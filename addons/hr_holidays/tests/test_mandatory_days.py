@@ -26,17 +26,27 @@ class TestHrLeaveMandatoryDays(TransactionCase):
 
         cls.employee_user = new_test_user(cls.env, login='user', groups='base.group_user', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
         cls.manager_user = new_test_user(cls.env, login='manager', groups='base.group_user,hr_holidays.group_hr_holidays_manager', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
+        cls.user_emp_leave_manager = new_test_user(cls.env, login='employee_leave_manager', groups='base.group_user', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
+        cls.hr_user = new_test_user(cls.env, login='HR_user', groups='hr_holidays.group_hr_holidays_manager', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
 
-        cls.employee_emp = cls.env['hr.employee'].create({
-            'name': 'Toto Employee',
+        cls.leave_manager = cls.env['hr.employee'].create({
+            'name': 'timeoff_officer',
             'company_id': cls.company.id,
-            'user_id': cls.employee_user.id,
+            'user_id': cls.user_emp_leave_manager.id,
             'resource_calendar_id': cls.default_calendar.id,
         })
         cls.manager_emp = cls.env['hr.employee'].create({
             'name': 'Toto Mananger',
             'company_id': cls.company.id,
             'user_id': cls.manager_user.id,
+        })
+        cls.employee_emp = cls.env['hr.employee'].create({
+            'name': 'Toto Employee',
+            'company_id': cls.company.id,
+            'user_id': cls.employee_user.id,
+            'resource_calendar_id': cls.default_calendar.id,
+            'leave_manager_id': cls.user_emp_leave_manager.id,
+            'parent_id': cls.manager_emp.id,
         })
 
         cls.leave_type = cls.env['hr.leave.type'].create({
@@ -385,3 +395,99 @@ class TestHrLeaveMandatoryDays(TransactionCase):
 
         self.assertTrue(leave_1.has_mandatory_day)
         self.assertFalse(leave_2.has_mandatory_day)
+
+    @freeze_time('2025-05-11')
+    def test_cancel_leave_on_mandatory_days(self):
+        """
+            Case: Test case for once a leave is approved, and mandatory days are added to the leave period afterward,
+            Expectation: The leave requester must be able to cancel the leave unconditionally,
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Sick Time Off',
+            'time_type': 'leave',
+            'requires_allocation': False,
+            'leave_validation_type': 'both',
+        })
+        employee_leave = self.env['hr.leave'].create({
+            'name': 'Holiday 5 days',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': datetime(2025, 5, 12),
+            'request_date_to': datetime(2025, 5, 16),
+        })
+        employee_leave.with_user(self.user_emp_leave_manager).action_approve()
+        employee_leave.with_user(self.manager_user).action_approve()
+        self.env['hr.leave.mandatory.day'].create({
+            'name': 'Super duper mandatory day1',
+            'company_id': self.company.id,
+            'start_date': datetime(2025, 5, 13),
+            'end_date': datetime(2025, 5, 13),
+            'resource_calendar_id': self.default_calendar.id,
+        })
+        self.env['hr.holidays.cancel.leave'].with_user(self.employee_user).create({
+            'leave_id': employee_leave.id,
+            'reason': 'mandatory days collision',
+        }).action_cancel_leave()
+        self.assertEqual(employee_leave.state, 'cancel', 'employee leave state should be in cancel state')
+
+    @freeze_time('2025-05-11')
+    def test_refuse_leave_on_mandatory_days(self):
+        """
+            Case: Test case for once a leave is approved, and mandatory days are added to the leave period afterward,
+            Expectation: User with the "refuse" access rights must be able to refuse the leave.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Sick Time Off',
+            'time_type': 'leave',
+            'requires_allocation': False,
+            'leave_validation_type': 'both',
+        })
+        employee_leave = self.env['hr.leave'].create({
+            'name': 'Holiday 4 days',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': datetime(2025, 5, 20),
+            'request_date_to': datetime(2025, 5, 23),
+        })
+        employee_leave.with_user(self.user_emp_leave_manager).action_approve()
+        self.env['hr.leave.mandatory.day'].create({
+            'name': 'Super duper mandatory day2',
+            'company_id': self.company.id,
+            'start_date': datetime(2025, 5, 22),
+            'end_date': datetime(2025, 5, 22),
+            'resource_calendar_id': self.default_calendar.id,
+        })
+        employee_leave.with_user(self.user_emp_leave_manager).action_refuse()
+        self.assertEqual(employee_leave.state, 'refuse', 'employee leave state should be in refuse state')
+
+    @freeze_time('2025-05-11')
+    def test_approve_leave_timeoff_officer_on_mandatory_days(self):
+        """
+            Case1: Test case for when a leave is raised, and mandatory days are added to the leave period afterward.
+            Expectation: The timeoff officer(HR) should be able to approve/refuse the request.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Sick Time Off',
+            'time_type': 'leave',
+            'requires_allocation': False,
+            'leave_validation_type': 'both',
+        })
+        employee_leave = self.env['hr.leave'].create({
+            'name': 'Holiday 5 days',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': datetime(2025, 5, 12),
+            'request_date_to': datetime(2025, 5, 16),
+        })
+        self.env['hr.leave.mandatory.day'].create({
+            'name': 'Super duper mandatory day1',
+            'company_id': self.company.id,
+            'start_date': datetime(2025, 5, 13),
+            'end_date': datetime(2025, 5, 13),
+            'resource_calendar_id': self.default_calendar.id,
+        })
+        employee_leave.with_user(self.hr_user).action_approve()
+        self.assertEqual(employee_leave.state, 'validate', 'employee leave state should be in validate state')
+        employee_leave.with_user(self.hr_user).action_back_to_approval()
+        employee_leave.with_user(self.hr_user).action_refuse()
+        self.assertEqual(employee_leave.state, 'refuse', 'employee leave state should be in refuse state')
