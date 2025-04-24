@@ -4,14 +4,14 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { Interaction } from "@web/public/interaction";
 
-export class ModalAttendeesRegistration extends Interaction {
-    static selector = "#modal_attendees_registration";
+export class ModalRegistration extends Interaction {
+    static selector = "#modal_attendees_registration,.o_wevent_modal_slot_ticket_registration";
     dynamicContent = {
         "form": {
             "t-on-submit": this.onSubmit,
         },
         ".js_goto_event, .btn-close": {
-            "t-on-click.once": this.onClick,
+            "t-on-click": this.onClick,
         },
     };
 
@@ -107,4 +107,4 @@ export class ModalAttendeesRegistration extends Interaction {
 
 registry
     .category("public.interactions")
-    .add("website_event.modal_attendees_registration", ModalAttendeesRegistration);
+    .add("website_event.modal_registration", ModalRegistration);

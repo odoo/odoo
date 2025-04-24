@@ -14,7 +14,11 @@ class PosConfig(models.Model):
                 'event_ticket_ids': [{
                     'ticket_id': ticket.id,
                     'seats_available': ticket.seats_available
-                } for ticket in event.event_ticket_ids]
+                } for ticket in event.event_ticket_ids],
+                'event_slot_ids': [{
+                    'slot_id': slot.id,
+                    'seats_available': slot.seats_available
+                } for slot in event.event_slot_ids]
             })
 
         for record in self:
