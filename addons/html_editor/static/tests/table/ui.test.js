@@ -1117,7 +1117,7 @@ test("reset row size to remove custom height", async () => {
     expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
 
     await click("[data-type='row'].o-we-table-menu");
-    await waitFor(".dropdown-menu");
+    await waitFor(".dropdown-menu", { timeout: 1000 });
     await click(queryOne(".dropdown-menu [name='reset_row_size']"));
     expect(getContent(el)).toBe(
         unformat(`
@@ -1172,7 +1172,7 @@ test("should redistribute excess width from current column to smaller columns", 
     expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
 
     await click("[data-type='column'].o-we-table-menu");
-    await waitFor(".dropdown-menu");
+    await waitFor(".dropdown-menu", { timeout: 1000 });
     await click(queryOne(".dropdown-menu [name='reset_column_size']"));
     expect(getContent(el)).toBe(
         unformat(`
@@ -1230,7 +1230,7 @@ test("should redistribute excess width from larger columns to current column", a
     expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
 
     await click("[data-type='column'].o-we-table-menu");
-    await waitFor(".dropdown-menu");
+    await waitFor(".dropdown-menu", { timeout: 1000 });
     await click(queryOne(".dropdown-menu [name='reset_column_size']"));
     expect(getContent(el)).toBe(
         unformat(`
