@@ -48,6 +48,9 @@ class DisplayDriver(Driver):
             'display_refresh': self._action_display_refresh,
             'open_kiosk': self._action_open_kiosk,
             'rotate_screen': self._action_rotate_screen,
+            'open': self._action_open_customer_display,
+            'close': self._action_close_customer_display,
+            'set': self._action_set_customer_display,
         })
 
         self.set_orientation(self.orientation)
@@ -117,6 +120,27 @@ class DisplayDriver(Driver):
         self.set_orientation(Orientation[orientation])
         event_manager.device_changed(self)
 
+    def _action_open_customer_display(self, data):
+        if self.device_identifier == 'distant_display' or not data.get('pos_id') or not data.get('access_token'):
+            return
+
+        origin = helpers.get_odoo_server_url() or http.request.httprequest.origin
+        self.update_url(f"{origin}/pos_customer_display/{data['pos_id']}/{data['access_token']}")
+
+    def _action_close_customer_display(self, data):
+        if self.device_identifier == 'distant_display':
+            return
+
+        helpers.update_conf({"browser_url": "", "screen_orientation": ""})
+        self.browser.disable_kiosk_mode()
+        self.update_url()
+
+    def _action_set_customer_display(self, data):
+        if self.device_identifier == 'distant_display' or not data.get('data'):
+            return
+
+        self.data['customer_display_data'] = data['data']
+
     def set_orientation(self, orientation=Orientation.NORMAL):
         if self.device_identifier == 'distant_display':
             return
@@ -139,23 +163,9 @@ class DisplayDriver(Driver):
 
 class DisplayController(http.Controller):
     @route.iot_route('/hw_proxy/customer_facing_display', type='jsonrpc', cors='*')
-    def customer_facing_display(self, action, pos_id=None, access_token=None, data=None):
+    def customer_facing_display(self):
         display = self.ensure_display()
-        if action == 'open':
-            origin = helpers.get_odoo_server_url()
-            display.update_url(f"{origin}/pos_customer_display/{pos_id}/{access_token}")
-            return {'status': 'opened'}
-        if action == 'close':
-            helpers.unlink_file('browser-url.conf')
-            helpers.unlink_file('screen-orientation.conf')
-            display.browser.disable_kiosk_mode()
-            display.update_url()
-            return {'status': 'closed'}
-        if action == 'set':
-            display.customer_display_data = data
-            return {'status': 'updated'}
-        if action == 'get':
-            return {'status': 'retrieved', 'data': display.customer_display_data}
+        return display.data.get('customer_display_data', {})
 
     def ensure_display(self):
         display: DisplayDriver = DisplayDriver.get_default_display()

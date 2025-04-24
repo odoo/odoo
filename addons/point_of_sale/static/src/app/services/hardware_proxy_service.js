@@ -22,6 +22,7 @@ export class HardwareProxy extends EventBus {
         this.host = "";
         this.keptalive = false;
         this.connectionInfo = reactive({ status: "init", drivers: {} });
+        this.deviceControllers = {};
         effect(
             (info) => {
                 if (info.status === "connected" && this.printer) {
