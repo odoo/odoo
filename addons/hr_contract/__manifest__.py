@@ -22,6 +22,7 @@ You can assign several contracts per employee.
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'data/mail_message_subtype_data.xml',
         'data/hr_contract_data.xml',
         'report/hr_contract_history_report_views.xml',
         'views/hr_contract_views.xml',
