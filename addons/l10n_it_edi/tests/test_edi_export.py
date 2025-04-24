@@ -525,7 +525,7 @@ class TestItEdiExport(TestItEdi):
 
         self._assert_export_invoice(invoice, 'prezzio_unitario_converted_company_currency.xml')
 
-    def test_export_XML_lowercase_fields(self):
+    def test_export_XML_lowercase_fields_and_payment_method(self):
         partner = self.env['res.partner'].create({
             'name': 'Alessi',
             'l10n_it_codice_fiscale': 'Mrtmtt91d08f205j',
@@ -545,6 +545,7 @@ class TestItEdiExport(TestItEdi):
                     'tax_ids': [Command.set(self.default_tax.ids)],
                 }),
             ],
+            'l10n_it_payment_method': 'MP15',
         })
         invoice.action_post()
         self._assert_export_invoice(invoice, 'invoice_lowercase_fields.xml')
