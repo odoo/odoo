@@ -69,6 +69,18 @@ class UomUom(models.Model):
                 ", ".join(locked_uoms.mapped('name')),
             ))
 
+    @api.depends('name', 'relative_factor', 'relative_uom_id')
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        uom_to_process_ids = []
+        for uom in self:
+            if uom.env.context.get('formatted_display_name') and uom.relative_uom_id:
+                uom.display_name = f"{uom.name}\t--{uom.relative_factor} {uom.relative_uom_id.name}--"
+            else:
+                uom_to_process_ids.append(uom.id)
+        if uom_to_process_ids:
+            super(UomUom, self.env['uom.uom'].browse(uom_to_process_ids))._compute_display_name()
+
     def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP', raise_if_failure=True):
         """ Convert the given quantity from the current UoM `self` into a given one
             :param qty: the quantity to convert
