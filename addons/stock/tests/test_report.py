@@ -3,7 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
-from odoo.tests import Form, TransactionCase
+from odoo.tests import Form, tagged, TransactionCase
 from odoo import Command
 
 
@@ -1951,3 +1951,36 @@ class TestReports(TestReportsCommon):
 
         Report.action_unassign(out_move.id, out_move.quantity, in_move.ids)
         self.assertEqual(out_move.procure_method, 'make_to_stock')
+
+
+@tagged('-at_install', 'post_install')
+class TestReportsPostInstall(TestReportsCommon):
+
+    def test_report_stock_lot_customer_simple_delivery(self):
+        serial_product = self.env['product.product'].create({'name': 'simple prod', 'is_storable': True})
+        serial_product.tracking = 'serial'
+        delivery = self.env['stock.picking'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_ids': [Command.create({
+                'name': f'out 1 units {serial_product.name}',
+                'product_id': serial_product.id,
+                'product_uom_qty': 1,
+                'quantity': 1,
+                'location_id': self.ref('stock.stock_location_stock'),
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })],
+        })
+        delivery.move_ids.write({'lot_ids': [Command.create({'name': 'ad-hoc-sn', 'product_id': serial_product.id})]})
+        delivery.button_validate()
+        customer_lots = self.env['stock.lot.report'].search([('partner_id', '=', self.partner.id)])
+        self.assertRecordValues(
+            customer_lots,
+            [{
+                'lot_id': delivery.move_line_ids.lot_id.id,
+                'picking_id': delivery.id,
+                'quantity': 1.0,
+            }]
+        )

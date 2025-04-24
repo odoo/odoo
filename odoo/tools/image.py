@@ -96,7 +96,7 @@ class ImageProcess:
 
             w, h = self.image.size
             if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
-                raise UserError(_lt("Image size excessive, uploaded images must be smaller than %s million pixels.", str(IMAGE_MAX_RESOLUTION / 1e6)))
+                raise UserError(_lt("Too large image (above %sMpx), reduce the image size.", str(IMAGE_MAX_RESOLUTION / 1e6)))
 
     def image_quality(self, quality=0, output_format=''):
         """Return the image resulting of all the image processing

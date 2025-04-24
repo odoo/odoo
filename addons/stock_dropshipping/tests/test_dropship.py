@@ -350,3 +350,32 @@ class TestDropship(common.TransactionCase):
             {'product_id': subcontracted_service.id, 'product_uom_qty': 1.0, 'qty_delivered': 0.0},
             {'product_id': self.dropship_product.id, 'product_uom_qty': 0.0, 'qty_delivered': 1.0},
         ])
+
+    def test_dropship_lot_product_appears_in_stock_lot_report(self):
+        dropship_product = self.lot_dropship_product
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': dropship_product.id,
+                'product_uom_qty': 2,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order.procurement_group_id.purchase_line_ids.order_id
+        purchase_order.button_confirm()
+        dropship_picking = purchase_order.picking_ids
+        dropship_picking.move_line_ids.lot_name = 'dropship product lot'
+        dropship_picking.move_ids.picked = True
+        dropship_picking.button_validate()
+        for model in (self.env['sale.order'], self.env['stock.picking']):
+            model.flush_model()
+
+        customer_lots = self.env['stock.lot.report'].search([('partner_id', '=', self.customer.id)])
+        self.assertRecordValues(
+            customer_lots,
+            [{
+                'lot_id': dropship_picking.move_line_ids.lot_id.id,
+                'picking_id': dropship_picking.id,
+                'quantity': 2.0,
+            }]
+        )

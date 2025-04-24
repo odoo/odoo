@@ -1982,8 +1982,9 @@ Please change the quantity done or the rounding precision of your unit of measur
         return True
 
     def _skip_push(self):
-        return self.is_inventory or self.move_dest_ids and any(m.location_id._child_of(self.location_dest_id) for m in self.move_dest_ids) or\
-            self.location_final_id and self.location_final_id._child_of(self.location_dest_id)
+        return self.is_inventory or (
+            self.move_dest_ids and any(m.location_id._child_of(self.location_dest_id) for m in self.move_dest_ids)
+        )
 
     def _check_quantity(self):
         return self.env['stock.quant'].search([
@@ -2328,6 +2329,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                         ]
         moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
                                                          order='priority desc, date asc, id asc')
+        moves_to_reserve = moves_to_reserve.sorted(key=lambda m: m.group_id.id in self.group_id.ids, reverse=True)
         moves_to_reserve._action_assign()
 
     def _rollup_move_dests_fetch(self):

@@ -735,3 +735,40 @@ class TestLotValuation(TestStockValuationCommon):
         # Revaluation should now raise a UserError when selected layers' remaining_qty = 0
         with self.assertRaises(UserError):
             self.lot1.action_revaluation()
+
+    def test_deliveries_with_minimal_access_rights(self):
+        """
+        Check that an inventory user is able to process a delivery.
+        """
+        product_lot = self.product1
+        self.env['stock.quant']._update_available_quantity(product_lot, self.env.ref('stock.warehouse0').lot_stock_id, 10.0, lot_id=self.lot1)
+        inventory_user = self.env['res.users'].create({
+            'name': 'Inventory user',
+            'login': 'inventory_user',
+            'email': 'inventory_user@gmail.com',
+            'groups_id': [Command.set(self.env.ref('stock.group_stock_user').ids)],
+        })
+        customer = self.env['res.partner'].create({
+            'name': 'Lovely customer'
+        })
+        delivery = self.env['stock.picking'].create({
+            'name': 'Lovely delivery',
+            'partner_id': customer.id,
+            'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'picking_type_id': self.env.ref('stock.warehouse0').out_type_id.id,
+            'move_ids': [Command.create({
+                'name': 'lovely move',
+                'product_id': product_lot.id,
+                'product_uom_qty': 5.0,
+                'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            })]
+        })
+        self.env.invalidate_all()
+        delivery.with_user(inventory_user).action_confirm()
+        delivery.with_user(inventory_user).button_validate()
+        self.assertEqual(delivery.state, 'done')
+        self.assertRecordValues(delivery.move_ids, [
+            {'quantity': 5.0, 'state': 'done', 'lot_ids': self.lot1.ids}
+        ])

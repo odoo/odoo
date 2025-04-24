@@ -22,6 +22,10 @@ class TestSaleOrderProductCatalog(HttpCase):
             'parent_id': self.env.company.id,
         })
         admin.company_id = branch
+        self.env['product.template'].create({
+            'name': "AAA Product",
+            'company_id': admin.company_id.id,
+        })
         self.start_tour(
             '/web#action=sale.action_quotations',
             'sale_catalog',

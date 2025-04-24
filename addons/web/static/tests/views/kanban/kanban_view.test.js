@@ -12985,7 +12985,8 @@ test("Keep scrollTop when loading records with load more", async () => {
     const clickKanbanLoadMoreButton = queryFirst(".o_kanban_load_more button");
     clickKanbanLoadMoreButton.scrollIntoView();
     const previousScrollTop = queryOne(".o_content").scrollTop;
-    await contains(clickKanbanLoadMoreButton).click();
+    clickKanbanLoadMoreButton.click();
+    await animationFrame();
     expect(previousScrollTop).not.toBe(0, { message: "Should not have the scrollTop value at 0" });
     expect(queryOne(".o_content").scrollTop).toBe(previousScrollTop);
 });

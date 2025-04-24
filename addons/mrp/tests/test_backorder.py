@@ -477,6 +477,45 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(production.name.split('-')[0], backorder_ids.name.split('-')[0])
         self.assertEqual(int(production.name.split('-')[1]) + 1, int(backorder_ids.name.split('-')[1]))
 
+    def test_backorder_name_with_multiple_backorder(self):
+        """ Test that the backorder name is correct when splitting and creating
+        multiple backorders.
+        """
+        # create a mo for 5 units and split it into 2
+        mo = self.generate_mo(qty_final=5)[0]
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.counter = 2
+        wizard.save().action_split()
+
+        # Ensure that the MO was correctly split into 2 MOs
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
+        mo_2 = mo.procurement_group_id.mrp_production_ids[1]
+
+        # Check that the sequence names are correct after splitting
+        self.assertEqual(mo.name.split('-')[1], '001')
+        self.assertEqual(mo_2.name.split('-')[1], '002')
+
+        # Validate the first MO and create a backorder
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        backorder_mo1 = mo.procurement_group_id.mrp_production_ids[-1]
+        self.assertEqual(backorder_mo1.name.split('-')[1], '003')
+
+        # Validate the second MO and create another backorder
+        mo_form = Form(mo_2)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        backorder_mo2 = mo_2.procurement_group_id.mrp_production_ids[-1]
+        self.assertEqual(backorder_mo2.name.split('-')[1], '004')
+
     def test_split_draft(self):
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.bom_1.product_id

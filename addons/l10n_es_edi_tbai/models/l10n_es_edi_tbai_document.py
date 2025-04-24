@@ -296,6 +296,7 @@ class L10nEsEdiTbaiDocument(models.Model):
             'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
             'fiscal_year': str(self.date.year),
             'freelancer': freelancer,
+            'is_freelancer': freelancer,  # For bugfix, will be removed in master
             'epigrafe': self.env['ir.config_parameter'].sudo().get_param('l10n_es_edi_tbai.epigrafe', '')
         }
         lroe_values.update({'tbai_b64_list': [base64.b64encode(self.xml_attachment_id.raw).decode()]})

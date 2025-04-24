@@ -770,3 +770,41 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         stock_move.quantity = 1.0
         picking.button_validate()
         self.assertEqual(picking.move_ids.location_dest_id, sub_location)
+
+    def test_foreign_bill_autocomplete_with_payment_term(self):
+        """ Test the bill auto-complete with a PO having a payment term in a foreign currency """
+        currency = self.env['res.currency'].create({
+            'name': "Test",
+            'symbol': 'T',
+            'rounding': 0.01,
+            'rate_ids': [
+                Command.create({'name': '2025-01-01', 'rate': 1.5}),
+            ],
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+            'payment_term_id': self.pay_terms_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_id_1.id,
+                'price_unit': 100.0,
+                'taxes_id': [Command.set(self.tax_purchase_a.ids)],
+            })],
+        })
+        po.button_confirm()
+
+        picking = po.picking_ids[0]
+        picking.move_line_ids.quantity = 1.0
+        picking.move_ids.picked = True
+        picking.button_validate()
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
+        invoice = move_form.save()
+
+        self.assertEqual(invoice.currency_id, currency)
+        self.assertEqual(invoice.invoice_payment_term_id, self.pay_terms_a)
+
+        line = invoice.invoice_line_ids[0]
+        self.assertEqual(line.amount_currency, 100.0)
+        self.assertEqual(line.balance, 66.67)

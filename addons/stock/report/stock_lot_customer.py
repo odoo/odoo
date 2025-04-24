@@ -24,7 +24,7 @@ class StockLotReport(models.Model):
             MIN(sml.id) AS id,
             lot.id lot_id,
             lot.product_id,
-            picking.partner_id,
+            partner.id partner_id,
             picking.id picking_id,
             sml.quantity,
             sml.product_uom_id uom_id,
@@ -33,17 +33,22 @@ class StockLotReport(models.Model):
             picking.date_done delivery_date
         """
 
-    def _from(self):
+    def _join_on_picking_type_and_partner(self):
         return """
+            JOIN stock_picking_type AS type
+            ON picking.picking_type_id = type.id and type.code = 'outgoing'
+            JOIN res_partner AS partner
+            ON partner.id = picking.partner_id
+        """
+
+    def _from(self):
+        return f"""
             stock_lot lot
             JOIN stock_move_line AS sml
             ON lot.id = sml.lot_id
             JOIN stock_picking AS picking
             ON picking.id = sml.picking_id
-            JOIN stock_picking_type AS type
-            ON picking.picking_type_id = type.id and type.code = 'outgoing'
-            JOIN res_partner AS partner
-            ON partner.id = picking.partner_id
+            {self._join_on_picking_type_and_partner()}
             LEFT JOIN res_country_state AS state
             ON state.id = partner.state_id
             LEFT JOIN res_country AS country
@@ -59,7 +64,7 @@ class StockLotReport(models.Model):
     def _group_by(self):
         return """
             picking.id,
-            picking.partner_id,
+            partner.id,
             lot.id,
             lot.product_id,
             country.code,

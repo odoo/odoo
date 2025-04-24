@@ -41,6 +41,15 @@ for (let i = 1; i <= 5; i++) {
 for (let i = 100; i <= 900; i += 100) {
     EDITOR_COLOR_CSS_VARIABLES.push(`${i}`);
 }
+
+// Black, white and their opacity variants.
+// These variables are necessary to prevent the colorpicker from being affected
+// by the backend "Dark Mode".
+EDITOR_COLOR_CSS_VARIABLES.push(
+    "black", "black-15", "black-25", "black-50", "black-75",
+    "white", "white-25", "white-50", "white-75", "white-85"
+);
+
 /**
  * window.getComputedStyle cannot work properly with CSS shortcuts (like
  * 'border-width' which is a shortcut for the top + right + bottom + left border

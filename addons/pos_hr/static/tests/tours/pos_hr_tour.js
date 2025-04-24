@@ -139,7 +139,19 @@ registry.category("web_tour.tours").add("CashierCannotClose", {
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             Chrome.clickMenuButton(),
             {
-                trigger: negate(`span.dropdown-item:contains("Close Register")`),
+                trigger: `span.dropdown-item:contains("Close Register")`,
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_basic_user_can_change_price", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "1", "10", "10"),
         ].flat(),
 });

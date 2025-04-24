@@ -41,9 +41,17 @@ registry.category("web_tour.tours").add('sale_catalog', {
             trigger: '.o_kanban_record:contains("Restricted Product")',
         },
         {
+            content: "Wait for filtering",
+            trigger: '.o_kanban_renderer:not(:has(.o_kanban_record:contains("AAA Product")))',
+        },
+        {
             content: "Add the product to the SO",
             trigger: '.o_kanban_record:contains("Restricted Product") .fa-shopping-cart',
             run: 'click',
+        },
+        {
+            content: "Wait for product to be added",
+            trigger: '.o_kanban_record:contains("Restricted Product"):not(:has(.fa-shopping-cart))',
         },
         {
             content: "Input a custom quantity",
