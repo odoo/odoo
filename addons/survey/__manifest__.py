@@ -71,7 +71,6 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/js/survey_form.js',
             'survey/static/src/js/survey_preload_image_mixin.js',
             'survey/static/src/js/survey_result.js',
-            'survey/static/src/interactions/survey_result_chart.js',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
             'web/static/src/scss/pre_variables.scss',
@@ -81,6 +80,7 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/scss/survey_templates_form.scss',
             'survey/static/src/scss/survey_templates_results.scss',
             'survey/static/src/xml/survey_breadcrumb_templates.xml',
+            'survey/static/src/xml/survey_paginated_results_rows_template.xml',
             'survey/static/src/interactions/*',
         ],
         'survey.survey_user_input_session_assets': [
