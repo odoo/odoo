@@ -9,7 +9,7 @@ from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
-from odoo.tests import users, warmup, tagged
+from odoo.tests import users, warmup, tagged, Form
 from odoo.tools import formataddr, mute_logger
 
 
@@ -678,6 +678,19 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             ('res_field', '=', 'invoice_pdf_report_file'),
         ])
         self.assertEqual(len(invoice_attachments), 1)
+
+    def test_compute_value_of_send_invoice_batch_wizard(self):
+        invoices = (
+            self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True) +
+            self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+        )
+
+        move_send_batch_wizard = Form(self.env['account.move.send.batch.wizard'].with_context(
+            active_model='account.move', active_ids=invoices.ids))
+
+        self.assertEqual(move_send_batch_wizard.move_ids.ids, invoices.ids)
+        self.assertEqual(move_send_batch_wizard.summary_data, {'email': {'count': len(invoices), 'label': 'by Email'}})
+        self.assertFalse(move_send_batch_wizard.alerts)
 
     def test_invoice_multi_email_missing(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
