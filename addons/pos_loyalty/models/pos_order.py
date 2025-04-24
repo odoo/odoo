@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from markupsafe import Markup
+
 from odoo import _, models
 from odoo.tools import float_compare
 import base64
@@ -73,6 +75,32 @@ class PosOrder(models.Model):
                 })
         self.env['loyalty.history'].create(history_lines_create_vals)
 
+    def add_history_lines_for_sold_gift_cards(self, gift_cards):
+        """
+        This will create history lines for the gift cards sold in the order.
+        It will also send a message to the gift card with the order link.
+        The message will be sent only if the gift card is not already linked to an order.
+        """
+        self.ensure_one()
+        body = Markup(
+            """
+                <span class='o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold'>{message}<span/>
+                <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
+                <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{order_name}</span>
+            """
+        ).format(message=_('Loyalty coupon sold'), order_name=self._get_html_link())
+        history_lines_create_vals = []
+        for gift_card in gift_cards:
+            history_lines_create_vals.append({
+                'card_id': gift_card.id,
+                'order_model': self._name,
+                'order_id': self.id,
+                'description': _('Gift Card Sold'),
+                'issued': gift_card.points
+            })
+            gift_card.message_post(body=body)
+        self.env['loyalty.history'].create(history_lines_create_vals)
+
     def confirm_coupon_programs(self, coupon_data):
         """
         This is called after the order is created.
@@ -90,25 +118,24 @@ class PosOrder(models.Model):
         coupon_new_id_map = {k: k for k in coupon_data.keys() if k > 0}
 
         # Create the coupons that were awarded by the order.
-        coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0 and not v.get('giftCardId')}
+        coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0 and not v.get('giftCardId') and not v.get('existing_gift_card_id')}
         coupon_create_vals = [{
             'program_id': p['program_id'],
             'partner_id': get_partner_id(p.get('partner_id', False)),
             'code': p.get('code') or p.get('barcode') or self.env['loyalty.card']._generate_code(),
             'points': 0,
-            'expiration_date': p.get('date_to', False),
+            'expiration_date': p.get('expiration_date') or p.get('date_to') or False,
             'source_pos_order_id': self.id,
-            'expiration_date': p.get('expiration_date')
         } for p in coupons_to_create.values()]
 
         # Pos users don't have the create permission
         new_coupons = self.env['loyalty.card'].with_context(action_no_send_mail=True).sudo().create(coupon_create_vals)
 
         # We update the gift card that we sold when the gift_card_settings = 'scan_use'.
-        gift_cards_to_update = [v for v in coupon_data.values() if v.get('giftCardId')]
+        gift_cards_to_update = [v for v in coupon_data.values() if v.get('giftCardId') or v.get('existing_gift_card_id')]
         updated_gift_cards = self.env['loyalty.card']
         for coupon_vals in gift_cards_to_update:
-            gift_card = self.env['loyalty.card'].browse(coupon_vals.get('giftCardId'))
+            gift_card = self.env['loyalty.card'].browse(coupon_vals.get('giftCardId') or coupon_vals.get('existing_gift_card_id'))
             gift_card.write({
                 'points': coupon_vals['points'],
                 'source_pos_order_id': self.id,
@@ -133,13 +160,16 @@ class PosOrder(models.Model):
                 coupon.points += coupon_data[coupon_new_id_map[coupon.id]]['points']
             for reward_code in coupon_data[coupon_new_id_map[coupon.id]].get('line_codes', []):
                 lines_per_reward_code[reward_code].coupon_id = coupon
+
+        backend_gift_cards = self.env['loyalty.card'].sudo().browse([v.get('existing_gift_card_id') for v in coupon_data.values() if v.get('existing_gift_card_id')])
+        self.add_history_lines_for_sold_gift_cards(new_coupons.filtered(lambda c: c.program_type == 'gift_card') | backend_gift_cards)
         # Send creation email
         new_coupons.with_context(action_no_send_mail=False)._send_creation_communication()
         # Reports per program
         report_per_program = {}
         coupon_per_report = defaultdict(list)
         # Important to include the updated gift cards so that it can be printed. Check coupon_report.
-        for coupon in new_coupons | updated_gift_cards:
+        for coupon in new_coupons | updated_gift_cards | backend_gift_cards:
             if coupon.program_id not in report_per_program:
                 report_per_program[coupon.program_id] = coupon.program_id.communication_plan_ids.\
                     filtered(lambda c: c.trigger == 'create').pos_report_print_id
