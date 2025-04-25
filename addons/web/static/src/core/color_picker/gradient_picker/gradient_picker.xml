@@ -10,9 +10,16 @@
                 </span>
             </div>
 
-            <div t-if="this.state.type === 'linear'" class="d-flex align-items-center justify-content-between">
+            <div t-if="this.state.type === 'linear'" class="d-flex align-items-center justify-content-between mb-1">
                 Angle
                 <span class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-center align-items-center my-auto me-2 position-relative gradient-angle-knob"
+                        t-ref="gradientAngleKnob"
+                        t-attf-style="--angle: #{this.state.angle}deg;"
+                        t-on-mousedown="onKnobMouseDown">
+                        <div class="position-absolute gradient-angle-thumb"></div>
+                    </div>
+
                     <input name="angle" type="text" t-att-value="this.state.angle" t-on-change="onAngleChange" style="width: 5ch" />
                     <span class="input-group-text">deg</span>
                 </span>
