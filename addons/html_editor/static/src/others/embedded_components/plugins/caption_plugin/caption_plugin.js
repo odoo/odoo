@@ -4,6 +4,7 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { renderToElement } from "@web/core/utils/render";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
 
@@ -68,6 +69,7 @@ export class CaptionPlugin extends Plugin {
             caption.textContent = image.getAttribute("data-caption");
             image.removeAttribute("data-caption");
             image.removeAttribute("data-caption-id");
+            image.classList.remove(EDITABLE_MEDIA_CLASS);
             image.after(caption);
         }
     }
@@ -129,6 +131,7 @@ export class CaptionPlugin extends Plugin {
         image.setAttribute("data-caption", captionText || "");
         // Ensure it's not possible to write inside the figure.
         figure.setAttribute("contenteditable", "false");
+        image.classList.add(EDITABLE_MEDIA_CLASS);
         // Ensure it's possible to write before and after the figure.
         const block = closestBlock(link || image);
         if (!block.previousSibling) {
@@ -171,6 +174,7 @@ export class CaptionPlugin extends Plugin {
             }
             unwrapContents(figure);
             image.removeAttribute("data-caption-id"); // (keep the data-caption for if we toggle again)
+            image.classList.remove(EDITABLE_MEDIA_CLASS);
             // Select the image.
             const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(image);
             this.dependencies.selection.setSelection({
