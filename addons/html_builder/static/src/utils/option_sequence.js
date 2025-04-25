@@ -63,6 +63,12 @@ export function between(previousPosition, nextPosition) {
  */
 export function after(position) {
     const index = ALL.findIndex((value) => value === position);
+    if (index === -1) {
+        throw new Error("Position " + position + " does not exist. Do not use arbitrary numbers.");
+    }
+    if (index === ALL.length - 1) {
+        throw new Error("Cannot place something after END position.");
+    }
     const nextPosition = ALL[index + 1];
     return between(position, nextPosition);
 }
@@ -75,11 +81,17 @@ export function after(position) {
  */
 export function before(position) {
     const index = ALL.findIndex((value) => value === position);
+    if (index === -1) {
+        throw new Error("Position " + position + " does not exist. Do not use arbitrary numbers.");
+    }
+    if (index === 0) {
+        throw new Error("Cannot place something before BEGIN position.");
+    }
     const previousPosition = ALL[index - 1];
     return between(previousPosition, position);
 }
 
-const SNIPPET_SPECIFIC = DEFAULT;
+const SNIPPET_SPECIFIC = track(DEFAULT);
 const [
     REPLACE_MEDIA,
     MEDIA_URL,
