@@ -2,19 +2,20 @@
 from __future__ import annotations
 
 import itertools
-import math
 import typing
 import warnings
-from datetime import datetime, time
+from datetime import datetime
 
 from pytz import utc
 
 from odoo.fields import Datetime
-from odoo.tools.float_utils import float_round
+
+from .date_utils import HOURS_PER_DAY, ROUNDING_FACTOR, float_to_time  # noqa: F401
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Iterator
     from collections.abc import Set as AbstractSet
+    from datetime import datetime
 
 T = typing.TypeVar('T')
 
@@ -38,14 +39,6 @@ def datetime_to_string(dt: datetime) -> str:
     """ Convert the given datetime (converted in UTC) to a string value. """
     warnings.warn("Since 19.0, use directly Datetime.to_string with astimezone", DeprecationWarning)
     return Datetime.to_string(dt.astimezone(utc))
-
-
-def float_to_time(hours: float) -> time:
-    """ Convert a number of hours into a time object. """
-    if hours == 24.0:
-        return time.max
-    fractional, integral = math.modf(hours)
-    return time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
 
 
 def _boundaries(intervals: Intervals[T] | Iterable[tuple[T, T, AbstractSet]], opening: str, closing: str) -> Iterator[tuple[T, str, AbstractSet]]:
