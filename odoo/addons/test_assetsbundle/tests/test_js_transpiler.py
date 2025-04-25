@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
-from odoo.tools import transpile_javascript
+from odoo.tools.js_transpiler import transpile_javascript
 
 
 @tagged('post_install', '-at_install')
