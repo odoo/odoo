@@ -1,5 +1,5 @@
+import os
 import unittest
-from os import name as os_name
 from unittest.mock import call, patch
 
 import odoo
@@ -18,7 +18,7 @@ class TestConfigManager(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        patcher = patch.dict('os.environ', {'ODOO_RC': EMPTY_CONFIG_PATH})
+        patcher = patch.dict('os.environ', {'ODOO_RC': EMPTY_CONFIG_PATH}, clear=True)
         patcher.start()
         self.addCleanup(patcher.stop)
         self.config = configmanager()
@@ -27,6 +27,7 @@ class TestConfigManager(TransactionCase):
         with (
             patch.dict(self.config._runtime_options, {}),
             patch.dict(self.config._cli_options, {}),
+            patch.dict(self.config._env_options, {}),
             patch.dict(self.config._file_options, {}),
             patch.dict(self.config._default_options, {}),
         ):
@@ -290,7 +291,7 @@ class TestConfigManager(TransactionCase):
             "WARNING:odoo.tools.config:option pre_upgrade_scripts, no such file '/tmp/pre-custom.py', skipped",
         ])
 
-    @unittest.skipIf(os_name != 'posix', 'this test is POSIX only')
+    @unittest.skipIf(os.name != 'posix', 'this test is POSIX only')
     def test_03_save_default_options(self):
         with file_open_temporary_directory(self.env) as temp_dir:
             config_path = f'{temp_dir}/save.conf'
@@ -545,6 +546,130 @@ class TestConfigManager(TransactionCase):
             # advanced
             'dev_mode': ['xml', 'reload'],
             'stop_after_init': True,
+            'osv_memory_count_limit': 71,
+            'transient_age_limit': 4.0,
+            'max_cron_threads': 4,
+            'limit_time_worker_cron': 0,
+            'unaccent': True,
+            'geoip_city_db': '/tmp/city.db',
+            'geoip_country_db': '/tmp/country.db',
+
+            'workers': 92,
+            'limit_memory_soft': 1048576,
+            'limit_memory_soft_gevent': 1048577,
+            'limit_memory_hard': 1048578,
+            'limit_memory_hard_gevent': 1048579,
+            'limit_time_cpu': 60,
+            'limit_time_real': 61,
+            'limit_time_real_cron': 62,
+            'limit_request': 100,
+        })
+
+    def test_07_environ(self):
+        with file_open('base/tests/config/environ') as file:
+            os.environ.update({
+                x[0]: x[2]
+                for line in file.readlines()
+                if (x := line.rstrip('\n').partition('=')) and x[0]
+                and not line.startswith('#')
+            })
+        self.config._parse_config()
+
+        self.assertConfigEqual({
+            # options not exposed on the command line
+            'admin_passwd': 'admin',
+            'bin_path': '',
+            'csv_internal_sep': ',',
+            'default_productivity_apps': False,
+            'proxy_access_token': '',
+            'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
+            'reportgz': False,
+            'websocket_rate_limit_burst': 10,
+            'websocket_rate_limit_delay': .2,
+            'websocket_keep_alive_timeout': 3600,
+
+            # common
+            'config': EMPTY_CONFIG_PATH,
+            'save': False,
+            'init': {},
+            'update': {},
+            'with_demo': True,
+            'import_partial': '',
+            'pidfile': '/tmp/pidfile',
+            'addons_path': [],
+            'upgrade_path': [],
+            'pre_upgrade_scripts': [],
+            'server_wide_modules': ['web', 'base', 'mail'],
+            'data_dir': '/tmp/data-dir',
+
+            # HTTP
+            'http_interface': '10.0.0.254',
+            'http_port': 6942,
+            'gevent_port': 8012,
+            'http_enable': False,
+            'proxy_mode': True,
+            'x_sendfile': True,
+
+            # web
+            'dbfilter': '.*',
+
+            # testing
+            'test_file': '',
+            'test_enable': False,
+            'test_tags': None,
+            'screencasts': '/tmp/screencasts',
+            'screenshots': '/tmp/screenshots',
+
+            # logging
+            'logfile': '/tmp/odoo.log',
+            'syslog': False,
+            'log_handler': [
+                ':WARNING',
+                'odoo.tools.config:DEBUG',
+            ],
+            'log_db': 'logdb',
+            'log_db_level': 'debug',
+            'log_level': 'debug',
+
+            # SMTP
+            'email_from': 'admin@example.com',
+            'from_filter': '.*',
+            'smtp_server': 'smtp.localhost',
+            'smtp_port': 1299,
+            'smtp_ssl': True,
+            'smtp_user': 'spongebob',
+            'smtp_password': 'Tigrou0072',
+            'smtp_ssl_certificate_filename': '/tmp/tlscert',
+            'smtp_ssl_private_key_filename': '/tmp/tlskey',
+
+            # database
+            'db_name': ['horizon'],
+            'db_user': 'kiwi',
+            'db_password': 'Tigrou0073',
+            'pg_path': '/tmp/pg_path',
+            'db_host': 'db.localhost',
+            'db_port': 4269,
+            'db_sslmode': 'verify-full',
+            'db_maxconn': 42,
+            'db_maxconn_gevent': 100,
+            'db_template': 'backup1706',
+            'db_replica_host': 'db2.localhost',
+            'db_replica_port': 2038,
+
+            # i18n (not loaded)
+            'load_language': None,
+            'language': None,
+            'translate_out': '',
+            'translate_in': '',
+            'overwrite_existing_translations': False,
+            'translate_modules': ['all'],
+
+            # security
+            'list_db': False,
+
+            # advanced
+            'dev_mode': ['xml', 'reload'],
+            'stop_after_init': False,  # not on env
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
             'max_cron_threads': 4,
