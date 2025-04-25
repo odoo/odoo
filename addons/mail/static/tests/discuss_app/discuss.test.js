@@ -391,12 +391,13 @@ test("reply to message from inbox (message linked to document)", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
     const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
         body: "<p>Test</p>",
         date: "2019-04-20 11:00:00",
         message_type: "comment",
-        needaction: true,
         model: "res.partner",
-        res_id: partnerId,
+        needaction: true,
+        res_id: serverState.partnerId,
     });
     pyEnv["mail.notification"].create({
         mail_message_id: messageId,
@@ -406,22 +407,23 @@ test("reply to message from inbox (message linked to document)", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message-header small", { text: "on Refactoring" });
+    await contains(".o-mail-Message-header small", { text: "on Mitchell Admin" });
     await click("[title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
     await contains(".o-mail-Message.o-selected");
     await contains(".o-mail-Composer");
-    await contains(".o-mail-Composer-coreHeader", { text: "on: Refactoring" });
+    await contains(".o-mail-Composer-coreHeader", { text: "on: Mitchell Admin" });
     await insertText(".o-mail-Composer-input:focus", "Hello");
     await press("Enter");
     await contains(".o-mail-Composer", { count: 0 });
     await contains(".o-mail-Message:not(.o-selected)");
     await contains(".o_notification:has(.o_notification_bar.bg-info)", {
-        text: 'Message posted on "Refactoring"',
+        text: 'Message posted on "Mitchell Admin"',
     });
-    await openFormView("res.partner", partnerId);
+    await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Message-content", { text: "Hello" });
+    await contains(".o-mail-Message-content", { text: "@Refactoring Hello" });
+    await contains(".o-mail-Message.o-selfAuthored a.o_mail_redirect", { text: "@Refactoring" });
 });
 
 test("Can reply to starred message", async () => {
@@ -446,8 +448,10 @@ test("Can reply to starred message", async () => {
 
 test("Can reply to history message", async () => {
     const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
     const channelId = pyEnv["discuss.channel"].create({ name: "RandomName" });
     const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
         body: "not empty",
         model: "discuss.channel",
         res_id: channelId,

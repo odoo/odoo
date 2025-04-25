@@ -11,6 +11,19 @@ export function assignDefined(obj, data, keys = Object.keys(data)) {
     return obj;
 }
 
+export function assignGetter(obj, data) {
+    const properties = Object.fromEntries(
+        Object.entries(data).map(([getterName, getterFn]) => [
+            getterName,
+            {
+                get: getterFn,
+                set: () => {}, // avoids Proxy "trap returned falsish" error
+            },
+        ])
+    );
+    Object.defineProperties(obj, properties);
+}
+
 export function assignIn(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
         if (key in data) {
