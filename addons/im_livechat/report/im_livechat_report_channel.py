@@ -32,7 +32,7 @@ class Im_LivechatReportChannel(models.Model):
         string="Day of the Week",
         readonly=True,
     )
-    time_to_answer = fields.Float("Response Time (sec)", digits=(16, 2), readonly=True, aggregator="avg", help="Average time in seconds to give the first answer to the visitor")
+    time_to_answer = fields.Float("Response Time", digits=(16, 6), readonly=True, aggregator="avg", help="Average time in hours to give the first answer to the visitor")
     start_date_hour = fields.Char('Hour of start Date of session', readonly=True)
     duration = fields.Float("Duration (min)", digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in minutes)")
     nbr_message = fields.Integer("Messages per Session", readonly=True, aggregator="avg", help="Number of message in the conversation")
@@ -177,7 +177,7 @@ class Im_LivechatReportChannel(models.Model):
                         EXTRACT('epoch' FROM MIN(message_vals.first_agent_message_dt) - c.create_date)
                     ELSE
                         EXTRACT('epoch' FROM MIN(message_vals.first_agent_message_dt_legacy) - c.create_date)
-                END AS time_to_answer,
+                END/3600 AS time_to_answer,
                 SUM(message_vals.message_count) as nbr_message,
                 CASE
                     WHEN C.livechat_is_escalated THEN 'escalated'

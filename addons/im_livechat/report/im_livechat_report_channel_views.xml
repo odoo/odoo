@@ -11,6 +11,8 @@
                     <field name="call_duration_hour" type="measure" widget="float_time"/>
                     <field name="partner_id" type="row"/>
                     <field name="percentage_of_calls" type="measure" widget="percentage"/>
+                    <field name="time_to_answer" string="Response Time (hh:mm:ss)" type="measure" widget="float_time" options="{'displaySeconds': True}" />
+                    <field name="duration" type="measure"/>
                     <field name="rating" string="Rating (%)" type="measure" widget="im_livechat.rating_percentage"/>
                     <field name="number_of_calls" string="# of calls" type="measure" widget="integer"/>
                 </pivot>

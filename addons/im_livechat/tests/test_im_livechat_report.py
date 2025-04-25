@@ -55,13 +55,13 @@ class TestImLivechatReport(TestImLivechatCommon):
         # 09:15:54: wrong model
         # So the duration of the session is: (08:45:54 - 06:05:54) = 2h40 = 160 minutes
         # The time to answer of this session is: (08:15:54 - 06:05:54) = 2h10 = 7800 seconds
-        self.assertEqual(int(report.time_to_answer), 7800)
+        self.assertEqual(report.time_to_answer, 7800 / 3600)
         self.assertEqual(int(report.duration), 160)
 
     def test_im_livechat_report_operator(self):
         result = self.env["im_livechat.report.channel"].formatted_read_group([], aggregates=["time_to_answer:avg", "duration:avg"])
         self.assertEqual(len(result), 1)
-        self.assertEqual(int(result[0]['time_to_answer:avg']), 7800)
+        self.assertEqual(result[0]["time_to_answer:avg"], 7800 / 3600)
         self.assertEqual(int(result[0]['duration:avg']), 160)
 
     @classmethod
