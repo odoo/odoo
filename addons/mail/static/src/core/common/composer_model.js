@@ -17,6 +17,24 @@ export class Composer extends Record {
         });
     }
 
+    /**
+     * @param {string} text - text to insert
+     * @param {number} position - insertion position
+     * @param {Object} [options]
+     * @param {boolean} [options.moveCursorToEnd=false] - If true, place cursor at end of composerText
+     */
+    insertText(text, position, { moveCursorToEnd = false } = {}) {
+        const before = this.composerText.substring(0, position);
+        const after = this.composerText.substring(position);
+        this.composerText = before + text + after;
+        this.selection.start = before.length + text.length;
+        if (moveCursorToEnd) {
+            this.selection.start = this.composerText.length;
+        }
+        this.selection.end = this.selection.start;
+        this.forceCursorMove = true;
+    }
+
     attachments = fields.Many("ir.attachment");
     /** @type {boolean} */
     emailAddSignature = true;

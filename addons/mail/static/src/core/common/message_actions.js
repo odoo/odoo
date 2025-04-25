@@ -68,18 +68,41 @@ registerMessageAction("reaction", {
     sequence: 10,
 });
 registerMessageAction("reply-to", {
-    condition: (component) => component.props.message.canReplyTo(component.props.thread),
+    condition: (component) => {
+        const message = toRaw(component.props.message);
+        const thread = toRaw(component.props.thread);
+        return (
+            message.canReplyTo(thread) ||
+            (!["discuss.channel", "mail.box"].includes(thread.model) &&
+                message.isNote &&
+                !message.isSelfAuthored)
+        );
+    },
     icon: "fa fa-reply",
     iconLarge: "fa fa-lg fa-reply",
     name: _t("Reply"),
     onSelected: (component) => {
         const message = toRaw(component.props.message);
         const thread = toRaw(component.props.thread);
-        if (message.eq(thread.composer.replyToMessage)) {
-            thread.composer.replyToMessage = undefined;
-        } else {
-            thread.composer.replyToMessage = message;
+        const composer = thread.composer;
+        if (message.eq(composer.replyToMessage)) {
+            composer.replyToMessage = undefined;
+            return;
         }
+        if (["discuss.channel", "mail.box"].includes(thread.model)) {
+            composer.replyToMessage = message;
+        }
+        if (thread.model === "discuss.channel") {
+            return;
+        }
+        if (!message.isSelfAuthored && message.model !== "discuss.channel") {
+            const mentionText = `@${message.authorName} `;
+            if (!composer.composerText.includes(mentionText)) {
+                composer.mentionedPartners.add(message.author);
+                composer.insertText(mentionText, 0, { moveCursorToEnd: true });
+            }
+        }
+        component.env.inChatter?.toggleComposer("note", { force: true });
     },
     sequence: (component) =>
         component.props.thread?.eq(component.store.inbox) || component.props.message.isSelfAuthored

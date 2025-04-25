@@ -3,7 +3,7 @@ import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 import { FollowerList } from "@mail/core/web/follower_list";
-import { isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
@@ -244,7 +244,8 @@ patch(Chatter.prototype, {
 
     get childSubEnv() {
         const res = Object.assign(super.childSubEnv, { messageHighlight: this.messageHighlight });
-        res.inChatter.aside = this.props.isChatterAside;
+        assignGetter(res.inChatter, { aside: () => this.props.isChatterAside });
+        Object.assign(res.inChatter, { toggleComposer: this.toggleComposer.bind(this) });
         return res;
     },
 
@@ -439,10 +440,10 @@ patch(Chatter.prototype, {
         this.state.showActivities = !this.state.showActivities;
     },
 
-    toggleComposer(mode = false) {
+    toggleComposer(mode = false, { force = false } = {}) {
         this.closeSearch();
         const toggle = async () => {
-            if (this.state.composerType === mode) {
+            if (!force && this.state.composerType === mode) {
                 this.state.composerType = false;
             } else {
                 if (mode === "message") {
