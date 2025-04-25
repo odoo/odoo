@@ -120,12 +120,13 @@ class ResConfigSettings(models.TransientModel):
         }
 
     def _l10n_in_check_gst_number(self):
-        if not self.company_id.vat:
+        company = self.company_id
+        if not company.partner_id.check_vat_in(company.vat):
             action = {
                 'view_mode': 'form',
                 'res_model': 'res.company',
                 'type': 'ir.actions.act_window',
-                'res_id': self.company_id.id,
+                'res_id': company.id,
                 'views': [[self.env.ref('base.view_company_form').id, 'form']],
             }
-            raise RedirectWarning(_("Please enter a GST number in company."), action, _("Go to Company"))
+            raise RedirectWarning(_("Please set a valid GST number on company."), action, _("Go to Company"))
