@@ -48,7 +48,9 @@ export class PresetInfoPopup extends Component {
         }
 
         if (this.preset.needsSlot && this.state.selectedSlot) {
-            this.selfOrder.currentOrder.preset_time = this.state.selectedSlot;
+            this.selfOrder.currentOrder.preset_time = DateTime.fromSQL(this.state.selectedSlot)
+                .toUTC()
+                .toFormat("yyyy-MM-dd HH:mm:ss");
         }
 
         this.props.callback(true);
