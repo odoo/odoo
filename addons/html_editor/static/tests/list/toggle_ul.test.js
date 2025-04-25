@@ -215,15 +215,9 @@ describe("Range collapsed", () => {
             await testEditor({
                 contentBefore: unformat(`
                         <ul>
-                            <li>a</li>
-                            <li class="oe-nested">
+                            <li><p>a</p>
                                 <ul>
-                                    <li>[]b</li>
-                                </ul>
-                            </li>
-                            <li class="oe-nested">
-                                <ul>
-                                    <li class="oe-nested">
+                                    <li><p>[]b</p>
                                         <ul>
                                             <li>c</li>
                                         </ul>
@@ -234,7 +228,7 @@ describe("Range collapsed", () => {
                 stepFunction: toggleUnorderedList,
                 contentAfter: unformat(`
                         <ul>
-                            <li>a</li>
+                            <li><p>a</p></li>
                         </ul>
                         <p>[]b</p>
                         <ul>

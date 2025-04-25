@@ -915,8 +915,7 @@ describe("Selection collapsed", () => {
 
         test("should delete a h1 inside a nested list immediately after insertion", async () => {
             await testEditor({
-                contentBefore:
-                    '<ul><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li></ul>',
+                contentBefore: "<ul><li><p>abc</p><ul><li>[]<br></li></ul></li></ul>",
                 stepFunction: async (editor) => {
                     await insertText(editor, "/");
                     await insertText(editor, "Heading");
@@ -926,7 +925,7 @@ describe("Selection collapsed", () => {
                     deleteBackward(editor);
                     deleteBackward(editor);
                 },
-                contentAfter: "<ul><li>abc[]</li></ul>",
+                contentAfter: "<ul><li><p>abc[]</p></li></ul>",
             });
         });
     });

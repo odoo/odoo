@@ -9,17 +9,17 @@ import {
 import { execCommand } from "../_helpers/userCommands";
 import { unformat } from "../_helpers/format";
 
-before(() => {
-    return document.fonts.add(new FontFace(
-        "Roboto",
-        "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)",
-    )).ready;
-});
+before(
+    () =>
+        document.fonts.add(
+            new FontFace("Roboto", "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)")
+        ).ready
+);
 
 test.tags("font-dependent");
 test("should apply font-size to completely selected list item", async () => {
     await testEditor({
-        styleContent: ':root { font: 14px Roboto }',
+        styleContent: ":root { font: 14px Roboto }",
         contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
         stepFunction: setFontSize("56px"),
         contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[abc]</li><li>def</li></ol>`,
@@ -28,8 +28,7 @@ test("should apply font-size to completely selected list item", async () => {
         styleContent: ":root { font: 14px Roboto }",
         contentBefore: unformat(`
             <ol>
-                <li>[abc</li>
-                <li class="oe-nested">
+                <li><p>[abc</p>
                     <ol>
                         <li>def</li>
                     </ol>
@@ -40,8 +39,7 @@ test("should apply font-size to completely selected list item", async () => {
         stepFunction: setFontSize("64px"),
         contentAfter: unformat(`
             <ol style="padding-inline-start: 69px;">
-                <li style="font-size: 64px;">[abc</li>
-                <li class="oe-nested">
+                <li style="font-size: 64px;"><p>[abc</p>
                     <ol style="padding-inline-start: 68px;">
                         <li style="font-size: 64px;">def</li>
                     </ol>
@@ -162,7 +160,7 @@ test("should carry font-size of list item to paragraph (4)", async () => {
 test.tags("font-dependent");
 test("should keep list item font-size on toggling list twice", async () => {
     await testEditor({
-        styleContent: 'ol { font: 14px Roboto }',
+        styleContent: "ol { font: 14px Roboto }",
         contentBefore:
             '<ol><li style="font-size: 18px;">[abc</li><li style="font-size: 32px;">def]</li></ol>',
         stepFunction: (editor) => {
@@ -185,7 +183,7 @@ test("should change font-size of a list item", async () => {
 test.tags("font-dependent");
 test("should change font-size of a list item (2)", async () => {
     await testEditor({
-        styleContent: 'ol { font: 14px Roboto }',
+        styleContent: "ol { font: 14px Roboto }",
         contentBefore:
             '<ol><li style="font-size: 18px;">[abc</li><li style="font-size: 18px;">ghi]</li></ol>',
         stepFunction: setFontSize("32px"),
@@ -225,7 +223,7 @@ test("should pad list based on font-size", async () => {
 test.tags("font-dependent");
 test("should pad list based on font-size (2)", async () => {
     await testEditor({
-        styleContent: 'ol { font: 14px Roboto }',
+        styleContent: "ol { font: 14px Roboto }",
         contentBefore: `<span style="font-size: 56px">[a]</span>`,
         stepFunction: toggleOrderedList,
         contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[]a</li></ol>`,
