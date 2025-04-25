@@ -1,4 +1,3 @@
-# -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
@@ -11,7 +10,6 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import ormcache, format_list
-from odoo.tools.date_intervals import string_to_datetime
 from odoo.exceptions import UserError
 
 from .hr_work_intervals import WorkIntervals
@@ -178,8 +176,8 @@ class HrContract(models.Model):
                     else:
                         end = end_dt.astimezone(tz)
                         tz_dates[(tz, end_dt)] = end
-                    dt0 = string_to_datetime(leave.date_from).astimezone(tz)
-                    dt1 = string_to_datetime(leave.date_to).astimezone(tz)
+                    dt0 = leave.date_from.astimezone(tz)
+                    dt1 = leave.date_to.astimezone(tz)
                     leave_start_dt = max(start, dt0)
                     leave_end_dt = min(end, dt1)
                     leave_interval = (leave_start_dt, leave_end_dt, leave)

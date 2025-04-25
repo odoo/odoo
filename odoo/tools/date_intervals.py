@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
+import warnings
 from datetime import time
 from itertools import chain
 from pytz import utc
@@ -20,11 +21,13 @@ def make_aware(dt):
 
 def string_to_datetime(value):
     """ Convert the given string value to a datetime in UTC. """
+    warnings.warn("Since 19.0, use directly Datetime.from_string", DeprecationWarning)
     return utc.localize(Datetime.from_string(value))
 
 
 def datetime_to_string(dt):
     """ Convert the given datetime (converted in UTC) to a string value. """
+    warnings.warn("Since 19.0, use directly Datetime.to_string with astimezone", DeprecationWarning)
     return Datetime.to_string(dt.astimezone(utc))
 
 
