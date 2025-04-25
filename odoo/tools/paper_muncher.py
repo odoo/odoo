@@ -15,12 +15,9 @@ def can_use_papermuncher():
 
     if not request or 'use-papermuncher' not in request.session.debug:
         return False
-    try:
-        binary = find_in_path('paper-muncher')
-        subprocess.Popen([binary, '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        return True
-    except Exception:  # noqa: BLE001
-        return False
+    binary = find_in_path('paper-muncher')
+    subprocess.Popen([binary, '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    return True
 
 
 def run_papermuncher(
