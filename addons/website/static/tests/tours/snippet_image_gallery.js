@@ -5,6 +5,7 @@ import {
     clickOnSnippet,
     insertSnippet,
     registerWebsitePreviewTour,
+    changeOptionInPopover,
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('snippet_image_gallery', {
@@ -84,16 +85,13 @@ registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     trigger: ":iframe .s_image_gallery .carousel-item.active img",
     run: "click",
 },
-    changeOption('ImageTools', 'we-select:contains("Filter") we-toggler'),
-    changeOption('ImageTools', '[data-gl-filter="blur"]'),
+    ...changeOptionInPopover("Image", "Filter", "Blur"),
 {
     content: "Check that the image has the correct filter",
-    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
-}, {
-    content: "Click on move to next",
-    trigger: ".snippet-option-GalleryElement we-button[data-position='next']",
-    run: "click",
-}, {
+    trigger: ".o_customize_tab [data-container-title='Image'] [data-label='Filter'] .o-dropdown:contains('Blur')",
+},
+changeOption("Image", "[data-label='Re-order'] button[data-action-value='next']"),
+{
     content: "Check that the image has been moved",
     trigger: ":iframe .s_image_gallery .carousel-item.active img[data-index='1']",
 }, {
@@ -102,28 +100,28 @@ registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     run: "click",
 }, {
     content: "Check that the footer options have been loaded",
-    trigger: ".snippet-option-HideFooter we-button:contains('Page Visibility')",
+    trigger:".o-tab-content [data-container-title='Footer']",
 }, {
     content: "Click on the moved image",
-    trigger: ":iframe .s_image_gallery .carousel-item.active img[data-index='1'][data-gl-filter='blur']",
+    trigger: ":iframe .s_image_gallery .carousel-item.active img",
     run: "click",
 }, {
     content: "Check that the image still has the correct filter",
-    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    trigger: ".o_customize_tab [data-container-title='Image'] [data-label='Filter'] .o-dropdown:contains('Blur')",
 }, {
     content: "Click to access next image",
     trigger: ":iframe .s_image_gallery .carousel-control-next",
     run: "click",
 }, {
     content: "Check that the option has changed",
-    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:not(:contains('Blur'))",
+    trigger: ".o_customize_tab [data-container-title='Image'] [data-label='Filter'] .o-dropdown:contains('None')",
 }, {
     content: "Click to access previous image",
     trigger: ":iframe .s_image_gallery .carousel-control-prev",
     run: "click",
 }, {
     content: "Check that the option is restored",
-    trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+    trigger: ".o_customize_tab [data-container-title='Image'] [data-label='Filter'] .o-dropdown:contains('Blur')",
 }]);
 
 registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {

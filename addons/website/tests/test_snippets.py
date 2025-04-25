@@ -130,7 +130,6 @@ class TestSnippets(HttpCase):
     def test_drag_and_drop_on_non_editable(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_drag_and_drop_on_non_editable', login='admin')
 
-    @unittest.skip
     def test_snippet_image_gallery_reorder(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), "snippet_image_gallery_reorder", login='admin')
 
