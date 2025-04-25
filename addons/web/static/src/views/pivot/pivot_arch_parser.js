@@ -1,5 +1,6 @@
 import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
+import { evaluateExpr } from "@web/core/py_js/py";
 
 export class PivotArchParser {
     parse(arch) {
@@ -62,6 +63,9 @@ export class PivotArchParser {
                     }
                     if (node.getAttribute("type") === "row") {
                         archInfo.rowGroupBys.push(fieldName);
+                    }
+                    if (node.hasAttribute("options")) {
+                        archInfo.fieldAttrs[fieldName].options = evaluateExpr(node.getAttribute("options"));
                     }
                     break;
                 }

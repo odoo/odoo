@@ -261,6 +261,19 @@ test("pivot rendering with widget", async () => {
     expect("td.o_pivot_cell_value:contains(32:00)").toHaveCount(1);
 });
 
+test("pivot rendering with widget and options", async () => {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot string="Partners">
+                <field name="foo" type="measure" widget="float_time" options="{'displaySeconds': True}"/>
+			</pivot>
+		`,
+    });
+    expect("td.o_pivot_cell_value:contains(32:00:00)").toHaveCount(1);
+});
+
 test("pivot rendering with string attribute on field", async () => {
     Partner._fields.foo = fields.Integer();
 
