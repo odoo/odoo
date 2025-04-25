@@ -916,12 +916,12 @@ msgstr "購買契約書を検索"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
 msgid "Select multiple RFQ (non-exclusive)"
-msgstr "見積依頼を複数選択(非排他的)"
+msgstr "複数の見積依頼を採用可"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
 msgid "Select only one RFQ (exclusive)"
-msgstr "見積依頼を1件のみ選択(排他的)"
+msgstr "見積依頼を1件のみ採用"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
@@ -930,9 +930,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"見積依頼書を1つだけ選択（排他的）：1つの購買オーダが確定したら、残りのオーダを取消します。\n"
+"見積依頼を1件のみ採用：購買オーダが確定したら、残りのオーダをキャンセルします。\n"
 "\n"
-"                    複数の見積依頼書を選択（非排他的）：複数の購買オーダが可能。1つの購買オーダが確定しても、残りのオーダは取消されません。"
+"                    複数の見積依頼を採用可：複数のオーダが可能。オーダが確定しても、残りのオーダはキャンセルされません。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
