@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
+import { getTranslationEditableEls } from "@html_builder/website_builder/plugins/translation_plugin";
 
 export class SetupEditorPlugin extends Plugin {
     static id = "setup_editor_plugin";
@@ -10,9 +11,21 @@ export class SetupEditorPlugin extends Plugin {
     };
 
     setup() {
+        this.websiteService = this.services.website;
         this.editable.setAttribute("contenteditable", false);
-
         // Add the `o_editable` class on the editable elements
+        if (this.config.isTranslation) {
+            const translationSavableEls = getTranslationEditableEls(
+                this.websiteService.pageDocument
+            );
+            for (const translationSavableEl of translationSavableEls) {
+                if (!translationSavableEl.hasAttribute("data-oe-readonly")) {
+                    translationSavableEl.classList.add("o_editable");
+                }
+            }
+            this.dispatchTo("after_setup_editor_handlers");
+            return;
+        }
         let editableEls = this.getEditableElements("[data-oe-model]")
             .filter((el) => !el.matches("link, script"))
             .filter((el) => !el.hasAttribute("data-oe-readonly"))
@@ -37,9 +50,6 @@ export class SetupEditorPlugin extends Plugin {
                 el.setAttribute("data-editor-message", _t("DRAG BUILDING BLOCKS HERE"));
             }
         });
-
-        // Set the `contenteditable` attribute on the editables.
-        this.setContenteditable();
     }
 
     getEditableElements(selector) {

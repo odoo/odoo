@@ -30,15 +30,21 @@ export class SavePlugin extends Plugin {
             //     called at the very end of the save process
             // }
         ],
+        get_dirty_els: () => this.editable.querySelectorAll(".o_dirty"),
     };
 
     async save() {
+        // TODO: implement the "group by" feature for save
         const proms = [];
         for (const fn of this.getResource("before_save_handlers")) {
             proms.push(fn());
         }
         await Promise.all(proms);
-        const saveProms = [...this.editable.querySelectorAll(".o_dirty")].map(async (dirtyEl) => {
+        const dirtyEls = [];
+        for (const getDirtyEls of this.getResource("get_dirty_els")) {
+            dirtyEls.push(...getDirtyEls());
+        }
+        const saveProms = dirtyEls.map(async (dirtyEl) => {
             dirtyEl.classList.remove("o_dirty");
             const cleanedEl = dirtyEl.cloneNode(true);
             this.dispatchTo("clean_for_save_handlers", { root: cleanedEl });
@@ -126,7 +132,7 @@ export class SavePlugin extends Plugin {
         if (el.dataset["oeTranslationSourceSha"]) {
             const translations = {};
             translations[this.services.website.currentWebsite.metadata.lang] = {
-                [el.dataset["oeTranslationSourceSha"]]: el.innerHTML,
+                [el.dataset["oeTranslationSourceSha"]]: this.getEscapedElement(el).innerHTML,
             };
             return rpc("/web_editor/field/translation/update", {
                 model: el.dataset["oeModel"],
@@ -137,6 +143,34 @@ export class SavePlugin extends Plugin {
         }
         // TODO: check what we want to modify in translate mode
         return this.saveView(el);
+    }
+
+    getEscapedElement(el) {
+        const escapedEl = el.cloneNode(true);
+        const allElements = [escapedEl, ...escapedEl.querySelectorAll("*")];
+        const exclusion = [];
+        for (const element of allElements) {
+            if (
+                element.matches(
+                    "object,iframe,script,style,[data-oe-model]:not([data-oe-model='ir.ui.view'])"
+                )
+            ) {
+                exclusion.push(element);
+                exclusion.push(...element.querySelectorAll("*"));
+            }
+        }
+        const exclusionSet = new Set(exclusion);
+        const toEscapeEls = allElements.filter((el) => !exclusionSet.has(el));
+        for (const toEscapeEl of toEscapeEls) {
+            for (const child of Array.from(toEscapeEl.childNodes)) {
+                if (child.nodeType === 3) {
+                    const divEl = document.createElement("div");
+                    divEl.textContent = child.nodeValue;
+                    child.nodeValue = divEl.innerHTML;
+                }
+            }
+        }
+        return escapedEl;
     }
 
     /**
