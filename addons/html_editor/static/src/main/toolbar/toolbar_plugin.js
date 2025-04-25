@@ -319,7 +319,11 @@ export class ToolbarPlugin extends Plugin {
     getFilteredTargetedNodes() {
         return this.dependencies.selection
             .getTargetedNodes()
-            .filter((node) => !isTextNode(node) || (node.textContent !== "\n" && !isZWS(node)));
+            .filter(
+                (node) =>
+                    this.dependencies.selection.isNodeEditable(node) &&
+                    (!isTextNode(node) || (node.textContent !== "\n" && !isZWS(node)))
+            );
     }
 
     updateToolbarVisibility(selectionData) {
@@ -353,11 +357,7 @@ export class ToolbarPlugin extends Plugin {
         if (isCollapsed) {
             return !!closestElement(selectionData.editableSelection.anchorNode, "td.o_selected_td");
         }
-        const targetedNodes = this.getFilteredTargetedNodes();
-        return (
-            !!targetedNodes.length &&
-            targetedNodes.every((node) => node.parentElement.isContentEditable)
-        );
+        return !!this.getFilteredTargetedNodes().length;
     }
 
     shouldPreventClosing() {
