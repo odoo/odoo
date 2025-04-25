@@ -5,6 +5,7 @@ import {
     openDiscuss,
     start,
     startServer,
+    openFormView,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { disableAnimations } from "@odoo/hoot-mock";
@@ -119,4 +120,52 @@ test("click on message in reply highlights original message", async () => {
         ".o-mail-Message:contains('Response to deleted message') .o-mail-MessageInReply:contains('Original message was deleted') .cursor-pointer"
     );
     await contains(".o-mail-Message.o-highlighted:contains('This message has been removed')");
+});
+
+test("reply action in Chatter prepends mention, sets state, activates note composer", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Test Partner" });
+    const partnerBId = pyEnv["res.partner"].create({ name: "Partner B" });
+    pyEnv["mail.message"].create({
+        body: "Test message from B",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+        author_id: partnerBId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o_last_breadcrumb_item", { text: "Test Partner" });
+    await contains(".o-mail-Chatter .o-mail-Message", { text: "Test message from B" });
+    await click("button[title='Reply']");
+    await contains(".o-mail-Chatter .o-mail-Composer-coreHeader", {
+        text: "Replying to Partner B",
+    });
+    await contains(".o-mail-Chatter-topbar button.o-mail-Chatter-logNote.active");
+    await contains(".o-mail-Chatter .o-mail-Composer-input", { value: "@Partner B " });
+    await contains(".o-mail-Chatter .o-mail-Composer-input:focus");
+});
+
+test("reply action in Chatter to self does not prepend mention", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Test Partner" });
+    pyEnv["mail.message"].create({
+        body: "My own message",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+        author_id: serverState.partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o_last_breadcrumb_item", { text: "Test Partner" });
+    await contains(".o-mail-Chatter .o-mail-Message", { text: "My own message" });
+    await click("button[title='Expand']");
+    await click(".o-dropdown-item", { text: "Reply" });
+    await contains(".o-mail-Chatter .o-mail-Composer-coreHeader", {
+        text: "Replying to Mitchell Admin",
+    });
+    await contains(".o-mail-Chatter-topbar button.o-mail-Chatter-logNote.active");
+    await contains(".o-mail-Chatter .o-mail-Composer-input", { value: "" });
+    await contains(".o-mail-Chatter .o-mail-Composer-input:focus");
 });
