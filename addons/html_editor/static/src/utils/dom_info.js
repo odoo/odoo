@@ -598,7 +598,10 @@ export function isEmptyBlock(blockEl) {
         // this visible is a "visible empty" node like an image.
         if (
             node.nodeName != "BR" &&
-            (isSelfClosingElement(node) || isMediaElement(node) || isProtecting(node))
+            (isSelfClosingElement(node) ||
+                isMediaElement(node) ||
+                isProtecting(node) ||
+                isButton(node))
         ) {
             return false;
         }
