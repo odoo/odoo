@@ -190,6 +190,14 @@ class TestDateRangeFunction(BaseCase):
 
         self.assertEqual(dates, expected)
 
+    def test_step_is_positive(self):
+        start = datetime.datetime(2018, 3, 25)
+        end = datetime.datetime(2018, 3, 26)
+        with self.assertRaises(ValueError):
+            list(date_utils.date_range(start, end, relativedelta()))
+        with self.assertRaises(ValueError):
+            list(date_utils.date_range(start, end, relativedelta(hours=-1)))
+
 
 class TestFormatLangDate(TransactionCase):
     def test_00_accepted_types(self):
