@@ -424,6 +424,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         quantities_info = {
             'free_qty': max(product.uom_id._compute_quantity(product.free_qty, bom_uom), 0) if product.is_storable else 0,
             'on_hand_qty': product.uom_id._compute_quantity(product.qty_available, bom_uom) if product.is_storable else 0,
+            'forecasted_qty': product.uom_id._compute_quantity(product.virtual_available, bom_uom) if product.is_storable else 0,
             'stock_loc': 'in_stock',
         }
         quantities_info['free_to_manufacture_qty'] = quantities_info['free_qty']
@@ -685,6 +686,9 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             resupply_state, resupply_delay = ('available', 0)
         elif route_info:
             resupply_state, resupply_delay = self._get_resupply_availability(route_info, components)
+
+        if quantities_info and quantities_info.get('forecasted_qty') < quantity:
+            resupply_state = 'unavailable'
 
         if resupply_state == "unavailable" and route_info == {} and components and report_line and report_line['phantom_bom']:
             val = self._get_last_availability(report_line)

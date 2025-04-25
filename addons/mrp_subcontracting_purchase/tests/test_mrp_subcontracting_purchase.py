@@ -93,7 +93,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertFalse(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
             self.assertEqual(component['quantity_on_hand'], 4)
-            self.assertEqual(component['availability_state'], 'estimated')
+            self.assertEqual(component['availability_state'], 'unavailable')
         self.assertEqual(bom_data['lines']['earliest_capacity'], 4)
         self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
         self.assertEqual(bom_data['lines']['leftover_capacity'], 1)
@@ -873,7 +873,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertFalse(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
             self.assertEqual(component['quantity_on_hand'], 4)
-            self.assertEqual(component['availability_state'], 'estimated')
+            self.assertEqual(component['availability_state'], 'unavailable')
         self.assertEqual(bom_data['lines']['earliest_capacity'], 4)
         # 01/11 + 2 days of Security Lead Time = 01/13
         self.assertEqual(bom_data['lines']['earliest_date'], '01/13/2024')
