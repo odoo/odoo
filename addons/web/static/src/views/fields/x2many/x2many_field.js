@@ -271,12 +271,17 @@ export class X2ManyField extends Component {
                 views: [[false, "form"]],
                 res_id: resId,
                 res_model: this.list.resModel,
+                context: this.getFormActionContext(),
             },
             {
                 props: { resIds: this.list.resIds },
                 newWindow: options.newWindow,
             }
         );
+    }
+
+    getFormActionContext() {
+        return this.props.context;
     }
 
     async onAdd({ context, editable } = {}) {
