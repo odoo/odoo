@@ -288,11 +288,11 @@ export class ListPlugin extends Plugin {
     }
 
     normalize(root = this.editable) {
-        const closestNestedLI = closestElement(root, "li.oe-nested");
+        const closestNestedLI = closestElement(root, "li:has(ul, ol)");
         if (closestNestedLI) {
             root = closestNestedLI.parentElement;
         }
-        for (const element of selectElements(root, "ul, ol, li")) {
+        for (let element of selectElements(root, "ul, ol, li")) {
             if (isProtected(element) || isProtecting(element)) {
                 continue;
             }
@@ -302,7 +302,10 @@ export class ListPlugin extends Plugin {
                 this.normalizeLI,
                 this.normalizeNestedList,
             ]) {
-                fn.call(this, element);
+                const updatedElement = fn.call(this, element);
+                if (updatedElement) {
+                    element = updatedElement;
+                }
             }
         }
     }
@@ -485,7 +488,11 @@ export class ListPlugin extends Plugin {
             previousSibling &&
             element.isContentEditable &&
             previousSibling.isContentEditable &&
-            compareListTypes(previousSibling, element)
+            (compareListTypes(previousSibling, element) ||
+                (element.tagName === "LI" &&
+                    isListItem(previousSibling) &&
+                    (isListElement(previousSibling.lastChild) ||
+                        isListElement(element.firstChild))))
         ) {
             const cursors = this.dependencies.selection.preserveSelection();
             cursors.update(callbacksForCursorUpdate.merge(element));
@@ -494,6 +501,7 @@ export class ListPlugin extends Plugin {
             element.remove();
             this.adjustListPadding(previousSibling);
             cursors.restore();
+            return previousSibling;
         }
     }
 
@@ -501,8 +509,15 @@ export class ListPlugin extends Plugin {
      * Wraps inlines in P to avoid inlines with block siblings.
      */
     normalizeLI(element) {
-        if (!isListItem(element) || element.classList.contains("oe-nested")) {
+        if (!isListItem(element)) {
             return;
+        }
+
+        if (
+            element.firstChild?.nodeType === Node.ELEMENT_NODE &&
+            isListElement(element.firstChild)
+        ) {
+            element.classList.add("oe-nested");
         }
 
         if (
@@ -525,10 +540,15 @@ export class ListPlugin extends Plugin {
         }
         if (["UL", "OL"].includes(element.parentElement?.tagName)) {
             const cursors = this.dependencies.selection.preserveSelection();
-            const li = this.document.createElement("li");
+            let li;
+            if (element.previousElementSibling?.nodeName === "LI") {
+                li = element.previousElementSibling;
+            } else {
+                li = this.document.createElement("li");
+                li.classList.add("oe-nested");
+            }
             element.parentElement.insertBefore(li, element);
             li.appendChild(element);
-            li.classList.add("oe-nested");
             cursors.restore();
         }
     }
@@ -542,13 +562,15 @@ export class ListPlugin extends Plugin {
      * @param {HTMLLIElement} li
      */
     indentLI(li) {
-        const lip = this.document.createElement("li");
+        const lip = li.previousElementSibling || this.document.createElement("li");
+        if (!lip.hasChildNodes()) {
+            lip.classList.add("oe-nested");
+        }
         const parentLi = li.parentElement;
         const nextSiblingLi = li.nextSibling;
-        lip.classList.add("oe-nested");
         const destul =
             li.previousElementSibling?.querySelector("ol, ul") ||
-            li.nextElementSibling?.querySelector("ol, ul") ||
+            li.querySelector("ol, ul") ||
             li.closest("ol, ul");
         const cursors = this.dependencies.selection.preserveSelection();
         // Remove the LI first to force a removal mutation in collaboration.
@@ -559,6 +581,8 @@ export class ListPlugin extends Plugin {
         // lip replaces li
         li.before(lip);
         ul.append(li);
+        const nestedLists = childNodes(li).filter((n) => isListElement(n));
+        ul.after(...nestedLists);
         parentLi.insertBefore(lip, nextSiblingLi);
         cursors.update((cursor) => {
             if (cursor.node === lip.parentNode) {
@@ -573,14 +597,14 @@ export class ListPlugin extends Plugin {
         cursors.restore();
     }
 
-    // @temp comment: former oShiftTab
     /**
      * @param {HTMLLIElement} li
      * @returns {HTMLLIElement|null} li or null if it no longer exists.
      */
     outdentLI(li) {
-        if (li.nextElementSibling) {
-            this.splitList(li.nextElementSibling);
+        const listToSplit = li.querySelector("ol, ul") || li.nextElementSibling;
+        if (listToSplit) {
+            this.splitList(listToSplit);
         }
 
         if (isListItem(li.parentNode.parentNode)) {
@@ -594,31 +618,42 @@ export class ListPlugin extends Plugin {
     /**
      * Splits a list at the given LI element (li is moved to the new list).
      *
-     * @param {HTMLLIElement} li
+     * @param {HTMLUListElement|HTMLOListElement|HTMLLIElement} node - HTML element
      */
-    splitList(li) {
+    splitList(node) {
         const cursors = this.dependencies.selection.preserveSelection();
         // Create new list
-        const currentList = li.parentElement;
+        const currentList = closestElement(node, "ul, ol");
         const newList = currentList.cloneNode(false);
-        if (isListItem(li.parentNode.parentNode)) {
+        const isList = isListElement(node);
+        const wrapperLi = isList ? this.document.createElement("li") : node;
+
+        if (isList) {
+            wrapperLi.classList.add("oe-nested");
+            newList.append(wrapperLi);
+            cursors.update(callbacksForCursorUpdate.after(node.parentNode.parentNode, newList));
+            node.parentNode.parentNode.after(newList);
+        } else if (isListItem(node.parentNode.parentNode)) {
             // li is nested list item
             const lip = this.document.createElement("li");
             lip.classList.add("oe-nested");
             lip.append(newList);
-            cursors.update(callbacksForCursorUpdate.after(li.parentNode.parentNode, lip));
-            li.parentNode.parentNode.after(lip);
+            cursors.update(callbacksForCursorUpdate.after(node.parentNode.parentNode, lip));
+            node.parentNode.parentNode.after(lip);
         } else {
-            cursors.update(callbacksForCursorUpdate.after(li.parentNode, newList));
-            li.parentNode.after(newList);
+            cursors.update(callbacksForCursorUpdate.after(node.parentNode, newList));
+            node.parentNode.after(newList);
         }
-        // Move nodes to new list
-        while (li.nextSibling) {
-            cursors.update(callbacksForCursorUpdate.append(newList, li.nextSibling));
-            newList.append(li.nextSibling);
+
+        const moveFrom = isList ? node.parentElement : node;
+        while (moveFrom.nextSibling) {
+            cursors.update(callbacksForCursorUpdate.append(newList, moveFrom.nextSibling));
+            newList.append(moveFrom.nextSibling);
         }
-        cursors.update(callbacksForCursorUpdate.prepend(newList, li));
-        newList.prepend(li);
+
+        const moveTo = isList ? wrapperLi : newList;
+        cursors.update(callbacksForCursorUpdate.prepend(moveTo, node));
+        moveTo.prepend(node);
         cursors.restore();
         this.adjustListPadding(currentList);
         this.adjustListPadding(newList);
@@ -632,7 +667,10 @@ export class ListPlugin extends Plugin {
         // Move LI
         cursors.update(callbacksForCursorUpdate.after(lip, li));
         lip.after(li);
-
+        while (ul.nextSibling) {
+            cursors.update(callbacksForCursorUpdate.append(li, ul.nextSibling));
+            li.append(ul.nextSibling);
+        }
         // Remove UL and LI.oe-nested if left empty.
         if (!ul.children.length) {
             cursors.update(callbacksForCursorUpdate.remove(ul));
@@ -738,13 +776,15 @@ export class ListPlugin extends Plugin {
         const listItems = new Set();
         const navListItems = new Set();
         const nonListItems = [];
-        for (const block of this.dependencies.selection.getTargetedBlocks()) {
+        const blocks = [...this.dependencies.selection.getTargetedBlocks()].filter(
+            (n) => !n.querySelector("li")
+        );
+        for (const block of blocks) {
             const closestLI = block.closest("li");
             if (closestLI) {
                 if (closestLI.classList.contains("nav-item")) {
                     navListItems.add(closestLI);
-                } else if (!closestLI.querySelector("li") && closestLI.isContentEditable) {
-                    // Keep deepest list items only.
+                } else if (closestLI.isContentEditable) {
                     listItems.add(closestLI);
                 }
             } else if (!["UL", "OL"].includes(block.tagName)) {
@@ -767,7 +807,7 @@ export class ListPlugin extends Plugin {
             return nodeToInsert;
         }
         const mode = container && this.getListMode(listEl);
-        if (isListItemElement(nodeToInsert) && nodeToInsert.classList.contains("oe-nested")) {
+        if (isListItemElement(nodeToInsert) && nodeToInsert.querySelector("ol, ul")) {
             return this.convertList(nodeToInsert, mode);
         }
         if (isListElement(nodeToInsert)) {

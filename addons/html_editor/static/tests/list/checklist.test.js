@@ -94,8 +94,7 @@ test("should check a nested item and the previous checklist item used as title",
     await testEditor({
         contentBefore: unformat(`
             <ul class="o_checklist">
-                <li>2</li>
-                <li class="oe-nested">
+                <li><p>2</p>
                     <ul class="o_checklist">
                         <li class="o_checked">2.1</li>
                         <li>2.2</li>
@@ -103,16 +102,13 @@ test("should check a nested item and the previous checklist item used as title",
                 </li>
             </ul>`),
         stepFunction: async (editor) => {
-            const lis = editor.editable.querySelectorAll(
-                '.o_checklist > li:not([class^="oe-nested"])'
-            );
+            const lis = editor.editable.querySelectorAll(".o_checklist > li");
             const li = lis[2];
             await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li>2</li>
-                <li class="oe-nested">
+                <li><p>2</p>
                     <ul class="o_checklist">
                         <li class="o_checked">2.1</li>
                         <li class="o_checked">2.2</li>
@@ -126,8 +122,7 @@ test("should uncheck a nested item and the previous checklist item used as title
     await testEditor({
         contentBefore: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked">2</li>
-                <li class="oe-nested">
+                <li class="o_checked"><p>2</p>
                     <ul class="o_checklist">
                         <li class="o_checked">2.1</li>
                         <li class="o_checked">2.2</li>
@@ -135,16 +130,13 @@ test("should uncheck a nested item and the previous checklist item used as title
                 </li>
             </ul>`),
         stepFunction: async (editor) => {
-            const lis = editor.editable.querySelectorAll(
-                '.o_checklist > li:not([class^="oe-nested"])'
-            );
+            const lis = editor.editable.querySelectorAll(".o_checklist > li");
             const li = lis[2];
             await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked">2</li>
-                <li class="oe-nested">
+                <li class="o_checked"><p>2</p>
                     <ul class="o_checklist">
                         <li class="o_checked">2.1</li>
                         <li>2.2</li>
@@ -158,11 +150,9 @@ test("should check a nested item and the wrapper wrapper title", async () => {
     await testEditor({
         contentBefore: unformat(`
             <ul class="o_checklist">
-                <li>3</li>
-                <li class="oe-nested">
+                <li><p>3</p>
                     <ul class="o_checklist">
-                        <li>3.1</li>
-                        <li class="oe-nested">
+                        <li><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.2.1</li>
                                 <li>3.2.2</li>
@@ -172,19 +162,15 @@ test("should check a nested item and the wrapper wrapper title", async () => {
                 </li>
             </ul>`),
         stepFunction: async (editor) => {
-            const lis = editor.editable.querySelectorAll(
-                '.o_checklist > li:not([class^="oe-nested"])'
-            );
+            const lis = editor.editable.querySelectorAll(".o_checklist > li");
             const li = lis[3];
             await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li>3</li>
-                <li class="oe-nested">
+                <li><p>3</p>
                     <ul class="o_checklist">
-                        <li>3.1</li>
-                        <li class="oe-nested">
+                        <li><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.2.1</li>
                                 <li class="o_checked">3.2.2</li>
@@ -200,11 +186,9 @@ test("should uncheck a nested item and the wrapper wrapper title", async () => {
     await testEditor({
         contentBefore: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked">3</li>
-                <li class="oe-nested">
+                <li class="o_checked"><p>3</p>
                     <ul class="o_checklist">
-                        <li class="o_checked">3.1</li>
-                        <li class="oe-nested">
+                        <li class="o_checked"><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.1.1</li>
                                 <li class="o_checked">3.1.2</li>
@@ -214,19 +198,15 @@ test("should uncheck a nested item and the wrapper wrapper title", async () => {
                 </li>
             </ul>`),
         stepFunction: async (editor) => {
-            const lis = editor.editable.querySelectorAll(
-                '.o_checklist > li:not([class^="oe-nested"])'
-            );
+            const lis = editor.editable.querySelectorAll(".o_checklist > li");
             const li = lis[3];
             await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked">3</li>
-                <li class="oe-nested">
+                <li class="o_checked"><p>3</p>
                     <ul class="o_checklist">
-                        <li class="o_checked">3.1</li>
-                        <li class="oe-nested">
+                        <li class="o_checked"><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.1.1</li>
                                 <li>3.1.2</li>
@@ -243,17 +223,13 @@ test("should check all nested checklist item", async () => {
     await testEditor({
         contentBefore: unformat(`
             <ul class="o_checklist">
-                <li>3</li>
-                <li class="oe-nested">
+                <li><p>3</p>
                     <ul class="o_checklist">
-                        <li>3.1</li>
-                        <li class="oe-nested">
+                        <li><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.1.1</li>
                                 <li>3.1.2</li>
                             </ul>
-                        </li>
-                        <li class="oe-nested">
                             <ul class="o_checklist">
                                 <li class="o_checked">3.2.1</li>
                                 <li>3.2.2</li>
@@ -264,19 +240,15 @@ test("should check all nested checklist item", async () => {
                 </li>
             </ul>`),
         stepFunction: async (editor) => {
-            const lis = editor.editable.querySelectorAll(
-                '.o_checklist > li:not([class^="oe-nested"])'
-            );
+            const lis = editor.editable.querySelectorAll(".o_checklist > li");
             const li = lis[0];
             await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked">3</li>
-                <li class="oe-nested">
+                <li class="o_checked"><p>3</p>
                     <ul class="o_checklist">
-                        <li>3.1</li>
-                        <li class="oe-nested">
+                        <li><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.1.1</li>
                                 <li>3.1.2</li>
@@ -296,17 +268,13 @@ test("should uncheck all nested checklist item", async () => {
     await testEditor({
         contentBefore: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked">3</li>
-                <li class="oe-nested">
+                <li class="o_checked"><p>3</p>
                     <ul class="o_checklist">
-                        <li class="o_checked">3.1</li>
-                        <li class="oe-nested">
+                        <li class="o_checked"><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.1.1</li>
                                 <li class="o_checked">3.1.2</li>
                             </ul>
-                        </li>
-                        <li class="oe-nested">
                             <ul class="o_checklist">
                                 <li class="o_checked">3.2.1</li>
                                 <li class="o_checked">3.2.2</li>
@@ -317,19 +285,15 @@ test("should uncheck all nested checklist item", async () => {
                 </li>
             </ul>`),
         stepFunction: async (editor) => {
-            const lis = editor.editable.querySelectorAll(
-                '.o_checklist > li:not([class^="oe-nested"])'
-            );
+            const lis = editor.editable.querySelectorAll(".o_checklist > li");
             const li = lis[0];
             await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li>3</li>
-                <li class="oe-nested">
+                <li><p>3</p>
                     <ul class="o_checklist">
-                        <li class="o_checked">3.1</li>
-                        <li class="oe-nested">
+                        <li class="o_checked"><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.1.1</li>
                                 <li class="o_checked">3.1.2</li>
@@ -348,11 +312,9 @@ test("should check all nested checklist item and update wrapper title", async ()
     await testEditor({
         contentBefore: unformat(`
             <ul class="o_checklist">
-                <li>3</li>
-                <li class="oe-nested">
+                <li><p>3</p>
                     <ul class="o_checklist">
-                        <li>3.1</li>
-                        <li class="oe-nested">
+                        <li><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.2.1</li>
                                 <li>3.2.2</li>
@@ -362,19 +324,15 @@ test("should check all nested checklist item and update wrapper title", async ()
                 </li>
             </ul>`),
         stepFunction: async (editor) => {
-            const lis = editor.editable.querySelectorAll(
-                '.o_checklist > li:not([class^="oe-nested"])'
-            );
+            const lis = editor.editable.querySelectorAll(".o_checklist > li");
             const li = lis[1];
             await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li>3</li>
-                <li class="oe-nested">
+                <li><p>3</p>
                     <ul class="o_checklist">
-                        <li class="o_checked">3.1</li>
-                        <li class="oe-nested">
+                        <li class="o_checked"><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.2.1</li>
                                 <li>3.2.2</li>
@@ -390,11 +348,9 @@ test("should uncheck all nested checklist items and update wrapper title", async
     await testEditor({
         contentBefore: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked">3</li>
-                <li class="oe-nested">
+                <li class="o_checked"><p>3</p>
                     <ul class="o_checklist">
-                        <li class="o_checked">3.1</li>
-                        <li class="oe-nested">
+                        <li class="o_checked"><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.2.1</li>
                                 <li class="o_checked">3.2.2</li>
@@ -404,19 +360,15 @@ test("should uncheck all nested checklist items and update wrapper title", async
                 </li>
             </ul>`),
         stepFunction: async (editor) => {
-            const lis = editor.editable.querySelectorAll(
-                '.o_checklist > li:not([class^="oe-nested"])'
-            );
+            const lis = editor.editable.querySelectorAll(".o_checklist > li");
             const li = lis[1];
             await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
-                <li class="o_checked">3</li>
-                <li class="oe-nested">
+                <li class="o_checked"><p>3</p>
                     <ul class="o_checklist">
-                        <li>3.1</li>
-                        <li class="oe-nested">
+                        <li><p>3.1</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">3.2.1</li>
                                 <li class="o_checked">3.2.2</li>

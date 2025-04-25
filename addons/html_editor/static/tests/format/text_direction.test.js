@@ -50,24 +50,24 @@ test("should properly switch the direction of the single level list (ltr).", asy
 
 test("should properly switch the direction of nested list (ltr).", async () => {
     await testEditor({
-        contentBefore: `<ul><li>a[]</li><li class="oe-nested"><ul><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+        contentBefore: `<ul><li><p>a[]</p><ul><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
         stepFunction: switchDirection,
-        contentAfter: `<ul dir="rtl"><li>a[]</li><li class="oe-nested"><ul dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+        contentAfter: `<ul dir="rtl"><li><p>a[]</p><ul dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
     });
     await testEditor({
-        contentBefore: `<ol><li>a[]</li><li class="oe-nested"><ol><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
+        contentBefore: `<ol><li><p>a[]</p><ol><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
         stepFunction: switchDirection,
-        contentAfter: `<ol dir="rtl"><li>a[]</li><li class="oe-nested"><ol dir="rtl"><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
+        contentAfter: `<ol dir="rtl"><li><p>a[]</p><ol dir="rtl"><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
     });
     await testEditor({
-        contentBefore: `<ul class="o_checklist"><li>a[]</li><li class="oe-nested"><ul class="o_checklist"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+        contentBefore: `<ul class="o_checklist"><li><p>a[]</p><ul class="o_checklist"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
         stepFunction: switchDirection,
-        contentAfter: `<ul class="o_checklist" dir="rtl"><li>a[]</li><li class="oe-nested"><ul class="o_checklist" dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+        contentAfter: `<ul class="o_checklist" dir="rtl"><li><p>a[]</p><ul class="o_checklist" dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
     });
     await testEditor({
-        contentBefore: `<ul><li>a[]</li><li class="oe-nested"><ul class="o_checklist"><li>b</li><li class="oe-nested"><ol><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
+        contentBefore: `<ul><li><p>a[]</p><ul class="o_checklist"><li><p>b</p><ol><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
         stepFunction: switchDirection,
-        contentAfter: `<ul dir="rtl"><li>a[]</li><li class="oe-nested"><ul class="o_checklist" dir="rtl"><li>b</li><li class="oe-nested"><ol dir="rtl"><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
+        contentAfter: `<ul dir="rtl"><li><p>a[]</p><ul class="o_checklist" dir="rtl"><li><p>b</p><ol dir="rtl"><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
     });
 });
 
@@ -91,24 +91,24 @@ test("should properly switch the direction of the single level list (rtl).", asy
 
 test("should properly switch the direction of nested list (rtl).", async () => {
     await testEditor({
-        contentBefore: `<ul dir="rtl"><li>a[]</li><li class="oe-nested"><ul dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+        contentBefore: `<ul dir="rtl"><li><p>a[]</p><ul dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
         stepFunction: switchDirection,
-        contentAfter: `<ul><li>a[]</li><li class="oe-nested"><ul><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+        contentAfter: `<ul><li><p>a[]</p><ul><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
     });
     await testEditor({
-        contentBefore: `<ol dir="rtl"><li>a[]</li><li class="oe-nested"><ol dir="rtl"><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
+        contentBefore: `<ol dir="rtl"><li><p>a[]</p><ol dir="rtl"><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
         stepFunction: switchDirection,
-        contentAfter: `<ol><li>a[]</li><li class="oe-nested"><ol><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
+        contentAfter: `<ol><li><p>a[]</p><ol><li>b</li><li>c</li></ol></li><li>d</li></ol>`,
     });
     await testEditor({
-        contentBefore: `<ul class="o_checklist" dir="rtl"><li>a[]</li><li class="oe-nested"><ul class="o_checklist" dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+        contentBefore: `<ul class="o_checklist" dir="rtl"><li><p>a[]</p><ul class="o_checklist" dir="rtl"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
         stepFunction: switchDirection,
-        contentAfter: `<ul class="o_checklist"><li>a[]</li><li class="oe-nested"><ul class="o_checklist"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
+        contentAfter: `<ul class="o_checklist"><li><p>a[]</p><ul class="o_checklist"><li>b</li><li>c</li></ul></li><li>d</li></ul>`,
     });
     await testEditor({
-        contentBefore: `<ul dir="rtl"><li>a[]</li><li class="oe-nested"><ul class="o_checklist" dir="rtl"><li>b</li><li class="oe-nested"><ol dir="rtl"><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
+        contentBefore: `<ul dir="rtl"><li><p>a[]</p><ul class="o_checklist" dir="rtl"><li><p>b</p><ol dir="rtl"><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
         stepFunction: switchDirection,
-        contentAfter: `<ul><li>a[]</li><li class="oe-nested"><ul class="o_checklist"><li>b</li><li class="oe-nested"><ol><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
+        contentAfter: `<ul><li><p>a[]</p><ul class="o_checklist"><li><p>b</p><ol><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
     });
 });
 

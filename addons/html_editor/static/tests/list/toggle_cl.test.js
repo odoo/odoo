@@ -101,18 +101,13 @@ describe("Range collapsed", () => {
             await testEditor({
                 contentBefore: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">def</li>
                             </ul>
-                        </li>
-                        <li class="oe-nested">
                             <ul>
                                 <li>g[]hi</li>
                             </ul>
-                        </li>
-                        <li class="oe-nested">
                             <ul class="o_checklist">
                                 <li class="o_checked">jkl</li>
                             </ul>
@@ -122,8 +117,7 @@ describe("Range collapsed", () => {
                 /* @todo @phoenix: move this test case to a new file, with tests for checkitem IDs.
                 contentAfterEdit: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked" id="checkId-1">abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul class="o_checklist">
                                 <li class="o_checked" id="checkId-2">def</li>
                                 <li id="checkId-4">g[]hi</li>
@@ -133,8 +127,7 @@ describe("Range collapsed", () => {
                     </ul>`), */
                 contentAfterEdit: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">def</li>
                                 <li>g[]hi</li>
@@ -146,28 +139,24 @@ describe("Range collapsed", () => {
             await testEditor({
                 contentBefore: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">def</li>
                             </ul>
-                        </li>
-                        <li class="oe-nested">
                             <ul>
                                 <li class="a">g[]hi</li>
                             </ul>
-                        </li>
-                        <li class="oe-nested">
                             <ul class="o_checklist">
                                 <li class="o_checked">jkl</li>
                             </ul>
                         </li>
                     </ul>`),
-                stepFunction: toggleCheckList,
+                stepFunction: (editable) => {
+                    toggleCheckList(editable);
+                },
                 contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">def</li>
                                 <li class="a">g[]hi</li>
@@ -327,15 +316,9 @@ describe("Range collapsed", () => {
             await testEditor({
                 contentBefore: unformat(`
                         <ul class="o_checklist">
-                            <li class="o_checked">a</li>
-                            <li class="oe-nested">
+                            <li><p>a</p>
                                 <ul class="o_checklist">
-                                    <li class="o_checked">[]b</li>
-                                </ul>
-                            </li>
-                            <li class="oe-nested">
-                                <ul class="o_checklist">
-                                    <li class="oe-nested">
+                                    <li class="o_checked"><p>[]b</p>
                                         <ul class="o_checklist">
                                             <li class="o_checked">c</li>
                                         </ul>
@@ -346,7 +329,7 @@ describe("Range collapsed", () => {
                 stepFunction: toggleCheckList,
                 contentAfter: unformat(`
                         <ul class="o_checklist">
-                            <li class="o_checked">a</li>
+                            <li><p>a</p></li>
                         </ul>
                         <p>[]b</p>
                         <ul class="o_checklist">
