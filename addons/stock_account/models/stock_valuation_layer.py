@@ -42,6 +42,7 @@ class StockValuationLayer(models.Model):
     lot_id = fields.Many2one('stock.lot', 'Lot/Serial Number', check_company=True, index=True)
 
     _index = models.Index("(product_id, remaining_qty, stock_move_id, company_id, create_date)")
+    _company_product_index = models.Index("(product_id, company_id, id, value, quantity)")
 
     def _compute_warehouse_id(self):
         for svl in self:
