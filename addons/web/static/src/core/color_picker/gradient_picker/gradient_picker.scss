@@ -1,0 +1,24 @@
+.gradient-angle-knob {
+    --radius: 15px;
+    --thumb-size: calc(var(--radius) * 0.5);
+
+    width: calc(var(--radius) * 2);
+    height: calc(var(--radius) * 2);
+    cursor: grab;
+    border-radius: 50%;
+    border: solid 2px;
+
+    &:active {
+      cursor: grabbing;
+    }
+}
+
+.gradient-angle-thumb {
+    width: var(--thumb-size);
+    height: var(--thumb-size);
+    background: black;
+    border-radius: 50%;
+    transform: rotate(var(--angle)) translateX(calc(var(--radius) - var(--thumb-size)));
+    transform-origin: center center;
+    pointer-events: none;
+}

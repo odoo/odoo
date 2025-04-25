@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, useState, useRef } from "@odoo/owl";
 import { CustomColorPicker as ColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { isColorGradient, rgbaToHex, convertCSSColorToRgba } from "@web/core/utils/colors";
 
@@ -23,6 +23,7 @@ export class GradientPicker extends Component {
             { hex: "#6C3582", percentage: 100 },
         ]);
         this.cssGradients = useState({ preview: "", linear: "", radial: "", sliderThumbStyle: "" });
+        this.knobRef = useRef("gradientAngleKnob");
 
         if (this.props.selectedGradient && isColorGradient(this.props.selectedGradient)) {
             // initialization of the gradient with the selected value
@@ -196,5 +197,39 @@ export class GradientPicker extends Component {
 
     get currentColorHex() {
         return this.colors?.[this.state.currentColorIndex]?.hex || "#000000";
+    }
+
+    onKnobMouseDown(ev) {
+        const knobEl = this.knobRef.el;
+        if (!knobEl) {
+            return;
+        }
+        const knobRadius = knobEl.offsetWidth / 2;
+        const knobRect = knobEl.getBoundingClientRect();
+        const centerX = knobRect.left + knobRadius;
+        const centerY = knobRect.top + knobRadius;
+
+        const updateAngle = (ev) => {
+            // calculate the differences between the mouse position and the
+            // center of the knob
+            const distanceX = ev.clientX - centerX;
+            const distanceY = ev.clientY - centerY;
+
+            // calculate the angle between the center and the mouse position
+            const angle = Math.atan2(distanceY, distanceX) * (180 / Math.PI);
+            this.state.angle = Math.round((angle + 360) % 360);
+        };
+
+        updateAngle(ev);
+        this.onColorGradientChange();
+
+        const onKnobMouseMove = (ev) => {
+            updateAngle(ev);
+            this.onColorGradientChange();
+        };
+        const onKnobMouseUp = () => document.removeEventListener("mousemove", onKnobMouseMove);
+
+        document.addEventListener("mousemove", onKnobMouseMove);
+        document.addEventListener("mouseup", onKnobMouseUp, { once: true });
     }
 }
