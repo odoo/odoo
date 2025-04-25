@@ -116,33 +116,6 @@
                     </del>
                     <field name="compare_list_price" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" class="oe_edit_only"/>
                 </div>
-                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
-                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
-                    <field name="base_unit_count" invisible="product_variant_count &gt; 1" style="width: 4rem;"/>
-                    <field name="base_unit_id" options="{'no_open': True}" invisible="product_variant_count &gt; 1" placeholder="Specify unit" style="width: 10rem;"/>
-                    <div class="d-flex flex-row" invisible="base_unit_price == 0 or product_variant_count &gt; 1">
-                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
-                    </div>
-                    <span class="text-muted" invisible="product_variant_count &lt;= 1">Based on variants</span>
-                </div>
-            </field>
-        </field>
-    </record>
-
-    <record id="product_product_normal_website_form_view" model="ir.ui.view">
-        <field name="name">product.product.normal.view.website</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view"/>
-        <field name="arch" type="xml">
-            <field name="categ_id" position="before">
-                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
-                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
-                    <field name="base_unit_count" style="width: 4rem;"/>
-                    <field name="base_unit_id" options="{'no_open': True}" placeholder="Specify unit" style="width: 10rem;"/>
-                    <div class="d-flex flex-row" invisible="base_unit_price == 0">
-                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
-                    </div>
-                </div>
             </field>
         </field>
     </record>
@@ -222,16 +195,6 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
         <field name="arch" type="xml">
-            <group name="pricing" position="inside">
-                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
-                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
-                    <field name="base_unit_count" style="width: 4rem;"/>
-                    <field name="base_unit_id" options="{'no_open': True}" placeholder="Specify unit" style="width: 10rem;"/>
-                    <div class="d-flex flex-row" invisible="base_unit_price == 0">
-                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
-                    </div>
-                </div>
-            </group>
             <group name="sales" position="inside">
                 <field name="website_ribbon_id" options="{'no_open': True}" readonly="True"/>
                 <field name="variant_ribbon_id" options="{'no_quick_create': True}"/>

@@ -50,6 +50,27 @@ class ProductProduct(models.Model):
     combination_indices = fields.Char(compute='_compute_combination_indices', store=True, index=True)
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant')
 
+    base_unit_count = fields.Float(
+        string="Base Unit Count",
+        help="Display base unit price. Set to 0 to hide it for this product.",
+        required=True,
+        default=0,
+    )
+    base_unit_id = fields.Many2one(
+        string="Custom Unit of Measure",
+        help="Define a custom unit to display in the price per unit of measure field.",
+        comodel_name='product.base.unit',
+    )
+    base_unit_price = fields.Monetary(
+        string="Price Per Unit",
+        compute='_compute_base_unit_price',
+    )
+    base_unit_name = fields.Char(
+        help="Displays the custom unit for the products if defined or the selected unit of measure"
+            " otherwise.",
+        compute='_compute_base_unit_name',
+    )
+
     standard_price = fields.Float(
         'Cost', company_dependent=True,
         digits='Product Price',
@@ -385,6 +406,31 @@ class ProductProduct(models.Model):
                 'message': message,
             }
         }
+
+    def _get_base_unit_price(self, price):
+        self.ensure_one()
+        return self.base_unit_count and price / self.base_unit_count
+
+    @api.depends('lst_price', 'base_unit_count')
+    def _compute_base_unit_price(self):
+        for product in self:
+            if not product.id:
+                product.base_unit_price = 0
+            else:
+                product.base_unit_price = product._get_base_unit_price(product.lst_price)
+
+    @api.depends('uom_name', 'base_unit_id')
+    def _compute_base_unit_name(self):
+        for product in self:
+            product.base_unit_name = product.base_unit_id.name or product.uom_name
+
+    @api.constrains('base_unit_count')
+    def _check_base_unit_count(self):
+        if any(product.base_unit_count < 0 for product in self):
+            raise ValidationError(_(
+                "The value of Base Unit Count must be greater than 0."
+                " Use 0 to hide the price per unit on this product."
+            ))
 
     @api.model_create_multi
     def create(self, vals_list):

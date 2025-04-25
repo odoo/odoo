@@ -117,6 +117,28 @@ class ProductTemplate(models.Model):
         help="Default unit of measure used for all stock operations.")
     uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Additional packagings for this product which can be used for sales", domain="[('id', '!=', uom_id)]")
     uom_name = fields.Char(string='Unit Name', related='uom_id.name', readonly=True)
+    base_unit_count = fields.Float(
+        string="Base Unit Count",
+        help="Display base unit price. Set to 0 to hide it for this product.",
+        compute='_compute_base_unit_count',
+        inverse='_set_base_unit_count',
+        store=True,
+        required=True,
+        default=0,
+    )
+    base_unit_id = fields.Many2one(
+        string="Custom Unit of Measure",
+        help="Define a custom unit to display in the price per unit of measure field.",
+        comodel_name='product.base.unit',
+        compute='_compute_base_unit_id',
+        inverse='_set_base_unit_id',
+        store=True,
+    )
+    base_unit_price = fields.Monetary(string="Price Per Unit", compute="_compute_base_unit_price", store=True)
+    base_unit_name = fields.Char(
+        compute='_compute_base_unit_name',
+        help="Displays the custom unit for the products if defined or the selected unit of measure otherwise.",
+    )
     company_id = fields.Many2one(
         'res.company', 'Company', index=True)
     seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors', depends_context=('company',))
@@ -494,6 +516,42 @@ class ProductTemplate(models.Model):
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
         return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'product_properties']
+
+    @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
+    def _compute_base_unit_count(self):
+        self.base_unit_count = 0
+        for template in self.filtered(lambda template: len(template.product_variant_ids) == 1):
+            template.base_unit_count = template.product_variant_ids.base_unit_count
+
+    def _set_base_unit_count(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.base_unit_count = template.base_unit_count
+
+    @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
+    def _compute_base_unit_id(self):
+        self.base_unit_id = self.env['product.base.unit']
+        for template in self.filtered(lambda template: len(template.product_variant_ids) == 1):
+            template.base_unit_id = template.product_variant_ids.base_unit_id
+
+    def _set_base_unit_id(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.base_unit_id = template.base_unit_id
+
+    def _get_base_unit_price(self, price):
+        self.ensure_one()
+        return self.base_unit_count and price / self.base_unit_count
+
+    @api.depends('list_price', 'base_unit_count')
+    def _compute_base_unit_price(self):
+        for template in self:
+            template.base_unit_price = template._get_base_unit_price(template.list_price)
+
+    @api.depends('uom_name', 'base_unit_id')
+    def _compute_base_unit_name(self):
+        for template in self:
+            template.base_unit_name = template.base_unit_id.name or template.uom_name
 
     @api.model_create_multi
     def create(self, vals_list):

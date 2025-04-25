@@ -3,9 +3,9 @@
 from odoo import fields, models
 
 
-class WebsiteBaseUnit(models.Model):
-    _name = 'website.base.unit'
-    _description = "Unit of Measure for price per unit on eCommerce products."
+class ProductBaseUnit(models.Model):
+    _name = 'product.base.unit'
+    _description = "Unit of Measure for price per unit on products."
     _order = 'name'
 
     name = fields.Char(
