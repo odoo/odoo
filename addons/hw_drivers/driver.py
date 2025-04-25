@@ -14,6 +14,7 @@ class Driver(Thread):
     """Hook to register the driver into the drivers list"""
     connection_type = ''
     daemon = True
+    priority = 0
 
     def __init__(self, identifier, device):
         super().__init__()
@@ -29,11 +30,8 @@ class Driver(Thread):
 
     def __init_subclass__(cls):
         super().__init_subclass__()
-        if hasattr(cls, 'priority'):
-            cls.priority += 1
-        else:
-            cls.priority = 0
-        drivers.append(cls)
+        if cls not in drivers:
+            drivers.append(cls)
 
     @classmethod
     def supported(cls, device):
