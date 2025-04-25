@@ -28,7 +28,7 @@
         <field name="arch" type="xml">
             <list string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
                 <field name="company_id" column_invisible="True"/>
-                <field name="priority" optional="show" widget="priority" nolabel="1"/>
+                <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                 <field name="name"/>
                 <field name="schedule_date" optional="show" widget="remaining_days"/>
                 <field name="product_id" readonly="1" optional="show"/>
