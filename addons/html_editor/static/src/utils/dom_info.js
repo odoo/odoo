@@ -302,6 +302,8 @@ export const ICON_SELECTOR = iconTags
 
 export const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
 
+export const EDITABLE_MEDIA_CLASS = "o_editable_media";
+
 /**
  * Indicates if the given node is an icon element.
  *
