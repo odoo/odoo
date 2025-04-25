@@ -377,7 +377,7 @@ class IrUiView(models.Model):
 
     @api.model
     @tools.ormcache('self.env.uid', 'self.env.su', 'xml_id', 'self._context.get("website_id")', cache='templates')
-    def _get_view_id(self, xml_id):
+    def _get_view_id(self, xml_id, raise_if_not_found=True):
         """If a website_id is in the context and the given xml_id is not an int
         then try to get the id of the specific view for that website, but
         fallback to the id of the generic view if there is no specific.
@@ -399,7 +399,7 @@ class IrUiView(models.Model):
                 _logger.warning("Could not find view object with xml_id '%s'", xml_id)
                 raise ValueError('View %r in website %r not found' % (xml_id, self._context['website_id']))
             return view.id
-        return super(IrUiView, self.sudo())._get_view_id(xml_id)
+        return super(IrUiView, self.sudo())._get_view_id(xml_id, raise_if_not_found=raise_if_not_found)
 
     @tools.ormcache('self.id', cache='templates')
     def _get_cached_visibility(self):

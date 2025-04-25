@@ -2136,7 +2136,7 @@ actual arch.
         return etree.tostring(arch_tree, encoding='unicode')
 
     @api.model
-    def _get_view_id(self, template):
+    def _get_view_id(self, template, raise_if_not_found=True):
         """ Return the view ID corresponding to ``template``, which may be a
         view ID or an XML ID. Note that this method may be overridden for other
         kinds of template values.
@@ -2148,16 +2148,17 @@ actual arch.
         view = self.sudo().search([('key', '=', template)], limit=1)
         if view:
             return view.id
-        res_model, res_id = self.env['ir.model.data']._xmlid_to_res_model_res_id(template, raise_if_not_found=True)
-        assert res_model == self._name, "Call _get_view_id, expected %r, got %r" % (self._name, res_model)
+        res_model, res_id = self.env['ir.model.data']._xmlid_to_res_model_res_id(template, raise_if_not_found=raise_if_not_found)
+        if res_model:
+            assert res_model == self._name, "Call _get_view_id, expected %r, got %r" % (self._name, res_model)
         return res_id
 
     @api.model
-    def _get(self, view_ref):
+    def _get(self, view_ref, raise_if_not_found=True):
         """ Return the view corresponding to ``view_ref``, which may be a
         view ID or an XML ID.
         """
-        return self.browse(self._get_view_id(view_ref))
+        return self.browse(self._get_view_id(view_ref, raise_if_not_found=raise_if_not_found))
 
     def _contains_branded(self, node):
         return node.tag == 't'\
