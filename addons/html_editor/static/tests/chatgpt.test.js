@@ -138,7 +138,17 @@ test("Translate/ChatGPT should be disabled if selection spans across non editabl
     expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
 });
 
-test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (3)", async () => {
+test.tags("desktop");
+test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (3-desktop)", async () => {
+    await setupEditor('<div contenteditable="false">a[b</div><div>c]d</div>');
+    await animationFrame();
+    await tick();
+    // The toolbar itself is disabled.
+    expect(".o-we-toolbar").toHaveCount(0);
+});
+
+test.tags("mobile");
+test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (3-mobile)", async () => {
     await setupEditor('<div contenteditable="false">a[b</div><div>c]d</div>');
     await animationFrame();
     await tick();

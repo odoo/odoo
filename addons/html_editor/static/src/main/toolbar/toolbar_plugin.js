@@ -309,9 +309,9 @@ export class ToolbarPlugin extends Plugin {
         }
     }
 
-    getFilterTraverseNodes() {
+    getFilterTraverseNodes(includeRoot = true) {
         return this.dependencies.selection
-            .getTraversedNodes()
+            .getTraversedNodes(includeRoot)
             .filter((node) => !isTextNode(node) || (node.textContent !== "\n" && !isZWS(node)));
     }
 
@@ -349,7 +349,17 @@ export class ToolbarPlugin extends Plugin {
         if (isCollapsed) {
             return !!closestElement(selectionData.editableSelection.anchorNode, "td.o_selected_td");
         }
-        return this.getFilterTraverseNodes().length;
+        let traversedNodes = this.getFilterTraverseNodes(false);
+        if (!traversedNodes.length) {
+            // If no traversed nodes were found, the selection might be
+            // contained in a single text node so we need to include that text
+            // node.
+            traversedNodes = this.getFilterTraverseNodes();
+        }
+        return (
+            traversedNodes.every((node) => node.parentElement.isContentEditable) &&
+            !!traversedNodes.length
+        );
     }
 
     shouldPreventClosing(selectionData) {

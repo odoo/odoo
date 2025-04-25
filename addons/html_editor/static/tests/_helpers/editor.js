@@ -13,6 +13,10 @@ export const Direction = {
     FORWARD: "FORWARD",
 };
 
+// A generic base64 image for testing
+export const base64Img =
+    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
 class TestEditor extends Component {
     static template = xml`
         <t t-if="props.styleContent">
@@ -102,11 +106,7 @@ export async function setupEditor(content, options = {}) {
     // awaiting for mountWithCleanup is not enough when mounted in an iframe,
     // @see Wysiwyg.onMounted
     const editor = await attachedEditor;
-    const plugins = new Map(
-        editor.plugins.map((plugin) => {
-            return [plugin.constructor.id, plugin];
-        })
-    );
+    const plugins = new Map(editor.plugins.map((plugin) => [plugin.constructor.id, plugin]));
     if (plugins.get("embeddedComponents")) {
         // await an extra animation frame for embedded components mounting
         // TODO @phoenix: would be more accurate to register mounting

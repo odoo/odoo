@@ -683,18 +683,19 @@ export class SelectionPlugin extends Plugin {
 
     /**
      * Returns the nodes intersected by the current selection, up to the common
-     * ancestor container (inclusive).
+     * ancestor container (inclusive if `includeCommonAncestor` is true).
      *
      * @returns {Node[]}
      */
-    getTraversedNodes() {
+    getTraversedNodes(includeCommonAncestor = true) {
         const selection = this.getSelectionData().deepEditableSelection;
         const { commonAncestorContainer: root } = selection;
 
-        let traversedNodes = [
-            root,
-            ...descendants(root).filter((node) => selection.intersectsNode(node)),
-        ];
+        let traversedNodes = [];
+        if (includeCommonAncestor) {
+            traversedNodes.push(root);
+        }
+        traversedNodes.push(...descendants(root).filter((node) => selection.intersectsNode(node)));
 
         const modifiers = [
             // Remove the editable from the list

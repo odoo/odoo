@@ -2,9 +2,10 @@ import { describe, expect, test } from "@odoo/hoot";
 import { click, press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
-import { setupEditor } from "./_helpers/editor";
+import { base64Img, setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
+import { cleanHints } from "./_helpers/dispatch";
 
 test("Can replace an image", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
@@ -121,5 +122,36 @@ describe("Powerbox search keywords", () => {
                 press("backspace");
             }
         }
+    });
+});
+
+describe("(non-)editable media", () => {
+    describe.tags("desktop");
+    describe("toolbar", () => {
+        test("toolbar should open when clicking on an image in an editable context", async () => {
+            const { editor } = await setupEditor(
+                `<div contenteditable="true"><img src="${base64Img}"></div>`
+            );
+            await click("img");
+            await animationFrame();
+            expect(".o-we-toolbar").toHaveCount(1);
+            // Now pressing the delete button should remove the image.
+            await click(".o-we-toolbar button[name='image_delete']");
+            cleanHints(editor);
+            expect(getContent(editor.editable)).toBe(
+                `<div contenteditable="true" class="o-paragraph">[]<br></div>`
+            );
+        });
+        test("toolbar should not open when clicking on an image in an non-editable context", async () => {
+            const { editor } = await setupEditor(
+                `<div contenteditable="false"><img src="${base64Img}"></div>`
+            );
+            await click("img");
+            await animationFrame();
+            expect(".o-we-toolbar").toHaveCount(0);
+            expect(getContent(editor.editable)).toBe(
+                `<div contenteditable="false">[<img src="${base64Img}">]</div>`
+            );
+        });
     });
 });
