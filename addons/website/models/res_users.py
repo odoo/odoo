@@ -100,3 +100,8 @@ class ResUsers(models.Model):
         internal_users = self.env.ref('base.group_user').users & self
         if any(user.website_id for user in internal_users):
             raise ValidationError(_("Remove website on related partner before they become internal user."))
+
+    # The model inherits the publishing fields from res.partner, this implements
+    # the required method.
+    def website_publish_button(self):
+        return self.partner_id.website_publish_button()
