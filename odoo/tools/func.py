@@ -16,7 +16,6 @@ __all__ = [
     'lazy_classproperty',
     'lazy_property',
     'reset_cached_properties',
-    'synchronized',
 ]
 
 T = typing.TypeVar("T")
