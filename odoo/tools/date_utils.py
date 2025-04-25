@@ -20,15 +20,6 @@ __all__ = [
 ]
 
 
-def date_type(value: D) -> type[D]:
-    ''' Return either the datetime.datetime class or datetime.date type whether `value` is a datetime or a date.
-
-    :param value: A datetime.datetime or datetime.date object.
-    :return: datetime.datetime or datetime.date
-    '''
-    return datetime if isinstance(value, datetime) else date
-
-
 def get_month(date: D) -> tuple[D, D]:
     ''' Compute the month dates range on which the 'date' parameter belongs to.
     '''
