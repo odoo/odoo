@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
 
 from odoo import exceptions, fields
 from odoo.fields import Command
@@ -25,6 +26,12 @@ class TestBoM(TestMrpCommon):
             {'name': f"p{k + 1}", 'is_storable': True}
             for k in range(n)
         ])
+
+    @classmethod
+    def _get_component_line(cls, bom, product, qty=1.0):
+        """Helper to fetch component line from BoM overview for given qty."""
+        data = cls.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=qty)['lines']
+        return next(c for c in data['components'] if c['product_id'] == product.id)
 
     def test_01_explode(self):
         boms, lines = self.bom_1.explode(self.product_4, 3)
@@ -2644,6 +2651,28 @@ class TestBoM(TestMrpCommon):
         # Archive the operation of the copied bom and check that the operation linked are removed
         copied_operation.action_archive()
         self.assertFalse(copied_bom.bom_line_ids.operation_id | copied_bom.byproduct_ids.operation_id)
+
+    def test_bom_overview_forecasted_component_status(self):
+        """This test case is for verifying that BoM overview availability respects forecasted stock and future
+        replenishments, and ensures that when the availability state is 'expected', the status column remains empty
+        (not 'To Order').
+        """
+        main_bom = self.make_bom(self.productA, self.productB)
+        self.env['mrp.production'].create({
+            'product_id': self.productA.id,
+            'product_qty': 1.0,
+            'bom_id': main_bom.id,
+            'date_start': fields.Datetime.now() + timedelta(days=10)
+        }).action_confirm()
+        self.env['mrp.production'].create({'product_id': self.productB.id, 'product_qty': 2.0}).action_confirm()
+
+        comp_line = self._get_component_line(main_bom, self.productB)
+        self.assertEqual(comp_line['availability_state'], 'expected')
+        self.assertFalse(comp_line.get('status'))  # Empty status when availability is 'expected'
+
+        comp_line = self._get_component_line(main_bom, self.productB, qty=2)
+        self.assertEqual(comp_line['availability_state'], 'unavailable')  # Reserved for the MO
+        self.assertEqual(comp_line.get('status'), '1.00 To Order')
 
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
