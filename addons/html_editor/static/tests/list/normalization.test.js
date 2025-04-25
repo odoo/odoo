@@ -146,14 +146,11 @@ describe("Nested lists without class oe-nested", () => {
             contentAfter: unformat(`
                 <ul>
                     <li>abc</li>
-                    <li>def</li>
-                    <li class="oe-nested">
+                    <li>def
                         <ul>
                             <li>ghi</li>
                             <li>jkl</li>
                         </ul>
-                    </li>
-                    <li class="oe-nested">
                         <ol>
                             <li>mno</li>
                             <li>pqr</li>
