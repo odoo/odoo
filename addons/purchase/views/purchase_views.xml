@@ -554,7 +554,7 @@
             <field name="arch" type="xml">
                 <list string="Purchase Order"
                       decoration-muted="state=='cancel'" sample="1">
-                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
+                    <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-info="state in ('draft','sent')"/>
                     <field name="date_order" column_invisible="not context.get('quotation_only', False)" readonly="state in ['cancel', 'purchase']" optional="show"/>
@@ -591,7 +591,7 @@
                         <button name="button_cancel" type="object" string="Cancel"
                             confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>
-                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
+                    <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1"/>
                     <field name="date_approve" column_invisible="context.get('quotation_only', False)" optional="show"/>
@@ -634,7 +634,7 @@
                         <button name="button_cancel" type="object" string="Cancel"
                             confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>
-                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
+                    <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1" decoration-info="state in ('draft','sent')"/>
                     <field name="date_approve" column_invisible="context.get('quotation_only', False)" optional="show"/>
