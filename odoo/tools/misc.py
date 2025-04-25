@@ -145,9 +145,10 @@ def find_in_path(name):
         path.append(config['bin_path'])
     return which(name, path=os.pathsep.join(path))
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Postgres subprocesses
-#----------------------------------------------------------
+# ----------------------------------------------------------
+
 
 def find_pg_tool(name):
     path = None
@@ -155,8 +156,9 @@ def find_pg_tool(name):
         path = config['pg_path']
     try:
         return which(name, path=path)
-    except IOError:
+    except OSError:
         raise Exception('Command `%s` not found.' % name)
+
 
 def exec_pg_environ():
     """
@@ -168,7 +170,7 @@ def exec_pg_environ():
     postgres user password in the PGPASSWORD environment variable or in a
     special .pgpass file.
 
-    See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
+    See also https://www.postgresql.org/docs/current/libpq-envars.html
     """
     env = os.environ.copy()
     if config['db_host']:
@@ -179,6 +181,8 @@ def exec_pg_environ():
         env['PGUSER'] = config['db_user']
     if config['db_password']:
         env['PGPASSWORD'] = config['db_password']
+    if config['db_sslmode']:
+        env['PGSSLMODE'] = config['db_sslmode']
     return env
 
 

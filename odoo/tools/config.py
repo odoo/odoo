@@ -349,30 +349,30 @@ class configmanager:
 
         # Database Group
         group = optparse.OptionGroup(parser, "Database related options")
-        group.add_option("-d", "--database", dest="db_name", type='comma', metavar="DATABASE,...", my_default=[],
+        group.add_option("-d", "--database", dest="db_name", type='comma', metavar="DATABASE,...", my_default=[], env_name='PGDATABASE',
                          help="database(s) used when installing or updating modules.")
-        group.add_option("-r", "--db_user", dest="db_user", my_default='',
+        group.add_option("-r", "--db_user", dest="db_user", my_default='', env_name='PGUSER',
                          help="specify the database user name")
-        group.add_option("-w", "--db_password", dest="db_password", my_default='',
+        group.add_option("-w", "--db_password", dest="db_password", my_default='', env_name='PGPASSWORD',
                          help="specify the database password")
-        group.add_option("--pg_path", dest="pg_path", type='path', my_default='',
+        group.add_option("--pg_path", dest="pg_path", type='path', my_default='', env_name='PGPATH',
                          help="specify the pg executable path")
-        group.add_option("--db_host", dest="db_host", my_default='',
+        group.add_option("--db_host", dest="db_host", my_default='', env_name='PGHOST',
                          help="specify the database host")
-        group.add_option("--db_replica_host", dest="db_replica_host", my_default=None,
+        group.add_option("--db_replica_host", dest="db_replica_host", my_default=None, env_name='PGHOST_REPLICA',
                          help="specify the replica host")
-        group.add_option("--db_port", dest="db_port", my_default=None,
+        group.add_option("--db_port", dest="db_port", my_default=None, env_name='PGPORT',
                          help="specify the database port", type="int")
-        group.add_option("--db_replica_port", dest="db_replica_port", my_default=None,
+        group.add_option("--db_replica_port", dest="db_replica_port", my_default=None, env_name='PGPORT_REPLICA',
                          help="specify the replica port", type="int")
-        group.add_option("--db_sslmode", dest="db_sslmode", type="choice", my_default='prefer',
+        group.add_option("--db_sslmode", dest="db_sslmode", type="choice", my_default='prefer', env_name='PGSSLMODE',
                          choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'],
                          help="specify the database ssl connection mode (see PostgreSQL documentation)")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
                          help="specify the maximum number of physical connections to PostgreSQL")
         group.add_option("--db_maxconn_gevent", dest="db_maxconn_gevent", type='int', my_default=None,
                          help="specify the maximum number of physical connections to PostgreSQL specifically for the gevent worker")
-        group.add_option("--db-template", dest="db_template", my_default="template0",
+        group.add_option("--db-template", dest="db_template", my_default="template0", env_name='PGDATABASE_TEMPLATE',
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
 
