@@ -655,3 +655,38 @@ test("multi_create: test onChange on TimePicker with no blur (input text)", asyn
         "3_2019-03-04 00:30:00_2019-03-04 07:00:00",
     ]);
 });
+
+test.tags("desktop");
+test("multi_create: test popover in all mode", async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+    });
+
+    await click(".o_calendar_sidebar .btn-group .btn .fa-trash");
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+
+    await click(".fc-event[data-event-id='2']");
+    await runAllTimers();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(1);
+
+    await click(".o_calendar_sidebar .btn-group .btn[data-tooltip='Filter']");
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+
+    await click(".fc-event[data-event-id='2']");
+    await runAllTimers();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(1);
+
+    await click(".o_calendar_sidebar .btn-group .btn[data-tooltip='New']");
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+
+    await click(".fc-event[data-event-id='2']");
+    await runAllTimers();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(1);
+});
