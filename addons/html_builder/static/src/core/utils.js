@@ -18,9 +18,13 @@ import { useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
 
+function isConnectedElement(el) {
+    return el && el.isConnected && !!el.ownerDocument.defaultView;
+}
+
 export function useDomState(getState, { checkEditingElement = true, onReady } = {}) {
     const env = useEnv();
-    const isValid = (el) => (!el && !checkEditingElement) || (el && el.isConnected);
+    const isValid = (el) => (!el && !checkEditingElement) || isConnectedElement(el);
     const handler = () => {
         const editingElement = env.getEditingElement();
         if (isValid(editingElement)) {
@@ -613,7 +617,7 @@ export function useInputBuilderComponent({
     const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(callApply);
     const operationWithReload = useOperationWithReload(callApply, reload);
     function getState(editingElement) {
-        if (!editingElement || !editingElement.isConnected) {
+        if (!isConnectedElement(editingElement)) {
             // TODO try to remove it. We need to move hook in BuilderComponent
             return {};
         }
@@ -864,7 +868,7 @@ export function getAllActionsAndOperations(comp) {
             const { actionId, actionParam, actionValue } = o;
             // TODO isApplied === first editing el or all ?
             const editingElement = editingElements[0];
-            if (!editingElement || !editingElement.isConnected) {
+            if (!isConnectedElement(editingElement)) {
                 return false;
             }
             const isApplied = getAction(actionId).isApplied?.({
