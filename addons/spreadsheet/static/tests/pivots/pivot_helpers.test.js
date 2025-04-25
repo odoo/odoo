@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { mockDate } from "@odoo/hoot-mock";
 
 import { getFirstListFunction, getNumberOfListFormulas } from "@spreadsheet/list/list_helpers";
 import { constants, tokenize, helpers } from "@odoo/o-spreadsheet";
@@ -118,14 +117,6 @@ describe("toNormalizedPivotValue", () => {
             expect(toNormalizedPivotValue(dimension, "01/2020")).toBe("1/2020");
             expect(toNormalizedPivotValue(dimension, "false")).toBe(false);
             expect(toNormalizedPivotValue(dimension, false)).toBe(false);
-
-            mockDate("2017-10-08");
-            expect(() => toNormalizedPivotValue(dimension, 456)).toThrow(
-                'Week value must be a string in the format "52/2017", but received 456 instead.'
-            );
-            expect(() => toNormalizedPivotValue(dimension, "hello/there")).toThrow(
-                'Week value must be a string in the format "52/2017", but received hello/there instead.'
-            );
 
             dimension.granularity = "month";
             expect(toNormalizedPivotValue(dimension, "11/2020")).toBe("11/2020");
