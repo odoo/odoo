@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_mrp_landed_costs" model="ir.ui.view">
+        <field name="name">account.view.move.form.inherited.mrp</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="stock_landed_costs.account_view_move_form_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@name='landed_costs_button']" position="attributes">
+                <attribute name="groups" separator="," add="mrp.group_mrp_manager"/>
+            </xpath>
+            <xpath expr="//t[@name='landed_costs_create_button']" position="attributes">
+                <attribute name="groups" separator="," add="mrp.group_mrp_manager"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='product_type']"
+                   position="attributes">
+                <attribute name="groups" separator="," add="mrp.group_mrp_manager"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='is_landed_costs_line']"
+                   position="attributes">
+                <attribute name="groups" separator="," add="mrp.group_mrp_manager"/>
+            </xpath>
+            <xpath expr="//field[@name='journal_line_ids']/list/field[@name='product_type']"
+                   position="attributes">
+                <attribute name="groups" separator="," add="mrp.group_mrp_manager"/>
+            </xpath>
+            <xpath expr="//field[@name='journal_line_ids']/list/field[@name='is_landed_costs_line']"
+                   position="attributes">
+                <attribute name="groups" separator="," add="mrp.group_mrp_manager"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

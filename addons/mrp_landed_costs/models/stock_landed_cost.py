@@ -11,8 +11,7 @@ class StockLandedCost(models.Model):
         ('manufacturing', "Manufacturing Orders")
     ], ondelete={'manufacturing': 'set default'})
     mrp_production_ids = fields.Many2many(
-        'mrp.production', string='Manufacturing order',
-        copy=False, groups='stock.group_stock_manager')
+        'mrp.production', string='Manufacturing order', copy=False)
 
     @api.onchange('target_model')
     def _onchange_target_model(self):

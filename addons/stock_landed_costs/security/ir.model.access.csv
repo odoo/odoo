@@ -2,3 +2,13 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 "access_stock_landed_cost","stock.landed.cost","model_stock_landed_cost","stock.group_stock_manager",1,1,1,1
 "access_stock_landed_cost_lines","stock.landed.cost.lines","model_stock_landed_cost_lines","stock.group_stock_manager",1,1,1,1
 "access_stock_valuation_adjustment_lines","stock.valuation.adjustment.lines","model_stock_valuation_adjustment_lines","stock.group_stock_manager",1,1,1,1
+
+"access_stock_landed_cost_purchase","stock.landed.cost purchase_manager","model_stock_landed_cost","purchase.group_purchase_manager",1,1,1,1
+"access_stock_landed_cost_lines_purchase","stock.landed.cost.lines purchase_manager","model_stock_landed_cost_lines","purchase.group_purchase_manager",1,1,1,1
+"access_stock_valuation_layer_purchase","stock.valuation.layer purchase_manager","model_stock_valuation_layer","purchase.group_purchase_manager",1,1,1,0
+"access_stock_valuation_adjustment_lines_purchase","stock.valuation.adjustment.lines purchase_manager","model_stock_valuation_adjustment_lines","purchase.group_purchase_manager",1,1,1,1
+
+"access_stock_landed_cost_bookkeeper","stock.landed.cost account_user","model_stock_landed_cost","account.group_account_user",1,1,1,1
+"access_stock_landed_cost_lines_bookkeeper","stock.landed.cost.lines account_user","model_stock_landed_cost_lines","account.group_account_user",1,1,1,1
+"access_stock_valuation_layer_bookkeeper","stock.valuation.layer account_user","model_stock_valuation_layer","account.group_account_user",1,1,1,0
+"access_stock_valuation_adjustment_lines_bookkeeper","stock.valuation.adjustment.lines account_user","model_stock_valuation_adjustment_lines","account.group_account_user",1,1,1,1
