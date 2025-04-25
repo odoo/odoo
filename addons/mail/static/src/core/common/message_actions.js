@@ -46,16 +46,43 @@ messageActionsRegistry
         sequence: 10,
     })
     .add("reply-to", {
-        condition: (component) => component.props.message.canReplyTo(component.props.thread),
+        condition: (component) => {
+            const { message, thread } = component.props;
+            return (
+                message.canReplyTo(thread) ||
+                (thread.model !== "discuss.channel" && message.isNote && !message.isSelfAuthored)
+            );
+        },
         icon: "fa fa-reply",
         title: _t("Reply"),
         onClick: (component) => {
             const message = toRaw(component.props.message);
             const thread = toRaw(component.props.thread);
-            if (message.eq(thread.composer.replyToMessage)) {
-                thread.composer.replyToMessage = undefined;
+            const composer = thread.composer;
+            let currentText = composer.text || "";
+            const mentionText = `@${message.authorName} `;
+            if (message.eq(composer.replyToMessage)) {
+                composer.replyToMessage = undefined;
             } else {
-                thread.composer.replyToMessage = message;
+                if (["discuss.channel", "mail.box"].includes(thread.model)) {
+                    composer.replyToMessage = message;
+                }
+                if (thread.model !== "discuss.channel") {
+                    if (
+                        !currentText.includes(mentionText) &&
+                        !message.isSelfAuthored &&
+                        message.model !== "discuss.channel"
+                    ) {
+                        composer.mentionedPartners.push(message.author);
+                        currentText = mentionText + currentText;
+                    }
+                    composer.text = currentText;
+                    composer.selection.start = currentText.length;
+                    composer.selection.end = currentText.length;
+                    if (component.env.inChatter?.composerType !== "note") {
+                        component.env.toggleComposer?.("note");
+                    }
+                }
             }
         },
         sequence: (component) =>

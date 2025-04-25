@@ -5,6 +5,7 @@ import {
     openDiscuss,
     start,
     startServer,
+    openFormView,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { disableAnimations } from "@odoo/hoot-mock";
@@ -119,4 +120,29 @@ test("click on message in reply highlights original message", async () => {
         ".o-mail-Message:contains('Response to deleted message') .o-mail-MessageInReply:contains('Original message was deleted') .cursor-pointer"
     );
     await contains(".o-mail-Message.o-highlighted:contains('This message has been removed')");
+});
+
+test("reply action functionality in Chatter", async () => {
+    const pyEnv = await startServer();
+    const partnerBId = pyEnv["res.partner"].create({ name: "Partner B" });
+    pyEnv["mail.message"].create({
+        body: "Test message from B",
+        subtype_id: pyEnv["mail.message.subtype"].search([
+            ["subtype_xmlid", "=", "mail.mt_note"],
+        ])[0],
+        model: "res.partner",
+        res_id: serverState.partnerId,
+        author_id: partnerBId,
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Message-actions button[title='Reply']");
+    await contains("button.active", { text: "Log note" });
+    await contains(".o-mail-Composer-coreHeader", { text: "Replying to Partner B", count: 0 });
+    await contains(".o-mail-Composer-input:focus", { value: "@Partner B " });
+    await click(".o-mail-Composer-send");
+    await contains(".o-mail-Message a.o_mail_redirect", { text: "@Partner B" });
+    await click(".o-mail-Message.o-selfAuthored button[title='Expand']");
+    await contains(".o-dropdown-item:contains('Forward')");
+    await contains(".o-dropdown-item:contains('Reply')", { count: 0 });
 });
