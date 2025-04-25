@@ -11,8 +11,8 @@ class StockLandedCost(models.Model):
         ('manufacturing', "Manufacturing Orders")
     ], ondelete={'manufacturing': 'set default'})
     mrp_production_ids = fields.Many2many(
-        'mrp.production', string='Manufacturing order',
-        copy=False, groups='stock.group_stock_manager')
+        'mrp.production', 'mrp_landed_costs_rel', 'mrp_production_id', 'landed_costs_id',
+        string='Manufacturing order', copy=False)
     mrp_productions_count = fields.Integer(compute='_compute_mrp_productions_count')
 
     @api.onchange('target_model')
@@ -22,11 +22,11 @@ class StockLandedCost(models.Model):
             self.mrp_production_ids = False
 
     def _get_targeted_move_ids(self):
-        return (
-            super()._get_targeted_move_ids()
-            | self.mrp_production_ids.move_finished_ids
-            - self.mrp_production_ids.move_byproduct_ids.filtered(lambda move: not move.cost_share)
-        )
+        move_ids = super()._get_targeted_move_ids()
+        if self.target_model == 'manufacturing':
+            move_ids |= self.mrp_production_ids.move_finished_ids \
+                - self.mrp_production_ids.move_byproduct_ids.filtered(lambda move: not move.cost_share)
+        return move_ids
 
     @api.depends('mrp_production_ids')
     def _compute_mrp_productions_count(self):

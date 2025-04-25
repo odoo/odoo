@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+"access_stock_landed_cost_mrp","stock.landed.cost mrp_manager","model_stock_landed_cost","mrp.group_mrp_manager",1,1,1,1
+"access_stock_landed_cost_lines_mrp","stock.landed.cost.lines mrp_manager","stock_landed_costs.model_stock_landed_cost_lines","mrp.group_mrp_manager",1,1,1,1
+"access_stock_valuation_adjustment_lines_mrp","stock.valuation.adjustment.lines mrp_manager","stock_landed_costs.model_stock_valuation_adjustment_lines","mrp.group_mrp_manager",1,1,1,1
+"access_product_value_mrp","product.value mrp_manager","stock_account.model_product_value","mrp.group_mrp_manager",1,0,0,0
+"access_account_move_mrp","account.move mrp_manager","account.model_account_move","mrp.group_mrp_manager",1,0,0,0
+"access_account_move_line_mrp","account.move.line mrp_manager","account.model_account_move_line","mrp.group_mrp_manager",1,0,0,0
+"access_account_journal_mrp","account.journal mrp_manager","account.model_account_journal","mrp.group_mrp_manager",1,0,0,0
+
+"access_mrp_workorder_stock","mrp.workorder stock_manager","mrp.model_mrp_workorder","stock.group_stock_manager",1,0,0,0
+
+"access_mrp_production_bookkeeper","mrp.production bookkeeper","mrp.model_mrp_production","account.group_account_user",1,0,0,0
+"access_mrp_workorder_bookkeeper","mrp.workorder bookkeeper","mrp.model_mrp_workorder","account.group_account_user",1,0,0,0
