@@ -3,6 +3,10 @@ import { Component, useState, onMounted, useRef, useEffect, useExternalListener 
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
+import { useColorPicker } from "@web/core/color_picker/color_picker";
+
+const DEFAULT_CUSTOM_TEXT_COLOR = "#714B67";
+const DEFAULT_CUSTOM_FILL_COLOR = "#ffffff";
 
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
@@ -24,6 +28,8 @@ export class LinkPopover extends Component {
         canEdit: { type: Boolean, optional: true },
         canUpload: { type: Boolean, optional: true },
         onUpload: { type: Function, optional: true },
+        allowCustomStyle: { type: Boolean, optional: true },
+        allowTargetBlank: { type: Boolean, optional: true },
     };
     static defaultProps = {
         canEdit: true,
@@ -38,6 +44,17 @@ export class LinkPopover extends Component {
         // alpha -> epsilon classes. This is currently done by removing
         // all btn-* classes anyway.
     ];
+    buttonSizesData = [
+        { size: "sm", label: _t("Small") },
+        { size: "", label: _t("Medium") },
+        { size: "lg", label: _t("Large") },
+    ];
+    borderData = [
+        { style: "solid", label: "━━━" },
+        { style: "dashed", label: "╌╌╌" },
+        { style: "dotted", label: "┄┄┄" },
+        { style: "double", label: "═══" },
+    ];
     setup() {
         this.ui = useService("ui");
         this.notificationService = useService("notification");
@@ -47,6 +64,9 @@ export class LinkPopover extends Component {
         const labelEqualsUrl =
             textContent === this.props.linkElement.href ||
             textContent + "/" === this.props.linkElement.href;
+        const computedStyle = this.props.document.defaultView.getComputedStyle(
+            this.props.linkElement
+        );
         this.state = useState({
             editing: this.props.linkElement.href ? false : true,
             url: this.props.linkElement.href || "",
@@ -63,11 +83,71 @@ export class LinkPopover extends Component {
             type:
                 this.props.type ||
                 this.props.linkElement.className
-                    .match(/btn(-[a-z0-9_-]*)(primary|secondary)/)
+                    .match(/btn(-[a-z0-9_-]*)(primary|secondary|custom)/)
                     ?.pop() ||
                 "",
+            linkTarget: this.props.linkElement.target === "_blank" ? "_blank" : "",
+            buttonSize: this.props.linkElement.className.match(/btn-(sm|lg)/)?.[1] || "",
+            customBorderSize: computedStyle.borderWidth.replace("px", "") || "1",
+            customBorderStyle: computedStyle.borderStyle || "solid",
             isImage: this.props.isImage,
         });
+
+        this.customTextColorState = useState({
+            selectedColor: computedStyle.color || DEFAULT_CUSTOM_TEXT_COLOR,
+            defaultTab: "solid",
+        });
+        this.customTextResetPreviewColor = this.customTextColorState.selectedColor;
+        this.customFillColorState = useState({
+            selectedColor: computedStyle.backgroundColor || DEFAULT_CUSTOM_FILL_COLOR,
+            defaultTab: "solid",
+        });
+        this.customFillResetPreviewColor = this.customFillColorState.selectedColor;
+        this.customBorderColorState = useState({
+            selectedColor: computedStyle.borderColor || DEFAULT_CUSTOM_TEXT_COLOR,
+            defaultTab: "solid",
+        });
+        this.customBorderResetPreviewColor = this.customBorderColorState.selectedColor;
+
+        if (this.props.allowCustomStyle) {
+            const createCustomColorPicker = (refName, colorStateRef, resetValueRef) =>
+                useColorPicker(
+                    refName,
+                    {
+                        state: this[colorStateRef],
+                        getUsedCustomColors: () => [],
+                        colorPrefix: "",
+                        applyColor: (colorValue) => {
+                            this[colorStateRef].selectedColor = colorValue;
+                            this[resetValueRef] = colorValue;
+                        },
+                        applyColorPreview: (colorValue) => {
+                            this[colorStateRef].selectedColor = colorValue;
+                        },
+                        applyColorResetPreview: () => {
+                            this[colorStateRef].selectedColor = this[resetValueRef];
+                        },
+                    },
+                    {
+                        onClose: this.onChange.bind(this),
+                    }
+                );
+            this.customTextColorPicker = createCustomColorPicker(
+                "customTextColorButton",
+                "customTextColorState",
+                "customTextResetPreviewColor"
+            );
+            this.customFillColorPicker = createCustomColorPicker(
+                "customFillColorButton",
+                "customFillColorState",
+                "customFillResetPreviewColor"
+            );
+            this.customBorderColorPicker = createCustomColorPicker(
+                "customBorderColorButton",
+                "customBorderColorState",
+                "customBorderResetPreviewColor"
+            );
+        }
 
         this.editingWrapper = useRef("editing-wrapper");
         this.inputRef = useRef(this.state.isImage || "label");
@@ -103,12 +183,24 @@ export class LinkPopover extends Component {
 
     onChange() {
         // Apply changes to update the link preview.
-        this.props.onChange(this.state.url, this.state.label, this.classes);
+        this.props.onChange(
+            this.state.url,
+            this.state.label,
+            this.classes,
+            this.customStyles,
+            this.state.linkTarget
+        );
     }
     onClickApply() {
         this.state.editing = false;
         this.applyDeducedUrl();
-        this.props.onApply(this.state.url, this.state.label, this.classes);
+        this.props.onApply(
+            this.state.url,
+            this.state.label,
+            this.classes,
+            this.customStyles,
+            this.state.linkTarget
+        );
     }
     applyDeducedUrl() {
         if (this.state.label === "") {
@@ -317,7 +409,25 @@ export class LinkPopover extends Component {
         if (!this.state.type) {
             return "";
         }
-        return `btn btn-fill-${this.state.type}`;
+        let classes = `btn btn-fill-${this.state.type}`;
+
+        if (this.state.buttonSize) {
+            classes += ` btn-${this.state.buttonSize}`;
+        }
+        return classes;
+    }
+
+    get customStyles() {
+        if (!this.props.allowCustomStyle || this.state.type !== "custom") {
+            return false;
+        }
+        let customStyles = `color: ${this.customTextColorState.selectedColor}; `;
+        customStyles += `background-color: ${this.customFillColorState.selectedColor}; `;
+        customStyles += `border-width: ${this.state.customBorderSize}px; `;
+        customStyles += `border-color: ${this.customBorderColorState.selectedColor}; `;
+        customStyles += `border-style: ${this.state.customBorderStyle}; `;
+
+        return customStyles;
     }
 
     async uploadFile() {
