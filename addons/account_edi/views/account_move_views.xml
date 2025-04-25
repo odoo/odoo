@@ -104,16 +104,16 @@
                 <xpath expr="//header" position="after">
                     <field name="edi_blocking_level" invisible="1" />
                     <field name="edi_error_count" invisible="1" />
-                    <div class="d-flex alert alert-info justify-content-between" role="alert"
+                    <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
                         invisible="edi_web_services_to_process in ['', False] or state == 'draft'">
                          <div>The invoice will soon be sent to
                              <field name="edi_web_services_to_process" class="w-auto"/>
                          </div>
-                         <button name="button_process_edi_web_services" type="object" class="oe_link ps-0 text-decoration-underline" string="Process now"/>
+                         <button name="button_process_edi_web_services" type="object" class="oe_link py-0 text-decoration-underline" string="Process now"/>
                     </div>
                     <div class="alert alert-danger" role="alert"
                         invisible="edi_error_count == 0 or edi_blocking_level != 'error'">
-                        <div class="o_row">
+                        <div class="o_row align-items-center">
                             <field name="edi_error_message" />
                             <button name="button_force_cancel"
                                 string="Force Cancel"

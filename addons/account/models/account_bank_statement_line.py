@@ -603,8 +603,8 @@ class AccountBankStatementLine(models.Model):
         transaction_amount, transaction_currency, journal_amount, journal_currency, company_amount, company_currency \
             = self._get_accounting_amounts_and_currencies()
 
-        rate_journal2foreign_curr = journal_amount and abs(transaction_amount) / abs(journal_amount)
-        rate_comp2journal_curr = company_amount and abs(journal_amount) / abs(company_amount)
+        rate_journal2foreign_curr = abs(transaction_amount) / abs(journal_amount) if journal_amount else 0.0
+        rate_comp2journal_curr = abs(journal_amount) / abs(company_amount) if company_amount else 0.0
 
         if currency == transaction_currency:
             trans_amount_currency = amount_currency
@@ -622,6 +622,9 @@ class AccountBankStatementLine(models.Model):
                 new_balance = company_currency.round(amount_currency / rate_comp2journal_curr)
             else:
                 new_balance = 0.0
+        elif balance is None:
+            trans_amount_currency = amount_currency
+            new_balance = currency._convert(amount_currency, company_currency, company=self.company_id, date=self.date)
         else:
             journ_amount_currency = journal_currency.round(balance * rate_comp2journal_curr)
             trans_amount_currency = transaction_currency.round(journ_amount_currency * rate_journal2foreign_curr)

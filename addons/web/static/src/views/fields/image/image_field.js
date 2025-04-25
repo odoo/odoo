@@ -188,6 +188,8 @@ export class ImageField extends Component {
                 const ctx = canvas.getContext("2d");
                 ctx.fillStyle = "transparent";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
                 ctx.drawImage(
                     image,
                     0,
