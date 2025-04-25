@@ -1,8 +1,9 @@
+import { SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 import { withSequence } from "@html_editor/utils/resource";
-import { SNIPPET_SPECIFIC_END } from "@html_builder/website_builder/option_sequence";
+
 export const COOKIES_BAR = SNIPPET_SPECIFIC_END;
 
 class PopupOptionPlugin extends Plugin {

@@ -1,7 +1,7 @@
+import { TEXT_ALIGNMENT } from "@html_builder/website_builder/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
-import { TEXT_ALIGNMENT } from "@html_builder/utils/option_sequence";
 
 class TextAlignmentOptionPlugin extends Plugin {
     static id = "textAlignmentOption";
