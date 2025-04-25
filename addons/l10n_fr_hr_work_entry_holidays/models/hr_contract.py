@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
 import pytz
 
 from odoo import models
-from odoo.tools.date_intervals import datetime_to_string
 
 
 class HrContract(models.Model):
@@ -25,8 +23,8 @@ class HrContract(models.Model):
         all_leaves = self.env['hr.leave'].search([
             ('employee_id', 'in', fr_contracts.employee_id.ids),
             ('state', '=', 'validate'),
-            ('date_from', '<=', datetime_to_string(end_dt)),
-            ('date_to', '>=', datetime_to_string(start_dt)),
+            ('date_from', '<=', end_dt.astimezone(pytz.utc).replace(tzinfo=None)),
+            ('date_to', '>=', start_dt.astimezone(pytz.utc).replace(tzinfo=None)),
             ('l10n_fr_date_to_changed', '=', True),
         ])
         leaves_per_employee = defaultdict(lambda: self.env['hr.leave'])
