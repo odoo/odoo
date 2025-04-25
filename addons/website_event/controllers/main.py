@@ -236,6 +236,7 @@ class WebsiteEventController(http.Controller):
         }, {...}]
         """
         ticket_order = {}
+        print(ticket_order)
         for key, value in form_details.items():
             registration_items = key.split('nb_register-')
             if len(registration_items) != 2:
@@ -274,12 +275,11 @@ class WebsiteEventController(http.Controller):
             }
         })
 
-    @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
-    def registration_new(self, event, **post):
+    def _prepare_tickets(self, event, data):
         """ After (slot and) tickets selection, render attendee(s) registration form.
         Slot and tickets availability check already performed in the template. """
-        tickets = self._process_tickets_form(event, post)
-        slot_id = post.get('event_slot_id', False)
+        tickets = self._process_tickets_form(event, data)
+        slot_id = data.get('event_slot_id', False)
         # Availability check needed as the total number of tickets can exceed the event/slot available tickets
         availability_check = True
         if event.seats_limited:
@@ -308,13 +308,26 @@ class WebsiteEventController(http.Controller):
                     "email": visitor.email,
                     "phone": visitor.mobile,
                 }
-        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
+        print("tickets")
+        print(tickets)
+        print("slot_id")
+        print(slot_id)
+        return {
             'tickets': tickets,
             'event_slot_id': slot_id,
             'event': event,
             'availability_check': availability_check,
             'default_first_attendee': default_first_attendee,
-        })
+        }
+
+    @http.route(['/event/<model("event.event"):event>/registration/details'], type='jsonrpc', auth="public", methods=['POST'], website=True)
+    def registration_details(self, event, **post):
+        data = self._prepare_tickets(event, post)
+        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", data)
+
+    @http.route(['/event/<model("event.event"):event>/registration/new'], type='http', auth="public", methods=['POST'], website=True)
+    def registration_new(self, event, **post):
+        return self._registration_confirmation(event, post)
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
@@ -338,17 +351,25 @@ class WebsiteEventController(http.Controller):
         # we use this to hold the fields that have already been handled
         # goal is to use the answer to the first question of every 'type' (aka name / phone / email / company name)
         already_handled_fields_data = {}
+        print("form_details")
+        print(form_details)
         for key, value in form_details.items():
             if not value or '-' not in key:
                 continue
-
+            print("pass here")
             key_values = key.split('-')
             # Special case for handling event_ticket_id data that holds only 2 values
             if len(key_values) == 2:
+                print("key_values")
+                print(key_values)
                 registration_index, field_name = key_values
+                print("registration_fields")
+                print(registration_fields)
                 if field_name not in registration_fields:
                     continue
                 registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
+                print("registration inside process_attendees_form")
+                print(registrations)
                 continue
 
             if len(key_values) != 3:
@@ -418,17 +439,16 @@ class WebsiteEventController(http.Controller):
 
         return request.env['event.registration'].sudo().create(registrations_to_create)
 
-    @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
-    def registration_confirm(self, event, **post):
+    def _registration_confirmation(self, event, data):
         """ Check before creating and finalize the creation of the registrations
             that we have enough seats for all selected tickets.
             If we don't, the user is instead redirected to page to register with a
             formatted error message. """
-        try:
-            request.env['ir.http']._verify_request_recaptcha_token('website_event_registration')
-        except UserError:
-            return request.redirect('/event/%s/register?registration_error_code=recaptcha_failed' % event.id)
-        registrations_data = self._process_attendees_form(event, post)
+        print("data")
+        print(data)
+        registrations_data = self._process_attendees_form(event, data)
+        print("registrations_data")
+        print(registrations_data)
         counter_per_combination = Counter((registration.get('event_slot_id', False), registration['event_ticket_id']) for registration in registrations_data)
         slot_ids = {slot_id for slot_id, _ in counter_per_combination if slot_id}
         ticket_ids = {ticket_id for _, ticket_id in counter_per_combination if ticket_id}
@@ -443,7 +463,22 @@ class WebsiteEventController(http.Controller):
             return request.redirect('/event/%s/register?registration_error_code=insufficient_seats' % event.id)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations_data)
 
+        print("attendees_sudo")
+        print(attendees_sudo)
+
         return request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
+
+    @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], csrf=False, website=True)
+    def registration_confirm(self, event, **post):
+        """ Check before creating and finalize the creation of the registrations
+            that we have enough seats for all selected tickets.
+            If we don't, the user is instead redirected to page to register with a
+            formatted error message. """
+        try:
+            request.env['ir.http']._verify_request_recaptcha_token('website_event_registration')
+        except UserError:
+            return request.redirect('/event/%s/register?registration_error_code=recaptcha_failed' % event.id)
+        return self._registration_confirmation(event, post)
 
     @http.route(['/event/<model("event.event"):event>/registration/success'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def event_registration_success(self, event, registration_ids):
@@ -451,6 +486,8 @@ class WebsiteEventController(http.Controller):
         visitor = request.env['website.visitor']._get_visitor_from_request()
         if not visitor:
             raise NotFound()
+        print("registration_ids")
+        print(registration_ids)
         attendees_sudo = request.env['event.registration'].sudo().search([
             ('id', 'in', [str(registration_id) for registration_id in registration_ids.split(',')]),
             ('event_id', '=', event.id),

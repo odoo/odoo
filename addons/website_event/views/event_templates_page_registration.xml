@@ -487,11 +487,11 @@
 
             <form t-if="event.event_registrations_open and (not event.event_ticket_ids or any(not ticket.is_expired for ticket in event.event_ticket_ids))"
                 id="registration_form"
-                t-attf-action="/event/#{slug(event)}/registration/new" method="post"
+                t-attf-action="/event/#{slug(event)}/registration/{{ 'details' if 1 else 'new' }}" method="post"
                 itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input t-if="event_slot" type="hidden" name="event_slot_id" t-att-value="event_slot.id"/>
-                <div id="o_wevent_tickets" class="shadow-sm o_wevent_js_ticket_details">
+                <div id="o_wevent_tickets" t-attf-class="shadow-sm {{ 'o_wevent_js_ticket_details' if 1 else '' }}">
                     <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger" role="alert">
                         <p class="mb-0">
                             Registration failed! These tickets are not available anymore.
@@ -615,7 +615,7 @@
                                 <t t-if="event.is_multi_slots">Cancel</t>
                                 <t t-else="">Close</t>
                             </button>
-                            <button type="submit" class="btn btn-primary a-submit" t-attf-id="#{event.id}" disabled="disabled">
+                            <button type="submit" class="btn btn-primary a-submit" t-attf-id="#{event.id}">
                                 Register
                                 <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
                                     (only <t t-out="event.seats_available"/> available)
