@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <templates xml:space="preserve">
+ 
+ <t t-name="html_builder.HeaderNavbarOption">
+     <BuilderRow label.translate="Mobile Alignment">
+         <BuilderSelect action="'websiteConfig'" id="'header_mobile_alignment_opt'">
+             <BuilderSelectItem 
+                 label.translate="Left"
+                 actionParam="{
+                     views: [],
+                     vars: {'hamburger-position-mobile': 'left'}
+                 }"
+             >Left</BuilderSelectItem>
+             <BuilderSelectItem 
+                 label.translate="Center"
+                 actionParam="{
+                     views: ['website.template_header_mobile_align_center', 'website.template_header_hamburger_mobile_align_center'],
+                     vars: {'hamburger-position-mobile': 'center'}
+                 }"
+             >Center</BuilderSelectItem>
+             <BuilderSelectItem 
+                 label.translate="Right"
+                 actionParam="{
+                     views: ['website.template_header_mobile_align_right', 'website.template_header_hamburger_mobile_align_right'],
+                     vars: {'hamburger-position-mobile': 'right'}
+                 }"
+             >Right</BuilderSelectItem>
+         </BuilderSelect>
+     </BuilderRow>
+     <BuilderRow label.translate="Font">
+         <BuilderFontFamilyPicker action="'customizeWebsiteVariable'" actionParam="'navbar-font'" valueParamName="'actionValue'"/>
+     </BuilderRow>
+     <BuilderRow label.translate="Format">
+         <BuilderButtonGroup>
+             <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'header-font-size'" unit="'px'" saveUnit="'rem'"/>
+             <BuilderColorPicker action="'customizeWebsiteVariable'" actionParam="'header-text-color'"/>
+             <BuilderSelect applyTo="'#top_menu'" action="'websiteConfig'" id="'header_alignment_opt'">
+                 <BuilderSelectItem 
+                     actionParam="{ 
+                         views: [], 
+                         vars: {'hamburger-position': 'left'} 
+                     }"
+                     className="'o_we_icon_select'"
+                 >
+                     <i class="fa fa-align-left fa-fw"></i>
+                 </BuilderSelectItem>
+                 <BuilderSelectItem 
+                     t-if="!hasSomeViews(['website.template_header_hamburger'])"
+                     actionParam="{ 
+                         views: ['website.template_header_default_align_center', 'website.template_header_boxed_align_center', 'website.template_header_stretch_align_center', 'website.template_header_search_align_center', 'website.template_header_sales_one_align_center', 'website.template_header_sales_two_align_center', 'website.template_header_sales_four_align_center', 'website.template_header_sidebar_align_center'], 
+                         vars: {'hamburger-position': 'center'} 
+                     }"
+                     className="'o_we_icon_select'"
+                 >
+                     <i class="fa fa-align-center fa-fw"></i>
+                 </BuilderSelectItem>
+                 <BuilderSelectItem 
+                     actionParam="{ 
+                         views: ['website.template_header_default_align_right', 'website.template_header_hamburger_align_right', 'website.template_header_boxed_align_right', 'website.template_header_stretch_align_right', 'website.template_header_search_align_right', 'website.template_header_sales_one_align_right', 'website.template_header_sales_two_align_right', 'website.template_header_sales_four_align_right', 'website.template_header_sidebar_align_right'], 
+                         vars: {'hamburger-position': 'right'} 
+                     }"
+                     className="'o_we_icon_select'"
+                 >
+                     <i class="fa fa-align-right fa-fw"></i>
+                 </BuilderSelectItem>
+             </BuilderSelect>
+         </BuilderButtonGroup>
+     </BuilderRow>
+     <BuilderRow label.translate="Link Style" t-if="hasSomeViews(['website.template_header_default', 'website.template_header_boxed', 'website.template_header_vertical', 'website.template_header_search', 'website.template_header_sales_one', 'website.template_header_sales_two', 'website.template_header_sales_three', 'website.template_header_sales_four'])">
+         <BuilderSelect action="'websiteConfig'">
+             <BuilderSelectItem 
+                 id="'option_header_navbar_links_default'"
+                 label.translate="Default"
+                 actionParam="{
+                     views: [],
+                     vars: {'header-links-style': 'default'},
+                     checkVars: true,
+                 }"
+             >Default</BuilderSelectItem>
+             <BuilderSelectItem 
+                 id="'option_header_navbar_links_fill'"
+                 label.translate="Fill"
+                 actionParam="{
+                     views: ['website.header_navbar_pills_style'],
+                     vars: {'header-links-style': 'fill'},
+                     checkVars: true,
+                 }"
+             >Fill</BuilderSelectItem>
+             <BuilderSelectItem 
+                 id="'option_header_navbar_links_outline'"
+                 label.translate="Outline"
+                 actionParam="{
+                     views: [],
+                     vars: {'header-links-style': 'outline'},
+                     checkVars: true,
+                 }"
+             >Outline</BuilderSelectItem>
+             <BuilderSelectItem 
+                 id="'option_header_navbar_links_pills'"
+                 label.translate="Pill"
+                 actionParam="{
+                     views: ['website.header_navbar_pills_style'],
+                     vars: {'header-links-style': 'pills'},
+                     checkVars: true,
+                 }"
+             >Pill</BuilderSelectItem>
+             <BuilderSelectItem 
+                 id="'option_header_navbar_block'"
+                 label.translate="Block"
+                 actionParam="{
+                     views: ['website.header_navbar_pills_style'],
+                     vars: {'header-links-style': 'block'},
+                     checkVars: true,
+                 }"
+             >Block</BuilderSelectItem>
+             <BuilderSelectItem 
+                 id="'option_header_navbar_border_bottom'"
+                 label.translate="Border Bottom"
+                 actionParam="{
+                     views: [],
+                     vars: {'header-links-style': 'border-bottom'},
+                     checkVars: true,
+                 }"
+             >Border Bottom</BuilderSelectItem>
+         </BuilderSelect>
+     </BuilderRow>
+     <BuilderRow label.translate="Additional color">
+         <BuilderSelect action="'websiteConfig'">
+             <BuilderSelectItem 
+                 label.translate="Default"
+                 actionParam="{views: []}"
+             >Default</BuilderSelectItem>
+             <BuilderSelectItem 
+                 label.translate="Primary"
+                 actionParam="{views: ['website.template_header_additional_color_primary']}"
+             >Primary</BuilderSelectItem>
+             <BuilderSelectItem 
+                 label.translate="Secondary"
+                 actionParam="{views: ['website.template_header_additional_color_secondary']}"
+             >Secondary</BuilderSelectItem>
+         </BuilderSelect>
+     </BuilderRow>
+     <BuilderRow label.translate="Sub Menus">
+         <BuilderSelect action="'websiteConfig'">
+             <BuilderSelectItem 
+                 id="header_dropdown_on_click_opt"
+                 label.translate="On Click"
+                 actionParam="{views: []}"
+                 className=""
+             >On Click</BuilderSelectItem>
+             <BuilderSelectItem 
+                 label.translate="On Hover"
+                 actionParam="{views: ['website.header_hoverable_dropdown']}"
+                 className="'o_hoverable_dropdown'"
+             >On Hover</BuilderSelectItem>
+         </BuilderSelect>
+     </BuilderRow>
+ 
+ </t>
+ 
+ </templates>

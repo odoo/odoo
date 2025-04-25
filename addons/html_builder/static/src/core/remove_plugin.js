@@ -18,6 +18,7 @@ const unremovableSelectors = [
     ".s_table_of_content_navbar_wrap",
     ".s_table_of_content_main",
     ".nav-item",
+    "#wrapwrap > header nav.navbar",
     "header",
     "main",
     "footer",

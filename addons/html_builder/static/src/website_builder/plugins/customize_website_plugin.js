@@ -26,6 +26,8 @@ export class CustomizeWebsitePlugin extends Plugin {
         "toggleTemplate",
         "withCustomHistory",
         "populateCache",
+        "loadConfigKey",
+        "getConfigKey",
     ];
 
     resources = {
@@ -289,12 +291,16 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
                 isApplied: ({ params }) => {
                     const records = [...(params.views || []), ...(params.assets || [])];
-                    return (
-                        records.every((v) => this.getConfigKey(v)) &&
-                        Object.entries(params.vars || {}).every(
-                            ([variable, value]) => value === this.getWebsiteVariableValue(variable)
-                        )
-                    );
+                    const configKeysIsApplied = records.every((v) => this.getConfigKey(v))
+                    if (params.checkVars && params.checkVars !== undefined) {
+                        return (
+                            configKeysIsApplied &&
+                            Object.entries(params.vars || {}).every(
+                                ([variable, value]) => value === this.getWebsiteVariableValue(variable)
+                            )
+                        );
+                    }
+                    return configKeysIsApplied
                 },
                 apply: async (action) => this.toggleConfig(action, true),
                 clean: (action) => this.toggleConfig(action, false),
