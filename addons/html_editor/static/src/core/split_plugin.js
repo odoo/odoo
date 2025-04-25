@@ -52,15 +52,12 @@ export class SplitPlugin extends Plugin {
             // unmergeable.
             (node) => node.classList?.contains("oe_unbreakable"),
             (node) => {
-                const isExplicitlyNotContentEditable = (node) => {
+                const isExplicitlyNotContentEditable = (node) =>
                     // In the `contenteditable` attribute consideration,
                     // disconnected nodes can be unsplittable only if they are
                     // explicitly set under a contenteditable="false" element.
-                    return (
-                        !isContentEditable(node) &&
-                        (node.isConnected || closestElement(node, "[contenteditable]"))
-                    );
-                };
+                    !isContentEditable(node) &&
+                    (node.isConnected || closestElement(node, "[contenteditable]"));
                 return (
                     isExplicitlyNotContentEditable(node) ||
                     // If node sets contenteditable='true' and is inside a non-editable
