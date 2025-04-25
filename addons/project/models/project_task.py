@@ -333,13 +333,11 @@ class ProjectTask(models.Model):
                 raise ValidationError(_('This task has sub-tasks, so it can\'t be private.'))
 
     @property
-    def SELF_READABLE_FIELDS(self):
-        # TODO rename
-        return PROJECT_TASK_READABLE_FIELDS | self.SELF_WRITABLE_FIELDS
+    def TASK_PORTAL_READABLE_FIELDS(self):
+        return PROJECT_TASK_READABLE_FIELDS
 
     @property
-    def SELF_WRITABLE_FIELDS(self):
-        # TODO rename
+    def TASK_PORTAL_WRITABLE_FIELDS(self):
         return PROJECT_TASK_WRITABLE_FIELDS
 
     @api.depends('parent_id.project_id')
@@ -1005,8 +1003,8 @@ class ProjectTask(models.Model):
     @tools.ormcache()
     def _portal_accessible_fields(self) -> tuple[frozenset[str], frozenset[str]]:
         """Readable and writable fields by portal users."""
-        readable = frozenset(self.SELF_READABLE_FIELDS)
-        writeable = frozenset(self.SELF_WRITABLE_FIELDS)
+        readable = frozenset(self.TASK_PORTAL_READABLE_FIELDS)
+        writeable = frozenset(self.TASK_PORTAL_WRITABLE_FIELDS)
         return readable | writeable, writeable
 
     def _has_field_access(self, field, operation):

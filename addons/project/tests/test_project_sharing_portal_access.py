@@ -29,25 +29,26 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         })
 
         Task = cls.env['project.task']
+        readable_fields, writeable_fields = Task._portal_accessible_fields()
         cls.read_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in Task.SELF_READABLE_FIELDS
+            if k in readable_fields
         ])
         cls.write_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in Task.SELF_WRITABLE_FIELDS
+            if k in writeable_fields
         ])
         cls.readonly_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in Task.SELF_READABLE_FIELDS and k not in Task.SELF_WRITABLE_FIELDS
+            if k in readable_fields and k not in writeable_fields
         ])
         cls.other_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k not in Task.SELF_READABLE_FIELDS
+            if k not in readable_fields
         ])
 
     def test_mention_suggestions(self):
