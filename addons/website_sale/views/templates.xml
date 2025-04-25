@@ -1689,7 +1689,6 @@
                          t-attf-class="oe_website_sale container my-3 my-lg-4 #{'discount'
                             if combination_info['has_discounted_price'] else ''}"
                          t-att-data-view-track="view_track and '1' or '0'"
-                         t-att-data-product-tracking-info="'product_tracking_info' in combination_info and json.dumps(combination_info['product_tracking_info'])"
                 >
                     <div class="row align-items-center">
                         <div class="col d-flex align-items-center order-1 order-lg-0">
