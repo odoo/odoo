@@ -15,6 +15,7 @@ export class DropZonePlugin extends Plugin {
     ];
 
     setup() {
+        this.snippetModel = this.services["html_builder.snippets"];
         this.dropzoneSelectors = this.getResource("dropzone_selector");
     }
 
@@ -43,13 +44,12 @@ export class DropZonePlugin extends Plugin {
     }
 
     /**
-     * Gets the selectors that determine where the given snippet can be placed.
+     * Gets the selectors that determine where the given element can be placed.
      *
      * @param {HTMLElement} snippetEl the element
-     * @param {Object} snippet the associated snippet object
      * @returns {Object} [selectorChildren, selectorSiblings]
      */
-    getSelectors(snippetEl, snippet) {
+    getSelectors(snippetEl) {
         let selectorChildren = [];
         let selectorSiblings = [];
         const selectorExcludeAncestor = [];
@@ -94,7 +94,17 @@ export class DropZonePlugin extends Plugin {
         }
 
         // Prevent dropping sanitized elements in sanitized zones.
-        const forbidSanitize = snippet.forbidSanitize;
+        let forbidSanitize = false;
+        // Check if the element is sanitized or if it contains such elements.
+        for (const el of [snippetEl, ...snippetEl.querySelectorAll("[data-snippet")]) {
+            const snippet = this.snippetModel.getOriginalSnippet(el.dataset.snippet);
+            if (snippet && snippet.forbidSanitize) {
+                forbidSanitize = snippet.forbidSanitize;
+                if (forbidSanitize === true) {
+                    break;
+                }
+            }
+        }
         const selectorSanitized = new Set();
         const filterSanitized = (el) => {
             if (el.closest('[data-oe-sanitize="no_block"]')) {

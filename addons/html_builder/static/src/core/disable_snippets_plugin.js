@@ -43,7 +43,18 @@ export class DisableSnippetsPlugin extends Plugin {
 
         // A snippet can only be dropped next/inside elements that are editable
         // and that do not explicitely block them.
-        const checkSanitize = (el, forbidSanitize) => {
+        const checkSanitize = (el, snippetEl) => {
+            let forbidSanitize = false;
+            // Check if the snippet is sanitized/contains such snippets.
+            for (const el of [snippetEl, ...snippetEl.querySelectorAll("[data-snippet")]) {
+                const snippet = this.snippetModel.getOriginalSnippet(el.dataset.snippet);
+                if (snippet && snippet.forbidSanitize) {
+                    forbidSanitize = snippet.forbidSanitize;
+                    if (forbidSanitize === true) {
+                        break;
+                    }
+                }
+            }
             if (forbidSanitize === "form") {
                 return !el.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"])');
             } else {
@@ -56,7 +67,7 @@ export class DisableSnippetsPlugin extends Plugin {
                 ({ selector, exclude, dropAreaEls }) =>
                     snippetEl.matches(selector) &&
                     !snippetEl.matches(exclude) &&
-                    dropAreaEls.some((el) => checkSanitize(el, snippet.forbidSanitize))
+                    dropAreaEls.some((el) => checkSanitize(el, snippetEl))
             );
         };
 
@@ -83,9 +94,17 @@ export class DisableSnippetsPlugin extends Plugin {
         // Disable the groups containing only disabled snippets.
         if (!areGroupsDisabled) {
             snippetGroups.forEach((snippetGroup) => {
-                snippetGroup.isDisabled = !snippets.find(
-                    (snippet) => snippet.groupName === snippetGroup.groupName && !snippet.isDisabled
-                );
+                if (snippetGroup.groupName !== "custom") {
+                    snippetGroup.isDisabled = !snippets.find(
+                        (snippet) =>
+                            snippet.groupName === snippetGroup.groupName && !snippet.isDisabled
+                    );
+                } else {
+                    const customSnippets = this.snippetModel.snippetsByCategory["snippet_custom"];
+                    snippetGroup.isDisabled = !customSnippets.find(
+                        (snippet) => !snippet.isDisabled
+                    );
+                }
             });
         }
     }

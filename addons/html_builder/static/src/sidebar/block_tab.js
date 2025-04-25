@@ -58,7 +58,7 @@ export class BlockTab extends Component {
                     this.snippetModel.openSnippetDialog(snippet, {
                         onSelect: (snippet) => {
                             snippetEl = snippet.content.cloneNode(true);
-                            const selectors = this.shared.dropzone.getSelectors(snippetEl, snippet);
+                            const selectors = this.shared.dropzone.getSelectors(snippetEl);
                             // Add the dropzones corresponding to the selected
                             // snippet and make them invisible.
                             const dropzoneEls = this.shared.dropzone.activateDropzones(selectors);
@@ -108,10 +108,7 @@ export class BlockTab extends Component {
         // current position.
         const hookParentEl = hookEl.parentElement;
         this.snippetModel.snippetStructures.forEach((snippet) => {
-            const { selectorChildren } = this.shared.dropzone.getSelectors(
-                snippet.content,
-                snippet
-            );
+            const { selectorChildren } = this.shared.dropzone.getSelectors(snippet.content);
             snippet.isExcluded = ![...selectorChildren].some((el) => el === hookParentEl);
         });
 
@@ -249,7 +246,7 @@ export class BlockTab extends Component {
                     dynamicSvgEl.src = colorCustomizedURL.pathname + colorCustomizedURL.search;
                 });
 
-                const selectors = this.shared.dropzone.getSelectors(snippetEl, snippet);
+                const selectors = this.shared.dropzone.getSelectors(snippetEl);
                 dropzoneEls = this.shared.dropzone.activateDropzones(selectors, {
                     toInsertInline: isInlineSnippet,
                 });
