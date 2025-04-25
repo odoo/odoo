@@ -186,7 +186,7 @@ export function payWithDemo() {
     ...pay(),
     {
         content: 'eCommerce: check that the payment is successful',
-        trigger: '.oe_website_sale_tx_status:contains("Your payment has been processed.")',
+        trigger: '[name="order_confirmation"]:contains("Your payment has been processed.")',
     }]
 }
 
@@ -207,7 +207,7 @@ export function payWithTransfer({
             {
                 content: "Last step",
                 trigger:
-                    '.oe_website_sale_tx_status:contains("Please use the following transfer details")',
+                    '[name="order_confirmation"]:contains("Please use the following transfer details")',
                 timeout: 30000,
             },
         ];
@@ -218,7 +218,7 @@ export function payWithTransfer({
             {
                 content: "Last step",
                 trigger:
-                    '.oe_website_sale_tx_status:contains("Please use the following transfer details")',
+                    '[name="order_confirmation"]:contains("Please use the following transfer details")',
                 timeout: 30000,
                 run() {
                     window.location.href = '/contactus'; // Redirect in JS to avoid the RPC loop (20x1sec)

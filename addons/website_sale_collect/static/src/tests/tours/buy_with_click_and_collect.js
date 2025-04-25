@@ -62,7 +62,7 @@ registry.category('web_tour.tours').add('website_sale_collect_buy_product', {
         ...tourUtils.pay({ expectUnloadPage: true, waitFinalizeYourPayment: true }),
         {
             content: "Check payment status confirmation window",
-            trigger: '.oe_website_sale_tx_status[data-order-tracking-info]',
+            trigger: '[name="order_confirmation"][data-order-tracking-info]',
         },
     ],
 });

@@ -1882,7 +1882,6 @@
                          t-attf-class="oe_website_sale container mt-4 mb-5 #{'discount'
                             if combination_info['has_discounted_price'] else ''}"
                          t-att-data-view-track="view_track and '1' or '0'"
-                         t-att-data-product-tracking-info="'product_tracking_info' in combination_info and json.dumps(combination_info['product_tracking_info'])"
                 >
                     <div class="d-flex flex-wrap align-items-center">
                         <div class="d-flex align-items-center flex-grow-1 mb-4 m-lg-0">
@@ -3842,7 +3841,12 @@
 
     <!-- Called in `website_sale.confirmation`. -->
     <template id="payment_confirmation_status">
-        <div class="oe_website_sale_tx_status mt-3" t-att-data-order-id="order.id" t-att-data-order-tracking-info="json.dumps(order_tracking_info)">
+        <div
+            name="order_confirmation"
+            class="mt-3"
+            t-att-data-order-id="order.id"
+            t-att-data-order-tracking-info="json.dumps(order_tracking_info)"
+        >
             <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
             <div
                 t-if="tx_sudo"

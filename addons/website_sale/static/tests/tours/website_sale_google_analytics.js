@@ -1,21 +1,32 @@
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
-odoo.loader.bus.addEventListener("module-started", (e) => {
-    if (e.detail.moduleName === "@website_sale/js/website_sale_tracking") {
-        //import websiteSaleTracking from "@website_sale/js/website_sale_tracking";
-        e.detail.module[Symbol.for("default")].include({
-            // Purposely don't call super to avoid call to third party (GA) during tests
-            _onViewItem(event, data) {
-                document.body.setAttribute("view-event-id", data.item_id);
-            },
-            _onAddToCart(event) {
-                const productsTrackingInfo = event.detail;
-                document.body.setAttribute("cart-event-id", productsTrackingInfo[0].item_id);
-            },
-        });
-    }
-});
+/**
+ * Patch tracking to avoid third party calls during tests.
+ */
+function patchTracking() {
+    const { Tracking } = odoo.loader.modules.get('@website_sale/interactions/tracking');
+    patch(Tracking.prototype, {
+        // Don't call super to avoid third party calls (GA).
+        onViewItem(event) {
+            const productTrackingInfo = event.detail;
+            document.body.setAttribute("view-event-id", productTrackingInfo.item_id);
+        },
+        onAddToCart(event) {
+            const productsTrackingInfo = event.detail;
+            document.body.setAttribute("cart-event-id", productsTrackingInfo[0].item_id);
+        },
+    });
+}
+
+if (odoo.loader.modules.has('@website_sale/interactions/tracking')) {
+    patchTracking();
+} else {
+    odoo.loader.bus.addEventListener('module-started', (e) => {
+        if (e.detail.moduleName === '@website_sale/interactions/tracking') patchTracking();
+    });
+}
 
 let itemId;
 
