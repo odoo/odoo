@@ -84,13 +84,22 @@ export class PivotRenderer extends Component {
      */
     getFormattedValue(cell) {
         const field = this.model.metaData.measures[cell.measure];
+        const fieldAttrs = this.model.metaData.fieldAttrs[cell.measure] ?? {};
+        const fieldInfo = {
+            options: fieldAttrs.options ?? {},
+            attrs: fieldAttrs,
+        };
         let formatType = this.model.metaData.widgets[cell.measure];
         if (!formatType) {
             const fieldType = field.type;
             formatType = ["many2one", "reference"].includes(fieldType) ? "integer" : fieldType;
         }
         const formatter = formatters.get(formatType);
-        return formatter(cell.value, field);
+        const formatOptions = { field };
+        if (formatter.extractOptions) {
+            Object.assign(formatOptions, formatter.extractOptions(fieldInfo));
+        }
+        return formatter(cell.value, formatOptions);
     }
     /**
      * Get the formatted variation of a cell.
