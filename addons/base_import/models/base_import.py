@@ -457,7 +457,10 @@ class Base_ImportImport(models.TransientModel):
                         }
                     )
                 else:
-                    values.append(cell.value)
+                    if cell.ctype == xlrd.XL_CELL_TEXT and isinstance(cell.value, str):
+                        values.append(cell.value.replace("\n", "<br/>"))
+                    else:
+                        values.append(cell.value)
             if any(x and (not isinstance(x, str) or x.strip()) for x in values):
                 rows.append(values)
 
@@ -466,17 +469,11 @@ class Base_ImportImport(models.TransientModel):
 
     # use the same method for xlsx and xls files
     def _read_xlsx(self, options):
-        try:
-            from xlrd import xlsx  # noqa: F401, PLC0415
-            if xlsx:
-                return self._read_xls(options)
-        except ImportError:
-            pass
-
         import openpyxl  # noqa: PLC0415
         import openpyxl.cell.cell as types  # noqa: PLC0415
         import openpyxl.styles.numbers as styles  # noqa: PLC0415
-        book = openpyxl.load_workbook(io.BytesIO(self.file or b''), data_only=True)
+        rich_text_enabled = options.get('rich_text', True)
+        book = openpyxl.load_workbook(io.BytesIO(self.file or b''), data_only=True, rich_text=True)
         sheets = options['sheets'] = book.sheetnames
         sheet_name = options['sheet'] = options.get('sheet') or sheets[0]
         sheet = book[sheet_name]
@@ -488,7 +485,6 @@ class Base_ImportImport(models.TransientModel):
                     raise ValueError(
                         _("Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s", row=rowx, col=colx, cell_value=cell.value)
                     )
-
                 if cell.value is None:
                     values.append('')
                 elif isinstance(cell.value, float):
@@ -507,11 +503,55 @@ class Base_ImportImport(models.TransientModel):
                         _("Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with format: %(cell_format)s, as (%(format_type)s) formats are not supported.", row=rowx, col=colx, cell_value=cell.value, cell_format=cell.number_format, format_type=d_fmt)
                         )
                 else:
-                    values.append(str(cell.value))
+                    if rich_text_enabled:
+                        values.append(self._rich_text_to_html(cell))
+                    else:
+                        values.append(str(cell.value))
 
             if any(x and (not isinstance(x, str) or x.strip()) for x in values):
                 rows.append(values)
         return sheet.max_row, rows
+
+    def _rich_text_to_html(self, cell):
+        """
+        Convert openpyxl rich text object to HTML with bold, italic, font color,
+        trike-through, and font size and line break support.
+        """
+        from openpyxl.cell.rich_text import CellRichText  # noqa: PLC0415
+        value = cell.value
+        if not isinstance(value, CellRichText):
+            # Fallback: handle line breaks if it's a plain string
+            return value.replace('\n', '<br/>') if isinstance(value, str) else str(value)
+
+        def apply_styles(text, font):
+            if font is None:
+                return text
+            if font.b:
+                text = f"<b>{text}</b>"
+            if font.i:
+                text = f"<i>{text}</i>"
+            if font.u:
+                text = f"<u>{text}</u>"
+            if font.strike:
+                text = f"<s>{text}</s>"
+            if font.color and isinstance(font.color.rgb, str):
+                rgb = font.color.rgb
+                if rgb.startswith("FF") and len(rgb) == 8:
+                    rgb = rgb[2:]
+                text = f"<font color='#{rgb}'>{text}</font>"
+            if font.sz:
+                text = f"<span style='font-size: {int(font.sz)}px;'>{text}</span>"
+            if isinstance(font.name, str):
+                text = f"<font style='font-family: {font.name}'>{text}</font>"
+            return text
+
+        return "".join(
+            apply_styles(
+                block.text.replace("\n", "<br/>"),
+                block.font if hasattr(block, "font") else None,
+            )
+            for block in value
+        )
 
     def _read_ods(self, options):
         from . import odf_ods_reader  # noqa: PLC0415
