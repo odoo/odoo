@@ -6,6 +6,7 @@ import {
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { TaxAutoComplete } from "@account/components/tax_autocomplete/tax_autocomplete";
+import { odoomark } from "@web/core/utils/strings";
 
 export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
     static components = {
@@ -30,7 +31,7 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
         return this.orm
             .call(this.props.resModel, "search_read", [], {
                 domain: [...this.props.getDomain(), ["name", "ilike", name]],
-                fields: ["id", "name", "tax_scope"],
+                fields: ["id", "name", "tax_scope", "description"],
                 context: this.props.context,
             })
             .then((records) => {
@@ -53,9 +54,28 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
     }
 
     mapRecordToOption(result) {
+        function formatValue(value, { defaultValue = "", parseHtml = false, makeBold = false, makeMuted = false }) {
+            let formattedValue = value ? value.split("\n")[0] : defaultValue;
+            if (formattedValue) {
+                if (parseHtml) {
+                    formattedValue = new DOMParser().parseFromString(formattedValue, "text/html").body.textContent;
+                }
+                if (makeBold) {
+                    formattedValue = `**${formattedValue}**`;
+                }
+                if (makeMuted) {
+                    formattedValue = `--${formattedValue}--`;
+                }
+            }
+            return formattedValue;
+        }
+        const taxName = formatValue(result.name, { defaultValue: _t("Unnamed"), makeBold: true });
+        const taxScope = formatValue(result.tax_scope, { makeMuted: true });
+        const taxDescription = formatValue(result.description, { parseHtml: true, makeMuted: true });
+        const label = odoomark(`${taxName} <tab> ${taxScope} <br> ${taxDescription}`);
         return {
             value: result.id,
-            label: result.name ? result.name.split("\n")[0] : _t("Unnamed"),
+            label: label,
             displayName: result.name,
             tax_scope: result.tax_scope,
         };
