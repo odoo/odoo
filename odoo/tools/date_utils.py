@@ -1,22 +1,47 @@
 import calendar
+import math
 import typing
 from collections.abc import Iterator
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timedelta
 
 import babel
 import pytz
 from dateutil.relativedelta import relativedelta, weekdays
 
+from .float_utils import float_round
+
 D = typing.TypeVar('D', date, datetime)
+utc = pytz.utc
+
 
 __all__ = [
     'date_range',
+    'float_to_time',
     'get_fiscal_year',
     'get_month',
     'get_quarter',
     'get_quarter_number',
     'get_timedelta',
+    'time_to_float',
 ]
+
+
+def float_to_time(hours: float) -> time:
+    """ Convert a number of hours into a time object. """
+    if hours == 24.0:
+        return time.max
+    fractional, integral = math.modf(hours)
+    return time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
+
+
+def time_to_float(duration: time | timedelta) -> float:
+    """ Convert a time object to a number of hours. """
+    if isinstance(duration, timedelta):
+        return duration.total_seconds() / 3600
+    if duration == time.max:
+        return 24.0
+    seconds = time.microsecond / 1_000_000 + time.second + time.minute * 60
+    return seconds / 3600 + time.hour
 
 
 def get_month(date: D) -> tuple[D, D]:
