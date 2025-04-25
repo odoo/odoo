@@ -48,10 +48,10 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">abc</li>
-                        <li class="oe-nested">
+                        <li class="o_checked">
+                            <p>abc</p>
                             <ul class="o_checklist">
-                            <li class="o_checked">d[e]f</li>
+                                <li class="o_checked">d[e]f</li>
                             </ul>
                         </li>
                     </ul>`),
@@ -65,8 +65,8 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">abc</li>
-                        <li class="oe-nested">
+                        <li class="o_checked">
+                            <p>abc</p>
                             <ul class="o_checklist">
                                 <li>d[e]f</li>
                             </ul>
@@ -82,10 +82,10 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li>abc</li>
-                        <li class="oe-nested">
+                        <li>
+                            <p>abc</p>
                             <ul class="o_checklist">
-                            <li>d[e]f</li>
+                                <li>d[e]f</li>
                             </ul>
                         </li>
                     </ul>`),
@@ -99,10 +99,10 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li>abc</li>
-                        <li class="oe-nested">
+                        <li>
+                            <p>abc</p>
                             <ul class="o_checklist">
-                            <li class="o_checked">d[e]f</li>
+                                <li class="o_checked">d[e]f</li>
                             </ul>
                         </li>
                     </ul>`),
@@ -135,8 +135,7 @@ describe("Checklist", () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
-                        <li>abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul class="o_checklist">
                                 <li>def</li>
                             </ul>
@@ -146,8 +145,7 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li>abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul class="o_checklist">
                                 <li>def</li>
                                 <li class="o_checked">g[h]i</li>
@@ -158,8 +156,7 @@ describe("Checklist", () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">def</li>
                             </ul>
@@ -169,8 +166,7 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">def</li>
                                 <li>g[h]i</li>
@@ -185,8 +181,7 @@ describe("Checklist", () => {
             contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li class="o_checked">abc</li>
-                        <li class="o_checked">d[e]f</li>
-                        <li class="oe-nested">
+                        <li class="o_checked">d[e]f
                             <ul class="o_checklist">
                                 <li class="o_checked">ghi</li>
                             </ul>
@@ -195,10 +190,9 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">abc</li>
-                        <li class="oe-nested">
+                        <li class="o_checked"><p>abc</p>
                             <ul class="o_checklist">
-                                <li class="o_checked">d[e]f</li>
+                                <li class="o_checked"><p>d[e]f</p></li>
                                 <li class="o_checked">ghi</li>
                             </ul>
                         </li>
@@ -208,8 +202,7 @@ describe("Checklist", () => {
             contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li>abc</li>
-                        <li class="o_checked">d[e]f</li>
-                        <li class="oe-nested">
+                        <li><p>d[e]f</p>
                             <ul class="o_checklist">
                                 <li class="o_checked">ghi</li>
                             </ul>
@@ -218,10 +211,9 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li>abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul class="o_checklist">
-                                <li class="o_checked">d[e]f</li>
+                                <li><p>d[e]f</p></li>
                                 <li class="o_checked">ghi</li>
                             </ul>
                         </li>
@@ -231,8 +223,7 @@ describe("Checklist", () => {
             contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li class="o_checked">abc</li>
-                        <li>d[e]f</li>
-                        <li class="oe-nested">
+                        <li><p>d[e]f</p>
                             <ul class="o_checklist">
                                 <li>ghi</li>
                             </ul>
@@ -241,10 +232,9 @@ describe("Checklist", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul class="o_checklist">
-                        <li class="o_checked">abc</li>
-                        <li class="oe-nested">
+                        <li class="o_checked"><p>abc</p>
                             <ul class="o_checklist">
-                                <li>d[e]f</li>
+                                <li><p>d[e]f</p></li>
                                 <li>ghi</li>
                             </ul>
                         </li>
@@ -265,8 +255,7 @@ describe("Regular list", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                     <ul>
-                        <li>abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul>
                                 <li>[]</li>
                             </ul>
@@ -289,8 +278,7 @@ describe("Regular list", () => {
             },
             contentAfter: unformat(`
                     <ul>
-                        <li>abc</li>
-                        <li class="oe-nested">
+                        <li><p>abc</p>
                             <ul>
                                 <li>[]<br></li>
                             </ul>
@@ -321,8 +309,7 @@ describe("Regular list", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li><br></li>
-                    <li class="oe-nested">
+                    <li><p><br></p>
                         <ul>
                             <li>
                                 []<br>
@@ -375,10 +362,9 @@ describe("with selection collapsed", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li>[]b</li>
                         </ul>
@@ -434,10 +420,9 @@ describe("with selection collapsed", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ol>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ol>
                             <li>[]b</li>
                         </ol>
@@ -457,10 +442,9 @@ describe("with selection collapsed", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li>[]b</li>
                         </ul>
@@ -497,10 +481,7 @@ describe("with selection collapsed", () => {
             contentBefore: unformat(`
                 <ul>
                     <li>a</li>
-                    <li>
-                        []b
-                    </li>
-                    <li class="oe-nested">
+                    <li><p>[]b</p>
                         <ul>
                             <li>c</li>
                         </ul>
@@ -509,12 +490,9 @@ describe("with selection collapsed", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
-                        a
-                    </li>
-                    <li class="oe-nested">
+                    <li><p>a</p>
                         <ul>
-                            <li>[]b</li>
+                            <li><p>[]b</p></li>
                             <li>c</li>
                         </ul>
                     </li>
@@ -527,10 +505,9 @@ describe("with selection collapsed", () => {
             contentBefore: unformat(`
                 <ul>
                     <li>a</li>
-                    <li>
+                    <li><p>
                         []b
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ol>
                             <li>c</li>
                         </ol>
@@ -539,12 +516,11 @@ describe("with selection collapsed", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ol>
-                            <li>[]b</li>
+                            <li><p>[]b</p></li>
                             <li>c</li>
                         </ol>
                     </li>
@@ -561,10 +537,9 @@ describe("with selection collapsed", () => {
                             <li>a</li>
                         </ol>
                     </li>
-                    <li>
+                    <li><p>
                         []b
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ol>
                             <li>c</li>
                         </ol>
@@ -576,7 +551,7 @@ describe("with selection collapsed", () => {
                     <li class="oe-nested">
                         <ol>
                             <li>a</li>
-                            <li>[]b</li>
+                            <li><p>[]b</p></li>
                             <li>c</li>
                         </ol>
                     </li>
@@ -613,8 +588,7 @@ describe("with selection collapsed", () => {
                                 <tr>
                                     <td>
                                         <ul>
-                                            <li>abc</li>
-                                            <li class="oe-nested">
+                                            <li><p>abc</p>
                                                 <ul>
                                                     <li>def[]</li>
                                                 </ul>
@@ -663,8 +637,7 @@ describe("with selection collapsed", () => {
                                 <tr>
                                     <td>
                                         <ul class="o_checklist">
-                                            <li>abc</li>
-                                            <li class="oe-nested">
+                                            <li><p>abc</p>
                                                 <ul class="o_checklist">
                                                     <li>def[]</li>
                                                 </ul>
@@ -725,10 +698,9 @@ describe("with selection", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li>[b]</li>
                         </ul>
@@ -814,10 +786,9 @@ describe("with selection", () => {
         await testEditor({
             contentBefore: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li>[b]</li>
                         </ul>
@@ -826,10 +797,9 @@ describe("with selection", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li class="oe-nested">
                                 <ul>
@@ -843,10 +813,9 @@ describe("with selection", () => {
         await testEditor({
             contentBefore: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li class="oe-nested">
                                 <ul>
@@ -859,10 +828,9 @@ describe("with selection", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li class="oe-nested">
                                 <ul>
@@ -877,19 +845,62 @@ describe("with selection", () => {
                     </li>
                 </ul>`),
         });
+        await testEditor({
+            contentBefore: unformat(`
+                <ul>
+                    <li><p>[a</p>
+                        <ul>
+                            <li><p>b</p>
+                                <ul>
+                                    <li><p>c</p>
+                                        <ul>
+                                            <li>d</li>
+                                        </ul>
+                                    </li>
+                                    <li>e</li>
+                                </ul>
+                            </li>
+                            <li>f</li>
+                        </ul>
+                    </li>
+                    <li>g]</li>
+                </ul>`),
+            stepFunction: keydownTab,
+            contentAfter: unformat(`
+                <ul>
+                    <li class="oe-nested">
+                        <ul>
+                            <li><p>[a</p>
+                                <ul>
+                                    <li><p>b</p>
+                                        <ul>
+                                            <li><p>c</p>
+                                                <ul>
+                                                    <li>d</li>
+                                                </ul>
+                                            </li>
+                                            <li>e</li>
+                                        </ul>
+                                    </li>
+                                    <li>f</li>
+                                </ul>
+                            </li>
+                            <li>g]</li>
+                        </ul>
+                    </li>
+                </ul>`),
+        });
     });
 
     test("should indent two multi-levels", async () => {
         await testEditor({
             contentBefore: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
-                            <li>[b</li>
-                            <li class="oe-nested">
+                            <li><p>[b</p>
                                 <ul>
                                     <li>c]</li>
                                 </ul>
@@ -900,15 +911,13 @@ describe("with selection", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li class="oe-nested">
                                 <ul>
-                                    <li>[b</li>
-                                    <li class="oe-nested">
+                                    <li><p>[b</p>
                                         <ul>
                                             <li>c]</li>
                                         </ul>
@@ -922,15 +931,14 @@ describe("with selection", () => {
         await testEditor({
             contentBefore: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li class="oe-nested">
                                 <ul>
-                                    <li>[b
-                                    </li><li class="oe-nested">
+                                    <li><p>[b
+                                    </p>
                                         <ul>
                                             <li>c]</li>
                                         </ul>
@@ -943,17 +951,15 @@ describe("with selection", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li class="oe-nested">
                                 <ul>
                                     <li class="oe-nested">
                                         <ul>
-                                            <li>[b</li>
-                                            <li class="oe-nested">
+                                            <li><p>[b</p>
                                                 <ul>
                                                     <li>c]</li>
                                                 </ul>
@@ -980,10 +986,9 @@ describe("with selection", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li>[b</li>
                             <li>c]</li>
@@ -1008,10 +1013,9 @@ describe("with selection", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li>]b</li>
                             <li>c[</li>
@@ -1029,9 +1033,9 @@ describe("with selection", () => {
             contentBefore: unformat(`
                 <ul>
                     <li>a</li>
-                    <li>
+                    <li><p>
                         [b
-                    </li><li class="oe-nested">
+                    </p>
                         <ul>
                             <li>c</li>
                         </ul>
@@ -1042,15 +1046,13 @@ describe("with selection", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
-                            <li>
+                            <li><p>
                                 [b
-                            </li>
-                            <li class="oe-nested">
+                            </p>
                                 <ul>
                                     <li>c</li>
                                 </ul>
@@ -1068,9 +1070,9 @@ describe("with selection", () => {
             contentBefore: unformat(`
                 <ul>
                     <li>a</li>
-                    <li>
+                    <li><p>
                         [b
-                    </li><li class="oe-nested">
+                    </p>
                         <ol>
                             <li>c]</li>
                         </ol>
@@ -1079,15 +1081,13 @@ describe("with selection", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>
+                    <li><p>
                         a
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ol>
-                            <li>
+                            <li><p>
                                 [b
-                            </li>
-                            <li class="oe-nested">
+                            </p>
                                 <ol>
                                     <li>c]</li>
                                 </ol>
@@ -1103,9 +1103,9 @@ describe("with selection", () => {
             contentBefore: unformat(`
                 <ul>
                     <li>a</li>
-                    <li>
+                    <li><p>
                         [b
-                    </li><li class="oe-nested">
+                    </p>
                         <ol>
                             <li>]c</li>
                         </ol>
@@ -1114,11 +1114,11 @@ describe("with selection", () => {
             stepFunction: keydownTab,
             contentAfter: unformat(`
                 <ul>
-                    <li>a</li>
-                    <li class="oe-nested">
+                    <li><p>a</p>
                         <ol>
-                            <li>[b</li>
-                            <li class="oe-nested">
+                            <li><p>
+                                [b
+                            </p>
                                 <ol>
                                     <li>]c</li>
                                 </ol>
@@ -1136,8 +1136,7 @@ describe("with selection", () => {
                 <ul>
                     <li>a</li>
                     <li>
-                        b
-                    </li><li class="oe-nested">
+                        <p>b</p>
                         <ol>
                             <li>c</li>
                         </ol>
@@ -1149,10 +1148,9 @@ describe("with selection", () => {
             },
             contentAfter: unformat(`
                 <ul>
-                    <li>a</li>
-                    <li class="oe-nested">
+                    <li><p>a</p>
                         <ol>
-                            <li>[b]</li>
+                            <li><p>[b]</p></li>
                             <li>c</li>
                         </ol>
                     </li>
@@ -1165,19 +1163,17 @@ describe("with selection", () => {
             contentBefore: unformat(`
                 <ul>
                     <li>a</li>
-                    <li>
+                    <li><p>
                         b
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li>c</li>
                             <li>[d</li>
                         </ul>
                     </li>
-                    <li>
+                    <li><p>
                         e
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
                             <li>f</li>
                             <li>g</li>
@@ -1190,23 +1186,20 @@ describe("with selection", () => {
             contentAfter: unformat(`
                 <ul>
                     <li>a</li>
-                    <li>
+                    <li><p>
                         b
-                    </li>
-                    <li class="oe-nested">
+                    </p>
                         <ul>
-                            <li>
+                            <li><p>
                                 c
-                            </li>
-                            <li class="oe-nested">
+                            </p>
                                 <ul>
                                     <li>[d</li>
                                 </ul>
                             </li>
-                            <li>
+                            <li><p>
                             e
-                            </li>
-                            <li class="oe-nested">
+                            </p>
                             <ul>
                                 <li>f</li>
                                 <li>g</li>
@@ -1279,8 +1272,7 @@ describe("with selection", () => {
                                 <tr>
                                     <td>
                                         <ol>
-                                            <li>abc</li>
-                                            <li class="oe-nested">
+                                            <li><p>abc</p>
                                                 <ol>
                                                     <li>[def]</li>
                                                 </ol>
