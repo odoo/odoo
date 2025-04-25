@@ -17,6 +17,7 @@ export class DropZonePlugin extends Plugin {
     setup() {
         this.snippetModel = this.services["html_builder.snippets"];
         this.dropzoneSelectors = this.getResource("dropzone_selector");
+        this.iframe = this.document.defaultView.frameElement;
     }
 
     /**
@@ -310,7 +311,8 @@ export class DropZonePlugin extends Plugin {
     /**
      * @typedef Options
      * @property {Boolean} toInsertInline true if the dragged element is inline
-     * @property {Boolean}fromIframe TODO
+     * @property {Boolean}isContentInIframe true if the content is inside an
+     * iframe
      */
     /**
      * Creates drop zones in the DOM (= locations where dragged elements may be
@@ -322,7 +324,7 @@ export class DropZonePlugin extends Plugin {
      */
     activateDropzones(
         { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids = [] },
-        { toInsertInline, fromIframe } = {}
+        { toInsertInline, isContentInIframe = true } = {}
     ) {
         // TODO improve this portion
         const targets = [];
@@ -352,6 +354,22 @@ export class DropZonePlugin extends Plugin {
         // Inserting a grid dropzone for each row in grid mode.
         for (const rowEl of selectorGrids) {
             rowEl.append(this.createGridDropzone(rowEl));
+        }
+
+        // In the case where the editable content is in an iframe, take the
+        // iframe offset into account to compute the dropzones.
+        if (isContentInIframe) {
+            const iframeRect = this.iframe.getBoundingClientRect();
+            const dropzoneEls = [...this.editable.querySelectorAll(".oe_drop_zone")];
+            dropzoneEls.forEach((dropzoneEl) => {
+                dropzoneEl.oldGetBoundingRect = dropzoneEl.getBoundingClientRect;
+                dropzoneEl.getBoundingClientRect = () => {
+                    const rect = dropzoneEl.oldGetBoundingRect();
+                    rect.x += iframeRect.x;
+                    rect.y += iframeRect.y;
+                    return rect;
+                };
+            });
         }
 
         return [...this.editable.querySelectorAll(".oe_drop_zone:not(.oe_sanitized_drop_zone)")];
