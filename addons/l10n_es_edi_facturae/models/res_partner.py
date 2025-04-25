@@ -1,6 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import check_barcode_encoding
+from odoo.tools.barcode import check_barcode_encoding
 
 
 class L10n_Es_Edi_FacturaeAc_Role_Type(models.Model):

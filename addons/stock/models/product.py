@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import operator as py_operator
@@ -10,10 +9,8 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import float_is_zero, check_barcode_encoding
-from odoo.tools.float_utils import float_round
+from odoo.tools.barcode import check_barcode_encoding
 from odoo.tools.mail import html2plaintext, is_html_empty
-from odoo.tools.misc import groupby
 
 PY_OPERATORS = {
     '<': py_operator.lt,
