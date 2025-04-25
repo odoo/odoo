@@ -1,0 +1,37 @@
+<odoo>
+
+    <!-- Declare models manually to guarantee model_id references -->
+    <record id="model_daily_summary" model="ir.model">
+        <field name="name">daily.summary</field>
+        <field name="model">daily.summary</field>
+        <field name="state">base</field>
+    </record>
+
+    <record id="model_summary_review" model="ir.model">
+        <field name="name">summary.review</field>
+        <field name="model">summary.review</field>
+        <field name="state">base</field>
+    </record>
+
+    <!-- Access Rules -->
+    <record id="access_daily_summary_user" model="ir.model.access">
+        <field name="name">daily.summary user</field>
+        <field name="model_id" ref="model_daily_summary"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="access_summary_review_user" model="ir.model.access">
+        <field name="name">summary.review user</field>
+        <field name="model_id" ref="model_summary_review"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+</odoo>

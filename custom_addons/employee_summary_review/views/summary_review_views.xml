@@ -1,0 +1,54 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="view_summary_review_tree" model="ir.ui.view">
+        <field name="name">summary.review.tree</field>
+        <field name="model">summary.review</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="summary_id"/>
+                <field name="reviewer_id"/>
+                <field name="rating"/>
+                <field name="approved_on"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_summary_review_form" model="ir.ui.view">
+        <field name="name">summary.review.form</field>
+        <field name="model">summary.review</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="summary_id"/>
+                        <field name="reviewer_id"/>
+                        <field name="rating"/>
+                        <field name="remarks"/>
+                        <field name="approved_by_id"/>
+                        <field name="approved_on"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_summary_review" model="ir.actions.act_window">
+        <field name="name">Summary Reviews</field>
+        <field name="res_model">summary.review</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Review submitted summaries here.
+            </p>
+        </field>
+    </record>
+
+    <!-- Sub Menu under Daily Summary -->
+    <menuitem id="menu_summary_review"
+              name="Summary Reviews"
+              parent="menu_daily_summary_root"
+              sequence="20"
+              action="action_summary_review"/>
+</odoo>

@@ -1,0 +1,54 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="view_daily_summary_tree" model="ir.ui.view">
+        <field name="name">daily.summary.tree</field>
+        <field name="model">daily.summary</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="date"/>
+                <field name="reviewed"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_daily_summary_form" model="ir.ui.view">
+        <field name="name">daily.summary.form</field>
+        <field name="model">daily.summary</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="date"/>
+                        <field name="work_description"/>
+                        <field name="reviewed"/>
+                        <field name="review_ids"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_daily_summary" model="ir.actions.act_window">
+        <field name="name">Daily Summaries</field>
+        <field name="res_model">daily.summary</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the first daily summary
+            </p>
+        </field>
+    </record>
+
+    <!-- Top-level App Menu -->
+    <menuitem id="menu_daily_summary_root"
+              name="Daily Summary"
+              sequence="10"
+              groups="base.group_user"
+              action="action_daily_summary"/>
+</odoo>
