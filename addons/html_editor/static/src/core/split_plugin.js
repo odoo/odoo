@@ -178,16 +178,16 @@ export class SplitPlugin extends Plugin {
      */
     splitElement(element, offset) {
         /** @type {HTMLElement} **/
-        const before = element.cloneNode();
+        const firstPart = element.cloneNode();
         /** @type {HTMLElement} **/
-        const after = element.cloneNode();
-        element.before(before);
-        element.after(after);
+        const secondPart = element.cloneNode();
+        element.before(firstPart);
+        element.after(secondPart);
         const children = childNodes(element);
-        before.append(...children.slice(0, offset));
-        after.append(...children.slice(offset));
+        firstPart.append(...children.slice(0, offset));
+        secondPart.append(...children.slice(offset));
         element.remove();
-        return [before, after];
+        return [firstPart, secondPart];
     }
 
     /**
