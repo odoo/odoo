@@ -1,16 +1,14 @@
-# -*- coding: utf-8 -*-
 import calendar
 import math
+import typing
+from collections.abc import Iterator
 from datetime import date, datetime, time
-from typing import Tuple, TypeVar, Literal, Iterator, Type
 
 import babel
 import pytz
 from dateutil.relativedelta import relativedelta, weekdays
 
-from .func import lazy
-
-D = TypeVar('D', date, datetime)
+D = typing.TypeVar('D', date, datetime)
 
 __all__ = [
     'date_range',
@@ -21,7 +19,8 @@ __all__ = [
     'get_timedelta',
 ]
 
-def date_type(value: D) -> Type[D]:
+
+def date_type(value: D) -> type[D]:
     ''' Return either the datetime.datetime class or datetime.date type whether `value` is a datetime or a date.
 
     :param value: A datetime.datetime or datetime.date object.
@@ -30,7 +29,7 @@ def date_type(value: D) -> Type[D]:
     return datetime if isinstance(value, datetime) else date
 
 
-def get_month(date: D) -> Tuple[D, D]:
+def get_month(date: D) -> tuple[D, D]:
     ''' Compute the month dates range on which the 'date' parameter belongs to.
     '''
     return date.replace(day=1), date.replace(day=calendar.monthrange(date.year, date.month)[1])
@@ -42,7 +41,7 @@ def get_quarter_number(date: date) -> int:
     return math.ceil(date.month / 3)
 
 
-def get_quarter(date: D) -> Tuple[D, D]:
+def get_quarter(date: D) -> tuple[D, D]:
     ''' Compute the quarter dates range on which the 'date' parameter belongs to.
     '''
     quarter_number = get_quarter_number(date)
@@ -53,7 +52,7 @@ def get_quarter(date: D) -> Tuple[D, D]:
     return date_from, date_to
 
 
-def get_fiscal_year(date: D, day: int = 31, month: int = 12) -> Tuple[D, D]:
+def get_fiscal_year(date: D, day: int = 31, month: int = 12) -> tuple[D, D]:
     ''' Compute the fiscal year dates range on which the 'date' parameter belongs to.
     A fiscal year is the period used by governments for accounting purposes and vary between countries.
     By default, calling this method with only one parameter gives the calendar year because the ending date of the
@@ -86,7 +85,7 @@ def get_fiscal_year(date: D, day: int = 31, month: int = 12) -> Tuple[D, D]:
     return date_from, date_to
 
 
-def get_timedelta(qty: int, granularity: Literal['hour', 'day', 'week', 'month', 'year']):
+def get_timedelta(qty: int, granularity: typing.Literal['hour', 'day', 'week', 'month', 'year']):
     """ Helper to get a `relativedelta` object for the given quantity and interval unit.
     """
     switch = {
@@ -99,7 +98,7 @@ def get_timedelta(qty: int, granularity: Literal['hour', 'day', 'week', 'month',
     return switch[granularity]
 
 
-Granularity = Literal['year', 'quarter', 'month', 'week', 'day', 'hour']
+Granularity = typing.Literal['year', 'quarter', 'month', 'week', 'day', 'hour']
 
 
 def start_of(value: D, granularity: Granularity) -> D:
@@ -163,7 +162,7 @@ def end_of(value: D, granularity: Granularity) -> D:
     elif granularity == 'week':
         # `calendar.weekday` uses ISO8601 for start of week reference, this means that
         # by default MONDAY is the first day of the week and SUNDAY is the last.
-        result = value + relativedelta(days=6-calendar.weekday(value.year, value.month, value.day))
+        result = value + relativedelta(days=6 - calendar.weekday(value.year, value.month, value.day))
     elif granularity == "day":
         result = value
     elif granularity == "hour" and is_datetime:
@@ -251,7 +250,7 @@ def date_range(start: D, end: D, step: relativedelta = relativedelta(months=1)) 
         dt = dt + step
 
 
-def weeknumber(locale: babel.Locale, date: date) -> Tuple[int, int]:
+def weeknumber(locale: babel.Locale, date: date) -> tuple[int, int]:
     """Computes the year and weeknumber of `date`. The week number is 1-indexed
     (so the first week is week number 1).
 
