@@ -25,7 +25,7 @@ class HrEmployee(models.Model):
             "views": [[self.env.ref("hr_fleet.fleet_vehicle_assignation_log_employee_view_list").id, "list"], [False, "form"]],
             "domain": [("driver_employee_id", "in", self.ids), ("driver_id", "in", self.work_contact_id.ids)],
             "context": dict(self.env.context, default_driver_id=self.user_id.partner_id.id, default_driver_employee_id=self.id),
-            "name": self.env._("History Employee Cars"),
+            "name": self.env._("Cars History"),
         }
 
     @api.depends('private_car_plate', 'car_ids.license_plate')
