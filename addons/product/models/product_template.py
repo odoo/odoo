@@ -150,12 +150,7 @@ class ProductTemplate(models.Model):
         string="Pricelist Rules",
         comodel_name='product.pricelist.item',
         inverse_name='product_tmpl_id',
-        # FIXME MASH this domain doesn't work
-        domain=lambda self: [
-            '|',
-            ('product_tmpl_id', '=', self.ids),
-            ('product_id', 'in', self.product_variant_ids.ids),
-        ]
+        compute='_compute_pricelist_rule_ids',
     )
 
     product_document_ids = fields.One2many(
@@ -181,6 +176,16 @@ class ProductTemplate(models.Model):
     )
     # Properties
     product_properties = fields.Properties('Properties', definition='categ_id.product_properties_definition', copy=True)
+
+    @api.depends('product_variant_ids')
+    def _compute_pricelist_rule_ids(self):
+        for template in self:
+            domain = [
+                '|',
+                ('product_tmpl_id', '=', template.id),
+                ('product_id', 'in', template.product_variant_ids.ids),
+            ]
+            template.pricelist_rule_ids = self.env['product.pricelist.item'].search(domain)
 
     @api.depends('type')
     def _compute_service_tracking(self):

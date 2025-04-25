@@ -66,11 +66,7 @@ class ProductProduct(models.Model):
         string="Pricelist Rules",
         comodel_name='product.pricelist.item',
         inverse_name='product_id',
-        # FIXME MASH this domain doesn't work
-        domain=lambda self: [
-            '|', ('product_id', '=', self.id),
-            '&', ('product_tmpl_id', '=', self.product_tmpl_id.id), ('product_id', '=', False)
-        ]
+        compute='_compute_pricelist_rule_ids',
     )
 
     product_document_ids = fields.One2many(
@@ -142,6 +138,17 @@ class ProductProduct(models.Model):
                 record.product_tmpl_id[template_field] = record[template_field]
             else:
                 record[variant_field] = record[template_field]
+
+    @api.depends('product_tmpl_id')
+    def _compute_pricelist_rule_ids(self):
+        for product in self:
+            product.pricelist_rule_ids = self.env['product.pricelist.item'].search([
+                '|',
+                ('product_id', '=', product.id),
+                '&',
+                ('product_tmpl_id', '=', product.product_tmpl_id.id),
+                ('product_id', '=', False),
+            ])
 
     @api.depends("product_tmpl_id.write_date")
     def _compute_write_date(self):

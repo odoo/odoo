@@ -300,6 +300,7 @@ class ProductTemplate(models.Model):
                 'price_reduce': self._apply_taxes_to_price(
                     pricelist_price, currency, product_taxes, taxes, template, website=website,
                 ),
+                'pricelist_rule_id': pricelist_rule_id
             }
             pricelist_item = template.env['product.pricelist.item'].browse(pricelist_rule_id)
             if pricelist_item._show_discount_on_shop():
