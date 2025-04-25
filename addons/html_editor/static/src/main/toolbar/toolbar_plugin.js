@@ -208,12 +208,15 @@ export class ToolbarPlugin extends Plugin {
         } else {
             // Mouse interaction behavior:
             // Close toolbar on mousedown and prevent it from opening until mouseup.
-            this.addDomListener(this.editable, "mousedown", () => {
-                this.overlay.close();
-                this.debouncedUpdateToolbar.cancel();
-                this.onSelectionChangeActive = false;
+            this.addGlobalDomListener("mousedown", (ev) => {
+                // Don't close if the mousedown is on an overlay.
+                if (!ev.target?.closest?.(".o-overlay-item")) {
+                    this.overlay.close();
+                    this.debouncedUpdateToolbar.cancel();
+                    this.onSelectionChangeActive = false;
+                }
             });
-            this.addDomListener(this.document, "mouseup", (ev) => {
+            this.addGlobalDomListener("mouseup", (ev) => {
                 if (ev.detail >= 2) {
                     // Delayed open, waiting for a possible triple click.
                     this.onSelectionChangeActive = true;
