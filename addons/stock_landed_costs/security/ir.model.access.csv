@@ -2,3 +2,19 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 "access_stock_landed_cost","stock.landed.cost","model_stock_landed_cost","stock.group_stock_manager",1,1,1,1
 "access_stock_landed_cost_lines","stock.landed.cost.lines","model_stock_landed_cost_lines","stock.group_stock_manager",1,1,1,1
 "access_stock_valuation_adjustment_lines","stock.valuation.adjustment.lines","model_stock_valuation_adjustment_lines","stock.group_stock_manager",1,1,1,1
+"access_product_value_stock","product.value stock_manager","stock_account.model_product_value","stock.group_stock_manager",1,0,0,0
+"access_account_move_stock","account.move stock_manager","account.model_account_move","stock.group_stock_manager",1,0,0,0
+"access_account_move_line_stock","account.move.line stock_manager","account.model_account_move_line","stock.group_stock_manager",1,0,0,0
+
+"access_stock_landed_cost_purchase","stock.landed.cost purchase_manager","model_stock_landed_cost","purchase.group_purchase_manager",1,1,1,1
+"access_stock_landed_cost_lines_purchase","stock.landed.cost.lines purchase_manager","model_stock_landed_cost_lines","purchase.group_purchase_manager",1,1,1,1
+"access_stock_valuation_adjustment_lines_purchase","stock.valuation.adjustment.lines purchase_manager","model_stock_valuation_adjustment_lines","purchase.group_purchase_manager",1,1,1,1
+"access_stock_lot_purchase","stock.lot purchase_manager","stock.model_stock_lot","purchase.group_purchase_manager",1,0,0,0
+"access_product_value_purchase","product.value purchase_manager","stock_account.model_product_value","purchase.group_purchase_manager",1,0,0,0
+"access_account_payment_purchase","account.payment purchase_manager","account.model_account_payment","purchase.group_purchase_manager",1,0,0,0
+
+"access_stock_landed_cost_bookkeeper","stock.landed.cost bookkeeper","model_stock_landed_cost","account.group_account_user",1,1,1,1
+"access_stock_landed_cost_lines_bookkeeper","stock.landed.cost.lines bookkeeper","model_stock_landed_cost_lines","account.group_account_user",1,1,1,1
+"access_stock_valuation_adjustment_lines_bookkeeper","stock.valuation.adjustment.lines bookkeeper","model_stock_valuation_adjustment_lines","account.group_account_user",1,1,1,1
+"access_stock_lot_bookkeeper","stock.lot bookkeeper","stock.model_stock_lot","account.group_account_user",1,0,0,0
+"access_product_value_bookkeeper","product.value bookkeeper","stock_account.model_product_value","account.group_account_user",1,0,0,0

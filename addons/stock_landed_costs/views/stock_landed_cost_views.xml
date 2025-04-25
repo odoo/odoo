@@ -16,7 +16,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="action_view_pickings" icon="fa-truck"
-                                type="object" invisible="pickings_count == 0">
+                                    groups="stock.group_stock_user" type="object" invisible="pickings_count == 0">
                                 <field name="pickings_count" string="Transfers" widget="statinfo"/>
                             </button>
                         </div>
@@ -31,7 +31,7 @@
                                 <field name="date" readonly="state == 'done'"/>
                                 <field name="target_model" widget="radio" invisible="1" readonly="state == 'done'"/>
                                 <field name="picking_ids" widget="many2many_tags" 
-                                    options="{'no_create_edit': True}" invisible="target_model != 'picking'" readonly="state == 'done'"
+                                    options="{'no_create': True}" invisible="target_model != 'picking'" readonly="state == 'done'"
                                     domain="[('company_id', '=', company_id), '|', ('move_ids.is_in', '!=', False), ('move_ids.is_out', '!=', False)]"/>
                             </group>
                             <group>
@@ -39,7 +39,8 @@
                                 <field name="account_journal_id" nolabel="1" readonly="state == 'done'"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="account_move_id" invisible="not account_move_id"/>
-                                <field name="vendor_bill_id"/>
+                                <field name="vendor_bill_id" options="{'no_create': True}"
+                                       context="{'default_move_type': 'in_invoice', 'input_full_display_name': True}"/>
                             </group>
                         </group>
                         <notebook>
