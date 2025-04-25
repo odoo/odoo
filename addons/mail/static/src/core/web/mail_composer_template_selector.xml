@@ -9,7 +9,7 @@
                 <div class="px-3 pb-1 text-muted">Select a Template</div>
                 <div t-if="state.templates.length > 0" class="mail-composer-template-list overflow-y-auto">
                     <t t-foreach="state.templates" t-as="template" t-key="template_index">
-                        <DropdownItem class="'px-3'" onSelected="() => this.onLoadTemplate(template)">
+                        <DropdownItem class="'text-truncate px-3'" onSelected="() => this.onLoadTemplate(template)">
                             <t t-if="template.display_name" t-out="template.display_name"/>
                             <span t-else="" class="fst-italic">Untitled</span>
                         </DropdownItem>
