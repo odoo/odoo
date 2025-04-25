@@ -415,7 +415,9 @@ class IrActionsServer(models.Model):
             elif self.activity_user_type == 'generic' and self.activity_user_field_name in record:
                 user = record[self.activity_user_field_name]
             if user:
-                vals['user_id'] = user.id
+                # if x2m field, assign to the first user found
+                # (same behavior as Field.traverse_related)
+                vals['user_id'] = user.ids[0]
             record.activity_schedule(**vals)
         return False
 
