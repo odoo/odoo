@@ -8,7 +8,7 @@
             <t t-set-slot="content">
                 <div class="px-3 pb-1 text-muted">Insert Template</div>
                 <t t-foreach="state.templates" t-as="template" t-key="template_index">
-                    <DropdownItem onSelected="() => this.onLoadTemplate(template)">
+                    <DropdownItem class="'text-truncate'" onSelected="() => this.onLoadTemplate(template)">
                         <t t-if="template.display_name" t-out="template.display_name"/>
                         <span t-else="" class="fst-italic">Untitled</span>
                     </DropdownItem>
@@ -20,12 +20,12 @@
                     <a href="#">Search More...</a>
                 </DropdownItem>
                 <div class="dropdown-divider"/>
-                <Dropdown>
+                <Dropdown menuClass="'mail-composer-template-dropdown'">
                     <div>Save as Template</div>
                     <t t-set-slot="content">
                         <div class="px-3 pb-1 text-muted">Overwrite Template</div>
                         <t t-foreach="state.templates" t-as="template" t-key="template_index">
-                            <DropdownItem onSelected="() => this.onOverwriteTemplate(template)">
+                            <DropdownItem class="'text-truncate'" onSelected="() => this.onOverwriteTemplate(template)">
                                 <t t-if="template.display_name" t-out="template.display_name"/>
                                 <span t-else="" class="fst-italic">Untitled</span>
                             </DropdownItem>
@@ -43,12 +43,12 @@
                     </t>
                 </Dropdown>
                 <div class="dropdown-divider"/>
-                <Dropdown>
+                <Dropdown menuClass="'mail-composer-template-dropdown'">
                     <div>Delete Template</div>
                     <t t-set-slot="content">
                         <div class="px-3 pb-1 text-muted">Delete Template</div>
                         <t t-foreach="state.templates" t-as="template" t-key="template_index">
-                            <DropdownItem onSelected="() => this.onDeleteTemplate(template)">
+                            <DropdownItem class="'text-truncate'" onSelected="() => this.onDeleteTemplate(template)">
                                 <t t-if="template.display_name" t-out="template.display_name"/>
                                 <span t-else="" class="fst-italic">Untitled</span>
                             </DropdownItem>
