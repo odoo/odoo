@@ -212,7 +212,7 @@ class AdamEquipmentDriver(ScaleDriver):
     """Driver for the Adam Equipment serial scale."""
 
     _protocol = ADAMEquipmentProtocol
-    priority = 0  # Test the supported method of this driver last, after all other serial drivers
+    priority = -1  # Test the supported method of this driver last, after all other serial drivers
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
