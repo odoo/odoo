@@ -28,8 +28,8 @@ class ProjectTask(models.Model):
     last_sol_of_customer = fields.Many2one('sale.order.line', compute='_compute_last_sol_of_customer')
 
     @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS | {
+    def TASK_PORTAL_READABLE_FIELDS(self):
+        return super().TASK_PORTAL_READABLE_FIELDS | {
             'remaining_hours_available',
             'remaining_hours_so',
         }
