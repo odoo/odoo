@@ -2,22 +2,73 @@
     <data>
         <template id="custom_header" inherit_id="website.layout">
             <xpath expr="//header" position="replace">
-               <div class="container">
-                <t t-call="website.placeholder_header_brand"/>
-                <t t-call="website.navbar_nav">
-                    <!-- Sign In -->
-                    <t t-call="portal.placeholder_user_sign_in">
-                        <t t-set="_item_class" t-valuef="nav-item"/>
-                        <t t-set="_link_class" t-valuef="nav-link text-900"/>
-                    </t>
-                    <!-- User Dropdown -->
-                    <t t-call="portal.user_dropdown">
-                        <t t-set="_user_name" t-value="true"/>
-                        <t t-set="_item_class" t-valuef="nav-item dropdown ml-auto"/>
-                        <t t-set="_link_class" t-valuef="nav-link text-900"/>
-                    </t>
-                </t>
-            </div>
+                <header class="o_header o_header_custom">
+                    <div class="top-bar py-2 bg-light text-center text-sm-left">
+                        <div class="container d-flex justify-content-between align-items-center">
+                            <div class="top-bar-left d-flex align-items-center">
+                                <span class="mr-3">
+                                    <i class="fa fa-info-circle"></i> Service Point
+                                </span>
+                                <span class="mr-3">
+                                    <i class="fa fa-envelope"></i> Quote for Authorities / Pay by Invoice for Business
+                                </span>
+                                <span>
+                                    <i class="fa fa-file-alt"></i> Bestellen auf Rezept
+                                </span>
+                            </div>
+                            <div class="top-bar-right d-flex align-items-center">
+                                <span class="mr-3">Incl. VAT</span>
+                                <span class="mr-3">
+                                    <img src="/path/to/flag-icon.png" alt="Flag" class="flag-icon" /> HUMAN DE EN
+                                </span>
+                                <a href="/login" class="text-dark">
+                                    <i class="fa fa-user"></i> Login
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="main-header py-3">
+                        <div class="container d-flex justify-content-between align-items-center">
+                            <div class="logo">
+                                <a href="/">
+                                    <img src="/path/to/logo.png" alt="Logo" class="img-fluid" />
+                                </a>
+                            </div>
+                            <nav class="nav">
+                                <a href="#" class="nav-link text-primary font-weight-bold">HUMAN</a>
+                                <a href="#" class="nav-link text-success font-weight-bold">VETERINARIAN</a>
+                            </nav>
+                            <div class="search-cart d-flex align-items-center">
+                                <form class="search-form mr-3">
+                                    <input type="text" class="form-control" placeholder="Search..." />
+                                    <button type="submit" class="btn btn-link">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </form>
+                                <a href="/cart" class="text-dark">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nav-bar py-2 bg-light">
+                        <div class="container">
+                            <nav class="nav justify-content-center">
+                                <a href="#" class="nav-link">Infusion &amp; Injection</a>
+                                <a href="#" class="nav-link">Dressings</a>
+                                <a href="#" class="nav-link">Hygiene</a>
+                                <a href="#" class="nav-link">Diagnostics</a>
+                                <a href="#" class="nav-link">Emergency</a>
+                                <a href="#" class="nav-link">Laboratory Supplies</a>
+                                <a href="#" class="nav-link">Practice Equipment</a>
+                                <a href="#" class="nav-link">Care Supplies</a>
+                                <a href="#" class="nav-link">Therapy</a>
+                                <a href="#" class="nav-link">Health &amp; Fitness</a>
+                                <a href="#" class="nav-link">Blog</a>
+                            </nav>
+                        </div>
+                    </div>
+                </header>
             </xpath>
         </template>
     </data>

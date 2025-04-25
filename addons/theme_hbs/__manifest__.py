@@ -1,5 +1,5 @@
 {
-    'name': 'HBS',
+    'name': 'Purple HBS',
     'description': 'A custom theme for Odoo',
     'version': '1.0',
     'author': 'Sanjay Sharma',
@@ -7,8 +7,9 @@
     'depends': ['website'],
     'data': [
         'views/snippets/s_sidegrid.xml',
-        # 'views/footer.xml',
-        # 'views/header.xml',
+        'views/snippets/s_dynamic_snippet_products_preview_data.xml',
+        'views/footer.xml',
+        'views/header.xml',
     ],
 
     'images': [

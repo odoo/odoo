@@ -2,25 +2,78 @@
     <data>
         <template id="custom_footer" inherit_id="website.layout">
             <xpath expr="//div[@id='footer']" position="replace">
-                <div id="footer" class="oe_structure oe_structure_solo">
-                    <div class="container-fluid px-lg-5">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h4>Company</h4>
-                                <ul>
-                                    <li><a href="#">About Us</a></li>
-                                    <li><a href="#">Contact Us</a></li>
-                                    <li><a href="#">Careers</a></li>
-                                    <li><a href="#">Services</a></li>
+                <div id="footer" class="oe_structure oe_structure_solo bg-primary text-white py-5">
+                    <div class="container">
+                        <!-- Logo and Social Media -->
+                        <div class="row text-center mb-4">
+                            <div class="col-12">
+                                <img src="/path/to/logo.png" alt="Logo" class="img-fluid mb-3" />
+                                <div class="social-icons">
+                                    <a href="#" class="text-white mx-2"><i class="fa fa-facebook fa-2x"></i></a>
+                                    <a href="#" class="text-white mx-2"><i class="fa fa-instagram fa-2x"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Links Section -->
+                        <div class="row text-center text-md-left">
+                            <div class="col-md-3">
+                                <h5 class="font-weight-bold">Service</h5>
+                                <ul class="list-unstyled">
+                                    <li><a href="#" class="text-white">Service Point</a></li>
+                                    <li><a href="#" class="text-white">About Us</a></li>
+                                    <li><a href="#" class="text-white">Press Releases</a></li>
+                                    <li><a href="#" class="text-white">Customer Stories</a></li>
+                                    <li><a href="#" class="text-white">Newsletter</a></li>
                                 </ul>
                             </div>
-                            <div class="col-md-4">
-                                <h4>Connect</h4>
-                                <ul>
-                                    <li><a href="#">Facebook</a></li>
-                                    <li><a href="#">Twitter</a></li>
-                                    <li><a href="#">Instagram</a></li>
+                            <div class="col-md-3">
+                                <h5 class="font-weight-bold">Information</h5>
+                                <ul class="list-unstyled">
+                                    <li><a href="#" class="text-white">Imprint</a></li>
+                                    <li><a href="#" class="text-white">General Terms</a></li>
+                                    <li><a href="#" class="text-white">Right of Withdrawal</a></li>
+                                    <li><a href="#" class="text-white">Privacy and Data Protection</a></li>
+                                    <li><a href="#" class="text-white">Shipping and Handling Costs</a></li>
+                                    <li><a href="#" class="text-white">Terms of Payment</a></li>
+                                    <li><a href="#" class="text-white">Battery Notice</a></li>
+                                    <li><a href="#" class="text-white">Sitemap</a></li>
                                 </ul>
+                            </div>
+                            <div class="col-md-3">
+                                <h5 class="font-weight-bold">Newsletter</h5>
+                                <form>
+                                    <div class="form-group">
+                                        <input type="email" class="form-control" placeholder="Enter your e-mail address" />
+                                    </div>
+                                    <button type="submit" class="btn btn-success btn-block">Subscribe</button>
+                                </form>
+                                <p class="mt-2 small">
+                                    Subscribe to the free newsletter and ensure that you will no longer miss any news or promotions.
+                                </p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <img src="/path/to/badge1.png" alt="Badge 1" class="img-fluid mb-3" />
+                                <img src="/path/to/badge2.png" alt="Badge 2" class="img-fluid mb-3" />
+                            </div>
+                        </div>
+
+                        <!-- Footer Bottom -->
+                        <div class="row mt-4">
+                            <div class="col-12 text-center">
+                                <p class="small">
+                                    * All prices incl. VAT. Additional shipping costs may apply. Delivery times may vary for international shipping.
+                                </p>
+                                <div class="payment-icons my-3">
+                                    <img src="/path/to/visa.png" alt="Visa" class="mx-2" />
+                                    <img src="/path/to/mastercard.png" alt="MasterCard" class="mx-2" />
+                                    <img src="/path/to/paypal.png" alt="PayPal" class="mx-2" />
+                                    <img src="/path/to/sofort.png" alt="Sofort" class="mx-2" />
+                                    <img src="/path/to/giropay.png" alt="Giropay" class="mx-2" />
+                                </div>
+                                <p class="small">
+                                    © 2025 - mediparts GmbH. Alle Rechte vorbehalten.
+                                </p>
                             </div>
                         </div>
                     </div>

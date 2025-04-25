@@ -47,24 +47,24 @@ $o-theme-font-configs: (
 
 // Headings
 
-$o-theme-h4-font-size-multiplier:           1.75;
-$o-theme-h5-font-size-multiplier:           1.5;
-$o-theme-h6-font-size-multiplier:           1.25;
+// $o-theme-h4-font-size-multiplier:           1.75;
+// $o-theme-h5-font-size-multiplier:           1.5;
+// $o-theme-h6-font-size-multiplier:           1.25;
 
-$o-theme-headings-font-weight:              400;
+// $o-theme-headings-font-weight:              400;
 
-// Texts
+// // Texts
 
-$o-theme-font-size-lg-multiplier:           1.25;
-$o-theme-font-size-sm-multiplier:           .875;
+// $o-theme-font-size-lg-multiplier:           1.25;
+// $o-theme-font-size-sm-multiplier:           .875;
 
-$o-theme-font-weight-light:                 300;
-$o-theme-font-weight-normal:                400;
-$o-theme-font-weight-bold:                  700;
+// $o-theme-font-weight-light:                 300;
+// $o-theme-font-weight-normal:                400;
+// $o-theme-font-weight-bold:                  700;
 
-// Buttons
+// // Buttons
 
-$o-theme-btn-font-weight:                   400;
+// $o-theme-btn-font-weight:                   400;
 
 //------------------------------------------------------------------------------//
 // Colors
@@ -73,11 +73,11 @@ $o-theme-btn-font-weight:                   400;
 $o-color-palettes: map-merge($o-color-palettes,
     (
         'theme-hbs-1': (
-            'o-color-5':                        #0071BC,
+            'o-color-5':                        #4A77A0,
             'o-color-4':                        #ffffff,
-            'o-color-3':                        #6496B8,
+            'o-color-3':                        #ffffff,
             'o-color-2':                        #3AA101,
-            'o-color-1':                        #0071BC,
+            'o-color-1':                        #0071BD,
         ),
     )
     
@@ -90,16 +90,37 @@ $o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'them
 //------------------------------------------------------------------------------//
 // Button Styles
 //------------------------------------------------------------------------------//
-button,
-.btn {
-    &:hover {
-        background-color: map-get(map-get($o-color-palettes, 'theme-hbs-1'), 'o-color-2'); // Use palette color
-        color: map-get(map-get($o-color-palettes, 'theme-hbs-1'), 'o-color-4'); // Optional: Use palette color
-    }
+
+
+// Add to cart to be in green color at all times
+a#add_to_cart {
+    // .btn-primary {   
+        background-color: #3AA101;
+        // border-color: $o-color-1;
+        // color: $o-color-4;
+
+        &:hover {
+            background-color: #6CB61B;
+            // border-color: $o-color-2;
+            // color: $o-color-4;
+        }
+    // }
 }
 
-a {
+
+.badge.bg-primary, .o_filter_tag.bg-primary {
+    --bg-light: #3AA101 !important; 
+    --color-light: #FFFFFF;
+    --bg-solid: var(--bg-light);
+    --bg-solid-contrast: var(--color-light);
+}
+
+
+
+.js_add_cart.btn-primary {
     &:hover {
-        color: map-get(map-get($o-color-palettes, 'theme-hbs-1'), 'o-color-2'); // Use palette color
+        background-color: #6CB61B;
+        // border-color: $o-color-2;
+        // color: $o-color-4;
     }
 }
