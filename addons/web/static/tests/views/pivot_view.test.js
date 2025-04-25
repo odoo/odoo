@@ -261,6 +261,49 @@ test("pivot rendering with widget", async () => {
     expect("td.o_pivot_cell_value:contains(32:00)").toHaveCount(1);
 });
 
+test("pivot rendering with widget and options", async () => {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot string="Partners">
+                <field name="foo" type="measure" widget="float_time" options="{'displaySeconds': True}"/>
+			</pivot>
+		`,
+    });
+    expect("td.o_pivot_cell_value:contains(32:00:00)").toHaveCount(1);
+});
+
+test("pivot rendering with widget and options from model field", async () => {
+    Partner._fields.biz = fields.Float({ digits: [16, 2] });
+    Partner._records[0].biz = 0.3333333;
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot string="Partners">
+                <field name="biz" type="measure" widget="percentage"/>
+			</pivot>
+		`,
+    });
+    expect("td.o_pivot_cell_value:contains(33.33%)").toHaveCount(1);
+});
+
+test("pivot rendering with widget and options from field attrs", async () => {
+    Partner._fields.biz = fields.Float({ digits: [16, 2] });
+    Partner._records[0].biz = 0.3333333;
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot string="Partners">
+                <field name="biz" type="measure" widget="float" digits="[16,4]"/>
+			</pivot>
+		`,
+    });
+    expect("td.o_pivot_cell_value:contains(0.3333)").toHaveCount(1);
+});
+
 test("pivot rendering with string attribute on field", async () => {
     Partner._fields.foo = fields.Integer();
 

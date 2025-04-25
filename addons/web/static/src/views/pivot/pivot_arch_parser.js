@@ -1,5 +1,6 @@
 import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
+import { evaluateExpr } from "@web/core/py_js/py";
 
 export class PivotArchParser {
     parse(arch) {
@@ -46,6 +47,16 @@ export class PivotArchParser {
                     ) {
                         archInfo.fieldAttrs[fieldName].isInvisible = true;
                         break;
+                    }
+                    for (const { name, value } of node.attributes) {
+                        if (["name", "type", "operator", "interval", "string", "widget"].includes(name)) {
+                            continue;
+                        }
+                        if (name === "options") {
+                            archInfo.fieldAttrs[fieldName].options = evaluateExpr(value);
+                        } else {
+                            archInfo.fieldAttrs[fieldName][name] = value;
+                        }
                     }
 
                     if (node.hasAttribute("interval")) {
