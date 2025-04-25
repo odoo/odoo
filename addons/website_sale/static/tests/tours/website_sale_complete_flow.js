@@ -383,7 +383,7 @@ import { pay } from "@website_sale/js/tours/tour_utils";
     },
         ...pay({ expectUnloadPage: true, waitFinalizeYourPayment: true }),
     {
-        trigger: '.oe_cart .oe_website_sale_tx_status',
+        trigger: '.oe_cart [name="order_confirmation"]',
     },
     {
         content: "Open Dropdown for See quotation",
@@ -513,5 +513,5 @@ import { pay } from "@website_sale/js/tours/tour_utils";
     ...tourUtils.payWithTransfer({ expectUnloadPage: true, waitFinalizeYourPayment: true }),
     {
         content: "Check payment status confirmation window",
-        trigger: ".oe_website_sale_tx_status[data-order-tracking-info]",
+        trigger: '[name="order_confirmation"][data-order-tracking-info]',
     }]});

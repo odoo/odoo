@@ -332,9 +332,10 @@ var VariantMixin = {
         // Indeed, every time another variant is selected, a new view_item event
         // needs to be tracked by google analytics.
         if ('product_tracking_info' in combination) {
-            const $product = $('#product_detail');
-            $product.data('product-tracking-info', combination['product_tracking_info']);
-            $product.trigger('view_item_event', combination['product_tracking_info']);
+            const product = document.querySelector('#product_detail');
+            product.dispatchEvent(
+                new CustomEvent('view_item_event', {'detail': combination['product_tracking_info']})
+            );
         }
         const addToCart = $parent.find('#add_to_cart_wrap');
         const contactUsButton = $parent.parents('#product_details').find('#contact_us_wrapper');
