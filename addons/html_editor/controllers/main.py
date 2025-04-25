@@ -12,6 +12,7 @@ from odoo import _, http, tools, SUPERUSER_ID
 from odoo.addons.html_editor.tools import get_video_url_data
 from odoo.exceptions import UserError, MissingError, AccessError
 from odoo.http import request
+from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.addons.iap.tools import iap_tools
@@ -338,7 +339,7 @@ class HTML_Editor(http.Controller):
                         str(uuid.uuid4())[:6],
                         SUPPORTED_IMAGE_MIMETYPES[mimetype],
                     )
-                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
+                data = image_process(data, size=(width, height), quality=quality, verify_resolution=True)
             except (ValueError, UserError) as e:
                 # When UserError thrown, browser considers file input an
                 # image but not recognized as such by PIL, eg .webp

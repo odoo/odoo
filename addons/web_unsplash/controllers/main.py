@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -7,8 +6,9 @@ import requests
 import werkzeug.utils
 from werkzeug.urls import url_encode
 
-from odoo import http, modules, tools, _
+from odoo import http, modules, _
 from odoo.http import request
+from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
 
 from odoo.addons.html_editor.controllers.main import HTML_Editor
@@ -98,7 +98,7 @@ class Web_Unsplash(http.Controller):
                 logger.exception("Timeout: " + str(e))
                 continue
 
-            image = tools.image_process(image, verify_resolution=True)
+            image = image_process(image, verify_resolution=True)
             mimetype = guess_mimetype(image)
             # append image extension in name
             query += mimetypes.guess_extension(mimetype) or ''

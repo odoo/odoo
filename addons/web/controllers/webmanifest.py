@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import mimetypes
@@ -8,7 +7,8 @@ from urllib.parse import unquote, urlencode
 from odoo import http, modules
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import file_open, file_path, image_process
+from odoo.tools import file_open, file_path
+from odoo.tools.image import image_process
 
 
 class WebManifest(http.Controller):

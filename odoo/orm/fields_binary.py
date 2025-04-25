@@ -11,7 +11,7 @@ from operator import attrgetter
 import psycopg2
 
 from odoo.exceptions import UserError
-from odoo.tools import SQL, human_size, image_process
+from odoo.tools import SQL, human_size
 from odoo.tools.mimetypes import guess_mimetype
 
 from .fields import Field
@@ -339,6 +339,8 @@ class Image(Binary):
                     return resized.datas or value
             return value
 
+        # delay import of image_process until this point
+        from odoo.tools.image import image_process  # noqa: PLC0415
         return base64.b64encode(image_process(img,
             size=(self.max_width, self.max_height),
             verify_resolution=self.verify_resolution,
