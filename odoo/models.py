@@ -5468,6 +5468,12 @@ class BaseModel(metaclass=MetaModel):
         :param default: field values to override in the original values of the copied record
         :return: list with a dictionary containing all the field values
         """
+        def valid(field):
+            """ determine whether user has access to field ``fname`` """
+            if field and field.groups:
+                return self.user_has_groups(field.groups)
+            else:
+                return True
         # In the old API, this method took a single id and return a dict. When
         # invoked with the new API, it returned a list of dicts.
         self.ensure_one()
@@ -5501,7 +5507,7 @@ class BaseModel(metaclass=MetaModel):
 
         fields_to_copy = {name: field
                           for name, field in self._fields.items()
-                          if field.copy and name not in default and name not in blacklist}
+                          if field.copy and name not in default and name not in blacklist and valid(field)}
 
         for name, field in fields_to_copy.items():
             if field.type == 'one2many':
