@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
 from pytz import timezone, utc
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools import is_html_empty
-from odoo.tools.date_intervals import float_to_time
+from odoo.tools.date_utils import float_to_time
 from odoo.tools.translate import html_translate
 
 
