@@ -23,11 +23,12 @@ except ImportError:
 from odoo import release
 from odoo.api import SUPERUSER_ID
 from odoo.http import request
-from odoo.tools import (misc, transpile_javascript,
-    is_odoo_module, SourceMapGenerator, profiler, OrderedSet)
-from odoo.tools.json import scriptsafe as json
+from odoo.tools import OrderedSet, misc, profiler
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS
+from odoo.tools.json import scriptsafe as json
+from odoo.tools.js_transpiler import is_odoo_module, transpile_javascript
 from odoo.tools.misc import file_open, file_path
+from odoo.tools.sourcemap_generator import SourceMapGenerator
 
 _logger = logging.getLogger(__name__)
 
