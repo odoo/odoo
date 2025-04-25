@@ -15,7 +15,7 @@ from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools.date_intervals import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime
+from odoo.tools.date_intervals import Intervals, float_to_time, make_aware
 from odoo.tools.float_utils import float_round
 
 from odoo.tools import date_utils, float_compare, ormcache
@@ -480,8 +480,8 @@ class ResourceCalendar(models.Model):
         # Public leave don't have a resource_id
         domain = domain + [
             ('resource_id', 'in', [False] + [r.id for r in resources_list]),
-            ('date_from', '<=', datetime_to_string(end_dt)),
-            ('date_to', '>=', datetime_to_string(start_dt)),
+            ('date_from', '<=', end_dt.astimezone(utc).replace(tzinfo=None)),
+            ('date_to', '>=', start_dt.astimezone(utc).replace(tzinfo=None)),
         ]
 
         # retrieve leave intervals in (start_dt, end_dt)
@@ -507,8 +507,8 @@ class ResourceCalendar(models.Model):
                 else:
                     end = end_dt.astimezone(tz)
                     tz_dates[(tz, end_dt)] = end
-                dt0 = string_to_datetime(leave_date_from).astimezone(tz)
-                dt1 = string_to_datetime(leave_date_to).astimezone(tz)
+                dt0 = leave_date_from.astimezone(tz)
+                dt1 = leave_date_to.astimezone(tz)
                 if leave_resource and leave_resource._is_flexible():
                     dt0, dt1 = self._handle_flexible_leave_interval(dt0, dt1, leave)
                 result[resource.id].append((max(start, dt0), min(end, dt1), leave))
