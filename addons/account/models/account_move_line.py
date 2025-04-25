@@ -2542,9 +2542,19 @@ class AccountMoveLine(models.Model):
             partials[index].exchange_move_id = exchange_move
 
         # ==== Create entries for cash basis taxes ====
+<<<<<<< 2c33bd04b317156b3052c0f12065a47f1128d678
         def is_cash_basis_needed(amls):
             return any(amls.company_id.mapped('tax_exigibility')) \
                 and amls.account_id.account_type in ('asset_receivable', 'liability_payable')
+||||||| 6542b0a5a58324f532a4ae1e0c630ca4fe2f77d7
+        def is_cash_basis_needed(account):
+            return account.company_id.tax_exigibility \
+                and account.account_type in ('asset_receivable', 'liability_payable')
+=======
+        def is_cash_basis_needed(account):
+            return account.company_id.sudo().tax_exigibility \
+                and account.account_type in ('asset_receivable', 'liability_payable')
+>>>>>>> 1128f11f5ee5cafa630a166c46e10397021ad472
 
         if not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
             for plan in plan_list:
