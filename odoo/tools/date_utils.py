@@ -1,5 +1,4 @@
 import calendar
-import math
 import typing
 from collections.abc import Iterator
 from datetime import date, datetime, time
@@ -21,30 +20,28 @@ __all__ = [
 
 
 def get_month(date: D) -> tuple[D, D]:
-    ''' Compute the month dates range on which the 'date' parameter belongs to.
-    '''
+    """ Compute the month date range from a date (set first and last day of month).
+    """
     return date.replace(day=1), date.replace(day=calendar.monthrange(date.year, date.month)[1])
 
 
 def get_quarter_number(date: date) -> int:
-    ''' Get the number of the quarter on which the 'date' parameter belongs to.
-    '''
-    return math.ceil(date.month / 3)
+    """ Get the quarter from a date (1-4)."""
+    return (date.month - 1) // 3 + 1
 
 
 def get_quarter(date: D) -> tuple[D, D]:
-    ''' Compute the quarter dates range on which the 'date' parameter belongs to.
-    '''
-    quarter_number = get_quarter_number(date)
-    month_from = ((quarter_number - 1) * 3) + 1
+    """ Compute the quarter date range from a date (set first and last day of quarter).
+    """
+    month_from = (date.month - 1) // 3 * 3 + 1
     date_from = date.replace(month=month_from, day=1)
-    date_to = date_from + relativedelta(months=2)
+    date_to = date_from.replace(month=month_from + 2)
     date_to = date_to.replace(day=calendar.monthrange(date_to.year, date_to.month)[1])
     return date_from, date_to
 
 
 def get_fiscal_year(date: D, day: int = 31, month: int = 12) -> tuple[D, D]:
-    ''' Compute the fiscal year dates range on which the 'date' parameter belongs to.
+    """ Compute the fiscal year date range from a date (first and last day of fiscal year).
     A fiscal year is the period used by governments for accounting purposes and vary between countries.
     By default, calling this method with only one parameter gives the calendar year because the ending date of the
     fiscal year is set to the YYYY-12-31.
@@ -53,7 +50,7 @@ def get_fiscal_year(date: D, day: int = 31, month: int = 12) -> tuple[D, D]:
     :param day:     The day of month the fiscal year ends.
     :param month:   The month of year the fiscal year ends.
     :return: The start and end dates of the fiscal year.
-    '''
+    """
 
     def fix_day(year, month, day):
         max_day = calendar.monthrange(year, month)[1]
