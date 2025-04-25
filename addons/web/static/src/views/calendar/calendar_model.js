@@ -295,8 +295,10 @@ export class CalendarModel extends Model {
                 }
             }
         }
-        await this.orm.create(this.meta.resModel, records, { context: this.meta.context });
-        return this.load();
+        if (records.length) {
+            await this.orm.create(this.meta.resModel, records, { context: this.meta.context });
+            return this.load();
+        }
     }
 
     async unlinkFilter(fieldName, recordId) {
