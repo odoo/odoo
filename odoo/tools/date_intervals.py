@@ -61,22 +61,25 @@ class Intervals(typing.Generic[T]):
         Each interval is a triple ``(start, stop, records)``, where ``records``
         is a recordset.
     """
-    def __init__(self, intervals=()):
+    def __init__(self, intervals: Iterable[tuple[T, T, AbstractSet]] | None = None):
         self._items: list[tuple[T, T, AbstractSet]] = []
         if intervals:
             # normalize the representation of intervals
             append = self._items.append
-            starts = []
-            items = []
-            for value, flag, recs in sorted(_boundaries(intervals, 'start', 'stop')):
+            starts: list[T] = []
+            items: AbstractSet | None = None
+            for value, flag, value_items in sorted(_boundaries(intervals, 'start', 'stop')):
                 if flag == 'start':
                     starts.append(value)
-                    items.append(recs)
+                    if items is None:
+                        items = value_items
+                    else:
+                        items = items.union(value_items)
                 else:
                     start = starts.pop()
                     if not starts:
-                        append((start, value, items[0].union(*items)))
-                        items.clear()
+                        append((start, value, items))
+                        items = None
 
     def __bool__(self):
         return bool(self._items)
