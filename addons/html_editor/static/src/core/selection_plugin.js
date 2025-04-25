@@ -204,11 +204,13 @@ export class SelectionPlugin extends Plugin {
         "focusEditable",
         // "collapseIfZWS",
         "isSelectionInEditable",
+        "isNodeEditable",
         "selectAroundNonEditable",
     ];
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
         shortcuts: [{ hotkey: "control+a", commandId: "selectAll" }],
+        is_node_editable_predicates: (node) => node.parentElement?.isContentEditable,
     };
 
     setup() {
@@ -923,6 +925,10 @@ export class SelectionPlugin extends Plugin {
             this.editable.contains(anchorNode) &&
             (focusNode === anchorNode || this.editable.contains(focusNode))
         );
+    }
+
+    isNodeEditable(node) {
+        return this.getResource("is_node_editable_predicates").some((p) => p(node));
     }
 
     focusEditable() {

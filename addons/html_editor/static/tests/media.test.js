@@ -6,6 +6,7 @@ import { base64Img, setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { cleanHints } from "./_helpers/dispatch";
+import { EDITABLE_MEDIA_CLASS } from "@html_editor/main/media/media_plugin";
 
 test("Can replace an image", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
@@ -152,6 +153,17 @@ describe("(non-)editable media", () => {
             expect(getContent(editor.editable)).toBe(
                 `<div contenteditable="false">[<img src="${base64Img}">]</div>`
             );
+        });
+        test("toolbar should open when clicking on an editable image in a non-editable context", async () => {
+            const { editor } = await setupEditor(
+                `<div contenteditable="false"><img src="${base64Img}" class="${EDITABLE_MEDIA_CLASS}"></div>`
+            );
+            await click("img");
+            await animationFrame();
+            expect(".o-we-toolbar").toHaveCount(1);
+            // Now pressing the delete button should remove the image.
+            await click(".o-we-toolbar button[name='image_delete']");
+            expect(getContent(editor.editable)).toBe(`<div contenteditable="false">[]<br></div>`);
         });
     });
 });

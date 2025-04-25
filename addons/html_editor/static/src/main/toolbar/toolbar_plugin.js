@@ -357,8 +357,8 @@ export class ToolbarPlugin extends Plugin {
             traversedNodes = this.getFilterTraverseNodes();
         }
         return (
-            traversedNodes.every((node) => node.parentElement.isContentEditable) &&
-            !!traversedNodes.length
+            !!traversedNodes.length &&
+            traversedNodes.every(this.dependencies.selection.isNodeEditable)
         );
     }
 

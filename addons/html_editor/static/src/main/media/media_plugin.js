@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import {
     ICON_SELECTOR,
     isIconElement,
+    isMediaElement,
     isProtected,
     isProtecting,
 } from "@html_editor/utils/dom_info";
@@ -14,6 +15,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
+export const EDITABLE_MEDIA_CLASS = "o_editable_media";
 
 /**
  * @typedef { Object } MediaShared
@@ -65,6 +67,7 @@ export class MediaPlugin extends Plugin {
         selectionchange_handlers: this.selectAroundIcon.bind(this),
 
         unsplittable_node_predicates: isIconElement, // avoid merge
+        is_node_editable_predicates: this.isEditableMediaElement.bind(this),
         clipboard_content_processors: this.clean.bind(this),
         clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
 
@@ -73,6 +76,13 @@ export class MediaPlugin extends Plugin {
 
     get recordInfo() {
         return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
+    }
+
+    isEditableMediaElement(node) {
+        return (
+            (isMediaElement(node) || node.nodeName === "IMG") &&
+            node.classList.contains(EDITABLE_MEDIA_CLASS)
+        );
     }
 
     replaceImage() {
