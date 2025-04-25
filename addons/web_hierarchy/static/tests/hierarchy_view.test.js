@@ -323,6 +323,27 @@ test("search record in hierarchy view", async () => {
     ]);
 });
 
+test("prohibit `hierarchy_search_parent_node` button from appearing on a node where you're your own manager", async () => {
+    Employee._records.push({
+        id: 5,
+        name: "Lisa",
+        parent_id: 5,
+        child_ids: [],
+    });
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+        viewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="test_filter" domain="[['id', '=', 5]]"/>
+            </search>
+        `,
+    })
+    await enableFilters(["test_filter"]);
+    expect(".o_hierarchy_node_container button[name=hierarchy_search_parent_node]").toHaveCount(0);
+});
+
 test("search record in hierarchy view with child field name defined in the arch", async () => {
     await mountView({
         type: "hierarchy",

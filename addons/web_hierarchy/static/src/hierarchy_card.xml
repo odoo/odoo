@@ -4,7 +4,13 @@
     <t t-name="web_hierarchy.HierarchyCard">
         <div class="o_hierarchy_node_container d-flex flex-column" t-att-class="classNames" t-att-data-node-id="props.node.id">
             <div class="o_hierarchy_node_button_container w-100 d-flex justify-content-end">
+<<<<<<< 16018348625fd2970f91301f25cb47131376be71
                 <button t-if="props.node.canShowParentNode"
+||||||| e87aba6917b1358029c80206ee1fa7a26a2634cf
+                <button t-if="props.node.parentResId !== false and !props.node.parentNode"
+=======
+                <button t-if="props.node.parentResId !== false and !props.node.parentNode and props.node.parentResId !== props.node.resId"
+>>>>>>> 50531fed0cf002ec1b6aaacf8ac600081f7c7cba
                         name="hierarchy_search_parent_node"
                         class="btn p-0"
                         t-on-click.synthetic="onClickArrowUp"
