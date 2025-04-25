@@ -34,4 +34,19 @@
         <field name="perm_unlink" eval="0"/>
     </record>
 
+    <!-- Add record rules for data privacy -->
+    <record id="rule_daily_summary_user" model="ir.rule">
+        <field name="name">Users can only see their own summaries</field>
+        <field name="model_id" ref="model_daily_summary"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Add manager group -->
+    <record id="group_summary_manager" model="res.groups">
+        <field name="name">Summary Manager</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
 </odoo>

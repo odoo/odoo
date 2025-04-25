@@ -5,12 +5,10 @@
     'license': 'LGPL-3',
     'category': 'Human Resources',
     'author': 'Your Name',
-    'depends': ['base', 'hr'],
+    'depends': ['base', 'hr', 'mail'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
-    ],
-    'views': [
         'views/daily_summary_views.xml',
         'views/summary_review_views.xml',
     ],

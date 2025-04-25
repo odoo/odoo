@@ -18,9 +18,8 @@ class SummaryReview(models.Model):
     approved_by_id = fields.Many2one('hr.employee', string="Approved by")
     approved_on = fields.Datetime(string="Approved On")
 
-    @api.model
     def create(self, vals):
-        record = super().create(vals)
+        record = super(SummaryReview, self).create(vals)
         if record.summary_id:
             record.summary_id.reviewed = True
         return record

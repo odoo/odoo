@@ -3,13 +3,17 @@
     <record id="view_summary_review_tree" model="ir.ui.view">
         <field name="name">summary.review.tree</field>
         <field name="model">summary.review</field>
+        <field name="type">list</field>
         <field name="arch" type="xml">
-            <tree>
-                <field name="summary_id"/>
-                <field name="reviewer_id"/>
-                <field name="rating"/>
-                <field name="approved_on"/>
-            </tree>
+            <list string="Summary Reviews" decoration-success="approved_on != False" decoration-info="approved_on == False">
+                <field name="summary_id" string="Work Summary"/>
+                <field name="reviewer_id" string="Reviewer"/>
+                <field name="date_reviewed" string="Review Date"/>
+                <field name="rating" widget="badge" decoration-danger="rating in ('1')" decoration-warning="rating in ('2')" decoration-info="rating in ('3')" decoration-success="rating in ('4','5')"/>
+                <field name="remarks" string="Comments" optional="show"/>
+                <field name="approved_by_id" string="Approved By" optional="show"/>
+                <field name="approved_on" string="Approval Date"/>
+            </list>
         </field>
     </record>
 
@@ -18,16 +22,25 @@
         <field name="name">summary.review.form</field>
         <field name="model">summary.review</field>
         <field name="arch" type="xml">
-            <form>
+            <form string="Summary Review">
                 <sheet>
                     <group>
-                        <field name="summary_id"/>
-                        <field name="reviewer_id"/>
-                        <field name="rating"/>
-                        <field name="remarks"/>
-                        <field name="approved_by_id"/>
-                        <field name="approved_on"/>
+                        <group name="summary_details">
+                            <field name="summary_id" string="Work Summary" domain="[('state', '=', 'submitted')]"/>
+                            <field name="reviewer_id" string="Reviewed By"/>
+                            <field name="date_reviewed" string="Review Date"/>
+                        </group>
+                        <group name="review_details">
+                            <field name="rating" string="Rating"/>
+                            <field name="approved_by_id" string="Approval By" readonly="approved_on != False"/>
+                            <field name="approved_on" string="Approval Date" readonly="1"/>
+                        </group>
                     </group>
+                    <notebook>
+                        <page string="Review Comments" name="remarks_page">
+                            <field name="remarks" placeholder="Enter your review comments here..." nolabel="1"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -37,7 +50,7 @@
     <record id="action_summary_review" model="ir.actions.act_window">
         <field name="name">Summary Reviews</field>
         <field name="res_model">summary.review</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Review submitted summaries here.
