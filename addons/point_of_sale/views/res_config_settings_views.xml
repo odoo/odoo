@@ -358,7 +358,7 @@
                                 </div>
                             </setting>
                             <setting string="Preparation Display" help="Display orders on the preparation display" id="preparation_display">
-                                <field name="module_pos_preparation_display" widget="upgrade_boolean"/>
+                                <field name="module_pos_preparation_display" readonly="pos_has_active_session or not pos_module_pos_restaurant" widget="upgrade_boolean"/>
                             </setting>
                         </block>
 
