@@ -192,18 +192,18 @@ def update_packages():
     subprocess.Popen(["sudo", "bash", "-c", background_cmd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
+@linux
 def misc_migration_updates():
     """Run miscellaneous updates after the code update."""
     _logger.warning("Running version migration updates")
-    if IS_LINUX:
-        if path_file('odoo', 'addons', 'point_of_sale').exists():
-            # TODO: remove this when v18.0 is deprecated (point_of_sale/tools/posbox/ -> iot_box_image/)
-            ramdisks_service = "/root_bypass_ramdisks/etc/systemd/system/ramdisks.service"
-            subprocess.run(
-                ['sudo', 'sed', '-i', "'s|iot_box_image|point_of_sale/tools/posbox|g'", ramdisks_service], check=False
-            )
+    if path_file('odoo', 'addons', 'point_of_sale').exists():
+        # TODO: remove this when v18.0 is deprecated (point_of_sale/tools/posbox/ -> iot_box_image/)
+        ramdisks_service = "/root_bypass_ramdisks/etc/systemd/system/ramdisks.service"
+        subprocess.run(
+            ['sudo', 'sed', '-i', "'s|iot_box_image|point_of_sale/tools/posbox|g'", ramdisks_service], check=False
+        )
 
-            # TODO: Remove this code when v16 is deprecated
-            with open('addons/point_of_sale/tools/posbox/configuration/odoo.conf', 'r+', encoding='utf-8') as f:
-                if "server_wide_modules" not in f.read():
-                    f.write("server_wide_modules=hw_drivers,hw_posbox_homepage,web\n")
+        # TODO: Remove this code when v16 is deprecated
+        with open('addons/point_of_sale/tools/posbox/configuration/odoo.conf', 'r+', encoding='utf-8') as f:
+            if "server_wide_modules" not in f.read():
+                f.write("server_wide_modules=hw_drivers,hw_posbox_homepage,web\n")
