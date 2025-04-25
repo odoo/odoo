@@ -283,7 +283,9 @@ export class ToolbarPlugin extends Plugin {
         return this.dependencies.selection
             .getTargetedNodes()
             .filter(
-                (node) => !isTextNode(node) || (node.textContent.trim().length && !isZWS(node))
+                (node) =>
+                    this.dependencies.selection.isNodeEditable(node) &&
+                    (!isTextNode(node) || (node.textContent.trim().length && !isZWS(node)))
             );
     }
 
