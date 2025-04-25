@@ -1,3 +1,4 @@
+import { BEGIN, END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -8,11 +9,11 @@ class MediaListOptionPlugin extends Plugin {
     mediaListItemOptionSelector = ".s_media_list_item";
     resources = {
         builder_options: [
-            withSequence(5, {
+            withSequence(BEGIN, {
                 template: "website.MediaListOption",
                 selector: ".s_media_list",
             }),
-            withSequence(20, {
+            withSequence(END, {
                 OptionComponent: MediaListItemOption,
                 selector: this.mediaListItemOptionSelector,
             }),

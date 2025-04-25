@@ -1,3 +1,4 @@
+import { BEGIN, SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -7,15 +8,15 @@ class TimelineImagesOptionPlugin extends Plugin {
     static dependencies = ["history"];
     resources = {
         builder_options: [
-            withSequence(5, {
+            withSequence(BEGIN, {
                 template: "html_builder.TimelineImagesOption",
                 selector: ".s_timeline_images",
             }),
-            withSequence(10, {
+            withSequence(SNIPPET_SPECIFIC_END, {
                 template: "html_builder.DotLinesColorOption",
                 selector: ".s_timeline_images",
             }),
-            withSequence(5, {
+            withSequence(SNIPPET_SPECIFIC, {
                 template: "html_builder.DotColorOption",
                 selector: ".s_timeline_images .s_timeline_images_row",
             }),

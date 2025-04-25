@@ -1,3 +1,4 @@
+import { SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -6,12 +7,12 @@ class NavTabsStyleOptionPlugin extends Plugin {
     static id = "navTabsOptionStyle";
     resources = {
         builder_options: [
-            withSequence(50, {
+            withSequence(SNIPPET_SPECIFIC_END, {
                 template: "html_builder.NavTabsStyleOption",
                 selector: ".s_tabs",
                 applyTo: ".s_tabs_main",
             }),
-            withSequence(50, {
+            withSequence(SNIPPET_SPECIFIC_END, {
                 template: "html_builder.NavTabsImagesStyleOption",
                 selector: ".s_tabs_images",
                 applyTo: ".s_tabs_main",

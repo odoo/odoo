@@ -1,3 +1,4 @@
+import { SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
@@ -16,7 +17,7 @@ class DynamicSnippetOptionPlugin extends Plugin {
     modelNameFilter = "";
     resources = {
         builder_options: [
-            withSequence(10, {
+            withSequence(SNIPPET_SPECIFIC_END, {
                 OptionComponent: DynamicSnippetOption,
                 props: {
                     modelNameFilter: this.modelNameFilter,

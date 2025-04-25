@@ -1,4 +1,5 @@
 import { VerticalAlignmentOption } from "@html_builder/plugins/vertical_alignment_option";
+import { BEGIN, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -8,7 +9,7 @@ class PriceListCafePlugin extends Plugin {
     static id = "priceList";
     resources = {
         builder_options: [
-            withSequence(5, {
+            withSequence(BEGIN, {
                 selector: ".s_pricelist_cafe",
                 OptionComponent: AddProductOption,
                 props: {
@@ -17,12 +18,12 @@ class PriceListCafePlugin extends Plugin {
                     productSelector: ".s_pricelist_cafe_item",
                 },
             }),
-            withSequence(6, {
+            withSequence(BEGIN, {
                 selector: ".s_pricelist_cafe",
                 OptionComponent: VerticalAlignmentOption,
                 applyTo: ".row:has(.s_pricelist_cafe_col)",
             }),
-            withSequence(5, {
+            withSequence(BEGIN, {
                 selector: ".s_pricelist_cafe .row > div",
                 OptionComponent: AddProductOption,
                 props: {
@@ -30,7 +31,7 @@ class PriceListCafePlugin extends Plugin {
                     productSelector: ".s_pricelist_cafe_item",
                 },
             }),
-            withSequence(10, {
+            withSequence(SNIPPET_SPECIFIC_END, {
                 template: "html_builder.PriceListCafeDescriptionOption",
                 selector: ".s_pricelist_cafe",
             }),

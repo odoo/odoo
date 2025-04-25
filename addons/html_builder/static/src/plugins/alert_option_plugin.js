@@ -1,3 +1,5 @@
+import { before } from "@html_builder/utils/option_sequence";
+import { WIDTH } from "@html_builder/website_builder/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { fonts } from "@html_editor/utils/fonts";
 import { registry } from "@web/core/registry";
@@ -35,7 +37,7 @@ class AlertOptionPlugin extends Plugin {
             },
         },
         builder_options: [
-            withSequence(5, {
+            withSequence(before(WIDTH), {
                 template: "html_builder.AlertOption",
                 selector: ".s_alert",
             }),

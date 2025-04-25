@@ -1,3 +1,5 @@
+import { before } from "@html_builder/utils/option_sequence";
+import { NEWSLETTER_SELECT } from "@html_builder/website_mass_mailing/newsletter_subscribe_common_option_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
@@ -8,7 +10,7 @@ export class NewsletterLayoutOptionPlugin extends Plugin {
 
     resources = {
         builder_options: [
-            withSequence(1, {
+            withSequence(before(NEWSLETTER_SELECT), {
                 template: "website_mass_mailing.NewsletterLayoutOption",
                 selector: ".s_newsletter_block",
                 applyTo:

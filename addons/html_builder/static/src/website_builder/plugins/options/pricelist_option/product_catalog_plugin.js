@@ -1,3 +1,4 @@
+import { BEGIN, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -7,7 +8,7 @@ class ProductCatalogOptionPlugin extends Plugin {
     static id = "productCatalogOptionPlugin";
     resources = {
         builder_options: [
-            withSequence(5, {
+            withSequence(BEGIN, {
                 selector: ".s_product_catalog",
                 OptionComponent: AddProductOption,
                 props: {
@@ -16,7 +17,7 @@ class ProductCatalogOptionPlugin extends Plugin {
                     productSelector: ".s_product_catalog_dish",
                 },
             }),
-            withSequence(5, {
+            withSequence(BEGIN, {
                 selector: ".s_product_catalog .row > div",
                 OptionComponent: AddProductOption,
                 props: {
@@ -24,7 +25,7 @@ class ProductCatalogOptionPlugin extends Plugin {
                     productSelector: ".s_product_catalog_dish",
                 },
             }),
-            withSequence(10, {
+            withSequence(SNIPPET_SPECIFIC_END, {
                 template: "html_builder.ProductCatalogDescriptionOption",
                 selector: ".s_product_catalog",
             }),

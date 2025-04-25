@@ -1,3 +1,5 @@
+import { before } from "@html_builder/utils/option_sequence";
+import { ANIMATE } from "@html_builder/website_builder/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -6,7 +8,7 @@ class BadgeOptionPlugin extends Plugin {
     static id = "badgeOption";
     resources = {
         builder_options: [
-            withSequence(10, {
+            withSequence(before(ANIMATE), {
                 template: "html_builder.BadgeOption",
                 selector: ".s_badge",
             }),

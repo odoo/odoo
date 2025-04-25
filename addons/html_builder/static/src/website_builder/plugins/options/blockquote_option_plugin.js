@@ -1,3 +1,5 @@
+import { after, END } from "@html_builder/utils/option_sequence";
+import { ANIMATE } from "@html_builder/website_builder/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
@@ -9,7 +11,7 @@ class BlockquoteOptionPlugin extends Plugin {
     resources = {
         mark_color_level_selector_params: [{ selector: this.selector }],
         builder_options: [
-            withSequence(30, {
+            withSequence(after(ANIMATE), {
                 selector: this.selector,
                 OptionComponent: WebsiteBackgroundOption,
                 props: {
@@ -19,7 +21,7 @@ class BlockquoteOptionPlugin extends Plugin {
                     withColorCombinations: true,
                 },
             }),
-            withSequence(40, {
+            withSequence(END, {
                 template: "website.BlockquoteOption",
                 selector: this.selector,
             }),

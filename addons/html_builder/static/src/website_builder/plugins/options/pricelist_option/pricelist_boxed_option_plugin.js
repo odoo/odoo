@@ -1,3 +1,4 @@
+import { BEGIN, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -7,7 +8,7 @@ class PriceListBoxedOptionPlugin extends Plugin {
     static id = "priceListBoxedOption";
     resources = {
         builder_options: [
-            withSequence(5, {
+            withSequence(BEGIN, {
                 selector: ".s_pricelist_boxed",
                 OptionComponent: AddProductOption,
                 props: {
@@ -16,7 +17,7 @@ class PriceListBoxedOptionPlugin extends Plugin {
                     productSelector: ".s_pricelist_boxed_item",
                 },
             }),
-            withSequence(5, {
+            withSequence(BEGIN, {
                 selector: ".s_pricelist_boxed_section",
                 OptionComponent: AddProductOption,
                 props: {
@@ -24,7 +25,7 @@ class PriceListBoxedOptionPlugin extends Plugin {
                     productSelector: ".s_pricelist_boxed_item",
                 },
             }),
-            withSequence(10, {
+            withSequence(SNIPPET_SPECIFIC_END, {
                 template: "html_builder.PriceListBoxedDescriptionOption",
                 selector: ".s_pricelist_boxed",
             }),

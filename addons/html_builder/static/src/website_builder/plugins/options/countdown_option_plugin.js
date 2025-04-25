@@ -1,3 +1,4 @@
+import { before, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -7,7 +8,7 @@ class CountdownOptionPlugin extends Plugin {
     static id = "CountdownOption";
     resources = {
         builder_options: [
-            withSequence(50, {
+            withSequence(before(SNIPPET_SPECIFIC_END), {
                 template: "html_builder.CountdownOption",
                 selector: ".s_countdown",
                 cleanForSave: this.cleanForSave.bind(this),

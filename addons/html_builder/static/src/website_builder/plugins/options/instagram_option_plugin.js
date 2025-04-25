@@ -1,3 +1,4 @@
+import { SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
@@ -10,7 +11,7 @@ class InstagramOptionPlugin extends Plugin {
 
     resources = {
         builder_options: [
-            withSequence(40, {
+            withSequence(SNIPPET_SPECIFIC_END, {
                 template: "html_builder.InstagramOption",
                 selector: ".s_instagram_page",
             }),

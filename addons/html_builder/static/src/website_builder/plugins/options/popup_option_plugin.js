@@ -1,9 +1,10 @@
-import { SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
+import { SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 import { withSequence } from "@html_editor/utils/resource";
 
+export const POPUP = SNIPPET_SPECIFIC;
 export const COOKIES_BAR = SNIPPET_SPECIFIC_END;
 
 class PopupOptionPlugin extends Plugin {
@@ -12,12 +13,12 @@ class PopupOptionPlugin extends Plugin {
 
     resources = {
         builder_options: [
-            {
+            withSequence(POPUP, {
                 template: "html_builder.PopupOption",
                 selector: ".s_popup",
                 exclude: "#website_cookies_bar",
                 applyTo: ".modal",
-            },
+            }),
             withSequence(COOKIES_BAR, {
                 template: "html_builder.PopupCookiesOption",
                 selector: ".s_popup#website_cookies_bar",

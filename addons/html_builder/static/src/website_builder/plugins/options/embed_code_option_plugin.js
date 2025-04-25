@@ -1,3 +1,4 @@
+import { BEGIN } from "@html_builder/utils/option_sequence";
 import { EmbedCodeOptionDialog } from "./embed_code_option_dialog";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
@@ -10,7 +11,7 @@ class EmbedCodeOptionPlugin extends Plugin {
 
     resources = {
         builder_options: [
-            withSequence(5, {
+            withSequence(BEGIN, {
                 template: "html_builder.EmbedCodeOption",
                 selector: ".s_embed_code",
             }),
