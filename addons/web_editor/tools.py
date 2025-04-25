@@ -1,7 +1,5 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import contextlib
 import logging
 import re
@@ -14,7 +12,7 @@ from werkzeug.urls import url_encode
 from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools import image_process
+from odoo.tools.image import image_process
 
 logger = logging.getLogger(__name__)
 

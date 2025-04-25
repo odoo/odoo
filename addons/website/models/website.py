@@ -26,6 +26,7 @@ from odoo.http import request
 from odoo.modules.module import get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN
 from odoo.tools import SQL, Query, sql as sqltools
+from odoo.tools.image import image_process
 from odoo.tools.translate import _, xml_translate
 
 logger = logging.getLogger(__name__)
@@ -366,7 +367,7 @@ class Website(models.Model):
     @api.model
     def _handle_favicon(self, vals):
         if vals.get('favicon'):
-            vals['favicon'] = base64.b64encode(tools.image_process(base64.b64decode(vals['favicon']), size=(256, 256), crop='center', output_format='ICO'))
+            vals['favicon'] = base64.b64encode(image_process(base64.b64decode(vals['favicon']), size=(256, 256), crop='center', output_format='ICO'))
 
     @api.model
     def _handle_domain(self, vals):

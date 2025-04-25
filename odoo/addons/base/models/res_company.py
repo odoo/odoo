@@ -8,6 +8,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
 from odoo.tools import html2plaintext, file_open, ormcache
+from odoo.tools.image import image_process
 
 _logger = logging.getLogger(__name__)
 
@@ -153,7 +154,7 @@ class ResCompany(models.Model):
     def _compute_logo_web(self):
         for company in self:
             img = company.partner_id.image_1920
-            company.logo_web = img and base64.b64encode(tools.image_process(base64.b64decode(img), size=(180, 0)))
+            company.logo_web = img and base64.b64encode(image_process(base64.b64decode(img), size=(180, 0)))
 
     @api.depends('partner_id.image_1920')
     def _compute_uses_default_logo(self):

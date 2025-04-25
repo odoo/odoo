@@ -11,7 +11,8 @@ from freezegun import freeze_time
 
 from odoo import api, http
 from odoo.tests import new_test_user, tagged, RecordCapturer
-from odoo.tools import config, file_open, image_process
+from odoo.tools import config, file_open
+from odoo.tools.image import image_process
 from odoo.tools.misc import submap
 
 from .test_common import TestHttpBase, HTTP_DATETIME_FORMAT
