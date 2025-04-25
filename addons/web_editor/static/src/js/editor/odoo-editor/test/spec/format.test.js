@@ -1108,6 +1108,18 @@ describe('Format', () => {
                 contentAfter: `<p>a<span style="font-size: 18px;"><s><u>[b]</u></s></span>c</p>`,
             });
         });
+        it("should apply font size on top of `font` tag", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></p>`,
+                stepFunction: setFontSize("80px"),
+                contentAfter: `<p><span style="font-size: 80px;"><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><font class="bg-o-color-1 text-black">[abcdefg]</font></p>`,
+                stepFunction: setFontSize("72px"),
+                contentAfter: `<p><span style="font-size: 72px;"><font class="bg-o-color-1 text-black">[abcdefg]</font></span></p>`,
+            });
+        });
     });
 
     describe('setFontSizeClassName', () => {
