@@ -3,7 +3,6 @@
 
 from . import constants
 from .parse_version import parse_version
-from .barcode import check_barcode_encoding
 from .cache import ormcache, ormcache_context
 from .config import config
 from .date_utils import *

@@ -12,7 +12,8 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.osv import expression
-from odoo.tools import SQL, check_barcode_encoding, groupby
+from odoo.tools import SQL, groupby
+from odoo.tools.barcode import check_barcode_encoding
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
