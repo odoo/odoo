@@ -25,7 +25,7 @@ class StockMove(models.Model):
 
     weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True)
 
-    @api.depends('product_id', 'product_uom_qty', 'product_uom')
+    @api.depends('product_id.weight', 'product_uom_qty', 'product_uom')
     def _cal_move_weight(self):
         moves_with_weight = self.filtered(lambda moves: moves.product_id.weight > 0.00)
         for move in moves_with_weight:
