@@ -23,7 +23,7 @@ _post = requests.post
 def set_user_agent(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        headers = kwargs.pop('headers', {})
+        headers = kwargs.pop('headers', None) or {}
         headers['User-Agent'] = 'OdooIoTBox/1.0'
         return func(*args, headers=headers, **kwargs)
 
