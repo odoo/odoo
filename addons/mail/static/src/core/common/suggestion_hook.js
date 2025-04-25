@@ -151,36 +151,25 @@ export class UseSuggestion {
         return this.composer.thread || this.composer.message.thread;
     }
     insert(option) {
-        const position = this.composer.selection.start;
-        const text = this.composer.composerText;
-        let before = text.substring(0, this.search.position + 1);
-        let after = text.substring(position, text.length);
+        let position = this.search.position + 1;
         if ([":", "::"].includes(this.search.delimiter)) {
-            before = text.substring(0, this.search.position);
-            after = text.substring(position, text.length);
+            position = this.search.position;
         }
         if (option.partner) {
-            this.composer.mentionedPartners.add({
-                id: option.partner.id,
-            });
-        }
-        if (option.role) {
+            this.composer.mentionedPartners.add({ id: option.partner.id });
+        } else if (option.role) {
             this.composer.mentionedRoles.add(option.role);
-        }
-        if (option.thread) {
-            this.composer.mentionedChannels.add({
-                model: "discuss.channel",
-                id: option.thread.id,
-            });
-        }
-        if (option.cannedResponse) {
+        } else if (option.thread) {
+            this.composer.mentionedChannels.add({ model: "discuss.channel", id: option.thread.id });
+        } else if (option.cannedResponse) {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
+        // remove the user-typed search delimiter
+        this.composer.composerText =
+            this.composer.composerText.substring(0, position) +
+            this.composer.composerText.substring(this.composer.selection.end);
         this.clearSearch();
-        this.composer.composerText = before + option.label + " " + after;
-        this.composer.selection.start = before.length + option.label.length + 1;
-        this.composer.selection.end = before.length + option.label.length + 1;
-        this.composer.forceCursorMove = true;
+        this.composer.insertText(`${option.label} `, position);
     }
     update() {
         if (!this.search.delimiter) {
