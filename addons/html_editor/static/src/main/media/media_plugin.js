@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import {
     ICON_SELECTOR,
+    EDITABLE_MEDIA_CLASS,
     isIconElement,
     isMediaElement,
     isProtected,
@@ -67,12 +68,20 @@ export class MediaPlugin extends Plugin {
 
         unsplittable_node_predicates: isIconElement, // avoid merge
         functional_empty_node_predicates: isMediaElement,
+        is_node_editable_predicates: this.isEditableMediaElement.bind(this),
 
         selectors_for_feff_providers: () => ICON_SELECTOR,
     };
 
     get recordInfo() {
         return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
+    }
+
+    isEditableMediaElement(node) {
+        return (
+            (isMediaElement(node) || node.nodeName === "IMG") &&
+            node.classList.contains(EDITABLE_MEDIA_CLASS)
+        );
     }
 
     replaceImage() {
