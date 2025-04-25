@@ -300,6 +300,8 @@ export const ICON_SELECTOR = iconTags
     .map((tag) => iconClasses.map((cls) => `${tag}.${cls}`).join(", "))
     .join(", ");
 
+export const EDITABLE_MEDIA_CLASS = "o_editable_media";
+
 /**
  * Indicates if the given node is an icon element.
  *
