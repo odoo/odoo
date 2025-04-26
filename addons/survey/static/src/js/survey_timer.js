@@ -24,10 +24,10 @@ publicWidget.registry.SurveyTimerWidget = publicWidget.Widget.extend({
 
 
     /**
-    * Two responsabilities : Validate that time limit is not exceeded and Run timer otherwise.
-    * If end-user's clock OR the system clock  is de-synchronized before the survey is started, we apply the
-    * difference in timer (if time difference is more than 5 seconds) so that we can
-    * display the 'absolute' counter
+    * Two responsibilities: Validate that the time limit is not exceeded and Run timer otherwise.
+    * If the end-user's clock OR the system clock is desynchronized,
+    * we apply the difference in the clocks (if the time difference is more than 500 ms).
+    * This makes the timer fair across users and helps avoid early submissions to the server.
     *
     * @override
     */
@@ -35,7 +35,7 @@ publicWidget.registry.SurveyTimerWidget = publicWidget.Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.countDownDate = moment.utc(self.timer).add(self.timeLimitMinutes, 'minutes');
-            if (Math.abs(self.timeDifference) >= 5000) {
+            if (Math.abs(self.timeDifference) >= 500) {
                 self.countDownDate = self.countDownDate.add(self.timeDifference, 'milliseconds');
             }
             if (self.timeLimitMinutes <= 0 || self.countDownDate.diff(moment.utc(), 'seconds') < 0) {
