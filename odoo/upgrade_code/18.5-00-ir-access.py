@@ -128,6 +128,7 @@ class upgrade:
             return
 
         _logger.info(WELCOME_MESSAGE)
+        self.check()
 
         file_manager.print_progress(0, len(modules_to_upgrade))
         for count, module in enumerate(modules_to_upgrade, start=1):
@@ -308,6 +309,64 @@ class upgrade:
 
         self.set_file_content(module, file_name, content)
         self.add_to_manifest(module, file_name)
+
+    def check(self) -> None:
+        """ Warn about non-monotonic access with possible group combinations. """
+        implied = self.get_groups_implied().closure()
+
+        ignored_groups = {
+            *implied('base.group_public'),
+            *implied('base.group_portal'),
+        }
+
+        # {(model, operation): {group: acls}}
+        model_group_acls = defaultdict(lambda: defaultdict(list))
+        # {(model, operation): {group: rules}}
+        model_group_rules = defaultdict(lambda: defaultdict(list))
+        for module in self.file_manager.get_modules():
+            for acl in self.extract_accesses(module):
+                if acl.group and acl.group not in ignored_groups:
+                    for operation in acl.operations:
+                        model_group_acls[acl.model, operation][acl.group].append(acl)
+            for rule in self.extract_rules(module):
+                if rule.group and rule.group not in ignored_groups:
+                    for operation in rule.operations:
+                        model_group_rules[rule.model, operation][rule.group].append(rule)
+
+        # check all model and operations on which we have both acls and rules
+        for model_operation in sorted(model_group_acls.keys() & model_group_rules.keys()):
+            model, operation = model_operation
+            acl_groups = model_group_acls[model_operation]
+            rule_groups = model_group_rules[model_operation]
+
+            # determines acls that do not imply having rules, and non-trivial rules
+            acls_without_rule = [
+                acl
+                for acl_group, acls in acl_groups.items()
+                if not any(group in rule_groups for group in implied(acl_group))
+                for acl in acls
+            ]
+            rules_with_domain = [
+                rule
+                for rules in rule_groups.values()
+                for rule in rules
+                if rule.domain
+            ]
+            if acls_without_rule and rules_with_domain:
+                # Those acls give some permission to all records in the model.
+                # But when combined with another group with rules, those
+                # permissions are granted to less records.
+                lines = [f"/!\\ {model=}, {operation=}"]
+                lines.append("    acl groups without rules, giving access to ALL records:")
+                for acl in sorted(acls_without_rule, key=lambda acl: acl.group):
+                    lines.append(f"     - {acl.group}: acl {acl.id}")
+                lines.append("    may interact with rules in groups, giving access to LESS records:")
+                for rule in sorted(rules_with_domain, key=lambda rule: rule.group):
+                    has_acl = any(group in acl_groups for group in implied(rule.group))
+                    extra = " (with acl)" if has_acl else ""
+                    lines.append(f"     - {rule.group}: rule {rule.id}{extra}")
+                lines.append("")
+                _logger.warning("\n".join(lines))
 
     def get_file_content(self, module: str, file_name: str) -> str:
         """ Return the content of the given file. """
