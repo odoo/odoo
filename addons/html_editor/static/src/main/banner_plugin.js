@@ -3,6 +3,7 @@ import { fillShrunkPhrasingParent } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
+import { htmlEscape } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 function isAvailable(selection) {
@@ -93,7 +94,9 @@ export class BannerPlugin extends Plugin {
         const bannerElement = parseHTML(
             this.document,
             `<div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" data-oe-role="status">
-                <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="${title}">${emoji}</i>
+                <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="${htmlEscape(
+                    title
+                )}">${emoji}</i>
                 <div class="o_editor_banner_content o-contenteditable-true w-100 px-3">
                     ${baseContainerHtml}
                 </div>

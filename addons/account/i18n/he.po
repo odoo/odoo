@@ -185,7 +185,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "%(name)s installment #%(number)s"
-msgstr ""
+msgstr "%(name)s תשלום #%(number)s"
 
 #. module: account
 #. odoo-python
@@ -1483,7 +1483,7 @@ msgstr "שורה בתנועה זו משתמשת בחשבון שאינו בשימ
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "A new Hard Lock Date must be posterior (or equal) to the previous one."
-msgstr ""
+msgstr "תאריך נעילה קשיח חדש חייב להיות מאוחר (או שווה) לתאריך הנעילה הקודם."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2216,12 +2216,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate Audit Trail"
-msgstr ""
+msgstr "הפעל מעקב אחרי שינויים"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Activate auto-validation"
-msgstr ""
+msgstr "הפעל אישור-אוטומטי"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2459,6 +2459,9 @@ msgid ""
 "suggest automatically validating future bills. You can toggle this feature "
 "at any time in the vendor's profile."
 msgstr ""
+"לאחר ייבוא של שלוש חשבוניות עבור ספק מבלי לבצע שינויים, ‏Odoo יציע לאשר "
+"אוטומטית חשבוניות עתידיות. תוכל להפעיל או לבטל את האפשרות הזו בכל עת בפרופיל"
+" של הספק."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__aggregation
@@ -3119,7 +3122,7 @@ msgstr "מעקב אחר שינויים"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
 #: model:ir.model.fields,field_description:account.field_account_move__audit_trail_message_ids
 msgid "Audit Trail Messages"
-msgstr ""
+msgstr "הודעות מעקב אחר שינויים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
@@ -3139,7 +3142,7 @@ msgstr "אישור אוטומטי"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__autocheck_on_post
 msgid "Auto-Check on Post"
-msgstr ""
+msgstr "בדיקה אוטומטית לפני רישום"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3234,12 +3237,12 @@ msgstr "אוטומציה"
 #: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Autopost Bills"
-msgstr ""
+msgstr "רישום אוטומטי של חשבוניות"
 
 #. module: account
 #: model:ir.model,name:account.model_account_autopost_bills_wizard
 msgid "Autopost Bills Wizard"
-msgstr ""
+msgstr "אשף רישום אוטומטי של חשבוניות"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -3458,7 +3461,7 @@ msgstr "דף בנק"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_extract
 msgid "Bank Statement Digitization"
-msgstr ""
+msgstr "דיגיטליזציה של דפי בנק"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -3859,7 +3862,7 @@ msgstr "ניתן ליצור קבוצות תשלומים"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Can't disable audit trail when there are existing records."
-msgstr ""
+msgstr "לא ניתן להשבית את מעקב אחר שינויים כאשר רשומות קיימות."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -5366,7 +5369,7 @@ msgstr "התחייבויות שוטפות"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
 msgid "Current Statement Balance"
-msgstr ""
+msgstr "יתרת הצהרה אחרונה"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
@@ -5772,7 +5775,7 @@ msgstr "חשבון הכנסה ברירת מחדל"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Incoterm"
-msgstr ""
+msgstr "מונח סחר בינלאומי ברירת מחדל"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6192,7 +6195,7 @@ msgstr "תצוגת ימים בחודש הבא"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
 msgid "Display Force Post"
-msgstr ""
+msgstr "הצגת רישום בכפייה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -6344,7 +6347,7 @@ msgstr "חלוקה עבור חשבוניות החזר"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Refunds"
-msgstr ""
+msgstr "חלוקה עבור החזרים כספיים"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
@@ -8193,7 +8196,7 @@ msgstr "התעלם מסכום חשבונית חריג "
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_date
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_date
 msgid "Ignore Abnormal Invoice Date"
-msgstr ""
+msgstr "התעלם מתאריכים חריגים בחשבוניות"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -9155,7 +9158,7 @@ msgstr "בעבר זה היה '%(previous)s' ועכשיו זה '%(current)s'."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Items With Missing Analytic Distribution"
-msgstr ""
+msgstr "פריטים עם חלוקה לחשבונות אנליטים חסרים"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -10543,7 +10546,7 @@ msgstr "סוג הפעילות הבאה"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__next
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Next Installment"
-msgstr ""
+msgstr "התשלום הבא"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__next_payment_date
@@ -10566,7 +10569,7 @@ msgstr "אין בנק תואם"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "No Bank Transaction"
-msgstr ""
+msgstr "אין עסקה בנקאית"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__no-message
@@ -10611,7 +10614,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "No outstanding account could be found to make the payment"
-msgstr ""
+msgstr "לא נמצא חשבון פעיל שממנו ניתן לבצע את התשלום."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -15505,7 +15508,7 @@ msgstr "הדף המבוקש אינו חוקי, או אינו קיים יותר."
 msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
-msgstr ""
+msgstr "הסכום שנותר בפריט היומן, מוצג במטבע שלו (ייתכן שאינו מטבע החברה)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual
@@ -15523,7 +15526,7 @@ msgstr "היתרה הפעילה (%s) אינה תואמת את יתרת הסיו�
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "The sections defined on a report cannot have sections themselves."
-msgstr ""
+msgstr "לא ניתן להגדיר תתי סעיפים לסעיפים שהוגדרו בדו\"ח זה."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__hash_date
@@ -15546,6 +15549,7 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"אמצעי התשלום שנבחר אינו זמין עבור תשלום זה. אנא בחר שוב אמצעי תשלום אחר."
 
 #. module: account
 #. odoo-python
@@ -15554,6 +15558,8 @@ msgid ""
 "The sending of invoices is not set up properly, make sure the report used is"
 " set for invoices."
 msgstr ""
+"שליחת החשבוניות אינה מוגדרת כראוי. ודא שהדוח שבו נעשה שימוש מוגדר לשימוש עם "
+"חשבוניות."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence

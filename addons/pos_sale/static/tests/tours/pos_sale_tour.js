@@ -421,3 +421,22 @@ registry.category("web_tour.tours").add("test_settle_order_with_lot", {
             PosSale.selectedOrderLinesHasLots("Product A", ["1001", "1002"]),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_down_payment_displayed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.downPaymentFirstOrder("+10"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "-1.15",
+            }),
+        ].flat(),
+});

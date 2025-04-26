@@ -557,7 +557,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                          "All the remaining days of the allocation will expire")
 
         # Days between the target date and the expiration date (accrual_plan's carryover date)
-        remaining_days_before_expiration = (allocation._get_carryover_date(target_date) - target_date).days + 1
+        remaining_days_before_expiration = (allocation._get_carryover_date(target_date) - target_date).days
         working_days_equivalent_needed = remaining_days_before_expiration * 24 / self.flex_40h_calendar.hours_per_day
     
         # Assert the closest allocation duration (number of working days equivalent (8 hours/day) remaining before the allocation expires)

@@ -3,6 +3,8 @@
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged, users
+from odoo.addons.mail.tools.parser import domain_eval
+from freezegun import freeze_time
 
 
 @tagged('mail_tools', 'res_partner')
@@ -178,6 +180,22 @@ class TestMailTools(MailCommon):
         for record, (expected_partner, msg) in zip(records, expected_partners):
             found = Partner._mail_find_partner_from_emails([self._test_email], records=record)
             self.assertEqual(found, [expected_partner], msg)
+
+    @freeze_time('2030-05-24')
+    def test_domain_eval(self):
+        success_pairs = [
+            ("list()", []),
+            ("list(range(1, 4))", [1, 2, 3]),
+            ("['|', (1, '=', 1), (1, '>', 0)]", ['|', (1, '=', 1), (1, '>', 0)]),
+            ("[(2, '=', 1 + 1)]", [(2, '=', 2)]),
+            (
+                "[('create_date', '<', datetime.datetime.combine(context_today() - relativedelta(days=100), datetime.time(1, 2, 3)).to_utc().strftime('%Y-%m-%d %H:%M:%S'))]",
+                [('create_date', '<', "2030-02-13 01:02:03")],
+            ),  # use the date utils used by front-end domains
+        ]
+        for domain_expression, domain_value in success_pairs:
+            with self.subTest(domain_expression=domain_expression, domain_value=domain_value):
+                self.assertEqual(domain_eval(domain_expression), domain_value)
 
 
 @tagged('mail_tools', 'mail_init')

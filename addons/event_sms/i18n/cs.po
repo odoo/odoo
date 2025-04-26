@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +46,8 @@ msgid ""
 "Ready for \"{{ object.event_id.name }}\" {{ object.event_date_range }}?\n"
 "{{ 'It starts at %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nSee you there!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Join us on %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}"
 msgstr ""
+"Jste připraveni na \"{{ object.event_id.name }}\" {{ object.event_date_range }}?\n"
+"{{ 'Začíná to v %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', na adrese %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nUvidíme se tam!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Připojte se k nám na %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
@@ -85,3 +88,6 @@ msgid ""
 "user.env.company.name }}: We are happy to confirm your registration for the "
 "{{ object.event_id.name }} event."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: Rádi potvrzujeme vaši registraci na událost {{ "
+"object.event_id.name }}."

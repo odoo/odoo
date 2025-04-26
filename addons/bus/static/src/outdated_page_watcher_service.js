@@ -15,33 +15,50 @@ export class OutdatedPageWatcherService {
      */
     setup(env, { bus_service, multi_tab, notification }) {
         this.notification = notification;
+        this.multi_tab = multi_tab;
         this.lastNotificationId = null;
         /** @deprecated */
         this.lastDisconnectDt = null;
         this.closeNotificationFn;
+        let wasBusAlreadyConnected;
+        bus_service.addEventListener(
+            "worker_state_updated",
+            ({ detail: state }) => {
+                wasBusAlreadyConnected = state !== "IDLE";
+            },
+            { once: true }
+        );
         bus_service.addEventListener("disconnect", () => {
             this.lastNotificationId = bus_service.lastNotificationId;
             this.lastDisconnectDt = DateTime.now();
         });
-        bus_service.addEventListener("reconnect", async () => {
-            if (!multi_tab.isOnMainTab()) {
-                return;
+        bus_service.addEventListener("connect", async () => {
+            if (wasBusAlreadyConnected) {
+                this.checkHasMissedNotifications();
             }
-            const hasMissedNotifications = await rpc(
-                "/bus/has_missed_notifications",
-                { last_notification_id: this.lastNotificationId },
-                { silent: true }
-            );
-            if (hasMissedNotifications) {
-                this.showOutdatedPageNotification();
-                multi_tab.setSharedValue("bus.has_missed_notifications", Date.now());
-            }
+            wasBusAlreadyConnected = true;
         });
+        bus_service.addEventListener("reconnect", () => this.checkHasMissedNotifications());
         multi_tab.bus.addEventListener("shared_value_updated", ({ detail: { key } }) => {
             if (key === "bus.has_missed_notifications") {
                 this.showOutdatedPageNotification();
             }
         });
+    }
+
+    async checkHasMissedNotifications() {
+        if (!this.multi_tab.isOnMainTab()) {
+            return;
+        }
+        const hasMissedNotifications = await rpc(
+            "/bus/has_missed_notifications",
+            { last_notification_id: this.lastNotificationId },
+            { silent: true }
+        );
+        if (hasMissedNotifications) {
+            this.showOutdatedPageNotification();
+            this.multi_tab.setSharedValue("bus.has_missed_notifications", Date.now());
+        }
     }
 
     showOutdatedPageNotification() {

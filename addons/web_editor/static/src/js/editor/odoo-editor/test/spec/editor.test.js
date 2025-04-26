@@ -5858,7 +5858,12 @@ X[]
                                         </tr>
                                     </tbody>
                                 </table>`),
-                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            stepFunction: async editor => {
+                                // Table selection happens on selectionchange
+                                // event which is fired in the next tick.
+                                await nextTick();
+                                editor.execCommand('applyColor', 'aquamarine', 'color');
+                            },
                             contentAfterEdit: unformat(`
                                 <p>
                                     a<font style="color: aquamarine;">[bc</font>

@@ -4,6 +4,7 @@ import werkzeug
 
 from odoo.http import Controller, request, route
 from odoo.osv.expression import AND, OR
+from odoo.addons.mail.tools.parser import domain_eval
 
 
 class ModelPageController(Controller):
@@ -43,7 +44,7 @@ class ModelPageController(Controller):
         if not Model.has_access("read"):
             raise werkzeug.exceptions.Forbidden()
 
-        rec_domain = ast.literal_eval(page.record_domain or "[]")
+        rec_domain = domain_eval(page.record_domain or "[]")
         domains = [rec_domain]
         implements_published_mixin = "website_published" in Model._fields
         if implements_published_mixin and not request.env.user.has_group('website.group_website_designer'):

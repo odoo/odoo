@@ -492,8 +492,6 @@ class AccountBankStatementLine(models.Model):
 
     def _find_or_create_bank_account(self):
         self.ensure_one()
-        if str2bool(self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")):
-            return self.env['res.partner.bank']
 
         # There is a sql constraint on res.partner.bank ensuring an unique pair <partner, account number>.
         # Since it's not dependent of the company, we need to search on others company too to avoid the creation
@@ -504,7 +502,9 @@ class AccountBankStatementLine(models.Model):
             ('acc_number', '=', self.account_number),
             ('partner_id', '=', self.partner_id.id),
         ])
-        if not bank_account:
+        if not bank_account and not str2bool(
+                self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")
+        ):
             bank_account = self.env['res.partner.bank'].create({
                 'acc_number': self.account_number,
                 'partner_id': self.partner_id.id,
@@ -603,8 +603,8 @@ class AccountBankStatementLine(models.Model):
         transaction_amount, transaction_currency, journal_amount, journal_currency, company_amount, company_currency \
             = self._get_accounting_amounts_and_currencies()
 
-        rate_journal2foreign_curr = journal_amount and abs(transaction_amount) / abs(journal_amount)
-        rate_comp2journal_curr = company_amount and abs(journal_amount) / abs(company_amount)
+        rate_journal2foreign_curr = abs(transaction_amount) / abs(journal_amount) if journal_amount else 0.0
+        rate_comp2journal_curr = abs(journal_amount) / abs(company_amount) if company_amount else 0.0
 
         if currency == transaction_currency:
             trans_amount_currency = amount_currency
@@ -622,6 +622,9 @@ class AccountBankStatementLine(models.Model):
                 new_balance = company_currency.round(amount_currency / rate_comp2journal_curr)
             else:
                 new_balance = 0.0
+        elif balance is None:
+            trans_amount_currency = amount_currency
+            new_balance = currency._convert(amount_currency, company_currency, company=self.company_id, date=self.date)
         else:
             journ_amount_currency = journal_currency.round(balance * rate_comp2journal_curr)
             trans_amount_currency = transaction_currency.round(journ_amount_currency * rate_journal2foreign_curr)
