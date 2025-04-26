@@ -7,15 +7,15 @@
 # Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # 江口和志 <sandwhale1010@gmail.com>, 2023
-# Junko Augias, 2023
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -214,6 +214,7 @@ msgid "Display Type"
 msgstr "表示タイプ"
 
 #. module: sale_management
+#. odoo-python
 #: code:addons/sale_management/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
@@ -447,14 +448,14 @@ msgstr "一つを削除"
 msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
-msgstr "注文を自動的に確認するために、顧客にオンライン署名を要求します。"
+msgstr "顧客にオンライン署名を依頼し、オーダを自動的に確定します。"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
 msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
-msgstr "注文を自動的に確認するために、顧客にオンライン支払いを要求します。"
+msgstr "顧客にオンライン決済を依頼し、オーダを自動的に確定します。"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -600,12 +601,14 @@ msgstr ""
 "クロスセルや割引を利用して、売上をアップしましょう。"
 
 #. module: sale_management
+#. odoo-python
 #: code:addons/sale_management/models/sale_order_option.py:0
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "確認済みの注文にオプションを追加することはできません。"
 
 #. module: sale_management
+#. odoo-python
 #: code:addons/sale_management/models/sale_order_template_line.py:0
 #, python-format
 msgid ""
@@ -614,6 +617,7 @@ msgid ""
 msgstr "販売見積書明細のタイプを変更することはできません。代わりに、現在の明細を削除し、適切なタイプの新しい明細を作成する必要があります。"
 
 #. module: sale_management
+#. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -624,12 +628,14 @@ msgstr ""
 "見積もりの 会社を変更するか、他の会社から製品を削除してください(%(bad_products)s)。"
 
 #. module: sale_management
+#. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid "Your template cannot contain products from multiple companies."
 msgstr "テンプレートに複数の企業のプロダクトを含めることはできません。"
 
 #. module: sale_management
+#. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid ""

@@ -117,6 +117,9 @@ msgid ""
 "The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"הכמות שבוצעה עבור המוצר %sאינה תואמת את דיוק העיגול שהוגדר ליחידת המידה%s.\n"
+"אנא שנה את הכמות שבוצעה או את דיוק העיגול של יחידת המידה."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -132,6 +135,16 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
+"טיוטה (Draft): ההעברה לא אושרה עדיין. לא חלה הזמנה על המלאי.\n"
+"ממתין לפעולה נוספת (Waiting another operation): ההעברה ממתינה לפעולה אחרת לפני שהיא תהיה מוכנה.\n"
+"ממתין (Waiting): ההעברה ממתינה לזמינות של מוצרים מסוימים.\n"
+"(א) מדיניות המשלוח היא \"בהקדם האפשרי\": לא ניתן להזמין שום מוצר.\n"
+"(ב) מדיניות המשלוח היא \"כשהמוצרים כולם מוכנים\": לא כל המוצרים יכולים להיות מוזמנים.\n"
+"מוכן (Ready): ההעברה מוכנה לעיבוד.\n"
+"(א) מדיניות המשלוח היא \"בהקדם האפשרי\": לפחות מוצר אחד הוזמן.\n"
+"(ב) מדיניות המשלוח היא \"כשהמוצרים כולם מוכנים\": כל המוצרים הוזמנו.\n"
+"בוצע (Done): ההעברה הושלמה.\n"
+"בוטל (Cancelled): ההעברה בוטלה."
 
 #. module: stock
 #. odoo-python
@@ -225,7 +238,7 @@ msgstr "'סוג-פעולה - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
 msgid "'Packages - %s' % (object.name)"
-msgstr ""
+msgstr "'חבילות-%s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
@@ -272,6 +285,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"מיקום ספק (Vendor Location): מיקום וירטואלי המייצג את מיקום המקור למוצרים שמגיעים מהספקים שלך.\n"
+"תצוגה (View): מיקום וירטואלי המשמש ליצירת מבנה היררכי למחסן שלך, שמאגד מיקומי משנה. לא ניתן לאחסן בו מוצרים ישירות.\n"
+"מיקום פנימי (Internal Location): מיקומים פיזיים בתוך המחסנים שלך.\n"
+"מיקום לקוח (Customer Location): מיקום וירטואלי המייצג את יעד המשלוח של מוצרים שנשלחים ללקוחותיך.\n"
+"אובדן מלאי (Inventory Loss): מיקום וירטואלי המשמש כנגדי לפעולות מלאי שמטרתן תיקון רמות המלאי (ספירות פיזיות).\n"
+"ייצור (Production): מיקום וירטואלי נגדי לפעולות ייצור: מיקום זה צורך את הרכיבים ומייצר את המוצרים הסופיים.\n"
+"מיקום מעבר (Transit Location): מיקום נגדי שיש להשתמש בו בפעולות בין חברות או בין מחסנים."
 
 #. module: stock
 #. odoo-python
@@ -1409,6 +1429,11 @@ msgid ""
 "(Chicago) in its entirety and does not include any costs relating to the "
 "legislation of the country in which the client is located."
 msgstr ""
+"מדינות מסוימות גובות ניכוי מס במקור על סכום החשבוניות, בהתאם לחקיקה הפנימית "
+"שלהן. כל ניכוי מס במקור ישולם על ידי הלקוח לרשויות המס המקומיות. בשום מקרה "
+"לא תישא החברה בעלויות הנובעות מהחקיקה המקומית של מדינה כלשהי. לכן, סכום "
+"החשבונית יהיה חייב במלואו לחברה, ואינו כולל כל עלות הקשורה לחקיקה של המדינה "
+"בה נמצא הלקוח."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -2147,6 +2172,8 @@ msgid ""
 "Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.\n"
 "        If greater than the last day of a month, then the last day of the month will be selected instead."
 msgstr ""
+"היום בחודש שבו על המלאי השנתי להתבצע. אם הערך הוא אפס או שלילי, ייבחר יום הראשון של החודש במקום זאת.\n"
+"       אם הערך גדול מהיום האחרון של החודש, ייבחר היום האחרון של החודש במקום זאת."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
@@ -2720,6 +2747,8 @@ msgid ""
 "Editing quantities in an Inventory Adjustment location is forbidden,those "
 "locations are used as counterpart when correcting the quantities."
 msgstr ""
+"עריכת כמויות במיקום התאמת מלאי אסורה, מיקומים אלו משמשים כנגד בעת תיקון "
+"הכמויות."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2982,6 +3011,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"כמות תחזית (מחושבת ככמות במלאי - כמות מוזמנת)\n"
+"בהקשר עם מיקום מלאי אחד, זה כולל סחורות המאוחסנות במיקום זה, או באחד מהמיקומים שלו.\n"
+"בהקשר עם מחסן אחד, זה כולל סחורות המאוחסנות במיקום המלאי של מחסן זה, או באחד מהמיקומים שלו.\n"
+"במקרים אחרים, זה כולל סחורות המאוחסנות בכל מיקום מלאי מסוג 'פנימי'."
 
 #. module: stock
 #. odoo-javascript
@@ -3429,7 +3462,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__sn_duplicated
 msgid "If the same SN is in another Quant"
-msgstr ""
+msgstr "אם אותו מספר סידורי נמצא בכמות אחרת"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
@@ -3894,7 +3927,7 @@ msgstr "מאחר"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
-msgstr ""
+msgstr "מאחר או יהיה באיחור בהתאם לדדליין ולתאריך המתוכנן"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -6745,7 +6778,7 @@ msgstr "מידע על עיתוד מלאי"
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Information for %s in %s"
-msgstr ""
+msgstr "מידע על חידוש מלאי עבור %s ב-%s"
 
 #. module: stock
 #. odoo-python
@@ -7329,6 +7362,7 @@ msgid ""
 "Serial number (%s) already exists in location(s): %s. Please correct the "
 "serial number encoded."
 msgstr ""
+"מספר סידורי (%s) כבר נמצא במיקום(ים): %s. אנא תקן את מספר הסידורי המוזן."
 
 #. module: stock
 #. odoo-python
@@ -7339,6 +7373,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"מספר סידורי (%s) לא נמצא במיקום %s, אבל נמצא במיקום (ים):\n"
+"\n"
+"אנא את זה על מנת למנוע מידע שגוי."
 
 #. module: stock
 #. odoo-python
@@ -10210,7 +10247,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 #, python-format
 msgid "{0} can only provide {1} {2}, while the quantity to order is {3} {2}."
-msgstr ""
+msgstr "{0} יכול לספק{1}{2} בזמן שהכמות שהוזמנה היא{3}{2}."
 
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation

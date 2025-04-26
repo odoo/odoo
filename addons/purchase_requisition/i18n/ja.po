@@ -319,7 +319,7 @@ msgstr "プロダクトをコピー"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_create_alternative_form
 msgid "Create Alternative"
-msgstr "代替を作成する"
+msgstr "代替を作成"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
@@ -696,7 +696,7 @@ msgstr "プロダクト購買用の他の購買オーダ候補"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__po_ids
 msgid "POs to Confirm"
-msgstr "確認する販売オーダ"
+msgstr "確定待ち購買オーダ"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -880,12 +880,12 @@ msgstr "購買契約書を検索"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
 msgid "Select multiple RFQ (non-exclusive)"
-msgstr "見積依頼を複数選択(非排他的)"
+msgstr "複数の見積依頼を採用可"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
 msgid "Select only one RFQ (exclusive)"
-msgstr "見積依頼を1件のみ選択(排他的)"
+msgstr "見積依頼を1件のみ採用"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
@@ -894,9 +894,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"見積依頼書を1つだけ選択（排他的）：購買オーダが確定したら、残りのオーダをキャンセルします。\n"
+"見積依頼を1件のみ採用：購買オーダが確定したら、残りのオーダをキャンセルします。\n"
 "\n"
-"                    複数の見積依頼書を選択（非排他的）：複数のオーダが可能。オーダが確定しても、残りのオーダはキャンセルされません。"
+"                    複数の見積依頼を採用可：複数のオーダが可能。オーダが確定しても、残りのオーダはキャンセルされません。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -1164,14 +1164,14 @@ msgstr "プロダクト明細がないため契約書 '%s' を確認できませ
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."
-msgstr "価格のない包括オーダを確認することはできません。"
+msgstr "価格のない包括オーダを確定することはできません。"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
-msgstr "数量のない包括オーダを確認することはできません。"
+msgstr "数量のない包括オーダを確定することはできません。"
 
 #. module: purchase_requisition
 #. odoo-python
