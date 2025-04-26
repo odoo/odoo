@@ -687,6 +687,8 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
 msgstr ""
+"חשבונית סטנדרטית מופקת עם כל שורות ההזמנה מוכנות לחיוב, לפי מדיניות החיוב "
+"שלהן (בהתבסס על כמות שהוזמנה או שסופקה)."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -718,7 +720,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "אשר ושלם את ההצעת מחיר"
 
 #. module: sale
 #. odoo-python
@@ -918,6 +920,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"לדוגמה, אם אתה מוכר שעות שירות בתשלום מראש, Odoo ממליץ לך \n"
+"        למכור שעות נוספות כאשר כל השעות שהוזמנו כבר מומשו."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1017,7 +1021,7 @@ msgstr "בטל"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel %s"
-msgstr ""
+msgstr "בטל %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1192,7 +1196,7 @@ msgstr "קוד מדינה"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "קופונים ותוכניות"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -1588,7 +1592,7 @@ msgstr "מוצר מקדמה"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s (Draft)"
-msgstr ""
+msgstr "תשלום מקדמה: %s (טיוטה)"
 
 #. module: sale
 #. odoo-python
@@ -1671,7 +1675,7 @@ msgstr "אשף יצירת דוא\"ל"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
+msgstr "האימייל נשלח ללקוח ברגע שהחשבונית זמינה."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2781,7 +2785,7 @@ msgstr "שלם עם"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment provider"
-msgstr ""
+msgstr "שלם באמצעות ספק תשלום אחר"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -2852,7 +2856,7 @@ msgstr "הורדת מחיר מיסים לא כלולים"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "הורדת מחיר כולל מס"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -2863,7 +2867,7 @@ msgstr "מחירון"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr ""
+msgstr "פריט מחירון"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -2947,7 +2951,7 @@ msgstr "סוג מוצר"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "יחידת מידה של מוצר לקריאה בלבד"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -2965,14 +2969,14 @@ msgstr "וריאנטים של מוצר"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr ""
+msgstr "מחירי המוצרים חושבו מחדש בהתאם למחירון %s."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr ""
+msgstr "מיסי מוצרים חושבו מחדש בהתאם לסוג תנועה %s."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3173,12 +3177,12 @@ msgstr "נמענים"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
+msgstr "חשב מחדש את כל המחירים בהתבסס על מחירון זה"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "חשב מחדש את כל המיסים בהתאם לסוג תנועה"
 
 #. module: sale
 #. odoo-python
@@ -3190,7 +3194,7 @@ msgstr "מזהה"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr ""
+msgstr "הפניה למסמך שיצר את בקשת הזמנת המכירה הזו."
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3297,7 +3301,7 @@ msgstr "הזמנות לקוח"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
-msgstr ""
+msgstr "אשף התחברות לספק תשלומים עבור מכירות"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3465,6 +3469,8 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"פריט הזמנת מכירה אשר אליו יתוסף הזמן שהושקע על מנת להיות מחויב . הסר את פריט"
+" הזמנת המכירה על מנת שדיווח שעות העבודה לא תהיה ניתנת לחיוב."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -3474,17 +3480,17 @@ msgstr "מחיר מכירה"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
 msgid "Sales: Order Cancellation"
-msgstr ""
+msgstr "מכירות: ביטול הזמנה"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "מכירות: אישור הזמנה"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "מכירות : שלח הצעות מחיר"
 
 #. module: sale
 #. odoo-python
@@ -3597,7 +3603,7 @@ msgstr "שלח הצעת מחיר לבדיקת פורטל הלקוחות."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Send and cancel"
-msgstr ""
+msgstr "שלח ובטל"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3628,12 +3634,12 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
 msgid "Sent automatically to customers when you cancel an order"
-msgstr ""
+msgstr "נשלח אוטומטית ללקוחות כאשר אתה מבטל הזמנה"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
 msgid "Sent to customers on order confirmation"
-msgstr ""
+msgstr "נשלח ללקוחות עם אישור ההזמנה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -3691,7 +3697,7 @@ msgstr "הצג שולי רווח בהזמנות"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "חתום ושלם את ההצעת מחיר"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3841,7 +3847,7 @@ msgstr "תגיות"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax 15%"
-msgstr ""
+msgstr "מע\"מ 15%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
@@ -3976,7 +3982,7 @@ msgstr "האסימון גישה אינו חוקי."
 msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
-msgstr ""
+msgstr "תאריך המסירה מוקדם מתאריך הצפי. ייתכן שלא תוכל לעמוד בתאריך המסירה."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -4003,6 +4009,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"החשבונית נוצרה אוטומטית וזמינה בפורטל הלקוח כאשר העסקה מאושרת על ידי ספק התשלום. \n"
+"החשבונית מסומנת כמשולמת והתשלום נרשם ביומן התשלומים המוגדר בהגדרות ספק התשלום. \n"
+"מצב זה מומלץ אם אתה מנפיק את החשבונית הסופית עם ההזמנה ולא לאחר המשלוח."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4062,7 +4071,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "הפרמטרים שסופקו אינם תקינים."
 
 #. module: sale
 #. odoo-python
@@ -4149,6 +4158,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
 msgstr ""
+"%(unit)sמוצר זה ארוז ב-%(pack_size).2f %(pack_name)s . עליך "
+"למכור%(quantity).2f ."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4196,7 +4207,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
-msgstr ""
+msgstr "תעדכן את כל המיסים על בסיס הסוג תנועה שנבחרה כעת."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4417,6 +4428,8 @@ msgstr "הזדמנות ל - Upsell"
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
+"נמצא בשימוש על ידי אנשי מכירות כאשר הם שולחים הצעות מחיר או טיוטות ללקוחות "
+"פוטנציאליים."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
