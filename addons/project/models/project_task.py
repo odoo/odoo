@@ -94,7 +94,7 @@ class ProjectTask(models.Model):
         'html.field.history.mixin',
     ]
     _mail_post_access = 'read'
-    _order = "priority desc, sequence, date_deadline asc, id desc"
+    _order = "priority desc nulls last, sequence, date_deadline asc, id desc"
     _primary_email = 'email_from'
     _systray_view = 'list'
     _track_duration_field = 'stage_id'
