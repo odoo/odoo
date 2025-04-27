@@ -1230,3 +1230,44 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
             'employee_id': self.employee_manager.id,
             'so_line': so_line.id,
         })
+
+    def test_timesheet_get_accounts_from_sol_with_fallback_on_project_accounts(self):
+        project_analytic_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+        other_analytic_plan2 = self.plan_b
+        analytic_account1, analytic_account2 = self.env['account.analytic.account'].create([
+            {
+                'name': 'Analytic Account 1',
+                'plan_id': project_analytic_plan.id,
+            },
+            {
+                'name': 'Analytic Account 2',
+                'plan_id': other_analytic_plan2.id,
+            },
+        ])
+        sale_order = self.env['sale.order'].create({
+            'name': 'Test  SO',
+            'partner_id': self.partner_a.id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_order_timesheet4.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+            'analytic_distribution': {str(analytic_account1.id): 100},
+        })
+        project = self.env['project.project'].create({
+            'name': 'Test Project',
+            'account_id': analytic_account1.id,
+            other_analytic_plan2._column_name(): analytic_account2.id,
+        })
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': project.id,
+            'unit_amount': 50,
+            'employee_id': self.employee_manager.id,
+            'so_line': so_line.id,
+        })
+        self.assertEqual(
+            timesheet._get_analytic_accounts(),
+            analytic_account1 | analytic_account2,
+            "As the timesheet SOL's distribution only contains the main account of the project, we fallback on the project's accounts and add them to the distribution.",
+        )
