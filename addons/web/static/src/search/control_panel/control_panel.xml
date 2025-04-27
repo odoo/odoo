@@ -22,12 +22,12 @@
             <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-lg-3 flex-grow-1">
                 <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
                     <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none" t-ref="mainButtons" t-on-keydown="onMainButtonsKeydown">
-                        <div t-if="env.isSmall" class="btn-group o_control_panel_collapsed_create">
+                        <div t-if="env.isSmall" t-att-class="{'btn-group': !state.disableDropdown}" class="o_control_panel_collapsed_create">
                             <t t-slot="control-panel-create-button"/>
-                            <button t-att-class="{invisible: display.disableDropdown}" type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split o_control_panel_collapsed_create" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button t-att-class="{'d-none': state.disableDropdown}" type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                  <span class="visually-hidden">Toggle Dropdown</span>
                             </button>
-                            <ul class="dropdown-menu o_control_panel_collapsed_create">
+                            <ul t-att-class="{'d-none': state.disableDropdown}" class="dropdown-menu">
                                 <t t-slot="layout-buttons"/>
                                 <t t-slot="control-panel-always-buttons"/>
                             </ul>
