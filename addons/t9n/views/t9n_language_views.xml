@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="t9n.language_view_list" model="ir.ui.view">
+        <field name="name">t9n.language.list</field>
+        <field name="model">t9n.language</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="native_name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="t9n.language_view_search" model="ir.ui.view">
+        <field name="name">t9n.language.search</field>
+        <field name="model">t9n.language</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="All Languages" filter_domain="[ '|', '|', ('name', 'ilike', self), ('native_name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="name"/>
+                <field name="native_name"/>
+                <field name="code"/>
+            </search>
+        </field>
+    </record>
+</odoo>
