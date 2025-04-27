@@ -29,6 +29,15 @@ const useDialogDraggable = makeDraggableHook({
     },
 });
 
+export const DIALOG_SIZES = {
+    fullscreen: "fullscreen",
+    fullwidth: "fullwidth",
+    "extra-large": "xl",
+    large: "lg",
+    medium: "md",
+    small: "sm",
+};
+
 export class Dialog extends Component {
     static template = "web.Dialog";
     static props = {
@@ -40,7 +49,7 @@ export class Dialog extends Component {
         size: {
             type: String,
             optional: true,
-            validate: (s) => ["sm", "md", "lg", "xl", "fs", "fullscreen"].includes(s),
+            validate: (s) => Object.values(DIALOG_SIZES).includes(s),
         },
         technical: { type: Boolean, optional: true },
         title: { type: String, optional: true },
