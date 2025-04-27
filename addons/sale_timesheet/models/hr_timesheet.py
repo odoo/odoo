@@ -220,7 +220,8 @@ class AccountAnalyticLine(models.Model):
             int(account_id) for account_id in next(iter(distribution)).split(',')
         ]).exists()
 
-        if not accounts:
+        has_one_project_main_account = len(accounts) == 1 and accounts[0] == self.env['project.project'].sudo().browse(vals.get('project_id')).account_id
+        if not accounts or has_one_project_main_account:
             return super()._timesheet_preprocess_get_accounts(vals)
 
         plan_column_names = {account.root_plan_id._column_name() for account in accounts}
