@@ -17,6 +17,8 @@ class MailLinkPreview(models.Model):
     _name = 'mail.link.preview'
     _inherit = ["bus.listener.mixin"]
     _description = "Store link preview data"
+    _order = 'source_url'
+    _rec_name = 'source_url'
 
     source_url = fields.Char('URL', required=True)
     og_type = fields.Char('Type')
