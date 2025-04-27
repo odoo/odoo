@@ -4696,7 +4696,15 @@ registry.sizing = SnippetOptionWidget.extend({
                 self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
                 backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, 0);
                 gridUtils._setElementToMaxZindex(backgroundGridEl, rowEl);
-                self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
+            } else if (rowEl.matches(".row") && $handle[0].matches(".e, .w")) {
+                self.options.wysiwyg.odooEditor.observerUnactive("displayBackgroundGrid");
+                const columnSize = rowEl.clientWidth / 12;
+                const backgroundColumns = renderToElement("web_editor.background_columns", {
+                    columnSize: columnSize,
+                });
+                rowEl.prepend(backgroundColumns);
+                backgroundGridEl = rowEl.firstElementChild;
+                self.options.wysiwyg.odooEditor.observerActive("displayBackgroundGrid");
             }
 
             // For loop to handle the cases where it is ne, nw, se or sw. Since
@@ -4797,6 +4805,10 @@ registry.sizing = SnippetOptionWidget.extend({
                     const gColClass = [...self.$target[0].classList].find(c => /^g-col-/.test(c));
                     self.$target[0].classList.remove(colClass);
                     self.$target[0].classList.add(gColClass.substring(2));
+                } else if (backgroundGridEl) {
+                    self.options.wysiwyg.odooEditor.observerUnactive("displayBackgroundGrid");
+                    backgroundGridEl.remove();
+                    self.options.wysiwyg.odooEditor.observerActive("displayBackgroundGrid");
                 }
 
                 self.options.wysiwyg.odooEditor.automaticStepActive('resizing');

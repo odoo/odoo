@@ -2847,6 +2847,22 @@ we-select.o_grid we-toggler {
     }
 }
 
+// Background columns.
+.o_we_background_columns {
+    position: absolute;
+    padding: 0 !important;
+
+    .o_we_cell {
+        height: calc(100% - 4px);
+        fill: $o-we-fg-lighter;
+        fill-opacity: .1;
+        stroke: $o-we-bg-darkest;
+        stroke-opacity: .2;
+        stroke-width: 1px;
+        filter: drop-shadow(-1px -1px 0px rgba(255, 255, 255, 0.3));
+    }
+}
+
 // Add snippets dialog.
 .o_add_snippet_dialog {
     max-height: $modal-lg !important;
