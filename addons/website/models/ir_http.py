@@ -351,7 +351,8 @@ class IrHttp(models.AbstractModel):
         domain = [
             ('redirect_type', 'in', ('301', '302')),
             # trailing / could have been removed by server_page
-            ('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/'])
+            ('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/']),
+            ('has_group', 'in', request.env.user.groups_id.ids)
         ]
         domain += request.website.website_domain()
         return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
