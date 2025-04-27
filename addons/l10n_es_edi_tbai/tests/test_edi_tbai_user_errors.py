@@ -20,7 +20,7 @@ class TestTbaiUserErrors(TestEsEdiTbaiCommonGipuzkoa):
         cls.tbai_error_msg = "Error when sending the invoice to TicketBAI:\n- "
 
     def test_no_certificate(self):
-        self.invoice_to_send.company_id.l10n_es_tbai_certificate_id = False
+        self.invoice_to_send.company_id.l10n_es_tbai_certificate_ids = []
 
         with self.assertRaises(UserError) as e:
             self.invoice_send_wizard.action_send_and_print()

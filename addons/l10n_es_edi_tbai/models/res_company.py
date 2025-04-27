@@ -45,13 +45,6 @@ L10N_ES_TBAI_LICENSE_DICT = {
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    l10n_es_tbai_certificate_id = fields.Many2one(
-        string="Certificate (TicketBAI)",
-        store=True,
-        readonly=False,
-        comodel_name='certificate.certificate',
-        compute="_compute_l10n_es_tbai_certificate",
-    )
     l10n_es_tbai_certificate_ids = fields.One2many(
         comodel_name='certificate.certificate',
         inverse_name='company_id',
@@ -93,17 +86,16 @@ class ResCompany(models.Model):
         for company in self:
             company.l10n_es_tbai_is_enabled = company.country_code == 'ES' and company.l10n_es_tbai_tax_agency
 
-    @api.depends('country_id', 'l10n_es_tbai_certificate_ids')
-    def _compute_l10n_es_tbai_certificate(self):
-        for company in self:
-            if company.country_code == 'ES':
-                company.l10n_es_tbai_certificate_id = self.env['certificate.certificate'].search(
-                    [('company_id', '=', company.id), ('is_valid', '=', True), ('scope', '=', 'tbai')],
-                    order='date_end desc',
-                    limit=1,
-                )
-            else:
-                company.l10n_es_tbai_certificate_id = False
+    def _get_l10n_es_tbai_certificate_id(self):
+        self.ensure_one()
+        if self.country_code == 'ES':
+            return self.env['certificate.certificate'].search(
+                [('company_id', '=', self.id), ('is_valid', '=', True), ('scope', '=', 'tbai')],
+                order='date_end desc',
+                limit=1,
+            )
+        else:
+            return False
 
     @api.depends('country_id', 'l10n_es_tbai_test_env', 'l10n_es_tbai_tax_agency')
     def _compute_l10n_es_tbai_license_html(self):
