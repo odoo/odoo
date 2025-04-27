@@ -49,28 +49,25 @@ class IrAsset(models.Model):
               * In a website context, every asset from another website
         """
         if website_id is not None:
-            current_website = self.env['website'].browse(website_id)
+            current_website_id = self.env['website'].browse(website_id)
         else:
-            current_website = self.env['website'].get_current_website(fallback=False)
-        if not current_website:
+            current_website_id = self.env['website'].get_current_website(fallback=False)
+        if not current_website_id:
             return self.filtered(lambda asset: not asset.website_id)
 
-        most_specific_assets = self.env['ir.asset']
-        for asset in self:
-            if asset.website_id == current_website:
-                # specific asset: add it if it's for the current website and ignore
-                # it if it's for another website
-                most_specific_assets += asset
-            elif not asset.website_id:
-                # no key: added either way
-                if not asset.key:
-                    most_specific_assets += asset
-                # generic asset: add it iff for the current website, there is no
-                # specific asset for this asset (based on the same `key` attribute)
-                elif not any(asset.key == asset2.key and asset2.website_id == current_website for asset2 in self):
-                    most_specific_assets += asset
+        specific_asset_keys = [
+            asset.key for asset in self
+            if asset.website_id and asset.website_id.id == current_website_id
+        ]
 
-        return most_specific_assets
+        return self.filtered(
+            lambda asset:
+            # Specific assets for the current website
+            (asset.website_id and asset.website_id.id == current_website_id) or
+            # Generic assets (no website, no existing specific asset)
+            # This also catches assets that have no key
+            (not asset.website_id and asset.key not in specific_asset_keys)
+        )
 
     def write(self, vals):
         """COW for ir.asset. This way editing websites does not impact other

@@ -294,21 +294,21 @@ class IrUiView(models.Model):
               * In a website context, every view from another website
         """
         current_website_id = self._context.get('website_id')
-        most_specific_views = self.env['ir.ui.view']
         if not current_website_id:
             return self.filtered(lambda view: not view.website_id)
 
-        for view in self:
-            # specific view: add it if it's for the current website and ignore
-            # it if it's for another website
-            if view.website_id and view.website_id.id == current_website_id:
-                most_specific_views |= view
-            # generic view: add it only if, for the current website, there is no
-            # specific view for this view (based on the same `key` attribute)
-            elif not view.website_id and not any(view.key == view2.key and view2.website_id and view2.website_id.id == current_website_id for view2 in self):
-                most_specific_views |= view
+        specific_view_keys = [
+            view.key for view in self
+            if view.website_id and view.website_id.id == current_website_id
+        ]
 
-        return most_specific_views
+        return self.filtered(
+            lambda view:
+            # Specific views for the current website
+            (view.website_id and view.website_id.id == current_website_id) or
+            # Generic views (no website, no existing specific view)
+            (not view.website_id and view.key not in specific_view_keys)
+        )
 
     @api.model
     def _view_get_inherited_children(self, view):
