@@ -1063,3 +1063,7 @@ class PosConfig(models.Model):
 
         if not param_model.get_param("point_of_sale.limited_customer_count"):
             param_model.set_param("point_of_sale.limited_customer_count", 100)
+
+    def _get_closing_entry_by_product(self):
+        self.ensure_one()
+        return self.is_closing_entry_by_product

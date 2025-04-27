@@ -958,7 +958,7 @@ class PosSession(models.Model):
                         # for taxes
                         tuple(base_line['record'].tax_ids_after_fiscal_position.flatten_taxes_hierarchy().ids),
                         tuple(base_line['tax_tag_ids'].ids),
-                        base_line['product_id'].id if self.config_id.is_closing_entry_by_product else False,
+                        base_line['product_id'].id if self.config_id._get_closing_entry_by_product() else False,
                     )
                     total_amount_currency += to_update['amount_currency']
                     sales[sale_key] = self._update_amounts(
@@ -969,7 +969,7 @@ class PosSession(models.Model):
                         },
                         order.date_order,
                     )
-                    if self.config_id.is_closing_entry_by_product:
+                    if self.config_id._get_closing_entry_by_product():
                         sales[sale_key] = self._update_quantities(sales[sale_key], base_line['quantity'])
 
                 # Combine tax lines
