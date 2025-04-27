@@ -241,6 +241,9 @@ class AccountMoveLine(models.Model):
         string="Invert Tags",
         compute='_compute_tax_tag_invert', store=True, readonly=False, copy=False,
     )
+    all_taxes_are_on_payment = fields.Boolean(compute='_compute_all_taxes_are_on_payment', store=True)  # technical field stored for speedup purposes
+    has_taxes = fields.Boolean(compute='_compute_all_taxes_are_on_payment', store=True)  # technical field stored for speedup purposes
+
 
     # === Reconciliation fields === #
     amount_residual = fields.Monetary(
@@ -470,6 +473,15 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('tax_line_id.tax_exigibility', 'tax_ids.tax_exigibility')
+    def _compute_all_taxes_are_on_payment(self):
+        for record in self:
+            record.has_taxes = (record.tax_line_id or record.tax_ids)
+            record.all_taxes_are_on_payment = (
+                (not record.tax_line_id or record.tax_line_id.tax_exigibility == "on_payment")
+                and all(tax.tax_exigibility == "on_payment" for tax in record.tax_ids)
+            )
 
     @api.depends('move_id')
     def _compute_display_type(self):
@@ -2976,14 +2988,13 @@ class AccountMoveLine(models.Model):
             '|', ('move_id.always_tax_exigible', '=', True),
 
             # Lines with only tags are always exigible
-            '|', '&', ('tax_line_id', '=', False), ('tax_ids', '=', False),
+            '|', ('has_taxes', '=', False),
 
             # Lines from CABA entries are always exigible
             '|', ('move_id.tax_cash_basis_rec_id', '!=', False),
 
             # Lines from non-CABA taxes are always exigible
-            '|', ('tax_line_id.tax_exigibility', '!=', 'on_payment'),
-            ('tax_ids.tax_exigibility', '!=', 'on_payment'), # So: exigible if at least one tax from tax_ids isn't on_payment
+            ('all_taxes_are_on_payment', '=', False),
         ]
 
     def _get_invoiced_qty_per_product(self):
