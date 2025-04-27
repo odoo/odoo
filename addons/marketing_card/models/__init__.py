@@ -1,3 +1,4 @@
+from . import card_dimension
 from . import card_campaign
 from . import card_campaign_tag
 from . import card_template
