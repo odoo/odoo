@@ -26,13 +26,13 @@
 
             <div class="mb-3 field-password pt-2">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" name="password" id="password" class="form-control"
+                <input type="password" name="password" id="password" class="form-control toggle-password"
                     required="required" t-att-autofocus="'autofocus' if only_passwords else None" placeholder="••••••••••"/>
             </div>
 
             <div class="mb-3 field-confirm_password">
                 <label for="confirm_password" class="form-label">Confirm Password</label>
-                <input type="password" name="confirm_password" id="confirm_password" class="form-control" required="required" placeholder="••••••••••"/>
+                <input type="password" name="confirm_password" id="confirm_password" class="form-control toggle-password" required="required" placeholder="••••••••••"/>
             </div>
         </template>
 
