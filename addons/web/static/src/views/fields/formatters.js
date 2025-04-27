@@ -431,6 +431,10 @@ export function formatJson(value) {
     return (value && JSON.stringify(value)) || "";
 }
 
+export function formatSerialized(value) {
+    return (value && JSON.stringify(value)) || "";
+}
+
 registry
     .category("formatters")
     .add("binary", formatBinary)
@@ -454,4 +458,5 @@ registry
     .add("properties_definition", formatProperties)
     .add("reference", formatReference)
     .add("selection", formatSelection)
+    .add("serialized", formatSerialized)
     .add("text", formatText);
