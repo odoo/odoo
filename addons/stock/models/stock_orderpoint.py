@@ -614,6 +614,14 @@ class StockWarehouseOrderpoint(models.Model):
             'group_id': group or self.group_id,
         }
 
+    def _check_if_linked_procurement_exist(self, orderpoint, origin):
+        """ Checks if there are outstanding replenishment orders have been previously created
+        for this orderpoint by checking against the origin
+        :param orderpoint: the orderpoint we need to check against
+        :param origin: the origin we need to check if it was previously linked to this orderpoint
+        """
+        return False
+
     def _procure_orderpoint_confirm(self, use_new_cursor=False, company_id=None, raise_user_error=True):
         """ Create procurements based on orderpoints.
         :param bool use_new_cursor: if set, use a dedicated cursor and auto-commit after processing
@@ -638,7 +646,7 @@ class StockWarehouseOrderpoint(models.Model):
                             origin = '%s - %s' % (orderpoint.display_name, ','.join(origins))
                         else:
                             origin = orderpoint.name
-                        if float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.product_uom.rounding) == 1:
+                        if not self._check_if_linked_procurement_exist(orderpoint, origin) and float_compare(orderpoint.qty_to_order, 0.0, precision_rounding=orderpoint.product_uom.rounding) == 1:
                             date = orderpoint._get_orderpoint_procurement_date()
                             global_visibility_days = self.env.context.get('global_visibility_days', self.env['ir.config_parameter'].sudo().get_param('stock.visibility_days', 0))
                             if global_visibility_days:
