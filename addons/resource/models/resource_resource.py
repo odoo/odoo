@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -7,7 +6,8 @@ from pytz import timezone
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.tools.date_intervals import Intervals, make_aware, timezone_datetime
+from odoo.tools.date_intervals import Intervals
+from odoo.tools.date_utils import localized, to_timezone
 
 
 class ResourceResource(models.Model):
@@ -114,8 +114,10 @@ class ResourceResource(models.Model):
         :return: Closest matching start and end of working periods for each resource
         :rtype: dict(resource, tuple(datetime | None, datetime | None))
         """
-        start, revert_start_tz = make_aware(start)
-        end, revert_end_tz = make_aware(end)
+        revert_start_tz = to_timezone(start.tzinfo)
+        revert_end_tz = to_timezone(end.tzinfo)
+        start = localized(start)
+        end = localized(end)
         result = {}
         for resource in self:
             resource_tz = timezone(resource.tz)
@@ -142,8 +144,8 @@ class ResourceResource(models.Model):
             Note: this method is used in enterprise (forecast and planning)
 
         """
-        start_datetime = timezone_datetime(start)
-        end_datetime = timezone_datetime(end)
+        start_datetime = localized(start)
+        end_datetime = localized(end)
         resource_mapping = {}
         calendar_mapping = defaultdict(lambda: self.env['resource.resource'])
         for resource in self:

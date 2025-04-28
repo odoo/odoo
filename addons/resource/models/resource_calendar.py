@@ -15,8 +15,8 @@ from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools.date_intervals import Intervals, make_aware
-from odoo.tools.date_utils import float_to_time
+from odoo.tools.date_intervals import Intervals
+from odoo.tools.date_utils import float_to_time, localized, to_timezone
 from odoo.tools.float_utils import float_round
 
 from odoo.tools import date_utils, float_compare, ormcache
@@ -733,8 +733,8 @@ class ResourceCalendar(models.Model):
             quantity of working time expressed as days and as hours.
         """
         # naive datetimes are made explicit in UTC
-        from_datetime, dummy = make_aware(from_datetime)
-        to_datetime, dummy = make_aware(to_datetime)
+        from_datetime = localized(from_datetime)
+        to_datetime = localized(to_datetime)
 
         # actual hours per day
         if compute_leaves:
@@ -754,7 +754,8 @@ class ResourceCalendar(models.Model):
 
         Return datetime after having planned hours
         """
-        day_dt, revert = make_aware(day_dt)
+        revert = to_timezone(day_dt.tzinfo)
+        day_dt = localized(day_dt)
 
         if resource is None:
             resource = self.env['resource.resource']
@@ -799,7 +800,8 @@ class ResourceCalendar(models.Model):
 
         Returns the datetime of a days scheduling.
         """
-        day_dt, revert = make_aware(day_dt)
+        revert = to_timezone(day_dt.tzinfo)
+        day_dt = localized(day_dt)
 
         # which method to use for retrieving intervals
         if compute_leaves:

@@ -11,8 +11,8 @@ from random import randint
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.date_intervals import make_aware, Intervals
-from odoo.tools.date_utils import start_of, end_of
+from odoo.tools.date_intervals import Intervals
+from odoo.tools.date_utils import start_of, end_of, localized, to_timezone
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import get_lang
 
@@ -320,16 +320,17 @@ class MrpWorkcenter(models.Model):
         """
         self.ensure_one()
         resource = self.resource_id
-        start_datetime, revert = make_aware(start_datetime)
+        revert = to_timezone(start_datetime.tzinfo)
+        start_datetime = localized(start_datetime)
         get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, resources=resource, tz=timezone(self.resource_calendar_id.tz))
         workorder_intervals_leaves_domain = [('time_type', '=', 'other')]
         if leaves_to_ignore:
             workorder_intervals_leaves_domain.append(('id', 'not in', leaves_to_ignore.ids))
         get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=workorder_intervals_leaves_domain, resources=resource, tz=timezone(self.resource_calendar_id.tz))
-        extra_leaves_slots_intervals = Intervals([(make_aware(start)[0], make_aware(stop)[0], self.env['resource.calendar.attendance']) for start, stop in extra_leaves_slots])
+        extra_leaves_slots_intervals = Intervals([(localized(start), localized(stop), self.env['resource.calendar.attendance']) for start, stop in extra_leaves_slots])
 
         remaining = duration
-        now = make_aware(datetime.now())[0]
+        now = localized(datetime.now())
         delta = timedelta(days=14)
         start_interval, stop_interval = None, None
         for n in range(50):  # 50 * 14 = 700 days in advance (hardcoded)
