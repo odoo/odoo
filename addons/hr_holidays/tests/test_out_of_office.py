@@ -75,6 +75,11 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             fields.Date.to_string(second_leave_date_end + relativedelta(days=1)),
             "correspondent should be out of office",
         )
+        self.assertEqual(
+            self.employee_hruser.user_id.with_context(formatted_display_name=True).display_name,
+            'armande (base.group_user,hr_holidays.group_hr_holidays_user) \t ✈ --Back on Jun 12, 2024--',
+            'formatted display name should show the "Back on" formatted date'
+        )
 
 
 @tagged('out_of_office')
