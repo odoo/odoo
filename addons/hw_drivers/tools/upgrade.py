@@ -56,9 +56,7 @@ def pip(*args):
         command.append('--break-system-package')
 
     p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
-    if p.returncode == 0:
-        return p.stdout.decode().strip()
-    return None
+    return p.returncode
 
 
 def get_db_branch(server_url):
@@ -72,12 +70,12 @@ def get_db_branch(server_url):
         response.raise_for_status()
     except requests.exceptions.HTTPError:
         _logger.exception('Could not reach configured server to get the Odoo version')
-        return
+        return None
     try:
         return response.json()['result']['server_serie'].replace('~', '-')
     except ValueError:
         _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
-        return
+        return None
 
 
 @toggleable
@@ -89,6 +87,9 @@ def check_git_branch(server_url=None):
     :param server_url: The URL of the connected Odoo database (provided by decorator).
     """
     db_branch = get_db_branch(server_url)
+    if not db_branch:
+        _logger.warning("Could not get the database branch, skipping git checkout")
+        return
 
     try:
         if not git('ls-remote', 'origin', db_branch):
@@ -126,12 +127,11 @@ def _ensure_production_remote(local_remote):
         git('remote', 'set-url', local_remote, production_remote)
 
 
-def checkout(branch, remote=None, clean=True):
+def checkout(branch, remote=None):
     """Checkout to the given branch of the given git remote.
 
     :param branch: The name of the branch to check out.
     :param remote: The name of the local git remote to use (usually ``origin`` but computed if not provided).
-    :param clean: If True, clean the working directory after checking out.
     """
     _logger.info("Preparing local repository for checkout")
     git('branch', '-m', branch)  # Rename the current branch to the target branch name
@@ -144,9 +144,8 @@ def checkout(branch, remote=None, clean=True):
     git('fetch', remote, branch, '--depth=1', '--prune')  # refs/remotes to avoid 'unknown revision'
     git('reset', f'{remote}/{branch}', '--hard')
 
-    if clean:
-        _logger.info("Cleaning the working directory")
-        git('clean', '-dfx')
+    _logger.info("Cleaning the working directory")
+    git('clean', '-dfx')
 
 
 def update_requirements():
@@ -158,7 +157,7 @@ def update_requirements():
         _logger.info("No requirements file found, not updating.")
         return
 
-    _logger.warning("Updating pip requirements")
+    _logger.info("Updating pip requirements")
     pip('install', '-r', requirements_file)
 
 

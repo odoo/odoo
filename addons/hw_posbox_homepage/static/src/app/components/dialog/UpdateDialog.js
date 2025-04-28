@@ -32,6 +32,11 @@ export class UpdateDialog extends Component {
                 url: "/hw_posbox_homepage/version_info",
             });
 
+            if (data.status === "error") {
+                console.error(data.message);
+                return;
+            }
+
             this.state.odooIsUpToDate = data.odooIsUpToDate;
             this.state.imageIsUpToDate = data.imageIsUpToDate;
             this.state.currentCommitHash = data.currentCommitHash;
