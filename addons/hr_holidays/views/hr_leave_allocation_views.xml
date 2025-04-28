@@ -101,9 +101,9 @@
                 <field name="expiring_carryover_days" invisible="1"/>
                 <field name="carried_over_days_expiration_date" invisible="1"/>
                 <header>
-                    <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve"/>
-                    <button string="Validate" name="action_approve" invisible="not can_validate or can_approve" type="object" class="oe_highlight"/>
-                    <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse"/>
+                    <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or not id"/>
+                    <button string="Validate" name="action_approve" invisible="not can_validate or can_approve or not id" type="object" class="oe_highlight"/>
+                    <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse or not id"/>
                     <field name="state" widget="statusbar" statusbar_visible="confirm,validate,validate1" invisible="validation_type != 'both'"/>
                     <field name="state" widget="statusbar" statusbar_visible="confirm,validate" invisible="validation_type == 'both'"/>
                 </header>

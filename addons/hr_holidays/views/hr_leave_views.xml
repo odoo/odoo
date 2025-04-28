@@ -286,10 +286,10 @@
             <form string="Time Off Request" class="o_hr_leave_form" duplicate="false">
             <field name="employee_id" invisible="1"/> <!-- for the employee's default value-->
             <header>
-                <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve"/>
-                <button string="Validate" name="action_approve" invisible="not can_validate or can_approve" type="object" class="oe_highlight"/>
-                <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse"/>
-                <button string="Cancel" name="action_cancel" type="object" invisible="not can_cancel" />
+                <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or not id"/>
+                <button string="Validate" name="action_approve" invisible="not can_validate or can_approve or not id" type="object" class="oe_highlight"/>
+                <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse or not id"/>
+                <button string="Cancel" name="action_cancel" type="object" invisible="not can_cancel or not id" />
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate,validate1" invisible="validation_type != 'both'"/>
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate" invisible="validation_type == 'both'"/>
             </header>

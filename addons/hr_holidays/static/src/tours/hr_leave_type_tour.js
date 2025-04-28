@@ -91,8 +91,9 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
             trigger: "input[data-field=request_date_to]",
             content: "Select the end date of the leave",
             tooltipPosition: "right",
-            run: `edit ${firstLeaveDateTo}`,
+            run: `edit ${firstLeaveDateTo} && press Enter`,
         },
+        ...stepUtils.saveForm(),
         {
             trigger: 'button[name="action_approve"]',
             content: "Approve the leave",
@@ -154,8 +155,9 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
             trigger: "input[data-field=request_date_to]",
             content: "Select the end date of the leave",
             tooltipPosition: "right",
-            run: `edit ${secondLeaveDateTo}`,
+            run: `edit ${secondLeaveDateTo} && press Enter`,
         },
+        ...stepUtils.saveForm(),
         {
             trigger: 'button[name="action_approve"]',
             content: "Approve the leave",

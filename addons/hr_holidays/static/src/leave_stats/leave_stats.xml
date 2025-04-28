@@ -52,7 +52,7 @@
                         <div class="col-4 d-flex">
                             <KanbanMany2OneAvatarEmployeeField
                                 record="{'data' : {'employee_id': leave.employee_id}, 'fields': this.props.record.fields}"
-                                name="'employee_id'" relation="'hr.employee'"
+                                name="'employee_id'" relation="'hr.employee.public'"
                             />
                             <span t-esc="leave.employee_id.display_name" class="mx-1 fw-bold"/>
                         </div>
