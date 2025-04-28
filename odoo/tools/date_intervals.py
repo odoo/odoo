@@ -11,6 +11,7 @@ from pytz import utc
 from odoo.fields import Datetime
 
 from .date_utils import HOURS_PER_DAY, ROUNDING_FACTOR, float_to_time  # noqa: F401
+from .date_utils import localized, to_timezone
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Iterator
@@ -24,9 +25,8 @@ def make_aware(dt: datetime) -> tuple[datetime, Callable[[datetime], datetime]]:
     """ Return ``dt`` with an explicit timezone, together with a function to
         convert a datetime to the same (naive or aware) timezone as ``dt``.
     """
-    if dt.tzinfo:
-        return dt, lambda val: val.astimezone(dt.tzinfo)
-    return dt.replace(tzinfo=utc), lambda val: val.astimezone(utc).replace(tzinfo=None)
+    warnings.warn("Since 19.0, use date_utils.localize and date_utils.to_timezone", DeprecationWarning)
+    return localized(dt), to_timezone(dt.tzinfo)
 
 
 def string_to_datetime(value) -> datetime:
@@ -160,9 +160,8 @@ def sum_intervals(intervals: Intervals[datetime]) -> float:
 
 
 def timezone_datetime(time: datetime) -> datetime:
-    if not time.tzinfo:
-        time = time.replace(tzinfo=utc)
-    return time
+    warnings.warn("Since 19.0, use date_utils.localize", DeprecationWarning)
+    return localized(time)
 
 
 def intervals_overlap(interval_a: tuple[datetime, datetime], interval_b: tuple[datetime, datetime]) -> bool:

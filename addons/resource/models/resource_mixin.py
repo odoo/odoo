@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
 from pytz import utc
 
 from odoo import api, fields, models
-from odoo.tools.date_intervals import timezone_datetime
+from odoo.tools.date_utils import localized
 
 
 class ResourceMixin(models.AbstractModel):
@@ -97,8 +96,8 @@ class ResourceMixin(models.AbstractModel):
         result = {}
 
         # naive datetimes are made explicit in UTC
-        from_datetime = timezone_datetime(from_datetime)
-        to_datetime = timezone_datetime(to_datetime)
+        from_datetime = localized(from_datetime)
+        to_datetime = localized(to_datetime)
 
         if calendar:
             mapped_resources = {calendar: self.resource_id}
@@ -142,8 +141,8 @@ class ResourceMixin(models.AbstractModel):
         result = {}
 
         # naive datetimes are made explicit in UTC
-        from_datetime = timezone_datetime(from_datetime)
-        to_datetime = timezone_datetime(to_datetime)
+        from_datetime = localized(from_datetime)
+        to_datetime = localized(to_datetime)
 
         mapped_resources = defaultdict(lambda: self.env['resource.resource'])
         for record in self:
