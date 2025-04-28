@@ -4,8 +4,8 @@ from pytz import UTC
 
 from odoo import api, models
 
-from odoo.tools.date_intervals import Intervals, sum_intervals
-from odoo.tools.date_utils import localized
+from odoo.tools.intervals import Intervals
+from odoo.tools.date_utils import localized, sum_intervals
 
 
 class CalendarEvent(models.Model):

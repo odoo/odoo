@@ -4,41 +4,12 @@ from __future__ import annotations
 import itertools
 import typing
 import warnings
-from datetime import datetime
-
-from pytz import utc
-
-from odoo.fields import Datetime
-
-from .date_utils import HOURS_PER_DAY, ROUNDING_FACTOR, float_to_time  # noqa: F401
-from .date_utils import localized, to_timezone
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Iterator
+    from collections.abc import Iterable, Iterator
     from collections.abc import Set as AbstractSet
-    from datetime import datetime
 
 T = typing.TypeVar('T')
-
-
-def make_aware(dt: datetime) -> tuple[datetime, Callable[[datetime], datetime]]:
-    """ Return ``dt`` with an explicit timezone, together with a function to
-        convert a datetime to the same (naive or aware) timezone as ``dt``.
-    """
-    warnings.warn("Since 19.0, use date_utils.localize and date_utils.to_timezone", DeprecationWarning)
-    return localized(dt), to_timezone(dt.tzinfo)
-
-
-def string_to_datetime(value) -> datetime:
-    """ Convert the given string value to a datetime in UTC. """
-    warnings.warn("Since 19.0, use directly Datetime.from_string", DeprecationWarning)
-    return utc.localize(Datetime.from_string(value))
-
-
-def datetime_to_string(dt: datetime) -> str:
-    """ Convert the given datetime (converted in UTC) to a string value. """
-    warnings.warn("Since 19.0, use directly Datetime.to_string with astimezone", DeprecationWarning)
-    return Datetime.to_string(dt.astimezone(utc))
 
 
 def _boundaries(intervals: Intervals[T] | Iterable[tuple[T, T, AbstractSet]], opening: str, closing: str) -> Iterator[tuple[T, str, AbstractSet]]:
@@ -149,19 +120,6 @@ class Intervals(typing.Generic[T]):
         """ Return the intervals. """
         warnings.warn("Deprecated since 19.0, just iterate over Intervals", DeprecationWarning)
         return self._items
-
-
-def sum_intervals(intervals: Intervals[datetime]) -> float:
-    """ Sum the intervals duration (unit: hour)"""
-    return sum(
-        (stop - start).total_seconds() / 3600
-        for start, stop, _ in intervals
-    )
-
-
-def timezone_datetime(time: datetime) -> datetime:
-    warnings.warn("Since 19.0, use date_utils.localize", DeprecationWarning)
-    return localized(time)
 
 
 def intervals_overlap(interval_a: tuple[T, T], interval_b: tuple[T, T]) -> bool:
