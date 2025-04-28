@@ -38,6 +38,7 @@ export class CaptionPlugin extends Plugin {
         ],
         clean_for_save_handlers: this.cleanForSave.bind(this),
         mount_component_handlers: this.setupNewCaption.bind(this),
+        delete_handlers: this.afterDelete.bind(this),
         delete_image_handlers: this.handleDeleteImage.bind(this),
         afer_save_media_dialog_handlers: this.onImageReplaced.bind(this),
         hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
@@ -253,6 +254,23 @@ export class CaptionPlugin extends Plugin {
             }
             const [anchorNode, anchorOffset] = rightPos(figure);
             this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        }
+    }
+
+    afterDelete() {
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        for (const figure of this.editable.querySelectorAll("figure:not(:has(img))")) {
+            const isSelectionInFigure = targetedNodes.includes(figure) || anchorNode === figure;
+            const sibling = figure.nextSibling || figure.previousSibling;
+            figure.remove();
+            if (isSelectionInFigure) {
+                // Note: this assumes the selection is collapsed after delete.
+                this.dependencies.selection.setSelection({
+                    anchorNode: sibling,
+                    anchorOffset: 0,
+                });
+            }
         }
     }
 
