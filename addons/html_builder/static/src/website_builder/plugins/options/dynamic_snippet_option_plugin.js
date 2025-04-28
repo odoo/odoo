@@ -84,38 +84,39 @@ class DynamicSnippetOptionPlugin extends Plugin {
     getActions() {
         return {
             dynamicFilter: {
-                isApplied: ({ editingElement: el, param }) =>
-                    parseInt(el.dataset.filterId) === param.id,
-                apply: ({ editingElement: el, param }) => {
-                    el.dataset.filterId = param.id;
+                isApplied: ({ editingElement: el, params }) =>
+                    parseInt(el.dataset.filterId) === params.id,
+                apply: ({ editingElement: el, params }) => {
+                    el.dataset.filterId = params.id;
                     if (
                         !el.dataset.templateKey ||
                         !el.dataset.templateKey.includes(
-                            `_${param.model_name.replaceAll(".", "_")}_`
+                            `_${params.model_name.replaceAll(".", "_")}_`
                         )
                     ) {
                         // Only if filter's model name changed
-                        this.updateTemplate(el, param.defaultTemplate);
+                        this.updateTemplate(el, params.defaultTemplate);
                     }
                 },
             },
             dynamicFilterTemplate: {
-                isApplied: ({ editingElement: el, param }) => el.dataset.templateKey === param.key,
-                apply: ({ editingElement: el, param }) => {
-                    this.updateTemplate(el, param);
+                isApplied: ({ editingElement: el, params }) =>
+                    el.dataset.templateKey === params.key,
+                apply: ({ editingElement: el, params }) => {
+                    this.updateTemplate(el, params);
                 },
             },
             customizeTemplate: {
-                isApplied: ({ editingElement: el, param: { mainParam: customDataKey } }) => {
+                isApplied: ({ editingElement: el, params: { mainParam: customDataKey } }) => {
                     const customData = JSON.parse(el.dataset.customTemplateData);
                     return customData[customDataKey];
                 },
-                apply: ({ editingElement: el, param: { mainParam: customDataKey }, value }) => {
+                apply: ({ editingElement: el, params: { mainParam: customDataKey }, value }) => {
                     const customData = JSON.parse(el.dataset.customTemplateData);
                     customData[customDataKey] = true;
                     el.dataset.customTemplateData = JSON.stringify(customData);
                 },
-                clean: ({ editingElement: el, param: { mainParam: customDataKey }, value }) => {
+                clean: ({ editingElement: el, params: { mainParam: customDataKey }, value }) => {
                     const customData = JSON.parse(el.dataset.customTemplateData);
                     customData[customDataKey] = false;
                     el.dataset.customTemplateData = JSON.stringify(customData);

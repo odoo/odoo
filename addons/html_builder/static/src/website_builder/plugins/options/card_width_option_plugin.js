@@ -16,7 +16,7 @@ class CardWidthOptionPlugin extends Plugin {
                 isApplied: (...args) => {
                     const {
                         editingElement: el,
-                        param: { mainParam: classNames },
+                        params: { mainParam: classNames },
                     } = args[0];
                     // Align-left button is active by default
                     if (classNames === "me-auto") {

@@ -50,18 +50,18 @@ class ImageGalleryOption extends Plugin {
             },
             setImageGalleryLayout: {
                 load: ({ editingElement }) => this.processImages(editingElement),
-                apply: ({ editingElement, param: { mainParam: mode }, loadResult }) => {
+                apply: ({ editingElement, params: { mainParam: mode }, loadResult }) => {
                     if (mode !== this.getMode(editingElement)) {
                         this.setImages(editingElement, mode, loadResult.images);
                         this.restoreSelection(loadResult.imageToSelect);
                     }
                 },
-                isApplied: ({ editingElement, param: { mainParam: mode } }) =>
+                isApplied: ({ editingElement, params: { mainParam: mode } }) =>
                     mode === this.getMode(editingElement),
             },
             setImageGalleryColumns: {
                 load: ({ editingElement }) => this.processImages(editingElement),
-                apply: ({ editingElement, param: { mainParam: columns }, loadResult }) => {
+                apply: ({ editingElement, params: { mainParam: columns }, loadResult }) => {
                     if (columns !== this.getColumns(editingElement)) {
                         editingElement.dataset.columns = columns;
                         this.setImages(
@@ -72,7 +72,7 @@ class ImageGalleryOption extends Plugin {
                         this.restoreSelection(loadResult.imageToSelect);
                     }
                 },
-                isApplied: ({ editingElement, param: { mainParam: columns } }) =>
+                isApplied: ({ editingElement, params: { mainParam: columns } }) =>
                     columns === this.getColumns(editingElement),
             },
             setCarouselSpeed: {

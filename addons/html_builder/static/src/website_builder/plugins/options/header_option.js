@@ -58,15 +58,15 @@ class HeaderOptionPlugin extends Plugin {
             styleActionHeader: withCustomHistory({
                 ...styleAction,
                 getValue: (...args) => {
-                    const { param } = args[0];
+                    const { params } = args[0];
                     const value = styleAction.getValue(...args);
-                    if (param.mainParam === "border-width") {
+                    if (params.mainParam === "border-width") {
                         return value.replace(/(^|\s)0px/gi, "").trim() || value;
                     }
                     return value;
                 },
-                apply: async ({ param, value }) => {
-                    const styleName = param.mainParam;
+                apply: async ({ params, value }) => {
+                    const styleName = params.mainParam;
 
                     if (styleName === "border-color") {
                         return this.dependencies.customizeWebsite.customizeWebsiteColors({
@@ -92,7 +92,7 @@ class HeaderOptionPlugin extends Plugin {
             setShadowHeader: withCustomHistory({
                 ...setShadow,
                 preview: false,
-                apply: ({ editingElement, param: { mainParam: attributeName }, value }) => {
+                apply: ({ editingElement, params: { mainParam: attributeName }, value }) => {
                     const shadow = getCurrentShadow(editingElement);
                     shadow[attributeName] = value;
 

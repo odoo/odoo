@@ -36,10 +36,10 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
         return {
             toggleBgVideo: {
                 load: this.loadReplaceBackgroundVideo.bind(this),
-                apply: ({ editingElement, param, loadResult }) => {
+                apply: ({ editingElement, params, loadResult }) => {
                     this.applyReplaceBackgroundVideo({
                         editingElement: editingElement,
-                        param: param,
+                        params: params,
                         loadResult: loadResult,
                     });
                     this.dispatchTo("on_bg_image_hide_handlers", editingElement);
@@ -51,7 +51,7 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
                     this.applyReplaceBackgroundVideo({
                         editingElement: editingElement,
                         loadResult: "",
-                        param: { forceClean: true },
+                        params: { forceClean: true },
                     });
                 },
             },
@@ -78,7 +78,7 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
     applyReplaceBackgroundVideo({
         editingElement,
         loadResult: mediaSrc,
-        param: { forceClean = false },
+        params: { forceClean = false },
     }) {
         if (!forceClean && !mediaSrc) {
             // No video has been chosen by the user on the media dialog

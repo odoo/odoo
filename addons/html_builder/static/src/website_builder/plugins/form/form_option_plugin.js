@@ -179,7 +179,7 @@ export class FormOptionPlugin extends Plugin {
             // ie: The Job you apply for if the form is on that job's page.
             addActionField: {
                 load: async ({ editingElement: el }) => this.fetchAuthorizedFields(el),
-                apply: ({ editingElement: el, value, param, loadResult: authorizedFields }) => {
+                apply: ({ editingElement: el, value, params, loadResult: authorizedFields }) => {
                     // Remove old property fields.
                     for (const [fieldName, field] of Object.entries(authorizedFields)) {
                         if (field._property) {
@@ -188,18 +188,18 @@ export class FormOptionPlugin extends Plugin {
                             }
                         }
                     }
-                    const fieldName = param.fieldName;
-                    if (param.isSelect === "true") {
+                    const fieldName = params.fieldName;
+                    if (params.isSelect === "true") {
                         value = parseInt(value);
                     }
                     this.addHiddenField(el, value, fieldName);
                 },
                 // TODO clear ? if field is a boolean ?
-                getValue: ({ editingElement: el, param }) => {
+                getValue: ({ editingElement: el, params }) => {
                     const value = el.querySelector(
-                        `.s_website_form_dnone input[name="${param.fieldName}"]`
+                        `.s_website_form_dnone input[name="${params.fieldName}"]`
                     )?.value;
-                    if (param.fieldName === "email_to") {
+                    if (params.fieldName === "email_to") {
                         // For email_to, we try to find a value in this order:
                         // 1. The current value of the input
                         // 2. The data-for value if it exists
@@ -212,14 +212,14 @@ export class FormOptionPlugin extends Plugin {
                     if (value) {
                         return value;
                     } else {
-                        return param.isSelect ? "0" : "";
+                        return params.isSelect ? "0" : "";
                     }
                 },
-                isApplied: ({ editingElement, param, value }) => {
+                isApplied: ({ editingElement, params, value }) => {
                     const getAction = this.dependencies.builderActions.getAction;
                     const currentValue = getAction("addActionField").getValue({
                         editingElement,
-                        param,
+                        params,
                     });
                     return currentValue === value;
                 },
@@ -479,21 +479,21 @@ export class FormOptionPlugin extends Plugin {
                 getValue: ({ editingElement: fieldEl }) => fieldEl.textContent,
             },
             toggleRequired: {
-                apply: ({ editingElement: fieldEl, param: { mainParam: activeValue } }) => {
+                apply: ({ editingElement: fieldEl, params: { mainParam: activeValue } }) => {
                     fieldEl.classList.add(activeValue);
                     fieldEl
                         .querySelectorAll("input, select, textarea")
                         .forEach((el) => el.toggleAttribute("required", true));
                     this.setLabelsMark(fieldEl.closest("form"));
                 },
-                clean: ({ editingElement: fieldEl, param: { mainParam: activeValue } }) => {
+                clean: ({ editingElement: fieldEl, params: { mainParam: activeValue } }) => {
                     fieldEl.classList.remove(activeValue);
                     fieldEl
                         .querySelectorAll("input, select, textarea")
                         .forEach((el) => el.removeAttribute("required"));
                     this.setLabelsMark(fieldEl.closest("form"));
                 },
-                isApplied: ({ editingElement: fieldEl, param: { mainParam: activeValue } }) =>
+                isApplied: ({ editingElement: fieldEl, params: { mainParam: activeValue } }) =>
                     fieldEl.classList.contains(activeValue),
             },
             setVisibility: {

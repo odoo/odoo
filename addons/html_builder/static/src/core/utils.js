@@ -487,7 +487,7 @@ export function useClickableBuilderComponent() {
                 let nextAction;
                 getAction(actionId).clean?.({
                     editingElement,
-                    param: actionParam,
+                    params: actionParam,
                     value: actionValue,
                     dependencyManager: comp.env.dependencyManager,
                     selectableContext: comp.env.selectableContext,
@@ -495,7 +495,7 @@ export function useClickableBuilderComponent() {
                         nextAction =
                             nextAction || nextApplySpecs.find((a) => a.actionId === actionId) || {};
                         return {
-                            param: nextAction.actionParam,
+                            params: nextAction.actionParam,
                             value: nextAction.actionValue,
                         };
                     },
@@ -521,7 +521,7 @@ export function useClickableBuilderComponent() {
                 proms.push(
                     applySpec.clean({
                         editingElement: applySpec.editingElement,
-                        param: applySpec.actionParam,
+                        params: applySpec.actionParam,
                         value: applySpec.actionValue,
                         loadResult: applySpec.loadOnClean ? applySpec.loadResult : null,
                         dependencyManager: comp.env.dependencyManager,
@@ -532,7 +532,7 @@ export function useClickableBuilderComponent() {
                 proms.push(
                     applySpec.apply({
                         editingElement: applySpec.editingElement,
-                        param: applySpec.actionParam,
+                        params: applySpec.actionParam,
                         value: applySpec.actionValue,
                         loadResult: applySpec.loadResult,
                         dependencyManager: comp.env.dependencyManager,
@@ -549,7 +549,7 @@ export function useClickableBuilderComponent() {
                 .map(
                     (a) =>
                         getAction(a.actionId).getPriority?.({
-                            param: a.actionParam,
+                            params: a.actionParam,
                             value: a.actionValue,
                         }) || 0
                 )
@@ -600,7 +600,7 @@ export function useInputBuilderComponent({
             proms.push(
                 applySpec.apply({
                     editingElement: applySpec.editingElement,
-                    param: applySpec.actionParam,
+                    params: applySpec.actionParam,
                     value: applySpec.actionValue,
                     loadResult: applySpec.loadResult,
                     dependencyManager: comp.env.dependencyManager,
@@ -621,7 +621,7 @@ export function useInputBuilderComponent({
             ({ actionId }) => getAction(actionId).getValue
         );
         const { actionId, actionParam } = actionWithGetValue;
-        const actionValue = getAction(actionId).getValue({ editingElement, param: actionParam });
+        const actionValue = getAction(actionId).getValue({ editingElement, params: actionParam });
         return {
             value: actionValue,
         };
@@ -845,7 +845,7 @@ export function getAllActionsAndOperations(comp) {
                         }
                         const result = await applySpec.load({
                             editingElement: applySpec.editingElement,
-                            param: applySpec.actionParam,
+                            params: applySpec.actionParam,
                             value: applySpec.actionValue,
                         });
                         applySpec.loadResult = result;
@@ -869,7 +869,7 @@ export function getAllActionsAndOperations(comp) {
             }
             const isApplied = getAction(actionId).isApplied?.({
                 editingElement,
-                param: actionParam,
+                params: actionParam,
                 value: actionValue,
             });
             return comp.props.inverseAction ? !isApplied : isApplied;

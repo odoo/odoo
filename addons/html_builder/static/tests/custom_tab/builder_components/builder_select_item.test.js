@@ -22,7 +22,7 @@ defineWebsiteModels();
 test("call a specific action with some params and value (BuilderSelectItem)", async () => {
     addActionOption({
         customAction: {
-            apply: ({ param: { mainParam: testParam }, value }) => {
+            apply: ({ params: { mainParam: testParam }, value }) => {
                 expect.step(`customAction ${testParam} ${value}`);
             },
         },

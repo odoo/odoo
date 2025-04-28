@@ -54,7 +54,7 @@ class ScrollButtonOptionPlugin extends Plugin {
                     classAction.apply(args);
                     const {
                         editingElement,
-                        param: { mainParam },
+                        params: { mainParam },
                     } = args;
                     // If a "d-lg-block" class exists on the section (e.g., for
                     // mobile visibility option), it should be replaced with a
@@ -75,7 +75,7 @@ class ScrollButtonOptionPlugin extends Plugin {
                 },
                 clean: (args) => {
                     classAction.clean(args);
-                    if (args.param.mainParam === "o_full_screen_height") {
+                    if (args.params.mainParam === "o_full_screen_height") {
                         this.removeButton(args);
                     }
                 },

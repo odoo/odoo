@@ -54,7 +54,7 @@ export class CoreBuilderActionPlugin extends Plugin {
                     const match = value.match(/url\(([^)]+)\)/);
                     return match ? match[1] : "";
                 },
-                apply: (el, value, param) => {
+                apply: (el, value, params) => {
                     const parts = backgroundImageCssToParts(el.style["background-image"]);
                     if (value) {
                         parts.url = `url('${value}')`;
@@ -62,7 +62,7 @@ export class CoreBuilderActionPlugin extends Plugin {
                         delete parts.url;
                     }
                     // todo: deal with the gradients
-                    setStyle(el, "background-image", backgroundImagePartsToCss(parts), param);
+                    setStyle(el, "background-image", backgroundImagePartsToCss(parts), params);
                 },
             },
             "box-shadow": {
@@ -116,7 +116,7 @@ export class CoreBuilderActionPlugin extends Plugin {
 
     getStyleAction() {
         const getValue = (el, styleName) =>
-            // const { editingElement, param } = args[0];
+            // const { editingElement, params } = args[0];
             // Disable all transitions for the duration of the style check
             // as we want to know the final value of a property to properly
             // update the UI.
@@ -129,16 +129,17 @@ export class CoreBuilderActionPlugin extends Plugin {
                 }
             });
         return {
-            getValue: ({ editingElement, param = {} }) => getValue(editingElement, param.mainParam),
-            isApplied: ({ editingElement, param = {}, value }) => {
-                const currentValue = getValue(editingElement, param.mainParam);
+            getValue: ({ editingElement, params = {} }) =>
+                getValue(editingElement, params.mainParam),
+            isApplied: ({ editingElement, params = {}, value }) => {
+                const currentValue = getValue(editingElement, params.mainParam);
                 return currentValue === value;
             },
-            apply: ({ editingElement, param = {}, value }) => {
-                param = { ...param };
-                const styleName = param.mainParam;
-                delete param.mainParam;
-                this.setStyle(editingElement, styleName, value, param);
+            apply: ({ editingElement, params = {}, value }) => {
+                params = { ...params };
+                const styleName = params.mainParam;
+                delete params.mainParam;
+                this.setStyle(editingElement, styleName, value, params);
             },
             // TODO clean() is missing !!
         };
@@ -228,9 +229,9 @@ function setStyle(el, styleName, value, { extraClass, force = false, allowImport
 }
 
 export const classAction = {
-    getPriority: ({ param: { mainParam: classNames } = {} }) =>
+    getPriority: ({ params: { mainParam: classNames } = {} }) =>
         (classNames || "")?.trim().split(/\s+/).filter(Boolean).length || 0,
-    isApplied: ({ editingElement, param: { mainParam: classNames } = {} }) => {
+    isApplied: ({ editingElement, params: { mainParam: classNames } = {} }) => {
         if (classNames === undefined || classNames === "") {
             return true;
         }
@@ -238,14 +239,14 @@ export const classAction = {
             .split(" ")
             .every((className) => editingElement.classList.contains(className));
     },
-    apply: ({ editingElement, param: { mainParam: classNames } = {} }) => {
+    apply: ({ editingElement, params: { mainParam: classNames } = {} }) => {
         for (const className of (classNames || "").split(" ")) {
             if (className !== "") {
                 editingElement.classList.add(className);
             }
         }
     },
-    clean: ({ editingElement, param: { mainParam: classNames } = {} }) => {
+    clean: ({ editingElement, params: { mainParam: classNames } = {} }) => {
         for (const className of (classNames || "").split(" ")) {
             if (className !== "") {
                 editingElement.classList.remove(className);
@@ -255,9 +256,9 @@ export const classAction = {
 };
 
 const attributeAction = {
-    getValue: ({ editingElement, param: { mainParam: attributeName } = {} }) =>
+    getValue: ({ editingElement, params: { mainParam: attributeName } = {} }) =>
         editingElement.getAttribute(attributeName),
-    isApplied: ({ editingElement, param: { mainParam: attributeName } = {}, value }) => {
+    isApplied: ({ editingElement, params: { mainParam: attributeName } = {}, value }) => {
         if (value) {
             return (
                 editingElement.hasAttribute(attributeName) &&
@@ -267,43 +268,43 @@ const attributeAction = {
             return !editingElement.hasAttribute(attributeName);
         }
     },
-    apply: ({ editingElement, param: { mainParam: attributeName } = {}, value }) => {
+    apply: ({ editingElement, params: { mainParam: attributeName } = {}, value }) => {
         if (value) {
             editingElement.setAttribute(attributeName, value);
         } else {
             editingElement.removeAttribute(attributeName);
         }
     },
-    clean: ({ editingElement, param: { mainParam: attributeName } = {} }) => {
+    clean: ({ editingElement, params: { mainParam: attributeName } = {} }) => {
         editingElement.removeAttribute(attributeName);
     },
 };
 
 const dataAttributeAction = {
-    getValue: ({ editingElement, param: { mainParam: attributeName } = {} }) =>
+    getValue: ({ editingElement, params: { mainParam: attributeName } = {} }) =>
         editingElement.dataset[attributeName],
-    isApplied: ({ editingElement, param: { mainParam: attributeName } = {}, value }) => {
+    isApplied: ({ editingElement, params: { mainParam: attributeName } = {}, value }) => {
         if (value) {
             return editingElement.dataset[attributeName] === value;
         } else {
             return !(attributeName in editingElement.dataset);
         }
     },
-    apply: ({ editingElement, param: { mainParam: attributeName } = {}, value }) => {
+    apply: ({ editingElement, params: { mainParam: attributeName } = {}, value }) => {
         if (value) {
             editingElement.dataset[attributeName] = value;
         } else {
             delete editingElement.dataset[attributeName];
         }
     },
-    clean: ({ editingElement, param: { mainParam: attributeName } = {} }) => {
+    clean: ({ editingElement, params: { mainParam: attributeName } = {} }) => {
         delete editingElement.dataset[attributeName];
     },
 };
 
 // TODO maybe find a better place for this
 const setClassRange = {
-    getValue: ({ editingElement, param: { mainParam: classNames } }) => {
+    getValue: ({ editingElement, params: { mainParam: classNames } }) => {
         for (const index in classNames) {
             const className = classNames[index];
             if (editingElement.classList.contains(className)) {
@@ -311,7 +312,7 @@ const setClassRange = {
             }
         }
     },
-    apply: ({ editingElement, param: { mainParam: classNames }, value: index }) => {
+    apply: ({ editingElement, params: { mainParam: classNames }, value: index }) => {
         for (const className of classNames) {
             if (editingElement.classList.contains(className)) {
                 editingElement.classList.remove(className);

@@ -11,20 +11,20 @@ class PriceListPlugin extends Plugin {
     getActions() {
         return {
             togglePriceListDescription: {
-                isApplied: ({ editingElement, param }) => {
-                    const description = editingElement.querySelector(`.${param.descriptionClass}`);
+                isApplied: ({ editingElement, params }) => {
+                    const description = editingElement.querySelector(`.${params.descriptionClass}`);
                     return description && !description.classList.contains("d-none");
                 },
-                apply: ({ editingElement, param }) => {
-                    const items = editingElement.querySelectorAll(`.${param.itemClass}`);
+                apply: ({ editingElement, params }) => {
+                    const items = editingElement.querySelectorAll(`.${params.itemClass}`);
                     for (const item of items) {
-                        const description = item.querySelector("." + param.descriptionClass);
+                        const description = item.querySelector("." + params.descriptionClass);
                         if (description) {
                             description.classList.remove("d-none");
                         } else {
                             const descriptionEl = this.document.createElement("p");
                             descriptionEl.classList.add(
-                                param.descriptionClass,
+                                params.descriptionClass,
                                 "d-block",
                                 "pe-5",
                                 "text-muted"
@@ -34,10 +34,10 @@ class PriceListPlugin extends Plugin {
                         }
                     }
                 },
-                clean: ({ editingElement, param }) => {
-                    const items = editingElement.querySelectorAll(`.${param.itemClass}`);
+                clean: ({ editingElement, params }) => {
+                    const items = editingElement.querySelectorAll(`.${params.itemClass}`);
                     for (const item of items) {
-                        const description = item.querySelector("." + param.descriptionClass);
+                        const description = item.querySelector("." + params.descriptionClass);
                         if (description) {
                             description.classList.add("d-none");
                         }

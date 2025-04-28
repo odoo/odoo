@@ -82,7 +82,7 @@ class ProductPageOptionPlugin extends Plugin {
                         if (value === "100_pc") {
                             const defaultZoomOption = "website_sale.product_picture_magnify_click";
                             await websiteConfigAction.apply({
-                                param: {
+                                params: {
                                     views: plugin.getDisabledOtherZoomViews(defaultZoomOption),
                                 },
                             });
@@ -113,7 +113,7 @@ class ProductPageOptionPlugin extends Plugin {
                             defaultZoomOption = "website_sale.product_picture_magnify_click";
                         }
                         await websiteConfigAction.apply({
-                            param: {
+                            params: {
                                 views: plugin.getDisabledOtherZoomViews(defaultZoomOption),
                             },
                         });

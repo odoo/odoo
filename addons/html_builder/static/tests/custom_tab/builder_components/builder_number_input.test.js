@@ -16,8 +16,8 @@ test("should get the initial value of the input", async () => {
     addActionOption({
         customAction: {
             getValue: ({ editingElement }) => editingElement.innerHTML,
-            apply: ({ param }) => {
-                expect.step(`customAction ${param}`);
+            apply: ({ params }) => {
+                expect.step(`customAction ${params}`);
             },
         },
     });

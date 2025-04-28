@@ -46,19 +46,19 @@ class FooterOptionPlugin extends Plugin {
         builder_actions: {
             websiteConfigFooter: {
                 reload: {},
-                isApplied: ({ param: { vars } }) => {
+                isApplied: ({ params: { vars } }) => {
                     for (const [name, value] of Object.entries(vars)) {
                         if (
                             !this.dependencies.builderActions
                                 .getAction("customizeWebsiteVariable")
-                                .isApplied({ param: { mainParam: name }, value })
+                                .isApplied({ params: { mainParam: name }, value })
                         ) {
                             return false;
                         }
                     }
                     return true;
                 },
-                apply: async ({ param: { vars, view }, selectableContext }) => {
+                apply: async ({ params: { vars, view }, selectableContext }) => {
                     const possibleValues = new Set();
                     for (const item of selectableContext.items) {
                         for (const a of item.getActions()) {

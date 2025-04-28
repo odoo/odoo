@@ -25,7 +25,7 @@ export class NewsletterLayoutOptionPlugin extends Plugin {
                 prepare: async ({ actionParam }) => {
                     await getAction("selectTemplate").prepare({ actionParam: actionParam });
                 },
-                isApplied: ({ editingElement, param: { attribute } }) => {
+                isApplied: ({ editingElement, params: { attribute } }) => {
                     const parentEl = editingElement.parentElement;
                     return (
                         (!parentEl.dataset.newsletterTemplate && attribute === "email") ||
@@ -35,7 +35,7 @@ export class NewsletterLayoutOptionPlugin extends Plugin {
                 apply: (action) => {
                     getAction("selectTemplate").apply(action);
                     const parentEl = action.editingElement.parentElement;
-                    parentEl.dataset.newsletterTemplate = action.param.attribute;
+                    parentEl.dataset.newsletterTemplate = action.params.attribute;
                 },
                 clean: (action) => getAction("selectTemplate").clean(action),
             },

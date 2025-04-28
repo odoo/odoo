@@ -50,14 +50,14 @@ export class BackgroundShapeOptionPlugin extends Plugin {
     getActions() {
         return {
             setBackgroundShape: {
-                apply: ({ editingElement, param, value }) => {
-                    param = param || {};
+                apply: ({ editingElement, params, value }) => {
+                    params = params || {};
                     const shapeData = this.getShapeData(editingElement);
                     const applyShapeParams = {
                         shape: value,
                         colors: this.getImplicitColors(editingElement, value, shapeData.colors),
                         flip: [],
-                        animated: param.animated,
+                        animated: params.animated,
                         shapeAnimationSpeed: shapeData.shapeAnimationSpeed,
                     };
                     this.applyShape(editingElement, () => applyShapeParams);
@@ -116,21 +116,21 @@ export class BackgroundShapeOptionPlugin extends Plugin {
                 isApplied: ({ editingElement }) => !this.getShapeData(editingElement).showOnMobile,
             },
             flipShape: {
-                apply: ({ editingElement, param: { mainParam: axis } }) => {
+                apply: ({ editingElement, params: { mainParam: axis } }) => {
                     this.applyShape(editingElement, () => {
                         const flip = new Set(this.getShapeData(editingElement).flip);
                         flip.add(axis);
                         return { flip: [...flip] };
                     });
                 },
-                clean: ({ editingElement, param: { mainParam: axis } }) => {
+                clean: ({ editingElement, params: { mainParam: axis } }) => {
                     this.applyShape(editingElement, () => {
                         const flip = new Set(this.getShapeData(editingElement).flip);
                         flip.delete(axis);
                         return { flip: [...flip] };
                     });
                 },
-                isApplied: ({ editingElement, param: { mainParam: axis } }) => {
+                isApplied: ({ editingElement, params: { mainParam: axis } }) => {
                     // Compat: flip classes are no longer used but may be
                     // present in client db.
                     const selector = `.o_we_flip_${axis}`;
@@ -148,7 +148,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
                     this.getShapeData(editingElement).shapeAnimationSpeed,
             },
             backgroundShapeColor: {
-                getValue: ({ editingElement, param: { mainParam: colorName } }) => {
+                getValue: ({ editingElement, params: { mainParam: colorName } }) => {
                     // TODO check if it works when the colorpicker is
                     // implemented.
                     const { shape, colors: customColors } = this.getShapeData(editingElement);
@@ -156,7 +156,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
                     const color = shape && colors[colorName];
                     return (color && normalizeColor(color)) || "";
                 },
-                apply: ({ editingElement, param: { mainParam: colorName }, value }) => {
+                apply: ({ editingElement, params: { mainParam: colorName }, value }) => {
                     this.applyShape(editingElement, () => {
                         value = getValueFromVar(value);
                         const { colors: previousColors } = this.getShapeData(editingElement);

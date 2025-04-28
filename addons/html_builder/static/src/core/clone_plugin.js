@@ -46,7 +46,7 @@ export class ClonePlugin extends Plugin {
             addItem: {
                 apply: ({
                     editingElement,
-                    param: { mainParam: itemSelector },
+                    params: { mainParam: itemSelector },
                     value: position,
                 }) => {
                     const itemEl = editingElement.querySelector(itemSelector);

@@ -17,10 +17,10 @@ class ImageOptimizePlugin extends Plugin {
     getActions() {
         return {
             setImageFormat: {
-                isApplied: ({ editingElement, param: { width, mimetype } }) =>
+                isApplied: ({ editingElement, params: { width, mimetype } }) =>
                     editingElement.dataset.resizeWidth === String(width) &&
                     editingElement.dataset.formatMimetype === mimetype,
-                load: async ({ editingElement: img, param: { width, mimetype } }) =>
+                load: async ({ editingElement: img, params: { width, mimetype } }) =>
                     this.dependencies.imagePostProcess.processImage(img, {
                         resizeWidth: width,
                         formatMimetype: mimetype,

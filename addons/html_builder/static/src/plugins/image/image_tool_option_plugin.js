@@ -93,14 +93,14 @@ class ImageToolOptionPlugin extends Plugin {
                 },
             },
             glFilter: {
-                isApplied: ({ editingElement, param: { mainParam: glFilterName } }) => {
+                isApplied: ({ editingElement, params: { mainParam: glFilterName } }) => {
                     if (glFilterName) {
                         return editingElement.dataset.glFilter === glFilterName;
                     } else {
                         return !editingElement.dataset.glFilter;
                     }
                 },
-                load: async ({ editingElement: img, param: { mainParam: glFilterName } }) =>
+                load: async ({ editingElement: img, params: { mainParam: glFilterName } }) =>
                     await this.dependencies.imagePostProcess.processImage(img, {
                         glFilter: glFilterName,
                     }),
@@ -109,7 +109,7 @@ class ImageToolOptionPlugin extends Plugin {
                 },
             },
             setCustomFilter: {
-                getValue: ({ editingElement, param: { mainParam: filterProperty } }) => {
+                getValue: ({ editingElement, params: { mainParam: filterProperty } }) => {
                     const filterOptions = JSON.parse(editingElement.dataset.filterOptions || "{}");
                     return (
                         filterOptions[filterProperty] || defaultImageFilterOptions[filterProperty]
@@ -117,7 +117,7 @@ class ImageToolOptionPlugin extends Plugin {
                 },
                 isApplied: ({
                     editingElement,
-                    param: { mainParam: filterProperty },
+                    params: { mainParam: filterProperty },
                     value: filterValue,
                 }) => {
                     const filterOptions = JSON.parse(editingElement.dataset.filterOptions || "{}");
@@ -128,7 +128,7 @@ class ImageToolOptionPlugin extends Plugin {
                 },
                 load: async ({
                     editingElement: img,
-                    param: { mainParam: filterProperty },
+                    params: { mainParam: filterProperty },
                     value,
                 }) => {
                     const filterOptions = JSON.parse(img.dataset.filterOptions || "{}");

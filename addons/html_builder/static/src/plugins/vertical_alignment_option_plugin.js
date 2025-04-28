@@ -26,11 +26,11 @@ class VerticalAlignmentOptionPlugin extends Plugin {
         return {
             setVerticalAlignment: {
                 ...classAction,
-                getPriority: ({ param: { mainParam: classNames } = { mainParam: "" } }) =>
+                getPriority: ({ params: { mainParam: classNames } = { mainParam: "" } }) =>
                     classNames === "align-items-stretch" ? 0 : 1,
                 isApplied: (...args) => {
                     const {
-                        param: { mainParam: classNames },
+                        params: { mainParam: classNames },
                     } = args[0];
                     if (classNames === "align-items-stretch") {
                         return true;

@@ -18,7 +18,7 @@ const falsy = () => false;
 test("call a specific action with some params and value", async () => {
     addActionOption({
         customAction: {
-            apply: ({ param: { mainParam: testParam }, value }) => {
+            apply: ({ params: { mainParam: testParam }, value }) => {
                 expect.step(`customAction ${testParam} ${value}`);
             },
         },
@@ -208,7 +208,9 @@ test("clean should provide the next action value", async () => {
     addActionOption({
         customAction: {
             clean({ nextAction }) {
-                expect.step(`customAction clean ${nextAction.param.mainParam} ${nextAction.value}`);
+                expect.step(
+                    `customAction clean ${nextAction.params.mainParam} ${nextAction.value}`
+                );
             },
             apply() {
                 expect.step(`customAction apply`);
@@ -379,10 +381,10 @@ describe("inherited actions", () => {
     function makeAction(n, { async, isApplied } = {}) {
         const action = {
             isApplied,
-            clean({ param: { mainParam: testParam }, value }) {
+            clean({ params: { mainParam: testParam }, value }) {
                 expect.step(`customAction${n} clean ${testParam} ${value}`);
             },
-            apply: ({ param: { mainParam: testParam }, value }) => {
+            apply: ({ params: { mainParam: testParam }, value }) => {
                 expect.step(`customAction${n} apply ${testParam} ${value}`);
             },
         };
@@ -391,7 +393,7 @@ describe("inherited actions", () => {
             const promise = new Promise((r) => {
                 resolve = r;
             });
-            action.load = async ({ param: { mainParam: testParam }, value }) => {
+            action.load = async ({ params: { mainParam: testParam }, value }) => {
                 expect.step(`customAction${n} load ${testParam} ${value}`);
                 return promise;
             };

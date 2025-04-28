@@ -30,7 +30,7 @@ class ProgressBarOptionPlugin extends Plugin {
     getActions() {
         return {
             display: {
-                apply: ({ editingElement, param: { mainParam: position } }) => {
+                apply: ({ editingElement, params: { mainParam: position } }) => {
                     // retro-compatibility
                     if (editingElement.classList.contains("progress")) {
                         editingElement.classList.remove("progress");

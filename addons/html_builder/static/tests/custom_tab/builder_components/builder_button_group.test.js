@@ -34,7 +34,7 @@ test("change the editingElement of sub widget through `applyTo` prop", async () 
 test("should propagate actionParam in the context", async () => {
     addBuilderAction({
         customAction: {
-            apply: ({ param: { mainParam: testParam } }) => {
+            apply: ({ params: { mainParam: testParam } }) => {
                 expect.step(`customAction ${testParam}`);
             },
         },

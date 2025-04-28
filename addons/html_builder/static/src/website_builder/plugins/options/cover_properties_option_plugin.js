@@ -21,7 +21,7 @@ class CoverPropertiesOptionPlugin extends Plugin {
         builder_actions: {
             setCoverBackground: {
                 load: this.loadBackgroundImage.bind(this),
-                isApplied: ({ editingElement, param: { mainParam: setBackground } }) => {
+                isApplied: ({ editingElement, params: { mainParam: setBackground } }) => {
                     const bg =
                         editingElement.querySelector(".o_record_cover_image").style.backgroundImage;
                     return !setBackground === (!bg || bg === "none");
@@ -33,7 +33,7 @@ class CoverPropertiesOptionPlugin extends Plugin {
         clean_for_save_handlers: this.saveToDataset.bind(this),
     };
 
-    loadBackgroundImage({ param: { mainParam: setBackground } }) {
+    loadBackgroundImage({ params: { mainParam: setBackground } }) {
         if (!setBackground) {
             return;
         }
@@ -72,19 +72,19 @@ class CoverPropertiesOptionPlugin extends Plugin {
         }
         (imageSrc ? classAction.apply : classAction.clean)({
             editingElement,
-            param: { mainParam: "o_record_has_cover" },
+            params: { mainParam: "o_record_has_cover" },
         });
 
         const bgEl = editingElement.querySelector(".o_record_cover_image");
 
         (b64ToSave ? classAction.apply : classAction.clean)({
             editingElement: bgEl,
-            param: { mainParam: "o_b64_cover_image_to_save" },
+            params: { mainParam: "o_b64_cover_image_to_save" },
         });
 
         this.dependencies.builderActions.getAction("styleAction").apply({
             editingElement: bgEl,
-            param: { mainParam: "background-image" },
+            params: { mainParam: "background-image" },
             value: imageSrc ? `url('${imageSrc}')` : "",
         });
     }

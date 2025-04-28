@@ -36,7 +36,7 @@ class AddToCartOptionPlugin extends Plugin {
                     }
                     classAction.clean({
                         editingElement: buttonEl,
-                        param: { mainParam: "disabled" },
+                        params: { mainParam: "disabled" },
                     });
                     if (!oneVariant) {
                         this.resetDefaultAction(editingElement);
@@ -54,7 +54,7 @@ class AddToCartOptionPlugin extends Plugin {
                     delete buttonEl.dataset.productVariantId;
                     classAction.apply({
                         editingElement: buttonEl,
-                        param: { mainParam: "disabled" },
+                        params: { mainParam: "disabled" },
                     });
                     this.resetDefaultAction(editingElement);
                 },
@@ -99,7 +99,7 @@ class AddToCartOptionPlugin extends Plugin {
                 },
             },
             addToCartAction: {
-                apply: ({ editingElement, param: { action, icon, label } }) => {
+                apply: ({ editingElement, params: { action, icon, label } }) => {
                     const classAction = this.dependencies.builderActions.getAction("classAction");
                     editingElement.dataset.action = action;
                     const buttonEl = editingElement.querySelector(".s_add_to_cart_btn");
@@ -107,11 +107,11 @@ class AddToCartOptionPlugin extends Plugin {
                     const iconEl = buttonEl.querySelector("i");
                     classAction.apply({
                         editingElement: iconEl,
-                        param: { mainParam: icon },
+                        params: { mainParam: icon },
                     });
                     buttonEl.lastChild.textContent = label;
                 },
-                clean: ({ editingElement, param: { icon } }) => {
+                clean: ({ editingElement, params: { icon } }) => {
                     const classAction = this.dependencies.builderActions.getAction("classAction");
 
                     delete editingElement.dataset.action;
@@ -120,10 +120,10 @@ class AddToCartOptionPlugin extends Plugin {
                     const iconEl = buttonEl.querySelector("i");
                     classAction.clean({
                         editingElement: iconEl,
-                        param: { mainParam: icon },
+                        params: { mainParam: icon },
                     });
                 },
-                isApplied: ({ editingElement, param: { action } }) =>
+                isApplied: ({ editingElement, params: { action } }) =>
                     editingElement.dataset.action === action,
             },
         },
@@ -131,9 +131,9 @@ class AddToCartOptionPlugin extends Plugin {
 
     resetDefaultAction(editingElement) {
         const addToCartAction = this.dependencies.builderActions.getAction("addToCartAction");
-        if (addToCartAction.isApplied({ editingElement, param: addToCartValues.buyNow })) {
-            addToCartAction.clean({ editingElement, param: addToCartValues.buyNow });
-            addToCartAction.apply({ editingElement, param: addToCartValues.addToCart });
+        if (addToCartAction.isApplied({ editingElement, params: addToCartValues.buyNow })) {
+            addToCartAction.clean({ editingElement, params: addToCartValues.buyNow });
+            addToCartAction.apply({ editingElement, params: addToCartValues.addToCart });
         }
     }
 }

@@ -39,10 +39,10 @@ class ProcessStepsOptionPlugin extends Plugin {
         return {
             changeConnector: {
                 ...classAction,
-                apply: ({ editingElement, param: { mainParam: className } }) => {
+                apply: ({ editingElement, params: { mainParam: className } }) => {
                     classAction.apply({
                         editingElement: editingElement,
-                        param: { mainParam: className },
+                        params: { mainParam: className },
                     });
                     reloadConnectors(editingElement);
                     let markerEnd = "";

@@ -14,7 +14,7 @@ test("empty border input is treated as 0", async () => {
                 .getAction("styleAction")
                 .getValue({
                     editingElement,
-                    param: {
+                    params: {
                         mainParam: this.getStyleActionParam("width"),
                     },
                 });

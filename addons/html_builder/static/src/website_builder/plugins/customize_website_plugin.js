@@ -52,15 +52,15 @@ export class CustomizeWebsitePlugin extends Plugin {
     getActions() {
         return {
             customizeWebsiteVariable: this.withCustomHistory({
-                isApplied: ({ param: { mainParam: variable } = {}, value }) => {
+                isApplied: ({ params: { mainParam: variable } = {}, value }) => {
                     const currentValue = this.getWebsiteVariableValue(variable);
                     return currentValue === value;
                 },
-                getValue: ({ param: { mainParam: variable } }) => {
+                getValue: ({ params: { mainParam: variable } }) => {
                     const currentValue = this.getWebsiteVariableValue(variable);
                     return currentValue;
                 },
-                apply: async ({ param: { mainParam: variable, nullValue = "null" }, value }) => {
+                apply: async ({ params: { mainParam: variable, nullValue = "null" }, value }) => {
                     await this.customizeWebsiteVariables(
                         {
                             [variable]: value,
@@ -70,7 +70,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
             }),
             customizeWebsiteColor: this.withCustomHistory({
-                getValue: ({ param: { mainParam: color, colorType, gradientColor } }) => {
+                getValue: ({ params: { mainParam: color, colorType, gradientColor } }) => {
                     const style = this.document.defaultView.getComputedStyle(
                         this.document.documentElement
                     );
@@ -82,7 +82,10 @@ export class CustomizeWebsitePlugin extends Plugin {
                     }
                     return getCSSVariableValue(color, style);
                 },
-                apply: async ({ param: { mainParam: color, colorType, gradientColor }, value }) => {
+                apply: async ({
+                    params: { mainParam: color, colorType, gradientColor },
+                    value,
+                }) => {
                     if (gradientColor) {
                         let colorValue = "";
                         let gradientValue = "";
@@ -175,9 +178,9 @@ export class CustomizeWebsitePlugin extends Plugin {
                     );
                     return getCSSVariableValue("body-image-type", style);
                 },
-                load: async ({ editingElement: el, param, value, historyImageSrc }) => {
+                load: async ({ editingElement: el, params, value, historyImageSrc }) => {
                     const getAction = this.dependencies.builderActions.getAction;
-                    const oldValue = getAction("customizeBodyBgType").getValue({ param });
+                    const oldValue = getAction("customizeBodyBgType").getValue({ params });
                     const oldImageSrc = this.getWebsiteVariableValue("body-image");
                     let imageSrc = "";
                     if (value === "NONE") {
@@ -201,7 +204,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
                 apply: ({
                     editingElement,
-                    param,
+                    params,
                     value,
                     loadResult: { imageSrc, oldImageSrc, oldValue },
                 }) => {
@@ -213,7 +216,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                         apply: () => {
                             this.services.ui.block({ delay: 2500 });
                             getAction("customizeBodyBgType")
-                                .load({ editingElement, param, value, historyImageSrc: imageSrc })
+                                .load({ editingElement, params, value, historyImageSrc: imageSrc })
                                 .then(() => {
                                     this.dispatchTo("trigger_dom_updated");
                                 })
@@ -224,7 +227,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                             getAction("customizeBodyBgType")
                                 .load({
                                     editingElement,
-                                    param,
+                                    params,
                                     value: oldValue,
                                     historyImageSrc: oldImageSrc,
                                 })
@@ -238,24 +241,24 @@ export class CustomizeWebsitePlugin extends Plugin {
             },
             removeFont: {
                 preview: false,
-                apply: async ({ param }) => {
+                apply: async ({ params }) => {
                     // TODO
                     const getAction = this.dependencies.builderActions.getAction;
                     await getAction("customizeWebsiteVariable").load({
-                        param: {
-                            mainParam: param.variable,
+                        params: {
+                            mainParam: params.variable,
                         },
                     });
                 },
             },
             customizeButtonStyle: this.withCustomHistory({
                 preview: false,
-                isApplied: ({ param, value }) => {
+                isApplied: ({ params, value }) => {
                     const getAction = this.dependencies.builderActions.getAction;
-                    const currentValue = getAction("customizeButtonStyle").getValue({ param });
+                    const currentValue = getAction("customizeButtonStyle").getValue({ params });
                     return currentValue === value;
                 },
-                getValue: ({ param: { mainParam: which } }) => {
+                getValue: ({ params: { mainParam: which } }) => {
                     const style = this.document.defaultView.getComputedStyle(
                         this.document.documentElement
                     );
@@ -263,7 +266,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     const isFlat = getCSSVariableValue(`btn-${which}-flat`, style);
                     return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
                 },
-                apply: async ({ param: { mainParam: which, nullValue }, value }) => {
+                apply: async ({ params: { mainParam: which, nullValue }, value }) => {
                     await this.customizeWebsiteVariables(
                         {
                             [`btn-${which}-outline`]: value === "outline" ? "true" : "false",
@@ -276,12 +279,12 @@ export class CustomizeWebsitePlugin extends Plugin {
             websiteConfig: {
                 reload: {},
                 prepare: async ({ actionParam }) => this.loadConfigKey(actionParam),
-                getPriority: ({ param }) => {
-                    const records = [...(param.views || []), ...(param.assets || [])];
+                getPriority: ({ params }) => {
+                    const records = [...(params.views || []), ...(params.assets || [])];
                     return records.length;
                 },
-                isApplied: ({ param }) => {
-                    const records = [...(param.views || []), ...(param.assets || [])];
+                isApplied: ({ params }) => {
+                    const records = [...(params.views || []), ...(params.assets || [])];
                     return records.every((v) => this.getConfigKey(v));
                 },
                 apply: async (action) => this.toggleConfig(action, true),
@@ -291,7 +294,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 prepare: async ({ actionParam }) => {
                     await this.loadTemplateKey(actionParam.view);
                 },
-                isApplied: ({ editingElement, param: { templateClass } }) => {
+                isApplied: ({ editingElement, params: { templateClass } }) => {
                     if (templateClass) {
                         return !!editingElement.querySelector(`.${templateClass}`);
                     }
@@ -466,8 +469,8 @@ export class CustomizeWebsitePlugin extends Plugin {
         const updateViews = this.toggleTheme(action, "views", apply);
         const updateAssets = this.toggleTheme(action, "assets", apply);
         // step 2: customize vars
-        const updateVars = action.param.vars
-            ? this.customizeWebsiteVariables(action.param.vars, "null", !apply)
+        const updateVars = action.params.vars
+            ? this.customizeWebsiteVariables(action.params.vars, "null", !apply)
             : Promise.resolve();
         await Promise.all([updateViews, updateAssets, updateVars]);
         if (this.isDestroyed) {
@@ -476,7 +479,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
 
     async toggleTheme(action, paramName, apply) {
-        if (!action.param[paramName]) {
+        if (!action.params[paramName]) {
             return;
         }
         const isViewData = paramName === "views";
@@ -492,8 +495,8 @@ export class CustomizeWebsitePlugin extends Plugin {
                 (disable ? toDisable : toEnable).add(record);
             }
         };
-        const shouldReset = isViewData && !!action.param.resetViewArch;
-        const records = action.param[paramName] || [];
+        const shouldReset = isViewData && !!action.params.resetViewArch;
+        const records = action.params[paramName] || [];
         if (action.selectableContext) {
             if (!apply) {
                 // do nothing, we will do it anyway in the apply call
@@ -506,11 +509,11 @@ export class CustomizeWebsitePlugin extends Plugin {
                             // disable all
                             prepareRecord(record, true);
                         }
-                    } else if (a.actionId === 'composite' || a.actionId === "reloadComposite"){
-                        for ( const itemAction of a.actionParam.mainParam){
-                            if (itemAction.action === "websiteConfig"){
-                                for (const record of itemAction.actionParam[paramName] || []){
-                                    prepareRecord(record, true)
+                    } else if (a.actionId === "composite" || a.actionId === "reloadComposite") {
+                        for (const itemAction of a.actionParam.mainParam) {
+                            if (itemAction.action === "websiteConfig") {
+                                for (const record of itemAction.actionParam[paramName] || []) {
+                                    prepareRecord(record, true);
                                 }
                             }
                         }
@@ -635,7 +638,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         }
 
         // Empty the container and add the template content
-        const templateFragment = parseHTML(this.document, this.getTemplateKey(action.param.view));
+        const templateFragment = parseHTML(this.document, this.getTemplateKey(action.params.view));
         action.editingElement.replaceChildren(templateFragment.firstElementChild);
     }
     getTemplateKey(key) {

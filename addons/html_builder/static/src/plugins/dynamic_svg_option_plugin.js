@@ -22,13 +22,13 @@ class DynamicSvgOptionPlugin extends Plugin {
     getActions() {
         return {
             svgColor: {
-                getValue: ({ editingElement: imgEl, param: { mainParam: colorName } }) => {
+                getValue: ({ editingElement: imgEl, params: { mainParam: colorName } }) => {
                     const searchParams = new URL(imgEl.src, window.location.origin).searchParams;
                     return searchParams.get(colorName);
                 },
                 load: async ({
                     editingElement: imgEl,
-                    param: { mainParam: colorName },
+                    params: { mainParam: colorName },
                     value: color,
                 }) => {
                     const newURL = new URL(imgEl.src, window.location.origin);
@@ -39,7 +39,7 @@ class DynamicSvgOptionPlugin extends Plugin {
                 },
                 apply: ({
                     editingElement: imgEl,
-                    param: { mainParam: colorName },
+                    params: { mainParam: colorName },
                     value: color,
                     loadResult: newSrc,
                 }) => {

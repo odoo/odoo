@@ -11,17 +11,17 @@ describe.current.tags("desktop");
 test("can call 2 separate actions with composite action", async () => {
     addBuilderAction({
         action1: {
-            isApplied: ({ editingElement, param: { mainParam: cls } }) =>
+            isApplied: ({ editingElement, params: { mainParam: cls } }) =>
                 editingElement.classList.contains(cls),
-            apply: ({ editingElement, param: { mainParam: cls } }) => {
+            apply: ({ editingElement, params: { mainParam: cls } }) => {
                 editingElement.classList.toggle(cls);
                 expect.step(`action1: ${cls}`);
             },
         },
         action2: {
-            isApplied: ({ editingElement, param: { mainParam: cls } }) =>
+            isApplied: ({ editingElement, params: { mainParam: cls } }) =>
                 editingElement.classList.contains(cls),
-            apply: ({ editingElement, param: { mainParam: cls } }) => {
+            apply: ({ editingElement, params: { mainParam: cls } }) => {
                 editingElement.classList.toggle(cls);
                 expect.step(`action2: ${cls}`);
             },
@@ -56,9 +56,9 @@ test("can call 2 separate actions with composite action", async () => {
 test("can call the same action twice with composite action", async () => {
     addBuilderAction({
         action1: {
-            isApplied: ({ editingElement, param: { mainParam: cls } }) =>
+            isApplied: ({ editingElement, params: { mainParam: cls } }) =>
                 editingElement.classList.contains(cls),
-            apply: ({ editingElement, param: { mainParam: cls } }) => {
+            apply: ({ editingElement, params: { mainParam: cls } }) => {
                 editingElement.classList.toggle(cls);
                 expect.step(`action1: ${cls}`);
             },

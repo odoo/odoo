@@ -110,7 +110,7 @@ class SearchbarOptionPlugin extends Plugin {
                 },
             },
             setSearchbarStyle: {
-                isApplied: ({ editingElement, param: { mainParam: style } }) => {
+                isApplied: ({ editingElement, params: { mainParam: style } }) => {
                     const searchInputIsLight = editingElement.matches(".border-0.bg-light");
                     const searchButtonIsLight =
                         this.getSearchButtonEl(editingElement)?.matches(".btn-light");
@@ -122,7 +122,7 @@ class SearchbarOptionPlugin extends Plugin {
                         return !searchInputIsLight && !searchButtonIsLight;
                     }
                 },
-                apply: ({ editingElement, param: { mainParam: style } }) => {
+                apply: ({ editingElement, params: { mainParam: style } }) => {
                     const isLight = style === "light";
                     const searchButtonEl = this.getSearchButtonEl(editingElement);
                     editingElement.classList.toggle("border-0", isLight);
@@ -137,21 +137,21 @@ class SearchbarOptionPlugin extends Plugin {
             // the default `dataAttributeAction`. The python should not need a
             // value if it doesn't exist.
             setNonEmptyDataAttribute: {
-                getValue: ({ editingElement, param: { mainParam: attributeName } = {} }) =>
+                getValue: ({ editingElement, params: { mainParam: attributeName } = {} }) =>
                     editingElement.dataset[attributeName],
                 isApplied: ({
                     editingElement,
-                    param: { mainParam: attributeName } = {},
+                    params: { mainParam: attributeName } = {},
                     value = "",
                 }) => editingElement.dataset[attributeName] === value,
-                apply: ({ editingElement, param: { mainParam: attributeName } = {}, value }) => {
+                apply: ({ editingElement, params: { mainParam: attributeName } = {}, value }) => {
                     if (value) {
                         editingElement.dataset[attributeName] = value;
                     } else {
                         delete editingElement.dataset[attributeName];
                     }
                 },
-                clean: ({ editingElement, param: { mainParam: attributeName } = {} }) => {
+                clean: ({ editingElement, params: { mainParam: attributeName } = {} }) => {
                     editingElement.dataset[attributeName] = "";
                 },
             },

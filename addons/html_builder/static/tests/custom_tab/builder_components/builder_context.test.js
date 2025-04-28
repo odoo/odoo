@@ -13,7 +13,7 @@ defineWebsiteModels();
 test("should pass the context", async () => {
     addActionOption({
         customAction: {
-            apply: ({ param: { mainParam: testParam }, value }) => {
+            apply: ({ params: { mainParam: testParam }, value }) => {
                 expect.step(`customAction ${testParam} ${value}`);
             },
         },

@@ -85,7 +85,7 @@ class VisibilityOptionPlugin extends Plugin {
                 isApplied: () => true,
             },
             toggleDeviceVisibility: {
-                apply: ({ editingElement, param: { mainParam: visibility } }) => {
+                apply: ({ editingElement, params: { mainParam: visibility } }) => {
                     // Clean first as the widget is not part of a group
                     this.clean(editingElement);
                     const style = getComputedStyle(editingElement);
@@ -107,7 +107,7 @@ class VisibilityOptionPlugin extends Plugin {
                 clean: ({ editingElement }) => {
                     this.clean(editingElement);
                 },
-                isApplied: ({ editingElement, param: { mainParam: visibility } }) =>
+                isApplied: ({ editingElement, params: { mainParam: visibility } }) =>
                     this.isApplied(editingElement, visibility),
             },
         };

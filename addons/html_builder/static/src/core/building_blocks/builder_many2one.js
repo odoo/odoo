@@ -43,7 +43,7 @@ export class BuilderMany2One extends Component {
         this.domState = useDomState((el) => {
             const actionValue = getAction(actionId).getValue({
                 editingElement: el,
-                param: actionParam,
+                params: actionParam,
             });
             return { selected: actionValue && JSON.parse(actionValue) };
         });
@@ -68,14 +68,14 @@ export class BuilderMany2One extends Component {
             if (applySpec.clean && applySpec.actionValue === undefined) {
                 applySpec.clean({
                     editingElement: applySpec.editingElement,
-                    param: applySpec.actionParam,
+                    params: applySpec.actionParam,
                     dependencyManager: this.env.dependencyManager,
                 });
             } else {
                 proms.push(
                     applySpec.apply({
                         editingElement: applySpec.editingElement,
-                        param: applySpec.actionParam,
+                        params: applySpec.actionParam,
                         value: applySpec.actionValue,
                         loadResult: applySpec.loadResult,
                         dependencyManager: this.env.dependencyManager,

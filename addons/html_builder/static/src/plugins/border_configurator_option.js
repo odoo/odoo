@@ -28,7 +28,7 @@ export class BorderConfigurator extends BaseOptionComponent {
         const getAction = this.env.editor.shared.builderActions.getAction;
         const styleActionValue = getAction("styleAction").getValue({
             editingElement,
-            param: {
+            params: {
                 mainParam: this.getStyleActionParam("width"),
             },
         });

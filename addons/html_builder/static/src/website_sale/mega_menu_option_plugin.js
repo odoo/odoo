@@ -50,7 +50,7 @@ class WebsiteSaleMegaMenuOptionPlugin extends Plugin {
                     this.dependencies.customizeWebsite.toggleTemplate(
                         {
                             editingElement,
-                            param: { view: loadResult },
+                            params: { view: loadResult },
                         },
                         true
                     );

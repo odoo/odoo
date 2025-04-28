@@ -27,12 +27,12 @@ class CardImageOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             setCoverImagePosition: {
-                apply: ({ editingElement, param: { mainParam: className } }) => {
+                apply: ({ editingElement, params: { mainParam: className } }) => {
                     const imageEl = editingElement.querySelector(".o_card_img");
                     imageEl.classList.add(className);
                     this.adaptRatio(editingElement, className);
                 },
-                clean: ({ editingElement, param: { mainParam: className } }) => {
+                clean: ({ editingElement, params: { mainParam: className } }) => {
                     const imageEl = editingElement.querySelector(".o_card_img");
                     imageEl.classList.remove(className);
                 },
@@ -55,7 +55,7 @@ class CardImageOptionPlugin extends Plugin {
                 },
             },
             alignCoverImage: {
-                apply: ({ editingElement, param: { mainParam: direction } }) => {
+                apply: ({ editingElement, params: { mainParam: direction } }) => {
                     const imgWrapper = editingElement.querySelector(".o_card_img_wrapper");
                     imgWrapper.classList.toggle("o_card_img_adjust_v", direction === "vertical");
                     imgWrapper.classList.toggle("o_card_img_adjust_h", direction === "horizontal");
@@ -74,7 +74,10 @@ class CardImageOptionPlugin extends Plugin {
             return;
         }
         const imageWrapper = editingElement.querySelector(".o_card_img_wrapper");
-        const asMainParam = (mainParam) => ({ editingElement: imageWrapper, param: { mainParam } });
+        const asMainParam = (mainParam) => ({
+            editingElement: imageWrapper,
+            params: { mainParam },
+        });
         for (const ratioClasses of ratiosOnlySupportedForTopImage) {
             if (classAction.isApplied(asMainParam(ratioClasses))) {
                 classAction.clean(asMainParam(ratioClasses));

@@ -168,7 +168,7 @@ class AnimateOptionPlugin extends Plugin {
                 },
                 apply: ({
                     editingElement,
-                    param: { mainParam: directionClassName },
+                    params: { mainParam: directionClassName },
                     value: effectClassName,
                 }) => {
                     if (directionClassName) {

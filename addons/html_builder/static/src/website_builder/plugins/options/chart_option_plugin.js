@@ -73,7 +73,7 @@ class ChartOptionPlugin extends Plugin {
                 },
             },
             removeColumn: {
-                apply: ({ editingElement, param: { mainParam: key } }) => {
+                apply: ({ editingElement, params: { mainParam: key } }) => {
                     const data = this.getData(editingElement);
                     const toRemoveIndex = data.datasets.findIndex((dataset) => dataset.key === key);
                     data.datasets.splice(toRemoveIndex, 1);
@@ -95,7 +95,7 @@ class ChartOptionPlugin extends Plugin {
                 },
             },
             removeRow: {
-                apply: ({ editingElement, param: { mainParam: labelIndex } }) => {
+                apply: ({ editingElement, params: { mainParam: labelIndex } }) => {
                     const data = this.getData(editingElement);
                     data.labels.splice(labelIndex, 1);
                     data.datasets.forEach((dataset) => {
@@ -109,14 +109,14 @@ class ChartOptionPlugin extends Plugin {
                 },
             },
             updateDatasetValue: {
-                getValue: ({ editingElement, param: { datasetKey, valueIndex } }) => {
+                getValue: ({ editingElement, params: { datasetKey, valueIndex } }) => {
                     const data = this.getData(editingElement);
                     const targetDataset = data.datasets.find(
                         (dataset) => dataset.key === datasetKey
                     );
                     return targetDataset?.data[valueIndex] || 0;
                 },
-                apply: ({ editingElement, value, param: { datasetKey, valueIndex } }) => {
+                apply: ({ editingElement, value, params: { datasetKey, valueIndex } }) => {
                     const data = this.getData(editingElement);
                     const targetDataset = data.datasets.find(
                         (dataset) => dataset.key === datasetKey
@@ -126,14 +126,14 @@ class ChartOptionPlugin extends Plugin {
                 },
             },
             updateDatasetLabel: {
-                getValue: ({ editingElement, param: { mainParam: datasetKey } }) => {
+                getValue: ({ editingElement, params: { mainParam: datasetKey } }) => {
                     const data = this.getData(editingElement);
                     const targetDataset = data.datasets.find(
                         (dataset) => dataset.key === datasetKey
                     );
                     return targetDataset?.label;
                 },
-                apply: ({ editingElement, value, param: { mainParam: datasetKey } }) => {
+                apply: ({ editingElement, value, params: { mainParam: datasetKey } }) => {
                     const data = this.getData(editingElement);
                     const targetDataset = data.datasets.find(
                         (dataset) => dataset.key === datasetKey
@@ -143,18 +143,18 @@ class ChartOptionPlugin extends Plugin {
                 },
             },
             updateLabelName: {
-                getValue: ({ editingElement, param: { mainParam: labelIndex } }) => {
+                getValue: ({ editingElement, params: { mainParam: labelIndex } }) => {
                     const data = this.getData(editingElement);
                     return data.labels[labelIndex];
                 },
-                apply: ({ editingElement, value, param: { mainParam: labelIndex } }) => {
+                apply: ({ editingElement, value, params: { mainParam: labelIndex } }) => {
                     const data = this.getData(editingElement);
                     data.labels[labelIndex] = value;
                     this.updateDOMData(editingElement, data);
                 },
             },
             setMinMax: {
-                getValue: ({ editingElement, param: { mainParam: type } }) => {
+                getValue: ({ editingElement, params: { mainParam: type } }) => {
                     if (type === "min") {
                         return parseInt(editingElement.dataset.ticksMin) || "";
                     }
@@ -162,7 +162,7 @@ class ChartOptionPlugin extends Plugin {
                         return parseInt(editingElement.dataset.ticksMax) || "";
                     }
                 },
-                apply: ({ editingElement, value, param: { mainParam: type } }) => {
+                apply: ({ editingElement, value, params: { mainParam: type } }) => {
                     let minValue, maxValue;
                     let noMin = false;
                     let noMax = false;
@@ -211,7 +211,7 @@ class ChartOptionPlugin extends Plugin {
                 },
             },
             colorChange: {
-                getValue: ({ editingElement, param: { type, datasetIndex, dataIndex } }) => {
+                getValue: ({ editingElement, params: { type, datasetIndex, dataIndex } }) => {
                     const data = this.getData(editingElement);
                     if (this.isPieChart(editingElement)) {
                         // TODO: shouldn't getColor be done directly in BuilderColorPicker?
@@ -220,7 +220,7 @@ class ChartOptionPlugin extends Plugin {
                         return this.getColor(data.datasets[datasetIndex]?.[type]);
                     }
                 },
-                apply: ({ editingElement, value, param: { type, datasetIndex, dataIndex } }) => {
+                apply: ({ editingElement, value, params: { type, datasetIndex, dataIndex } }) => {
                     const data = this.getData(editingElement);
                     if (this.isPieChart(editingElement)) {
                         data.datasets[datasetIndex][type][dataIndex] = value;

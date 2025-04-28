@@ -61,11 +61,11 @@ class ImageShapeOptionPlugin extends Plugin {
                 },
             },
             setImgShapeColor: {
-                getValue: ({ editingElement: img, param: { index: colorIndex } }) =>
+                getValue: ({ editingElement: img, params: { index: colorIndex } }) =>
                     img.dataset.shapeColors?.split(";")[colorIndex] || "",
                 load: async ({
                     editingElement: img,
-                    param: { index: colorIndex },
+                    params: { index: colorIndex },
                     value: color,
                 }) => {
                     color = getValueFromVar(color);
@@ -82,7 +82,7 @@ class ImageShapeOptionPlugin extends Plugin {
                 },
             },
             flipImageShape: {
-                load: async ({ editingElement: img, param: { axis } }) => {
+                load: async ({ editingElement: img, params: { axis } }) => {
                     const currentAxis = img.dataset.shapeFlip || "";
                     const newAxis = currentAxis.includes(axis)
                         ? currentAxis.replace(axis, "")
@@ -94,7 +94,7 @@ class ImageShapeOptionPlugin extends Plugin {
                 },
             },
             rotateImageShape: {
-                load: async ({ editingElement: img, param: { side } }) => {
+                load: async ({ editingElement: img, params: { side } }) => {
                     const currentRotateValue = parseInt(img.dataset.shapeRotate) || 0;
                     const rotation = side === "left" ? -90 : 90;
                     const newRotateValue = (currentRotateValue + rotation + 360) % 360;

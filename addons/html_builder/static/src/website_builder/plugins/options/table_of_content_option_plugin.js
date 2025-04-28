@@ -45,7 +45,7 @@ class TableOfContentOptionPlugin extends Plugin {
     getActions() {
         return {
             navbarPosition: {
-                isApplied: ({ editingElement: navbarWrapEl, param: { mainParam: position } }) => {
+                isApplied: ({ editingElement: navbarWrapEl, params: { mainParam: position } }) => {
                     if (navbarWrapEl.classList.contains("s_table_of_content_horizontal_navbar")) {
                         return position === "top";
                     } else {
@@ -57,7 +57,7 @@ class TableOfContentOptionPlugin extends Plugin {
                         return (previousSibling === mainContent ? "right" : "left") === position;
                     }
                 },
-                apply: ({ editingElement: navbarWrapEl, param: { mainParam: position } }) => {
+                apply: ({ editingElement: navbarWrapEl, params: { mainParam: position } }) => {
                     const mainContentEl = navbarWrapEl.parentElement.querySelector(
                         ".s_table_of_content_main"
                     );
@@ -94,7 +94,7 @@ class TableOfContentOptionPlugin extends Plugin {
                         mainContentEl.classList.add("col-lg-12");
                     }
                 },
-                clean: ({ editingElement: navbarWrapEl, param: { mainParam: position } }) => {
+                clean: ({ editingElement: navbarWrapEl, params: { mainParam: position } }) => {
                     const mainContentEl = navbarWrapEl.parentElement.querySelector(
                         ".s_table_of_content_main"
                     );

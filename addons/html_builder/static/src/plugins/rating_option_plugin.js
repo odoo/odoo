@@ -16,17 +16,17 @@ class RatingOptionPlugin extends Plugin {
     getActions() {
         return {
             setIcons: {
-                apply: ({ editingElement, param: { mainParam: iconParam } }) => {
+                apply: ({ editingElement, params: { mainParam: iconParam } }) => {
                     editingElement.dataset.icon = iconParam;
                     renderIcons(editingElement);
                     delete editingElement.dataset.activeCustomIcon;
                     delete editingElement.dataset.inactiveCustomIcon;
                 },
-                isApplied: ({ editingElement, param: { mainParam: iconParam } }) =>
+                isApplied: ({ editingElement, params: { mainParam: iconParam } }) =>
                     getIconType(editingElement) === iconParam,
             },
             customIcon: {
-                load: async ({ editingElement, param: { mainParam: customParam } }) =>
+                load: async ({ editingElement, params: { mainParam: customParam } }) =>
                     new Promise((resolve) => {
                         const isCustomActive = customParam === "customActiveIcon";
                         const media = document.createElement("i");
@@ -51,7 +51,7 @@ class RatingOptionPlugin extends Plugin {
                 apply: ({
                     editingElement,
                     loadResult: savedIconEl,
-                    param: { mainParam: customParam },
+                    params: { mainParam: customParam },
                 }) => {
                     if (!savedIconEl) {
                         return;

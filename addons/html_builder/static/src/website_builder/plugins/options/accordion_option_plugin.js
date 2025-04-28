@@ -41,11 +41,11 @@ class accordionOptionPlugin extends Plugin {
                     });
                     return selectedIconClass;
                 },
-                apply: ({ editingElement, param, loadResult: customClass }) => {
+                apply: ({ editingElement, params, loadResult: customClass }) => {
                     if (!customClass) {
                         return;
                     }
-                    const isActiveIcon = param.isActiveIcon;
+                    const isActiveIcon = params.isActiveIcon;
                     const media = document.createElement("i");
                     media.className = isActiveIcon
                         ? editingElement.dataset.activeCustomIcon
@@ -68,7 +68,7 @@ class accordionOptionPlugin extends Plugin {
                 },
             },
             customAccordionIcon: {
-                apply: ({ editingElement, param, value }) => {
+                apply: ({ editingElement, params, value }) => {
                     const accordionButtonEls = editingElement.querySelectorAll(".accordion-button");
                     const activeCustomIcon =
                         editingElement.dataset.activeCustomIcon || "fa fa-arrow-up";
@@ -91,7 +91,7 @@ class accordionOptionPlugin extends Plugin {
                             while (el.firstChild) {
                                 el.removeChild(el.firstChild);
                             }
-                            if (!param.selectIcons) {
+                            if (!params.selectIcons) {
                                 return;
                             }
                             const customIconsClasses =

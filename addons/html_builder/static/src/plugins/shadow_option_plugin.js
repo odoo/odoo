@@ -40,12 +40,12 @@ class ShadowOptionPlugin extends Plugin {
                 },
             },
             setShadow: {
-                apply: ({ editingElement, param: { mainParam: attributeName }, value }) => {
+                apply: ({ editingElement, params: { mainParam: attributeName }, value }) => {
                     const shadow = getCurrentShadow(editingElement);
                     shadow[attributeName] = value;
                     setBoxShadow(editingElement, shadowToString(shadow));
                 },
-                getValue: ({ editingElement, param: { mainParam: attributeName } }) =>
+                getValue: ({ editingElement, params: { mainParam: attributeName } }) =>
                     getCurrentShadow(editingElement)[attributeName],
             },
         };

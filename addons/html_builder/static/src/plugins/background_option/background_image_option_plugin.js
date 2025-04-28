@@ -50,7 +50,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
                     }
                     this.dependencies.builderActions.getAction("styleAction").apply({
                         editingElement: filterEl,
-                        param: {
+                        params: {
                             mainParam: "background-color",
                         },
                         value: value,
@@ -63,7 +63,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
                     }
                     return this.dependencies.builderActions.getAction("styleAction").getValue({
                         editingElement: filterEl,
-                        param: {
+                        params: {
                             mainParam: "background-color",
                         },
                     });
@@ -78,7 +78,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
                     this.applyReplaceBackgroundImage.bind(this)({
                         editingElement: editingElement,
                         loadResult: "",
-                        param: { forceClean: true },
+                        params: { forceClean: true },
                     });
                     this.dispatchTo("on_bg_image_hide_handlers", editingElement);
                 },
@@ -88,9 +88,9 @@ export class BackgroundImageOptionPlugin extends Plugin {
                 apply: this.applyReplaceBackgroundImage.bind(this),
             },
             dynamicColor: {
-                getValue: ({ editingElement, param: { mainParam: colorName } }) =>
+                getValue: ({ editingElement, params: { mainParam: colorName } }) =>
                     getBackgroundImageColor(editingElement, colorName),
-                apply: ({ editingElement, param: { mainParam: colorName }, value }) => {
+                apply: ({ editingElement, params: { mainParam: colorName }, value }) => {
                     value = getValueFromVar(value);
                     const currentSrc = getBgImageURLFromEl(editingElement);
                     const newURL = new URL(currentSrc, window.location.origin);
@@ -148,7 +148,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
     applyReplaceBackgroundImage({
         editingElement,
         loadResult: imageSrc,
-        param: { forceClean = false },
+        params: { forceClean = false },
     }) {
         if (!forceClean && !imageSrc) {
             // Do nothing: no images has been selected on the media dialog

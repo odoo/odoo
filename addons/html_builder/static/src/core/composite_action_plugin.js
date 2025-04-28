@@ -23,7 +23,7 @@ export class CompositeActionPlugin extends Plugin {
             }
             await Promise.all(proms);
         },
-        getPriority: ({ param: { mainParam: actions }, value }) => {
+        getPriority: ({ params: { mainParam: actions }, value }) => {
             const results = [];
             for (const actionDef of actions) {
                 const action = this.dependencies.builderActions.getAction(actionDef.action);
@@ -37,7 +37,7 @@ export class CompositeActionPlugin extends Plugin {
         },
         // We arbitrarily keep the result of the 1st action, as we
         // obviously cannot return more than one value.
-        getValue: ({ editingElement, param: { mainParam: actions } }) => {
+        getValue: ({ editingElement, params: { mainParam: actions } }) => {
             let actionGetValue;
             const actionDef = actions.find((actionDef) => {
                 const action = this.dependencies.builderActions.getAction(actionDef.action);
@@ -54,7 +54,7 @@ export class CompositeActionPlugin extends Plugin {
                 return actionGetValue(actionDescr);
             }
         },
-        isApplied: ({ editingElement, param: { mainParam: actions }, value }) => {
+        isApplied: ({ editingElement, params: { mainParam: actions }, value }) => {
             const results = [];
             for (const actionDef of actions) {
                 const action = this.dependencies.builderActions.getAction(actionDef.action);
@@ -69,7 +69,7 @@ export class CompositeActionPlugin extends Plugin {
             }
             return results.every((result) => result);
         },
-        load: async ({ editingElement, param: { mainParam: actions }, value }) => {
+        load: async ({ editingElement, params: { mainParam: actions }, value }) => {
             const loadActions = [];
             const loadResults = [];
             for (const actionDef of actions) {
@@ -95,7 +95,7 @@ export class CompositeActionPlugin extends Plugin {
         },
         apply: async ({
             editingElement,
-            param: { mainParam: actions },
+            params: { mainParam: actions },
             value,
             loadResult,
             dependencyManager,
@@ -119,7 +119,7 @@ export class CompositeActionPlugin extends Plugin {
         loadOnClean: true,
         clean: ({
             editingElement,
-            param: { mainParam: actions },
+            params: { mainParam: actions },
             value,
             loadResult,
             dependencyManager,
@@ -179,7 +179,7 @@ export class CompositeActionPlugin extends Plugin {
             }
         }
         if (actionParam) {
-            actionDescr.param = convertParamToObject(actionParam);
+            actionDescr.params = convertParamToObject(actionParam);
         }
         if (actionValue || value) {
             actionDescr.value = actionValue || value;

@@ -24,18 +24,18 @@ class MailGroupOptionPlugin extends Plugin {
 
                     this.dependencies.builderActions
                         .getAction("dataAttributeAction")
-                        .apply({ editingElement, param: { mainParam: "id" }, value: id });
+                        .apply({ editingElement, params: { mainParam: "id" }, value: id });
                 },
                 clean: ({ editingElement }) => {
                     this.dependencies.builderActions
                         .getAction("dataAttributeAction")
-                        .clean({ editingElement, param: { mainParam: "id" } });
+                        .clean({ editingElement, params: { mainParam: "id" } });
                 },
                 getValue: ({ editingElement }) => {
                     const value = {};
                     const id = this.dependencies.builderActions
                         .getAction("dataAttributeAction")
-                        .getValue({ editingElement, param: { mainParam: "id" } });
+                        .getValue({ editingElement, params: { mainParam: "id" } });
                     if (!id) {
                         return;
                     }
