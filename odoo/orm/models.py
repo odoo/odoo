@@ -3053,7 +3053,7 @@ class BaseModel(metaclass=MetaModel):
         )
 
         if self.env.user._has_group('base.group_no_one'):
-            if field.groups == NO_ACCESS:
+            if not field.groups or field.groups == NO_ACCESS:
                 allowed_groups_msg = _("always forbidden")
             else:
                 groups_list = [self.env.ref(g) for g in field.groups.split(',')]
