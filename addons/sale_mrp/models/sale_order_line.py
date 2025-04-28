@@ -146,7 +146,7 @@ class SaleOrderLine(models.Model):
             )),
             'outgoing_moves': lambda m: (
                 m.state != 'cancel' and not m.scrapped
-                and m.location_dest_id.usage != 'customer' and m.to_refund
+                and m.location_id.usage == 'customer' and m.to_refund
             ),
         }
 
