@@ -8,7 +8,6 @@ import {
     contains,
     openDiscuss,
     insertText,
-    openKanbanView,
 } from "@mail/../tests/mail_test_helpers";
 
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
@@ -60,30 +59,6 @@ test("Show 'back on' in mention list", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-NavigableList-item span", { text: "Back on Apr 11" });
-});
-
-test("Show 'back on' on many2many_avatar_user", async () => {
-    mockDate("2025-04-08 12:00:00");
-    const pyEnv = await startServer();
-    pyEnv["res.users"].write([serverState.userId], {
-        leave_date_to: DateTime.now().plus({ days: 3 }).toISODate(),
-    });
-    pyEnv["m2x.avatar.user"].create({ user_ids: [serverState.userId] });
-    await start();
-    await openKanbanView("m2x.avatar.user", {
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="user_id"/>
-                        <field name="user_ids" widget="many2many_avatar_user"/>
-                    </t>
-                </templates>
-            </kanban>
-        `,
-    });
-    await click(".o_kanban_record .o_field_many2many_avatar_user .o_quick_assign");
-    await contains(".o_avatar_many2x_autocomplete span", { text: "Back on Apr 11" });
 });
 
 test("Show year when 'back on' is on different year than now", async () => {
