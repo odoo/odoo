@@ -94,5 +94,20 @@
         </record>
         <function model="discuss.channel" name="rating_apply"
             eval="([ref('im_livechat.livechat_channel_session_2')], 5, 'LIVECHAT_2', None, 'Super Job')"/>
+        <record id="livechat_channel_session_2_message_call_notification" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="im_livechat.livechat_channel_session_2"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_2_guest"/>
+            <field name="author_id"/>
+            <field name="body">&lt;div data-oe-type=&#34;call&#34; class=&#34;o_mail_notification&#34;&gt;&lt;/div&gt;</field>
+            <field name="message_type">notification</field>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=6)" name="date"/>
+        </record>
+        <record id="livechat_channel_session_2_call_1" model="discuss.call.history">
+            <field name="channel_id" ref="im_livechat.livechat_channel_session_2"/>
+            <field name="start_dt" eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=8)"/>
+            <field name="end_dt" eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=10)"/>
+            <field name="start_call_message_id" ref="livechat_channel_session_2_message_call_notification"/>
+        </record>
     </data>
 </odoo>

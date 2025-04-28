@@ -86,5 +86,22 @@
         </record>
         <function model="discuss.channel" name="rating_apply"
             eval="([ref('im_livechat.livechat_channel_session_10')], 1, 'LIVECHAT_10', None, 'Not so good')"/>
+        <record id="livechat_channel_session_10_message_call_notification" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="im_livechat.livechat_channel_session_10"/>
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_10_guest"/>
+            <field name="author_id"/>
+            <field name="body">&lt;div data-oe-type=&#34;call&#34; class=&#34;o_mail_notification&#34;&gt;&lt;/div&gt;</field>
+            <field name="message_type">notification</field>
+            <field eval="DateTime.today() + relativedelta(days=-1, seconds=20)" name="date"/>
+        </record>
+        <record id="livechat_channel_session_10_call_1" model="discuss.call.history">
+            <field name="channel_id" ref="im_livechat.livechat_channel_session_10" />
+            <field name="start_dt"
+                eval="DateTime.today() + relativedelta(days=-1, seconds=30)" />
+            <field name="end_dt"
+                eval="DateTime.today() + relativedelta(days=-1, minutes=25)" />
+            <field name="start_call_message_id" ref="livechat_channel_session_10_message_call_notification" />
+        </record>
     </data>
 </odoo>
