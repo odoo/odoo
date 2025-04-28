@@ -72,3 +72,10 @@ export function clickBackBtn() {
         run: "click",
     };
 }
+
+export function checkQRCodeGenerated() {
+    return {
+        content: `Check that the QR code is shown`,
+        trigger: "h1:contains('Scan the QR code to pay')",
+    };
+}
