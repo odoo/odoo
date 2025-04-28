@@ -442,7 +442,8 @@ export class PosStore extends Reactive {
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 if (
                     typeof order.id === "number" &&
-                    Object.keys(order.last_order_preparation_change.lines).length > 0
+                    Object.keys(order.last_order_preparation_change.lines).length > 0 &&
+                    !order.skip_send_kitchen
                 ) {
                     await this.sendOrderInPreparation(order, true);
                 }
@@ -1184,6 +1185,7 @@ export class PosStore extends Reactive {
             }
 
             const serializedOrder = orders.map((order) => order.serialize({ orm: true }));
+            debugger;
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
                 context,
             });

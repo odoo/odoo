@@ -321,6 +321,7 @@ patch(PosStore.prototype, {
                         destinationOrder,
                         adoptingLine
                     );
+                    adoptingLine.skip_change = true;
                 } else {
                     const serialized = orphanLine.serialize();
                     serialized.order_id = destinationOrder.id;
@@ -331,6 +332,7 @@ patch(PosStore.prototype, {
                         false,
                         true
                     );
+                    newOrderLine.skip_change = true;
 
                     const preparationLine =
                         order.last_order_preparation_change.lines[orphanLine.preparationKey];
@@ -346,7 +348,9 @@ patch(PosStore.prototype, {
             }
 
             this.set_order(destinationOrder);
+            order.skip_send_kitchen = true
             await this.deleteOrders([order]);
+            delete order.skip_send_kitchen;
         }
 
         await this.syncAllOrders({ orders: [destinationOrder || order] });
