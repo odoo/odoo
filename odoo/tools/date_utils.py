@@ -1,7 +1,7 @@
 import calendar
 import math
 import typing
-from collections.abc import Iterator, Callable
+from collections.abc import Callable, Iterable, Iterator
 from datetime import date, datetime, time, timedelta, tzinfo
 
 import babel
@@ -23,6 +23,7 @@ __all__ = [
     'get_quarter_number',
     'get_timedelta',
     'localized',
+    'sum_intervals',
     'time_to_float',
     'to_timezone',
 ]
@@ -273,6 +274,14 @@ def date_range(start: D, end: D, step: relativedelta = relativedelta(months=1)) 
     while start <= end:
         yield post_process(start)
         start += step
+
+
+def sum_intervals(intervals: Iterable[tuple[datetime, datetime, ...]]) -> float:
+    """ Sum the intervals duration (unit: hour)"""
+    return sum(
+        (interval[1] - interval[0]).total_seconds() / 3600
+        for interval in intervals
+    )
 
 
 def weeknumber(locale: babel.Locale, date: date) -> tuple[int, int]:

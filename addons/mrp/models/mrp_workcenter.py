@@ -11,7 +11,7 @@ from random import randint
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.date_intervals import Intervals
+from odoo.tools.intervals import Intervals
 from odoo.tools.date_utils import start_of, end_of, localized, to_timezone
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import get_lang

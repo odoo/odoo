@@ -6,7 +6,7 @@ from pytz import timezone
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.tools.date_intervals import Intervals
+from odoo.tools.intervals import Intervals
 from odoo.tools.date_utils import localized, to_timezone
 
 

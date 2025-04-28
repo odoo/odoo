@@ -8,7 +8,7 @@ from functools import reduce
 from odoo import api, models
 
 from odoo.osv import expression
-from odoo.tools.date_intervals import Intervals
+from odoo.tools.intervals import Intervals
 
 
 class ResPartner(models.Model):

@@ -15,7 +15,7 @@ from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools.date_intervals import Intervals
+from odoo.tools.intervals import Intervals
 from odoo.tools.date_utils import float_to_time, localized, to_timezone
 from odoo.tools.float_utils import float_round
 
