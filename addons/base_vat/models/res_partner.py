@@ -285,16 +285,25 @@ class ResPartner(models.Model):
         # Check the vat number
         return stdnum.util.get_cc_module('ro', 'vat').is_valid(vat)
 
-    _check_tin_hu_individual_re = re.compile(r'^8\d{9}$')
-    _check_tin_hu_companies_re = re.compile(r'^\d{8}-?[1-5]-?\d{2}$')
-    _check_tin_hu_european_re = re.compile(r'^\d{8}$')
-
     def check_vat_gr(self, vat):
         """ Allows some custom test VAT number to be valid to allow testing Greece EDI. """
         greece_test_vats = ('047747270', '047747210', '047747220', '117747270', '127747270')
         if vat in greece_test_vats:
             return True
         return stdnum.util.get_cc_module('gr', 'vat').is_valid(vat)
+
+    def check_vat_gt(self, vat):
+        """
+        Allow some custom Guatemala NIT numbers to pass the test to be used for testing the Guatemalan EDI.
+        """
+        guatemalan_test_vats = ('11201220K', '11201350K')
+        if vat in guatemalan_test_vats:
+            return True
+        return stdnum.util.get_cc_module('gt', 'vat').is_valid(vat)
+
+    _check_tin_hu_individual_re = re.compile(r'^8\d{9}$')
+    _check_tin_hu_companies_re = re.compile(r'^\d{8}-?[1-5]-?\d{2}$')
+    _check_tin_hu_european_re = re.compile(r'^\d{8}$')
 
     def check_vat_hu(self, vat):
         """
