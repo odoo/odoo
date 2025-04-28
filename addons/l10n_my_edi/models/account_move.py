@@ -140,6 +140,14 @@ class AccountMove(models.Model):
         super()._compute_show_reset_to_draft_button()
         self.filtered(lambda m: m.l10n_my_edi_state and m.l10n_my_edi_state not in CANCELLED_STATES).show_reset_to_draft_button = False
 
+    @api.depends('l10n_my_invoice_need_edi', 'l10n_my_edi_state')
+    def _compute_highlight_send_button(self):
+        # EXTENDS 'account' to not highlight the "Send" button when the "Send To MyInvois" button is available to have just one call to action.
+        super()._compute_highlight_send_button()
+        for move in self:
+            if move.l10n_my_invoice_need_edi:
+                move.highlight_send_button &= move.l10n_my_edi_state == 'valid'
+
     @api.depends('company_id', 'invoice_line_ids.tax_ids')
     def _compute_l10n_my_edi_display_tax_exemption_reason(self):
         """ Some users will never use tax-exempt taxes, so it's better to only show the field when necessary. """
