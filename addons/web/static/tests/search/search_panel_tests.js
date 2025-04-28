@@ -3505,4 +3505,29 @@ QUnit.module("Search", (hooks) => {
             );
         }
     );
+
+    QUnit.test("search panel with sample data", async (assert) => {
+        serverData.models.partner.records = [];
+
+        serverData.views["partner,false,kanban"] = /* xml */ `
+            <kanban sample="1">
+                <templates>
+                    <div t-name="kanban-box" class="oe_kanban_global_click">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`;
+        serverData.views["partner,false,list"] = /* xml */ `
+            <tree sample="1">
+                <field name="foo"/>
+            </tree>`;
+
+        const webclient = await createWebClient({ serverData });
+        await doAction(webclient, 1);
+
+        assert.deepEqual(getComputedStyle(getFilter(target, 0, "input")).pointerEvents, 'auto');
+
+        await switchView(target, "list");
+        assert.deepEqual(getComputedStyle(getFilter(target, 0, "input")).pointerEvents, 'auto');
+    });
 });
