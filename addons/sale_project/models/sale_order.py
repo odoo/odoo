@@ -201,7 +201,7 @@ class SaleOrder(models.Model):
         return action
 
     def _tasks_ids_domain(self):
-        return ['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids), ('has_template_ancestor', '=', False)]
+        return ['&', ('is_template', '=', False), ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids), ('has_template_ancestor', '=', False)]
 
     def action_create_project(self):
         self.ensure_one()

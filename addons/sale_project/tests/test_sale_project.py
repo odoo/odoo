@@ -44,6 +44,11 @@ class TestSaleProject(TestSaleProjectCommon):
             'sequence': 1,
             'project_ids': [(4, cls.project_template.id)]
         })
+        cls.task_template = cls.env['project.task'].create({
+            'name': 'test task template',
+            'project_id': cls.project_template.id,
+            'is_template': True,
+        })
 
         # Create service products
         uom_hour = cls.env.ref('uom.product_uom_hour')
@@ -635,6 +640,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'price_unit': product_B.list_price,
             'order_id': sale_order.id,
         })
+        sale_order._action_confirm()
 
         def get_project_ids_from_action_domain(action):
             for el in action['domain']:
@@ -1522,3 +1528,110 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_order.action_confirm()
         self.assertEqual(sale_order.project_ids[0].company_id, self.project_template.company_id)
         self.assertEqual(sale_order.project_ids[0].account_id.company_id, partner.company_id)
+
+    def test_template_hours_applied_and_fallback_hours_used_for_additional_tasks(self):
+        """
+        Steps:
+        1. Set task template allocated_hours = 20.
+        2. Create 2 products: 2 linked to template.
+        3. Confirm sale order.
+        4. Expect:
+           - 1 task created.
+           - Template-based task gets 20 hrs.
+        """
+        self.task_template.allocated_hours = 20
+        product_1, product_2 = self.env['product.product'].create([{
+            'name': 'Test product 1',
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+            'task_template_id': self.task_template.id,
+            'service_policy': 'ordered_prepaid',
+        }, {
+            'name': 'Test product 2',
+            'type': 'service',
+            'service_tracking': 'task_in_project',
+            'project_template_id': self.project_global.id,
+            'task_template_id': self.task_template.id,
+            'service_policy': 'ordered_prepaid',
+        }])
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+        })
+        sol1, sol2 = self.env['sale.order.line'].create([{
+            'order_id': order.id,
+            'product_id': product_1.id,
+            'product_uom_qty': 2,
+        }, {
+            'order_id': order.id,
+            'product_id': product_2.id,
+            'product_uom_qty': 10,
+        }])
+
+        order.action_confirm()
+        self.assertEqual(order.tasks_count, 1, "1 task should be created")
+        self.assertEqual((sol1 + sol2).task_id.allocated_hours, 20, "Template task should get 20 hrs")
+
+    def test_allocated_hours_computed_from_quantity_when_template_hours_missing(self):
+        """
+        Steps:
+        1. Create a template without allocated_hours.
+        2. Create product using the template with quantity 2.
+        3. Confirm sale order.
+        4. Expect:
+           - 1 task created.
+           - Task gets 2 hrs based on order quantity.
+        """
+        product = self.env['product.product'].create([{
+            'name': 'Test product',
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+            'task_template_id': self.task_template.id,
+            'service_policy': 'ordered_prepaid',
+        }])
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                    'product_uom_qty': 2,
+                }),
+            ],
+        })
+
+        order.action_confirm()
+        self.assertEqual(order.tasks_count, 1, "1 task should be created")
+        self.assertEqual(order.tasks_ids.allocated_hours, 2, "Task should get 2 hrs from qty")
+
+    def test_zero_hours_assigned_when_service_policy_is_manual(self):
+        """
+        Steps:
+        1. Create product with delivered_manual service policy.
+        2. Link it to task template.
+        3. Confirm sale order.
+        4. Expect:
+           - 1 task created.
+           - Task has 0 allocated hours.
+        """
+        product = self.env['product.product'].create([{
+            'name': 'Test product',
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+            'task_template_id': self.task_template.id,
+            'service_policy': 'delivered_manual',
+        }])
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                    'product_uom_qty': 2,
+                }),
+            ],
+        })
+
+        order.action_confirm()
+        self.assertEqual(order.tasks_count, 1, "1 task should be created")
+        self.assertEqual(order.tasks_ids.allocated_hours, 0, "Task should get 0 hrs (manual policy)")
