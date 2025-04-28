@@ -111,7 +111,10 @@
             <field name="view_mode">pivot,graph</field>
             <field name="context">{"search_default_filter_date_last_month":1}</field>
             <field name="search_view_id" ref="im_livechat_report_channel_view_search"/>
-            <field name="help">Livechat Support Statistics allows you to easily check and analyse your company livechat session performance. Extract information about the missed sessions, the audience, the duration of a session, etc.</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">No data yet!</p>
+                <p>Track and improve livechat performance with insights on session activity, response time, customer ratings, and call interactions.</p>
+            </field>
         </record>
 
         <record id="im_livechat_report_channel_action" model="ir.actions.act_window">
