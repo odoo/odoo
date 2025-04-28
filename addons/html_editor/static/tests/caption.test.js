@@ -8,8 +8,9 @@ import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embeddi
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
-import { insertText } from "./_helpers/user_actions";
+import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
 import { cleanHints } from "./_helpers/dispatch";
+import { getContent } from "./_helpers/selection";
 
 class CaptionPluginWithPredictableId extends CaptionPlugin {
     getCaptionId() {
@@ -482,6 +483,76 @@ test("remove an image with a caption", async () => {
             `<p><br></p>
             <h1>[]Heading</h1>`
         ),
+    });
+});
+
+// For the following two tests.
+const getDeleteImageTestData = () => {
+    const captionId = 1;
+    const caption = "Hello";
+    return {
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<p><img class="img-fluid test-image" data-caption="${caption}" src="${base64Img}"></p>
+            <h1>[]Heading</h1>`
+        ),
+        prepareImage: async (editor) => {
+            await toggleCaption();
+            await waitFor("figcaption > input");
+            // Check that we indeed have a proper figure structure.
+            expect(getContent(editor.editable).replace("[]", "")).toBe(
+                unformat(
+                    `<p><br></p>
+                            <figure contenteditable="false">
+                            <img class="img-fluid test-image o_editable_media" data-caption="${caption}" src="${base64Img}" data-caption-id="${captionId}">
+                            <figcaption ${getFigcaptionAttributes(
+                                captionId,
+                                caption,
+                                true
+                            )}><input ${CAPTION_INPUT_ATTRIBUTES}></figcaption>
+                        </figure>
+                        <h1>Heading</h1>`
+                )
+            );
+            const input = queryOne("input");
+            expect(editor.document.activeElement).toBe(input);
+            expect(input.value).toBe(caption);
+            // Deselect and reselect the image.
+            await click("h1");
+            await click("img");
+        },
+        contentAfter: unformat(
+            `<p><br></p>
+            <h1>[]Heading</h1>`
+        ),
+    };
+};
+
+test.tags("focus required");
+test("remove an image with a caption, using the delete key", async () => {
+    const { config, contentBefore, prepareImage, contentAfter } = getDeleteImageTestData();
+    await testEditor({
+        config,
+        contentBefore,
+        stepFunction: async (editor) => {
+            await prepareImage(editor);
+            deleteForward(editor);
+        },
+        contentAfter,
+    });
+});
+
+test.tags("focus required");
+test("remove an image with a caption, using the backspace key", async () => {
+    const { config, contentBefore, prepareImage, contentAfter } = getDeleteImageTestData();
+    await testEditor({
+        config,
+        contentBefore,
+        stepFunction: async (editor) => {
+            await prepareImage(editor);
+            deleteBackward(editor);
+        },
+        contentAfter,
     });
 });
 
