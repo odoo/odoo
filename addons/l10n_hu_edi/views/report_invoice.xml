@@ -49,7 +49,7 @@
             <div t-if="o.partner_id.l10n_hu_group_vat">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_group_vat"/></div>
             <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
                 <div/>
-                <strong>Shipping Address:</strong>
+                <strong class="d-block mt-3">Shipping Address:</strong>
                 <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
             </div>
         </xpath>
