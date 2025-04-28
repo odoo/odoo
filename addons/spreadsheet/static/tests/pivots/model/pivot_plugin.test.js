@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import {
     defineSpreadsheetActions,
     defineSpreadsheetModels,
@@ -1238,6 +1238,25 @@ test("PIVOT week are correctly formatted at evaluation", async function () {
     expect(getEvaluatedCell(model, "B3").format).toBe("#,##0.00");
     expect(getEvaluatedCell(model, "B3").value).toBe(10);
     expect(getEvaluatedCell(model, "B3").formattedValue).toBe("10.00");
+});
+
+test("PIVOT week invalid values", async function () {
+    mockDate("2017-10-08");
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="date" interval="week" type="col"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+    });
+    setCellContent(model, "A1", '=PIVOT.VALUE(1,"probability:avg", "date:week", 456)');
+    setCellContent(model, "A2", '=PIVOT.VALUE(1,"probability:avg", "date:week", "hello/there")');
+    expect(getEvaluatedCell(model, "A1").message).toBe(
+        'Week value must be a string in the format "52/2017", but received 456 instead.'
+    );
+    expect(getEvaluatedCell(model, "A2").message).toBe(
+        'Week value must be a string in the format "52/2017", but received hello/there instead.'
+    );
 });
 
 test("PIVOT month_number are correctly formatted at evaluation", async function () {

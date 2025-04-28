@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { mockDate } from "@odoo/hoot-mock";
 
 import { getFirstListFunction, getNumberOfListFormulas } from "@spreadsheet/list/list_helpers";
 import { constants, tokenize, helpers } from "@odoo/o-spreadsheet";
@@ -13,8 +12,13 @@ const {
 } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
-function stringArg(value) {
-    return { type: "STRING", value: `${value}` };
+function stringArg(value, tokenIndex) {
+    return {
+        type: "STRING",
+        value: `${value}`,
+        tokenStartIndex: tokenIndex,
+        tokenEndIndex: tokenIndex,
+    };
 }
 
 beforeEach(() => {
@@ -32,14 +36,14 @@ describe("pivot_helpers", () => {
         ({ functionName, args } = getFirstPivotFunction(tokens));
         expect(functionName).toBe("PIVOT.VALUE");
         expect(args.length).toBe(2);
-        expect(args[0]).toEqual(stringArg("1"));
-        expect(args[1]).toEqual(stringArg("test"));
+        expect(args[0]).toEqual(stringArg("1", 3));
+        expect(args[1]).toEqual(stringArg("test", 6));
         ({ functionName, args } = getFirstListFunction(tokens));
         expect(functionName).toBe("ODOO.LIST");
         expect(args.length).toBe(3);
-        expect(args[0]).toEqual(stringArg("2"));
-        expect(args[1]).toEqual(stringArg("hello"));
-        expect(args[2]).toEqual(stringArg("bla"));
+        expect(args[0]).toEqual(stringArg("2", 13));
+        expect(args[1]).toEqual(stringArg("hello", 16));
+        expect(args[2]).toEqual(stringArg("bla", 19));
     });
 
     test("Extraction with two PIVOT formulas", async function () {
@@ -48,8 +52,8 @@ describe("pivot_helpers", () => {
         const { functionName, args } = getFirstPivotFunction(tokens);
         expect(functionName).toBe("PIVOT.VALUE");
         expect(args.length).toBe(2);
-        expect(args[0]).toEqual(stringArg("1"));
-        expect(args[1]).toEqual(stringArg("test"));
+        expect(args[0]).toEqual(stringArg("1", 3));
+        expect(args[1]).toEqual(stringArg("test", 6));
         expect(getFirstListFunction(tokens)).toBe(undefined);
     });
 
@@ -118,14 +122,6 @@ describe("toNormalizedPivotValue", () => {
             expect(toNormalizedPivotValue(dimension, "01/2020")).toBe("1/2020");
             expect(toNormalizedPivotValue(dimension, "false")).toBe(false);
             expect(toNormalizedPivotValue(dimension, false)).toBe(false);
-
-            mockDate("2017-10-08");
-            expect(() => toNormalizedPivotValue(dimension, 456)).toThrow(
-                'Week value must be a string in the format "52/2017", but received 456 instead.'
-            );
-            expect(() => toNormalizedPivotValue(dimension, "hello/there")).toThrow(
-                'Week value must be a string in the format "52/2017", but received hello/there instead.'
-            );
 
             dimension.granularity = "month";
             expect(toNormalizedPivotValue(dimension, "11/2020")).toBe("11/2020");
