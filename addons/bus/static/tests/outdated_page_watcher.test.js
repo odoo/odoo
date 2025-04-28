@@ -33,3 +33,24 @@ test("disconnect during vacuum should ask for reload", async () => {
     await contains(".o_notification button:contains(Refresh)").click();
     await waitForSteps(["reload"]);
 });
+
+test("reconnect after going offline after bus gc should ask for reload", async () => {
+    addBusServiceListeners(
+        ["connect", () => asyncStep("connect")],
+        ["disconnect", () => asyncStep("disconnect")]
+    );
+    onRpc("/bus/has_missed_notifications", () => true);
+    await mountWithCleanup(WebClient);
+    startBusService();
+    await runAllTimers();
+    await waitForSteps(["connect"]);
+    browser.dispatchEvent(new Event("offline"));
+    await waitForSteps(["disconnect"]);
+    browser.dispatchEvent(new Event("online"));
+    await runAllTimers();
+    await waitForSteps(["connect"]);
+    await waitFor(".o_notification");
+    expect(".o_notification_content:first").toHaveText(
+        "Save your work and refresh to get the latest updates and avoid potential issues."
+    );
+});
