@@ -274,6 +274,8 @@
             <form>
                 <group>
                     <field name="model_id" placeholder="e.g. Model S"/>
+                    <field name="license_plate" placeholder="e.g. PAE 326"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 </group>
             </form>
         </field>
