@@ -1072,18 +1072,17 @@ class BaseAutomation(models.Model):
             now = self.env.cr.now()
             records = automation._search_time_based_automation_records(until=now)
             # run the automation on the records
-            try:
-                for record in records:
+            for record in records:
+                try:
                     automation._process(record)
-                self.env.flush_all()
-            except Exception as e:
-                if not auto_commit:
-                    raise
-                self.env.cr.rollback()
-                _logger.exception("Error in time-based automation rule `%s`.", automation.name)
-                final_exception = e
-                continue
-
+                except Exception as e:
+                    if not auto_commit:
+                        raise
+                    self.env.cr.rollback()
+                    _logger.exception("Error in time-based automation rule `%s`.", automation.name)
+                    final_exception = e
+                    continue
+            self.env.flush_all()
             automation.write({'last_run': now})
             if auto_commit:
                 # auto-commit for batch processing
