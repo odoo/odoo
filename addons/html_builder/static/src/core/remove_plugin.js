@@ -34,7 +34,12 @@ export function isRemovable(el) {
     return !unremovableNodePredicates.some((p) => p(el));
 }
 
-const layoutElementsSelector = [".o_we_shape", ".o_we_bg_filter"].join(",");
+const layoutElementsSelector = [
+    ".o_we_shape",
+    ".o_we_bg_filter",
+    ".s_parallax_bg",
+    ".o_bg_video_container",
+].join(",");
 
 export class RemovePlugin extends Plugin {
     static id = "remove";

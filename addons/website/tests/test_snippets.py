@@ -22,7 +22,6 @@ class TestSnippets(HttpCase):
             return self.make_fetch_proxy_response('<body>Dummy page</body>')
         return super().fetch_proxy(url)
 
-    @unittest.skip
     def test_01_empty_parents_autoremove(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_empty_parent_autoremove', login='admin')
 
