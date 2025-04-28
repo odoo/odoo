@@ -1983,7 +1983,7 @@ class MailThread(models.AbstractModel):
         if self and len(self) != len(records_emails):
             raise ValueError('Invoke with either self maching records_emails, either on a void recordset.')
         # when invoked through MailThread, ids may come from records_emails (not recommended tool usage)
-        res_ids = self.ids or [record.id for record in records_emails]
+        res_ids = self._ids or [record.id for record in records_emails]
         found_results = dict.fromkeys(res_ids, self.env['res.partner'])
         # email_key is email_normalized, unless email is wrong and cannot be normalized
         # in which case the raw input is used instead, to distinguish various wrong
