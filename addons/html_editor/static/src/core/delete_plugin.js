@@ -311,7 +311,7 @@ export class DeletePlugin extends Plugin {
         <b>[abc]</b> -> <b>[]ZWS</b>
         <b>[abc</b> <b>d]ef</b> -> <b>[]ZWS</b> <b>ef</b>
         <b>[abc</b> <b>def]</b> -> <b>[]ZWS</b> <b>ZWS</b>
-        
+
     Block:
         Shrunk blocks get filled.
         <p>[abc]</p> -> <p>[]<br></p>
