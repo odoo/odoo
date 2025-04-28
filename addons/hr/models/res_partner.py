@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import RedirectWarning, UserError
 
 
 class ResPartner(models.Model):
@@ -62,3 +63,40 @@ class ResPartner(models.Model):
         employees = {employee for [employee] in employee_data}
         for partner in self:
             partner.employee = partner in employees
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_contact_rel_employee(self):
+        partners = self.filtered(lambda partner: partner.employee)
+        if len(self) == 1 and len(partners) == 1 and self.id == partners[0].id:
+            raise UserError(_('You cannot delete contact that are linked to an employee, please archive them instead.'))
+        if partners:
+            error_msg = _(
+                'You cannot delete contact(s) linked to employee(s).\n'
+                'Please archive them instead.\n\n'
+                'Affected contact(s): %(names)s', names=", ".join([u.name for u in partners]),
+            )
+            action_error = partners._action_show()
+            raise RedirectWarning(error_msg, action_error, _('Go to contact'))
+
+    def _action_show(self):
+        """If self is a singleton, directly access the form view. If it is a recordset, open a list view"""
+        view_id = self.env.ref('base.view_partner_form').id
+        action = {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.partner',
+            'context': {'create': False},
+        }
+        if len(self) > 1:
+            action.update({
+                'name': _('Contacts'),
+                'view_mode': 'list,form',
+                'views': [[None, 'list'], [view_id, 'form']],
+                'domain': [('id', 'in', self.ids)],
+            })
+        else:
+            action.update({
+                'view_mode': 'form',
+                'views': [[view_id, 'form']],
+                'res_id': self.id,
+            })
+        return action
