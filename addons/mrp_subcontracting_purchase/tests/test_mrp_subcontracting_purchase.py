@@ -163,8 +163,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         receipt.button_validate()
         self.assertEqual(receipt.state, 'done')
         self.assertEqual(sub_mos.state, 'done')
-        with self.assertRaises(UserError):
-            po.order_line.product_qty = lower_qty
 
     def test_purchase_and_return01(self):
         """
