@@ -34,6 +34,8 @@ patch(Message.prototype, {
                     direction: "none",
                 },
             };
+        } else {
+            this.message.composer = null;
         }
     },
 
