@@ -45,6 +45,7 @@ export class CalendarController extends Component {
             resModel: this.props.resModel,
             domain: this.props.domain,
             fields: this.props.fields,
+            date: this.props.state ? this.props.state.date : undefined,
         });
         this.displayName = this.env.config.getDisplayName();
 
