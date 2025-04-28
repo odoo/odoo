@@ -3,7 +3,7 @@ import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
 import { reactive } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { FormOption } from "./form_option";
+import { FormOptionRedraw } from "./form_option_redraw";
 import { FormFieldOptionRedraw } from "./form_field_option_redraw";
 import { FormOptionAddFieldButton } from "./form_option_add_field_button";
 import {
@@ -19,6 +19,7 @@ import {
     getFieldType,
     getLabelPosition,
     getMark,
+    getModelName,
     getMultipleInputs,
     getNewRecordId,
     getQuotesEncodedName,
@@ -84,7 +85,7 @@ export class FormOptionPlugin extends Plugin {
         },
         builder_options: [
             {
-                OptionComponent: FormOption,
+                OptionComponent: FormOptionRedraw,
                 props: {
                     fetchModels: this.fetchModels.bind(this),
                     prepareFormModel: this.prepareFormModel.bind(this),
@@ -152,9 +153,9 @@ export class FormOptionPlugin extends Plugin {
                     if (modelCantChange) {
                         return;
                     }
-                    const activeForm = this.modelsCache
-                        .get()
-                        .find((model) => model.id === parseInt(modelId));
+                    const activeForm = this.getModelsCache(el).find(
+                        (model) => model.id === parseInt(modelId)
+                    );
                     return { activeForm, formInfo: await this.prepareFormModel(el, activeForm) };
                 },
                 apply: ({ editingElement: el, value: modelId, loadResult }) => {
@@ -169,8 +170,8 @@ export class FormOptionPlugin extends Plugin {
                     );
                 },
                 isApplied: ({ editingElement: el, value: modelId }) => {
-                    const models = this.modelsCache.get();
-                    const targetModelName = el.dataset.model_name || "mail.mail";
+                    const models = this.getModelsCache(el);
+                    const targetModelName = getModelName(el);
                     const activeForm = models.find((m) => m.model === targetModelName);
                     return parseInt(modelId) === activeForm.id;
                 },
@@ -541,7 +542,11 @@ export class FormOptionPlugin extends Plugin {
         this.fieldRecordsCache.invalidate();
         this.authorizedFieldsCache.invalidate();
     }
-    async fetchModels() {
+    getModelsCache(formEl) {
+        // Through a method so that it can be overridden.
+        return this.modelsCache.get();
+    }
+    async fetchModels(formEl) {
         return this.modelsCache.preload();
     }
     async _fetchModels() {
@@ -666,7 +671,7 @@ export class FormOptionPlugin extends Plugin {
             for (const fieldEl of el.querySelectorAll(".s_website_form_field")) {
                 fieldEl.remove();
             }
-            activeForm = this.modelsCache.get().find((model) => model.id === modelId);
+            activeForm = this.getModelsCache(el).find((model) => model.id === modelId);
         }
         // Success page
         if (!el.dataset.successMode) {

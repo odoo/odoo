@@ -18,7 +18,8 @@ export class FormModelRequiredFieldAlert extends Component {
     }
     async handleProps(props) {
         // Get list of website_form compatible models, needed for alert message.
-        const models = await props.fetchModels();
+        const el = this.env.getEditingElement();
+        const models = await props.fetchModels(el);
         const model = models.find((model) => model.model === props.modelName);
         const actionName = model?.website_form_label || props.modelName;
         this.state.message = _t("The field “%(field)s” is mandatory for the action “%(action)s”.", {

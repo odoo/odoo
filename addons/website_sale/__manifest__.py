@@ -156,6 +156,7 @@
         ],
         'html_builder.assets': [
             'website_sale/static/src/plugins/**/*',
+            'website_sale/static/src/js/website_sale_form_editor.js',
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',

@@ -483,6 +483,10 @@ export function getDomain(formEl, name, type, relation) {
     return field && field.domain;
 }
 
+export function getModelName(formEl) {
+    return formEl.dataset.model_name || "mail.mail";
+}
+
 export function getListItems(fieldEl) {
     const selectEl = getSelect(fieldEl);
     const multipleInputsEl = getMultipleInputs(fieldEl);
