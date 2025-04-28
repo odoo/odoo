@@ -23,7 +23,12 @@ class ResCompany(models.Model):
     l10n_ro_edi_refresh_expiry_date = fields.Date(string='Refresh Token Expiry Date')
     l10n_ro_edi_callback_url = fields.Char(compute='_compute_l10n_ro_edi_callback_url')
     l10n_ro_edi_test_env = fields.Boolean(string='Use Test Environment', default=True)
-    l10n_ro_edi_anaf_imported_inv_journal = fields.Many2one(comodel_name='account.journal', string="Select journal for imported bills")
+    l10n_ro_edi_anaf_imported_inv_journal = fields.Many2one(
+        comodel_name='account.journal',
+        string="Select journal for SPV imported bills",
+        domain="[('type', '=', 'purchase')]",
+        default=lambda self: self.env['account.journal'].search([('type', '=', 'purchase')], limit=1),
+    )
 
     @api.depends('country_code')
     def _compute_l10n_ro_edi_callback_url(self):
@@ -144,21 +149,11 @@ class ResCompany(models.Model):
             ('l10n_ro_edi_client_id', '!=', False),
             ('l10n_ro_edi_client_secret', '!=', False),
         ])
-        session = requests.Session()
         for company in ro_companies:
-            error_cause = ''
             try:
-                company.env['l10n_ro_edi.document']._request_ciusro_synchronize_invoices(
-                    company=company,
-                    session=session,
-                    nb_days=1,
-                )
-            except ValidationError as e:
-                error_cause = e
-
-            if error_cause:
-                error_header = _("", company_id=company.id)
+                self.env['account.move'].with_company(company)._l10n_ro_edi_fetch_invoices()
+            except UserError as e:
                 self._l10n_ro_edi_log_message(
-                    message=f'{error_header}\n{error_cause}',
+                    message=f'{company.id}\n{e}',
                     func='_cron_l10n_ro_edi_synchronize_invoices',
                 )

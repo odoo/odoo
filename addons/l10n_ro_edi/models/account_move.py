@@ -1,5 +1,14 @@
 import requests
-from odoo import models, fields, _, api, modules
+
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
+
+from .utils import (
+    _request_ciusro_download_answer,
+    _request_ciusro_fetch_status,
+    _request_ciusro_send_invoice,
+    _request_ciusro_synchronize_invoices,
+)
 
 
 class AccountMove(models.Model):
@@ -21,7 +30,6 @@ class AccountMove(models.Model):
                 - Validated: Sent & validated by the SPV
                 - Error: Sending error or validation error from the SPV""",
     )
-    l10n_ro_edi_attachment_id = fields.Many2one(comodel_name='ir.attachment')
     l10n_ro_edi_index = fields.Char(string='E-Factura Index', readonly=True)
 
     ################################################################################
@@ -50,90 +58,6 @@ class AccountMove(models.Model):
     ################################################################################
     # Romanian Document Shorthands & Helpers
     ################################################################################
-
-    def _l10n_ro_edi_create_attachment_values(self, raw, res_model=None, res_id=None, name=None):
-        """ Shorthand for creating the attachment_id values on the invoice's document """
-        self.ensure_one()
-        res_model = res_model or self._name
-        res_id = res_id or self.id
-        name = name or self.name
-        return {
-            'name': f"ciusro_signature_{name.replace('/', '_')}.xml",
-            'res_model': res_model,
-            'res_id': res_id,
-            'raw': raw,
-            'type': 'binary',
-            'mimetype': 'application/xml',
-        }
-
-    def _l10n_ro_edi_create_document_invoice_sent(self, values: dict):
-        """ Shorthand for creating a ``l10n_ro_edi.document`` of state ``invoice_sent``.
-
-        :param values: dictionary of {'key_loading': <str>, 'attachment_raw': <bytes>}
-        :return: ``l10n_ro_edi.document`` object """
-        self.ensure_one()
-        document = self.env['l10n_ro_edi.document'].sudo().create({
-            'invoice_id': self.id,
-            'state': 'invoice_sent',
-            'key_loading': values['key_loading'],
-        })
-        attachment_values = self._l10n_ro_edi_create_attachment_values(
-            raw=values['attachment_raw'],
-            res_model=document._name,
-            res_id=document.id,
-        )
-        document.attachment_id = self.env['ir.attachment'].sudo().create(attachment_values)
-        return document
-
-    def _l10n_ro_edi_create_document_invoice_sending_failed(self, values: dict):
-        """ Shorthand for creating a ``l10n_ro_edi.document`` of state ``invoice_sending_failed``.
-        The ``attachment_raw`` and ``key_loading`` dictionary values is optional in case the error is from pre_send.
-
-        :param values: dictionary of {
-            'error': <str>,
-            'key_loading': <optional str>,
-            'attachment_raw': <optional str>,
-        }
-        :return: ``l10n_ro_edi.document`` object """
-        self.ensure_one()
-        document = self.env['l10n_ro_edi.document'].sudo().create({
-            'invoice_id': self.id,
-            'state': 'invoice_sending_failed',
-            'message': values['error'],
-        })
-        if values.get('key_loading'):
-            document.key_loading = values['key_loading']
-        if values.get('attachment_raw'):
-            attachment_values = self._l10n_ro_edi_create_attachment_values(
-                raw=values['attachment_raw'],
-                res_model=document._name,
-                res_id=document.id,
-            )
-            document.attachment_id = self.env['ir.attachment'].sudo().create(attachment_values)
-        return document
-
-    def _l10n_ro_edi_create_document_invoice_validated(self, values: dict):
-        """ Shorthand for creating a ``l10n_ro_edi.document`` of state `invoice_validated`.
-        The created attachment are saved on both the document and on the invoice.
-
-        :param values: dictionary containing 'key_loading', 'key_signature', 'key_certificate', and 'attachment_raw'
-        :return: ``l10n_ro_edi.document`` object """
-        self.ensure_one()
-        document = self.env['l10n_ro_edi.document'].sudo().create({
-            'invoice_id': self.id,
-            'state': 'invoice_validated',
-            'key_loading': values['key_loading'],
-            'key_signature': values['key_signature'],
-            'key_certificate': values['key_certificate'],
-        })
-        attachment = self.env['ir.attachment'].sudo().create(self._l10n_ro_edi_create_attachment_values(values['attachment_raw']))
-        document.attachment_id = self.l10n_ro_edi_attachment_id = attachment
-        return document
-
-    def _l10n_ro_edi_get_attachment_file_name(self):
-        """ Returns the signature file attachment's name from ``l10n_ro_edi.document``/``invoice_validated`` """
-        self.ensure_one()
-        return f"ciusro_{self.name.replace('/', '_')}.xml"
 
     def _l10n_ro_edi_get_failed_documents(self):
         """ Shorthand for getting all l10n_ro_edi.document in invoice_sending_failed state """
@@ -180,32 +104,31 @@ class AccountMove(models.Model):
         self.ensure_one()
         if errors := self._l10n_ro_edi_get_pre_send_errors(xml_data, True):
             self._l10n_ro_edi_get_failed_documents().unlink()
-            self._l10n_ro_edi_create_document_invoice_sending_failed({'error': '\n'.join(errors)})
+            self.env['l10n_ro_edi.document']._l10n_ro_edi_create_document_invoice_sending_failed(self, '\n'.join(errors))
             return
 
         self.env['res.company']._with_locked_records(self)
-        result = self.env['l10n_ro_edi.document']._request_ciusro_send_invoice(
+        result = _request_ciusro_send_invoice(
             company=self.company_id,
             xml_data=xml_data,
             move_type=self.move_type,
             is_b2b=self.partner_id.commercial_partner_id.is_company,
         )
-        result['attachment_raw'] = xml_data
-        if 'error' in result:  # result == {'error': <str>, 'attachment_raw': <bytes>}
+        if 'error' in result:
             self._l10n_ro_edi_get_failed_documents().unlink()
-            self._l10n_ro_edi_create_document_invoice_sending_failed(result)
+            self.env['l10n_ro_edi.document']._l10n_ro_edi_create_document_invoice_sending_failed(self, result['error'])
             self.message_post(body=_("Error when trying to send the E-Factura to the SPV: %s",
                                      result['error']))
-        else:  # result == {'key_loading': <str>, 'attachment_raw': <bytes>}; initial sending successful
+        else:
             self._l10n_ro_edi_get_sent_and_failed_documents().unlink()
-            self._l10n_ro_edi_create_document_invoice_sent(result)
             self.l10n_ro_edi_index = result['key_loading']
+            self.env['l10n_ro_edi.document']._l10n_ro_edi_create_document_invoice_sent(self, xml_data)
             self.message_post(body=_(
                 "E-Factura has been sent and is now being validated by the SPV with index key: %s",
-                result['key_loading'],
+                self.l10n_ro_edi_index,
             ))
 
-    def _l10n_ro_edi_fetch_invoice_sent_documents(self, invoices_to_fetch=[]):
+    def _l10n_ro_edi_fetch_invoice_sent_documents(self):
         """
         This method loops over all invoice with sending document in `self`. For each of them,
         it pre-checks error and make a fetch request for the invoice. Based on the answer, it will then:
@@ -219,62 +142,61 @@ class AccountMove(models.Model):
         """
         session = requests.Session()
         to_delete_documents = self.env['l10n_ro_edi.document']
-        invoices_to_fetch if invoices_to_fetch else self.filtered(lambda inv: inv.l10n_ro_edi_state == 'invoice_sent')
+        invoices_to_fetch = self.filtered(lambda inv: inv.l10n_ro_edi_state == 'invoice_sent')
 
         for invoice in invoices_to_fetch:
             if errors := invoice._l10n_ro_edi_get_pre_send_errors():
                 to_delete_documents |= invoice._l10n_ro_edi_get_failed_documents()
-                invoice._l10n_ro_edi_create_document_invoice_sending_failed({'error': '\n'.join(errors)})
+                self.env['l10n_ro_edi.document']._l10n_ro_edi_create_document_invoice_sending_failed(invoice, '\n'.join(errors))
                 continue
 
-            active_sending_document = invoice.l10n_ro_edi_document_ids.filtered(lambda d: d.state == 'invoice_sent')[0]
-            previous_raw = active_sending_document.attachment_id.sudo().raw
-            self.env['res.company']._with_locked_records(invoices_to_fetch)
-            result = self.env['l10n_ro_edi.document']._request_ciusro_fetch_status(
+            self.env['res.company']._with_locked_records(invoice)
+            result = _request_ciusro_fetch_status(
                 company=invoice.company_id,
                 key_loading=invoice.l10n_ro_edi_index,
                 session=session,
             )
-
             if result == {}:  # SPV is still processing the XML (no answer yet); do nothing
                 continue
-            elif 'error' in result:  # Fetch error / SPV finished validating the XML and sends back a disapproval answer
+
+            if 'error' in result:  # Fetch error / SPV finished validating the XML and sends back a disapproval answer
                 to_delete_documents |= invoice._l10n_ro_edi_get_sent_and_failed_documents()
-                result['key_loading'] = invoice.l10n_ro_edi_index
-                result['attachment_raw'] = previous_raw
-                invoice._l10n_ro_edi_create_document_invoice_sending_failed(result)
+                self.env['l10n_ro_edi.document']._l10n_ro_edi_create_document_invoice_sending_failed(invoice, result['error'])
                 invoice.message_post(body=_("Error when trying to fetch the E-Factura from the SPV: %s",
                                             result['error']))
-            else:  # result == {'key_download': <str>}; SPV finished validation and sends us an approval answer
-                # use the obtained key_download to immediately make a download request and process them
-                final_result = self.env['l10n_ro_edi.document']._request_ciusro_download_answer(
+            else:
+                # result == {'key_download': <str>, 'state_status': ['nok', 'ok']};
+                # SPV finished validation and sends us an approval answer use the obtained key_download
+                # to immediately make a download request and process them
+                to_delete_documents |= invoice._l10n_ro_edi_get_sent_and_failed_documents()
+                download_data = _request_ciusro_download_answer(
                     company=invoice.company_id,
                     key_download=result['key_download'],
                     session=session,
-                    file_to_dl='error' if result['state_status'] == 'nok' else 'signature',
                 )
-                to_delete_documents |= invoice._l10n_ro_edi_get_sent_and_failed_documents()
-                final_result['key_loading'] = invoice.l10n_ro_edi_index
-                if final_result.get('error'):
-                    final_error_message = final_result['error'].replace('\t', '')
-                    final_result.update({
-                        'attachment_raw': previous_raw,
-                        'error': final_error_message,
-                    })
-                    invoice._l10n_ro_edi_create_document_invoice_sending_failed(final_result)
+                if result['state_status'] == 'nok' or download_data['error']:
+                    error_msg = download_data['error'].replace('\t', '')
+                    self.env['l10n_ro_edi.document']._l10n_ro_edi_create_document_invoice_sending_failed(invoice, error_msg)
                     invoice.message_post(body=_("Error when trying to download the E-Factura answer from the SPV: %s",
-                                                final_error_message))
+                                                error_msg))
                 else:
-                    invoice._l10n_ro_edi_create_document_invoice_validated(final_result)
+                    self.env['l10n_ro_edi.document']._l10n_ro_edi_create_document_invoice_validated(
+                        invoice,
+                        result['key_download'],
+                        download_data['signature']['key_signature'],
+                        download_data['signature']['key_certificate'],
+                        download_data['signature']['attachment_raw']
+                    )
 
-            if not modules.module.current_test:
+            if self._can_commit():
                 self._cr.commit()
 
         # Delete outdated documents in batches
         to_delete_documents.unlink()
 
     def _l10n_ro_edi_fetch_invoices(self):
-        """ Fetch invoices from ANAF """
+        """ Synchronize bills/invoices from ANAF """
+
         def _l10n_ro_edi_check_bill_already_imported(record):
             return self.env['account.move'].search([
                 ('move_type', '=', 'in_invoice'),
@@ -283,38 +205,41 @@ class AccountMove(models.Model):
             ], limit=1)
 
         session = requests.Session()
-        result = self.env['l10n_ro_edi.document']._request_ciusro_synchronize_invoices(
+        result = _request_ciusro_synchronize_invoices(
             company=self.env.company,
             session=session,
-            nb_days=1,
         )
-        if result:
-            for res in result:
-                if not _l10n_ro_edi_check_bill_already_imported(res):
-                    move = self.env['account.move'].create(
-                        {
-                            'move_type': 'in_invoice',
-                            'journal_id': self.env.company.l10n_ro_edi_anaf_imported_inv_journal.id,
+        if 'error' in result:
+            raise UserError(result['error'])
 
-                        }
-                    )
-                    attachment = self.env['ir.attachment'].create({
-                        'name': f"ciusro_signature_{res['name']}.xml",
-                        'raw': res['raw'],
-                        'res_model': 'account.move',
-                        'res_id': move.id,
-                    })
-                    move._extend_with_attachments(attachment, False)
-                    move.message_post(body=_(
-                        "Synchronized with ANAF",
-                        result['key_loading'],
-                    ))
-            if not modules.module.current_test:
-                self._cr.commit()
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'reload',
-            }
+        for message in result['messages']:
+            if not _l10n_ro_edi_check_bill_already_imported(message):  # ABOO: search in a for loop
+                move = self.env['account.move'].create(  # ABOO: create in a loop
+                    {
+                        'move_type': 'in_invoice',
+                        'journal_id': self.env.company.l10n_ro_edi_anaf_imported_inv_journal.id,
+
+                    }
+                )
+                attachment = self.env['ir.attachment'].create({
+                    'name': f"ciusro_signature_{message['name']}.xml",
+                    'raw': message['raw'],
+                    'res_model': 'account.move',
+                    'res_id': move.id,
+                })
+                move._extend_with_attachments(attachment)
+                move.message_post(body=_(
+                    "Synchronized with ANAF",
+                    result['key_loading'],
+                ))
+
+        if self._can_commit():
+            self._cr.commit()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
     def action_l10n_ro_edi_fetch_invoices(self):
         self._l10n_ro_edi_fetch_invoices()

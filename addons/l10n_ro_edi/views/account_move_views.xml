@@ -19,16 +19,17 @@
                 <page id="l10n_ro_edi_documents"
                       string="E-Factura"
                       invisible="not l10n_ro_edi_document_ids">
+                    
+                    <field name="l10n_ro_edi_index"/>
                     <field name="l10n_ro_edi_document_ids">
                         <list create="false" delete="false" edit="false" no_open="1"
                               decoration-danger="state == 'invoice_sending_failed'"
                               decoration-warning="state == 'invoice_sent'"
                               decoration-success="state == 'invoice_validated'">
-                            <field name="message" column_invisible="1"/>
-                            <field name="attachment_id" column_invisible="1"/>
+                            <field name="message"/>
+                            <field name="key_download" optional="hidden"/>
                             <field name="datetime"/>
                             <field name="state" widget="account_document_state"/>
-                            <field name="key_loading" optional="hide"/>
 
                             <button name="action_l10n_ro_edi_fetch_status"
                                     type="object"
@@ -37,7 +38,8 @@
                             <button name="action_l10n_ro_edi_download_signature"
                                     type="object"
                                     string="Download"
-                                    invisible="not attachment_id"/>
+                                    invisible="not attachment"/>
+                            <field name="attachment">Test ABOO</field>
                         </list>
                     </field>
                 </page>
