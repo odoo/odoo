@@ -10,6 +10,7 @@ class ResPartner(models.Model):
     first_name = fields.Char("First Name")
     middle_name = fields.Char("Middle Name")
     last_name = fields.Char("Last Name")
+    l10n_ph_rdo = fields.Char("RDO", help="Revenue District Office")
 
     @api.model
     def _commercial_fields(self):
