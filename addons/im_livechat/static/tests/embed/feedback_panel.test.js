@@ -79,7 +79,7 @@ test("Feedback with rating and comment", async () => {
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
     await assertSteps(["/im_livechat/visitor_leave_session"]);
-    await click(`img[data-alt="${RATING.GOOD}"]`);
+    await click(`img[alt="${RATING.GOOD}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
     await click("button:contains(Send):enabled");
     await contains("p", { text: "Thank you for your feedback" });
