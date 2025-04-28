@@ -26,6 +26,9 @@ class TestPhCommon(AccountTestInvoicingCommon):
         })
         cls.partner_a.write({
             'name': 'Test Partner',
+            'first_name': 'John',
+            'middle_name': 'Doe',
+            'last_name': 'Smith',
             'street': '9 Super Street',
             'city': 'Super City',
             'zip': '8888',
@@ -34,6 +37,8 @@ class TestPhCommon(AccountTestInvoicingCommon):
         })
         cls.partner_b.write({
             'name': 'Test Partner Company',
+            'property_payment_term_id': cls.pay_terms_a.id,
+            'property_supplier_payment_term_id': cls.pay_terms_a.id,
             'street': '10 Super Street',
             'city': 'Super City',
             'zip': '8888',
@@ -43,11 +48,8 @@ class TestPhCommon(AccountTestInvoicingCommon):
         })
         cls.partner_c = cls.env['res.partner'].create({
             'name': 'Test Partner Company Member',
-            'first_name': 'John',
-            'middle_name': 'Doe',
-            'last_name': 'Smith',
-            'property_payment_term_id': cls.pay_terms_b.id,
-            'property_supplier_payment_term_id': cls.pay_terms_b.id,
+            'property_payment_term_id': cls.pay_terms_a.id,
+            'property_supplier_payment_term_id': cls.pay_terms_a.id,
             'property_account_position_id': cls.fiscal_pos_a.id,
             'property_account_receivable_id': cls.company_data['default_account_receivable'].copy().id,
             'property_account_payable_id': cls.company_data['default_account_payable'].copy().id,
