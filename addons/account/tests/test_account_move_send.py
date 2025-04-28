@@ -684,6 +684,23 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         ])
         self.assertEqual(len(invoice_attachments), 1)
 
+    def test_send_invoice_batch_with_origin_id(self):
+        invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
+        invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+
+        wizard = self.env['account.move.send.batch.wizard'].with_context(
+            active_model='account.move',
+            active_ids=(invoice1 + invoice2).ids
+        ).new()
+
+        self.assertEqual(wizard.summary_data, {'email': {'count': 2, 'label': 'by Email'}})
+        self.assertEqual(len(wizard.move_ids), 2)
+        self.assertFalse(wizard.alerts)
+
+        results = wizard.action_send_and_print()
+        self.assertEqual(results['type'], 'ir.actions.client')
+        self.assertEqual(results['params']['next']['type'], 'ir.actions.act_window_close')
+
     def test_invoice_multi_email_missing(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
         invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
