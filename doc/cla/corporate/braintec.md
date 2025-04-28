@@ -18,3 +18,4 @@ Frédéric Garbely frederic.garbely@braintec.com https://github.com/BT-fgarbely
 Carlos Serra Toro carlos.serra@braintec.com https://github.com/BT-cserra
 Cristian Rodriguez Navarro cristian.rodriguez@braintec.com https://github.com/BT-crodriguez
 Olivier Jossen olivier.jossen@braintec.com https://github.com/BT-ojossen
+Simon Schmid simon.schmid@braintec.com https://github.com/BT-sschmid
