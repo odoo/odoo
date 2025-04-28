@@ -131,7 +131,7 @@ class AccountReconcileModel(models.Model):
         ('contains', 'Contains'),
         ('not_contains', 'Not Contains'),
         ('match_regex', 'Match Regex'),
-    ], string='Label', tracking=True, help='''The reconciliation model will only be applied when either the statement line label or transaction details matches the following:
+    ], string='Label', tracking=True, help='''The reconciliation model will only be applied when either the statement line label, the transaction details or the note matches the following:
         * Contains: The statement line must contains this string (case insensitive).
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
