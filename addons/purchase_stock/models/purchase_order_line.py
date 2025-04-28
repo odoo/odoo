@@ -159,12 +159,6 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.product_id and line.product_id.type == 'consu':
                 rounding = line.product_uom_id.rounding
-                # Prevent decreasing below received quantity
-                if float_compare(line.product_qty, line.qty_received, precision_rounding=rounding) < 0:
-                    raise UserError(_(
-                        "You're trying to decrease the ordered quantity below the received quantity, you goofball.\n\n"
-                        "Try creating a return first silly billy!"
-                    ))
 
                 if float_compare(line.product_qty, line.qty_invoiced, precision_rounding=rounding) < 0 and line.invoice_lines:
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
@@ -177,6 +171,8 @@ class PurchaseOrderLine(models.Model):
 
                 # If the user increased quantity of existing line or created a new line
                 # Give priority to the pickings related to the line
+                moves_to_assign = line.order_id.picking_ids.move_ids.filtered(lambda m: not m.purchase_line_id and line.product_id == m.product_id)
+                moves_to_assign.purchase_line_id = line.id
                 line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer'))
                 if line_pickings:
                     picking = line_pickings[0]
