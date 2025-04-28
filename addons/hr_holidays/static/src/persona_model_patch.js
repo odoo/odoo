@@ -16,17 +16,6 @@ export function getOutOfOfficeDateEndText(datetime) {
 }
 
 patch(Persona.prototype, {
-    updateImStatus(newStatus) {
-        if (newStatus == "online" && this.leave_date_to) {
-            this.im_status = "leave_online";
-        } else if (newStatus == "offline" && this.leave_date_to) {
-            this.im_status = "leave_offline";
-        } else if (newStatus == "away" && this.leave_date_to) {
-            this.im_status = "leave_away";
-        } else {
-            return super.updateImStatus(...arguments);
-        }
-    },
     get outOfOfficeDateEndText() {
         if (!this.leave_date_to) {
             return "";
