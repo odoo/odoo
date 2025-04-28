@@ -31,6 +31,7 @@ import {
     replaceFieldElement,
     setActiveProperties,
     setVisibilityDependency,
+    getParsedDataFor,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
@@ -215,6 +216,13 @@ export class FormOptionPlugin extends Plugin {
                         // 3. The default value (`defaultEmailToValue`)
                         if (value && value !== this.defaultEmailToValue) {
                             return value;
+                        }
+                        // Get the email_to value from the data-for attribute if it exists.
+                        // We use it if there is no value on the email_to input.
+                        const formId = el.id;
+                        const dataForValues = getParsedDataFor(formId, el.ownerDocument);
+                        if (dataForValues) {
+                            this.dataForEmailTo = dataForValues["email_to"];
                         }
                         return this.dataForEmailTo || this.defaultEmailToValue;
                     }
