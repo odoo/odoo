@@ -11,6 +11,7 @@
     'depends': [
         'account',
         'base_vat',
+        'l10n_account_withholding_tax',
     ],
     'auto_install': ['account'],
     'data': [
@@ -20,6 +21,7 @@
         'views/account_move_views.xml',
         'views/account_payment_views.xml',
         'views/account_tax_views.xml',
+        'views/res_company_views.xml',
         'views/res_partner_views.xml',
         'security/ir.model.access.csv',
     ],

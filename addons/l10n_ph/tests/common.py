@@ -26,6 +26,9 @@ class TestPhCommon(AccountTestInvoicingCommon):
         })
         cls.partner_a.write({
             'name': 'Test Partner',
+            'first_name': 'John',
+            'middle_name': 'Doe',
+            'last_name': 'Smith',
             'street': '9 Super Street',
             'city': 'Super City',
             'zip': '8888',
@@ -43,9 +46,6 @@ class TestPhCommon(AccountTestInvoicingCommon):
         })
         cls.partner_c = cls.env['res.partner'].create({
             'name': 'Test Partner Company Member',
-            'first_name': 'John',
-            'middle_name': 'Doe',
-            'last_name': 'Smith',
             'property_payment_term_id': cls.pay_terms_b.id,
             'property_supplier_payment_term_id': cls.pay_terms_b.id,
             'property_account_position_id': cls.fiscal_pos_a.id,
