@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, Command
+from odoo import api, fields, models, Command, _
+from odoo.tools import format_date
 
 
 class ResUsers(models.Model):
@@ -79,3 +80,12 @@ class ResUsers(models.Model):
         users = super().create(vals_list)
         users.sudo()._clean_leave_responsible_users()
         return users
+
+    @api.depends('leave_date_to')
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        for user in self:
+            if user._context.get("formatted_display_name") and user.leave_date_to:
+                name = "%s \t ✈ --%s %s--" % (user.name, _("Back on"), format_date(self.env, user.leave_date_to, self.env.user.lang, "medium"))
+                user.display_name = name.strip()
