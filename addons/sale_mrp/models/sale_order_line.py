@@ -141,7 +141,7 @@ class SaleOrderLine(models.Model):
             )),
             'outgoing_moves': lambda m: (
                 m.state != 'cancel' and not m.scrapped
-                and m.location_dest_id.usage != 'customer' and m.to_refund
+                and m.location_id.usage == 'customer' and m.to_refund
             ),
         }
 
@@ -158,4 +158,4 @@ class SaleOrderLine(models.Model):
             order_qty = self.product_uom_id._compute_quantity(order_qty, bom.product_uom_id)
             qty = moves._compute_kit_quantities(self.product_id, order_qty, bom, filters)
             return bom.product_uom_id._compute_quantity(qty, self.product_uom_id)
-        return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
+        return super()._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
