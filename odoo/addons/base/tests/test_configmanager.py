@@ -135,6 +135,7 @@ class TestConfigManager(TransactionCase):
             'db_template': 'template0',
             'db_replica_host': None,
             'db_replica_port': None,
+            'db_app_name': 'odoo-{pid}',
 
             # i18n
             'load_language': None,
@@ -251,6 +252,7 @@ class TestConfigManager(TransactionCase):
             'db_template': 'backup1706',
             'db_replica_host': 'db2.localhost',
             'db_replica_port': 2038,
+            'db_app_name': 'odoo-{pid}',
 
             # i18n
             'load_language': 'fr_FR',  # blacklist for save, read from the config file
@@ -303,6 +305,7 @@ class TestConfigManager(TransactionCase):
                     project_path=PROJECT_PATH,
                     homedir=self.config._normalize('~'),
                     empty_dict=r'{}',
+                    pid='{pid}',
                 )
                 self.assertEqual(config_content.splitlines(), save_content.splitlines())
 
@@ -404,6 +407,7 @@ class TestConfigManager(TransactionCase):
             'db_maxconn_gevent': None,
             'db_replica_host': None,
             'db_replica_port': None,
+            'db_app_name': 'odoo-{pid}',
             'geoip_country_db': '/usr/share/GeoIP/GeoLite2-Country.mmdb',
             'from_filter': '',
             'gevent_port': 8072,
@@ -531,6 +535,7 @@ class TestConfigManager(TransactionCase):
             'db_template': 'backup1706',
             'db_replica_host': 'db2.localhost',
             'db_replica_port': 2038,
+            'db_app_name': 'myapp{pid}',
 
             # i18n
             'load_language': 'fr_FR',
@@ -655,6 +660,7 @@ class TestConfigManager(TransactionCase):
             'db_template': 'backup1706',
             'db_replica_host': 'db2.localhost',
             'db_replica_port': 2038,
+            'db_app_name': 'envapp',
 
             # i18n (not loaded)
             'load_language': None,
