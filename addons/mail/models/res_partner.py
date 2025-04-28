@@ -95,7 +95,11 @@ class Partner(models.Model):
         if not parsed_email_normalized and assert_valid_email:
             raise ValueError(_('%(email)s is not recognized as a valid email. This is required to create a new customer.'))
         if parsed_email_normalized:
-            partners = self.search([('email_normalized', '=', parsed_email_normalized)], limit=1)
+            domain = [('email_normalized', '=', parsed_email_normalized)]
+            company_id = self.env.context.get('default_company_id', False)
+            if company_id:
+                domain.append(('company_id', '=', company_id))
+            partners = self.search(domain, limit=1)
             if partners:
                 return partners
 
