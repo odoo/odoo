@@ -841,7 +841,8 @@ class ProjectTask(models.Model):
                 vals['stage_id'] = task.stage_id.id
             if 'active' not in default and not task['active'] and not self.env.context.get('copy_project'):
                 vals['active'] = True
-            vals['name'] = task.name if self.env.context.get('copy_project') or self.env.context.get('copy_from_template') else _("%s (copy)", task.name)
+            if not default.get('name'):
+                vals['name'] = task.name if self.env.context.get('copy_project') or self.env.context.get('copy_from_template') else _("%s (copy)", task.name)
             if task.recurrence_id and not default.get('recurrence_id'):
                 vals['recurrence_id'] = task.recurrence_id.copy().id
             if task.allow_milestones:
@@ -1987,8 +1988,9 @@ class ProjectTask(models.Model):
             "partner_id",
         ]
 
-    def action_create_from_template(self):
+    def action_create_from_template(self, values=None):
         self.ensure_one()
+        values = values or {}
         default = {
             key[8:]: value
             for key, value in self.env.context.items()
@@ -1996,7 +1998,7 @@ class ProjectTask(models.Model):
         } | {
             field: False
             for field in self._get_template_field_blacklist()
-        }
+        } | values
         return self.with_context(copy_from_template=True).copy(default=default).id
 
     def action_archive(self):
