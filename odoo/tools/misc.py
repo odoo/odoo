@@ -181,6 +181,8 @@ def exec_pg_environ():
         env['PGUSER'] = config['db_user']
     if config['db_password']:
         env['PGPASSWORD'] = config['db_password']
+    if config['db_app_name']:
+        env['PGAPPNAME'] = config['db_app_name'].replace('{pid}', f'env{os.getpid()}')[:63]
     if config['db_sslmode']:
         env['PGSSLMODE'] = config['db_sslmode']
     return env

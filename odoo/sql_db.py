@@ -32,7 +32,7 @@ import odoo
 
 from . import tools
 from .release import MIN_PG_VERSION
-from .tools import SQL
+from .tools import config, SQL
 from .tools.func import frame_codeinfo, locked
 from .tools.misc import Callbacks, real_time
 
@@ -768,11 +768,12 @@ def connection_info_for(db_or_uri: str, readonly=False) -> tuple[str, dict]:
         the default configuration from ``db_`` or ``db_replica_``.
     :rtype: (str, dict)
     """
+    app_name = config['db_app_name']
     if 'ODOO_PGAPPNAME' in os.environ:
-        # Using manual string interpolation for security reason and trimming at default NAMEDATALEN=63
-        app_name = os.environ['ODOO_PGAPPNAME'].replace('{pid}', str(os.getpid()))[0:63]
-    else:
-        app_name = "odoo-%d" % os.getpid()
+        warnings.warn("Since 19.0, use PGAPPNAME instead of ODOO_PGAPPNAME", DeprecationWarning)
+        app_name = os.environ['ODOO_PGAPPNAME']
+    # Using manual string interpolation for security reason and trimming at default NAMEDATALEN=63
+    app_name = app_name.replace('{pid}', str(os.getpid()))[:63]
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
         us = urls.url_parse(db_or_uri)  # type: ignore
