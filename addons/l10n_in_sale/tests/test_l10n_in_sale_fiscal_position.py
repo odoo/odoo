@@ -14,7 +14,7 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
         cls.partner_b.property_account_position_id = None
 
     def _assert_order_fiscal_position(self, fpos_ref, partner, post=True):
-        test_order = self.env['sale.order'].create({
+        test_order = self.env['sale.order'].sudo().create({
             'partner_id': partner,
             'company_id': self.env.company.id,
             'order_line': [
@@ -66,7 +66,7 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
         with self.subTest(scenario="SEZ"):
             # Here fpos should Intra-State. But due to `l10n_in_gst_treatment` on partner, it will be SEZ
             self.partner_a.l10n_in_gst_treatment = 'special_economic_zone'
-            sale_order = self.env['sale.order'].with_company(self.env.company).create({
+            sale_order = self.env['sale.order'].sudo().with_company(self.env.company).create({
                 'date_order': fields.Date.from_string('2019-01-01'),
                 'partner_id': self.partner_a.id,  # Intra-State Partner
                 'order_line': [Command.create({
