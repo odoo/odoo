@@ -112,7 +112,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         if not self.company_id.vat:
             return _("Please configure the Tax ID on your company for TicketBAI.")
 
-        if self.company_id._l10n_es_freelancer() and not self.env['ir.config_parameter'].sudo().get_param('l10n_es_edi_tbai.epigrafe', False):
+        if self.company_id.l10n_es_tbai_tax_agency == 'bizkaia' and self.company_id._l10n_es_freelancer() and not self.env['ir.config_parameter'].sudo().get_param('l10n_es_edi_tbai.epigrafe', False):
             return _("In order to use Ticketbai Batuz for freelancers, you will need to configure the "
                         "Epigrafe or Main Activity.  In this version, you need to go in debug mode to "
                         "Settings > Technical > System Parameters and set the parameter 'l10n_es_edi_tbai.epigrafe'"
