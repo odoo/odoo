@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from odoo.tests.common import TransactionCase
-from odoo.tools.date_intervals import Intervals, intervals_overlap, invert_intervals
+from odoo.tools.intervals import Intervals, intervals_overlap, invert_intervals
 
 
 class TestIntervals(TransactionCase):
@@ -70,8 +70,8 @@ class TestIntervals(TransactionCase):
             [(0, 5), (12, 13), (20, 22), (23, 24)],
         )
 
-class TestUtils(TransactionCase):
 
+class TestUtils(TransactionCase):
 
     def test_intervals_intersections(self):
         test_data = [

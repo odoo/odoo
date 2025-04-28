@@ -10,9 +10,8 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import ormcache, format_list
+from odoo.tools.date_intervals import Intervals
 from odoo.exceptions import UserError
-
-from .hr_work_intervals import WorkIntervals
 
 
 class HrContract(models.Model):
@@ -184,7 +183,7 @@ class HrContract(models.Model):
                     leave_interval = contract._get_valid_leave_intervals(attendances, leave_interval)
                     if leave_interval:
                         result[resource.id] += leave_interval
-            mapped_leaves = {r.id: WorkIntervals(result[r.id]) for r in resources_list}
+            mapped_leaves = {r.id: Intervals(result[r.id], keep_distinct=True) for r in resources_list}
             leaves = mapped_leaves[resource.id]
 
             real_attendances = attendances - leaves
@@ -237,7 +236,7 @@ class HrContract(models.Model):
                     ('state', 'draft'),
                 ] + contract._get_more_vals_attendance_interval(interval))]
 
-            leaves_over_attendances = WorkIntervals(leaves) & real_leaves
+            leaves_over_attendances = Intervals(leaves, keep_distinct=True) & real_leaves
             for interval in real_leaves:
                 # Could happen when a leave is configured on the interface on a day for which the
                 # employee is not supposed to work, i.e. no attendance_ids on the calendar.

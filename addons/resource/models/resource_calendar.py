@@ -19,7 +19,6 @@ from odoo.tools.date_intervals import Intervals, float_to_time, make_aware
 from odoo.tools.float_utils import float_round
 
 from odoo.tools import date_utils, float_compare, ormcache
-from odoo.addons.hr_work_entry_contract.models.hr_work_intervals import WorkIntervals
 
 
 class ResourceCalendar(models.Model):
@@ -429,7 +428,7 @@ class ResourceCalendar(models.Model):
         result_per_resource_id = dict()
         for tz, resources in resources_per_tz.items():
             res = result_per_tz[tz]
-            res_intervals = WorkIntervals(res)
+            res_intervals = Intervals(res, keep_distinct=True)
             for resource in resources:
                 if resource and resource._is_flexible():
                 # If the resource is flexible, return the whole period from start_dt to end_dt with a dummy attendance
@@ -437,11 +436,11 @@ class ResourceCalendar(models.Model):
                         'duration_hours': (end - start).total_seconds() / 3600,
                         'duration_days': (end - start).days + 1,
                     })
-                    result_per_resource_id[resource.id] = WorkIntervals([(start, end, dummy_attendance)])
+                    result_per_resource_id[resource.id] = Intervals([(start, end, dummy_attendance)], keep_distinct=True)
                 elif resource in per_resource_result:
                     resource_specific_result = [(max(bounds_per_tz[tz][0], tz.localize(val[0])), min(bounds_per_tz[tz][1], tz.localize(val[1])), val[2])
                         for val in per_resource_result[resource]]
-                    result_per_resource_id[resource.id] = WorkIntervals(itertools.chain(res, resource_specific_result))
+                    result_per_resource_id[resource.id] = Intervals(itertools.chain(res, resource_specific_result), keep_distinct=True)
                 else:
                     result_per_resource_id[resource.id] = res_intervals
         return result_per_resource_id

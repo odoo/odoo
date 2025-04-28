@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
+import itertools
 import math
 import typing
 import warnings
 from datetime import datetime, time
-from itertools import chain
 
 from pytz import utc
 
@@ -60,15 +60,24 @@ class Intervals(typing.Generic[T]):
     """ Collection of ordered disjoint intervals with some associated records.
         Each interval is a triple ``(start, stop, records)``, where ``records``
         is a recordset.
+
+        By default, adjacent intervals are merged (1, 3, a) and (3, 5, b) become
+        (1, 5, a | b). This behaviour can be prevented by setting
+        `keep_distinct=True`.
     """
-    def __init__(self, intervals: Iterable[tuple[T, T, AbstractSet]] | None = None):
+    def __init__(self, intervals: Iterable[tuple[T, T, AbstractSet]] | None = None, *, keep_distinct: bool = False):
         self._items: list[tuple[T, T, AbstractSet]] = []
+        self._keep_distinct = keep_distinct
         if intervals:
             # normalize the representation of intervals
             append = self._items.append
             starts: list[T] = []
             items: AbstractSet | None = None
-            for value, flag, value_items in sorted(_boundaries(intervals, 'start', 'stop')):
+            if self._keep_distinct:
+                boundaries = sorted(_boundaries(sorted(intervals), 'start', 'stop'), key=lambda i: i[0])
+            else:
+                boundaries = sorted(_boundaries(intervals, 'start', 'stop'))
+            for value, flag, value_items in boundaries:
                 if flag == 'start':
                     starts.append(value)
                     if items is None:
@@ -95,7 +104,7 @@ class Intervals(typing.Generic[T]):
 
     def __or__(self, other):
         """ Return the union of two sets of intervals. """
-        return Intervals(chain(self._items, other._items))
+        return Intervals(itertools.chain(self._items, other._items), keep_distinct=self._keep_distinct)
 
     def __and__(self, other):
         """ Return the intersection of two sets of intervals. """
@@ -107,7 +116,7 @@ class Intervals(typing.Generic[T]):
 
     def _merge(self, other: Intervals | Iterable[tuple[T, T, AbstractSet]], difference: bool) -> Intervals:
         """ Return the difference or intersection of two sets of intervals. """
-        result = Intervals()
+        result = Intervals(keep_distinct=self._keep_distinct)
         append = result._items.append
 
         # using 'self' and 'other' below forces normalization
@@ -117,7 +126,11 @@ class Intervals(typing.Generic[T]):
         start = None                    # set by start/stop
         recs1 = None                    # set by start
         enabled = difference            # changed by switch
-        for value, flag, recs in sorted(chain(bounds1, bounds2)):
+        if self._keep_distinct:
+            bounds = sorted(itertools.chain(bounds1, bounds2), key=lambda i: i[0])
+        else:
+            bounds = sorted(itertools.chain(bounds1, bounds2))
+        for value, flag, recs in bounds:
             if flag == 'start':
                 start = value
                 recs1 = recs
