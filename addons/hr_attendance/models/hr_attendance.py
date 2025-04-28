@@ -416,10 +416,13 @@ class HrAttendance(models.Model):
                                              overtime_to_unlink.employee_id.ids)
         overtime_to_unlink.sudo().unlink()
         to_recompute = self.search([('employee_id', 'in', employees_worked_hours_to_compute)])
+        # for automatically validated attendances, avoid recomputing extra hours if user has changed its value
+        validated_modified = to_recompute.filtered(lambda att: att.employee_id.company_id.attendance_overtime_validation == 'no_validation'
+                                                        and float_compare(att.overtime_hours, att.validated_overtime_hours, precision_digits=2))
         self.env.add_to_compute(self._fields['overtime_hours'],
                                 to_recompute)
         self.env.add_to_compute(self._fields['validated_overtime_hours'],
-                                to_recompute)
+                                to_recompute - validated_modified)
         self.env.add_to_compute(self._fields['expected_hours'],
                                 to_recompute)
 
