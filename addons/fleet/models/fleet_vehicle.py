@@ -430,6 +430,5 @@ class FleetVehicle(models.Model):
             'res_model': 'fleet.vehicle.send.mail',
             'context': {
                 'default_vehicle_ids': self.ids,
-                'default_render_model': 'fleet.vehicle',
             }
         }
