@@ -11196,6 +11196,45 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
 });
 
 test.tags("desktop");
+test(`multi edit: invalid field and urgent save`, async () => {
+    onRpc("web_save", () => {
+        throw new Error("should not save");
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo" required="1"/>
+                <field name="int_field"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts(".o_data_cell")).toEqual([
+        "yop",
+        "10",
+        "blip",
+        "9",
+        "gnap",
+        "17",
+        "blip",
+        "-4",
+    ]);
+
+    // select two records
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+
+    // edit first record and unset foo
+    await contains(`.o_data_row:eq(0) .o_data_cell`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell input`).edit("");
+    expect(`.o_dialog`).toHaveCount(1);
+
+    // provoke an urgent save
+    await unload();
+});
+
+test.tags("desktop");
 test(`editable list view (multi edition): mousedown on 'Discard', but mouseup somewhere else`, async () => {
     await mountView({
         resModel: "foo",

@@ -3554,9 +3554,11 @@ test(`onchange send relation parent field values (including readonly)`, async ()
     expect.verifySteps([]);
 
     // trigger an onchange by modifying float_field
+    // confirm with blur s.t. it doesn't create a new line which would call another onchange and
+    // pollute our assertions
     checkOnchange = true;
     await contains(`.o_field_one2many .o_field_widget[name=float_field] input`).edit("12.4", {
-        confirm: "tab",
+        confirm: "blur",
     });
     expect.verifySteps(["onchange"]);
 });

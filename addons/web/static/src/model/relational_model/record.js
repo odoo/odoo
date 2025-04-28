@@ -487,7 +487,7 @@ export class Record extends DataPoint {
             this._unsetRequiredFields.clear();
             for (const fieldName of unsetRequiredFields) {
                 this._unsetRequiredFields.add(fieldName);
-                this._setInvalidField(fieldName);
+                this._invalidFields.add(fieldName);
             }
         }
         const isValid = !this._invalidFields.size;
