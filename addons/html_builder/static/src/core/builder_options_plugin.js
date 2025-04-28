@@ -47,6 +47,9 @@ export class BuilderOptionsPlugin extends Plugin {
             ...option,
             id: uniqueId(),
         }));
+        this.getResource("patch_builder_options").forEach((option) => {
+            this.patchBuilderOptions(option);
+        });
         this.builderHeaderMiddleButtons = this.getResource("builder_header_middle_buttons").map(
             (headerMiddleButton) => ({ ...headerMiddleButton, id: uniqueId() })
         );
@@ -248,6 +251,34 @@ export class BuilderOptionsPlugin extends Plugin {
         const reasons = [];
         this.dispatchTo("clone_disabled_reason_providers", { el, reasons });
         return reasons.length ? reasons.join(" ") : undefined;
+    }
+    patchBuilderOptions({ target_name, target_element, method, value }) {
+        if (!target_name || !target_element || !method || !value) {
+            throw new Error(
+                `Missing patch_builder_options required parameters: target_name, target_element, method, value`
+            );
+        }
+
+        const builderOption = this.builderOptions.find((option) => option.name === target_name);
+        if (!builderOption) {
+            throw new Error(`Builder option ${target_name} not found`);
+        }
+
+        switch (method) {
+            case "replace":
+                builderOption[target_element] = value;
+                break;
+            case "add":
+                if (!builderOption[target_element]) {
+                    throw new Error(
+                        `Builder option ${target_name} does not have ${target_element}`
+                    );
+                }
+                builderOption[target_element] += `, ${value}`;
+                break;
+            default:
+                throw new Error(`Unknown method ${method}`);
+        }
     }
 }
 

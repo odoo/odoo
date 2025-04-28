@@ -1,5 +1,6 @@
 import { KeepLast } from "@web/core/utils/concurrency";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { isImageSupportedForStyle } from "@html_builder/plugins/image/replace_media_option";
 
 export class AnimateOption extends BaseOptionComponent {
     static template = "html_builder.AnimateOption";
@@ -74,28 +75,4 @@ export class AnimateOption extends BaseOptionComponent {
 
         return hasDirection;
     }
-}
-
-/**
- * @param {HTMLImageElement} img
- * @returns {Boolean}
- */
-export function isImageSupportedForStyle(img) {
-    if (!img.parentElement) {
-        return false;
-    }
-
-    // See also `[data-oe-type='image'] > img` added as data-exclude of some
-    // snippet options.
-    const isTFieldImg = "oeType" in img.parentElement.dataset;
-
-    // Editable root elements are technically *potentially* supported here (if
-    // the edited attributes are not computed inside the related view, they
-    // could technically be saved... but as we cannot tell the computed ones
-    // apart from the "static" ones, we choose to not support edition at all in
-    // those "root" cases).
-    // See also `[data-oe-xpath]` added as data-exclude of some snippet options.
-    const isEditableRootElement = "oeXpath" in img.dataset;
-
-    return !isTFieldImg && !isEditableRootElement;
 }

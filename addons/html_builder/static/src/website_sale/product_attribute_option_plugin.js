@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 
 class ProductAttributeOptionPlugin extends Plugin {
-    static id = "productAtttributeOption";
+    static id = "productAttributeOption";
     resources = {
         builder_options: {
             template: "website_sale.ProductAttributeOption",

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ProductImageOption">
+    <BuilderRow label.translate="Media">
+        <BuilderButton
+            action="'replaceMedia'"
+            title.translate="Replace image"
+            className="'flex-grow-1'"
+            type="'success'"
+            preview="false"
+            label.translate="Replace" />
+        <BuilderButton
+            action="'removeMedia'"
+            className="'flex-grow-1'" 
+            type="'danger'"
+            preview="false"
+            label.translate="Remove"/>   
+    </BuilderRow>
+    <BuilderRow label.translate="Re-order">
+        <BuilderButtonGroup preview="false" action="'setPosition'">
+            <BuilderButton icon="'fa-angle-double-left'" title.translate="Move to first"  actionValue="'first'"/>
+            <BuilderButton icon="'fa-angle-left'" title.translate="Move to previous" actionValue="'left'"/>
+            <BuilderButton icon="'fa-angle-right'" title.translate="Move to next" actionValue="'right'"/>
+            <BuilderButton icon="'fa-angle-double-right'" title.translate="Move to last" actionValue="'last'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+</templates>

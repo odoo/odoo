@@ -13,6 +13,10 @@ import {
     ALIGNMENT_STYLE_PADDING,
 } from "@html_builder/utils/option_sequence";
 
+export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
+export const REPLACE_MEDIA_EXCLUDE =
+    "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa";
+
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
     static dependencies = [
@@ -28,9 +32,9 @@ class ImageToolOptionPlugin extends Plugin {
         builder_options: [
             withSequence(REPLACE_MEDIA, {
                 OptionComponent: ReplaceMediaOption,
-                selector: "img, .media_iframe_video, span.fa, i.fa",
-                exclude:
-                    "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa",
+                selector: REPLACE_MEDIA_SELECTOR,
+                exclude: REPLACE_MEDIA_EXCLUDE,
+                name: "replaceMediaOption",
             }),
             withSequence(IMAGE_TOOL, {
                 OptionComponent: ImageToolOption,

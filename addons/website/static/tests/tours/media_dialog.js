@@ -156,7 +156,7 @@ registerWebsitePreviewTour("website_media_dialog_image_shape", {
     },
     {
         content: "Open MediaDialog from an image",
-        trigger: ".o_we_bg_success[data-action-id='replaceMedia']",
+        trigger: ".btn-success[data-action-id='replaceMedia']",
         run: "click",
     },
     {
