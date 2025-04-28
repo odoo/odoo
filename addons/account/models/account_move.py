@@ -742,6 +742,9 @@ class AccountMove(models.Model):
         search='_search_next_payment_date',
     )
 
+    display_send_button = fields.Boolean(compute='_compute_display_send_button')
+    highlight_send_button = fields.Boolean(compute='_compute_highlight_send_button')
+
     _checked_idx = models.Index("(journal_id) WHERE (checked IS NOT TRUE)")
     _payment_idx = models.Index("(journal_id, state, payment_state, move_type, date)")
     _unique_name = models.UniqueIndex(
@@ -2153,6 +2156,16 @@ class AccountMove(models.Model):
     def _compute_next_payment_date(self):
         for move in self:
             move.next_payment_date = min([line.payment_date for line in move.line_ids.filtered(lambda l: l.payment_date and not l.reconciled)], default=False)
+
+    @api.depends('move_type', 'state')
+    def _compute_display_send_button(self):
+        for move in self:
+            move.display_send_button = move.is_sale_document() and move.state == 'posted'
+
+    @api.depends('is_being_sent', 'invoice_pdf_report_id')
+    def _compute_highlight_send_button(self):
+        for move in self:
+            move.highlight_send_button = not move.is_being_sent and not move.invoice_pdf_report_id
 
     def _search_next_payment_date(self, operator, value):
         if operator not in ('in', '<', '<='):

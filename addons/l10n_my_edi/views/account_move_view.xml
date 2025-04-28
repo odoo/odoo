@@ -9,24 +9,6 @@
                 <widget name="web_ribbon" title="Processing" bg_color="text-bg-info" invisible="l10n_my_edi_state != 'in_progress'"/>
                 <widget name="web_ribbon" title="Rejected" bg_color="text-bg-warning" invisible="l10n_my_edi_state != 'rejected'"/>
             </xpath>
-            <!-- Hide the original send & print button, as it is difficult to update its invisible condition -->
-            <button name="action_invoice_sent" class="oe_highlight" position="attributes">
-                <attribute name="invisible" add="l10n_my_invoice_need_edi" separator=" or "/>
-            </button>
-            <!-- Instead, we display our own buttons so that we can write the invisible properly for our use case. -->
-            <xpath expr="//button[@name='action_invoice_sent' and not(@class)]" position="after">
-                <button name="action_invoice_sent"
-                        type="object"
-                        string="Send"
-                        invisible="(not l10n_my_invoice_need_edi or l10n_my_edi_state != 'valid') or (state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund'))"
-                        class="oe_highlight"
-                        data-hotkey="y"/>
-                <button name="action_invoice_sent"
-                        type="object"
-                        string="Send"
-                        invisible="(not l10n_my_invoice_need_edi or l10n_my_edi_state == 'valid') or (state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund'))"
-                        data-hotkey="y"/>
-            </xpath>
             <!-- We want the CTA to be primary only on invoices, and secondary on vendor bills. -->
             <button name="action_invoice_sent" position="before">
                 <button name="action_l10n_my_edi_send_invoice" string="Send To MyInvois" type="object"
