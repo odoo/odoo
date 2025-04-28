@@ -50,7 +50,7 @@
             <field name="name">im_livechat.report.channel.graph</field>
             <field name="model">im_livechat.report.channel</field>
             <field name="arch" type="xml">
-                <graph string="Livechat Support Statistics" stacked="1" sample="1">
+                <graph string="Livechat Support Statistics" type="line" stacked="1" sample="1">
                     <field name="call_duration_hour" type="measure" widget="float_time"/>
                     <field name="has_call" invisible="1"/>
                     <field name="percentage_of_calls" type="measure" widget="percentage"/>
@@ -131,6 +131,7 @@
                 {
                     "search_default_filter_date_last_month": 1,
                     "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
+                    "graph_measure": "__count__",
                     "im_livechat.hide_partner_company": True,
                 }
             </field>
