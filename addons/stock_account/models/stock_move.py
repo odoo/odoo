@@ -11,7 +11,7 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     to_refund = fields.Boolean(
-        string="Update quantities on SO/PO", copy=True,
+        "Update quantities on SO/PO", copy=True, default=True,
         help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string='Company Currency', readonly=True)
     value = fields.Monetary(
