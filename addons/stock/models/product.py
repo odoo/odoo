@@ -843,7 +843,7 @@ class ProductTemplate(models.Model):
                     template.lot_sequence_id = new_sequence
                     sequences_by_prefix[template.serial_prefix_format] = new_sequence
             else:
-                template.lot_sequence_id = False
+                template.lot_sequence_id = self.env.ref('stock.sequence_production_lots', raise_if_not_found=False)
 
     @api.depends('serial_prefix_format', 'lot_sequence_id')
     def _compute_next_serial(self):
