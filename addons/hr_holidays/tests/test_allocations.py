@@ -1,3 +1,4 @@
+from odoo import Command
 from datetime import date
 
 from freezegun import freeze_time
@@ -470,3 +471,27 @@ class TestAllocations(TestHrHolidaysCommon):
         employee._compute_allocation_remaining_display()
 
         self.assertEqual(employee.allocation_display, '0')
+
+    def test_create_allocation_employee_with_0_hours_week_working_hours(self):
+        """
+        This test makes sure that the Zero Division Error is not raised when creating an allocation
+        for an employee with a 0 hours week working hours.
+        """
+        self.calendar_0h = self.env['resource.calendar'].create({
+            'name': 'Calendar - 0H',
+            'company_id': self.company.id,
+            'attendance_ids': [Command.clear()],
+        })
+        self.paid_time_off_hours = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off in Hours',
+            'request_unit': 'hour',
+            'leave_validation_type': 'no_validation',
+            'company_id': self.company.id,
+            'time_type': 'other',
+            'requires_allocation': 'yes',
+        })
+        self.employee.resource_calendar_id = self.calendar_0h
+        allocation_form = Form(self.env['hr.leave.allocation'])
+        allocation_form.name = 'Holiday (8 Hours)'
+        allocation_form.employee_id = self.employee
+        allocation_form.holiday_status_id = self.paid_time_off_hours
