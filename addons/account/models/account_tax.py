@@ -1649,6 +1649,201 @@ class AccountTax(models.Model):
                 'tax_ids': tax_data['taxes'].ids,
             })
 
+<<<<<<< a89b61804b3f0c38e8faa1b2b99a3688d635c876
+||||||| bc10f500101612bb651ee81d2fc417b23982b393
+            return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100
+
+        # The first/last base must absolutely be rounded to work in round globally.
+        # Indeed, the sum of all taxes ('taxes' key in the result dictionary) must be strictly equals to
+        # 'price_included' - 'price_excluded' whatever the rounding method.
+        #
+        # Example using the global rounding without any decimals:
+        # Suppose two invoice lines: 27000 and 10920, both having a 19% price included tax.
+        #
+        #                   Line 1                      Line 2
+        # -----------------------------------------------------------------------
+        # total_included:   27000                       10920
+        # tax:              27000 / 1.19 = 4310.924     10920 / 1.19 = 1743.529
+        # total_excluded:   22689.076                   9176.471
+        #
+        # If the rounding of the total_excluded isn't made at the end, it could lead to some rounding issues
+        # when summing the tax amounts, e.g. on invoices.
+        # In that case:
+        #  - amount_untaxed will be 22689 + 9176 = 31865
+        #  - amount_tax will be 4310.924 + 1743.529 = 6054.453 ~ 6054
+        #  - amount_total will be 31865 + 6054 = 37919 != 37920 = 27000 + 10920
+        #
+        # By performing a rounding at the end to compute the price_excluded amount, the amount_tax will be strictly
+        # equals to 'price_included' - 'price_excluded' after rounding and then:
+        #   Line 1: sum(taxes) = 27000 - 22689 = 4311
+        #   Line 2: sum(taxes) = 10920 - 2176 = 8744
+        #   amount_tax = 4311 + 8744 = 13055
+        #   amount_total = 31865 + 13055 = 37920
+        base = price_unit * quantity
+        if self._context.get('round_base', True):
+            base = currency.round(base)
+
+        # For the computation of move lines, we could have a negative base value.
+        # In this case, compute all with positive values and negate them at the end.
+        sign = 1
+        if currency.is_zero(base):
+            sign = -1 if fixed_multiplicator < 0 else 1
+        elif base < 0:
+            sign = -1
+            base = -base
+
+        # Store the totals to reach when using price_include taxes (only the last price included in row)
+        total_included_checkpoints = {}
+        i = len(taxes) - 1
+        store_included_tax_total = True
+        # Keep track of the accumulated included fixed/percent amount.
+        incl_tax_amounts = {
+            'percent_taxes': [],
+            'division_taxes': [],
+            'fixed_amount': 0.0,
+        }
+        # Store the tax amounts we compute while searching for the total_excluded
+        cached_base_amounts = {}
+        cached_tax_amounts = {}
+        is_base_affected = True
+        if handle_price_include:
+            for tax in reversed(taxes):
+                tax_repartition_lines = (
+                    is_refund
+                    and tax.refund_repartition_line_ids
+                    or tax.invoice_repartition_line_ids
+                ).filtered(lambda x: x.repartition_type == "tax")
+                sum_repartition_factor = sum(tax_repartition_lines.mapped("factor"))
+
+                if tax.include_base_amount and is_base_affected:
+                    base = recompute_base(base, incl_tax_amounts)
+                    store_included_tax_total = True
+                if self._context.get('force_price_include', tax.price_include):
+                    if tax.amount_type == 'percent':
+                        incl_tax_amounts['percent_taxes'].append((i, tax.amount, sum_repartition_factor))
+                    elif tax.amount_type == 'division':
+                        incl_tax_amounts['division_taxes'].append((i, tax.amount * sum_repartition_factor))
+                    elif tax.amount_type == 'fixed':
+                        incl_tax_amounts['fixed_amount'] = abs(quantity) * tax.amount * sum_repartition_factor * abs(fixed_multiplicator)
+                    else:
+                        # tax.amount_type == other (python)
+                        tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner, fixed_multiplicator)
+                        tax_amount = float_round(tax_amount, precision_rounding=prec)
+                        incl_tax_amounts['fixed_amount'] += tax_amount
+                        # Avoid unecessary re-computation
+                        cached_tax_amounts[i] = tax_amount
+                    # In case of a zero tax, do not store the base amount since the tax amount will
+                    # be zero anyway. Group and Python taxes have an amount of zero, so do not take
+                    # them into account.
+                    if store_included_tax_total and (
+                        tax.amount or tax.amount_type not in ("percent", "division", "fixed")
+                    ):
+                        total_included_checkpoints[i] = base
+                        store_included_tax_total = False
+                i -= 1
+                is_base_affected = tax.is_base_affected
+
+        total_excluded = recompute_base(base, incl_tax_amounts)
+=======
+            return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100
+
+        # The first/last base must absolutely be rounded to work in round globally.
+        # Indeed, the sum of all taxes ('taxes' key in the result dictionary) must be strictly equals to
+        # 'price_included' - 'price_excluded' whatever the rounding method.
+        #
+        # Example using the global rounding without any decimals:
+        # Suppose two invoice lines: 27000 and 10920, both having a 19% price included tax.
+        #
+        #                   Line 1                      Line 2
+        # -----------------------------------------------------------------------
+        # total_included:   27000                       10920
+        # tax:              27000 / 1.19 = 4310.924     10920 / 1.19 = 1743.529
+        # total_excluded:   22689.076                   9176.471
+        #
+        # If the rounding of the total_excluded isn't made at the end, it could lead to some rounding issues
+        # when summing the tax amounts, e.g. on invoices.
+        # In that case:
+        #  - amount_untaxed will be 22689 + 9176 = 31865
+        #  - amount_tax will be 4310.924 + 1743.529 = 6054.453 ~ 6054
+        #  - amount_total will be 31865 + 6054 = 37919 != 37920 = 27000 + 10920
+        #
+        # By performing a rounding at the end to compute the price_excluded amount, the amount_tax will be strictly
+        # equals to 'price_included' - 'price_excluded' after rounding and then:
+        #   Line 1: sum(taxes) = 27000 - 22689 = 4311
+        #   Line 2: sum(taxes) = 10920 - 2176 = 8744
+        #   amount_tax = 4311 + 8744 = 13055
+        #   amount_total = 31865 + 13055 = 37920
+        base = price_unit * quantity
+        if self._context.get('round_base', True):
+            base = currency.round(base)
+
+        # For the computation of move lines, we could have a negative base value.
+        # In this case, compute all with positive values and negate them at the end.
+        sign = 1
+        if currency.is_zero(base):
+            sign = -1 if fixed_multiplicator < 0 else 1
+        elif base < 0:
+            sign = -1
+            base = -base
+
+        # Store the totals to reach when using price_include taxes (only the last price included in row)
+        total_included_checkpoints = {}
+        i = len(taxes) - 1
+        store_included_tax_total = True
+        # Keep track of the accumulated included fixed/percent amount.
+        incl_tax_amounts = {
+            'percent_taxes': [],
+            'division_taxes': [],
+            'fixed_amount': 0.0,
+        }
+        custom_fixed_amount_after = 0.0
+        # Store the tax amounts we compute while searching for the total_excluded
+        cached_base_amounts = {}
+        cached_tax_amounts = {}
+        is_base_affected = True
+        if handle_price_include:
+            for tax in reversed(taxes):
+                tax_repartition_lines = (
+                    is_refund
+                    and tax.refund_repartition_line_ids
+                    or tax.invoice_repartition_line_ids
+                ).filtered(lambda x: x.repartition_type == "tax")
+                sum_repartition_factor = sum(tax_repartition_lines.mapped("factor"))
+
+                if tax.include_base_amount and is_base_affected:
+                    base = recompute_base(base, incl_tax_amounts)
+                    store_included_tax_total = True
+                if self._context.get('force_price_include', tax.price_include):
+                    if tax.amount_type == 'percent':
+                        incl_tax_amounts['percent_taxes'].append((i, tax.amount, sum_repartition_factor))
+                    elif tax.amount_type == 'division':
+                        incl_tax_amounts['division_taxes'].append((i, tax.amount * sum_repartition_factor))
+                    elif tax.amount_type == 'fixed':
+                        incl_tax_amounts['fixed_amount'] = abs(quantity) * tax.amount * sum_repartition_factor * abs(fixed_multiplicator)
+                    else:
+                        # tax.amount_type == other (python)
+                        tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner, fixed_multiplicator)
+                        tax_amount = float_round(tax_amount, precision_rounding=prec)
+                        incl_tax_amounts['fixed_amount'] += tax_amount
+                        # Avoid unecessary re-computation
+                        cached_tax_amounts[i] = tax_amount
+                        custom_fixed_amount_after += tax_amount
+                    # In case of a zero tax, do not store the base amount since the tax amount will
+                    # be zero anyway. Group and Python taxes have an amount of zero, so do not take
+                    # them into account.
+                    if (
+                        store_included_tax_total
+                        and (tax.amount or tax.amount_type not in ("percent", "division", "fixed"))
+                        and i not in cached_tax_amounts
+                    ):
+                        total_included_checkpoints[i] = base - custom_fixed_amount_after
+                        store_included_tax_total = False
+                        custom_fixed_amount_after = 0.0
+                i -= 1
+                is_base_affected = tax.is_base_affected
+
+        total_excluded = recompute_base(base, incl_tax_amounts)
+>>>>>>> a466ff9f34fe61b3b87123515ff605ef73eeed18
         if self._context.get('round_base', True):
             total_excluded = currency.round(total_excluded)
             total_included = currency.round(total_included)
