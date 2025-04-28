@@ -48,7 +48,7 @@ class Partner(models.Model):
             # Add the events linked to the children of the partner
             for p in self.browse(meetings.keys()):
                 partner = p
-                while partner.parent_id:
+                while partner.sudo().parent_id:
                     partner = partner.parent_id
                     if partner in self:
                         meetings[partner.id] = meetings.get(partner.id, set()) | meetings[p.id]
