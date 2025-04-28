@@ -272,13 +272,37 @@ class SaleOrderLine(models.Model):
             'user_ids': False,  # force non assigned task, as created as sudo()
         }
 
+    def _prepare_template_vals(self, template, project):
+        if template.allocated_hours:
+            allocated_hours = template.allocated_hours
+        else:
+            allocated_hours = sum(
+                sol._convert_qty_company_hours(self.company_id)
+                for sol in self.order_id.order_line
+                if sol.product_id.task_template_id.id == template.id
+                and sol.product_id.service_type not in ['milestones', 'manual']
+            )
+
+        return {
+            'allocated_hours': allocated_hours,
+            'partner_id': self.order_id.partner_id.id,
+            'project_id': project.id,
+            'sale_line_id': self.id,
+            'sale_order_id': self.order_id.id,
+        }
+
     def _timesheet_create_task(self, project):
         """ Generate task for the given so line, and link it.
             :param project: record of project.project in which the task should be created
             :return task: record of the created task
         """
-        values = self._timesheet_create_task_prepare_values(project)
-        task = self.env['project.task'].sudo().create(values)
+        if template := self.product_id.task_template_id:
+            vals = self._prepare_template_vals(template, project)
+            task_name = '%s-%s' % (self.order_id.name, template.name)
+            task = template.with_context(copy_from_template=True, task_name=task_name).sudo().copy(vals)
+        else:
+            values = self._timesheet_create_task_prepare_values(project)
+            task = self.env['project.task'].sudo().create(values)
         self.task_id = task
         # post message on task
         task_msg = _("This task has been created from: %(order_link)s (%(product_name)s)",
@@ -303,6 +327,7 @@ class SaleOrderLine(models.Model):
         """
         so_line_task_global_project = self._get_so_lines_task_global_project()
         so_line_new_project = self._get_so_lines_new_project()
+        task_templates = self.env['project.task']
 
         # search so lines from SO of current so lines having their project generated, in order to check if the current one can
         # create its own project, or reuse the one of its order.
@@ -365,7 +390,8 @@ class SaleOrderLine(models.Model):
                         project = map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)]
                     else:
                         project = map_so_project[so_line.order_id.id]
-                if not so_line.task_id:
+                if not so_line.task_id and so_line.product_id.task_template_id not in task_templates:
+                    task_templates |= so_line.product_id.task_template_id
                     so_line._timesheet_create_task(project=project)
             so_line._handle_milestones(project)
 
@@ -379,7 +405,10 @@ class SaleOrderLine(models.Model):
             if not so_line.task_id:
                 project = map_sol_project.get(so_line.id) or so_line.order_id.project_id
                 if project and so_line.product_uom_qty > 0:
-                    so_line._timesheet_create_task(project)
+                    if so_line.product_id.task_template_id not in task_templates:
+                        task_templates |= so_line.product_id.task_template_id
+                        so_line._timesheet_create_task(project)
+
                 elif not project:
                     raise UserError(_(
                         "A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
