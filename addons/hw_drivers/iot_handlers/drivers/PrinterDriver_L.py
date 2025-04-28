@@ -2,12 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64decode
-from cups import IPPError, IPP_PRINTER_IDLE, IPP_PRINTER_PROCESSING, IPP_PRINTER_STOPPED
-import dbus
+from cups import IPPError, IPP_JOB_COMPLETED, IPP_JOB_PROCESSING, IPP_JOB_PENDING, CUPS_FORMAT_AUTO
 import logging
 import netifaces as ni
 import re
-import subprocess
+import time
 
 from odoo import http
 from odoo.addons.hw_drivers.connection_manager import connection_manager
@@ -83,30 +82,23 @@ class PrinterDriver(PrinterDriverBase):
         return re.sub(r"[\(].*?[\)]", "", device_model).strip()
 
     def disconnect(self):
-        self.update_status('disconnected', 'Printer was disconnected')
+        self.send_status('disconnected', 'Printer was disconnected')
         super(PrinterDriver, self).disconnect()
 
-    def print_raw(self, data, landscape=False, duplex=True):
+    def print_raw(self, data):
         """
         Print raw data to the printer
         :param data: The data to print
-        :param landscape: Print in landscape mode (Default: False)
-        :param duplex: Print in duplex mode (recto-verso) (Default: True)
         """
-        options = []
-        if landscape:
-            options.extend(['-o', 'orientation-requested=4'])
-        if not duplex:
-            options.extend(['-o', 'sides=one-sided'])
-        cmd = ["lp", "-d", self.device_identifier, *options]
-
-        _logger.debug("Printing using command: %s", cmd)
-        process = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-        process.communicate(data)
-        if process.returncode != 0:
-            # The stderr isn't meaningful, so we don't log it ('No such file or directory')
-            _logger.error('Printing failed: printer with the identifier "%s" could not be found',
-                          self.device_identifier)
+        try:
+            with cups_lock:
+                job_id = conn.createJob(self.device_identifier, 'Odoo print job', {'document-format': CUPS_FORMAT_AUTO})
+                conn.startDocument(self.device_identifier, job_id, 'Odoo print job', CUPS_FORMAT_AUTO, 1)
+                conn.writeRequestData(data, len(data))
+                conn.finishDocument(self.device_identifier)
+            self.job_ids.append(job_id)
+        except IPPError as error:
+            self.send_status(status='error', message=error.message)
 
     @classmethod
     def format_star(cls, im):
@@ -233,6 +225,33 @@ class PrinterDriver(PrinterDriverBase):
         _logger.debug("_action_default called for printer %s", self.device_name)
         self.print_raw(b64decode(data['document']))
         return {'print_id': data['print_id']}
+
+    def _cancel_job_with_error(self, job_id, error_message):
+        self.job_ids.remove(job_id)
+        conn.cancelJob(job_id)
+        self.send_status(status='error', message=error_message)
+
+    def _check_job_status(self, job_id):
+        try:
+            with cups_lock:
+                job = conn.getJobAttributes(job_id, requested_attributes=['job-state', 'job-state-reasons', 'job-printer-state-message', 'time-at-creation'])
+                _logger.debug("job details for job id #%d: %s", job_id, job)
+                job_state = job['job-state']
+                if job_state == IPP_JOB_COMPLETED:
+                    self.job_ids.remove(job_id)
+                    self.send_status(status='success')
+                # Generic timeout, e.g. USB printer has been unplugged
+                elif job['time-at-creation'] + self.job_timeout_seconds < time.time():
+                    self._cancel_job_with_error(job_id, 'Printing timed out')
+                # Cannot reach network printer
+                elif job_state == IPP_JOB_PROCESSING and 'printer is unreachable' in job.get('job-printer-state-message', ''):
+                    self._cancel_job_with_error(job_id, 'Printer is unreachable')
+                # Any other failure state
+                elif job_state not in [IPP_JOB_PROCESSING, IPP_JOB_PENDING]:
+                    self._cancel_job_with_error(job_id, job['job-state-reasons'])
+        except IPPError:
+            _logger.exception('IPP error occurred while fetching CUPS jobs')
+            self.job_ids.remove(job_id)
 
 
 class PrinterController(http.Controller):

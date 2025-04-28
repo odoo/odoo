@@ -4,6 +4,7 @@ import io
 import logging
 from PIL import Image, ImageOps
 import re
+import time
 
 from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.main import iot_devices
@@ -14,6 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class PrinterDriverBase(Driver, ABC):
     connection_type = 'printer'
+    job_timeout_seconds = 30
 
     RECEIPT_PRINTER_COMMANDS = {
         'star': {
@@ -34,8 +36,7 @@ class PrinterDriverBase(Driver, ABC):
         super().__init__(identifier, device)
 
         self.device_type = 'printer'
-        self.state = {'status': 'connecting', 'message': 'Connecting to printer', 'reason': None}
-        self.send_status()
+        self.job_ids = []
 
         self._actions.update({
             'cashbox': self.open_cashbox,
@@ -53,27 +54,14 @@ class PrinterDriverBase(Driver, ABC):
         ) else 'disconnected'
         return {'status': status, 'messages': ''}
 
-    def update_status(self, status, message, reason=None):
-        """Updates the state of the current printer.
+    def send_status(self, status, message=None):
+        """Sends a status update event for the printer.
 
-        :param str status: The new value of the status
+        :param str status: The value of the status
         :param str message: A comprehensive message describing the status
-        :param str reason: The reason fo the current status
         """
-        if self.state['status'] != status or self.state['reason'] != reason:
-            self.state = {
-                'status': status,
-                'message': message,
-                'reason': reason,
-            }
-            self.send_status()
-
-    def send_status(self):
-        """Sends the current status of the printer to the connected Odoo instance."""
-        self.data = {
-            'value': '',
-            'state': self.state,
-        }
+        self.data['status'] = status
+        self.data['message'] = message
         event_manager.device_changed(self)
 
     def print_receipt(self, data):
@@ -211,6 +199,15 @@ class PrinterDriverBase(Driver, ABC):
         for drawer in commands['drawers']:
             self.print_raw(drawer)
 
+    def run(self):
+        while True:
+            # We monitor ongoing jobs by polling them every second.
+            # Ideally we would receive events instead of polling, but unfortunately CUPS
+            # events do not trigger with all printers, and win32print has no event mechanism.
+            for job_id in self.job_ids:
+                self._check_job_status(job_id)
+            time.sleep(1)
+
     @abstractmethod
     def print_raw(self, data):
         """Sends the raw data to the printer.
@@ -227,4 +224,9 @@ class PrinterDriverBase(Driver, ABC):
     @abstractmethod
     def _action_default(self, data):
         """Action called when no action name is provided in the action data."""
+        pass
+
+    @abstractmethod
+    def _check_job_status(self, job_id):
+        """Method called to poll the status of a print job."""
         pass

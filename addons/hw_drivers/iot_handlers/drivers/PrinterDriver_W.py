@@ -3,8 +3,10 @@
 
 import logging
 from base64 import b64decode
+from datetime import datetime, timezone
 import io
 import win32print
+import pywintypes
 import ghostscript
 
 from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
@@ -41,15 +43,16 @@ class PrinterDriver(PrinterDriverBase):
         return 'direct' if device['port'].startswith(('USB', 'COM', 'LPT')) else 'network'
 
     def disconnect(self):
-        self.update_status('disconnected', 'Printer was disconnected')
+        self.send_status('disconnected', 'Printer was disconnected')
         super(PrinterDriver, self).disconnect()
 
     def print_raw(self, data):
-        win32print.StartDocPrinter(self.printer_handle, 1, ('', None, "RAW"))
+        job_id = win32print.StartDocPrinter(self.printer_handle, 1, ('', None, "RAW"))
         win32print.StartPagePrinter(self.printer_handle)
         win32print.WritePrinter(self.printer_handle, data)
         win32print.EndPagePrinter(self.printer_handle)
         win32print.EndDocPrinter(self.printer_handle)
+        self.job_ids.append(job_id)
 
     def print_report(self, data):
         helpers.write_file('document.pdf', data, 'wb')
@@ -70,9 +73,11 @@ class PrinterDriver(PrinterDriverBase):
         stdout_log_level = logging.DEBUG
         try:
             ghostscript.Ghostscript(*args, stdout=stdout_buf, stderr=stderr_buf)
+            self.send_status(status='success')
         except Exception:
             _logger.exception("Error while printing report, ghostscript args: %s, error buffer: %s", args, stderr_buf.getvalue())
             stdout_log_level = logging.ERROR # some stdout value might contains relevant error information
+            self.send_status(status='error', message='Printing report failed')
             raise
         finally:
             _logger.log(stdout_log_level, "Ghostscript stdout: %s", stdout_buf.getvalue())
@@ -101,6 +106,35 @@ class PrinterDriver(PrinterDriverBase):
             self.print_raw("^XA^CI28 ^FT35,40 ^A0N,30 ^FDIoT Box Test Label^FS^XZ".encode())
         else:
             self.print_raw("IoT Box Test Page".encode())
+
+    def _cancel_job_with_error(self, job_id, error_message):
+        self.job_ids.remove(job_id)
+        win32print.SetJob(self.printer_handle, job_id, 0, None, win32print.JOB_CONTROL_DELETE)
+        self.send_status(status='error', message=error_message)
+
+    def _check_job_status(self, job_id):
+        try:
+            job = win32print.GetJob(self.printer_handle, job_id, win32print.JOB_INFO_1)
+            elapsed_time = datetime.now(timezone.utc) - job['Submitted']
+            _logger.debug('job details for job id #%d: %s', job_id, job)
+            if job['Status'] & win32print.JOB_STATUS_PRINTED:
+                self.job_ids.remove(job_id)
+                self.send_status(status='success')
+            # Print timeout, e.g. network printer is disconnected
+            if elapsed_time.seconds > self.job_timeout_seconds:
+                self._cancel_job_with_error(job_id, 'Printing timed out')
+            # Generic error, e.g. USB printer is not connected
+            elif job['Status'] & win32print.JOB_STATUS_ERROR:
+                self._cancel_job_with_error(job_id, 'Unknown error')
+        except pywintypes.error as error:
+            # GetJob returns error 87 (incorrect parameter) if the print job doesn't exist.
+            # Windows deletes print jobs on completion, so this actually means the print
+            # was succcessful.
+            if error.winerror == 87:
+                self.send_status(status='success')
+            else:
+                _logger.exception('Win32 error occurred while querying print job')
+            self.job_ids.remove(job_id)
 
 
 proxy_drivers['printer'] = PrinterDriver
