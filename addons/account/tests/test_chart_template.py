@@ -295,6 +295,25 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             ])
             return data
 
+        # First try with `force_create=False` (during an upgrade)
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False, force_create=False)
+
+        taxes = self.env['account.tax'].search([('company_id', '=', self.company.id)])
+        self.assertRecordValues(taxes, [
+            {'name': 'Tax 1'},
+            {'name': 'Tax 2'},
+        ])
+
+        fiscal_position = self.env['account.fiscal.position'].search([])
+        self.assertRecordValues(fiscal_position.tax_ids.tax_src_id, [
+            {'name': 'Tax 1'},
+        ])
+        self.assertRecordValues(fiscal_position.tax_ids.tax_dest_id, [
+            {'name': 'Tax 2'},
+        ])
+
+        # then try with `force_create=True` (when updating the CoA manually)
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
 
