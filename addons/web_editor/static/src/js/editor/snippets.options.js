@@ -8907,6 +8907,11 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @see this.selectClass for params
      */
     backgroundPositionOverlay: async function (previewMode, widgetValue, params) {
+        if (!widgetValue) {
+            this._toggleBgOverlay(false);
+            return;
+        }
+        this.el.querySelector(".fa-arrows-alt").classList.add("o_toggle_background_position_overlay");
         // Updates the internal image
         await new Promise(resolve => {
             this.img = document.createElement('img');
@@ -8969,6 +8974,9 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     _computeWidgetState: function (methodName, params) {
         if (methodName === 'backgroundType') {
             return this.$target.css('background-repeat') === 'repeat' ? 'repeat-pattern' : 'cover';
+        }
+        if (methodName === "backgroundPositionOverlay") {
+            return this.el.querySelector(".fa-arrows-alt").classList.contains("o_toggle_background_position_overlay");
         }
         return this._super(...arguments);
     },
@@ -9034,6 +9042,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         }
 
         if (!activate) {
+            this.el.querySelector(".fa-arrows-alt").classList.remove("o_toggle_background_position_overlay", "active");
             this.$backgroundOverlay.removeClass('oe_active');
             this.trigger_up('unblock_preview_overlays');
             this.trigger_up('activate_snippet', {$snippet: this.$target});
@@ -9073,6 +9082,12 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         this.$overlayBackground.empty().append(this.$bgDragger);
         this.$backgroundOverlay.addClass('oe_active');
         this._dimensionOverlay();
+        const shapeEl =  this.$bsTarget[0].querySelector(".o_we_shape");
+        if (shapeEl) {
+            const shapeOverlayEl = document.createElement("div");
+            shapeOverlayEl.classList.add(...shapeEl.classList);
+            this.$bgDragger[0].insertAdjacentElement("afterend", shapeOverlayEl);
+        }
         this.$bgDragger.tooltip('show');
 
         // Needs to be deferred or the click event that activated the overlay deactivates it as well.
