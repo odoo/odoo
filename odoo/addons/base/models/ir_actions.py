@@ -719,38 +719,24 @@ class IrActionsServer(models.Model):
 
     def _generate_action_name(self):
         self.ensure_one()
-        match self.state:
-            case 'object_write':
-                _field_chain, field_chain_str = self._get_relation_chain("update_path")
-                if self.evaluation_type == 'value':
-                    return _("Update %(field_chain_str)s", field_chain_str=field_chain_str)
-                else:
-                    return _("Compute %(field_chain_str)s", field_chain_str=field_chain_str)
-            case "object_copy":
-                if self.crud_model_id and self.resource_ref:
-                    return _("Duplicate %(model)s: %(record)s",
-                             model=self.crud_model_id.name,
-                             record=self.env[self.crud_model_id.model].browse(self.resource_ref.id).display_name)
+        if self.state == 'object_create':
+            return _("Create %(model_name)s", model_name=self.crud_model_id.name)
+        if self.state == 'object_write':
+            return _("Update %(model_name)s", model_name=self.crud_model_id.name)
+        if self.state == "object_copy":
+            if not self.crud_model_id or not self.resource_ref:
                 return _("Duplicate ...")
-            case 'object_create':
-                return _(
-                    "Create %(model_name)s with name %(value)s",
-                    model_name=self.crud_model_id.name,
-                    value=self.value
-                )
-            case _:
-                return dict(self._fields["state"]._description_selection(self.env)).get(
-                    self.state, ""
-                )
+            record = self.env[self.crud_model_id.model].browse(self.resource_ref.id)
+            return _("Duplicate %(record)s", record=record.display_name)
+        return dict(self._fields["state"]._description_selection(self.env)).get(
+            self.state, ""
+        )
 
     def _name_depends(self):
         return [
             "state",
-            "update_field_id",
             "crud_model_id",
-            "value",
             "resource_ref",
-            "evaluation_type",
         ]
 
     @api.depends(lambda self: self._name_depends())

@@ -239,7 +239,7 @@ class BaseAutomationTestUi(HttpCase):
                     {"default_model_id": model.id, "default_usage": "base_automation"},
                 )
             if onchange_link_passes == 2:
-                self.assertEqual(res["value"]["name"], "Add followers: ")
+                self.assertEqual(res["value"]["name"], "Add Followers")
 
             return res
 

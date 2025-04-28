@@ -109,54 +109,15 @@ class IrActionsServer(models.Model):
         compute='_compute_activity_user_info', readonly=False, store=True)
 
     def _name_depends(self):
-        return super()._name_depends() + [
-            "template_id",
-            "partner_ids",
-            "activity_summary",
-            "activity_type_id",
-            "followers_type",
-            "followers_partner_field_name",
-        ]
+        return [*super()._name_depends(), "template_id", "activity_type_id"]
 
     def _generate_action_name(self):
         self.ensure_one()
-        match self.state:
-            case 'mail_post':
-                return _(
-                    'Send email: %(template_name)s',
-                    template_name=self.template_id.name
-                )
-            case 'followers':
-                if self.followers_type == 'generic':
-                    _field_chain, field_chain_str = self._get_relation_chain("followers_partner_field_name")
-                    return _(
-                        'Add followers based on field: %(field_chain_str)s',
-                        field_chain_str=field_chain_str
-                    )
-                else:
-                    return _(
-                        'Add followers: %(partner_names)s',
-                        partner_names=', '.join(self.partner_ids.mapped('name'))
-                    )
-            case 'remove_followers':
-                if self.followers_type == 'generic':
-                    _field_chain, field_chain_str = self._get_relation_chain("followers_partner_field_name")
-                    return _(
-                        'Remove followers based on field: %(field_chain_str)s',
-                        field_chain_str=field_chain_str
-                    )
-                else:
-                    return _(
-                        'Remove followers: %(partner_names)s',
-                        partner_names=', '.join(self.partner_ids.mapped('name'))
-                    )
-            case 'next_activity':
-                return _(
-                    'Create activity: %(activity_name)s',
-                    activity_name=self.activity_summary or self.activity_type_id.name
-                )
-            case _:
-                return super()._generate_action_name()
+        if self.state == 'mail_post' and self.template_id:
+            return _('Send %(template_name)s', template_name=self.template_id.name)
+        if self.state == 'next_activity' and self.activity_type_id:
+            return _('Create %(activity_name)s', activity_name=self.activity_type_id.name)
+        return super()._generate_action_name()
 
     @api.depends('state')
     def _compute_available_model_ids(self):

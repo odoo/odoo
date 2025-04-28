@@ -413,7 +413,7 @@
                                         required="state in ['object_create', 'object_copy']"/>
                                     <field name="value" widget="char" string="Name" invisible="state != 'object_create'"
                                         help="The name of the record to create" placeholder="e.g. Follow-up"/>
-                                    <field name="resource_ref" placeholder="Choose a record..." string="Duplicate from" options="{'model_field': 'crud_model_id', 'no_create': True, 'no_open': True}" invisible="crud_model_id == False or state != 'object_copy'"/>
+                                    <field name="resource_ref" placeholder="Choose a record..." string="Duplicate from" options="{'model_field': 'crud_model_id', 'no_create': True, 'no_open': True}" invisible="crud_model_id == False or state != 'object_copy'" required="state == 'object_copy'"/>
                                     <field name="link_field_id"
                                         domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name),
                                         ('ttype', 'in', ['many2one', 'one2many', 'many2many'])]"
@@ -514,30 +514,6 @@ env['res.partner'].create({'name': partner_name})
                             />
                             <i class="fa fa-warning text-warning px-2 m-0" invisible="not warning" t-att-title="record.warning.raw_value"/>
                             <field name="name" class="text-truncate" />
-                            <t invisible="state != 'object_write'">
-                                <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'clear') or evaluation_type != 'value'">
-                                    <span>by clearing it</span>
-                                </t>
-                                <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'add') or evaluation_type != 'value'">
-                                    <span>by adding</span><field name="resource_ref"/>
-                                </t>
-                                <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'remove') or evaluation_type != 'value'">
-                                    <span>by removing</span><field name="resource_ref"/>
-                                </t>
-                                <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'set') or evaluation_type != 'value'">
-                                    <span>by setting it to</span><field name="resource_ref"/>
-                                    </t>
-                                <t invisible="update_field_type == 'many2many' and evaluation_type == 'value'">
-                                    <span invisible="evaluation_type != 'value'">to</span>
-                                    <span invisible="value_field_to_show != 'html_value'">rich content</span>
-                                    <span invisible="evaluation_type != 'equation'">as</span>
-                                    <field name="resource_ref" invisible="not (value_field_to_show == 'resource_ref' and evaluation_type == 'value')" />
-                                    <field name="selection_value" invisible="not (value_field_to_show == 'selection_value' and evaluation_type == 'value')" class="d-inline"/>
-                                    <field name="update_boolean_value" invisible="not (value_field_to_show == 'update_boolean_value' and evaluation_type == 'value')" class="d-inline"/>
-                                    <em invisible="not (value_field_to_show == 'value' and evaluation_type == 'value')" class="d-inline"><field name="value"/></em>
-                                    <code invisible="not (evaluation_type == 'equation')"><field name="value" /></code>
-                                </t>
-                            </t>
                             <button type="delete" name="delete" class="btn fa fa-trash fa-xl px-3 ms-auto" title="Delete Action" />
                         </t>
                     </templates>
