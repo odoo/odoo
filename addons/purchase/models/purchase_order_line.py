@@ -313,6 +313,22 @@ class PurchaseOrderLine(models.Model):
             if not line.product_id or line.invoice_lines or not line.company_id or self.env.context.get('skip_uom_conversion'):
                 continue
             params = line._get_select_sellers_params()
+<<<<<<< 5fa80189b178b8eda0a1900275314aa589c1f332
+||||||| f101a9b6d65e34cf3d3175a341b87e3f14c44a02
+            seller = line.product_id._select_seller(
+                partner_id=line.partner_id,
+                quantity=line.product_qty,
+                date=line.order_id.date_order and line.order_id.date_order.date() or fields.Date.context_today(line),
+                uom_id=line.product_uom_id,
+                params=params)
+=======
+            seller = line.product_id._select_seller(
+                partner_id=line.partner_id,
+                quantity=abs(line.product_qty),
+                date=line.order_id.date_order and line.order_id.date_order.date() or fields.Date.context_today(line),
+                uom_id=line.product_uom_id,
+                params=params)
+>>>>>>> c1c86182e4b28e929bf56e79f57f33aaa13e67f1
 
             if line.selected_seller_id or not line.date_planned:
                 line.date_planned = line._get_date_planned(line.selected_seller_id).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
