@@ -42,3 +42,18 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "self_mobile_online_payment_meal_table")
+
+    def test_online_payment_kiosk_qr_code(self):
+        """
+        Verify that when making an order from kiosk with online payment, a QR code is generated
+        """
+        self_route = self.pos_config._get_self_order_route()
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_service_mode': 'counter',
+            'self_order_online_payment_method_id': self.online_payment_method.id,
+            'use_presets': False,
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self.start_tour(self_route, "test_online_payment_kiosk_qr_code")
