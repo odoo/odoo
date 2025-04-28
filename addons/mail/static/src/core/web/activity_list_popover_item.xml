@@ -31,7 +31,7 @@
             <div class="d-flex align-items-center flex-wrap mx-3">
                 <img class="me-2 rounded o_object_fit_cover" t-att-src="props.activity.persona.avatarUrl" style="max-width: 1.5rem; max-height: 1.5rem;"/>
                 <div class="mt-1">
-                    <small class="text-truncate" t-esc="props.activity.persona.name"/>
+                    <small class="text-truncate" t-esc="props.activity.persona.displayName"/>
                     <small t-if="props.activity.state !== 'today'" class="mx-1">-</small>
                     <small t-if="['overdue', 'planned'].includes(props.activity.state)" class="fw-bold" t-att-title="props.activity.dateDeadlineFormatted" t-esc="delayLabel"/>
                     <small t-if="props.activity.state === 'done'" class="fw-bold" t-att-title="dateDoneFormatted" t-esc="props.activity.dateDoneFormatted"/>

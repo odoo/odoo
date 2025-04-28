@@ -48,6 +48,11 @@ export class Persona extends Record {
     /** @type {string} */
     landlineNumber;
     debouncedSetImStatus;
+    displayName = Record.attr(undefined, {
+        compute() {
+            return this._computeDisplayName();
+        },
+    });
     /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
     signature = Record.attr(undefined, { html: true });
     storeAsTrackedImStatus = Record.one("Store", {
@@ -105,6 +110,10 @@ export class Persona extends Record {
     /** @type {luxon.DateTime} */
     write_date = Record.attr(undefined, { type: "datetime" });
     group_ids = Record.many("res.groups", { inverse: "personas" });
+
+    _computeDisplayName() {
+        return this.name;
+    }
 
     /**
      * @returns {boolean}
