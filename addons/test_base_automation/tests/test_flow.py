@@ -4,6 +4,7 @@ import json
 from unittest.mock import patch
 import sys
 
+from freezegun import freeze_time
 from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests import Form, common, tagged
@@ -926,6 +927,29 @@ if env.context.get('old_values', None):  # on write
         self.assertEqual(len(action_ids), 1)
         self.assertEqual(len(copy_action_ids), len(action_ids))
         self.assertNotEqual(copy_action_ids, action_ids)
+
+    @freeze_time('2030-05-24')
+    def test_150_domain_evaluation(self):
+        # a dummy automation only to test domain evaluation
+        dummy = create_automation(
+            self,
+            model_id=self.lead_model.id,
+            trigger='on_create_or_write',
+        )
+
+        success_pairs = [
+            ("list()", []),
+            ("list(range(1, 4))", [1, 2, 3]),
+            ("['|', (1, '=', 1), (1, '>', 0)]", ['|', (1, '=', 1), (1, '>', 0)]),
+            ("[(2, '=', 1 + 1)]", [(2, '=', 2)]),
+            (
+                "[('create_date', '<', datetime.datetime.combine(context_today() - relativedelta(days=100), datetime.time(1, 2, 3)).to_utc().strftime('%Y-%m-%d %H:%M:%S'))]",
+                [('create_date', '<', "2030-02-13 01:02:03")],
+            ),  # use the date utils used by front-end domains
+        ]
+        for domain_expression, domain_value in success_pairs:
+            with self.subTest(domain_expression=domain_expression, domain_value=domain_value):
+                self.assertEqual(dummy._get_evaluated_domain(domain_expression), domain_value)
 
 
 @common.tagged('post_install', '-at_install')

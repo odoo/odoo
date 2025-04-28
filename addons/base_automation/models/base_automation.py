@@ -577,7 +577,7 @@ class BaseAutomation(models.Model):
         return automations.with_env(self.env)
 
     def _get_eval_context(self, payload=None):
-        """ Prepare the context used when evaluating python code
+        """ Prepare the base context used when evaluating domains and record_getter
             :returns: dict -- evaluation context given to safe_eval
         """
         self.ensure_one()
@@ -593,6 +593,15 @@ class BaseAutomation(models.Model):
         if payload is not None:
             eval_context['payload'] = payload
         return eval_context
+
+    def _get_evaluated_domain(self, domain):
+        self.ensure_one()
+        domain = domain.replace('.to_utc()', '')
+        return safe_eval.safe_eval(domain, {
+            **self._get_eval_context(),
+            'context_today': safe_eval.datetime.datetime.today,
+            'relativedelta': safe_eval.dateutil.relativedelta.relativedelta,
+        })
 
     def _get_cron_interval(self, automations=None):
         """ Return the expected time interval used by the cron, in minutes. """
@@ -618,7 +627,7 @@ class BaseAutomation(models.Model):
                 # this context flag enables to detect the executions of
                 # automations while evaluating their precondition
                 records = records.with_context(__action_feedback=True)
-            domain = safe_eval.safe_eval(self_sudo.filter_pre_domain, self._get_eval_context())
+            domain = self._get_evaluated_domain(self_sudo.filter_pre_domain)
             return records.sudo().filtered_domain(domain).with_env(records.env)
         else:
             return records
@@ -634,7 +643,7 @@ class BaseAutomation(models.Model):
                 # this context flag enables to detect the executions of
                 # automations while evaluating their postcondition
                 records = records.with_context(__action_feedback=True)
-            domain = safe_eval.safe_eval(self_sudo.filter_domain, self._get_eval_context())
+            domain = self._get_evaluated_domain(self_sudo.filter_domain)
             return records.sudo().filtered_domain(domain).with_env(records.env), domain
         else:
             return records, None
@@ -951,13 +960,12 @@ class BaseAutomation(models.Model):
         for automation in self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)]):
             _logger.info("Starting time-based automation rule `%s`.", automation.name)
             last_run = fields.Datetime.from_string(automation.last_run) or datetime.datetime.fromtimestamp(0, tz=None)
-            eval_context = automation._get_eval_context()
 
             # retrieve all the records that satisfy the automation's condition
             domain = []
             context = dict(self._context)
             if automation.filter_domain:
-                domain = safe_eval.safe_eval(automation.filter_domain, eval_context)
+                domain = automation._get_evaluated_domain(automation.filter_domain)
             records = self.env[automation.model_name].with_context(context).search(domain)
 
             def get_record_dt(record):
