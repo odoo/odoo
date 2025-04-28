@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template_id" xml:space="preserve">
+    <t t-name="template" t-inherit="point_of_sale.ProductInfoPopup" t-inherit-mode="extension">
+        <xpath expr="//ProductInfoBanner" position="after">
+                <t t-debug="pdb"/>
+                <h3 class="section-title">
+                    Description
+                </h3>
+                <t t-if="props.product.public_description">
+                    <span class="modal-body o_self_order_main_desc fs-3 p-4 ps-5 overflow-auto" t-out="props.product.public_description"/>
+                </t>
+                <t t-else="">
+                    <span class="modal-body o_self_order_main_desc fs-3 p-4 ps-5 overflow-auto">No description available</span>
+                </t>
+        </xpath>
+    </t>
+</templates>
