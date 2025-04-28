@@ -4,14 +4,13 @@ import { registry } from "@web/core/registry";
 export class WebsiteForumShare extends Interaction {
     static selector = ".website_forum";
 
-    // assetLibs = [
-    //     "website_forum.assets_widget_xml",
-    // ];
-    xmlTemplates = {
-        "/website_forum/static/src/xml/public_templates.xml": [
-            "website_forum.spam_search_name",
-        ],
-    };
+    assetBundles = ["website_forum.assets_widget_xml"];
+    // xmlTemplates = {
+    //     "/website_forum/static/src/xml/public_templates.xml": [
+    //         "website_forum.spam_search_name",
+    //     ],
+    // };
+    // xmlTemplates = ["/website_forum/static/src/xml/public_templates.xml"];
 
     start() {
         // Retrieve stored social data

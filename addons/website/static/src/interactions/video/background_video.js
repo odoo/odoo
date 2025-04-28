@@ -12,11 +12,13 @@ export class BackgroundVideo extends Interaction {
         _modal: () => this.el.closest("modal"),
     };
 
-    xmlTemplates = {
-        "/website/static/src/xml/website.background.video.xml": [
-            "website.background.video",
-        ],
-    };
+    // xmlTemplates = {
+    //     "/website/static/src/xml/website.background.video.xml": [
+    //         "website.background.video",
+    //     ],
+    // };
+    // xmlTemplates = ["/website/static/src/xml/website.background.video.xml"];
+    assetBundles = ["website.assets_widget_xml"];
 
     dynamicContent = {
         _document: {

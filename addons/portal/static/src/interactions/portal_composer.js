@@ -27,15 +27,14 @@ export class PortalComposer extends Interaction {
         },
     };
 
-    // assetLibs = [
-    //     "portal.assets_widget_xml",
-    // ];
-    xmlTemplates = {
-        "/portal/static/src/xml/portal_chatter.xml": [
-            "portal.Chatter.Attachments",
-            "portal.Composer",
-        ],
-    };
+    assetBundles = ["portal.assets_widget_xml"];
+    // xmlTemplates = {
+    //     "/portal/static/src/xml/portal_chatter.xml": [
+    //         "portal.Chatter.Attachments",
+    //         "portal.Composer",
+    //     ],
+    // };
+    // xmlTemplates = ["/portal/static/src/xml/portal_chatter.xml"];
 
     static prepareOptions(options) {
         if (typeof options.default_attachment_ids === "string") {

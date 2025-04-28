@@ -9,9 +9,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
     events: {
         'click .o_wslides_js_course_join_link': '_onClickJoin',
     },
-    assetLibs: [
-        "website_slides.assets_widget_xml",
-    ],
+    assetLibs: ["website_slides.assets_widget_xml"],
 
     /**
      *

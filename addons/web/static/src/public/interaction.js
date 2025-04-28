@@ -3,8 +3,6 @@ import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { INITIAL_VALUE, SKIP_IMPLICIT_UPDATE } from "./colibri";
 import { makeAsyncHandler, makeButtonHandler } from "./utils";
 import { loadBundle, loadXML } from "@web/core/assets";
-// import { loadFile } from "@odoo/owl";
-// import { registerTemplate } from "@web/core/templates";
 
 /**
  * This is the base class to describe interactions. The Interaction class
@@ -44,10 +42,9 @@ export class Interaction {
     static selectorHas = "";
 
     /**
-     * Map to track which template files have been loaded for interactions
-     * Shared across all interaction instances
+     * Constant to reset dynamicContent t-att-* and t-out.
      */
-    static loadedTemplates = new Set();
+    static INITIAL_VALUE = INITIAL_VALUE;
 
     /**
      * Note that a dynamic selector is allowed to return a falsy value, for ex
@@ -103,16 +100,16 @@ export class Interaction {
     dynamicContent = {};
 
     /**
-     *Load static XML of interaction when interaction is initiated.
+     * Asset bundles to be loaded for this interaction.
      *
-     * @type {null|string[]}
+     * @type {null | string[]}
      */
-    assetLibs = null;
+    assetBundles = null;
 
     /**
      * XML templates to be loaded for this interaction.
-     * Format: { templateName: xmlPath }
-     * @type {Object}
+     *
+     * @type {null | string[]}
      */
     xmlTemplates = null;
 
@@ -159,75 +156,7 @@ export class Interaction {
      * be done here. The website framework will wait for this method to complete
      * before applying the dynamic content (event handlers, ...)
      */
-    async willStart() {
-        // if (this.xmlTemplates) {
-        //     const templatePromises = Object.entries(this.xmlTemplates).map(async ([name, path]) => {
-        //         // Load XML file content
-        //         const xmlContent = await loadFile(path);
-        //         debugger;
-        //         // Parse XML to find the template with matching name
-        //         const parser = new DOMParser();
-        //         const doc = parser.parseFromString(xmlContent, "text/xml");
-        //         const template = doc.querySelector(`t[t-name="${name}"]`);
-
-        //         if (!template) {
-        //             throw new Error(`Template ${name} not found in ${path}`);
-        //         }
-
-        //         // Register template using the core templates function
-        //         registerTemplate(name, path, template.outerHTML);
-        //     });
-
-        //     await Promise.all(templatePromises);
-        // }
-        // if (this.xmlTemplates) {
-        //     const templatePromises = Object.entries(this.xmlTemplates).map(async ([name, path]) => {
-        //         // Load XML file content
-        //         const xmlContent = await loadFile(path);
-        //         // Create a bundle-like module definition
-        //         const bundleName = `interaction_template_${name.replace(/\./g, "_")}`;
-        //         const moduleContent = `
-        //             odoo.define("${bundleName}.xml", ["@web/core/templates"], function(require) {
-        //                 "use strict";
-        //                 const { registerTemplate } = require("@web/core/templates");
-        //                 registerTemplate("${name}", "${path}", \`${xmlContent}\`);
-        //             });
-        //         `;
-
-        //         // Create and execute script
-        //         const script = document.createElement("script");
-        //         script.textContent = moduleContent;
-        //         document.head.appendChild(script);
-        //     });
-
-        //     await Promise.all(templatePromises);
-        // }
-        // if (this.xmlTemplates) {
-        //     const templatePromises = Object.entries(this.xmlTemplates).map(async ([name, path]) => {
-        //         await loadXML(path);
-        //     });
-        //     await Promise.all(templatePromises);
-        // }
-        if (this.xmlTemplates) {
-            const templatePromises = Object.entries(this.xmlTemplates).map(async ([path, templateInfo]) => {
-                if (!Interaction.loadedTemplates.has(path)) {
-                    await loadXML(path);
-                    Interaction.loadedTemplates.add(path);
-                }
-            });
-            await Promise.all(templatePromises);
-        }
-
-        if (this.assetLibs) {
-            for (const bundleName of this.assetLibs || []) {
-                if (typeof bundleName === "string") {
-                    await loadBundle(bundleName);
-                } else {
-                    await Promise.all(bundleName.map(loadBundle));
-                }
-            }
-        }
-    }
+    async willStart() {}
 
     /**
      * The start function when we need to execute some code after the interaction
@@ -546,5 +475,71 @@ export class Interaction {
      */
     mountComponent(el, C, props = null) {
         this.__colibri__.mountComponent([el], C, props);
+    }
+
+    /**
+     * Load XML templates listed in `xmlTemplates`.
+     * Ensures each resource is loaded only once.
+     *
+     * @returns {Promise<void>}
+     */
+    async loadXMLTemplates() {
+        if (!this.xmlTemplates || !this.xmlTemplates.length) {
+            return;
+        }
+
+        if (!Interaction._templateLoadPromises) {
+            Interaction._templateLoadPromises = new Map();
+        }
+
+        const templatePromises = this.xmlTemplates.map((path) => {
+            if (!path) {
+                return Promise.resolve();
+            }
+
+            // If already loading, return the same promise
+            if (!Interaction._templateLoadPromises.has(path)) {
+                const promise = loadXML(path).then(() => {
+                    console.log("loaded XML ::", path);
+                });
+                Interaction._templateLoadPromises.set(path, promise);
+            }
+
+            return Interaction._templateLoadPromises.get(path);
+        });
+
+        await Promise.all(templatePromises);
+    }
+
+    /**
+     * Load asset bundles listed in `assetBundles`.
+     * Ensures each resource is loaded only once.
+     *
+     * @returns {Promise<void>}
+     */
+    async loadAssetBundles() {
+        if (!this.assetBundles || !this.assetBundles.length) {
+            return;
+        }
+
+        if (!Interaction._assetLoadPromises) {
+            Interaction._assetLoadPromises = new Map();
+        }
+
+        const assetPromises = this.assetBundles.map((bundleName) => {
+            if (!bundleName) {
+                return Promise.resolve();
+            }
+            // If already loading, return the same promise
+            if (!Interaction._assetLoadPromises.has(bundleName)) {
+                const promise = loadBundle(bundleName).then(() => {
+                    console.log("loaded asset ::", bundleName);
+                });
+                Interaction._assetLoadPromises.set(bundleName, promise);
+            }
+            return Interaction._assetLoadPromises.get(bundleName);
+        });
+
+        await Promise.all(assetPromises);
     }
 }

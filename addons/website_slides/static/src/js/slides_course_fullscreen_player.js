@@ -387,9 +387,7 @@
             'change_slide': '_onChangeSlideRequest',
             'slide_go_next': '_onSlideGoToNext',
         }),
-        assetLibs: [
-            "website_slides.assets_widget_xml",
-        ],
+        assetLibs: ["website_slides.assets_widget_xml"],
         /**
         * @override
         * @param {Object} el

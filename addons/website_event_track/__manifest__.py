@@ -50,6 +50,7 @@
             'website_event_track/static/src/xml/website_event_track_form_tags_wrapper.xml',
             'website_event_track/static/src/xml/website_event_track_email_reminder.xml',
             'website_event_track/static/src/snippets/**/*.js',
+            'website_event_track/static/src/interactions/*',
         ],
         'website_event_track.assets_widget_xml': [
             'website_event_track/static/src/xml/website_event_pwa.xml',

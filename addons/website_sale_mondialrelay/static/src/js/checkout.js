@@ -20,9 +20,8 @@ WebsiteSaleCheckout.include({
     events: Object.assign({
         "click #btn_confirm_relay": "_onClickBtnConfirmRelay",
     }, WebsiteSaleCheckout.prototype.events),
-    assetLibs: [
-        "website_sale_mondialrelay.assets_widget_xml",
-    ],
+
+    assetLibs: ["website_sale_mondialrelay.assets_widget_xml"],
 
     /**
      * Do not allow use same as delivery if delivery method mondialrelay or mondialrelay address is

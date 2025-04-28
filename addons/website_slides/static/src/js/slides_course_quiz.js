@@ -45,9 +45,7 @@
             reset_display: '_resetDisplay',
             delete_question: '_deleteQuestion',
         },
-        assetLibs: [
-            "website_slides.assets_widget_xml",
-        ],
+        assetLibs: ["website_slides.assets_widget_xml"],
 
         /**
         * @override

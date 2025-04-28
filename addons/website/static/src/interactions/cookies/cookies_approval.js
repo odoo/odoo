@@ -11,14 +11,13 @@ export class CookiesApproval extends Interaction {
         },
     };
 
-    // assetLibs = [
-    //     "website.assets_widget_xml",
-    // ];
-    xmlTemplates = {
-        "/website/static/src/xml/website.cookies_warning.xml": [
-            "website.cookiesWarning",
-        ],
-    };
+    assetBundles = ["website.assets_widget_xml"];
+    // xmlTemplates = {
+    //     "/website/static/src/xml/website.cookies_warning.xml": [
+    //         "website.cookiesWarning",
+    //     ],
+    // };
+    // xmlTemplates = ["/website/static/src/xml/website.cookies_warning.xml"];
 
     setup() {
         this.iframeEl = this.el.tagName === "IFRAME" ? this.el : this.el.querySelector("iframe");

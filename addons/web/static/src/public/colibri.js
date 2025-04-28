@@ -27,6 +27,8 @@ export class Colibri {
     }
 
     async start() {
+        await this.interaction.loadAssetBundles();
+        await this.interaction.loadXMLTemplates();
         await this.interaction.willStart();
         if (this.isDestroyed) {
             return;

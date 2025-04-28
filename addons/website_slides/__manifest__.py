@@ -105,7 +105,7 @@ Featuring
             # 'website_slides/static/src/xml/slide_course_prerequisite.xml', interaction
             'website_slides/static/src/xml/slide_quiz.xml',
             'website_slides/static/src/xml/slide_quiz_create.xml',
-            'website_slides/static/src/xml/website_slides_sidebar.xml', # interaction and widget
+            'website_slides/static/src/xml/website_slides_sidebar.xml',
             'website_slides/static/src/xml/website_slides_fullscreen.xml',
             'website_slides/static/src/xml/slide_course_join.xml',
             # "website_slides/static/src/xml/slide_course_prerequisite.xml",

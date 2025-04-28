@@ -14,6 +14,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         'click [name="o_payment_expand_button"]': '_hideExpandButton',
         'click [name="o_payment_submit_button"]': '_submitForm',
     }),
+
     assetLibs: [
         "payment.assets_widget_xml",
     ],

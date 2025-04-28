@@ -271,41 +271,100 @@ export const assets = {
     //  * @returns {Promise<void>} resolved when the XML has been loaded and templates registered
     //  */
     // loadXML(url, { targetDoc = document } = {}) {
-        // const cacheMap = getCacheMap(targetDoc);
-        // if (cacheMap.has(url)) {
-        //     return cacheMap.get(url);
-        // }
+    // const cacheMap = getCacheMap(targetDoc);
+    // if (cacheMap.has(url)) {
+    //     return cacheMap.get(url);
+    // }
 
-        // const promise = fetch(url)
-        //     .then(response => {
-        //         if (!response.ok) {
-        //             throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: response.statusText });
-        //         }
-        //         return response.text();
-        //     })
-        //     .then(xmlText => {
-        //         const parser = new DOMParser();
-        //         const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+    // const promise = fetch(url)
+    //     .then(response => {
+    //         if (!response.ok) {
+    //             throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: response.statusText });
+    //         }
+    //         return response.text();
+    //     })
+    //     .then(xmlText => {
+    //         const parser = new DOMParser();
+    //         const xmlDoc = parser.parseFromString(xmlText, "application/xml");
 
-        //         // Find all templates in the XML
-        //         const templates = xmlDoc.querySelectorAll('template, t[t-name]');
-        //         templates.forEach(template => {
-        //             const name = template.getAttribute('t-name');
-        //             if (name) {
-        //                 // Register each template using the core templates service
-        //                 // const { registerTemplate } = require("@web/core/templates");
-        //                 registerTemplate(name, url, template.outerHTML);
-        //             }
-        //         });
-        //     })
-        //     .catch(error => {
-        //         cacheMap.delete(url);
-        //         throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: error });
-        //     });
+    //         // Find all templates in the XML
+    //         const templates = xmlDoc.querySelectorAll('template, t[t-name]');
+    //         templates.forEach(template => {
+    //             const name = template.getAttribute('t-name');
+    //             if (name) {
+    //                 // Register each template using the core templates service
+    //                 // const { registerTemplate } = require("@web/core/templates");
+    //                 registerTemplate(name, url, template.outerHTML);
+    //             }
+    //         });
+    //     })
+    //     .catch(error => {
+    //         cacheMap.delete(url);
+    //         throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: error });
+    //     });
 
-        // cacheMap.set(url, promise);
-        // return promise;
+    // cacheMap.set(url, promise);
+    // return promise;
 
+    // },
+    // async loadXML(url, { targetDoc = document, checkDependencies = true } = {}) {
+    //     const cacheMap = getCacheMap(targetDoc);
+    //     if (cacheMap.has(url)) {
+    //         return cacheMap.get(url);
+    //     }
+
+    //     const promise = fetch(url)
+    //         .then(async (response) => {
+    //             if (!response.ok) {
+    //                 throw new AssetsLoadingError(`The loading of ${url} failed`, {
+    //                     cause: response.statusText,
+    //                 });
+    //             }
+    //             return response.text();
+    //         })
+    //         .then(async (xmlText) => {
+    //             const parser = new DOMParser();
+    //             const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+    //             // Find all templates in the XML
+    //             const templates = xmlDoc.querySelectorAll('template, t[t-name]');
+    //             const dependencyPromises = [];
+
+    //             for (const template of templates) {
+    //                 const name = template.getAttribute('t-name');
+    //                 const inheritFrom = template.getAttribute('t-inherit');
+
+    //                 if (name) {
+    //                     // Store template dependency information
+    //                     this.templateDependencies.set(name, {
+    //                         parentTemplate: inheritFrom,
+    //                         xmlPath: url
+    //                     });
+
+    //                     // If template inherits and we need to check dependencies
+    //                     if (inheritFrom && checkDependencies) {
+    //                         const parentInfo = this.templateDependencies.get(inheritFrom);
+    //                         if (parentInfo) {
+    //                             // Load parent template if not already loaded
+    //                             dependencyPromises.push(
+    //                                 this.loadXML(parentInfo.xmlPath, { checkDependencies: false })
+    //                             );
+    //                         }
+    //                     }
+
+    //                     // Register template only after parent is loaded
+    //                     await Promise.all(dependencyPromises);
+    //                     registerTemplate(name, url, template.outerHTML);
+    //                 }
+    //             }
+    //         })
+    //         .catch(error => {
+    //             cacheMap.delete(url);
+    //             throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: error });
+    //         });
+
+    //     cacheMap.set(url, promise);
+    //     return promise;
     // },
     async loadXML(url, { targetDoc = document, checkDependencies = true } = {}) {
         const cacheMap = getCacheMap(targetDoc);
@@ -314,49 +373,31 @@ export const assets = {
         }
 
         const promise = fetch(url)
-            .then(async response => {
+            .then(async (response) => {
                 if (!response.ok) {
-                    throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: response.statusText });
+                    throw new AssetsLoadingError(`The loading of ${url} failed`, {
+                        cause: response.statusText,
+                    });
                 }
                 return response.text();
             })
-            .then(async xmlText => {
+            .then(async (xmlText) => {
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(xmlText, "application/xml");
 
                 // Find all templates in the XML
-                const templates = xmlDoc.querySelectorAll('template, t[t-name]');
-                const dependencyPromises = [];
+                const templates = xmlDoc.querySelectorAll("template, t[t-name]");
 
                 for (const template of templates) {
-                    const name = template.getAttribute('t-name');
-                    const inheritFrom = template.getAttribute('t-inherit');
-
-                    if (name) {
-                        // Store template dependency information
-                        this.templateDependencies.set(name, {
-                            parentTemplate: inheritFrom,
-                            xmlPath: url
-                        });
-
-                        // If template inherits and we need to check dependencies
-                        if (inheritFrom && checkDependencies) {
-                            const parentInfo = this.templateDependencies.get(inheritFrom);
-                            if (parentInfo) {
-                                // Load parent template if not already loaded
-                                dependencyPromises.push(
-                                    this.loadXML(parentInfo.xmlPath, { checkDependencies: false })
-                                );
-                            }
-                        }
-
-                        // Register template only after parent is loaded
-                        await Promise.all(dependencyPromises);
-                        registerTemplate(name, url, template.outerHTML);
+                    const name = template.getAttribute("t-name") || template.getAttribute("id");
+                    if (!name) {
+                        console.warn("Template without t-name or id found", template);
+                        continue;
                     }
+                    registerTemplate(name, url, template.outerHTML);
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 cacheMap.delete(url);
                 throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: error });
             });

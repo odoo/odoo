@@ -50,6 +50,8 @@ class WebsiteLinks extends Interaction {
         },
     };
 
+    assetBundles = ["website_links.assets_widget_xml"];
+
     setup() {
         this.linkEls = [];
         this.urls = new Set();
@@ -59,6 +61,9 @@ class WebsiteLinks extends Interaction {
             ".o_website_links_recent_links_notification"
         );
         this.listContainerEl = this.el.querySelector("#o_website_links_recent_links");
+    }
+
+    willStart() {
         this.getRecentLinks("newest");
     }
 

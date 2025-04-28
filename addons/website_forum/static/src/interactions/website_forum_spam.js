@@ -13,14 +13,13 @@ export class WebsiteForumSpam extends Interaction {
         "#spamSearch": { "t-on-input": this.debounced(this.onSpamSearchInput, 200) },
     };
 
-    // assetLibs = [
-    //     "website_forum.assets_widget_xml",
-    // ];
-    xmlTemplates = {
-        "/website_forum/static/src/xml/public_templates.xml": [
-            "website.social_modal",
-        ],
-    };
+    assetBundles = ["website_forum.assets_widget_xml"];
+    // xmlTemplates = {
+    //     "/website_forum/static/src/xml/public_templates.xml": [
+    //         "website.social_modal",
+    //     ],
+    // };
+    // xmlTemplates = ["/website_forum/static/src/xml/public_templates.xml"];
 
     setup() {
         this.spamIDs = JSON.parse(
