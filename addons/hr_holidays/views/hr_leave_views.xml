@@ -269,7 +269,7 @@
                             <field name="display_name" attrs="{'invisible': [('holiday_status_id', '=', False)]}"/>
                         </div>
                         <group name="col_left">
-                            <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from, 'default_date_to':date_to}" options="{'no_create': True, 'no_open': True, 'request_type':'leave'}" />
+                            <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':request_date_from, 'default_date_to':request_date_to}" options="{'no_create': True, 'no_open': True, 'request_type':'leave'}" />
                             <field name="date_from" invisible="1" />
                             <field name="date_to" invisible="1" />
                             <!-- half day or custom hours: only show one date -->
