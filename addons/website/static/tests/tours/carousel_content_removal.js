@@ -75,13 +75,13 @@ registerWebsitePreviewTour(
         ...insertSnippet({ id: "s_carousel", name: "Carousel", groupName: "Intro" }),
         ...clickOnSnippet(".carousel .carousel-item.active"),
         // Slide to the right.
-        changeOption("CarouselItem", 'we-button[data-switch-to-slide="right"]'),
+        changeOption("Slide (1/3)", "[aria-label='Move Forward']"),
         checkSlides(3, 2),
         // Add a slide (with the "CarouselItem" option).
-        changeOption("CarouselItem", "we-button[data-add-slide-item]"),
+        changeOption("Slide (2/3)", "button[aria-label='Add Slide']"),
         checkSlides(4, 3),
         // Remove a slide.
-        changeOption("CarouselItem", "we-button[data-remove-slide]"),
+        changeOption("Slide (3/4)", "button[aria-label='Remove Slide']"),
         checkSlides(3, 2),
         {
             trigger: ":iframe .carousel .carousel-control-prev",
@@ -90,20 +90,20 @@ registerWebsitePreviewTour(
         },
         checkSlides(3, 1),
         // Add a slide (with the "Carousel" option).
-        changeOption("Carousel", "we-button[data-add-slide]"),
+        changeOption("Carousel", "[data-action-id='addSlide']"),
         checkSlides(4, 2),
         {
             content: "Check if the slide indicator was correctly updated",
-            trigger: "we-customizeblock-options span:contains(' (2/4)')",
+            trigger: ".options-container span:contains(' (2/4)')",
         },
         // Check if we can still remove a slide.
-        changeOption("CarouselItem", "we-button[data-remove-slide]"),
+        changeOption("Slide (2/4)", "button[aria-label='Remove Slide']"),
         checkSlides(3, 1),
         // Slide to the left.
-        changeOption("CarouselItem", 'we-button[data-switch-to-slide="left"]'),
+        changeOption("Slide (1/3)", "[aria-label='Move Backward']"),
         checkSlides(3, 3),
         // Reorder the slides and make it the second one.
-        changeOption("GalleryElement", 'we-button[data-position="prev"]'),
+        changeOption("Slide (3/3)", "[data-action-value='prev']"),
         checkSlides(3, 2),
         ...clickOnSave(),
         // Check that saving always sets the first slide as active.
