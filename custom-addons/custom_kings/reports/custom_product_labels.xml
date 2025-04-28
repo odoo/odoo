@@ -1,0 +1,20 @@
+<odoo>
+    <data>
+
+        <!-- Report Actions - you must have these! -->
+        <record id="action_report_product_barcode" model="ir.actions.report">
+            <field name="name">Product Barcode Label</field>
+            <field name="model">product.template</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">custom_kings.report_product_barcode</field>
+        </record>
+
+        <record id="action_report_product_details" model="ir.actions.report">
+            <field name="name">Product Details Label</field>
+            <field name="model">product.template</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">custom_kings.report_product_details</field>
+        </record>
+
+    </data>
+</odoo>

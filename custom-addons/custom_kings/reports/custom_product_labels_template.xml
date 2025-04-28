@@ -1,0 +1,140 @@
+<odoo>
+    <data>
+        <!-- Barcode Label -->
+        <template id="report_product_barcode">
+            <t t-call="web.html_container">
+                <style>
+                    table.label-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+                    td.label-cell {
+                        width: 50%;
+                        padding: 5mm;
+                        vertical-align: top;
+                    }
+                    .o_label_full {
+                        width: 100%;
+                        height: 60mm;
+                        border: 1px solid #000;
+                        padding: 5mm;
+                        box-sizing: border-box;
+                        page-break-inside: avoid;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                    }
+                    .o_label_name {
+                        font-size: 16px;
+                        font-weight: bold;
+                        text-align: center;
+                        margin-bottom: 4px;
+                    }
+                    .o_label_code {
+                        font-size: 12px;
+                        text-align: center;
+                        margin-bottom: 8px;
+                    }
+                    .o_label_bottom_row {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: flex-end;
+                        width: 100%;
+                    }
+                    .o_label_price {
+                        font-size: 18px;
+                        font-weight: bold;
+                        text-align: left;
+                    }
+                    .o_label_barcode {
+                        text-align: right;
+                    }
+                </style>
+        
+                <t t-set="qty" t-value="custom_quantity or 1"/>
+                <t t-set="rows" t-value="(qty + 1) // 2"/>
+        
+                <table class="label-table">
+                    <t t-foreach="range(rows)" t-as="row_index">
+                        <tr>
+                            <!-- First label -->
+                            <td class="label-cell">
+                                <t t-if="(row_index * 2) &lt; qty">
+                                    <div class="o_label_full">
+                                        <div class="o_label_name">
+                                            <span t-out="product_name or ''"/>
+                                        </div>
+                                        <div class="o_label_code">
+                                            <span t-out="default_code or ''"/>
+                                        </div>
+                                        <div class="o_label_bottom_row">
+                                            <div class="o_label_price">
+                                                <span t-out="list_price or ''"/> <span t-out="currency_symbol or ''"/>
+                                            </div>
+                                            <div class="o_label_barcode">
+                                                <t t-if="barcode">
+                                                    <div t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'EAN13', 'img_style': 'width:80px;height:30px;'}"/>
+                                                    <div t-out="barcode" />
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </td>
+        
+                            <!-- Second label -->
+                            <td class="label-cell">
+                                <t t-if="(row_index * 2 + 1) &lt; qty">
+                                    <div class="o_label_full">
+                                        <div class="o_label_name">
+                                            <span t-out="product_name or ''"/>
+                                        </div>
+                                        <div class="o_label_code">
+                                            <span t-out="default_code or ''"/>
+                                        </div>
+                                        <div class="o_label_bottom_row">
+                                            <div class="o_label_price">
+                                                <span t-out="list_price or ''"/> <span t-out="currency_symbol or ''"/>
+                                            </div>
+                                            <div class="o_label_barcode">
+                                                <t t-if="barcode">
+                                                    <div t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'EAN13', 'img_style': 'width:80px;height:30px;'}"/>
+                                                    <div t-out="barcode" />
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </t>
+        </template>
+        
+        
+        
+        
+        
+          
+        
+
+
+
+        <!-- Product Details Label -->
+        <template id="report_product_details">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="product">
+                    <div style="width: 250px; height: 100px; padding: 10px; border: 1px solid #000; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;">
+                        <!-- Internal Notes / Description -->
+                        <div style="font-size: 12px; text-align: left; word-break: break-word;">
+                            <t t-out="product.description_sale or product.description"/>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

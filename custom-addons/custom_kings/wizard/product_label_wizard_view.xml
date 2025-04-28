@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <!-- Wizard Form View -->
+        <record id="view_product_label_wizard_form" model="ir.ui.view">
+            <field name="name">product.label.wizard.form</field>
+            <field name="model">product.label.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Print Product Label">
+                    <group>
+                        <field name="custom_quantity"/>
+                        <field name="label_type" widget="radio"/>
+                    </group>
+                    <footer>
+                        <button name="action_print_labels" type="object" string="Print" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Wizard Action -->
+        <record id="action_product_label_wizard" model="ir.actions.act_window">
+            <field name="name">Print Product Label</field>
+            <field name="res_model">product.label.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
