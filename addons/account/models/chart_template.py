@@ -335,18 +335,24 @@ class AccountChartTemplate(models.AbstractModel):
                     if xmlid not in xmlid2fiscal_position and not force_create:
                         skip_update.add((model_name, xmlid))
                         continue
-                    # Only add tax mappings containing new taxes
-                    if old_tax_ids := values.pop('tax_ids', []):
-                        new_tax_ids = []
-                        for element in old_tax_ids:
-                            match element:
-                                case Command.CREATE, _, {'tax_src_id': src_id, 'tax_dest_id': dest_id} if (
-                                    not self.ref(src_id, raise_if_not_found=False)
-                                    or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
-                                ):
-                                    new_tax_ids.append(element)
-                        if new_tax_ids:
-                            values['tax_ids'] = new_tax_ids
+                    # Only add accounts and taxes mappings containing new records
+                    for model in ['account', 'tax']:
+                        if not force_create:  # there can't be new records if we don't create them
+                            values.pop(f'{model}_ids', [])
+                        if old_ids := values.pop(f'{model}_ids', []):
+                            new_ids = []
+                            for element in old_ids:
+                                match element:
+                                    case Command.CREATE, _, (
+                                        {'tax_src_id': src_id, 'tax_dest_id': dest_id}
+                                        | {'account_src_id': src_id, 'account_dest_id': dest_id}
+                                    ) if (
+                                        not self.ref(src_id, raise_if_not_found=False)
+                                        or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
+                                    ):
+                                        new_ids.append(element)
+                            if new_ids:
+                                values[f'{model}_ids'] = new_ids
 
                 elif model_name == 'account.tax':
                     # Only update the tags of existing taxes
