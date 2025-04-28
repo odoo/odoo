@@ -1,8 +1,8 @@
 import calendar
 import math
 import typing
-from collections.abc import Iterator
-from datetime import date, datetime, time, timedelta
+from collections.abc import Iterator, Callable
+from datetime import date, datetime, time, timedelta, tzinfo
 
 import babel
 import pytz
@@ -22,7 +22,9 @@ __all__ = [
     'get_quarter',
     'get_quarter_number',
     'get_timedelta',
+    'localized',
     'time_to_float',
+    'to_timezone',
 ]
 
 
@@ -42,6 +44,18 @@ def time_to_float(duration: time | timedelta) -> float:
         return 24.0
     seconds = time.microsecond / 1_000_000 + time.second + time.minute * 60
     return seconds / 3600 + time.hour
+
+
+def localized(dt: datetime) -> datetime:
+    """ When missing, add tzinfo to a datetime. """
+    return dt if dt.tzinfo else dt.replace(tzinfo=utc)
+
+
+def to_timezone(tz: tzinfo | None) -> Callable[[datetime], datetime]:
+    """ Get a function converting a datetime to another localized datetime. """
+    if tz is None:
+        return lambda dt: dt.astimezone(utc).replace(tzinfo=None)
+    return lambda dt: dt.astimezone(tz)
 
 
 def get_month(date: D) -> tuple[D, D]:

@@ -4,7 +4,8 @@ from pytz import UTC
 
 from odoo import api, models
 
-from odoo.tools.date_intervals import Intervals, sum_intervals, timezone_datetime
+from odoo.tools.date_intervals import Intervals, sum_intervals
+from odoo.tools.date_utils import localized
 
 
 class CalendarEvent(models.Model):
@@ -64,8 +65,8 @@ class CalendarEvent(models.Model):
                     interval_by_event[event] = allday_event_interval & global_interval
             else:
                 interval_by_event[event] = Intervals([(
-                    timezone_datetime(event.start),
-                    timezone_datetime(event.stop),
+                    localized(event.start),
+                    localized(event.stop),
                     self.env['resource.calendar']
                 )])
         return interval_by_event
