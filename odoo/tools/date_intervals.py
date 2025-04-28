@@ -164,15 +164,15 @@ def timezone_datetime(time: datetime) -> datetime:
     return localized(time)
 
 
-def intervals_overlap(interval_a: tuple[datetime, datetime], interval_b: tuple[datetime, datetime]) -> bool:
-    """Check whether an interval of time intersects another.
+def intervals_overlap(interval_a: tuple[T, T], interval_b: tuple[T, T]) -> bool:
+    """Check whether intervals intersect.
 
-    :param interval_a: Time range (ignored if 0-width)
-    :param interval_b: Time range
+    :param interval_a:
+    :param interval_b:
     :return: True if two non-zero intervals overlap
     """
-    start_a, stop_a = tuple(timezone_datetime(i) for i in interval_a)
-    start_b, stop_b = tuple(timezone_datetime(i) for i in interval_b)
+    start_a, stop_a = interval_a
+    start_b, stop_b = interval_b
     return start_a < stop_b and stop_a > start_b
 
 
