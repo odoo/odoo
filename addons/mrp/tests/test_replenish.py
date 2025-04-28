@@ -122,6 +122,49 @@ class TestMrpReplenish(TestMrpCommon):
         replenish_picking.button_validate()
         self.assertEqual(basic_mo.move_raw_ids.mapped('state'), ['assigned', 'assigned'])
 
+    def test_scrap_replenishment_reassigns_required_qty_to_component(self):
+        """ Test that when validating the scrap replenishment transfer, the required quantity
+        is re-assigned to the component for the final manufacturing product. """
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm'
+        basic_mo, _, _, product_to_scrap, other_product = self.generate_mo(qty_final=1, qty_base_1=10, qty_base_2=10)
+        for product in (product_to_scrap, other_product):
+            self.env['stock.quant'].create({
+                'product_id': product.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'quantity': 20
+            })
+        self.assertEqual(basic_mo.move_raw_ids.location_id, warehouse.pbm_loc_id)
+        basic_mo.action_confirm()
+        self.assertEqual(len(basic_mo.picking_ids), 1)
+        basic_mo.picking_ids.action_assign()
+        basic_mo.picking_ids.button_validate()
+        self.assertEqual(basic_mo.move_raw_ids.mapped('state'), ['assigned', 'assigned'])
+
+        # Scrap the product and trigger replenishment
+        scrap_form = Form.from_action(self.env, basic_mo.button_scrap())
+        scrap_form.product_id = product_to_scrap
+        scrap_form.scrap_qty = 5
+        scrap_form.should_replenish = True
+        self.assertEqual(scrap_form.location_id, warehouse.pbm_loc_id)
+        scrap_form.save().action_validate()
+
+        # Assert that the component quantity is reduced
+        self.assertNotEqual(basic_mo.move_raw_ids.mapped('state'), ['assigned', 'assigned'])
+        move_to_scrap = basic_mo.move_raw_ids.filtered(lambda m: m.product_id == product_to_scrap)
+        move_other = basic_mo.move_raw_ids.filtered(lambda m: m.product_id == other_product)
+        self.assertEqual(move_to_scrap.quantity, 5, "Scrapped component should have qty 5")
+        self.assertEqual(move_other.quantity, 10, "Other component should remain qty 10")
+        self.assertEqual(len(basic_mo.picking_ids), 2)
+
+        replenish_picking = basic_mo.picking_ids.filtered(lambda x: x.state == 'assigned')
+        replenish_picking.button_validate()
+
+        # Assert that the component quantity is re-assigned
+        self.assertEqual(basic_mo.move_raw_ids.mapped('state'), ['assigned', 'assigned'])
+        self.assertEqual(move_to_scrap.quantity, 10, "Scrapped component should return to qty 10")
+        self.assertEqual(move_other.quantity, 10, "Other component should still be qty 10")
+
     def test_global_visibility_days_affect_lead_time_manufacture_rule(self):
         """ Ensure global visibility days will only be captured one time in an orderpoint's
         lead_days/json_lead_days.
