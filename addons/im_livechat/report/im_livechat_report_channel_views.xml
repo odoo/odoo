@@ -14,6 +14,7 @@
                     <field name="time_to_answer" type="measure"/>
                     <field name="duration" type="measure"/>
                     <field name="rating" string="Rating (%)" type="measure" widget="im_livechat.rating_percentage"/>
+                    <field name="number_of_calls" string="# of calls" type="measure" widget="integer"/>
                 </pivot>
             </field>
         </record>
@@ -110,7 +111,12 @@
             <field name="name">Agents</field>
             <field name="res_model">im_livechat.report.channel</field>
             <field name="view_mode">pivot,graph</field>
-            <field name="context">{"search_default_filter_date_last_month":1}</field>
+            <field name="context">
+                {
+                    "search_default_filter_date_last_month": 1,
+                    "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
+                }
+            </field>
             <field name="search_view_id" ref="im_livechat_report_channel_view_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_empty_folder">No data yet!</p>
@@ -122,7 +128,12 @@
             <field name="name">Sessions</field>
             <field name="res_model">im_livechat.report.channel</field>
             <field name="view_mode">graph,pivot</field>
-            <field name="context">{"search_default_filter_date_last_month": 1}</field>
+            <field name="context">
+                {
+                    "search_default_filter_date_last_month": 1,
+                    "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
+                }
+            </field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_empty_folder">No data yet!</p>
                 <p>Track and improve livechat performance with insights on session activity, response time, customer ratings, and call interactions.</p>
