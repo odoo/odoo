@@ -22,7 +22,7 @@ export function patchWithCleanupImg() {
     const defaultImg =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
     patchWithCleanup(Img, {
-        template: xml`<img t-att-data-src="props.src" t-att-data-alt="props.alt" t-att-class="props.class" t-att-style="props.style" t-att="props.attrs" src="${defaultImg}"/>`,
+        template: xml`<img t-att-data-src="props.src" t-att-alt="props.alt" t-att-class="props.class" t-att-style="props.style" t-att="props.attrs" src="${defaultImg}"/>`,
     });
     patchWithCleanup(Img.prototype, {
         loadImage: () => {},
