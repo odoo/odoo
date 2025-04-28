@@ -582,7 +582,7 @@ test("sidebar: basic channel rendering", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
+    await contains(".o-mail-DiscussSidebarChannel img[alt='Thread Image']");
     await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands.d-none");
     await contains(
         ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
