@@ -689,35 +689,45 @@
             <svg t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="1100" height="1100" xmlns="http://www.w3.org/2000/svg">
                <circle cx="550" cy="550" r="550" t-att-fill="company.primary_color" fill-opacity=".1"/>
             </svg>
-            <div class="d-flex justify-content-between">
-                <div>
-                    <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
-                    <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
-                </div>
-                <div name="company_address" class="text-end">
-                    <ul class="list-unstyled" name="company_address_list">
-                        <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
-                            <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
-                                <strong>Company address block</strong>
-                                <div>Contains the company address.</div>
-                            </div>
-                        </span></li>
-                        <li t-else="">
-                            <span t-field="company.company_details" class="text-nowrap">
-                                <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
-                                    <strong>Company details block</strong>
-                                    <div>Contains the company details.</div>
-                                </div>
+            <table class="o_ignore_layout_styling table table-borderless mb-0">
+                <tbody>
+                    <tr>
+                        <td t-if="company.report_header" class="o_company_tagline fw-bold p-0 pe-2">
+                            <span t-field="company.report_header">
+                                Company tagline
                             </span>
-                        </li>
-                        <li t-if="not forced_vat"/>
-                        <li t-else="">
-                            <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
-                            <span t-esc="forced_vat">US12345671</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                        </td>
+                        <td class="p-0 text-end">
+                            <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                            <div name="company_address">
+                                <ul class="list-unstyled" name="company_address_list">
+                                    <li t-if="company.is_company_details_empty">
+                                        <span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
+                                            <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                                <strong>Company address block</strong>
+                                                <div>Contains the company address.</div>
+                                            </div>
+                                        </span>
+                                    </li>
+                                    <li t-else="">
+                                        <span t-field="company.company_details" class="text-nowrap">
+                                            <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                                <strong>Company details block</strong>
+                                                <div>Contains the company details.</div>
+                                            </div>
+                                        </span>
+                                    </li>
+                                    <li t-if="not forced_vat"/>
+                                    <li t-else="">
+                                        <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                        <span t-esc="forced_vat">US12345671</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- BODY -->
@@ -732,7 +742,7 @@
             <table class="o_ignore_layout_styling table table-borderless mb-0">
                 <tbody>
                     <tr>
-                        <td t-call="web.address_layout" class="p-0">
+                        <td t-call="web.address_layout" t-attf-class="p-0 {{'pt-3' if information_block else ''}}">
                             <t t-set="custom_layout_address" t-value="true"/>
                         </td>
                         <td t-if="not information_block" class="align-bottom p-0 ps-2">
