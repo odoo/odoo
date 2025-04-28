@@ -98,7 +98,7 @@ export class ChannelMember extends Record {
     typingTimeoutId;
 
     get name() {
-        return this.persona.name;
+        return this.thread.getPersonaName(this.persona);
     }
 
     /**

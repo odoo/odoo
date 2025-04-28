@@ -437,6 +437,14 @@ export class Message extends Record {
         }
     }
 
+    /**
+     * @param {import("models").Persona} persona
+     * @returns {string}
+     */
+    getPersonaName(persona) {
+        return this.thread?.getPersonaName(persona) || persona.displayName;
+    }
+
     async react(content) {
         this.store.insert(
             await rpc(

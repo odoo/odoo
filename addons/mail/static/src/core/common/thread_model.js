@@ -339,6 +339,16 @@ export class Thread extends Record {
         );
     }
 
+    /**
+     * Return the name of the given persona to display in the context of this
+     * thread.
+     *
+     * @param {import("models").Persona} persona
+     */
+    getPersonaName(persona) {
+        return persona.displayName;
+    }
+
     get hasAttachmentPanel() {
         return this.model === "discuss.channel";
     }

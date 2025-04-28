@@ -34,7 +34,9 @@ export class MessageReactionList extends Component {
     /** @param {import("models").MessageReactions} reaction */
     previewText(reaction) {
         const { count, content: emoji } = reaction;
-        const personNames = reaction.personas.slice(0, 3).map((persona) => persona.name);
+        const personNames = reaction.personas
+            .slice(0, 3)
+            .map((persona) => this.props.message.getPersonaName(persona));
         const shortcode = loader.loaded?.emojiValueToShortcode?.[emoji] ?? "?";
         switch (count) {
             case 1:
