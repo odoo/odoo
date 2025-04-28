@@ -4,7 +4,7 @@
 import re
 import logging
 
-from odoo import api, models, Command
+from odoo import api, fields, models, Command
 from odoo.tools import email_normalize
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
@@ -239,3 +239,20 @@ class RecurrenceRule(models.Model):
         if event:
             return event._get_event_user()
         return self.env.user
+
+    def _is_event_over(self):
+        """Check if all events in this recurrence are in the past.
+        :return: True if all events in this recurrence are in the past, False otherwise
+        """
+        self.ensure_one()
+        if not self.calendar_event_ids:
+            return False
+        now = fields.Datetime.now()
+        today = fields.Date.today()
+
+        # For all-day events
+        if self.calendar_event_ids[0].allday:
+            return all(event.stop_date < today for event in self.calendar_event_ids)
+
+        # For timed events
+        return all(event.stop < now for event in self.calendar_event_ids)

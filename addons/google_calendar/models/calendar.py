@@ -128,6 +128,22 @@ class Meeting(models.Model):
             '!', '&', '&', ('recurrency', '=', True), ('recurrence_id', '!=', False), ('follow_recurrence', '=', True)
         ]
 
+    def _is_event_over(self):
+        """Check if the event is over. This method is used to check if the event
+        should trigger invitations with Google Calendar.
+        :return: True if the event is over, False otherwise
+        """
+        self.ensure_one()
+        now = fields.Datetime.now()
+        today = fields.Date.today()
+
+        # For all-day events
+        if self.allday:
+            return self.stop_date and self.stop_date < today
+
+        # For timed events
+        return self.stop and self.stop < now
+
     @api.model
     def _odoo_values(self, google_event, default_reminders=()):
         if google_event.is_cancelled():
