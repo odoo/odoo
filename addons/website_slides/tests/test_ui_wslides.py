@@ -199,6 +199,17 @@ class TestUi(TestUICommon):
 
         self.start_tour('/slides', 'course_reviews', login=user_demo.login)
 
+    def test_course_review_comment(self):
+        self.channel._action_add_members(self.user_demo.partner_id)
+        self.channel.with_user(self.user_demo).message_post(
+            body="New Review",
+            message_type="comment",
+            rating_value="3",
+            subtype_xmlid="mail.mt_comment",
+        )
+
+        self.start_tour("/slides", "course_reviews_comment", login=self.user_admin.login)
+
     def test_course_reviews_reaction_public(self):
         password = "Pl1bhD@2!kXZ"
         manager = self.user_admin
