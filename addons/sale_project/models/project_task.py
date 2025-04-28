@@ -147,6 +147,13 @@ class ProjectTask(models.Model):
         if quotations:
             quotations.action_confirm()
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default)
+        for task, vals in zip(self, vals_list):
+            if task_name := self.env.context.get('task_name'):
+                vals['name'] = task_name
+        return vals_list
+
     @api.model_create_multi
     def create(self, vals_list):
         tasks = super().create(vals_list)
