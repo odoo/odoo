@@ -248,7 +248,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
                 );
                 assertEqual(
                     this.anchor.querySelector(".o_automation_actions").textContent,
-                    "Update NameUpdate Priority"
+                    "Update test_base_automation.projectUpdate test_base_automation.project"
                 );
             },
         },
@@ -381,7 +381,7 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
             async run() {
                 assertEqual(
                     this.anchor.innerText,
-                    "Update Active 0\nto\nNo (False)\nUpdate Active 1\nto\nNo (False)\nUpdate Active 2\nto\nNo (False)"
+                    "Update Active 0\nUpdate Active 1\nUpdate Active 2"
                 );
             },
         },
@@ -397,7 +397,7 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
             async run() {
                 assertEqual(
                     this.anchor.innerText,
-                    "Update Active 2\nto\nNo (False)\nUpdate Active 0\nto\nNo (False)\nUpdate Active 1\nto\nNo (False)"
+                    "Update Active 2\nUpdate Active 0\nUpdate Active 1"
                 );
             },
         },
