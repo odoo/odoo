@@ -617,7 +617,7 @@ class MailMail(models.Model):
                 )
                 if not modules.module.current_test:
                     _logger.info(
-                        'Sent batch %s emails via mail server ID #%s',
+                        "Processed batch of %s mail.mail records via mail server ID #%s",
                         len(batch_ids), mail_server_id)
             finally:
                 if smtp_session:
