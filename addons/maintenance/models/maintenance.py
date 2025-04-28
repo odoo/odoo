@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo.exceptions import ValidationError
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.translate import html_translate
 
 
 class MaintenanceStage(models.Model):
@@ -37,7 +38,7 @@ class MaintenanceEquipmentCategory(models.Model):
         default=lambda self: self.env.company)
     technician_user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.uid)
     color = fields.Integer('Color Index')
-    note = fields.Html('Comments', translate=True)
+    note = fields.Html('Comments', translate=html_translate)
     equipment_ids = fields.One2many('maintenance.equipment', 'category_id', string='Equipment', copy=False)
     equipment_count = fields.Integer(string="Equipment Count", compute='_compute_equipment_count')
     maintenance_ids = fields.One2many('maintenance.request', 'category_id', copy=False)

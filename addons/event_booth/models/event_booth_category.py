@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.tools.translate import html_translate
 
 
 class EventBoothCategory(models.Model):
@@ -13,6 +14,6 @@ class EventBoothCategory(models.Model):
     active = fields.Boolean(default=True)
     name = fields.Char(string='Name', required=True, translate=True)
     sequence = fields.Integer(string='Sequence', default=10)
-    description = fields.Html(string='Description', translate=True, sanitize_attributes=False)
+    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False)
     booth_ids = fields.One2many(
         'event.booth', 'booth_category_id', string='Booths', groups='event.group_event_registration_desk')

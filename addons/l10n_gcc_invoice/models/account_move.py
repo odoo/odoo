@@ -4,7 +4,7 @@
 import logging
 
 from odoo import fields, models, api
-
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ except ImportError:
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    narration = fields.Html(translate=True)
+    narration = fields.Html(translate=html_translate)
 
     def _get_name_invoice_report(self):
         self.ensure_one()

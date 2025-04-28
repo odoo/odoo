@@ -19,6 +19,7 @@ from odoo.tools import _, frozendict
 from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
@@ -67,7 +68,7 @@ class IrActionsActions(models.Model):
     path = fields.Char(string="Path to show in the URL")
     help = fields.Html(string='Action Description',
                        help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
-                       translate=True)
+                       translate=html_translate)
     binding_model_id = fields.Many2one('ir.model', ondelete='cascade',
                                        help="Setting a value makes this action available in the sidebar for the given model.")
     binding_type = fields.Selection([('action', 'Action'),

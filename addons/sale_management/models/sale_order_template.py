@@ -3,6 +3,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.tools.translate import html_translate
 
 
 class SaleOrderTemplate(models.Model):
@@ -16,7 +17,7 @@ class SaleOrderTemplate(models.Model):
     company_id = fields.Many2one(comodel_name='res.company', default=lambda self: self.env.company)
 
     name = fields.Char(string="Quotation Template", required=True)
-    note = fields.Html(string="Terms and conditions", translate=True)
+    note = fields.Html(string="Terms and conditions", translate=html_translate)
     sequence = fields.Integer(default=10)
 
     mail_template_id = fields.Many2one(

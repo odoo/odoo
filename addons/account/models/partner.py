@@ -10,6 +10,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, SQL, mute_logger, unique
+from odoo.tools.translate import html_translate
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 
 _logger = logging.getLogger(__name__)
@@ -46,7 +47,7 @@ class AccountFiscalPosition(models.Model):
         context={'active_test': False},
     )
     tax_map = fields.Binary(compute='_compute_tax_map')
-    note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
+    note = fields.Html('Notes', translate=html_translate, help="Legal mentions that have to be printed on the invoices.")
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply tax & account mappings on invoices automatically if the matching criterias (VAT/Country) are met.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     company_country_id = fields.Many2one(string="Company Country", related='company_id.account_fiscal_country_id')

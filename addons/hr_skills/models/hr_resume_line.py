@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.tools.translate import html_translate
 
 
 class HrResumeLine(models.Model):
@@ -13,7 +14,7 @@ class HrResumeLine(models.Model):
     name = fields.Char(required=True, translate=True)
     date_start = fields.Date(required=True)
     date_end = fields.Date()
-    description = fields.Html(string="Description", translate=True)
+    description = fields.Html(string="Description", translate=html_translate)
     line_type_id = fields.Many2one('hr.resume.line.type', string="Type")
 
     # Used to apply specific template on a line
