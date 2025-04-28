@@ -231,6 +231,7 @@ class StockMoveLine(models.Model):
         if self._context.get('avoid_putaway_rules'):
             return
         self = self.with_context(do_not_unreserve=True)
+        self = self.filtered(lambda l: l.qty_done == 0 or not l.picking_id)
         for package, smls in groupby(self, lambda sml: sml.result_package_id):
             smls = self.env['stock.move.line'].concat(*smls)
             excluded_smls = set(smls.ids)
