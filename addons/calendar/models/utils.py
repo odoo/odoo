@@ -1,4 +1,5 @@
-from odoo.tools.date_intervals import Intervals
+from odoo.tools.intervals import Intervals
+
 
 def interval_from_events(event_ids):
     """Group events with contiguous and/or overlapping time slots.

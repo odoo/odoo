@@ -7,7 +7,7 @@ from itertools import chain
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools.date_intervals import Intervals
+from odoo.tools.intervals import Intervals
 
 
 class HrWorkEntry(models.Model):

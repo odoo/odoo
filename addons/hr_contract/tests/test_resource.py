@@ -4,7 +4,8 @@ from datetime import date, datetime
 from pytz import utc, timezone
 
 from odoo.fields import Date
-from odoo.tools.date_intervals import Intervals, sum_intervals
+from odoo.tools.intervals import Intervals
+from odoo.tools.date_utils import sum_intervals
 
 from .common import TestContractCommon
 

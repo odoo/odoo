@@ -4,7 +4,7 @@
 from datetime import datetime
 from pytz import utc
 
-from odoo.tools.date_intervals import Intervals
+from odoo.tools.intervals import Intervals
 
 from .common import TestHrCommon
 
