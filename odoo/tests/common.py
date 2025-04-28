@@ -1278,6 +1278,10 @@ class ChromeBrowser:
 
         log_type = type
         _logger = self._logger.getChild('browser')
+        if self._result.done() and "Failed to fetch" in message and log_type in ('warning', 'error'):
+            # lower down Failed to fetch error message
+            log_type = 'info'
+
         _logger.log(
             self._TO_LEVEL.get(log_type, logging.INFO),
             "%s%s",
