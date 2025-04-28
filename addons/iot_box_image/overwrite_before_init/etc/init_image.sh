@@ -197,6 +197,7 @@ usermod -a -G video odoo
 usermod -a -G render odoo
 usermod -a -G lp odoo
 usermod -a -G input odoo
+usermod -a -G dialout odoo
 usermod -a -G pi odoo
 mkdir -v /var/log/odoo
 chown odoo:odoo /var/log/odoo
