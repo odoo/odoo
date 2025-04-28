@@ -309,3 +309,14 @@ class TestLotSerial(TestStockCommon):
         lot_id = self.env['stock.lot'].search([('partner_ids.name', 'ilike', 'bo')])
         self.assertEqual(len(lot_id), 1)
         self.assertEqual(lot_id, self.lot_p_a)
+
+    def test_default_lot_sequence(self):
+        """Test that the default lot sequence is used when the product is created with a null prefix"""
+        product_a = self.env['product.product'].create({
+            'name': 'Test Product A',
+            'tracking': 'lot',
+            'serial_prefix_format': False,
+        })
+        default_lot_sequence = self.env.ref('stock.sequence_production_lots')
+        product_a.invalidate_recordset()
+        self.assertEqual(product_a.lot_sequence_id, default_lot_sequence)
