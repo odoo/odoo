@@ -544,6 +544,8 @@ class Html(BaseString):
     strip_style: bool = False                 # whether to strip style attributes (removed and therefore not sanitized)
     strip_classes: bool = False               # whether to strip classes attributes
 
+    _tmp = set()
+
     def _get_attrs(self, model_class, name):
         # called by _setup_attrs__(), working together with BaseString._setup_attrs__()
         attrs = super()._get_attrs(model_class, name)
@@ -565,6 +567,10 @@ class Html(BaseString):
         # where not using `html_translate` before and they must remain without `html_translate`.
         # Otherwise, breaks `--test-tags .test_render_field`, for instance.
         elif attrs.get('translate') is True and attrs.get('sanitize', True):
+            name_ = f'{model_class._name}.{name}'
+            if not name.startswith('x_') and name_ not in self._tmp:
+                _logger.warning("convert translate to html_translate for field %s", name_)
+                self._tmp.add(name_)
             attrs['translate'] = html_translate
         return attrs
 

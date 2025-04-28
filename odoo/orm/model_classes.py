@@ -19,6 +19,7 @@ from odoo.tools import (
     sql,
 )
 from odoo.tools.misc import ReadonlyDict
+from odoo.tools.translate import html_translate
 
 if typing.TYPE_CHECKING:
     from odoo.api import Environment
@@ -381,7 +382,8 @@ def _setup(model: BaseModel):
             if not translate:
                 # patch the field definition by adding an override
                 _logger.debug("Patching %s.%s with translate=True", model_cls._name, name)
-                fields_.append(type(fields_[0])(translate=True))
+                translate = html_translate if fields_[0].type == 'html' else True
+                fields_.append(type(fields_[0])(translate=translate))
         if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == model_cls._name:
             model_cls._fields._data__[name] = fields_[0]
         else:
