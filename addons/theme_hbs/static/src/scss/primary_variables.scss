@@ -8,7 +8,6 @@ $o-website-values-palettes: (
 
         // Header
         'header-template':                  'vertical',
-        'hamburger-position':               'right',
         'logo-height':                      3rem,
         'fixed-logo-height':                2rem,
         'header-links-style':               'pills',
@@ -73,9 +72,9 @@ $o-theme-font-configs: (
 $o-color-palettes: map-merge($o-color-palettes,
     (
         'theme-hbs-1': (
-            'o-color-5':                        #4A77A0,
+            'o-color-5':                        #0071BD,
             'o-color-4':                        #ffffff,
-            'o-color-3':                        #ffffff,
+            'o-color-3':                        #FFFFFF,
             'o-color-2':                        #3AA101,
             'o-color-1':                        #0071BD,
         ),
@@ -93,7 +92,7 @@ $o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'them
 
 
 // Add to cart to be in green color at all times
-a#add_to_cart {
+a#add_to_cart, .js_subscribe_btn  {
     // .btn-primary {   
         background-color: #3AA101;
         // border-color: $o-color-1;
@@ -108,7 +107,7 @@ a#add_to_cart {
 }
 
 
-.badge.bg-primary, .o_filter_tag.bg-primary {
+.bage.dbg-primary, .o_filter_tag.bg-primary {
     --bg-light: #3AA101 !important; 
     --color-light: #FFFFFF;
     --bg-solid: var(--bg-light);
@@ -117,7 +116,7 @@ a#add_to_cart {
 
 
 
-.js_add_cart.btn-primary {
+.js_add_cart.btn-primary{
     &:hover {
         background-color: #6CB61B;
         // border-color: $o-color-2;
