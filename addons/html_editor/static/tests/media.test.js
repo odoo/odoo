@@ -2,9 +2,9 @@ import { describe, expect, test } from "@odoo/hoot";
 import { click, press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
-import { base64Img, setupEditor } from "./_helpers/editor";
+import { base64Img, setupEditor, testEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
-import { insertText } from "./_helpers/user_actions";
+import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
 import { cleanHints } from "./_helpers/dispatch";
 import { EDITABLE_MEDIA_CLASS } from "@html_editor/main/media/media_plugin";
 
@@ -164,6 +164,75 @@ describe("(non-)editable media", () => {
             // Now pressing the delete button should remove the image.
             await click(".o-we-toolbar button[name='image_delete']");
             expect(getContent(editor.editable)).toBe(`<div contenteditable="false">[]<br></div>`);
+        });
+    });
+    describe("delete", () => {
+        test("delete should remove an image in an editable context", async () => {
+            const contentBefore = `<div contenteditable="true"><img src="${base64Img}"></div>`;
+            const contentAfter = `<div contenteditable="true">[]<br></div>`;
+            // Forward
+            await testEditor({
+                contentBefore,
+                stepFunction: async (editor) => {
+                    await click("img");
+                    deleteForward(editor);
+                },
+                contentAfter,
+            });
+            // Backward
+            await testEditor({
+                contentBefore,
+                stepFunction: async (editor) => {
+                    await click("img");
+                    deleteBackward(editor);
+                },
+                contentAfter,
+            });
+        });
+        test("delete should not remove an image in an non-editable context", async () => {
+            const contentBefore = `<div contenteditable="false"><img src="${base64Img}"></div>`;
+            // Forward
+            await testEditor({
+                contentBefore,
+                stepFunction: async (editor) => {
+                    await click("img");
+                    deleteForward(editor);
+                },
+                // TODO: there should be no difference between forward and backward.
+                contentAfter: `<div contenteditable="false">[<img src="${base64Img}">]</div>`,
+            });
+            // Backward
+            await testEditor({
+                contentBefore,
+                stepFunction: async (editor) => {
+                    await click("img");
+                    deleteBackward(editor);
+                },
+                // TODO: there should be no difference between forward and backward.
+                contentAfter: `<div contenteditable="false">[]<img src="${base64Img}"></div>`,
+            });
+        });
+        test("deleteForward should remove an editable image in a non-editable context", async () => {
+            const contentBefore = `<div contenteditable="false"><img src="${base64Img}" class="${EDITABLE_MEDIA_CLASS}"></div>`;
+            const contentAfter = `<div contenteditable="false">[]<br></div>`;
+            // Forward
+            await testEditor({
+                contentBefore,
+                stepFunction: async (editor) => {
+                    await click("img");
+                    deleteForward(editor);
+                },
+                contentAfter,
+            });
+            // Backward
+            await testEditor({
+                contentBefore,
+                stepFunction: async (editor) => {
+                    await click("img");
+                    deleteBackward(editor);
+                },
+                contentAfter,
+            });
         });
     });
 });

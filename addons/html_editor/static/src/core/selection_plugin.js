@@ -205,6 +205,7 @@ export class SelectionPlugin extends Plugin {
         // "collapseIfZWS",
         "isSelectionInEditable",
         "isNodeEditable",
+        "isSelectionEditable",
         "selectAroundNonEditable",
     ];
     resources = {
@@ -666,7 +667,14 @@ export class SelectionPlugin extends Plugin {
             this.getResource("fully_selected_node_predicates").some((cb) => cb(node, selection)) ||
             // Default rule
             (range.isPointInRange(node, 0) && range.isPointInRange(node, nodeSize(node)));
-        return this.getTraversedNodes().filter(isNodeFullySelected);
+        const selectedNodes = this.getTraversedNodes(false).filter(isNodeFullySelected);
+        // If no selectedNodes were find, it could still be that the whole
+        // selection is contained within a text node and that all the contents
+        // of its parent are selected.
+        // TODO: check this first instead of calling getTraversedNodes twice?
+        return selectedNodes.length
+            ? selectedNodes
+            : this.getTraversedNodes().filter(isNodeFullySelected);
     }
 
     isNodeContentsFullySelected(node) {
@@ -929,6 +937,10 @@ export class SelectionPlugin extends Plugin {
 
     isNodeEditable(node) {
         return this.getResource("is_node_editable_predicates").some((p) => p(node));
+    }
+
+    isSelectionEditable() {
+        return this.getSelectedNodes().every((node) => this.isNodeEditable(node));
     }
 
     focusEditable() {

@@ -143,7 +143,23 @@ export class DeletePlugin extends Plugin {
         // see collapseIfZWS
 
         let range = this.getNormalizedRange(selection);
-        if (range.collapsed || !closestElement(range.commonAncestorContainer).isContentEditable) {
+        if (range.collapsed) {
+            return;
+        }
+        // Delete only if the selection is all editable or if every non-editable
+        // node's editable ancestor is fully selected.
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
+        if (
+            !selectedNodes.every(
+                (node) =>
+                    this.dependencies.selection.isNodeEditable(node) ||
+                    selectedNodes.includes(
+                        closestElement(node, (node) =>
+                            this.dependencies.selection.isNodeEditable(node)
+                        )
+                    )
+            )
+        ) {
             return;
         }
         range = this.adjustRange(range, [
