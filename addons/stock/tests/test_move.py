@@ -6888,3 +6888,15 @@ class StockMove(TransactionCase):
             {'quantity': 149.97, 'quantity_product_uom': 5.29},
             {'quantity': 0.03, 'quantity_product_uom': 0},
         ])
+
+    def test_scrap_creation_without_scrap_location(self):
+        """Test that a scrap can be created when no scrap location is available."""
+        scrap_location = self.env['stock.location'].search([('company_id', '=', self.env.company.id), ('scrap_location', '=', True)], limit=1)
+        scrap_location.write({'scrap_location': False})
+
+        scrap_form = Form(self.env['stock.scrap'])
+        scrap_form.product_id = self.product
+        scrap_form.scrap_qty = 1
+
+        self.assertTrue(scrap_form, "Scrap record should be created successfully.")
+        self.assertFalse(scrap_form.scrap_location_id)
