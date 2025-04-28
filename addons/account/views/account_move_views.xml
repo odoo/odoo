@@ -1148,7 +1148,14 @@
                                                "/>
                                         <field name="name" widget="section_and_note_text" optional="show"/>
                                         <field name="account_id"
-                                               context="{'partner_id': partner_id, 'move_type': parent.move_type, 'search_default_assetsacc': 'in_' in parent.move_type, 'search_default_expensesacc': 'in_' in parent.move_type, 'search_default_incomeacc': 'out_' in parent.move_type, 'preferred_internal_group': 'out_' in parent.move_type and 'income' or 'in_' in parent.move_type and 'expense' or False}"
+                                               context="{
+                                                    'partner_id': partner_id,
+                                                    'move_type': parent.move_type,
+                                                    'search_default_type_asset_fixed': 'in_' in parent.move_type,
+                                                    'search_default_type_expense': 'in_' in parent.move_type,
+                                                    'search_default_incomeacc': 'out_' in parent.move_type,
+                                                    'preferred_account_type': 'out_' in parent.move_type and 'income' or 'in_' in parent.move_type and 'expense',
+                                               }"
                                                groups="account.group_account_readonly"
                                                options="{'no_quick_create': True}"
                                                domain="[('company_ids', 'parent_of', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]"
