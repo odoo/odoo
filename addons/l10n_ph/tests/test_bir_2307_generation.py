@@ -14,8 +14,8 @@ class TestBIR2307Generation(TestPhCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        # 1% Withholding Tax
-        vat_purchase_wc640 = cls.env.ref(f'account.{cls.company_data["company"].id}_l10n_ph_tax_purchase_wc640')
+        # 10% Withholding Tax
+        purchase_10_wc516 = cls.env.ref(f'account.{cls.company_data["company"].id}_l10n_ph_tax_purchase_10_wc516')
 
         cls.invoice = cls.env['account.move'].create({
             'move_type': 'in_invoice',
@@ -26,7 +26,7 @@ class TestBIR2307Generation(TestPhCommon):
                     'name': 'Test line',
                     'quantity': 1.0,
                     'price_unit': 100,
-                    'tax_ids': vat_purchase_wc640,
+                    'tax_ids': purchase_10_wc516,
                 })
             ]
         })
@@ -72,7 +72,7 @@ class TestBIR2307Generation(TestPhCommon):
             # Header
             0: ['Reporting_Month', 'Vendor_TIN', 'branchCode', 'companyName', 'surName', 'firstName', 'middleName', 'address', 'zip_code', 'nature', 'ATC', 'income_payment', 'ewt_rate', 'tax_amount'],
             # Row
-            1: ['01/15/2020', '123456789', '001', 'JMC Company', '', '', '', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '1% WC640 - Supplier of goods', 'WC640', 100.0, 1.0, 1.0],
+            1: ['01/15/2020', '123456789', '001', 'JMC Company', '', '', '', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', 'WC516 - Commission/rebates/discounts', 'WC516', 100.0, 10.0, 10.0],
         }
 
         report_file = io.BytesIO(bir_2307)
