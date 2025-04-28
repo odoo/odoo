@@ -2,7 +2,6 @@ import { DependencyManager } from "../core/dependency_manager";
 import { useSubEnv } from "@odoo/owl";
 import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_service";
 import { _t } from "@web/core/l10n/translation";
-import { isVisible } from "@web/core/utils/ui";
 
 /**
  * Checks if the view of the targeted element is mobile.
@@ -69,15 +68,17 @@ export function isElementInViewport(el) {
 }
 
 /**
- * Checks if the element is visible while editing. Checks the current state of
- * the element itself (@see isVisible for the limits) and that it doesn't have a
- * `data-invisible` ancestor.
+ * Checks if the given element is visible in the sense of the jQuery `:visible`
+ * selector.
  *
- * @param {HTMLElement} el
+ * @param {HTMLElement} el the element
  * @returns {Boolean}
  */
-export function isElementVisible(el) {
-    return isVisible(el) && !el.closest("[data-invisible='1']");
+export function isVisible(el) {
+    if (el.offsetHeight > 0 || el.offsetWidth > 0) {
+        return true;
+    }
+    return false;
 }
 
 /**

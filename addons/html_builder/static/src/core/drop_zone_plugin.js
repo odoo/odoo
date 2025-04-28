@@ -1,4 +1,4 @@
-import { isElementVisible } from "@html_builder/utils/utils";
+import { isVisible } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 
@@ -29,7 +29,7 @@ export class DropZonePlugin extends Plugin {
      */
     getDropRootElement() {
         const openModalEl = this.editable.querySelector(".modal.show");
-        if (isElementVisible(openModalEl)) {
+        if (openModalEl && isVisible(openModalEl)) {
             return openModalEl;
         }
         const openDropdownEl = this.editable.querySelector(
@@ -149,9 +149,7 @@ export class DropZonePlugin extends Plugin {
             return false;
         }
         // Drop only in visible elements.
-        const invisibleClasses =
-            ".o_snippet_invisible, .o_snippet_mobile_invisible, .o_snippet_desktop_invisible";
-        if (el.closest(invisibleClasses) && el.closest("[data-invisible]")) {
+        if (!isVisible(el)) {
             return false;
         }
         // Drop only in open dropdown and offcanvas elements.
@@ -220,16 +218,14 @@ export class DropZonePlugin extends Plugin {
     }
 
     /**
-     * Creates a dropzone element.
-     * This allows to add data on the dropzone depending on the hook
-     * environment.
-     * TODO
-     * @param {HTMLElement} hookEl the dropzone parent
-     * @param {boolean} [vertical=false]
-     * @param {Object} [style]
+     * Creates a dropzone and adapts it depending on the hook environment.
+     *
+     * @param {HTMLElement} parentEl the dropzone parent
+     * @param {Boolean} isVertical true if the dropzone should be vertical
+     * @param {Object} style the style to assign to the dropzone
      * @returns {HTMLElement}
      */
-    createDropzone(hookEl, isVertical, style) {
+    createDropzone(parentEl, isVertical, style) {
         const dropzoneEl = this.document.createElement("div");
         dropzoneEl.classList.add("oe_drop_zone", "oe_insert");
 
@@ -240,7 +236,7 @@ export class DropZonePlugin extends Plugin {
             "data-editor-sub-message",
         ];
         for (const messageAttribute of editorMessagesAttributes) {
-            const message = hookEl.getAttribute(messageAttribute);
+            const message = parentEl.getAttribute(messageAttribute);
             if (message) {
                 dropzoneEl.setAttribute(messageAttribute, message);
             }
@@ -249,9 +245,7 @@ export class DropZonePlugin extends Plugin {
         if (isVertical) {
             dropzoneEl.classList.add("oe_vertical");
         }
-        if (style) {
-            Object.assign(dropzoneEl.style, style);
-        }
+        Object.assign(dropzoneEl.style, style);
         return dropzoneEl;
     }
 
@@ -298,6 +292,61 @@ export class DropZonePlugin extends Plugin {
     }
 
     /**
+     * Checks whether the dropzone to insert should be horizontal or vertical.
+     *
+     * @param {HTMLElement} hookEl the element before/after which the dropzone
+     *   will be inserted
+     * @param {HTMLElement} parentEl the parent element of `hookEl`
+     * @param {Boolean} toInsertInline true if the dragged element is inline
+     * @returns {Object} - `vertical[Boolean]`: true if the dropzone is vertical
+     *                   - `style[Object]`: the style to add to the dropzone
+     */
+    setDropzoneDirection(hookEl, parentEl, toInsertInline) {
+        let vertical = false;
+        const style = {};
+        const hookStyle = window.getComputedStyle(hookEl);
+        const parentStyle = window.getComputedStyle(parentEl);
+
+        const float = hookStyle.float || hookStyle.cssFloat;
+        const { display, flexDirection } = parentStyle;
+
+        if (
+            toInsertInline ||
+            float === "left" ||
+            float === "right" ||
+            (display === "flex" && flexDirection === "row")
+        ) {
+            if (!toInsertInline) {
+                style.float = float;
+            }
+            // Compute the parent content width and the element outer width.
+            const parentPaddingX =
+                parseFloat(parentStyle.paddingLeft) + parseFloat(parentStyle.paddingRight);
+            const parentBorderX =
+                parseFloat(parentStyle.borderLeft) + parseFloat(parentStyle.borderRight);
+            const hookMarginX =
+                parseFloat(hookStyle.marginLeft) + parseFloat(hookStyle.marginRight);
+
+            const parentContentWidth =
+                parentEl.getBoundingClientRect().width - parentPaddingX - parentBorderX;
+            const hookOuterWidth = hookEl.getBoundingClientRect().width + hookMarginX;
+
+            if (parseInt(parentContentWidth) !== parseInt(hookOuterWidth)) {
+                vertical = true;
+                const hookOuterHeight = hookEl.getBoundingClientRect().height;
+                style.height = Math.max(hookOuterHeight, 30) + "px";
+                if (toInsertInline) {
+                    style.display = "inline-block";
+                    style.verticalAlign = "middle";
+                    style.float = "none";
+                }
+            }
+        }
+
+        return { vertical, style };
+    }
+
+    /**
      * @typedef Selectors
      * @property {Set<HTMLElement>} selectorSiblings elements which must have
      *   siblings drop zones
@@ -326,21 +375,34 @@ export class DropZonePlugin extends Plugin {
         { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids = [] },
         { toInsertInline, isContentInIframe = true } = {}
     ) {
-        // TODO improve this portion
-        const targets = [];
-        for (const el of selectorChildren) {
-            targets.push(...el.children);
-            el.prepend(this.createDropzone(el));
+        const isIgnored = (el) => el.matches(".o_we_no_overlay") || !isVisible(el);
+        const hookEls = [];
+        for (const parentEl of selectorChildren) {
+            const validChildrenEls = [...parentEl.children].filter((el) => !isIgnored(el));
+            hookEls.push(...validChildrenEls);
+            parentEl.prepend(this.createDropzone(parentEl));
         }
-        targets.push(...selectorSiblings);
+        hookEls.push(...selectorSiblings);
 
-        for (const target of targets) {
-            if (!target.nextElementSibling?.classList.contains("oe_drop_zone")) {
-                target.after(this.createDropzone(target.parentElement));
+        // Inserting the normal dropzones.
+        for (const hookEl of hookEls) {
+            const parentEl = hookEl.parentElement;
+            const { vertical, style } = this.setDropzoneDirection(hookEl, parentEl, toInsertInline);
+
+            let nextEl = hookEl.nextElementSibling;
+            while (nextEl && isIgnored(nextEl)) {
+                nextEl = nextEl.nextElementSibling;
+            }
+            if (!nextEl?.classList.contains("oe_drop_zone")) {
+                hookEl.after(this.createDropzone(parentEl, vertical, style));
             }
 
-            if (!target.previousElementSibling?.classList.contains("oe_drop_zone")) {
-                target.before(this.createDropzone(target.parentElement));
+            let previousEl = hookEl.previousElementSibling;
+            while (previousEl && isIgnored(previousEl)) {
+                previousEl = previousEl.previousElementSibling;
+            }
+            if (!previousEl?.classList.contains("oe_drop_zone")) {
+                hookEl.before(this.createDropzone(parentEl, vertical, style));
             }
         }
 
