@@ -23,7 +23,7 @@ class PurchaseOrderGroup(models.Model):
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    requisition_id = fields.Many2one('purchase.requisition', string='Purchase Agreement', copy=False)
+    requisition_id = fields.Many2one('purchase.requisition', string='Purchase Agreement', copy=False, ondelete='restrict')
     is_quantity_copy = fields.Selection(related='requisition_id.is_quantity_copy', readonly=False)
 
     purchase_group_id = fields.Many2one('purchase.order.group')
