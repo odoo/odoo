@@ -334,6 +334,21 @@ class AccountChartTemplate(models.AbstractModel):
                     if xmlid not in xmlid2fiscal_position and not force_create:
                         skip_update.add((model_name, xmlid))
                         continue
+                    # Only add accounts mappings containing new records
+                    if not force_create:  # there can't be new records if we don't create them
+                        values.pop('account_ids', [])
+                    if old_ids := values.pop('account_ids', []):
+                        new_ids = []
+                        for element in old_ids:
+                            match element:
+                                case Command.CREATE, _, {'account_src_id': src_id, 'account_dest_id': dest_id} if (
+                                    not self.ref(src_id, raise_if_not_found=False)
+                                    or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
+                                ):
+                                    new_ids.append(element)
+                        if new_ids:
+                            values['account_ids'] = new_ids
+
                 elif model_name == 'account.tax':
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
                         if not force_create:
@@ -370,7 +385,11 @@ class AccountChartTemplate(models.AbstractModel):
                             if link_commands:
                                 values['fiscal_position_ids'] = link_commands
                         # Only add tax mappings containing new taxes
-                        if original_tax_ids and (new_taxes := [xml_id for xml_id in original_tax_ids.split(',') if xml_id not in xmlid2tax]):
+                        if (
+                            force_create
+                            and original_tax_ids
+                            and (new_taxes := [xml_id for xml_id in original_tax_ids.split(',') if xml_id not in xmlid2tax])
+                        ):
                             values['original_tax_ids'] = [
                                 Command.link(alt_xml_id)
                                 for alt_xml_id in new_taxes
