@@ -1,0 +1,19 @@
+<odoo>
+    <record id="view_move_form_inherit_tax_on_payment" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in.payment</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">.
+                <field name="advanced_payment_tax_created_move_ids" invisible="1"/>
+                <button name="open_advanced_payment_entries"
+                        class="oe_stat_button"
+                        icon="fa-usd"
+                        type="object"
+                        attrs="{'invisible': [('advanced_payment_tax_created_move_ids', '=', [])]}"
+                        string="Advanced Tax Adjustment">
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
