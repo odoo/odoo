@@ -418,12 +418,12 @@
                                 options="{'no_open': True, 'no_quick_create': True}"
                                 widget="many2many_avatar_user"/>
                             <field name="role_ids" invisible="not (is_template and has_project_template)" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Assign at project creation"/>
-                            <field name="priority" widget="priority_switch"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="partner_id" nolabel="0" widget="res_partner_many2one" class="o_task_customer_field" invisible="not project_id or has_template_ancestor"/>
+                            <field name="priority" widget="priority_switch"/>
                             <label for="date_deadline"/>
                             <div id="date_deadline_and_recurring_task" class="d-inline-flex w-100">
                                 <field name="date_deadline" nolabel="1" decoration-danger="date_deadline and date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
