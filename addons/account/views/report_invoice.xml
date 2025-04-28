@@ -10,7 +10,7 @@
                         <div class="col-6">
                             <t t-set="information_block">
                                 <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
-                                    <strong>Shipping Address</strong>
+                                    <strong class="d-block mt-3">Shipping Address</strong>
                                     <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                                 </div>
                             </t>
