@@ -289,7 +289,7 @@ test("sidebar: basic chat rendering", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
-    await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
+    await contains(".o-mail-DiscussSidebarChannel img[alt='Thread Image']");
     await contains(
         ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']"
     );
