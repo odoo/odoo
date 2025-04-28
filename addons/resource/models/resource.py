@@ -509,8 +509,8 @@ class ResourceCalendar(models.Model):
         # Public leave don't have a resource_id
         domain = domain + [
             ('resource_id', 'in', [False] + [r.id for r in resources_list]),
-            ('date_from', '<=', datetime_to_string(end_dt)),
-            ('date_to', '>=', datetime_to_string(start_dt)),
+            ('date_from', '>=', datetime_to_string(start_dt)),
+            ('date_to', '<=', datetime_to_string(end_dt)),
         ]
 
         # retrieve leave intervals in (start_dt, end_dt)
