@@ -366,19 +366,32 @@ class ResourceCalendar(models.Model):
         for tz, resources in resources_per_tz.items():
             res = result_per_tz[tz]
             res_intervals = WorkIntervals(res)
+            if any(r._is_flexible() for r in resources if r):
+                start_datetime = start_dt.astimezone(tz)
+                end_datetime = end_dt.astimezone(tz)
+            else:
+                start_datetime = start_dt
+                end_datetime = end_dt
+
             for resource in resources:
                 if resource and resource._is_flexible():
-                    duration_days = (end - start).days + (0.5 if (end - start).total_seconds() / 3600 < resource.calendar_id.hours_per_day else 1)
-                    if resource.calendar_id and resource.calendar_id.flexible_hours:
-                        duration_hours = duration_days * resource.calendar_id.hours_per_day
-                    else:
-                        duration_hours = (end - start).total_seconds() / 3600
-                    # If the resource is flexible, return the whole period from start_dt to end_dt with a dummy attendance
-                    dummy_attendance = self.env['resource.calendar.attendance'].new({
-                        'duration_hours': duration_hours,
-                        'duration_days': duration_days,
-                    })
-                    result_per_resource_id[resource.id] = WorkIntervals([(start, end, dummy_attendance)])
+                    intervals = []
+                    start_date = start_datetime.date()
+                    end_date = end_datetime.date()
+                    num_days = (end_date - start_date).days + 1
+                    for day_offset in range(num_days):
+                        day_start = datetime.combine(start_date, time.min).astimezone(tz) + relativedelta(days=day_offset)
+                        day_end = datetime.combine(start_date, time.max).astimezone(tz) + relativedelta(days=day_offset)
+                        duration_hours = 24
+                        if resource.calendar_id:
+                            duration_hours = resource.calendar_id.hours_per_day
+                            day_end = day_start + relativedelta(hours=resource.calendar_id.hours_per_day)
+                        dummy_attendance = self.env['resource.calendar.attendance'].new({
+                            'duration_hours': duration_hours,
+                            'duration_days': 1,
+                        })
+                        intervals.append((day_start, day_end, dummy_attendance))
+                    result_per_resource_id[resource.id] = WorkIntervals(intervals)
                 elif resource in per_resource_result:
                     resource_specific_result = [(max(bounds_per_tz[tz][0], tz.localize(val[0])), min(bounds_per_tz[tz][1], tz.localize(val[1])), val[2])
                         for val in per_resource_result[resource]]
@@ -390,8 +403,8 @@ class ResourceCalendar(models.Model):
     def _handle_flexible_leave_interval(self, dt0, dt1, leave):
         """Hook method to handle flexible leave intervals. Can be overridden in other modules."""
         tz = dt0.tzinfo  # Get the timezone information from dt0
-        dt0 = datetime.combine(dt0.date(), time.min).replace(tzinfo=tz)
-        dt1 = datetime.combine(dt1.date(), time.max).replace(tzinfo=tz)
+        dt0 = datetime.combine(dt0.date(), time.min).astimezone(tz)
+        dt1 = datetime.combine(dt1.date(), time.max).astimezone(tz)
         return dt0, dt1
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
