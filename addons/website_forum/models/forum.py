@@ -307,7 +307,7 @@ class Post(models.Model):
 
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
-    content = fields.Html('Content', strip_style=True)
+    content = fields.Html('Content', strip_style=False)
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Closed'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
@@ -835,7 +835,7 @@ class Post(models.Model):
         values = {
             'author_id': self_sudo.create_uid.partner_id.id,  # use sudo here because of access to res.users model
             'email_from': self_sudo.create_uid.email_formatted,  # use sudo here because of access to res.users model
-            'body': tools.html_sanitize(self.content, sanitize_attributes=True, strip_style=True, strip_classes=True),
+            'body': tools.html_sanitize(self.content, sanitize_attributes=True, strip_style=False, strip_classes=True),
             'message_type': 'comment',
             'subtype_xmlid': 'mail.mt_comment',
             'date': self.create_date,
