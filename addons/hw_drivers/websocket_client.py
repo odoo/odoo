@@ -32,33 +32,24 @@ def send_to_controller(params, server_url=None):
 
 
 def on_message(ws, messages):
-    """
-        Synchronously handle messages received by the websocket.
-    """
-    messages = json.loads(messages)
-    _logger.debug("websocket received a message: %s", pprint.pformat(messages))
-    iot_mac = helpers.get_mac_address()
-    for message in messages:
-        message_type = message['message']['type']
+    """Synchronously handle messages received by the websocket."""
+    for message in json.loads(messages):
+        _logger.debug("websocket received a message: %s", pprint.pformat(message))
         payload = message['message']['payload']
-        if message_type == 'iot_action':
-            if iot_mac in payload['iotDevice']['iotIdentifiers']:
-                for device in payload['iotDevice']['identifiers']:
-                    device_identifier = device['identifier']
+        if not helpers.get_mac_address() in payload.get('iot_identifiers', []):
+            continue
+
+        match message['message']['type']:
+            case 'iot_action':
+                for device_identifier in payload['device_identifiers']:
                     if device_identifier in main.iot_devices:
-                        start_operation_time = time.perf_counter()
                         _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
                         main.iot_devices[device_identifier].action(payload)
-                        _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
-            else:
-                # likely intended as IoT share the same channel
-                _logger.debug("message ignored due to different iot mac: %s", iot_mac)
-        elif message_type == 'server_clear':
-            if iot_mac in payload['iotIdentifiers']:
+            case 'server_clear':
                 helpers.disconnect_from_server()
                 close_server_log_sender_handler()
-        elif message_type not in ['operation_confirmation', 'bundle_changed']:  # intended to be ignored
-            _logger.warning("message type not supported: %s", message_type)
+            case _:
+                continue
 
 
 def on_error(ws, error):
