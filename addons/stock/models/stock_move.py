@@ -2087,7 +2087,11 @@ Please change the quantity done or the rounding precision in your settings.""",
                 backorder._check_entire_pack()
         if moves_todo:
             moves_todo._check_quantity()
+            moves_todo._action_synch_order()
         return moves_todo
+
+    def _action_synch_order(self):
+        return True
 
     def _create_backorder(self):
         # Split moves where necessary and move quants
