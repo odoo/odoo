@@ -152,6 +152,20 @@ class MailThread(models.AbstractModel):
         help="Number of messages with delivery error")
     message_attachment_count = fields.Integer('Attachment Count', compute='_compute_message_attachment_count', groups="base.group_user")
 
+    partner_fields = fields.Json(compute="_compute_partner_fields")
+
+    def _compute_partner_fields(self):
+        for thread in self:
+            # sudo : Returning a list of fields name, not data
+            thread.partner_fields = self.env[self._name].sudo()._mail_get_partner_fields()
+
+    primary_email_field = fields.Char(compute="_compute_primary_email_field")
+
+    def _compute_primary_email_field(self):
+        for thread in self:
+            # sudo : Returning a field name, not data
+            thread.primary_email_field = self.env[self._name].sudo()._mail_get_primary_email_field()
+
     @api.depends('message_follower_ids')
     def _compute_message_partner_ids(self):
         for thread in self:
@@ -4673,6 +4687,8 @@ class MailThread(models.AbstractModel):
                 try:
                     thread.check_access("write")
                     res["hasWriteAccess"] = True
+                    res["primary_email_field"] = self.primary_email_field
+                    res["partner_fields"] = self.partner_fields
                 except AccessError:
                     pass
             if (

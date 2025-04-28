@@ -12,8 +12,8 @@ import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzo
 import { RecipientsInput } from "@mail/core/web/recipients_input";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
-import { Deferred, KeepLast } from "@web/core/utils/concurrency";
-import { onWillStart, status, useEffect } from "@odoo/owl";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { status, useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -81,26 +81,8 @@ patch(Chatter.prototype, {
         super.setup(...arguments);
         this.orm = useService("orm");
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
-        let mailImpactingFieldsPromise = new Deferred();
-        onWillStart(async () => {
-            const { partner_fields, primary_email_field } = await rpc(
-                "/mail/thread/recipients/fields",
-                {
-                    thread_model: this.props.threadModel,
-                }
-            );
-            this.mailImpactingFields = {
-                recordFields: partner_fields,
-                emailFields: primary_email_field,
-            };
-            mailImpactingFieldsPromise.resolve();
-        });
 
         useRecordObserver(async (record) => {
-            if (mailImpactingFieldsPromise) {
-                await mailImpactingFieldsPromise;
-                mailImpactingFieldsPromise = null;
-            }
             return this.updateRecipients(record);
         });
         this.attachmentPopout = usePopoutAttachment();
@@ -188,24 +170,26 @@ patch(Chatter.prototype, {
     },
 
     async updateRecipients(record, mode = this.state.composerType) {
-        if (!record) {
+        if (!record || !this.state.thread) {
             return;
         }
         const partnerIds = []; // Ensure that we don't have duplicates
         let email;
-        this.mailImpactingFields.recordFields.forEach((field) => {
-            const value = record._changes[field];
-            if (record.data[field] !== undefined && value) {
-                partnerIds.push(value.id);
-            }
-        });
-        this.mailImpactingFields.emailFields.forEach((field) => {
-            const value = record._changes[field];
-            if (record.data[field] !== undefined && value) {
+        if (this.state.thread.partner_fields) {
+            for (const field of this.state.thread.partner_fields) {
+                const value = record._changes[field];
+                if (record.data[field] !== undefined && value) {
+                    partnerIds.push(value.id);
+                }
+            };
+        }
+        if (this.state.thread.primary_email_field) {
+            const value = record._changes[this.state.thread.primary_email_field];
+            if (record.data[this.state.thread.primary_email_field] !== undefined && value) {
                 email = value;
                 return;
             }
-        });
+        }
         if ((!partnerIds.length && !email) || mode !== "message" || status(this) === "destroyed") {
             return;
         }

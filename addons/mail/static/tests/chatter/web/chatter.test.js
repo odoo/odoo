@@ -71,8 +71,6 @@ test("simple chatter on a record", async () => {
         {
             ignoreOrder: true,
             stepsAfter: [
-                '/mail/thread/recipients/fields - {"thread_model":"res.partner"}',
-                '/mail/thread/recipients/fields - {"thread_model":"res.partner"}',
                 `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","fetch_params":{"limit":30}}`,
             ],
         }
