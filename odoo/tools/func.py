@@ -40,7 +40,14 @@ class lazy_property(functools.cached_property):
             category=DeprecationWarning,
             stacklevel=2,
         )
-    reset_all = staticmethod(reset_cached_properties)
+
+    @staticmethod
+    def reset_all(instance):
+        warnings.warn(
+            "lazy_property is deprecated since Odoo 19, use `reset_cache_properties` directly",
+            category=DeprecationWarning,
+        )
+        reset_cached_properties(instance)
 
 
 def conditional(condition: typing.Any, decorator: Callable[[T], T]) -> Callable[[T], T]:

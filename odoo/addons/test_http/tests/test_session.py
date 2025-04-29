@@ -12,7 +12,7 @@ from tempfile import TemporaryDirectory
 import odoo
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.http import SESSION_LIFETIME
-from odoo.tools import config, lazy_property, mute_logger
+from odoo.tools import config, mute_logger, reset_cached_properties
 from odoo.tests import get_db_name, tagged
 from .test_common import TestHttpBase
 
@@ -291,8 +291,8 @@ class TestSessionStore(HttpCaseWithUserDemo):
         self.tmpdir = TemporaryDirectory()
         self.addCleanup(self.tmpdir.cleanup)
 
-        lazy_property.reset_all(odoo.http.root)
-        self.addCleanup(lazy_property.reset_all, odoo.http.root)
+        reset_cached_properties(odoo.http.root)
+        self.addCleanup(reset_cached_properties, odoo.http.root)
         patcher = patch.dict(config.options, {'data_dir': self.tmpdir.name})
         self.startPatcher(patcher)
 

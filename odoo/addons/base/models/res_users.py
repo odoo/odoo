@@ -24,7 +24,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, DEFAULT_LANG
-from odoo.tools import is_html_empty, frozendict, lazy_property, SQL
+from odoo.tools import is_html_empty, frozendict, reset_cached_properties, SQL
 
 
 _logger = logging.getLogger(__name__)
@@ -598,7 +598,7 @@ class ResUsers(models.Model):
             # e.g. `account_test_savepoint.py` `setup_company_data`, triggered by `test_account_invoice_report.py`
             for env in list(self.env.transaction.envs):
                 if env.user in self:
-                    lazy_property.reset_all(env)
+                    reset_cached_properties(env)
 
         if 'group_ids' in values and self.ids:
             # clear caches linked to the users

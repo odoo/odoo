@@ -9,7 +9,7 @@ import odoo
 from odoo.modules.registry import Registry
 from odoo.sql_db import close_db, db_connect
 from odoo.tests import HOST, BaseCase, Like, get_db_name, tagged
-from odoo.tools import lazy_property, mute_logger, SQL
+from odoo.tools import mute_logger, reset_cached_properties, SQL
 
 
 """
@@ -46,8 +46,8 @@ def drop_db(db):
 class TestHttpRegistry(BaseCase):
     @classmethod
     def setUpClass(cls):
-        lazy_property.reset_all(odoo.http.root)
-        cls.addClassCleanup(lazy_property.reset_all, odoo.http.root)
+        reset_cached_properties(odoo.http.root)
+        cls.addClassCleanup(reset_cached_properties, odoo.http.root)
         cls.classPatch(odoo.conf, 'server_wide_modules', ['base', 'web', 'rpc', 'test_http'])
 
         # make sure there are always many databases, to break monodb
