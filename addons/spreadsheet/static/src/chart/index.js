@@ -169,5 +169,14 @@ chartSubtypeRegistry.add("odoo_geo", {
     category: "misc",
     preview: "o-spreadsheet-ChartPreview.GEO_CHART",
 });
+chartSubtypeRegistry.add("odoo_funnel", {
+    matcher: (definition) => definition.type === "odoo_funnel",
+    displayName: _t("Funnel"),
+    chartType: "odoo_funnel",
+    chartSubtype: "odoo_funnel",
+    subtypeDefinition: { cumulative: true },
+    category: "misc",
+    preview: "o-spreadsheet-ChartPreview.FUNNEL_CHART",
+});
 
 export { OdooChartCorePlugin, ChartOdooMenuPlugin, OdooChartUIPlugin };

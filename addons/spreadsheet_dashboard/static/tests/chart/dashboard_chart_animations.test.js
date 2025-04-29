@@ -74,3 +74,25 @@ test("Animations are replayed only when chart data changes", async () => {
     await animationFrame();
     expect(charts[chartId].config.options.animation).toBe(false);
 });
+
+test("Charts are animated when chart type changes", async () => {
+    const env = await makeSpreadsheetMockEnv();
+    const setupModel = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    createBasicChart(setupModel, "chartId");
+    const charts = spyCharts();
+    const { model } = await createDashboardActionWithData(setupModel.exportData());
+
+    expect(".o-figure").toHaveCount(1);
+    expect(charts["chartId"].config.options.animation.animateRotate).toBe(true);
+    delete charts["chartId"];
+
+    const definition = model.getters.getChartDefinition("chartId");
+    model.dispatch("UPDATE_CHART", {
+        definition: { ...definition, type: "pie" },
+        figureId: "chartId",
+        sheetId: model.getters.getActiveSheetId(),
+    });
+    await animationFrame();
+
+    expect(charts["chartId"].config.options.animation.animateRotate).toBe(true);
+});
