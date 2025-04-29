@@ -84,7 +84,7 @@ export class IoTLongpolling {
         const body = {
             session_id: this._session_id,
             device_identifier: device_identifier,
-            data: JSON.stringify(data),
+            data,
         };
         return this._rpcIoT(iot_ip, route || this.actionRoute, body, undefined, fallback);
     }
