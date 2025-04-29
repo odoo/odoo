@@ -298,86 +298,21 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 _logger.warning(f"[SKIP] Single-pick payload already sent for wizard {self.id}")
                 raise UserError(_("Payload already sent for this pick. Please refresh."))
 
+            payloads = [self.process_single_pick()]
+            for payload in payloads:
+                self.send_payload_to_api(api_url, payload)
+
             # Mark as sent BEFORE sending payload to protect from retries
             self.write({'single_pick_payload_sent': True})
             self.env.cr.flush()
             _logger.info(f"[PRE-FLAG] Wizard {self.id} marked as payload sent before API call.")
 
-            payloads = [self.process_single_pick()]
-            for payload in payloads:
-                self.send_payload_to_api(api_url, payload)
-
-            self.single_pick_payload_sent = True  # For view update purposes (non-critical)
-
-            # Only update pickings used in lines
-            relevant_picking_ids = self.line_ids.mapped('picking_id').filtered(lambda p: p)
-            for picking in relevant_picking_ids:
-                line_states = set(self.line_ids.filtered(lambda l: l.picking_id == picking).mapped('current_state'))
-                if 'draft' in line_states:
-                    new_state = 'pack'
-                elif 'pick' in line_states:
-                    new_state = 'pick'
-                elif 'partially_pick' in line_states:
-                    new_state = 'partially_pick'
-                else:
-                    new_state = 'draft'
-
-                picking.action_assign()
-
-                # Loop over each move and reserve + set qty_done
-                # for move in picking.move_ids_without_package:
-                #     # Only create a move line if none exist
-                #     if not move.move_line_ids:
-                #         move_line_vals = move._prepare_move_line_vals()
-                #         move_line_vals['qty_done'] = move.product_uom_qty
-                #         self.env['stock.move.line'].create(move_line_vals)
-                #     else:
-                #         for move_line in move.move_line_ids:
-                #             move_line.qty_done = move.product_uom_qty
-                sale_order_state = 'packed'
-                confirm_pick = picking.button_validate()
-
-                # Update status in DB
-                self.env.cr.execute("""
-                    UPDATE stock_picking SET current_state = %s WHERE id = %s
-                """, (new_state, picking.id))
-                # self.env.cr.execute("""
-                #     UPDATE sale_order SET pick_status = %s WHERE id = %s
-                # """, (sale_order_state,picking.sale_id.id))
-                picking._invalidate_cache(['current_state'])
-                _logger.info(f"Picking {picking.name} forced update to '{new_state}' in database.")
-                _logger.info(f"Picking {picking.sale_id.name} forced update to '{sale_order_state}' in database.")
-
-                # Container Release payload
-                # self.release_container()
+            # Container Release payload
+            self.release_container()
 
         else:
-            for line in self.line_ids:
-                # payload = self.prepare_payload_for_individual_line(line)
-                # self.send_payload_to_api(api_url, payload)
-
-                picking = line.picking_id
-                if not picking:
-                    continue
-
-                new_state = 'pack' if line.current_state == 'draft' else line.current_state
-                picking.action_assign()
-                confirm_pick = picking.button_validate()
-
-                # Update via SQL
-                self.env.cr.execute("""
-                    UPDATE stock_picking SET current_state = %s WHERE id = %s
-                """, (new_state, picking.id))
-
-                self.env.cr.execute("""
-                    UPDATE sale_order SET pick_status = 'packed' WHERE id = %s
-                """, (line.sale_order_id.id,))
-
-                picking._invalidate_cache(['current_state'])
-                _logger.info(f"Updated picking {picking.name} and sale order {line.sale_order_id.name} immediately.")
-
             # Container Release payload
-            # self.release_container()
+            self.release_container()
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -593,6 +528,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     tenant_code_id = fields.Many2one(related='picking_id.tenant_code_id', string='Tenant ID')
     site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code')
     package_box_type_id = fields.Many2one('package.box.configuration', string='Package Box Type',
+                                          domain="[('site_code_id', '=', site_code_id), ('tenant_code_id', '=', tenant_code_id)]",
                                           help="Select packaging box for each product line.")
     sale_order_id = fields.Many2one(related='picking_id.sale_id', string='Sale Order', store=True)
     incoterm_location = fields.Char(related='sale_order_id.packaging_source_type', string='Incoterm location')
