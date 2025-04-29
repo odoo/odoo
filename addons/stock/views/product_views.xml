@@ -185,17 +185,16 @@
                     </div>
                     <field name="show_qty_update_button" invisible="1"/>
                     <label for="qty_available" class="oe_inline" invisible="not is_storable" groups="stock.group_stock_user"/>
-                    <div class="d-flex gap-2 align-items-baseline hover-show" invisible="not is_storable" groups="stock.group_stock_user">
-                        <field name="qty_available" style="max-width:100px;" readonly="True" groups="!stock.group_stock_manager"/>
-                        <field name="qty_available" style="max-width:100px;" readonly="show_qty_update_button" groups="stock.group_stock_manager"/>
+                    <div class="o_row" invisible="not is_storable" groups="stock.group_stock_user">
+                        <a type="object" name="action_open_quants"
+                           invisible="not show_qty_update_button" groups="stock.group_stock_manager">
+                            <field name="qty_available" readonly="True"/>
+                        </a>
+                        <field name="qty_available" invisible="show_qty_update_button" groups="stock.group_stock_manager" style="max-width: fit-content;"/>
+                        <field name="qty_available" readonly="True" groups="!stock.group_stock_manager" style="max-width: fit-content;"/>
                         <span name="uom_span" groups="uom.group_uom">
-                            <field name="uom_name" class="oe_inline me-5"/>
+                            <field name="uom_name" class="oe_inline"/>
                         </span>
-                        <button id="update_product_qty_button" string="Update" type="object"
-                            name="action_open_quants"
-                            groups="stock.group_stock_manager"
-                            invisible="not show_qty_update_button"
-                            class="btn btn-link py-0 btn-show"/>
                     </div>
                 </field>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
