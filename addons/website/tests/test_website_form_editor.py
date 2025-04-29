@@ -36,7 +36,6 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
             'test@test.test',
             'The email was edited, the form should have been sent to the configured email')
 
-    @unittest.skip
     def test_website_form_contact_us_edition_no_email(self):
         self.env.company.email = 'website_form_contactus_edition_no_email@mail.com'
         self.start_tour('/odoo', 'website_form_contactus_edition_no_email', login="admin")
