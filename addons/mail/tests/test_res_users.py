@@ -88,6 +88,28 @@ class TestUser(MailCommon):
         self.assertEqual(user.notification_type, 'email')
         self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.group_ids)
 
+        admin = mail_new_test_user(
+            self.env,
+            login="user_test_constraint_4",
+            name="Test User 4",
+            email="user_test_constraint_3@test.example.com",
+            notification_type='inbox',
+            groups='base.group_erp_manager',
+        )
+        # Re-check that no error occurs when we have overlapping writes on admin user
+        admin.write({
+            'notification_type': 'email',
+            'group_ids': [
+                (3, self.env.ref('base.group_user').id),
+                (3, self.env.ref('base.group_erp_manager').id),
+                (4, self.env.ref('base.group_portal').id),
+            ],
+        })
+        self.assertFalse(admin._is_admin())
+        self.assertTrue(admin._is_portal())
+        self.assertEqual(admin.notification_type, 'email')
+        self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), admin.group_ids)
+
     def test_web_create_users(self):
         src = [
             'POILUCHETTE@test.example.com',
