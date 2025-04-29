@@ -462,6 +462,7 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._enable_pricelists()
         Pricelist = cls.env['product.pricelist']
         Website = cls.env['website']
 
@@ -821,6 +822,9 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
             The objective is to verify that the pricelist
             changes correctly according to the user.
         """
+        self.env.user.write(
+            {'group_ids': [Command.link(self.env.ref('product.group_product_pricelist').id)]}
+        )
         website = self.env.ref('website.default_website')
         test_user = self.env['res.users'].create({
             'name': 'Toto',
