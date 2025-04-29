@@ -160,6 +160,18 @@ class AccountTestInvoicingCommon(ProductCommon):
         cls.inbound_payment_method_line = bank_journal.inbound_payment_method_line_ids[0]
         cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
 
+        # user with restricted groups
+        cls.simple_accountman = cls.env['res.users'].create({
+            'name': 'simple accountman',
+            'login': 'simple_accountman',
+            'password': 'simple_accountman',
+            'groups_id': [
+                # the `account` specific groups from get_default_groups()
+                Command.link(cls.env.ref('account.group_account_manager').id),
+                Command.link(cls.env.ref('account.group_account_user').id),
+            ],
+        })
+
     @classmethod
     def change_company_country(cls, company, country):
         company.country_id = country
