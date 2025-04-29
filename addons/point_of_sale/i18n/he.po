@@ -57,12 +57,14 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"הבעיה הזו מתרחשת משום שהכמות הופכת לאפס לאחר עיגול במהלך ההמרה. כדי לתקן זאת, יש להתאים את מקדמי ההמרה או את שיטת העיגול, כך שגם הכמות הקטנה ביותר ביחידת המקור לא תעוגל לאפס ביחידת היעד."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid " - From \"%(uom_from)s\" to \"%(uom_to)s\""
-msgstr ""
+msgstr "- מ - \"%(uom_from)s\" ל -\"%(uom_to)s\""
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__iot
@@ -79,7 +81,7 @@ msgstr "%הנחה"
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
-msgstr ""
+msgstr "%(name)s ליקוט קופה"
 
 #. module: point_of_sale
 #. odoo-python
@@ -92,13 +94,13 @@ msgstr "%(name)s זיכוי"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
-msgstr ""
+msgstr "%(old_pm)s השתנה ל %(new_pm)s וגם מ%(old_amount)s ל %(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(old_pm)s changed to %(new_pm)s for %(old_amount)s"
-msgstr ""
+msgstr "%(old_pm)s השתנה ל %(new_pm)s ל %(old_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -140,7 +142,7 @@ msgstr "%(vatLabel)s: %(vatId)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.js:0
 msgid "%s customer(s) found for \"%s\"."
-msgstr ""
+msgstr "%s לקוחות נמצאו עבור \"%s\"."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -196,7 +198,7 @@ msgstr "10"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "100.00"
-msgstr ""
+msgstr "100.00"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -262,7 +264,7 @@ msgstr "45"
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__ticket_code
 msgid ""
 "5 digits alphanumeric code to be used by portal user to request an invoice"
-msgstr ""
+msgstr "קוד אלפאנומרי בן 5 תווים שישמש את משתמש הפורטל לבקשת חשבונית."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.blue_denim_jeans_template
@@ -358,6 +360,8 @@ msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
 msgstr ""
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">טרם "
+"נקבע</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1040,7 +1044,7 @@ msgstr "כמות קבצים מצורפים"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/product_configurator_popup/product_configurator_popup.xml:0
 msgid "Attribute selection"
-msgstr ""
+msgstr "בחירת מאפיין"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_menu_products_attribute_action
@@ -1081,7 +1085,7 @@ msgstr "פתח מגירת מזומנים אוטומטית"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Automatically validate order"
-msgstr ""
+msgstr "אימות הזמנה באופן אוטומטי"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_auto_validate_terminal_payment
@@ -1298,7 +1302,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 msgid "Buffer:"
-msgstr ""
+msgstr "באפר:"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_bus_mixin
@@ -1314,7 +1318,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "By:"
-msgstr ""
+msgstr "על ידי: "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -1385,7 +1389,7 @@ msgstr "בוטל"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Cannot modify a tip"
-msgstr ""
+msgstr "לא ניתן לערוך טיפ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1757,7 +1761,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
 msgid "Choose how the URL to the portal will be print on the receipt."
-msgstr ""
+msgstr "בחר כיצד כתובת ה-URL לפורטל תודפס על הקבלה."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1953,7 +1957,7 @@ msgstr "אינדקס צבעים"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Combine %(payment_method)s POS payments from %(session)s"
-msgstr ""
+msgstr "שלב %(payment_method)s תשלומי קופה מ%(session)s"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_t_shirt_pants_product_template
@@ -3193,7 +3197,7 @@ msgstr "הערות כלליות "
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_ticket_unique_code
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_ticket_unique_code
 msgid "Generate a code on ticket"
-msgstr ""
+msgstr "צור קוד על קבלה"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3846,7 +3850,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__last_order_preparation_change
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "המצב האחרון של ההזמנה"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4208,7 +4212,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Net Weight:"
-msgstr ""
+msgstr "משקל נטו:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4239,7 +4243,7 @@ msgstr "מוצר חדש"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "New amount"
-msgstr ""
+msgstr "כמות חדשה"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
@@ -7320,7 +7324,7 @@ msgstr "תצוגת מס"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal
 msgid "Tax Excl."
-msgstr ""
+msgstr "ללא מיסים"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_tax_group
@@ -7336,7 +7340,7 @@ msgstr "ח.פ/ת.ז %(vatId)s"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
 msgid "Tax Incl."
-msgstr ""
+msgstr "כולל מיסים"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_fiscal_position_tax

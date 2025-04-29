@@ -9,6 +9,10 @@ from odoo.tests import tagged, Form
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdiDoiRemaining(TestItEdiDoi):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.user.groups_id |= cls.env.ref('sales_team.group_sale_salesman')
 
     def create_invoice(self, declaration, invoice_line_vals):
         return self.env['account.move'].create({

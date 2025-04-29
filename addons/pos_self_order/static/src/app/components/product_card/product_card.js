@@ -93,7 +93,33 @@ export class ProductCard extends Component {
         }
 
         if (product.isCombo()) {
-            this.router.navigate("combo_selection", { id: product.id });
+            const selectedCombos = [];
+            let showComboSelectionPage = false;
+            for (const combo of product.combo_ids) {
+                const { combo_item_ids } = combo;
+                if (combo_item_ids.length > 1 || combo_item_ids[0]?.product_id.isConfigurable()) {
+                    showComboSelectionPage = true;
+                    break;
+                }
+                selectedCombos.push({
+                    combo_item_id: this.selfOrder.models["product.combo.item"].get(
+                        combo_item_ids[0].id
+                    ),
+                    configuration: {
+                        attribute_custom_values: [],
+                        attribute_value_ids: [],
+                        price_extra: 0,
+                    },
+                });
+            }
+
+            if (showComboSelectionPage) {
+                this.router.navigate("combo_selection", { id: product.id });
+            } else {
+                this.flyToCart();
+                this.selfOrder.editedLine?.delete();
+                this.selfOrder.addToCart(product, 1, "", {}, {}, selectedCombos);
+            }
         } else if (product.isConfigurable()) {
             this.router.navigate("product", { id: product.id });
         } else {

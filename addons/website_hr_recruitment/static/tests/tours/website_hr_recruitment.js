@@ -130,7 +130,7 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
 ...clickOnEditAndWaitEditMode(),
 {
     content: 'Verify that the job_id field has kept its default value',
-    trigger: ":iframe form input[name=job_id][value=FAKE_JOB_ID_DEFAULT_VAL]:not(:visible)",
+    trigger: ":iframe form input[name=job_id]:not(:visible):not([value='']):not([value=FAKE_JOB_ID_DEFAULT_VAL])",
 },
 ]);
 
