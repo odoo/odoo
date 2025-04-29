@@ -68,7 +68,7 @@ const storeServicePatch = {
      * @param {import("models").ChannelMember} m2
      */
     sortMembers(m1, m2) {
-        return m1.persona.name?.localeCompare(m2.persona.name) || m1.id - m2.id;
+        return m1.name?.localeCompare(m2.name) || m1.id - m2.id;
     },
     /** @param {number[]} partnerIds */
     async startChat(partnerIds) {
