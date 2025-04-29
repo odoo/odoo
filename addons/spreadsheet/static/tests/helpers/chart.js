@@ -15,11 +15,8 @@ const uuidGenerator = new spreadsheet.helpers.UuidGenerator();
  * @param {string} type
  * @param {import("@spreadsheet/chart/odoo_chart/odoo_chart").OdooChartDefinition} definition
  */
-export function insertChartInSpreadsheet(
-    model,
-    type = "odoo_bar",
-    definition = getChartDefinition(type)
-) {
+export function insertChartInSpreadsheet(model, type = "odoo_bar", definition = {}) {
+    definition = { ...getChartDefinition(type), ...definition };
     model.dispatch("CREATE_CHART", {
         sheetId: model.getters.getActiveSheetId(),
         figureId: definition.id,
