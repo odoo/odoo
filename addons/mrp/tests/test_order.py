@@ -3531,9 +3531,6 @@ class TestMrpOrder(TestMrpCommon):
                 workorder.workcenter_id = self.workcenter_2
             mo = mo_form.save()
 
-        self.assertTrue(mo.workorder_ids[0].date_start)
-        self.assertTrue(mo.workorder_ids[2].date_start)
-
     def test_compute_product_id(self):
         """
             Tests the creation of a production order automatically sets the product when the bom is provided,

@@ -239,7 +239,7 @@ class MrpProduction(models.Model):
     unbuild_ids = fields.One2many('mrp.unbuild', 'mo_id', 'Unbuilds')
     unbuild_count = fields.Integer(compute='_compute_unbuild_count', string='Number of Unbuilds')
     is_locked = fields.Boolean('Is Locked', default=_get_default_is_locked, copy=False)
-    is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned", store=True)
+    is_planned = fields.Boolean('Its Operations are Planned', copy=False)
 
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", compute="_compute_production_location", store=True)
@@ -469,14 +469,6 @@ class MrpProduction(models.Model):
     def _compute_duration(self):
         for production in self:
             production.duration = sum(production.workorder_ids.mapped('duration'))
-
-    @api.depends("workorder_ids.date_start", "workorder_ids.date_finished", "date_start")
-    def _compute_is_planned(self):
-        for production in self:
-            if production.workorder_ids:
-                production.is_planned = any(wo.date_start and wo.date_finished for wo in production.workorder_ids)
-            else:
-                production.is_planned = False
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -1673,6 +1665,7 @@ class MrpProduction(models.Model):
         self.with_context(force_date=True).write({
             'date_start': min((workorder.leave_id.date_from for workorder in workorders if workorder.leave_id), default=None),
             'date_finished': max((workorder.leave_id.date_to for workorder in workorders if workorder.leave_id), default=None),
+            'is_planned': True,
         })
 
     def button_unplan(self):
