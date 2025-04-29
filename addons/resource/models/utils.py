@@ -1,5 +1,10 @@
 from odoo.fields import Domain
 
+# Default hour per day value. The one should
+# only be used when the one from the calendar
+# is not available.
+HOURS_PER_DAY = 8
+
 
 def filter_domain_leaf(domain, field_check, field_name_mapping=None):
     """
