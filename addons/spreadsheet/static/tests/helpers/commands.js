@@ -239,6 +239,15 @@ export function createGaugeChart(model, chartId, sheetId = model.getters.getActi
     });
 }
 
+export function updateChart(model, chartId, partialDefinition) {
+    const definition = model.getters.getChartDefinition(chartId);
+    return model.dispatch("UPDATE_CHART", {
+        definition: { ...definition, ...partialDefinition },
+        figureId: chartId,
+        sheetId: model.getters.getActiveSheetId(),
+    });
+}
+
 export function undo(model) {
     model.dispatch("REQUEST_UNDO");
 }
