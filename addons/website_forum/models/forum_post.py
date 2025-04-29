@@ -734,6 +734,12 @@ class ForumPost(models.Model):
                     raise AccessError(_('%d karma required to edit a post.', post.karma_edit))
         return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
 
+    def _notify_by_email_get_headers(self, headers=None):
+        # Never use explicit recipients
+        headers = super()._notify_by_email_get_headers(headers=headers)
+        headers.pop('X-Msg-To-Add', False)
+        return headers
+
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         groups = super()._notify_get_recipients_groups(
             message, model_description, msg_vals=msg_vals
