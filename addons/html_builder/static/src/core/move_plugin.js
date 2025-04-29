@@ -20,7 +20,7 @@ const moveUpOrDown = {
         ".s_product_catalog_dish",
         ".s_timeline_list_row",
         ".s_timeline_row",
-        "s_timeline_images_row",
+        ".s_timeline_images_row",
     ].join(", "),
 };
 
@@ -78,6 +78,19 @@ export class MovePlugin extends Plugin {
         this.overlayTarget = null;
         this.isMobileView = false;
         this.isGridItem = false;
+
+        // Needed for compatibility (with already dropped snippets).
+        // For each row, check if all its columns are either mobile ordered or
+        // not. If they are not consistent, then remove the mobile orders from
+        // all of them, to avoid issues.
+        const rowEls = this.editable.querySelectorAll(".row");
+        for (const rowEl of rowEls) {
+            const columnEls = [...rowEl.children];
+            const orderedColumnEls = columnEls.filter((el) => el.style.order);
+            if (orderedColumnEls.length && orderedColumnEls.length !== columnEls.length) {
+                removeMobileOrders(orderedColumnEls);
+            }
+        }
     }
 
     getActiveOverlayButtons(target) {
@@ -144,22 +157,6 @@ export class MovePlugin extends Plugin {
         this.isMobileView = isMobileView(this.overlayTarget);
         this.isGridItem = this.overlayTarget.classList.contains("o_grid_item");
     }
-
-    // TODO check where to call it (SnippetMove > start).
-    // refreshTarget() {
-    //     // Needed for compatibility (with already dropped snippets).
-    //     // If the target is a column, check if all the columns are either mobile
-    //     // ordered or not. If they are not consistent, then we remove the mobile
-    //     // order classes from all of them, to avoid issues.
-    //     const parentEl = this.overlayTarget.parentElement;
-    //     if (parentEl.classList.contains("row")) {
-    //         const columnEls = [...parentEl.children];
-    //         const orderedColumnEls = columnEls.filter((el) => el.style.order);
-    //         if (orderedColumnEls.length && orderedColumnEls.length !== columnEls.length) {
-    //             removeMobileOrders(orderedColumnEls);
-    //         }
-    //     }
-    // }
 
     areArrowsDisplayed() {
         const siblingsEl = [...this.overlayTarget.parentNode.children];
