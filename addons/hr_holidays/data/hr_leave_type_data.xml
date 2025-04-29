@@ -309,48 +309,48 @@
 <!-- EG: Egypt -->
     <record id="l10n_eg_leave_type_marriage" model="hr.leave.type">
         <field name="name">Marriage Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation">False</field>
         <field name="company_id" eval="False"/>
         <field name="country_id" ref="base.eg"/>
     </record>
 
     <record id="l10n_eg_leave_type_maternity" model="hr.leave.type">
         <field name="name">Maternity Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation">False</field>
         <field name="country_id" ref="base.eg"/>
         <field name="company_id" eval="False"/>
     </record>
 
     <record id="l10n_eg_leave_type_hajj" model="hr.leave.type">
         <field name="name">Hajj Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation">False</field>
         <field name="company_id" eval="False"/>
         <field name="country_id" ref="base.eg"/>
     </record>
 
     <record id="l10n_eg_leave_type_death" model="hr.leave.type">
         <field name="name">Death Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation">False</field>
         <field name="company_id" eval="False"/>
         <field name="country_id" ref="base.eg"/>
     </record>
 
     <record id="l10n_eg_leave_type_paid_sick_time_off" model="hr.leave.type">
         <field name="name">Paid Sick time off</field>
-        <field name="requires_allocation">yes</field>
+        <field name="requires_allocation">True</field>
         <field name="employee_requests">no</field>
         <field name="country_id" ref="base.eg"/>
     </record>
 
     <record id="l10n_eg_leave_type_sick_leave_75" model="hr.leave.type">
         <field name="name">Sick Leave (75% Paid)</field>
-        <field name="requires_allocation">yes</field>
+        <field name="requires_allocation">True</field>
         <field name="country_id" ref="base.eg"/>
     </record>
 
     <record id="l10n_eg_leave_type_sick_leave_unpaid" model="hr.leave.type">
         <field name="name">Sick Leave (UnPaid)</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation">False</field>
         <field name="country_id" ref="base.eg"/>
     </record>
 
