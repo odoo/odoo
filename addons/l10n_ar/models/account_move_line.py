@@ -24,6 +24,11 @@ class AccountMoveLine(models.Model):
                 price, invoice.currency_id, self.quantity, self.product_id, invoice.partner_id)['total_included']
         price_net = price_unit * (1 - (self.discount or 0.0) / 100.0)
 
+        if invoice._is_refund_invoice():
+            price_unit = -price_unit
+            price_subtotal = -price_subtotal
+            price_net = -price_net
+
         return {
             'price_unit': price_unit,
             'price_subtotal': price_subtotal,

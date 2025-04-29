@@ -99,6 +99,11 @@ class AccountMove(models.Model):
         document 61 could not be used as refunds. """
         return ['99', '186', '188', '189', '60']
 
+    def _is_refund_invoice(self):
+        """ This method is used to check if the document type is in the list of document types that can be used as
+        an invoice and refund and if the move type is 'in_refund'. """
+        return self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() and self.move_type == 'in_refund'
+
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
         domain = super()._get_l10n_latam_documents_domain()
@@ -404,6 +409,24 @@ class AccountMove(models.Model):
                 values["formatted_amount_tax"] = formatLang(self.env, values["tax_amount"])
 
             tax_totals["detail_ar_tax"] = list(detail_info.values())
+
+        if self._is_refund_invoice():
+            if 'amount_total' in tax_totals:
+                tax_totals['amount_total'] = -tax_totals['amount_total']
+                tax_totals['formatted_amount_total'] = formatLang(self.env, tax_totals['amount_total'], currency_obj=self.currency_id)
+            if 'amount_untaxed' in tax_totals:
+                tax_totals['amount_untaxed'] = -tax_totals['amount_untaxed']
+                tax_totals['formatted_amount_untaxed'] = formatLang(self.env, tax_totals['amount_untaxed'], currency_obj=self.currency_id)
+            for group in tax_totals.get('groups_by_subtotal', {}).values():
+                for subtotal in group:
+                    subtotal['tax_group_amount'] = -subtotal['tax_group_amount']
+                    subtotal['tax_group_base_amount'] = -subtotal['tax_group_base_amount']
+                    subtotal['formatted_tax_group_amount'] = formatLang(self.env, subtotal['tax_group_amount'], currency_obj=self.currency_id)
+                    subtotal['formatted_tax_group_base_amount'] = formatLang(self.env, subtotal['tax_group_base_amount'], currency_obj=self.currency_id)
+            for subtotal in tax_totals.get('subtotals', []):
+                subtotal['amount'] = -subtotal['amount']
+                if 'formatted_amount' in subtotal:
+                    subtotal['formatted_amount'] = formatLang(self.env, subtotal['amount'], currency_obj=self.currency_id)
 
         return tax_totals
 
