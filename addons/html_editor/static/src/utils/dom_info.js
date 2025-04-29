@@ -326,7 +326,9 @@ export function isMediaElement(node) {
     return (
         isIconElement(node) ||
         (node.classList &&
-            (node.classList.contains("o_image") || node.classList.contains("media_iframe_video")))
+            (node.classList.contains("o_image") ||
+                node.classList.contains("media_iframe_video"))) ||
+        node.nodeName === "CANVAS"
     );
 }
 
