@@ -481,10 +481,16 @@ class MrpProduction(models.Model):
 
     @api.depends('procurement_group_id', 'procurement_group_id.stock_move_ids.group_id')
     def _compute_picking_ids(self):
+        grouped_stock_pickings = self.env['stock.picking']._read_group(
+            domain=[('group_id', 'in', self.procurement_group_id.ids), ('group_id', '!=', False)],
+            aggregates=['id:recordset'],
+            groupby=['group_id'],
+        )
+        pickings_per_procurement_group = {
+            group_id.id: picking_ids.sorted() for group_id, picking_ids in grouped_stock_pickings
+        }
         for order in self:
-            order.picking_ids = self.env['stock.picking'].search([
-                ('group_id', '=', order.procurement_group_id.id), ('group_id', '!=', False),
-            ])
+            order.picking_ids = pickings_per_procurement_group.get(order.procurement_group_id.id, [])
             order.picking_ids |= order.move_raw_ids.move_orig_ids.picking_id
             order.delivery_count = len(order.picking_ids)
 
@@ -1687,7 +1693,7 @@ class MrpProduction(models.Model):
         documents_by_production = {}
         for production in self:
             documents = defaultdict(list)
-            for move_raw_id in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
+            for move_raw_id in production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
                 iterate_key = self._get_document_iterate_key(move_raw_id)
                 if iterate_key:
                     document = self.env['stock.picking']._log_activity_get_documents({move_raw_id: (move_raw_id.product_uom_qty, 0)}, iterate_key, 'UP')
@@ -1695,6 +1701,8 @@ class MrpProduction(models.Model):
                         documents[key] += [value]
             if documents:
                 documents_by_production[production] = documents
+            if self.env.context.get('skip_activity'):
+                continue
             # log an activity on Parent MO if child MO is cancelled.
             finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             if finish_moves:
