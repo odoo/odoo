@@ -3,10 +3,8 @@ import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scann
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
-import { uuid } from "@web/views/utils";
 import { _t } from "@web/core/l10n/translation";
 
-const IOT_BOX_PING_TIMEOUT_MS = 1000;
 const PRINT_SETTINGS_LOCAL_STORAGE_KEY = "event.registration_print_settings";
 const DEFAULT_PRINT_SETTINGS = {
     autoPrint: false,
@@ -29,6 +27,7 @@ export class EventRegistrationSummaryDialog extends Component {
         this.isBarcodeScannerSupported = isBarcodeScannerSupported();
         this.orm = useService("orm");
         this.notification = useService("notification");
+        this.iotHttpService = useService("iot_http");
         this.continueButtonRef = useRef("continueButton");
 
         this.registrationStatus = useState({value: this.registration.status});
@@ -148,37 +147,6 @@ export class EventRegistrationSummaryDialog extends Component {
         browser.localStorage.setItem(PRINT_SETTINGS_LOCAL_STORAGE_KEY, JSON.stringify(this.printSettings));
     }
 
-    async isIotBoxReachable() {
-        const timeoutController = new AbortController();
-        setTimeout(() => timeoutController.abort(), IOT_BOX_PING_TIMEOUT_MS);
-        const iotBoxUrl = this.selectedPrinter?.ipUrl;
-
-        try {
-            const response = await browser.fetch(`${iotBoxUrl}/hw_proxy/hello`, { signal: timeoutController.signal });
-            return response.ok;
-        } catch {
-            return false;
-        }
-    }
-
-    async printWithLongpolling(reportId) {
-        try {
-            const [[ip, identifier,, printData]] = await this.orm.call("ir.actions.report", "render_and_send", [
-                reportId,
-                [this.selectedPrinter],
-                [this.registration.id],
-                null,
-                null,
-                false, // Do not use websocket
-            ]);
-            const payload = { document: printData, print_id: uuid() }
-            const { result } = await this.env.services.iot_longpolling.action(ip, identifier, payload, true);
-            return result;
-        } catch {
-            return false;
-        }
-    }
-
     async printWithBadgePrinter() {
         const reportName = `event.event_report_template_esc_label_${this.registration.badge_format}_badge`;
         const [{ id: reportId }] = await this.orm.searchRead("ir.actions.report", [["report_name", "=", reportName]], ["id"]);
@@ -192,13 +160,10 @@ export class EventRegistrationSummaryDialog extends Component {
             }),
             { type: "info" }
         );
-        if (await this.isIotBoxReachable()) {
-            const printSuccessful = await this.printWithLongpolling(reportId);
-            if (printSuccessful) {
-                return;
-            }
-        }
-        const printJobArguments = [reportId, [this.registration.id], null, uuid()];
-        await this.env.services.iot_websocket.addJob([this.printSettings.iotPrinterId], printJobArguments);
+        const [{ iot_box_ip, device_identifier, document }] = await this.orm.call(
+            "ir.actions.report", "render_document",
+            [reportId, [this.selectedPrinter], [this.registration.id], null],
+        );
+        this.iotHttpService.action(iot_box_ip, device_identifier, { document });
     }
 }
