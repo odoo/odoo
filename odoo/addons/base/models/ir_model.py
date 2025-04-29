@@ -15,7 +15,7 @@ from psycopg2.extras import Json
 from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import lazy_property, split_every, sql, unique, OrderedSet, SQL
+from odoo.tools import reset_cached_properties, split_every, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 from odoo.tools.translate import _, LazyTranslate
 
@@ -2410,7 +2410,7 @@ class IrModelData(models.Model):
                         field_.setup(model)
                         has_shared_field = True
         if has_shared_field:
-            lazy_property.reset_all(self.env.registry)
+            reset_cached_properties(self.env.registry)
 
         # to collect external ids of records that cannot be deleted
         undeletable_ids = []

@@ -9,7 +9,7 @@ from werkzeug.http import parse_cache_control_header
 import odoo
 from odoo.http import Session
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.tools import config, lazy_property
+from odoo.tools import config, reset_cached_properties
 from odoo.addons.test_http.utils import MemoryGeoipResolver, MemorySessionStore
 
 HTTP_DATETIME_FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
@@ -22,8 +22,8 @@ class TestHttpBase(HttpCaseWithUserDemo):
         geoip_resolver = MemoryGeoipResolver()
         session_store = MemorySessionStore(session_class=Session)
 
-        lazy_property.reset_all(odoo.http.root)
-        cls.addClassCleanup(lazy_property.reset_all, odoo.http.root)
+        reset_cached_properties(odoo.http.root)
+        cls.addClassCleanup(reset_cached_properties, odoo.http.root)
         cls.classPatch(config, 'options', config.options.new_child({
             'server_wide_modules': ['base', 'web', 'rpc', 'test_http']
         }))
