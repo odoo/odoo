@@ -134,6 +134,7 @@ class MrpProduction(models.Model):
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
     date_start = fields.Datetime(
         'Start', copy=False, default=_get_default_date_start,
+        compute='_compute_date_start', store=True, readonly=False,
         help="Date you plan to start production or date you actually started production.",
         index=True, required=True)
     date_finished = fields.Datetime(
@@ -288,6 +289,11 @@ class MrpProduction(models.Model):
         search='_search_date_category', readonly=True
     )
     serial_numbers_count = fields.Integer("Count of serial numbers", compute='_compute_serial_numbers_count')
+    scheduling = fields.Selection([
+        ('forward', 'Forward'),
+        ('backward', 'Backward')],
+        string='Scheduling', required=True,
+        compute="_compute_scheduling", store=True, readonly=False)
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -747,6 +753,17 @@ class MrpProduction(models.Model):
         late_stock_moves = self.env['stock.move'].search([('delay_alert_date', operator, value)])
         return ['|', ('move_raw_ids', 'in', late_stock_moves.ids), ('move_finished_ids', 'in', late_stock_moves.ids)]
 
+    @api.depends('company_id', 'date_deadline', 'is_planned', 'product_id', 'workorder_ids.duration_expected', 'scheduling')
+    def _compute_date_start(self):
+        for production in self:
+            if not production.date_deadline or production.is_planned or production.state == 'done' or production.scheduling == 'forward':
+                continue
+            expected_duration = sum(self.workorder_ids.mapped('duration_expected'))
+            days_delay = production.bom_id.produce_delay
+            date_start = production.date_deadline - relativedelta(minutes=expected_duration or 60) - relativedelta(days=days_delay)
+            date_start = max(date_start, fields.Datetime.now())
+            production.date_start = date_start
+
     @api.depends('company_id', 'date_start', 'is_planned', 'product_id', 'workorder_ids.duration_expected')
     def _compute_date_finished(self):
         for production in self:
@@ -854,6 +871,11 @@ class MrpProduction(models.Model):
                 record.state in ['confirmed', 'progress', 'to_close'] and (
                     record.date_deadline and (record.date_deadline < datetime.datetime.now() or record.date_deadline < record.date_finished))
             )
+
+    @api.depends('picking_type_id')
+    def _compute_scheduling(self):
+        for mo in self:
+            mo.scheduling = mo.picking_type_id.scheduling
 
     def _search_date_category(self, operator, value):
         if operator != 'in':
@@ -1007,12 +1029,16 @@ class MrpProduction(models.Model):
                 vals['move_finished_ids'] = list(filter(lambda move: move[2]['product_id'] == vals['product_id'], vals['move_finished_ids']))
                 vals['move_finished_ids'] = vals.get('move_finished_ids', []) + vals['move_byproduct_ids']
                 del vals['move_byproduct_ids']
-            if not vals.get('name', False) or vals['name'] == _('New'):
+            if not vals.get('name', False) or vals['name'] == _('New') or not vals.get("scheduling", False):
                 picking_type_id = vals.get('picking_type_id')
                 if not picking_type_id:
                     picking_type_id = self._get_default_picking_type_id(vals.get('company_id', self.env.company.id))
                     vals['picking_type_id'] = picking_type_id
-                vals['name'] = self.env['stock.picking.type'].browse(picking_type_id).sequence_id.next_by_id()
+                picking_type = self.env['stock.picking.type'].browse(picking_type_id)
+                if not vals.get('name', False) or vals['name'] == _('New'):
+                    vals['name'] = picking_type.sequence_id.next_by_id()
+                if not vals.get("scheduling", False):
+                    vals["scheduling"] = picking_type.scheduling
             if not vals.get('production_group_id'):
                 vals['production_group_id'] = self.env["mrp.production.group"].create({'name': vals['name']}).id
         res = super().create(vals_list)
@@ -1626,14 +1652,23 @@ class MrpProduction(models.Model):
 
         self._link_workorders_and_moves()
 
-        # Plan workorders starting from final ones (those with no dependent workorders)
-        final_workorders = self.workorder_ids.filtered(lambda wo: not wo.needed_by_workorder_ids)
-        for workorder in final_workorders:
-            workorder._plan_workorder(replan)
-
-        workorders = self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])
-        if not workorders:
-            return
+        # Plan workorders
+        now = datetime.datetime.now()
+        forward = self.scheduling == 'forward'
+        while True:
+            goal = max(self.date_start if forward else self.date_deadline or now, now)
+            final_workorders = self.workorder_ids.filtered(lambda wo: not wo.needed_by_workorder_ids)
+            for workorder in final_workorders:
+                workorder._plan_workorder(goal, forward, replan)
+            workorders = self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])
+            if not workorders:
+                return
+            date_start = min(workorder.leave_id.date_from for workorder in workorders)
+            if not forward and date_start < now:
+                forward = replan = True
+                self.date_start = now
+            else:
+                break
 
         self.with_context(force_date=True).write({
             'date_start': min((workorder.leave_id.date_from for workorder in workorders if workorder.leave_id), default=None),
