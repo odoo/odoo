@@ -231,7 +231,7 @@ Section -$(TITLE_Nginx) Nginx
 
     FindFirst $0 $1 "$INSTDIR\nginx*"
     DetailPrint "Setting up nginx"
-    Rename "$TEMP\$1" "$INSTDIR\nginx"
+    Rename "$INSTDIR\$1" "$INSTDIR\nginx"
     FindClose $0
 
     SetOutPath "$INSTDIR\nginx\conf"
