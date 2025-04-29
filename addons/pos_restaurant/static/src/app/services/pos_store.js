@@ -26,7 +26,7 @@ patch(PosStore.prototype, {
                 action: () =>
                     this.dialog.closeAll() &&
                     this.config.module_pos_restaurant &&
-                    !["PaymentScreen", "TicketScreen", "ActionScreen"].includes(
+                    !["PaymentScreen", "TicketScreen", "ActionScreen", "LoginScreen"].includes(
                         this.mainScreen.component.name
                     ) &&
                     this.showScreen("FloorScreen"),
