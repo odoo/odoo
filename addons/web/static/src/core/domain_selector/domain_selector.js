@@ -1,24 +1,19 @@
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
-import { Domain } from "@web/core/domain";
-import { TreeEditor } from "@web/core/tree_editor/tree_editor";
-import {
-    domainFromTree,
-    treeFromDomain,
-    formatValue,
-    condition,
-} from "@web/core/tree_editor/condition_tree";
-import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
-import { deepEqual } from "@web/core/utils/objects";
+import { Domain } from "@web/core/domain";
 import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_selector_operator_editor";
-import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
-import { useService } from "@web/core/utils/hooks";
+import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
+import { Condition, ConditionTree, formatValue } from "@web/core/tree_editor/condition_tree";
+import { TreeEditor } from "@web/core/tree_editor/tree_editor";
+import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { useMakeGetFieldDef } from "@web/core/tree_editor/utils";
+import { useService } from "@web/core/utils/hooks";
+import { deepEqual } from "@web/core/utils/objects";
 import { getDefaultCondition } from "./utils";
 
-const ARCHIVED_CONDITION = condition("active", "in", [true, false]);
+const ARCHIVED_CONDITION = Condition.of("active", "in", [true, false]);
 const ARCHIVED_DOMAIN = `[("active", "in", [True, False])]`;
 
 export class DomainSelector extends Component {
@@ -68,11 +63,11 @@ export class DomainSelector extends Component {
             return;
         }
 
-        const tree = treeFromDomain(domain);
+        const tree = ConditionTree.fromDomain(domain);
 
         const getFieldDef = await this.makeGetFieldDef(p.resModel, tree, ["active"]);
 
-        this.tree = treeFromDomain(domain, {
+        this.tree = ConditionTree.fromDomain(domain, {
             getFieldDef,
             distributeNot: !p.isDebugMode,
         });
@@ -93,7 +88,7 @@ export class DomainSelector extends Component {
                 }
             } else if (deepEqual(this.tree, ARCHIVED_CONDITION)) {
                 this.includeArchived = true;
-                this.tree = treeFromDomain(`[]`);
+                this.tree = ConditionTree.fromDomain(`[]`);
             }
         }
     }
@@ -119,15 +114,13 @@ export class DomainSelector extends Component {
         const { isDebugMode } = this.props;
         return {
             component: ModelFieldSelector,
-            extractProps: ({ update, value: path }) => {
-                return {
-                    path,
-                    update,
-                    resModel,
-                    isDebugMode,
-                    readonly: false,
-                };
-            },
+            extractProps: ({ update, value: path }) => ({
+                path,
+                update,
+                resModel,
+                isDebugMode,
+                readonly: false,
+            }),
             isSupported: (path) => [0, 1].includes(path) || typeof path === "string",
             defaultValue: () => defaultCondition.path,
             stringify: (path) => formatValue(path),
@@ -156,7 +149,7 @@ export class DomainSelector extends Component {
     update(tree) {
         const archiveDomain = this.includeArchived ? ARCHIVED_DOMAIN : `[]`;
         const domain = tree
-            ? Domain.and([domainFromTree(tree), archiveDomain]).toString()
+            ? Domain.and([tree.toDomainRepr(), archiveDomain]).toString()
             : archiveDomain;
         this.props.update(domain);
     }

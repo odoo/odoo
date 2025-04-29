@@ -6,8 +6,8 @@ import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import {
     areEquivalentTrees,
     cloneTree,
-    condition,
-    connector,
+    Condition,
+    Connector,
     isTree,
 } from "@web/core/tree_editor/condition_tree";
 import {
@@ -22,7 +22,7 @@ import {
 import { useService } from "@web/core/utils/hooks";
 import { shallowEqual } from "@web/core/utils/objects";
 
-const TRUE_TREE = condition(1, "=", 1);
+const TRUE_TREE = Condition.of(1, "=", 1);
 export class TreeEditor extends Component {
     static template = "web.TreeEditor";
     static components = {
@@ -71,9 +71,9 @@ export class TreeEditor extends Component {
         }
         this.tree = cloneTree(props.tree);
         if (shallowEqual(this.tree, TRUE_TREE)) {
-            this.tree = connector(props.defaultConnector);
+            this.tree = Connector.of(props.defaultConnector);
         } else if (this.tree.type !== "connector") {
-            this.tree = connector(props.defaultConnector, [this.tree]);
+            this.tree = Connector.of(props.defaultConnector, [this.tree]);
         }
 
         if (this.previousTree && areEquivalentTrees(this.tree, this.previousTree)) {
@@ -126,7 +126,7 @@ export class TreeEditor extends Component {
     }
 
     createNewBranch(value) {
-        return connector(value, [this.createNewLeaf(), this.createNewLeaf()]);
+        return Connector.of(value, [this.createNewLeaf(), this.createNewLeaf()]);
     }
 
     insertRootLeaf(parent) {
