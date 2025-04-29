@@ -49,6 +49,7 @@
         'data/website_menu_data.xml',
 
         'views/custom_templates.xml',
+        'views/product_detail_template.xml',
 
         'views/vendor_dashboard_views.xml',
         'views/stock_moves_views.xml',
@@ -85,6 +86,8 @@
         'web.assets_frontend': [
             'multi_vendor_marketplace/static/src/css/custom_styles.css',
             'multi_vendor_marketplace/static/src/js/rating.js',
+            'multi_vendor_marketplace/static/src/js/product_modal.js',
+            'multi_vendor_marketplace/static/src/js/odoobot_chat.js',
             'multi_vendor_marketplace/static/src/scss/partner_rating.css',
             'https://unpkg.com/sweetalert/dist/sweetalert.min.js',
         ],

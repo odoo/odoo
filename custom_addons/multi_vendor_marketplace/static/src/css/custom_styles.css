@@ -40,6 +40,28 @@
 }
 
 /* ############################################################################################################################################################## */
+/* LIVECHAT BUTTON STYLING */
+/* ############################################################################################################################################################## */
+#o_livechat_button {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+#o_livechat_button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#o_livechat_button i {
+    font-size: 18px;
+}
+
+/* ############################################################################################################################################################## */
 /* CКРЫТИЯ КНОПОК */
 /* ############################################################################################################################################################## */
 
@@ -80,6 +102,16 @@ li.o_wsale_my_cart {
     width: 100%;
     height: auto;
     transition: filter 0.3s ease;
+}
+
+/* Product detail page - rounded images */
+#product_detail .product_detail_img {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#product_detail .o_wsale_product_images img {
+    border-radius: 12px;
 }
 
 /* Увеличение изображения при наведении (меньше) */
@@ -176,6 +208,407 @@ li.o_wsale_my_cart {
 .navbar-nav .nav-link[href="/profile"]:hover:after {
     content: "Profile";
     /* ...остальные стили */
+}
+
+/* ############################################################################################################################################################## */
+/* ПРОДУКТ ДЕТАЛИ - в стиле второго изображения */
+/* ############################################################################################################################################################## */
+
+/* Шапка магазина с рейтингом */
+.store-header {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.store-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.store-rating {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.rating-stars {
+    color: #ffc300;
+    margin-right: 5px;
+}
+
+.rating-score {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+/* Продукт заголовок */
+#product_detail h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Продукт цена */
+#product_detail .product_price h3 {
+    font-size: 24px;
+    color: #f76b00 !important;
+    font-weight: bold;
+}
+
+/* Доставка инфо */
+#product_detail .delivery-info {
+    background-color: #f9f9f9;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+/* Кнопки действий */
+#product_detail .action-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+/* Кнопка купить сейчас */
+#product_detail .action-buttons button[name="express"] {
+    background-color: #ff6a00 !important;
+    border-color: #ff6a00 !important;
+    color: white;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 4px;
+    flex: 1;
+    transition: all 0.2s ease;
+}
+
+#product_detail .action-buttons button[name="express"]:hover {
+    background-color: #e05d00 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Кнопка добавить в корзину */
+#product_detail .action-buttons #add_to_cart {
+    background-color: #ffc300 !important;
+    border-color: #ffc300 !important;
+    color: #333;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 4px;
+    flex: 1;
+    transition: all 0.2s ease;
+}
+
+#product_detail .action-buttons #add_to_cart:hover {
+    background-color: #e6b000 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Селектор количества */
+#product_detail .quantity-selector .input-group {
+    width: 120px;
+}
+
+#product_detail .quantity-selector .form-control {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Информация о продавце */
+#product_detail .seller-info {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+#product_detail .seller-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+#product_detail .seller-name {
+    font-weight: 500;
+    color: #333;
+}
+
+#product_detail .seller-rating {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+#product_detail .rating-stars {
+    color: #ffc300;
+    margin-right: 5px;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    #product_detail .action-buttons {
+        flex-direction: column;
+    }
+    
+    #product_detail .seller-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    #product_detail .seller-rating {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+
+/* ############################################################################################################################################################## */
+/* МОДАЛЬНОЕ ОКНО ПРОДУКТА */
+/* ############################################################################################################################################################## */
+
+/* Стили для модального окна */
+#product_variants_modal .modal-content {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+#product_variants_modal .modal-header {
+    border-bottom: 1px solid #eee;
+    padding: 15px 20px;
+}
+
+#product_variants_modal .modal-title {
+    font-weight: 600;
+    font-size: 18px;
+    color: #333;
+}
+
+#product_variants_modal .close {
+    font-size: 28px;
+    opacity: 0.7;
+    padding: 0;
+    margin: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f5f5f5;
+    border: none;
+    cursor: pointer;
+}
+
+#product_variants_modal .close:hover {
+    opacity: 1;
+    background: #eee;
+}
+
+#product_variants_modal .modal-body {
+    padding: 20px;
+}
+
+#product_variants_modal .modal-footer {
+    border-top: 1px solid #eee;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Блок выбора количества */
+#product_variants_modal .quantity-section {
+    margin-bottom: 20px;
+}
+
+#product_variants_modal .quantity-section h6 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#product_variants_modal .input-group {
+    border-radius: 4px;
+    overflow: hidden;
+    width: 120px;
+}
+
+#product_variants_modal .input-group button {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    color: #333;
+    font-size: 14px;
+    width: 36px;
+    padding: 0;
+}
+
+#product_variants_modal .input-group button:hover {
+    background-color: #e9e9e9;
+}
+
+#product_variants_modal .input-group input {
+    text-align: center;
+    font-weight: 600;
+    border-left: none;
+    border-right: none;
+    border-color: #ddd;
+}
+
+/* Кнопки действий */
+#product_variants_modal .btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+
+#product_variants_modal .btn-buy-now,
+#product_variants_modal .btn-add-to-cart {
+    background-color: #089454;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+#product_variants_modal .btn-buy-now:hover,
+#product_variants_modal .btn-add-to-cart:hover {
+    background-color: #067a45;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Атрибуты товара */
+#product_variants_modal .variant-option {
+    margin-bottom: 20px;
+}
+
+#product_variants_modal .variant-option h6 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#product_variants_modal .form-check {
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+#product_variants_modal .form-check-input {
+    margin-top: 0.25rem;
+}
+
+#product_variants_modal .form-check-label {
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Стили для кнопок продавца */
+.store-actions .btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.store-actions .btn-outline-primary {
+    color: #0d6efd !important;
+    border-color: #dbe6fd !important;
+    background-color: #f0f9ff !important;
+}
+
+.store-actions .btn-primary {
+    background-color: #2c88a2 !important;
+    border-color: #2c88a2 !important;
+    color: white !important;
+}
+
+.store-actions .btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Make modal trigger work properly */
+.o_show_variants_modal {
+    cursor: pointer;
+}
+
+/* Styles for product images */
+#product_detail .product_detail_img {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#product_detail .o_wsale_product_images img {
+    border-radius: 12px;
+}
+
+/* Contact modal styling */
+#contact_seller_modal .social-links .btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+#contact_seller_modal .social-links .btn:hover {
+    transform: translateY(-3px);
+}
+
+/* Product options modal styling to match mockup */
+#product_variants_modal .modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#product_variants_modal .modal-footer .btn-primary {
+    background-color: #089454 !important;
+    border-color: #089454 !important;
+    color: white !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#product_variants_modal .modal-footer .btn-secondary {
+    color: white !important;
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+/* Fix for button text */
+#product_variants_modal .modal-footer .btn-primary i {
+    margin-right: 0.5rem;
+}
+
+#product_variants_modal .quantity_modal {
+    max-width: 80px;
+    text-align: center;
+}
+
+#product_variants_modal .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Quantity control styling */
+.input-group .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 
