@@ -117,9 +117,9 @@ $o-font-family-monospace: o-add-unicode-support-font((SFMono-Regular, Menlo, Mon
 $o-headings-font-family: o-add-unicode-support-font(("SF Pro Display", $o-system-fonts)) !default;
 
 // Font colors
-$o-main-text-color: $o-gray-700 !default;
-$o-main-color-muted: rgba($o-main-text-color, $o-opacity-muted) !default;
-$o-main-headings-color: $o-gray-900 !default;
+$o-main-text-color: $o-gray-900 !default;
+$o-main-color-muted: rgba($o-gray-700, $o-opacity-muted) !default;
+$o-main-headings-color: $o-black !default;
 $o-main-link-color: darken($o-brand-primary, 5%) !default;
 $o-main-favorite-color: #f3cc00 !default;
 $o-main-code-color: #d2317b !default;
@@ -129,7 +129,7 @@ $o-table-cell-padding-x-sm: .3rem !default;
 $o-table-cell-padding-y-sm: .5rem !default;
 
 // Components colors
-$o-component-active-color:  $o-gray-900 !default;
+$o-component-active-color:  $o-black !default;
 $o-component-active-bg: mix($o-action, $o-gray-100, 20%) !default;
 $o-component-active-border: $o-action !default;
 
@@ -210,7 +210,7 @@ $o-label-font-size-factor: 0.8 !default;
 
 // == List group
 
-$o-list-group-active-color: $o-gray-900 !default;
+$o-list-group-active-color: $o-black !default;
 $o-list-group-active-bg: lighten(saturate(adjust-hue($o-info, 15), 1.8), 50) !default;
 
 // Breadcrumbs
@@ -260,11 +260,11 @@ $o-btns-bs-override: map-merge((
     "secondary": (
         background: $o-gray-300,
         border: $o-gray-300,
-        color: $o-gray-800,
+        color: $o-gray-900,
 
         hover-background: $o-gray-400,
         hover-border: $o-gray-400,
-        hover-color: $o-gray-900,
+        hover-color: $o-black,
 
         active-background: $o-component-active-bg,
         active-border:  $o-component-active-border,
@@ -273,11 +273,11 @@ $o-btns-bs-override: map-merge((
     "light": (
         background: $o-white,
         border: $o-white,
-        color: $o-gray-700,
+        color: $o-gray-900,
 
         hover-background: $o-gray-200,
         hover-border: $o-gray-200,
-        hover-color: $o-gray-900,
+        hover-color: $o-black,
 
         active-background: $o-component-active-bg,
         active-border:  $o-component-active-border,
@@ -290,11 +290,11 @@ $o-btns-bs-outline-override: map-merge((
     "secondary": (
         background: transparent,
         border: $o-gray-300,
-        color: $o-gray-700,
+        color: $o-gray-900,
 
         hover-background: $o-gray-200,
         hover-border: $o-gray-300,
-        hover-color: $o-gray-800,
+        hover-color: $o-black,
 
         active-background: $o-component-active-bg,
         active-border:  $o-component-active-border,
