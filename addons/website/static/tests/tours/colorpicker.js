@@ -14,28 +14,25 @@ function selectColorpickerSwitchPanel(type) {
         },
         {
             content: "Click on background-color option",
-            trigger: ".o_we_so_color_palette[data-css-property='background-color']",
+            trigger: "div[data-label='Background'] .o_we_color_preview[title='Color']",
             run: "click"
         },
         {
             content: "Select type of colorpicker in switch panel",
-            trigger: `.o_we_colorpicker_switch_pane_btn[data-target="${type}"]`,
+            trigger: `.o_popover .o_font_color_selector .btn-tab:contains("${type}")`,
             run: "click"
         },
     ]
 }
 
-function checkBackgroundColorWithRGBA(red, green, blue) {
+function checkBackgroundColorWithHEX(hexCode) {
     return [
         {
             content: "Check if the RGBA color matches the selected color",
-            trigger: ".o_rgba_div",
+            trigger: ".o_popover .o_colorpicker_widget .o_hex_input",
             run: function () {
-                const rgbaEl = this.anchor;
-                const red_color = rgbaEl.querySelector(".o_red_input").value;
-                const green_color = rgbaEl.querySelector(".o_green_input").value;
-                const blue_color = rgbaEl.querySelector(".o_blue_input").value;
-                if (red_color != red || green_color != green || blue_color != blue) {
+                const hex = this.anchor.value;
+                if (hex !== hexCode) {
                     console.error("There may be a problem with the RGBA colorpicker");
                 }
             }
@@ -52,26 +49,31 @@ registerWebsitePreviewTour("website_background_colorpicker", {
         name: "Text",
         groupName: "Text",
     }),
-    ...selectColorpickerSwitchPanel("gradients"),
+    ...selectColorpickerSwitchPanel("Gradient"),
     {
         content: "Select first gradient element",
-        trigger: ".o_colorpicker_section .o_we_color_btn[data-color='linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%)']",
+        trigger: ".o_colorpicker_sections .o_color_button[data-color='linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%)']",
         run: "click"
     },
     ...clickOnSave(),
     ...clickOnEditAndWaitEditMode(),
-    ...selectColorpickerSwitchPanel("gradients"),
-    ...checkBackgroundColorWithRGBA("255", "204", "51"),
+    ...selectColorpickerSwitchPanel("Gradient"),
+    {
+        content: "Click on custom button to open colorpicker widget",
+        trigger: "button:contains('Custom')[style='background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%);']",
+        run: "click"
+    },
+    ...checkBackgroundColorWithHEX("#FFCC33"),
     ...clickOnSave(),
     ...clickOnEditAndWaitEditMode(),
-    ...selectColorpickerSwitchPanel("custom-colors"),
+    ...selectColorpickerSwitchPanel("Custom"),
     {
         content: "Select first custom color element",
-        trigger: ".o_colorpicker_section .o_we_color_btn[style='background-color:#65435C;']",
+        trigger: ".o_colorpicker_section button[data-color='black']",
         run: "click"
     },
     ...clickOnSave(),
     ...clickOnEditAndWaitEditMode(),
-    ...selectColorpickerSwitchPanel("custom-colors"),
-    ...checkBackgroundColorWithRGBA("101", "67", "92"),
+    ...selectColorpickerSwitchPanel("Custom"),
+    ...checkBackgroundColorWithHEX("#000000"),
 ]);

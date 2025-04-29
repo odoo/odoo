@@ -25,7 +25,7 @@ registerWebsitePreviewTour('website_click_tour', {
     },
     {
         content: "wait for the page to be loaded",
-        trigger: '.o_website_preview[data-view-xmlid="website.contactus"]',
+        trigger: ".o_website_preview :iframe [data-view-xmlid='website.contactus']",
     },
     ...clickOnEditAndWaitEditMode(),
     {

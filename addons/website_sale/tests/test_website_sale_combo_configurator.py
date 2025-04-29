@@ -5,10 +5,8 @@ from odoo.tests import HttpCase, tagged
 
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
-
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
-
     def test_website_sale_combo_configurator(self):
         no_variant_attribute = self.env['product.attribute'].create({
             'name': "No variant attribute",

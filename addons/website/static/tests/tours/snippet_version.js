@@ -20,10 +20,10 @@ registerWebsitePreviewTour("snippet_version_1", {
     }),
     {
     content: "Test t-snippet and t-snippet-call: snippets have data-snippet set",
-    trigger: '#oe_snippets .o_panel_body > .oe_snippet',
+    trigger: '.o-snippets-menu .o_snippets_container_body > .o_snippet',
     run: function () {
         // Tests done here as all these are not visible on the page
-        const draggableSnippets = [...document.querySelectorAll('#oe_snippets .o_panel_body > .oe_snippet:not([data-module-id]) > :nth-child(2)')];
+        const draggableSnippets = [...document.querySelectorAll('.o-snippets-menu .o_snippets_container_body > .o_snippet:not([data-module-id]) > :nth-child(2)')];
         if (draggableSnippets.length && !draggableSnippets.every(el => el.dataset.snippet)) {
             console.error("error Some t-snippet are missing their template name or there are no snippets to drop");
         }
@@ -45,7 +45,7 @@ registerWebsitePreviewTour("snippet_version_2", {
 },
 {
     trigger:
-        "we-customizeblock-options:contains(Test snip) .snippet-option-VersionControl > we-alert",
+        ".o_customize_tab .options-container[data-container-title='Test snip'] .o_we_version_control.alert",
 },
 {
     content: "Edit text_image",
@@ -54,7 +54,7 @@ registerWebsitePreviewTour("snippet_version_2", {
 },
 {
     trigger:
-        "we-customizeblock-options:contains(Text - Image) .snippet-option-VersionControl  > we-alert",
+        ".o_customize_tab .options-container[data-container-title='Text - Image'] .o_we_version_control.alert",
 },
 {
     content: "Edit s_share",
@@ -63,7 +63,7 @@ registerWebsitePreviewTour("snippet_version_2", {
 },
 {
     trigger:
-        "we-customizeblock-options:contains(Share) .snippet-option-VersionControl > we-alert",
+        ".o_customize_tab .options-container[data-container-title='Block'] .o_we_version_control.alert",
 },
 {
     content: "s_share is outdated",

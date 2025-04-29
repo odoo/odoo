@@ -251,11 +251,12 @@ describe("step", () => {
     });
 });
 
-describe("prevent system classes to be set from history", () => {
+describe("system classes and attributes", () => {
     class TestSystemClassesPlugin extends Plugin {
         static id = "testRenderClasses";
         resources = {
             system_classes: ["x"],
+            system_attributes: ["data-x"],
         };
     }
     const Plugins = [...MAIN_PLUGINS, TestSystemClassesPlugin];
@@ -273,38 +274,44 @@ describe("prevent system classes to be set from history", () => {
         });
     });
 
-    test("should prevent system classes to be added when adding 2 classes", async () => {
+    test("system classes are ignored by history (neither added or removed)", async () => {
+        const { editor, el } = await setupEditor(`<p>a[]</p>`, { config: { Plugins: Plugins } });
+        const p = editor.editable.querySelector("p");
+        p.className = "x y";
+        addStep(editor);
+        undo(editor);
+        expect(getContent(el)).toBe(`<p class="x">a[]</p>`);
+        redo(editor);
+        expect(getContent(el)).toBe(`<p class="x y">a[]</p>`);
+    });
+
+    test("system class with char mutation", async () => {
         await testEditor({
             contentBefore: `<p>a[]</p>`,
             stepFunction: async (editor) => {
                 const p = editor.editable.querySelector("p");
-                p.className = "x y";
+                p.className = "x";
+                p.textContent = "b";
+                editor.shared.selection.setCursorEnd(p);
                 addStep(editor);
                 undo(editor);
                 redo(editor);
             },
-            contentAfter: `<p class="y">a[]</p>`,
+            contentAfter: `<p class="x">b[]</p>`,
             config: { Plugins: Plugins },
         });
     });
 
-    test("should prevent system classes to be added in historyApply", async () => {
-        const { el, plugins } = await setupEditor(`<p>a</p>`, { config: { Plugins } });
-        /** @type import("../src/core/history_plugin").HistoryPlugin") */
-        const historyPlugin = plugins.get("history");
-        const p = el.querySelector("p");
-
-        historyPlugin.applyMutations([
-            {
-                attributeName: "class",
-                id: historyPlugin.nodeToIdMap.get(p),
-                oldValue: null,
-                type: "attributes",
-                value: "x y",
-            },
-        ]);
-
-        expect(getContent(el)).toBe(`<p class="y">a</p>`);
+    test("system attributes mutations are ignored by history", async () => {
+        const { editor, el } = await setupEditor(`<p>a[]</p>`, { config: { Plugins: Plugins } });
+        const p = editor.editable.querySelector("p");
+        p.setAttribute("data-x", "1");
+        p.setAttribute("data-y", "1");
+        addStep(editor);
+        undo(editor);
+        expect(getContent(el)).toBe(`<p data-x="1">a[]</p>`);
+        redo(editor);
+        expect(getContent(el)).toBe(`<p data-x="1" data-y="1">a[]</p>`);
     });
 
     test("should skip the mutations if no changes in state", async () => {
@@ -434,18 +441,24 @@ describe("makePreviewableOperation", () => {
             newElem.setAttribute("id", elemId);
             div.appendChild(newElem);
         });
-        const numberOfSteps = history.steps.length;
+        let numberOfSteps = history.steps.length;
         const numberOfCurrentMutations = history.currentStep.mutations.length;
         previewableAddParagraph.preview("first");
+        // step added by the preview
+        numberOfSteps += 1;
         await animationFrame();
         expect(history.steps.length).toBe(numberOfSteps);
         expect("#first").toHaveCount(1);
         previewableAddParagraph.preview("second");
+        // step added by the revert of the first preview and the second preview
+        numberOfSteps += 2;
         await animationFrame();
         expect(history.steps.length).toBe(numberOfSteps);
         expect("#first").toHaveCount(0);
         expect("#second").toHaveCount(1);
         previewableAddParagraph.revert();
+        // step added by the revert
+        numberOfSteps += 1;
         await animationFrame();
         expect("#first").toHaveCount(0);
         expect("#second").toHaveCount(0);
@@ -463,16 +476,20 @@ describe("makePreviewableOperation", () => {
             newElem.setAttribute("id", elemId);
             div.appendChild(newElem);
         });
-        const numberOfSteps = history.steps.length;
+        let numberOfSteps = history.steps.length;
         previewableAddParagraph.preview("first");
+        // step added by the preview
+        numberOfSteps += 1;
         await animationFrame();
         expect(history.steps.length).toBe(numberOfSteps);
         expect("#first").toHaveCount(1);
         previewableAddParagraph.commit("second");
+        // step added by the revert due to the commit and the commit in itself
+        numberOfSteps += 2;
         await animationFrame();
         expect("#first").toHaveCount(0);
         expect("#second").toHaveCount(1);
-        expect(history.steps.length).toBe(numberOfSteps + 1);
+        expect(history.steps.length).toBe(numberOfSteps);
     });
 });
 
@@ -600,5 +617,112 @@ describe("destroy", () => {
         editor.destroy();
         await animationFrame();
         expect.verifySteps([]);
+    });
+});
+
+describe("custom mutation", () => {
+    test("should apply/revert custom mutation", async () => {
+        const { el, editor } = await setupEditor(`<p>[]c</p>`);
+        const restoreSavePoint = editor.shared.history.makeSavePoint();
+        await insertText(editor, "a");
+
+        editor.shared.history.applyCustomMutation({
+            apply: () => {
+                expect.step("custom apply");
+            },
+            revert: () => {
+                expect.step("custom revert");
+            },
+        });
+        editor.shared.history.addStep();
+        expect.verifySteps(["custom apply"]);
+        expect(getContent(el)).toBe(`<p>a[]c</p>`);
+
+        undo(editor);
+        expect.verifySteps(["custom revert"]);
+        expect(getContent(el)).toBe(`<p>a[]c</p>`);
+
+        undo(editor);
+        expect.verifySteps([]);
+        expect(getContent(el)).toBe(`<p>[]c</p>`);
+
+        redo(editor);
+        expect.verifySteps([]);
+        expect(getContent(el)).toBe(`<p>a[]c</p>`);
+
+        redo(editor);
+        expect.verifySteps(["custom apply"]);
+        expect(getContent(el)).toBe(`<p>a[]c</p>`);
+
+        undo(editor);
+        expect.verifySteps(["custom revert"]);
+        expect(getContent(el)).toBe(`<p>a[]c</p>`);
+
+        restoreSavePoint();
+        expect.verifySteps(["custom apply", "custom revert", "custom apply", "custom revert"]);
+    });
+
+    test("should apply/revert custom mutation with dom mutation", async () => {
+        const { el, editor } = await setupEditor(`<p>[]c</p>`);
+        const restoreSavePoint = editor.shared.history.makeSavePoint();
+        await insertText(editor, "a");
+
+        editor.shared.history.applyCustomMutation({
+            apply: () => {
+                expect.step("custom apply");
+            },
+            revert: () => {
+                expect.step("custom revert");
+            },
+        });
+        await insertText(editor, "b");
+        expect.verifySteps(["custom apply"]);
+        expect(getContent(el)).toBe(`<p>ab[]c</p>`);
+
+        undo(editor);
+        expect.verifySteps(["custom revert"]);
+        expect(getContent(el)).toBe(`<p>a[]c</p>`);
+
+        undo(editor);
+        expect.verifySteps([]);
+        expect(getContent(el)).toBe(`<p>[]c</p>`);
+
+        redo(editor);
+        expect.verifySteps([]);
+        expect(getContent(el)).toBe(`<p>a[]c</p>`);
+
+        redo(editor);
+        expect.verifySteps(["custom apply"]);
+        expect(getContent(el)).toBe(`<p>ab[]c</p>`);
+
+        undo(editor);
+        expect.verifySteps(["custom revert"]);
+        expect(getContent(el)).toBe(`<p>a[]c</p>`);
+
+        restoreSavePoint();
+        expect.verifySteps(["custom apply", "custom revert", "custom apply", "custom revert"]);
+    });
+});
+
+describe("unobserved mutations", () => {
+    const withAddStep = (editor, callback) => {
+        callback();
+        editor.shared.history.addStep();
+    };
+
+    describe("classes", () => {
+        test("unobserved class mutations should not be affected by undo/redo", async () => {
+            const { editor } = await setupEditor(`<p>test</p>`);
+            /** @type {HTMLElement} */
+            const p = editor.editable.querySelector("p");
+            withAddStep(editor, () => p.classList.add("a"));
+            editor.shared.history.ignoreDOMMutations(() => p.classList.add("b"));
+            withAddStep(editor, () => p.classList.add("c"));
+            editor.shared.history.undo();
+            expect(p.className).toBe("a b");
+            editor.shared.history.ignoreDOMMutations(() => p.classList.remove("b"));
+            editor.shared.history.redo();
+            expect(p.className).toBe("a c");
+        });
     });
 });

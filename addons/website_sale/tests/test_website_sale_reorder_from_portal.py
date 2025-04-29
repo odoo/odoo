@@ -2,6 +2,7 @@
 
 from odoo.fields import Command
 from odoo.tests import tagged
+import unittest
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.website.tools import MockRequest

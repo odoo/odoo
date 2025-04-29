@@ -43,6 +43,7 @@ export class ColorPicker extends Component {
             type: Object,
             shape: {
                 selectedColor: String,
+                selectedColorCombination: { type: String, optional: true },
                 defaultTab: String,
             },
         },
@@ -50,24 +51,36 @@ export class ColorPicker extends Component {
         applyColor: Function,
         applyColorPreview: Function,
         applyColorResetPreview: Function,
+        enabledTabs: { type: Array, optional: true },
         colorPrefix: { type: String },
+        noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
     };
     static defaultProps = {
         close: () => {},
+        enabledTabs: ["solid", "gradient", "custom"],
     };
 
     setup() {
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
+        this.root = useRef("root");
 
         this.defaultColor = this.props.state.selectedColor;
+        this.focusedColorBtn = null;
         this.state = useState({
-            activeTab: this.props.state.defaultTab,
+            activeTab: this.getDefaultTab(),
             currentCustomColor: this.props.state.selectedColor,
             showGradientPicker: false,
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
+    }
+
+    getDefaultTab() {
+        if (this.props.enabledTabs.includes(this.props.state.defaultTab)) {
+            return this.props.state.defaultTab;
+        }
+        return this.props.enabledTabs[0];
     }
 
     get selectedColor() {
@@ -79,7 +92,11 @@ export class ColorPicker extends Component {
     }
 
     processColorFromEvent(ev) {
-        let color = ev.target.dataset.color;
+        const target = this.getTarget(ev);
+        let color = target.dataset.color;
+        if (color && isColorCombination(color)) {
+            return color;
+        }
         if (color && !isCSSColor(color) && !isColorGradient(color)) {
             color = this.props.colorPrefix + color;
         }
@@ -92,7 +109,7 @@ export class ColorPicker extends Component {
     }
 
     onColorApply(ev) {
-        if (ev.target.tagName !== "BUTTON") {
+        if (this.getTarget(ev).tagName !== "BUTTON") {
             return;
         }
         const color = this.processColorFromEvent(ev);
@@ -106,17 +123,31 @@ export class ColorPicker extends Component {
     }
 
     onColorHover(ev) {
-        if (ev.target.tagName !== "BUTTON") {
+        if (this.getTarget(ev).tagName !== "BUTTON") {
             return;
         }
         this.onColorPreview(ev);
     }
 
     onColorHoverOut(ev) {
-        if (ev.target.tagName !== "BUTTON") {
+        if (this.getTarget(ev).tagName !== "BUTTON") {
             return;
         }
         this.props.applyColorResetPreview();
+    }
+    getTarget(ev) {
+        const target = ev.target.closest(`[data-color]`);
+        return this.root.el.contains(target) ? target : ev.target;
+    }
+
+    onColorFocusin(ev) {
+        if (!ev.target.classList.contains("o_color_button") || this.focusedColorBtn === ev.target) {
+            this.focusedColorBtn = null;
+            return;
+        }
+        this.onColorHover(ev);
+        this.focusedColorBtn = ev.target;
+        ev.target.focus();
     }
 
     getCurrentGradientColor() {
@@ -132,6 +163,9 @@ export class ColorPicker extends Component {
     colorPickerNavigation(ev) {
         const { target, key } = ev;
         if (!target.classList.contains("o_color_button")) {
+            return;
+        }
+        if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(key)) {
             return;
         }
 
@@ -150,7 +184,7 @@ export class ColorPicker extends Component {
                 targetBtn = row.children[buttonIndex];
             }
         }
-        if (targetBtn?.classList.contains("o_color_button")) {
+        if (targetBtn && targetBtn.classList.contains("o_color_button")) {
             targetBtn.focus();
         }
     }
@@ -161,7 +195,7 @@ export function useColorPicker(refName, props, options = {}) {
     const root = useRef(refName);
 
     function onClick() {
-        colorPicker.open(root.el, props);
+        colorPicker.isOpen ? colorPicker.close() : colorPicker.open(root.el, props);
     }
 
     useEffect(
@@ -178,4 +212,14 @@ export function useColorPicker(refName, props, options = {}) {
     );
 
     return colorPicker;
+}
+
+/**
+ * Checks if a given string is a color combination.
+ *
+ * @param {string} color
+ * @returns {boolean}
+ */
+function isColorCombination(color) {
+    return color.startsWith("o_cc");
 }

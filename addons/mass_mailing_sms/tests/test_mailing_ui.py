@@ -2,7 +2,6 @@
 
 from odoo.tests import HttpCase, tagged, users
 
-
 @tagged('post_install', '-at_install', 'mail_activity')
 class TestMailingUi(HttpCase):
 

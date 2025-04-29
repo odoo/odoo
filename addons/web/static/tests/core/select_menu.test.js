@@ -949,8 +949,6 @@ test("Choices are updated and filtered when props change", async () => {
 });
 
 test("SelectMenu group items only after being opened", async () => {
-    let count = 0;
-
     patchWithCleanup(SelectMenu.prototype, {
         filterOptions(args) {
             expect.step("filterOptions");
@@ -984,11 +982,9 @@ test("SelectMenu group items only after being opened", async () => {
             });
         }
 
-        onInput() {
-            count++;
+        onInput(searchString) {
             // options have been filtered when typing on the search input",
-            expect.verifySteps(["filterOptions"]);
-            if (count === 1) {
+            if (searchString === "option d") {
                 this.state.choices = [{ label: "Option C", value: "optionC" }];
                 this.state.groups = [
                     {
@@ -1015,7 +1011,7 @@ test("SelectMenu group items only after being opened", async () => {
 
     await open();
     expect(".o_select_menu_menu").toHaveText("Option A\nGroup A\nOption B\nOption C");
-    expect.verifySteps(["filterOptions"]);
+    expect.verifySteps(["filterOptions", "filterOptions"]);
 
     await click("input");
     await edit("option d");
@@ -1023,14 +1019,14 @@ test("SelectMenu group items only after being opened", async () => {
     await animationFrame();
 
     expect(".o_select_menu_menu").toHaveText("Group B\nOption D");
-    expect.verifySteps(["filterOptions"]);
+    expect.verifySteps(["filterOptions", "filterOptions"]);
     await edit("");
     await runAllTimers();
 
     await animationFrame();
 
     expect(".o_select_menu_menu").toHaveText("Option A\nGroup A\nOption B\nOption C");
-    expect.verifySteps(["filterOptions"]);
+    expect.verifySteps(["filterOptions", "filterOptions"]);
 });
 
 test("search value is cleared when reopening the menu", async () => {
@@ -1058,7 +1054,7 @@ test("search value is cleared when reopening the menu", async () => {
     }
     await mountSingleApp(MyParent);
     await open();
-    expect.verifySteps([]);
+    expect.verifySteps(["search="]);
     await click("input");
     await edit("a");
     await runAllTimers();

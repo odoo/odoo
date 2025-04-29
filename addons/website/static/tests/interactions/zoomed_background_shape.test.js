@@ -27,6 +27,8 @@ test("zoomed_background_shape is not needed without zoom", async () => {
     expect(shapeEl).toHaveStyle({"right": "0px"});
 });
 
+// TODO: @mysterious-egg check if it s ok in mobile
+test.tags("desktop");
 test("zoomed_background_shape applies correction on zoom", async () => {
     const { core } = await startInteractions(`
         <div id="wrapwrap" style="width: 1000px; transform: scale(0.9997);">

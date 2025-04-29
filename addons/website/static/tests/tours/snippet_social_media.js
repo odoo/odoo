@@ -57,12 +57,12 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url, replaceIcon =
     const replaceIconByImageSteps = replaceIcon ? replaceIconByImage("https://www.example.com") : [];
     return [{
         content: "Click on Add New Social Network",
-        trigger: 'we-list we-button.o_we_list_add_optional',
+        trigger: "div[data-container-title='Social Media'] button[data-action-id='addSocialMediaLink']",
         run: "click",
     },
     {
         content: "Ensure new option is found",
-        trigger: `we-list table input:eq(${optionIndex})[data-list-position="${optionIndex}"][data-dom-position="${linkIndex}"][data-undeletable=false]`,
+        trigger: `.o_social_media_list tr:eq(${optionIndex}):has(div[data-action-id="editSocialMediaLink"])`,
     },
     {
         content: "Ensure new link is found",
@@ -71,7 +71,7 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url, replaceIcon =
     ...replaceIconByImageSteps,
     {
         content: "Change added Option label",
-        trigger: `we-list table input:eq(${optionIndex})`,
+        trigger: `.o_social_media_list tr:eq(${optionIndex}) input`,
         run: `edit ${url} && click body`,
     },
     {
@@ -91,7 +91,7 @@ registerWebsitePreviewTour('snippet_social_media', {
     ...addNewSocialNetwork(8, 8, 'https://www.youtu.be/y7TlnAv6cto'),
     {
         content: 'Click on the toggle to hide Facebook',
-        trigger: 'we-list table we-button.o_we_user_value_widget',
+        trigger: ".o_social_media_list div[data-action-id='toggleRecordedSocialMediaLink'] input[type='checkbox']",
         run: 'click',
     },
     {
@@ -100,13 +100,13 @@ registerWebsitePreviewTour('snippet_social_media', {
     },
     {
         content: 'Drag the facebook link at the end of the list',
-        trigger: 'we-list table we-button.o_we_drag_handle',
+        trigger: ".o_social_media_list button.o_drag_handle",
         tooltipPosition: 'bottom',
-        run: "drag_and_drop we-list table tr:last-child",
+        run: "drag_and_drop .o_social_media_list tr:last-child",
     },
     {
         content: 'Check drop completed',
-        trigger: 'we-list table input:eq(8)[data-media="facebook"]',
+        trigger: ".o_social_media_list tr:eq(8) div[data-action-param='facebook']",
     },
     ...preventRaceConditionStep,
     // Create a Link for which we don't have an icon to propose.
@@ -123,14 +123,14 @@ registerWebsitePreviewTour('snippet_social_media', {
                  ":has(a:eq(4)[href='/website/social/github'])" +
                  ":has(a:eq(5)[href='/website/social/tiktok'])" +
                  ":has(a:eq(6)[href='/website/social/discord'])" +
-                 ":has(a:eq(7)[href='https://www.youtu.be/y7TlnAv6cto']:has(i.fa-youtube))" +
+                 ":has(a:eq(7)[href='https://www.youtu.be/y7TlnAv6cto']:has(i.fa-youtube-play))" +
                  ":has(a:eq(8)[href='https://whatever.it/1EdSw9X']:has(i.fa-pencil))" +
                  ":has(a:eq(9)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
     },
     // Create a custom link, not officially supported, ensure icon is found.
     {
         content: 'Change custom social to unsupported link',
-        trigger: 'we-list table input:eq(7)',
+        trigger: ".o_social_media_list tr:eq(7) input",
         run: "edit https://www.paypal.com/abc && click body",
     },
     {
@@ -141,7 +141,7 @@ registerWebsitePreviewTour('snippet_social_media', {
     ...preventRaceConditionStep,
     {
         content: 'Delete the custom link',
-        trigger: 'we-list we-button.o_we_select_remove_option',
+        trigger: ".o_social_media_list button[data-action-id='deleteSocialMediaLink']",
         run: 'click',
     },
     {
@@ -150,7 +150,7 @@ registerWebsitePreviewTour('snippet_social_media', {
     },
     {
         content: 'Click on the toggle to show Facebook',
-        trigger: 'we-list table we-button.o_we_user_value_widget:not(.active)',
+        trigger: ".o_social_media_list input[type='checkbox']:not(:checked)",
         run: 'click',
     },
     {
@@ -169,7 +169,7 @@ registerWebsitePreviewTour('snippet_social_media', {
     },
     {
         content: 'Change url of the DB instagram link',
-        trigger: 'we-list table input:eq(3)',
+        trigger: ".o_social_media_list tr:eq(3) input",
         run: "edit https://instagram.com/odoo.official/ && click body",
     },
     ...preventRaceConditionStep,
