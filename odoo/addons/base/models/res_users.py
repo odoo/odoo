@@ -1453,12 +1453,15 @@ class UsersImplied(models.Model):
         if not values.get('groups_id'):
             return super(UsersImplied, self).write(values)
         users_before = self.filtered(lambda u: u._is_internal())
-        res = super(UsersImplied, self).write(values)
+        res = super(UsersImplied, self.with_context(no_add_implied_groups=True)).write(values)
         demoted_users = users_before.filtered(lambda u: not u._is_internal())
         if demoted_users:
             # demoted users are restricted to the assigned groups only
             vals = {'groups_id': [Command.clear()] + values['groups_id']}
             super(UsersImplied, demoted_users).write(vals)
+        if self.env.context.get('no_add_implied_groups'):
+            # in a recursive write, defer adding implied groups to the base call
+            return res
         # add implied groups for all users (in batches)
         users_batch = defaultdict(self.browse)
         for user in self:
