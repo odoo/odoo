@@ -17,7 +17,12 @@ export function clickOrderButton({ waitForSync = false } = {}) {
         },
     ];
     if (waitForSync) {
-        steps.push(...Chrome.waitRequest());
+        steps.push(
+            {
+                trigger: ".status-buttons .fa-spin",
+            },
+            Chrome.isSynced()
+        );
     }
     return steps;
 }
