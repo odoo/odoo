@@ -407,3 +407,31 @@ class TestRecruitment(TransactionCase):
 
         res = A1.action_open_applications()
         self.assertEqual(len(res['domain'][0][2]), 3, "The list view should display 3 applications")
+
+    def test_similar_applicants_made_obsolete(self):
+        sim1, sim2, sim3 = self.env['hr.applicant'].create([
+            {
+                'partner_name': 'Test 1',
+                'email_from': 'test@gmail.com',
+            },
+            {
+                'partner_name': 'Test 2',
+                'linkedin_profile': 'test.com',
+            },
+            {
+                'partner_name': 'Test 3',
+                'partner_phone': '123',
+            },
+        ])
+        sim4 = self.env['hr.applicant'].create([
+            {
+                'partner_name': 'Test 3',
+                'email_from': 'test@gmail.com',
+                'linkedin_profile': 'test.com',
+                'partner_phone': '123',
+            },
+        ])
+        self.assertEqual(sim1.is_obsolete, True)
+        self.assertEqual(sim2.is_obsolete, True)
+        self.assertEqual(sim3.is_obsolete, True)
+        self.assertEqual(sim4.is_obsolete, False)
