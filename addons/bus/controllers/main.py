@@ -17,8 +17,3 @@ class BusController(Controller):
         # sudo - bus.bus: checking if a notification still exists in order to
         # detect missed notification during disconnect is allowed.
         return request.env["bus.bus"].sudo().search_count([("id", "=", last_notification_id)]) == 0
-
-    @route("/bus/get_autovacuum_info", type="jsonrpc", auth="public")
-    def get_autovacuum_info(self):
-        # sudo - ir.cron: lastcall and nextcall of the autovacuum is not sensitive
-        return request.env.ref("base.autovacuum_job").sudo().read(["lastcall", "nextcall"])[0]
