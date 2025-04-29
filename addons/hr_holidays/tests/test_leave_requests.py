@@ -358,7 +358,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'state': 'confirm',
             'date_from': time.strftime('2018-1-1'),
             'date_to': time.strftime('%Y-1-1'),
-        })
+        }).action_approve()
 
         leave1 = self.env['hr.leave'].create({
             'name': 'Holiday 1 week',
@@ -422,7 +422,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'state': 'confirm',
             'date_from': time.strftime('2018-1-1'),
             'date_to': time.strftime('%Y-1-1'),
-        })
+        }).action_approve()
 
         leave0 = self.env['hr.leave'].create({
             'name': 'Holiday 1 day',
@@ -703,8 +703,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_from': '2022-01-01',
             'date_to': '2022-12-31',
         }
-        self.env['hr.leave.allocation'].create(allocation_vals)
-        self.env['hr.leave.allocation'].create(allocation_vals)
+        self.env['hr.leave.allocation'].create(allocation_vals).action_approve()
+        self.env['hr.leave.allocation'].create(allocation_vals).action_approve()
 
         # Able to create a leave of 10 days with two allocations of 5 days
         self.env['hr.leave'].with_user(self.user_employee_id).create({
@@ -1001,7 +1001,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'state': 'confirm',
                 'date_from': '2020-01-01',
                 'date_to': '2020-12-31',
-            })
+            }).action_approve()
 
             leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
                 'name': 'Holiday Request',
@@ -1135,6 +1135,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Sick Leave (days)',
             'request_unit': 'day',
             'leave_validation_type': 'hr',
+            'requires_allocation': 'no',
         })
         sick_leave = self.env['hr.leave'].create({
             'name': 'Sick 3 days',
@@ -1147,6 +1148,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'OT Compensation (hours)',
             'request_unit': 'hour',
             'leave_validation_type': 'manager',
+            'requires_allocation': 'no',
         })
         comp_leave = self.env['hr.leave'].create({
             'name': 'OT Comp (4 hours)',
@@ -1185,6 +1187,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Sick Leave (days)',
             'request_unit': 'day',
             'leave_validation_type': 'hr',
+            'requires_allocation': 'no',
         })
         sick_leave = self.env['hr.leave'].create({
             'name': 'Sick 3 days',
@@ -1263,7 +1266,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'default_date_to': '2024-03-28 08:00:00',
         }
         leave_form = Form(self.env['hr.leave'].with_user(self.user_employee).with_context(context))
-        leave_form.holiday_status_id = self.holidays_type_2
+        leave_form.holiday_status_id = self.holidays_type_3
         leave = leave_form.save()
         self.assertEqual(leave.number_of_days, 1.0)
 
@@ -1335,6 +1338,15 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         activities = test_holiday_1.activity_ids
         self.assertFalse(activities, "No activity should be created if no Time Off Officer is set for approval.")
 
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Allocation for hruser',
+            'employee_id': self.employee_hruser_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'number_of_days': 5,
+            'state': 'confirm',
+            'date_from': '2024-01-01',
+        })
+        allocation.action_approve()
         self.holidays_type_2.responsible_ids = [Command.link(self.user_employee.id)]
         test_holiday_2 = self.env['hr.leave'].create({
             'name': 'Test leave',
@@ -1352,7 +1364,15 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         # Case 2: Approved by Time Off Officer and Employee's Approver, but no Time Off Officer is set
         self.holidays_type_4.responsible_ids = False     # No Time Off Officer set
-
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Allocation for hrmanager',
+            'employee_id': self.employee_hrmanager_id,
+            'holiday_status_id': self.holidays_type_4.id,
+            'number_of_days': 5,
+            'state': 'confirm',
+            'date_from': '2024-01-01',
+        })
+        allocation.action_approve()
         test_holiday_3 = self.env['hr.leave'].create({
             'name': 'Test leave',
             'employee_id': self.employee_hrmanager_id,
@@ -1375,7 +1395,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave = self.env['hr.leave'].with_user(user_id).create({
             'name': 'Test leave',
             'employee_id': employee_id,
-            'holiday_status_id': self.holidays_type_2.id,
+            'holiday_status_id': self.holidays_type_1.id,
             'date_from': (datetime.today() - relativedelta(days=2)),
             'date_to': datetime.today()
         })
@@ -1412,3 +1432,18 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': date(2022, 3, 12),
         })
         self.assertEqual(leave.number_of_days, 2)
+
+    def test_time_off_creation_without_allocation(self):
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Smart Leave',
+            'requires_allocation': 'yes',
+            'leave_validation_type': 'hr',
+        })
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].create({
+                'name': 'Smart Leave Request',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-07-01',
+                'request_date_to': '2024-07-02',
+            })

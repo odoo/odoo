@@ -29,6 +29,7 @@ class TestSandwichLeave(TransactionCase):
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
             'request_unit': 'day',
+            'requires_allocation': 'no',
             'l10n_in_is_sandwich_leave': True,
             'company_id': self.indian_company.id,
         })
