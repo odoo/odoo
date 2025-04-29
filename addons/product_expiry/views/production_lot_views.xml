@@ -5,24 +5,23 @@
         <field name="model">stock.lot</field>
         <field name="inherit_id" ref="stock.view_production_lot_form" />
         <field name="arch" type="xml">
-        <xpath expr="//page[@name='description']" position="before">
-            <page string="Dates" name="expiration_dates" invisible="not use_expiration_date">
+        <xpath expr="//group[@name='description']" position="before">
+            <group string="Dates" name="expiration_dates" invisible="not use_expiration_date">
                 <field name="use_expiration_date" invisible="1"/>
                 <group>
-                    <group>
-                        <field name="expiration_date" />
-                        <field name="removal_date" />
-                    </group>
-                    <group>
-                        <field name="use_date" />
-                        <field name="alert_date" />
-                    </group>
+                    <field string="Expiration" name="expiration_date"/>
+                    <field string="Alert from" name="alert_date"/>
+                    <field string="Best before" name="use_date"/>
+                    <field string="Removal Date" name="removal_date"/>
                 </group>
-            </page>
+            </group>
         </xpath>
-        <xpath expr="//div[hasclass('oe_title')]" position="inside">
+        <xpath expr="//div[hasclass('oe_title')]" position="before">
             <field name="product_expiry_alert" invisible="1"/>
-            <span class="badge text-bg-danger" invisible="not product_expiry_alert">Expiration Alert</span>
+            <span class="badge rounded-pill float-end text-bg-warning"
+                  invisible="not (alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)">Expiring</span>
+            <span class="badge rounded-pill float-end text-bg-danger"
+                  invisible="not product_expiry_alert">Expired</span>
         </xpath>
             <xpath expr="//field[@name='ref']" position="after">
                 <field name="expiration_date" invisible="not use_expiration_date or display_complete"/>
