@@ -71,7 +71,7 @@ class StockMove(models.Model):
                 # Adjust unit price to account for discounts before adding taxes.
                 adjusted_unit_price = invoice_line.price_unit * (1 - (invoice_line.discount / 100)) if invoice_line.discount else invoice_line.price_unit
                 if invoice_line.tax_ids:
-                    invoice_line_value = invoice_line.tax_ids.with_context(round=False).compute_all(
+                    invoice_line_value = invoice_line.tax_ids.with_context(round=False, round_base=False).compute_all(
                         adjusted_unit_price, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
                 else:
                     invoice_line_value = adjusted_unit_price * invoice_line.quantity
