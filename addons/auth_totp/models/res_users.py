@@ -120,7 +120,7 @@ class ResUsers(models.Model):
     def _totp_rate_limit(self, limit_type):
         self.ensure_one()
         assert request, "A request is required to be able to rate limit TOTP related actions"
-        limit, interval = TOTP_RATE_LIMITS.get(limit_type)
+        limit, interval = TOTP_RATE_LIMITS[limit_type]
         RateLimitLog = self.env['auth.totp.rate.limit.log'].sudo()
         ip = request.httprequest.environ['REMOTE_ADDR']
         domain = [
@@ -134,7 +134,7 @@ class ResUsers(models.Model):
                 'send_email': _('You reached the limit of authentication mails sent for your account, please try again later.'),
                 'code_check': _('You reached the limit of code verifications for your account, please try again later.'),
             }
-            description = descriptions.get(limit_type)
+            description = descriptions[limit_type]
             raise AccessDenied(description)
         RateLimitLog.create({
             'user_id': self.id,
