@@ -25,7 +25,7 @@ class TestBusPresence(WebsocketCase, MailCommon):
         else:
             self.authenticate(None, None)
             auth_cookie = f"{recipient._cookie_name}={recipient._format_auth_cookie()};"
-        websocket = self.websocket_connect(cookie=auth_cookie, timeout=1)
+        websocket = self.websocket_connect(cookie=auth_cookie)
         sender_bus_target = sender.partner_id if sent_from_user else sender
         self.subscribe(
             websocket,
