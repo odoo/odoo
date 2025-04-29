@@ -59,7 +59,7 @@ from odoo.modules.registry import Registry
 from odoo.osv import expression
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.service import security
-from odoo.sql_db import BaseCursor, Cursor
+from odoo.sql_db import BaseCursor, Cursor, TestCursor
 from odoo.tools import float_compare, single_email_re, profiler, lower_logging
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
@@ -765,6 +765,14 @@ class TransactionCase(BaseCase):
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
+
+        def check_cursor_stack():
+            for cursor in TestCursor._cursors_stack:
+                _logger.info('One curor was remaining in the TestCursor stack at the end of the test')
+                cursor._close = True
+            TestCursor._cursors_stack = []
+
+        cls.addClassCleanup(check_cursor_stack)
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
 
