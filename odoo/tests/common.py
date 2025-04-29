@@ -1052,6 +1052,14 @@ class TransactionCase(BaseCase):
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cast(Cursor, cls.cr).close)
 
+        def check_cursor_stack():
+            for cursor in test_cursor.TestCursor._cursors_stack:
+                _logger.info('One curor was remaining in the TestCursor stack at the end of the test')
+                cursor._closed = True
+            test_cursor.TestCursor._cursors_stack = []
+
+        cls.addClassCleanup(check_cursor_stack)
+
         if cls.freeze_time:
             cls.startClassPatcher(freezegun.freeze_time(cls.freeze_time))
 
