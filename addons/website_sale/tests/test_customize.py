@@ -64,6 +64,9 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         cls.env['product.pricelist'].action_archive()
 
     def test_01_admin_shop_custom_attribute_value_tour(self):
+        self.env.user.write(
+            {'group_ids': [Command.link(self.env.ref('product.group_product_pricelist').id)]}
+        )
         self.start_tour("/", 'a_shop_custom_attribute_value', login="admin")
 
     def test_02_admin_shop_custom_attribute_value_tour(self):
@@ -208,6 +211,9 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         )
 
     def test_07_editor_shop(self):
+        self.env.user.write(
+            {'group_ids': [Command.link(self.env.ref('product.group_product_pricelist').id)]}
+        )
         self.env['product.pricelist'].create([
             {'name': 'Base Pricelist', 'selectable': True},
             {'name': 'Other Pricelist', 'selectable': True}

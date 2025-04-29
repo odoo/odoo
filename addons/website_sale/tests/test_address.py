@@ -174,6 +174,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
     def test_04_apply_empty_pl(self):
         ''' Ensure empty pl code reset the applied pl '''
+        self._enable_pricelists()
         so = self._create_so(partner_id=self.env.user.partner_id.id)
         eur_pl = self.env['product.pricelist'].create({
             'name': 'EUR_test',
@@ -189,6 +190,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             self.assertNotEqual(so.pricelist_id, eur_pl, "Pricelist should be removed when sending an empty pl code")
 
     def test_04_pl_reset_on_login(self):
+        self._enable_pricelists()
         """Check that after login, the SO pricelist is correctly recomputed."""
         test_user = self.env['res.users'].create({
             'name': 'Toto',

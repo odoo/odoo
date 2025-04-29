@@ -12,7 +12,7 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        cls._enable_pricelists()
         ProductTemplate = cls.env['product.template']
         Pricelist = cls.env['product.pricelist']
 
