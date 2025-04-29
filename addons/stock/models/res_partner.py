@@ -21,4 +21,5 @@ class ResPartner(models.Model):
     def action_view_stock_serial(self):
         action = self.env["ir.actions.act_window"]._for_xml_id("stock.action_production_lot_form")
         action['domain'] = [('partner_ids', 'child_of', self.ids)]
+        action['context'] = {'display_complete': True}
         return action

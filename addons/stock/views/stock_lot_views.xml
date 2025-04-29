@@ -16,7 +16,7 @@
                                 invisible="delivery_count == 0">
                             <field name="delivery_count" widget="statinfo" string="Transfers"/>
                         </button>
-                        <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" type="object">
+                        <button name="action_lot_open_quants" groups="stock.group_stock_multi_locations" icon="fa-arrows" class="oe_stat_button" type="object">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Location</span>
                             </div>
@@ -34,26 +34,27 @@
                     </h1>
                 </div>
                 <group name="main_group">
-                    <group>
+                    <group string="Information">
                         <field name="product_id" context="{'default_is_storable': True, 'default_tracking': 'lot'}" readonly="context.get('set_product_readonly', False)" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
-                        <label for="product_qty" invisible="not display_complete"/>
-                        <div class="o_row" invisible="not display_complete">
-                            <field name="product_qty"/>
-                            <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
-                        </div>
-                        <field name="ref"/>
+                        <field name="ref" string="Reference"/>
                         <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                        <field name="location_id" invisible="not location_id" groups="stock.group_stock_manager"/>
-                        <field name="partner_ids" invisible="not partner_ids" widget="many2many_tags" groups="stock.group_stock_manager"/>
+                        <field name="partner_ids" string="Customer" invisible="not partner_ids or not location_id" groups="stock.group_stock_manager"
+                               widget="many2many_tags" options="{'edit_tags': True}"/>
                     </group>
-                    <group></group>
+                    <group string="Inventory" name="inventory_group">
+                        <label for="product_qty" invisible="not display_complete"/>
+                        <div invisible="not display_complete">
+                            <field name="product_qty" class="oe_inline me-1"/>
+                            <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"
+                                   options="{'no_open': True}" class="oe_inline"/>
+                        </div>
+                        <field name="location_id" invisible="not location_id" groups="stock.group_stock_manager"/>
+                    </group>
                     <field name="lot_properties" nolabel="1" columns="2" hideAddButton="1"/>
                 </group>
-                <notebook invisible="not display_complete">
-                    <page string="Description" name="description">
-                        <field name="note"/>
-                    </page>
-                </notebook>
+                <group name="description" string="Description" invisible="not display_complete">
+                    <field name="note" colspan="2" nolabel="1"/>
+                </group>
                 </sheet>
                 <chatter/>
             </form>
@@ -66,8 +67,8 @@
         <field name="arch" type="xml">
             <list string="Lots/Serial Numbers" multi_edit="1">
                 <field name="name" decoration-bf="1"/>
-                <field name="ref" optional="show"/>
                 <field name="product_id" readonly="1"/>
+                <field name="ref" optional="hide"/>
                 <field name="create_date" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="partner_ids" optional="hide" widget="many2many_tags" string="Transfer to"/>
