@@ -44,6 +44,9 @@ class StockMoveLine(models.Model):
         If no packaging is selected, user can enter xdock_qty manually (handled via inverse).
         """
         for move in self:
+            if move.picking_id.picking_type_id.code != 'incoming':
+                move.xdock_qty = 0.0
+                continue
             if move.product_packaging_id:
                 if move.xdock_packaging_qty:
                     move.xdock_qty = move.product_packaging_id.qty * move.xdock_packaging_qty

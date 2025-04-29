@@ -92,6 +92,8 @@ class AutomationDecantingProductProcess(models.TransientModel):
                     _("The number of lines (%s) exceeds the allowed partition limit (%s).")
                     % (self.count_lines, self.container_partition)
                 )
+            if line.quantity <= 0:
+                raise ValidationError(_("The quantity for product '%s' should be greater than 0." % line.product_id.display_name))
 
             # Create a new decanting process line for each line item
             self.env['automation.decanting.orders.process.line'].create({
