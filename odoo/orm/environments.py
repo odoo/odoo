@@ -16,7 +16,7 @@ from weakref import WeakSet
 
 from odoo.exceptions import AccessError, UserError, CacheMiss
 from odoo.sql_db import BaseCursor
-from odoo.tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL
+from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, Query, SQL
 from odoo.tools.translate import get_translation, get_translated_module, LazyGettext
 from odoo.tools.misc import StackMap, SENTINEL
 
@@ -342,7 +342,7 @@ class Environment(Mapping[str, "BaseModel"]):
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
         """
-        lazy_property.reset_all(self)
+        reset_cached_properties(self)
         self.transaction.clear()
 
     def invalidate_all(self, flush: bool = True) -> None:
@@ -562,7 +562,7 @@ class Transaction:
         """
         self.registry = Registry(self.registry.db_name)
         for env in self.envs:
-            lazy_property.reset_all(env)
+            reset_cached_properties(env)
         self.clear()
 
 

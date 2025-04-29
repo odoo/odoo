@@ -8,7 +8,7 @@ import functools
 import logging
 import typing
 
-from odoo.tools import lazy_property, OrderedSet
+from odoo.tools import reset_cached_properties, OrderedSet
 from odoo.tools.sql import column_exists
 
 from .module import _get_manifest_cached
@@ -226,7 +226,7 @@ class ModuleGraph:
 
     def extend(self, names: Collection[str]) -> None:
         for module in self._modules.values():
-            lazy_property.reset_all(module)
+            reset_cached_properties(module)
 
         names = [name for name in names if name not in self._modules]
 
