@@ -236,6 +236,7 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
     def test_cart_update_with_fpos(self):
         # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken
         # into account when updating the cart
+        self._enable_pricelists()
         pricelist = self.pricelist
         # Create fiscal position mapping taxes 10% -> 6%
         fpos = self.env['account.fiscal.position'].create({
