@@ -1,0 +1,223 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_install_request
+# 
+# Translators:
+# Lyall Kindmurr, 2024
+# Wil Odoo, 2024
+# Alin Miclea, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-27 13:03+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Alin Miclea, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: base_install_request
+#: model:mail.template,body_html:base_install_request.mail_template_base_install_request
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello,\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> has requested to activate the <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"/> module. This module is included in your subscription. It has <span style=\"color: #875A7B; font-weight: bold;\">no extra cost</span>, but an administrator role is required to activate it.\n"
+"        <br/><br/>\n"
+"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-quote=\"1\">\n"
+"            <t t-out=\"object.body_html\"/>\n"
+"        </blockquote>\n"
+"        <br data-o-mail-quote=\"1\"/><br data-o-mail-quote=\"1\"/>\n"
+"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-base_install_request.action_base_module_install_review?menu_id={{ ctx['menu_id'] }}\">Review Request</a>\n"
+"        <br/><br/>\n"
+"        Thanks,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    \n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/models/ir_module_module.py:0
+msgid "Activation Request of \"%s\""
+msgstr "Solicitare de activare a \"%s”"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
+msgid "Body"
+msgstr "Conținut"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "Cancel"
+msgstr "Anulează"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__create_uid
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__create_date
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__create_date
+msgid "Created on"
+msgstr "Creat pe"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
+msgid "Depending Apps"
+msgstr "Aplicații dependende"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__display_name
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__id
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "Install App"
+msgstr "Instalați aplicația"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_date
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: base_install_request
+#: model:mail.template,name:base_install_request.mail_template_base_install_request
+msgid "Mail: Install Request"
+msgstr "E-mail: Solicitare de instalare"
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_ir_module_module
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__module_id
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_id
+msgid "Module"
+msgstr "Modul"
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_base_module_install_request
+msgid "Module Activation Request"
+msgstr "Cerere de activare a modulului"
+
+#. module: base_install_request
+#: model:mail.template,subject:base_install_request.mail_template_base_install_request
+msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
+msgstr ""
+"Cerere de activare a modulului pentru \"{{ object.module_id.shortdesc }}\""
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_base_module_install_review
+msgid "Module Activation Review"
+msgstr "Revizuire activare modul"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
+msgid "Modules Description"
+msgstr "Descrierea modulelor"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "No extra cost, this application is free."
+msgstr "Fără costuri suplimentare, această aplicație este gratuită."
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "No module selected."
+msgstr "Niciun modul selectat."
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
+msgid "Request Access"
+msgstr "Solicitați acces"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Request Activation"
+msgstr "Solicită activarea"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Send to:"
+msgstr "Trimite către:"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_description
+msgid "The following apps will be installed:"
+msgstr "Următoarele aplicații vor fi instalate:"
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "The module is already installed."
+msgstr "Modulul este deja instalat."
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid ""
+"This app is included in your subscription. It's free to activate, but only "
+"an administrator can do it. Fill this form to send an activation request."
+msgstr ""
+"Această aplicație este inclusă în abonamentul dvs. Activarea este gratuită, "
+"dar numai un administrator o poate face. Completați acest formular pentru a "
+"trimite o cerere de activare."
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
+msgid "User"
+msgstr "Utilizator"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Why do you need this module?"
+msgstr "De ce aveți nevoie de acest modul?"
+
+#. module: base_install_request
+#: model:ir.actions.act_window,name:base_install_request.action_base_module_install_review
+msgid "You are about to install an extra application"
+msgstr "Sunteți pe cale să instalați o aplicație suplimentară"
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+msgid "Your request has been successfully sent"
+msgstr "Cererea ta a fost trimisa cu succes"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid ""
+"e.g. I'd like to use the SMS Marketing module to organize the promotion of "
+"our internal events, and exhibitions. I need access for 3 people of my team."
+msgstr ""
+"de exemplu, aș dori să folosesc modulul SMS Marketing pentru a organiza "
+"promovarea evenimentelor și expozițiilor noastre interne. Am nevoie de acces"
+" pentru 3 persoane din echipa mea."
