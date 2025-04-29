@@ -22,4 +22,7 @@ patch(DataServiceOptions.prototype, {
             "loyalty.reward",
         ];
     },
+    get cleanupModels() {
+        return [...super.cleanupModels, "loyalty.program"];
+    },
 });

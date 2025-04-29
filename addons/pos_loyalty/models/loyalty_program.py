@@ -29,6 +29,14 @@ class LoyaltyProgram(models.Model):
             'portal_point_name', 'trigger_product_ids', 'rule_ids', 'reward_ids'
         ]
 
+    def _unrelevant_records(self):
+        config_id = self.env.context.get('config_id')
+        if config_id:
+            config = self.env['pos.config'].browse(config_id)
+            valid_record = config._get_program_ids()
+            return self.filtered(lambda record: record.id not in valid_record.ids).ids
+        return []
+
     @api.depends("communication_plan_ids.pos_report_print_id")
     def _compute_pos_report_print_id(self):
         for program in self:

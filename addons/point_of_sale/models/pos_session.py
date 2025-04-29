@@ -207,10 +207,9 @@ class PosSession(models.Model):
             existing_records = self.env[model].browse(ids).exists()
 
             non_existent_ids = set(ids) - set(existing_records.ids)
-            inactive_ids = set(existing_records._unrelevant_records())
+            inactive_ids = set(existing_records.with_context(config_id=self.config_id.id)._unrelevant_records())
 
             response[model] = list(non_existent_ids | inactive_ids)
-
         return response
 
     def delete_opening_control_session(self):
