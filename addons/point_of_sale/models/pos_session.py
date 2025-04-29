@@ -1154,6 +1154,7 @@ class PosSession(models.Model):
             account_payment.write({
                 'outstanding_account_id': account_payment.destination_account_id,
                 'destination_account_id': account_payment.outstanding_account_id,
+                'payment_type': 'outbound',
             })
 
         account_payment.action_post()
