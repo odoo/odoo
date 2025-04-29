@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import unittest
 
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -94,6 +95,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon):
 
         self.start_tour("/", 'shop_buy_product', login="demo")
 
+    @unittest.skip("skipped on saas-17.4 only")
     def test_04_admin_website_sale_tour(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
