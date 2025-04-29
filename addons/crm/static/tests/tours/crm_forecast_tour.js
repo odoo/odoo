@@ -69,6 +69,7 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: "button[name=action_set_won_rainbowman]",
         content: "win the lead",
+        run: "click"
     }, {
         trigger: '.o_back_button',
         content: 'navigate back to the kanban view',
