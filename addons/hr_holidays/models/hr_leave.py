@@ -723,6 +723,9 @@ Versions:
             if leave_type.allows_negative:
                 max_excess = leave_type.max_allowed_negative
                 for employee in employees:
+                    if not leave_data[employee]:
+                        raise ValidationError(_("You do not have any allocation for this time off type.\n"
+                                                "Please request an allocation before submitting your time off request."))
                     if leave_data[employee] and leave_data[employee][0][1]['virtual_remaining_leaves'] < -max_excess:
                         raise ValidationError(_("There is no valid allocation to cover that request."))
                 continue
@@ -733,6 +736,9 @@ Versions:
             for employee in employees:
                 previous_emp_data = previous_leave_data[employee] and previous_leave_data[employee][0][1]['virtual_excess_data']
                 emp_data = leave_data[employee] and leave_data[employee][0][1]['virtual_excess_data']
+                if not leave_data[employee]:
+                    raise ValidationError(_("You do not have any allocation for this time off type.\n"
+                                            "Please request an allocation before submitting your time off request."))
                 if not previous_emp_data and not emp_data:
                     continue
                 if previous_emp_data != emp_data and len(emp_data) >= len(previous_emp_data):
