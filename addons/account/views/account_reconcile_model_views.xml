@@ -200,7 +200,8 @@
                                             <field name="tax_ids"
                                                    widget="many2many_tags"
                                                    optional="hide"
-                                                   domain="[('type_tax_use', '=?', parent.counterpart_type if parent.counterpart_type in ('sale', 'purchase') and rule_type == 'writeoff_button' else None)]"/>
+                                                   domain="[('type_tax_use', '=?', parent.counterpart_type if parent.counterpart_type in ('sale', 'purchase') and rule_type == 'writeoff_button' else None)]"
+                                                   context="{'append_type_to_tax_name': True}"/>
                                             <field name="analytic_distribution" widget="analytic_distribution"
                                                    groups="analytic.group_analytic_accounting"
                                                    options="{'account_field': 'account_id', 'business_domain': 'general'}"/>
