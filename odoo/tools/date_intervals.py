@@ -8,13 +8,6 @@ from pytz import utc
 from odoo.fields import Datetime
 from odoo.tools.float_utils import float_round
 
-# Default hour per day value. The one should
-# only be used when the one from the calendar
-# is not available.
-HOURS_PER_DAY = 8
-# This will generate 16th of days
-ROUNDING_FACTOR = 16
-
 
 def make_aware(dt):
     """ Return ``dt`` with an explicit timezone, together with a function to
