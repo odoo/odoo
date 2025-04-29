@@ -66,6 +66,17 @@ class AccountTestInvoicingCommon(TransactionCase):
             'company_id': cls.company_data['company'].id,
         })
 
+        cls.simple_accountman = cls.env['res.users'].create({
+            'name': 'simple accountman',
+            'login': 'simple_accountman',
+            'password': 'simple_accountman',
+            'groups_id': [
+                # from instantiate_accountman() without "default" superuser groups
+                Command.link(cls.env.ref('account.group_account_manager').id),
+                Command.link(cls.env.ref('account.group_account_user').id),
+            ],
+        })
+
         cls.currency_data = cls.setup_multi_currency_data()
 
         # ==== Taxes ====
