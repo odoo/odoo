@@ -10,6 +10,16 @@ from odoo.http import request
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    def _compute_warehouse_id(self):
+        """ Override of `website_sale_stock` to avoid recomputations for in_store orders
+        when the warehouse was set by the pickup_location_data"""
+        in_store_orders_with_pickup_data = self.filtered(
+            lambda so: (
+                so.carrier_id.delivery_type == 'in_store' and so.pickup_location_data
+            )
+        )
+        super(SaleOrder, self - in_store_orders_with_pickup_data)._compute_warehouse_id()
+
     def set_delivery_line(self, carrier, amount):
         """ Override of `website_sale` to recompute warehouse and fiscal position when a new
         delivery method is not in-store anymore. """
@@ -18,9 +28,10 @@ class SaleOrder(models.Model):
                 so.carrier_id.delivery_type == 'in_store' and carrier.delivery_type != 'in_store'
             )
         )
+        res = super().set_delivery_line(carrier, amount)
         in_store_orders._compute_warehouse_id()
         in_store_orders._compute_fiscal_position_id()
-        return super().set_delivery_line(carrier, amount)
+        return res
 
     def _set_pickup_location(self, pickup_location_data):
         """ Override `website_sale` to set the pickup location for in-store delivery methods.
