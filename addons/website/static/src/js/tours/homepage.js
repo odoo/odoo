@@ -51,16 +51,16 @@ const snippets = [
 ];
 
 registerThemeHomepageTour('homepage', () => [
-    ...insertSnippet(snippets[0], "top"),
+    ...insertSnippet(snippets[0], { position: "top" }),
     ...clickOnText(snippets[0], "h1"),
     goBackToBlocks(),
     ...insertSnippet(snippets[1]),
     ...insertSnippet(snippets[2]),
-    ...clickOnSnippet(snippets[2], "top"),
+    ...clickOnSnippet(snippets[2], { position: "top" }),
     changeBackgroundColor(),
     goBackToBlocks(),
     ...insertSnippet(snippets[3]),
-    ...insertSnippet(snippets[4], "top"),
+    ...insertSnippet(snippets[4], { position: "top" }),
     ...insertSnippet(snippets[5]),
     ...insertSnippet(snippets[6]),
     ...insertSnippet(snippets[7]),

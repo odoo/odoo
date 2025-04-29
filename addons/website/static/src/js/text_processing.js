@@ -1,6 +1,7 @@
 import { isVisible } from "@web/core/utils/ui";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
+//TODO: Delete higlight function (duplicate whith highlight_utils) when deleting snippets options
 // SVG generator: contains all information needed to draw highlight SVGs
 // according to text dimensions, highlight style,...
 const _textHighlightFactory = {

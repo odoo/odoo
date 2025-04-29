@@ -2,6 +2,7 @@
 import { queryFirst } from '@odoo/hoot-dom';
 import {
     changeOption,
+    changeOptionInPopover,
     clickOnSave,
     clickOnSnippet,
     insertSnippet,
@@ -29,8 +30,7 @@ const templates = [
 function changeTemplate(templateKey) {
     const templateClass = templateKey.replace(/dynamic_filter_template_/, "s_");
     return [
-        changeOption(optionBlock, 'we-select[data-name="template_opt"] we-toggler', 'template'),
-        changeOption(optionBlock, `we-button[data-select-data-attribute="website_sale.${templateKey}"]`),
+        ...changeOptionInPopover("Products", "Template", `div[data-action-param*="${templateKey}"]`),
         {
             content: 'Check the template is applied',
             trigger: `:iframe .s_dynamic_snippet_products.${templateClass} .carousel`,
@@ -69,8 +69,7 @@ registerWebsitePreviewTour('website_sale.products_snippet_recently_viewed', {
     ...insertSnippet(productsSnippet),
     ...clickOnSnippet(productsSnippet),
     ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
-    changeOption(optionBlock, 'we-select[data-name="filter_opt"] we-toggler', 'filter'),
-    changeOption(optionBlock, 'we-select[data-name="filter_opt"] we-button:contains("Recently Viewed")', 'filter'),
+    ...changeOptionInPopover("Products", "Filter", "Recently Viewed"),
     ...clickOnSave(),
     {
         content: 'make delete icon appear',

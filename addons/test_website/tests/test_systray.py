@@ -6,7 +6,6 @@ from odoo.tools import config, mute_logger
 
 from odoo.addons.base.tests.common import HttpCase
 
-
 @tagged('post_install', '-at_install')
 class TestSystray(HttpCase):
 
@@ -38,6 +37,9 @@ class TestSystray(HttpCase):
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_01_admin(self):
         self.start_tour(self.env['website'].get_client_action_url('/test_model/1'), 'test_systray_admin', login="admin")
+
+    # TODO master-mysterious-egg fix error
+    # need to convert auto_hide_menu.js
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_02_reditor_tester(self):

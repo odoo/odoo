@@ -1,5 +1,5 @@
 import {
-    changeOption,
+    changeOptionInPopover,
     clickOnSnippet,
     insertSnippet,
     registerWebsitePreviewTour,
@@ -11,20 +11,17 @@ registerWebsitePreviewTour("snippet_rating", {
 }, () => [
     ...insertSnippet({ id: "s_rating", name: "Rating" }),
     ...clickOnSnippet({ id: "s_rating", name: "Rating" }),
-    changeOption("Rating", "we-select:has([data-select-class]) we-toggler"),
-    changeOption("Rating", 'we-button[data-select-class="s_rating_inline"]'),
+    ...changeOptionInPopover("Rating", "Title Position", "[data-class-action='s_rating_inline']"),
     {
         content: "Check whether s_rating_inline class applied or not",
         trigger: ":iframe .s_rating_inline",
     },
-    changeOption("Rating", "we-select:has([data-select-class]) we-toggler"),
-    changeOption("Rating", 'we-button[data-select-class="s_rating_no_title"]'),
+    ...changeOptionInPopover("Rating", "Title Position", "[data-class-action='s_rating_no_title']"),
     {
         content: "Check whether s_rating_no_title class applied or not",
         trigger: ":iframe .s_rating_no_title",
     },
-    changeOption("Rating", "we-select:has([data-select-class]) we-toggler"),
-    changeOption("Rating", 'we-button[data-select-class=""] div:contains("Top")'),
+    ...changeOptionInPopover("Rating", "Title Position", "Top"),
     {
         content: "Check whether s_rating_no_title class removed or not",
         trigger: ":iframe .s_rating:not(.s_rating_no_title)",

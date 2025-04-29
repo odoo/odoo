@@ -29,10 +29,14 @@ Coupon & promotion programs can be edited in the Catalog menu of the Website app
     'auto_install': ['website_sale', 'sale_loyalty'],
     'assets': {
         'web.assets_frontend': [
-            'website_sale_loyalty/static/src/**/*',
+            'website_sale_loyalty/static/src/js/**/*',
+            'website_sale_loyalty/static/src/interactions/**/*',
         ],
         'web.assets_tests': [
             'website_sale_loyalty/static/tests/**/*',
+        ],
+        'html_builder.assets': [
+            'website_sale_loyalty/static/src/website_builder/**/*',
         ],
     },
     'author': 'Odoo S.A.',

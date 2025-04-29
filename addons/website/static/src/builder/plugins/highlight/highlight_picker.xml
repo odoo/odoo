@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.highlightPicker">
+    <div t-ref="root" class="p-2 grid gap-0" style="overflow-y:scroll; overflow-x:hidden; --text-highlight-color: #000000; --text-highlight-width: .15em;">
+        <t t-foreach="this.getHighlightFactory()" t-as="highlight" t-key="highlight">
+                <div class="border g-col-4 position-relative"
+                    style="padding: 20px 5px; cursor: pointer"
+                    t-on-click="() => this.props.selectHighlight(highlight)"
+                    t-on-mouseenter="() => this.props.previewHighlight(highlight)"
+                    t-on-mouseleave="() => this.props.revertHighlight()">
+                <div class="overflow-visible position-relative fw-bolder fs-3 text-center">
+                    <span t-attf-class="o_text_highlight o_text_highlight_{{highlight}}">Text</span>
+                </div>
+            </div>
+        </t>
+    </div>
+</t>
+</templates>

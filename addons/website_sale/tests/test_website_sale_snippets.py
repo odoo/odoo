@@ -3,6 +3,7 @@
 import logging
 
 from odoo.tests import HttpCase, tagged
+import unittest
 
 from odoo.addons.website.tools import MockRequest
 

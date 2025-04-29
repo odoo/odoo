@@ -170,15 +170,7 @@ export class SelectMenu extends Component {
     }
 
     async onBeforeOpen() {
-        if (this.state.searchValue.length) {
-            this.state.searchValue = "";
-            if (this.props.onInput) {
-                // This props can be used by the parent to fetch items dynamically depending
-                // the search value. It must be called with the empty search value.
-                await this.executeOnInput("");
-            }
-        }
-        this.filterOptions();
+        await this.onInput("");
     }
 
     onStateChanged(open) {
@@ -207,11 +199,7 @@ export class SelectMenu extends Component {
         }
     }
 
-    async executeOnInput(searchString) {
-        await this.props.onInput(searchString);
-    }
-
-    onInput(searchString) {
+    async onInput(searchString) {
         this.filterOptions(searchString);
         this.state.searchValue = searchString;
 
@@ -221,7 +209,7 @@ export class SelectMenu extends Component {
             inputEl.parentNode.scrollTo(0, 0);
         }
         if (this.props.onInput) {
-            this.executeOnInput(searchString);
+            await this.props.onInput(searchString);
         }
     }
 

@@ -218,10 +218,18 @@ export function cleanTrailingBR(el, predicates = []) {
     }
 }
 
-export function toggleClass(node, className) {
-    node.classList.toggle(className);
-    if (!node.className) {
-        node.removeAttribute("class");
+/**
+ * Wrapper for classList.toggle that removes the class attribute if the
+ * element has no class name after the toggle.
+ *
+ * @param {Element} element
+ * @param {string} className
+ * @param {boolean} [force]
+ */
+export function toggleClass(element, className, force) {
+    element.classList.toggle(className, force);
+    if (!element.className) {
+        element.removeAttribute("class");
     }
 }
 

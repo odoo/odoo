@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_blog.BlogPageOption">
+    <BuilderContext action="'websiteConfig'">
+        <BuilderRow label.translate="Layout">
+            <BuilderSelect>
+                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_post_regular_cover']}">Title Above Cover</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: []}">Title Inside Cover</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Increase Readability" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_readable']}"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Sidebar">
+            <BuilderCheckbox id="'blog_post_sidebar_opt'" actionParam="{views: ['website_blog.opt_blog_post_sidebar']}"/>
+        </BuilderRow>
+
+        <t t-if="this.isActiveItem('blog_post_sidebar_opt')">
+            <BuilderRow label.translate="Archive" level="1">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_archive_display']}"/>
+            </BuilderRow>
+
+            <BuilderRow label.translate="Author" level="1">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_author_avatar_display']}"/>
+            </BuilderRow>
+
+            <BuilderRow label.translate="Blogs List" level="1">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_blogs_display']}"/>
+            </BuilderRow>
+
+            <BuilderRow label.translate="Share Links" level="1">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_share_links_display']}"/>
+            </BuilderRow>
+
+            <BuilderRow label.translate="Tags" level="1">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_tags_display']}"/>
+            </BuilderRow>
+        </t>
+
+        <BuilderRow label.translate="Breadcrumb">
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_breadcrumb']}"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Bottom">
+            <BuilderButton label.translate="Next Article" actionParam="{views: ['website_blog.opt_blog_post_read_next']}"/>
+            <BuilderButton label.translate="Comments" actionParam="{views: ['website_blog.opt_blog_post_comment']}"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+</templates>

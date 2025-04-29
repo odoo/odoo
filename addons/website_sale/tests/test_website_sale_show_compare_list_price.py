@@ -2,6 +2,7 @@
 
 from odoo.fields import Command
 from odoo.tests import tagged
+import unittest
 
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 

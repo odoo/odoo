@@ -142,6 +142,21 @@ describe("popover should switch UI depending on editing state", () => {
         expect(".o_we_edit_link").toHaveCount(1);
         expect(".o_we_remove_link").toHaveCount(1);
     });
+    test("changes to link text done before clicking on edit button should be kept if discard button is pressed", async () => {
+        const { editor, el } = await setupEditor(
+            '<p>this is a <a href="http://test.com/">link[]</a></p>'
+        );
+        await waitFor(".o-we-linkpopover", { timeout: 1500 });
+        await insertText(editor, "ABCD");
+        // Discard should not remove changes done directly to the link text
+        await click(".o_we_edit_link");
+        await waitFor(".o_we_href_input_link");
+        await click(".o_we_discard_link");
+        await waitFor(".o_we_edit_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.com/">linkABCD[]</a></p>'
+        );
+    });
 });
 
 describe("popover should edit,copy,remove the link", () => {
@@ -1156,6 +1171,13 @@ describe("readonly mode", () => {
         expect(".o-we-linkpopover .o_we_edit_link").toHaveCount(0);
         expect(".o-we-linkpopover .o_we_remove_link").toHaveCount(0);
     });
+    // TODO: need to check with AGE
+    test.todo("popover should not open for not editable image", async () => {
+        await setupEditor(`<a href="#"><img src="${base64Img}" contenteditable="false"></a>`);
+        await click("img");
+        await animationFrame();
+        expect(".o-we-linkpopover").toHaveCount(0);
+    });
 });
 
 describe("upload file via link popover", () => {
@@ -1266,5 +1288,18 @@ describe("apply button should be disabled when the URL is empty", () => {
         await contains(".o-we-linkpopover input.o_we_href_input_link").clear();
         await tick();
         expect(".o_we_apply_link").toHaveAttribute("disabled");
+    });
+});
+
+describe("hidden label field", () => {
+    test("label field should be hidden if <a> content is not text only", async () => {
+        await setupEditor(`<a href="http://test.com/"><img src="${base64Img}">te[]xt</a>`);
+        await waitFor(".o-we-linkpopover");
+        expect(".o-we-linkpopover").toHaveCount(1);
+        // open edit mode and check if label input is hidden
+        await click(".o_we_edit_link");
+        await waitFor(".input-group");
+        expect(".o_we_label_link").not.toBeVisible();
+        expect(".o_we_href_input_link").toHaveValue("http://test.com/");
     });
 });
