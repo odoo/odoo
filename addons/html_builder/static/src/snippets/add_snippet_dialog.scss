@@ -1,0 +1,40 @@
+.o_add_snippet_dialog {
+    max-height: $modal-lg !important;
+
+    .modal-body {
+        display: flex;
+        padding: 0;
+
+        aside {
+            input[type="search"] {
+                // Chromium-based browsers render a "cancel" button by default.
+                // When visible, adapt its position in order to visually
+                // "replace" the magnify icon.
+                &::-webkit-search-cancel-button {
+                    transform: translateX(map-get($spacers, 3));
+                }
+
+                &:not(:placeholder-shown) + .input-group-text {
+                    display: none;
+
+                    // Preserve Firefox from chromium adaptations
+                    @media screen and (min--moz-device-pixel-ratio:0) {
+                        display: block;
+                    }
+                }
+            }
+        }
+
+        .list-group {
+            --list-group-border-radius: 0;
+
+            min-width: 200px;
+            max-width: 250px;
+
+            button.active {
+                background-color: $o-brand-primary;
+                border-color: $o-brand-primary;
+            }
+        }
+    }
+}

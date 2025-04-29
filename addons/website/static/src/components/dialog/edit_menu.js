@@ -61,7 +61,7 @@ export class MenuDialog extends Component {
                     this.url.input.value = input.value;
                 },
             };
-            const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(input, options);
+            const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(input, options, this.env);
             return () => unmountAutocompleteWithPages();
         }, () => [this.urlInputRef.el]);
     }

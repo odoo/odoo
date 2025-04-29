@@ -36,7 +36,11 @@ export class GoogleMap extends Interaction {
 
     async willStart() {
         if (typeof google !== 'object' || typeof google.maps !== 'object') {
-            await this.services.website_map.loadGMapAPI(this.canSpecifyKey);
+            // @TODO mysterious-egg: this would not be needed if we didn't
+            // duplicate the API loading:
+            const refetch = window.top.refetchGoogleMaps;
+            window.top.refetchGoogleMaps = false;
+            await this.services.website_map.loadGMapAPI(this.canSpecifyKey, refetch);
             return;
         }
         this.canStart = true;

@@ -4,7 +4,7 @@ registerWebsitePreviewTour("snippet_image", {
     url: "/",
     edition: true,
 }, () => [
-    ...insertSnippet({id: "s_image", name: "Image"}),
+    ...insertSnippet({id: "s_image", name: "Image"}, { ignoreLoading: true }),
 {
     content: "Verify if the media dialog opens",
     trigger: ".o_select_media_dialog",
@@ -18,7 +18,7 @@ registerWebsitePreviewTour("snippet_image", {
     content: "Verify if the image placeholder has been removed",
     trigger: ":iframe footer:not(:has(.s_image > svg))",
 },
-    ...insertSnippet({id: "s_image", name: "Image"}),
+    ...insertSnippet({id: "s_image", name: "Image"}, { ignoreLoading: true }),
 {
     content: "Verify that the image placeholder is within the page",
     trigger: ":iframe footer .s_image > svg",
@@ -34,7 +34,7 @@ registerWebsitePreviewTour("snippet_image", {
 },
 {
     content: "Click on the 'undo' button",
-    trigger: '#oe_snippets button.fa-undo',
+    trigger: '.o-snippets-top-actions button.fa-undo',
     run: "click",
 },
 {

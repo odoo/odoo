@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BackgroundPositionOption">
+    <t t-if="isActiveItem('toggle_bg_image_id')">
+        <BuilderRow label.translate="Position" level="2">
+            <BuilderSelect action="'backgroundType'" preview="false">
+                <BuilderSelectItem actionValue="'cover'">Cover</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'repeat-pattern'" id="'background_repeat_opt'">Repeat pattern</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderButton icon="'fa-crosshairs'" title.translate="Background Position" preview="false" action="'backgroundPositionOverlay'"/>
+        </BuilderRow>
+        <BuilderContext t-if="isActiveItem('background_repeat_opt')" action="'setBackgroundSize'">
+            <BuilderRow label.translate="Width" level="3">
+                <BuilderNumberInput actionParam="'width'" placeholder.translate="auto" unit="'px'" min="0"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Height" level="3">
+                <BuilderNumberInput actionParam="'height'" placeholder.translate="auto" unit="'px'" min="0"/>
+            </BuilderRow>
+        </BuilderContext>
+    </t>
+</t>
+
+</templates>

@@ -14,7 +14,6 @@ const modifierFields = [
     'originalSrc',
     'resizeWidth',
     'aspectRatio',
-    "bgSrc",
     "mimetypeBeforeConversion",
 ];
 export const isGif = (mimetype) => mimetype === 'image/gif';

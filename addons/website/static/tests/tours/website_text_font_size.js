@@ -52,42 +52,45 @@ function getFontSizeTestSteps(fontSizeClass) {
             },
         }, {
             content: `Open the font size dropdown to select ${fontSizeClass}`,
-            trigger: "#font-size button",
+            trigger: ".o-we-toolbar :iframe [name='font-size-input']",
             run: "click",
         }, {
             content: `Select ${fontSizeClass} in the dropdown`,
-            trigger: `a[data-apply-class="${fontSizeClass}"]:contains(${classNameInfo.get(fontSizeClass).start})`,
+            trigger: `.o_font_size_selector_menu span:contains(${classNameInfo.get(fontSizeClass).start})`,
             run: "click",
         },
         checkComputedFontSize(fontSizeClass, "start"),
         ...goToTheme(),
         {
             content: `Open the collapse to see the font size of ${fontSizeClass}`,
-            trigger: `we-collapse:has(we-input[data-variable="` +
-            `${classNameInfo.get(fontSizeClass).scssVariableName}"]) we-toggler`,
+            trigger: `.we-bg-options-container:has([data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]) [data-label="Font Size"] .o_we_collapse_toggler`,
             run: "click",
         }, {
             content: `Check that the setting for ${fontSizeClass} is correct`,
-            trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
-                + ` input:value("${classNameInfo.get(fontSizeClass).start}")`,
+            trigger: `[data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]`+ ` input:value("${classNameInfo.get(fontSizeClass).start}")`,
         }, {
             content: `Change the setting value of ${fontSizeClass}`,
-            trigger: `[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"] input`,
+            trigger: `[data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"] input`,
             // TODO: Remove "&& click body"
             run: `edit ${classNameInfo.get(fontSizeClass).end} && click body`,
         }, {
             content: `[${fontSizeClass}] Go to blocks tab`,
-            trigger: ".o_we_add_snippet_btn",
+            trigger: "[data-name='blocks']",
             run: "click",
         }, {
             content: `[${fontSizeClass}] Wait to be in blocks tab`,
-            trigger: ".o_we_add_snippet_btn.active",
+            trigger: "[data-name='blocks'].active",
             run: "click",
         },
         ...goToTheme(),
         {
+            content: `Open the collapse to see the font size of ${fontSizeClass}`,
+            trigger: `.we-bg-options-container:has([data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]) [data-label="Font Size"] .o_we_collapse_toggler`,
+            run: "click",
+        },
+        {
             content: `Check that the setting of ${fontSizeClass} has been updated`,
-            trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
+            trigger: `[data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
                 + ` input:value("${classNameInfo.get(fontSizeClass).end}")`,
         },
         {
@@ -95,8 +98,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         },
         {
             content: `Close the collapse to hide the font size of ${fontSizeClass}`,
-            trigger: `we-collapse:has(we-input[data-variable=` +
-                `"${classNameInfo.get(fontSizeClass).scssVariableName}"]) we-toggler`,
+            trigger: `.we-bg-options-container:has([data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]) [data-label="Font Size"] .o_we_collapse_toggler`,
             run: "click",
         },
         checkComputedFontSize(fontSizeClass, "end"),
@@ -119,8 +121,8 @@ function getFontSizeTestSteps(fontSizeClass) {
 function getAllFontSizesTestSteps() {
     const steps = [];
     const fontSizeClassesToSkip = [
-        // This option is hidden by default because same value as base-fs.
-        "h6-fs",
+        // This option is hidden by default because same value as h6-fs.
+        "base-fs",
         // There is nothing related to these classes in the UI to test anymore.
         "small",
         "o_small_twelve-fs",

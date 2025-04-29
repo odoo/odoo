@@ -157,10 +157,14 @@ class InteractionService {
         }
     }
 
+    shouldStop(el, interaction) {
+        return el === interaction.el || el.contains(interaction.el);
+    }
+
     stopInteractions(el = this.el) {
         const interactions = [];
         for (const interaction of this.interactions.slice().reverse()) {
-            if (el === interaction.el || el.contains(interaction.el)) {
+            if (this.shouldStop(el, interaction)) {
                 interaction.destroy();
                 this.activeInteractions.delete(interaction.el, interaction.interaction.constructor);
             } else {

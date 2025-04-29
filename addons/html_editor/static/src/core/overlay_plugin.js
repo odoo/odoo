@@ -24,7 +24,7 @@ export class OverlayPlugin extends Plugin {
     overlays = [];
 
     setup() {
-        this.iframe = this.document.defaultView.frameElement;
+        this.iframe = this.window.frameElement;
         this.topDocument = this.iframe?.ownerDocument || this.document;
         this.container = this.getScrollContainer();
         this.throttledUpdateContainer = throttleForAnimation(() => {
@@ -112,8 +112,7 @@ export class Overlay {
                     close: this.close.bind(this),
                     isOverlayOpen: this.isOverlayOpen.bind(this),
                     history: {
-                        enableObserver: this.plugin.dependencies.history.enableObserver,
-                        disableObserver: this.plugin.dependencies.history.disableObserver,
+                        ignoreDOMMutations: this.plugin.dependencies.history.ignoreDOMMutations,
                     },
                 }),
                 {

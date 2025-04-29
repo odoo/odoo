@@ -1,0 +1,124 @@
+$-editor-messages-margin-x: 2%;
+
+.editor_enable .btn:hover {
+    cursor: text;
+}
+
+%o-editor-messages {
+    background: $o-we-dropzone-bg-color;
+    text-align: center;
+    color: #fff;
+    outline: $o-we-dropzone-border-width dashed $o-we-dropzone-accent-color;
+    outline-offset: -$o-we-dropzone-border-width;
+
+    &:before {
+        content: attr(data-editor-message);
+        display: block;
+        font-size: 20px;
+    }
+
+    // Show the default editor message only for "empty" elements
+    &:not(:empty) {
+        &[data-editor-message-default]:before {
+            content: none;
+        }
+    }
+
+    &:after {
+        content: attr(data-editor-sub-message);
+        display: block;
+    }
+}
+
+// This style block is about the "editor message" which highlights the areas
+// where the user can drag & drop snippets.
+.o_editable {
+    // Summernote did not Support for placeholder text, guess who else does not...
+    &[placeholder]:not(:focus) {
+        &:empty:before,
+        &:has(br:only-child):before,
+        &[data-oe-zws-empty-inline]:before {
+            content: attr(placeholder);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+    }
+
+    &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
+
+        // Base case (website.page (#wrap), t-field (product description), ...)
+        > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone) {
+            @extend %o-editor-messages;
+            height: auto;
+
+            // Empty editable element during drag & drop
+            &:only-child {
+                width: 100% - 2 * $-editor-messages-margin-x;
+                padding: 12px 0;
+                margin: 20px $-editor-messages-margin-x;
+            }
+
+            &:not(:only-child) {
+                &::before {
+                    font-size: 16px;
+                }
+
+                &[data-editor-message-default]::before {
+                    content: none;
+                }
+            }
+        }
+
+        // Exception 1: empty wrap NOT during drag & drop
+        &#wrap:empty {
+            @extend %o-editor-messages;
+            padding: 112px 0px;
+            margin: 20px $-editor-messages-margin-x;
+            border-radius: $border-radius-lg;
+        }
+
+        // Exception 2: empty wrap during drag & drop (override of base case)
+        &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone):only-child {
+            padding: 112px 0px;
+            text-shadow: none;
+        }
+
+        > p:empty:only-child {
+            color: #aaa;
+        }
+    }
+
+    &[data-oe-type=html].oe_empty:empty {
+        @extend %o-editor-messages;
+    }
+}
+
+.oe_structure_solo > .oe_drop_zone {
+    // TODO implement something more robust. This is currently for our only
+    // use case of oe_structure_solo: the footer. The dropzone in there need to
+    // be 1px lower that the end-of-page dropzone to distinguish them. The
+    // usability has to be reviewed anyway.
+    transform: translateY(10px); // For some reason "1px" is not enough...
+}
+
+.o-we-hint {
+    position: relative;
+
+    &:after {
+        content: attr(o-we-hint-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        color: inherit;
+        opacity: 0.4;
+        pointer-events: none;
+        text-align: inherit;
+        width: 100%;
+    }
+}
+
+.css_non_editable_mode_hidden,
+.o_editable .media_iframe_video .css_editable_mode_display {
+    display: block !important;
+}

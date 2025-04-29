@@ -1,11 +1,15 @@
+import { prepareUpdate } from "@html_editor/utils/dom_state";
+import { withSequence } from "@html_editor/utils/resource";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { cleanTextNode, splitTextNode, unwrapContents, fillEmpty } from "../utils/dom";
+import { cleanTextNode, fillEmpty, splitTextNode, unwrapContents } from "../utils/dom";
 import {
     areSimilarElements,
     isContentEditable,
-    isEmptyTextNode,
     isEmptyBlock,
+    isEmptyTextNode,
     isSelfClosingElement,
     isTextNode,
     isVisibleTextNode,
@@ -13,20 +17,16 @@ import {
     isZWS,
     previousLeaf,
 } from "../utils/dom_info";
+import { isFakeLineBreak } from "../utils/dom_state";
 import {
     childNodes,
     closestElement,
     descendants,
-    selectElements,
     findFurthest,
+    selectElements,
 } from "../utils/dom_traversal";
-import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
+import { formatsSpecs } from "../utils/formatting";
 import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
-import { prepareUpdate } from "@html_editor/utils/dom_state";
-import { _t } from "@web/core/l10n/translation";
-import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { withSequence } from "@html_editor/utils/resource";
-import { isFakeLineBreak } from "../utils/dom_state";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -289,15 +289,17 @@ export class FormatPlugin extends Plugin {
             let parentNode = node.parentElement;
 
             // Remove the format on all inline ancestors until a block or an element
-            // with a class that is not related to font size (in case the formatting
-            // comes from the class).
+            // with a class that is not indicated as splittable.
+            const isClassListSplittable = (classList) =>
+                [...classList].every((className) =>
+                    this.getResource("format_splittable_class").some((cb) => cb(className))
+                );
 
             while (
                 parentNode &&
                 !isBlock(parentNode) &&
                 !this.dependencies.split.isUnsplittable(parentNode) &&
-                (parentNode.classList.length === 0 ||
-                    [...parentNode.classList].every((cls) => FONT_SIZE_CLASSES.includes(cls)))
+                (parentNode.classList.length === 0 || isClassListSplittable(parentNode.classList))
             ) {
                 const isUselessZws =
                     parentNode.tagName === "SPAN" &&

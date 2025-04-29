@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_customer.CustomerFilterOption">
+        <BuilderRow label.translate="Countries Filter">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{
+                    views: ['website_customer.opt_country_list'],
+                }"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Industry Filter">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{
+                    views: ['website_customer.opt_industry_list'],
+                }"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Tags Filter">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{
+                    views: ['website_customer.opt_tag_list'],
+                }"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Show Map" t-if="hasGoogleMapsApiKey">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{
+                    views: ['website_customer.opt_country'],
+                }"/>
+        </BuilderRow>
+</t>
+
+</templates>

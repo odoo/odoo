@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="html_builder.NavTabsImagesStyleOption" t-inherit="html_builder.NavTabsStyleOption" primary="True">
+        <xpath expr="//BuilderSelectItem[@actionValue=&quot;'vertical'&quot;]" position="attributes">
+            <attribute name="classAction">'s_tabs_nav_vertical'</attribute>
+            <attribute name="id">'vertical_opt'</attribute>
+        </xpath>
+        <xpath expr="//BuilderRow[@label.translate=&quot;Direction&quot;]" position="after">
+            <BuilderRow label.translate="Descriptions" t-if="isActiveItem('vertical_opt')">
+                <BuilderCheckbox classAction="'s_tabs_nav_with_descriptions'"/>
+            </BuilderRow>
+        </xpath>
+    </t>
+</templates>

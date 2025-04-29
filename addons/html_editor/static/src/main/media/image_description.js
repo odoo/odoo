@@ -6,10 +6,10 @@ import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 export class ImageDescription extends Component {
     static components = { Dialog };
     static props = {
+        ...toolbarButtonProps,
         getDescription: Function,
         getTooltip: Function,
         updateImageDescription: Function,
-        ...toolbarButtonProps,
     };
     static template = "html_editor.ImageDescription";
 

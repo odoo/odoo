@@ -41,6 +41,9 @@
         'web.report_assets_common': [
             '/website_event_exhibitor/static/src/scss/event_full_page_ticket_report.scss',
         ],
+        'html_builder.assets': [
+            'website_event_exhibitor/static/src/website_builder/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

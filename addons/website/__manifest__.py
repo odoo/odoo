@@ -19,6 +19,7 @@
         'mail',
         'google_recaptcha',
         'utm',
+        'html_builder',
     ],
     'external_dependencies': {
         'python': ['geoip2'],
@@ -226,6 +227,7 @@
             ('remove', 'website/static/src/snippets/**/options.js'),
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
             'website/static/src/scss/website.scss',
+            'website/static/src/scss/website_common.scss',
             'website/static/src/scss/website_controller_page.scss',
             'website/static/src/scss/website.ui.scss',
             'website/static/src/libs/zoomodoo/zoomodoo.js',
@@ -243,6 +245,8 @@
             'website/static/src/xml/website.background.video.xml',
             'website/static/src/xml/website.cookies_warning.xml',
             'website/static/src/js/text_processing.js',
+            'website/static/src/js/highlight_utils.js',
+            'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',
@@ -264,6 +268,10 @@
             'website/static/src/**/*.edit.scss',
             'website/static/src/core/website_edit_service.js',
         ],
+        'website.inside_builder_style': [
+            ('include', 'html_builder.inside_builder_style'),
+            'website/static/src/**/*.inside.scss',
+        ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',
             'website/static/src/scss/options/user_values.scss',
@@ -276,7 +284,6 @@
         ],
         'web.assets_tests': [
             'website/static/tests/tour_utils/focus_blur_snippets_options.js',
-            'website/static/tests/tour_utils/website_preview_test.js',
             'website/static/tests/tour_utils/lifecycle_dep_interaction.js',
             'website/static/tests/tours/**/*',
         ],
@@ -289,6 +296,7 @@
             'website/static/src/js/backend/**/*',
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/text_processing.js',
+            'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/*/*',
             'website/static/src/components/fields/*',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.js',
@@ -304,13 +312,17 @@
             'website/static/src/xml/website.xml',
             'website/static/src/scss/website_controller_page_kanban.scss',
 
-            # Don't include dark mode files in light mode
-            ('remove', 'website/static/src/client_actions/*/*.dark.scss'),
+            'website/static/src/xml/website_form_editor.xml',
+            # TODO Remove the module's form js - this is for testing.
+            'website/static/src/js/send_mail_form.js',
+            # TODO when moving options to website: load this from website
+            # directly. This file is loaded in assets_wysiwyg in website, but we
+            # need to load it here for html_builder.
+            'website/static/src/xml/website.cookies_bar.xml',
         ],
         "web.assets_web_dark": [
             'website/static/src/components/dialog/*.dark.scss',
             'website/static/src/scss/website.backend.dark.scss',
-            'website/static/src/client_actions/*/*.dark.scss',
             'website/static/src/components/website_loader/website_loader.dark.scss'
         ],
         'web.qunit_suite_tests': [
@@ -321,6 +333,7 @@
             'website/static/tests/core/**/*',
             'website/static/tests/helpers.js',
             'website/static/tests/interactions/**/*',
+            'website/static/tests/builder/**/*',
         ],
         'web.assets_unit_tests_setup': [
             'web/static/src/legacy/js/core/class.js',
@@ -329,6 +342,7 @@
             'web/static/src/legacy/js/public/public_widget.js',
             'web/static/src/legacy/js/public/public_root.js',
             'website/static/lib/multirange/*.js',
+            'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/core/**/*',
             'website/static/src/utils/**/*',
             'website/static/src/interactions/**/*',
@@ -396,7 +410,6 @@
             'website/static/src/snippets/s_website_form/options.js',
             'website/static/src/snippets/s_floating_blocks/options.js',
             'website/static/src/snippets/s_floating_blocks/options.xml',
-            'website/static/src/js/form_editor_registry.js',
             'website/static/src/js/send_mail_form.js',
             'website/static/src/xml/website_form.xml',
             'website/static/src/xml/website.editor.xml',
@@ -462,6 +475,14 @@
 
             # Don't include dark mode files in light mode
             ('remove', 'website/static/src/components/dialog/*.dark.scss'),
+        ],
+        'html_builder.assets': [
+
+            'website/static/src/scss/website_common.scss',
+            'website/static/src/builder/**/*',
+        ],
+        'html_builder.iframe_add_dialog': [
+            'website/static/src/snippets/**/*.edit.scss',
         ],
     },
     'configurator_snippets': {

@@ -23,7 +23,27 @@ export class Colibri {
         this.dynamicNodes = new Map();
         this.core = core;
         this.interaction = new I(el, core.env, this);
+        this.setupInteraction();
+    }
+
+    setupInteraction() {
         this.interaction.setup();
+    }
+
+    destroyInteraction() {
+        for (const cleanup of this.cleanups.reverse()) {
+            cleanup();
+        }
+        this.cleanups = [];
+        this.interaction.destroy();
+    }
+
+    startInteraction(content) {
+        if (content) {
+            this.processContent(content);
+            this.updateContent();
+        }
+        this.interaction.start();
     }
 
     async start() {
@@ -33,11 +53,7 @@ export class Colibri {
         }
         this.isReady = true;
         const content = this.interaction.dynamicContent;
-        if (content) {
-            this.processContent(content);
-            this.updateContent();
-        }
-        this.interaction.start();
+        this.startInteraction(content);
     }
 
     addListener(nodes, event, fn, options) {
@@ -250,7 +266,9 @@ export class Colibri {
     processContent(content) {
         for (const sel in content) {
             if (sel.startsWith("t-")) {
-                throw new Error(`Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`);
+                throw new Error(
+                    `Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`
+                );
             }
             let nodes;
             if (this.dynamicNodes.has(sel)) {
@@ -379,13 +397,9 @@ export class Colibri {
             }
         }
 
-        for (const cleanup of this.cleanups.reverse()) {
-            cleanup();
-        }
-        this.cleanups = [];
         this.listeners.clear();
         this.dynamicNodes.clear();
-        this.interaction.destroy();
+        this.destroyInteraction();
         this.core = null;
         this.isDestroyed = true;
         this.isReady = false;

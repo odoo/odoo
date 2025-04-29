@@ -439,4 +439,9 @@ describe("isShrunkBlock", () => {
         const result = isShrunkBlock(hr);
         expect(result).toBe(false);
     });
+    test("should not consider a block containing a canvas as a shrunk block", () => {
+        const [canvas] = insertTestHtml("<canvas></canvas>");
+        const result = isShrunkBlock(canvas);
+        expect(result).toBe(false);
+    });
 });

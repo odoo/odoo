@@ -300,6 +300,8 @@ export const ICON_SELECTOR = iconTags
     .map((tag) => iconClasses.map((cls) => `${tag}.${cls}`).join(", "))
     .join(", ");
 
+export const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
+
 /**
  * Indicates if the given node is an icon element.
  *
@@ -319,7 +321,9 @@ export function isMediaElement(node) {
     return (
         isIconElement(node) ||
         (node.classList &&
-            (node.classList.contains("o_image") || node.classList.contains("media_iframe_video")))
+            (node.classList.contains("o_image") ||
+                node.classList.contains("media_iframe_video"))) ||
+        node.nodeName === "CANVAS"
     );
 }
 

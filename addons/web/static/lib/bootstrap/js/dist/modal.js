@@ -158,7 +158,7 @@
       index_js.reflow(this._element);
       this._element.classList.add(CLASS_NAME_SHOW);
       const transitionComplete = () => {
-        if (this._config.focus) {
+        if (this._config?.focus) {
           this._focustrap.activate();
         }
         this._isTransitioning = false;

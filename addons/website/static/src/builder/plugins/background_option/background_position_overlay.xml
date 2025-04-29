@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BackgroundPositionOverlay">
+    <div class="o_we_background_position_overlay" t-ref="backgroundOverlay">
+        <div class="o_we_overlay_content position-absolute" t-ref="overlayContent">
+            <div class="o_overlay_background" t-on-mousedown.prevent="onDragBackgroundStart"
+                t-ref="parentBgDragger"
+                title="Click and drag the background to adjust its position!"
+                >
+                <t t-out="props.outerHtmlEditingElement"/>
+            </div>
+            <div class="o_we_overlay_buttons position-absolute d-flex m-1" style="top: 0">
+                <button class="btn btn-primary me-1 o_btn_apply" t-on-click="apply">Apply</button>
+                <button class="btn btn-danger o_btn_discard" t-on-click="this.props.discardPosition">Discard</button>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

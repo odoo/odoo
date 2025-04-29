@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.OptionsContainer">
+    <div t-if="props.options.length"
+         class="options-container" t-ref="root" t-att-data-container-title="title"
+         t-on-mouseenter="onMouseEnter" t-on-mouseleave="onMouseLeave">
+        <div class="we-bg-darker p-2">
+                <!-- TODO change the structure so the clickable surface is bigger -->
+            <span class="ps-2 text-white" t-out="title" role="button" t-on-click="selectElement"/>
+                <!-- TODO CSS + remove temporary BS classes -->
+            <div class="float-end">
+                <div class="me-3 d-inline">
+                    <t t-if="props.headerMiddleButtons" t-foreach="props.headerMiddleButtons" t-as="headerMiddleButton" t-key="headerMiddleButton.id">
+                        <BuilderContext applyTo="headerMiddleButton.applyTo">
+                            <t t-if="headerMiddleButton.Component"
+                                t-component="headerMiddleButton.Component"
+                                t-props="headerMiddleButton.props || {}"/>
+                            <t t-else="" t-call="{{headerMiddleButton.template}}"/>
+                        </BuilderContext>
+                    </t>
+                </div>
+                <t t-foreach="props.containerTopButtons" t-as="button" t-key="button_index">
+                    <button class="o_we_link border-0 px-0 me-1" t-att-class="button.class"
+                            t-att-title="button.title" t-att-aria-label="button.title"
+                            t-on-click="() => button.handler(props.editingElement)"/>
+                </t>
+                <t t-if="props.isClonable || props.cloneDisabledReason">
+                    <!-- Disabled buttons do not display their title -->
+                    <span t-att-title="props.cloneDisabledReason" t-att-aria-label="props.cloneDisabledReason">
+	                    <button class="fa fa-fw fa-clone oe_snippet_clone o_we_link o_we_hover_success btn btn-outline-success border-0 px-0 me-1"
+	                            title="Duplicate this block"
+	                            aria-label="Duplicate this block"
+                                t-att-disabled="!!props.cloneDisabledReason"
+	                            t-on-click="cloneElement"/>
+	                </span>
+                </t>
+                <t t-if="props.isRemovable || props.removeDisabledReason">
+                    <!-- Disabled buttons do not display their title -->
+                    <span t-att-title="props.removeDisabledReason" t-att-aria-label="props.removeDisabledReason">
+	                    <button class="fa fa-fw fa-trash oe_snippet_remove o_we_link o_we_hover_danger btn btn-outline-danger border-0 px-0 me-1 "
+	                            title="Remove this block"
+	                            aria-label="Remove this block"
+	                            t-att-disabled="!!props.removeDisabledReason"
+	                            t-on-click="removeElement"/>
+	                </span>
+                </t>
+            </div>
+        </div>
+	    <t t-if="state.isUpToDate">
+            <div class="we-bg-options-container pb-3" t-ref="content">
+                <t t-foreach="props.options" t-as="option" t-key="option.id">
+                    <BuilderContext applyTo="option.applyTo" t-if="hasAccess(option.groups)">
+                        <t t-if="option.OptionComponent" t-component="option.OptionComponent" t-props="option.props || {}"></t>
+                        <t t-else="" t-call="{{option.template}}"/>
+                    </BuilderContext>
+                </t>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="o_we_version_control alert alert-info d-flex flex-column p-3 pt-4 align-items-center text-center text-white">
+                <div>This block is outdated.</div>
+                <div>You might not be able to customize it anymore.</div>
+                <button type="button" class="btn o_we_bg_brand_primary py-2 my-4 border-0" t-on-click="() => this.replaceElementWithNewVersion()">REPLACE BY NEW VERSION</button>
+                <div>You can still access the block options but it might be ineffective.</div>
+                <button type="button" class="btn o_we_bg_brand_primary py-2 my-4 border-0" t-on-click="() => this.accessOutdated()">ACCESS OPTIONS ANYWAY</button>
+            </div>
+        </t>        
+    </div>
+</t>
+
+</templates>

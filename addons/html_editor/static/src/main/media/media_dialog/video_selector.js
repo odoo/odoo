@@ -37,7 +37,7 @@ export class VideoSelector extends Component {
         errorMessages: Function,
         vimeoPreviewIds: { type: Array, optional: true },
         isForBgVideo: { type: Boolean, optional: true },
-        media: { type: Object, optional: true },
+        media: { validate: (p) => p.nodeType === Node.ELEMENT_NODE, optional: true },
         "*": true,
     };
     static defaultProps = {

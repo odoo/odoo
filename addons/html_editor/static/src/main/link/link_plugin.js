@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
-import { isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isElement, isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
@@ -220,6 +220,15 @@ export class LinkPlugin extends Plugin {
             icon: "fa-square",
         }),
 
+        link_popovers: [
+            withSequence(50, {
+                //Default option
+                PopoverClass: LinkPopover,
+                isAvailable: () => true,
+                getProps: (props) => props,
+            }),
+        ],
+
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
         input_handlers: this.onInputDeleteNormalizeLink.bind(this),
@@ -236,14 +245,10 @@ export class LinkPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
     };
+
     setup() {
-        this.overlay = this.dependencies.overlay.createOverlay(
-            LinkPopover,
-            {
-                closeOnPointerdown: false,
-            },
-            { sequence: 50 }
-        );
+        this.initializePopovers();
+        this.currentOverlay = this.getActivePopover().overlay;
         this.addDomListener(this.editable, "click", (ev) => {
             const linkEl = ev.target.closest("a");
             if (linkEl) {
@@ -377,7 +382,7 @@ export class LinkPlugin extends Plugin {
      * @param {HTMLElement} [linkElement]
      */
     openLinkTools(linkElement, type) {
-        this.overlay.close();
+        this.currentOverlay.close();
         if (!this.isLinkAllowedOnSelection()) {
             return this.services.notification.add(
                 _t("Unable to create a link on the current selection."),
@@ -411,27 +416,36 @@ export class LinkPlugin extends Plugin {
         const selectionTextContent = selection?.textContent();
         const isImage = !!findInSelection(selection, "img");
 
-        const applyCallback = (url, label, classes) => {
-            if (this.linkInDocument && isImage) {
+        const applyCallback = (url, label, classes, customStyle, linkTarget) => {
+            if (this.linkInDocument) {
                 if (url) {
                     this.linkInDocument.href = url;
                 } else {
                     this.linkInDocument.removeAttribute("href");
                 }
-            } else if (this.linkInDocument) {
-                if (url) {
-                    this.linkInDocument.href = url;
+                if (linkTarget) {
+                    this.linkInDocument.setAttribute("target", linkTarget);
                 } else {
-                    this.linkInDocument.removeAttribute("href");
+                    this.linkInDocument.removeAttribute("target");
                 }
-                if (classes) {
-                    this.linkInDocument.className = classes;
-                } else {
-                    this.linkInDocument.removeAttribute("class");
-                }
-                if (cleanZWChars(this.linkInDocument.innerText) !== label) {
-                    this.linkInDocument.innerText = label;
-                    cursorsToRestore = null;
+                if (!isImage) {
+                    if (classes) {
+                        this.linkInDocument.className = classes;
+                    } else {
+                        this.linkInDocument.removeAttribute("class");
+                    }
+                    if (customStyle) {
+                        this.linkInDocument.setAttribute("style", customStyle);
+                    } else {
+                        this.linkInDocument.removeAttribute("style");
+                    }
+                    if (
+                        this.linkInDocument.childElementCount == 0 &&
+                        cleanZWChars(this.linkInDocument.innerText) !== label
+                    ) {
+                        this.linkInDocument.innerText = label;
+                        cursorsToRestore = null;
+                    }
                 }
             } else if (url) {
                 // prevent the link creation if the url field was empty
@@ -479,6 +493,12 @@ export class LinkPlugin extends Plugin {
                     if (classes) {
                         link.className = classes;
                     }
+                    if (customStyle) {
+                        link.setAttribute("style", customStyle);
+                    }
+                    if (linkTarget) {
+                        link.setAttribute("target", linkTarget);
+                    }
                     this.linkInDocument = link;
                     cursorsToRestore = null;
                     this.dependencies.dom.insert(link);
@@ -486,8 +506,9 @@ export class LinkPlugin extends Plugin {
             }
         };
 
-        const restoreSavePoint = this.dependencies.history.makeSavePoint();
+        this.restoreSavePoint = this.dependencies.history.makeSavePoint();
         const props = {
+            document: this.document,
             linkElement,
             isImage: isImage,
             onApply: (...args) => {
@@ -499,7 +520,7 @@ export class LinkPlugin extends Plugin {
             },
             onChange: applyCallback,
             onDiscard: () => {
-                restoreSavePoint();
+                this.restoreSavePoint();
                 if (linkElement.isConnected) {
                     this.openLinkTools(linkElement);
                 }
@@ -508,16 +529,19 @@ export class LinkPlugin extends Plugin {
             onRemove: () => {
                 this.removeLinkInDocument();
                 this.linkInDocument = null;
-                this.overlay.close();
+                this.currentOverlay.close();
             },
             onCopy: () => {
                 this.linkInDocument = null;
-                this.overlay.close();
+                this.currentOverlay.close();
             },
             onClose: () => {
                 this.linkInDocument = null;
-                this.overlay.close();
+                this.currentOverlay.close();
                 this.dependencies.selection.focusEditable();
+            },
+            onEdit: () => {
+                this.restoreSavePoint = this.dependencies.history.makeSavePoint();
             },
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
@@ -529,14 +553,20 @@ export class LinkPlugin extends Plugin {
             onUpload: this.config.onAttachmentChange,
             type: this.type || "",
             showReplaceTitleBanner: this.newlyInsertedLinks.has(linkElement),
+            allowCustomStyle: this.config.allowCustomStyle,
+            allowTargetBlank: this.config.allowTargetBlank,
         };
-        this.overlay.open({ props });
+
+        const popover = this.getActivePopover(linkElement);
+        this.currentOverlay = popover.overlay;
+        this.currentOverlay.open({ props: popover.getProps(props) });
         if (this.linkInDocument) {
             if (this.newlyInsertedLinks.has(this.linkInDocument)) {
                 this.newlyInsertedLinks.delete(this.linkInDocument);
             }
         }
     }
+
     /**
      * close the link tool
      *
@@ -547,8 +577,8 @@ export class LinkPlugin extends Plugin {
         // Some unit tests fail when this.overlay.isOpen but the DOM don't contain the linkPopover yet.
         // Because of some kind of race condition between the hoot mock event and the owl renderer.
         // This is why we check for the popover in the DOM.
-        if (this.overlay.isOpen && document.querySelector(".o-we-linkpopover")) {
-            this.overlay.close();
+        if (this.currentOverlay.isOpen && document.querySelector(".o-we-linkpopover")) {
+            this.currentOverlay.close();
             if (link && link.isConnected) {
                 this.dependencies.selection.setSelection({
                     anchorNode: link,
@@ -556,7 +586,16 @@ export class LinkPlugin extends Plugin {
                     focusNode: link,
                     focusOffset: nodeSize(link),
                 });
+                const saveCustomStyle = link.getAttribute("style");
+                link.removeAttribute("style");
                 this.dependencies.color.removeAllColor();
+                if (
+                    saveCustomStyle &&
+                    this.config.allowCustomStyle &&
+                    link.className.includes("custom")
+                ) {
+                    link.setAttribute("style", saveCustomStyle);
+                }
                 // Remove the current link (linkInDocument) if it has no content
                 if (cleanZWChars(link.innerText) === "" && !link.querySelector("img")) {
                     const [anchorNode, anchorOffset] = rightPos(link);
@@ -578,6 +617,10 @@ export class LinkPlugin extends Plugin {
 
     normalizeLink(root) {
         for (const anchorEl of selectElements(root, "a")) {
+            if (/btn(-[a-z0-9_-]*)custom/.test(anchorEl.className)) {
+                // if the link is a customized button, we don't want to change the color
+                continue;
+            }
             const { color } = anchorEl.style;
             const childNodes = [...anchorEl.childNodes];
             // For each anchor element, if it has an inline color style,
@@ -643,9 +686,9 @@ export class LinkPlugin extends Plugin {
                 }
             }
         }
-        if (!selectionData.documentSelectionIsInEditable) {
-            const popoverEl = document.querySelector(".o-we-linkpopover");
-            if (popoverEl?.contains(selectionData.documentSelection?.anchorNode)) {
+        if (!selectionData.currentSelectionIsInEditable) {
+            const anchorNode = document.getSelection()?.anchorNode;
+            if (anchorNode && isElement(anchorNode) && anchorNode.closest(".o-we-linkpopover")) {
                 return;
             }
             this.linkInDocument = null;
@@ -662,10 +705,17 @@ export class LinkPlugin extends Plugin {
             }
         } else {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
-            if (closestLinkElement) {
+            if (closestLinkElement && closestLinkElement.isContentEditable) {
                 if (closestLinkElement !== this.linkInDocument) {
                     this.openLinkTools(closestLinkElement);
                 }
+            } else if (
+                closestLinkElement &&
+                (closestLinkElement.getAttribute("role") === "menuitem" ||
+                    closestLinkElement.classList.contains("nav-link")) &&
+                !closestLinkElement.dataset.bsToggle
+            ) {
+                this.openLinkTools(closestLinkElement);
             } else {
                 this.linkInDocument = null;
                 this.closeLinkTools();
@@ -902,8 +952,8 @@ export class LinkPlugin extends Plugin {
             if (url && this?.isCurrentLinkInSync) {
                 linkEl.setAttribute("href", url);
                 this.isCurrentLinkInSync = false;
-                if (this.overlay.isOpen) {
-                    this.overlay.close();
+                if (this.currentOverlay.isOpen) {
+                    this.currentOverlay.close();
                 }
             }
         }
@@ -1015,6 +1065,27 @@ export class LinkPlugin extends Plugin {
                 }
             }
         }
+    }
+
+    initializePopovers() {
+        this.overlays = [];
+        this.getResource("link_popovers").map((link_popover) => {
+            this.overlays.push({
+                overlay: this.dependencies.overlay.createOverlay(
+                    link_popover.PopoverClass,
+                    {
+                        closeOnPointerdown: false,
+                    },
+                    { sequence: 50 }
+                ),
+                isAvailable: link_popover.isAvailable,
+                getProps: link_popover.getProps,
+            });
+        });
+    }
+
+    getActivePopover(linkElement) {
+        return this.overlays.find((overlay) => overlay.isAvailable(linkElement));
     }
 }
 

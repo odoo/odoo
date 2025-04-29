@@ -955,7 +955,7 @@ export class ListPlugin extends Plugin {
      * @param {HTMLLIElement} li - LI element inside a checklist.
      */
     isPointerInsideCheckbox(li, pointerOffsetX, pointerOffsetY) {
-        const beforeStyle = this.document.defaultView.getComputedStyle(li, ":before");
+        const beforeStyle = this.window.getComputedStyle(li, ":before");
         const checkboxPosition = {
             left: parseInt(beforeStyle.left),
             top: parseInt(beforeStyle.top),
@@ -1047,13 +1047,11 @@ export class ListPlugin extends Plugin {
             return;
         }
         const defaultPadding =
-            parseFloat(
-                this.document.defaultView.getComputedStyle(document.documentElement).fontSize
-            ) * 2; // 2rem
+            parseFloat(this.window.getComputedStyle(document.documentElement).fontSize) * 2; // 2rem
         // Align the whole list based on the item that requires the largest padding.
         const requiredPaddings = [...list.children].map((li) => {
             const markerWidth = Math.floor(
-                parseFloat(this.document.defaultView.getComputedStyle(li, "::marker").width)
+                parseFloat(this.window.getComputedStyle(li, "::marker").width)
             );
             // For `UL` with large font size the marker width is so big that more padding is needed.
             const paddingForMarker =

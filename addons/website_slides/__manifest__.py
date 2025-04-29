@@ -189,6 +189,9 @@ Featuring
             'website_slides/static/src/interactions/**/*',
             'website_slides/static/src/js/public/**/*',
         ],
+        'html_builder.assets': [
+            'website_slides/static/src/website_builder/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

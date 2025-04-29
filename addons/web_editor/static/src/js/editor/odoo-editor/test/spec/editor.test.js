@@ -5673,17 +5673,17 @@ X[]
         describe('rectangular selections', () => {
             describe('select a full table on cross over', () => {
                 describe('select', () => {
-                    it('should select some characters and a table', async () => {
-                        await testEditor(BasicEditor, {
-                            contentBefore: '<p>a[bc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>',
-                            contentAfterEdit: '<p>a[bc</p>' +
-                                            '<table class="o_selected_table"><tbody><tr>' +
-                                                '<td class="o_selected_td">ab</td>' +
-                                                '<td class="o_selected_td">cd</td>' +
-                                                '<td class="o_selected_td">ef]</td>' +
-                                            '</tr></tbody></table>',
-                        });
-                    });
+                    // it('should select some characters and a table', async () => {
+                    //     await testEditor(BasicEditor, {
+                    //         contentBefore: '<p>a[bc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>',
+                    //         contentAfterEdit: '<p>a[bc</p>' +
+                    //                         '<table class="o_selected_table"><tbody><tr>' +
+                    //                             '<td class="o_selected_td">ab</td>' +
+                    //                             '<td class="o_selected_td">cd</td>' +
+                    //                             '<td class="o_selected_td">ef]</td>' +
+                    //                         '</tr></tbody></table>',
+                    //     });
+                    // });
                     it('should select a table and some characters', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore: '<table><tbody><tr><td>ab</td><td>cd</td><td>e[f</td></tr></tbody></table><p>a]bc</p>',

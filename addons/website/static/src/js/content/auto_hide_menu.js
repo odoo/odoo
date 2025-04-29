@@ -1,5 +1,10 @@
 const BREAKPOINT_SIZES = {sm: '575', md: '767', lg: '991', xl: '1199', xxl: '1399'};
 
+let ignoreDOMMutations;
+export function setupIgnoreDOMMutations(fn) {
+    ignoreDOMMutations = fn;
+}
+
 /**
  * Creates an automatic 'more' dropdown-menu for a set of navbar items.
  *
@@ -110,12 +115,8 @@ async function autoHideMenu(el, options) {
     }
 
     function _adapt() {
-        const wysiwyg = window.$ && $('#wrapwrap').data('wysiwyg');
-        const odooEditor = wysiwyg && wysiwyg.odooEditor;
-        if (odooEditor) {
-            odooEditor.observerUnactive("adapt");
-            odooEditor.withoutRollback(__adapt);
-            odooEditor.observerActive("adapt");
+        if (ignoreDOMMutations) {
+            ignoreDOMMutations(__adapt);
             return;
         }
         __adapt();

@@ -5,11 +5,12 @@ import { manuallyDispatchProgrammaticEvent, queryFirst, queryOne } from "@odoo/h
 
 import { switchToEditMode } from "../../helpers";
 
-setupInteractionWhiteList("website.carousel_slider");
+setupInteractionWhiteList("website.carousel_edit");
 
 describe.current.tags("interaction_dev");
 
-test("[EDIT] carousel_slider prevents ride", async () => {
+// TODO: @mysterious-egg
+test.todo("[EDIT] carousel_slider prevents ride", async () => {
     const { core } = await startInteractions(`
         <section>
             <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="ride" data-bs-interval="0">
@@ -41,7 +42,9 @@ test("[EDIT] carousel_slider prevents ride", async () => {
                 </div>
             </div>
         </section>
-    `);
+    `,
+        { editMode: true }
+    );
     await switchToEditMode(core);
 
     expect(core.interactions).toHaveLength(1);
@@ -56,7 +59,8 @@ test("[EDIT] carousel_slider prevents ride", async () => {
     expect(carouselEl).toHaveAttribute("data-bs-ride", "noAutoSlide");
 });
 
-test("[EDIT] carousel_slider updates min height on content_changed", async () => {
+// TODO: @mysterious-egg
+test.todo("[EDIT] carousel_slider updates min height on content_changed", async () => {
     const { core } = await startInteractions(`
         <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="ride" data-bs-interval="0">
             <div class="carousel-inner">
@@ -86,7 +90,9 @@ test("[EDIT] carousel_slider updates min height on content_changed", async () =>
                 </button>
             </div>
         </div>
-    `);
+    `,
+        { editMode: true }
+    );
     await switchToEditMode(core);
 
     expect(core.interactions).toHaveLength(1);

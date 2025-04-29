@@ -21,6 +21,8 @@ export class Plugin {
     constructor(document, editable, dependencies, config, services) {
         /** @type { Document } **/
         this.document = document;
+        /** @type { Window } */
+        this.window = document.defaultView;
         /** @type { HTMLElement } **/
         this.editable = editable;
         /** @type { EditorConfig } **/

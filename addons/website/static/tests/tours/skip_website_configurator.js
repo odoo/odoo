@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add('skip_website_configurator', {
     },
     {
         content: "Check that the homepage is loaded",
-        trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
+        trigger: ".o_website_preview :iframe html[data-view-xmlid='website.homepage']",
         timeout: 30000,
     },
     {

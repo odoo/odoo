@@ -8,6 +8,7 @@ export class ImageTransformButton extends Component {
     static props = {
         id: String,
         icon: String,
+        title: String,
         getSelectedImage: Function,
         resetImageTransformation: Function,
         addStep: Function,

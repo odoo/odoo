@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="website_builder.AttributeTranslateDialog">
+    <WebsiteDialog close.bind="addStepAndClose"
+        title.translate="Translate Attribute"
+        showSecondaryButton="false">
+        <div class="mb-3">
+            <t t-foreach="Object.entries(translationInfos)" t-as="translationInfo" t-key="translationInfo_index">
+                <t t-set="attributeName" t-value="translationInfo[0]"/>
+                <t t-set="translation" t-value="translationInfo[1].translation"/>
+                <label class="col-form-label" t-out="attributeName"/>
+                <input class="form-control"
+                    t-att-value="translation"
+                    t-on-change="onInputChange"
+                />
+            </t>
+        </div>
+    </WebsiteDialog>
+</t>
+
+</templates>

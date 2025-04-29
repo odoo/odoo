@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_blog.blogPostPageOption">
+    <BuilderContext action="'websiteConfig'">
+        <BuilderRow label.translate="Top Banner">
+            <BuilderCheckbox id="'blog_cover_opt'" actionParam="{views: ['website_blog.opt_blog_cover_post']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Full-Width" t-if="isActiveItem('blog_cover_opt')" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cover_post_fullwidth_design']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Layout">
+            <BuilderSelect>
+                <BuilderSelectItem actionParam="{views: []}">Grid</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_list_view']}">List</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Cards" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cards_design']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Increase Readability" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_readable']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Sidebar">
+            <BuilderCheckbox id="'blog_posts_sidebar_opt'" actionParam="{views: ['website_blog.opt_blog_sidebar_show']}"/>
+        </BuilderRow>
+        <t t-if="isActiveItem('blog_posts_sidebar_opt')">
+            <BuilderRow label.translate="Archives" level="1">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_sidebar_blog_index_archives']}"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Follow Us" level="1">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_sidebar_blog_index_follow_us']}"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Tags List" level="1">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_sidebar_blog_index_tags']}"/>
+            </BuilderRow>
+        </t>
+        <BuilderRow label.translate="Posts List">
+            <BuilderSelect>
+                <BuilderSelectItem actionParam="{views: []}">No Cover</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_blog.opt_posts_loop_show_cover']}">Cover</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Author" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_author']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Comments/Views Stats" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_stats']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Teaser &amp; Tags" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_teaser']}"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

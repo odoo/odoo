@@ -31,8 +31,8 @@
             t-att-data-type="field.type"
             data-name="Field"
             t-att-data-translated-name="defaultName">
-            <div t-if="field.formatInfo.labelPosition != 'none' and field.formatInfo.labelPosition != 'top'" class="row s_col_no_resize s_col_no_bgcolor">
-                <label t-attf-class="#{!field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{field.formatInfo.labelPosition == 'right' and 'text-end' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+            <div t-if="field.formatInfo.labelPosition !== 'none' and field.formatInfo.labelPosition !== 'top'" class="row s_col_no_resize s_col_no_bgcolor">
+                <label t-attf-class="#{!field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{field.formatInfo.labelPosition === 'right' and 'text-end' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
                      <t t-call="website.form_label_content"/>
                 </label>
                 <div class="col-sm">
@@ -41,7 +41,7 @@
                 </div>
             </div>
             <t t-else="">
-                <label t-attf-class="s_website_form_label #{field.formatInfo.labelPosition == 'none' and 'd-none' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+                <label t-attf-class="s_website_form_label #{field.formatInfo.labelPosition === 'none' and 'd-none' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
                      <t t-call="website.form_label_content"/>
                 </label>
                 <t t-out="0"/>
@@ -276,11 +276,11 @@
     <!-- Many2One Field -->
     <t t-name="website.form_field_many2one">
         <!-- Binary one2many -->
-        <t t-if="field.relation == 'ir.attachment'">
+        <t t-if="field.relation === 'ir.attachment'">
             <t t-call="website.form_field_binary"/>
         </t>
         <!-- Generic one2many -->
-        <t t-if="field.relation != 'ir.attachment'">
+        <t t-if="field.relation !== 'ir.attachment'">
             <t t-call="website.form_field">
                 <select class="form-select s_website_form_input" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None" t-att-id="field.id">
                     <t t-foreach="field.records" t-as="record" t-key="record_index">
@@ -294,15 +294,15 @@
     <!-- One2Many Field -->
     <t t-name="website.form_field_one2many">
         <!-- Binary one2many -->
-        <t t-if="field.relation == 'ir.attachment'">
+        <t t-if="field.relation === 'ir.attachment'">
             <t t-call="website.form_field_binary">
                 <t t-set="multiple" t-value="1"/>
             </t>
         </t>
         <!-- Generic one2many -->
-        <t t-if="field.relation != 'ir.attachment'">
+        <t t-if="field.relation !== 'ir.attachment'">
             <t t-call="website.form_field">
-                <t t-if="!field.records || field.records.length == 0">
+                <t t-if="!field.records || field.records.length === 0">
                     <input
                         class="form-control s_website_form_input"
                         t-att-name="field.name"
@@ -312,11 +312,13 @@
                         disabled=""
                     />
                 </t>
-                <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
-                    <t t-foreach="field.records" t-as="record" t-key="record_index">
-                        <t t-call="website.form_checkbox"/>
-                    </t>
-                </div>
+                <t t-else="">
+	                <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
+	                    <t t-foreach="field.records" t-as="record" t-key="record_index">
+	                        <t t-call="website.form_checkbox"/>
+	                    </t>
+	                </div>
+                </t>
             </t>
         </t>
     </t>

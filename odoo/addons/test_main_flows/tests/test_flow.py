@@ -190,7 +190,6 @@ class TestUi(BaseTestUi):
         with mute_logger("odoo.http"):
             self.start_tour(f"/odoo/action-{act_window.id}?debug=assets", "test_company_switch_access_error", login="admin", cookies={"cids": current_companies})
 
-
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUiMobile(BaseTestUi):
 

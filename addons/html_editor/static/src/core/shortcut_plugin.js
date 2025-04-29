@@ -28,7 +28,7 @@ export class ShortCutPlugin extends Plugin {
             throw new Error("ShorcutPlugin needs hotkey service to properly work");
         }
         if (document !== this.document) {
-            hotkeyService.registerIframe({ contentWindow: this.document.defaultView });
+            hotkeyService.registerIframe({ contentWindow: this.window });
         }
         for (const shortcut of this.getResource("shortcuts")) {
             const command = this.dependencies.userCommand.getCommand(shortcut.commandId);
