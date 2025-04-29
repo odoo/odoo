@@ -72,6 +72,7 @@
             "point_of_sale/static/src/app/generic_components/**/*",
             "point_of_sale/static/src/css/pos_receipts.css",
             "point_of_sale/static/src/app/screens/receipt_screen/receipt/**/*",
+            "point_of_sale/static/src/app/store/pos_hook.js",
             "pos_self_order/static/src/overrides/components/receipt_header/*",
             "point_of_sale/static/src/app/printer/base_printer.js",
             "point_of_sale/static/src/app/printer/printer_service.js",
