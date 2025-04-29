@@ -146,9 +146,3 @@ export class MegaMenuDropdown extends Interaction {
 registry
     .category("public.interactions")
     .add("website.mega_menu_dropdown", MegaMenuDropdown);
-
-registry
-    .category("public.interactions.edit")
-    .add("website.mega_menu_dropdown", {
-        Interaction: MegaMenuDropdown,
-    });

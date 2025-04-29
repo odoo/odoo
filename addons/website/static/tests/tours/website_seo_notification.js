@@ -15,12 +15,12 @@ registerWebsitePreviewTour(
         // Part one checks that the SEO notification is displayed when the page title is not set.
         {
             content: "Open new page menu",
-            trigger: ".o_menu_systray .o_new_content_container > a",
+            trigger: ".o_menu_systray .o_new_content_container > button",
             run: "click",
         },
         {
             content: "Click on new page",
-            trigger: ".o_new_content_element a",
+            trigger: ".o_new_content_element button",
             run: "click",
         },
         {
@@ -73,6 +73,10 @@ registerWebsitePreviewTour(
             content: "Click on My Account",
             trigger: ":iframe #o_main_nav .js_usermenu a.dropdown-item.ps-3:contains('My Account')",
             run: "click",
+        },
+        {
+            content: "Let the page get loaded",
+            trigger: ":iframe .o_portal",
         },
         ...clickOnEditAndWaitEditMode(),
         ...insertSnippet({

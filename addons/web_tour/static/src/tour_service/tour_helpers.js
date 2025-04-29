@@ -77,6 +77,20 @@ export class TourHelpers {
     }
 
     /**
+     * Performs a pointerUp sequence on the given **{@link Selector}**
+     * @description Let's see more informations about pointerUp sequence here: {@link hoot.pointerUp}
+     * @param {Selector} selector
+     * @example
+     *  run: "pointerUp", // pointerUp on the action element
+     * @example
+     *  run: "pointerUp .o_rows:first", // pointerUp on the selector
+     */
+    async pointerup(selector) {
+        const element = this._get_action_element(selector);
+        await hoot.pointerUp(element);
+    }
+
+    /**
      * Starts a drag sequence on the active element (anchor) and drop it on the given **{@link Selector}**.
      * @param {Selector} selector
      * @param {hoot.PointerOptions} options

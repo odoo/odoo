@@ -3,6 +3,7 @@
 import odoo.tests
 from odoo.addons.website.tools import create_image_attachment
 
+
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteGridLayout(odoo.tests.HttpCase):
 

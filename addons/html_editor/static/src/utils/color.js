@@ -70,6 +70,7 @@ export function isColorCombinationName(name) {
 
 export const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
 export const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/;
+export const COLOR_COMBINATION_CLASSES_REGEX = /\bo_cc[0-9]+\b/g;
 
 /**
  * Returns true if the given element has a visible color (fore- or

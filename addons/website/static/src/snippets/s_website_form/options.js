@@ -1,4 +1,3 @@
-import FormEditorRegistry from "@website/js/form_editor_registry";
 import options from "@web_editor/js/editor/snippets.options";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import weUtils from "@web_editor/js/common/utils";
@@ -6,6 +5,7 @@ import "@website/js/editor/snippets.options";
 import { unique } from "@web/core/utils/arrays";
 import { redirect } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from '@web/core/registry';
 import { memoize } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 import { escape } from "@web/core/utils/strings";
@@ -736,7 +736,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
 
         // Add Action related options
         const formKey = this.activeForm.website_form_key;
-        const formInfo = FormEditorRegistry.get(formKey, null);
+        const formInfo = registry.category("website.form_editor_actions").get(formKey, null);
         if (!formInfo || !formInfo.fields) {
             return;
         }
@@ -870,17 +870,18 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      */
     _applyFormModel: async function (modelId) {
         let oldFormInfo;
+        const actionsRegistry = registry.category("website.form_editor_actions");
         if (modelId) {
             const oldFormKey = this.activeForm.website_form_key;
             if (oldFormKey) {
-                oldFormInfo = FormEditorRegistry.get(oldFormKey, null);
+                oldFormInfo = actionsRegistry.get(oldFormKey, null);
             }
             this.$target.find('.s_website_form_field').remove();
             this.activeForm = this.models.find(model => model.id === modelId);
             currentActionName = this.activeForm.website_form_label;
         }
         const formKey = this.activeForm.website_form_key;
-        const formInfo = FormEditorRegistry.get(formKey, null);
+        const formInfo = actionsRegistry.get(formKey, null);
         // Success page
         if (!this.$target[0].dataset.successMode) {
             this.$target[0].dataset.successMode = 'redirect';

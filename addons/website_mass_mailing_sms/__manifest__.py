@@ -18,4 +18,9 @@ your visitors to subscribe with their phone number.
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'assets': {
+        'html_builder.assets': [
+            'website_mass_mailing_sms/static/src/website_builder/**/*',
+        ],
+    },
 }

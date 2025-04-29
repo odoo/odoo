@@ -25,6 +25,9 @@
         'website.assets_edit_frontend': [
             'website_mail_group/static/src/**/*.edit.js',
         ],
+        'html_builder.assets': [
+            'website_mail_group/static/src/website_builder/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

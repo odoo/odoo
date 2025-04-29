@@ -27,9 +27,10 @@ const ANONYMOUS_PROCESS_ID = 'ANONYMOUS_PROCESS_ID';
 
 export const websiteService = {
     dependencies: ['orm', 'action', 'hotkey'],
-    async start(env, { orm, action, hotkey }) {
+    start(env, { orm, action, hotkey }) {
         let websites = [];
         let currentWebsiteId;
+        let currentWebsiteIdList = [];
         let currentMetadata = {};
         let fullscreen;
         let pageDocument;
@@ -80,13 +81,34 @@ export const websiteService = {
             Component: WebsiteLoader,
             props: { bus },
         });
+
+        function addWebsiteId(id) {
+            if (!currentWebsiteIdList.length) {
+                currentWebsiteId = id;
+            }
+            currentWebsiteIdList.push(id);
+        }
+
+        function removeWebsiteId() {
+            currentWebsiteIdList.shift();
+            if (currentWebsiteIdList.length) {
+                currentWebsiteId = currentWebsiteIdList[0];
+            } else {
+                currentWebsiteId = null;
+            }
+        }
+
         return {
             set currentWebsiteId(id) {
+                if (id === null) {
+                    removeWebsiteId();
+                    return;
+                }
                 if (id && id !== lastWebsiteId) {
                     invalidateSnippetCache = true;
                     lastWebsiteId = id;
                 }
-                currentWebsiteId = id;
+                addWebsiteId(id);
                 websiteSystrayRegistry.trigger('EDIT-WEBSITE');
             },
             /**
@@ -101,6 +123,9 @@ export const websiteService = {
                     currentWebsite.metadata = currentMetadata;
                 }
                 return currentWebsite;
+            },
+            get currentWebsiteId(){
+                return currentWebsiteId;
             },
             get websites() {
                 return websites;
@@ -220,13 +245,13 @@ export const websiteService = {
                 invalidateSnippetCache = value;
             },
 
-            goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
+            goToWebsite({ websiteId, path, edition, translation, lang, htmlBuilder=false } = {}) {
                 this.websiteRootInstance = undefined;
                 if (lang) {
                     invalidateSnippetCache = true;
                     path = `/website/lang/${encodeURIComponent(lang)}?r=${encodeURIComponent(path)}`;
                 }
-                action.doAction('website.website_preview', {
+                action.doAction("website.website_preview", {
                     clearBreadcrumbs: true,
                     additionalContext: {
                         params: {
@@ -247,7 +272,7 @@ export const websiteService = {
                 ]);
             },
             async fetchWebsites() {
-                websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name']))];
+                websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name', 'language_ids']))];
             },
             async loadWysiwyg() {
                 await ensureJQuery();

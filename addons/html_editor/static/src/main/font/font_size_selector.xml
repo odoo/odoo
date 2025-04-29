@@ -5,11 +5,13 @@
                 <iframe t-ref="iframeContent" style="width: 4ch; height:100%;"/>
             </button>
             <t t-set-slot="content">
-                <t t-foreach="items" t-as="item" t-key="item_index">
-                    <DropdownItem onSelected="() => this.onSelected(item)" t-on-pointerdown.prevent="() => {}">
-                        <t t-esc="item.name"/>
-                    </DropdownItem>
-                </t>
+                <div data-prevent-closing-overlay="true">
+                    <t t-foreach="items" t-as="item" t-key="item_index">
+                        <DropdownItem onSelected="() => this.onSelected(item)" t-on-pointerdown.prevent="() => {}">
+                            <t t-esc="item.name"/>
+                        </DropdownItem>
+                    </t>
+                </div>
             </t>
         </Dropdown>
     </t>

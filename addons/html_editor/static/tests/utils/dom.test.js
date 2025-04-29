@@ -305,4 +305,11 @@ describe("fillEmpty", () => {
         fillEmpty(div);
         expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
     });
+    test("should not fill a block containing a canvas", async () => {
+        const { el } = await setupEditor("<div><canvas></canvas></div>");
+        expect(el.innerHTML).toBe('<div class="o-paragraph"><canvas></canvas></div>');
+        const div = el.firstChild;
+        fillEmpty(div);
+        expect(el.innerHTML).toBe('<div class="o-paragraph"><canvas></canvas></div>');
+    });
 });

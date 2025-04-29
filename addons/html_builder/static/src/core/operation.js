@@ -1,0 +1,135 @@
+import { Mutex } from "@web/core/utils/concurrency";
+
+// TODO when making apply async:
+// - check `isDestroyed` instead of `this.editableDocument.defaultView`
+
+/**
+ * @typedef OperationParams
+ * @property {Function} load an async function for which the mutex should wait
+ *   before executing the main function
+ * @property {Boolean} cancellable tells if the operation is cancellable (if it
+ *   is a preview for example)
+ * @property {Function} cancelPrevious the function to run when cancelling
+ * @property {Number} [cancelTime=50] TODO
+ * @property {Boolean} [withLoadingEffect=true] specifes if a spinner should
+ *   appear on the editable during the operation
+ * @property {Number} [loadingEffectDelay=500] the delay after which the
+ *   spinner should appear
+ */
+
+export class Operation {
+    constructor(editableDocument = document) {
+        this.mutex = new Mutex();
+        this.editableDocument = editableDocument;
+    }
+
+    /**
+     * Allows to execute a function in the mutex.
+     * See `OperationParams.load` to make it async.
+     *
+     * @param {Function} fn the function
+     * @param {OperationParams} params
+     * @returns {Promise<void>}
+     */
+    next(
+        fn,
+        {
+            load = () => Promise.resolve(),
+            cancellable,
+            cancelPrevious,
+            cancelTime = 50,
+            withLoadingEffect = true,
+            loadingEffectDelay = 500,
+        } = {}
+    ) {
+        this.cancelPrevious?.();
+        let isCancel = false;
+        let cancelResolve;
+        this.cancelPrevious =
+            cancellable &&
+            (() => {
+                this.cancelPrevious = null;
+                isCancel = true;
+                cancelPrevious?.();
+                cancelResolve?.();
+            });
+
+        const cancelTimePromise = new Promise((resolve) => setTimeout(resolve, cancelTime));
+        const cancelLoadPromise = new Promise((resolve) => {
+            cancelResolve = resolve;
+        });
+
+        return this.mutex.exec(async () => {
+            if (isCancel) {
+                return;
+            }
+
+            const removeLoadingElement = this.addLoadingElement(
+                withLoadingEffect,
+                loadingEffectDelay
+            );
+            const applyOperation = async () => {
+                const loadResult = await load();
+
+                if (isCancel) {
+                    return;
+                }
+                this.previousLoadResolve = null;
+
+                // Cancel the operation if the iframe has been reloaded
+                // and does not have a browsing context anymore.
+                if (!this.editableDocument.defaultView) {
+                    return;
+                }
+
+                await fn?.(loadResult);
+            };
+
+            try {
+                await Promise.race([
+                    Promise.all([cancelLoadPromise, cancelTimePromise]),
+                    applyOperation(),
+                ]);
+            } finally {
+                removeLoadingElement();
+            }
+        });
+    }
+
+    /**
+     * Adds a transparent loading screen above the editable to prevent modifying
+     * its content during an ongoing operation. Returns a callback to remove
+     * the loading screen.
+     *
+     * @param {Boolean} withLoadingEffect if true, adds a loading effect
+     * @param {Number} loadingEffectDelay delay after which the loading effect
+     *   should appear
+     * @returns {Function}
+     */
+    addLoadingElement(withLoadingEffect, loadingEffectDelay) {
+        const loadingScreenEl = document.createElement("div");
+        loadingScreenEl.classList.add(
+            ...["o_loading_screen", "d-flex", "justify-content-center", "align-items-center"]
+        );
+        const spinnerEl = document.createElement("img");
+        spinnerEl.setAttribute("src", "/web/static/img/spin.svg");
+        loadingScreenEl.appendChild(spinnerEl);
+        this.editableDocument.body.appendChild(loadingScreenEl);
+
+        // If specified, add a loading effect on that element after a delay.
+        let loadingTimeout;
+        if (withLoadingEffect) {
+            loadingTimeout = setTimeout(
+                () => loadingScreenEl.classList.add("o_we_ui_loading"),
+                loadingEffectDelay
+            );
+        }
+
+        return () => {
+            if (loadingTimeout) {
+                clearTimeout(loadingTimeout);
+            }
+            loadingScreenEl.remove();
+        };
+    }
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_event_track.eventTrackPageOptionTopbar">
+    <BuilderRow label.translate="Wishlists">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_event_track.agenda_topbar_wishlist']}"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website_event_track.EventTrackPageOption">
+    <BuilderContext action="'websiteConfig'">
+        <BuilderRow label.translate="Wishlists">
+            <BuilderCheckbox actionParam="{views: ['website_event_track.session_topbar_wishlist']}" />
+        </BuilderRow>
+        <BuilderRow label.translate="Filter by Tags">
+            <BuilderCheckbox actionParam="{views: ['website_event_track.session_topbar_tag']}" />
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

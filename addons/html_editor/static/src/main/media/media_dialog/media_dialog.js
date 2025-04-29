@@ -309,9 +309,9 @@ export class MediaDialog extends Component {
         if (saveSelectedMedia) {
             const elements = await this.renderMedia(selectedMedia);
             if (this.props.multiImages) {
-                this.props.save(elements);
+                await this.props.save(elements, selectedMedia, this.state.activeTab);
             } else {
-                this.props.save(elements[0]);
+                await this.props.save(elements[0], selectedMedia, this.state.activeTab);
             }
         }
         this.props.close();

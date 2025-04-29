@@ -7,6 +7,24 @@ import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
 
 export class MediaVideo extends Interaction {
     static selector = ".media_iframe_video";
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _popup: () => this.el.closest(".s_popup"),
+    };
+    dynamicContent = {
+        _popup: {
+            "t-on-shown.bs.modal": () => {
+                // TODO still oeExpression to remove someday
+                this.services.website_cookies.manageIframeSrc(
+                    this.el.querySelector("iframe"),
+                    this.el.dataset.oeExpression || this.el.dataset.src
+                );
+            },
+            "t-on-hide.bs.modal": () => {
+                this.el.querySelector("iframe").src = "";
+            },
+        },
+    };
 
     setup() {
         if (this.el.dataset.needCookiesApproval) {

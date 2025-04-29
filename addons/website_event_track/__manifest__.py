@@ -56,7 +56,10 @@
         ],
         'web.assets_tests': [
             'website_event_track/static/tests/tours/*.js',
-        ]
+        ],
+        'html_builder.assets': [
+            'website_event_track/static/src/website_builder/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

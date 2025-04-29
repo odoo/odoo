@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ImageFormat">
+    <BuilderRow label.translate="Format" level="this.props.level">
+        <BuilderSelect>
+            <t t-foreach="state.formats" t-as="format" t-key="format.id">
+                <BuilderSelectItem className="'o_we_badge_at_end'" action="'setImageFormat'" actionParam="format">
+                    <t t-esc="format.label"/>
+                    <span class="badge rounded-pill text-bg-dark" t-out="format.mimetype.split('/')[1]"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Quality" t-if="state.showQuality" level="this.props.level">
+        <BuilderRange
+            action="'setImageQuality'"
+            min="0"
+            max="100" />
+    </BuilderRow>
+</t>
+
+
+
+</templates>

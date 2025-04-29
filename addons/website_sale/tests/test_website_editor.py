@@ -253,7 +253,7 @@ class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
             'name': 'Test Product Outside Category',
             'website_published': True,
         })
-        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'category_page_and_products_snippet_edition', login="website_user")
+        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'category_page_and_products_snippet_edition', login="admin")
         self.start_tour('/shop', 'category_page_and_products_snippet_use', login=None)
 
     def test_website_sale_restricted_editor_ui(self):
