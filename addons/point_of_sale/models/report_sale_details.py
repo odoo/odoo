@@ -172,7 +172,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                         elif payment['id'] in account_payments.mapped('pos_payment_method_id.id'):
                             account_payment = account_payments.filtered(lambda p: p.pos_payment_method_id.id == payment['id'])
                             payment['final_count'] = payment['total']
-                            payment['money_counted'] = sum(account_payment.mapped('amount'))
+                            payment['money_counted'] = sum(account_payment.mapped('amount_signed'))
                             payment['money_difference'] = payment['money_counted'] - payment['final_count']
                             payment['cash_moves'] = []
                             if payment['money_difference'] > 0:
