@@ -13,6 +13,7 @@ import threading
 import uuid
 
 from lxml import etree, html
+from urllib.parse import urlparse
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
@@ -112,6 +113,11 @@ class Website(models.Model):
     name = fields.Char('Website Name', required=True)
     sequence = fields.Integer(default=10)
     domain = fields.Char('Website Domain', help='E.g. https://www.mydomain.com')
+    domain_punycode = fields.Char(
+        string="Punycode Domain",
+        compute="_compute_domain_punycode",
+        store=False,
+        readonly=True)
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company, required=True)
     language_ids = fields.Many2many(
         'res.lang', 'website_lang_rel', 'website_id', 'lang_id', string="Languages",
@@ -216,6 +222,15 @@ class Website(models.Model):
         language_ids = self.language_ids._origin
         if language_ids and self.default_lang_id not in language_ids:
             self.default_lang_id = language_ids[0]
+
+    @api.depends('domain')
+    def _compute_domain_punycode(self):
+        """Compute the punycode (ASCII-safe) version of the domain."""
+        for website in self:
+            website_domain = website.domain or ''
+            hostname = urlparse(website_domain).hostname or ''
+            punycode_hostname = hostname.encode('idna').decode('ascii')
+            website.domain_punycode = website_domain.replace(hostname, punycode_hostname)
 
     @api.depends('social_default_image')
     def _compute_has_social_default_image(self):
@@ -1413,13 +1428,23 @@ class Website(models.Model):
         def _filter_domain(website, domain_name, ignore_port=False):
             """Ignore `scheme` from the `domain`, just match the `netloc` which
             is host:port in the version of `url_parse` we use."""
-            website_domain = get_base_domain(website.domain)
+            website_domain = get_base_domain(website.domain_punycode)
             if ignore_port:
                 website_domain = _remove_port(website_domain)
                 domain_name = _remove_port(domain_name)
             return website_domain.lower() == (domain_name or '').lower()
 
-        found_websites = self.search([('domain', 'ilike', _remove_port(domain_name))])
+        # We need to test two possibilities unicode or punycode (safety guard)
+        domain_name = domain_name.encode("idna").decode("ascii")
+        domain_name_idna = domain_name.encode("ascii").decode("idna")
+
+        # TODO: in master, store the computed field domain_punycode to avoid
+        #       the need to search on domain_name and domain_name_idna.
+        found_websites = self.search([
+            '|',
+            ('domain', 'ilike', _remove_port(domain_name)),
+            ('domain', 'ilike', _remove_port(domain_name_idna)),
+        ])
         # Filter for the exact domain (to filter out potential subdomains) due
         # to the use of ilike.
         # `domain_name` could be an empty string, in that case multiple website
