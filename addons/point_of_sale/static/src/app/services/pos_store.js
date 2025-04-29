@@ -1292,14 +1292,17 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     // There for override
-    async preSyncAllOrders(orders) {}
+    async preSyncAllOrders(orders) {
+        return orders;
+    }
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
-        let orders = options.orders || [...orderToCreate, ...orderToUpdate];
+        let availableOrders = options.orders || [...orderToCreate, ...orderToUpdate];
+        let orders = [];
 
         // Filter out orders that are already being synced
-        orders = orders.filter(
+        availableOrders = availableOrders.filter(
             (order) => !this.syncingOrders.has(order.id) && (order.isDirty() || options.force)
         );
 
@@ -1312,8 +1315,8 @@ export class PosStore extends WithLazyGetterTrap {
                 await this.deleteOrders([], orderIdsToDelete);
             }
 
-            const context = this.getSyncAllOrdersContext(orders, options);
-            await this.preSyncAllOrders(orders);
+            const context = this.getSyncAllOrdersContext(availableOrders, options);
+            orders = await this.preSyncAllOrders(availableOrders);
 
             if (orders.length === 0) {
                 return;

@@ -693,7 +693,7 @@ patch(PosStore.prototype, {
         };
         document.addEventListener("click", onClickWhileTransfer);
     },
-    prepareOrderTransfer(order, destinationTable) {
+    async prepareOrderTransfer(order, destinationTable) {
         const originalTable = order.table_id;
         this.alert.dismiss();
 
@@ -720,7 +720,7 @@ patch(PosStore.prototype, {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
         if (destinationTable) {
-            if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
+            if (!(await this.prepareOrderTransfer(sourceOrder, destinationTable))) {
                 return;
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
@@ -733,7 +733,7 @@ patch(PosStore.prototype, {
     async mergeTableOrders(orderUuid, destinationTable) {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
-        if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
+        if (!(await this.prepareOrderTransfer(sourceOrder, destinationTable))) {
             return;
         }
 
