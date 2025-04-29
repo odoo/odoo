@@ -19,7 +19,9 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='signature']" position="after">
-                    <field name="calendar_default_privacy" readonly="0" string="Calendar Default Privacy" invisible="share"/>
+                    <group string="Calendar" name="calendar">
+                        <field name="calendar_default_privacy" readonly="0" string="Calendar Default Privacy" invisible="share"/>
+                    </group>
                 </xpath>
             </field>
         </record>
