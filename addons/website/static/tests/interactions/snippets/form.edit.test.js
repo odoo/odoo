@@ -3,6 +3,8 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { switchToEditMode } from "../../helpers";
 
+setupInteractionWhiteList("website.form");
+
 describe.current.tags("interaction_dev");
 
 const formXml = `
@@ -57,7 +59,6 @@ function setupUser() {
 }
 
 test("form formats date in edit mode", async () => {
-    setupInteractionWhiteList("website.form_date_formatter");
     const { core } = await startInteractions(formXml, { waitForStart: true, editMode: true });
     await switchToEditMode(core);
     expect(core.interactions).toHaveLength(1);
@@ -67,7 +68,6 @@ test("form formats date in edit mode", async () => {
 });
 
 test("form is NOT prefilled in edit mode", async () => {
-    setupInteractionWhiteList("website.form_date_formatter");
     setupUser();
     const { core } = await startInteractions(formXml, { waitForStart: true, editMode: true });
     await switchToEditMode(core);
@@ -76,7 +76,6 @@ test("form is NOT prefilled in edit mode", async () => {
 });
 
 test("form is NOT prefilled in translate mode", async () => {
-    setupInteractionWhiteList("website.form");
     setupUser();
     const { core } = await startInteractions(formXml, { waitForStart: true, translateMode: true });
     expect(core.interactions).toHaveLength(1);

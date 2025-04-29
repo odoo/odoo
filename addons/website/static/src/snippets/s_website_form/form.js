@@ -175,8 +175,19 @@ export class Form extends Interaction {
         // All 'hidden if' fields start with d-none
         this.el.querySelectorAll(".s_website_form_field_hidden_if:not(.d-none)").forEach(el => el.classList.add("d-none"));
 
+        // Prevent "data-for" values removal on destroy, they are still used
+        // in edit mode to keep the form linked to its predefined server
+        // values (e.g., the default `job_id` value on the application form
+        // for a given job).
+        const dataForValues = wUtils.getParsedDataFor(this.el.id, document) || {};
+        const initialValuesToReset = new Map(
+            [...this.initialValues.entries()].filter(
+                ([input]) => !dataForValues[input.name] || input.name === "email_to"
+            )
+        );
+
         // Reset the initial default values.
-        for (const [fieldEl, initialValue] of this.initialValues.entries()) {
+        for (const [fieldEl, initialValue] of initialValuesToReset.entries()) {
             if (initialValue) {
                 fieldEl.setAttribute("value", initialValue);
             } else {
