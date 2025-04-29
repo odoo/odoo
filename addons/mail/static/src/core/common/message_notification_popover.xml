@@ -8,7 +8,7 @@
             <div t-foreach="otherNotifications" t-as="notification" t-key="notification.id">
                 <i class="me-2 fa-fw" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.persona">
-                    <t t-esc="notification.persona.name"/>
+                    <t t-esc="props.message.getPersonaName(notification.persona)"/>
                     <t t-if="notification.persona.email and !notification.isFailure"> (<t t-out="notification.persona.email"/>)</t>
                 </span>
                 <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>
@@ -21,7 +21,7 @@
             <div t-foreach="followerNotifications" t-as="notification" t-key="notification.id">
                 <i class="me-2 fa-fw" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.persona">
-                    <t t-esc="notification.persona.name"/>
+                    <t t-esc="props.message.getPersonaName(notification.persona)"/>
                     <t t-if="notification.persona.email and !notification.isFailure"> (<t t-out="notification.persona.email"/>)</t>
                 </span>
                 <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>

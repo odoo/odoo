@@ -341,7 +341,7 @@ export class Message extends Record {
 
     get authorName() {
         if (this.author) {
-            return this.author.name;
+            return this.getPersonaName(this.author);
         }
         return this.email_from;
     }
@@ -532,6 +532,14 @@ export class Message extends Record {
         if (threadAsInEdition && threadAsInEdition.eq(thread)) {
             threadAsInEdition.composer.autofocus++;
         }
+    }
+
+    /**
+     * @param {import("models").Persona} persona
+     * @returns {string}
+     */
+    getPersonaName(persona) {
+        return this.thread?.getPersonaName(persona) || persona.displayName;
     }
 
     async react(content) {
