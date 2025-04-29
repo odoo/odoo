@@ -16,23 +16,15 @@
                 </div>
             </button>
         </xpath>
-        <xpath expr="//group[@name='main_group']/group[2]" position="inside">
+        <group name="inventory_group" position="inside">
             <field name="company_currency_id" invisible="1"/>
-            <group invisible="not lot_valuated">
-                <label for="total_value"/>
-                <div class="o_row">
-                    <field name="total_value" widget='monetary' class="oe_inline" options="{'currency_field': 'company_currency_id'}"/>
-                </div>
-                <label for="avg_cost"/>
-                <div class="o_row">
-                    <field name="avg_cost" widget='monetary' class="oe_inline" options="{'currency_field': 'company_currency_id'}"/>
-                </div>
-                <label for="standard_price"/>
-                <div class="o_row">
-                    <field name="standard_price" widget='monetary' class="oe_inline" options="{'currency_field': 'company_currency_id'}"/>
-                </div>
-            </group>
-            </xpath>
+            <field name="total_value" widget="monetary" invisible="not lot_valuated"
+                   options="{'currency_field': 'company_currency_id'}"/>
+            <field name="avg_cost" widget="monetary" invisible="not lot_valuated"
+                   options="{'currency_field': 'company_currency_id'}"/>
+            <field name="standard_price" widget="monetary" invisible="not lot_valuated"
+                   options="{'currency_field': 'company_currency_id'}"/>
+        </group>
         </field>
         </record>
         </data>
