@@ -17,20 +17,6 @@
                     </div>
                 </button>
             </xpath>
-            <xpath expr="//group[@name='main_group']" position="after">
-                <group>
-                    <field name="purchase_order_ids" widget="many2many"
-                           readonly="True"
-                           invisible="not purchase_order_ids or display_complete">
-                        <list>
-                            <field name="name"/>
-                            <field name="partner_id" readonly="state in ['cancel', 'purchase']"/>
-                            <field name="date_order" readonly="state in ['cancel', 'purchase']"/>
-                            <field name="state" column_invisible="True"/>
-                        </list>
-                    </field>
-                </group>
-            </xpath>
         </field>
     </record>
 </odoo>
