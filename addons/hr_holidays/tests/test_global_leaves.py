@@ -198,7 +198,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'state': 'confirm',
             'date_from': date(2024, 12, 1),
             'date_to': date(2024, 12, 30),
-        })
+        }).action_approve()
 
         partially_covered_leave = self.env['hr.leave'].create({
             'name': 'Holiday 1 week',
