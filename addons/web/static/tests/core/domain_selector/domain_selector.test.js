@@ -5,23 +5,23 @@ import { Component, useState, xml } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
-    Partner,
-    Product,
     Country,
+    Partner,
+    Player,
+    Product,
     Stage,
     Team,
-    Player,
-    addNewRule,
     clearNotSupported,
-    clickOnButtonAddBranch,
-    clickOnButtonAddNewRule,
     clickOnButtonDeleteNode,
+    clickOnNewFilter,
+    clickOnNewGroup,
     editValue,
     getConditionText,
     getCurrentOperator,
     getCurrentPath,
     getCurrentValue,
     getOperatorOptions,
+    getTreeEditorContent,
     getValueOptions,
     isNotSupportedOperator,
     isNotSupportedPath,
@@ -30,6 +30,7 @@ import {
     selectOperator,
     selectValue,
     toggleArchive,
+    toggleConnector,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
@@ -89,13 +90,7 @@ test("creating a domain from scratch", async () => {
         isDebugMode: true,
     });
 
-    // As we gave an empty domain, there should be a visible button to add
-    // the first domain part
-    expect(SELECTORS.addNewRule).toHaveCount(1);
-
-    // Clicking on that button should add a visible field selector in the
-    // component so that the user can change the field chain
-    await addNewRule();
+    await clickOnNewFilter();
     expect(".o_model_field_selector").toHaveCount(1);
 
     // Focusing the field selector input should open a field selector popover
@@ -118,29 +113,36 @@ test("creating a domain from scratch", async () => {
         ".o_model_field_selector_popover .o_model_field_selector_popover_item_name"
     ).click();
     expect(SELECTORS.debugArea).toHaveValue(`[("bar", "!=", False)]`);
+<<<<<<< HEAD
 
     // There should be a "+" button to add a domain part; clicking on it
     // should add the default "('id', '=', 1)" domain
     expect(SELECTORS.buttonAddNewRule).toHaveCount(1);
     await clickOnButtonAddNewRule();
+=======
+    expect(SELECTORS.newFilter).toHaveCount(1);
+
+    await clickOnNewFilter();
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
     expect(SELECTORS.debugArea).toHaveValue(`["&", ("bar", "!=", False), ("bar", "!=", False)]`);
 
-    // There should be two "Add branch" buttons to add a domain "branch"; clicking on
-    // the first one, should add this group with defaults "('id', '=', 1)"
-    // domains and the "|" operator
-    expect(SELECTORS.buttonAddBranch).toHaveCount(2);
-    await clickOnButtonAddBranch();
+    await clickOnNewGroup();
     expect(SELECTORS.debugArea).toHaveValue(
+<<<<<<< HEAD
         `["&", "&", ("bar", "!=", False), "|", ("id", "=", 1), ("id", "=", 1), ("bar", "!=", False)]`
+=======
+        `["&", "&", ("bar", "!=", False), ("bar", "!=", False), ("bar", "!=", False)]`
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
     );
+    expect(SELECTORS.deleteFilter).toHaveCount(3);
 
-    // There should be five buttons to remove domain part; clicking on
-    // the two last ones, should leave a domain with only the "bar" and
-    // "foo" fields, with the initial "&" operator
-    expect(SELECTORS.buttonDeleteNode).toHaveCount(5);
     await clickOnButtonDeleteNode(-1);
     await clickOnButtonDeleteNode(-1);
+<<<<<<< HEAD
     expect(SELECTORS.debugArea).toHaveValue(`["&", ("bar", "!=", False), ("id", "=", 1)]`);
+=======
+    expect(SELECTORS.debugArea).toHaveValue(`[("bar", "!=", False)]`);
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
 });
 
 test("building a domain with a datetime", async () => {
@@ -181,7 +183,7 @@ test("building a domain with an invalid path", async () => {
     expect(".o_model_field_selector_warning").toHaveCount(1);
     expect(".o_model_field_selector_warning").toHaveAttribute("title", "Invalid field chain");
     expect(getOperatorOptions()).toHaveLength(1);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("abc");
 
     await openModelFieldSelectorPopover();
@@ -200,12 +202,12 @@ test("building a domain with an invalid path (2)", async () => {
 
     expect(getCurrentPath()).toBe("bloup");
     expect(isNotSupportedPath()).toBe(true);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("abc");
 
     await clearNotSupported();
     expect(getCurrentPath()).toBe("Id");
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("1");
 });
 
@@ -224,12 +226,12 @@ test("building a domain with an invalid path (3)", async () => {
 
     expect(getCurrentPath()).toBe("bloup");
     expect(isNotSupportedPath()).toBe(true);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("abc");
 
     await clearNotSupported();
     expect(getCurrentPath()).toBe("User");
-    expect(getCurrentOperator()).toBe("is in");
+    expect(getCurrentOperator()).toBe("in");
     expect(getCurrentValue()).toBe("");
 });
 
@@ -251,7 +253,7 @@ test("building a domain with an invalid operator", async () => {
     expect(getCurrentPath()).toBe("Foo");
     expect(".o_model_field_selector_warning").toHaveCount(0);
     expect(getOperatorOptions()).toHaveLength(10);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("abc");
 });
 
@@ -279,13 +281,13 @@ test("building a domain with an expression in value", async () => {
     });
 
     expect(getCurrentPath()).toBe("Int");
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("id");
 
     await selectOperator("<");
 
     expect(getCurrentPath()).toBe("Int");
-    expect(getCurrentOperator()).toBe("is lower");
+    expect(getCurrentOperator()).toBe("lower");
     expect(getCurrentValue()).toBe("1");
 });
 
@@ -371,7 +373,7 @@ test("set [(1, '=', 1)] or [(0, '=', 1)] as domain with the debug textarea", asy
     });
     expect(SELECTORS.condition).toHaveCount(1);
     expect(getCurrentPath()).toBe("0");
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("1");
 });
 
@@ -399,13 +401,13 @@ test("selection field with operator change from 'set' to '='", async () => {
 
     await selectOperator("=");
     expect(getCurrentPath()).toBe("State");
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe(`ABC`);
 });
 
 test("show correct operator", async () => {
     await makeDomainSelector({ domain: `[['state', 'in', ['abc']]]` });
-    expect(getCurrentOperator()).toBe("is in");
+    expect(getCurrentOperator()).toBe("in");
 });
 
 test("multi selection", async () => {
@@ -449,7 +451,7 @@ test("multi selection", async () => {
 test("json field with operator change from 'equal' to 'ilike'", async () => {
     await makeDomainSelector({ domain: `[['json_field', '=', "hey"]]` });
     expect(getCurrentPath()).toBe(`Json Field`);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe(`hey`);
 
     await selectOperator("ilike");
@@ -545,12 +547,13 @@ test("reset domain", async () => {
     });
     expect(".o_domain_selector").toHaveText("This domain is not supported.\nReset domain");
     expect(SELECTORS.resetButton).toHaveCount(1);
-    expect(SELECTORS.addNewRule).toHaveCount(0);
+    expect(SELECTORS.newFilter).toHaveCount(0);
+    expect(SELECTORS.newGroup).toHaveCount(0);
 
     await contains(SELECTORS.resetButton).click();
-    expect(".o_domain_selector").toHaveText("Match all records\nNew Rule");
     expect(SELECTORS.resetButton).toHaveCount(0);
-    expect(SELECTORS.addNewRule).toHaveCount(1);
+    expect(SELECTORS.newFilter).toHaveCount(1);
+    expect(SELECTORS.newGroup).toHaveCount(1);
     expect.verifySteps(["[]"]);
 });
 
@@ -566,8 +569,8 @@ test("default condition depends on available fields", async () => {
             expect.step(domain);
         },
     });
-    expect(".o_domain_selector").toHaveText("Match all records\nNew Rule");
-    await addNewRule();
+    expect(".o_domain_selector").toHaveText("New filter\nNew group");
+    await clickOnNewFilter();
     expect.verifySteps(['[("user_id", "in", [])]']);
 });
 
@@ -601,7 +604,7 @@ test("debug input in model field selector popover", async () => {
     expect(getCurrentPath()).toBe("a");
     expect(".o_model_field_selector_warning").toHaveCount(1);
     expect(getOperatorOptions()).toHaveLength(1);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("1");
     expect(SELECTORS.debugArea).toHaveValue(`[("a", "=", 1)]`);
 });
@@ -617,7 +620,7 @@ test("between operator", async () => {
     });
 
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(getCurrentOperator()).toBe("is between");
+    expect(getCurrentOperator()).toBe("between");
     expect(".o_datetime_input").toHaveCount(2);
 
     await contains(".o_datetime_input:first").edit("2023-01-02 00:00:00");
@@ -637,8 +640,8 @@ test("between operator (2)", async () => {
         domain: `["&", "&", ("foo", "=", "abc"), ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 23:59:59")]`,
     });
     expect(SELECTORS.condition).toHaveCount(2);
-    expect(getCurrentOperator()).toBe("is equal");
-    expect(getCurrentOperator(1)).toBe("is between");
+    expect(getCurrentOperator()).toBe("equal");
+    expect(getCurrentOperator(1)).toBe("between");
     expect(".o_datetime_input").toHaveCount(2);
 });
 
@@ -648,8 +651,8 @@ test("between operator (3)", async () => {
         domain: `["&", "&", ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 23:59:59"), ("foo", "=", "abc")]`,
     });
     expect(SELECTORS.condition).toHaveCount(2);
-    expect(getCurrentOperator()).toBe("is between");
-    expect(getCurrentOperator(1)).toBe("is equal");
+    expect(getCurrentOperator()).toBe("between");
+    expect(getCurrentOperator(1)).toBe("equal");
     expect(".o_datetime_input").toHaveCount(2);
 });
 
@@ -659,8 +662,8 @@ test("between operator (4)", async () => {
         domain: `["&", ("datetime", ">=", "2023-01-01 00:00:00"), "&", ("datetime", "<=", "2023-01-10 00:00:00"), ("foo", "=", "abc")]`,
     });
     expect(SELECTORS.condition).toHaveCount(2);
-    expect(getCurrentOperator()).toBe("is between");
-    expect(getCurrentOperator(1)).toBe("is equal");
+    expect(getCurrentOperator()).toBe("between");
+    expect(getCurrentOperator(1)).toBe("equal");
     expect(".o_datetime_input").toHaveCount(2);
 });
 
@@ -671,7 +674,7 @@ test("between operator (5)", async () => {
         readonly: true,
     });
     expect(".o_domain_selector").toHaveText(
-        `Match\nany\nof the following rules:\nCreated on\nis between\n04/01/2023 00:00:00\nand\n04/30/2023 23:59:59\n0\nis equal\n1`
+        `Where\nCreated on\nbetween\n04/01/2023 00:00:00\nand\n04/30/2023 23:59:59\nOr\n0\nequal\n1`
     );
 });
 
@@ -685,7 +688,7 @@ test("expressions in between operator", async () => {
         },
     });
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(getCurrentOperator()).toBe("is between");
+    expect(getCurrentOperator()).toBe("between");
     expect(SELECTORS.valueEditor).toHaveCount(1);
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
     expect(SELECTORS.clearNotSupported).toHaveCount(1);
@@ -703,99 +706,99 @@ test("support of connector '!' (mode readonly)", async () => {
     const toTest = [
         {
             domain: `["!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc`,
+            result: `Where\nFoo\nnot equal\nabc`,
         },
         {
             domain: `["!", "!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc`,
+            result: `Where\nFoo\nequal\nabc`,
         },
         {
             domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc`,
+            result: `Where\nFoo\nnot equal\nabc`,
         },
         {
             domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Where\nFoo\nnot equal\nabc\nOr\nFoo\nnot equal\ndef`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Where\nFoo\nnot equal\nabc\nAnd\nFoo\nnot equal\ndef`,
         },
         {
             domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nnot equal\nabc\nAnd\nFoo\nequal\ndef`,
         },
         {
             domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nAnd\nFoo\nequal\ndef`,
         },
         {
             domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nAnd\nFoo\nnot equal\ndef`,
         },
         {
             domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nAnd\nFoo\nequal\ndef`,
         },
         {
             domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nnot equal\nabc\nOr\nFoo\nequal\ndef`,
         },
         {
             domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nOr\nFoo\nequal\ndef`,
         },
         {
             domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nOr\nFoo\nnot equal\ndef`,
         },
         {
             domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nOr\nFoo\nequal\ndef`,
         },
         {
             domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nany\nof:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where\nWhere\nFoo\nnot equal\nabc\nOr\nFoo\nnot equal\ndef\nAnd\nFoo\nequal\nghi`,
         },
         {
             domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where\nFoo\nnot equal\nabc\nAnd\nFoo\nnot equal\ndef\nAnd\nFoo\nequal\nghi`,
         },
         {
             domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where\nFoo\nnot equal\nabc\nOr\nFoo\nnot equal\ndef\nOr\nFoo\nequal\nghi`,
         },
         {
             domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nall\nof:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where\nWhere\nFoo\nnot equal\nabc\nAnd\nFoo\nnot equal\ndef\nOr\nFoo\nequal\nghi`,
         },
         {
             domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Where\nFoo\nnot equal\nabc\nOr\nFoo\nnot equal\ndef\nOr\nFoo\nnot equal\nghi`,
         },
         {
             domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Where\nFoo\nnot equal\nabc\nAnd\nFoo\nnot equal\ndef\nAnd\nFoo\nnot equal\nghi`,
         },
         {
             domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nall\nof:\nFoo\nis not equal\nabc\nFoo\nis equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Where\nWhere\nFoo\nnot equal\nabc\nAnd\nFoo\nequal\ndef\nOr\nFoo\nnot equal\nghi`,
         },
         {
             domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nany\nof:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Where\nWhere\nFoo\nnot equal\nabc\nOr\nFoo\nnot equal\ndef\nAnd\nFoo\nnot equal\nghi`,
         },
         {
             domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nall\nof:\nFoo\nis not equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Where\nFoo\nnot equal\nabc\nOr\nWhere\nFoo\nnot equal\ndef\nAnd\nFoo\nnot equal\nghi`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "!=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nany\nof:\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where\nFoo\nnot equal\nabc\nAnd\nWhere\nFoo\nnot equal\ndef\nOr\nFoo\nequal\nghi`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "!=", "def"), "!", ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nany\nof:\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where\nFoo\nnot equal\nabc\nAnd\nWhere\nFoo\nequal\ndef\nOr\nFoo\nequal\nghi`,
         },
     ];
 
@@ -821,99 +824,99 @@ test("support of connector '!' (debug mode)", async () => {
     const toTest = [
         {
             domain: `["!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc`,
+            result: `Where\nFoo\nnot equal\nabc`,
         },
         {
             domain: `["!", "!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc`,
+            result: `Where\nFoo\nequal\nabc`,
         },
         {
             domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc`,
+            result: `Where\nFoo\nnot equal\nabc`,
         },
         {
             domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nnot all\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where not\nFoo\nequal\nabc\nOr not\nFoo\nequal\ndef`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nnone\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where not\nFoo\nequal\nabc\nAnd not\nFoo\nequal\ndef`,
         },
         {
             domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nnot equal\nabc\nAnd\nFoo\nequal\ndef`,
         },
         {
             domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nAnd\nFoo\nequal\ndef`,
         },
         {
             domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nAnd\nFoo\nnot equal\ndef`,
         },
         {
             domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nAnd\nFoo\nequal\ndef`,
         },
         {
             domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nnot equal\nabc\nOr\nFoo\nequal\ndef`,
         },
         {
             domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nOr\nFoo\nequal\ndef`,
         },
         {
             domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nOr\nFoo\nnot equal\ndef`,
         },
         {
             domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Where\nFoo\nequal\nabc\nOr\nFoo\nequal\ndef`,
         },
         {
             domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nnot all\nof:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where\nWhere not\nFoo\nequal\nabc\nOr not\nFoo\nequal\ndef\nAnd\nFoo\nequal\nghi`,
         },
         {
             domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nnone\nof:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where\nWhere not\nFoo\nequal\nabc\nAnd not\nFoo\nequal\ndef\nAnd\nFoo\nequal\nghi`,
         },
         {
             domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nnot all\nof:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where\nWhere not\nFoo\nequal\nabc\nOr not\nFoo\nequal\ndef\nOr\nFoo\nequal\nghi`,
         },
         {
             domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nnone\nof:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where\nWhere not\nFoo\nequal\nabc\nAnd not\nFoo\nequal\ndef\nOr\nFoo\nequal\nghi`,
         },
         {
             domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnot all\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where not\nFoo\nequal\nabc\nOr not\nFoo\nequal\ndef\nOr not\nFoo\nequal\nghi`,
         },
         {
             domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnone\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where not\nFoo\nequal\nabc\nAnd not\nFoo\nequal\ndef\nAnd not\nFoo\nequal\nghi`,
         },
         {
             domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnot all\nof the following rules:\nany\nof:\nFoo\nis equal\nabc\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where not\nWhere\nFoo\nequal\nabc\nOr\nFoo\nnot equal\ndef\nOr not\nFoo\nequal\nghi`,
         },
         {
             domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnone\nof the following rules:\nall\nof:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where not\nWhere\nFoo\nequal\nabc\nAnd\nFoo\nequal\ndef\nAnd not\nFoo\nequal\nghi`,
         },
         {
             domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnot all\nof the following rules:\nFoo\nis equal\nabc\nany\nof:\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where not\nFoo\nequal\nabc\nOr not\nWhere\nFoo\nequal\ndef\nOr\nFoo\nequal\nghi`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnone\nof the following rules:\nFoo\nis equal\nabc\nall\nof:\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Where not\nFoo\nequal\nabc\nAnd not\nWhere\nFoo\nequal\ndef\nAnd\nFoo\nequal\nghi`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), "!", ("foo", "=", "ghi")]`,
-            result: `Match\nnone\nof the following rules:\nFoo\nis equal\nabc\nall\nof:\nFoo\nis equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Where not\nFoo\nequal\nabc\nAnd not\nWhere\nFoo\nequal\ndef\nAnd\nFoo\nnot equal\nghi`,
         },
     ];
 
@@ -994,7 +997,11 @@ test("support properties", async () => {
     expectedDomain = `[("properties.xpad_prop_1", "=", False)]`;
     await contains(".o_model_field_selector_popover_item[data-name='xpad_prop_1'] button").click();
     expect(getCurrentPath()).toBe("Properties > M2O");
+<<<<<<< HEAD
     expect(getOperatorOptions()).toEqual(["is equal", "is not equal", "set", "not set"]);
+=======
+    expect(getOperatorOptions()).toEqual(["equal", "not equal", "set", "not set"]);
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
 
     const toTests = [
         {
@@ -1005,18 +1012,28 @@ test("support properties", async () => {
         {
             name: "xphone_prop_2",
             domain: `[("properties.xphone_prop_2", "=", False)]`,
+<<<<<<< HEAD
             options: ["is equal", "is not equal", "set", "not set"],
+=======
+            options: ["equal", "not equal", "set", "not set"],
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
         },
         {
             name: "xphone_prop_3",
             domain: `[("properties.xphone_prop_3", "=", "")]`,
             options: [
-                "is equal",
-                "is not equal",
+                "equal",
+                "not equal",
                 "contains",
+<<<<<<< HEAD
                 "does not contain",
                 "is in",
                 "is not in",
+=======
+                "not contain",
+                "in",
+                "not in",
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
                 "set",
                 "not set",
                 "starts with",
@@ -1027,6 +1044,7 @@ test("support properties", async () => {
             name: "xphone_prop_4",
             domain: `[("properties.xphone_prop_4", "=", 1)]`,
             options: [
+<<<<<<< HEAD
                 "is equal",
                 "is not equal",
                 "is greater",
@@ -1037,6 +1055,17 @@ test("support properties", async () => {
                 "is not between",
                 "contains",
                 "does not contain",
+=======
+                "equal",
+                "not equal",
+                "greater",
+                "greater or equal",
+                "lower",
+                "lower or equal",
+                "between",
+                "contains",
+                "not contain",
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
                 "set",
                 "not set",
             ],
@@ -1045,6 +1074,7 @@ test("support properties", async () => {
             name: "xphone_prop_5",
             domain: `[("properties.xphone_prop_5", "=", context_today().strftime("%Y-%m-%d"))]`,
             options: [
+<<<<<<< HEAD
                 "today",
                 "not today",
                 "is equal",
@@ -1059,6 +1089,18 @@ test("support properties", async () => {
                 "not next",
                 "last",
                 "not last",
+=======
+                "equal",
+                "not equal",
+                "greater",
+                "greater or equal",
+                "lower",
+                "lower or equal",
+                "between",
+                "not between",
+                "within",
+                "not within",
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
                 "set",
                 "not set",
             ],
@@ -1066,12 +1108,20 @@ test("support properties", async () => {
         {
             name: "xphone_prop_6",
             domain: `[("properties.xphone_prop_6", "in", "")]`,
+<<<<<<< HEAD
             options: ["is in", "is not in", "set", "not set"],
+=======
+            options: ["in", "not in", "set", "not set"],
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
         },
         {
             name: "xphone_prop_7",
             domain: `[("properties.xphone_prop_7", "in", [])]`,
+<<<<<<< HEAD
             options: ["is in", "is not in", "set", "not set"],
+=======
+            options: ["in", "not in", "set", "not set"],
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
         },
     ];
 
@@ -1125,31 +1175,31 @@ test("support properties (mode readonly)", async () => {
         },
         {
             domain: `[("properties.xphone_prop_2", "=", "abc")]`,
-            result: "Properties ➔ Selection is equal ABC",
+            result: "Properties ➔ Selection equal ABC",
         },
         {
             domain: `[("properties.xphone_prop_3", "=", "def")]`,
-            result: "Properties ➔ Char is equal def",
+            result: "Properties ➔ Char equal def",
         },
         {
             domain: `[("properties.xphone_prop_4", "=", 1)]`,
-            result: "Properties ➔ Integer is equal 1",
+            result: "Properties ➔ Integer equal 1",
         },
         {
             domain: `[("properties.xphone_prop_5", "=", "2023-10-05")]`,
-            result: "Properties ➔ Date is equal 05|10|2023",
+            result: "Properties ➔ Date equal 05|10|2023",
         },
         {
             domain: `[("properties.xphone_prop_6", "in", "g")]`,
-            result: "Properties ➔ Tags is in g",
+            result: "Properties ➔ Tags in g",
         },
         {
             domain: `[("properties.xphone_prop_7", "in", [37])]`,
-            result: "Properties ➔ M2M is in ( xphone )",
+            result: "Properties ➔ M2M in ( xphone )",
         },
         {
             domain: `[("properties.xpad_prop_1", "=", 41)]`,
-            result: "Properties ➔ M2O is equal xpad",
+            result: "Properties ➔ M2O equal xpad",
         },
     ];
 
@@ -1171,27 +1221,27 @@ test("support properties (mode readonly)", async () => {
     }
 });
 
-test("no button 'New Rule' (mode readonly)", async () => {
+test("no button 'New Filter' (mode readonly)", async () => {
     await makeDomainSelector({
         readonly: true,
         domain: `[("bar", "=", True)]`,
     });
     expect(SELECTORS.condition).toHaveCount(1);
-    expect("a[role=button]").toHaveCount(0);
+    expect(SELECTORS.newFilter).toHaveCount(0);
 });
 
-test("button 'New Rule' (edit mode)", async () => {
+test("button 'New Filter' (edit mode)", async () => {
     await makeDomainSelector();
     expect(SELECTORS.condition).toHaveCount(0);
-    expect(SELECTORS.addNewRule).toHaveCount(1);
+    expect(SELECTORS.newFilter).toHaveCount(1);
 
-    await addNewRule();
+    await clickOnNewFilter();
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(SELECTORS.addNewRule).toHaveCount(1);
+    expect(SELECTORS.newFilter).toHaveCount(1);
 
-    await addNewRule();
+    await clickOnNewFilter();
     expect(SELECTORS.condition).toHaveCount(2);
-    expect(SELECTORS.addNewRule).toHaveCount(1);
+    expect(SELECTORS.newFilter).toHaveCount(1);
 });
 
 test("updating path should also update operator if invalid", async () => {
@@ -1310,7 +1360,7 @@ test("display of a contextual value (readonly)", async () => {
         domain: `[("foo", "=", uid)]`,
         readonly: true,
     });
-    expect(getConditionText()).toBe("Foo is equal uid");
+    expect(getConditionText()).toBe("Foo equal uid");
 });
 
 test("boolean field (readonly)", async () => {
@@ -1336,6 +1386,7 @@ test("integer field (readonly)", async () => {
         domain: `[]`,
     });
     const toTest = [
+<<<<<<< HEAD
         { domain: `[("int", "=", True)]`, text: `Int is equal true` },
         { domain: `[("int", "=", False)]`, text: `Int not set` },
         { domain: `[("int", "!=", True)]`, text: `Int is not equal true` },
@@ -1346,9 +1397,21 @@ test("integer field (readonly)", async () => {
         { domain: `[("int", "<=", 1)]`, text: `Int is lower or equal 1` },
         { domain: `[("int", ">", 1)]`, text: `Int is greater 1` },
         { domain: `[("int", ">=", 1)]`, text: `Int is greater or equal 1` },
+=======
+        { domain: `[("int", "=", True)]`, text: `Int equal true` },
+        { domain: `[("int", "=", False)]`, text: `Int not set` },
+        { domain: `[("int", "!=", True)]`, text: `Int not equal true` },
+        { domain: `[("int", "!=", False)]`, text: `Int set` },
+        { domain: `[("int", "=", 1)]`, text: `Int equal 1` },
+        { domain: `[("int", "!=", 1)]`, text: `Int not equal 1` },
+        { domain: `[("int", "<", 1)]`, text: `Int lower 1` },
+        { domain: `[("int", "<=", 1)]`, text: `Int lower or equal 1` },
+        { domain: `[("int", ">", 1)]`, text: `Int greater 1` },
+        { domain: `[("int", ">=", 1)]`, text: `Int greater or equal 1` },
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
         {
             domain: `["&", ("int", ">=", 1),("int","<=", 2)]`,
-            text: `Int is between 1 and 2`,
+            text: `Int between 1 and 2`,
         },
     ];
     for (const { domain, text } of toTest) {
@@ -1368,22 +1431,22 @@ test("date field (readonly)", async () => {
         domain: `[]`,
     });
     const toTest = [
-        { domain: `[("date", "=", False)]`, text: `Date is equal false` },
-        { domain: `[("date", "!=", False)]`, text: `Date is not equal false` },
-        { domain: `[("date", "=", "2023-07-03")]`, text: `Date is equal 03|07|2023` },
-        { domain: `[("date", "=", context_today())]`, text: `Date is equal context_today()` },
-        { domain: `[("date", "!=", "2023-07-03")]`, text: `Date is not equal 03|07|2023` },
-        { domain: `[("date", "<", "2023-07-03")]`, text: `Date is lower 03|07|2023` },
-        { domain: `[("date", "<=", "2023-07-03")]`, text: `Date is lower or equal 03|07|2023` },
-        { domain: `[("date", ">", "2023-07-03")]`, text: `Date is greater 03|07|2023` },
-        { domain: `[("date", ">=", "2023-07-03")]`, text: `Date is greater or equal 03|07|2023` },
+        { domain: `[("date", "=", False)]`, text: `Date equal false` },
+        { domain: `[("date", "!=", False)]`, text: `Date not equal false` },
+        { domain: `[("date", "=", "2023-07-03")]`, text: `Date equal 03|07|2023` },
+        { domain: `[("date", "=", context_today())]`, text: `Date equal context_today()` },
+        { domain: `[("date", "!=", "2023-07-03")]`, text: `Date not equal 03|07|2023` },
+        { domain: `[("date", "<", "2023-07-03")]`, text: `Date lower 03|07|2023` },
+        { domain: `[("date", "<=", "2023-07-03")]`, text: `Date lower or equal 03|07|2023` },
+        { domain: `[("date", ">", "2023-07-03")]`, text: `Date greater 03|07|2023` },
+        { domain: `[("date", ">=", "2023-07-03")]`, text: `Date greater or equal 03|07|2023` },
         {
             domain: `["&", ("date", ">=", "2023-07-03"),("date","<=", "2023-07-15")]`,
-            text: `Date is between 03|07|2023 and 15|07|2023`,
+            text: `Date between 03|07|2023 and 15|07|2023`,
         },
         {
             domain: `["&", ("date", ">=", "2023-07-03"),("date","<=", context_today())]`,
-            text: `Date is between 03|07|2023 and context_today()`,
+            text: `Date between 03|07|2023 and context_today()`,
         },
     ];
     for (const { domain, text } of toTest) {
@@ -1400,13 +1463,19 @@ test("char field (readonly)", async () => {
     const toTest = [
         { domain: `[("foo", "=", False)]`, text: `Foo not set` },
         { domain: `[("foo", "!=", False)]`, text: `Foo set` },
+<<<<<<< HEAD
         { domain: `[("foo", "=", "abc")]`, text: `Foo is equal abc` },
         { domain: `[("foo", "=", expr)]`, text: `Foo is equal expr` },
         { domain: `[("foo", "!=", "abc")]`, text: `Foo is not equal abc` },
+=======
+        { domain: `[("foo", "=", "abc")]`, text: `Foo equal abc` },
+        { domain: `[("foo", "=", expr)]`, text: `Foo equal expr` },
+        { domain: `[("foo", "!=", "abc")]`, text: `Foo not equal abc` },
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
         { domain: `[("foo", "ilike", "abc")]`, text: `Foo contains abc` },
-        { domain: `[("foo", "not ilike", "abc")]`, text: `Foo does not contain abc` },
-        { domain: `[("foo", "in", ["abc", "def"])]`, text: `Foo is in ( abc , def )` },
-        { domain: `[("foo", "not in", ["abc", "def"])]`, text: `Foo is not in ( abc , def )` },
+        { domain: `[("foo", "not ilike", "abc")]`, text: `Foo not contain abc` },
+        { domain: `[("foo", "in", ["abc", "def"])]`, text: `Foo in ( abc , def )` },
+        { domain: `[("foo", "not in", ["abc", "def"])]`, text: `Foo not in ( abc , def )` },
     ];
     for (const { domain, text } of toTest) {
         await parent.set(domain);
@@ -1422,18 +1491,26 @@ test("selection field (readonly)", async () => {
     const toTest = [
         { domain: `[("state", "=", False)]`, text: `State not set` },
         { domain: `[("state", "!=", False)]`, text: `State set` },
+<<<<<<< HEAD
         { domain: `[("state", "=", "abc")]`, text: `State is equal ABC` },
         { domain: `[("state", "=", expr)]`, text: `State is equal expr` },
         { domain: `[("state", "!=", "abc")]`, text: `State is not equal ABC` },
         { domain: `[("state", "in", ["abc", "def"])]`, text: `State is in ( ABC , DEF )` },
         { domain: `[("state", "in", ["abc", False])]`, text: `State is in ( "ABC" , false )` },
+=======
+        { domain: `[("state", "=", "abc")]`, text: `State equal ABC` },
+        { domain: `[("state", "=", expr)]`, text: `State equal expr` },
+        { domain: `[("state", "!=", "abc")]`, text: `State not equal ABC` },
+        { domain: `[("state", "in", ["abc", "def"])]`, text: `State in ( ABC , DEF )` },
+        { domain: `[("state", "in", ["abc", False])]`, text: `State in ( "ABC" , false )` },
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
         {
             domain: `[("state", "not in", ["abc", "def"])]`,
-            text: `State is not in ( ABC , DEF )`,
+            text: `State not in ( ABC , DEF )`,
         },
         {
             domain: `[("state", "not in", ["abc", expr])]`,
-            text: `State is not in ( "ABC" , expr )`,
+            text: `State not in ( "ABC" , expr )`,
         },
     ];
     for (const { domain, text } of toTest) {
@@ -1477,15 +1554,15 @@ test("selection property (readonly)", async () => {
         },
         {
             domain: `[("properties.selection_prop", "=", "abc")]`,
-            text: `Properties ➔ Selection is equal ABC`,
+            text: `Properties ➔ Selection equal ABC`,
         },
         {
             domain: `[("properties.selection_prop", "=", expr)]`,
-            text: `Properties ➔ Selection is equal expr`,
+            text: `Properties ➔ Selection equal expr`,
         },
         {
             domain: `[("properties.selection_prop", "!=", "abc")]`,
-            text: `Properties ➔ Selection is not equal ABC`,
+            text: `Properties ➔ Selection not equal ABC`,
         },
     ];
     for (const { domain, text } of toTest) {
@@ -1498,51 +1575,51 @@ test("many2one field (readonly)", async () => {
     const toTest = [
         {
             domain: `[("product_id", "=", 37)]`,
-            text: "Product is equal xphone",
+            text: "Product equal xphone",
         },
         {
             domain: `[("product_id", "=", 2)]`,
-            text: "Product is equal Inaccessible/missing record ID: 2",
+            text: "Product equal Inaccessible/missing record ID: 2",
         },
         {
             domain: `[("product_id", "!=", 37)]`,
-            text: "Product is not equal xphone",
+            text: "Product not equal xphone",
         },
         {
             domain: `[("product_id", "=", false)]`,
-            text: "Product is equal false",
+            text: "Product equal false",
         },
         {
             domain: `[("product_id", "!=", false)]`,
-            text: "Product is not equal false",
+            text: "Product not equal false",
         },
         {
             domain: `[("product_id", "in", [])]`,
-            text: "Product is in ( )",
+            text: "Product in ( )",
         },
         {
             domain: `[("product_id", "in", [41, 37])]`,
-            text: "Product is in ( xpad , xphone )",
+            text: "Product in ( xpad , xphone )",
         },
         {
             domain: `[("product_id", "in", [1, 37])]`,
-            text: "Product is in ( Inaccessible/missing record ID: 1 , xphone )",
+            text: "Product in ( Inaccessible/missing record ID: 1 , xphone )",
         },
         {
             domain: `[("product_id", "in", [1, uid, 37])]`,
-            text: 'Product is in ( Inaccessible/missing record ID: 1 , uid , "xphone" )',
+            text: 'Product in ( Inaccessible/missing record ID: 1 , uid , "xphone" )',
         },
         {
             domain: `[("product_id", "in", ["abc"])]`,
-            text: "Product is in ( abc )",
+            text: "Product in ( abc )",
         },
         {
             domain: `[("product_id", "in", 37)]`,
-            text: "Product is in xphone",
+            text: "Product in xphone",
         },
         {
             domain: `[("product_id", "in", 2)]`,
-            text: "Product is in Inaccessible/missing record ID: 2",
+            text: "Product in Inaccessible/missing record ID: 2",
         },
     ];
     const parent = await makeDomainSelector({ readonly: true });
@@ -1557,12 +1634,16 @@ test("many2one field operators (edit)", async () => {
         domain: `[("product_id", "=", false)]`,
     });
     expect(getOperatorOptions()).toEqual([
-        "is in",
-        "is not in",
-        "is equal",
-        "is not equal",
+        "in",
+        "not in",
+        "equal",
+        "not equal",
         "contains",
+<<<<<<< HEAD
         "does not contain",
+=======
+        "not contain",
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
         "set",
         "not set",
         "starts with",
@@ -1613,7 +1694,7 @@ test("many2one field and operator =/!= (edit)", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -1622,30 +1703,30 @@ test("many2one field and operator =/!= (edit)", async () => {
     await runAllTimers();
     expect(".dropdown-menu").toHaveCount(1);
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xphone"]);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("xph");
 
     await contains(".dropdown-menu li").click();
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("xphone");
     expect.verifySteps([`[("product_id", "=", 37)]`]);
     expect(".dropdown-menu").toHaveCount(0);
 
     await editValue("", { confirm: false });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("");
     await contains(".o_domain_selector").click();
     expect.verifySteps([`[("product_id", "=", False)]`]);
 
     await selectOperator("!=");
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equal");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([`[("product_id", "!=", False)]`]);
 
     await editValue("xpa", { confirm: false });
     await runAllTimers();
     await contains(".dropdown-menu li").click();
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equal");
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_id", "!=", 41)]`]);
 });
@@ -1655,7 +1736,7 @@ test("many2one field on record with falsy display_name", async () => {
     await makeDomainSelector({
         domain: `[("product_id", "=", False)]`,
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("");
     expect(".dropdown-menu").toHaveCount(0);
 
@@ -1673,7 +1754,7 @@ test("many2one field and operator in/not in (edit)", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is in");
+    expect(getCurrentOperator()).toBe("in");
     expect(getCurrentValue()).toBe("xphone");
     expect.verifySteps([]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -1687,12 +1768,12 @@ test("many2one field and operator in/not in (edit)", async () => {
     expect(getCurrentValue()).toBe("xphone xpad");
 
     await selectOperator("not in");
-    expect(getCurrentOperator()).toBe("is not in");
+    expect(getCurrentOperator()).toBe("not in");
     expect(getCurrentValue()).toBe("xphone xpad");
     expect.verifySteps([`[("product_id", "not in", [37, 41])]`]);
 
     await contains(".o_tag .o_delete").click();
-    expect(getCurrentOperator()).toBe("is not in");
+    expect(getCurrentOperator()).toBe("not in");
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_id", "not in", [41])]`]);
 });
@@ -1717,7 +1798,7 @@ test("many2one field and operator ilike/not ilike (edit)", async () => {
     expect.verifySteps([`[("product_id", "ilike", "def")]`]);
 
     await selectOperator("not ilike");
-    expect(getCurrentOperator()).toBe("does not contain");
+    expect(getCurrentOperator()).toBe("not contain");
     expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
     expect(getCurrentValue()).toBe("def");
     expect.verifySteps([`[("product_id", "not ilike", "def")]`]);
@@ -1730,7 +1811,7 @@ test("many2many field and operator set/not set (edit)", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([]);
 
@@ -1746,7 +1827,7 @@ test("many2many field and operator set/not set (edit)", async () => {
     expect.verifySteps([`[("product_id", "!=", False)]`]);
 
     await selectOperator("!=");
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equal");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([`[("product_id", "!=", False)]`]);
 });
@@ -1758,7 +1839,7 @@ test("many2many field: clone a set/not set condition", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([]);
 
@@ -1768,7 +1849,7 @@ test("many2many field: clone a set/not set condition", async () => {
     expect.verifySteps([`[("product_id", "=", False)]`]);
     expect(SELECTORS.condition).toHaveCount(1);
 
-    await clickOnButtonAddNewRule();
+    await clickOnNewFilter();
     expect(SELECTORS.condition).toHaveCount(2);
     expect(getCurrentOperator()).toBe("not set");
     expect(getCurrentOperator(1)).toBe("not set");
@@ -1781,12 +1862,16 @@ test("x2many field operators (edit)", async () => {
         domain: `[("product_ids", "=", false)]`,
     });
     expect(getOperatorOptions()).toEqual([
-        "is in",
-        "is not in",
-        "is equal",
-        "is not equal",
+        "in",
+        "not in",
+        "equal",
+        "not equal",
         "contains",
+<<<<<<< HEAD
         "does not contain",
+=======
+        "not contain",
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
         "set",
         "not set",
         "starts with",
@@ -1849,7 +1934,7 @@ test("many2many field: operator =/!=/in/not in (edit)", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is in");
+    expect(getCurrentOperator()).toBe("in");
     expect(getCurrentValue()).toBe("xphone");
     expect.verifySteps([]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -1864,22 +1949,22 @@ test("many2many field: operator =/!=/in/not in (edit)", async () => {
     expect(getCurrentValue()).toBe("xphone xpad");
 
     await selectOperator("not in");
-    expect(getCurrentOperator()).toBe("is not in");
+    expect(getCurrentOperator()).toBe("not in");
     expect(getCurrentValue()).toBe("xphone xpad");
     expect.verifySteps([`[("product_ids", "not in", [37, 41])]`]);
 
     await contains(".o_tag .o_delete").click();
-    expect(getCurrentOperator()).toBe("is not in");
+    expect(getCurrentOperator()).toBe("not in");
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_ids", "not in", [41])]`]);
 
     await selectOperator("=");
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_ids", "=", [41])]`]);
 
     await selectOperator("!=");
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equal");
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_ids", "!=", [41])]`]);
 });
@@ -1905,7 +1990,7 @@ test("many2many field: operator ilike/not ilike (edit)", async () => {
     expect.verifySteps([`[("product_ids", "ilike", "def")]`]);
 
     await selectOperator("not ilike");
-    expect(getCurrentOperator()).toBe("does not contain");
+    expect(getCurrentOperator()).toBe("not contain");
     expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
     expect(getCurrentValue()).toBe("def");
     expect.verifySteps([`[("product_ids", "not ilike", "def")]`]);
@@ -1947,8 +2032,7 @@ test("Include archived button basic use", async () => {
         '["&", "&", ("foo", "=", "test"), ("bar", "=", True), ("active", "in", [True, False])]',
     ]);
 
-    await contains(".dropdown-toggle").click();
-    await contains(".dropdown-menu span:nth-child(2)").click();
+    await toggleConnector();
     expect(SELECTORS.condition).toHaveCount(2);
     expect.verifySteps([
         '["&", "|", ("foo", "=", "test"), ("bar", "=", True), ("active", "in", [True, False])]',
@@ -1986,7 +2070,7 @@ test("Include archived on empty tree", async () => {
     expect(SELECTORS.condition).toHaveCount(0);
     expect.verifySteps(['[("active", "in", [True, False])]']);
 
-    await addNewRule();
+    await clickOnNewFilter();
     expect(SELECTORS.condition).toHaveCount(1);
     expect.verifySteps(['["&", ("id", "=", 1), ("active", "in", [True, False])]']);
 });
@@ -2012,7 +2096,7 @@ test("date/datetime edition: switch !=/set", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equal");
     expect(".o_datetime_input").toHaveCount(1);
     expect(getCurrentValue()).toBe("05/20/2023");
 
@@ -2022,7 +2106,7 @@ test("date/datetime edition: switch !=/set", async () => {
     expect.verifySteps([`[("date", "!=", False)]`]);
 
     await selectOperator("!=");
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equal");
     expect(".o_datetime_input").toHaveCount(1);
     expect(getCurrentValue()).toBe("04/20/2023");
     expect.verifySteps([`[("date", "!=", "2023-04-20")]`]);
@@ -2045,7 +2129,7 @@ test("date/datetime edition: switch is_set to other operators", async () => {
 
     await selectOperator("between");
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(getCurrentOperator()).toBe("is between");
+    expect(getCurrentOperator()).toBe("between");
     expect(SELECTORS.valueEditor).toHaveCount(1);
     expect(SELECTORS.valueEditor + " " + SELECTORS.editor).toHaveCount(2);
     expect(SELECTORS.clearNotSupported).toHaveCount(0);
@@ -2063,15 +2147,15 @@ test("date/datetime edition: switch is_set to other operators", async () => {
     await selectOperator(">=");
     expect(".o_datetime_input").toHaveCount(1);
     expect(getCurrentValue()).toBe("04/20/2023 00:00");
-    expect(getCurrentOperator()).toBe("is greater or equal");
+    expect(getCurrentOperator()).toBe("greater or equal");
     expect.verifySteps(['[("datetime", ">=", "2023-04-20 00:00:00")]']);
 });
 
 test("render false and true leaves", async () => {
     await makeDomainSelector({ domain: `[(0, "=", 1), (1, "=", 1)]` });
-    expect(getOperatorOptions()).toEqual(["is equal"]);
+    expect(getOperatorOptions()).toEqual(["equal"]);
     expect(getValueOptions()).toEqual(["1"]);
-    expect(getOperatorOptions(-1)).toEqual(["is equal"]);
+    expect(getOperatorOptions(-1)).toEqual(["equal"]);
     expect(getValueOptions(-1)).toEqual(["1"]);
 });
 
@@ -2086,8 +2170,8 @@ test("datetime domain in readonly mode (check localization)", async () => {
         domain: `["&", ("datetime", ">=", "2023-11-03 11:41:23"), ("datetime", "<=", "2023-11-13 09:45:11")]`,
         readonly: true,
     });
-    expect(".o_tree_editor_condition").toHaveText(
-        `Datetime\nis between\n11.03.2023 13:41:23\nand\n11.13.2023 11:45:11`
+    expect(SELECTORS.condition).toHaveText(
+        `Datetime\nbetween\n11.03.2023 13:41:23\nand\n11.13.2023 11:45:11`
     );
 });
 
@@ -2102,7 +2186,7 @@ test("date domain in readonly mode (check localization)", async () => {
         domain: `["&", ("date", ">=", "2023-11-03"), ("date", "<=", "2023-11-13")]`,
         readonly: true,
     });
-    expect(".o_tree_editor_condition").toHaveText("Date\nis between\n03|11|2023\nand\n13|11|2023");
+    expect(SELECTORS.condition).toHaveText("Date\nbetween\n03|11|2023\nand\n13|11|2023");
 });
 
 test(`any/not any operator in editable mode`, async () => {
@@ -2111,15 +2195,14 @@ test(`any/not any operator in editable mode`, async () => {
         isDebugMode: true,
         domain: `[("product_id", "any", ["|", ("team_id", "any", [("name", "=", "Mancester City")]), ("team_id.name", "not in", ["Leicester", "Liverpool"])])]`,
     });
-    expect(".o_tree_editor").toHaveCount(3);
-    expect(".o_tree_editor_row").toHaveCount(10);
+    expect(`${SELECTORS.tree}`).toHaveCount(3);
     expect(getCurrentPath(1)).toBe("Product Team");
     expect(getCurrentPath(3)).toBe("Product Team > Team Name");
     expect(getCurrentValue(1)).toBe("Leicester Liverpool");
     expect(getCurrentOperator(1)).toBe("matches");
-    expect(getCurrentOperator(3)).toBe("is not in");
+    expect(getCurrentOperator(3)).toBe("not in");
     await selectOperator("in", 3);
-    expect(getCurrentOperator(3)).toBe("is in");
+    expect(getCurrentOperator(3)).toBe("in");
     expect(SELECTORS.debugArea).toHaveValue(
         `[("product_id", "any", ["|", ("team_id", "any", [("name", "=", "Mancester City")]), ("team_id.name", "in", ["Leicester", "Liverpool"])])]`
     );
@@ -2129,7 +2212,7 @@ test(`any/not any operator (readonly) with custom domain as value`, async () => 
     const toTest = [
         {
             domain: `[("product_id", "any", [("machin", "in", ["chose", "truc"] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nmachin\nis in\n(\nchose\n,\ntruc\n)`,
+            text: `Where\nProduct\nmatches\nWhere\nmachin\nin\n(\nchose\n,\ntruc\n)`,
         },
     ];
     const parent = await makeDomainSelector({ readonly: true });
@@ -2143,19 +2226,19 @@ test(`any/not any operator (readonly) with invalid domain as value`, async () =>
     const toTest = [
         {
             domain: `[("product_id", "any", A )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\n(\nA\n)`,
+            text: `Where\nProduct\nmatches\n(\nA\n)`,
         },
         {
             domain: `[("product_id", "any", "bete et méchant" )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\n(\nbete et méchant\n)`,
+            text: `Where\nProduct\nmatches\n(\nbete et méchant\n)`,
         },
         {
             domain: `[("product_id", "any", [("team_id", "any", "bête et méchant")])]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nProduct Team\nmatches\n(\nbête et méchant\n)`,
+            text: `Where\nProduct\nmatches\nWhere\nProduct Team\nmatches\n(\nbête et méchant\n)`,
         },
         {
             domain: `[("product_id", "any", ["&"])]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\n(\n&\n)`,
+            text: `Where\nProduct\nmatches\n(\n&\n)`,
         },
     ];
     const parent = await makeDomainSelector({ readonly: true });
@@ -2170,7 +2253,7 @@ test(`any operator (edit) with invalid domain as value`, async () => {
     expect(SELECTORS.valueEditor).toHaveCount(1);
     expect(SELECTORS.clearNotSupported).toHaveCount(1);
     await contains(SELECTORS.clearNotSupported).click();
-    expect(`${SELECTORS.connector}:eq(1)`).toHaveText("all records");
+    expect(`${SELECTORS.connector}:eq(1)`).toHaveText("New filter\nNew group");
 });
 
 test(`any operator (edit) test getDefaultPath`, async () => {
@@ -2183,7 +2266,7 @@ test(`any operator (edit) test getDefaultPath`, async () => {
         resModel: "partner",
         domain: `[("country_id", "any", [])]`,
     });
-    await addNewRule();
+    await clickOnNewFilter();
     expect(getCurrentPath(0)).toBe("Country");
     expect(getCurrentPath(1)).toBe("Stage");
 });
@@ -2222,27 +2305,31 @@ test(`any/not any operator (readonly)`, async () => {
     const toTest = [
         {
             domain: `[("product_id", "any", [("name", "in", [37,41] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nProduct Name\nis in\n(\n37\n,\n41\n)`,
+            text: `Where\nProduct\nmatches\nWhere\nProduct Name\nin\n(\n37\n,\n41\n)`,
         },
         {
             domain: `[("product_id", "not any", [("name", "in", [37,41] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches none of\nall\nof:\nProduct Name\nis in\n(\n37\n,\n41\n)`,
+            text: `Where\nProduct\nmatches none of\nWhere\nProduct Name\nin\n(\n37\n,\n41\n)`,
         },
         {
             domain: `[("product_id", "not any", ["|", ("team_id", "any", [("name", "ilike", "mancity")] ), ("name", "in", [37,41] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches none of\nany\nof:\nProduct Team\nmatches\nall\nof:\nTeam Name\ncontains\nmancity\nProduct Name\nis in\n(\n37\n,\n41\n)`,
+            text: `Where\nProduct\nmatches none of\nWhere\nProduct Team\nmatches\nWhere\nTeam Name\ncontains\nmancity\nOr\nProduct Name\nin\n(\n37\n,\n41\n)`,
         },
         {
             domain: `[("product_id", "any", ["|", ("name", "in", [37,41] ), ("bar", "=", True)] )]`,
+<<<<<<< HEAD
             text: `Match\nall\nof the following rules:\nProduct\nmatches\nany\nof:\nProduct Name\nis in\n(\n37\n,\n41\n)\nProduct Bar\nset`,
+=======
+            text: `Where\nProduct\nmatches\nWhere\nProduct Name\nin\n(\n37\n,\n41\n)\nOr\nProduct Bar\nset`,
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
         },
         {
             domain: `[("product_id", "any", ["&", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["&", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nProduct Name\nis in\n(\nJD7\n,\nKDB\n)\nProduct Team\nmatches none of\nall\nof:\nId\nis equal\n17\nTeam Name\ncontains\nmancity`,
+            text: `Where\nProduct\nmatches\nWhere\nProduct Name\nin\n(\nJD7\n,\nKDB\n)\nAnd\nProduct Team\nmatches none of\nWhere\nId\nequal\n17\nAnd\nTeam Name\ncontains\nmancity`,
         },
         {
             domain: `[("product_id", "any", ["|", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["|", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\nany\nof:\nProduct Name\nis in\n(\nJD7\n,\nKDB\n)\nProduct Team\nmatches none of\nany\nof:\nId\nis equal\n17\nTeam Name\ncontains\nmancity`,
+            text: `Where\nProduct\nmatches\nWhere\nProduct Name\nin\n(\nJD7\n,\nKDB\n)\nOr\nProduct Team\nmatches none of\nWhere\nId\nequal\n17\nOr\nTeam Name\ncontains\nmancity`,
         },
     ];
     const parent = await makeDomainSelector({ readonly: true });
@@ -2258,7 +2345,7 @@ test(`any/not any operator (readonly) for one2many`, async () => {
         domain: `[("player_ids", "any", [('name', 'in', ["Kevin De Bruyne", "Jeremy Doku"])])]`,
         readonly: true,
     });
-    const text = `Match\nall\nof the following rules:\nPlayers\nmatch\nall\nof:\nPlayer Name\nis in\n(\nKevin De Bruyne\n,\nJeremy Doku\n)`;
+    const text = `Where\nPlayers\nmatch\nWhere\nPlayer Name\nin\n(\nKevin De Bruyne\n,\nJeremy Doku\n)`;
     expect(".o_domain_selector").toHaveText(text);
 });
 
@@ -2268,7 +2355,11 @@ test(`next operator (readonly) for date`, async () => {
         domain: `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
         readonly: true,
     });
+<<<<<<< HEAD
     const text = `Match\nall\nof the following rules:\nDate\nnext\n1\nweeks`;
+=======
+    const text = `Where\nDate\nwithin\n1\nweeks`;
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
     expect(".o_domain_selector").toHaveText(text);
 });
 
@@ -2278,7 +2369,11 @@ test(`next operator (readonly) for datetime`, async () => {
         domain: `["&", ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today() + relativedelta(weeks=1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
         readonly: true,
     });
+<<<<<<< HEAD
     const text = `Match\nall\nof the following rules:\nDatetime\nnext\n1\nweeks`;
+=======
+    const text = `Where\nDatetime\nwithin\n1\nweeks`;
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
     expect(".o_domain_selector").toHaveText(text);
 });
 
@@ -2290,7 +2385,11 @@ test(`next operator (edit) for date`, async () => {
             expect.step(domain);
         },
     });
+<<<<<<< HEAD
     expect(getCurrentOperator()).toBe("next");
+=======
+    expect(getCurrentOperator()).toBe("within");
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
@@ -2332,7 +2431,11 @@ test(`next operator (edit) for date with an expression for amount`, async () => 
             expect.step(domain);
         },
     });
+<<<<<<< HEAD
     expect(getCurrentOperator()).toBe("next");
+=======
+    expect(getCurrentOperator()).toBe("within");
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
@@ -2360,7 +2463,11 @@ test(`next operator (edit) for datetime with invalid period`, async () => {
             expect.step(domain);
         },
     });
+<<<<<<< HEAD
     expect(getCurrentOperator()).toBe("next");
+=======
+    expect(getCurrentOperator()).toBe("within");
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) span`).toHaveText("a");
@@ -2498,8 +2605,8 @@ test("shorten descriptions of long lists", async () => {
         domain: `[("id", "in", [${values}])]`,
         readonly: true,
     });
-    expect(".o_tree_editor_condition").toHaveText(
-        `Id\nis in\n(\n${values.slice(0, 20).join("\n,\n")}\n,\n...\n)`
+    expect(SELECTORS.condition).toHaveText(
+        `Id\nin\n(\n${values.slice(0, 20).join("\n,\n")}\n,\n...\n)`
     );
 });
 
@@ -2511,7 +2618,7 @@ test("many2one: no domain in autocompletion", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -2521,11 +2628,11 @@ test("many2one: no domain in autocompletion", async () => {
 
     expect(".dropdown-menu").toHaveCount(1);
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xphone", "xpad"]);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("x");
 
     await contains(".dropdown-menu li").click();
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("xphone");
     expect.verifySteps([`[("product_id", "=", 37)]`]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -2540,7 +2647,7 @@ test("many2many: domain in autocompletion", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -2550,11 +2657,11 @@ test("many2many: domain in autocompletion", async () => {
 
     expect(".dropdown-menu").toHaveCount(1);
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("x");
 
     await contains(".dropdown-menu li").click();
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equal");
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_ids", "=", [41])]`]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -2575,7 +2682,7 @@ test("Hierarchical operators", async () => {
             expect.step(domain);
         },
     });
-    await addNewRule();
+    await clickOnNewFilter();
     expect.verifySteps(['[("id", "=", 1)]']);
     await openModelFieldSelectorPopover();
     await contains(
@@ -2583,12 +2690,12 @@ test("Hierarchical operators", async () => {
     ).click();
     expect.verifySteps(['[("product_id", "in", [])]']);
     expect(getOperatorOptions()).toEqual([
-        "is in",
-        "is not in",
-        "is equal",
-        "is not equal",
+        "in",
+        "not in",
+        "equal",
+        "not equal",
         "contains",
-        "does not contain",
+        "not contain",
         "child of",
         "parent of",
         "set",
@@ -2621,12 +2728,16 @@ test("Hierarchical operators", async () => {
     expect.verifySteps(['[("team_id", "in", [])]']);
     expect(getOperatorOptions()).toEqual(
         [
-            "is in",
-            "is not in",
-            "is equal",
-            "is not equal",
+            "in",
+            "not in",
+            "equal",
+            "not equal",
             "contains",
+<<<<<<< HEAD
             "does not contain",
+=======
+            "not contain",
+>>>>>>> d4b32c34ff52 ([IMP] web: TreeEditor: support successive ANDs/ORs)
             "set",
             "not set",
             "starts with",
@@ -2651,15 +2762,19 @@ test("preserve virtual operators in sub domains", async () => {
     expect(getCurrentOperator(2)).toBe("not set");
     expect(getCurrentOperator(3)).toBe("not set");
 
-    await contains(".o_tree_editor:eq(1) a:contains('New Rule'):eq(1)").click();
+    await clickOnNewFilter(1);
+    expect(getCurrentOperator()).toBe("matches");
+    expect(getCurrentOperator(1)).toBe("matches");
     expect(getCurrentOperator(2)).toBe("not set");
     expect(getCurrentOperator(3)).toBe("not set");
-    expect(getCurrentOperator(4)).toBe("is equal");
+    expect(getCurrentOperator(4)).toBe("matches");
+    expect(getCurrentOperator(5)).toBe("not set");
+    expect(getCurrentOperator(6)).toBe("not set");
     expect.verifySteps([
-        `[("product_id", "any", ["&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("id", "=", 1)])]`,
+        `[("product_id", "any", ["&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)])])]`,
     ]);
 
-    await clickOnButtonDeleteNode(4);
+    await clickOnButtonDeleteNode(5);
     expect(getCurrentOperator()).toBe("matches");
     expect(getCurrentOperator(1)).toBe("matches");
     expect(getCurrentOperator(2)).toBe("not set");
@@ -2752,4 +2867,59 @@ test("remove all conditions in a sub connector", async () => {
     expect.verifySteps([`["&", ("bar", "!=", False), ("id", "=", 1)]`]);
     await clickOnButtonDeleteNode(2);
     expect.verifySteps([`[("bar", "!=", False)]`]);
+});
+
+test("toggle 'include archived' button should preserve tree structure", async () => {
+    Partner._fields.active = fields.Boolean();
+    await makeDomainSelector({
+        domain: `[]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+
+    await clickOnNewGroup();
+    expect(getTreeEditorContent()).toEqual([
+        { value: "Where", level: 0 },
+        { value: "Where", level: 1 },
+        { value: ["Id", "equal", "1"], level: 2 },
+    ]);
+    expect.verifySteps([`[("id", "=", 1)]`]);
+
+    await toggleArchive();
+    expect(getTreeEditorContent()).toEqual([
+        { value: "Where", level: 0 },
+        { value: "Where", level: 1 },
+        { value: ["Id", "equal", "1"], level: 2 },
+    ]);
+    expect.verifySteps([`["&", ("id", "=", 1), ("active", "in", [True, False])]`]);
+
+    await toggleArchive();
+    expect(getTreeEditorContent()).toEqual([
+        { value: "Where", level: 0 },
+        { value: "Where", level: 1 },
+        { value: ["Id", "equal", "1"], level: 2 },
+    ]);
+    expect.verifySteps([`[("id", "=", 1)]`]);
+});
+
+test("empty domain and two succive 'New group'", async () => {
+    await makeDomainSelector({
+        domain: `[]`,
+        isDebugMode: true,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    await clickOnNewGroup();
+    expect.verifySteps([`[("id", "=", 1)]`]);
+    await clickOnNewGroup();
+    expect(getTreeEditorContent()).toEqual([
+        { value: "Where", level: 0 },
+        { value: "Where", level: 1 },
+        { value: ["Id", "equal", "1"], level: 2 },
+        { value: "Where", level: 2 },
+        { value: ["Id", "equal", "1"], level: 3 },
+    ]);
+    expect.verifySteps([`["|", ("id", "=", 1), ("id", "=", 1)]`]);
 });

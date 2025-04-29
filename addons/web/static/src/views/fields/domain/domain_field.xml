@@ -43,15 +43,20 @@
                         <a t-if="props.isFoldable and state.isValid" t-on-click="fold">
                             <i class="fa fa-lg fa-caret-down pe-2"></i>
                         </a>
-                        <DomainSelector
-                            resModel="resModel"
-                            domain="getDomain()"
-                            readonly="props.readonly or props.editInDialog"
-                            debugUpdate.bind="debugUpdate"
-                            update.bind="update"
-                            isDebugMode="!!env.debug"
-                            className="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
-                        />
+                        <t t-if="props.readonly and this.getDomain() === '[]'">
+                            <div class="o_read_mode">Match all records</div>
+                        </t>
+                        <t t-else="">
+                            <DomainSelector
+                                resModel="resModel"
+                                domain="getDomain()"
+                                readonly="props.readonly or props.editInDialog"
+                                debugUpdate.bind="debugUpdate"
+                                update.bind="update"
+                                isDebugMode="!!env.debug"
+                                className="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
+                            />
+                        </t>
                     </div>
                     <div class="o_field_domain_panel d-flex align-items-center gap-2 mt-1">
                         <i class="oi oi-arrow-right" role="img" aria-label="Domain" title="Domain" />

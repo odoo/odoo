@@ -10,7 +10,7 @@ import {
     Product,
     Stage,
     Team,
-    addNewRule,
+    clickOnNewFilter,
     clearNotSupported,
     clickOnButtonDeleteNode,
     editValue,
@@ -113,11 +113,11 @@ test("basic domain field usage is ok", async function () {
     });
 
     // As the domain is empty, there should be a button to add a new rule
-    expect(SELECTORS.addNewRule).toHaveCount(1);
+    expect(SELECTORS.newFilter).toHaveCount(1);
 
     // Clicking on the button should add the [["id", "=", "1"]] domain, so
     // there should be a field selector in the DOM
-    await addNewRule();
+    await clickOnNewFilter();
     expect(".o_model_field_selector").toHaveCount(1, {
         message: "there should be a field selector",
     });
@@ -166,7 +166,7 @@ test("using binary field in domain widget", async function () {
             </form>`,
     });
 
-    await addNewRule();
+    await clickOnNewFilter();
     await contains(".o_model_field_selector").click();
     await contains(".o_model_field_selector_popover_item[data-name='image'] button").click();
     expect(getCurrentPath()).toBe("Picture");
@@ -828,7 +828,8 @@ test("domain field in kanban view", async function () {
         message: "selected records are listed in a dialog",
     });
 
-    await contains(".o_domain_selector").click();
+    await contains(".modal-footer button:contains(Close)").click();
+    await contains(".o_read_mode:first").click(); // weird (one just wants to click on record 1)
     expect.verifySteps(["open record 1"]);
 });
 
@@ -846,10 +847,10 @@ test("domain field with 'inDialog' options", async function () {
     expect(".modal").toHaveCount(0);
     await contains(".o_field_domain_dialog_button").click();
     expect(".modal").toHaveCount(1);
-    await contains(`.modal ${SELECTORS.addNewRule}`).click();
+    await contains(`.modal ${SELECTORS.newFilter}`).click();
     await contains(".modal-footer .btn-primary").click();
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(getConditionText()).toBe("Id is equal 1");
+    expect(getConditionText()).toBe("Id equal 1");
 });
 
 test("invalid value in domain field with 'inDialog' options", async function () {
@@ -870,7 +871,7 @@ test("invalid value in domain field with 'inDialog' options", async function () 
     await contains(".o_field_domain_dialog_button").click();
     expect(".modal").toHaveCount(1);
 
-    await contains(`.modal ${SELECTORS.addNewRule}`).click();
+    await contains(`.modal ${SELECTORS.newFilter}`).click();
     await contains(SELECTORS.debugArea).edit("[(0, '=', expr)]");
     await contains(".modal-footer .btn-primary").click();
     expect(".modal").toHaveCount(1, { message: "the domain is invalid: the dialog is not closed" });
@@ -994,11 +995,11 @@ test("domain field can be foldable", async function () {
     await contains(".o_field_domain > div > div").click();
 
     // There should be a button to add a new rule
-    expect(SELECTORS.addNewRule).toHaveCount(1);
+    expect(SELECTORS.newFilter).toHaveCount(1);
 
     // Clicking on the button should add the [["id", "=", "1"]] domain, so
     // there should be a field selector in the DOM
-    await addNewRule();
+    await clickOnNewFilter();
     expect(".o_model_field_selector").toHaveCount(1);
 
     // Focusing the field selector input should open the field selector
@@ -1029,11 +1030,11 @@ test("domain field can be foldable", async function () {
     // Fold domain selector
     await contains(".o_field_domain a i").click();
 
-    expect(".o_field_domain .o_facet_values:contains('Color index is equal 2')").toHaveCount(1);
+    expect(".o_field_domain .o_facet_values:contains('Color index equal 2')").toHaveCount(1);
 });
 
 test("add condition in empty foldable domain", async function () {
-    serverState.debug = true;
+    serverState.debug = "true";
     Partner._records[0].foo = '[("id", "=", 1)]';
 
     await mountView({
@@ -1089,7 +1090,7 @@ test("foldable domain field unfolds and hides caret when domain is invalid", asy
     expect(".fa-caret-down").toHaveCount(0);
     expect(".o_domain_selector_row").toHaveText("This domain is not supported.\nReset domain");
     await contains(".o_domain_selector_row button").click();
-    expect(".o_field_domain span:first").toHaveText("Match all records");
+    expect(`.o_field_domain ${SELECTORS.tree}`).toHaveText("New filter\nNew group");
 });
 
 test("folded domain field with any operator", async function () {
@@ -1108,7 +1109,7 @@ test("folded domain field with any operator", async function () {
                 </sheet>
             </form>`,
     });
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Company matches ( Id is equal 1 )");
+    expect(`.o_field_domain .o_facet_values`).toHaveText("Company matches ( Id equal 1 )");
 });
 
 test("foldable domain, search_count delayed", async function () {
@@ -1133,7 +1134,7 @@ test("foldable domain, search_count delayed", async function () {
     });
     expect(".o_domain_show_selection_button").toHaveCount(0);
     expect(".o_tree_editor").toHaveCount(0);
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Id is equal 1");
+    expect(`.o_field_domain .o_facet_values`).toHaveText("Id equal 1");
     def.resolve();
     await animationFrame();
     expect(".o_domain_show_selection_button").toHaveCount(1);
