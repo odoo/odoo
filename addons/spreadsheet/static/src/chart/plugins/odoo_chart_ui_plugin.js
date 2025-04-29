@@ -41,21 +41,16 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
                 this._addDomains();
                 break;
             case "UPDATE_CHART": {
-                switch (cmd.definition.type) {
-                    case "odoo_pie":
-                    case "odoo_bar":
-                    case "odoo_line": {
-                        const dataSource = this.getChartDataSource(cmd.id);
-                        const chart = this.getters.getChart(cmd.id);
-                        if (
-                            cmd.definition.type !== chart.type ||
-                            chart.cumulative !== cmd.definition.cumulative ||
-                            dataSource.getInitialDomainString() !==
-                                new Domain(cmd.definition.searchParams.domain).toString()
-                        ) {
-                            this.shouldChartUpdateReloadDataSource = true;
-                        }
-                        break;
+                if (cmd.definition.type.startsWith("odoo_")) {
+                    const dataSource = this.getChartDataSource(cmd.id);
+                    const chart = this.getters.getChart(cmd.id);
+                    if (
+                        cmd.definition.type !== chart.type ||
+                        chart.cumulative !== cmd.definition.cumulative ||
+                        dataSource.getInitialDomainString() !==
+                            new Domain(cmd.definition.searchParams.domain).toString()
+                    ) {
+                        this.shouldChartUpdateReloadDataSource = true;
                     }
                 }
                 break;
