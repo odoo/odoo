@@ -789,7 +789,7 @@ class ResUsers(models.Model):
                 # the new ones to other existing users
                 old_groups = self._default_groups()
 
-        res = super().write(values)
+        res = super(ResUsers, self.with_context(no_add_implied_groups=True)).write(values)
 
         if old_groups:
             # new elements in _default_groups() means new groups for default users
@@ -822,14 +822,15 @@ class ResUsers(models.Model):
                 # demoted users are restricted to the assigned groups only
                 vals = {'groups_id': [Command.clear()] + values['groups_id']}
                 super(ResUsers, demoted_users).write(vals)
-            # add implied groups for all users (in batches)
-            users_batch = defaultdict(self.browse)
-            for user in self:
-                users_batch[user.groups_id] += user
-            for groups, users in users_batch.items():
-                gs = set(concat(g.trans_implied_ids for g in groups))
-                vals = {'groups_id': [Command.link(g.id) for g in gs]}
-                super(ResUsers, users).write(vals)
+            if not self.env.context.get('no_add_implied_groups'):
+                # add implied groups for all users (in batches)
+                users_batch = defaultdict(self.browse)
+                for user in self:
+                    users_batch[user.groups_id] += user
+                for groups, users in users_batch.items():
+                    gs = set(concat(g.trans_implied_ids for g in groups))
+                    vals = {'groups_id': [Command.link(g.id) for g in gs]}
+                    super(ResUsers, users).write(vals)
             # clear caches linked to the users
             if self.ids:
                 self.env['ir.model.access'].call_cache_clearing_methods()
