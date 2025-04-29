@@ -9,7 +9,7 @@
                         <div t-att-name="error" style="white-space: pre-wrap;">
                             <t t-out="error_value.message"/>
                             <a class="fw-bold"
-                               t-if="error_value.action"
+                               t-if="error_value.action or error_value.action_call"
                                href="#"
                                t-on-click.prevent="() => this.handleOnClick(error_value)"
                             >
