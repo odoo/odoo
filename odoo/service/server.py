@@ -910,6 +910,8 @@ class PreforkServer(CommonServer):
     def worker_kill(self, pid, sig):
         try:
             os.kill(pid, sig)
+            if sig == signal.SIGKILL:
+                self.worker_pop(pid)
         except OSError as e:
             if e.errno == errno.ESRCH:
                 self.worker_pop(pid)
