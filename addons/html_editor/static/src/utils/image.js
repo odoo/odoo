@@ -28,9 +28,95 @@ export function backgroundImageCssToParts(css) {
  * @returns {string} CSS 'background-image' property value
  */
 export function backgroundImagePartsToCss(parts) {
-    let css = parts.url || "";
-    if (parts.gradient) {
-        css += (css ? ", " : "") + parts.gradient;
+    return [parts.url, parts.gradient].filter(Boolean).join(", ") || "";
+}
+
+/**
+ * @param {HTMLImageElement} image
+ * @returns {string|null} The mimetype of the image.
+ */
+export function getMimetype(image) {
+    const src = getImageSrc(image);
+
+    return (
+        image.dataset.mimetype ||
+        image.dataset.mimetypeBeforeConversion ||
+        (src &&
+            ((src.endsWith(".png") && "image/png") ||
+                (src.endsWith(".webp") && "image/webp") ||
+                (src.endsWith(".jpg") && "image/jpeg") ||
+                (src.endsWith(".jpeg") && "image/jpeg"))) ||
+        null
+    );
+}
+
+/**
+ * @param {HTMLImageElement} img
+ * @returns {Promise<Boolean>}
+ */
+export async function isImageCorsProtected(img) {
+    const src = img.getAttribute("src");
+    if (!src) {
+        return false;
     }
-    return css || "none";
+    let isCorsProtected = false;
+    if (!src.startsWith("/") || /\/web\/image\/\d+-redirect\//.test(src)) {
+        // The `fetch()` used later in the code might fail if the image is
+        // CORS protected. We check upfront if it's the case.
+        // Two possible cases:
+        // 1. the `src` is an absolute URL from another domain.
+        //    For instance, abc.odoo.com vs abc.com which are actually the
+        //    same database behind.
+        // 2. A "attachment-url" which is just a redirect to the real image
+        //    which could be hosted on another website.
+        isCorsProtected = await fetch(src, { method: "HEAD" })
+            .then(() => false)
+            .catch(() => true);
+    }
+    return isCorsProtected;
+}
+
+/**
+ * @param {string} src
+ * @returns {Promise<Boolean>}
+ */
+export async function isSrcCorsProtected(src) {
+    const dummyImg = document.createElement("img");
+    dummyImg.src = src;
+    return isImageCorsProtected(dummyImg);
+}
+
+/**
+ * Returns the src of the image, or the src of the background-image if the
+ * element is not an image.
+ *
+ * @param {HTMLElement} el The element to get the src or background-image from.
+ * @returns {string|null} The src of the image.
+ */
+export function getImageSrc(el) {
+    if (el.tagName === "IMG") {
+        return el.getAttribute("src");
+    }
+    const url = backgroundImageCssToParts(el.style.backgroundImage).url;
+    return url && getBgImageURLFromURL(url);
+}
+
+/**
+ * Parse an element's background-image's url.
+ *
+ * @param {string} string a css value in the form 'url("...")'
+ * @returns {string|false} the src of the image or false if not parsable
+ */
+export function getBgImageURLFromURL(url) {
+    const match = url.match(/^url\((['"])(.*?)\1\)$/);
+    if (!match) {
+        return "";
+    }
+    const matchedURL = match[2];
+    // Make URL relative if possible
+    const fullURL = new URL(matchedURL, window.location.origin);
+    if (fullURL.origin === window.location.origin) {
+        return fullURL.href.slice(fullURL.origin.length);
+    }
+    return matchedURL;
 }

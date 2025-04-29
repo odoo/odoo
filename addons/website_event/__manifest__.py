@@ -13,6 +13,7 @@
         'website',
         'website_partner',
         'website_mail',
+        'html_builder',
     ],
     'data': [
         'data/event_data.xml',
@@ -77,6 +78,9 @@
         ],
         'website.assets_editor': [
             'website_event/static/src/js/systray_items/*.js',
+        ],
+        'html_builder.assets': [
+            'website_event/static/src/website_builder/**/*',
         ],
     },
     'author': 'Odoo S.A.',

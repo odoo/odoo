@@ -36,7 +36,7 @@ const IMAGE_SIZE = [
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection"];
-    static shared = ["getSelectedImage"];
+    static shared = ["getSelectedImage", "previewImage"];
     resources = {
         user_commands: [
             {
@@ -191,11 +191,6 @@ export class ImagePlugin extends Plugin {
 
     setup() {
         this.imageSize = reactive({ displayName: "Default" });
-        this.addDomListener(this.editable, "dblclick", (e) => {
-            if (e.target.tagName === "IMG") {
-                this.previewImage();
-            }
-        });
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (e.target.tagName === "IMG") {
                 const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(e.target);
@@ -373,6 +368,7 @@ export class ImagePlugin extends Plugin {
         return {
             id: "image_transform",
             icon: "fa-object-ungroup",
+            title: _t("Transform the picture (click twice to reset transformation)"),
             getSelectedImage: this.getSelectedImage.bind(this),
             resetImageTransformation: this.resetImageTransformation.bind(this),
             addStep: this.dependencies.history.addStep.bind(this),

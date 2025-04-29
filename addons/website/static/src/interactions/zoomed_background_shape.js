@@ -71,9 +71,3 @@ export class ZoomedBackgroundShape extends Interaction {
 registry
     .category("public.interactions")
     .add("website.zoomed_background_shape", ZoomedBackgroundShape);
-
-registry
-    .category("public.interactions.edit")
-    .add("website.zoomed_background_shape", {
-        Interaction: ZoomedBackgroundShape,
-    });

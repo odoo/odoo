@@ -8,7 +8,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { switchToEditMode } from "../../helpers";
 import { queryAll } from "@odoo/hoot-dom";
 
-setupInteractionWhiteList("website.carousel_section_slider");
+setupInteractionWhiteList("website.carousel_edit");
 
 describe.current.tags("interaction_dev");
 

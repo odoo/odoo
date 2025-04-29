@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale_comparison.ProductPageOption" t-inherit="website_sale.ProductPageOption" t-inherit-mode="extension">
+    <BuilderRow id="'o_we_actions_opt'" position="inside">
+        <BuilderButton title.translate="Compare"
+            action="'websiteConfig'"
+            actionParam="{views:['website_sale_comparison.product_add_to_compare']}"
+        >
+            <i class="fa fa-fw fa-exchange"/>
+            Compare
+        </BuilderButton>
+    </BuilderRow>
+    <BuilderRow id="'o_we_actions_opt'" position="after">
+        <BuilderRow label.translate="Specification">
+            <BuilderSelect action="'websiteConfig'">
+                <BuilderSelectItem actionParam="{views:[]}">None</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views:['website_sale_comparison.product_attributes_body']}">Bottom of Page</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views:['website_sale_comparison.accordion_specs_item']}">In accordion</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderRow>
+</t>
+
+</templates>

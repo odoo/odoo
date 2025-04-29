@@ -366,7 +366,9 @@ export class FileSelector extends Component {
             .then(async (result) => {
                 const blob = await result.blob();
                 blob.id = new Date().getTime();
-                blob.name = new URL(url).pathname.split("/").findLast((s) => s);
+                blob.name = new URL(url, window.location.href).pathname
+                    .split("/")
+                    .findLast((s) => s);
                 await this.uploadFiles([blob]);
             })
             .catch(async () => {
@@ -386,20 +388,23 @@ export class FileSelector extends Component {
                         resolve();
                     };
                     imageEl.onload = () => {
-                        this.uploadService
-                            .uploadUrl(
-                                url,
-                                {
-                                    resModel: this.props.resModel,
-                                    resId: this.props.resId,
-                                },
-                                (attachment) => this.onUploaded(attachment)
-                            )
-                            .then(resolve);
+                        this.onLoadUploadedUrl(url, resolve);
                     };
                     imageEl.src = url;
                 });
             });
+    }
+
+    async onLoadUploadedUrl(url, resolve) {
+        await this.uploadService.uploadUrl(
+            url,
+            {
+                resModel: this.props.resModel,
+                resId: this.props.resId,
+            },
+            (attachment) => this.onUploaded(attachment)
+        );
+        resolve();
     }
 
     async onUploaded(attachment) {

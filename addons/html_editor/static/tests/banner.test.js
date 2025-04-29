@@ -195,6 +195,45 @@ test("Can change an emoji banner", async () => {
     expect("i.o_editor_banner_icon").toHaveText("😀");
 });
 
+test("toolbar should be closed when you open the emojipicker", async () => {
+    const { editor, el } = await setupEditor(`<p class="test">Test</p><p>a[]</p>`);
+    await insertText(editor, "/bannerinfo");
+    await press("enter");
+
+    // Move the selection to open the toolbar
+    const textNode = el.querySelector(".test").childNodes[0];
+    setSelection({ anchorNode: textNode, anchorOffset: 0, focusNode: textNode, focusOffset: 2 });
+    await waitFor(".o-we-toolbar");
+
+    await loader.loadEmoji();
+    await click("i.o_editor_banner_icon");
+    await waitFor(".o-EmojiPicker");
+    await animationFrame();
+    expect(".o-EmojiPicker").toHaveCount(1);
+    expect(".o-we-toolbar").toHaveCount(0);
+});
+
+test.tags("desktop", "iframe");
+test("toolbar should be closed when you open the emojipicker (iframe)", async () => {
+    const { editor, el } = await setupEditor(`<p class="test">Test</p><p>a[]</p>`, {
+        props: { iframe: true },
+    });
+    await insertText(editor, "/bannerinfo");
+    await press("enter");
+
+    // Move the selection to open the toolbar
+    const textNode = el.querySelector(".test").childNodes[0];
+    setSelection({ anchorNode: textNode, anchorOffset: 0, focusNode: textNode, focusOffset: 2 });
+    await waitFor(".o-we-toolbar");
+
+    await loader.loadEmoji();
+    await click(":iframe i.o_editor_banner_icon");
+    await waitFor(".o-EmojiPicker");
+    await animationFrame();
+    expect(".o-EmojiPicker").toHaveCount(1);
+    expect(".o-we-toolbar").toHaveCount(0);
+});
+
 test("add banner inside empty list", async () => {
     const { el, editor } = await setupEditor("<ul><li>[]<br></li></ul>");
     await insertText(editor, "/bannerinfo");

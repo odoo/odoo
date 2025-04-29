@@ -65,6 +65,9 @@ import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/vid
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
 import { EditorVersionPlugin } from "./core/editor_version_plugin";
+import { ImagePostProcessPlugin } from "./main/media/image_post_process_plugin";
+import { DoubleClickImagePreviewPlugin } from "./main/media/dblclick_image_preview_plugin";
+import { StylePlugin } from "./core/style_plugin";
 
 /**
  * @typedef { Object } SharedMethods
@@ -121,6 +124,7 @@ export const CORE_PLUGINS = [
     SelectionPlugin,
     SplitPlugin,
     UserCommandPlugin,
+    StylePlugin,
 ];
 
 export const MAIN_PLUGINS = [
@@ -148,7 +152,9 @@ export const MAIN_PLUGINS = [
     YoutubePlugin,
     IconPlugin,
     ImagePlugin,
+    ImagePostProcessPlugin,
     ImageCropPlugin,
+    DoubleClickImagePreviewPlugin,
     LinkPlugin,
     LinkPastePlugin,
     FeffPlugin,

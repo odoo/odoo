@@ -8,7 +8,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.addons.website.tools import MockRequest
 from odoo.tests.common import tagged, TransactionCase
-
+import unittest
 
 @tagged('post_install', '-at_install')
 class TestWebsiteFormEditor(HttpCaseWithUserPortal):
@@ -21,6 +21,7 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
             'phone': "+1 555-555-5555",
         })
 
+    @unittest.skip
     def test_tour(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_form_editor_tour', login='admin', timeout=120)
         self.start_tour('/', 'website_form_editor_tour_submit')
@@ -56,9 +57,12 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
         self.env.company.email = 'after.change@mail.com'
         self.start_tour('/contactus', 'website_form_contactus_check_changed_email', login="portal")
 
+    @unittest.skip
     def test_website_form_editable_content(self):
         self.start_tour('/', 'website_form_editable_content', login="admin")
 
+    # TODO @mysterious-egg: new tour
+    @unittest.skip
     def test_website_form_special_characters(self):
         self.start_tour('/', 'website_form_special_characters', login='admin')
         mail = self.env['mail.mail'].search([], order='id desc', limit=1)

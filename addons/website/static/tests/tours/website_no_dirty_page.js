@@ -13,7 +13,7 @@ const makeSteps = (steps = []) => [
         groupName: "Content",
     }), {
         content: "Click on Discard",
-        trigger: '.o_we_website_top_actions [data-action="cancel"]',
+        trigger: ".o-snippets-top-actions [data-action='cancel']",
         run: "click",
     }, {
         content: "Check that discarding actually warns when there are dirty changes, and cancel",
@@ -26,14 +26,14 @@ const makeSteps = (steps = []) => [
         // This makes sure the last step about leaving edit mode at the end of
         // this tour makes sense.
         content: "Confirm we are in edit mode",
-        trigger: 'body.editor_has_snippets',
+        trigger: ":iframe #wrapwrap.odoo-editor-editable",
     },
     ...steps,
     {
         // Makes sure the dirty flag does not happen after a setTimeout or
         // something like that.
         content: "Click elsewhere and wait for a few ms",
-        trigger: ":iframe #wrap",
+        trigger: ":iframe body",
         async run(actions) {
             // TODO: use actions.click(); instead
             this.anchor.click();
@@ -50,11 +50,11 @@ const makeSteps = (steps = []) => [
     },
     {
         content: "Click on Discard",
-        trigger: '.o_we_website_top_actions [data-action="cancel"]',
+        trigger: ".o-snippets-top-actions [data-action='cancel']",
         run: "click",
     }, {
         content: "Confirm we are not in edit mode anymore",
-        trigger: 'body:not(.editor_has_snippets)',
+        trigger: ":iframe #wrapwrap:not(.odoo-editor-editable)",
     },
 ];
 
