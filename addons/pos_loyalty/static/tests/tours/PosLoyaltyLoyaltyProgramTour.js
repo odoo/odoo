@@ -302,3 +302,17 @@ registry.category("web_tour.tours").add("PosCheapestProductTaxInclude", {
             PosLoyalty.orderTotalIs("6.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_not_create_loyalty_card_expired_program", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.addOrderline("Desk Organizer", "3"),
+            PosLoyalty.finalizeOrder("Cash", "15.3"),
+        ].flat(),
+});

@@ -2476,3 +2476,23 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_loyalty_on_order_with_fixed_tax', login="pos_user")
+
+    def test_not_create_loyalty_card_expired_program(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['res.partner'].create({'name': 'Test Partner'})
+
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+        loyalty_program.write({
+            'date_from': date.today() - timedelta(days=10),
+            'date_to': date.today() - timedelta(days=5),
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_not_create_loyalty_card_expired_program",
+            login="pos_user",
+        )
+
+        self.assertEqual(loyalty_program.coupon_count, 0)
