@@ -571,7 +571,6 @@ class Html(BaseString):
             if not name.startswith('x_') and name_ not in self._tmp:
                 _logger.warning("convert translate to html_translate for field %s", name_)
                 self._tmp.add(name_)
-            attrs['translate'] = html_translate
         return attrs
 
     _related_sanitize = property(attrgetter('sanitize'))
