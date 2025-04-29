@@ -1,4 +1,5 @@
 import logging
+import time
 import timeit
 from typing import Literal
 
@@ -81,8 +82,13 @@ class TestPerformanceTimeit(TransactionCase):
         """
         assert repeat > 1, "repeat at least twice as the first result is often slower"
         assert number > 0, "number of runs must be positive"
-        times = timeit.repeat(code, globals={**ctx, 'records': records}, repeat=repeat, number=number)
-        best_mean = min(times) / number * 1_000_000
+        args = dict(globals={**ctx, 'records': records}, repeat=repeat, number=number, timer=time.process_time_ns)
+        times = timeit.repeat(code, **args)
+        if min(times) == 0:
+            _logger.info("  retry with default timer, result is too small")
+            args['timer'] = time.perf_counter_ns
+            times = timeit.repeat(code, **args)
+        best_mean = min(times) / number / 1000
         if relative_size != 1:
             _logger.info("  `%s` takes %.3fµs (%.3fµs/%d)", code, best_mean / relative_size, best_mean, relative_size)
         else:
