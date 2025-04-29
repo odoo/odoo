@@ -279,6 +279,12 @@ class AccountMoveLine(models.Model):
         comodel_name='account.move.line',
         compute='_compute_reconciled_lines_ids', inverse='_inverse_reconciled_lines_ids',
     )
+    # Technical field that filters the reconciled_lines_ids to remove the exchange diff line.
+    reconciled_lines_excluding_exchange_diff_ids = fields.Many2many(
+        comodel_name='account.move.line',
+        compute='_compute_reconciled_lines_excluding_exchange_diff_ids',
+    )
+
     matching_number = fields.Char(
         string="Matching #",
         copy=False,
@@ -1080,6 +1086,16 @@ class AccountMoveLine(models.Model):
     def _compute_reconciled_lines_ids(self):
         for line in self:
             line.reconciled_lines_ids = line.matched_debit_ids.debit_move_id + line.matched_credit_ids.credit_move_id
+
+    @api.depends('matched_debit_ids', 'matched_credit_ids')
+    def _compute_reconciled_lines_excluding_exchange_diff_ids(self):
+        for line in self:
+            all_lines = line.matched_debit_ids.debit_move_id + line.matched_credit_ids.credit_move_id
+            excluded_ids = (
+                line.matched_debit_ids.exchange_move_id.line_ids +
+                line.matched_credit_ids.exchange_move_id.line_ids
+            )
+            line.reconciled_lines_excluding_exchange_diff_ids = all_lines - excluded_ids
 
     def _search_payment_date(self, operator, value):
         if operator == 'in':
