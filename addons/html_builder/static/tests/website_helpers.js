@@ -225,6 +225,7 @@ export async function setupWebsiteBuilder(
         getEditor: () => editor,
         getEditableContent: () => editableContent,
         openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
+        getIframeEl: () => iframe,
     };
 }
 
