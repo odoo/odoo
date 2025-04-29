@@ -59,8 +59,8 @@ export function assertPathName(pathname, trigger) {
 export function changeBackground(snippet, position = "bottom") {
     return [
         {
-            trigger: ".o_we_customize_panel .o_we_bg_success",
-        content: markup(_t("<b>Customize</b> any block through this menu. Try to change the background image of this block.")),
+            trigger: `.o_customize_tab button[data-action-id="replaceBgImage"]`,
+            content: markup(_t("<b>Customize</b> any block through this menu. Try to change the background image of this block.")),
             tooltipPosition: position,
             run: "click",
         },
@@ -69,17 +69,19 @@ export function changeBackground(snippet, position = "bottom") {
 
 export function changeBackgroundColor(position = "bottom") {
     return {
-        trigger: ".o_we_customize_panel .o_we_color_preview",
+        trigger: ".o_customize_tab .o_we_color_preview",
         content: markup(_t("<b>Customize</b> any block through this menu. Try to change the background color of this block.")),
         tooltipPosition: position,
         run: "click",
     };
 }
 
+// TODO: RAHG: This function's trigger is same as above. need to be changed
+// to avoid duplication
 export function selectColorPalette(position = "left") {
     return {
         trigger:
-            ".o_we_customize_panel .o_we_so_color_palette we-selection-items, .o_we_customize_panel .o_we_color_preview",
+            ".o_customize_tab .o_we_color_preview",
         content: markup(_t(`<b>Select</b> a Color Palette.`)),
         tooltipPosition: position,
         run: 'click',
@@ -88,7 +90,7 @@ export function selectColorPalette(position = "left") {
 
 export function changeColumnSize(position = "right") {
     return {
-        trigger: `:iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
+        trigger: `.oe_overlay.oe_active .o_handles .o_handle:not(.readonly)`,
         content: markup(_t("<b>Slide</b> this button to change the column size.")),
         tooltipPosition: position,
         run: "click",
@@ -98,11 +100,11 @@ export function changeColumnSize(position = "right") {
 export function changeImage(snippet, position = "bottom") {
     return [
         {
-            trigger: "body.editor_enable",
+            trigger: "body :iframe .odoo-editor-editable",
         },
         {
             trigger: snippet.id ? `#wrapwrap .${snippet.id} img` : snippet,
-        content: markup(_t("<b>Double click on an image</b> to change it with one of your choice.")),
+            content: markup(_t("<b>Double click on an image</b> to change it with one of your choice.")),
             tooltipPosition: position,
             run: "dblclick",
         },
@@ -115,14 +117,45 @@ export function changeImage(snippet, position = "bottom") {
     Set allowPalette to true to select options within a palette.
 */
 export function changeOption(optionName, weName = '', optionTooltipLabel = '', position = "bottom", allowPalette = false) {
-    const noPalette = allowPalette ? '' : '.o_we_customize_panel:not(:has(.o_we_so_color_palette.o_we_widget_opened))';
-    const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
+    const noPalette = allowPalette ? "" : !document.querySelector(".o_popover .o_font_color_selector") && ".o_customize_tab";
+    const option_block = `${noPalette} [data-container-title='${optionName}']`;
     return {
-        trigger: `${option_block} ${weName}, ${option_block} [title='${weName}']`,
+        trigger: `${option_block} ${weName}, ${option_block} [data-action-id="${weName}"]`,
         content: markup(_t("<b>Click</b> on this option to change the %s of the block.", optionTooltipLabel)),
         tooltipPosition: position,
         run: "click",
     };
+}
+
+/*
+ * This function is used when the desired UI control is embedded inside popover
+ * (e.g., a dropdown that appears only after clicking a toggle).
+ *
+ * It constructs two steps:
+ *   1. Clicks the dropdown toggle or control to open the popover.
+ *   2. Clicks the target element (option) inside the popover.
+ *
+ * Note: This function assumes that the popover content is available and render
+ *       immediately after the first click.
+ *
+ * @param {string} blockName - The name of the block (e.g., "Text - Image").
+ * @param {string} optionName - The name of the option (e.g., "Visibility").
+ * @param {string} elementName - The name of the element to be clicked inside
+ *                               the popover (e.g., "Conditionally").
+ *
+ * Example:
+ *      ...changeOptionInPopover("Text - Image", "Visibility", "Conditionally")
+ */
+export function changeOptionInPopover(blockName, optionName, elementName) {
+    const steps = [changeOption(blockName, `[data-label='${optionName}'] .dropdown-toggle`)];
+
+    steps.push(
+        clickOnElement(
+            `${elementName} in the ${optionName} option`,
+            `.o_popover div:contains("${elementName}"), .o_popover ${elementName}`
+        )
+    );
+    return steps;
 }
 
 export function selectNested(trigger, optionName, altTrigger = null, optionTooltipLabel = '', position = "top", allowPalette = false) {
@@ -144,7 +177,7 @@ export function changePaddingSize(direction) {
         position = "bottom";
     }
     return {
-        trigger: `:iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
+        trigger: `.oe_overlay.oe_active .o_handle.${paddingDirection}`,
         content: markup(_t("<b>Slide</b> this button to change the %s padding", direction)),
         tooltipPosition: position,
         run: "click",
@@ -166,7 +199,9 @@ export function checkIfVisibleOnScreen(elementSelector) {
             const boundingRect = this.anchor.getBoundingClientRect();
             const centerX = boundingRect.left + boundingRect.width / 2;
             const centerY = boundingRect.top + boundingRect.height / 2;
-            const iframeDocument = document.querySelector(".o_iframe").contentDocument;
+            const iframeDocument = document.querySelector(
+                ".o_website_preview iframe"
+            ).contentDocument;
             const el = iframeDocument.elementFromPoint(centerX, centerY);
             if (!this.anchor.contains(el)) {
                 console.error("The element is not visible on screen");
@@ -196,12 +231,12 @@ export function clickOnElement(elementName, selector) {
 export function clickOnEditAndWaitEditMode(position = "bottom") {
     return [{
         content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
-        trigger: "body:not(.editor_has_snippets) .o_menu_systray .o_edit_website_container a",
+        trigger: "body .o_menu_systray a:contains('Edit')",
         tooltipPosition: position,
         run: "click",
     }, {
         content: "Check that we are in edit mode",
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        trigger: ".o_website_preview :iframe .odoo-editor-editable",
     }];
 }
 
@@ -214,7 +249,7 @@ export function clickOnEditAndWaitEditMode(position = "bottom") {
 export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
     return [{
         content: markup(_t("<b>Click Edit</b> dropdown")),
-        trigger: ".o_edit_website_container button",
+        trigger: "body .o_menu_systray button:contains('Edit')",
         tooltipPosition: position,
         run: "click",
     }, {
@@ -224,7 +259,7 @@ export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") 
         run: "click",
     }, {
         content: "Check that we are in edit mode",
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        trigger: ".o_website_preview :iframe .odoo-editor-editable",
     }];
 }
 
@@ -237,12 +272,12 @@ export function clickOnSnippet(snippet, position = "bottom") {
     const trigger = snippet.id ? `#wrapwrap .${snippet.id}` : snippet;
     return [
         {
-            trigger: "body.editor_has_snippets",
+            trigger: ".o-website-builder_sidebar",
             noPrepend: true,
         },
         {
             trigger: `:iframe ${trigger}`,
-        content: markup(_t("<b>Click on a snippet</b> to access its options menu.")),
+            content: markup(_t("<b>Click on a snippet</b> to access its options menu.")),
             tooltipPosition: position,
             run: "click",
         },
@@ -252,7 +287,7 @@ export function clickOnSnippet(snippet, position = "bottom") {
 export function clickOnSave(position = "bottom", timeout = 50000) {
     return [
         {
-            trigger: "#oe_snippets:not(:has(.o_we_ongoing_insertion))",
+            trigger: ".o-snippets-menu:not(:has(.o_we_ongoing_insertion))",
         },
         {
             trigger: "body:not(:has(.o_dialog))",
@@ -293,7 +328,7 @@ export function clickOnSave(position = "bottom", timeout = 50000) {
 export function clickOnText(snippet, element, position = "bottom") {
     return [
         {
-            trigger: ":iframe body.editor_enable",
+            trigger: ":iframe body .odoo-editor-editable",
         },
         {
             trigger: snippet.id ? `:iframe #wrapwrap .${snippet.id} ${element}` : snippet,
@@ -315,14 +350,14 @@ export function clickOnText(snippet, element, position = "bottom") {
 export function insertSnippet(snippet, position = "bottom") {
     const blockEl = snippet.groupName || snippet.name;
     const insertSnippetSteps = [{
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        trigger: ".o_website_preview :iframe .odoo-editor-editable",
         noPrepend: true,
     }];
-    const snippetIDSelector = snippet.id ? `[data-snippet-id="${snippet.id}"]` : `[data-snippet-id^="${snippet.customID}_"]`;
+    const snippetIDSelector = snippet.id ? `[data-snippet="${snippet.id}"]` : `[data-snippet^="${snippet.customID}"]`;
     if (snippet.groupName) {
         insertSnippetSteps.push({
             content: markup(_t("Click on the <b>%s</b> category.", blockEl)),
-            trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
+            trigger: `#snippet_groups .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion) .o_snippet_thumbnail_area`,
             tooltipPosition: position,
             run: "click",
         },
@@ -330,18 +365,15 @@ export function insertSnippet(snippet, position = "bottom") {
             content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
             // FIXME `:not(.d-none)` should obviously not be needed but it seems
             // currently needed when using a tour in user/interactive mode.
-            trigger: `:iframe .o_snippet_preview_wrap${snippetIDSelector}:not(.d-none)`,
+            trigger: `:iframe .o_snippet_preview_wrap > ${snippetIDSelector}:not(.d-none)`,
             noPrepend: true,
             tooltipPosition: "top",
             run: "click",
-        },
-        {
-            trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
         });
     } else {
         insertSnippetSteps.push({
             content: markup(_t("Drag the <b>%s</b> block and drop it at the bottom of the page.", blockEl)),
-            trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
+            trigger: `#snippet_content .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
             tooltipPosition: position,
             run: "drag_and_drop :iframe #wrapwrap > footer",
         });
@@ -351,7 +383,7 @@ export function insertSnippet(snippet, position = "bottom") {
 
 export function goBackToBlocks(position = "bottom") {
     return {
-        trigger: '.o_we_add_snippet_btn',
+        trigger: "button[data-name='blocks']",
         content: _t("Click here to go back to block tab."),
         tooltipPosition: position,
         run: "click",
@@ -361,10 +393,10 @@ export function goBackToBlocks(position = "bottom") {
 export function goToTheme(position = "bottom") {
     return [
         {
-            trigger: "#oe_snippets.o_loaded",
+            trigger: ".o-website-builder_sidebar",
         },
         {
-            trigger: ".o_we_customize_theme_btn",
+            trigger: "button[data-name='theme']",
             content: _t("Go to the Theme tab"),
             tooltipPosition: position,
             run: "click",
@@ -452,7 +484,7 @@ export function registerWebsitePreviewTour(name, options, steps) {
             if (options.edition) {
                 tourSteps.unshift({
                     content: "Wait for the edit mode to be started",
-                    trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+                    trigger: ".o_website_preview :iframe .odoo-editor-editable",
                     timeout: 30000,
                 });
             } else {
@@ -471,16 +503,14 @@ export function registerThemeHomepageTour(name, steps) {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
     return registerWebsitePreviewTour(
-        "homepage",
+        name,
         {
             url: "/",
         },
         () => [
             ...clickOnEditAndWaitEditMode(),
             ...prepend_trigger(
-                steps().concat(clickOnSave()),
-                ".o_website_preview[data-view-xmlid='website.homepage'] "
-            ),
+                steps().concat(clickOnSave())),
         ]
     );
 }
@@ -588,16 +618,16 @@ export function toggleMobilePreview(toggleOn) {
     const mobileOffSelector = ":not(.o_is_mobile)";
     return [
         {
-            trigger: `:iframe html${toggleOn ? mobileOffSelector : mobileOnSelector}`,
+            trigger: `div.o_website_preview${toggleOn ? mobileOffSelector : mobileOnSelector}`,
         },
         {
             content: `Toggle the mobile preview ${onOrOff}`,
-            trigger: ".o_we_website_top_actions [data-action='mobile']",
+            trigger: ".o-snippets-top-actions [data-action='mobile']",
             run: "click",
         },
         {
             content: `Check that the mobile preview is ${onOrOff}`,
-            trigger: `:iframe html${toggleOn ? mobileOnSelector : mobileOffSelector}`,
+            trigger: `div.o_website_preview${toggleOn ? mobileOnSelector : mobileOffSelector}`,
         },
     ];
 }

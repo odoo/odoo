@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_mail_group.MailGroupOption">
+    <BuilderRow>
+        <BuilderMany2One
+            action="'mailGroupAction'"
+            model="'mail.group'"
+            allowUnselect="false"
+            createAction="'createMailGroup'"
+        />
+    </BuilderRow>
+</t>
+
+</templates>

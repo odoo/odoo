@@ -1,0 +1,277 @@
+import { ChartOption, DATASET_KEY_PREFIX } from "./chart_option";
+import { getCSSVariableValue } from "@html_builder/utils/utils_css";
+import { Plugin } from "@html_editor/plugin";
+import { registry } from "@web/core/registry";
+import { isCSSColor } from "@web/core/utils/colors";
+
+class ChartOptionPlugin extends Plugin {
+    static id = "chartOptionPlugin";
+    static dependencies = ["history"];
+    resources = {
+        builder_options: [
+            {
+                OptionComponent: ChartOption,
+                selector: ".s_chart",
+                props: {
+                    isPieChart: this.isPieChart,
+                    getColor: (color) => this.getColor(color),
+                },
+            },
+        ],
+        so_content_addition_selector: [".s_chart"],
+        builder_actions: this.getActions(),
+    };
+
+    updateDOMData(editingElement, data) {
+        editingElement.dataset.data = JSON.stringify(data);
+    }
+
+    getActions() {
+        return {
+            setChartType: {
+                isApplied: ({ editingElement, value }) => editingElement.dataset.type === value,
+                apply: ({ editingElement, value }) => {
+                    editingElement.dataset.type = value;
+
+                    const data = this.getData(editingElement);
+                    if (this.isPieChart(editingElement)) {
+                        if (typeof data.datasets[0].backgroundColor === "string") {
+                            data.datasets.forEach((dataset) => {
+                                dataset.backgroundColor = [dataset.backgroundColor];
+                                dataset.borderColor = [dataset.borderColor];
+                                for (let i = 1; i < data.labels.length; i++) {
+                                    dataset.backgroundColor.push(this.randomColor());
+                                    dataset.borderColor.push("");
+                                }
+                            });
+                        }
+                    } else if (Array.isArray(data.datasets[0].backgroundColor)) {
+                        data.datasets.forEach((dataset) => {
+                            dataset.backgroundColor = dataset.backgroundColor[0];
+                            dataset.borderColor = dataset.borderColor[0];
+                        });
+                    }
+                    this.updateDOMData(editingElement, data);
+                },
+            },
+            addColumn: {
+                apply: ({ editingElement }) => {
+                    const data = this.getData(editingElement);
+                    const fillDatasetArray = (value) => Array(data.labels.length).fill(value);
+
+                    const newDataset = {
+                        key: DATASET_KEY_PREFIX + Date.now(),
+                        label: "",
+                        data: fillDatasetArray(0),
+                        backgroundColor: this.isPieChart(editingElement)
+                            ? data.labels.map(() => this.randomColor())
+                            : "",
+                        borderColor: this.isPieChart(editingElement) ? fillDatasetArray("") : "",
+                    };
+                    data.datasets.push(newDataset);
+                    this.updateDOMData(editingElement, data);
+                },
+            },
+            removeColumn: {
+                apply: ({ editingElement, param: { mainParam: key } }) => {
+                    const data = this.getData(editingElement);
+                    const toRemoveIndex = data.datasets.findIndex((dataset) => dataset.key === key);
+                    data.datasets.splice(toRemoveIndex, 1);
+                    this.updateDOMData(editingElement, data);
+                },
+            },
+            addRow: {
+                apply: ({ editingElement }) => {
+                    const data = this.getData(editingElement);
+                    data.labels.push("");
+                    data.datasets.forEach((dataset) => {
+                        dataset.data.push(0);
+                        if (this.isPieChart(editingElement)) {
+                            dataset.backgroundColor.push(this.randomColor());
+                            dataset.borderColor.push("");
+                        }
+                    });
+                    this.updateDOMData(editingElement, data);
+                },
+            },
+            removeRow: {
+                apply: ({ editingElement, param: { mainParam: labelIndex } }) => {
+                    const data = this.getData(editingElement);
+                    data.labels.splice(labelIndex, 1);
+                    data.datasets.forEach((dataset) => {
+                        dataset.data.splice(labelIndex, 1);
+                        if (this.isPieChart(editingElement)) {
+                            dataset.backgroundColor.splice(labelIndex, 1);
+                            dataset.borderColor.splice(labelIndex, 1);
+                        }
+                    });
+                    this.updateDOMData(editingElement, data);
+                },
+            },
+            updateDatasetValue: {
+                getValue: ({ editingElement, param: { datasetKey, valueIndex } }) => {
+                    const data = this.getData(editingElement);
+                    const targetDataset = data.datasets.find(
+                        (dataset) => dataset.key === datasetKey
+                    );
+                    return targetDataset?.data[valueIndex] || 0;
+                },
+                apply: ({ editingElement, value, param: { datasetKey, valueIndex } }) => {
+                    const data = this.getData(editingElement);
+                    const targetDataset = data.datasets.find(
+                        (dataset) => dataset.key === datasetKey
+                    );
+                    targetDataset.data[valueIndex] = value;
+                    this.updateDOMData(editingElement, data);
+                },
+            },
+            updateDatasetLabel: {
+                getValue: ({ editingElement, param: { mainParam: datasetKey } }) => {
+                    const data = this.getData(editingElement);
+                    const targetDataset = data.datasets.find(
+                        (dataset) => dataset.key === datasetKey
+                    );
+                    return targetDataset?.label;
+                },
+                apply: ({ editingElement, value, param: { mainParam: datasetKey } }) => {
+                    const data = this.getData(editingElement);
+                    const targetDataset = data.datasets.find(
+                        (dataset) => dataset.key === datasetKey
+                    );
+                    targetDataset.label = value;
+                    this.updateDOMData(editingElement, data);
+                },
+            },
+            updateLabelName: {
+                getValue: ({ editingElement, param: { mainParam: labelIndex } }) => {
+                    const data = this.getData(editingElement);
+                    return data.labels[labelIndex];
+                },
+                apply: ({ editingElement, value, param: { mainParam: labelIndex } }) => {
+                    const data = this.getData(editingElement);
+                    data.labels[labelIndex] = value;
+                    this.updateDOMData(editingElement, data);
+                },
+            },
+            setMinMax: {
+                getValue: ({ editingElement, param: { mainParam: type } }) => {
+                    if (type === "min") {
+                        return parseInt(editingElement.dataset.ticksMin) || "";
+                    }
+                    if (type === "max") {
+                        return parseInt(editingElement.dataset.ticksMax) || "";
+                    }
+                },
+                apply: ({ editingElement, value, param: { mainParam: type } }) => {
+                    let minValue, maxValue;
+                    let noMin = false;
+                    let noMax = false;
+                    if (type === "min") {
+                        minValue = parseInt(value);
+                        maxValue = parseInt(editingElement.dataset.ticksMax);
+                    }
+                    if (type === "max") {
+                        maxValue = parseInt(value);
+                        minValue = parseInt(editingElement.dataset.ticksMin);
+                    }
+                    if (isNaN(minValue)) {
+                        noMin = true;
+                        minValue = 0;
+                    }
+
+                    if (!isNaN(maxValue)) {
+                        if (maxValue < minValue) {
+                            [minValue, maxValue] = [maxValue, minValue];
+                            [noMin, noMax] = [noMax, noMin];
+                        } else if (maxValue === minValue) {
+                            minValue = minValue < 0 ? 2 * minValue : 0;
+                            maxValue = minValue < 0 ? 0 : 2 * maxValue;
+                        }
+                    } else {
+                        noMax = true;
+                        maxValue = this.getMaxValue(editingElement);
+                        // When max value is not given and min value is greater
+                        // than chart data values
+                        if (minValue > maxValue) {
+                            maxValue = minValue;
+                            [noMin, noMax] = [noMax, noMin];
+                        }
+                    }
+
+                    if (noMin) {
+                        delete editingElement.dataset.ticksMin;
+                    } else {
+                        editingElement.dataset.ticksMin = minValue;
+                    }
+                    if (noMax) {
+                        delete editingElement.dataset.ticksMax;
+                    } else {
+                        editingElement.dataset.ticksMax = maxValue;
+                    }
+                },
+            },
+            colorChange: {
+                getValue: ({ editingElement, param: { type, datasetIndex, dataIndex } }) => {
+                    const data = this.getData(editingElement);
+                    if (this.isPieChart(editingElement)) {
+                        // TODO: shouldn't getColor be done directly in BuilderColorPicker?
+                        return this.getColor(data.datasets[datasetIndex]?.[type][dataIndex]);
+                    } else {
+                        return this.getColor(data.datasets[datasetIndex]?.[type]);
+                    }
+                },
+                apply: ({ editingElement, value, param: { type, datasetIndex, dataIndex } }) => {
+                    const data = this.getData(editingElement);
+                    if (this.isPieChart(editingElement)) {
+                        data.datasets[datasetIndex][type][dataIndex] = value;
+                    } else {
+                        data.datasets[datasetIndex][type] = value;
+                    }
+                    this.updateDOMData(editingElement, data);
+                },
+            },
+        };
+    }
+
+    getData(editingElement) {
+        return JSON.parse(editingElement.dataset.data);
+    }
+
+    isPieChart(editingElement) {
+        return ["pie", "doughnut"].includes(editingElement.dataset.type);
+    }
+
+    getMaxValue(editingElement) {
+        const datasets = this.getData(editingElement).datasets;
+        let dataValues;
+        if (!editingElement.dataset.stacked) {
+            dataValues = datasets.flatMap((set) => set.data.map((data) => parseInt(data) || 0));
+        } else {
+            dataValues = datasets.reduce((acc, set) => {
+                const data = set.data.map((data) => parseInt(data) || 0);
+                return acc.map((value, i) => value + data[i]);
+            }, Array(datasets[0].data.length).fill(0));
+        }
+        return Math.ceil(Math.max(...dataValues) / 5) * 5;
+    }
+
+    getColor(color) {
+        if (!color) {
+            return "";
+        }
+        return isCSSColor(color)
+            ? color
+            : getCSSVariableValue(
+                  color,
+                  this.document.defaultView.getComputedStyle(this.document.documentElement)
+              );
+    }
+
+    randomColor() {
+        return (
+            "#" + ("00000" + ((Math.random() * (1 << 24)) | 0).toString(16)).slice(-6).toUpperCase()
+        );
+    }
+}
+
+registry.category("website-plugins").add(ChartOptionPlugin.id, ChartOptionPlugin);

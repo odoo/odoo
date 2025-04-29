@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.CarouselOption">
+    <BuilderRow label.translate="Slide">
+        <BuilderButton title.translate="Add Slide"  action="'addSlide'">Add Slide</BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Style">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Classic</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_controllers_indicators_outside'">Indicators outside</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Invert colors" level="1">
+        <BuilderCheckbox classAction="'carousel-dark'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Arrows" level="1">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'s_carousel_default'">Default</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_boxed'">Boxed</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_rounded'">Rounded</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_arrows_hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Indicators" applyTo="'.carousel-indicators'" level="1">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Bars</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_indicators_dots'">Dots</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_indicators_numbers'">Numbers</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_indicators_hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Transition">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'slide'">Slide</BuilderSelectItem>
+            <BuilderSelectItem classAction="'carousel-fade slide'">Fade</BuilderSelectItem>
+            <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Speed">
+	    <BuilderNumberInput dataAttributeAction="'bsInterval'"
+            default="10"
+            unit="'s'"
+            saveUnit="'ms'"
+            step="0.1"
+            min="0"
+            preview="false"
+            applyWithUnit="false"/>
+    </BuilderRow>
+
+</t>
+
+<t t-name="html_builder.CarouselItemHeaderMiddleButtons">
+    <button class="btn btn-primary ms-0 py-0 px-1 me-1"
+            title="Move Backward"
+            aria-label="Move Backward"
+            t-on-click="slidePrev">
+        <span class="fa fa-fw fa-angle-left"/>
+    </button>
+    <button class="btn btn-primary py-0 px-1 me-2"
+            title="Move Forward"
+            aria-label="Move Forward"
+            t-on-click="slideNext">
+        <span class="fa fa-fw fa-angle-right"/>
+    </button>
+    <button class="o_we_bg_success btn btn-primary ms-0 py-0 px-1 me-1"
+            title="Add Slide"
+            aria-label="Add Slide"
+            t-on-click="addSlide">
+        <span class="fa fa-fw fa-plus"/>
+    </button>
+    <button class="o_we_bg_danger btn btn-primary py-0 px-1 me-3"
+            title="Remove Slide"
+            aria-label="Remove Slide"
+            t-on-click="removeSlide">
+        <span class="fa fa-fw fa-minus"/>
+    </button>
+</t>
+
+</templates>

@@ -29,20 +29,19 @@ export function buildEditableInteractions(builders) {
         // Apply mixins from top-most class.
         let EI = makeEditable.Interaction;
         while (mixins.length) {
-            EI =  mixins.pop()(EI);
+            EI = mixins.pop()(EI);
         }
         if (!EI.name) {
             // if we get here, this is most likely because we have an anonymous
             // class. To make it easier to work with, we can add the name property
             // by doing a little hack
             const name = makeEditable.Interaction.name + "__mixin";
-            EI = {[name]: class extends EI {}} [name];
+            EI = { [name]: class extends EI {} }[name];
         }
         result.push(EI);
     }
     return result;
 }
-
 
 registry.category("services").add("website_edit", {
     dependencies: ["public.interactions"],
@@ -84,7 +83,6 @@ registry.category("services").add("website_edit", {
         };
     },
 });
-
 
 // Patch PublicRoot.
 

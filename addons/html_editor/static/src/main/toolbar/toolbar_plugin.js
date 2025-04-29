@@ -134,6 +134,7 @@ export class ToolbarPlugin extends Plugin {
     static shared = ["getToolbarInfo"];
     resources = {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
+        selection_leave_handlers: () => this.overlay.close(),
         step_added_handlers: () => this.updateToolbar(),
         user_commands: {
             id: "expandToolbar",
@@ -304,7 +305,6 @@ export class ToolbarPlugin extends Plugin {
     updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
         this.updateToolbarVisibility(selectionData);
         if (this.overlay.isOpen || this.config.disableFloatingToolbar) {
-            this.updateNamespace();
             this.updateButtonsStates(selectionData.editableSelection);
         }
     }
@@ -316,6 +316,7 @@ export class ToolbarPlugin extends Plugin {
     }
 
     updateToolbarVisibility(selectionData) {
+        this.updateNamespace();
         if (this.config.disableFloatingToolbar) {
             return;
         }
@@ -328,18 +329,23 @@ export class ToolbarPlugin extends Plugin {
                 this.isToolbarExpanded = false;
             }
             this.overlay.open({ props });
-        } else if (this.overlay.isOpen && !this.shouldPreventClosing(selectionData)) {
-            // Close toolbar
+        } else if (this.overlay.isOpen && !this.shouldPreventClosing()) {
             this.overlay.close();
         }
     }
 
     shouldBeVisible(selectionData) {
         const inEditable =
-            selectionData.documentSelectionIsInEditable &&
+            selectionData.currentSelectionIsInEditable &&
             !selectionData.documentSelectionIsProtected &&
             !selectionData.documentSelectionIsProtecting;
         if (!inEditable) {
+            return false;
+        }
+        const canDisplayToolbar = this.getResource("can_display_toolbar").every((fn) =>
+            fn(this.state.namespace)
+        );
+        if (!canDisplayToolbar) {
             return false;
         }
         if (this.isMobileToolbar) {
@@ -352,10 +358,11 @@ export class ToolbarPlugin extends Plugin {
         return this.getFilterTraverseNodes().length;
     }
 
-    shouldPreventClosing(selectionData) {
-        const preventClosing = selectionData.documentSelection?.anchorNode?.closest?.(
-            "[data-prevent-closing-overlay]"
-        );
+    shouldPreventClosing() {
+        // Should check in the document with overlays.
+        const preventClosing = document
+            .getSelection()
+            ?.anchorNode?.closest?.("[data-prevent-closing-overlay]");
         return preventClosing?.dataset?.preventClosingOverlay === "true";
     }
 

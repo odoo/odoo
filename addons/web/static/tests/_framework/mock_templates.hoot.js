@@ -33,7 +33,7 @@ const replaceAttributes = (template) => {
 
 const ATTRIBUTE_DEFAULT_VALUES = [
     // "alt": empty string
-    { attribute: "alt", value: "" },
+    { attribute: "alt", tagName: "img", value: "" },
     { attribute: "src", tagName: "iframe", value: "" },
     {
         attribute: "src",

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.FooterTemplateOption">
+    <BuilderRow label.translate="Template">
+        <BuilderSelect action="'websiteConfigFooter'">
+            <BuilderSelectItem title.translate="Default"
+                actionParam="{ view: 'website.footer_custom', vars: { 'footer-template': 'default' } }"
+            >
+                <Img src="'/website/static/src/img/snippets_options/footer_template_default.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Descriptive"
+                actionParam="{ view: 'website.template_footer_descriptive', vars: { 'footer-template': 'descriptive' } }"
+            >
+                <Img src="'/website/static/src/img/snippets_options/footer_template_descriptive.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Centered"
+                actionParam="{ view: 'website.template_footer_centered', vars: { 'footer-template': 'centered' } }"
+            >
+                <Img src="'/website/static/src/img/snippets_options/footer_template_centered.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Links"
+                actionParam="{ view: 'website.template_footer_links', vars: { 'footer-template': 'links' } }"
+            >
+                <Img src="'/website/static/src/img/snippets_options/footer_template_links.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Minimalist"
+                actionParam="{ view: 'website.template_footer_minimalist', vars: { 'footer-template': 'minimalist' } }"
+            >
+                <Img src="'/website/static/src/img/snippets_options/footer_template_minimalist.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Contact"
+                actionParam="{ view: 'website.template_footer_contact', vars: { 'footer-template': 'contact' } }"
+            >
+                <Img src="'/website/static/src/img/snippets_options/footer_template_contact.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Call-to-action"
+                actionParam="{ view: 'website.template_footer_call_to_action', vars: { 'footer-template': 'call_to_action' } }"
+            >
+                <Img src="'/website/static/src/img/snippets_options/footer_template_call_to_action.svg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Headline"
+                actionParam="{ view: 'website.template_footer_headline', vars: { 'footer-template': 'headline' } }"
+            >
+                <Img src="'/website/static/src/img/snippets_options/footer_template_headline.svg'"/>
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+<t t-name="html_builder.FooterWidthOption">
+    <BuilderRow label.translate="Content width">
+        <BuilderButtonGroup action="'websiteConfig'">
+            <BuilderButton classAction="'o_container_small'" actionParam="{ views: ['website.footer_copyright_content_width_small'] }">
+                <Img src="'/website/static/src/img/snippets_options/content_width_small.svg'"/>
+            </BuilderButton>
+            <BuilderButton classAction="'container'" actionParam="{ views: [] }">
+                <Img src="'/website/static/src/img/snippets_options/content_width_normal.svg'"/>
+            </BuilderButton>
+            <BuilderButton classAction="'container-fluid'" actionParam="{ views: ['website.footer_copyright_content_width_fluid'] }">
+                <Img src="'/website/static/src/img/snippets_options/content_width_full.svg'"/>
+            </BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+<t t-name="html_builder.FooterBorder">
+    <BorderConfigurator label.translate="Border"/>
+    <ShadowOption/>
+</t>
+
+<t t-name="html_builder.FooterScrollToTopOption">
+    <BuilderRow label.translate="Scroll Top Button">
+        <BuilderCheckbox id="'footer_scrolltop_opt'" action="'websiteConfig'" actionParam="{
+            views: ['website.option_footer_scrolltop'],
+            vars: {'footer-scrolltop': !this.isActiveItem('footer_scrolltop_opt')},
+        }"/>
+        <BuilderSelect t-if="this.isActiveItem('footer_scrolltop_opt')" applyTo="'#o_footer_scrolltop_wrapper'">
+            <BuilderSelectItem classAction="'justify-content-start'">Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'justify-content-center'">Center</BuilderSelectItem>
+            <BuilderSelectItem classAction="'justify-content-end'">Right</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>

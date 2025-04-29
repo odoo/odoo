@@ -1,6 +1,8 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
+// TODO: remove this after html_builder is merged, it's already handled in
+// carousel.edit.js
 export class CarouselSectionSliderEdit extends Interaction {
     static selector = "section > .carousel";
     dynamicContent = {

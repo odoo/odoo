@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.AddSnippetDialog">
+    <Dialog
+        title.translate="Insert a block"
+        contentClass="'o_add_snippet_dialog h-100'"
+        footer="false"
+        size="'xl'">
+        <div class="overflow-hidden w-100">
+            <div class="d-flex w-100 h-100 vertical flex-row">
+                <aside class="border-end overflow-auto">
+                    <div class="d-block position-relative p-2 bg-100 border-bottom">
+                        <input type="search" class="form-control bg-white pe-4" placeholder="Search for a block"
+                            aria-label="Search for a block" t-model="state.search"/>
+                        <span class="input-group-text position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent text-muted">
+                            <i class="oi oi-search" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <div class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto" role="tablist">
+                        <t t-if="!state.search" t-foreach="snippetGroups" t-as="snippetGroup" t-key="snippetGroup.id">
+                            <button class="list-group-item list-group-item-light list-group-item-action p-3" role="tab"
+                                t-att-class="{ 'active': this.state.groupSelected === snippetGroup.groupName}"
+                                t-on-click="() => this.selectGroup(snippetGroup)">
+                                <t t-out="snippetGroup.title"/>
+                            </button>
+                        </t>
+                    </div>
+                </aside>
+                <div class="position-relative flex-grow-1 flex-shrink-1">
+                    <div class="spinner-grow position-absolute top-50 start-50 translate-middle" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <iframe class="border-0 fade bg-200 position-relative o_add_snippet_iframe" t-att-class="state.showIframe ? ' show' : '' " tabindex="-1" t-ref="iframe" src="about:blank" height="333%" width="333%" />
+                </div>
+            </div>
+        </div>
+    </Dialog>
+</t>
+
+</templates>

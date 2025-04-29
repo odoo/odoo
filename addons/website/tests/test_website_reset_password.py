@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
+import unittest
 
 import odoo
 from odoo import Command
@@ -10,6 +11,7 @@ from odoo.tests.common import HttpCase
 
 @tagged('post_install', '-at_install')
 class TestWebsiteResetPassword(HttpCase):
+
 
     def test_01_website_reset_password_tour(self):
         """The goal of this test is to make sure the reset password works."""

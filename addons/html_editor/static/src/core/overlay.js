@@ -39,9 +39,6 @@ export class EditorOverlay extends Component {
         if (this.props.target) {
             getTarget = () => this.props.target;
         } else {
-            useExternalListener(this.props.bus, "updatePosition", () => {
-                position.unlock();
-            });
             const editable = this.props.editable;
             this.rangeElement = editable.ownerDocument.createElement("range-el");
             editable.after(this.rangeElement);
@@ -50,6 +47,10 @@ export class EditorOverlay extends Component {
             });
             getTarget = this.getSelectionTarget.bind(this);
         }
+
+        useExternalListener(this.props.bus, "updatePosition", () => {
+            position.unlock();
+        });
 
         const rootRef = useRef("root");
 
@@ -111,18 +112,18 @@ export class EditorOverlay extends Component {
         }
         let rect = range.getBoundingClientRect();
         if (rect.x === 0 && rect.width === 0 && rect.height === 0) {
-            // Attention, using disableObserver and enableObserver is always dangerous (when we add or remove nodes)
+            // Attention, ignoring DOM mutations is always dangerous (when we add or remove nodes)
             // because if another mutation uses the target that is not observed, that mutation can never be applied
             // again (when undo/redo and in collaboration).
-            this.props.history.disableObserver();
-            const clonedRange = range.cloneRange();
-            const shadowCaret = doc.createTextNode("|");
-            clonedRange.insertNode(shadowCaret);
-            clonedRange.selectNode(shadowCaret);
-            rect = clonedRange.getBoundingClientRect();
-            shadowCaret.remove();
-            clonedRange.detach();
-            this.props.history.enableObserver();
+            this.props.history.ignoreDOMMutations(() => {
+                const clonedRange = range.cloneRange();
+                const shadowCaret = doc.createTextNode("|");
+                clonedRange.insertNode(shadowCaret);
+                clonedRange.selectNode(shadowCaret);
+                rect = clonedRange.getBoundingClientRect();
+                shadowCaret.remove();
+                clonedRange.detach();
+            });
         }
         // Html element with a patched getBoundingClientRect method. It
         // represents the range as a (HTMLElement) target for the usePosition

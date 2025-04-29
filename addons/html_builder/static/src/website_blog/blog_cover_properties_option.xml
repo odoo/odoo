@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_blog.BlogCoverPropertiesOption" t-inherit="html_builder.CoverPropertiesOption">
+    <xpath expr="//BuilderSelectItem[@classAction=&quot;'o_full_screen_height'&quot;]/span" position="attributes">
+        <attribute name="t-else"> <!-- Without the space just before this comment, t-else is not applied --></attribute>
+    </xpath>
+    <xpath expr="//BuilderSelectItem[@classAction=&quot;'o_half_screen_height'&quot;]/span" position="attributes">
+        <attribute name="t-else"> <!-- Without the space just before this comment, t-else is not applied --></attribute>
+    </xpath>
+    <xpath expr="//BuilderSelectItem[@classAction=&quot;'cover_auto'&quot;]/span" position="attributes">
+        <attribute name="t-else"> <!-- Without the space just before this comment, t-else is not applied --></attribute>
+    </xpath>
+    <xpath expr="//BuilderSelectItem[@classAction=&quot;'o_full_screen_height'&quot;]/span" position="before">
+        <span t-if="this.blogState.isRegularCover">Large</span>
+    </xpath>
+    <xpath expr="//BuilderSelectItem[@classAction=&quot;'o_half_screen_height'&quot;]/span" position="before">
+        <span t-if="this.blogState.isRegularCover">Medium</span>
+    </xpath>
+    <xpath expr="//BuilderSelectItem[@classAction=&quot;'cover_auto'&quot;]/span" position="before">
+        <span t-if="this.blogState.isRegularCover">Tiny</span>
+    </xpath>
+</t>
+
+</templates>

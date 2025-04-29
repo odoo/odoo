@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.NavTabsHeaderMiddleButtons">
+    <button class="text-success btn ms-0 py-0 px-1"
+            title.translate="Add Tab"
+            aria-label="Add Tab"
+            t-on-click="addItem">
+        <span class="fa fa-fw fa-plus"/>
+    </button>
+    <button class="btn py-0 px-1 me-3"
+            t-att-class="state.tabEls.length gt 2 ? 'text-danger' : 'disabled text-muted'"
+            title="Remove Tab"
+            aria-label="Remove Tab"
+            t-on-click="removeItem">
+        <span class="fa fa-fw fa-minus"/>
+    </button>
+</t>
+
+</templates>

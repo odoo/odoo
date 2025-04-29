@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
-import { isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isElement, isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
@@ -469,6 +469,7 @@ export class LinkPlugin extends Plugin {
 
         const restoreSavePoint = this.dependencies.history.makeSavePoint();
         const props = {
+            document: this.document,
             linkElement,
             isImage: isImage,
             onApply: (...args) => {
@@ -615,9 +616,9 @@ export class LinkPlugin extends Plugin {
                 }
             }
         }
-        if (!selectionData.documentSelectionIsInEditable) {
-            const popoverEl = document.querySelector(".o-we-linkpopover");
-            if (popoverEl?.contains(selectionData.documentSelection?.anchorNode)) {
+        if (!selectionData.currentSelectionIsInEditable) {
+            const anchorNode = document.getSelection()?.anchorNode;
+            if (anchorNode && isElement(anchorNode) && anchorNode.closest(".o-we-linkpopover")) {
                 return;
             }
             this.linkInDocument = null;
@@ -633,7 +634,7 @@ export class LinkPlugin extends Plugin {
             }
         } else {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
-            if (closestLinkElement) {
+            if (closestLinkElement && closestLinkElement.isContentEditable) {
                 if (closestLinkElement !== this.linkInDocument) {
                     this.openLinkTools(closestLinkElement);
                 }

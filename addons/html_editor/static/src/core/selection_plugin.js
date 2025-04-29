@@ -238,6 +238,31 @@ export class SelectionPlugin extends Plugin {
                 this.onKeyDownArrows(ev);
             }
         });
+
+        this.focusEditableDocument = true;
+        if (this.document !== document) {
+            const focusEditable = () => {
+                this.focusEditableDocument = true;
+            };
+            const unFocusEditable = (ev) => {
+                if (this.focusEditableDocument) {
+                    // autofocus trigger when you close a popover (like color picker)
+                    if (ev.target.tagName === "IFRAME") {
+                        return;
+                    }
+                    const preventClosing = ev.target?.closest?.("[data-prevent-closing-overlay]");
+                    if (preventClosing?.dataset?.preventClosingOverlay === "true") {
+                        return;
+                    }
+                    this.focusEditableDocument = false;
+                    this.dispatchTo("selection_leave_handlers");
+                }
+            };
+            this.addDomListener(this.document, "focus", focusEditable, { capture: true });
+            this.addDomListener(document, "focus", unFocusEditable, { capture: true });
+            this.addDomListener(this.document, "pointerdown", focusEditable, { capture: true });
+            this.addDomListener(document, "pointerdown", unFocusEditable, { capture: true });
+        }
     }
 
     selectAll() {
@@ -442,6 +467,8 @@ export class SelectionPlugin extends Plugin {
             documentSelection: documentSelection,
             editableSelection: editableSelection,
             documentSelectionIsInEditable: documentSelectionIsInEditable,
+            currentSelectionIsInEditable:
+                documentSelectionIsInEditable && this.focusEditableDocument,
         };
 
         Object.defineProperty(selectionData, "deepEditableSelection", {

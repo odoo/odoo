@@ -30,7 +30,12 @@ const HEX_OPACITY = "99";
 export class ColorPlugin extends Plugin {
     static id = "color";
     static dependencies = ["selection", "split", "history", "format"];
-    static shared = ["colorElement", "getPropsForColorSelector", "removeAllColor"];
+    static shared = [
+        "colorElement",
+        "getPropsForColorSelector",
+        "removeAllColor",
+        "getElementColors",
+    ];
     resources = {
         user_commands: [
             {
@@ -58,6 +63,19 @@ export class ColorPlugin extends Plugin {
         /** Handlers */
         selectionchange_handlers: this.updateSelectedColor.bind(this),
         remove_format_handlers: this.removeAllColor.bind(this),
+
+        /** Overridables */
+        /**
+         * Makes the way colors are applied overridable.
+         *
+         * @param {Element} element
+         * @param {string} color hexadecimal or bg-name/text-name class
+         * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
+         */
+        apply_color_style: (element, mode, color) => {
+            element.style[mode] = color;
+            return true;
+        },
 
         /** Predicates */
         has_format_predicates: [
@@ -103,6 +121,11 @@ export class ColorPlugin extends Plugin {
         if (!el) {
             return;
         }
+
+        Object.assign(this.selectedColors, this.getElementColors(el));
+    }
+
+    getElementColors(el) {
         const elStyle = getComputedStyle(el);
         const backgroundImage = elStyle.backgroundImage;
         const hasGradient = isColorGradient(backgroundImage);
@@ -123,10 +146,11 @@ export class ColorPlugin extends Plugin {
             }
         }
 
-        this.selectedColors.color =
-            hasGradient && hasTextGradientClass ? backgroundImage : rgbaToHex(elStyle.color);
-        this.selectedColors.backgroundColor =
-            hasGradient && !hasTextGradientClass ? backgroundImage : rgbaToHex(backgroundColor);
+        return {
+            color: hasGradient && hasTextGradientClass ? backgroundImage : rgbaToHex(elStyle.color),
+            backgroundColor:
+                hasGradient && !hasTextGradientClass ? backgroundImage : rgbaToHex(backgroundColor),
+        };
     }
 
     /**
@@ -413,11 +437,12 @@ export class ColorPlugin extends Plugin {
      * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
      */
     colorElement(element, color, mode) {
-        const newClassName = element.className
+        const oldClassName = element.getAttribute("class") || "";
+        const newClassName = oldClassName
             .replace(mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX, "")
             .replace(/\btext-gradient\b/g, "") // cannot be combined with setting a background
             .replace(/\s+/, " ");
-        element.className !== newClassName && (element.className = newClassName);
+        oldClassName !== newClassName && element.setAttribute("class", newClassName);
         element.style["background-image"] = "";
         if (mode === "backgroundColor") {
             element.style["background"] = "";
@@ -429,13 +454,13 @@ export class ColorPlugin extends Plugin {
             element.style[mode] = "";
             if (mode === "color") {
                 element.style["background"] = "";
-                element.style["background-image"] = color;
+                this.delegateTo("apply_color_style", element, "background-image", color);
                 element.classList.add("text-gradient");
             } else {
-                element.style["background-image"] = color;
+                this.delegateTo("apply_color_style", element, "background-image", color);
             }
         } else {
-            element.style[mode] = color;
+            this.delegateTo("apply_color_style", element, mode, color);
         }
     }
 }

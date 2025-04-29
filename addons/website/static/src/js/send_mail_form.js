@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
-import FormEditorRegistry from "@website/js/form_editor_registry";
+import { registry } from '@web/core/registry';
 
-FormEditorRegistry.add('send_mail', {
+registry.category("website.form_editor_actions").add('send_mail', {
     formFields: [{
         type: 'char',
         custom: true,

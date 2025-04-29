@@ -145,14 +145,18 @@ registerWebsitePreviewTour("website_media_dialog_image_shape", {
     }),
     {
         content: "Click on the image",
-        trigger: ":iframe .s_text_image img",
+        trigger: ":iframe .s_text_image img:not(:visible), :iframe .s_text_image img",
         run: "click",
     },
-    changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
-    changeOption("ImageTools", "we-button[data-set-img-shape]"),
+    changeOption("Image", "[data-label='Shape'] .dropdown-toggle"),
+    {
+        content: "Click on the first image shape",
+        trigger: "[data-action-id='setImageShape']",
+        run: "click",
+    },
     {
         content: "Open MediaDialog from an image",
-        trigger: "we-customizeblock-option:contains(media) we-button:contains(replace)",
+        trigger: ".o_we_bg_success[data-action-id='replaceMedia']",
         run: "click",
     },
     {
@@ -186,8 +190,22 @@ registerWebsitePreviewTour("website_media_dialog_insert_media", {
         run: "editor test",
     },
     {
-        content: "Click on the toolbar's 'insert media' button",
-        trigger: ".oe-toolbar #media-insert",
+        content: "Show the powerbox",
+        trigger: ":iframe .s_text_block p:last-child",
+        async run(actions) {
+            await actions.editor(`/`);
+            const wrapwrap = this.anchor.closest("#wrapwrap");
+            wrapwrap.dispatchEvent(
+                new InputEvent("input", {
+                    inputType: "insertText",
+                    data: "/",
+                })
+            );
+        },
+    },
+    {
+        content: "Click on the media item from powerbox",
+        trigger: "div.o-we-command-name:contains('Media')",
         run: "click",
     },
     {

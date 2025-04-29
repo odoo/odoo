@@ -289,6 +289,13 @@ export class WebsitePreview extends Component {
      * the iframe's url (it is clearer for the user).
      */
     _replaceBrowserUrl() {
+        const url = new URL(window.location);
+        const path = this.iframe.el.contentDocument.location.pathname;
+        
+        url.searchParams.set("url", path.replace(/\//g, "∕"));
+        window.history.replaceState({}, "", url); 
+
+        return;
         if (!wUtils.isHTTPSorNakedDomainRedirection(this.iframe.el.contentWindow.location.origin, window.location.origin)) {
             // If another domain ends up loading in the iframe (for example,
             // if the iframe is being redirected and has no initial URL, so it
@@ -514,4 +521,4 @@ export class WebsitePreview extends Component {
     }
 }
 
-registry.category('actions').add('website_preview', WebsitePreview);
+registry.category('actions').add('old_website_preview', WebsitePreview);

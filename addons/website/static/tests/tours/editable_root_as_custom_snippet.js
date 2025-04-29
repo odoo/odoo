@@ -5,6 +5,7 @@ import {
     clickOnSnippet,
     insertSnippet,
     registerWebsitePreviewTour,
+    goBackToBlocks,
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("editable_root_as_custom_snippet", {
@@ -13,15 +14,16 @@ registerWebsitePreviewTour("editable_root_as_custom_snippet", {
     checkDelay: 400,
 }, () => [
     ...clickOnSnippet('.s_title.custom[data-oe-model][data-oe-id][data-oe-field][data-oe-xpath]'),
-    changeOption('SnippetSave', 'we-button'),
+    changeOption('Block', '.oe_snippet_save'),
     {
         content: "Confirm modal",
         trigger: '.modal-footer .btn-primary',
         run: "click",
     },
+    goBackToBlocks(),
     {
         content: "Wait for the custom category to appear in the panel",
-        trigger: '.oe_snippet[name="Custom"]',
+        trigger: '.o_snippet[name="Custom"]',
     },
     ...clickOnSave(),
     {

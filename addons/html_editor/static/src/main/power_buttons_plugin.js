@@ -77,7 +77,7 @@ export class PowerButtonsPlugin extends Plugin {
             const btn = this.document.createElement("button");
             let className = "power_button btn px-2 py-1 cursor-pointer";
             if (icon) {
-                let iconLibrary = icon.includes("fa-") ? "fa" : "oi";
+                const iconLibrary = icon.includes("fa-") ? "fa" : "oi";
                 className += ` ${iconLibrary} ${icon}`;
             } else {
                 const span = this.document.createElement("span");
@@ -107,9 +107,9 @@ export class PowerButtonsPlugin extends Plugin {
 
     updatePowerButtons() {
         this.powerButtonsContainer.classList.add("d-none");
-        const { editableSelection, documentSelectionIsInEditable } =
+        const { editableSelection, currentSelectionIsInEditable } =
             this.dependencies.selection.getSelectionData();
-        if (!documentSelectionIsInEditable) {
+        if (!currentSelectionIsInEditable) {
             return;
         }
         const block = closestBlock(editableSelection.anchorNode);
@@ -138,15 +138,16 @@ export class PowerButtonsPlugin extends Plugin {
     }
 
     getPlaceholderWidth(block) {
-        this.dependencies.history.disableObserver();
-        const clone = block.cloneNode(true);
-        clone.innerText = clone.getAttribute("o-we-hint-text");
-        clone.style.width = "fit-content";
-        clone.style.visibility = "hidden";
-        this.editable.appendChild(clone);
-        const { width } = clone.getBoundingClientRect();
-        this.editable.removeChild(clone);
-        this.dependencies.history.enableObserver();
+        let width;
+        this.dependencies.history.ignoreDOMMutations(() => {
+            const clone = block.cloneNode(true);
+            clone.innerText = clone.getAttribute("o-we-hint-text");
+            clone.style.width = "fit-content";
+            clone.style.visibility = "hidden";
+            this.editable.appendChild(clone);
+            width = clone.getBoundingClientRect().width;
+            this.editable.removeChild(clone);
+        });
         return width;
     }
 

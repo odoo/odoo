@@ -38,7 +38,7 @@ registerWebsitePreviewTour("snippet_image_gallery_remove", {
     name: 'Image Gallery',
 }), {
     content: "Click on Remove all",
-    trigger: "we-button:has(div:contains('Remove all'))",
+    trigger: "button[data-action-id='removeAllImages']",
     run: "click",
 }, {
     content: "Click on Add Images",
@@ -60,10 +60,10 @@ registerWebsitePreviewTour("snippet_image_gallery_remove", {
     run: "click",
 }, {
     content: "Check that the Snippet Editor of the clicked image has been loaded",
-    trigger: "we-customizeblock-options span:contains('Image'):not(:contains('Image Gallery'))",
+    trigger: ".o-tab-content [data-container-title='Image Gallery']",
 }, {
     content: "Click on Remove Block",
-    trigger: ".o_we_customize_panel we-title:has(span:contains('Image Gallery')) we-button[title='Remove Block']",
+    trigger: ".o_customize_tab .options-container[data-container-title='Image Gallery'] .oe_snippet_remove",
     run: "click",
 }, {
     content: "Check that the Image Gallery snippet has been removed",
@@ -139,7 +139,7 @@ registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
         id: "s_image_gallery",
         name: "Image Gallery",
     }),
-    changeOption("GalleryImageList", "we-button[data-add-images]"),
+    changeOption("Image Gallery", "addImage"),
 {
     content: "Click on the default image",
     trigger: ".o_select_media_dialog img[title='s_default_image.jpg']",

@@ -50,11 +50,14 @@ export class ColorPicker extends Component {
         applyColor: Function,
         applyColorPreview: Function,
         applyColorResetPreview: Function,
+        enabledTabs: { type: Array, optional: true },
         colorPrefix: { type: String },
+        noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
     };
     static defaultProps = {
         close: () => {},
+        enabledTabs: ["solid", "gradient", "custom"],
     };
 
     setup() {
@@ -62,12 +65,20 @@ export class ColorPicker extends Component {
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
 
         this.defaultColor = this.props.state.selectedColor;
+        this.focusedColorBtn = null;
         this.state = useState({
-            activeTab: this.props.state.defaultTab,
+            activeTab: this.getDefaultTab(),
             currentCustomColor: this.props.state.selectedColor,
             showGradientPicker: false,
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
+    }
+
+    getDefaultTab() {
+        if (this.props.enabledTabs.includes(this.props.state.defaultTab)) {
+            return this.props.state.defaultTab;
+        }
+        return this.props.enabledTabs[0];
     }
 
     get selectedColor() {
@@ -119,6 +130,16 @@ export class ColorPicker extends Component {
         this.props.applyColorResetPreview();
     }
 
+    onColorFocusin(ev) {
+        if (!ev.target.classList.contains("o_color_button") || this.focusedColorBtn === ev.target) {
+            this.focusedColorBtn = null;
+            return;
+        }
+        this.onColorHover(ev);
+        this.focusedColorBtn = ev.target;
+        ev.target.focus();
+    }
+
     getCurrentGradientColor() {
         if (isColorGradient(this.props.state.selectedColor)) {
             return this.props.state.selectedColor;
@@ -132,6 +153,9 @@ export class ColorPicker extends Component {
     colorPickerNavigation(ev) {
         const { target, key } = ev;
         if (!target.classList.contains("o_color_button")) {
+            return;
+        }
+        if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(key)) {
             return;
         }
 
@@ -150,7 +174,7 @@ export class ColorPicker extends Component {
                 row?.matches(".o_color_section, .o_colorpicker_section") &&
                 row.children[buttonIndex];
         }
-        if (targetBtn?.classList.contains("o_color_button")) {
+        if (targetBtn && targetBtn.classList.contains("o_color_button")) {
             targetBtn.focus();
         }
     }

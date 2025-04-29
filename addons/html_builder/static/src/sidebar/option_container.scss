@@ -1,0 +1,65 @@
+.options-container {
+    .btn {
+        color: $o-we-fg-light;
+        font-size: 12px;
+        padding: 1px 6px;
+        border: none;
+
+        &.active {
+            color: $o-we-fg-lighter;
+            background-color: $o-we-bg-light !important;
+
+        }
+
+        &>img {
+          padding-bottom: 2px;
+        }
+    }
+
+    .btn-primary {
+        background-color: $o-we-bg-lightest !important;
+    }
+
+    .btn-primary.o_we_bg_danger {
+        color: white;
+        background-color: #e6586c !important;
+    }   
+
+    .btn-primary.o_we_bg_success {
+        color: white;
+        background-color: #40ad67 !important;
+    }
+
+    .we-bg-options-container {
+        > div {
+            margin-top: 1px;
+            margin-bottom: 1px;
+        }
+    }
+
+    div:has(> input):not(table.o_social_media_list div) {
+        width: 60px;
+    }
+    div:has(> input.o_we_large) {
+        width: 100%;
+    }
+    table.o_social_media_list button {
+        width: 2em;
+    }
+
+    input {
+        border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+        border-radius: $o-we-sidebar-content-field-border-radius;
+        background-color: $o-we-sidebar-content-field-input-bg;
+        color: inherit;
+        padding: 0 $o-we-sidebar-content-field-clickable-spacing;
+
+        &:focus {
+            border-color: $o-we-sidebar-content-field-input-border-color;
+        }
+    }
+}
+
+.o_we_img_animate:hover img {
+    content: image-set(var(--animate-src));
+}

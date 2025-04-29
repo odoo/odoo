@@ -43,9 +43,7 @@ registerWebsitePreviewTour("interaction_lifecycle", {
         trigger: ":iframe .s_countdown.interaction_started",
         run() {
             const result = JSON.parse(window.localStorage.interactionAndWysiwygLifecycle);
-            const expected = ["interactionStop", "wysiwygStop", "interactionStart",
-                "interactionStop", "wysiwygStart", "wysiwygStarted", "interactionStart",
-            ];
+            const expected = ["interactionStop", "interactionStart", "interactionStop", "interactionStart"];
             const alternative = ["interactionStop", "interactionStart", "wysiwygStop",
                 "interactionStop", "wysiwygStart", "wysiwygStarted", "interactionStart",
             ];

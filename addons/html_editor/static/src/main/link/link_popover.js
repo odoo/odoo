@@ -7,6 +7,7 @@ import { cleanZWChars, deduceURLfromText } from "./utils";
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
     static props = {
+        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         linkElement: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
         onApply: Function,
         onChange: Function,
@@ -63,7 +64,8 @@ export class LinkPopover extends Component {
                 this.props.type ||
                 this.props.linkElement.className
                     .match(/btn(-[a-z0-9_-]*)(primary|secondary)/)
-                    ?.pop() || "",
+                    ?.pop() ||
+                "",
             isImage: this.props.isImage,
         });
 
@@ -82,7 +84,7 @@ export class LinkPopover extends Component {
                 this.loadAsyncLinkPreview();
             }
         });
-        useExternalListener(document, "pointerdown", (ev) => {
+        const onPointerDown = (ev) => {
             if (
                 this.editingWrapper?.el &&
                 !this.state.isImage &&
@@ -90,7 +92,12 @@ export class LinkPopover extends Component {
             ) {
                 this.onClickApply();
             }
-        });
+        };
+        useExternalListener(this.props.document, "pointerdown", onPointerDown);
+        if (this.props.document !== document) {
+            // Listen to pointerdown outside the iframe
+            useExternalListener(document, "pointerdown", onPointerDown);
+        }
     }
 
     onChange() {
