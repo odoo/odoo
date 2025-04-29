@@ -278,7 +278,7 @@ test("Data reloaded upon domain update for charts other than pie/bar/line", asyn
 
     updateChart(model, chartId, { type: "odoo_pie" });
     await waitForDataLoaded(model);
-    expect.verifySteps(["formatted_read_group"]); // Chart type changed
+    expect.verifySteps([]); // Chart type changed
 
     const newDefinition = model.getters.getChartDefinition(chartId);
     updateChart(model, chartId, {
