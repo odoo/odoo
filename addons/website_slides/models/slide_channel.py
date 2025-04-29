@@ -819,6 +819,10 @@ class SlideChannel(models.Model):
         to_activate.with_context(active_test=False).slide_ids.action_unarchive()
         return super(SlideChannel, to_activate).action_unarchive()
 
+    # ---------------------------------------------------------
+    # Mail Thread
+    # ---------------------------------------------------------
+
     def message_post(self, *, parent_id=False, subtype_id=False, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
         through the 'Presentation Published' email, it should be considered as a
@@ -846,6 +850,15 @@ class SlideChannel(models.Model):
         if message.rating_value and message.is_current_user_or_guest_author:
             self.env.user._add_karma(self.karma_gen_channel_rank, self, _("Course Ranked"))
         return message
+
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return []
+
+    def _notify_by_email_get_headers(self, headers=None):
+        # Never use explicit recipients
+        headers = super()._notify_by_email_get_headers(headers=headers)
+        headers.pop('X-Msg-To-Add', False)
+        return headers
 
     # ---------------------------------------------------------
     # Business / Actions
@@ -1301,6 +1314,3 @@ class SlideChannel(models.Model):
         if field in image_fields:
             return self.website_default_background_image_url
         return super()._get_placeholder_filename(field)
-
-    def _mail_get_partner_fields(self, introspect_fields=False):
-        return []
