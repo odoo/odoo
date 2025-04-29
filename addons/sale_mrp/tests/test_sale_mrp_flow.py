@@ -2537,3 +2537,33 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         internal_picking.button_validate()
         self.assertEqual(internal_picking.state, 'done')
         self.assertEqual(order.order_line.qty_delivered, 0)
+
+    def test_return_for_exchange_kit_product_component(self):
+        """ Returning for exchange a kit's component should leave the original sale order line's
+        qty_delivered with the correct value.
+        """
+        for comp in self.bom_kit_1.bom_line_ids.product_id:
+            self.env['stock.quant']._update_available_quantity(comp, self.company_data['default_warehouse'].lot_stock_id, quantity=10)
+
+        comp_to_return = self.bom_kit_1.bom_line_ids.filtered(lambda bl: bl.product_qty == 1).product_id
+        kit_product = self.kit_1
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': kit_product.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        sale_order.action_confirm()
+        delivery = sale_order.picking_ids
+        delivery.action_assign()
+        delivery.button_validate()
+        return_picking_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        return_wizard.product_return_moves.filtered(lambda prm: prm.product_id == comp_to_return).quantity = 1
+        res = return_wizard.action_create_exchanges()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.button_validate()
+        exchange_picking = sale_order.picking_ids.filtered(lambda so: so.state != 'done')
+        exchange_picking.button_validate()
+        self.assertEqual(sale_order.order_line.qty_delivered, 1)
