@@ -5,6 +5,7 @@ import { resizeGrid } from "@html_builder/utils/grid_layout_utils";
 import { getVisibleSibling } from "./move_plugin";
 import { unremovableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
 import { isUnremovableQWebElement as qwebPluginPredicate } from "@html_editor/others/qweb_plugin";
+import { isEditable } from "@html_builder/utils/utils";
 
 // TODO (see forceNoDeleteButton) make a resource in the options plugins to not
 // duplicate some selectors.
@@ -18,13 +19,10 @@ const unremovableSelectors = [
     ".s_table_of_content_navbar_wrap",
     ".s_table_of_content_main",
     ".nav-item",
-    "#wrapwrap > header nav.navbar",
-    "header",
-    "main",
-    "footer",
 ].join(", ");
 
 const unremovableNodePredicates = [
+    (node) => !isEditable(node.parentNode),
     ...deletePluginPredicates,
     qwebPluginPredicate,
     (node) => node.parentNode.matches('[data-oe-type="image"]'),

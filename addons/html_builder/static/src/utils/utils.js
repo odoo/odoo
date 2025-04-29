@@ -150,3 +150,25 @@ export function getSelectorParams(builderOptions, optionClass) {
     }
     return selectorParams;
 }
+
+/**
+ * Checks if the given element is editable.
+ *
+ * @param {HTMLElement} node the element
+ * @returns {Boolean}
+ */
+export function isEditable(node) {
+    let currentNode = node;
+    while (currentNode) {
+        if (currentNode.className && typeof currentNode.className === "string") {
+            if (currentNode.className.includes("o_not_editable")) {
+                return false;
+            }
+            if (currentNode.className.includes("o_editable")) {
+                return true;
+            }
+        }
+        currentNode = currentNode.parentNode;
+    }
+    return false;
+}
