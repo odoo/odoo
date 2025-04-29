@@ -528,6 +528,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     tenant_code_id = fields.Many2one(related='picking_id.tenant_code_id', string='Tenant ID')
     site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code')
     package_box_type_id = fields.Many2one('package.box.configuration', string='Package Box Type',
+                                          domain="[('site_code_id', '=', site_code_id), ('tenant_code_id', '=', tenant_code_id)]",
                                           help="Select packaging box for each product line.")
     sale_order_id = fields.Many2one(related='picking_id.sale_id', string='Sale Order', store=True)
     incoterm_location = fields.Char(related='sale_order_id.packaging_source_type', string='Incoterm location')
