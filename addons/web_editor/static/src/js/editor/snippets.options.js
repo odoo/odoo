@@ -8873,10 +8873,11 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
 
         this._initOverlay();
 
-        // Resize overlay content on window resize because background images
+        // Resize overlay content on body resize because background images
         // change size, and on carousel slide because they sometimes take up
         // more space and move elements around them.
-        $(window).on('resize.bgposition', () => this._dimensionOverlay());
+        this.resizeObserver = new ResizeObserver(this._dimensionOverlay.bind(this));
+        this.resizeObserver.observe(this.ownerDocument.body);
     },
     /**
      * @override
@@ -8885,6 +8886,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         this._toggleBgOverlay(false);
         $(window).off('.bgposition');
         this._super.apply(this, arguments);
+        this.resizeObserver.disconnect();
     },
 
     //--------------------------------------------------------------------------
