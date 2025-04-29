@@ -122,7 +122,7 @@ def start_nginx_server():
         path_nginx = get_path_nginx()
         if path_nginx:
             _logger.info('Start Nginx server: %s\\nginx.exe', path_nginx)
-            os.popen(str(path_nginx / 'nginx.exe'))
+            subprocess.Popen([str(path_nginx / 'nginx.exe')], cwd=str(path_nginx))
     elif platform.system() == 'Linux':
         subprocess.check_call(["sudo", "service", "nginx", "restart"])
 
