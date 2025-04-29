@@ -44,7 +44,6 @@ class DriverController(http.Controller):
             return False
 
         iot_device.data['owner'] = session_id
-        data = json.loads(data)
 
         _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
         iot_device.action(data)
