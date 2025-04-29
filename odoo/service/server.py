@@ -956,7 +956,7 @@ class PreforkServer(CommonServer):
 
     def process_timeout(self):
         now = time.time()
-        for (pid, worker) in self.workers.items():
+        for (pid, worker) in list(self.workers.items()):
             if worker.watchdog_timeout is not None and \
                     (now - worker.watchdog_time) >= worker.watchdog_timeout:
                 _logger.error("%s (%s) timeout after %ss",
@@ -1041,7 +1041,7 @@ class PreforkServer(CommonServer):
                 time.sleep(0.1)
         else:
             _logger.info("Stopping forcefully")
-        for pid in self.workers:
+        for pid in list(self.workers):
             self.worker_kill(pid, signal.SIGTERM)
 
     def run(self, preload, stop):
