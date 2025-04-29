@@ -11,7 +11,7 @@ import {
 } from "@spreadsheet/../tests/helpers/chart";
 import { insertListInSpreadsheet } from "@spreadsheet/../tests/helpers/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
-import { addGlobalFilter } from "@spreadsheet/../tests/helpers/commands";
+import { addGlobalFilter, updateChart } from "@spreadsheet/../tests/helpers/commands";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 import { mockService, makeServerError } from "@web/../tests/web_test_helpers";
 import * as spreadsheet from "@odoo/o-spreadsheet";
@@ -252,6 +252,33 @@ test("Data reloaded strictly upon domain update", async () => {
     await animationFrame();
     // it should have not have loaded the data since the domain was unchanged
     expect.verifySteps([]);
+});
+
+test("Data reloaded upon domain update for charts other than pie/bar/line", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_line",
+        mockRPC: async function (route, args) {
+            if (args.method === "formatted_read_group") {
+                expect.step("formatted_read_group");
+            }
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+
+    await waitForDataLoaded(model);
+    expect.verifySteps(["formatted_read_group"]); // Data loaded
+
+    updateChart(model, chartId, { type: "odoo_pie" });
+    await waitForDataLoaded(model);
+    expect.verifySteps(["formatted_read_group"]); // Chart type changed
+
+    const newDefinition = model.getters.getChartDefinition(chartId);
+    updateChart(model, chartId, {
+        searchParams: { ...newDefinition.searchParams, domain: [["1", "=", "1"]] },
+    });
+    await waitForDataLoaded(model);
+    expect.verifySteps(["formatted_read_group"]); // Data re-loaded on domain update
 });
 
 test("Can import/export an Odoo chart", async () => {
@@ -519,7 +546,11 @@ test("Load odoo chart spreadsheet with models that cannot be accessed", async fu
     let hasAccessRights = true;
     const { model } = await createSpreadsheetWithChart({
         mockRPC: async function (route, args) {
-            if (args.model === "partner" && args.method === "formatted_read_group" && !hasAccessRights) {
+            if (
+                args.model === "partner" &&
+                args.method === "formatted_read_group" &&
+                !hasAccessRights
+            ) {
                 throw makeServerError({ description: "ya done!" });
             }
         },
@@ -602,7 +633,7 @@ const cumulativeChartDefinition = {
     title: "Partners",
     dataSourceId: "42",
     id: "42",
-}
+};
 
 test("cumulative line chart with past data before domain period without specifying cumulated start", async () => {
     const { model } = await createSpreadsheetWithChart({
