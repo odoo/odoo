@@ -2,15 +2,24 @@ import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_uti
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 
-export function clickOrderButton() {
-    return [
+/**
+ * @param {Object} [param0={}]
+ * @param {boolean} [param0.waitForSync=false] - If `true`, wait for the sync to finish after the order button is clicked.
+ */
+export function clickOrderButton({ waitForSync = false } = {}) {
+    const steps = [
         {
             content: "click order button",
             trigger: ".actionpad .submit-order",
             run: "click",
         },
     ];
+    if (waitForSync) {
+        steps.push(...Chrome.waitRequest());
+    }
+    return steps;
 }
 export function orderlinesHaveNoChange() {
     return Order.doesNotHaveLine({ withClass: ".has-change" });
