@@ -10,24 +10,24 @@ export class ImageShapeOption extends BaseOptionComponent {
         this.customizeTabPlugin = this.env.editor.shared.customizeTab;
         this.imageShapeOption = this.env.editor.shared.imageShapeOption;
         this.toRatio = toRatio;
-        this.state = useDomState((editingElement) => ({
-            hasShape: !!editingElement.dataset.shape,
-            shapeLabel: this.imageShapeOption.getShapeLabel(editingElement.dataset.shape),
-            showImageShape0: this.isShapeVisible(editingElement, 0),
-            showImageShape1: this.isShapeVisible(editingElement, 1),
-            showImageShape2: this.isShapeVisible(editingElement, 2),
-            showImageShape3: this.isShapeVisible(editingElement, 3),
-            showImageShape4: this.isShapeVisible(editingElement, 4),
-            showImageShapeTransform: this.imageShapeOption.isTransformableShape(
-                editingElement.dataset.shape
-            ),
-            showImageShapeAnimation: this.imageShapeOption.isAnimableShape(
-                editingElement.dataset.shape
-            ),
-            togglableRatio: this.imageShapeOption.isTogglableRatioShape(
-                editingElement.dataset.shape
-            ),
-        }));
+        this.state = useDomState((editingElement) => {
+            let shape = editingElement.dataset.shape;
+            if (shape) {
+                shape = shape.replace("web_editor", "html_builder");
+            }
+            return {
+                hasShape: !!shape,
+                shapeLabel: this.imageShapeOption.getShapeLabel(shape),
+                showImageShape0: this.isShapeVisible(editingElement, 0),
+                showImageShape1: this.isShapeVisible(editingElement, 1),
+                showImageShape2: this.isShapeVisible(editingElement, 2),
+                showImageShape3: this.isShapeVisible(editingElement, 3),
+                showImageShape4: this.isShapeVisible(editingElement, 4),
+                showImageShapeTransform: this.imageShapeOption.isTransformableShape(shape),
+                showImageShapeAnimation: this.imageShapeOption.isAnimableShape(shape),
+                togglableRatio: this.imageShapeOption.isTogglableRatioShape(shape),
+            };
+        });
     }
     isShapeVisible(img, shapeIndex) {
         const shapeName = img.dataset.shape;
