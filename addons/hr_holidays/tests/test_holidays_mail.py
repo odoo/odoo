@@ -41,6 +41,17 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
                 }
             ]).action_approve()
 
+            self.env['hr.leave.allocation'].create([
+                {
+                    'name': 'Paid Time off for Mitchell',
+                    'holiday_status_id': holiday_status_paid_time_off.id,
+                    'number_of_days': 20,
+                    'employee_id': self.ref('hr.employee_admin'),
+                    'state': 'confirm',
+                    'date_from': time.strftime('%Y-%m-01'),
+                },
+            ]).action_approve()
+
             leave_vals = {
                 'name': 'Sick Time Off',
                 'holiday_status_id': holiday_status_paid_time_off.id,
