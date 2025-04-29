@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//setting[@id='recaptcha']" position="attributes">
-                <attribute name="help" add="If no keys are provided, no checks will be done." separator=" " />
+                <attribute name="help">Protect your forms from spam and abuse. If no keys are provided, no checks will be done.</attribute>
             </xpath>
             <div id="recaptcha_warning" position="replace">
                 <div class="content-group" id="reacaptcha_configuration_settings" invisible="not module_google_recaptcha">
