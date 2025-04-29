@@ -27,8 +27,7 @@ class MailMessageReaction(models.Model):
     def _to_store(self, store: Store, fields):
         if fields:
             raise NotImplementedError("Fields are not supported for reactions.")
-        store.add(self.guest_id, ["avatar_128", "name"])
-        store.add(self.partner_id, ["avatar_128", "name"])
+        self._persona_to_store(store)
         for (message_id, content), reactions in groupby(self, lambda r: (r.message_id, r.content)):
             reactions = self.env["mail.message.reaction"].union(*reactions)
             data = {
@@ -40,3 +39,7 @@ class MailMessageReaction(models.Model):
                 "message": message_id.id,
             }
             store.add_model_values("MessageReactions", data)
+
+    def _persona_to_store(self, store: Store):
+        store.add(self.guest_id, ["avatar_128", "name"])
+        store.add(self.partner_id, ["avatar_128", "name"])

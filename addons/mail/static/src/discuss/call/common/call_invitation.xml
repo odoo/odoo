@@ -20,7 +20,7 @@
                     'justify-content-start ps-2': state.videoStream,
                     'justify-content-center': !state.videoStream,
                 }">
-                    <span class="w-100 fw-bolder text-truncate overflow-hidden" t-att-class="{ 'text-center': !state.videoStream }" t-esc="props.thread.rtcInvitingSession.channel_member_id.persona.name"/>
+                    <span class="w-100 fw-bolder text-truncate overflow-hidden" t-att-class="{ 'text-center': !state.videoStream }" t-esc="props.thread.rtcInvitingSession.channel_member_id.name"/>
                     <span class="opacity-75 smaller">
                         <t t-if="props.thread.rtcInvitingSession.is_camera_on">Incoming Video Call...</t>
                         <t t-else="">Incoming Call...</t>

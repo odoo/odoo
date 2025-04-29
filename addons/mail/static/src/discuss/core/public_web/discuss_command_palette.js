@@ -158,7 +158,7 @@ export class DiscussCommandPalette {
             personas = Object.values(this.store.Persona.records).filter(
                 (persona) =>
                     persona.isInternalUser &&
-                    cleanTerm(persona.name).includes(this.cleanedTerm) &&
+                    cleanTerm(persona.displayName).includes(this.cleanedTerm) &&
                     (!filtered || !filtered.has(persona))
             );
             personas = this.suggestion
@@ -248,7 +248,7 @@ export class DiscussCommandPalette {
                 action: () => {
                     this.store.openChat({ partnerId: persona.id });
                 },
-                name: persona.name,
+                name: persona.displayName,
                 category,
                 props: {
                     imgUrl: persona.avatarUrl,

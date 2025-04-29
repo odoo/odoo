@@ -46,6 +46,11 @@ export class Persona extends Record {
     /** @type {string} */
     phone;
     debouncedSetImStatus;
+    displayName = fields.Attr(undefined, {
+        compute() {
+            return this._computeDisplayName();
+        },
+    });
     /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
     signature = fields.Html(undefined);
     storeAsTrackedImStatus = fields.One("Store", {
@@ -102,6 +107,10 @@ export class Persona extends Record {
     isInternalUser = false;
     write_date = fields.Datetime();
     group_ids = fields.Many("res.groups", { inverse: "personas" });
+
+    _computeDisplayName() {
+        return this.name;
+    }
 
     get emailWithoutDomain() {
         return this.email.substring(0, this.email.lastIndexOf("@"));

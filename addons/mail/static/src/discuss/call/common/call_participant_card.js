@@ -143,7 +143,7 @@ export class CallParticipantCard extends Component {
     }
 
     get name() {
-        return this.channelMember?.persona.name;
+        return this.channelMember?.name;
     }
 
     get hasMediaError() {
