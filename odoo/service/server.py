@@ -960,7 +960,7 @@ class PreforkServer(CommonServer):
 
     def process_timeout(self):
         now = time.time()
-        for (pid, worker) in self.workers.items():
+        for (pid, worker) in list(self.workers.items()):
             if worker.watchdog_timeout is not None and \
                     (now - worker.watchdog_time) >= worker.watchdog_timeout:
                 _logger.error("%s (%s) timeout after %ss",
