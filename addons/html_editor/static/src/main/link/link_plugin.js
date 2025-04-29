@@ -635,7 +635,11 @@ export class LinkPlugin extends Plugin {
         } else if (!selection.isCollapsed) {
             // Open the link tool only if we have an image selected
             const imageNode = findInSelection(selection, "img");
-            if (imageNode?.parentNode?.tagName === "A" && this.isLinkAllowedOnSelection()) {
+            if (
+                imageNode?.isContentEditable &&
+                imageNode?.parentNode?.tagName === "A" &&
+                this.isLinkAllowedOnSelection()
+            ) {
                 this.openLinkTools(imageNode.parentElement);
             } else {
                 this.linkInDocument = null;
