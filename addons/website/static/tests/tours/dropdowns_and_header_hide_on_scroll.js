@@ -48,6 +48,12 @@ registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
         trigger: ":iframe #wrapwrap header.o_header_fixed",
     },
     selectHeader(),
+    {
+        // Checking step needed to make sure the builder DOM is up to date with
+        // the reloaded iframe.
+        content: "Expect Fixed scroll effect to be selected",
+        trigger: "[data-label='Scroll Effect'] .dropdown-toggle:contains('Fixed')",
+    },
     ...changeOptionInPopover("Header", "Template", ".dropdown-item[data-action-param*=sales_two]"),
     {
         trigger: ":iframe .o_header_sales_two_top",
