@@ -27,7 +27,7 @@ export class KioskCartPage extends Component {
     }
 
     get lines() {
-        return this.selfOrder.currentOrder.lines;
+        return this.selfOrder.currentOrder.lines.filter((line) => !line.combo_parent_id);
     }
 
     get optionalProducts() {

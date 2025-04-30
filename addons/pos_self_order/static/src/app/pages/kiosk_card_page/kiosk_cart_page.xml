@@ -13,20 +13,24 @@
                             </div>
                             <div class="w-100" >
                                 <h3 t-esc="product.name" class="text-break"/>
-                                <h4 t-if="line.attribute_value_ids?.length > 0 || line.combo_line_ids.length > 0" class="border-start">
-                                    <t t-if="line.attribute_value_ids?.length > 0" >
-                                        <div t-foreach="line.attribute_value_ids" t-as="attrVal" t-key="attrVal.id" class="ps-3 mt-1 text-muted fw-medium">
-                                            <t t-esc="attrVal.attribute_id.name" />: 
-                                            <t t-esc="attrVal.name" />
-                                        </div>
-                                    </t>
-                                    <div t-foreach="line.combo_line_ids" t-as="cline" t-key="cline.uuid" class="ps-3 mb-2">
-                                        <t t-esc="cline.product_id.name"/> <t t-set="c_qty" t-value="cline.qty / line.qty"/>
-                                        <t t-if="c_qty &gt; 1" > x <t t-esc="c_qty"/></t> 
+                                <h4 t-if="line.attribute_value_ids?.length > 0 || line.combo_line_ids.length > 0">
+                                    <div class="border-start">
+                                        <t t-if="line.attribute_value_ids?.length > 0" >
+                                            <div t-foreach="line.attribute_value_ids" t-as="attrVal" t-key="attrVal.id" class="ps-3 mt-1 text-muted fw-medium">
+                                                <t t-esc="attrVal.attribute_id.name" />: 
+                                                <t t-esc="attrVal.name" />
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <div class="border-start ms-4">
+                                        <div t-foreach="line.combo_line_ids" t-as="cline" t-key="cline.uuid" class="ps-3 mb-2">
+                                            <t t-esc="cline.product_id.name"/> <t t-set="c_qty" t-value="cline.qty / line.qty"/>
+                                            <t t-if="c_qty &gt; 1" > x <t t-esc="c_qty"/></t> 
 
-                                        <div t-foreach="cline.attribute_value_ids" t-as="attrVal" t-key="attrVal.id" class="ps-3 mt-1 fw-medium text-muted">
-                                            <t t-esc="attrVal.attribute_id.name" />: 
-                                            <t t-esc="attrVal.name" />
+                                            <div t-foreach="cline.attribute_value_ids" t-as="attrVal" t-key="attrVal.id" class="ps-3 mt-1 fw-medium text-muted">
+                                                <t t-esc="attrVal.attribute_id.name" />: 
+                                                <t t-esc="attrVal.name" />
+                                            </div>
                                         </div>
                                     </div>
                                 </h4>

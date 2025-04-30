@@ -176,6 +176,17 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_sides", {
             { name: "Fabric", value: "Leather" },
         ]),
         Utils.clickBtn("Add to cart"),
+        // Check if the combo choice does not have an individual order line
+        Utils.clickBtn("Checkout"),
+        {
+            trigger: ".product-item",
+            run: () => {
+                const productItems = document.querySelectorAll(".product-item");
+                if (productItems.length !== 1) {
+                    throw new Error(`Expected 1 product item, but found ${productItems.length}`);
+                }
+            },
+        },
     ],
 });
 
