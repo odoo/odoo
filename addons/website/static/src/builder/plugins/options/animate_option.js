@@ -8,7 +8,9 @@ export class AnimateOption extends BaseOptionComponent {
         getDirectionsItems: Function,
         getEffectsItems: Function,
         canHaveHoverEffect: Function,
+        requireAnimation: { type: Boolean, optional: true },
     };
+    static defaultProps = { requireAnimation: false };
 
     setup() {
         super.setup();
