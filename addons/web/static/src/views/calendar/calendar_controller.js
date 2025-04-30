@@ -70,13 +70,7 @@ export class CalendarController extends Component {
         this.orm = useService("orm");
         this.displayDialog = useUniqueDialog();
 
-        this.model = useModelWithSampleData(this.props.Model, {
-            ...this.props.archInfo,
-            resModel: this.props.resModel,
-            domain: this.props.domain,
-            fields: this.props.fields,
-            date: this.props.state?.date,
-        });
+        this.model = useModelWithSampleData(this.props.Model, this.modelParams);
 
         useSetupAction({
             getLocalState: () => this.model.exportedState,
@@ -109,6 +103,16 @@ export class CalendarController extends Component {
             async multiDeleteRecords(ids) {
                 await this.model.unlinkRecords(ids);
             },
+        };
+    }
+
+    get modelParams() {
+        return {
+            ...this.props.archInfo,
+            resModel: this.props.resModel,
+            domain: this.props.domain,
+            fields: this.props.fields,
+            date: this.props.state?.date,
         };
     }
 
