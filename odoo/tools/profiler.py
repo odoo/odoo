@@ -23,6 +23,8 @@ _logger = logging.getLogger(__name__)
 # ensure we have a non patched time for profiling times when using freezegun
 real_datetime_now = datetime.now
 real_time = time.time.__call__
+real_cpu_time = time.thread_time.__call__
+
 
 def _format_frame(frame):
     code = frame.f_code
@@ -541,6 +543,8 @@ class Profiler:
         """
         self.start_time = 0
         self.duration = 0
+        self.start_cpu_time = 0
+        self.cpu_duration = 0
         self.profile_session = profile_session or make_session()
         self.description = description
         self.init_frame = None
@@ -603,6 +607,7 @@ class Profiler:
         if self.disable_gc and gc.isenabled():
             gc.disable()
         self.start_time = real_time()
+        self.start_cpu_time = real_cpu_time()
         for collector in self.collectors:
             collector.start()
         return self
@@ -618,6 +623,7 @@ class Profiler:
             for collector in self.collectors:
                 collector.stop()
             self.duration = real_time() - self.start_time
+            self.cpu_duration = real_cpu_time() - self.start_cpu_time
             self._add_file_lines(self.init_stack_trace)
 
             if self.db:
@@ -630,6 +636,7 @@ class Profiler:
                         "create_date": real_datetime_now(),
                         "init_stack_trace": json.dumps(_format_stack(self.init_stack_trace)),
                         "duration": self.duration,
+                        "cpu_duration": self.cpu_duration,
                         "entry_count": self.entry_count(),
                         "sql_count": sum(len(collector.entries) for collector in self.collectors if collector.name == 'sql')
                     }
