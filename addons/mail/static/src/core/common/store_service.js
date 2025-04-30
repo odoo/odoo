@@ -449,6 +449,25 @@ export class Store extends BaseStore {
                 ev.preventDefault();
                 return true;
             }
+        } else if (
+            this.env.services.ui.isSmall &&
+            ev.target.closest(".o-mail-ChatWindow") &&
+            link.href &&
+            !link.href.startsWith("#")
+        ) {
+            let url;
+            try {
+                url = new URL(link.href);
+            } catch {
+                // Ignore invalid URLs
+                return false;
+            }
+            if (
+                browser.location.host === url.host &&
+                browser.location.pathname.startsWith("/odoo")
+            ) {
+                this.ChatWindow.get({ thread })?.fold();
+            }
         }
         return false;
     }
