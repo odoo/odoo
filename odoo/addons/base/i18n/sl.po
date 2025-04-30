@@ -17,14 +17,15 @@
 # Martin Trigaux, 2025
 # Jasmina Macur <jasmina@hbs.si>, 2025
 # Tomaž Jug <tomaz@editor.si>, 2025
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 16:32+0000\n"
+"POT-Creation-Date: 2025-03-03 11:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tomaž Jug <tomaz@editor.si>, 2025\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -743,7 +744,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll_account
 msgid ""
 "\n"
-"Accounting Data for KSA Payroll Rules.\n"
+"Accounting Data for Saudi Arabia Payroll Rules.\n"
 "=======================================================\n"
 "\n"
 msgstr ""
@@ -920,6 +921,8 @@ msgstr ""
 msgid ""
 "\n"
 "Accounting reports for Bangladesh\n"
+"============================================\n"
+"- Corporate tax report\n"
 msgstr ""
 
 #. module: base
@@ -1143,7 +1146,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_pk_reports
 msgid ""
 "\n"
-"Accounting reports for Pakistan\n"
+"Accounting Reports for Pakistan (Profit and Loss report and Balance Sheet)\n"
 msgstr ""
 
 #. module: base
@@ -2061,7 +2064,9 @@ msgid ""
 "\n"
 "Bangladesh Payroll Rules.\n"
 "=========================\n"
-"\n"
+"- Salary rules calculation\n"
+"- Income tax credits handling\n"
+"- Introduced the income tax slabs calculations\n"
 msgstr ""
 
 #. module: base
@@ -3141,7 +3146,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_edi_pos
 msgid ""
 "\n"
-"E-invoice implementation for the Kingdom of Saudi Arabia (PoS)\n"
+"E-invoice implementation for Saudi Arabia; Integration with ZATCA (POS)\n"
 msgstr ""
 
 #. module: base
@@ -3323,7 +3328,13 @@ msgid ""
 "\n"
 "Egypt Payroll and End of Service rules.\n"
 "=======================================\n"
-"\n"
+"- Basic calculation\n"
+"- End of service calculation\n"
+"- Other inputs (overtime, salary attachments, etc.)\n"
+"- Social insurance calculation\n"
+"- End of service provisions\n"
+"- Tax break calculations and deductions\n"
+"- Master payroll export\n"
 msgstr ""
 
 #. module: base
@@ -4356,15 +4367,19 @@ msgstr ""
 msgid ""
 "\n"
 "Jordan Payroll and Tax Rules\n"
-"============================\n"
+"========================================\n"
+"\n"
+"- Supports basic calculation\n"
+"- Tax income brackets\n"
+"- National contribution tax and social security\n"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_pos
 msgid ""
 "\n"
-"K.S.A. POS Localization\n"
-"=======================================================\n"
+"Saudi Arabia POS Localization\n"
+"===========================================================\n"
 msgstr ""
 
 #. module: base
@@ -4402,9 +4417,16 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll
 msgid ""
 "\n"
-"Kingdom of Saudi Arabia Payroll and End of Service rules.\n"
+"Saudi Arabia Payroll and End of Service rules.\n"
 "===========================================================\n"
-"\n"
+"- Basic Calculation\n"
+"- End of Service Calculation\n"
+"- Other Input Rules (Overtime, Salary Attachments, etc.)\n"
+"- Split Structures for EOS and Monthly Salaries\n"
+"- GOSI Employee Deduction and company contributions\n"
+"- Unpaid leaves\n"
+"- WPS\n"
+"- Master Payroll Export\n"
 msgstr ""
 
 #. module: base
@@ -5264,7 +5286,17 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa
 msgid ""
 "\n"
-"Odoo Arabic localization for most Saudi Arabia.\n"
+"Saudi Arabia Accounting Module\n"
+"===========================================================\n"
+"Saudi Arabia Accounting Basic Charts and Localization\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Vat Filling Report\n"
+"- Withholding Tax Report\n"
+"- Fiscal Positions\n"
 msgstr ""
 
 #. module: base
@@ -5425,6 +5457,8 @@ msgid ""
 "\n"
 "Pakistan Payroll and End of Service rules\n"
 "=========================================\n"
+"- Basic salaries calculations.\n"
+"- Tax bracket calculations/deductions\n"
 msgstr ""
 
 #. module: base
@@ -6445,8 +6479,19 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_eg
 msgid ""
 "\n"
-"This is the base module to manage the accounting chart for Egypt in Odoo.\n"
+"Egypt Accounting Module\n"
 "==============================================================================\n"
+"Egypt Accounting Basic Charts and Localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- VAT Return\n"
+"- Withholding Tax Report\n"
+"- Schedule Tax Report\n"
+"- Other Taxes Report\n"
+"- Fiscal Positions\n"
 msgstr ""
 
 #. module: base
@@ -7816,8 +7861,17 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_eg_edi_eta
 msgid ""
 "\n"
-"This module integrate with the ETA Portal to automatically sign and send your invoices to the tax Authority.\n"
-"Special thanks to Plementus <info@plementus.com> for their help in developing this module.\n"
+"Egypt Tax Authority Invoice Integration\n"
+"==============================================================================\n"
+"Integrates with the ETA portal to automatically send and sign the Invoices to the Tax Authority.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
+msgid ""
+"\n"
+"            Egyptian Tax Authority Invoice Integration\n"
+"        "
 msgstr ""
 
 #. module: base
@@ -8235,6 +8289,7 @@ msgid ""
 "\n"
 "United Arab Emirates Corporate Tax Report\n"
 "=======================================================\n"
+"Adds the Corporate Tax Report which can be accessed by going to Accounting > Reporting > Corporate Tax Report\n"
 msgstr ""
 
 #. module: base
@@ -8243,15 +8298,35 @@ msgid ""
 "\n"
 "United Arab Emirates Payroll and End of Service rules.\n"
 "=======================================================\n"
-"\n"
+"- Basic salary calculations\n"
+"- EOS calculations\n"
+"- Annual leaves provisions and EOS provisions\n"
+"- Social insurance rules for locals\n"
+"- Overtime rule for the other inputs case\n"
+"- Sick-leaves calculations\n"
+"- DEWS calculations\n"
+"- EOS calculations for free zones (DMCC)\n"
+"- Out of contract calculations\n"
+"- Calculation for unused leaves for EOS calculation\n"
+"- Additional other input rules for (bonus, commissions, arrears, etc.)\n"
+"- Master payroll export\n"
+"- WPS\n"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
 msgid ""
 "\n"
-"United Arab Emirates accounting chart and localization.\n"
+"United Arab Emirates Accounting Module\n"
 "=======================================================\n"
+"United Arab Emirates accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
+"- Fiscal Positions\n"
 msgstr ""
 
 #. module: base
@@ -14212,6 +14287,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Spodnje besedilo služi kot predlog in ne prevzema odgovornosti podjetja Odoo"
+" S.A."
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -18381,7 +18458,10 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi
-msgid "E-Invoicing, Universal Business Language"
+msgid ""
+"\n"
+"        E-Invoicing, Universal Business Language\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -18562,12 +18642,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_eta
-msgid "Egyptian E-Invoice Integration"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
-msgid "Egyptian Tax Authority Invoice Integration"
+msgid "Egypt E-Invoicing"
 msgstr ""
 
 #. module: base
@@ -20630,11 +20705,6 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_company__report_footer
 msgid "Footer text displayed at the bottom of all reports."
 msgstr "Tekst, ki bo v nogi vseh poročil."
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_be_codabox
-msgid "For Accounting Firms"
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__value
@@ -23874,12 +23944,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll
-msgid "K.S.A. - Payroll"
+msgid "Saudi Arabia - Payroll"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
-msgid "K.S.A. - Payroll with Accounting"
+msgid "Saudi Arabia - Payroll with Accounting"
 msgstr ""
 
 #. module: base
@@ -31922,7 +31992,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__root_id
 msgid "Root"
-msgstr ""
+msgstr "Koren"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rounding
@@ -35989,15 +36059,32 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bd
 msgid ""
-"This is the base module to manage chart of accounts and localization for the"
-" Bangladesh "
+"\n"
+"This is the base module to manage the accounting chart for Bangladesh in Odoo\n"
+"============================\n"
+"Bangladesh accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of accounts\n"
+"- Taxes\n"
+"- Tax report\n"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pk
 msgid ""
-"This is the base module to manage chart of accounts and localization for the"
-" Pakistan "
+"\n"
+"Pakistan Accounting Module\n"
+"=======================================================\n"
+"Pakistan accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
+"- Withholding Tax Report\n"
 msgstr ""
 
 #. module: base
@@ -36113,9 +36200,8 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codabox
 msgid ""
-"This module allows Accounting Firms to connect to CodaBox\n"
-"and automatically import CODA and SODA statements for their clients in Odoo.\n"
-"The connection must be done by the Accounting Firm.\n"
+"This module allows connection to CodaBox and automatically imports CODA and "
+"SODA statements in Odoo."
 msgstr ""
 
 #. module: base
@@ -36964,12 +37050,17 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
-msgid "U.A.E. - Payroll"
+msgid "United Arab Emirates - Payroll"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
-msgid "U.A.E. - Payroll with Accounting"
+msgid "United Arab Emirates - Payroll with Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ae_corporate_tax_report
+msgid "United Arab Emirates - Corporate Tax Report"
 msgstr ""
 
 #. module: base
@@ -37306,11 +37397,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_reports
 msgid "United Arab Emirates - Accounting Reports"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_ae_corporate_tax_report
-msgid "United Arab Emirates - Corporate Tax Report"
 msgstr ""
 
 #. module: base

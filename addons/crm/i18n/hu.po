@@ -158,6 +158,9 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "invisible=\"not partner_email_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer email will also be updated.\" "
+"invisible=\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -166,6 +169,9 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_phone_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -462,7 +468,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Add a description..."
-msgstr "Új leírás..."
+msgstr "Leírás hozzáadása..."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -506,12 +512,12 @@ msgstr "Álnév kapcsolat biztonság"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain_id
 msgid "Alias Domain"
-msgstr "Tartomány álnév"
+msgstr "Álnév tartomány "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
 msgid "Alias Domain Name"
-msgstr "Alias domain név"
+msgstr "Álnév tartomány név"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_full_name
@@ -698,7 +704,7 @@ msgstr "Bumm! Az elmúlt 30 nap csapatrekordja."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_bounce
 msgid "Bounce"
-msgstr "Visszadob"
+msgstr "Visszadobás"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_root
@@ -829,7 +835,7 @@ msgstr "Lezárás dátuma"
 #. odoo-python
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr "Lezárt/szunnyadó érdeklődéseket nem lehet lehetőséggé alakítani."
+msgstr "Lezárt/elhalt érdeklődéseket nem lehet lehetőséggé alakítani."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
@@ -907,7 +913,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Contact Information"
-msgstr "Elérhetőségek"
+msgstr "Kapcsolat információk"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__contact_name
@@ -990,7 +996,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__correct
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__phone_state__correct
 msgid "Correct"
-msgstr "Megfelelő"
+msgstr "Helyes"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
@@ -1046,7 +1052,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__create
 msgid "Create a new customer"
-msgstr "Új ügyfél létrehozása"
+msgstr "Új vevő létrehozása"
 
 #. module: crm
 #. odoo-python
@@ -1143,13 +1149,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Customer"
-msgstr "Ügyfél"
+msgstr "Vevő"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Customer Email"
-msgstr "Ügyfél e-mail címe"
+msgstr "Vevő email címe"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.res_partner_menu_customer
@@ -1262,7 +1268,7 @@ msgstr "Nincs hozzáférés, adat kihagyása a felhasználó kivonat emailjébő
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__nothing
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__nothing
 msgid "Do not link to a customer"
-msgstr "Ne kapcsolja ügyfélhez"
+msgstr "Ne kapcsolja vevőhöz"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -1374,8 +1380,8 @@ msgid ""
 "Enter here the internal requirements for this stage (ex: Offer sent to "
 "customer). It will appear as a tooltip over the stage's name."
 msgstr ""
-"Írja be itt ezen szakasz belső követelményeit (pl.: Ajánlat elküldve az "
-"ügyfélnek). Ez tippként fog megjelenni a szakasz neve felett."
+"Írja be itt ezen szakasz belső követelményeit (pl.: Ajánlat elküldve a "
+"vevőnek). Ez tippként fog megjelenni a szakasz neve felett."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__date_deadline
@@ -2082,7 +2088,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__exist
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__exist
 msgid "Link to an existing customer"
-msgstr "Összekapcsolás egy meglévő ügyféllel"
+msgstr "Összekapcsolás egy meglévő vevőhöz"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_id
@@ -3027,7 +3033,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__action
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__action
 msgid "Related Customer"
-msgstr "Kapcsolódó ügyfél"
+msgstr "Kapcsolódó vevő"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_interval_number
@@ -3591,7 +3597,7 @@ msgstr ""
 #: model:digest.tip,name:crm.digest_tip_crm_4
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
 msgid "Tip: Do not waste time recording customers' data"
-msgstr ""
+msgstr "Tipp: ne vesztegesse idejét vevői adatok rögzítésével"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_6
@@ -3771,8 +3777,8 @@ msgid ""
 "                    prospects you import, etc."
 msgstr ""
 "Használja az érdeklődéseket, ha szüksége van egy minősítési lépésre\n"
-"                    egy lehetőség vagy egy ügyfél létrehozása előtt. Ez lehet egy kézbe kapott névjegykártya, \n"
-"                    egy kitöltött kapcsolafelvételi űrlap a weboldalán vagy egy\n"
+"                    egy lehetőség vagy egy vevő létrehozása előtt. Ez lehet egy kézbe kapott névjegykártya, \n"
+"                    egy kitöltött kapcsolatfelvételi űrlap a weboldalán vagy egy\n"
 "                    még nem minősített, beimportált lista, stb."
 
 #. module: crm
@@ -3785,10 +3791,10 @@ msgid ""
 "new customer in your address book."
 msgstr ""
 "Érdeklődéséket akkor érdemes használni, ha szükséges egy minősítési lépés "
-"mielőtt Lehetőséget vagy Partnert hozna létre. Érdeklődés lehet például egy "
+"mielőtt Lehetőséget vagy Vevőt hozna létre. Érdeklődés lehet például egy "
 "névjegykártya, a weboldal kpacsolatfelvételi űrlapjának kitöltése vagy egy "
 "nem minősített kapcsolatokat tartalmazó fájl. A minősítés után az érdeklődés"
-" átalakítható üzleti lehetőséggé és/vagy új partnerré."
+" átalakítható üzleti lehetőséggé és/vagy új vevővé."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
