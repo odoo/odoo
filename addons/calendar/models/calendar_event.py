@@ -136,7 +136,7 @@ class CalendarEvent(models.Model):
     videocall_location = fields.Char('Meeting URL', compute='_compute_videocall_location', store=True, copy=True)
     access_token = fields.Char('Invitation Token', store=True, copy=False, index=True)
     videocall_source = fields.Selection([('discuss', 'Discuss'), ('custom', 'Custom')], compute='_compute_videocall_source')
-    videocall_channel_id = fields.Many2one('discuss.channel', 'Discuss Channel')
+    videocall_channel_id = fields.Many2one('discuss.channel', 'Discuss Channel', index="btree_not_null")
     # visibility
     privacy = fields.Selection(
         [('public', 'Public'),
