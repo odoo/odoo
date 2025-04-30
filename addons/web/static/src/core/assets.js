@@ -11,10 +11,10 @@ import { registry } from "./registry";
 
 const computeCacheMap = () => {
     for (const script of document.head.querySelectorAll("script[src]")) {
-        cacheMap.set(script.src, Promise.resolve());
+        cacheMap.set(script.getAttribute("src"), Promise.resolve());
     }
     for (const link of document.head.querySelectorAll("link[rel=stylesheet][href]")) {
-        cacheMap.set(link.href, Promise.resolve());
+        cacheMap.set(link.getAttribute("href"), Promise.resolve());
     }
 };
 
@@ -170,9 +170,9 @@ export const assets = {
             return cacheMap.get(url);
         }
         const linkEl = document.createElement("link");
+        linkEl.setAttribute("href", url);
         linkEl.type = "text/css";
         linkEl.rel = "stylesheet";
-        linkEl.href = url;
         const promise = new Promise((resolve, reject) =>
             onLoadAndError(linkEl, resolve, async () => {
                 cacheMap.delete(url);
@@ -207,8 +207,8 @@ export const assets = {
             return cacheMap.get(url);
         }
         const scriptEl = document.createElement("script");
+        scriptEl.setAttribute("src", url);
         scriptEl.type = url.includes("web/static/lib/pdfjs/") ? "module" : "text/javascript";
-        scriptEl.src = url;
         const promise = new Promise((resolve, reject) =>
             onLoadAndError(scriptEl, resolve, () => {
                 cacheMap.delete(url);
