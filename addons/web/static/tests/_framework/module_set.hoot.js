@@ -133,7 +133,9 @@ const fetchDependencies = async (addons) => {
             dependencyBatchPromise = Deferred.resolve().then(() => {
                 const module_names = [...new Set(dependencyBatch)];
                 dependencyBatch = [];
-                return realOrm("ir.module.module.dependency", "all_dependencies", [], { module_names });
+                return realOrm("ir.module.module.dependency", "all_dependencies", [], {
+                    module_names,
+                });
             });
         }
         dependencyBatch.push(...addonsToFetch);
@@ -412,13 +414,21 @@ class ModuleSetLoader extends loader.constructor {
 
 const ALLOWED_GLOBAL_KEYS = [
     "ace", // Ace editor
+    // Bootstrap.js is voluntarily ignored as it is deprecated
     "Chart", // Chart.js
+    "Cropper", // Cropper.js
+    "DOMPurify", // DOMPurify
     "FullCalendar", // Full Calendar
     "L", // Leaflet
     "lamejs", // LameJS
     "luxon", // Luxon
-    "odoo",
-    "owl",
+    "odoo", // Odoo global object
+    "owl", // Owl
+    "pdfjsLib", // PDF JS
+    "Popper", // Popper
+    "SignaturePad", // Signature Pad
+    "StackTrace", // StackTrace
+    "ZXing", // ZXing
 ];
 const AUTO_INCLUDED_ADDONS = {
     /**
