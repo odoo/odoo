@@ -5,7 +5,7 @@ import { getBasicData, defineSpreadsheetModels } from "@spreadsheet/../tests/hel
 import { createBasicChart } from "@spreadsheet/../tests/helpers/commands";
 import { mountSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
-import { contains, mockService, serverState } from "@web/../tests/web_test_helpers";
+import { mockService, serverState } from "@web/../tests/web_test_helpers";
 
 defineSpreadsheetModels();
 
@@ -192,36 +192,6 @@ test("click on icon external link on chart redirect to the odoo menu", async fun
     expect.verifySteps([doActionStep]);
 });
 
-test("Click on chart in dashboard mode redirect to the odoo menu", async function () {
-    const doActionStep = "doAction";
-    mockActionService(doActionStep);
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    const fixture = await mountSpreadsheet(model);
-
-    createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_MENU_TO_CHART", {
-        chartId,
-        odooMenuId: 2,
-    });
-    const chartMenu = model.getters.getChartOdooMenu(chartId);
-    expect(chartMenu.id).toBe(2, { message: "Odoo menu is linked to chart" });
-    await animationFrame();
-
-    await click(fixture.querySelector(".o-chart-container"));
-    await animationFrame();
-    // Clicking on a chart while not dashboard mode do nothing
-    expect.verifySteps([]);
-
-    model.updateMode("dashboard");
-    await animationFrame();
-    await click(fixture.querySelector(".o-chart-container"));
-    await animationFrame();
-    // Clicking on a chart while on dashboard mode redirect to the odoo menu
-    expect.verifySteps([doActionStep]);
-});
-
 test("can use menus xmlIds instead of menu ids", async function () {
     mockActionService("doAction");
     const { model } = await createModelWithDataSource({
@@ -268,32 +238,4 @@ test("Trying to open a menu without an action sends a notification to the user",
         "The menu linked to this chart doesn't have an corresponding action. Please link the chart to another menu.";
     // Notification was send and doAction wasn't called
     expect.verifySteps([expectedNotificationMessage]);
-});
-
-test("Middle-click on chart in dashboard mode open the odoo menu in a new tab", async function () {
-    const { model } = await createModelWithDataSource({
-        serverData,
-    });
-    await mountSpreadsheet(model);
-
-    mockService("action", {
-        doAction(_, options) {
-            expect.step("doAction");
-            expect(options).toEqual({
-                newWindow: true,
-            });
-            return Promise.resolve(true);
-        },
-    });
-
-    createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_MENU_TO_CHART", {
-        chartId,
-        odooMenuId: 2,
-    });
-
-    model.updateMode("dashboard");
-    await animationFrame();
-    await contains(".o-chart-container").click({ ctrlKey: true });
-    expect.verifySteps(["doAction"]);
 });

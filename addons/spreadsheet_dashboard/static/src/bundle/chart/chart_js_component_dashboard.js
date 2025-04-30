@@ -21,6 +21,7 @@ patch(components.ChartJsComponent.prototype, {
     },
     createChart(chartData) {
         if (this.env.model.getters.isDashboard()) {
+            chartData = this.addOdooMenuPluginToChartData(chartData);
             if (!this.animationStore.animationPlayed[this.props.figureUI.id]) {
                 chartData = this.enableAnimationInChartData(chartData);
                 this.animationStore.disableAnimationForChart(this.props.figureUI.id);
@@ -30,6 +31,7 @@ patch(components.ChartJsComponent.prototype, {
     },
     updateChartJs(chartData) {
         if (this.env.model.getters.isDashboard()) {
+            chartData = this.addOdooMenuPluginToChartData(chartData);
             if (this.hasChartDataChanged()) {
                 chartData = this.enableAnimationInChartData(chartData);
                 this.animationStore.disableAnimationForChart(this.props.figureUI.id);
@@ -53,5 +55,12 @@ patch(components.ChartJsComponent.prototype, {
                 },
             },
         };
+    },
+    addOdooMenuPluginToChartData(chartData) {
+        chartData.options.plugins.chartOdooMenuPlugin = {
+            env: this.env,
+            menu: this.env.model.getters.getChartOdooMenu(this.props.figureUI.id),
+        };
+        return chartData;
     },
 });
