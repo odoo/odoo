@@ -1,27 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_crm
-#
+# 
 # Translators:
-# Батмөнх Ганбат <batmunkh2522@gmail.com>, 2022
-# hish, 2022
-# Otgonbayar.A <gobi.mn@gmail.com>, 2022
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
-# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2022
-# Martin Trigaux, 2022
-#
+# hish, 2024
+# Otgonbayar.A <gobi.mn@gmail.com>, 2024
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: tserendavaa tsogtoo <tseegii011929@gmail.com>, 2024\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
-"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
@@ -85,6 +85,12 @@ msgid "Do not link to a customer"
 msgstr "Захиалагчтай битгий холбо"
 
 #. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
 msgid "ID"
 msgstr "ID"
@@ -93,11 +99,6 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
 msgid "Invoiced in Sales Orders Target"
 msgstr "Борлуулалтын захиалга зорилтот хэлбэрээр нэхэмжлэх"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
-msgid "Last Modified on"
-msgstr "Сүүлд зассан огноо"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -118,11 +119,6 @@ msgstr "Сэжим/Боломж"
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
 msgid "Link to an existing customer"
 msgstr "Байгаа захиалагчид холбох"
-
-#. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr "Захиалгын эх боломжоос чат руу нэвтэрнэ үү"
 
 #. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
@@ -177,6 +173,7 @@ msgid "Sale Orders"
 msgstr "Борлуулалтын захиалга"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales Analysis"
 msgstr "Борлуулалтын шинжилгээ"
@@ -192,6 +189,7 @@ msgid "Sales Team"
 msgstr "Борлуулалтын баг"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales: Untaxed Total"
 msgstr "Борлуулалт: Татваргүй нийт"
@@ -212,6 +210,7 @@ msgid "User"
 msgstr "Хэрэглэгч"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr ""

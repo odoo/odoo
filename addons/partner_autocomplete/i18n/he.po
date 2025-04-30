@@ -1,28 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* partner_autocomplete
-#
+# 
 # Translators:
-# Yihya Hugirat <hugirat@gmail.com>, 2022
-# Amit Spilman <amit@laylinetech.com>, 2022
-# NoaFarkash, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
-# Martin Trigaux, 2022
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
-#
+# Orel Nahmany, 2024
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# NoaFarkash, 2024
+# Amit Spilman <amit@laylinetech.com>, 2024
+# Martin Trigaux, 2024
+# Yihya Hugirat <hugirat@gmail.com>, 2024
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
+# or balmas, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022\n"
+"POT-Creation-Date: 2025-04-07 20:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
-"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Language: he\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
@@ -31,21 +33,20 @@ msgid "Additional info"
 msgstr "מידע נוסף"
 
 #. module: partner_autocomplete
+#: model:iap.service,description:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Automatically enrich your contact base with corporate data."
+msgstr ""
+
+#. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 msgid "Buy more credits"
-msgstr ""
+msgstr "קנה עוד קרדיטים "
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_company
 msgid "Companies"
 msgstr "חברות"
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr ""
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
@@ -57,7 +58,7 @@ msgstr "מזהה בסיס נתונים של החברה"
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
 msgid "Config Settings"
-msgstr "הגדר הגדרות"
+msgstr "הגדרות תצורה"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_partner
@@ -82,6 +83,11 @@ msgstr "שם לתצוגה"
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__iap_enrich_auto_done
 msgid "Enrich Done"
+msgstr ""
+
+#. module: partner_autocomplete
+#: model:iap.service,unit_name:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Enrichments"
 msgstr ""
 
 #. module: partner_autocomplete
@@ -153,16 +159,10 @@ msgid "Partner Autocomplete: Sync with remote DB"
 msgstr ""
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr ""
-
-#. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
-msgid "Placeholder"
-msgstr "שומר מקום"
+msgid "Search Worldwide 🌎"
+msgstr ""
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -181,4 +181,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 msgid "Test mode"
+msgstr "מצב בדיקה "
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+msgid "Unable to enrich company (no credit was consumed)."
 msgstr ""
