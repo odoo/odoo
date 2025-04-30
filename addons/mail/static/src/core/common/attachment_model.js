@@ -5,6 +5,8 @@ import { rpc } from "@web/core/network/rpc";
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
 import { _t } from "@web/core/l10n/translation";
 
+import { loadPDFJSAssets } from "@web/core/utils/pdfjs";
+
 export class Attachment extends FileModelMixin(Record) {
     static _name = "ir.attachment";
     static id = "id";
@@ -25,6 +27,7 @@ export class Attachment extends FileModelMixin(Record) {
     res_name;
     message = fields.One("mail.message", { inverse: "attachment_ids" });
     create_date = fields.Datetime();
+    _thumbnail;
 
     get isDeletable() {
         if (this.message && !this.store.self.isInternalUser) {
@@ -73,6 +76,36 @@ export class Attachment extends FileModelMixin(Record) {
 
     get previewName() {
         return this.voice ? _t("Voice Message") : this.name || "";
+    }
+
+    async generatePdfThumbnail() {
+        await loadPDFJSAssets();
+        // Force usage of worker to avoid hanging the tab.
+        const initialWorkerSrc = globalThis.pdfjsLib.GlobalWorkerOptions.workerSrc;
+        globalThis.pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "/web/static/lib/pdfjs/build/pdf.worker.js";
+        const pdf = await globalThis.pdfjsLib.getDocument(this.urlRoute).promise;
+        const page = await pdf.getPage(1);
+        // Render first page onto a canvas
+        const viewPort = page.getViewport({ scale: 1 });
+        const canvas = document.createElement("canvas");
+        canvas.width = 38;
+        canvas.height = 38;
+        const scale = canvas.width / viewPort.width;
+        await page.render({
+            canvasContext: canvas.getContext("2d"),
+            viewport: page.getViewport({ scale }),
+        }).promise;
+        // Restore pdfjs's state
+        globalThis.pdfjsLib.GlobalWorkerOptions.workerSrc = initialWorkerSrc;
+        return canvas.toDataURL("image/jpeg");
+    }
+
+    get thumbnail() {
+        if (this.isPdf && !this._thumbnail) {
+            this.generatePdfThumbnail().then(thumb => this._thumbnail = thumb);
+        }
+        return this._thumbnail;
     }
 }
 
