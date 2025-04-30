@@ -374,6 +374,7 @@ export class Store extends BaseStore {
     handleClickOnLink(ev, thread) {
         const model = ev.target.dataset.oeModel;
         const id = Number(ev.target.dataset.oeId);
+        let handled = false;
         if (ev.target.closest(".o_channel_redirect") && model && id) {
             ev.preventDefault();
             this.Thread.getOrFetch({ model, id }).then((thread) => {
@@ -385,13 +386,31 @@ export class Store extends BaseStore {
                     });
                 }
             });
-            return true;
+            handled = true;
         } else if (ev.target.closest(".o_mail_redirect") && id) {
             ev.preventDefault();
             this.openChat({ partnerId: id });
-            return true;
+            handled = true;
         }
-        return false;
+        if (!handled && this.env.services.ui.isSmall && ev.target.closest(".o-mail-ChatWindow")) {
+            const link = ev.target.closest("a");
+            if (link?.href && !link.href.startsWith("#")) {
+                let url;
+                try {
+                    url = new URL(link.href);
+                } catch {
+                    // Ignore invalid URLs
+                    return handled;
+                }
+                if (
+                    browser.location.host === url.host &&
+                    browser.location.pathname.startsWith("/odoo")
+                ) {
+                    this.ChatWindow.get({ thread })?.fold();
+                }
+            }
+        }
+        return handled;
     }
 
     setup() {
