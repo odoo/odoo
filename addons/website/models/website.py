@@ -901,10 +901,10 @@ class Website(models.Model):
         # Configure the pages
         for page_code in requested_pages:
             snippet_list = configurator_snippets.get(page_code, [])
-            if page_code == 'homepage':
-                page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
-            else:
-                page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
+            home_page = self.with_context(website_id=website.id).viewref('website.homepage', raise_if_not_found=False) if page_code == 'homepage' else None
+            page_view_id = home_page or self.env['ir.ui.view'].browse(pages_views.get(page_code))
+            if not page_view_id:
+                continue  # Skip rendering this page
             rendered_snippets = []
             nb_snippets = len(snippet_list)
             for i, snippet in enumerate(snippet_list, start=1):
