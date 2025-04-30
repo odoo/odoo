@@ -17,7 +17,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.frozen_today = datetime(year=2022, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone('utc'))
+        cls.frozen_today = datetime(year=2025, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone('utc'))
 
         # Allow to see the full result of AssertionError.
         cls.maxDiff = None
@@ -61,8 +61,8 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
             cert_name = 'Bizkaia-IZDesa2021.p12'
             cert_password = 'IZDesa2021'
         elif agency == 'gipuzkoa':
-            cert_name = 'gipuzkoa_IZDesa2021.p12'
-            cert_password = 'IZDesa2021'
+            cert_name = 'gipuzkoa_Iz3np32024.p12'
+            cert_password = 'Iz3np32024'
         else:
             raise ValueError("Unknown tax agency: " + agency)
 
@@ -90,8 +90,8 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         return cls.env['account.move'].with_context(edi_test_mode=True).create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
-            'invoice_date': '2022-01-01',
-            'date': '2022-01-01',
+            'invoice_date': '2025-01-01',
+            'date': '2025-01-01',
             **kwargs,
             'invoice_line_ids': [(0, 0, {
                 'product_id': cls.product_a.id,
@@ -128,7 +128,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
     <CabeceraFactura>
       <SerieFactura>INVTEST</SerieFactura>
       <NumFactura>01</NumFactura>
-      <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
+      <FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura>
       <HoraExpedicionFactura>___ignore___</HoraExpedicionFactura>
       <FacturaSimplificada>N</FacturaSimplificada>
     </CabeceraFactura>
@@ -198,7 +198,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
     <CabeceraFactura>
       <SerieFactura>INVTEST</SerieFactura>
       <NumFactura>01</NumFactura>
-      <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
+      <FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura>
     </CabeceraFactura>
   </IDFactura>
   <HuellaTBAI>
@@ -221,7 +221,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         <Capitulo>2</Capitulo>
         <Operacion>A00</Operacion>
         <Version>1.0</Version>
-        <Ejercicio>2022</Ejercicio>
+        <Ejercicio>2025</Ejercicio>
         <ObligadoTributario>
             <NIF>09760433S</NIF>
             <ApellidosNombreRazonSocial>EUS Company</ApellidosNombreRazonSocial>
@@ -239,8 +239,8 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                 <CabeceraFactura>
                     <SerieFactura>TEST</SerieFactura>
                     <NumFactura>INV/5234</NumFactura>
-                    <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
-                    <FechaRecepcion>01-01-2022</FechaRecepcion>
+                    <FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura>
+                    <FechaRecepcion>01-01-2025</FechaRecepcion>
                     <TipoFactura>F1</TipoFactura>
                 </CabeceraFactura>
                 <DatosFactura>
@@ -273,7 +273,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         <Capitulo>2</Capitulo>
         <Operacion>A00</Operacion>
         <Version>1.0</Version>
-        <Ejercicio>2022</Ejercicio>
+        <Ejercicio>2025</Ejercicio>
         <ObligadoTributario>
             <NIF>09760433S</NIF>
             <ApellidosNombreRazonSocial>EUS Company</ApellidosNombreRazonSocial>
@@ -291,8 +291,8 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                 <CabeceraFactura>
                     <SerieFactura>TEST</SerieFactura>
                     <NumFactura>INV/5234</NumFactura>
-                    <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
-                    <FechaRecepcion>01-01-2022</FechaRecepcion>
+                    <FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura>
+                    <FechaRecepcion>01-01-2025</FechaRecepcion>
                     <TipoFactura>F1</TipoFactura>
                 </CabeceraFactura>
                 <DatosFactura>
@@ -325,7 +325,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         <Capitulo>2</Capitulo>
         <Operacion>A00</Operacion>
         <Version>1.0</Version>
-        <Ejercicio>2022</Ejercicio>
+        <Ejercicio>2025</Ejercicio>
         <ObligadoTributario>
             <NIF>09760433S</NIF>
             <ApellidosNombreRazonSocial>EUS Company</ApellidosNombreRazonSocial>
@@ -340,8 +340,8 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                 <CabeceraFactura>
                     <SerieFactura>TEST</SerieFactura>
                     <NumFactura>INV/5234</NumFactura>
-                    <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
-                    <FechaRecepcion>01-01-2022</FechaRecepcion>
+                    <FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura>
+                    <FechaRecepcion>01-01-2025</FechaRecepcion>
                     <TipoFactura>F1</TipoFactura>
                 </CabeceraFactura>
                 <DatosFactura>
