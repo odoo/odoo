@@ -14,8 +14,7 @@ export const menuService = {
             if (!reload && odoo.loadMenusPromise) {
                 return odoo.loadMenusPromise;
             }
-            const loadMenusHash = new Date().getTime().toString();
-            const res = await browser.fetch(`${loadMenusUrl}?unique=${loadMenusHash}`);
+            const res = await browser.fetch(loadMenusUrl, { cache: "no-store" });
             if (!res.ok) {
                 throw new Error("Error while fetching menus");
             }
