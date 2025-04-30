@@ -334,3 +334,179 @@ test("o_animate should be normalized with loading=eager", async () => {
     // Should be normalized
     expect(":iframe .test-options-target img").toHaveProperty("loading", "eager");
 });
+
+describe("animate text in toolbar", () => {
+    test("create a animated span with the selected text", async () => {
+        const websiteBuilder = await setupWebsiteBuilder(`<p class="test">abcd</p>`);
+        const editable = websiteBuilder.getEditableContent();
+        const editor = websiteBuilder.getEditor();
+        const selection = editable.ownerDocument.getSelection();
+
+        // Move the selection to open the toolbar
+        let textNode = editable.querySelector(".test").childNodes[0];
+        selection.setBaseAndExtent(textNode, 1, textNode, 3);
+
+        // click on animate and it create a span with the animation
+        await contains("button[name=expand_toolbar]").click();
+        expect("button[title='Animate Text']").not.toHaveClass("active");
+        await contains("button[title='Animate Text']").click();
+        expect(":iframe span").toHaveText("bc");
+        expect(":iframe span:contains('bc')").toHaveClass("o_animate");
+
+        // Move the selection to close the animate popover and the span is still there
+        textNode = editable.querySelector(".test").childNodes[0];
+        selection.setBaseAndExtent(textNode, 0, textNode, 0);
+        expect(":iframe span:contains('bc')").toHaveClass("o_animate");
+
+        // undo removes the span
+        editor.shared.history.undo();
+        expect(":iframe span").toHaveCount(0);
+    });
+
+    test("change existing animated span by selecting the exact text", async () => {
+        const websiteBuilder = await setupWebsiteBuilder(
+            `<p class="test">a<span class="o_animated_text o_animate o_anim_fade_in o_animate_preview">bc</span>d</p>`
+        );
+        const editable = websiteBuilder.getEditableContent();
+        const selection = editable.ownerDocument.getSelection();
+
+        // select the text in the span
+        const textNode = editable.querySelector(".test span").childNodes[0];
+        selection.setBaseAndExtent(textNode, 0, textNode, 2);
+
+        // animate is marked active
+        await contains("button[name=expand_toolbar]").click();
+        expect("button[title='Animate Text']").toHaveClass("active");
+        await contains("button[title='Animate Text']").click();
+        expect(":iframe span:contains('bc')").not.toHaveClass("o_anim_rotate_in");
+        expect(":iframe span:contains('bc')").toHaveClass("o_anim_fade_in");
+
+        // click on an animation effect and it is changed on the span
+        await contains("div:has(>div[data-action-value=o_anim_rotate_in]) + button").click();
+        await contains("div[data-action-value=o_anim_rotate_in]:not(.d-none *)").click();
+        expect(":iframe span:contains('bc')").toHaveClass("o_anim_rotate_in");
+        expect(":iframe span:contains('bc')").not.toHaveClass("o_anim_fade_in");
+
+        // undo restore the classes
+        await contains("button.fa-undo").click();
+        expect(":iframe span:contains('bc')").not.toHaveClass("o_anim_rotate_in");
+        expect(":iframe span:contains('bc')").toHaveClass("o_anim_fade_in");
+
+        // reset removes the span
+        await contains(":iframe span").click(); // move the selection around to make the toolbar re-appear
+        selection.setBaseAndExtent(textNode, 0, textNode, 2);
+        await contains("button[name=expand_toolbar]").click();
+        await contains("button[title='Animate Text']").click();
+        await contains("button[title=Reset]").click();
+        expect(":iframe span").toHaveCount(0);
+        expect(":iframe .test").toHaveText("abcd");
+    });
+
+    test("clicking on animate when popover is open", async () => {
+        const websiteBuilder = await setupWebsiteBuilder(
+            `<p class="test">a<span class="o_animated_text">bc</span>d</p>`
+        );
+        const editable = websiteBuilder.getEditableContent();
+        const selection = editable.ownerDocument.getSelection();
+
+        // select the text in the span
+        const textNode = editable.querySelector(".test span").childNodes[0];
+        selection.setBaseAndExtent(textNode, 0, textNode, 2);
+
+        // animate is marked active
+        await contains("button[name=expand_toolbar]").click();
+        expect("button[title='Animate Text']").toHaveClass("active");
+        await contains("button[title='Animate Text']").click();
+        expect("div[data-class-action=o_animate]").toHaveCount(1);
+
+        await contains("button[title='Animate Text']").click();
+        expect("div[data-class-action=o_animate]").toHaveCount(1);
+    });
+
+    test("set animation with a selection overlapping existing animated span (start of span in selection)", async () => {
+        const websiteBuilder = await setupWebsiteBuilder(
+            `<p class="test">a<span class="o_animated_text">bc</span>d</p>`
+        );
+        const editable = websiteBuilder.getEditableContent();
+        const selection = editable.ownerDocument.getSelection();
+
+        const test = editable.querySelector(".test");
+        const span = editable.querySelector(".test span");
+
+        selection.setBaseAndExtent(test.childNodes[0], 0, span.childNodes[0], 1);
+
+        await contains("button[name=expand_toolbar]").click();
+        expect("button[title='Animate Text']").not.toHaveClass("active");
+        await contains("button[title='Animate Text']").click();
+        expect(":iframe span:eq(0)").toHaveText("ab");
+        expect(":iframe span:eq(1)").toHaveText("c");
+    });
+
+    test("set animation with a selection overlapping existing animated span (end of span in selection)", async () => {
+        const websiteBuilder = await setupWebsiteBuilder(
+            `<p class="test">a<span class="o_animated_text">bc</span>d</p>`
+        );
+        const editable = websiteBuilder.getEditableContent();
+        const selection = editable.ownerDocument.getSelection();
+
+        const test = editable.querySelector(".test");
+        const span = editable.querySelector(".test span");
+
+        selection.setBaseAndExtent(span.childNodes[0], 1, test.childNodes[2], 1);
+
+        await contains("button[name=expand_toolbar]").click();
+        expect("button[title='Animate Text']").not.toHaveClass("active");
+        await contains("button[title='Animate Text']").click();
+        expect(":iframe span:eq(0)").toHaveText("b");
+        expect(":iframe span:eq(1)").toHaveText("cd");
+    });
+
+    test("set animation with a selection contained inside an existing animated span", async () => {
+        const websiteBuilder = await setupWebsiteBuilder(
+            `<p class="test">a<span class="o_animated_text" other-attribute>bcd</span>e</p>`
+        );
+        const editable = websiteBuilder.getEditableContent();
+        const selection = editable.ownerDocument.getSelection();
+
+        const span = editable.querySelector(".test span");
+
+        selection.setBaseAndExtent(span.childNodes[0], 1, span.childNodes[0], 2);
+
+        await contains("button[name=expand_toolbar]").click();
+        expect("button[title='Animate Text']").not.toHaveClass("active");
+        await contains("button[title='Animate Text']").click();
+        expect(":iframe span[other-attribute]:eq(0)").toHaveText("b");
+        expect(":iframe span:not([other-attribute])").toHaveText("c");
+        expect(":iframe span[other-attribute]:eq(1)").toHaveText("d");
+    });
+
+    test("reset animation with a selection containing and overlapping existing animated spans", async () => {
+        const websiteBuilder = await setupWebsiteBuilder(
+            `<p class="test">a<span class="o_animated_text">bc</span>d<span class="o_animated_text">ef</span>g<span class="o_animated_text">hi</span>j</p>`
+        );
+        const editable = websiteBuilder.getEditableContent();
+        const selection = editable.ownerDocument.getSelection();
+
+        const test = editable.querySelector(".test");
+
+        selection.setBaseAndExtent(
+            test.childNodes[1].childNodes[0],
+            1,
+            test.childNodes[5].childNodes[0],
+            1
+        );
+
+        await contains("button[name=expand_toolbar]").click();
+        expect("button[title='Animate Text']").not.toHaveClass("active");
+        await contains("button[title='Animate Text']").click();
+        expect(":iframe span:eq(0)").toHaveText("b");
+        expect(":iframe span:eq(1)").toHaveText("cdefgh");
+        expect(":iframe span:eq(2)").toHaveText("i");
+
+        // click reset to remove the selected span
+        await contains("button[title=Reset]").click();
+        expect(":iframe span:eq(0)").toHaveText("b");
+        expect(":iframe span:eq(1)").toHaveText("i");
+        expect(":iframe .test").toHaveText("abcdefghij");
+    });
+});
