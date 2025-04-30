@@ -192,7 +192,7 @@ class TestConfigManager(TransactionCase):
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
             'with_demo': True,
-            'import_partial': '/tmp/import-partial',
+            'import_partial': '',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],  # the path found in the config file is invalid
             'upgrade_path': [],  # the path found in the config file is invalid
@@ -212,9 +212,9 @@ class TestConfigManager(TransactionCase):
             'dbfilter': '.*',
 
             # testing
-            'test_file': '/tmp/file-file',
-            'test_enable': True,
-            'test_tags': ':TestMantra.test_is_extra_mile_done',
+            'test_file': '',
+            'test_enable': False,
+            'test_tags': None,
             'screencasts': '/tmp/screencasts',
             'screenshots': '/tmp/screenshots',
 
@@ -256,7 +256,7 @@ class TestConfigManager(TransactionCase):
             'language': 'fr_FR',  # blacklist for save, read from the config file
             'translate_out': '/tmp/translate_out.csv',  # blacklist for save, read from the config file
             'translate_in': '/tmp/translate_in.csv',  # blacklist for save, read from the config file
-            'overwrite_existing_translations': True,  # blacklist for save, read from the config file
+            'overwrite_existing_translations': False,
             'translate_modules': ['all'],  # ignored from the config file
 
             # security
@@ -264,7 +264,7 @@ class TestConfigManager(TransactionCase):
 
             # advanced
             'dev_mode': ['xml'],  # blacklist for save, read from the config file
-            'stop_after_init': True,  # blacklist for save, read from the config file
+            'stop_after_init': False,
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
             'max_cron_threads': 4,
@@ -288,7 +288,6 @@ class TestConfigManager(TransactionCase):
             "WARNING:odoo.tools.config:option addons_path, no such directory '/tmp/odoo', skipped",
             "WARNING:odoo.tools.config:option upgrade_path, no such directory '/tmp/upgrade', skipped",
             "WARNING:odoo.tools.config:option pre_upgrade_scripts, no such file '/tmp/pre-custom.py', skipped",
-            "WARNING:odoo.tools.config:test file '/tmp/file-file' cannot be found",
         ])
 
     @unittest.skipIf(os_name != 'posix', 'this test is POSIX only')
