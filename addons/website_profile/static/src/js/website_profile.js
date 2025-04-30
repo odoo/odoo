@@ -8,13 +8,14 @@ import { redirect } from "@web/core/utils/urls";
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
     read_events: {
-        'click .send_validation_email': '_onSendValidationEmailClick',
+        'click .send_validation_email': 'async _onSendValidationEmailClick',
         'click .validated_email_close': '_onCloseValidatedEmailClick',
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
     /**
      * @private
      * @param {Event} ev
@@ -22,11 +23,12 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     _onSendValidationEmailClick: function (ev) {
         ev.preventDefault();
         const element = ev.currentTarget;
-        rpc('/profile/send_validation_email', {
+        return rpc('/profile/send_validation_email', {
             redirect_url: element.dataset["redirect_url"],
         }).then(function (data) {
             if (data) {
                 redirect(element.dataset["redirect_url"]);
+                return new Promise(() => {});
             }
         });
     },
