@@ -5,8 +5,6 @@ from odoo import Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 import unittest
 
-# TODO master-mysterious-egg fix error
-@unittest.skip("prepare mysterious-egg for merging")
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo):
 

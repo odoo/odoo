@@ -3,8 +3,6 @@
 from odoo.tests import HttpCase, tagged, users
 import unittest
 
-# TODO master-mysterious-egg fix error
-@unittest.skip("prepare mysterious-egg for merging")
 @tagged('post_install', '-at_install', 'mail_activity')
 class TestMailingUi(HttpCase):
 
