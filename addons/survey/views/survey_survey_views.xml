@@ -13,7 +13,7 @@
                 <header>
                     <button name="action_send_survey" string="Share" type="object" class="oe_highlight" invisible="not active"/>
                     <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
-                      invisible="answer_done_count &lt;= 0"/>
+                      invisible="context.get('hide_results', False) or answer_done_count &lt;= 0"/>
                     <button name="action_start_session" string="Create Live Session" type="object" class="d-none d-sm-block"
                         invisible="session_state or not active or not session_available"/>
                     <button name="action_open_session_manager" string="Open Session Manager" type="object" class="d-none d-sm-block"
@@ -315,7 +315,7 @@
                                 <button name="action_result_survey"
                                         string="See results" type="object"
                                         class="btn btn-secondary"
-                                        invisible="not active">
+                                        invisible="context.get('hide_results', False) or not active">
                                     See results
                                 </button>
                                 <button name="action_start_session"
