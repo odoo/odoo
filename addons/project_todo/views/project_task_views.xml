@@ -29,7 +29,7 @@
                     <t t-name="card">
                         <t t-set="todoHasAssignees" t-value="record.user_ids.raw_value.length &gt; 1"/>
                         <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value)}">
-                            <field name="name" class="fw-bolder fs-5" widget="name_with_subtask_count"/>
+                            <field name="name" class="fw-bold fs-5" widget="name_with_subtask_count"/>
                             <field t-if="record.date_deadline.raw_value" name="date_deadline" widget="remaining_days"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field t-if="record.displayed_image_id.value" name="displayed_image_id" widget="attachment_image"/>
