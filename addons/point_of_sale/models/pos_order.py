@@ -704,6 +704,9 @@ class PosOrder(models.Model):
         return invoice
 
     def action_pos_order_paid(self):
+        """
+        Action that performs all side effects needed to be done when an order is paid.
+        """
         self.ensure_one()
 
         # TODO: add support for mix of cash and non-cash payments when both cash_rounding and only_round_cash_method are True
@@ -730,6 +733,8 @@ class PosOrder(models.Model):
                 raise UserError(_("Order %s is not fully paid.", self.name))
 
         # self.write({'state': 'paid'})
+        self._create_order_picking()
+        self._compute_total_cost_in_real_time()
 
         return True
 
@@ -1024,6 +1029,25 @@ class PosOrder(models.Model):
         today_orders.write({'state': 'cancel'})
         return {
             'pos.order': today_orders.read(self._load_pos_data_fields(self.config_id.ids[0]), load=False)
+        }
+
+    @api.model
+    def read_pos_data_uuid(self, uuid):
+        order = self.search([('uuid', '=', uuid)], limit=1)
+        if not order:
+            return {}
+        return order.read_pos_data([], order.config_id.id)
+
+    def read_pos_data(self, data, config_id):
+        # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
+
+        return {
+            'pos.order': self.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.session': [],
+            'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.pack.operation.lot': self.lines.pack_lot_ids.read(self.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            "product.attribute.custom.value": self.lines.custom_attribute_value_ids.read(self.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
 
     def _should_create_picking_real_time(self):

@@ -259,7 +259,7 @@ class PosConfig(models.Model):
                 case _:
                     pass
         for config in self._configs_that_share_data() + self:
-            config._notify('DATA_CHANGED', {'queue': queue, 'login_number': login_number, 'config': self.id})
+            config._notify('DATA_CHANGED', {'queue': queue, 'login_number': login_number, 'config_id': self.id})
         return id_updates
 
     @api.depends('payment_method_ids')

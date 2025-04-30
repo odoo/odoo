@@ -13,7 +13,6 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { debounce } from "@web/core/utils/timing";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { omit } from "@web/core/utils/objects";
-import { delay } from "@web/core/utils/concurrency";
 
 const MIN_FLUSH_INTERVAL_MILLIS = 10;
 
@@ -236,19 +235,16 @@ export class PosData extends Reactive {
 
         const prepareVals = (vals) =>
             Object.fromEntries(
-                Object.entries(vals).map(([k, v]) => [
-                    k,
-                    ((record) => {
-                        const getId = (record) => record?.id ?? record ?? false; // the orm service ignores undefined values, so we need to set it to false
-                        if (record?.isValid) {
-                            return serializeDateTime(record);
-                        }
-                        if (record instanceof Array) {
-                            return record.map((r) => getId(r));
-                        }
-                        return getId(record);
-                    })(v),
-                ])
+                Object.entries(vals).map(([k, v]) => {
+                    const getId = (record) => record?.id ?? record ?? false; // the orm service ignores undefined values, so we need to set it to false
+                    if (v?.isValid) {
+                        return [k, serializeDateTime(v)];
+                    }
+                    if (v instanceof Array) {
+                        return [k, v.map((r) => getId(r))];
+                    }
+                    return [k, getId(v)];
+                })
             );
         const { models } = createRelatedModels(relations, modelClasses, this.opts);
         Object.entries(models).forEach(([modelName, _]) => {
@@ -259,9 +255,9 @@ export class PosData extends Reactive {
                 if (!ids.length) {
                     return;
                 }
-                if (ids.some((x) => typeof x === "number")) {
-                    return;
-                }
+                // if (ids.some((x) => typeof x === "number")) {
+                //     return;
+                // }
                 const vals = models[modelName].getBy("uuid", ids[0]).raw;
                 this.indexedDB.create(modelName, [vals]);
                 this.queue.push(["CREATE", modelName, omit(vals, "id")]);
@@ -294,68 +290,63 @@ export class PosData extends Reactive {
         this.models = models;
         await this.withoutSyncing(this.initData.bind(this));
         this.network.loading = false;
-        this.shouldSync = true;
-        this.connectWebSocket("DATA_CHANGED", ({ queue: newData, login_number, config }) => {
-            if (config == odoo.pos_config_id && login_number == odoo.login_number) {
+        this.connectWebSocket("DATA_CHANGED", ({ queue: newData, login_number, config_id }) => {
+            if (config_id == odoo.pos_config_id && login_number == odoo.login_number) {
                 return;
             }
+            const findRecord = async (modelName, id) =>
+                this.models[modelName].find((x) => x.uuid === id || x.id === id) ||
+                (
+                    await this.searchRead(modelName, [
+                        [typeof id === "string" ? "uuid" : "id", "=", id],
+                    ])
+                )[0];
+            const linkVals = async (modelName, vals) => {
+                for (const key in vals) {
+                    const field = this.models[modelName]?.fields[key];
+
+                    if (field?.type === "many2one" && vals[key]) {
+                        vals[key] = await findRecord(field.relation, vals[key]);
+                    }
+                    if (field.type === "many2many" || field.type === "one2many") {
+                        const records = await Promise.all(
+                            [...vals[key]].map(async (id) => await findRecord(field.relation, id))
+                        );
+                        vals[key] = [["set", ...records.filter((x) => x)]];
+                        // FIXME why do we need the filer? otherwise the last element is undefined, but why ???
+                    }
+                }
+                return vals;
+            };
             this.withoutSyncing(async () => {
-                console.debug("DATA_CHANGED", newData);
                 for (const [command, ...data] of newData) {
-                    const findRecord = async (modelName, id) =>
-                        this.models[modelName].find((x) => x.uuid === id || x.id === id) ||
-                        (
-                            await this.searchRead(modelName, [
-                                [typeof id === "string" ? "uuid" : "id", "=", id],
-                            ])
-                        )[0];
-                    const linkVals = async (modelName, vals) => {
-                        for (const key in vals) {
-                            const field = this.models[modelName]?.fields[key];
-
-                            if (field?.type === "many2one" && vals[key]) {
-                                vals[key] = await findRecord(field.relation, vals[key]);
-                            }
-                            if (field.type === "many2many" || field.type === "one2many") {
-                                const records = await Promise.all(
-                                    [...vals[key]].map(
-                                        async (id) => await findRecord(field.relation, id)
-                                    )
-                                );
-                                vals[key] = [["link", ...records.filter((x) => x)]]; // TODO: correctly choose between link and update
-                                // FIXME why do we need the filer? otherwise the last element is undefined, but why ???
-                            }
-                        }
-                        return vals;
-                    };
-
                     if (command === "CREATE") {
                         const [model, vals] = data;
                         this.models[model].create(await linkVals(model, vals));
                     } else if (command === "UPDATE") {
                         const [model, id, vals] = data;
-                        (await findRecord(model, id))?.update?.(await linkVals(model, vals));
+                        (await findRecord(model, id))?.update(await linkVals(model, vals));
                     } else if (command === "DELETE") {
                         const [model, id] = data;
-                        this.models[model].find((x) => x.uuid === id || x.id === id)?.delete?.();
+                        this.models[model].find((x) => x.uuid === id || x.id === id)?.delete();
                     }
                 }
             });
         });
     }
     async withoutSyncing(callback) {
-        this.shouldSync = false;
-        const value = await callback();
-        this.shouldSync = true;
-        return value;
+        try {
+            this.shouldSync = false;
+            return await callback();
+        } finally {
+            this.shouldSync = true;
+        }
     }
 
     async flush() {
-        // this.flushToIndexedDB();
         if (this.queue.length === 0 || !navigator.onLine) {
             return;
         }
-        localStorage.setItem(`pos_config_${odoo.pos_config_id}_changes_queue`, []);
         try {
             console.debug("Trying to flush:");
             console.debug(
@@ -371,7 +362,8 @@ export class PosData extends Reactive {
                 false
             );
             Object.assign(this.idUpdates, idUpdates);
-            console.debug("Flushed queue");
+            localStorage.setItem(`pos_config_${odoo.pos_config_id}_changes_queue`, []);
+            console.debug("Flush done");
             this.queue = [];
         } catch (error) {
             localStorage.setItem(
@@ -613,30 +605,31 @@ export class PosData extends Reactive {
     }
 
     async read(model, ids, fields = [], options = [], queue = false) {
+        // Needs to flush so that `mapUuidToId` works correctly.
+        await this.flush();
         return await this.execute({
             type: "read",
             model,
-            ids: await this.resolveIds(ids),
+            ids: this.mapUuidToId(ids),
             fields,
             options,
             queue,
         });
     }
 
-    async resolveIds(idOrIds) {
+    /**
+     * @param {number | string | (string | number)[]} idOrIds
+     * @returns {number | number[]}
+     */
+    mapUuidToId(idOrIds) {
         if (typeof idOrIds === "number") {
             return idOrIds;
         }
         if (typeof idOrIds === "string") {
-            if (this.idUpdates[idOrIds]) {
-                return this.idUpdates[idOrIds];
-            } else {
-                await delay(MIN_FLUSH_INTERVAL_MILLIS); // wait for queue to be flushed
-                return this.idUpdates[idOrIds];
-            }
+            return this.idUpdates[idOrIds];
         }
         if (Array.isArray(idOrIds)) {
-            return Promise.all(idOrIds.map((id) => this.resolveIds(id)));
+            return idOrIds.map((id) => this.mapUuidToId(id));
         }
     }
 
@@ -649,10 +642,11 @@ export class PosData extends Reactive {
             throw new Error("There are unsynced changes in the queue.");
         }
         if (Array.isArray(args) && args.length == 0) {
+            // This is for static (api.model) methods.
             return await this.orm.call(model, method, args, kwargs);
         }
 
-        const ids = await this.resolveIds(args[0]);
+        const ids = this.mapUuidToId(args[0]);
         return await this.orm.call(model, method, [ids, ...args.slice(1)], kwargs);
     }
 
