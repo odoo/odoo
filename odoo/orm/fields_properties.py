@@ -10,7 +10,7 @@ from collections import abc, defaultdict
 from operator import attrgetter
 
 from odoo.exceptions import AccessError, MissingError
-from odoo.tools import SQL, OrderedSet, is_list_of
+from odoo.tools import SQL, OrderedSet, is_list_of, html_sanitize
 from odoo.tools.misc import frozendict, has_list_types
 from odoo.tools.translate import _
 
@@ -69,12 +69,16 @@ class Properties(Field):
 
     ALLOWED_TYPES = (
         # standard types
-        'boolean', 'integer', 'float', 'text', 'char', 'date', 'datetime',
+        'boolean', 'integer', 'float', 'text', 'char', 'html', 'date', 'datetime',
         # relational like types
         'many2one', 'many2many', 'selection', 'tags',
         # UI types
-         'separator',
+        'separator',
     )
+
+    SANITIZE_SETTINGS = {
+        'sanitize_attributes': True,
+    }
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
@@ -518,6 +522,9 @@ class Properties(Field):
                     if id_ in res_ids_per_model[res_model]
                 ] if res_model in env else []
 
+            elif property_type == 'html':
+                property_value = html_sanitize(property_value, **cls.SANITIZE_SETTINGS)
+
             property_definition['value'] = property_value
 
     @classmethod
@@ -800,7 +807,7 @@ class PropertiesDefinition(Field):
             'string': 'Color Code',
             'type': 'char',
             'default': 'blue',
-            'default': 'red',
+            'value': 'red',
         }, {
             'name': 'aa34746a6851ee4e',
             'string': 'Partner',
@@ -945,6 +952,9 @@ class PropertiesDefinition(Field):
             property_type = property_definition.get('type')
             if property_type and property_type not in Properties.ALLOWED_TYPES:
                 raise ValueError(f'Wrong property type {property_type!r}.')
+
+            if property_type == 'html' and (default := property_definition.get('default')):
+                property_definition['default'] = html_sanitize(default, **Properties.SANITIZE_SETTINGS)
 
             model = property_definition.get('comodel')
             if model and (model not in env or env[model].is_transient() or env[model]._abstract):

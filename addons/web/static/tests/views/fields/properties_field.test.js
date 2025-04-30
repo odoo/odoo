@@ -43,15 +43,15 @@ async function closePopover() {
 async function changeType(propertyType) {
     const TYPES_INDEX = {
         char: 1,
-        integer: 4,
-        float: 5,
-        date: 6,
-        datetime: 7,
-        selection: 8,
-        tags: 9,
-        many2one: 10,
-        many2many: 11,
-        separator: 12,
+        integer: 5,
+        float: 6,
+        date: 7,
+        datetime: 8,
+        selection: 9,
+        tags: 10,
+        many2one: 11,
+        many2many: 12,
+        separator: 13,
     };
     const propertyTypeIndex = TYPES_INDEX[propertyType];
     await click(".o_field_property_definition_type input");

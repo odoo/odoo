@@ -2713,6 +2713,9 @@ class BaseModel(metaclass=MetaModel):
                 property=sql_property,
             )
 
+        elif property_type == 'html':
+            raise UserError(_('You cannot group by HTML properties.'))
+
         # if the key is not present in the dict, fallback to false instead of none
         return SQL("COALESCE(%s, 'false')", sql_property)
 

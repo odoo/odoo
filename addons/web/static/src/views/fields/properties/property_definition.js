@@ -116,6 +116,7 @@ export class PropertyDefinition extends Component {
         return [
             ["char", _t("Text")],
             ["text", _t("Multiline Text")],
+            ["html", _t("HTML")],
             ["boolean", _t("Checkbox")],
             ["integer", _t("Integer")],
             ["float", _t("Decimal")],

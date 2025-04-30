@@ -785,6 +785,77 @@ class PropertiesCase(TestPropertiesMixin):
             msg='Definition must be present when reading child')
         self.assertEqual(many2one_property['value'], (self.partner.id, self.partner.display_name))
 
+    def test_properties_field_html(self):
+        """Test that the HTML values are sanitized."""
+        xss_payload = "<img src='x' onerror='alert(1)'/>"
+        self.message_2.attributes = [
+            {
+                "name": "html",
+                "type": "html",
+                "string": "HTML",
+                "default": xss_payload,
+                "value": xss_payload,
+                "definition_changed": True,
+            },
+        ]
+        expected = '<img src="x">'
+        self.assertEqual(dict(self.message_2.attributes)['html'], expected)
+        self.assertEqual(self.message_2.attributes['html'], expected)
+
+        self.env.flush_all()
+        with self.assertRaises(UserError):
+            self.env['test_orm.message']._read_group([], ['attributes.html'])
+
+        with self.assertRaises(UserError):
+            self.env['test_orm.message'].web_read_group([], ['attributes.html'])
+
+        properties = self.message_2.read(['attributes'])[0]['attributes']
+        self.assertEqual(properties[0]['value'], expected)
+        self.assertEqual(properties[0]['default'], expected)
+
+        definition = self.message_2.discussion.attributes_definition
+        self.assertEqual(definition[0]['default'], expected)
+
+        definition = self.message_2.discussion.read(['attributes_definition'])[0]['attributes_definition']
+        self.assertEqual(definition[0]['default'], expected)
+
+        # write a dict on the record
+        self.message_2.attributes = {'html': xss_payload}
+        self.assertEqual(self.message_2.attributes['html'], expected)
+        properties = self.message_2.read(['attributes'])[0]['attributes']
+        self.assertEqual(properties[0]['value'], expected)
+
+        # Try to trick the ORM, by first creating a text property, and then convert it to HTML
+        self.message_2.attributes = [
+            {
+                "name": "text",
+                "type": "text",
+                "string": "HTML",
+                "default": xss_payload,
+                "value": xss_payload,
+                "definition_changed": True,
+            },
+        ]
+        self.assertEqual(self.message_2.attributes['text'], xss_payload)
+        properties = self.message_2.read(['attributes'])[0]['attributes']
+        self.assertEqual(properties[0]['name'], 'text')
+        self.assertEqual(properties[0]['value'], xss_payload)
+        self.assertEqual(properties[0]['default'], xss_payload)
+        self.env.invalidate_all()
+
+        self.message_2.discussion.attributes_definition = [
+            {
+                "name": "text",
+                "type": "html",
+                "string": "HTML",
+                "default": xss_payload,
+            },
+        ]
+        self.assertEqual(self.message_2.attributes['text'], expected)
+        properties = self.message_2.read(['attributes'])[0]['attributes']
+        self.assertEqual(properties[0]['value'], expected)
+        self.assertEqual(properties[0]['default'], expected)
+
     def test_properties_field_many2one_basic(self):
         """Test the basic (read, write...) of the many2one property."""
         self.message_2.attributes = [
