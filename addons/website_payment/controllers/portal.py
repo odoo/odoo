@@ -61,11 +61,16 @@ class PaymentPortal(payment_portal.PaymentPortal):
         )
         tx_sudo.is_donation = True
         if use_public_partner:
-            tx_sudo.update({
-                'partner_name': details['name'],
-                'partner_email': details['email'],
-                'partner_country_id': int(details['country_id']),
-            })
+            fields = tx_sudo._fields
+            for key, value in kwargs['partner_details'].items():
+                # Find matching field key
+                match_key = f'partner_{key}' if f'partner_{key}' in fields else key
+                if match_key in fields:
+                    # Type conversion for specific fields
+                    if key.endswith('_id'):
+                        tx_sudo.update({match_key: int(value)})
+                    else:
+                        tx_sudo.update({match_key: value})
         elif not tx_sudo.partner_country_id:
             tx_sudo.partner_country_id = int(kwargs['partner_details']['country_id'])
         # the user can change the donation amount on the payment page,
@@ -111,7 +116,21 @@ class PaymentPortal(payment_portal.PaymentPortal):
             countries = request.env['res.country'].sudo().search([])
             descriptions = request.httprequest.form.getlist('donation_descriptions')
 
+            # When we click the edit button, the donation_options reset.
+            # We need to set the default values for the donation options
+            # to avoid errors in the template.
             donation_options = json_safe.loads(donation_options) if donation_options else {}
+            donation_options.setdefault('prefilledOptions', "true")
+            donation_options.setdefault('donationAmounts', '["10", "25", "50", "100"]')
+            donation_options.setdefault('descriptions', 'true')
+            if not descriptions:
+                descriptions = [
+                    'A year of cultural awakening.',
+                    'Caring for a baby for 1 month.',
+                    'One year in elementary school.',
+                    'One year in high school.'
+                ]
+
             donation_amounts = json_safe.loads(donation_options.get('donationAmounts', '[]'))
 
             rendering_context.update({
