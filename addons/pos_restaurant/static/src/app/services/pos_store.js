@@ -438,6 +438,13 @@ patch(PosStore.prototype, {
         if (nbNoteChange) {
             categories["noteUpdate"] = { count: nbNoteChange, name: _t("Note") };
         }
+        const nbCourseUpdates = Object.values(orderChanges.courseUpdate).reduce(
+            (sum, change) => sum + change.quantity,
+            0
+        );
+        if (nbCourseUpdates) {
+            categories["courseUpdate"] = { count: nbCourseUpdates, name: _t("Course") };
+        }
         // Only send modeUpdate if there's already an older mode in progress.
         const currentOrder = this.getOrder();
         if (
@@ -854,14 +861,18 @@ patch(PosStore.prototype, {
         if (!destCourse) {
             return;
         }
+        const lines = [];
         if (selectedLine) {
-            selectedLine.course_id = destCourse.id;
+            lines.push(selectedLine);
+            if (selectedLine.combo_line_ids?.length) {
+                lines.push(...selectedLine.combo_line_ids);
+            }
         } else {
-            const lines = [...selectedCourse.lines];
-            lines.forEach((line) => {
-                line.course_id = destCourse.id;
-            });
+            lines.push(...selectedCourse.lines);
         }
+        lines.forEach((line) => {
+            line.course_id = destCourse.id;
+        });
         order.selectCourse(destCourse);
         order.recomputeOrderData();
     },

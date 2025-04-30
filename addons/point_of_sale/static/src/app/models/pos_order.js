@@ -302,6 +302,8 @@ export class PosOrder extends Base {
                     line.getQuantity();
                 this.last_order_preparation_change.lines[line.preparationKey]["note"] =
                     line.getNote();
+                this.last_order_preparation_change.lines[line.preparationKey]["course"] =
+                    line.course_id?.uuid;
             } else {
                 this.last_order_preparation_change.lines[line.preparationKey] = {
                     attribute_value_names: line.attribute_value_ids.map((a) => a.name),
@@ -313,6 +315,7 @@ export class PosOrder extends Base {
                     display_name: line.getProduct().display_name,
                     note: line.getNote(),
                     quantity: line.getQuantity(),
+                    course: line.course_id?.uuid,
                 };
             }
             line.setHasChange(false);

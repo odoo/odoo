@@ -36,6 +36,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
     const oldChanges = order.last_order_preparation_change.lines;
     const changes = {};
     const noteUpdate = {};
+    const courseUpdate = {};
     let changesCount = 0;
     let changeAbsCount = 0;
 
@@ -49,6 +50,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
             prepaCategoryIds.has(id)
         );
 
+        orderline.setHasChange(false);
         if (prepaCategoryIds.size === 0 || productCategoryIds.length > 0) {
             const key = Object.keys(order.last_order_preparation_change.lines).find((k) =>
                 k.startsWith(orderline.uuid)
@@ -69,40 +71,35 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
                 quantity: quantityDiff,
                 note: note,
+                course: orderline.course_id?.uuid,
                 pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
                 display_name: product.display_name,
                 group: receiptLineGrouper.getGroup(orderline),
             };
 
+            // Qty Update
             if (quantityDiff) {
-                // if note update with qty add
                 changes[lineKey] = lineDetails;
                 changesCount += quantityDiff;
                 changeAbsCount += Math.abs(quantityDiff);
-                if (oldChanges[relatedKey] && oldChanges[relatedKey].note !== note) {
-                    lineDetails.quantity = oldChanges[relatedKey].quantity || 0;
-                    noteUpdate[lineKey] = lineDetails;
-                }
-
                 orderline.setHasChange(true);
-            } else {
-                if (quantityDiff) {
-                    orderline.setHasChange(false);
-                } else {
-                    // If only note updated
-                    if (oldChanges[relatedKey] && oldChanges[relatedKey].note !== note) {
-                        lineDetails.quantity = orderline.qty;
-                        noteUpdate[lineKey] = lineDetails;
-                        orderline.setHasChange(true);
-                        changesCount += 1;
-                    } else {
-                        orderline.setHasChange(false);
-                    }
+            }
+            if (oldChanges[relatedKey]) {
+                // Note update of existing line
+                if (oldChanges[relatedKey].note !== note) {
+                    noteUpdate[lineKey] = lineDetails;
+                    orderline.setHasChange(true);
+                    changesCount += 1;
+                }
+                // Course Update of existing line
+                if (orderline.course_id?.uuid !== oldChanges[relatedKey].course) {
+                    lineDetails.quantity = oldChanges[relatedKey].quantity; // show how much quantity's course updated
+                    courseUpdate[lineKey] = lineDetails;
+                    orderline.setHasChange(true);
+                    changesCount += oldChanges[relatedKey].quantity;
                 }
             }
-        } else {
-            orderline.setHasChange(false);
         }
     }
     // Checks whether an orderline has been deleted from the order since it
@@ -119,6 +116,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                     display_name: lineResume["display_name"],
                     isCombo: lineResume["isCombo"],
                     note: lineResume["note"],
+                    course: lineResume["course"],
                     attribute_value_names: lineResume["attribute_value_names"],
                     group: lineResume["group"],
                     quantity: -quantity,
@@ -134,6 +132,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
     const result = {
         nbrOfChanges: changeAbsCount,
         noteUpdate: noteUpdate,
+        courseUpdate: courseUpdate,
         orderlines: changes,
         count: changesCount,
     };

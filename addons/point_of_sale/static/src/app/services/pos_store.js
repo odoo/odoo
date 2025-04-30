@@ -799,6 +799,7 @@ export class PosStore extends WithLazyGetterTrap {
             qty: this.getOrder().preset_id?.is_return ? -1 : 1,
             tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
             product_id: productTemplate.product_variant_ids[0],
+            note: vals.note || "[]",
             ...vals,
         };
 
@@ -930,6 +931,7 @@ export class PosStore extends WithLazyGetterTrap {
                         "link",
                         attr,
                     ]),
+                    note: "[]",
                     custom_attribute_value_ids: Object.entries(
                         comboItem.attribute_custom_values
                     ).map(([id, cus]) => [
