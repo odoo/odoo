@@ -22,7 +22,7 @@
                 </div>
             </t>
             <div t-else="" class="d-flex" style="flex-grow: 1; flex-basis: 0; min-width: 0; gap: 4px;" t-ref="content">
-                <t t-slot="default"/>
+                <t t-slot="default" toggleCollapseContent="() => this.toggleCollapseContent()"/>
             </div>
         </div>
         <div t-if="props.slots.collapse" t-att-class="{ 'd-none': !state.expanded }" t-ref="collapse-content" t-att-id="collapseContentId">

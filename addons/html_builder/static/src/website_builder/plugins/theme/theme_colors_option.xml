@@ -68,8 +68,8 @@
                 <div></div>     <!-- This is required, without it the row is not displayed at all -->
                 <t t-set-slot="collapse">
                     <t t-foreach="state.presets" t-as="preset" t-key="preset.id">
-                        <BuilderRow>
-                            <div
+                        <BuilderRow t-slot-scope="row">
+                            <div t-on-click="row.toggleCollapseContent"
                                 t-attf-class="
                                     w-100 p-2 d-flex justify-content-between
                                     align-items-center"
@@ -86,6 +86,7 @@
                                     Text
                                 </p>
                                 <button
+                                    tabindex="-1"
                                     class="btn btn-sm"
                                     t-attf-style="
                                         background-color: {{preset.primaryBtn}};
@@ -94,6 +95,7 @@
                                     Button
                                 </button>
                                 <button
+                                    tabindex="-1"
                                     class="btn btn-sm"
                                     t-attf-style="
                                         background-color: {{preset.secondaryBtn}};
