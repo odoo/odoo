@@ -34,8 +34,7 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger: "a[id=review-tab]",
-            run: "click",
+            trigger: "body:not(:has(.modal.show))",
         },
         {
             // If it fails here, it means the system is allowing you to add another review.
@@ -52,7 +51,7 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             content: "Reload page (fetch message)",
-            trigger: ".modal",
+            trigger: "body:not(:has(.modal.show))",
             run() {
                 location.reload();
             },
