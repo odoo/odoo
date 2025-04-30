@@ -228,6 +228,9 @@ GMC_SUPPORTED_UOM = {
     'sqm',
 }
 
-GMC_BASE_MEASURE = re.compile(r'(?P<base_count>\d+)?\s*(?P<base_unit>[a-z]+)')
+# Meta Catalog Feed
+META_SUPPORTED_UOM = GMC_SUPPORTED_UOM | {'ct'}
+
+BASE_MEASURE = re.compile(r'(?P<base_count>\d+)?\s*(?P<base_unit>[a-z]+)')
 
 SHOP_PATH = '/shop'
