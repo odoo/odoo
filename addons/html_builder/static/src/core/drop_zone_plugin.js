@@ -48,12 +48,17 @@ export class DropZonePlugin extends Plugin {
      * Gets the selectors that determine where the given element can be placed.
      *
      * @param {HTMLElement} snippetEl the element
+     * @param {Boolean} [checkLockedWithin=false] true if the selectors should
+     *   be filtered based on the `dropLockWithin` selectors
+     * @param {Boolean} [withGrids=false] true if the elements in grid mode are
+     *   considered
      * @returns {Object} [selectorChildren, selectorSiblings]
      */
-    getSelectors(snippetEl) {
+    getSelectors(snippetEl, checkLockedWithin = false, withGrids = false) {
         let selectorChildren = [];
         let selectorSiblings = [];
         const selectorExcludeAncestor = [];
+        const selectorLockedWithin = [];
 
         const editableAreaEls = this.dependencies.setup_editor_plugin.getEditableAreas();
         const rootEl = this.getDropRootElement();
@@ -63,6 +68,7 @@ export class DropZonePlugin extends Plugin {
                 exclude = false,
                 dropIn,
                 dropNear,
+                dropLockWithin,
                 excludeAncestor,
                 excludeNearParent,
             } = dropzoneSelector;
@@ -80,18 +86,36 @@ export class DropZonePlugin extends Plugin {
                         ...this.getSelectorChildren(editableAreaEls, rootEl, { selector: dropIn })
                     );
                 }
+                if (dropLockWithin) {
+                    selectorLockedWithin.push(dropLockWithin);
+                }
                 if (excludeAncestor) {
                     selectorExcludeAncestor.push(excludeAncestor);
                 }
             }
         });
 
+        // Remove the dragged element from the selectors.
+        selectorSiblings = selectorSiblings.filter((el) => !snippetEl.contains(el));
+        selectorChildren = selectorChildren.filter((el) => !snippetEl.contains(el));
+
         // Prevent dropping an element into another one.
-        // (E.g. ToC inside another ToC)
+        // (e.g. ToC inside another ToC)
         if (selectorExcludeAncestor.length) {
             const excludeAncestor = selectorExcludeAncestor.join(",");
             selectorSiblings = selectorSiblings.filter((el) => !el.closest(excludeAncestor));
             selectorChildren = selectorChildren.filter((el) => !el.closest(excludeAncestor));
+        }
+
+        // Prevent dropping an element outside a given direct or indirect parent
+        // (e.g. form field must remain within its own form)
+        if (checkLockedWithin && selectorLockedWithin.length) {
+            const lockedAncestorsSelector = selectorLockedWithin.join(",");
+            const closestLockedAncestorEl = snippetEl.closest(lockedAncestorsSelector);
+            const filterFct = (el) =>
+                el.closest(lockedAncestorsSelector) === closestLockedAncestorEl;
+            selectorSiblings = selectorSiblings.filter(filterFct);
+            selectorChildren = selectorChildren.filter(filterFct);
         }
 
         // Prevent dropping sanitized elements in sanitized zones.
@@ -130,10 +154,26 @@ export class DropZonePlugin extends Plugin {
         selectorSiblings = selectorSiblings.filter((el) => filterSanitized(el));
         selectorChildren = selectorChildren.filter((el) => filterSanitized(el));
 
+        // Remove the siblings/children that would add a dropzone as a direct
+        // child of a grid and make a dedicated set out of the identified grids.
+        const selectorGrids = new Set();
+        if (withGrids) {
+            const filterGrids = (potentialGridEl) => {
+                if (potentialGridEl.matches(".o_grid_mode")) {
+                    selectorGrids.add(potentialGridEl);
+                    return false;
+                }
+                return true;
+            };
+            selectorSiblings = selectorSiblings.filter((el) => filterGrids(el.parentElement));
+            selectorChildren = selectorChildren.filter((el) => filterGrids(el));
+        }
+
         return {
             selectorSiblings: new Set(selectorSiblings),
             selectorChildren: new Set(selectorChildren),
             selectorSanitized,
+            selectorGrids,
         };
     }
 
@@ -349,13 +389,13 @@ export class DropZonePlugin extends Plugin {
     /**
      * @typedef Selectors
      * @property {Set<HTMLElement>} selectorSiblings elements which must have
-     *   siblings drop zones
+     *   siblings dropzones
      * @property {Set<HTMLElement>} selectorChildren elements which must have
-     *   child drop zones between each existing child
+     *   child dropzones between each existing child
      * @property {Set<HTMLElement>} selectorSanitized sanitized elements in
-     *   which an indicative drop zone preventing the drop must be inserted
-     * @property {Set<HTMLElement>|Array<HTMLElement>} selectorGrids elements
-     *   which are in grid mode and for which a grid drop zone must be inserted
+     *   which an indicative dropzone preventing the drop must be inserted
+     * @property {Set<HTMLElement>} selectorGrids elements which are in grid
+     *   mode and for which a grid dropzone must be inserted
      */
     /**
      * @typedef Options
@@ -364,7 +404,7 @@ export class DropZonePlugin extends Plugin {
      * iframe
      */
     /**
-     * Creates drop zones in the DOM (= locations where dragged elements may be
+     * Creates dropzones in the DOM (= locations where dragged elements may be
      * dropped).
      *
      * @param {Selectors} selectors
@@ -372,7 +412,7 @@ export class DropZonePlugin extends Plugin {
      * @returns
      */
     activateDropzones(
-        { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids = [] },
+        { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids },
         { toInsertInline, isContentInIframe = true } = {}
     ) {
         const isIgnored = (el) => el.matches(".o_we_no_overlay") || !isVisible(el);
@@ -389,20 +429,24 @@ export class DropZonePlugin extends Plugin {
             const parentEl = hookEl.parentElement;
             const { vertical, style } = this.setDropzoneDirection(hookEl, parentEl, toInsertInline);
 
-            let nextEl = hookEl.nextElementSibling;
-            while (nextEl && isIgnored(nextEl)) {
-                nextEl = nextEl.nextElementSibling;
-            }
-            if (!nextEl?.classList.contains("oe_drop_zone")) {
-                hookEl.after(this.createDropzone(parentEl, vertical, style));
-            }
-
             let previousEl = hookEl.previousElementSibling;
             while (previousEl && isIgnored(previousEl)) {
                 previousEl = previousEl.previousElementSibling;
             }
-            if (!previousEl?.classList.contains("oe_drop_zone")) {
+            if (!previousEl || !previousEl.classList.contains("oe_drop_zone")) {
                 hookEl.before(this.createDropzone(parentEl, vertical, style));
+            }
+
+            if (hookEl.classList.contains("oe_drop_clone")) {
+                continue;
+            }
+
+            let nextEl = hookEl.nextElementSibling;
+            while (nextEl && isIgnored(nextEl)) {
+                nextEl = nextEl.nextElementSibling;
+            }
+            if (!nextEl || !nextEl.classList.contains("oe_drop_zone")) {
+                hookEl.after(this.createDropzone(parentEl, vertical, style));
             }
         }
 

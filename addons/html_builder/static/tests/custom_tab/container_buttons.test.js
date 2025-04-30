@@ -257,22 +257,22 @@ test("Show the overlay preview when hovering an options container", async () => 
     await setupWebsiteBuilder(dummySnippet);
 
     await contains(":iframe .col-lg-7").click();
-    expect(".overlay .o_overlay_options").toHaveCount(1);
+    expect(".overlay .o_overlay_options:not(.d-none)").toHaveCount(1);
     expect(".oe_overlay").toHaveCount(2);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .col-lg-7");
 
     await contains(".o_customize_tab .options-container span:contains('Dummy Section')").hover();
-    expect(".overlay .o_overlay_options").toHaveCount(0);
+    expect(".overlay .o_overlay_options.d-none").toHaveCount(1);
     expect(".oe_overlay.oe_active.o_overlay_hidden").toHaveCount(1);
     expect(".oe_overlay.o_we_overlay_preview").toHaveRect(":iframe section");
 
     await contains(".o_customize_tab .options-container span:contains('Column')").hover();
-    expect(".overlay .o_overlay_options").toHaveCount(0);
+    expect(".overlay .o_overlay_options.d-none").toHaveCount(1);
     expect(".oe_overlay.oe_active.o_we_overlay_preview").toHaveCount(1);
     expect(".oe_overlay.o_we_overlay_preview").toHaveRect(":iframe .col-lg-7");
 
     await contains(":iframe .col-lg-7").hover();
-    expect(".overlay .o_overlay_options").toHaveCount(1);
+    expect(".overlay .o_overlay_options:not(.d-none)").toHaveCount(1);
     expect(".oe_overlay.o_we_overlay_preview").toHaveCount(0);
     expect(".oe_overlay.oe_active:not(.o_overlay_hidden)").toHaveRect(":iframe .col-lg-7");
 });

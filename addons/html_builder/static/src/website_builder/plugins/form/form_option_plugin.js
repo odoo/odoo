@@ -137,10 +137,18 @@ export class FormOptionPlugin extends Plugin {
                 formEl.removeAttribute("contenteditable");
             }
         },
-        dropzone_selector: {
-            selector: ".s_website_form",
-            excludeAncestor: "form",
-        },
+        dropzone_selector: [
+            {
+                selector: ".s_website_form",
+                excludeAncestor: "form",
+            },
+            {
+                selector: ".s_website_form_field, .s_website_form_submit",
+                exclude: ".s_website_form_dnone",
+                dropNear: ".s_website_form_field",
+                dropLockWithin: "form",
+            },
+        ],
         so_content_addition_selector: [".s_website_form"],
     };
     getActions() {

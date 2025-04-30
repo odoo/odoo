@@ -42,12 +42,6 @@ export class DropZoneSelectorPlugin extends Plugin {
                 excludeNearParent: so_snippet_addition_drop_in,
             },
             {
-                selector: ".s_website_form_field",
-                exclude: ".s_website_form_dnone",
-                dropNear: ".s_website_form_field",
-                //TODO DROP LOCK WITHIN drop-lock-within="form"
-            },
-            {
                 selector: ".row > div",
                 exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
                 dropNear: ".row:not(.s_col_no_resize) > div",

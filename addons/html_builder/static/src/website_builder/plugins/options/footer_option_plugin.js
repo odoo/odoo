@@ -101,7 +101,23 @@ class FooterOptionPlugin extends Plugin {
                 },
             },
         },
+        on_prepare_drag_handlers: this.prepareDrag.bind(this),
     };
+
+    prepareDrag() {
+        // Remove the footer scroll effect if it has one (because the footer
+        // dropzone flickers otherwise when it is in grid mode).
+        let restore = () => {};
+        const wrapwrapEl = this.editable;
+        const hasFooterScrollEffect = wrapwrapEl.classList.contains("o_footer_effect_enable");
+        if (hasFooterScrollEffect) {
+            wrapwrapEl.classList.remove("o_footer_effect_enable");
+            restore = () => {
+                wrapwrapEl.classList.add("o_footer_effect_enable");
+            };
+        }
+        return restore;
+    }
 }
 
 registry.category("website-plugins").add(FooterOptionPlugin.id, FooterOptionPlugin);

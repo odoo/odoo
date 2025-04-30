@@ -72,6 +72,7 @@ export class MovePlugin extends Plugin {
         }),
         on_cloned_handlers: this.onCloned.bind(this),
         on_remove_handlers: this.onRemove.bind(this),
+        on_element_dropped_handlers: this.onElementDropped.bind(this),
     };
 
     setup() {
@@ -151,6 +152,24 @@ export class MovePlugin extends Plugin {
         if (mobileOrder) {
             fillRemovedItemGap(toRemoveEl.parentElement, parseInt(mobileOrder));
         }
+    }
+
+    onElementDropped({ droppedEl, dragState }) {
+        if (!isMovable(droppedEl)) {
+            return;
+        }
+        const parentEl = droppedEl.parentElement;
+
+        // If the dropped element has a mobile order and if it was dropped in
+        // another snippet, fill the gap left in the starting snippet.
+        const mobileOrder = droppedEl.style.order;
+        const { startParentEl } = dragState;
+        if (mobileOrder && parentEl !== startParentEl) {
+            fillRemovedItemGap(startParentEl, parseInt(mobileOrder));
+        }
+
+        // Remove all the mobile orders in the new snippet.
+        removeMobileOrders(parentEl.children);
     }
 
     refreshState() {

@@ -77,7 +77,7 @@ test("check invisible element after save", async () => {
         "[data-container-title='Column'] button[data-action-id='toggleDeviceVisibility']"
     ).click();
     expect(":iframe .row").toHaveInnerHTML(`
-        <div class="col-lg-3 o_colored_level d-lg-none o_snippet_desktop_invisible" data-invisible="1">
+        <div class="col-lg-3 o_colored_level o_draggable d-lg-none o_snippet_desktop_invisible" data-invisible="1">
             <p>TEST</p>
         </div>
     `);
