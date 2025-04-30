@@ -30,6 +30,7 @@
         # QWeb templates
         'views/delivery_form_templates.xml',
         'views/gmc_templates.xml',
+        'views/meta_templates.xml',
         'views/templates.xml',
 
         # Model views.

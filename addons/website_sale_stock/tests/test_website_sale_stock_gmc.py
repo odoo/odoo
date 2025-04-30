@@ -2,15 +2,16 @@
 
 from odoo.tests import tagged
 
-from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon
+from odoo.addons.website_sale.tests.website_sale_feed_common import WebsiteSaleFeedCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleStockGMC(WebsiteSaleGMCCommon):
+class TestWebsiteSaleStockGMC(WebsiteSaleFeedCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.feed_type = "gmc"
         cls.website.warehouse_id = cls.env.ref('stock.warehouse0')
         cls.stock_loc = cls.website.warehouse_id.lot_stock_id
         cls.supplier_loc = cls.env.ref('stock.stock_location_suppliers')
