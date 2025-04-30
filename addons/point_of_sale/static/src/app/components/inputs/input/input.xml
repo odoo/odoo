@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.input">
         <div t-attf-class="{{props.class}} {{ state.isOpen ? 'flex-grow-1' : '' }} d-flex">
             <button t-if="props.isSmall"
-                class="p-2 rounded btn btn-secondary"
+                class="btn btn-light btn-lg lh-lg"
                 t-on-click="() => {
                     state.isOpen = !state.isOpen;
                     props.isOpenCallback?.(state.isOpen);

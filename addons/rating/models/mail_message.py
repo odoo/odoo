@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -26,12 +27,14 @@ class MailMessage(models.Model):
             message.rating_value = message.rating_id.rating if message.rating_id else 0.0
 
     def _search_rating_value(self, operator, operand):
-        ratings = self.env['rating.rating'].sudo().search([
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        ratings = self.env['rating.rating'].sudo()._search([
             ('rating', operator, operand),
             ('message_id', '!=', False),
-            ("consumed", "=", True),
+            ('consumed', '=', True),
         ])
-        return [('id', 'in', ratings.mapped('message_id').ids)]
+        return [('id', 'in', ratings.subselect('message_id'))]
 
     def _to_store_defaults(self):
         # sudo: mail.message - guest and portal user can receive rating of accessible message
@@ -41,5 +44,8 @@ class MailMessage(models.Model):
         super()._to_store(store, [f for f in fields if f != "record_rating"], **kwargs)
         if "record_rating" in fields:
             for records in self._records_by_model_name().values():
-                if issubclass(self.pool[records._name], self.pool["rating.mixin"]):
+                if (
+                    issubclass(self.pool[records._name], self.pool["rating.mixin"])
+                    and records._has_field_access(records._fields["rating_avg"], 'read')
+                ):
                     store.add(records, ["rating_avg", "rating_count"], as_thread=True)

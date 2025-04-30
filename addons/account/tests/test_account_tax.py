@@ -71,7 +71,7 @@ class TestAccountTax(AccountTestInvoicingCommon):
             ],
         })
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.company_data['default_tax_sale'].company_id = self.company_data_2['company']
 
     def test_logging_of_tax_update_when_tax_is_used(self):
@@ -233,8 +233,6 @@ class TestAccountTax(AccountTestInvoicingCommon):
         })
         self.env['account.reconcile.model'].create({
             'name': "test_tax_is_used",
-            'rule_type': 'writeoff_suggestion',
-            'auto_reconcile': False,
             'line_ids': [Command.create({
                 'account_id': self.company_data['default_account_revenue'].id,
                 'tax_ids': [Command.set(tax_reconciliation.ids)],

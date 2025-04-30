@@ -103,7 +103,7 @@ class SmsComposer(models.TransientModel):
                 continue
 
             records = composer._get_records()
-            if records and isinstance(records, self.pool['mail.thread']):
+            if records:
                 res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=not composer.comment_single_recipient)
                 composer.recipient_valid_count = len([rid for rid, rvalues in res.items() if rvalues['sanitized']])
                 composer.recipient_invalid_count = len([rid for rid, rvalues in res.items() if not rvalues['sanitized']])
@@ -116,13 +116,13 @@ class SmsComposer(models.TransientModel):
     def _compute_recipient_single_stored(self):
         for composer in self:
             records = composer._get_records()
-            if not records or not isinstance(records, self.pool['mail.thread']) or not composer.comment_single_recipient:
+            if not records or not composer.comment_single_recipient:
                 composer.recipient_single_number_itf = ''
                 continue
             records.ensure_one()
             res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=True)
             if not composer.recipient_single_number_itf:
-                composer.recipient_single_number_itf = res[records.id]['number'] or ''
+                composer.recipient_single_number_itf = res[records.id]['sanitized'] or res[records.id]['number'] or ''
             if not composer.number_field_name:
                 composer.number_field_name = res[records.id]['field_store']
 
@@ -130,14 +130,14 @@ class SmsComposer(models.TransientModel):
     def _compute_recipient_single_non_stored(self):
         for composer in self:
             records = composer._get_records()
-            if not records or not isinstance(records, self.pool['mail.thread']) or not composer.comment_single_recipient:
+            if not records or not composer.comment_single_recipient:
                 composer.recipient_single_description = False
                 composer.recipient_single_number = ''
                 continue
             records.ensure_one()
             res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=True)
             composer.recipient_single_description = res[records.id]['partner'].name or records._mail_get_partners()[records[0].id].display_name
-            composer.recipient_single_number = res[records.id]['number'] or ''
+            composer.recipient_single_number = res[records.id]['sanitized'] or res[records.id]['number'] or ''
 
     @api.depends('recipient_single_number', 'recipient_single_number_itf')
     def _compute_recipient_single_valid(self):
@@ -204,7 +204,14 @@ class SmsComposer(models.TransientModel):
             return self._action_send_sms_mass(records)
 
     def _action_send_sms_numbers(self):
-        sms_values = [{'body': self.body, 'number': number} for number in self.sanitized_numbers.split(',')]
+        sms_values = [
+            {
+                'body': self.body,
+                'number': number
+            } for number in (
+                self.sanitized_numbers.split(',') if self.sanitized_numbers else [self.recipient_single_number_itf or self.recipient_single_number or '']
+            )
+        ]
         self.env['sms.sms'].sudo().create(sms_values).send()
         return True
 
@@ -238,11 +245,14 @@ class SmsComposer(models.TransientModel):
     def _action_send_sms_mass(self, records=None):
         records = records if records is not None else self._get_records()
 
-        sms_record_values = self._prepare_mass_sms_values(records)
-        sms_all = self._prepare_mass_sms(records, sms_record_values)
-        if sms_all and self.mass_keep_log and records and isinstance(records, self.pool['mail.thread']):
-            log_values = self._prepare_mass_log_values(records, sms_record_values)
-            records._message_log_batch(**log_values)
+        sms_record_values_filtered = self._filter_out_and_handle_revoked_sms_values(self._prepare_mass_sms_values(records))
+        records_filtered = records.filtered(lambda record: record.id in sms_record_values_filtered)
+        if self.mass_keep_log and sms_record_values_filtered and isinstance(records_filtered, self.pool['mail.thread']):
+            log_values = self._prepare_mass_log_values(records_filtered, sms_record_values_filtered)
+            mail_messages = records_filtered._message_log_batch(**log_values)
+            for idx, record in enumerate(records_filtered):
+                sms_record_values_filtered[record.id]['mail_message_id'] = mail_messages[idx].id
+        sms_all = self._prepare_mass_sms(records_filtered, sms_record_values_filtered)
 
         if sms_all and self.mass_force_send:
             sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
@@ -252,6 +262,14 @@ class SmsComposer(models.TransientModel):
     # ------------------------------------------------------------
     # Mass mode specific
     # ------------------------------------------------------------
+
+    def _filter_out_and_handle_revoked_sms_values(self, sms_values_all):
+        """Meant to be overridden to filter out and handle sms that must not be sent.
+
+        :param dict sms_values_all: sms values by res_id
+        :return dict: filtered sms_vals_all
+        """
+        return sms_values_all
 
     def _get_blacklist_record_ids(self, records, recipients_info):
         """ Get a list of blacklisted records. Those will be directly canceled

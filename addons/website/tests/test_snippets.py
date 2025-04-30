@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from lxml import html
 from werkzeug.urls import url_encode
@@ -8,9 +9,17 @@ from odoo.addons.website.tools import MockRequest, create_image_attachment
 from odoo.tests.common import HOST
 from odoo.tools import config
 
+_logger = logging.getLogger(__name__)
+
 
 @tagged('post_install', '-at_install', 'website_snippets')
 class TestSnippets(HttpCase):
+
+    def fetch_proxy(self, url):
+        if 'twitter.com' in url or 'youtube.com' in url:
+            _logger.info('External chrome request during tests: Sending dummy page for %s', url)
+            return self.make_fetch_proxy_response('<body>Dummy page</body>')
+        return super().fetch_proxy(url)
 
     def test_01_empty_parents_autoremove(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_empty_parent_autoremove', login='admin')
@@ -22,12 +31,7 @@ class TestSnippets(HttpCase):
         with MockRequest(self.env, website=self.env['website'].browse(1)):
             snippets_template = self.env['ir.ui.view'].render_public_asset('website.snippets')
         html_template = html.fromstring(snippets_template)
-        data_snippet_els = html_template.xpath("//*[snippets and not(hasclass('d-none'))]//*[@data-oe-snippet-key]/*[@data-snippet]")
-
-        # FIXME targeting data-oe-snippet-key should be enough to find actual
-        # snippets, but the current xpath search for inner data-snippet too as
-        # it currently missing on some snippet (e.g. accordion?)
-        data_snippet_els = [el.getparent() for el in data_snippet_els]
+        data_snippet_els = html_template.xpath("//*[snippets and not(hasclass('d-none'))]//*[@data-oe-snippet-key]")
 
         blacklist = [
             's_facebook_page',  # avoid call to external services (facebook.com)
@@ -65,6 +69,7 @@ class TestSnippets(HttpCase):
             'social_github': 'https://github.com/odoo',
             'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
             'social_tiktok': 'https://www.tiktok.com/@odoo',
+            'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
         })
         create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_banner_default_image.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_social_media', login="admin")
@@ -136,3 +141,6 @@ class TestSnippets(HttpCase):
 
     def test_rating_snippet(self):
         self.start_tour(self.env["website"].get_client_action_url("/"), "snippet_rating", login="admin")
+
+    def test_custom_popup_snippet(self):
+        self.start_tour(self.env["website"].get_client_action_url("/"), "custom_popup_snippet", login="admin")

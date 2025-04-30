@@ -6,15 +6,16 @@
                 <h4 class="modal-title" t-esc="props.title" />
             </t>
             <div class="payment-methods-overview overflow-auto">
-                <div class="w-100">
-                    It seems that the data we have is oudtaded. You could quickly update it by selecting "Limited Synchronisation" or reload all the data by choosing " Full synchronisation".
-                    Otherwise, you can keep going with the data we have in the memory by clicking on "Discard"
-                </div>
+                <p>You can update it by selecting one of the following options:</p>
+                <ul>
+                    <li><strong>Limited Synchronization:</strong> Quickly refresh essential data.</li>
+                    <li><strong>Full Synchronization:</strong> Reload all data (may take longer depending on the amount of data).</li>
+                </ul>
             </div>
             <t t-set-slot="footer">
                 <div class="modal-footer-left d-flex gap-2 w-100">
-                    <button class="button btn btn-primary" t-on-click="() => this.confirm(false)">Limited synchronization</button>
-                    <button class="button btn btn-secondary" t-on-click="() => this.confirm(true)">Full synchronization</button>
+                    <button class="button btn btn-primary" t-on-click="() => this.confirm(false)">Limited</button>
+                    <button class="button btn btn-secondary" t-on-click="() => this.confirm(true)">Full</button>
                     <button class="button btn btn-secondary ms-auto" t-on-click="props.close">Discard</button>
                 </div>
             </t>

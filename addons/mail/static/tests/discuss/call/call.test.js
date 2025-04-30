@@ -2,25 +2,25 @@ import {
     click,
     contains,
     defineMailModels,
+    listenStoreFetch,
     mockGetMedia,
-    onRpcBefore,
     openDiscuss,
     patchUiSize,
     SIZES,
     start,
     startServer,
     triggerEvents,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import {
-    CROSS_TAB_HOST_MESSAGE,
     CROSS_TAB_CLIENT_MESSAGE,
+    CROSS_TAB_HOST_MESSAGE,
 } from "@mail/discuss/call/common/rtc_service";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { advanceTime, hover, queryFirst } from "@odoo/hoot-dom";
-import { mockUserAgent } from "@odoo/hoot-mock";
-import { EventBus } from "@odoo/owl";
+import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
+import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -30,7 +30,6 @@ import {
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 describe.current.tags("desktop");
@@ -126,23 +125,20 @@ test("should disconnect when closing page while in call", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            sendBeacon: async (route, data) => {
-                if (data instanceof Blob && route === "/mail/rtc/channel/leave_call") {
-                    const blobText = await data.text();
-                    const blobData = JSON.parse(blobText);
-                    asyncStep(`sendBeacon_leave_call:${blobData.params.channel_id}`);
-                }
-            },
-            serviceWorker: {
-                controller: {
-                    postMessage(data) {
-                        if (data.name === "UNEXPECTED_CALL_TERMINATION") {
-                            asyncStep(`postMessage:${data.name}:${data.channelId}`);
-                        }
-                    },
+    mockSendBeacon(async (route, data) => {
+        if (data instanceof Blob && route === "/mail/rtc/channel/leave_call") {
+            const blobText = await data.text();
+            const blobData = JSON.parse(blobText);
+            asyncStep(`sendBeacon_leave_call:${blobData.params.channel_id}`);
+        }
+    });
+    patchWithCleanup(navigator, {
+        serviceWorker: {
+            controller: {
+                postMessage(data) {
+                    if (data.name === "UNEXPECTED_CALL_TERMINATION") {
+                        asyncStep(`postMessage:${data.name}:${data.channelId}`);
+                    }
                 },
             },
         },
@@ -151,7 +147,7 @@ test("should disconnect when closing page while in call", async () => {
     await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
     // simulate page close
-    window.dispatchEvent(new Event("pagehide"), { bubble: true });
+    await manuallyDispatchProgrammaticEvent(window, "pagehide");
     await waitForSteps([
         `postMessage:UNEXPECTED_CALL_TERMINATION:${channelId}`,
         `sendBeacon_leave_call:${channelId}`,
@@ -170,11 +166,6 @@ test("should display invitations", async () => {
         channel_member_id: memberId,
         channel_id: channelId,
     });
-    onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
-        }
-    });
     mockService("mail.sound_effects", {
         play(name) {
             asyncStep(`play - ${name}`);
@@ -183,13 +174,9 @@ test("should display invitations", async () => {
             asyncStep(`stop - ${name}`);
         },
     });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitStoreFetch("init_messaging");
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     // send after init_messaging because bus subscription is done after init_messaging
     pyEnv["bus.bus"]._sendone(
@@ -368,9 +355,9 @@ test("Systray icon shows latest action", async () => {
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone");
-    await click("[title='Mute']");
+    await click("[title='Mute (shift+m)']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone-slash");
-    await click("[title='Deafen']");
+    await click("[title='Deafen (shift+d)']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-deaf");
     await click("[title='Turn camera on']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
@@ -399,10 +386,10 @@ test("Systray icon keeps track of earlier actions", async () => {
     await click("[title='Turn camera on']");
     // stack: ["video", "share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
-    await click("[title='Mute']");
+    await click("[title='Mute (shift+m)']");
     // stack: ["mute", "video", "share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone-slash");
-    await click("[title='Unmute']");
+    await click("[title='Unmute (shift+m)']");
     // stack: ["video", "share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
     await click("[title='Stop camera']");
@@ -516,15 +503,17 @@ test("expand call participants when joining a call", async () => {
 });
 
 test("start call when accepting from push notification", async () => {
-    patchWithCleanup(window.navigator, {
-        serviceWorker: Object.assign(new EventBus(), { register: () => Promise.resolve() }),
+    const serviceWorker = Object.assign(new EventTarget(), {
+        register: () => Promise.resolve(),
+        ready: Promise.resolve(),
     });
+    patchWithCleanup(window.navigator, { serviceWorker });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss();
     await contains(".o-mail-Discuss-threadName[title=Inbox]");
-    browser.navigator.serviceWorker.dispatchEvent(
+    serviceWorker.dispatchEvent(
         new MessageEvent("message", {
             data: { action: "OPEN_CHANNEL", data: { id: channelId, joinCall: true } },
         })
@@ -556,7 +545,7 @@ test("Use saved volume settings", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Join the Call']");
     await contains(".o-discuss-Call");
     await triggerEvents(`.o-discuss-CallParticipantCard[title='${partnerName}']`, ["mouseenter"]);
     await click("button[title='Participant options']");
@@ -601,7 +590,7 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const broadcastChannel = new browser.BroadcastChannel("call_sync_state");
+    const broadcastChannel = new BroadcastChannel("call_sync_state");
     const sessionId = pyEnv["discuss.channel.rtc.session"].create({
         channel_member_id: pyEnv["discuss.channel.member"].create({
             channel_id: channelId,
@@ -612,8 +601,8 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
     await start();
     await openDiscuss(channelId);
     expect("[title='Disconnect']").not.toBeVisible();
-    expect("[title='Mute']").not.toBeVisible();
-    expect("[title='Deafen']").not.toBeVisible();
+    expect("[title='Mute (shift+m)']").not.toBeVisible();
+    expect("[title='Deafen (shift+d)']").not.toBeVisible();
     broadcastChannel.postMessage({
         type: CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE,
         hostedChannelId: channelId,
@@ -626,14 +615,14 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
         },
     });
     await contains("[title='Disconnect']");
-    await contains("[title='Deafen']");
+    await contains("[title='Deafen (shift+d)']");
 
     broadcastChannel.onmessage = (event) => {
         if (event.data.type === CROSS_TAB_CLIENT_MESSAGE.REQUEST_ACTION) {
             asyncStep(`is_muted:${event.data.changes["is_muted"]}`);
         }
     };
-    await click("[title='Mute']");
+    await click("[title='Mute (shift+m)']");
     await waitForSteps(["is_muted:true"]);
 });
 
@@ -651,4 +640,28 @@ test("automatically cancel incoming call after some time", async () => {
     await contains(".o-discuss-CallInvitation");
     await advanceTime(30_000);
     await contains(".o-discuss-CallInvitation", { count: 0 });
+});
+
+test("should also invite to the call when inviting to the channel", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await contains(".o-discuss-Call");
+    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await contains(".o-discuss-ChannelInvitation");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
+    await click("[title='Invite to Channel']:enabled");
+    await contains(".o-discuss-CallParticipantCard.o-isInvitation");
 });

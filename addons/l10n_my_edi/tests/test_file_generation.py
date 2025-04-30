@@ -6,7 +6,7 @@ from lxml import etree
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import cleanup_xml_node
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 NS_MAP = {
     'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
@@ -409,7 +409,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         # We assert that the supplier is the partner of the invoice, with all information present.
         supplier_root = root.xpath('cac:AccountingSupplierParty/cac:Party', namespaces=NS_MAP)[0]
         data_to_check = [
-            ('cac:PartyIdentification/cbc:ID[@schemeID="TIN"]', self.partner_b.commercial_partner_id._l10n_my_edi_get_tin_for_myinvois()),  # We set the generic VAT in the new field, it should have been used.
+            ('cac:PartyIdentification/cbc:ID[@schemeID="TIN"]', 'EI00000000030'),  # The partner_b malaysian TIN is set to the customer one, and it will be transformed to supplier during submission
             ('cac:PartyIdentification/cbc:ID[@schemeID="BRN"]', self.partner_b.commercial_partner_id.l10n_my_identification_number),
             ('cbc:IndustryClassificationCode', self.partner_b.commercial_partner_id.l10n_my_edi_industrial_classification.code),  # It should use the code on the partner.
             ('cac:PartyName/cbc:Name', self.partner_b.name),
@@ -425,6 +425,71 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         ]
         for path, expected_value in data_to_check:
             self._assert_node_values(customer_root, path, expected_value)
+
+    def test_09_refund_note(self):
+        """ A refund note is issued when an invoice has received a credit note, and that credit note was paid to the customer. """
+        # Create the original invoice, and receive the payment.
+        invoice = self.init_invoice(
+            'out_invoice', partner=self.partner_b, products=self.product_a
+        )
+        invoice.l10n_my_edi_external_uuid = '12345678912345678912345678'
+        invoice.action_post()
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': '2019-01-02',
+        })._create_payments()
+        # Create the credit note, and pay it back.
+        action = invoice.action_reverse()
+        reversal_wizard = self.env[action['res_model']].with_context(
+            active_ids=invoice.ids,
+            active_model='account.move',
+            default_journal_id=invoice.journal_id.id,
+        ).create({})
+        action = reversal_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.action_post()
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=credit_note.ids).create({
+            'payment_date': '2019-01-02',
+        })._create_payments()
+        # Generate the file and assert the type, should be "refund" (04)
+        file, _errors = credit_note._l10n_my_edi_generate_invoice_xml()
+        root = etree.fromstring(file)
+        self._assert_node_values(
+            root,
+            'cbc:InvoiceTypeCode',
+            '04',
+            attributes={'listVersionID': '1.1'},
+        )
+
+    def test_10_credit_note(self):
+        """ A credit note is issued when an invoice has received a credit note, and that credit note was not paid to the customer. """
+        # Create the original invoice, don't receive a payment.
+        invoice = self.init_invoice(
+            'out_invoice', partner=self.partner_b, products=self.product_a
+        )
+        invoice.l10n_my_edi_external_uuid = '12345678912345678912345678'
+        invoice.action_post()
+        # Create the credit note to reduce the amount due of the invoice
+        action = invoice.action_reverse()
+        reversal_wizard = self.env[action['res_model']].with_context(
+            active_ids=invoice.ids,
+            active_model='account.move',
+            default_journal_id=invoice.journal_id.id,
+        ).create({})
+        action = reversal_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        with Form(credit_note) as credit_note_form:
+            with credit_note_form.invoice_line_ids.edit(0) as line:
+                line.price_unit = 500
+        credit_note.action_post()
+        # Generate the file and assert the type, should be "credit note" (03)
+        file, _errors = credit_note._l10n_my_edi_generate_invoice_xml()
+        root = etree.fromstring(file)
+        self._assert_node_values(
+            root,
+            'cbc:InvoiceTypeCode',
+            '02',
+            attributes={'listVersionID': '1.1'},
+        )
 
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)

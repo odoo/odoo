@@ -22,6 +22,7 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
             password='salesman',
             groups='sales_team.group_sale_salesman',
         )
+        cls.salesman.group_ids += cls.env.ref('product.group_product_manager')
 
         # Setup partner since user salesman don't have the right to create it on the fly
         cls.env['res.partner'].create({'name': 'Tajine Saucisse'})
@@ -184,7 +185,6 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
                 (6, 0, [office_chair.product_tmpl_id.id, self.product_product_conf_chair.id])
             ]
         })
-        self.product_product_conf_chair.sale_line_warn = 'warning'
         self.product_product_conf_chair.sale_line_warn_msg = 'sold'
         self.product_product_custo_desk.optional_product_ids = [
             (4, self.product_product_conf_chair.id)

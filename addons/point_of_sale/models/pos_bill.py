@@ -10,7 +10,7 @@ class PosBill(models.Model):
     _inherit = ["pos.load.mixin"]
 
     name = fields.Char("Name")
-    value = fields.Float("Value", required=True, digits=(16, 2))
+    value = fields.Float("Value", required=True, digits=(16, 4))
     pos_config_ids = fields.Many2many("pos.config", string="Point of Sales")
 
     @api.model

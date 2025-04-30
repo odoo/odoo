@@ -2,6 +2,7 @@
 
 from odoo.tests import Form, tagged
 from odoo import Command
+from odoo.exceptions import RedirectWarning
 
 from odoo.addons.analytic.tests.common import AnalyticCommon
 
@@ -210,3 +211,86 @@ class TestAnalyticAccount(AnalyticCommon):
             'amount': 100,
             'company_id': self.company_b_branch.id,
         })
+
+    def test_change_plan(self):
+        """Changing the plan of an account updates columns of the analytic lines."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+        })
+        self.analytic_account_1.plan_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_1_col: False,
+            plan_2_col: self.analytic_account_1.id,
+        }])
+
+    def test_change_plan_conflict(self):
+        """Don't allow changing the plan if some lines already have values set for that plan."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_2.id,
+        })
+        with self.assertRaisesRegex(RedirectWarning, "wipe out your current data"):
+            self.analytic_account_1.plan_id = self.analytic_plan_2
+
+    def test_change_plan_no_conflict(self):
+        """Exception for the previous test if it was already the correct value that is set."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_1.id,
+        })
+        self.analytic_account_1.plan_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_1_col: False,
+            plan_2_col: self.analytic_account_1.id,
+        }])
+
+    def test_change_parent_plan(self):
+        """Changing the parent of a plan updates account columns of the analytic lines."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+        })
+
+        # Setting a parent plan should lead to the line having analytic_account_1 under Plan 2
+        self.analytic_plan_1.parent_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_2_col: self.analytic_account_1.id,
+        }])
+        # plan_1_col should no longer be a field of the analytic line
+        self.assertNotIn(plan_1_col, line)
+
+        # Removing the parent plan should fully reverse the analytic line
+        self.analytic_plan_1.parent_id = False
+        self.assertRecordValues(line, [{
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: False,
+        }])
+
+    def test_change_parent_plan_conflict(self):
+        """
+        Test case where changing the parent plan leads to more than one account under the same
+        plan in an analytic line.
+        """
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_2.id,
+        })
+        with self.assertRaisesRegex(RedirectWarning, "Making this change would wipe out"):
+            self.analytic_plan_1.parent_id = self.analytic_plan_2

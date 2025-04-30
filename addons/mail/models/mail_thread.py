@@ -25,7 +25,7 @@ from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, Command, tools
+from odoo import _, api, exceptions, fields, models, tools
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import push_to_end_point, DeviceUnreachableError
 from odoo.exceptions import MissingError, AccessError
@@ -170,17 +170,21 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_partner_ids(self, operator, operand):
-        """Search function for message_follower_ids"""
-        neg = ''
         if operator in expression.NEGATIVE_TERM_OPERATORS:
-            neg = 'not '
-            operator = expression.TERM_OPERATORS_NEGATION[operator]
+            return NotImplemented
+        if not (self.env.su or self.env.user._is_internal()):
+            user_partner = self.env.user.partner_id
+            allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
+            operand_values = operand if isinstance(operand, Iterable) and not isinstance(operand, str) else [operand]
+            if not allow_partner_ids.issuperset(operand_values):
+                raise AccessError(self.env._("Portal users can only filter threads by themselves as followers."))
+
         followers = self.env['mail.followers'].sudo()._search([
             ('res_model', '=', self._name),
             ('partner_id', operator, operand),
         ])
         # use `in` query to avoid reading thousands of potentially followed objects
-        return [('id', neg + 'in', followers.subselect('res_id'))]
+        return [('id', 'in', followers.subselect('res_id'))]
 
     @api.depends('message_follower_ids')
     def _compute_message_is_follower(self):
@@ -194,15 +198,14 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_is_follower(self, operator, operand):
-        followers = self.env['mail.followers'].sudo().search_fetch(
-            [('res_model', '=', self._name), ('partner_id', '=', self.env.user.partner_id.id)],
-            ['res_id'],
-        )
-        # Cases ('message_is_follower', '=', True) or  ('message_is_follower', '!=', False)
-        if (operator == '=' and operand) or (operator == '!=' and not operand):
-            return [('id', 'in', followers.mapped('res_id'))]
-        else:
-            return [('id', 'not in', followers.mapped('res_id'))]
+        if operator != 'in':
+            return NotImplemented
+        followers = self.env['mail.followers'].sudo()._search([
+            ('res_model', '=', self._name),
+            ('partner_id', operator, self.env.user.partner_id.ids),
+        ])
+        # use `in` query to avoid reading thousands of potentially followed objects
+        return [('id', 'in', followers.subselect('res_id'))]
 
     def _compute_has_message(self):
         self.env['mail.message'].flush_model()
@@ -217,11 +220,9 @@ class MailThread(models.AbstractModel):
             record.has_message = record.id in channel_ids
 
     def _search_has_message(self, operator, value):
-        if (operator == '=' and value is True) or (operator == '!=' and value is False):
-            operator_new = 'in'
-        else:
-            operator_new = 'not in'
-        return [('id', operator_new, SQL("(SELECT res_id FROM mail_message WHERE model = %s)", self._name))]
+        if operator != 'in':
+            return NotImplemented
+        return [('id', 'in', SQL("(SELECT res_id FROM mail_message WHERE model = %s)", self._name))]
 
     def _compute_message_needaction(self):
         res = dict.fromkeys(self.ids, 0)
@@ -266,8 +267,10 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_has_error(self, operator, operand):
-        message_ids = self.env['mail.message']._search([('has_error', operator, operand), ('author_id', '=', self.env.user.partner_id.id)])
-        return [('message_ids', 'in', message_ids)]
+        if operator != 'in':
+            return NotImplemented
+        message_domain = [('has_error', '=', True), ('author_id', '=', self.env.user.partner_id.id)]
+        return [('message_ids', 'any', message_domain)]
 
     def _compute_message_attachment_count(self):
         read_group_var = self.env['ir.attachment']._read_group([('res_id', 'in', self.ids), ('res_model', '=', self._name)],
@@ -301,7 +304,7 @@ class MailThread(models.AbstractModel):
 
         threads = super(MailThread, self).create(vals_list)
         # subscribe uid unless asked not to
-        if not self._context.get('mail_create_nosubscribe') and threads and self.env.user.active:
+        if not self._context.get('mail_create_nosubscribe') and threads and self.env.user.active and not self.env.user.share:
             self.env['mail.followers']._insert_followers(
                 threads._name, threads.ids,
                 self.env.user.partner_id.ids, subtypes=None,
@@ -446,21 +449,6 @@ class MailThread(models.AbstractModel):
         if "form" in res["views"] and isinstance(self.env[self._name], self.env.registry['mail.activity.mixin']):
             res["models"][self._name]["has_activities"] = True
         return res
-
-    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
-        if self.env.su or self.env.user._is_internal():
-            return super()._condition_to_sql(alias, field_expr, operator, value, query)
-        if field_expr != 'message_partner_ids':
-            return super()._condition_to_sql(alias, field_expr, operator, value, query)
-        user_partner = self.env.user.partner_id
-        allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
-        if isinstance(value, Iterable) and not isinstance(value, str):
-            operand = value
-        else:
-            operand = {value}
-        if not allow_partner_ids.issuperset(operand):
-            raise AccessError(self.env._("Portal users can only filter threads by themselves as followers."))
-        return super(MailThread, self.sudo())._condition_to_sql(alias, field_expr, operator, value, query)
 
     # ------------------------------------------------------
     # MODELS / CRUD HELPERS
@@ -1451,17 +1439,10 @@ class MailThread(models.AbstractModel):
         if strip_attachments:
             msg_dict.pop('attachments', None)
 
-        message_ids = [msg_dict['message_id']]
-        if msg_dict.get('x_odoo_message_id'):
-            message_ids.append(msg_dict['x_odoo_message_id'])
-        existing_msg_ids = self.env['mail.message'].search([('message_id', 'in', message_ids)], limit=1)
+        existing_msg_ids = self.env['mail.message'].search([('message_id', '=', msg_dict['message_id'])], limit=1)
         if existing_msg_ids:
-            if msg_dict.get('x_odoo_message_id'):
-                _logger.info('Ignored mail from %s to %s with Message-Id %s / Context Message-Id %s: found duplicated Message-Id during processing',
-                             msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'), msg_dict.get('x_odoo_message_id'))
-            else:
-                _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
-                             msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
+            _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
+                         msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
             return False
 
         if self._detect_loop_headers(msg_dict):
@@ -1793,7 +1774,6 @@ class MailThread(models.AbstractModel):
             # Very unusual situation, be we should be fault-tolerant here
             message_id = "<%s@localhost>" % time.time()
             _logger.debug('Parsing Message without message-id, generating a random one: %s', message_id)
-        msg_dict['x_odoo_message_id'] = (message.get('X-Odoo-Message-Id') or '').strip()
         msg_dict['message_id'] = message_id.strip()
 
         if message.get('Subject'):
@@ -1898,7 +1878,7 @@ class MailThread(models.AbstractModel):
             - The list of references ids used to find the bounced mail message
         """
         reference_ids = []
-        headers = ('Message-Id', 'X-Odoo-Message-Id', 'X-Microsoft-Original-Message-ID')
+        headers = ('Message-Id', 'X-Microsoft-Original-Message-ID')
         for header in headers:
             value = decode_message_header(message, header)
             references = unfold_references(value)
@@ -2034,10 +2014,8 @@ class MailThread(models.AbstractModel):
         # fetch information used to find existing partners, beware portal/public who
         # cannot read followers
         followers = self.sudo().message_partner_ids if 'message_partner_ids' in self else self.env['res.partner']
-        aliases = self.env['mail.alias'].sudo().search(
-            [('alias_full_name', 'in', emails_key_all)]
-        ) if avoid_alias else self.env['mail.alias'].sudo()
-        ban_emails = (ban_emails or []) + aliases.mapped('alias_full_name')
+        alias_emails = self.env['mail.alias.domain'].sudo()._find_aliases(emails_key_all) if avoid_alias else []
+        ban_emails = (ban_emails or []) + alias_emails
 
         # inspired notably from odoo/odoo@80a0b45df806ffecfb068b5ef05ae1931d655810; final
         # ordering is search order defined in '_find_or_create_from_emails', which is id ASC
@@ -2313,8 +2291,9 @@ class MailThread(models.AbstractModel):
         # posted 'in behalf of'). Limit to active and internal partners, as external
         # customers should be proposed through suggested recipients.
         author_subscribe = (
-            not self._context.get('mail_post_autofollow_author_skip')
-            and msg_values['message_type'] not in ('notification', 'user_notification', 'auto_comment')
+            not self._context.get('mail_post_autofollow_author_skip') and
+            msg_values['message_type'] not in ('notification', 'user_notification', 'auto_comment') and
+            subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         )
         if author_subscribe:
             real_author = self._message_compute_real_author(msg_values['author_id'])
@@ -2391,7 +2370,7 @@ class MailThread(models.AbstractModel):
             if not self.env.user._is_internal():
                 attachment_ids = filtered_attachment_ids.ids
 
-            m2m_attachment_ids += [Command.link(id) for id in attachment_ids]
+            m2m_attachment_ids += [(4, att_id) for att_id in attachment_ids]
 
         # Handle attachments parameter, that is a dictionary of attachments
         return_values = {}
@@ -2999,7 +2978,7 @@ class MailThread(models.AbstractModel):
 
         for values in values_list:
             create_values = dict(values)
-            create_values['partner_ids'] = [Command.link(pid) for pid in (create_values.get('partner_ids') or [])]
+            create_values['partner_ids'] = [(4, pid) for pid in (create_values.get('partner_ids') or [])]
             create_values_list.append(create_values)
 
         # remove context, notably for default keys, as this thread method is not
@@ -3433,7 +3412,7 @@ class MailThread(models.AbstractModel):
         if force_send := self.env.context.get('mail_notify_force_send', force_send):
             force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail.force.send.limit', 100))
             force_send = len(emails) < force_send_limit
-        if force_send and not self.env['ir.mail_server']._disable_send():
+        if force_send:
             # unless asked specifically, send emails after the transaction to
             # avoid side effects due to emails being sent while the transaction fails
             if send_after_commit:
@@ -3712,14 +3691,29 @@ class MailThread(models.AbstractModel):
             # replace new lines by spaces to conform to email headers requirements
             mail_subject = ' '.join(mail_subject.splitlines())
 
-        # compute references: set references to the parent and add current message just to
+        # compute references: set references to parents likely to be sent and add current message just to
         # have a fallback in case replies mess with Messsage-Id in the In-Reply-To (e.g. amazon
         # SES SMTP may replace Message-Id and In-Reply-To refers an internal ID not stored in Odoo)
         message_sudo = message.sudo()
-        if message_sudo.parent_id:
-            references = f'{message_sudo.parent_id.message_id} {message_sudo.message_id}'
-        else:
-            references = message_sudo.message_id
+        ancestors = self.env['mail.message'].sudo().search(
+            [
+                ('model', '=', message_sudo.model), ('res_id', '=', message_sudo.res_id),
+                ('id', '!=', message_sudo.id),
+                ('subtype_id', '!=', False),  # filters out logs
+                ('message_id', '!=', False),  # ignore records that somehow don't have a message_id (non ORM created)
+            ], limit=32, order='id DESC',  # take 32 last, hoping to find public discussions in it
+        )
+
+        # filter out internal messages, to fetch 'public discussion' first
+        outgoing_types = ('comment', 'auto_comment', 'email', 'email_outgoing')
+        history_ancestors = ancestors.sorted(lambda m: (
+            not m.is_internal and not m.subtype_id.internal,
+            m.message_type in outgoing_types,
+            m.message_type != 'user_notification',  # user notif -> avoid if possible
+        ), reverse=True)  # False before True unless reverse
+        # order from oldest to newest
+        ancestors = history_ancestors[:3].sorted('id')
+        references = ' '.join(m.message_id for m in (ancestors + message_sudo))
         # prepare notification mail values
         base_mail_values = {
             'mail_message_id': message.id,
@@ -3760,7 +3754,7 @@ class MailThread(models.AbstractModel):
         :return: a new dictionary of values suitable for a <mail.mail> create;
         """
         final_mail_values = dict(mail_values)
-        final_mail_values['recipient_ids'] = [Command.link(pid) for pid in recipient_ids]
+        final_mail_values['recipient_ids'] = [(4, pid) for pid in recipient_ids]
         if additional_values:
             final_mail_values.update(additional_values)
         return final_mail_values
@@ -4743,7 +4737,15 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     def _get_allowed_message_post_params(self):
-        return {"attachment_ids", "body", "email_add_signature", "message_type", "partner_ids", "subtype_xmlid"}
+        return {
+            "attachment_ids",
+            "body",
+            "email_add_signature",
+            "message_type",
+            "partner_ids",
+            "role_ids",
+            "subtype_xmlid",
+        }
 
     @api.model
     def _get_allowed_message_update_params(self):

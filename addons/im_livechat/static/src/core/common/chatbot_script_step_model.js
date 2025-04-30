@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 
 export class ChatbotScriptStep extends Record {
     static id = "id";
@@ -11,6 +11,6 @@ export class ChatbotScriptStep extends Record {
     /** @type {"free_input_multi"|"free_input_single"|"question_email"|"question_phone"|"question_selection"|"text"|"forward_operator"} */
     type;
     isLast = false;
-    answers = Record.many("chatbot.script.answer");
+    answers = fields.Many("chatbot.script.answer");
 }
 ChatbotScriptStep.register();

@@ -69,6 +69,9 @@ patch(PosOrder.prototype, {
         // Always start with invalid coupons so that coupon for this
         // order is properly assigned. @see _checkMissingCoupons
         this.invalidCoupons = true;
+    },
+    initState() {
+        super.initState();
         this.uiState = {
             ...this.uiState,
             disabledRewards: this.uiState.disabledRewards || new Set(),
@@ -93,8 +96,8 @@ patch(PosOrder.prototype, {
             }
         }
     },
-    setupState(vals) {
-        super.setupState(...arguments);
+    restoreState(vals) {
+        super.restoreState(...arguments);
         this.uiState.disabledRewards = new Set(vals?.disabledRewards || []);
     },
     serializeState() {
@@ -833,19 +836,22 @@ patch(PosOrder.prototype, {
             return _t("The reward could not be applied.");
         }
         for (const rewardLine of rewardLines) {
-            const prepareRewards = {
-                ...rewardLine,
-                reward_id: rewardLine.reward_id,
-                coupon_id: this.models["loyalty.card"].get(rewardLine.coupon_id),
-                tax_ids: rewardLine.tax_ids.map((tax) => ["link", tax]),
-            };
-            this.models["pos.order.line"].create({
-                ...prepareRewards,
-                order_id: this,
-                price_type: "manual",
-            });
+            this.applyRewardLine(rewardLine);
         }
         return true;
+    },
+    applyRewardLine(rewardLine) {
+        const prepareRewards = {
+            ...rewardLine,
+            reward_id: rewardLine.reward_id,
+            coupon_id: this.models["loyalty.card"].get(rewardLine.coupon_id),
+            tax_ids: rewardLine.tax_ids.map((tax) => ["link", tax]),
+        };
+        this.models["pos.order.line"].create({
+            ...prepareRewards,
+            order_id: this,
+            price_type: "manual",
+        });
     },
     /**
      * Checks if there are any existing manual changes or new coupon additions for the given coupon code
@@ -910,7 +916,9 @@ patch(PosOrder.prototype, {
             if (!line.getQuantity()) {
                 continue;
             }
-            const taxKey = line.tax_ids.map((t) => t.id);
+            const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+                ? line.tax_ids.map((t) => t.id)
+                : line.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
             discountable += line.getPriceWithTax();
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
@@ -1162,7 +1170,7 @@ patch(PosOrder.prototype, {
 
             lst.push({
                 product_id: discountProduct,
-                price_unit: -(entry[1] * discountFactor),
+                price_unit: -(Math.min(this.getTotalWithTax(), entry[1]) * discountFactor),
                 qty: 1,
                 reward_id: reward,
                 is_reward_line: true,
@@ -1392,40 +1400,9 @@ patch(PosOrder.prototype, {
             return super.removeOrderline(lineToRemove);
         }
     },
-    getSortedOrderlines() {
-        const lines = super.getSortedOrderlines();
-        if (this.config.orderlines_sequence_in_cart_by_category && this.lines.length) {
-            const rewardLines = [];
-            const resultLines = [];
 
-            lines.forEach((line) => {
-                if (line.is_reward_line) {
-                    rewardLines.push(line);
-                } else {
-                    resultLines.push(line);
-                }
-            });
-
-            rewardLines.forEach((line) => {
-                if (line.reward_id.reward_type === "discount") {
-                    resultLines.splice(resultLines.length, 0, line);
-                } else if (line.reward_id.reward_type === "product") {
-                    const rewardProductIndex = resultLines.findIndex(
-                        (rewardLine) =>
-                            line.reward_id?.reward_product_id?.id === rewardLine.product_id.id
-                    );
-                    resultLines.splice(rewardProductIndex + 1, 0, line);
-                }
-            });
-            return resultLines;
-        }
-        return lines;
-    },
-
-    _isRefundAndSalesNotAllowed(values, options) {
+    isSaleDisallowed(values, options) {
         // Allow gift cards to be added to a refund
-        return (
-            super._isRefundAndSalesNotAllowed(values, options) && !options.eWalletGiftCardProgram
-        );
+        return super.isSaleDisallowed(values, options) && !options.eWalletGiftCardProgram;
     },
 });

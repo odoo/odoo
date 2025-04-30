@@ -7,8 +7,8 @@ import uuid
 from lxml import etree, html
 
 from odoo import api, models, _
-from odoo.osv import expression
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
 
 _logger = logging.getLogger(__name__)
@@ -443,10 +443,8 @@ class IrUiView(models.Model):
 
         # find available name
         current_website = self.env['website'].browse(self._context.get('website_id'))
-        website_domain = current_website.website_domain()
-        used_names = self.search(expression.AND([
-            [('name', '=like', '%s%%' % name)], website_domain
-        ])).mapped('name')
+        website_domain = Domain(current_website.website_domain())
+        used_names = self.search(Domain('name', '=like', '%s%%' % name) & website_domain).mapped('name')
         name = self._find_available_name(name, used_names)
 
         # html to xml to add '/' at the end of self closing tags like br, ...

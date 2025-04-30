@@ -30,12 +30,13 @@ class SaleOrder(models.Model):
                 'name': _(
                     "%(name)s (Estimated Cost: %(cost)s)",
                     name=sol["name"],
-                    cost=self._format_currency_amount(price_unit),
+                    cost=self.currency_id.format(price_unit),
                 ),
             })
         del context
         return sol
 
+    # to remove in master
     def _format_currency_amount(self, amount):
         pre = post = u''
         if self.currency_id.position == 'before':
@@ -48,7 +49,7 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    def _prepare_procurement_values(self, group_id):
+    def _prepare_procurement_values(self, group_id=False):
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
         if not values.get("route_ids") and self.order_id.carrier_id.route_ids:
             values['route_ids'] = self.order_id.carrier_id.route_ids

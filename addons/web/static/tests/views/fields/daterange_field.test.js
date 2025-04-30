@@ -1,6 +1,7 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import {
     click,
+    press,
     queryAll,
     queryAllProperties,
     queryAllTexts,
@@ -189,6 +190,34 @@ test("Date field - interaction with the datepicker", async () => {
     // Check date after save
     expect("input[data-field=date]").toHaveValue("02/13/2017");
     expect("input[data-field=date_end]").toHaveValue("03/18/2017");
+});
+
+test("Date field - interaction with the datepicker - empty dates", async () => {
+    Partner._fields.date_start = fields.Date({ string: "Date end", required: true });
+    Partner._fields.date_end = fields.Date({ string: "Date end", required: true });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="date_start" widget="daterange" options="{'end_date_field': 'date_end'}"/>
+            </form>`,
+    });
+
+    // open the first one
+    await contains("input[data-field=date_start]").click();
+
+    expect(".o_select_start").not.toBeDisplayed();
+    expect(".o_select_end").not.toBeDisplayed();
+
+    // Change date
+    await contains(getPickerCell("5")).click();
+    await contains(getPickerCell("12")).click();
+
+    expect(".o_select_start").toHaveText("5");
+    expect(".o_select_end").toHaveText("12");
 });
 
 test("date picker should still be present when scrolling outside of it", async () => {
@@ -1031,7 +1060,7 @@ test("date values are selected eagerly and do not flicker", async () => {
     await contains(".o_field_datetime input").click();
     await contains(getPickerCell("19")).click();
     await contains(".o_add_date:enabled").click();
-    await contains(".btn:contains(Apply)").click();
+    await press("enter");
 
     expect(queryAllValues(".o_field_datetime input")).toEqual([
         "02/19/2017 15:30",
@@ -1067,6 +1096,54 @@ test("update the selected input date after removing the existing date", async ()
     await contains(getPickerCell("12")).click();
 
     expect("input[data-field=date]").toHaveValue("02/12/2017");
+});
+
+test("update the selected input datetime after clearing the existing date", async () => {
+    Partner._fields.date_end = fields.Date({ string: "Date end" });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="datetime" widget="daterange" options="{'start_date_field': 'date_end'}" />
+            </form>`,
+        resId: 1,
+    });
+    await contains("input[data-field=datetime]").click();
+    await contains(".o_datetime_buttons button.btn-secondary:contains('Clear')").click();
+    expect(".o_time_picker_input").toHaveCount(1);
+
+    await contains(getPickerCell("12")).click();
+    await click(".o_time_picker:eq(0) .o_time_picker_input");
+    await animationFrame();
+    await edit("15:35", { confirm: "enter" });
+    await animationFrame();
+
+    expect("input[data-field=datetime]").toHaveValue("03/12/2019 15:35");
+});
+
+test("daterange with inverted start date and end date", async () => {
+    Partner._records[0].datetime_end = "2017-02-01 00:00:00";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_daterange input:eq(0)").toHaveValue("02/08/2017 15:30");
+    expect(".o_field_daterange input:eq(1)").toHaveValue("02/01/2017 05:30");
+
+    await contains("input[data-field=datetime]").click();
+
+    expect(".o_selected").toHaveCount(8, {
+        message: "should correctly display the range even if invalid",
+    });
 });
 
 test("daterange field in kanban with show_time option", async () => {

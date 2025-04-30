@@ -138,7 +138,7 @@ class ThemeWebsiteMenu(models.Model):
 
     name = fields.Char(required=True, translate=True)
     url = fields.Char(default='')
-    page_id = fields.Many2one('theme.website.page', ondelete='cascade')
+    page_id = fields.Many2one('theme.website.page', ondelete='cascade', index='btree_not_null')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer()
     parent_id = fields.Many2one('theme.website.menu', index=True, ondelete="cascade")
@@ -181,7 +181,7 @@ class ThemeWebsitePage(models.Model):
     ]
 
     url = fields.Char()
-    view_id = fields.Many2one('theme.ir.ui.view', required=True, ondelete="cascade")
+    view_id = fields.Many2one('theme.ir.ui.view', required=True, index=True, ondelete="cascade")
     website_indexed = fields.Boolean('Page Indexed', default=True)
     is_published = fields.Boolean()
     is_new_page_template = fields.Boolean(string="New Page Template")
@@ -353,7 +353,7 @@ class ThemeUtils(models.AbstractModel):
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
 
-    theme_template_id = fields.Many2one('theme.ir.ui.view', copy=False)
+    theme_template_id = fields.Many2one('theme.ir.ui.view', copy=False, index='btree_not_null')
 
     def write(self, vals):
         # During a theme module update, theme views' copies receiving an arch
@@ -380,23 +380,23 @@ class IrUiView(models.Model):
 class IrAsset(models.Model):
     _inherit = 'ir.asset'
 
-    theme_template_id = fields.Many2one('theme.ir.asset', copy=False)
+    theme_template_id = fields.Many2one('theme.ir.asset', copy=False, index='btree_not_null')
 
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
     key = fields.Char(copy=False)
-    theme_template_id = fields.Many2one('theme.ir.attachment', copy=False)
+    theme_template_id = fields.Many2one('theme.ir.attachment', copy=False, index='btree_not_null')
 
 
 class WebsiteMenu(models.Model):
     _inherit = 'website.menu'
 
-    theme_template_id = fields.Many2one('theme.website.menu', copy=False)
+    theme_template_id = fields.Many2one('theme.website.menu', copy=False, index='btree_not_null')
 
 
 class WebsitePage(models.Model):
     _inherit = 'website.page'
 
-    theme_template_id = fields.Many2one('theme.website.page', copy=False)
+    theme_template_id = fields.Many2one('theme.website.page', copy=False, index='btree_not_null')

@@ -97,32 +97,6 @@
                 <field name="invoiced_target"/>
             </xpath>
 
-            <xpath expr="//t[@name='second_options']" position="after">
-                <div class="row" t-if="record.quotations_count.raw_value">
-                    <a class="col" name="%(action_quotations_salesteams)d" type="action" context="{'search_default_draft': True, 'search_default_sent': True}">
-                        <field name="quotations_count" class="me-1"/>
-                        <t t-if="record.quotations_count.raw_value == 1">Quotation</t>
-                        <t t-else="">Quotations</t>
-                    </a>
-                    <field class="col-auto text-truncate" name="quotations_amount" widget="monetary"/>
-                </div>
-                <div class="row" name="orders_to_invoice" t-if="record.sales_to_invoice_count.raw_value">
-                    <a class="col-8" name="%(action_orders_to_invoice_salesteams)d" type="action">
-                        <field name="sales_to_invoice_count" class="me-1"/>
-                        <t t-if="record.sales_to_invoice_count.raw_value == 1">Order to Invoice</t>
-                        <t t-else="">Orders to Invoice</t>
-                    </a>
-                </div>
-            </xpath>
-
-            <xpath expr="//div[@name='o_kanban_primary_bottom']" position="after">
-                <t groups="sales_team.group_sale_manager">
-                    <div class="col-12 o_dashboard_bottom_block mt-2">
-                        <field name="invoiced" widget="sales_team_progressbar" title="Invoicing" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true, 'on_change': 'update_invoiced_target'}"/>
-                    </div>
-                </t>
-            </xpath>
-
             <xpath expr="//div[@name='manage_view']" position="inside">
                 <div>
                     <a name="%(action_orders_salesteams)d" type="action">Sales Orders</a>

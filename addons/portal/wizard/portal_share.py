@@ -107,8 +107,4 @@ class PortalShare(models.TransientModel):
         # when partner not user send individual mail with signup token
         self._send_signup_link(self.partner_ids - partner_ids)
 
-        # subscribe all recipients so that they receive future communication (better than
-        # using autofollow as more precise)
-        self.resource_ref.message_subscribe(partner_ids=self.partner_ids.ids)
-
         return {'type': 'ir.actions.act_window_close'}

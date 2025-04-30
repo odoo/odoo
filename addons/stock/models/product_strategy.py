@@ -45,9 +45,10 @@ class StockPutawayRule(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
         default=_default_product_id,
+        index='btree_not_null',
         domain="[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else [('type', '!=', 'service')]",
         ondelete='cascade')
-    category_id = fields.Many2one('product.category', 'Product Category',
+    category_id = fields.Many2one('product.category', 'Product Category', index='btree_not_null',
         default=_default_category_id, domain=[('filter_for_stock_putaway_rule', '=', True)], ondelete='cascade')
     location_in_id = fields.Many2one(
         'stock.location', 'When product arrives in', check_company=True,

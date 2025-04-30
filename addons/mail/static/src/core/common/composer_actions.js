@@ -46,12 +46,7 @@ composerActionsRegistry
             return "";
         },
         condition: (component) =>
-            (component.props.mode !== "extended" && !component.props.composer.message) ||
-            (component.props.messageToReplyTo?.message &&
-                component.props.composer.thread.notEq(
-                    component.props.messageToReplyTo.message.thread
-                )) ||
-            (component.props.composer.message && component.ui.isSmall),
+            !component.env.inChatter && (!component.props.composer.message || component.ui.isSmall),
         disabledCondition: (component) => component.isSendButtonDisabled,
         icon: "fa fa-paper-plane-o",
         name(component) {
@@ -103,9 +98,11 @@ composerActionsRegistry
     .add("upload-files", {
         condition: (component) => {
             const thread = component.thread ?? component.message?.thread;
-            return !(
-                thread?.channel_type === "whatsapp" &&
-                component.props.composer.attachments.length > 0
+            return (
+                !(
+                    thread?.channel_type === "whatsapp" &&
+                    component.props.composer.attachments.length > 0
+                ) && !component.props.composer.portalComment
             );
         },
         icon: "fa fa-paperclip",
@@ -159,12 +156,7 @@ function transformAction(component, id, action) {
             return action.componentProps?.(component, this);
         },
         get condition() {
-            if (!action?.condition) {
-                return true;
-            }
-            return typeof action.condition === "function"
-                ? action.condition(component)
-                : action.condition;
+            return composerActionsInternal.condition(component, id, action);
         },
         get disabledCondition() {
             return action.disabledCondition?.(component);
@@ -206,6 +198,17 @@ function transformAction(component, id, action) {
         setup: action.setup,
     };
 }
+
+export const composerActionsInternal = {
+    condition(component, id, action) {
+        if (!action?.condition) {
+            return true;
+        }
+        return typeof action.condition === "function"
+            ? action.condition(component)
+            : action.condition;
+    },
+};
 
 export function useComposerActions() {
     const component = useComponent();

@@ -30,7 +30,17 @@ export class ProjectProject extends models.Model {
 
     check_access_rights() {
         return Promise.resolve(true);
-    };
+    }
+
+    get_template_tasks(projectId) {
+        return this.env["project.task"].search_read(
+            [
+                ["project_id", "=", projectId],
+                ["is_template", "=", true],
+            ],
+            ["id", "name"]
+        );
+    }
 }
 
 export class ProjectProjectStage extends models.Model {
@@ -90,6 +100,8 @@ export class ProjectTask extends models.Model {
     date_deadline = fields.Datetime({ string: "Stop Date" });
     depend_on_ids = fields.Many2many({ relation: "project.task" });
     closed_depend_on_count = fields.Integer();
+    is_closed = fields.Boolean();
+    is_template = fields.Boolean({ string: "Is Template", default: false });
 
     _records = [
         {

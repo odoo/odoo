@@ -3,7 +3,8 @@
     aspect-ratio: 16/9;
 
     &.o-isTalking {
-        box-shadow: inset 0 0 0 map-get($spacers, 1) var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline: 4px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline-offset: -4px;
 
         &.o-inset {
             box-shadow: inset 0 0 0 map-get($spacers, 1)/2 var(--discuss-talkingColor, $o-discuss-talkingColor);
@@ -22,6 +23,10 @@
             width: 30%;
             left: 0;
             top: 0;
+        }
+
+        .o-mail-ChatWindow & {
+            bottom: 5vh;
         }
 
         .o-discuss-CallParticipantCard-avatar img {
@@ -92,8 +97,12 @@
     &.o-proportional-container {
         container-type: inline-size;
         .o-proportional-text {
+            font-size: #{"min(1rem, 40cqw)"};
             &.o-video-text {
                 font-size: 5cqw;
+            }
+            &.o-discuss-CallParticipantCard-overlayBottomName {
+                font-size: #{"min(0.8rem, 40cqw)"};
             }
         }
     }

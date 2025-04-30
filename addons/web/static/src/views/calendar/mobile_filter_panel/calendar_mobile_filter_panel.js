@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { getColor } from "../colors";
+import { getColor } from "../utils";
 
 export class CalendarMobileFilterPanel extends Component {
     static components = {};

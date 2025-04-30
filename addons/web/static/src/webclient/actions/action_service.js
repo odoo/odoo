@@ -141,20 +141,15 @@ export function makeActionManager(env, router = _router) {
     const keepLast = new KeepLast();
     let id = 0;
     let controllerStack = [];
-    let dialogCloseProm;
-    let actionCache = {};
     let dialog = null;
     let nextDialog = null;
 
     router.hideKeyFromUrl("globalState");
 
-    env.bus.addEventListener("CLEAR-CACHES", () => {
-        actionCache = {};
-    });
     rpcBus.addEventListener("RPC:RESPONSE", async (ev) => {
         const { model, method } = ev.detail.data.params;
         if (model === "ir.actions.act_window" && UPDATE_METHODS.includes(method)) {
-            actionCache = {};
+            rpcBus.trigger("CLEAR-CACHES", "/web/action/load");
             const virtualStack = await _controllersFromState();
             const nextStack = [...virtualStack, controllerStack[controllerStack.length - 1]];
             nextStack[nextStack.length - 1].config.breadcrumbs.splice(
@@ -310,14 +305,14 @@ export function makeActionManager(env, router = _router) {
      *
      * @return {Function|undefined} When there was a dialog, returns its onClose callback for propagation to next dialog.
      */
-    function _removeDialog() {
+    async function _removeDialog(closeParams) {
         if (dialog) {
             const { onClose, remove } = dialog;
+            await onClose?.(closeParams);
             dialog = null;
             // Remove the dialog from the dialog_service.
             // The code is well enough designed to avoid falling in a function call loop.
             remove();
-            return onClose;
         }
     }
 
@@ -354,17 +349,16 @@ export function makeActionManager(env, router = _router) {
             // actionRequest is an id or an xmlid
             const ctx = makeContext([user.context, context]);
             delete ctx.params;
-            const key = `${JSON.stringify(actionRequest)},${JSON.stringify(ctx)}`;
-            let action = await actionCache[key];
-            if (!action) {
-                actionCache[key] = rpc("/web/action/load", {
+            const action = await rpc(
+                "/web/action/load",
+                {
                     action_id: actionRequest,
                     context: ctx,
-                });
-                action = await actionCache[key];
-                if (action.help) {
-                    action.help = markup(action.help);
-                }
+                },
+                { cached: true }
+            );
+            if (action.help) {
+                action.help = markup(action.help);
             }
             return Object.assign({}, action);
         }
@@ -393,6 +387,7 @@ export function makeActionManager(env, router = _router) {
      */
     function _preprocessAction(action, context = {}) {
         try {
+            delete action._originalAction;
             action._originalAction = JSON.stringify(action);
         } catch {
             // do nothing, the action might simply not be serializable
@@ -421,6 +416,10 @@ export function makeActionManager(env, router = _router) {
             } else {
                 const searchViewId = action.search_view_id ? action.search_view_id[0] : false;
                 action.views.push([searchViewId, "search"]);
+            }
+            if ("no_breadcrumbs" in action.context) {
+                action._noBreadcrumbs = action.context.no_breadcrumbs;
+                delete action.context.no_breadcrumbs;
             }
         }
         return action;
@@ -736,8 +735,7 @@ export function makeActionManager(env, router = _router) {
         };
 
         viewProps.noBreadcrumbs =
-            "no_breadcrumbs" in action.context ? action.context.no_breadcrumbs : target === "new";
-        delete action.context.no_breadcrumbs;
+            "_noBreadcrumbs" in action ? action._noBreadcrumbs : target === "new";
 
         const embeddedActions =
             view.type === "form"
@@ -871,15 +869,11 @@ export function makeActionManager(env, router = _router) {
             controller.embeddedActions = embeddedActions;
         };
         controller.config.historyBack = () => {
-            if (dialog) {
-                _executeCloseAction();
+            const previousController = controllerStack[controllerStack.length - 2];
+            if (previousController) {
+                restore(previousController.jsId);
             } else {
-                const previousController = controllerStack[controllerStack.length - 2];
-                if (previousController) {
-                    restore(previousController.jsId);
-                } else {
-                    env.bus.trigger("WEBCLIENT:LOAD_DEFAULT_APP");
-                }
+                env.bus.trigger("WEBCLIENT:LOAD_DEFAULT_APP");
             }
         };
 
@@ -977,11 +971,7 @@ export function makeActionManager(env, router = _router) {
             }
             onMounted() {
                 if (action.target === "new") {
-                    dialogCloseProm = new Promise((_r) => {
-                        dialogCloseResolve = _r;
-                    }).then(() => {
-                        dialogCloseProm = undefined;
-                    });
+                    dialog?.remove();
                     dialog = nextDialog;
                 } else {
                     controller.getGlobalState = () => {
@@ -1042,14 +1032,10 @@ export function makeActionManager(env, router = _router) {
                 actionDialogProps.size = size;
             }
             actionDialogProps.footer = action.context.footer ?? actionDialogProps.footer;
-            const onClose = _removeDialog();
+            const onClose = dialog?.onClose;
+            delete dialog?.onClose;
             removeDialogFn = env.services.dialog.add(ActionDialog, actionDialogProps, {
-                onClose: () => {
-                    const onClose = _removeDialog();
-                    if (onClose) {
-                        onClose();
-                    }
-                },
+                onClose: (closeParams) => _removeDialog(closeParams),
             });
             if (nextDialog) {
                 nextDialog.remove();
@@ -1098,8 +1084,6 @@ export function makeActionManager(env, router = _router) {
             controller.props.globalState = controller.action.globalState;
         }
 
-        const closingProm = _executeCloseAction();
-
         if (options.clearBreadcrumbs && !options.noEmptyTransition) {
             const def = new Deferred();
             env.bus.trigger("ACTION_MANAGER:UPDATE", {
@@ -1120,9 +1104,9 @@ export function makeActionManager(env, router = _router) {
             Component: ControllerComponent,
             componentProps: controller.props,
         };
-        env.services.dialog.closeAll();
+        env.services.dialog.closeAll({ noReload: true });
         env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
-        return Promise.all([currentActionProm, closingProm]).then((r) => r[0]);
+        await currentActionProm;
     }
 
     // ---------------------------------------------------------------------------
@@ -1397,18 +1381,11 @@ export function makeActionManager(env, router = _router) {
         return doAction(nextAction, options);
     }
 
-    async function _executeCloseAction(params = {}) {
-        let onClose;
+    function _executeCloseAction(params = {}) {
         if (dialog) {
-            onClose = _removeDialog();
-        } else {
-            onClose = params.onClose;
+            return _removeDialog(params.onCloseInfo);
         }
-        if (onClose) {
-            await onClose(params.onCloseInfo);
-        }
-
-        return dialogCloseProm;
+        return params.onClose?.(params.onCloseInfo);
     }
 
     // ---------------------------------------------------------------------------
@@ -1474,6 +1451,9 @@ export function makeActionManager(env, router = _router) {
      * @returns {Promise<void>}
      */
     async function doActionButton(params, { isEmbeddedAction, newWindow } = {}) {
+        if (!params.name) {
+            return;
+        }
         // determine the action to execute according to the params
         let action;
         if (!isEmbeddedAction) {

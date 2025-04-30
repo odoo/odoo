@@ -29,7 +29,10 @@
                         <t t-name="menu">
                             <div class="container">
                                 <a type="object" name="action_view_rating" class="dropdown-item" role="menuitem">Ratings</a>
-                                <a type="open" class="dropdown-item" role="menuitem">Configure Channel</a>
+                                <a type="open" class="dropdown-item" role="menuitem">
+                                    <span groups="im_livechat.im_livechat_group_manager">Configure Channel</span>
+                                    <span groups="!im_livechat.im_livechat_group_manager">View Channel</span>
+                                </a>
                             </div>
                         </t>
                         <t t-name="card" class="p-0 row g-0">
@@ -44,7 +47,7 @@
                                     </div>
                                     <div>
                                         <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-primary">Leave</button>
-                                        <button t-else="" name="action_join" type="object" class="btn btn-secondary">Join</button>
+                                        <button t-else="" name="action_join" type="object" class="btn btn-secondary" groups="im_livechat.im_livechat_group_user">Join</button>
                                     </div>
                                 </div>
                                 <footer class="pt-0">
@@ -74,7 +77,7 @@
                         <field name="rating_count" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="object" name="action_view_chatbot_scripts" icon="fa-android"
-                                invisible="chatbot_script_count == 0">
+                                invisible="chatbot_script_count == 0" groups="im_livechat.im_livechat_group_manager">
                                 <field string="Chatbots" name="chatbot_script_count" widget="statinfo"/>
                             </button>
                             <button class="oe_stat_button" type="action" invisible="nbr_channel == 0" name="%(discuss_channel_action_from_livechat_channel)d" icon="fa-comments">
@@ -93,7 +96,7 @@
                         </div>
                         <notebook>
                             <page string="Operators" name="operators">
-                                    <field name="user_ids" nolabel="1" colspan="2" domain="[['all_group_ids', 'not in', %(base.group_portal)d]]">
+                                    <field name="user_ids" nolabel="1" colspan="2" domain="[['all_group_ids', 'in', %(im_livechat.im_livechat_group_user)d]]">
                                         <kanban>
                                             <templates>
                                                 <t t-name="card" class="flex-row">
@@ -103,7 +106,7 @@
                                                     <main class="ps-1">
                                                         <div class="d-flex justify-content-between align-items-baseline">
                                                             <field name="name" class="fw-bold fs-5"/>
-                                                            <a class="btn p-0 opacity-75 opacity-100-hover" role="button" groups="im_livechat.im_livechat_group_manager" type="delete">
+                                                            <a class="btn p-0 opacity-75 opacity-100-hover" role="button" groups="im_livechat.im_livechat_group_user" type="delete">
                                                                 <i title="Remove operator" class="fa fa-fw fa-lg fa-close"/>
                                                             </a>
                                                         </div>
@@ -117,7 +120,7 @@
                                         Operators that do not show any activity In Odoo for more than 30 minutes will be considered as disconnected.
                                     </p>
                             </page>
-                            <page string="Options" name="options">
+                            <page string="Options" name="options" groups="im_livechat.im_livechat_group_manager">
                                 <group>
                                     <group string="Livechat Button">
                                         <field name="button_text" string="Notification text" help="Text to display on the notification"/>
@@ -146,25 +149,34 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Channel Rules" name="channel_rules">
+                            <page string="Channel Rules" name="channel_rules" groups="im_livechat.im_livechat_group_manager">
                                 <field name="rule_ids" colspan="2"/>
                                 <div class="text-muted" colspan="2">Define rules for your live support channel. You can apply an action for the given URL, and per country.<br />To identify the country, GeoIP must be installed on your server, otherwise, the countries of the rule will not be taken into account.</div>
                             </page>
-                            <page string="Widget" name="configuration_widget">
+                            <page string="Widget" name="configuration_widget" groups="im_livechat.im_livechat_group_manager">
                                 <div class="alert alert-warning mt4 mb16" role="alert" invisible="web_page">
                                     Save your Channel to get your configuration widget.
                                 </div>
                                 <div invisible="not web_page">
-                                    <separator string="How to use the Website Live Chat widget?"/>
                                     <p>
-                                        Copy and paste this code into your website, within the &lt;head&gt; tag:
+                                        Learn how to display a live chat bubble on your website and start chatting with visitors in a few easy steps.
                                     </p>
-                                    <field name="script_external" readonly="1" widget="CopyClipboardChar"/>
+                                    <separator string="FOR WEBSITES BUILT WITH ODOO" />
+                                    <ol>
+                                        <li>Go to <strong>Website</strong> > <strong>Configuration</strong> > <strong>Settings</strong> > <strong>Email</strong> &amp; <strong>Marketing.</strong></li>
+                                        <li>Turn on the <strong>Live Chat</strong> feature.</li>
+                                        <li>Choose the live chat channel you want to display on your website.</li>
+                                    </ol>
+                                    <separator string="FOR OTHER WEBSITES" />
                                     <p>
-                                        or copy this url and send it by email to your customers or suppliers:
+                                        Add the following code to the &lt;head&gt; section of your website:
                                     </p>
-                                    <field name="web_page" readonly="1" widget="CopyClipboardChar"/>
-                                    <p>For websites built with the Odoo CMS, go to Website > Configuration > Settings and select the Website Live Chat Channel you want to add to your website.</p>
+                                    <field class="text-muted" name="script_external" readonly="1" widget="CopyClipboardChar"/>
+                                    <br/><br/>
+                                    <p>
+                                        Alternatively, share this URL with your customers or suppliers via email:
+                                    </p>
+                                    <field class="text-muted" name="web_page" readonly="1" widget="CopyClipboardChar"/>
                                 </div>
                             </page>
                         </notebook>
@@ -256,32 +268,32 @@
             sequence="5"/>
 
         <menuitem
+            id="menu_livechat_sessions"
+            name="Sessions"
+            parent="menu_livechat_root"
+            action="discuss_channel_action"
+            groups="im_livechat_group_user"
+            sequence="10"/>
+
+        <menuitem
             id="menu_reporting_livechat"
-            name="Report"
+            name="Reporting"
             parent="menu_livechat_root"
             sequence="50"
             groups="im_livechat_group_manager"/>
-
-
-        <menuitem
-            id="session_history"
-            name="Sessions History"
-            parent="menu_reporting_livechat"
-            action="discuss_channel_action"
-            groups="im_livechat_group_user"
-            sequence="5"/>
-
-        <menuitem id="rating_rating_menu_livechat"
-            name="Customer Ratings"
-            action="rating_rating_action_livechat_report"
-            parent="menu_reporting_livechat"
-            sequence="40"/>
 
         <menuitem
             id="livechat_config"
             name="Configuration"
             parent="menu_livechat_root"
             sequence="55"/>
+
+        <menuitem
+            id="livechat_technical"
+            name="Technical"
+            parent="menu_livechat_root"
+            groups="base.group_no_one"
+            sequence="75"/>
 
         <menuitem
             id="canned_responses"
@@ -296,7 +308,7 @@
             name="Chatbots"
             parent="livechat_config"
             action="chatbot_script_action"
-            groups="im_livechat_group_user"
+            groups="im_livechat_group_manager"
             sequence="20"/>
 
     </data>

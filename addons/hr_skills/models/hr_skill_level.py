@@ -9,7 +9,7 @@ class HrSkillLevel(models.Model):
     _description = "Skill Level"
     _order = "level_progress desc"
 
-    skill_type_id = fields.Many2one('hr.skill.type', ondelete='cascade')
+    skill_type_id = fields.Many2one('hr.skill.type', index='btree_not_null', ondelete='cascade')
     name = fields.Char(required=True)
     level_progress = fields.Integer(string="Progress", help="Progress from zero knowledge (0%) to fully mastered (100%).")
     default_level = fields.Boolean(help="If checked, this level will be the default one selected when choosing this skill.")

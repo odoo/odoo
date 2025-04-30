@@ -116,7 +116,7 @@ class TestOrmCache(TransactionCase):
         )
 
     def test_signaling_01_single(self):
-        self.assertFalse(self.registry.test_cr)
+        self.assertFalse(self._registry_patched)
         self.registry.cache_invalidated.clear()
         registry = self.registry
         old_sequences = dict(registry.cache_sequences)
@@ -152,7 +152,7 @@ class TestOrmCache(TransactionCase):
         )
 
     def test_signaling_01_multiple(self):
-        self.assertFalse(self.registry.test_cr)
+        self.assertFalse(self._registry_patched)
         self.registry.cache_invalidated.clear()
         registry = self.registry
         old_sequences = dict(registry.cache_sequences)

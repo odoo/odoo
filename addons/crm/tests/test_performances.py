@@ -21,6 +21,13 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
     of random in tests.
     """
 
+    def setUp(self):
+        super().setUp()
+        # patch registry to simulate a ready environment
+        self.patch(self.env.registry, 'ready', True)
+        # we don't use mock_mail_gateway thus want to mock smtp to test the stack
+        self._mock_smtplib_connection()
+
     @mute_logger('odoo.models.unlink', 'odoo.addons.crm.models.crm_team', 'odoo.addons.crm.models.crm_team_member')
     def test_assign_perf_duplicates(self):
         """ Test assign process with duplicates on partner. Allow to ensure notably

@@ -21,8 +21,8 @@ export class MessageInReply extends Component {
             return url("/mail/static/src/img/email_icon.png");
         }
 
-        if (this.props.message.parentMessage.author) {
-            return this.props.message.parentMessage.author.avatarUrl;
+        if (this.props.message.parent_id.author) {
+            return this.props.message.parent_id.author.avatarUrl;
         }
 
         return this.store.DEFAULT_AVATAR;

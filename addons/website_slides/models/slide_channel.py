@@ -470,22 +470,12 @@ class SlideChannel(models.Model):
 
     @api.model
     def _search_is_visible(self, operator, value):
-        if operator not in ("=", "!=") or not isinstance(value, (bool, int)):
-            raise NotImplementedError('Operation not supported')
-        check_is_visible = value if operator == '=' else not value
-        if check_is_visible:
-            domain = ['|', ('is_member', '=', True)] + (
-                [('visibility', '=', 'public')]
-                if self.env.user._is_public()
-                else [('visibility', 'in', ['public', 'connected'])]
-            )
-        else:
-            domain = [('is_member', '=', False)] + (
-                [('visibility', '!=', 'public')]
-                if self.env.user._is_public()
-                else [('visibility', 'not in', ['public', 'connected'])]
-            )
-        return domain
+        if operator != 'in':
+            return NotImplemented
+        return [
+            '|', ('is_member', '=', True),
+            ('visibility', 'in', ['public'] if self.env.user._is_public() else ['public', 'connected']),
+        ]
 
     @api.depends('channel_partner_all_ids', 'channel_partner_all_ids.member_status', 'channel_partner_all_ids.active')
     def _compute_partners(self):
@@ -501,8 +491,6 @@ class SlideChannel(models.Model):
             slide_channel.partner_ids = data.get(slide_channel, [])
 
     def _search_partner_ids(self, operator, value):
-        if isinstance(value, int) and operator == 'in':
-            value = [value]
         return [(
             'channel_partner_ids', 'in', self.env['slide.channel.partner'].sudo()._search(
                 [('partner_id', operator, value),
@@ -536,8 +524,9 @@ class SlideChannel(models.Model):
     @api.model
     def _compute_has_requested_access(self):
         requested_cids = self.sudo().activity_search(
-            ['website_slides.mail_activity_data_access_request'],
-            additional_domain=[('request_partner_id', '=', self.env.user.partner_id.id)]
+            ['mail.mail_activity_data_todo'],
+            additional_domain=[('request_partner_id', '=', self.env.user.partner_id.id)],
+            only_automated=False,
         ).mapped('res_id')
         for channel in self:
             channel.has_requested_access = channel.id in requested_cids
@@ -563,16 +552,14 @@ class SlideChannel(models.Model):
             channel.is_member_invited = channel.id in invitation_pending_channels_ids
 
     def _search_is_member(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise NotImplementedError(_('Operation not supported'))
-        check_has_access = operator == '=' and value or operator == '!=' and not value
-        return [('id', 'in' if check_has_access else 'not in', self._search_is_member_channel_ids())]
+        if operator != 'in':
+            return NotImplemented
+        return [('id', 'in', self._search_is_member_channel_ids())]
 
     def _search_is_member_invited(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise NotImplementedError(_('Operation not supported'))
-        check_has_access = operator == '=' and value or operator == '!=' and not value
-        return [('id', 'in' if check_has_access else 'not in', self._search_is_member_channel_ids(invited=True))]
+        if operator != 'in':
+            return NotImplemented
+        return [('id', 'in', self._search_is_member_channel_ids(invited=True))]
 
     def _search_is_member_channel_ids(self, invited=False):
         return self.env['slide.channel.partner'].sudo()._read_group(
@@ -783,7 +770,10 @@ class SlideChannel(models.Model):
 
         if vals.get('user_id'):
             self._action_add_members(self.env['res.users'].sudo().browse(vals['user_id']).partner_id)
-            self.activity_reschedule(['website_slides.mail_activity_data_access_request'], new_user_id=vals.get('user_id'))
+            self.activity_reschedule(
+                ['mail_activity_data_todo'],
+                new_user_id=vals.get('user_id'),
+            )
         if 'enroll_group_ids' in vals:
             self._add_groups_members()
 
@@ -948,7 +938,7 @@ class SlideChannel(models.Model):
                 :return: returns the union of new records and the ones unarchived.
         """
         SlideChannelPartnerSudo = self.env['slide.channel.partner'].sudo()
-        allowed_channels = self._filter_add_members(target_partners, raise_on_access=raise_on_access)
+        allowed_channels = self._filter_add_members(raise_on_access=raise_on_access)
         if not allowed_channels or not target_partners:
             return SlideChannelPartnerSudo
 
@@ -1002,14 +992,13 @@ class SlideChannel(models.Model):
                 )
         return result_channel_partners
 
-    def _filter_add_members(self, target_partners, raise_on_access=False):
+    def _filter_add_members(self, raise_on_access=False):
         allowed = self.filtered(lambda channel: channel.enroll == 'public')
-        on_invite = self.filtered(lambda channel: channel.enroll == 'invite')
-        if on_invite:
-            if on_invite.has_access('write'):
-                allowed |= on_invite
-            elif raise_on_access:
-                raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
+        if controlled_access := (self - allowed):
+            allowed += controlled_access._filtered_access('write')
+            if raise_on_access and allowed != self:
+                raise AccessError(_('You are not allowed to add members to this course. '
+                                    'Please contact the course responsible or an administrator.'))
         return allowed
 
     def _add_groups_members(self):
@@ -1135,16 +1124,18 @@ class SlideChannel(models.Model):
         if partner:
             if self._action_add_members(partner):
                 self.activity_search(
-                    ['website_slides.mail_activity_data_access_request'],
-                    user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)]
+                    ['mail.mail_activity_data_todo'],
+                    user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)],
+                    only_automated=False,
                 ).action_feedback(feedback=_('Access Granted'))
 
     def action_refuse_access(self, partner_id):
         partner = self.env['res.partner'].browse(partner_id).exists()
         if partner:
             self.activity_search(
-                ['website_slides.mail_activity_data_access_request'],
-                user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)]
+                ['mail.mail_activity_data_todo'],
+                user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)],
+                only_automated=False,
             ).action_feedback(feedback=_('Access Refused'))
 
     # ---------------------------------------------------------
@@ -1159,14 +1150,15 @@ class SlideChannel(models.Model):
     def _action_request_access(self, partner):
         activities = self.env['mail.activity']
         requested_cids = self.sudo().activity_search(
-            ['website_slides.mail_activity_data_access_request'],
-            additional_domain=[('request_partner_id', '=', partner.id)]
+            ['mail.mail_activity_data_todo'],
+            additional_domain=[('request_partner_id', '=', partner.id)],
         ).mapped('res_id')
         for channel in self:
             if channel.id not in requested_cids and channel.user_id:
                 activities += channel.activity_schedule(
-                    'website_slides.mail_activity_data_access_request',
+                    'mail.mail_activity_data_todo',
                     note=_('<b>%s</b> is requesting access to this course.', partner.name),
+                    summary=_('Access Request'),
                     user_id=channel.user_id.id,
                     request_partner_id=partner.id
                 )
@@ -1309,3 +1301,6 @@ class SlideChannel(models.Model):
         if field in image_fields:
             return self.website_default_background_image_url
         return super()._get_placeholder_filename(field)
+
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return []

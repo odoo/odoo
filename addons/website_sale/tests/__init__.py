@@ -8,16 +8,19 @@ from . import test_delivery_ui
 from . import test_ecommerce_access
 from . import test_express_checkout_flows
 from . import test_fuzzy
+from . import test_product_public_category
 from . import test_sale_process
 from . import test_sitemap
 from . import test_website_editor
 from . import test_website_sale_add_to_cart_snippet
 from . import test_website_sale_cart
+from . import test_website_sale_checkout_steps
 from . import test_website_sale_cart_abandoned
 from . import test_website_sale_cart_notification
 from . import test_website_sale_cart_payment
 from . import test_website_sale_cart_recovery
 from . import test_website_sale_combo_configurator
+from . import test_website_sale_gmc
 from . import test_website_sale_image
 from . import test_website_sale_invoice
 from . import test_website_sale_mail
@@ -28,6 +31,7 @@ from . import test_website_sale_product_filters
 from . import test_website_sale_product_page
 from . import test_website_sale_product_template
 from . import test_website_sale_reorder_from_portal
+from . import test_website_sale_shop_redirects
 from . import test_website_sale_show_compare_list_price
 from . import test_website_sale_snippets
 from . import test_website_sale_visitor

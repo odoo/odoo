@@ -2,9 +2,12 @@ import {
     click,
     contains,
     defineMailModels,
+    listenStoreFetch,
     openListView,
     start,
     startServer,
+    userContext,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-dom";
@@ -16,29 +19,12 @@ import {
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 import { serializeDate } from "@web/core/l10n/dates";
-import { user } from "@web/core/user";
 
 defineMailModels();
 describe.current.tags("desktop");
 
 test("list activity widget with no activity", async () => {
-    const mailDataDoneDef = new Deferred();
-    onRpc("/mail/data", async (request) => {
-        const { params } = await request.json();
-        expect(params).toEqual({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: user.allowedCompanies.map((c) => c.id),
-            },
-        });
-        asyncStep("/mail/data");
-        mailDataDoneDef.resolve();
-    });
     onRpc("res.users", "web_search_read", async (params) => {
-        await mailDataDoneDef; // Ensure order of steps.
         expect(params.kwargs).toEqual({
             specification: {
                 activity_ids: { fields: {} },
@@ -52,23 +38,19 @@ test("list activity widget with no activity", async () => {
             offset: 0,
             order: "",
             limit: 80,
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                bin_size: true,
-                allowed_company_ids: user.allowedCompanies.map((c) => c.id),
-            },
+            context: { ...userContext(), bin_size: true },
             count_limit: 10001,
             domain: [],
         });
         asyncStep("web_search_read");
     });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await openListView("res.users", {
         arch: `<list><field name="activity_ids" widget="list_activity"/></list>`,
     });
-    await waitForSteps(["/mail/data", "web_search_read"]);
+    await waitForSteps(["web_search_read"]);
     await contains(".o-mail-ActivityButton i.text-muted");
     await contains(".o-mail-ListActivity-summary", { text: "" });
 });

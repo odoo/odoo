@@ -10,6 +10,7 @@ class TestProjectProfitabilityCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.user.group_ids += cls.env.ref('project.group_project_manager')
 
         cls.partner = cls.env['res.partner'].create({
             'name': 'Georges',

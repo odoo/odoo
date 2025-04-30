@@ -23,6 +23,45 @@ const FOLDABLE_TYPES = ["properties", "many2one", "many2many"];
 let nextItemId = 1;
 const SUB_ITEMS_DEFAULT_LIMIT = 8;
 
+/**
+ * @param {Object} params
+ * @param {string} params.operator
+ * @param {string} params.value
+ * @param {string} [params.label]
+ * @returns {Object}
+ */
+function manageSearchWithQuotes({ operator, value, label }) {
+    const startsWithQuote = value.length > 1 && value[0] === `"`;
+    const endsWithQuote = value.length > 1 && value[value.length - 1] === `"`;
+    const enforceOperator = startsWithQuote || endsWithQuote;
+    let labelForFacet;
+    if (startsWithQuote) {
+        if (endsWithQuote) {
+            operator = "=";
+            value = value.slice(1, -1);
+            label = label ? label.slice(1, -1) : label;
+        } else {
+            operator = "=ilike";
+            value = value.slice(1) + "%";
+            labelForFacet = label ? label.slice(1) : label;
+            label = label ? label.slice(1) + "%" : label;
+        }
+    } else if (endsWithQuote) {
+        operator = "=ilike";
+        value = "%" + value.slice(0, -1);
+        labelForFacet = label ? label.slice(0, -1) : label;
+        label = label ? "%" + label.slice(0, -1) : label;
+    }
+    const autoCompleteValue = { label, operator, value };
+    if (enforceOperator) {
+        autoCompleteValue.enforceOperator = enforceOperator;
+    }
+    if (labelForFacet) {
+        autoCompleteValue.labelForFacet = labelForFacet;
+    }
+    return autoCompleteValue;
+}
+
 export class SearchBar extends Component {
     static template = "web.SearchBar";
     static components = {
@@ -174,8 +213,10 @@ export class SearchBar extends Component {
             // or the properties item itself
             preposition = null;
         }
-
-        if (["selection", "boolean", "tags"].includes(fieldType)) {
+        if (
+            ["boolean", "tags"].includes(fieldType) ||
+            (isFieldProperty && fieldType === "selection")
+        ) {
             const booleanOptions = [
                 [true, _t("Yes")],
                 [false, _t("No")],
@@ -185,7 +226,7 @@ export class SearchBar extends Component {
                 const { selection, tags } = searchItem.propertyFieldDefinition || {};
                 options = selection || tags || booleanOptions;
             } else {
-                options = this.fields[searchItem.fieldName].selection || booleanOptions;
+                options = booleanOptions;
             }
             for (const [value, label] of options) {
                 if (fuzzyTest(trimmedQuery.toLowerCase(), label.toLowerCase())) {
@@ -209,21 +250,18 @@ export class SearchBar extends Component {
         let value;
         try {
             switch (fieldType) {
-                case "date": {
+                case "date":
                     value = serializeDate(parser(trimmedQuery));
                     break;
-                }
-                case "datetime": {
+                case "datetime":
                     value = serializeDateTime(parser(trimmedQuery));
                     break;
-                }
-                case "many2one": {
+                case "selection":
+                case "many2one":
                     value = trimmedQuery;
                     break;
-                }
-                default: {
+                default:
                     value = parser(trimmedQuery);
-                }
             }
         } catch {
             return [];
@@ -247,7 +285,7 @@ export class SearchBar extends Component {
         } else if (fieldType === "properties") {
             item.isParent = true;
             item.unselectable = true;
-        } else if (fieldType === "many2one") {
+        } else if (fieldType === "many2one" || fieldType === "selection") {
             item.isParent = true;
         }
 
@@ -300,37 +338,45 @@ export class SearchBar extends Component {
      */
     async computeSubItems(searchItem, query) {
         const field = this.fields[searchItem.fieldName];
-        let domain = [];
-        if (searchItem.domain) {
-            const domainEvalContext = {
-                ...this.env.searchModel.domainEvalContext,
-                ...field.context,
-            };
-            domain = new Domain(searchItem.domain).toList(domainEvalContext);
-        }
-        const relation =
-            searchItem.type === "field_property"
-                ? searchItem.propertyFieldDefinition.comodel
-                : field.relation;
-
-        let nameSearchOperator = "ilike";
-        if (query && query[0] === '"' && query[query.length - 1] === '"') {
-            query = query.slice(1, -1);
-            nameSearchOperator = "=";
-        }
-        const limitToFetch = this.state.subItemsLimits[searchItem.id] + 1;
-        const options = await this.orm.call(relation, "name_search", [], {
-            domain: domain,
-            operator: nameSearchOperator,
-            context: { ...this.env.searchModel.globalContext, ...field.context },
-            limit: limitToFetch,
-            name: query.trim(),
-        });
-
+        let options = [];
         let showLoadMore = false;
-        if (options.length === limitToFetch) {
-            options.pop();
-            showLoadMore = true;
+        if (searchItem.fieldType === "selection") {
+            options = field.selection.filter(([_, label]) =>
+                fuzzyTest(query.toLowerCase(), label.toLowerCase())
+            );
+        } else {
+            let domain = [];
+            if (searchItem.domain) {
+                const domainEvalContext = {
+                    ...this.env.searchModel.domainEvalContext,
+                    ...field.context,
+                };
+                domain = new Domain(searchItem.domain).toList(domainEvalContext);
+            }
+            const relation =
+                searchItem.type === "field_property"
+                    ? searchItem.propertyFieldDefinition.comodel
+                    : field.relation;
+
+            let nameSearchOperator;
+            ({ operator: nameSearchOperator, value: query } = manageSearchWithQuotes({
+                operator: "ilike",
+                value: query,
+            }));
+
+            const limitToFetch = this.state.subItemsLimits[searchItem.id] + 1;
+            options = await this.orm.call(relation, "name_search", [], {
+                domain: domain,
+                operator: nameSearchOperator,
+                context: { ...this.env.searchModel.globalContext, ...field.context },
+                limit: limitToFetch,
+                name: query.trim(),
+            });
+
+            if (options.length === limitToFetch) {
+                options.pop();
+                showLoadMore = true;
+            }
         }
 
         const subItems = [];
@@ -413,6 +459,7 @@ export class SearchBar extends Component {
 
         const searchItem = this.getSearchItem(item.searchItemId);
         if (
+            (searchItem.fieldType === "selection" && !item.isChild) ||
             (searchItem.type === "field" && searchItem.fieldType === "properties") ||
             (searchItem.type === "field_property" && item.unselectable)
         ) {
@@ -422,14 +469,8 @@ export class SearchBar extends Component {
 
         if (!item.unselectable) {
             const { searchItemId, label, operator, value } = item;
-            const autoCompleteValues = { label, operator, value };
-            if (value && value[0] === '"' && value[value.length - 1] === '"') {
-                autoCompleteValues.value = value.slice(1, -1);
-                autoCompleteValues.label = label.slice(1, -1);
-                autoCompleteValues.operator = "=";
-                autoCompleteValues.enforceEqual = true;
-            }
-            this.env.searchModel.addAutoCompletionValues(searchItemId, autoCompleteValues);
+            const autoCompleteValue = manageSearchWithQuotes({ label, operator, value });
+            this.env.searchModel.addAutoCompletionValues(searchItemId, autoCompleteValue);
         }
 
         if (item.loadMore) {
@@ -477,7 +518,11 @@ export class SearchBar extends Component {
             resModel,
             domain,
             context: this.env.searchModel.domainEvalContext,
-            onConfirm: (domain) => this.env.searchModel.splitAndAddDomain(domain, groupId),
+            onConfirm: (nextDomain) => {
+                if (nextDomain !== domain) {
+                    this.env.searchModel.splitAndAddDomain(nextDomain, groupId);
+                }
+            },
             disableConfirmButton: (domain) => domain === `[]`,
             title: _t("Modify Condition"),
             isDebugMode: this.env.searchModel.isDebugMode,
@@ -626,6 +671,7 @@ export class SearchBar extends Component {
             hotkeys: {
                 arrowright: {
                     bypassEditableProtection: true,
+                    allowRepeat: false,
                     isAvailable: (navigator) => {
                         const focusedItem = this.items[navigator.activeItemIndex];
                         return (

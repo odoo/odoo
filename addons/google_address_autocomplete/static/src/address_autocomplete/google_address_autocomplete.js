@@ -79,7 +79,7 @@ export class AddressAutoComplete extends CharField {
                         return [];
                     }
                 },
-                optionTemplate: "google_address_autocomplete.CharFieldDropdownOption",
+                optionSlot: "option",
                 placeholder: _t("Searching for addresses..."),
             },
         ];
@@ -114,7 +114,9 @@ export class AddressAutoComplete extends CharField {
 
             const recordFieldName = addressFieldMap[fieldName] || fieldName;
             if (recordFieldName in activeFields) {
-                if (Array.isArray(value) && fields[recordFieldName].type !== "many2one") {
+                if (fields[recordFieldName].type === "many2one") {
+                    value = value && { id: value[0], display_name: value[1] };
+                } else if (Array.isArray(value)) {
                     value = value[1];
                 }
                 valuesToUpdate[recordFieldName] = value || false;
@@ -147,8 +149,9 @@ export const addressAutoComplete = {
             }
         })
     ],
-    extractProps: ({ attrs, options }) => {
-        const props = charField.extractProps({attrs, options});
+    extractProps: (fieldInfo, dynamicInfo) => {
+        const { options } = fieldInfo;
+        const props = charField.extractProps(fieldInfo, dynamicInfo);
         const addressFieldMap = {};
         Object.keys(standardAddressFields).forEach((fname) => {
             const optionValue = options[fname];

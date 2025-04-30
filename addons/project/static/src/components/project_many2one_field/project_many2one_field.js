@@ -12,9 +12,10 @@ export class ProjectMany2OneField extends Component {
     get m2oProps() {
         const props = computeM2OProps(this.props);
         const { record } = this.props;
+        props.cssClass = "w-100";
         if (!record.data.project_id && !record._isRequired("project_id")) {
             props.placeholder = _t("Private");
-            props.cssClass = "private_placeholder";
+            props.cssClass += " private_placeholder";
         }
         return props;
     }

@@ -178,6 +178,51 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(event_from_activity.attendee_ids.partner_id, activity.user_id.partner_id)
         self.assertEqual(event_from_activity.user_id, activity.user_id)
 
+    def test_activity_event_multiple_meetings(self):
+        # Creating multiple meetings from an activity creates additional activities
+        # ensure meeting activity type exists
+        meeting_act_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+        if not meeting_act_type:
+            meeting_act_type = self.env['mail.activity.type'].create({
+                'name': 'Meeting Test',
+                'category': 'meeting',
+            })
+
+        # have a test model inheriting from activities
+        test_record = self.env['res.partner'].create({
+            'name': 'Test',
+        })
+
+        activity_id = self.env['mail.activity'].create({
+            'summary': 'Meeting with partner',
+            'activity_type_id': meeting_act_type.id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': test_record.id,
+        })
+
+        calendar_action = activity_id.with_context(default_res_model='res.partner', default_res_id=test_record.id).action_create_calendar_event()
+        event_1 = self.env['calendar.event'].with_context(calendar_action['context']).create({
+            'name': 'Meeting 1',
+            'start': datetime(2025, 3, 10, 17),
+            'stop': datetime(2025, 3, 10, 22),
+        })
+
+        self.assertEqual(event_1.activity_ids, activity_id)
+
+        total_activities = self.env['mail.activity'].search_count(domain=[])
+
+        event_2 = self.env['calendar.event'].with_context(calendar_action['context']).create({
+            'name': 'Meeting 2',
+            'start': datetime(2025, 3, 11, 17),
+            'stop': datetime(2025, 3, 11, 22),
+        })
+        self.assertEqual(event_1.activity_ids, activity_id, "Event 1's activity should still be the first activity")
+        self.assertEqual(activity_id.calendar_event_id, event_1, "The first activity's event should still be event 1")
+        self.assertEqual(total_activities + 1, self.env['mail.activity'].search_count(domain=[]), "1 more activity record should have been created (by event 2)")
+        self.assertNotEqual(event_2.activity_ids, activity_id, "Event 2's activity should not be the first activity")
+        self.assertEqual(event_2.activity_ids.activity_type_id, activity_id.activity_type_id, "Event 2's activity should be the same activity type as the first activity")
+        self.assertEqual(test_record.activity_ids, activity_id | event_2.activity_ids, "Resource record should now have both activities")
+
     def test_event_allday(self):
         self.env.user.tz = 'Pacific/Honolulu'
 
@@ -515,3 +560,26 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         duration = self.env['calendar.event'].with_company(second_company).get_default_duration()
         self.assertEqual(duration, 8, "Custom duration is 8 hours in the other company")
+
+    def test_discuss_videocall_not_ringing_with_event(self):
+        self.event_tech_presentation._set_discuss_videocall_location()
+        self.event_tech_presentation._create_videocall_channel()
+        self.event_tech_presentation.write(
+            {
+                "start": fields.Datetime.to_string(datetime.now() + timedelta(hours=2)),
+            }
+        )
+
+        partner1, partner2 = self.env["res.partner"].create(
+            [{"name": "Bob", "email": "bob@gm.co"}, {"name": "Jack", "email": "jack@gm.co"}]
+        )
+        new_partners = [partner1.id, partner2.id]
+        # invite partners to meeting
+        self.event_tech_presentation.write(
+            {"partner_ids": [Command.link(new_partner) for new_partner in new_partners]}
+        )
+
+        channel_member = self.event_tech_presentation.videocall_channel_id.channel_member_ids[0]
+        channel_member_2 = self.event_tech_presentation.videocall_channel_id.channel_member_ids[1]
+        channel_member._rtc_join_call()
+        self.assertFalse(channel_member_2.rtc_inviting_session_id)

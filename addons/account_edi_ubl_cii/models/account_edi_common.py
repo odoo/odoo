@@ -3,7 +3,7 @@ from markupsafe import Markup
 from odoo import _, models, Command
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_repr, format_list
+from odoo.tools import float_repr
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
@@ -35,6 +35,10 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_gal': 'GLL',
     'uom.product_uom_cubic_inch': 'INQ',
     'uom.product_uom_cubic_foot': 'FTQ',
+    'uom.product_uom_square_meter': 'MTK',
+    'uom.product_uom_square_foot': 'FTK',
+    'uom.product_uom_yard': 'YRD',
+    'uom.product_uom_millimeter': 'MMT',
 }
 
 # -------------------------------------------------------------------------
@@ -237,7 +241,7 @@ class AccountEdiCommon(models.AbstractModel):
         :return: an Error message or None
         """
         if not record:
-            return custom_warning_message or _("The element %(record)s is required on %(field_list)s.", record=record, field_list=format_list(self.env, field_names))
+            return custom_warning_message or _("The element %(record)s is required on %(field_list)s.", record=record, field_list=field_names)
 
         if not isinstance(field_names, (list, tuple)):
             field_names = (field_names,)
@@ -252,7 +256,7 @@ class AccountEdiCommon(models.AbstractModel):
             return custom_warning_message or _(
                 "The element %(record)s is required on %(field_list)s.",
                 record=record,
-                field_list=format_list(self.env, field_names),
+                field_list=field_names,
             )
 
         display_field_names = record.fields_get(field_names)
@@ -260,7 +264,7 @@ class AccountEdiCommon(models.AbstractModel):
             display_field = f"'{display_field_names[field_names[0]]['string']}'"
             return _("The field %(field)s is required on %(record)s.", field=display_field, record=record.display_name)
         else:
-            display_fields = format_list(self.env, [f"'{display_field_names[x]['string']}'" for x in display_field_names])
+            display_fields = [f"'{display_field_names[x]['string']}'" for x in display_field_names]
             return _("At least one of the following fields %(field_list)s is required on %(record)s.", field_list=display_fields, record=record.display_name)
 
     # -------------------------------------------------------------------------
@@ -365,7 +369,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         return attachments
 
-    def _import_partner(self, company_id, name, phone, email, vat, peppol_eas=False, peppol_endpoint=False, postal_address={}):
+    def _import_partner(self, company_id, name, phone, email, vat, *, peppol_eas=False, peppol_endpoint=False, postal_address={}, **kwargs):
         """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name) """
         logs = []
         if peppol_eas and peppol_endpoint:
@@ -387,8 +391,8 @@ class AccountEdiCommon(models.AbstractModel):
             if peppol_eas and peppol_endpoint:
                 partner_vals.update({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
             partner = self.env['res.partner'].create(partner_vals)
-            if vat and self.env['res.partner']._run_vat_test(vat, country, partner.is_company):
-                partner.vat = vat
+            if vat:
+                partner.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
             logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
         if not partner.country_id and not partner.street and not partner.street2 and not partner.city and not partner.zip and not partner.state_id:
             partner.write({

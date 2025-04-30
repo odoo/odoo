@@ -52,7 +52,10 @@
             <div t-else="" class="d-flex h-100 mx-0 mx-md-n3 overflow-hidden">
 
                 <!-- List view -->
-                <section class="o_location_selector_view col-md-4 d-flex flex-grow-1 flex-column">
+                <section
+                    t-if="showListView"
+                    class="o_location_selector_view col-md-4 d-flex flex-grow-1 flex-column"
+                >
 
                     <!-- Search bar -->
                     <t t-call="delivery.locationSelector.searchbar">
@@ -78,7 +81,7 @@
                 </section>
 
                 <!-- Map view -->
-                <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start pe-2">
+                <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start">
                     <MapContainer
                         locations="this.state.locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"

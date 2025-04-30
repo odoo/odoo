@@ -30,6 +30,7 @@ from . import mail_blacklist
 from . import mail_followers
 from . import mail_gateway_allowed
 from . import mail_link_preview
+from . import mail_message_link_preview
 from . import mail_message_reaction
 from . import mail_message_schedule
 from . import mail_message_subtype
@@ -65,6 +66,7 @@ from . import ir_qweb
 from . import ir_websocket
 from . import res_company
 from . import res_config_settings
+from . import res_role
 from . import res_users
 from . import update
 

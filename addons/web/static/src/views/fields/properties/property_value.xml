@@ -62,7 +62,6 @@
                     deleteAction="'value'"
                     readonly="props.readonly"
                     canChangeTags="props.canChangeDefinition"
-                    checkDefinitionWriteAccess.bind="props.checkDefinitionWriteAccess ? props.checkDefinitionWriteAccess : () => {}"
                     onValueChange.bind="onValueChange"
                     onTagsChange.bind="props.onTagsChange"/>
             </t>
@@ -71,27 +70,27 @@
                 class="o_field_property_many2one_value d-flex flex-row align-items-center"
                 t-att-class="{'avatar': showAvatar}">
                 <t t-if="props.comodel">
-                    <t t-set="hasAccess" t-value="!propertyValue || propertyValue[1]"/>
-                    <img t-if="showAvatar and propertyValue[0] and hasAccess"
-                        t-attf-src="/web/image/{{props.comodel}}/{{propertyValue[0]}}/avatar_128"
+                    <t t-set="hasAccess" t-value="!propertyValue || propertyValue.display_name"/>
+                    <img t-if="showAvatar and propertyValue.id and hasAccess"
+                        t-attf-src="/web/image/{{props.comodel}}/{{propertyValue.id}}/avatar_128"
                         class="o_avatar rounded me-1"/>
                     <t t-if="props.readonly || !hasAccess">
                         <a
                             t-if="clickableRelational || !hasAccess"
-                            t-attf-class="o_form_uri {{propertyValue and propertyValue[1] ? '' : 'disabled'}}"
-                            t-att-href="propertyValue[0] ? `#id=${propertyValue[0]}&amp;model=${props.comodel}` : '#'"
+                            t-attf-class="o_form_uri {{propertyValue and propertyValue.display_name ? '' : 'disabled'}}"
+                            t-att-href="propertyValue.id ? `#id=${propertyValue.id}&amp;model=${props.comodel}` : '#'"
                             t-on-click.prevent="onMany2oneClick">
-                            <t t-if="hasAccess" t-out="propertyValue[1]"/>
+                            <t t-if="hasAccess" t-out="propertyValue.display_name"/>
                             <t t-else="">No Access</t>
                         </a>
                         <span
                             t-else=""
-                            t-out="propertyValue and propertyValue[1] || ''" />
+                            t-out="propertyValue and propertyValue.display_name || ''" />
                     </t>
                     <Many2XAutocomplete
                         t-else=""
                         t-key="props.id + '_' + props.comodel + '_' + props.string"
-                        value="propertyValue[1] || ''"
+                        value="propertyValue.display_name || ''"
                         id="props.id"
                         resModel="props.comodel"
                         autoSelect="true"
@@ -103,7 +102,7 @@
                         activeActions="{ create: true, createEdit: true, write: true }"
                     />
                     <button
-                        t-if="!props.readonly and propertyValue and propertyValue[0] and hasAccess"
+                        t-if="!props.readonly and propertyValue and propertyValue.id and hasAccess"
                         type="button"
                         class="btn btn-secondary oi oi-arrow-right o_external_button o_properties_external_button py-0"
                         tabindex="-1"
@@ -134,6 +133,13 @@
                         isToMany="true"
                     />
                 </div>
+            </t>
+            <t t-elif="props.type === 'text'">
+                <textarea
+                    class="o_input"
+                    t-att-value="propertyValue || ''"
+                    t-on-change="(event) => this.onValueChange(event.target.value)"
+                />
             </t>
             <t t-else="">
                 <input

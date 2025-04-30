@@ -1,9 +1,10 @@
-import { busModels } from "@bus/../tests/bus_test_helpers";
+import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
 import { after, before, expect, getFixture, registerDebugInfo } from "@odoo/hoot";
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
+import { Deferred, microTick } from "@odoo/hoot-mock";
 import {
     MockServer,
+    asyncStep,
     authenticate,
     defineModels,
     defineParams,
@@ -12,17 +13,18 @@ import {
     makeMockEnv,
     makeMockServer,
     mountWithCleanup,
+    onRpc,
     parseViewProps,
     patchWithCleanup,
     restoreRegistry,
     serverState,
+    waitForSteps,
     webModels,
 } from "@web/../tests/web_test_helpers";
 
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { contains } from "./mail_test_helpers_contains";
 
-import { busService } from "@bus/services/bus_service";
 import { mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
@@ -30,7 +32,6 @@ import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
-import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_service";
@@ -59,6 +60,7 @@ import { MailFollowers } from "./mock_server/mock_models/mail_followers";
 import { MailGuest } from "./mock_server/mock_models/mail_guest";
 import { MailLinkPreview } from "./mock_server/mock_models/mail_link_preview";
 import { MailMessage } from "./mock_server/mock_models/mail_message";
+import { MailMessageLinkPreview } from "./mock_server/mock_models/mail_message_link_preview";
 import { MailMessageReaction } from "./mock_server/mock_models/mail_message_reaction";
 import { MailMessageSubtype } from "./mock_server/mock_models/mail_message_subtype";
 import { MailNotification } from "./mock_server/mock_models/mail_notification";
@@ -69,6 +71,7 @@ import { MailThread } from "./mock_server/mock_models/mail_thread";
 import { MailTrackingValue } from "./mock_server/mock_models/mail_tracking_value";
 import { ResFake } from "./mock_server/mock_models/res_fake";
 import { ResPartner } from "./mock_server/mock_models/res_partner";
+import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
@@ -82,19 +85,15 @@ registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 mailGlobal.isInTest = true;
 useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked; // so that RPCs after tests do not throw error
 
-patch(busService, {
-    _onMessage(id, type, payload) {
-        super._onMessage(...arguments);
-        if (type === "mail.record/insert") {
-            const recordsByModelName = Object.entries(payload);
-            for (const [modelName, records] of recordsByModelName) {
-                for (const record of Array.isArray(records) ? records : [records]) {
-                    registerDebugInfo(modelName, record);
-                }
-            }
+addBusMessageHandler("mail.record/insert", (_env, _id, payload) => {
+    const recordsByModelName = Object.entries(payload);
+    for (const [modelName, records] of recordsByModelName) {
+        for (const record of Array.isArray(records) ? records : [records]) {
+            registerDebugInfo(`insert > "${modelName}"`, record);
         }
-    },
+    }
 });
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
@@ -125,6 +124,7 @@ export const mailModels = {
     MailGuest,
     MailLinkPreview,
     MailMessage,
+    MailMessageLinkPreview,
     MailMessageReaction,
     MailMessageSubtype,
     MailNotification,
@@ -135,6 +135,7 @@ export const mailModels = {
     MailTrackingValue,
     ResFake,
     ResPartner,
+    ResRole,
     ResUsers,
     ResUsersSettings,
     ResUsersSettingsVolumes,
@@ -684,4 +685,105 @@ export function setupChatHub({ opened = [], folded = [] } = {}) {
 
 export function assertChatHub({ opened = [], folded = [] }) {
     expect(browser.localStorage.getItem(CHAT_HUB_KEY)).toEqual(toChatHubData(opened, folded));
+}
+
+export const STORE_FETCH_ROUTES = ["/mail/action", "/mail/data"];
+
+/**
+ * Prepares listeners for the various ways a store fetch could be triggered. It is important to call
+ * this method before the RPC are done (typically before the start() of the test) to not miss any of
+ * them. Each intercepted fetch should have a corresponding waitStoreFetch in the test.
+ *
+ * @param {string|string[]} [nameOrNames=[]] name or names of the store fetch params to intercept
+ * (such as init_messaging or channels_as_member). If empty all params are intercepted.
+ * @param {Object} [options={}]
+ * @param {function} [options.onRpc] entry point to override the onRpc of the intercepted calls.
+ * @param {string[]} [options.logParams=[]] names of the store fetch params for which both the name
+ *  and the specific params should be logged in asyncStep. By default only the name is logged.
+ */
+export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRpcOverride } = {}) {
+    async function registerStep(request, name, params) {
+        const res = await onRpcOverride?.(request);
+        if (logParams.includes(name)) {
+            asyncStep(`store fetch: ${name} - ${JSON.stringify(params)}`);
+        } else {
+            asyncStep(`store fetch: ${name}`);
+        }
+        return res;
+    }
+    async function registerSteps(request, fetchParams) {
+        const namesToRegister = typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames;
+        let res;
+        for (const fetchParam of fetchParams) {
+            const name = typeof fetchParam === "string" ? fetchParam : fetchParam[0];
+            const params = typeof fetchParam === "string" ? undefined : fetchParam[1];
+            if (namesToRegister.length > 0) {
+                if (namesToRegister.some((namesToRegister) => namesToRegister === name)) {
+                    res = await registerStep(request, name, params);
+                }
+            } else {
+                res = await registerStep(request, name, params);
+            }
+        }
+        return res;
+    }
+    /**
+     * The fetch could happen through any of those routes depending on various conditions.
+     * Most tests don't care about which route is used, so we just listen to all of them.
+     */
+    onRpc("/mail/action", async (request) => {
+        const { params } = await request.json();
+        return registerSteps(request, params.fetch_params);
+    });
+    onRpc("/mail/data", async (request) => {
+        const { params } = await request.json();
+        return registerSteps(request, params.fetch_params);
+    });
+}
+
+/**
+ * Waits for the given name or names of store fetch parameters to have been fetched from the server,
+ * in the given order. Expected names have to be registered with listenStoreFetch beforehand.
+ * If other asyncStep are resolving in the same flow, they must be provided to stepsAfter (if they
+ * are resolved after the fetch) or stepsBefore (if they are resolved before the fetch). The order
+ * can be ignored with ignoreOrder option.
+ *
+ * @param {string|string[]} nameOrNames
+ * @param {Object} [options={}]
+ * @param {boolean} [options.ignoreOrder=false]
+ * @param {string[]} [options.stepsAfter=[]]
+ * @param {string[]} [options.stepsBefore=[]]
+ */
+export async function waitStoreFetch(
+    nameOrNames = [],
+    { ignoreOrder = false, stepsAfter = [], stepsBefore = [] } = {}
+) {
+    await waitForSteps(
+        [
+            ...stepsBefore,
+            ...(typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames).map(
+                (nameOrNameAndParams) => {
+                    if (typeof nameOrNameAndParams === "string") {
+                        return `store fetch: ${nameOrNameAndParams}`;
+                    }
+                    return `store fetch: ${nameOrNameAndParams[0]} - ${JSON.stringify(
+                        nameOrNameAndParams[1]
+                    )}`;
+                }
+            ),
+            ...stepsAfter,
+        ],
+        { ignoreOrder }
+    );
+    /**
+     * Extra tick necessary to ensure the RPC is fully processed before resolving.
+     * This is necessary because the asyncStep in onRpc is not synchronous with the moment
+     * the RPC result is resolved and processed in the business code. Removing this tick
+     * won't make everything fail, but it might create subtle race conditions.
+     */
+    await microTick();
+}
+
+export function userContext() {
+    return { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] };
 }

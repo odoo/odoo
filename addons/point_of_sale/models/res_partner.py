@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class ResPartner(models.Model):
@@ -12,7 +12,7 @@ class ResPartner(models.Model):
         groups="point_of_sale.group_pos_user",
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
-    pos_contact_address = fields.Char('PoS Address', compute='_compute_contact_address')
+    pos_contact_address = fields.Char('PoS Address', compute='_compute_pos_contact_address')
     invoice_emails = fields.Char(compute='_compute_invoice_emails', readonly=True)
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position',
@@ -22,10 +22,19 @@ class ResPartner(models.Model):
              "customers or sales orders/invoices. The default value comes from the customer.",
     )
 
-    def _compute_contact_address(self):
-        super()._compute_contact_address()
+    @api.depends(lambda self: self._display_address_depends())
+    def _compute_pos_contact_address(self):
         for partner in self:
             partner.pos_contact_address = partner._display_address(without_company=True)
+
+    def _compute_application_statistics_hook(self):
+        data_list = super()._compute_application_statistics_hook()
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            return data_list
+        for partner in self.filtered('pos_order_count'):
+            stat_info = {'iconClass': 'fa-shopping-bag', 'value': partner.pos_order_count, 'label': _('Shopping cart')}
+            data_list[partner.id].append(stat_info)
+        return data_list
 
     @api.model
     def get_new_partner(self, config_id, domain, offset):
@@ -64,7 +73,7 @@ class ResPartner(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return [
-            'id', 'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'email',
+            'id', 'name', 'street', 'street2', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'email',
             'barcode', 'write_date', 'property_product_pricelist', 'parent_name', 'pos_contact_address', 'invoice_emails', 'fiscal_position_id'
         ]
 

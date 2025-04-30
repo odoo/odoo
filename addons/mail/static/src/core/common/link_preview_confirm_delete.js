@@ -1,4 +1,3 @@
-import { rpc } from "@web/core/network/rpc";
 import { Component } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
@@ -7,13 +6,15 @@ import { useService } from "@web/core/utils/hooks";
 /**
  * @typedef {Object} Props
  * @property {import("models").LinkPreview} linkPreview
+ * @property {function} [delete] Function bound to the delete button
+ * @property {function} [deleteAll] Function bound to the delete all button
  * @property {function} close
  * @property {Component} LinkPreviewListComponent
  * @extends {Component<Props, Env>}
  */
 export class LinkPreviewConfirmDelete extends Component {
     static components = { Dialog };
-    static props = ["linkPreview", "close", "LinkPreview"];
+    static props = ["linkPreview", "delete", "deleteAll?", "close", "LinkPreview"];
     static template = "mail.LinkPreviewConfirmDelete";
 
     setup() {
@@ -26,20 +27,12 @@ export class LinkPreviewConfirmDelete extends Component {
     }
 
     onClickOk() {
-        rpc(
-            "/mail/link_preview/hide",
-            { link_preview_ids: [this.props.linkPreview.id] },
-            { silent: true }
-        );
+        this.props.delete();
         this.props.close();
     }
 
     onClickDeleteAll() {
-        rpc(
-            "/mail/link_preview/hide",
-            { link_preview_ids: this.message.link_preview_ids.map((lp) => lp.id) },
-            { silent: true }
-        );
+        this.props.deleteAll?.();
         this.props.close();
     }
 

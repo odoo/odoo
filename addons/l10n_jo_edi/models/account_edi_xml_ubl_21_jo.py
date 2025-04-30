@@ -163,7 +163,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             return [{
                 'payment_means_code': 10,
                 'payment_means_code_attrs': {'listID': "UN/ECE 4461"},
-                'instruction_note': invoice.ref.replace('/', '_'),
+                'instruction_note': invoice.ref.replace('/', '_') if invoice.ref else '',
             }]
         else:
             return []
@@ -415,7 +415,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             'accounting_customer_party_vals': {
                 'party_vals': self._get_empty_party_vals() if is_refund else self._get_partner_party_vals(customer, role='customer'),
                 'accounting_contact': {
-                    'telephone': '' if is_refund else invoice.partner_id.phone or invoice.partner_id.mobile,
+                    'telephone': '' if is_refund else invoice.partner_id.phone,
                 },
             },
             'seller_supplier_party_vals': {

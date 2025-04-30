@@ -73,7 +73,15 @@
                         name="overtime_status"
                         widget="statusbar"
                         readonly="not is_manager"
-                        options="{'clickable': '1'}"/>
+                        options="{'clickable': '1'}"
+                        invisible="no_validated_overtime_hours"/>
+                    <field
+                        name="overtime_status"
+                        widget="statusbar"
+                        readonly="not is_manager"
+                        options="{'clickable': '1'}"
+                        invisible="not no_validated_overtime_hours"
+                        statusbar_visible="approved,refused"/>
                 </header>
                 <sheet>
                     <group>
@@ -118,7 +126,7 @@
                                     <button
                                         class="oe_stat_button"
                                         string="Approve"
-                                        invisible="not is_manager or overtime_status not in ['to_approve', 'refused']"
+                                        invisible="not is_manager or overtime_status not in ['to_approve', 'refused'] or no_validated_overtime_hours"
                                         name="action_approve_overtime"
                                         icon="fa-check"
                                         type="object"
@@ -126,7 +134,7 @@
                                     <button
                                         class="oe_stat_button"
                                         string="Refuse"
-                                        invisible="not is_manager or overtime_status not in ['to_approve', 'approved']"
+                                        invisible="not is_manager or overtime_status not in ['to_approve', 'approved'] or no_validated_overtime_hours"
                                         name="action_refuse_overtime"
                                         icon="fa-times"
                                         type="object"

@@ -4,6 +4,7 @@ import { closestBlock } from "../utils/blocks";
 import { closestElement } from "../utils/dom_traversal";
 import { isListItemElement, paragraphRelatedElementsSelector } from "../utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class SeparatorPlugin extends Plugin {
     static id = "separator";
@@ -18,10 +19,10 @@ export class SeparatorPlugin extends Plugin {
                 run: this.insertSeparator.bind(this),
             },
         ],
-        powerbox_items: {
+        powerbox_items: withSequence(1, {
             categoryId: "structure",
             commandId: "insertSeparator",
-        },
+        }),
         /** Handlers */
         normalize_handlers: this.normalize.bind(this),
         selectionchange_handlers: this.handleSelectionInHr.bind(this),

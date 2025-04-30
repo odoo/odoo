@@ -7,7 +7,7 @@
         <div class="d-flex align-items-center gap-1">
             <span class="o_avatar o_m2o_avatar">
                 <t t-if="value !== false">
-                    <img class="rounded" t-attf-src="/web/image/{{relation}}/{{value[0]}}/avatar_128"/>
+                    <img class="rounded" t-attf-src="/web/image/{{relation}}/{{value.id}}/avatar_128"/>
                 </t>
                 <t t-elif="!props.readonly">
                     <span class="o_avatar_empty o_m2o_avatar_empty"/>

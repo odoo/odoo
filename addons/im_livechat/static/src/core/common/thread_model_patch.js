@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { _t } from "@web/core/l10n/translation";
@@ -7,8 +7,8 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        this.livechat_operator_id = Record.one("Persona");
-        this.livechatVisitorMember = Record.one("discuss.channel.member", {
+        this.livechat_operator_id = fields.One("Persona");
+        this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
                 if (this.channel_type !== "livechat") {
                     return;
@@ -28,7 +28,7 @@ patch(Thread.prototype, {
             },
         });
         /** @type {true|undefined} */
-        this.open_chat_window = Record.attr(undefined, {
+        this.open_chat_window = fields.Attr(undefined, {
             /** @this {import("models").Thread} */
             onUpdate() {
                 if (this.open_chat_window) {
@@ -39,7 +39,10 @@ patch(Thread.prototype, {
         });
     },
     get autoOpenChatWindowOnNewMessage() {
-        return this.channel_type === "livechat" || super.autoOpenChatWindowOnNewMessage;
+        return (
+            (this.channel_type === "livechat" && !this.store.chatHub.compact) ||
+            super.autoOpenChatWindowOnNewMessage
+        );
     },
     get showCorrespondentCountry() {
         if (this.channel_type === "livechat") {
@@ -65,5 +68,18 @@ patch(Thread.prototype, {
         return this.channel_type === "livechat" && this.livechat_active === false
             ? _t("This livechat conversation has ended")
             : "";
+    },
+    /**
+     * @override
+     * @param {import("models").Persona} persona
+     */
+    getPersonaName(persona) {
+        if (this.channel_type === "livechat" && persona.user_livechat_username) {
+            return persona.user_livechat_username;
+        }
+        if (persona.is_public && this.anonymous_name) {
+            return this.anonymous_name;
+        }
+        return super.getPersonaName(persona);
     },
 });

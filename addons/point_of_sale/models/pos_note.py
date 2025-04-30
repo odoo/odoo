@@ -11,6 +11,7 @@ class PosNote(models.Model):
 
     name = fields.Char(required=True)
     sequence = fields.Integer('Sequence', default=1)
+    color = fields.Integer(string='Color')
 
     _name_unique = models.Constraint(
         'unique (name)',
@@ -23,4 +24,4 @@ class PosNote(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['name']
+        return ['name', 'color']

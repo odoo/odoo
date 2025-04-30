@@ -69,7 +69,6 @@ class AccountJournal(models.Model):
 
     def _get_default_account_domain(self):
         return """[
-            ('deprecated', '=', False),
             ('account_type', 'in', ('asset_cash', 'liability_credit_card') if type == 'bank'
                                    else ('liability_credit_card',) if type == 'credit'
                                    else ('asset_cash',) if type == 'cash'
@@ -118,7 +117,7 @@ class AccountJournal(models.Model):
         compute='_compute_suspense_account_id',
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
              "allowing finding the right account.", string='Suspense Account',
-        domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
+        domain="[('account_type', '=', 'asset_current')]",
     )
     non_deductible_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -126,7 +125,6 @@ class AccountJournal(models.Model):
         string='Private Part Account',
         readonly=False,
         store=True,
-        domain="[('deprecated', '=', False)]",
         help="Account used to register the private part of mixed expenses.",
     )
     restrict_mode_hash_table = fields.Boolean(string="Secure Posted Entries with Hash",
@@ -210,20 +208,19 @@ class AccountJournal(models.Model):
         comodel_name='account.account', check_company=True,
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
         string='Profit Account',
-        domain="[('deprecated', '=', False), \
-                ('account_type', 'in', ('income', 'income_other'))]")
+        domain="[('account_type', 'in', ('income', 'income_other'))]")
     loss_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True,
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
         string='Loss Account',
-        domain="[('deprecated', '=', False), \
-                ('account_type', '=', 'expense')]")
+        domain="[('account_type', '=', 'expense')]")
 
     # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
     bank_account_id = fields.Many2one('res.partner.bank',
         string="Bank Account",
         ondelete='restrict', copy=False,
+        index='btree_not_null',
         check_company=True,
         domain="[('partner_id','=', company_partner_id)]")
     bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
@@ -250,6 +247,23 @@ class AccountJournal(models.Model):
     )
     accounting_date = fields.Date(compute='_compute_accounting_date')
     display_alias_fields = fields.Boolean(compute='_compute_display_alias_fields')
+
+    show_fetch_in_einvoices_button = fields.Boolean(
+        string="Show E-Invoice Buttons",
+        compute='_compute_show_fetch_in_einvoices_button',
+    )
+    show_refresh_out_einvoices_status_button = fields.Boolean(
+        string="Show E-Invoice Status Buttons",
+        compute='_compute_show_refresh_out_einvoices_status_button',
+    )
+
+    incoming_einvoice_notification_email = fields.Char(
+        string="Invoice Notifications",
+        help="Receive an email for incoming electronic invoices.",
+        compute='_compute_incoming_einvoice_notification_email',
+        store=True,
+        readonly=False,
+    )
 
     _code_company_uniq = models.Constraint(
         'unique (company_id, code)',
@@ -465,6 +479,24 @@ class AccountJournal(models.Model):
             temp_move = self.env['account.move'].new({'journal_id': journal.id})
             journal.accounting_date = temp_move._get_accounting_date(move_date, has_tax)
 
+    @api.depends('company_id', 'type')
+    def _compute_incoming_einvoice_notification_email(self):
+        for journal in self:
+            if journal.type == 'purchase':
+                journal.incoming_einvoice_notification_email = journal.incoming_einvoice_notification_email or journal.company_id.email
+            else:
+                journal.incoming_einvoice_notification_email = False
+
+    @api.depends('type')
+    def _compute_show_fetch_in_einvoices_button(self):
+        # TO OVERRIDE
+        self.show_fetch_in_einvoices_button = False
+
+    @api.depends('type')
+    def _compute_show_refresh_out_einvoices_status_button(self):
+        # TO OVERRIDE
+        self.show_refresh_out_einvoices_status_button = False
+
     @api.onchange('type')
     def _onchange_type(self):
         self.filtered(lambda journal: journal.type not in {'sale', 'purchase'}).alias_name = False
@@ -615,6 +647,12 @@ class AccountJournal(models.Model):
                                         "1/ click on the top-right button 'Journal Entries' from this journal form\n"
                                         "2/ then filter on 'Draft' entries\n"
                                         "3/ select them all and post or delete them through the action menu"))
+
+    @api.constrains('type', 'incoming_einvoice_notification_email')
+    def _check_incoming_einvoice_notification_email(self):
+        for journal in self:
+            if not journal.type == 'purchase' and journal.incoming_einvoice_notification_email:
+                raise ValidationError(_("The incoming e-invoice notification email can only be set on purchase journals."))
 
     @api.depends('type')
     def _compute_refund_sequence(self):
@@ -962,11 +1000,6 @@ class AccountJournal(models.Model):
                 name = f"{name} ({journal.currency_id.name})"
             journal.display_name = name
 
-    def action_archive(self):
-        if self.env['account.payment.method.line'].search_count([('journal_id', 'in', self.ids)], limit=1):
-            raise ValidationError(_("This journal is associated with a payment method. You cannot archive it"))
-        return super().action_archive()
-
     def action_configure_bank_journal(self):
         """ This function is called by the "configure" button of bank journals,
         visible on dashboard if no bank statement source has been defined yet
@@ -1129,3 +1162,39 @@ class AccountJournal(models.Model):
         '''
         self.ensure_one()
         return order_reference
+
+    # -------------------------------------------------------------------------
+    # E-Invoice Related Methods
+    # -------------------------------------------------------------------------
+
+    def _notify_einvoices_received(self, moves):
+        self.ensure_one()
+
+        if not moves or not self.incoming_einvoice_notification_email:
+            return
+
+        mail_template = self.env.ref('account.mail_template_einvoice_notification', raise_if_not_found=False)
+        if not mail_template:
+            return
+
+        mail_template.with_context(einvoices=moves).send_mail(self.id, force_send=True)
+
+    def button_unsubscribe_from_invoice_notifications(self):
+        self.ensure_one()
+        self.incoming_einvoice_notification_email = False
+
+    def button_fetch_in_einvoices(self):
+        # TO OVERRIDE
+        """
+        Abstract method to fetch e-invoices.
+        Should fetch vendor bill invoices synchronously and doesn't return anything.
+        """
+        pass
+
+    def button_refresh_out_einvoices_status(self):
+        # TO OVERRIDE
+        """
+        Abstract method to fetch e-invoice statuses.
+        Should fetch customer invoices statuses synchronously and doesn't return anything.
+        """
+        pass

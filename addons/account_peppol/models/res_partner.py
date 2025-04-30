@@ -146,7 +146,11 @@ class ResPartner(models.Model):
                 continue
 
             if all_companies is None:
-                all_companies = self.env['res.company'].sudo().search([])
+                # We only check it for companies that are actually using Peppol.
+                can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
+                all_companies = self.env['res.company'].sudo().search([
+                    ('account_peppol_proxy_state', 'in', can_send),
+                ])
 
             for company in all_companies:
                 partner.button_account_peppol_check_partner_endpoint(company=company)
@@ -154,11 +158,6 @@ class ResPartner(models.Model):
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
-
-    def write(self, vals):
-        res = super().write(vals)
-        self._update_peppol_state_per_company(vals=vals)
-        return res
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -192,7 +191,8 @@ class ResPartner(models.Model):
             self_partner._get_peppol_edi_format(),
         )
 
-        self._log_verification_state_update(company, old_value, self_partner.peppol_verification_state)
+        if old_value != self_partner.peppol_verification_state:
+            self._log_verification_state_update(company, old_value, self_partner.peppol_verification_state)
         return False
 
     @api.model

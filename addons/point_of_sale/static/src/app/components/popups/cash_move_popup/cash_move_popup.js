@@ -5,9 +5,12 @@ import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 
 import { CashMoveReceipt } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_receipt/cash_move_receipt";
+import { CashMoveListPopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
+
+const { DateTime } = luxon;
 
 export class CashMovePopup extends Component {
     static template = "point_of_sale.CashMovePopup";
@@ -30,6 +33,10 @@ export class CashMovePopup extends Component {
         this.ui = useService("ui");
     }
 
+    get partnerId() {
+        return this.pos.user.partner_id.id;
+    }
+
     async confirm() {
         const amount = parseFloat(this.state.amount);
         const formattedAmount = this.env.utils.formatCurrency(amount);
@@ -46,7 +53,7 @@ export class CashMovePopup extends Component {
         await this.pos.data.call(
             "pos.session",
             "try_cash_in_out",
-            this._prepareTryCashInOutPayload(type, amount, reason, extras),
+            this._prepareTryCashInOutPayload(type, amount, reason, this.partnerId, extras),
             {},
             true
         );
@@ -90,10 +97,19 @@ export class CashMovePopup extends Component {
             ? this.env.utils.formatCurrency(parseFloat(value))
             : "";
     }
-    _prepareTryCashInOutPayload(type, amount, reason, extras) {
-        return [[this.pos.session.id], type, amount, reason, extras];
+    _prepareTryCashInOutPayload(type, amount, reason, partnerId, extras) {
+        return [[this.pos.session.id], type, amount, reason, partnerId, extras];
     }
     isValidCashMove() {
         return this.env.utils.isValidFloat(this.state.amount) && this.state.reason.trim() !== "";
+    }
+    async openDetails() {
+        const cashMoves = await this.pos.data.call("pos.session", "get_cash_in_out_list", [
+            this.pos.session.id,
+        ]);
+        this.dialog.add(CashMoveListPopup, {
+            cashMoves: cashMoves.map((m) => ({ ...m, date: DateTime.fromSQL(m.date) })),
+            partnerId: this.partnerId,
+        });
     }
 }

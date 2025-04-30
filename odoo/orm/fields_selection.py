@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 import typing
 from collections import defaultdict
@@ -6,6 +7,14 @@ from odoo.tools.misc import SENTINEL, Sentinel, merge_sequences
 from odoo.tools.sql import pg_varchar
 
 from .fields import Field, _logger, determine, resolve_mro
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from .types import BaseModel
+
+    SelectValue = tuple[str, str]  # (value, string)
+    OnDeletePolicy = str | Callable[[BaseModel], None]
 
 
 class Selection(Field[str | typing.Literal[False]]):
@@ -53,12 +62,12 @@ class Selection(Field[str | typing.Literal[False]]):
     type = 'selection'
     _column_type = ('varchar', pg_varchar())
 
-    selection = None            # [(value, string), ...], function or method name
-    validate = True             # whether validating upon write
-    ondelete = None             # {value: policy} (what to do when value is deleted)
+    selection: list[SelectValue] | str | Callable[[BaseModel], list[SelectValue]] | None = None  # [(value, string), ...], function or method name
+    validate: bool = True       # whether validating upon write
+    ondelete: dict[str, OnDeletePolicy] | None = None  # {value: policy} (what to do when value is deleted)
 
     def __init__(self, selection=SENTINEL, string: str | Sentinel = SENTINEL, **kwargs):
-        super(Selection, self).__init__(selection=selection, string=string, **kwargs)
+        super().__init__(selection=selection, string=string, **kwargs)
         self._selection = dict(selection) if isinstance(selection, list) else None
 
     def setup_nonrelated(self, model):

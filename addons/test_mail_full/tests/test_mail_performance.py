@@ -1,14 +1,15 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
 from markupsafe import Markup
 
+from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.test_performance import BaseMailPerformance
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+from odoo.tools.misc import limited_field_access_token
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
@@ -90,7 +91,7 @@ class TestMailPerformance(FullBaseMailPerformance):
         record_ticket = self.env['mail.test.ticket.mc'].browse(self.record_ticket.ids)
         attachments = self.env['ir.attachment'].create(self.test_attachments_vals)
 
-        with self.assertQueryCount(employee=88):  # test_mail_full: 87
+        with self.assertQueryCount(employee=89):  # test_mail_full: 80
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),
@@ -138,6 +139,12 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
         # messages and ratings
         user_id_field = cls.env['ir.model.fields']._get(cls.record_ratings._name, 'user_id')
         comment_subtype_id = cls.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        cls.link_previews = cls.env["mail.link.preview"].create(
+            [
+                {"source_url": "https://www.odoo.com"},
+                {"source_url": "https://www.example.com"},
+            ]
+        )
         cls.messages_all = cls.env['mail.message'].sudo().create([
             {
                 'attachment_ids': [
@@ -153,12 +160,9 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                 'body': f'<p>Test {msg_idx}</p>',
                 'date': datetime(2023, 5, 15, 10, 30, 5),
                 'email_from': record.customer_id.email_formatted,
-                'link_preview_ids': [
-                    (0, 0, {
-                        'source_url': 'https://www.odoo.com',
-                    }), (0, 0, {
-                        'source_url': 'https://www.example.com',
-                    }),
+                "message_link_preview_ids": [
+                    Command.create({"link_preview_id": cls.link_previews[0].id}),
+                    Command.create({"link_preview_id": cls.link_previews[1].id}),
                 ],
                 'notification_ids': [
                     (0, 0, {
@@ -256,6 +260,9 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'id': message.attachment_ids[0].id,
                         'mimetype': 'application/octet-stream',
                         'name': 'Test file 1',
+                        'raw_access_token': limited_field_access_token(
+                            message.attachment_ids[0], 'raw'
+                        ),
                         'res_id': record.id,
                         'res_model': record._name,
                     }, {
@@ -265,6 +272,9 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'id': message.attachment_ids[1].id,
                         'mimetype': 'application/octet-stream',
                         'name': 'Test file 0',
+                        'raw_access_token': limited_field_access_token(
+                            message.attachment_ids[1], 'raw'
+                        ),
                         'res_id': record.id,
                         'res_model': record._name,
                     }
@@ -274,13 +284,13 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             self.assertEqual(format_res["author"]["name"], record.customer_id.display_name)
             self.assertEqual(format_res['author_avatar_url'], f'/web/image/mail.message/{message.id}/author_avatar/50x50')
             self.assertEqual(format_res['date'], datetime(2023, 5, 15, 10, 30, 5))
-            self.assertEqual(' '.join(format_res['published_date_str'].split()), 'May 15, 2023, 10:30:05 AM')
+            self.assertEqual(' '.join(format_res['published_date_str'].split()), '05/15/2023 10:30:05')
             self.assertEqual(format_res['id'], message.id)
             self.assertFalse(format_res['is_internal'])
             self.assertFalse(format_res['is_message_subtype_note'])
             self.assertEqual(format_res['subtype_id'], (comment_subtype.id, comment_subtype.name))
             # should not be in, not asked
-            self.assertNotIn('rating', format_res)
+            self.assertNotIn('rating_id', format_res)
             self.assertNotIn('rating_stats', format_res)
             self.assertNotIn('rating_value', format_res)
 
@@ -290,16 +300,16 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_rating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=29):
+        with self.assertQueryCount(employee=29):  # sometimes +1
             res = messages_all.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), len(messages_all))
         for format_res, _message, _record in zip(res, messages_all, self.messages_records):
-            self.assertEqual(format_res['rating']['publisher_avatar'], f'/web/image/res.partner/{self.partner_admin.id}/avatar_128/50x50')
-            self.assertEqual(format_res['rating']['publisher_comment'], 'Comment')
-            self.assertEqual(format_res['rating']['publisher_id'], self.partner_admin.id)
-            self.assertEqual(" ".join(format_res['rating']['publisher_datetime'].split()), 'May 13, 2023, 10:30:05 AM')
-            self.assertEqual(format_res['rating']['publisher_name'], self.partner_admin.display_name)
+            self.assertEqual(format_res['rating_id']['publisher_avatar'], f'/web/image/res.partner/{self.partner_admin.id}/avatar_128/50x50')
+            self.assertEqual(format_res['rating_id']['publisher_comment'], 'Comment')
+            self.assertEqual(format_res['rating_id']['publisher_id'], self.partner_admin.id)
+            self.assertEqual(" ".join(format_res['rating_id']['publisher_datetime'].split()), '05/13/2023 10:30:05')
+            self.assertEqual(format_res['rating_id']['publisher_name'], self.partner_admin.display_name)
             self.assertDictEqual(
                 format_res['rating_stats'],
                 {'avg': 4.0, 'total': 4, 'percent': {1: 0.0, 2: 0.0, 3: 0.0, 4: 100.0, 5: 0.0}}
@@ -316,3 +326,126 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)
+
+
+@tagged('rating', 'mail_performance', 'post_install', '-at_install')
+class TestRatingPerformance(FullBaseMailPerformance):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.RECORD_COUNT = 20
+
+        cls.partners = cls.env['res.partner'].sudo().create([
+            {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)}
+            for idx in range(cls.RECORD_COUNT)])
+
+        # create records with 2 ratings to check batch statistics on them
+        responsibles = [cls.user_admin, cls.user_employee, cls.env['res.users']]
+        cls.record_ratings = cls.env['mail.test.rating'].create([{
+            'customer_id': cls.partners[idx].id,
+            'name': f'Test Rating {idx}',
+            'user_id': responsibles[idx % 3].id,
+        } for idx in range(cls.RECORD_COUNT)])
+        rates = [enum % 5 for enum, _rec in enumerate(cls.record_ratings)]
+        # create rating from 1 -> 5 for each record
+        for rate, record in zip(rates, cls.record_ratings, strict=True):
+            record.rating_apply(rate + 1, token=record._rating_get_access_token())
+        # create rating with 4 or 5 (half records)
+        for record in cls.record_ratings[:10]:
+            record.rating_apply(4, token=record._rating_get_access_token())
+        for record in cls.record_ratings[10:]:
+            record.rating_apply(5, token=record._rating_get_access_token())
+
+    def apply_ratings(self, rate):
+        for record in self.record_ratings:
+            access_token = record._rating_get_access_token()
+            record.rating_apply(rate, token=access_token)
+        self.flush_tracking()
+
+    def create_ratings(self, model):
+        self.record_ratings = self.env[model].create([{
+            'customer_id': self.partners[idx].id,
+            'name': 'Test Rating',
+            'user_id': self.user_admin.id,
+        } for idx in range(self.RECORD_COUNT)])
+        self.flush_tracking()
+
+    @users('employee')
+    @warmup
+    def test_rating_api_rating_get_operator(self):
+        user_names = []
+        with self.assertQueryCount(employee=4):  # tmf: 4
+            ratings = self.record_ratings.with_env(self.env)
+            for rating in ratings:
+                user_names.append(rating._rating_get_operator().name)
+        expected_names = ['Mitchell Admin', 'Ernest Employee', False] * 6 + ['Mitchell Admin', 'Ernest Employee']
+        for partner_name, expected_name in zip(user_names, expected_names, strict=True):
+            self.assertEqual(partner_name, expected_name)
+
+    @users('employee')
+    @warmup
+    def test_rating_api_rating_get_partner(self):
+        partner_names = []
+        with self.assertQueryCount(employee=3):  # tmf: 3
+            ratings = self.record_ratings.with_env(self.env)
+            for rating in ratings:
+                partner_names.append(rating._rating_get_partner().name)
+        for partner_name, expected in zip(partner_names, self.partners, strict=True):
+            self.assertEqual(partner_name, expected.name)
+
+    @users('employee')
+    @warmup
+    def test_rating_get_grades_perfs(self):
+        with self.assertQueryCount(employee=1):
+            ratings = self.record_ratings.with_env(self.env)
+            grades = ratings.rating_get_grades()
+        self.assertDictEqual(grades, {'great': 28, 'okay': 4, 'bad': 8})
+
+    @users('employee')
+    @warmup
+    def test_rating_get_stats_perfs(self):
+        with self.assertQueryCount(employee=1):
+            ratings = self.record_ratings.with_env(self.env)
+            stats = ratings.rating_get_stats()
+        self.assertDictEqual(stats, {'avg': 3.75, 'total': 40, 'percent': {1: 10.0, 2: 10.0, 3: 10.0, 4: 35.0, 5: 35.0}})
+
+    @users('employee')
+    @warmup
+    def test_rating_last_value_perfs(self):
+        with self.assertQueryCount(employee=233):  # tmf: 233
+            self.create_ratings('mail.test.rating.thread')
+
+        with self.assertQueryCount(employee=263):  # tmf: 263
+            self.apply_ratings(1)
+
+        with self.assertQueryCount(employee=222):  # tmf: 222
+            self.apply_ratings(5)
+
+    @users('employee')
+    @warmup
+    def test_rating_last_value_perfs_with_rating_mixin(self):
+        with self.assertQueryCount(employee=256):  # tmf: 256
+            self.create_ratings('mail.test.rating')
+
+        with self.assertQueryCount(employee=285):  # tmf: 285
+            self.apply_ratings(1)
+
+        with self.assertQueryCount(employee=264):  # tmf: 264
+            self.apply_ratings(5)
+
+        with self.assertQueryCount(employee=1):
+            self.record_ratings._compute_rating_last_value()
+            vals = (val == 5 for val in self.record_ratings.mapped('rating_last_value'))
+            self.assertTrue(all(vals), "The last rating is kept.")
+
+    @users('employee')
+    @warmup
+    def test_rating_stat_fields(self):
+        expected_texts = ['ok', 'ok', 'ok', 'top', 'top'] * 2 + ['ok', 'ok', 'top', 'top', 'top'] * 2
+        expected_satis = [50.0, 50.0, 50.0, 100.0, 100.0] * 4
+        with self.assertQueryCount(employee=2):
+            ratings = self.record_ratings.with_env(self.env)
+            for rating, text, satisfaction in zip(ratings, expected_texts, expected_satis, strict=True):
+                self.assertEqual(rating.rating_avg_text, text)
+                self.assertEqual(rating.rating_percentage_satisfaction, satisfaction)

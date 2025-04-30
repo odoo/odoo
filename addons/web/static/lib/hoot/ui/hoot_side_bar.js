@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, onWillRender, useRef, useState, xml } from "@odoo/owl";
+import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
 import { Suite } from "../core/suite";
 import { createUrlFromId } from "../core/url";
 import { lookup, normalize } from "../hoot_utils";
@@ -64,19 +64,36 @@ export class HootSideBarSuite extends Component {
                 }"
             />
         </t>
-        <span t-att-class="getClassName()" t-esc="props.name" />
+        <span t-ref="root" t-att-class="getClassName()" t-esc="props.name" />
         <t t-if="props.multi">
-            <strong class="text-abort whitespace-nowrap me-1">
+            <strong class="text-amber whitespace-nowrap me-1">
                 x<t t-esc="props.multi" />
             </strong>
         </t>
     `;
 
+    setup() {
+        const rootRef = useRef("root");
+        let wasSelected = false;
+        useEffect(
+            (selected) => {
+                if (selected && !wasSelected) {
+                    rootRef.el.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                    });
+                }
+                wasSelected = selected;
+            },
+            () => [this.props.selected]
+        );
+    }
+
     getClassName() {
         const { reporting, selected } = this.props;
         let className = "truncate transition";
         if (reporting.failed) {
-            className += " text-fail";
+            className += " text-rose";
         } else if (!reporting.tests) {
             className += " opacity-25";
         }
@@ -97,7 +114,7 @@ export class HootSideBarCounter extends Component {
     static template = xml`
         <t t-set="info" t-value="getCounterInfo()" />
         <span
-            t-attf-class="${HootSideBarCounter.name} {{ info[1] ? info[0] : 'text-muted' }} {{ info[1] ? 'font-bold' : '' }}"
+            t-attf-class="${HootSideBarCounter.name} {{ info[1] ? info[0] : 'text-gray' }} {{ info[1] ? 'font-bold' : '' }}"
             t-esc="info[1]"
         />
     `;
@@ -106,13 +123,13 @@ export class HootSideBarCounter extends Component {
         const { reporting, statusFilter } = this.props;
         switch (statusFilter) {
             case "failed":
-                return ["text-fail", reporting.failed];
+                return ["text-rose", reporting.failed];
             case "passed":
-                return ["text-pass", reporting.passed];
+                return ["text-emerald", reporting.passed];
             case "skipped":
-                return ["text-skip", reporting.skipped];
+                return ["text-cyan", reporting.skipped];
             case "todo":
-                return ["text-todo", reporting.todo];
+                return ["text-purple", reporting.todo];
             default:
                 return ["text-primary", reporting.tests];
         }
@@ -173,7 +190,7 @@ export class HootSideBar extends Component {
                                     selected="uiState.selectedSuiteId === suite.id"
                                     unfolded="unfoldedIds.has(suite.id)"
                                 />
-                                <span class="text-muted">
+                                <span class="text-gray">
                                     (<t t-esc="suite.totalTestCount" />)
                                 </span>
                             </div>

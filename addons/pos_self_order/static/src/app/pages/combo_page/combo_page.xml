@@ -5,7 +5,7 @@
             <button class="btn btn-secondary btn-lg px-3 text-nowrap" t-on-click="() => this.router.back()">
                 <i class="oi oi-chevron-left" aria-hidden="true"/><span class="ms-2 d-none d-md-inline">Discard</span>
             </button>
-            <h1 class="mb-0 fw-bolder text-nowrap" t-esc="props.productTemplate.name"/>
+            <h1 class="mb-0 text-nowrap" t-esc="props.productTemplate.name"/>
             <span class="d-none d-md-inline px-5"/> <!-- Spacer -->
         </div>
 
@@ -40,8 +40,8 @@
                 </div>
             </section>
             <t t-if="state.selectedProduct">
-                <div class="o-so-product-details d-flex flex-row align-items-start p-3 gap-3">
-                    <div class="o-so-product-details-image ratio ratio-1x1 w-25 flex-shrink-0">
+                <div class="o_so_product_details d-flex flex-row align-items-start p-3 gap-3">
+                    <div class="o_so_product_details_image ratio ratio-1x1 w-25 flex-shrink-0">
                         <div class="placeholder-glow">
                             <div class="placeholder w-100 h-100 bg-300 rounded"/>
                         </div>
@@ -52,7 +52,7 @@
                             loading="lazy"
                             onerror="this.remove()"/>
                     </div>
-                    <div class="o-so-product-details-description">
+                    <div class="o_so_product_details_description">
                         <h2 t-esc="state.selectedProduct.name"/>
                         <small t-if="state.selectedProduct.public_description"
                             class="o_self_order_main_desc d-block mb-3 text-muted"
@@ -86,9 +86,15 @@
                             <div>
                                 <span class="fs-4" t-esc="combo.combo_item_id.product_id.display_name"/>
                                 <ul t-if="combo.configuration.attribute_value_ids.length > 0">
-                                    <li t-foreach="this.getSelectedValues(combo.configuration.attribute_value_ids)" t-as="attrVal" t-key="attrVal.attribute_id.id">
-                                        <span t-esc="attrVal.attribute_id.name" /> : <span t-esc="attrVal.name" />
-                                    </li>
+                                    <t t-foreach="this.getGroupedSelectedValues(combo.configuration.attribute_value_ids)" t-as="attrVal" t-key="attrVal.attribute_id.id">
+                                        <li>
+                                            <span t-esc="attrVal.attribute_id.name" /> : 
+                                            <t t-foreach="attrVal.values" t-as="value" t-key="value.id">
+                                                <span t-esc="value.name" />
+                                                <t t-if="!value_last">, </t>
+                                            </t>
+                                        </li>
+                                    </t>
                                 </ul>
                             </div>
                         </div>
@@ -113,7 +119,7 @@
         <div
             t-if="state.showResume || (!state.showResume and showQtyButtons)"
             class="page-buttons d-flex justify-content-end gap-3 p-3 border-top bg-view">
-            <button t-if="!state.showResume and showQtyButtons" class="btn btn-primary btn-lg" t-on-click="next">Next</button>
+            <button t-if="!state.showResume and showQtyButtons" class="btn btn-primary btn-lg" t-on-click="next" t-att-disabled="!this.isEveryValueSelected() or isArchivedCombination()">Next</button>
             <button t-if="state.showResume and selfOrder.ordering" class="btn btn-primary btn-lg" t-on-click="addToCart">Add to cart</button>
         </div>
     </t>

@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
 import base64
 import io
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.tools.translate import trans_export, trans_export_records
 
 NEW_LANG_KEY = '__new__'
@@ -18,9 +17,9 @@ class BaseLanguageExport(models.TransientModel):
     @api.model
     def _get_languages(self):
         langs = self.env['res.lang'].get_installed()
-        return [(NEW_LANG_KEY, _('New Language (Empty translation template)'))] + \
+        return [(NEW_LANG_KEY, self.env._('New Language (Empty translation template)'))] + \
                langs
-   
+
     name = fields.Char('File Name', readonly=True)
     lang = fields.Selection(_get_languages, string='Language', required=True, default=NEW_LANG_KEY)
     format = fields.Selection([('csv','CSV File'), ('po','PO File'), ('tgz', 'TGZ Archive')],

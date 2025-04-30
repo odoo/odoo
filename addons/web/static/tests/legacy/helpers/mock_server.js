@@ -126,6 +126,7 @@ export function makeServerError({
     subType,
     errorName,
     type,
+    args,
 } = {}) {
     return makeErrorFromResponse({
         code: code || 0,
@@ -133,7 +134,7 @@ export function makeServerError({
         data: {
             name: errorName || `odoo.exceptions.${type || "UserError"}`,
             debug: "traceback",
-            arguments: [],
+            arguments: args || [],
             context: context || {},
             subType,
             message: description,
@@ -1933,7 +1934,7 @@ export class MockServer {
             Object.keys(kwargs.specification).length === 1 &&
             "display_name" in kwargs.specification
         ) {
-            return idNamePairs.map(([id, name]) => ({ id, display_name: name }));
+            return idNamePairs.map(([id, name]) => ({ id, display_name: name, __formatted_display_name: name }));
         }
         const ids = idNamePairs.map(([id]) => id);
         return this.mockWebRead(modelName, [ids], kwargs);

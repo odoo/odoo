@@ -6,10 +6,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <group name="sale">
-                    <field name="property_product_pricelist" groups="product.group_product_pricelist" invisible="not is_company and parent_id"/>
-                    <div name="parent_pricelists" groups="product.group_product_pricelist" colspan="2" invisible="is_company or not parent_id">
-                        <p>Pricelists are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
-                    </div>
+                    <field name="property_product_pricelist" groups="product.group_product_pricelist"/>
                 </group>
             </field>
         </record>

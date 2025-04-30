@@ -43,7 +43,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
             const channelInfo = {};
             channelInfo["anonymous_name"] = channel.anonymous_name;
             const [country] = ResCountry.browse(channel.country_id);
-            channelInfo["anonymous_country"] = country
+            channelInfo["country_id"] = country
                 ? {
                       code: country.code,
                       id: country.id,
@@ -63,7 +63,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                     channelInfo.livechat_operator_id = false;
                 }
                 channelInfo["livechat_active"] = channel.livechat_active;
-                channelInfo.livechatChannel = mailDataHelpers.Store.one(
+                channelInfo.livechat_channel_id = mailDataHelpers.Store.one(
                     this.env["im_livechat.channel"].browse(channel.livechat_channel_id),
                     makeKwArgs({ fields: ["name"] })
                 );

@@ -127,7 +127,7 @@
                                     </div>
                                 </group>
                                 <group name="group_time_managment" string="Time Management" invisible="1" col="1" class="row mt16 o_settings_container"/>
-                                <group name="group_documents_analytics" string="Analytics" col="1" class="row mt16 o_settings_container" invisible="not rating_active">
+                                <group name="group_documents_analytics" string="Analytics" col="1" class="row mt16 o_settings_container" groups="project.group_project_rating">
                                     <div>
                                         <field name="rating_active" invisible="1"/>
                                         <setting class="col-lg-12" name="analytic_div" help="Get customer feedback and evaluate the performance of your employees" groups="project.group_project_rating">
@@ -172,6 +172,8 @@
                     <field name="user_id" string="Project Manager"/>
                     <field name="stage_id" groups="project.group_project_stages"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="activity_user_id" string="Activities of"/>
+                    <field name="activity_type_id" string="Activity type"/>
                     <filter string="My Projects" name="own_projects" domain="[('user_id', '=', uid)]"/>
                     <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <filter string="Unassigned" name="unassigned_projects" domain="[('user_id', '=', False)]"/>
@@ -182,14 +184,17 @@
                     <filter string="End Date" name="end_date" date="date" end_month="1" end_year="1"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator invisible="1"/>
+                    <filter invisible="1" string="My Activities" name="filter_activities_my"
+                            domain="[('activity_user_id', '=', uid)]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                        help="Show all records which has next action date is before today"/>
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records whose next activity date is past"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project Manager" name="Manager" context="{'group_by': 'user_id'}"/>
                         <filter string="Stage" name="groupby_stage" context="{'group_by': 'stage_id'}" groups="project.group_project_stages"/>
@@ -378,6 +383,8 @@
                     <field name="rating_active" />
                     <field name="privacy_visibility"/>
                     <field name="last_update_color"/>
+                    <field name="is_milestone_deadline_exceeded"/>
+                    <field name="can_mark_milestone_as_done"/>
                     <progressbar field="last_update_status" colors='{"on_track": "success", "at_risk": "warning", "off_track": "danger", "on_hold": "info", "done": "purple"}'/>
                     <field name="sequence" widget="handle"/>
                     <templates>
@@ -427,10 +434,12 @@
                             </div>
                         </t>
                         <t t-name="card">
-                            <div class="o_project_kanban_main d-flex align-items-baseline gap-1 ms-1">
-                                <field name="is_favorite" widget="project_is_favorite" nolabel="1"/>
-                                <div class="min-w-0 pb-4 me-2">
+                            <main class="o_project_kanban_main">
+                                <div class="d-flex align-items-baseline gap-1">
+                                    <field name="is_favorite" widget="project_is_favorite" nolabel="1"/>
                                     <span class="text-truncate d-block fs-4 fw-bold" t-att-title="record.display_name.value"><field name="display_name"/></span>
+                                </div>
+                                <div class="o_project_kanban_body min-w-0 pb-4 me-2">
                                     <span name="partner_name" class="text-muted d-flex align-items-baseline" t-if="record.partner_id.value">
                                         <span class="fa fa-user me-2" aria-label="Partner" title="Partner"></span><field class="text-truncate" name="partner_id"/>
                                     </span>
@@ -444,9 +453,9 @@
                                     </div>
                                     <div t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" class="d-flex text-muted" groups="project.group_project_rating">
                                         <b class="me-1">
-                                            <span class="fa mt4 fa-smile-o fw-bolder text-success" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Satisfied" role="img" aria-label="Happy face"/>
-                                            <span class="fa mt4 fa-meh-o fw-bolder text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
-                                            <span class="fa mt4 fa-frown-o fw-bolder text-danger" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
+                                            <span class="fa mt4 fa-smile-o fw-bolder text-success" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Happy" role="img" aria-label="Happy face"/>
+                                            <span class="fa mt4 fa-meh-o fw-bolder text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Neutral" role="img" aria-label="Neutral face"/>
+                                            <span class="fa mt4 fa-frown-o fw-bolder text-danger" t-else="" title="Average Rating: Unhappy" role="img" aria-label="Unhappy face"/>
                                         </b>
                                         <t t-if="record.rating_avg.raw_value % 1 == 0">
                                             <field name="rating_avg" nolabel="1" widget="float" digits="[1, 0]"/>
@@ -457,8 +466,8 @@
                                     </div>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 </div>
-                            </div>
-                            <footer class="mt-auto pt-0 ms-1">
+                            </main>
+                            <footer class="mt-auto pt-0">
                                 <div class="d-flex align-items-center">
                                     <div class="o_project_kanban_boxes d-flex align-items-baseline">
                                         <a class="o_project_kanban_box me-1" name="action_view_tasks" type="object">
@@ -468,7 +477,7 @@
                                             </div>
                                         </a>
                                         <a groups='project.group_project_milestone' t-if="record.allow_milestones and record.allow_milestones.raw_value and record.milestone_count.raw_value &gt; 0"
-                                            class="d-inline-block btn-link text-dark small me-1"
+                                            t-attf-class="d-inline-block small me-1 text-{{ record.is_milestone_deadline_exceeded.raw_value ? 'danger' : (record.can_mark_milestone_as_done.raw_value ? 'success' : 'muted') }}"
                                             role="button"
                                             name="action_get_list_view"
                                             type="object"

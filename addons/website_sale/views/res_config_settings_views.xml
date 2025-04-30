@@ -152,12 +152,13 @@
                     <setting
                         id="click_and_collect_setting"
                         help="Allow customers to pick up their online purchases at your store and pay in person"
+                        documentation="/applications/websites/ecommerce/shipping.html#click-collect"
                     >
                         <field name="module_website_sale_collect"/>
                     </setting>
                     <setting id="ups_provider_setting" string="UPS" help="Compute shipping costs and ship with UPS"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                        <field name="module_delivery_ups" widget="upgrade_boolean"/>
+                        <field name="module_delivery_ups_rest" widget="upgrade_boolean"/>
                     </setting>
                     <setting id="shipping_provider_dhl_setting" string="DHL Express Connector" help="Compute shipping costs and ship with DHL"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
@@ -170,18 +171,18 @@
                     </setting>
                     <setting id="shipping_provider_fedex_setting" string="FedEx" help="Compute shipping costs and ship with FedEx"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                        <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                        <field name="module_delivery_fedex_rest" widget="upgrade_boolean"/>
                         <div class="content-group">
-                            <div class="mt8" invisible="not module_delivery_fedex">
+                            <div class="mt8" invisible="not module_delivery_fedex_rest">
                                 <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="FedEx Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'fedex'}"/>
                             </div>
                         </div>
                     </setting>
                     <setting id="shipping_provider_usps_setting" string="USPS" help="Compute shipping costs and ship with USPS"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                        <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                        <field name="module_delivery_usps_rest" widget="upgrade_boolean"/>
                         <div class="content-group">
-                            <div class="mt8" invisible="not module_delivery_usps">
+                            <div class="mt8" invisible="not module_delivery_usps_rest">
                                 <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="USPS Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'usps'}"/>
                             </div>
                         </div>
@@ -250,21 +251,20 @@
             <setting id="website_marketing_automation" position="after">
                 <setting
                     id="abandoned_carts_setting"
-                    title="Customer needs to be signed in otherwise the mail address is not known.
-    &#10;&#10;- If a potential customer creates one or more abandoned checkouts and then completes a sale before the recovery email gets sent, then the email won't be sent.
-    &#10;&#10;- If user has manually sent a recovery email, the mail will not be sent a second time
-    &#10;&#10;- If a payment processing error occurred when the customer tried to complete their checkout, then the email won't be sent.
-    &#10;&#10;- If your shop does not support shipping to the customer's address, then the email won't be sent.
-    &#10;&#10;- If none of the products in the checkout are available for purchase (empty inventory, for example), then the email won't be sent.
-    &#10;&#10;- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
                     string="Automatically send abandoned checkout emails"
-                    help="Mail only sent to signed in customers with items available for sale in their cart.">
+                    documentation="/applications/websites/ecommerce/ecommerce_management/order_handling.html#abandoned-cart"
+                    help="Mail only sent to signed in customers with items available for sale in carts created after the feature activation.">
                     <field name="send_abandoned_cart_email"/>
 
-                    <div invisible="not send_abandoned_cart_email" class="content-group" title="Carts are flagged as abandoned after this delay.">
+                    <div invisible="not send_abandoned_cart_email" class="content-group">
                         <div class="row mt16">
                             <div class="col-12">
-                                <label for="cart_abandoned_delay" string="Send after" class="o_light_label"/>
+                                <label
+                                    for="cart_abandoned_delay"
+                                    string="Send after"
+                                    class="o_light_label"
+                                />
+                                <span> </span>
                                 <field class="col-2" name="cart_abandoned_delay" widget="float_time" /> Hours.
                             </div>
                         </div>
@@ -298,7 +298,21 @@
                     <field name="module_website_sale_autocomplete"/>
                 </setting>
             </setting>
-
+            <setting id="robots_setting" position="after">
+                <setting
+                    id="google_merchant_center_setting"
+                    help="Connect your eCommerce to Google Merchant Center via a product file."
+                    documentation="/applications/websites/ecommerce/products/catalog.html#multi-channel-promotion"
+                >
+                    <field name="enabled_gmc_src"/>
+                    <field
+                        name="gmc_xml_url"
+                        string="Copy file link"
+                        widget="CopyClipboardButton"
+                        invisible="not enabled_gmc_src"
+                    />
+                </setting>
+            </setting>
         </field>
     </record>
 </odoo>

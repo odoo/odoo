@@ -75,11 +75,12 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},
             'update': {},
-            'without_demo': False,
+            'with_demo': False,
             'import_partial': '',
             'pidfile': '',
             'addons_path': [],
             'upgrade_path': [],
+            'pre_upgrade_scripts': [],
             'server_wide_modules': ['base', 'rpc', 'web'],
             'data_dir': DEFAULT_DATADIR,
 
@@ -190,11 +191,12 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
-            'without_demo': True,
+            'with_demo': True,
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],  # the path found in the config file is invalid
             'upgrade_path': [],  # the path found in the config file is invalid
+            'pre_upgrade_scripts': [],  # the path found in the config file is invalid
             'server_wide_modules': ['web', 'base', 'mail'],
             'data_dir': '/tmp/data-dir',
 
@@ -285,6 +287,7 @@ class TestConfigManager(TransactionCase):
         self.assertEqual(capture.output, [
             "WARNING:odoo.tools.config:option addons_path, no such directory '/tmp/odoo', skipped",
             "WARNING:odoo.tools.config:option upgrade_path, no such directory '/tmp/upgrade', skipped",
+            "WARNING:odoo.tools.config:option pre_upgrade_scripts, no such file '/tmp/pre-custom.py', skipped",
             "WARNING:odoo.tools.config:test file '/tmp/file-file' cannot be found",
         ])
 
@@ -364,7 +367,8 @@ class TestConfigManager(TransactionCase):
             'unaccent': False,
             'update': {},
             'upgrade_path': [],
-            'without_demo': False,
+            'pre_upgrade_scripts': [],
+            'with_demo': True,
 
             # options that are not taken from the file (also in 14.0)
             'addons_path': [],
@@ -442,7 +446,6 @@ class TestConfigManager(TransactionCase):
             with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
                 self.config._parse_config(file.read().split())
         self.assertEqual(capture.output, [
-            "WARNING:odoo.tools.config:option --without-demo: since 19.0, invalid boolean value: 'rigolo', assume True",
             "WARNING:odoo.tools.config:test file '/tmp/file-file' cannot be found",
         ])
 
@@ -464,11 +467,12 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {'hr': True, 'stock': True},
             'update': {'account': True, 'website': True},
-            'without_demo': True,
+            'with_demo': True,
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],
             'upgrade_path': [],
+            'pre_upgrade_scripts': [],
             'server_wide_modules': ['web', 'base', 'mail'],
             'data_dir': '/tmp/data-dir',
 

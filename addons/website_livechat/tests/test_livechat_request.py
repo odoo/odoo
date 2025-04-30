@@ -42,7 +42,7 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertEqual(chat_request.livechat_operator_id, self.operator_b.partner_id, "Operator for active livechat session must be Operator Marc")
 
         # Click on livechatbutton at client side
-        res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
+        res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
         channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id),
                                                    ('livechat_active', '=', True)])
@@ -93,6 +93,6 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.make_jsonrpc_request(
             "/mail/action",
             {"fetch_params": [["init_livechat", self.livechat_channel.id]]},
-            headers={"Cookie": f"{guest._cookie_name}={guest._format_auth_cookie()};"},
+            cookies={guest._cookie_name: guest._format_auth_cookie()},
         )
         self.assertEqual(chat_request.channel_member_ids.guest_id, guest)

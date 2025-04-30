@@ -31,8 +31,13 @@ class PosController(PortalAccount):
             body = f.read()
             return body
 
+    # Support old routes for backward compatibility
     @http.route(['/pos/web', '/pos/ui'], type='http', auth='user')
-    def pos_web(self, config_id=False, from_backend=False, **k):
+    def old_pos_web(self, config_id=False, from_backend=False, **k):
+        return self.pos_web(config_id, from_backend, **k)
+
+    @http.route(["/pos/ui/<config_id>", "/pos/ui/<config_id>/<path:subpath>"], auth="user", type='http')
+    def pos_web(self, config_id=False, from_backend=False, subpath=None, **k):
         """Open a pos session for the given config.
 
         The right pos session will be selected to open, if non is open yet a new session will be created.
@@ -134,6 +139,14 @@ class PosController(PortalAccount):
                     return request.redirect('/pos/ticket/validate?access_token=%s' % (order.access_token))
                 else:
                     errors['generic'] = _("No sale order found.")
+
+        elif request.httprequest.method == 'GET':
+            if kwargs.get('order_uuid'):
+                order = self.env['pos.order'].sudo().search([('uuid', '=', kwargs['order_uuid'])], limit=1)
+                form_values.update({
+                    'pos_reference': order.pos_reference if order.exists() else '',
+                    'date_order': order.date_order.strftime("%Y-%m-%d") if order.exists() else '',
+                })
 
         return request.render("point_of_sale.ticket_request_with_code", {
             'errors': errors,

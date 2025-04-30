@@ -12,7 +12,6 @@ import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -255,21 +254,24 @@ registry.category("web_tour.tours").add("LotTour", {
             inLeftSide(
                 [
                     ProductScreen.clickLotIcon(),
-                    ProductScreen.enterLotNumber("2"),
+                    ProductScreen.deleteNthLotNumber(1),
+                    ProductScreen.enterLotNumber("2", "serial", true),
                     Order.hasLine({
                         productName: "Product A",
                         quantity: 1,
                     }),
                     ProductScreen.clickLotIcon(),
-                    ProductScreen.enterLastLotNumber("1"),
+                    ProductScreen.enterLotNumber("1"),
                     Order.hasLine({
                         productName: "Product A",
                         quantity: 2.0,
                     }),
                 ].flat()
             ),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
             ProductScreen.clickDisplayedProduct("Product A"),
-            ProductScreen.enterLastLotNumber("3"),
+            ProductScreen.enterLotNumber("3"),
             ProductScreen.selectedOrderlineHas("Product A", "3"),
             inLeftSide({
                 trigger: ".info-list:contains('SN 3')",
@@ -278,11 +280,76 @@ registry.category("web_tour.tours").add("LotTour", {
             // Verify if the serial number can be reused for the current order
             Chrome.createFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Product A"),
-            ProductScreen.enterLastLotNumber("5"),
+            ProductScreen.enterLotNumber("5"),
             ProductScreen.clickDisplayedProduct("Product A"),
-            ProductScreen.enterLastLotNumber("3"),
+            ProductScreen.enterLotNumber("3"),
             inLeftSide({
                 trigger: ".info-list:not(:contains('SN 3'))",
             }),
+            // Check auto assign lot number if there is only one available option
+            ProductScreen.clickDisplayedProduct("Product B"),
+            inLeftSide({
+                trigger: ".info-list:contains('Lot Number 1001')",
+            }),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+            ...ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("002"),
+            inLeftSide(
+                [Numpad.click("1"), ProductScreen.clickLine("Product B"), Numpad.click("1")].flat()
+            ),
+            TicketScreen.confirmRefund(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
+});
+
+registry.category("web_tour.tours").add("OrderTimeTour", {
+    steps: () => {
+        const validateDateStep = {
+            content: "Validate order date is Today",
+            trigger: ".orders .order-row:first .fw-bolder",
+            run: function ({ anchor: displayedDateElement }) {
+                if (displayedDateElement.textContent.trim() !== "Today") {
+                    throw new Error("Order date does not match local timezone");
+                }
+            },
+        };
+
+        const validateTimeStep = {
+            content: "Validate order time matches local timezone",
+            trigger: ".orders .order-row:first .small.text-muted",
+            run: function ({ anchor: displayedTimeElement }) {
+                const orderDateUTC = window.posmodel.getOrder().date_order;
+                const orderDateTime = luxon.DateTime.fromSQL(orderDateUTC, {
+                    zone: "UTC",
+                }).toLocal();
+                if (orderDateTime.toFormat("HH:mm") !== displayedTimeElement.textContent.trim()) {
+                    throw new Error("Order time does not match local timezone");
+                }
+            },
+        };
+
+        return [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.setTimeZone("Pacific/Honolulu"),
+            Chrome.clickOrders(),
+            validateDateStep,
+            validateTimeStep,
+            ProductScreen.setTimeZone("Europe/Brussels"),
+            Chrome.clickRegister(),
+            Chrome.clickOrders(),
+            validateDateStep,
+            validateTimeStep,
+        ].flat();
+    },
 });

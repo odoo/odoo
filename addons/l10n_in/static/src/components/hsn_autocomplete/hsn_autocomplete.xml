@@ -7,13 +7,13 @@
             onSelect.bind="onSelect"
             input="inputRef"
             placeholder="props.placeholder || ''"
-        />
-    </t>
-
-    <t t-name="hsn_autocomplete.DropdownOption">
-        <div class="text-wrap">
-            <strong t-out="option.label"/>
-            <div t-out="option.description"/>
-        </div>
+        >
+            <t t-set-slot="option" t-slot-scope="optionScope">
+                <div class="text-wrap">
+                    <strong t-out="optionScope.option.label"/>
+                    <div t-out="optionScope.option.description"/>
+                </div>
+            </t>
+        </AutoComplete>
     </t>
 </templates>

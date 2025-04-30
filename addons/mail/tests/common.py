@@ -480,7 +480,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 for mail in self._new_mails
             )
             raise AssertionError(
-                f'mail.mail not found for ID {mail_id} / message {mail_message} / status {status} / author {author} ({email_from})\n{debug_info}'
+                f'mail.mail not found for ID {mail_id} / message {mail_message} / status {status} / '
+                f'author {author} ({email_from})\n{debug_info}'
             )
         return mail
 
@@ -503,8 +504,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 f'From: {mail.author_id} ({mail.email_from}) - To: {sorted(mail.recipient_ids.ids)} (State: {mail.state})'
                 for mail in self._new_mails
             )
-            recipients_info = f'Missing: {[f"{r.name} ({r.id})" for r in recipients if r.id not in filtered.recipient_ids.ids]}'
             author_info = f'{author.name} ({author.id})' if isinstance(author, self.env['res.partner'].__class__) else author
+            recipients_info = f'Missing: {[f"{r.name} ({r.id})" for r in recipients if r.id not in filtered.recipient_ids.ids]}'
             raise AssertionError(
                 f'mail.mail not found for message {mail_message} / status {status} / recipients {sorted(recipients.ids)} / '
                 f'author {author_info}, email_from ({email_from})\n{recipients_info}\n{debug_info}'
@@ -531,7 +532,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 for mail in self._new_mails
             )
             raise AssertionError(
-                f'mail.mail not found for message {mail_message} / status {status} / email_to {email_to} / author {author} ({email_from})\n{debug_info}'
+                f'mail.mail not found for message {mail_message} / status {status} / email_to {email_to} / '
+                f'author {author} ({email_from})\n{debug_info}'
             )
         return mail
 
@@ -917,11 +919,18 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
         # (partial) content check
         for val in content_check:
-            if val in expected:
-                self.assertIn(
-                    expected[val], sent_mail[val[:-8]],
-                    'Value for %s: %s does not contain %s' % (val, sent_mail[val[:-8]], expected[val])
-                )
+            if val == 'references_content' and val in expected:
+                if not expected['references_content']:
+                    self.assertFalse(sent_mail['references'])
+                else:
+                    for reference in expected['references_content']:
+                        self.assertIn(reference, sent_mail['references'])
+            else:
+                if val in expected:
+                    self.assertIn(
+                        expected[val], sent_mail[val[:-8]],
+                        'Value for %s: %s does not contain %s' % (val, sent_mail[val[:-8]], expected[val])
+                    )
 
         if 'headers' in expected:
             # specific use case for X-Msg-To-Add: it is a comma-separated list of
@@ -1053,6 +1062,12 @@ class MailCase(common.TransactionCase, MockEmail):
         # accumulated and sent at flush -> we want to test only the result of a
         # given test, not setup + test
         self.flush_tracking()
+
+    def _mock_smtplib_connection(self):
+        """ Just trying to go through mail stack without using mail gateway mock """
+        smtp = self.mock_smtplib_connection()
+        smtp.__enter__()
+        self.addCleanup(lambda: smtp.__exit__(None, None, None))
 
     @classmethod
     def _reset_mail_context(cls, record):
@@ -1536,7 +1551,7 @@ class MailCase(common.TransactionCase, MockEmail):
             email_values = {
                 'body_content': mbody,
                 'email_from': message.email_from,
-                'references_content': message.message_id,
+                'references_content': [message.message_id],
             }
             if message_info.get('email_values'):
                 email_values.update(message_info['email_values'])
@@ -1559,7 +1574,7 @@ class MailCase(common.TransactionCase, MockEmail):
                     self.assertMailMail(
                         partners,
                         mail_status,
-                        author=message_info.get('mail_mail_values', {}).get('author_id') or message.author_id,
+                        author=message_info.get('mail_mail_values', {}).get('author_id', message.author_id),
                         content=mbody,
                         email_to_recipients=group['email_to_recipients'] or None,
                         email_values=email_values,
@@ -1708,6 +1723,7 @@ class MailCommon(MailCase):
                 'email': 'test.admin@test.example.com',
                 "name": "Mitchell Admin",
                 'notification_type': 'inbox',
+                'phone': '0455135790',
             })
         # have root available at hand, just in case
         cls.user_root = cls.env.ref('base.user_root')
@@ -1896,6 +1912,21 @@ class MailCommon(MailCase):
             }
         })
 
+    def _filter_channels_fields(self, /, *channels_data):
+        """ Remove store channel data dependant on other modules if they are not not installed.
+        Not written in a modular way to avoid complex override for a simple test tool.
+        """
+        for data in channels_data:
+            if "im_livechat.channel" not in self.env:
+                data.pop("country_id", None)
+                data.pop("livechat_channel_id", None)
+                data.pop("operator", None)
+            if "whatsapp.message" not in self.env:
+                data.pop("whatsapp_account_name", None)
+                data.pop("whatsapp_channel_valid_until", None)
+                data.pop("whatsapp_partner_id", None)
+        return list(channels_data)
+
     def _filter_messages_fields(self, /, *messages_data):
         """ Remove store message data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
@@ -1911,7 +1942,7 @@ class MailCommon(MailCase):
         """
         if "hr.leave" not in self.env:
             for data in partners_data:
-                data.pop("out_of_office_date_end", None)
+                data.pop("leave_date_to", None)
         return list(partners_data)
 
     def _filter_threads_fields(self, /, *threads_data):
@@ -1919,10 +1950,6 @@ class MailCommon(MailCase):
         Not written in a modular way to avoid complex override for a simple test tool.
         """
         for data in threads_data:
-            if "im_livechat.channel" not in self.env:
-                data.pop("anonymous_country", None)
-                data.pop("livechatChannel", None)
-                data.pop("operator", None)
             if (
                 "rating.mixin" not in self.env.registry
                 or data["model"] not in self.env.registry
@@ -1932,8 +1959,4 @@ class MailCommon(MailCase):
             ):
                 data.pop("rating_avg", None)
                 data.pop("rating_count", None)
-            if "whatsapp.message" not in self.env:
-                data.pop("whatsapp_account_name", None)
-                data.pop("whatsapp_channel_valid_until", None)
-                data.pop("whatsapp_partner_id", None)
         return list(threads_data)

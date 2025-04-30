@@ -14,10 +14,6 @@ export class OrderCourse extends Component {
 
     clickCourse(evt, course) {
         const order = course.order_id;
-        if (course.isSelected()) {
-            order.deselectCourse();
-        } else {
-            order.selectCourse(course);
-        }
+        order.selectCourse(course);
     }
 }

@@ -195,6 +195,21 @@ test("in editable list view", async () => {
     expect("textarea").toBeFocused();
 });
 
+test("placeholder_field shows as placeholder", async () => {
+    Product._fields.char = fields.Char({
+        default: "My Placeholder",
+    });
+    await mountView({
+        type: "form",
+        resModel: "product",
+        arch: `<form>
+            <field name="description" options="{'placeholder_field' : 'char'}"/>
+            <field name="char"/>
+        </form>`,
+    });
+    expect(`.o_field_text textarea`).toHaveAttribute("placeholder", "My Placeholder");
+});
+
 test.tags("desktop");
 test("with dynamic placeholder", async () => {
     onRpc("mail_allowed_qweb_expressions", () => []);

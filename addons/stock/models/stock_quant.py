@@ -12,7 +12,7 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.osv import expression
-from odoo.tools import SQL, check_barcode_encoding, format_list, groupby
+from odoo.tools import SQL, check_barcode_encoding, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -204,6 +204,8 @@ class StockQuant(models.Model):
                 quant.is_outdated = True
 
     def _search_is_outdated(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
         quant_ids = self.search([('inventory_quantity_set', '=', True)])
         quant_ids = quant_ids.filtered(lambda quant: float_compare(quant.inventory_quantity - quant.inventory_diff_quantity, quant.quantity, precision_rounding=quant.product_uom_id.rounding)).ids
         return [('id', 'in', quant_ids)]
@@ -238,18 +240,16 @@ class StockQuant(models.Model):
 
     def _search_on_hand(self, operator, value):
         """Handle the "on_hand" filter, indirectly calling `_get_domain_locations`."""
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_('Operation not supported'))
-        domain_loc = self.env['product.product']._get_domain_locations()[0]
-        quant_query = self.env['stock.quant']._search(domain_loc)
-        if (operator == '!=' and value is True) or (operator == '=' and value is False):
-            domain_operator = 'not in'
-        else:
-            domain_operator = 'in'
-        return [('id', domain_operator, quant_query)]
+        if operator != 'in':
+            return NotImplemented
+        return self.env['product.product']._get_domain_locations()[0]
 
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate stock quants.'))
+
+    @api.model
+    def name_create(self, name):
+        return False
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -310,7 +310,7 @@ class StockQuant(models.Model):
                 quant = super().create(vals)
                 _add_to_cache(quant)
                 quants |= quant
-                if self._is_inventory_mode():
+                if self._is_inventory_mode() and quant.company_id:
                     quant._check_company()
         return quants
 
@@ -1007,8 +1007,7 @@ class StockQuant(models.Model):
         date_by_location = {loc: loc._get_next_inventory_date() for loc in self.mapped('location_id')}
         for quant in self:
             quant.inventory_date = date_by_location[quant.location_id]
-        self.write({'inventory_quantity': 0, 'user_id': False})
-        self.write({'inventory_diff_quantity': 0})
+        self.action_clear_inventory_quantity()
 
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity=False, reserved_quantity=False, lot_id=None, package_id=None, owner_id=None, in_date=None):
@@ -1120,11 +1119,11 @@ class StockQuant(models.Model):
         reserved_move_lines = self.env['stock.move.line']._read_group(
             [
                 ('state', 'in', ['assigned', 'partially_available', 'waiting', 'confirmed']),
-                ('quantity', '!=', 0),
+                ('quantity_product_uom', '!=', 0),
                 ('product_id.is_storable', '=', True),
             ],
             ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
-            ['quantity:sum'],
+            ['quantity_product_uom:sum'],
         )
         reserved_move_lines = {
             (product, location, lot, package, owner): reserved_quantity
@@ -1469,7 +1468,7 @@ class StockQuant(models.Model):
                                 'before its corresponding receipt operation is validated. In this case the issue will be solved '
                                 'automatically once all steps are completed. Otherwise, the serial number should be corrected to '
                                 'prevent inconsistent data.',
-                                serial_number=lot_id.name, location_list=format_list(self.env, sn_locations.mapped('display_name')))
+                                serial_number=lot_id.name, location_list=sn_locations.mapped('display_name'))
 
                 elif source_location_id and source_location_id not in sn_locations:
                     # using an existing SN in the wrong location
@@ -1489,14 +1488,14 @@ class StockQuant(models.Model):
                                     'Source location for this move will be changed to %(recommended_location)s',
                                     serial_number=lot_id.name,
                                     source_location=source_location_id.display_name,
-                                    other_locations=format_list(self.env, sn_locations.mapped('display_name')),
+                                    other_locations=sn_locations.mapped('display_name'),
                                     recommended_location=recommended_location.display_name)
                     else:
                         message = _('Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n\n'
                                     'Please correct this to prevent inconsistent data.',
                                     serial_number=lot_id.name,
                                     source_location=source_location_id.display_name,
-                                    other_locations=format_list(self.env, sn_locations.mapped('display_name')))
+                                    other_locations=sn_locations.mapped('display_name'))
                         recommended_location = None
         return message, recommended_location
 
@@ -1584,14 +1583,9 @@ class StockQuantPackage(models.Model):
                 package.valid_sscc = check_barcode_encoding(package.name, 'sscc')
 
     def _search_owner(self, operator, value):
-        if value:
-            packs = self.search([('quant_ids.owner_id', operator, value)])
-        else:
-            packs = self.search([('quant_ids', operator, value)])
-        if packs:
-            return [('id', 'in', packs.ids)]
-        else:
-            return [('id', '=', False)]
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return NotImplemented
+        return [('quant_ids.owner_id', operator, value)]
 
     def write(self, vals):
         if 'location_id' in vals:

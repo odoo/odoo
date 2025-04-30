@@ -1,59 +1,70 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryOne } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
-import {
-    onRpc,
-} from "@web/../tests/web_test_helpers";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
-import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 class TestItem extends Interaction {
     static selector = ".s_test_item";
     dynamicContent = {
-        "_root": {
+        _root: {
             "t-att-data-started": (el) => `*${el.dataset.testParam}*`,
         },
     };
 }
-registry.category("public.interactions").add("website_sale.test_dynamic_carousel_products_item", TestItem);
 
-setupInteractionWhiteList(["website_sale.dynamic_snippet_products", "website_sale.test_dynamic_carousel_products_item"]);
+setupInteractionWhiteList([
+    "website_sale.dynamic_snippet_products",
+    "website_sale.test_dynamic_carousel_products_item",
+]);
+beforeEach(() => {
+    registry
+        .category("public.interactions")
+        .add("website_sale.test_dynamic_carousel_products_item", TestItem);
+});
+
 describe.current.tags("interaction_dev");
 
-test.tags("desktop")("dynamic snippet products loads items and displays them through template", async () => {
+test.tags("desktop");
+test("dynamic snippet products loads items and displays them through template", async () => {
     document.documentElement.dataset.mainObject = "product.public.category(2,)";
     onRpc("/website/snippet/filters", async (args) => {
         const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
         expect(json.params.filter_id).toBe(3);
-        expect(json.params.template_key).toBe("website_sale.dynamic_filter_template_product_product_borderless_1");
+        expect(json.params.template_key).toBe(
+            "website_sale.dynamic_filter_template_product_product_borderless_1"
+        );
         expect(json.params.limit).toBe(16);
-        expect(json.params.search_domain).toEqual([[
-            "public_categ_ids",
-            "child_of",
-            2,
-        ]]);
-        return [`
+        expect(json.params.search_domain).toEqual([["public_categ_ids", "child_of", 2]]);
+        return [
+            `
             <div class="s_test_item" data-test-param="test">
                 Some test record
             </div>
-        `, `
+        `,
+            `
             <div class="s_test_item" data-test-param="test2">
                 Another test record
             </div>
-        `, `
+        `,
+            `
             <div class="s_test_item" data-test-param="test3">
                 Yet another test record
             </div>
-        `, `
+        `,
+            `
             <div class="s_test_item" data-test-param="test4">
                 Last test record of first page
             </div>
-        `, `
+        `,
+            `
             <div class="s_test_item" data-test-param="test5">
                 Test record in second page
             </div>
-        `];
+        `,
+        ];
     });
     const { core } = await startInteractions(`
       <div id="wrapwrap">

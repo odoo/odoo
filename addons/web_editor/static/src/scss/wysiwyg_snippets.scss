@@ -279,7 +279,10 @@
     }
     @for $level from 1 through 3 {
         .o_we_sublevel_#{$level} {
+            --o-we-checkbox-color: #{$o-we-fg-light};
+
             @extend %o_we_sublevel;
+            color: $o-we-fg-light;
 
             @if $level > 1 {
                 > we-title {
@@ -393,7 +396,7 @@
                 &.o_snippet_install {
                     .btn.o_install_btn {
                         z-index: 1;
-                        @include o-position-absolute($top: 10px);
+                        @include o-position-absolute($top: 10px, $right: 2px, $left: 2px);
                         @include text-truncate();
                     }
 
@@ -620,7 +623,11 @@
                     &.o_long_title {
                         width: fit-content !important;
                         padding-right: 10px !important;
+                        flex: 1 1 auto;
                     }
+                }
+                we-button .o_switch {
+                    min-width: fit-content;
                 }
                 .highlighted-text {
                     color: white;
@@ -882,6 +889,12 @@
                     flex-direction: column;
                 }
             }
+
+            &:hover, &.active {
+                &::after {
+                    color: $o-we-fg-lighter;
+                }
+            }
         }
         %we-icon-button {
             position: relative;
@@ -1076,6 +1089,7 @@
             border: none;
             background: none;
             cursor: default;
+            color: var(--o-we-checkbox-color, $o-we-color);
 
             > we-title {
                 cursor: pointer;
@@ -1107,9 +1121,6 @@
             &.active we-checkbox {
                 background-color: $o-we-sidebar-content-field-toggle-active-bg;
                 justify-content: flex-end;
-            }
-            &.active, &:hover {
-                color: $o-we-sidebar-content-field-clickable-color;
             }
         }
 
@@ -1406,6 +1417,9 @@
 
                 &::placeholder {
                     color: $o-we-sidebar-content-field-control-item-color;
+                }
+                &.datetimepicker-input.text-primary {
+                    color: inherit !important;
                 }
             }
             span {
@@ -1774,6 +1788,10 @@
                 &.o_we_user_value_widget {
                     min-width: auto; // ... except for these ones
                 }
+            }
+
+            &:has(.o_long_title) we-button {
+                flex-shrink: 0;
             }
 
             &.o_we_header_font_row > div {
@@ -2872,6 +2890,17 @@ we-select.o_grid we-toggler {
 }
 
 // Add snippets dialog iframe.
+.o_add_snippet_dialog_iframe_loader {
+    // This loader will appear after a 1s delay, ensuring it doesn't disrupt the
+    // experience for users with a good connection.
+    visibility: hidden;
+    animation: showLoader 0s 1s forwards;
+}
+@keyframes showLoader {
+    to {
+        visibility: visible;
+    }
+}
 .o_add_snippets_preview {
     overflow: hidden;
 
@@ -2904,6 +2933,9 @@ we-select.o_grid we-toggler {
             [data-snippet="s_quotes_carousel_minimal"],
             [data-snippet="s_quotes_carousel"] {
                 height: 550px;
+            }
+            [data-snippet="s_quotes_carousel_compact"] {
+                height: 350px;
             }
             [data-snippet="s_three_columns"] .figure-img[style*="height:50vh"] {
                 /* In Travel theme. */
@@ -2949,10 +2981,40 @@ we-select.o_grid we-toggler {
                     }
                 }
             }
+            > [data-snippet][data-preview-interaction-enabled="true"] {
+                > *:first-child {
+                    // Enable pointer events on the snippet when preview
+                    // interaction is enabled to allow mouseenter/mouseleave
+                    // events.
+                    pointer-events: auto;
+                }
+
+                > *:first-child * {
+                    // Disable pointer events for descendants to prevent
+                    // unwanted hover effects.
+                    // Descendants that require interaction can be excluded
+                    // using the :not() selector.
+                    pointer-events: none;
+                }
+            }
+            &[data-label]:not([data-label=""])::before {
+                content: attr(data-label);
+                @include o-position-absolute(0, 0);
+                z-index: 1;
+                transform-origin: top right;
+                transform: scale(3.4);
+                font-family: $o-we-font-family;
+                font-size: $o-we-sidebar-font-size;
+                background-color: $o-we-toolbar-color-accent;
+                color: white;
+                padding: 6px 12px;
+                border-bottom-left-radius: 5px;
+            }
             &::after {
                 content: "";
                 @include o-position-absolute(0, 0, 0, 0);
                 outline: 6px solid transparent;
+                pointer-events: none;
                 z-index: 1;
             }
             &:hover {

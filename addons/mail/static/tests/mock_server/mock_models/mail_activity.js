@@ -29,26 +29,9 @@ export class MailActivity extends models.ServerModel {
 
     /** @param {number[]} ids */
     action_feedback(ids) {
-        /** @type {import("mock_models").MailActivityType} */
-        const MailActivityType = this.env["mail.activity.type"];
-
-        const activities = this.browse(ids);
-        const activityTypes = MailActivityType.browse(
-            unique(activities.map((a) => a.activity_type_id))
-        );
-        const activityTypeById = Object.fromEntries(
-            activityTypes.map((actType) => [actType.id, actType])
-        );
         this.write(
-            activities
-                .filter((act) => activityTypeById[act.activity_type_id].keep_done)
-                .map((act) => act.id),
+            ids,
             { active: false, date_done: serializeDate(today()), state: "done" }
-        );
-        this.unlink(
-            activities
-                .filter((act) => !activityTypeById[act.activity_type_id].keep_done)
-                .map((act) => act.id)
         );
     }
 
@@ -96,6 +79,7 @@ export class MailActivity extends models.ServerModel {
                 "state",
                 "summary",
             ]);
+            data.note = ["markup", data.note];
             // simulate computes
             const activityType = data.activity_type_id
                 ? MailActivityType.find((r) => r.id === data.activity_type_id[0])
@@ -252,6 +236,7 @@ export class MailActivity extends models.ServerModel {
                 reporting_date: reportingDate ? reportingDate.toFormat("yyyy-LL-dd") : false,
                 state: ongoing.length ? this._compute_state_from_date(dateDeadline) : "done",
                 user_assigned_ids: userAssignedIds,
+                summaries: ongoing.map((a) => a.summary ? a.summary : ''),
                 ...attachmentsInfo,
             };
         }
@@ -270,7 +255,6 @@ export class MailActivity extends models.ServerModel {
                     id: type.id,
                     name: type.display_name,
                     template_ids: templates,
-                    keep_done: type.keep_done,
                 };
             }),
             activity_res_ids: ongoingResIds.concat(completedResIds).map((idStr) => Number(idStr)),

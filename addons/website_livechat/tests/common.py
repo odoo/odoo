@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
 
 from odoo import fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.mail.tests.common import MailCommon
 
 
-class TestLivechatCommon(TransactionCaseWithUserDemo):
+class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
     def setUp(self):
         super().setUp()
         self.env.company.email = "test@test.example.com"
@@ -80,7 +80,7 @@ class TestLivechatCommon(TransactionCaseWithUserDemo):
         channel_messages_count = len(channel.message_ids)
 
         rating_to_emoji = {1: "😞", 3: "😐", 5: "😊"}
-        self.opener.post(url=self.send_feedback_url, json={'params': {
+        self.url_open(url=self.send_feedback_url, json={'params': {
             'channel_id': channel.id,
             'rate': rating_value,
             'reason': reason,

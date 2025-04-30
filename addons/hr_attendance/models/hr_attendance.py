@@ -17,6 +17,7 @@ from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessError
 from odoo.tools import convert, format_duration, format_time, format_datetime
 from odoo.tools.date_intervals import Intervals
+from odoo.tools.float_utils import float_compare
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
@@ -48,8 +49,9 @@ class HrAttendance(models.Model):
     overtime_hours = fields.Float(string="Over Time", compute='_compute_overtime_hours', store=True)
     overtime_status = fields.Selection(selection=[('to_approve', "To Approve"),
                                                   ('approved', "Approved"),
-                                                  ('refused', "Refused")], compute="_compute_overtime_status", store=True, tracking=True)
+                                                  ('refused', "Refused")], compute="_compute_overtime_status", store=True, tracking=True, readonly=False)
     validated_overtime_hours = fields.Float(string="Extra Hours", compute='_compute_validated_overtime_hours', store=True, readonly=False, tracking=True)
+    no_validated_overtime_hours = fields.Boolean(compute='_compute_no_validated_overtime_hours')
     in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True, aggregator=None)
     in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True, aggregator=None)
     in_country_name = fields.Char(string="Country", help="Based on IP Address", readonly=True)
@@ -95,7 +97,7 @@ class HrAttendance(models.Model):
         day_starts = {
             att: self._get_day_start_and_day(att.employee_id, att.check_in)
             for att in self
-            if att.employee_id
+            if att.employee_id and att.check_in
         }
         if not day_starts:
             return
@@ -142,11 +144,18 @@ class HrAttendance(models.Model):
         with_validation = self - no_validation
 
         for attendance in with_validation:
-            if attendance.overtime_status not in ['approved', 'refused']:
+            if attendance.overtime_status == 'to_approve':
                 attendance.validated_overtime_hours = attendance.overtime_hours
+            elif attendance.overtime_status == 'refused':
+                attendance.validated_overtime_hours = 0
 
         for attendance in no_validation:
             attendance.validated_overtime_hours = attendance.overtime_hours
+
+    @api.depends('validated_overtime_hours')
+    def _compute_no_validated_overtime_hours(self):
+        for attendance in self:
+            attendance.no_validated_overtime_hours = not float_compare(attendance.validated_overtime_hours, 0.0, precision_digits=5)
 
     @api.depends('employee_id')
     def _compute_overtime_status(self):

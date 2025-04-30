@@ -31,7 +31,7 @@ export class MailCoreWeb {
             }
         });
         this.busService.subscribe("mail.message/inbox", (payload, { id: notifId }) => {
-            const { "mail.message": messages = [] } = this.store.insert(payload, { html: true });
+            const { "mail.message": messages = [] } = this.store.insert(payload);
             /** @type {import("models").Message} */
             const message = messages[0];
             const inbox = this.store.inbox;
@@ -80,7 +80,6 @@ export class MailCoreWeb {
                 inbox.fetchMoreMessages();
             }
         });
-        this.busService.start();
     }
 }
 

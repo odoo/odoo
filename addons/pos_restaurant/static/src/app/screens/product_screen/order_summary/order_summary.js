@@ -4,7 +4,7 @@ import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_su
 patch(OrderSummary.prototype, {
     bookTable() {
         this.pos.getOrder().setBooked(true);
-        this.pos.showScreen("FloorScreen");
+        this.pos.navigate("FloorScreen");
     },
     showBookButton() {
         if (!this.pos.selectedTable) {
@@ -24,7 +24,7 @@ patch(OrderSummary.prototype, {
         const order = this.pos.getOrder();
         await this.pos._onBeforeDeleteOrder(order);
         order.state = "cancel";
-        this.pos.showScreen("FloorScreen");
+        this.pos.navigate("FloorScreen");
     },
     showUnbookButton() {
         if (this.pos.selectedTable) {
@@ -49,7 +49,7 @@ patch(OrderSummary.prototype, {
             this.pos.config.module_pos_restaurant &&
             !currentOrder.finalized &&
             currentOrder.isBooked &&
-            currentOrder.lines.length === 0 &&
+            currentOrder.isEmpty() &&
             !currentOrder.hasCourses()
         );
     },

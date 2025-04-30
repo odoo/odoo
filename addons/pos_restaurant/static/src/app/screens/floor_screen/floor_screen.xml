@@ -5,21 +5,13 @@
             <t t-set="editButtonClass" t-value="'btn btn-lg'" />
             <t t-set="hasSelectedTable" t-value="selectedTables.length > 0" />
             <t t-set="firstSelectedTable" t-value="selectedTables.length ? selectedTables[0] : null" />
-            <div class="d-flex flex-row flex-wrap justify-content-between p-2 gap-1 border-bottom bg-view">
-                <!-- Left Side Div -->
-                <div class="left-buttons d-flex align-items-center gap-3">
-                    <button class="new-order btn btn-secondary btn-lg lh-lg" t-on-click="() => this.clickNewOrder()">
-                        <t t-if="ui.isSmall">
-                            <i class="fa fa-plus fa-fw" role="img" aria-label="New Order" title="New Order"></i>
-                        </t>
-                        <t t-else="">
-                            <i class="fa fa-plus fa-fw me-1" role="img" aria-label="New Order" title="New Order"></i>
-                            New Order
-                        </t>
-                    </button>
-                </div>
+            <div t-attf-class="d-flex flex-row {{pos.isEditMode ? 'flex-wrap' : ''}} justify-content-between px-2 gap-1 border-bottom bg-view">
+                <button t-if="!pos.isEditMode" class="new-order btn btn-primary btn-lg lh-lg my-2" t-on-click="() => this.clickNewOrder()">
+                    <i class="fa fa-plus fa-fw" role="img" aria-label="New Order" title="New Order"/>
+                    <span t-if="!ui.isSmall" class="ms-1">New Order</span>
+                </button>
                 <!-- Center Side Div -->
-                <div class="floor-selector btn-group py-2 overflow-auto">
+                <div class="floor-selector d-flex gap-1 py-2 overflow-auto">
                     <t t-foreach="pos.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
                         <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap text-body" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
                             <t t-esc="floor.name" />
@@ -32,7 +24,7 @@
                     </button>
                 </div>
                 <!-- Right Side Div -->
-                <div t-if="pos.isEditMode" class="edit-buttons d-flex gap-2 m-2 px-1 px-sm-0 overflow-x-auto" t-att-class="{'mx-auto': ui.isSmall}">
+                <div t-if="pos.isEditMode" class="edit-buttons d-flex flex-grow-1 justify-content-center justify-content-md-end gap-2 m-2 px-1 px-sm-0 overflow-x-auto">
                     <div class="d-flex gap-1 p-1 rounded-3 bg-200">
                         <t t-if="hasSelectedTable">
                             <span t-if="!ui.isSmall" class="mx-2 align-self-center text-uppercase smaller fw-bolder">Table <t t-esc="firstSelectedTable.table_number" /></span>
@@ -173,7 +165,7 @@
                                     <t t-set="data" t-value="getChangeCount(table)"/>
                                     <div
                                         t-if="data.changes > 0"
-                                        t-esc="this.env.utils.formatProductQty(data.changes)"
+                                        t-esc="this.env.utils.formatProductQty(data.changes, false)"
                                         t-att-class="{
                                             'text-bg-danger': data.changes
                                         }"

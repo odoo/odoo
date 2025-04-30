@@ -16,6 +16,7 @@ class ExportAggregator(models.Model):
     bool_or = fields.Boolean(aggregator='bool_or')
     many2one = fields.Many2one('export.integer')
     one2many = fields.One2many('export.aggregator.one2many', 'parent_id')
+    many2many = fields.Many2many(comodel_name='res.partner')
     active = fields.Boolean(default=True)
 
 

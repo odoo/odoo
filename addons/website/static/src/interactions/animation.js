@@ -34,14 +34,19 @@ export class Animation extends Interaction {
                 "o_animate_preview": undefined,
             }),
             "t-att-style": (el) => {
-                return {
+                const result = {
                     "animation-name": this.isResetting ? "dummy-none" : undefined,
                     "animation-play-state": (this.isResetting || this.isAnimateOnScroll) ? undefined : this.playState,
-                    "animation-delay": this.delay,
                     // The ones which are invisible in state 0 (like fade_in for
                     // example) will stay invisible.
                     "visibility": "visible",
                 };
+                // Avoid resetting animation-delay upon stop when it is not
+                // supposed to be modified at all.
+                if (this.isAnimateOnScroll) {
+                    result["animation-delay"] = this.delay;
+                }
+                return result;
             },
         },
     };

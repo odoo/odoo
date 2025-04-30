@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
+
+from odoo.addons.sale.tests.common import TestSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class StockMoveInvoice(AccountTestInvoicingCommon):
+class TestStockMoveInvoice(TestSaleCommon):
 
     @classmethod
     def setUpClass(cls):

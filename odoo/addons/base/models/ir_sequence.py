@@ -88,7 +88,7 @@ class IrSequence(models.Model):
     """
     _name = 'ir.sequence'
     _description = 'Sequence'
-    _order = 'name'
+    _order = 'name, id'
     _allow_sudo_commands = False
 
     def _get_number_next_actual(self):

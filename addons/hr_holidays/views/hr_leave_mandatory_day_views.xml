@@ -29,6 +29,7 @@
                 <field name="name"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="department_ids" widget="many2many_tags" optional="hide"/>
+                <field name="job_ids" widget="many2many_tags" optional="hide"/>
                 <field name="start_date"/>
                 <field name="end_date"/>
                 <field name="color" widget="color_picker"/>
@@ -48,6 +49,7 @@
                 <filter name="filter_date" date="start_date" default_period="year" string="Period"/>
                 <group expand="0" string="Group By">
                     <filter name="department" string="Department" context="{'group_by': 'department_ids'}"/>
+                    <filter name="job" string="Job" context="{'group_by': 'job_ids'}"/>
                     <filter name="company" string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 </group>
             </search>
@@ -60,5 +62,21 @@
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="hr_leave_mandatory_day_view_search"/>
         <field name="context">{'search_default_filter_date': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No mandatory days yet!
+            </p>
+            <p class="d-flex flex-column">
+                <span>
+                    Set mandatory days to prevent employees
+                </span>
+                <span>
+                    from taking days off during critical periods.
+                </span>
+            </p>
+            <p>
+                e.g. Company Event
+            </p>
+        </field>
     </record>
 </odoo>

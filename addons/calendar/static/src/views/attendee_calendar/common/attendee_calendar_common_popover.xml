@@ -17,11 +17,6 @@
     </t>
 
     <t t-name="calendar.AttendeeCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary">
-        <xpath expr="//t[@t-if='isEventEditable']" position="after">
-            <t t-elif="isEventViewable">
-                <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">View</a>
-            </t>
-        </xpath>
         <xpath expr="//t[@t-if='isEventDeletable']" position="after">
             <a t-if="isEventArchivable and isEventDetailsVisible" href="#" class="btn btn-secondary o_cw_popover_archive_g" t-on-click="onClickArchive">Delete</a>
             <t t-if="displayAttendeeAnswerChoice">

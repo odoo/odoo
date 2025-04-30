@@ -3,7 +3,7 @@
 
 from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.mail.tests.test_mail_activity import ActivityScheduleCase
+from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged, users
 
@@ -193,10 +193,16 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             # Happy case
             form = self._instantiate_activity_schedule_wizard(employees)
             form.plan_id = self.plan_onboarding
-            self.assertEqual(form.plan_summary,
-                             "<ul>Manager <ul><li>To-Do: Plan training</li>"
-                             "</ul>Coach <ul><li>To-Do: Training</li>"
-                             "</ul>Employee <ul><li>To-Do: Send feedback to the manager</li></ul></ul>")
+            expected_summary_lines = [
+                ('Plan training', self.user_manager.id if len(employees) == 1 else False),
+                ('Training', self.user_coach.id if len(employees) == 1 else False),
+                ('Send feedback to the manager', employees.user_id.id if len(employees) == 1 else False),
+            ]
+            for summary_line, (expected_description, expected_responsible_id) in zip(
+                form.plan_schedule_line_ids._records, expected_summary_lines, strict=True
+            ):
+                self.assertEqual(summary_line['line_description'], expected_description)
+                self.assertEqual(summary_line['responsible_user_id'], expected_responsible_id)
             self.assertFalse(form.has_error)
             wizard = form.save()
             wizard.action_schedule_plan()

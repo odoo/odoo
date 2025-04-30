@@ -11,20 +11,22 @@ __base="$(basename ${__file} .sh)"
 # Recommends: antiword, graphviz, ghostscript, python-gevent, poppler-utils
 export DEBIAN_FRONTEND=noninteractive
 
+# single-user mode, appropriate for chroot environment
+# explicitly setting the runlevel prevents warnings after installing packages
+export RUNLEVEL=1
+
+# Unset lang variables to prevent locale settings leaking from host
+unset "${!LC_@}"
+unset "${!LANG@}"
+
 # set locale to en_US
 echo "set locale to en_US"
 echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
-locale-gen
-# Environment variables
-echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
-echo "export LANG=en_US.UTF-8" >> ~/.bashrc
-echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
-echo "export DISPLAY=:0" | tee -a ~/.bashrc /home/pi/.bashrc
-echo "export XAUTHORITY=/run/lightdm/pi/xauthority" >> /home/pi/.bashrc
-echo "export XAUTHORITY=/run/lightdm/root/:0" >> ~/.bashrc
+dpkg-reconfigure locales
+
 # Aliases
 echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias odoo='sudo systemctl stop odoo; sudo /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo='sudo systemctl stop odoo; sudo -u odoo /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_logs='less +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias write_mode='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_conf='cat /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
@@ -71,7 +73,7 @@ odoo_dev() {
   sudo git config --global --add safe.directory /home/pi/odoo
   sudo git remote add dev https://github.com/odoo-dev/odoo.git
   sudo git fetch dev \$1 --depth=1 --prune
-  sudo git reset --hard dev/\$1
+  sudo git reset --hard FETCH_HEAD
   sudo chown -R odoo:odoo /home/pi/odoo
   cd \$pwd
 }
@@ -87,7 +89,7 @@ odoo_origin() {
   sudo git config --global --add safe.directory /home/pi/odoo
   sudo git remote set-url origin https://github.com/odoo/odoo.git  # ensure odoo repository
   sudo git fetch origin \$1 --depth=1 --prune
-  sudo git reset --hard origin/\$1
+  sudo git reset --hard FETCH_HEAD
   sudo chown -R odoo:odoo /home/pi/odoo
   cd \$pwd
 }
@@ -144,8 +146,9 @@ devtools() {
 }
 " | tee -a ~/.bashrc /home/pi/.bashrc
 
-source ~/.bashrc
-source /home/pi/.bashrc
+# Change default hostname from 'raspberrypi' to 'iotbox'
+echo iotbox | tee /etc/hostname
+sed -i 's/\braspberrypi/iotbox/g' /etc/hosts
 
 apt-get update
 
@@ -153,6 +156,9 @@ apt-get update
 # This will be modified by a unique password on the first start of Odoo
 password="$(openssl rand -base64 12)"
 echo "pi:${password}" | chpasswd
+
+# Prevent Wi-Fi blocking
+apt-get -y remove rfkill
 
 echo "Acquire::Retries "16";" > /etc/apt/apt.conf.d/99acquire-retries
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
@@ -188,8 +194,8 @@ chown odoo:odoo "/home/pi/odoo.conf"
 groupadd usbusers
 usermod -a -G usbusers odoo
 usermod -a -G video odoo
+usermod -a -G render odoo
 usermod -a -G lp odoo
-usermod -a -G input lightdm
 usermod -a -G input odoo
 usermod -a -G pi odoo
 mkdir -v /var/log/odoo
@@ -202,8 +208,6 @@ chmod -R 644 /etc/logrotate.d/
 chown root:root /etc/logrotate.conf
 chmod 644 /etc/logrotate.conf
 
-echo "* * * * * rm /var/run/odoo/sessions/*" | crontab -
-
 update-rc.d -f hostapd remove
 update-rc.d -f nginx remove
 update-rc.d -f dnsmasq remove
@@ -213,33 +217,12 @@ systemctl disable dphys-swapfile.service
 systemctl enable ssh
 systemctl set-default graphical.target
 systemctl disable getty@tty1.service
-systemctl enable systemd-timesyncd.service
+systemctl disable systemd-timesyncd.service
 systemctl unmask hostapd.service
 systemctl disable hostapd.service
 systemctl disable cups-browsed.service
+systemctl enable labwc.service
 systemctl enable odoo.service
-
-# ========= BOOT FILE CONFIGURATION =========
-# Related documentation:
-# https://www.raspberrypi.com/documentation/computers/legacy_config_txt.html
-BOOT_CONFIG_FILE="/boot/config.txt"
-
-# disable overscan in /boot/config.txt, we can't use
-# overwrite_after_init because it's on a different device
-# (/dev/mmcblk0p1) and we don't mount that afterwards.
-# This option disables any black strips around the screen
-# cf: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
-echo "disable_overscan=1" >> ${BOOT_CONFIG_FILE}
-
-# Allow to detect displays after boot
-echo "hdmi_force_hotplug=1" >> ${BOOT_CONFIG_FILE} # HDMI output mode will be used, even if no HDMI monitor is detected
-echo "​hdmi_force_mode=1" >> ${BOOT_CONFIG_FILE} # Allow forced options below
-echo "hdmi_group=0" >> ${BOOT_CONFIG_FILE} # Automatically detect hdmi group
-echo "hdmi_mode=16" >> ${BOOT_CONFIG_FILE} # 1080p 60Hz 16:9
-echo "hdmi_ignore_edid=0xa5000080" >> ${BOOT_CONFIG_FILE} # safeguard against invalid display EDID
-
-# Use the fkms driver instead of the legacy one (RPI3 requires this)
-sed -i '/dtoverlay/c\dtoverlay=vc4-fkms-v3d' ${BOOT_CONFIG_FILE}
 
 # create dirs for ramdisks
 create_ramdisk_dir () {
@@ -251,5 +234,6 @@ create_ramdisk_dir "/etc"
 create_ramdisk_dir "/tmp"
 mkdir -v /root_bypass_ramdisks
 
-echo "password"
-echo ${password}
+echo ""
+echo "--- DEFAULT PASSWORD: ${password} ---"
+echo ""

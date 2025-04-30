@@ -7,6 +7,10 @@ const scssErrorNotificationService = {
     dependencies: ["notification"],
     start(env, { notification }) {
         const origin = getOrigin();
+        // Iframe with src "about:blank" origin isn't a valid base URL.
+        if (browser.location.origin === "null") {
+            return;
+        }
         const assets = [...document.styleSheets].filter((sheet) => {
             return (
                 sheet.href?.includes("/web") &&

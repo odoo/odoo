@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import datetime
 import itertools
 import logging
 import sys
@@ -174,7 +175,7 @@ def load_module_graph(
 
         new_install = package.state == 'to install'
         if needs_update:
-            if not new_install:
+            if not new_install or package.name in registry._force_upgrade_scripts:
                 if package.name != 'base':
                     registry._setup_models__(env.cr)
                 migrations.migrate_module(package, 'pre')
@@ -190,9 +191,10 @@ def load_module_graph(
                 registry._setup_models__(env.cr)
                 getattr(py_module, pre_init)(env)
 
-        model_names = registry.load(env.cr, package)
+        model_names = registry.load(package)
 
         if needs_update:
+            model_names = registry.descendants(model_names, '_inherit', '_inherits')
             models_updated |= set(model_names)
             models_to_check -= set(model_names)
             registry._setup_models__(env.cr)
@@ -203,16 +205,16 @@ def load_module_graph(
             # This is because the extension may have changed the model,
             # e.g. adding required=True to an existing field, but the schema has not been
             # updated by this module because it's not marked as 'to upgrade/to install'.
+            model_names = registry.descendants(model_names, '_inherit', '_inherits')
             models_to_check |= set(model_names) & models_updated
-
-        idref: dict = {}
 
         if needs_update:
             # Can't put this line out of the loop: ir.module.module will be
             # registered by init_models() above.
             module = env['ir.module.module'].browse(module_id)
-
             module._check()
+
+            idref: dict = {}
 
             if new_install:  # 'to install'
                 load_data(env, idref, 'init', kind='data', package=package)
@@ -283,9 +285,10 @@ def load_module_graph(
             if suite.countTestCases():
                 if not needs_update:
                     registry._setup_models__(env.cr)
+                registry.check_null_constraints(env.cr)
                 # Python tests
                 tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
-                test_results = loader.run_suite(suite)
+                test_results = loader.run_suite(suite, global_report=report)
                 assert report is not None, "Missing report during tests"
                 report.update(test_results)
                 test_time = time.time() - tests_t0
@@ -379,6 +382,9 @@ def load_modules(
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
             raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
+        if update_module and upgrade_modules:
+            for pyfile in tools.config['pre_upgrade_scripts']:
+                odoo.modules.migration.exec_script(cr, graph['base'].installed_version, pyfile, 'base', 'pre')
 
         if update_module and tools.sql.table_exists(cr, 'ir_model_fields'):
             # determine the fields which are currently translated in the database
@@ -501,6 +507,12 @@ def load_modules(
 
             # Cleanup orphan records
             env['ir.model.data']._process_end(registry.updated_modules)
+            # Cleanup cron
+            vacuum_cron = env.ref('base.autovacuum_job', raise_if_not_found=False)
+            if vacuum_cron:
+                # trigger after a small delay to give time for assets to regenerate
+                vacuum_cron._trigger(at=datetime.datetime.now() + datetime.timedelta(minutes=1))
+
             env.flush_all()
 
         # STEP 5: Uninstall modules to remove
@@ -539,8 +551,12 @@ def load_modules(
         #   - module C is loaded and extends model M;
         #   - module B and C depend on A but not on each other;
         # The changes introduced by module C are not taken into account by the upgrade of B.
+        if update_module:
+            # We need to fix custom fields for which we have dropped the not-null constraint.
+            cr.execute("""SELECT DISTINCT model FROM ir_model_fields WHERE state = 'manual'""")
+            models_to_check.update(model_name for model_name, in cr.fetchall() if model_name in registry)
         if models_to_check:
-            registry.init_models(cr, list(models_to_check), {'models_to_check': True})
+            registry.init_models(cr, list(models_to_check), {'models_to_check': True, 'update_custom_fields': True})
 
         # STEP 6: verify custom views on every model
         if update_module:
@@ -564,6 +580,9 @@ def load_modules(
         for model in env.values():
             model._register_hook()
         env.flush_all()
+
+        # STEP 10: check that we can trust nullable columns
+        registry.check_null_constraints(cr)
 
 
 def reset_modules_state(db_name: str) -> None:

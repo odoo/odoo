@@ -131,7 +131,7 @@ export class PaymentRazorpay extends PaymentInterface {
         const order = this.pos.getOrder();
         const line = order.getSelectedPaymentline();
 
-        if (line.amount < 0 && !order._isRefundOrder()) {
+        if (line.amount < 0 && !order.isRefund) {
             this._showError(_t("Cannot process transactions with negative amount."));
             return Promise.resolve();
         }
@@ -140,7 +140,7 @@ export class PaymentRazorpay extends PaymentInterface {
         const referencePrefix = this.pos.config.name.replace(/\s/g, "").slice(0, 4);
         line.payment_ref_no =
             referencePrefix + "/" + orderId + "/" + crypto.randomUUID().replaceAll("-", "");
-        if (order._isRefundOrder()) {
+        if (order.isRefund) {
             line.setPaymentStatus("waitingCard");
             const data = {
                 amount: Math.abs(line.amount),
@@ -228,7 +228,7 @@ export class PaymentRazorpay extends PaymentInterface {
             clearTimeout(this.pollingTimeout);
 
             // If the user navigates to another screen, stop the polling
-            if (this.pos.mainScreen.component.name !== "PaymentScreen") {
+            if (this.pos.router.state.current !== "PaymentScreen") {
                 return;
             }
 

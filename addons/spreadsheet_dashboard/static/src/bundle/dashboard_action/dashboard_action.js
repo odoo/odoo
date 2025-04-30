@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { DashboardLoader, Status } from "./dashboard_loader";
@@ -28,6 +29,7 @@ export class SpreadsheetDashboardAction extends Component {
         SpreadsheetShareButton,
     };
     static props = { ...standardActionServiceProps };
+    static displayName = _t("Dashboards");
 
     setup() {
         this.Status = Status;
@@ -74,12 +76,10 @@ export class SpreadsheetDashboardAction extends Component {
             }
         );
         useSetupAction({
-            getLocalState: () => {
-                return {
-                    activeDashboardId: this.activeDashboardId,
-                    dashboardLoader: this.loader.getState(),
-                };
-            },
+            getLocalState: () => ({
+                activeDashboardId: this.activeDashboardId,
+                dashboardLoader: this.loader.getState(),
+            }),
         });
         useSpreadsheetPrint(() => this.state.activeDashboard?.model);
         /** @type {{ activeDashboard: import("./dashboard_loader").Dashboard}} */

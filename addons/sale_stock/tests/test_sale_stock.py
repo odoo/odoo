@@ -153,7 +153,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'advance_payment_method': 'percentage',
             'amount': 5.0,
         })
-        act = adv_wiz.with_context(open_invoices=True).create_invoices()
+        act = adv_wiz.create_invoices()
         inv = self.env['account.move'].browse(act['res_id'])
         self.assertEqual(inv.amount_untaxed, self.so.amount_untaxed * 5.0 / 100.0, 'Sale Stock: deposit invoice is wrong')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so should be to invoice after invoicing deposit')
@@ -236,7 +236,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'delivered',
         })
-        adv_wiz.with_context(open_invoices=True).create_invoices()
+        adv_wiz.create_invoices()
         self.inv_2 = self.so.invoice_ids.filtered(lambda r: r.state == 'draft')
         self.assertAlmostEqual(self.inv_2.invoice_line_ids.sorted()[0].quantity, 2.0, msg='Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids.sorted()[0].quantity)
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" instead of "%s" after invoicing the return' % self.so.invoice_status)
@@ -960,7 +960,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         invoice status of the associated SO should be 'Nothing to Invoice'
         """
         group_auto_done = self.env.ref('sale.group_auto_done_setting')
-        self.env.user.group_ids = [(4, group_auto_done.id)]
+        self.group_user.implied_ids = [Command.link(group_auto_done.id)]
 
         product = self.product_a
         product.invoice_policy = 'delivery'
@@ -1388,7 +1388,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'amount': 5.0,
         })
 
-        act = adv_wiz.with_context(open_invoices=True).create_invoices()
+        act = adv_wiz.create_invoices()
         invoice = self.env['account.move'].browse(act['res_id'])
 
         self.assertEqual(invoice.invoice_incoterm_id.id, incoterm.id)
@@ -2020,3 +2020,67 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         error_message = "You must set a warehouse on your sale order to proceed."
         with self.assertRaisesRegex(UserError, error_message), self.env.cr.savepoint():
             so.with_company(new_company).action_confirm()
+
+    def test_custom_delivery_route_new_sale_line(self):
+        """
+        Create a custom delivery route Stock -> Transit -> Customer that uses pull rules.
+        Ensure that the validating the move from Stock to Transit does NOT create a new SaleOrderLine.
+        """
+        warehouse = self.company_data['default_warehouse']
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+        transit_location = self.env['stock.location'].create({
+            'name': 'Transit',
+            'usage': 'transit',
+            'location_id': warehouse.view_location_id.id,
+        })
+        warehouse.pick_type_id.default_location_dest_id = transit_location
+
+        warehouse.delivery_route_id = self.env['stock.route'].create({
+            'name': '2 Steps Pull Delivery Route',
+            'warehouse_selectable': True,
+            'warehouse_ids': [(4, warehouse.id)],
+            'rule_ids': [
+                Command.create({
+                    'name': 'Stock to Output',
+                    'action': 'pull',
+                    'location_src_id': stock_location.id,
+                    'location_dest_id': transit_location.id,
+                    'picking_type_id': warehouse.pick_type_id.id,
+                    'procure_method': 'make_to_stock',
+                }),
+                Command.create({
+                    'name': 'Output to Customer',
+                    'action': 'pull',
+                    'location_src_id': transit_location.id,
+                    'location_dest_id': customer_location.id,
+                    'picking_type_id': warehouse.out_type_id.id,
+                    'procure_method': 'make_to_order',
+                })
+            ]
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': 'Test Product',
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 1.0,
+            })],
+        })
+        sale_order.action_confirm()
+
+        # Ensure the created pickings follow the expected route
+        pickings = sale_order.picking_ids
+        self.assertEqual(len(pickings), 2, "Expected two pickings: Stock->Output and Output->Customer")
+        self.assertEqual(pickings[0].location_id, stock_location)
+        self.assertEqual(pickings[0].location_dest_id, transit_location)
+        self.assertEqual(pickings[1].location_id, transit_location)
+        self.assertEqual(pickings[1].location_dest_id, customer_location)
+
+        pickings[0].move_ids.picked = True
+        pickings[0].button_validate()
+
+        self.assertEqual(pickings[0].state, 'done')
+        self.assertEqual(len(sale_order.order_line), 1)

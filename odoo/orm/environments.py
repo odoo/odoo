@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import functools
 import logging
 import typing
 import warnings
@@ -121,7 +122,7 @@ class Environment(Mapping[str, "BaseModel"]):
     def __call__(
         self,
         cr: BaseCursor | None = None,
-        user: int | BaseModel | None = None,
+        user: IdType | BaseModel | None = None,
         context: dict | None = None,
         su: bool | None = None,
     ) -> Environment:
@@ -134,14 +135,21 @@ class Environment(Mapping[str, "BaseModel"]):
         :param dict context: optional context dictionary to change the current context
         :param bool su: optional boolean to change the superuser mode
         :returns: environment with specified args (new or existing one)
-        :rtype: :class:`Environment`
         """
         cr = self.cr if cr is None else cr
-        uid = self.uid if user is None else int(user)
+        uid = self.uid if user is None else int(user)  # type: ignore
         if context is None:
             context = clean_context(self.context) if su and not self.su else self.context
         su = (user is None and self.su) if su is None else su
         return Environment(cr, uid, context, su)
+
+    @typing.overload
+    def ref(self, xml_id: str, raise_if_not_found: typing.Literal[True] = True) -> BaseModel:
+        ...
+
+    @typing.overload
+    def ref(self, xml_id: str, raise_if_not_found: typing.Literal[False]) -> BaseModel | None:
+        ...
 
     def ref(self, xml_id: str, raise_if_not_found: bool = True) -> BaseModel | None:
         """ Return the record corresponding to the given ``xml_id``.
@@ -177,28 +185,28 @@ class Environment(Mapping[str, "BaseModel"]):
             superuser mode. """
         return self.su or self.user._is_system()
 
-    @lazy_property
+    @functools.cached_property
     def registry(self) -> Registry:
         """Return the registry associated with the transaction."""
         return self.transaction.registry
 
-    @lazy_property
+    @functools.cached_property
     def _protected(self):
         """Return the protected map of the transaction."""
         return self.transaction.protected
 
-    @lazy_property
+    @functools.cached_property
     def cache(self):
         """Return the cache object of the transaction."""
         return self.transaction.cache
 
-    @lazy_property
+    @functools.cached_property
     def _cache_key(self) -> dict[Field, typing.Any]:
         """Return an empty key for the cache"""
         # memo {field: cache_key}
         return {}
 
-    @lazy_property
+    @functools.cached_property
     def user(self) -> BaseModel:
         """Return the current user (as an instance).
 
@@ -206,7 +214,7 @@ class Environment(Mapping[str, "BaseModel"]):
         :rtype: :class:`res.users record<~odoo.addons.base.models.res_users.ResUsers>`"""
         return self(su=True)['res.users'].browse(self.uid)
 
-    @lazy_property
+    @functools.cached_property
     def company(self) -> BaseModel:
         """Return the current company (as an instance).
 
@@ -236,7 +244,7 @@ class Environment(Mapping[str, "BaseModel"]):
             return self['res.company'].browse(company_ids[0])
         return self.user.company_id.with_env(self)
 
-    @lazy_property
+    @functools.cached_property
     def companies(self) -> BaseModel:
         """Return a recordset of the enabled companies by the user.
 
@@ -276,23 +284,18 @@ class Environment(Mapping[str, "BaseModel"]):
         #   - when loading an binary image on a template
         return self['res.company'].browse(user_company_ids)
 
-    @lazy_property
+    @functools.cached_property
     def lang(self) -> str | None:
-        """Return the current language code.
-
-        :rtype: str
-        """
+        """Return the current language code."""
         lang = self.context.get('lang')
         if lang and lang != 'en_US' and not self['res.lang']._get_data(code=lang):
             # cannot translate here because we do not have a valid language
             raise UserError(f'Invalid language code: {lang}')  # pylint: disable=missing-gettext
         return lang or None
 
-    @lazy_property
+    @functools.cached_property
     def _lang(self) -> str:
         """Return the technical language code of the current context for **model_terms** translated field
-
-        :rtype: str
         """
         context = self.context
         lang = self.lang or 'en_US'

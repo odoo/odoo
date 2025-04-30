@@ -2,6 +2,7 @@ import {
     createDocumentFragmentFromContent,
     htmlJoin,
     htmlReplace,
+    htmlReplaceAll,
     htmlTrim,
 } from "@mail/utils/common/html";
 
@@ -29,27 +30,45 @@ test("htmlJoin keeps html markup and escapes text", () => {
 });
 
 test("htmlReplace with text/text/text replaces with escaped text", () => {
-    const res = htmlReplace("<p>test</p>", "<p>test</p>", "<span>test</span>");
+    let res = htmlReplace("<p>test</p>", "<p>test</p>", "<span>test</span>");
+    expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt;");
+    expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplace("<p>test</p>", "<p>test</p>", () => "<span>test</span>");
     expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt;");
     expect(res).toBeInstanceOf(Markup);
 });
 
 test("htmlReplace with text/text/html replaces with html markup", () => {
-    const res = htmlReplace("<p>test</p>", "<p>test</p>", markup("<span>test</span>"));
+    let res = htmlReplace("<p>test</p>", "<p>test</p>", markup("<span>test</span>"));
+    expect(res.toString()).toBe("<span>test</span>");
+    expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplace("<p>test</p>", "<p>test</p>", () => markup("<span>test</span>"));
     expect(res.toString()).toBe("<span>test</span>");
     expect(res).toBeInstanceOf(Markup);
 });
 
 test("htmlReplace with text/html does not find", () => {
-    const res = htmlReplace("<p>test</p>", markup("<p>test</p>"), "never found");
+    let res = htmlReplace("<p>test</p>", markup("<p>test</p>"), "never found");
+    expect(res.toString()).toBe("&lt;p&gt;test&lt;/p&gt;");
+    expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplace("<p>test</p>", () => markup("<p>test</p>"), "never found");
     expect(res.toString()).toBe("&lt;p&gt;test&lt;/p&gt;");
     expect(res).toBeInstanceOf(Markup);
 });
 
 test("htmlReplace with html/html/html replaces with html markup", () => {
-    const res = htmlReplace(
+    let res = htmlReplace(
         markup("<p>test</p>"),
         markup("<p>test</p>"),
+        markup("<span>test</span>")
+    );
+    expect(res.toString()).toBe("<span>test</span>");
+    expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplace(markup("<p>test</p>"), markup("<p>test</p>"), () =>
         markup("<span>test</span>")
     );
     expect(res.toString()).toBe("<span>test</span>");
@@ -57,15 +76,108 @@ test("htmlReplace with html/html/html replaces with html markup", () => {
 });
 
 test("htmlReplace with html/html/text replaces with escaped text", () => {
-    const res = htmlReplace(markup("<p>test</p>"), markup("<p>test</p>"), "<span>test</span>");
+    let res = htmlReplace(markup("<p>test</p>"), markup("<p>test</p>"), "<span>test</span>");
+    expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt;");
+    expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplace(markup("<p>test</p>"), markup("<p>test</p>"), () => "<span>test</span>");
     expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt;");
     expect(res).toBeInstanceOf(Markup);
 });
 
 test("htmlReplace with html/text does not find", () => {
-    const res = htmlReplace(markup("<p>test</p>"), "<p>test</p>", "never found");
+    let res = htmlReplace(markup("<p>test</p>"), "<p>test</p>", "never found");
     expect(res.toString()).toBe("<p>test</p>");
     expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplace(markup("<p>test</p>"), () => "<p>test</p>", "never found");
+    expect(res.toString()).toBe("<p>test</p>");
+    expect(res).toBeInstanceOf(Markup);
+});
+
+test("htmlReplaceAll with text/text/text replaces all with escaped text", () => {
+    let res = htmlReplaceAll("<p>test</p> <p>test</p>", "<p>test</p>", "<span>test</span>");
+    expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;");
+    expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplaceAll("<p>test</p> <p>test</p>", "<p>test</p>", () => "<span>test</span>");
+    expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;");
+    expect(res).toBeInstanceOf(Markup);
+});
+
+test("htmlReplaceAll with text/text/html replaces all with html markup", () => {
+    let res = htmlReplaceAll("<p>test</p> <p>test</p>", "<p>test</p>", markup("<span>test</span>"));
+    expect(res.toString()).toBe("<span>test</span> <span>test</span>");
+    expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplaceAll("<p>test</p> <p>test</p>", "<p>test</p>", () =>
+        markup("<span>test</span>")
+    );
+    expect(res.toString()).toBe("<span>test</span> <span>test</span>");
+    expect(res).toBeInstanceOf(Markup);
+});
+
+test("htmlReplaceAll with text/html does not find, escapes all", () => {
+    let res = htmlReplaceAll("<p>test</p> <p>test</p>", markup`<p>test</p>`, "never found");
+    expect(res.toString()).toBe("&lt;p&gt;test&lt;/p&gt; &lt;p&gt;test&lt;/p&gt;");
+    expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplaceAll("<p>test</p> <p>test</p>", markup`<p>test</p>`, () => "never found");
+    expect(res.toString()).toBe("&lt;p&gt;test&lt;/p&gt; &lt;p&gt;test&lt;/p&gt;");
+    expect(res).toBeInstanceOf(Markup);
+});
+
+test("htmlReplaceAll with html/html/html replaces all with html markup", () => {
+    let res = htmlReplaceAll(
+        markup("<p>test</p> <p>test</p>"),
+        markup("<p>test</p>"),
+        markup("<span>test</span>")
+    );
+    expect(res.toString()).toBe("<span>test</span> <span>test</span>");
+    expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplaceAll(markup("<p>test</p> <p>test</p>"), markup("<p>test</p>"), () =>
+        markup("<span>test</span>")
+    );
+    expect(res.toString()).toBe("<span>test</span> <span>test</span>");
+    expect(res).toBeInstanceOf(Markup);
+});
+
+test("htmlReplaceAll with html/html/text replaces all with escaped text", () => {
+    let res = htmlReplaceAll(
+        markup("<p>test</p> <p>test</p>"),
+        markup("<p>test</p>"),
+        "<span>test</span>"
+    );
+    expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;");
+    expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplaceAll(
+        markup("<p>test</p> <p>test</p>"),
+        markup("<p>test</p>"),
+        () => "<span>test</span>"
+    );
+    expect(res.toString()).toBe("&lt;span&gt;test&lt;/span&gt; &lt;span&gt;test&lt;/span&gt;");
+    expect(res).toBeInstanceOf(Markup);
+});
+
+test("htmlReplaceAll with html/text does not find, keeps all", () => {
+    let res = htmlReplaceAll(markup("<p>test</p> <p>test</p>"), "<p>test</p>", "never found");
+    expect(res.toString()).toBe("<p>test</p> <p>test</p>");
+    expect(res).toBeInstanceOf(Markup);
+
+    res = htmlReplaceAll(markup("<p>test</p> <p>test</p>"), "<p>test</p>", () => "never found");
+    expect(res.toString()).toBe("<p>test</p> <p>test</p>");
+    expect(res).toBeInstanceOf(Markup);
+});
+
+test("htmlReplace/htmlReplaceAll only accept functions replacement when search is a RegExp", () => {
+    expect(() => htmlReplace("test", /test/, "$1")).toThrow(
+        "htmlReplace: replacement must be a function when search is a RegExp."
+    );
+    expect(() => htmlReplaceAll("test", /test/, "$1")).toThrow(
+        "htmlReplaceAll: replacement must be a function when search is a RegExp."
+    );
 });
 
 test("htmlTrim escapes text", () => {

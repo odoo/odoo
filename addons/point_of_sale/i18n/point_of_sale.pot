@@ -2399,6 +2399,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Customer address is required"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
@@ -3435,6 +3441,14 @@ msgstr ""
 #: model:product.template,description_sale:point_of_sale.product_wholemeal_loaf_product_template
 msgid ""
 "High fibre loaf. Baked with fine wholemeal flour to give a soft texture."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
+"Make sure to close all sessions first to avoid any issues."
 msgstr ""
 
 #. module: point_of_sale
@@ -7833,6 +7847,13 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
+msgid ""
+"The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The default pricelist must be included in the available pricelists."
 msgstr ""
 
@@ -8741,6 +8762,18 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
+msgid "This barcode is not compatible with the GS1 standard. Consider configuring a fallback barcode parser from the PoS settings."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
+msgid "Unsupported Barcode Format"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/hooks/hooks.js:0
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Unknown Error"
@@ -9158,6 +9191,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
 "You cannot share open orders with configuration that does not use the same "
@@ -9535,4 +9577,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
 msgid ""
 "{{ line.hasValidProductLot() ? 'Valid product lot' : 'Invalid product lot'}}"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by order %s in the active pos session %s"
 msgstr ""

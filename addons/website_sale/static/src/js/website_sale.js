@@ -1,5 +1,4 @@
 import { hasTouch, isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { rpc } from "@web/core/network/rpc";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import "@website/libs/zoomodoo/zoomodoo";
@@ -25,6 +24,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
         'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
         'submit': '_onClickConfirmOrder',
+        'input .o_wsale_attribute_search_bar': '_searchAttributeValues',
+        'click .o_wsale_variant_pills_shop': '_onClickPillsAttribute',
+        'click .o_wsale_view_more_btn': '_onToggleViewMoreLabel',
     }),
 
     /**
@@ -351,6 +353,46 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         }
     },
     /**
+     * Search attribute values based on the input text.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _searchAttributeValues(ev) {
+        const input = ev.target;
+        const searchValue = input.value.toLowerCase();
+
+        document.querySelectorAll(`#${input.dataset.containerId} .form-check`).forEach(item =>{
+            const labelText = item.querySelector('.form-check-label').textContent.toLowerCase();
+            item.style.display = labelText.includes(searchValue) ? '' : 'none'
+        });
+    },
+    /**
+     * Highlight selected pill
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickPillsAttribute(ev) {
+        if (ev.target.tagName === "LABEL" || ev.target.tagName === "INPUT") {
+            return;
+        }
+        const checkbox = ev.target.closest('.o_wsale_variant_pills_shop').querySelector("input");
+        checkbox.click();
+    },
+    /**
+     * Toggle the button text between "View More" and "View Less"
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onToggleViewMoreLabel(ev) {
+        const button = ev.target;
+        const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+        button.innerHTML = isExpanded ? "View Less" : "View More";
+    },
+    /**
      * When the quantity is changed, we need to query the new price of the product.
      * Based on the pricelist, the price might change when quantity exceeds a certain amount.
      *
@@ -402,7 +444,35 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             if (productGrid) {
                 productGrid.classList.add("opacity-50");
             }
-            $(ev.currentTarget).closest("form").submit();
+            const form = ev.currentTarget.closest('form');
+            const filters = form.querySelectorAll('input:checked, select');
+            const attributeValues = new Map();
+            const tags = new Set();
+            for (const filter of filters) {
+                if (filter.value) {
+                    if (filter.name === 'attribute_value') {
+                        // Group attribute value ids by attribute id.
+                        const [attributeId, attributeValueId] = filter.value.split('-');
+                        const valueIds = attributeValues.get(attributeId) ?? new Set();
+                        valueIds.add(attributeValueId);
+                        attributeValues.set(attributeId, valueIds);
+                    } else if (filter.name === 'tags') {
+                        tags.add(filter.value)
+                    }
+                }
+            }
+            const url = new URL(form.action);
+            const searchParams = url.searchParams;
+            // Aggregate all attribute values belonging to the same attribute into a single
+            // `attribute_values` search param.
+            for (const entry of attributeValues.entries()) {
+                searchParams.append('attribute_values', `${entry[0]}-${[...entry[1]].join(',')}`);
+            }
+            // Aggregate all tags into a single `tags` search param.
+            if (tags.size) {
+                searchParams.set('tags', [...tags].join(','));
+            }
+            window.location.href = `${url.pathname}?${searchParams.toString()}`;
         }
     },
     /**
@@ -586,51 +656,19 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
 publicWidget.registry.WebsiteSale = WebsiteSale
 
-publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
-    selector: '.oe_website_sale',
-    disabledInEditableMode: false,
-    events: {
-        'change .o_wsale_apply_layout input': '_onApplyShopLayoutChange',
-    },
+publicWidget.registry.WebsiteSaleSearchModal = publicWidget.Widget.extend({
+    selector: '#o_wsale_search_modal',
+    disabledInEditableMode: true,
 
     //--------------------------------------------------------------------------
-    // Handlers
+    // Overrides
     //--------------------------------------------------------------------------
+    start() {
+        this._super(...arguments);
 
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onApplyShopLayoutChange: function (ev) {
-        const wysiwyg = this.options.wysiwyg;
-        if (wysiwyg) {
-            wysiwyg.odooEditor.observerUnactive('_onApplyShopLayoutChange');
-        }
-        var clickedValue = $(ev.target).val();
-        var isList = clickedValue === 'list';
-        if (!this.editableMode) {
-            rpc('/shop/save_shop_layout_mode', {
-                'layout_mode': isList ? 'list' : 'grid',
-            });
-        }
-
-        const activeClasses = ev.target.parentElement.dataset.activeClasses.split(' ');
-        ev.target.parentElement.querySelectorAll('.btn').forEach((btn) => {
-            activeClasses.map(c => btn.classList.toggle(c));
+        this.el.addEventListener("shown.bs.modal", (ev) => {
+            ev.target.querySelector('.oe_search_box').focus();
         });
-
-        var $grid = this.$('#products_grid');
-        // Disable transition on all list elements, then switch to the new
-        // layout then reenable all transitions after having forced a redraw
-        // TODO should probably be improved to allow disabling transitions
-        // altogether with a class/option.
-        $grid.find('*').css('transition', 'none');
-        $grid.toggleClass('o_wsale_layout_list', isList);
-        void $grid[0].offsetWidth;
-        $grid.find('*').css('transition', '');
-        if (wysiwyg) {
-            wysiwyg.odooEditor.observerActive('_onApplyShopLayoutChange');
-        }
     },
 });
 
@@ -663,54 +701,8 @@ publicWidget.registry.WebsiteSaleAccordionProduct = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend({
-    selector: '#o_product_page_reviews',
-    disabledInEditableMode: false,
-
-    /**
-     * @override
-     */
-    init() {
-        this._super(...arguments);
-        this.website_menus = this.bindService("website_menus");
-    },
-
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        this._updateChatterComposerPosition();
-        this.website_menus.registerCallback(this._updateChatterComposerPosition.bind(this));
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this.$el.find('.o_portal_chatter_composer').css('top', '');
-        this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _updateChatterComposerPosition() {
-        let size = 20;
-        for (const el of document.querySelectorAll('.o_top_fixed_element')) {
-            size += $(el).outerHeight();
-        }
-        this.$el.find('.o_portal_chatter_composer').css('top', size);
-    },
-});
-
 export default {
     WebsiteSale: publicWidget.registry.WebsiteSale,
-    WebsiteSaleLayout: publicWidget.registry.WebsiteSaleLayout,
+    WebsiteSaleSearchModal: publicWidget.registry.WebsiteSaleSearchModal,
     WebsiteSaleProductPage: publicWidget.registry.WebsiteSaleAccordionProduct,
-    WebsiteSaleCarouselProduct: publicWidget.registry.websiteSaleCarouselProduct,
-    WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
 };

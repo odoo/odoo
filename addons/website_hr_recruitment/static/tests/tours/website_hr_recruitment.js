@@ -33,7 +33,7 @@ function applyForAJob(jobName, application) {
         run: `edit linkedin.com/in/${application.name.toLowerCase().replace(' ', '-')}`,
     }, {
         content: "Complete Subject",
-        trigger: "textarea[name=applicant_notes]",
+        trigger: "textarea[name=short_introduction]",
         run: `edit ${application.subject}`,
     }, { // TODO: Upload a file ?
         content: "Send the form",

@@ -22,11 +22,11 @@ _logger = logging.getLogger(__name__)
 TEMPLATE_MODELS = (
     'account.group',
     'account.account',
+    'account.fiscal.position',
     'account.tax.group',
     'account.tax',
     'account.journal',
     'account.reconcile.model',
-    'account.fiscal.position',
 )
 
 TAX_TAG_DELIMITER = '||'
@@ -129,7 +129,7 @@ class AccountChartTemplate(models.AbstractModel):
     # Loading
     # --------------------------------------------------------------------------------
 
-    def try_loading(self, template_code, company, install_demo=False):
+    def try_loading(self, template_code, company, install_demo=False, force_create=True):
         """Check if the chart template can be loaded then proceeds installing it.
 
         :param template_code: code of the chart template to be loaded.
@@ -157,9 +157,9 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code in {'syscohada', 'syscebnl'} and template_code != company.chart_template:
             raise UserError(_("The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.", template_code))
 
-        return self._load(template_code, company, install_demo)
+        return self._load(template_code, company, install_demo, force_create)
 
-    def _load(self, template_code, company, install_demo):
+    def _load(self, template_code, company, install_demo, force_create=True ):
         """Install this chart of accounts for the current company.
 
         :param template_code: code of the chart template to be loaded.
@@ -220,7 +220,7 @@ class AccountChartTemplate(models.AbstractModel):
             }
 
         if reload_template:
-            self._pre_reload_data(company, template_data, data)
+            self._pre_reload_data(company, template_data, data, force_create)
             install_demo = False
         data = self._pre_load_data(template_code, company, template_data, data)
         self._load_data(data)
@@ -241,7 +241,7 @@ class AccountChartTemplate(models.AbstractModel):
                 # Do not rollback installation of CoA if demo data failed
                 _logger.exception('Error while loading accounting demo data')
         for subsidiary in company.child_ids:
-            self._load(template_code, subsidiary, install_demo)
+            self._load(template_code, subsidiary, install_demo, force_create)
 
     @api.model
     def _install_demo(self, companies):
@@ -251,13 +251,12 @@ class AccountChartTemplate(models.AbstractModel):
             self.sudo()._load_data(self._get_demo_data(company))
             self._post_load_demo_data(company)
 
-    def _pre_reload_data(self, company, template_data, data):
+    def _pre_reload_data(self, company, template_data, data, force_create=True):
         """Pre-process the data in case of reloading the chart of accounts.
 
         When we reload the chart of accounts, we only want to update fields that are main
         configuration, like:
         - tax tags
-        - fiscal position mappings linked to new records
         """
         for prop in list(template_data):
             if prop.startswith('property_'):
@@ -302,11 +301,19 @@ class AccountChartTemplate(models.AbstractModel):
         current_taxes = self.env['account.tax'].with_context(active_test=False).search([
             *self.env['account.tax']._check_company_domain(company),
         ])
+
+        current_fiscal_positions =  self.env['account.fiscal.position'].with_context(active_test=False).search([
+            *self.env['account.fiscal.position']._check_company_domain(company),
+        ])
         unique_tax_name_key = lambda t: (t.name, t.type_tax_use, t.tax_scope, t.company_id)
         unique_tax_name_keys = set(current_taxes.mapped(unique_tax_name_key))
         xmlid2tax = {
             xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.tax'].browse(record)
             for record, xml_id in current_taxes.get_external_id().items() if xml_id.startswith('account.')
+        }
+        xmlid2fiscal_position= {
+            xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.fiscal.position'].browse(record)
+            for record, xml_id in current_fiscal_positions.get_external_id().items() if xml_id.startswith('account.')
         }
         def tax_template_changed(tax, template):
             template_line_ids = [x for x in template.get('repartition_line_ids', []) if x[0] != Command.CLEAR]
@@ -317,27 +324,21 @@ class AccountChartTemplate(models.AbstractModel):
                 or len(template_line_ids) not in (0, len(tax.repartition_line_ids))
             )
 
+        existing_current_year_earnings_account = self.env['account.account'].search([('company_ids', '=', company.id),('account_type', '=', 'equity_unaffected')], limit=1)
         obsolete_xmlid = set()
         skip_update = set()
         for model_name, records in data.items():
             for xmlid, values in records.items():
                 if model_name == 'account.fiscal.position':
-                    # Only add tax mappings containing new taxes
-                    if old_tax_ids := values.pop('tax_ids', []):
-                        new_tax_ids = []
-                        for element in old_tax_ids:
-                            match element:
-                                case Command.CREATE, _, {'tax_src_id': src_id, 'tax_dest_id': dest_id} if (
-                                    not self.ref(src_id, raise_if_not_found=False)
-                                    or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
-                                ):
-                                    new_tax_ids.append(element)
-                        if new_tax_ids:
-                            values['tax_ids'] = new_tax_ids
-
+                    # if xmlid is not in xmlid2fiscal_position and we do not force create so we will skip_update for that record
+                    if xmlid not in xmlid2fiscal_position and not force_create:
+                        skip_update.add((model_name, xmlid))
+                        continue
                 elif model_name == 'account.tax':
-                    # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
+                        if not force_create:
+                            skip_update.add((model_name, xmlid))
+                            continue
                         if self._context.get('force_new_tax_active'):
                             values['active'] = True
                         if xmlid in xmlid2tax:
@@ -356,8 +357,24 @@ class AccountChartTemplate(models.AbstractModel):
                             if rename_idx:
                                 tax_to_rename.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {tax_to_rename.name}"
                     else:
+                        fiscal_position_ids = values.get('fiscal_position_ids')
+                        original_tax_ids = values.get('original_tax_ids')
                         repartition_lines = values.get('repartition_line_ids')
                         values.clear()
+                        # taxes will always be (re)linked to fiscal positions (unless the fp doesn't exist and won't be created)
+                        if fiscal_position_ids:
+                            link_commands = [
+                                Command.link(xml_id)
+                                for xml_id in fiscal_position_ids.split(',') if force_create or xml_id in xmlid2fiscal_position
+                            ]
+                            if link_commands:
+                                values['fiscal_position_ids'] = link_commands
+                        # Only add tax mappings containing new taxes
+                        if original_tax_ids and (new_taxes := [xml_id for xml_id in original_tax_ids.split(',') if xml_id not in xmlid2tax]):
+                            values['original_tax_ids'] = [
+                                Command.link(alt_xml_id)
+                                for alt_xml_id in new_taxes
+                            ]
                         if repartition_lines:
                             values['repartition_line_ids'] = repartition_lines
                             for element in values.get('repartition_line_ids', []):
@@ -366,6 +383,9 @@ class AccountChartTemplate(models.AbstractModel):
                                         repartition_line_values.clear()
                                         repartition_line_values['tag_ids'] = tags or [Command.clear()]
                 elif model_name == 'account.account':
+                    if  existing_current_year_earnings_account and values['account_type'] == 'equity_unaffected':
+                        skip_update.add((model_name, xmlid))
+                        continue
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
                     normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
@@ -388,7 +408,7 @@ class AccountChartTemplate(models.AbstractModel):
                     # on existing accounts, only tag_ids are to be updated using default data
                     if account and 'tag_ids' in data[model_name][xmlid]:
                         data[model_name][xmlid] = {'tag_ids': data[model_name][xmlid]['tag_ids']}
-                    elif account:
+                    elif account or not force_create:
                         skip_update.add((model_name, xmlid))
 
         for skip_model, skip_xmlid in skip_update:
@@ -400,9 +420,6 @@ class AccountChartTemplate(models.AbstractModel):
                 ('module', '=', 'account'),
             ]).unlink()
 
-        custom_fields = {  # Don't alter values that can be changed by the users
-            'account.fiscal.position.tax_ids',
-        }
         for model_name, records in data.items():
             _fields = self.env[model_name]._fields
             for xmlid, values in records.items():
@@ -410,7 +427,6 @@ class AccountChartTemplate(models.AbstractModel):
                     fname
                     for fname in values
                     if fname in _fields
-                    and f"{model_name}.{fname}" not in custom_fields
                     and _fields[fname].type in ('one2many', 'many2many')
                     and isinstance(values[fname], (list, tuple))
                 ]
@@ -978,6 +994,10 @@ class AccountChartTemplate(models.AbstractModel):
             for _command, _id, rep_line in tax_template.get('repartition_line_ids', []):
                 rep_line['account_id'] = existing_accounts.get(rep_line.get('account_id'))
 
+            # Since Foreign Fiscal Positions and Replacement Taxes are not relevant to the OSS company
+            tax_template.pop('fiscal_position_ids', None)
+            tax_template.pop('original_tax_ids', None)
+
             account_xml_id = tax_template.get('cash_basis_transition_account_id')
             tax_template['cash_basis_transition_account_id'] = existing_accounts[account_xml_id]
 
@@ -1078,41 +1098,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template(model='account.reconcile.model')
     def _get_account_reconcile_model(self, template_code):
         return {
-            "reconcile_perfect_match": {
-                "name": _('Invoices/Bills Perfect Match'),
-                "sequence": 1,
-                "rule_type": 'invoice_matching',
-                "auto_reconcile": True,
-                "match_same_currency": True,
-                "allow_payment_tolerance": True,
-                "payment_tolerance_type": 'percentage',
-                "payment_tolerance_param": 0,
-                "match_partner": True,
-            },
-            "reconcile_partial_underpaid": {
-                "name": _('Invoices/Bills Partial Match if Underpaid'),
-                "sequence": 2,
-                "rule_type": 'invoice_matching',
-                "auto_reconcile": False,
-                "match_same_currency": True,
-                "allow_payment_tolerance": False,
-                "match_partner": True,
-            },
-            "reconcile_bill": {
-                "name": 'Create Bill',
-                "sequence": 5,
-                "rule_type": 'writeoff_button',
-                'counterpart_type': 'purchase',
-                'line_ids': [
-                    Command.create({
-                        'amount_type': 'percentage_st_line',
-                        'amount_string': '100',
-                    }),
-                ],
-            },
             'internal_transfer_reco': {
                 'name': _('Internal Transfers'),
-                'rule_type': 'writeoff_button',
                 'line_ids': [
                     Command.create({
                         'amount_type': 'percentage',

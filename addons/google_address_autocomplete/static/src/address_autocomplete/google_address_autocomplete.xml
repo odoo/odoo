@@ -10,9 +10,10 @@
             searchOnInputClick="false"
             inputDebounceDelay="350"
             input="input"
-         />
-    </t>
-    <t t-name="google_address_autocomplete.CharFieldDropdownOption">
-        <strong t-esc="option.formatted_address or '&#160;'"/>
+        >
+            <t t-set-slot="option" t-slot-scope="optionScope">
+                <strong t-esc="optionScope.option.formatted_address or '&#160;'"/>
+            </t>
+        </AutoComplete>
     </t>
 </templates>

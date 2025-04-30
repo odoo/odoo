@@ -27,11 +27,11 @@ const makeSession = ({
         lang,
     },
     cache_hashes: {
-        load_menus: "164b675eb9bf49f8bca52e350cd81482a8cf0d0c1c8a47d99bd063c0a0bf4f0d",
         translations: "f17c8e4bb0fd4d5db2615d28713486df97853a8f",
     },
     can_insert_in_spreadsheet: true,
     db,
+    registry_hash: "05500d71e084497829aa807e3caa2e7e9782ff702c15b2f57f87f2d64d049bd0",
     home_action_id: false,
     is_admin: true,
     is_internal_user: true,

@@ -139,7 +139,8 @@ class AccountAccruedOrdersWizard(models.TransientModel):
 
         if orders.filtered(lambda o: o.company_id != self.company_id):
             raise UserError(_('Entries can only be created for a single company at a time.'))
-
+        if orders.currency_id and len(orders.currency_id) > 1:
+            raise UserError(_('Cannot create an accrual entry with orders in different currencies.'))
         orders_with_entries = []
         fnames = []
         total_balance = 0.0
@@ -165,9 +166,9 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     o.order_line.with_context(accrual_entry_date=self.date)._compute_untaxed_amount_invoiced()
                     o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_to_invoice()
                 lines = o.order_line.filtered(
-                    # We only want lines that are not sections or notes and include all lines
+                    # We only want non-comment lines (no sections, notes, ...) and include all lines
                     # for purchase orders but exclude downpayment lines for sales orders.
-                    lambda l: l.display_type not in ['line_section', 'line_note'] and (is_purchase or not l.is_downpayment) and
+                    lambda l: not l.display_type and (is_purchase or not l.is_downpayment) and
                     fields.Float.compare(
                         l.qty_to_invoice,
                         0,
@@ -247,10 +248,6 @@ class AccountAccruedOrdersWizard(models.TransientModel):
 
         if self.reversal_date <= self.date:
             raise UserError(_('Reversal date must be posterior to date.'))
-        orders = self.env[self._context['active_model']].with_company(self.company_id).browse(self._context['active_ids'])
-        if len({order.currency_id or order.company_id.currency_id for order in orders}) != 1:
-            raise UserError(_('Cannot create an accrual entry with orders in different currencies.'))
-
         move_vals, orders_with_entries = self._compute_move_vals()
         move = self.env['account.move'].create(move_vals)
         move._post()

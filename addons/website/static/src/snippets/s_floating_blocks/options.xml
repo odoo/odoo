@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.s_floating_blocks.alert.empty">
+    <div role="dialog" class="s_floating_blocks_alert_empty d-none alert alert-info mx-auto text-center" style="width: var(--breakpoint-sm)">
+        Add new cards using the sidebar<br />
+        <small><strong>TIP:</strong> You need at least two cards to perform the effect</small>
+    </div>
+</t>
+
+<t t-name="website.s_floating_blocks.new_card">
+    <section data-name="Card" class="s_floating_blocks_block s_col_no_resize position-sticky d-flex py-5 o_cc o_cc1">
+        <div class="container-fluid align-self-end">
+            <div class="s_floating_blocks_block_grid row mx-0 o_grid_mode" data-row-count="8">
+                <div class="o_grid_item g-height-4 col-lg-8 order-lg-0" style="z-index: 1; grid-area: 1 / 1 / 5 / 9;">
+                    <p class="lead">A great subtitle</p>
+                    <h2 class="display-4-fs">Card Title</h2>
+                </div>
+
+                <div class="o_grid_item g-height-2 g-col-lg-4 col-lg-4" style="z-index: 2; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px; grid-area: 7 / 1 / 9 / 5;">
+                    <a href="#" title="" role="button" class="btn btn-lg btn-secondary">Button</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</t>
+
+</templates>

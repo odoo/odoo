@@ -76,8 +76,8 @@ patch(PaymentScreen.prototype, {
      * @override
      */
     async _postPushOrderResolve(order, server_ids) {
-        for (const order_id of server_ids) {
-            await this._postProcessLoyalty(this.pos.models["pos.order"].get(order_id));
+        if (!["draft", "cancel"].includes(order.state)) {
+            await this._postProcessLoyalty(order);
         }
         return super._postPushOrderResolve(order, server_ids);
     },
@@ -98,7 +98,7 @@ patch(PaymentScreen.prototype, {
                 agg[pe.coupon_id].partner_id = partner.id;
             }
             if (program.program_type != "loyalty") {
-                agg[pe.coupon_id].expiration_date = program.date_to;
+                agg[pe.coupon_id].expiration_date = program.date_to || pe.expiration_date;
             }
             return agg;
         }, {});
@@ -195,7 +195,7 @@ patch(PaymentScreen.prototype, {
                 old_id: item.old_id,
             }));
             this.pos.data.call("pos.order", "add_loyalty_history_lines", [
-                [this.currentOrder.id],
+                [order.id],
                 loyaltyPoints,
                 couponUpdates,
             ]);

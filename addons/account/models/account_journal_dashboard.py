@@ -146,28 +146,32 @@ class AccountJournal(models.Model):
 
     def _query_has_sequence_holes(self):
         self.env['account.move'].flush_model(['journal_id', 'date', 'sequence_prefix', 'made_sequence_gap'])
+        # A branch company is locked when the parent is locked.
+        # Parent companies of the journal company can not add moves to the journal.
+        # Thus it is good enough to consider all moves in the journal after the journal company lockdate.
+        # This way we find all holes that can still be corrected.
+        to_check = self.grouped(lambda j: j.company_id._get_user_fiscal_lock_date(j, ignore_exceptions=True))
         queries = []
-        for company in self.env.companies:
-            company = company.with_context(ignore_exceptions=True)
+        for lock_date, journals in to_check.items():
+            # We add the companies to the query to benefit from index `account_move_journal_id_company_id_idx`
+            journal_company_ids = journals.company_id.ids
+            companies = self.env['res.company'].sudo().search([
+                ('id', 'child_of', journal_company_ids),
+            ])
             queries.append(SQL(
                 """
                     SELECT move.journal_id,
                            move.sequence_prefix
                       FROM account_move move
-                      JOIN account_journal journal ON move.journal_id = journal.id
                      WHERE move.journal_id = ANY(%(journal_ids)s)
-                       AND move.company_id = %(company_id)s
+                       AND move.company_id = ANY(%(company_ids)s)
                        AND move.made_sequence_gap IS TRUE
-                       AND move.date > %(fiscal_lock_date)s
-                       AND (journal.type <> 'sale' OR move.date > %(sale_lock_date)s)
-                       AND (journal.type <> 'purchase' OR move.date > %(purchase_lock_date)s)
+                       AND move.date > %(lock_date)s
                   GROUP BY move.journal_id, move.sequence_prefix
                 """,
-                journal_ids=self.ids,
-                company_id=company.id,
-                fiscal_lock_date=max(company.user_fiscalyear_lock_date, company.user_hard_lock_date),
-                sale_lock_date=company.user_sale_lock_date,
-                purchase_lock_date=company.user_purchase_lock_date,
+                journal_ids=journals.ids,
+                company_ids=companies.ids,
+                lock_date=lock_date,
             ))
         self.env.cr.execute(SQL(' UNION ALL '.join(['%s'] * len(queries)), *queries))
         return self.env.cr.fetchall()

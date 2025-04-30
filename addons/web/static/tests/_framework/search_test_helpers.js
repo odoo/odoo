@@ -217,7 +217,9 @@ export async function toggleFavoriteMenu() {
  */
 export async function editFavorite(text) {
     await ensureSearchBarMenu();
-    await contains(`.o_favorite_menu .o_menu_item:contains(/^${text}$/) i.fa-pencil`).click();
+    await contains(`.o_favorite_menu .o_menu_item:contains(/^${text}$/) i.fa-pencil`, {
+        visible: false,
+    }).click();
 }
 
 export async function toggleSaveFavorite() {
@@ -237,7 +239,12 @@ export async function editFavoriteName(name) {
 
 export async function saveFavorite() {
     await ensureSearchBarMenu();
-    await contains(`.o_favorite_menu .o_add_favorite + .o_accordion_values button`).click();
+    await contains(`.o_favorite_menu .o_save_favorite`).click();
+}
+
+export async function saveAndEditFavorite() {
+    await ensureSearchBarMenu();
+    await contains(`.o_favorite_menu .o_edit_favorite`).click();
 }
 
 //-----------------------------------------------------------------------------

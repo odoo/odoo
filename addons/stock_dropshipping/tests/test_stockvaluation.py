@@ -1,7 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+
+from odoo.fields import Command
 from odoo.tests import Form, tagged
+
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import (
+    ValuationReconciliationTestCommon,
+)
 
 
 @tagged('post_install', '-at_install')
@@ -23,30 +27,30 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
     def _dropship_product1(self):
         # enable the dropship route on the product
-        dropshipping_route = self.env.ref('stock_dropshipping.route_drop_shipping')
+        dropshipping_route = self.quick_ref('stock_dropshipping.route_drop_shipping')
         self.product1.write({'route_ids': [(6, 0, [dropshipping_route.id])]})
 
         # add a vendor
         vendor1 = self.env['res.partner'].create({'name': 'vendor1'})
-        seller1 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor1.id,
-            'price': 8,
+        self.product1.write({
+            'seller_ids': [
+                Command.create({
+                    'partner_id': vendor1.id,
+                    'price': 8,
+                })
+            ]
         })
-        self.product1.write({'seller_ids': [(6, 0, [seller1.id])]})
 
         # sell one unit of this product
-        customer1 = self.env['res.partner'].create({'name': 'customer1'})
-        self.sale_order1 = self.env['sale.order'].create({
-            'partner_id': customer1.id,
-            'partner_invoice_id': customer1.id,
-            'partner_shipping_id': customer1.id,
-            'order_line': [(0, 0, {
-                'name': self.product1.name,
-                'product_id': self.product1.id,
-                'product_uom_qty': 1,
-                'price_unit': 12,
-                'tax_ids': [(6, 0, [])],
-            })],
+        self.sale_order1 = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product1.id,
+                    'price_unit': 12,
+                    'tax_ids': [Command.set([])],
+                })
+            ],
             'picking_policy': 'direct',
         })
         self.sale_order1.action_confirm()

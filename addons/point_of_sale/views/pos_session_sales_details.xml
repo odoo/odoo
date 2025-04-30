@@ -3,7 +3,7 @@
     <data>
         <template id="pos_session_sales_details">
             <div class="page">
-                <div class="bg-secondary p-3">
+                <div class="bg-secondary p-3" id="header">
                     <div class="row">
                         <div class="col-3 d-flex flex-column justify-content-center">
                             <br/>
@@ -171,7 +171,6 @@
                                 <td class="ps-2 fw-bold"><span t-out="category['name']">Technical Stuff</span></td>
                                 <td class="fw-bold"/>
                                 <td class="fw-bold"/>
-                                <td class="text-end fw-bold"></td>
                                 <td class="text-end fw-bold">
                                     <span t-out="category['qty']">0</span>
                                 </td>
@@ -192,17 +191,17 @@
                                         </t>
                                     </td>
                                     <td class="text-end">
-                                        <td class="text-end"><span t-out="line['quantity']">0</span></td>
+                                        <span t-out="line['quantity']">0</span>
                                         <t t-if='line["uom"] != "Units"'>
                                             <span t-out='line["uom"]'>Unit</span>
                                         </t>
                                     </td>
                                     <td class="text-end">
                                         <t t-if="currency['position']">
-                                            <span t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span><span t-out='currency["symbol"]'>$</span>
+                                            <span t-out='line["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span><span t-out='currency["symbol"]'>$</span>
                                         </t>
                                         <t t-else="" >
-                                            <span t-out='currency["symbol"]'>$</span><span t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
+                                            <span t-out='currency["symbol"]'>$</span><span t-out='line["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
                                         </t>
                                         <t t-if='line["discount"] != 0'>
                                             Disc: <span t-out='line["discount"]'>0</span>%
@@ -212,7 +211,6 @@
                             </tr>
                             <tr>
                                 <td><strong>Total</strong></td>
-                                <td/>
                                 <td/>
                                 <td/>
                                 <td class="text-end">
@@ -451,7 +449,7 @@
                         </span>
                     </div>
                 </t>
-                <div style="page-break-after: always;"/>
+                <div id="end_report" style="page-break-after: always;"/>
             </div>
         </template>
     </data>

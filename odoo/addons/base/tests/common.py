@@ -32,6 +32,8 @@ class BaseCommon(TransactionCase):
         if independent_user:
             cls.env = cls.env(user=independent_user)
             cls.user = cls.env.user
+        else:
+            cls.env.user.group_ids += cls.get_default_groups()
 
         independent_company = cls.setup_independent_company()
         if independent_company:
@@ -62,7 +64,7 @@ class BaseCommon(TransactionCase):
     @classmethod
     def setup_other_currency(cls, code, **kwargs):
         rates = kwargs.pop('rates', [])
-        currency = cls.env['res.currency'].with_context(active_test=False).search([('name', '=', code)], limit=1)
+        currency = cls._enable_currency(code)
         currency.rate_ids.unlink()
         currency.write({
             'active': True,
@@ -96,7 +98,8 @@ class BaseCommon(TransactionCase):
     @classmethod
     def _enable_currency(cls, currency_code):
         currency = cls.env['res.currency'].with_context(active_test=False).search(
-            [('name', '=', currency_code.upper())]
+            [('name', '=', currency_code.upper())],
+            limit=1,
         )
         currency.action_unarchive()
         return currency

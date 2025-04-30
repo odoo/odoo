@@ -91,7 +91,7 @@
                                     </div>
                                 </setting>
                                 <field name="company_id" invisible="1"/>
-                                <setting id="inter_company" string="Inter-Company Transactions" company_dependent="1" help="Automatically generate counterpart documents in recipient companies" groups="base.group_multi_company" title="Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company.">
+                                <setting id="inter_company" string="Inter-Company Transactions" company_dependent="1" help="Create corresponding in/out orders and invoices when you sell/buy between your companies" groups="base.group_multi_company" title="Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company.">
                                     <field name="module_account_inter_company_rules" widget="upgrade_boolean"/>
                                     <div class="content-group" invisible="not module_account_inter_company_rules" id="inter_companies_rules">
                                         <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
@@ -115,10 +115,9 @@
 
                     <block title="Permissions" id="user_default_rights">
                         <setting string="Default Access Rights" help="Set custom access rights for new users" title="By default, new users get highest access rights for all installed apps. If unchecked, new users will only have basic employee access." id="access_rights">
-                            <field name="user_default_rights"/>
-                            <div class="content-group" invisible="not user_default_rights">
+                            <div class="content-group">
                                 <div class="mt8">
-                                    <button type="object" name="open_default_user" string="Default Access Rights" icon="oi-arrow-right" class="btn-link"/>
+                                    <button type="object" name="open_new_user_default_groups" string="Default Access Rights" icon="oi-arrow-right" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>
@@ -164,7 +163,7 @@
                             <setting string="Geolocation"
                                      help="Geolocate your partners"
                                      id="base_geolocalize"
-                                     documentation="https://www.odoo.com/documentation/17.0/applications/general/integrations/geolocation.html">
+                                     documentation="/applications/general/integrations/geolocation.html">
                                 <field name="module_base_geolocalize"/>
                                 <div class="content-group" invisible="not module_base_geolocalize" name="base_geolocalize_warning">
                                     <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to choose your Geo Provider.</div>
@@ -200,7 +199,6 @@
                         <widget name='res_config_dev_tool'/>
                         <div id='about'>
                             <block title="About" name="about_setting_container">
-                                <widget name="mobile_apps_funnel"/>
                                 <widget name='res_config_edition'/>
                             </block>
                         </div>

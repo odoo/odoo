@@ -1,5 +1,5 @@
 import { Thread } from "@mail/core/common/thread_model";
-import { Record } from "@mail/model/record";
+import { fields } from "@mail/model/misc";
 import { rpc } from "@web/core/network/rpc";
 
 import { patch } from "@web/core/utils/patch";
@@ -8,22 +8,22 @@ import { patch } from "@web/core/utils/patch";
 const threadPatch = {
     setup() {
         super.setup(...arguments);
-        this.discussAppCategory = Record.one("DiscussAppCategory", {
+        this.discussAppCategory = fields.One("DiscussAppCategory", {
             compute() {
                 return this._computeDiscussAppCategory();
             },
         });
-        this.from_message_id = Record.one("mail.message");
-        this.parent_channel_id = Record.one("Thread", {
+        this.from_message_id = fields.One("mail.message");
+        this.parent_channel_id = fields.One("Thread", {
             onDelete() {
                 this.delete();
             },
         });
-        this.sub_channel_ids = Record.many("Thread", {
+        this.sub_channel_ids = fields.Many("Thread", {
             inverse: "parent_channel_id",
             sort: (a, b) => b.id - a.id,
         });
-        this.displayInSidebar = Record.attr(false, {
+        this.displayInSidebar = fields.Attr(false, {
             compute() {
                 return (
                     this.displayToSelf ||
@@ -79,7 +79,7 @@ const threadPatch = {
             from_message_id: initialMessage?.id,
             name,
         });
-        this.store.insert(data, { html: true });
+        this.store.insert(data);
         this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open({ focus: true });
     },
     /**
@@ -98,7 +98,7 @@ const threadPatch = {
             parent_channel_id: this.id,
             search_term: searchTerm,
         });
-        const { Thread: threads = [] } = this.store.insert(data, { html: true });
+        const { Thread: threads = [] } = this.store.insert(data);
         if (searchTerm) {
             // Ignore holes in the sub-channel list that may arise when
             // searching for a specific term.

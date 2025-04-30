@@ -4,6 +4,7 @@ import itertools
 import logging
 import typing
 from collections import defaultdict
+from collections.abc import Reversible
 from operator import attrgetter
 
 from odoo.exceptions import MissingError, UserError
@@ -21,23 +22,29 @@ from .utils import COLLECTION_TYPES, SQL_OPERATORS, check_pg_name
 
 M = typing.TypeVar('M', bound=BaseModel)
 if typing.TYPE_CHECKING:
-    from .types import ContextType, DomainType
+    from collections.abc import Sequence
+    from .types import CommandValue, ContextType, DomainType, Environment
+
+    OnDelete = typing.Literal['cascade', 'set null', 'restrict']
 
 _schema = logging.getLogger('odoo.schema')
 
 
 class _Relational(Field[M], typing.Generic[M]):
     """ Abstract class for relational fields. """
-    relational = True
+    relational: typing.Literal[True] = True
+    comodel_name: str
     domain: DomainType = []         # domain for searching values
     context: ContextType = {}       # context for searching values
-    auto_join = False               # whether joins are generated upon search
-    check_company = False
+    auto_join: bool = False         # whether joins are generated upon search
+    check_company: bool = False
 
     def __get__(self, records, owner=None):
         # base case: do the regular access
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
+
+        records._check_field_access(self, 'read')
 
         # multi-record case
         if self.compute and self.store:
@@ -85,7 +92,7 @@ class _Relational(Field[M], typing.Generic[M]):
         return Domain(domain)
 
     @property
-    def _related_domain(self):
+    def _related_domain(self) -> DomainType | None:
         def validated(domain):
             if isinstance(domain, str) and not self.inherited:
                 # string domains are expressions that are not valid for self's model
@@ -103,7 +110,7 @@ class _Relational(Field[M], typing.Generic[M]):
     _description_relation = property(attrgetter('comodel_name'))
     _description_context = property(attrgetter('context'))
 
-    def _description_domain(self, env) -> str | list:
+    def _description_domain(self, env: Environment) -> str | list:
         domain = self._internal_description_domain_raw(env)
         if self.check_company:
             field_to_check = None
@@ -182,20 +189,25 @@ class Many2one(_Relational[M]):
     type = 'many2one'
     _column_type = ('int4', 'int4')
 
-    ondelete = None                     # what to do when value is deleted
-    delegate = False                    # whether self implements delegation
+    ondelete: OnDelete | None = None    # what to do when value is deleted
+    delegate: bool = False              # whether self implements delegation
 
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, string: str | Sentinel = SENTINEL, **kwargs):
-        super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
+        super().__init__(comodel_name=comodel_name, string=string, **kwargs)
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
         # determine self.delegate
-        if not self.delegate and name in model_class._inherits.values():
+        if name in model_class._inherits.values():
             self.delegate = True
-        # self.delegate implies self.auto_join
-        if self.delegate:
+            # self.delegate implies self.auto_join
             self.auto_join = True
+        elif self.delegate:
+            comodel_name = self.comodel_name or 'comodel_name'
+            raise TypeError((
+                f"The delegate field {self} must be declared in the model class e.g.\n"
+                f"_inherits = {{{comodel_name!r}: {name!r}}}"
+            ))
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
@@ -230,10 +242,10 @@ class Many2one(_Relational[M]):
         comodel = model.env[self.comodel_name]
         if not model.is_transient() and comodel.is_transient():
             raise ValueError('Many2one %s from Model to TransientModel is forbidden' % self)
-        return super(Many2one, self).update_db(model, columns)
+        return super().update_db(model, columns)
 
     def update_db_column(self, model, column):
-        super(Many2one, self).update_db_column(model, column)
+        super().update_db_column(model, column)
         model.pool.post_init(self.update_db_foreign_key, model, column)
 
     def update_db_foreign_key(self, model, column):
@@ -411,6 +423,7 @@ class Many2one(_Relational[M]):
         fname = field_expr
         comodel = model.env[self.comodel_name]
         sql_field = model._field_to_sql(alias, fname, query)
+        can_be_null = self not in model.env.registry.not_null_fields
 
         if not isinstance(value, Domain):
             # value is SQL or Query
@@ -426,7 +439,7 @@ class Many2one(_Relational[M]):
                 SQL(" IN ") if operator == 'any' else SQL(" NOT IN "),
                 subselect,
             )
-            if not self.required and operator != 'any':
+            if can_be_null and operator != 'any':
                 sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
             if self.company_dependent:
                 sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
@@ -444,10 +457,17 @@ class Many2one(_Relational[M]):
                 SQL.identifier(coalias, 'id'),
             ))
 
-            if operator == 'not any':
-                sql = value._to_sql(comodel, coalias, query)
-                return SQL("(%s IS NULL OR (%s) IS NOT TRUE)", sql_field, sql)
-            return value._to_sql(comodel, coalias, query)
+            sql = value._to_sql(comodel, coalias, query)
+            if operator == 'any':
+                if can_be_null:
+                    return SQL("(%s IS NOT NULL AND %s)", sql_field, sql)
+                else:
+                    return sql
+            else:
+                if can_be_null:
+                    return SQL("(%s IS NULL OR (%s) IS NOT TRUE)", sql_field, sql)
+                else:
+                    return SQL("(%s) IS NOT TRUE", sql)
 
         # execute search and generate condition with a SQL query
         domain_query = comodel.with_context(active_test=False)._search(value)
@@ -620,7 +640,7 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
         records.env.remove_to_compute(self, records)
         self.write_batch([(records, value)])
 
-    def write_batch(self, records_commands_list, create=False):
+    def write_batch(self, records_commands_list: Sequence[tuple[BaseModel, typing.Any]], create: bool = False) -> None:
         if not records_commands_list:
             return
 
@@ -644,6 +664,12 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
             assert not any(record_ids), f"{records_commands_list} contains a mix of real and new records. It is not supported."
             self.write_new(records_commands_list)
 
+    def write_real(self, records_commands_list: Sequence[tuple[BaseModel, list[CommandValue]]], create: bool = False) -> None:
+        raise NotImplementedError
+
+    def write_new(self, records_commands_list: Sequence[tuple[BaseModel, list[CommandValue]]]) -> None:
+        raise NotImplementedError
+
     def _check_sudo_commands(self, comodel):
         # if the model doesn't accept sudo commands
         if not comodel._allow_sudo_commands:
@@ -657,9 +683,6 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
         comodel = model.env[self.comodel_name]
 
         # update the operator to 'any'
-        if operator in ('=', '!='):
-            operator = 'in' if operator == '=' else 'not in'
-            value = [value]
         if operator in ('in', 'not in'):
             operator = 'any' if operator == 'in' else 'not any'
         assert operator in ('any', 'not any'), \
@@ -709,7 +732,7 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
             return query
         if isinstance(value, Query):
             # add the field_domain to the query
-            domain = field_domain._optimize_for_sql(comodel)
+            domain = field_domain.optimize(comodel, full=True)
             if not domain.is_true():
                 # TODO should clone/copy Query value
                 value.add_where(domain._to_sql(comodel, value.table, value))
@@ -745,12 +768,12 @@ class One2many(_RelationalMulti[M]):
     """
     type = 'one2many'
 
-    inverse_name = None                 # name of the inverse field
-    copy = False                        # o2m are not copied by default
+    inverse_name: str | None = None     # name of the inverse field
+    copy: bool = False                  # o2m are not copied by default
 
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, inverse_name: str | Sentinel = SENTINEL,
                  string: str | Sentinel = SENTINEL, **kwargs):
-        super(One2many, self).__init__(
+        super().__init__(
             comodel_name=comodel_name,
             inverse_name=inverse_name,
             string=string,
@@ -758,7 +781,7 @@ class One2many(_RelationalMulti[M]):
         )
 
     def setup_nonrelated(self, model):
-        super(One2many, self).setup_nonrelated(model)
+        super().setup_nonrelated(model)
         if self.inverse_name:
             # link self to its inverse field and vice-versa
             comodel = model.env[self.comodel_name]
@@ -792,7 +815,7 @@ class One2many(_RelationalMulti[M]):
                 return Domain(inverse_field.model_field, '=', self.model_name)
         return Domain.TRUE
 
-    def get_comodel_domain(self, model) -> Domain:
+    def get_comodel_domain(self, model: BaseModel) -> Domain:
         return super().get_comodel_domain(model) & self._additional_domain(model.env)
 
     def _internal_description_domain_raw(self, env) -> str | list:
@@ -1026,7 +1049,7 @@ class One2many(_RelationalMulti[M]):
 
     def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, value) -> Query:
         inverse_field = comodel._fields[self.inverse_name]
-        if not inverse_field.required:
+        if inverse_field not in comodel.env.registry.not_null_fields:
             # In the condition, one must avoid subqueries to return
             # NULL values, since it makes the IN test NULL instead
             # of FALSE.  This may discard expected results, as for
@@ -1074,7 +1097,7 @@ class One2many(_RelationalMulti[M]):
 class Many2many(_RelationalMulti[M]):
     """ Many2many field; the value of such a field is the recordset.
 
-    :param comodel_name: name of the target model (string)
+    :param str comodel_name: name of the target model (string)
         mandatory except in the case of related or extended fields
 
     :param str relation: optional name of the table that stores the relation in
@@ -1114,18 +1137,18 @@ class Many2many(_RelationalMulti[M]):
     """
     type = 'many2many'
 
-    _explicit = True                    # whether schema is explicitly given
-    relation = None                     # name of table
-    column1 = None                      # column of table referring to model
-    column2 = None                      # column of table referring to comodel
-    ondelete = 'cascade'                # optional ondelete for the column2 fkey
+    _explicit: bool = True              # whether schema is explicitly given
+    relation: str | None = None         # name of table
+    column1: str | None = None          # column of table referring to model
+    column2: str | None = None          # column of table referring to comodel
+    ondelete: OnDelete | None = 'cascade'  # optional ondelete for the column2 fkey
 
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, relation: str | Sentinel = SENTINEL,
                  column1: str | Sentinel = SENTINEL, column2: str | Sentinel = SENTINEL,
                  string: str | Sentinel = SENTINEL, **kwargs):
         if 'auto_join' in kwargs:
             raise NotImplementedError("auto_join is not supported on Many2many fields")
-        super(Many2many, self).__init__(
+        super().__init__(
             comodel_name=comodel_name,
             relation=relation,
             column1=column1,
@@ -1134,7 +1157,7 @@ class Many2many(_RelationalMulti[M]):
             **kwargs
         )
 
-    def setup_nonrelated(self, model):
+    def setup_nonrelated(self, model: BaseModel) -> None:
         super().setup_nonrelated(model)
         # 2 cases:
         # 1) The ondelete attribute is defined and its definition makes sense
@@ -1568,7 +1591,7 @@ class Many2many(_RelationalMulti[M]):
         )
 
 
-class PrefetchMany2one:
+class PrefetchMany2one(Reversible):
     """ Iterable for the values of a many2one field on the prefetch set of a given record. """
     __slots__ = 'record', 'field'
 
@@ -1587,7 +1610,7 @@ class PrefetchMany2one:
         return unique(id_ for id_ in ids if id_ is not None)
 
 
-class PrefetchX2many:
+class PrefetchX2many(Reversible):
     """ Iterable for the values of an x2many field on the prefetch set of a given record. """
     __slots__ = 'record', 'field'
 

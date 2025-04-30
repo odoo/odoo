@@ -40,8 +40,8 @@ class WebsiteMenu(models.Model):
 
     name = fields.Char('Menu', required=True, translate=True)
     url = fields.Char("Url", compute="_compute_url", store=True, required=True, default="#", copy=True)
-    page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
-    controller_page_id = fields.Many2one('website.controller.page', 'Related Model Page', ondelete='cascade')
+    page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade', index='btree_not_null')
+    controller_page_id = fields.Many2one('website.controller.page', 'Related Model Page', ondelete='cascade', index='btree_not_null')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer(default=_default_sequence)
     website_id = fields.Many2one('website', 'Website', ondelete='cascade')
@@ -116,8 +116,10 @@ class WebsiteMenu(models.Model):
     def write(self, values):
         self.env.registry.clear_cache('templates')
         res = super().write(values)
-        if 'group_ids' in values:
-            self.filtered('group_ids').group_ids += self.env.ref('website.group_website_designer')
+        if 'group_ids' in values and not self.env.context.get("adding_designer_group_to_menu"):
+            self.filtered("group_ids").with_context(
+                adding_designer_group_to_menu=True
+            ).group_ids += self.env.ref("website.group_website_designer")
         return res
 
     def unlink(self):

@@ -1,9 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+
 from odoo import api, fields, models
 from odoo.tools import format_date, str2bool
+from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.tools.image import image_data_uri
 
 
 class AccountMove(models.Model):
@@ -69,6 +73,35 @@ class AccountMove(models.Model):
             and not pending_transactions
         )
 
+    def _get_online_payment_error(self):
+        """
+        Returns the appropriate error message to be displayed if _has_to_be_paid() method returns False.
+        """
+        self.ensure_one()
+        transactions = self.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))
+        pending_transactions = transactions.filtered(
+            lambda tx: tx.state in {'pending', 'authorized'}
+                       and tx.provider_code not in {'none', 'custom'})
+        enabled_feature = str2bool(
+            self.env['ir.config_parameter'].sudo().get_param(
+                'account_payment.enable_portal_payment'
+            )
+        )
+        errors = []
+        if not enabled_feature:
+            errors.append(_("This invoice cannot be paid online."))
+        if transactions or self.currency_id.is_zero(self.amount_residual):
+            errors.append(_("There is no amount to be paid."))
+        if self.state != 'posted':
+            errors.append(_("This invoice isn't posted."))
+        if self.currency_id.is_zero(self.amount_residual):
+            errors.append(_("This invoice has already been paid."))
+        if self.move_type != 'out_invoice':
+            errors.append(_("This is not an outgoing invoice."))
+        if pending_transactions:
+            errors.append(_("There are pending transactions for this invoice."))
+        return '\n'.join(errors)
+
     def get_portal_last_transaction(self):
         self.ensure_one()
         return self.with_context(active_test=False).transaction_ids.sudo()._get_last()
@@ -133,3 +166,18 @@ class AccountMove(models.Model):
             'amount_max': amount_max,
             **additional_info
         }
+
+    def _generate_portal_payment_qr(self):
+        self.ensure_one()
+        portal_url = self._get_portal_payment_link()
+        barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=portal_url, width=128, height=128)
+        return image_data_uri(base64.b64encode(barcode))
+
+    def _get_portal_payment_link(self):
+        self.ensure_one()
+        payment_link_wizard = self.env['payment.link.wizard'].create({
+            'amount': self.amount_residual,
+            'res_model': self._name,
+            'res_id': self.id,
+        })
+        return payment_link_wizard.link

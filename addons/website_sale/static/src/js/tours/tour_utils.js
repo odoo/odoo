@@ -44,7 +44,7 @@ export function assertCartAmounts({taxes = false, untaxed = false, total = false
 }
 
 export function assertCartContains({productName, backend, notContains = false} = {}) {
-    let trigger = `a:contains(${productName})`;
+    let trigger = `h6:contains(${productName})`;
 
     if (notContains) {
         trigger = `:not(${trigger})`;
@@ -142,7 +142,7 @@ export function payWithDemo() {
     pay(),
     {
         content: 'eCommerce: check that the payment is successful',
-        trigger: '.oe_website_sale_tx_status:contains("Your payment has been successfully processed.")',
+        trigger: '.oe_website_sale_tx_status:contains("Your payment has been processed.")',
     }]
 }
 

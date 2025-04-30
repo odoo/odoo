@@ -13,7 +13,6 @@ const {
     getChartTitle,
     getPieChartLegend,
     getChartShowValues,
-    truncateLabel,
 } = chartHelpers;
 
 export class OdooPieChart extends OdooChart {
@@ -56,7 +55,7 @@ function createOdooChartRuntime(chart, getters) {
     const config = {
         type: definition.isDoughnut ? "doughnut" : "pie",
         data: {
-            labels: chartData.labels.map(truncateLabel),
+            labels: chartData.labels,
             datasets: getPieChartDatasets(definition, chartData),
         },
         options: {

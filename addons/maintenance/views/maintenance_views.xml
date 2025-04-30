@@ -32,13 +32,16 @@
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                 <separator/>
+                <filter invisible="1" string="My Activities" name="filter_activities_my"
+                    domain="[('activity_user_id', '=', uid)]"/>
+                <separator invisible="1"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"/>
+                    domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records whose next activity date is past"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter string="Active" name="active" domain="[('archive', '=', False)]"/>
                 <filter string="Cancelled" name="inactive" domain="[('archive', '=', True)]"/>
@@ -254,6 +257,7 @@
     <record id="hr_equipment_request_action" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
+        <field name="path">maintenance-requests</field>
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
         <field name="context">{
@@ -330,6 +334,7 @@
     <record id="hr_equipment_request_action_cal" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
+        <field name="path">maintenance-calendar</field>
         <field name="view_mode">calendar,kanban,list,form,pivot,graph,activity</field>
         <field name="view_id" ref="hr_equipment_view_calendar"/>
         <field name="context">{
@@ -346,8 +351,9 @@
     </record>
 
     <record id="maintenance_request_action_reports" model="ir.actions.act_window">
-        <field name="name">Maintenance Requests</field>
+        <field name="name">Maintenance Requests Analysis</field>
         <field name="res_model">maintenance.request</field>
+        <field name="path">maintenance-requests-analysis</field>
         <field name="view_mode">graph,pivot,kanban,list,form,calendar,activity</field>
         <field name="context">{
             'search_default_active': True,
@@ -519,13 +525,16 @@
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]" groups="mail.group_mail_notification_type_inbox"/>
                 <separator/>
+                <filter invisible="1" string="My Activities" name="filter_activities_my"
+                    domain="[('activity_user_id', '=', uid)]"/>
+                <separator invisible="1"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"/>
+                    domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records whose next activity date is past"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <group  expand='0' string='Group by...'>
@@ -542,6 +551,7 @@
     <record id="hr_equipment_action" model="ir.actions.act_window">
         <field name="name">Equipment</field>
         <field name="res_model">maintenance.equipment</field>
+        <field name="path">equipments</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="view_id" ref="hr_equipment_view_kanban"/>
         <field name="help" type="html">
@@ -607,22 +617,10 @@
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"
                            class="oe_inline" placeholder="Visible to all"/>
                 </group>
-                <group name="group_alias">
-                    <label for="alias_name" string="Email Alias"/>
-                    <div name="alias_def">
-                        <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
-                        <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" dir="ltr">
-                            <field name="alias_name" placeholder="alias" class="oe_inline"/>@
-                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
-                                   options="{'no_create': True, 'no_open': True}"/>
-                        </div>
-                    </div>
-                </group>
                 <group>
                     <field name="note"/>
                 </group>
                 </sheet>
-                <chatter/>
             </form>
         </field>
     </record>
@@ -677,6 +675,7 @@
     <record id="hr_equipment_category_action" model="ir.actions.act_window">
         <field name="name">Equipment Categories</field>
         <field name="res_model">maintenance.equipment.category</field>
+        <field name="path">equipement-categories</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="view_id" ref="hr_equipment_category_view_tree"/>
         <field name="help" type="html">
@@ -727,6 +726,7 @@
     <record id="hr_equipment_stage_action" model="ir.actions.act_window">
         <field name="name">Stages</field>
         <field name="res_model">maintenance.stage</field>
+        <field name="path">maintenance-stages</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -753,6 +753,17 @@
                     <group>
                         <field name="active" invisible="1"/>
                         <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" domain="[('share', '=', False)]"/>
+                    </group>
+                    <group name="group_alias">
+                        <label for="alias_name" string="Email Alias"/>
+                        <div name="alias_def">
+                            <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
+                            <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" dir="ltr">
+                                <field name="alias_name" placeholder="alias" class="oe_inline"/>@
+                                <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                                    options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                        </div>
                     </group>
                     <group>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
@@ -894,6 +905,7 @@
     <record id="maintenance_team_action_settings" model="ir.actions.act_window">
         <field name="name">Teams</field>
         <field name="res_model">maintenance.team</field>
+        <field name="path">maintenance-teams</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="maintenance_team_view_search"/>
         <field name="view_ids" eval="[(5, 0, 0),

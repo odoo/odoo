@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
@@ -8,9 +7,9 @@ import logging
 import psycopg2
 import datetime
 
-from odoo import api, fields, models, Command
-from odoo import _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError, UserError
+from odoo.fields import Command
 from odoo.tools import mute_logger, SQL
 
 _logger = logging.getLogger('odoo.addons.base.partner.merge')
@@ -99,6 +98,20 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         self._cr.execute(query, (table,))
         return self._cr.fetchall()
 
+    def _has_check_or_unique_constraint(self, table, column):
+        self._cr.execute("""
+            SELECT 1
+            FROM pg_constraint c
+            JOIN pg_class r ON (c.conrelid = r.oid)
+            CROSS JOIN LATERAL unnest(c.conkey) AS cattr(attnum)
+            JOIN pg_attribute a ON (a.attrelid = c.conrelid AND a.attnum = cattr.attnum)
+            WHERE c.contype IN ('c', 'u')
+                AND r.relname = %s
+                AND a.attname = %s
+            LIMIT 1
+        """, (table, column))
+        return bool(self._cr.rowcount)
+
     @api.model
     def _update_foreign_keys_generic(self, model, src_records, dst_record):
         """ Update all foreign key from the src_records to dst_record for any model.
@@ -131,6 +144,12 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 'column': column,
                 'value': columns[0],
             }
+
+            self._cr.execute('SELECT FROM "%(table)s" WHERE "%(column)s" IN %%s LIMIT 1' % query_dic,
+                                (tuple(src_records.ids),))
+            if self._cr.fetchone() is None:
+                continue  # no record
+
             if len(columns) <= 1:
                 # unique key treated
                 query = """
@@ -147,6 +166,10 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                         )""" % query_dic
                 for record in src_records:
                     self._cr.execute(query, (dst_record.id, record.id, dst_record.id))
+            elif not self._has_check_or_unique_constraint(table, column):
+                # if there is no CHECK or UNIQUE constraint, we do it without a savepoint
+                query = 'UPDATE "%(table)s" SET "%(column)s" = %%s WHERE "%(column)s" IN %%s' % query_dic
+                self._cr.execute(query, (dst_record.id, tuple(src_records.ids)))
             else:
                 try:
                     with mute_logger('odoo.sql_db'), self._cr.savepoint():
@@ -173,6 +196,12 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             if Model is None:
                 return
             records = Model.sudo().search([(field_model, '=', referenced_model), (field_id, '=', src.id)])
+            if not records:
+                return
+            if not self._has_check_or_unique_constraint(records._table, field_id):
+                records.sudo().write({field_id: dst_record.id})
+                records.env.flush_all()
+                return
             try:
                 with mute_logger('odoo.sql_db'), self._cr.savepoint():
                     records.sudo().write({field_id: dst_record.id})
@@ -259,34 +288,34 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         self.env.flush_all()
 
         # company_dependent fields of merged records
-        with self._cr.savepoint():
-            for fname, field in dst_record._fields.items():
-                if field.company_dependent:
-                    self.env.execute_query(SQL(
-                        # use the specific company dependent value of sources
-                        # to fill the non-specific value of destination. Source
-                        # values for rows with larger id have higher priority
-                        # when aggregated
-                        """
-                        WITH source AS (
-                            SELECT %(field)s
-                            FROM  %(table)s
-                            WHERE id IN %(source_ids)s
-                            ORDER BY id
-                        ), source_agg AS (
-                            SELECT jsonb_object_agg(key, value) AS value
-                            FROM  source, jsonb_each(%(field)s)
-                        )
-                        UPDATE %(table)s
-                        SET %(field)s = source_agg.value || COALESCE(%(table)s.%(field)s, '{}'::jsonb)
-                        FROM source_agg
-                        WHERE id = %(destination_id)s AND source_agg.value IS NOT NULL
-                        """,
-                        table=SQL.identifier(dst_record._table),
-                        field=SQL.identifier(fname),
-                        destination_id=dst_record.id,
-                        source_ids=tuple(src_records.ids),
-                    ))
+        for fname, field in dst_record._fields.items():
+            if not field.company_dependent:
+                continue
+            self.env.execute_query(SQL(
+                # use the specific company dependent value of sources
+                # to fill the non-specific value of destination. Source
+                # values for rows with larger id have higher priority
+                # when aggregated
+                """
+                WITH source AS (
+                    SELECT %(field)s
+                    FROM  %(table)s
+                    WHERE id IN %(source_ids)s
+                    ORDER BY id
+                ), source_agg AS (
+                    SELECT jsonb_object_agg(key, value) AS value
+                    FROM  source, jsonb_each(%(field)s)
+                )
+                UPDATE %(table)s
+                SET %(field)s = source_agg.value || COALESCE(%(table)s.%(field)s, '{}'::jsonb)
+                FROM source_agg
+                WHERE id = %(destination_id)s AND source_agg.value IS NOT NULL
+                """,
+                table=SQL.identifier(dst_record._table),
+                field=SQL.identifier(fname),
+                destination_id=dst_record.id,
+                source_ids=tuple(src_records.ids),
+            ))
 
     @api.model
     def _update_foreign_keys(self, src_partners, dst_partner):
@@ -396,21 +425,21 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             return
 
         if len(partner_ids) > 3:
-            raise UserError(_("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
+            raise UserError(self.env._("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
 
         # check if the list of partners to merge contains child/parent relation
         child_ids = self.env['res.partner']
         for partner_id in partner_ids:
             child_ids |= Partner.search([('id', 'child_of', [partner_id.id])]) - partner_id
         if partner_ids & child_ids:
-            raise UserError(_("You cannot merge a contact with one of his parent."))
+            raise UserError(self.env._("You cannot merge a contact with one of his parent."))
 
         # check if the list of partners to merge are linked to more than one user
         if len(partner_ids.with_context(active_test=False).user_ids) > 1:
-            raise UserError(_("You cannot merge contacts linked to more than one user even if only one is active."))
+            raise UserError(self.env._("You cannot merge contacts linked to more than one user even if only one is active."))
 
         if extra_checks and len(set(partner.email for partner in partner_ids)) > 1:
-            raise UserError(_("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
+            raise UserError(self.env._("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
 
         # remove dst_partner from partners to merge
         if dst_partner and dst_partner in partner_ids:
@@ -508,7 +537,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                     groups.append(field_name[len(group_by_prefix):])
 
         if not groups:
-            raise UserError(_("You have to specify a filter for your selection."))
+            raise UserError(self.env._("You have to specify a filter for your selection."))
 
         return groups
 

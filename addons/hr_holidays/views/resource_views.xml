@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="resource.resource_calendar_leave_form"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="holiday_id"/>
+                <field name="holiday_id" options="{'no_quick_create': True}"/>
             </field>
         </field>
     </record>
@@ -35,6 +35,7 @@
             <xpath expr="//field[@name='name']" position="attributes">
                 <attribute name="string">Name</attribute>
                 <attribute name="required">1</attribute>
+                <attribute name="placeholder">e.g. New Year's Day</attribute>
             </xpath>
             <xpath expr="//field[@name='resource_id']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
@@ -42,6 +43,9 @@
             <xpath expr="//field[@name='date_to']" position="after">
                 <field name="company_id" column_invisible="True"/>
                 <xpath expr="//field[@name='calendar_id']" position="move"/>
+            </xpath>
+            <xpath expr="//field[@name='calendar_id']" position="attributes">
+                <attribute name="placeholder">All Schedules</attribute>
             </xpath>
         </field>
     </record>
@@ -82,8 +86,15 @@
         <field name="view_mode">list,form</field>
         <field name="domain">[('resource_id', '=', False)]</field>
         <field name="view_id" ref="resource_calendar_leaves_tree_inherit"/>
-        <field name="context">{
-            'search_default_filter_date': True}</field>
+        <field name="context">{'search_default_filter_date': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No Public Holidays yet!
+            </p>
+            <p>
+                Public Holidays are non-working days that don't impact employees' balances
+            </p>
+        </field>
     </record>
 
     <record id="resource_calendar_view_tree" model="ir.ui.view">

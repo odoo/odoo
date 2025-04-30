@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DiscussSidebarMailboxes">
-        <div class="d-flex flex-column flex-grow-0 o-gap-0_5 mt-2">
+        <div class="d-flex flex-column flex-grow-0 o-gap-0_5 mt-1 bg-inherit">
             <Mailbox mailbox="store.inbox"/>
             <Mailbox mailbox="store.starred"/>
             <Mailbox mailbox="store.history"/>
@@ -23,7 +23,7 @@
 
     <t t-name="mail.Mailbox.main">
         <button
-            class="o-mail-DiscussSidebar-item o-mail-Mailbox btn d-flex align-items-center px-0 mx-2 border-0 rounded-2 fw-normal text-reset"
+            class="o-mail-DiscussSidebar-item o-mail-Mailbox btn d-flex align-items-baseline px-0 mx-2 border-0 rounded-3 fw-normal text-reset"
             t-att-class="{
                 'bg-inherit': mailbox.notEq(store.discuss.thread),
                 'o-active': mailbox.eq(store.discuss.thread),
@@ -31,21 +31,22 @@
                 'o-py-0_5': !store.discuss.isSidebarCompact,
                 'o-unread': mailbox.counter,
             }"
+            style="line-height: 1.65;"
             t-att-data-mailbox-id="mailbox.id"
             t-on-click="(ev) => this.openThread(ev)"
             t-ref="root"
         >
-            <ThreadIcon className="'bg-inherit ' + (store.discuss.isSidebarCompact ? '' : 'mx-2')" thread="mailbox"/>
+            <ThreadIcon className="'bg-inherit opacity-75 ' + (store.discuss.isSidebarCompact ? '' : 'mx-2 pt-1')" thread="mailbox" size="store.discuss.isSidebarCompact ? 'large' : 'medium'"/>
             <t t-if="!store.discuss.isSidebarCompact">
-                <div class="me-2 text-truncate small" style="line-height: 1.65;" t-esc="mailbox.display_name"/>
+                <div class="me-2 text-truncate text-muted small" t-esc="mailbox.display_name"/>
                 <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
             </t>
-            <span
-                t-if="mailbox.counter > 0"
-                class="o-mail-DiscussSidebar-badge o-discuss-badge badge rounded-pill fw-bold"
-                t-att-class="{ 'o-muted': mailbox.id === 'starred', 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute top-0 o-compact': store.discuss.isSidebarCompact }"
-                t-esc="mailbox.counter"
-            />
+            <t t-if="mailbox.counter > 0" t-call="mail.discuss_badge">
+                <t t-set="counter" t-value="mailbox.counter"/>
+                <t t-set="badgeClass" t-value="'o-mail-DiscussSidebar-badge ' + (store.discuss.isSidebarCompact ? 'position-absolute top-0 o-compact' : 'mx-1')"/>
+                <t t-set="counterClass" t-value="(mailbox.id === 'starred' ? 'o-muted' : '')"/>
+                <t t-set="floating" t-value="store.discuss.isSidebarCompact"/>
+            </t>
         </button>
     </t>
 

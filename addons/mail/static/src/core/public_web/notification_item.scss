@@ -1,11 +1,11 @@
 .o-mail-NotificationItem {
     outline: 1px solid transparent;
     outline-offset: -1px;
-    background-color: var(--mail-MessagingMenu-bg, $o-view-background-color);
+    background-color: var(--mail-NotificationItem-bg, mix($gray-100, $o-view-background-color, 95%));
 
     &.o-important {
-        background-color: mix($o-gray-100, $o-info, 92.5%) !important;
-        border-color: darken(mix($o-gray-100, $o-info, 92.5%), 5%) !important;
+        background-color: mix($o-gray-100, $o-info, 90%) !important;
+        border-color: darken(mix($o-gray-100, $o-info, 90%), 5%) !important;
     }
     &.o-active {
         outline-color: rgba($o-action, var(--mail-NotificationItem-activeOutlineOpacity, 0.5));
@@ -17,13 +17,10 @@
             background-color: mix($o-gray-100, $o-info, 87.5%) !important;
         }
     }
-    &:not(.o-small) {
-        padding-left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
-    }
 }
 
 .o-mail-NotificationItem-avatarContainer {
-    height: 40px;
+    height: 42px;
     aspect-ratio: 1;
     margin-top: map-get($spacers, 1) / 2;
     margin-bottom: map-get($spacers, 1) / 2;
@@ -44,28 +41,21 @@
 }
 
 .o-mail-NotificationItem-markAsRead {
-    background-color: transparent !important;
+    background-color: rgba($success, .15) !important;
     font-size: 0.85rem !important;
     color: $success !important;
+    outline: 1px solid rgba($success, .25);
+    outline-offset: -1px;
+    padding: map-get($spacers, 1) / 2;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.075) !important;
+        outline-color: rgba(darken($success, 10%), .5);
+        background-color: transparent !important;
+        box-shadow: $box-shadow-sm
     }
 }
 
-.o-mail-NotificationItem-text {
-    font-family: "text-emoji", $font-family-base;
-
-    &:before {
-        // invisible character so that typing status bar has constant height, regardless of text content.
-        content: "\200b"; /* unicode zero width space character */
-    }
-}
-
-.o-mail-NotificationItem-unreadIndicator {
-    color: darken($info, 5%);
-    font-size: 0.5rem;
-    left: 1px;
-    top: 40px;
-    transform: translateY(-125%);
+.o-mail-NotificationItem-text:before {
+    // invisible character so that typing status bar has constant height, regardless of text content.
+    content: "\200b"; /* unicode zero width space character */
 }

@@ -33,7 +33,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     active = fields.Boolean(default=True)
     id_client = fields.Char(required=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True,
+    company_id = fields.Many2one('res.company', string='Company', required=True, index=True,
         default=lambda self: self.env.company)
     edi_identification = fields.Char(required=True, help="The unique id that identifies this user, typically the vat")
     private_key_id = fields.Many2one(
@@ -129,6 +129,13 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if error_code == 'no_such_user':
                 # This error is also raised if the user didn't exchange data and someone else claimed the edi_identificaiton.
                 self.sudo().active = False
+            if error_code == 'invalid_signature':
+                raise AccountEdiProxyError(
+                    error_code,
+                    _("Invalid signature for request. This might be due to another connection to odoo Access Point "
+                      "server. It can occur if you have duplicated your database. \n\n"
+                      "If you are not sure how to fix this, please contact our support."),
+                )
             raise AccountEdiProxyError(error_code, proxy_error['message'] or False)
 
         return response['result']
@@ -139,7 +146,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
         :param company: the company of the user.
         '''
-        private_key_sudo = self.env['certificate.key'].sudo()._generate_rsa_private_key(company, name=f"{self.id_client}_{self.edi_identification}.key")
+        private_key_sudo = self.env['certificate.key'].sudo()._generate_rsa_private_key(
+            company,
+            name=f"{proxy_type}_{edi_mode}_{company.id}.key",
+        )
         edi_identification = self._get_proxy_identification(company, proxy_type)
         if edi_mode == 'demo':
             # simulate registration

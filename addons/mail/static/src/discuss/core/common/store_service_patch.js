@@ -1,7 +1,6 @@
 import { Store } from "@mail/core/common/store_service";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { debounce } from "@web/core/utils/timing";
 
@@ -33,24 +32,21 @@ const storeServicePatch = {
      * @returns {Promise<import("models").Thread>}
      */
     async createGroupChat({ default_display_mode, partners_to, name }) {
-        const data = await rpc("/discuss/channel/create_group", {
-            default_display_mode,
-            partners_to,
-            name,
-        });
-        const { Thread } = this.insert(data);
-        const [channel] = Thread;
-        channel.open({ focus: true });
+        const { channel } = await this.fetchStoreData(
+            "/discuss/create_group",
+            { default_display_mode, partners_to, name },
+            { readonly: false, requestData: true }
+        );
+        await channel.open({ focus: true });
         return channel;
     },
     /** @param {number} channelId */
     async fetchChannel(channelId) {
-        const channelIds = this.fetchParams.find(
-            (fetchParams) => fetchParams[0] === "discuss.channel"
-        );
-        if (channelIds) {
-            channelIds[1].push(channelId);
-            await this.fetchDeferred;
+        const fetchParam = this.fetchParams.find(([name]) => name === "discuss.channel");
+        if (fetchParam) {
+            const [, channelIds, dataRequest] = fetchParam;
+            channelIds.push(channelId);
+            await dataRequest._resultDef;
         } else {
             await this.fetchStoreData("discuss.channel", [channelId]);
         }
@@ -72,20 +68,20 @@ const storeServicePatch = {
      * @param {import("models").ChannelMember} m2
      */
     sortMembers(m1, m2) {
-        return m1.persona.name?.localeCompare(m2.persona.name) || m1.id - m2.id;
+        return m1.name?.localeCompare(m2.name) || m1.id - m2.id;
     },
     /** @param {number[]} partnerIds */
     async startChat(partnerIds) {
         const partners_to = [...new Set([this.self.id, ...partnerIds])];
         if (partners_to.length === 1) {
             const chat = await this.joinChat(partners_to[0], true);
-            chat.open({ focus: true });
+            chat.open({ focus: true, bypassCompact: true });
         } else if (partners_to.length === 2) {
             const correspondentId = partners_to.find(
                 (partnerId) => partnerId !== this.store.self.id
             );
             const chat = await this.joinChat(correspondentId, true);
-            chat.open({ focus: true });
+            chat.open({ focus: true, bypassCompact: true });
         } else {
             await this.createGroupChat({ partners_to });
         }

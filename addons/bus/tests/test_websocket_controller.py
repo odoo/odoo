@@ -32,7 +32,6 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.assertIsNotNone(result)
 
     def test_websocket_peek_session_expired_login(self):
-        session = self.authenticate(None, None)
         # first rpc should be fine
         self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': [],
@@ -42,16 +41,15 @@ class TestWebsocketController(HttpCaseWithUserDemo):
 
         self.authenticate('admin', 'admin')
         # rpc with outdated session should lead to error.
-        headers = {'Cookie': f'session_id={session.sid};'}
         with self.assertRaises(JsonRpcException, msg='odoo.http.SessionExpiredException'):
             self.make_jsonrpc_request('/websocket/peek_notifications', {
                 'channels': [],
                 'last': 0,
                 'is_first_poll': False,
-            }, headers=headers)
+            })
 
     def test_websocket_peek_session_expired_logout(self):
-        session = self.authenticate('demo', 'demo')
+        self.authenticate('demo', 'demo')
         # first rpc should be fine
         self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': [],
@@ -60,10 +58,9 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         })
         self.url_open('/web/session/logout')
         # rpc with outdated session should lead to error.
-        headers = {'Cookie': f'session_id={session.sid};'}
         with self.assertRaises(JsonRpcException, msg='odoo.http.SessionExpiredException'):
             self.make_jsonrpc_request('/websocket/peek_notifications', {
                 'channels': [],
                 'last': 0,
                 'is_first_poll': False,
-            }, headers=headers)
+            })

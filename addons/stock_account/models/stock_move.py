@@ -56,7 +56,7 @@ class StockMove(models.Model):
             layers |= layers.stock_valuation_layer_ids
             if self.product_id.lot_valuated:
                 layers_by_lot = layers.grouped('lot_id')
-                prices = {}
+                prices = defaultdict(lambda: 0)
                 for lot, stock_layers in layers_by_lot.items():
                     qty = sum(stock_layers.mapped("quantity"))
                     val = sum(stock_layers.mapped("value"))
@@ -87,6 +87,29 @@ class StockMove(models.Model):
         :rtype: list
         """
         return ['in', 'out', 'dropshipped', 'dropshipped_returned']
+
+    def _get_move_directions(self):
+        move_in_ids = set()
+        move_out_ids = set()
+        locations_should_be_valued = (self.move_line_ids.location_id | self.move_line_ids.location_dest_id).filtered(lambda l: l._should_be_valued())
+        for record in self:
+            for move_line in record.move_line_ids:
+                if move_line._should_exclude_for_valuation() or not move_line.picked:
+                    continue
+                if move_line.location_id not in locations_should_be_valued and move_line.location_dest_id in locations_should_be_valued:
+                    move_in_ids.add(record.id)
+                if move_line.location_id in locations_should_be_valued and move_line.location_dest_id not in locations_should_be_valued:
+                    move_out_ids.add(record.id)
+
+        move_directions = defaultdict(set)
+        for record in self:
+            if record.id in move_in_ids and not record._is_dropshipped_returned():
+                move_directions[record.id].add('in')
+
+            if record.id in move_out_ids and not record._is_dropshipped():
+                move_directions[record.id].add('out')
+
+        return move_directions
 
     def _get_in_move_lines(self):
         """ Returns the `stock.move.line` records of `self` considered as incoming. It is done thanks
@@ -219,9 +242,7 @@ class StockMove(models.Model):
                 quantities[forced_quantity[0]] += forced_quantity[1]
             else:
                 for line in lines:
-                    quantities[line.lot_id] += line.product_uom_id._compute_quantity(
-                        line.quantity, move.product_id.uom_id
-                    )
+                    quantities[line.lot_id] += line.quantity_product_uom
             if float_is_zero(sum(quantities.values()), precision_rounding=move.product_id.uom_id.rounding):
                 continue
 
@@ -265,9 +286,7 @@ class StockMove(models.Model):
                 quantities[forced_quantity[0]] += forced_quantity[1]
             elif move.product_id.lot_valuated:
                 for line in lines:
-                    quantities[line.lot_id] += line.product_uom_id._compute_quantity(
-                        line.quantity, move.product_id.uom_id
-                    )
+                    quantities[line.lot_id] += line.quantity_product_uom
             else:
                 quantities[self.env['stock.lot']] += move.product_qty
 
@@ -353,7 +372,7 @@ class StockMove(models.Model):
         stock_valuation_layers._validate_accounting_entries()
         stock_valuation_layers._validate_analytic_accounting_entries()
 
-        valued_moves['out'].filtered(lambda m: m.product_id.lot_valuated)._product_price_update_after_done()
+        valued_moves['out'].filtered(lambda m: m.product_id.lot_valuated).sudo()._product_price_update_after_done()
 
         stock_valuation_layers._check_company()
 
@@ -402,7 +421,7 @@ class StockMove(models.Model):
                 quantity_by_lot[forced_qty[0]] += forced_qty[1]
             else:
                 for valued_move_line in valued_move_lines:
-                    quantity_by_lot[valued_move_line.lot_id] += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
+                    quantity_by_lot[valued_move_line.lot_id] += valued_move_line.quantity_product_uom
 
             qty = sum(quantity_by_lot.values())
             move_cost = move._get_price_unit()
@@ -490,9 +509,7 @@ class StockMove(models.Model):
                 quantities[forced_quantity[0]] += forced_quantity[1]
             else:
                 for line in lines:
-                    quantities[line.lot_id] += line.product_uom_id._compute_quantity(
-                        line.quantity, move.product_id.uom_id
-                    )
+                    quantities[line.lot_id] += line.quantity_product_uom
             if move.product_id.lot_valuated:
                 unit_cost = {lot: lot.standard_price for lot in move.lot_ids}
             else:
@@ -513,10 +530,15 @@ class StockMove(models.Model):
         return svl_vals_list
 
     def _get_src_account(self, accounts_data):
-        return self.location_id.valuation_out_account_id.id or accounts_data['stock_input'].id
+        if self.location_id.usage == 'inventory':
+            return self.location_id.valuation_in_account_id.id or accounts_data['income'].id
+        else:
+            return self.location_id.valuation_out_account_id.id or accounts_data['stock_input'].id
 
     def _get_dest_account(self, accounts_data):
-        if not self.location_dest_id.usage in ('production', 'inventory'):
+        if self.location_dest_id.usage == 'inventory':
+            return self.location_dest_id.valuation_out_account_id.id or accounts_data['expense'].id
+        elif not self.location_dest_id.usage in ('production', 'inventory'):
             return accounts_data['stock_output'].id
         else:
             return self.location_dest_id.valuation_in_account_id.id or accounts_data['stock_output'].id
@@ -694,20 +716,30 @@ class StockMove(models.Model):
         if self._should_exclude_for_valuation():
             return am_vals
 
-        company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
-        company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
+        move_directions = self.env.context.get('move_directions') or False
+
+        self_is_out_move = self_is_in_move = False
+        if move_directions:
+            self_is_out_move = move_directions.get(self.id) and 'out' in move_directions.get(self.id)
+            self_is_in_move = move_directions.get(self.id) and 'in' in move_directions.get(self.id)
+        else:
+            self_is_out_move = self._is_out()
+            self_is_in_move = self._is_in()
+
+        company_from = self_is_out_move and self.mapped('move_line_ids.location_id.company_id') or False
+        company_to = self_is_in_move and self.mapped('move_line_ids.location_dest_id.company_id') or False
 
         journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
         # Create Journal Entry for products arriving in the company; in case of routes making the link between several
         # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
-        if self._is_in():
+        if self_is_in_move:
             if self._is_returned(valued_type='in'):
                 am_vals.append(self.with_company(company_to).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
             else:
                 am_vals.append(self.with_company(company_to)._prepare_account_move_vals(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost))
 
         # Create Journal Entry for products leaving the company
-        if self._is_out():
+        if self_is_out_move:
             cost = -1 * cost
             if self._is_returned(valued_type='out'):
                 am_vals.append(self.with_company(company_from).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))

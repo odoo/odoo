@@ -1,4 +1,4 @@
-import { AND, Record } from "@mail/core/common/record";
+import { AND, fields, Record } from "@mail/core/common/record";
 import { imageUrl } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
@@ -31,6 +31,14 @@ export class Persona extends Record {
 
     /** @type {string} */
     avatar_128_access_token;
+    /** @type {string} */
+    commercial_company_name;
+    /**
+     * function = job position (Frenchism)
+     *
+     * @type {string}
+     */
+    function;
     /** @type {number} */
     id;
     /** @type {boolean | undefined} */
@@ -38,9 +46,14 @@ export class Persona extends Record {
     /** @type {string} */
     phone;
     debouncedSetImStatus;
+    displayName = fields.Attr(undefined, {
+        compute() {
+            return this._computeDisplayName();
+        },
+    });
     /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
-    signature = Record.attr(undefined, { html: true });
-    storeAsTrackedImStatus = Record.one("Store", {
+    signature = fields.Html(undefined);
+    storeAsTrackedImStatus = fields.One("Store", {
         /** @this {import("models").Persona} */
         compute() {
             if (
@@ -71,13 +84,13 @@ export class Persona extends Record {
     type;
     /** @type {string} */
     name;
-    country = Record.one("res.country");
+    country = fields.One("res.country");
     /** @type {string} */
     email;
     /** @type {number} */
     userId;
     /** @type {ImStatus} */
-    im_status = Record.attr(null, {
+    im_status = fields.Attr(null, {
         onUpdate() {
             if (this.eq(this.store.self) && this.im_status === "offline") {
                 this.store.env.services.im_status.updateBusPresence();
@@ -85,16 +98,19 @@ export class Persona extends Record {
         },
     });
     /** @type {luxon.DateTime} */
-    last_poll = Record.attr(undefined, { type: "datetime" });
+    offline_since = fields.Datetime();
     /** @type {boolean} */
     is_public;
     /** @type {'email' | 'inbox'} */
     notification_preference;
     isAdmin = false;
     isInternalUser = false;
-    /** @type {luxon.DateTime} */
-    write_date = Record.attr(undefined, { type: "datetime" });
-    group_ids = Record.many("res.groups", { inverse: "personas" });
+    write_date = fields.Datetime();
+    group_ids = fields.Many("res.groups", { inverse: "personas" });
+
+    _computeDisplayName() {
+        return this.name;
+    }
 
     get emailWithoutDomain() {
         return this.email.substring(0, this.email.lastIndexOf("@"));
@@ -143,9 +159,17 @@ export class Persona extends Record {
 
     updateImStatus(newStatus) {
         if (newStatus === "offline") {
-            this.last_poll = DateTime.now();
+            this.offline_since = DateTime.now();
         }
         this.im_status = newStatus;
+    }
+
+    _getActualModelName() {
+        return this.type === "partner"
+            ? "res.partner"
+            : this.type === "visitor"
+            ? "website.visitor"
+            : "mail.guest";
     }
 }
 

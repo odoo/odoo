@@ -309,6 +309,7 @@ export class MailThread extends models.ServerModel {
             result.push({
                 partner_id: partner.id,
                 name: partner.display_name,
+                email: partner.email,
                 lang,
                 reason,
                 create_values: {},
@@ -626,7 +627,7 @@ export class MailThread extends models.ServerModel {
             res["isLoadingAttachments"] = false;
             // Specific implementation of mail.thread.main.attachment
             if (this.env[this._name]._fields.message_main_attachment_id) {
-                res["mainAttachment"] = mailDataHelpers.Store.one(
+                res["message_main_attachment_id"] = mailDataHelpers.Store.one(
                     IrAttachment.browse(thread.message_main_attachment_id),
                     makeKwArgs({ only_id: true })
                 );

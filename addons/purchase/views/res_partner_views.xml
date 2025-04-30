@@ -49,26 +49,6 @@
             </field>
         </record>
 
-        <!-- Partner kanban view inherited -->
-        <record model="ir.ui.view" id="purchase_partner_kanban_view">
-            <field name="name">res.partner.kanban.purchaseorder.inherit</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//footer/div" position="inside">
-                    <a t-if="record.purchase_order_count?.value"
-                        class="btn btn-sm btn-link smaller"
-                        groups="purchase.group_purchase_user"
-                        name="%(purchase.act_res_partner_2_purchase_order)d"
-                        role="button"
-                        type="action">
-                        <i class="fa fa-credit-card me-1" aria-label="Purchases" role="img" title="Purchases"/>
-                        <field name="purchase_order_count"/>
-                    </a>
-                </xpath>
-            </field>
-        </record>
-
     <record id="act_res_partner_2_supplier_invoices" model="ir.actions.act_window">
             <field name="name">Vendor Bills</field>
             <field name="res_model">account.move</field>
@@ -100,17 +80,14 @@
                         <field string="Purchases" name="purchase_order_count" widget="statinfo"/>
                     </button>
                 </div>
-                <page name="internal_notes" position="inside">
-                    <group groups="purchase.group_purchase_user">
-                        <group groups="purchase.group_warning_purchase" col="2">
-                            <separator string="Warning on the Purchase Order" colspan="2"/>
-                            <field name="purchase_warn" nolabel="1" colspan="2" required="1"/>
-                            <field name="purchase_warn_msg" colspan="2" placeholder="Type a message..." nolabel="1"
-                                invisible="purchase_warn in (False, 'no-message')"
-                                required="purchase_warn and purchase_warn != 'no-message'"/>
-                        </group>
+                <group name="warnings" position="inside">
+                    <group groups="purchase.group_warning_purchase" col="2">
+                        <separator string="Warning on Purchase Orders and Bills" colspan="2"/>
+                        <field name="purchase_warn_msg"
+                               placeholder="e.g. This vendor is on vacation until the end of August."
+                               nolabel="1" colspan="2"/>
                     </group>
-                </page>
+                </group>
             </field>
         </record>
 </odoo>

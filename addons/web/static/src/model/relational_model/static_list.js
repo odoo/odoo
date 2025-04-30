@@ -7,10 +7,14 @@ import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields 
 
 import { markRaw } from "@odoo/owl";
 
+/**
+ * @typedef {import("./record").Record} RelationalRecord
+ */
+
 function compareFieldValues(v1, v2, fieldType) {
     if (fieldType === "many2one") {
-        v1 = v1 ? v1[1] : "";
-        v2 = v2 ? v2[1] : "";
+        v1 = v1 ? v1.display_name : "";
+        v2 = v2 ? v2.display_name : "";
     }
     return v1 < v2;
 }
@@ -38,13 +42,12 @@ export class StaticList extends DataPoint {
     static type = "StaticList";
 
     /**
-     * @param {import("./relational_model").Config} config
-     * @param {Object} data
-     * @param {Object} [options={}]
-     * @param {Function} [options.onUpdate]
-     * @param {Record} [options.parent]
+     * @type {typeof DataPoint.prototype.setup<{
+     *  onUpdate?: () => unknown;
+     *  parent?: RelationalRecord;
+     * }>}
      */
-    setup(config, data, options = {}) {
+    setup(_config, data, options = {}) {
         this._parent = options.parent;
         this._onUpdate = options.onUpdate;
 
@@ -63,6 +66,7 @@ export class StaticList extends DataPoint {
         // config to add the form view's fields in activeFields.
         this._extendedRecords = new Set();
 
+        /** @type {RelationalRecord[]} */
         this.records = data
             .slice(this.offset, this.limit)
             .map((r) => this._createRecordDatapoint(r));
@@ -172,8 +176,8 @@ export class StaticList extends DataPoint {
      * @param {Object} [params.context]
      * @param {boolean} [params.withoutParent]
      * @param {string} [params.mode]
-     * @param {Record} [record]
-     * @returns {Record}
+     * @param {RelationalRecord} [record]
+     * @returns {RelationalRecord}
      */
     extendRecord(params, record) {
         return this.model.mutex.exec(async () => {
@@ -357,7 +361,7 @@ export class StaticList extends DataPoint {
      * add this record to the list (if it is a new one), and to notify the parent record of the
      * update. We may also want to sort the list.
      *
-     * @param {Record} record
+     * @param {RelationalRecord} record
      */
     validateExtendedRecord(record) {
         return this.model.mutex.exec(async () => {
@@ -1009,7 +1013,11 @@ export class StaticList extends DataPoint {
         if (fieldName) {
             if (orderBy.length && orderBy[0].name === fieldName) {
                 if (!this._needsReordering) {
-                    orderBy[0] = { name: orderBy[0].name, asc: !orderBy[0].asc };
+                    if (orderBy[0].asc) {
+                        orderBy[0] = { name: orderBy[0].name, asc: false };
+                    } else {
+                        orderBy = [];
+                    }
                 }
             } else {
                 orderBy = orderBy.filter((o) => o.name !== fieldName);

@@ -12,10 +12,10 @@ from operator import itemgetter
 
 from psycopg2.extras import Json
 
-from odoo import api, fields, models, tools, Command
+from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.osv import expression
-from odoo.tools import format_list, lazy_property, split_every, sql, unique, OrderedSet, SQL
+from odoo.fields import Command, Domain
+from odoo.tools import lazy_property, split_every, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 from odoo.tools.translate import _, LazyTranslate
 
@@ -233,6 +233,8 @@ class IrModel(models.Model):
     view_ids = fields.One2many('ir.ui.view', compute='_view_ids', string='Views')
     count = fields.Integer(compute='_compute_count', string="Count (Incl. Archived)",
                            help="Total number of records in this model")
+    fold_name = fields.Char(string="Fold Field", help="In a Kanban view where columns are records of this model, the value "
+        "of this (boolean) field determines which column should be folded by default.")
 
     @api.depends()
     def _inherited_models(self):
@@ -297,6 +299,12 @@ class IrModel(models.Model):
             for field in order_fields:
                 if field not in stored_fields:
                     raise ValidationError(_("Unable to order by %s: fields used for ordering must be present on the model and stored.", field))
+
+    @api.constrains('fold_name')
+    def _check_fold_name(self):
+        for model in self:
+            if model.fold_name and model.fold_name not in model.field_id.mapped('name'):
+                raise ValidationError(_("The value of 'Fold Field' should be a field name of the model."))
 
     _obj_name_uniq = models.Constraint('UNIQUE (model)', 'Each model must have a unique name.')
 
@@ -378,7 +386,7 @@ class IrModel(models.Model):
             vals['field_id'] = [op for op in vals['field_id'] if op[0] != 4]
         res = super().write(vals)
         # ordering has been changed, reload registry to reflect update + signaling
-        if 'order' in vals:
+        if 'order' in vals or 'fold_name' in vals:
             self.env.flush_all()  # _setup_models__ need to fetch the updated values from the db
             self.pool._setup_models__(self._cr)
         return res
@@ -416,6 +424,7 @@ class IrModel(models.Model):
             'state': 'manual' if model._custom else 'base',
             'abstract': model._abstract,
             'transient': model._transient,
+            'fold_name': model._fold_name,
         }
 
     def _reflect_models(self, model_names):
@@ -470,6 +479,7 @@ class IrModel(models.Model):
             '_abstract': bool(model_data['abstract']),
             '_transient': bool(model_data['transient']),
             '_order': model_data['order'],
+            '_fold_name': model_data['fold_name'],
             '__doc__': model_data['info'],
         }
 
@@ -490,7 +500,7 @@ FIELD_TYPES = [(key, key) for key in sorted(fields.Field.by_type)]
 class IrModelFields(models.Model):
     _name = 'ir.model.fields'
     _description = "Fields"
-    _order = "name"
+    _order = "name, id"
     _rec_name = 'field_description'
     _allow_sudo_commands = False
 
@@ -912,7 +922,7 @@ class IrModelFields(models.Model):
                 self.env.cache.clear_dirty_field(field)
         # remove fields from registry, and check that views are not broken
         fields = [pop_field(self.env[record.model], record.name) for record in records]
-        domain = expression.OR([('arch_db', 'like', record.name)] for record in records)
+        domain = Domain.OR([('arch_db', 'like', record.name)] for record in records)
         views = self.env['ir.ui.view'].search(domain)
         try:
             for view in views:
@@ -921,7 +931,7 @@ class IrModelFields(models.Model):
             if not uninstalling:
                 raise UserError(_(
                     "Cannot rename/delete fields that are still present in views:\nFields: %(fields)s\nView: %(view)s",
-                    fields=format_list(self.env, [str(f) for f in fields]),
+                    fields=fields,
                     view=view.name,
                 ))
             else:
@@ -1236,6 +1246,7 @@ class IrModelFields(models.Model):
             'required': bool(field_data['required']),
             'readonly': bool(field_data['readonly']),
             'store': bool(field_data['store']),
+            'company_dependent': bool(field_data['company_dependent']),
         }
         if field_data['ttype'] in ('char', 'text', 'html'):
             attrs['translate'] = bool(field_data['translate'])
@@ -1983,7 +1994,7 @@ class IrModelAccess(models.Model):
               FROM ir_model_access a
               JOIN ir_model m ON (a.model_id = m.id)
               JOIN res_groups g ON (a.group_id = g.id)
-         LEFT JOIN ir_module_category c ON (c.id = g.category_id)
+         LEFT JOIN res_groups_privilege c ON (c.id = g.privilege_id)
              WHERE m.model = %s
                AND a.active = TRUE
                AND a.perm_{access_mode} = TRUE

@@ -23,6 +23,6 @@ class TestToggleUpload(HttpCase):
                     "thread_model": "discuss.channel",
                 },
                 files={"ufile": file},
-                headers={"Cookie": f"session_id={self.session.sid};{guest._cookie_name}={guest._format_auth_cookie()};"},
+                cookies={guest._cookie_name: guest._format_auth_cookie()}
             )
         self.assertEqual(response.status_code, 200)

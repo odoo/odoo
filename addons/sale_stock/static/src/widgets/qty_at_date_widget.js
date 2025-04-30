@@ -21,8 +21,8 @@ export class QtyAtDatePopover extends Component {
         this.actionService.doAction("stock.stock_forecasted_product_product_action", {
             additionalContext: {
                 active_model: 'product.product',
-                active_id: this.props.record.data.product_id[0],
-                warehouse_id: this.props.record.data.warehouse_id && this.props.record.data.warehouse_id[0],
+                active_id: this.props.record.data.product_id.id,
+                warehouse_id: this.props.record.data.warehouse_id && this.props.record.data.warehouse_id.id,
                 move_to_match_ids: this.props.record.data.move_ids.records.map(record => record.resId),
                 sale_line_to_match_id: this.props.record.resId,
             },
@@ -87,5 +87,17 @@ export class QtyAtDateWidget extends Component {
 
 export const qtyAtDateWidget = {
     component: QtyAtDateWidget,
+    fieldDependencies: [
+        { name: 'display_qty_widget', type: 'boolean'},
+        { name: 'free_qty_today', type: 'float'},
+        { name: 'forecast_expected_date', type: 'datetime'},
+        { name: 'is_mto', type: 'boolean'},
+        { name: 'move_ids', type: 'one2many'},
+        { name: 'qty_available_today', type: 'float'},
+        { name: 'qty_to_deliver', type: 'float'},
+        { name: 'scheduled_date', type: 'datetime'},
+        { name: 'virtual_available_at_date', type: 'float'},
+        { name: 'warehouse_id', type: 'many2one'},
+    ],
 };
 registry.category("view_widgets").add("qty_at_date_widget", qtyAtDateWidget);

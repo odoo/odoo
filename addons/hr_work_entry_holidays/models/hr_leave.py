@@ -14,7 +14,7 @@ from odoo.tools import format_date
 class HrLeaveType(models.Model):
     _inherit = 'hr.leave.type'
 
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', string='Work Entry Type')
+    work_entry_type_id = fields.Many2one('hr.work.entry.type', string='Work Entry Type', index='btree_not_null')
 
 
 class HrLeave(models.Model):
@@ -121,12 +121,6 @@ class HrLeave(models.Model):
         with self.env['hr.work.entry']._error_checking(start=start, stop=stop, employee_ids=employee_ids):
             return super().create(vals_list)
 
-    def action_reset_confirm(self):
-        start = min(self.mapped('date_from'), default=False)
-        stop = max(self.mapped('date_to'), default=False)
-        with self.env['hr.work.entry']._error_checking(start=start, stop=stop, employee_ids=self.employee_id.ids):
-            return super().action_reset_confirm()
-
     def _get_leaves_on_public_holiday(self):
         return super()._get_leaves_on_public_holiday().filtered(
             lambda l: l.holiday_status_id.work_entry_type_id.code not in ['LEAVE110', 'LEAVE210', 'LEAVE280'])
@@ -145,7 +139,7 @@ class HrLeave(models.Model):
         self._regen_work_entries()
         return res
 
-    def _action_user_cancel(self, reason):
+    def _action_user_cancel(self, reason=None):
         res = super()._action_user_cancel(reason)
         self.sudo()._regen_work_entries()
         return res

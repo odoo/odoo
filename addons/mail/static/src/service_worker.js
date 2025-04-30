@@ -3,6 +3,7 @@
 
 const MESSAGE_TYPE = {
     UNEXPECTED_CALL_TERMINATION: "UNEXPECTED_CALL_TERMINATION",
+    POST_RTC_LOGS: "POST_RTC_LOGS",
 };
 const PUSH_NOTIFICATION_TYPE = {
     CALL: "CALL",
@@ -12,6 +13,109 @@ const PUSH_NOTIFICATION_ACTION = {
     ACCEPT: "ACCEPT",
     DECLINE: "DECLINE",
 };
+
+const LOG_AGE_LIMIT = 24 * 60 * 60 * 1000; // 24h
+let db;
+let interactionSinceCleanupCount = 0;
+
+async function openDatabase() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open("RtcLogsDB", 1);
+        request.onupgradeneeded = function (event) {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains("logs")) {
+                const store = db.createObjectStore("logs", { keyPath: "id", autoIncrement: true });
+                store.createIndex("timestamp", "timestamp", { unique: false });
+            }
+        };
+        request.onsuccess = async function (event) {
+            db = event.target.result;
+            try {
+                await cleanupLogs(db);
+            } catch (error) {
+                console.error("Error cleaning up logs:", error);
+            }
+            resolve(db);
+        };
+        request.onerror = function (event) {
+            reject(event.target.error);
+        };
+    });
+}
+
+self.addEventListener("activate", (event) => {
+    event.waitUntil(openDatabase());
+});
+
+async function cleanupLogs(dataBase) {
+    const cutoffTime = Date.now() - LOG_AGE_LIMIT;
+    return new Promise((resolve, reject) => {
+        const tx = dataBase.transaction("logs", "readwrite");
+        const store = tx.objectStore("logs");
+        const index = store.index("timestamp");
+        const range = IDBKeyRange.upperBound(cutoffTime);
+        const request = index.openCursor(range);
+        request.onsuccess = (event) => {
+            const cursor = event.target.result;
+            if (cursor) {
+                cursor.delete();
+                cursor.continue();
+            }
+        };
+        request.onerror = (event) => reject(event.target.error);
+        tx.oncomplete = () => resolve();
+        tx.onerror = (event) => reject(event.target.error);
+    });
+}
+
+async function storeLogs(logs, { download = false } = {}) {
+    if (!db) {
+        await openDatabase();
+    }
+    if (interactionSinceCleanupCount > 30) {
+        // cleanup logs in case the service worker lives for a long time
+        interactionSinceCleanupCount = 0;
+        await cleanupLogs(db);
+    }
+    interactionSinceCleanupCount++;
+    return new Promise((resolve, reject) => {
+        let output;
+        const tx = db.transaction("logs", "readwrite");
+        const store = tx.objectStore("logs");
+        for (const log of logs) {
+            if (!log) {
+                continue;
+            }
+            const { type, entry, value } = log;
+            const request = store.add({
+                type: type,
+                entry: entry,
+                value: value,
+                timestamp: Date.now(),
+            });
+            request.onerror = (event) => reject(event.target.error);
+        }
+        if (download) {
+            const request = store.getAll();
+            request.onsuccess = () => {
+                const allLogs = request.result;
+                const timelines = {};
+                const snapshots = {};
+                allLogs.forEach((log) => {
+                    if (log.type === "timeline") {
+                        timelines[log.entry] = log.value;
+                    } else if (log.type === "snapshot") {
+                        snapshots[log.entry] = log.value;
+                    }
+                });
+                request.onerror = (event) => reject(event.target.error);
+                output = { timelines, snapshots };
+            };
+        }
+        tx.oncomplete = () => resolve(output);
+        tx.onerror = (event) => reject(event.target.error);
+    });
+}
 
 /**
  * @param {number} channelId id of the mail discuss channel
@@ -140,10 +244,25 @@ self.addEventListener("pushsubscriptionchange", async (event) => {
         credentials: "include",
     });
 });
-self.addEventListener("message", ({ data, source }) => {
+self.addEventListener("message", async ({ data, source }) => {
     switch (data.name) {
         case MESSAGE_TYPE.UNEXPECTED_CALL_TERMINATION:
             openDiscussChannel(data.channelId, { joinCall: true, source });
             break;
+        case MESSAGE_TYPE.POST_RTC_LOGS: {
+            const { logs, download } = data;
+            try {
+                const data = await storeLogs(logs, { download });
+                if (download) {
+                    source.postMessage({
+                        action: "POST_RTC_LOGS",
+                        data,
+                    });
+                }
+            } catch (error) {
+                console.error("Error storing log:", error);
+            }
+            break;
+        }
     }
 });

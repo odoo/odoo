@@ -1,6 +1,6 @@
 import { renderToFragment } from "@web/core/utils/render";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
-import { SKIP_IMPLICIT_UPDATE } from "./colibri";
+import { INITIAL_VALUE, SKIP_IMPLICIT_UPDATE } from "./colibri";
 import { makeAsyncHandler, makeButtonHandler } from "./utils";
 
 /**
@@ -39,6 +39,11 @@ export class Interaction {
      * @type {string}
      */
     static selectorHas = "";
+
+    /**
+     * Constant to reset dynamicContent t-att-* and t-out.
+     */
+    static INITIAL_VALUE = INITIAL_VALUE;
 
     /**
      * Note that a dynamic selector is allowed to return a falsy value, for ex
@@ -82,6 +87,9 @@ export class Interaction {
      * - other falsy values (`""`, `0`) are applied as such (`required=""`)
      * - boolean `true` is applied as the attribute's name
      *   (e.g. `{ "t-att-required": () => true }` applies `required="required"`)
+     *
+     * t-att-* and t-out directives also accept `Interaction.INITIAL_VALUE`,
+     * which resets them to the value they had before the interaction's start.
      *
      * Note that this is not owl! It is similar, to make it easy to learn, but
      * it is different, the syntax and semantics are somewhat different.
@@ -195,10 +203,43 @@ export class Interaction {
     }
 
     /**
+     * Mechanism to handle context-specific protection of a specific
+     * chunk of synchronous code after returning from an asynchronous one.
+     * This method returns a function that will run the wrapped function in a
+     * protected context when it is called.
+     * This should typically be used around code that follows an
+     * await this.waitFor(...).
+     *
+     * Example use-case: website builder's edit-mode disables the history
+     * observer to ignore the changes done by interactions.
+     *
+     * A listener involving async code would then look like this:
+     * async onClick() {
+     *     // Code before await is protected
+     *     const result = await this.waitFor(...);
+     *     // Code here is not protected anymore
+     *     // Render variables can be updated because updateContent will run
+     *     // after the handler in a protected state
+     *     this.stuffUsedByTAtt = result.stuffUsedByTAtt;
+     *     this.protectSyncAfterAsync(() => {
+     *         // Code here is protected again, DOM can be updated
+     *         doStuff(this.el);
+     *     })();
+     * }
+     *
+     * @param {Function} fn function that needs to run in a protected context
+     * @return {Function} protected function
+     */
+    protectSyncAfterAsync(fn) {
+        return this.__colibri__.protectSyncAfterAsync(this, "protectSyncAfterAsync", fn);
+    }
+
+    /**
      * Wait for a specific timeout, then execute the given function (unless the
      * interaction has been destroyed). The dynamic content is then applied.
      */
     waitForTimeout(fn, delay) {
+        fn = this.__colibri__.protectSyncAfterAsync(this, "waitForTimeout", fn);
         return setTimeout(() => {
             if (!this.isDestroyed) {
                 fn.call(this);
@@ -214,6 +255,7 @@ export class Interaction {
      * interaction has been destroyed). The dynamic content is then applied.
      */
     waitForAnimationFrame(fn) {
+        fn = this.__colibri__.protectSyncAfterAsync(this, "waitForAnimationFrame", fn);
         return window.requestAnimationFrame(() => {
             if (!this.isDestroyed) {
                 fn.call(this);
@@ -227,13 +269,18 @@ export class Interaction {
     /**
      * Debounces a function and makes sure it is cancelled upon destroy.
      */
-    debounced(fn, delay) {
-        const debouncedFn = debounce(async (...args) => {
-            await fn.apply(this, args);
-            if (this.isReady && !this.isDestroyed) {
-                this.updateContent();
-            }
-        }, delay);
+    debounced(fn, delay, options) {
+        fn = this.__colibri__.protectSyncAfterAsync(this, "debounced", fn);
+        const debouncedFn = debounce(
+            async (...args) => {
+                await fn.apply(this, args);
+                if (this.isReady && !this.isDestroyed) {
+                    this.updateContent();
+                }
+            },
+            delay,
+            options
+        );
         this.registerCleanup(() => {
             debouncedFn.cancel();
         });
@@ -254,6 +301,7 @@ export class Interaction {
      * Throttles a function for animation and makes sure it is cancelled upon destroy.
      */
     throttled(fn) {
+        fn = this.__colibri__.protectSyncAfterAsync(this, "throttled", fn);
         const throttledFn = throttleForAnimation(async (...args) => {
             await fn.apply(this, args);
             if (this.isReady && !this.isDestroyed) {
@@ -282,6 +330,7 @@ export class Interaction {
      * more than 400ms.
      */
     locked(fn, useLoadingAnimation = false) {
+        fn = this.__colibri__.protectSyncAfterAsync(this, "locked", fn);
         if (useLoadingAnimation) {
             return makeButtonHandler(fn);
         } else {
@@ -302,7 +351,12 @@ export class Interaction {
      * @returns {Function} removes the listeners
      */
     addListener(target, event, fn, options) {
-        const nodes = target[Symbol.iterator] ? target : [target];
+        let nodes;
+        if (target.nodeName && ["FORM", "SELECT"].includes(target.nodeName)) {
+            nodes = [target];
+        } else {
+            nodes = target[Symbol.iterator] ? target : [target];
+        }
         const [ev, handler, opts] = this.__colibri__.addListener(nodes, event, fn, options);
         return () => nodes.forEach((node) => node.removeEventListener(ev, handler, opts));
     }
@@ -326,12 +380,33 @@ export class Interaction {
      * @param { HTMLElement } el
      * @param { HTMLElement } [locationEl] the target
      * @param { "afterbegin" | "afterend" | "beforebegin" | "beforeend" } [position]
+     * @param { boolean } [removeOnClean]
      */
-    insert(el, locationEl = this.el, position = "beforeend") {
+    insert(el, locationEl = this.el, position = "beforeend", removeOnClean = true) {
         locationEl.insertAdjacentElement(position, el);
-        this.registerCleanup(() => el.remove());
+        if (removeOnClean) {
+            this.registerCleanup(() => el.remove());
+        }
         this.services["public.interactions"].startInteractions(el);
         this.refreshListeners();
+    }
+
+    /**
+     * Remove the children of an element.
+     * The children will be inserted back when the interaction is destroyed.
+     *
+     * @param { HTMLElement } el
+     * @param { boolean } [insertBackOnClean]
+     */
+    removeChildren(el, insertBackOnClean = true) {
+        for (const child of el.children) {
+            this.services["public.interactions"].stopInteractions(child);
+        }
+        const children = [...el.childNodes];
+        el.replaceChildren();
+        if (insertBackOnClean) {
+            this.registerCleanup(() => el.replaceChildren(...children));
+        }
     }
 
     /**
@@ -343,9 +418,17 @@ export class Interaction {
      * @param { HTMLElement } [locationEl] the target
      * @param { "afterbegin" | "afterend" | "beforebegin" | "beforeend" } [position]
      * @param { Function } callback called with rendered elements before insertion
+     * @param { boolean } [removeOnClean]
      * @returns { HTMLElement[] } rendered elements
      */
-    renderAt(template, renderContext, locationEl, position = "beforeend", callback) {
+    renderAt(
+        template,
+        renderContext,
+        locationEl,
+        position = "beforeend",
+        callback,
+        removeOnClean = true
+    ) {
         const fragment = renderToFragment(template, renderContext);
         const result = [...fragment.children];
         const els = [...fragment.children];
@@ -354,7 +437,7 @@ export class Interaction {
             els.reverse();
         }
         for (const el of els) {
-            this.insert(el, locationEl, position);
+            this.insert(el, locationEl, position, removeOnClean);
         }
         return result;
     }

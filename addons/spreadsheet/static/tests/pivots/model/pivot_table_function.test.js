@@ -278,17 +278,17 @@ test("PIVOT with multiple row groups", async function () {
     // values in the first sheet from the individual pivot functions
     // prettier-ignore
     expect(getEvaluatedGrid(model, "A1:D11", firstSheetId)).toEqual([
-        [null,          "xphone",       "xpad",         "Total"],
-        [null,         "Probability",  "Probability",  "Probability"],
-        [1,             "",             11,             11],
-        [2,             "",             11,             11],
-        [2,             "",             15,             15],
-        [4,             "",             15,             15],
-        [12,            10,             "",             10],
-        [1,             10,             "",             10],
-        [17,            "",             95,             95],
-        [3,             "",             95,             95],
-        ["Total",       10,             121,              131],
+        ["(#1) Partner Pivot", "xphone",       "xpad",         "Total"],
+        ["",                   "Probability",  "Probability",  "Probability"],
+        [1,                     "",             11,             11],
+        [2,                     "",             11,             11],
+        [2,                     "",             15,             15],
+        [4,                     "",             15,             15],
+        [12,                    10,             "",             10],
+        [1,                     10,             "",             10],
+        [17,                    "",             95,             95],
+        [3,                     "",             95,             95],
+        ["Total",               10,             121,            131],
     ]);
     model.dispatch("CREATE_SHEET", { sheetId: "42" });
     setCellContent(model, "A1", `=PIVOT("1")`, "42");

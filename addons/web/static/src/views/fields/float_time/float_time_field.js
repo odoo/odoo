@@ -13,7 +13,6 @@ export class FloatTimeField extends Component {
     static props = {
         ...standardFieldProps,
         inputType: { type: String, optional: true },
-        placeholder: { type: String, optional: true },
         displaySeconds: { type: Boolean, optional: true },
     };
     static defaultProps = {
@@ -54,10 +53,9 @@ export const floatTimeField = {
     ],
     supportedTypes: ["float"],
     isEmpty: () => false,
-    extractProps: ({ attrs, options }) => ({
+    extractProps: ({ options }) => ({
         displaySeconds: options.displaySeconds,
         inputType: options.type,
-        placeholder: attrs.placeholder,
     }),
 };
 

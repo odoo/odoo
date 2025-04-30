@@ -14,6 +14,7 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { groupBy } from "@web/core/utils/arrays";
 
+const mockRpcRegistry = registry.category("mock_rpc");
 export const DISCUSS_ACTION_ID = 104;
 
 /**
@@ -93,13 +94,13 @@ export function registerRoute(route, handler) {
             return res;
         }
         const response = handler.call(this, request);
-        res = await beforeCallableHandler.after?.(response);
+        res = await beforeCallableHandler?.after?.(response);
         if (res !== undefined) {
             return res;
         }
         return response;
     };
-    registry.category("mock_rpc").add(route, beforeCallableHandler);
+    mockRpcRegistry.add(route, beforeCallableHandler);
 }
 
 // RPC handlers
@@ -196,7 +197,7 @@ async function channel_call_join(request) {
         ["channel_member_id", "in", channelMembers.map((channelMember) => channelMember.id)],
     ]);
     return new mailDataHelpers.Store(DiscussChannel.browse(channel_id), {
-        rtcSessions: mailDataHelpers.Store.many(rtcSessions, "ADD"),
+        rtc_session_ids: mailDataHelpers.Store.many(rtcSessions, "ADD"),
     })
         .add("Rtc", {
             iceServers: false,
@@ -241,7 +242,7 @@ async function channel_call_leave(request) {
             channel,
             "mail.record/insert",
             new mailDataHelpers.Store(DiscussChannel.browse(Number(channelId)), {
-                rtcSessions: mailDataHelpers.Store.many(
+                rtc_session_ids: mailDataHelpers.Store.many(
                     DiscussChannelRtcSession.browse(sessions.map((session) => session.id)),
                     "DELETE",
                     makeKwArgs({ only_id: true })
@@ -260,42 +261,6 @@ async function channel_call_leave(request) {
         ]);
     }
     BusBus._sendmany(notifications);
-}
-
-registerRoute("/discuss/channel/get_or_create_chat", discuss_get_or_create_chat);
-/** @type {RouteCallback} */
-async function discuss_get_or_create_chat(request) {
-    const { partners_to } = await parseRequestParams(request);
-
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    const channel = DiscussChannel._get_or_create_chat(partners_to);
-    return {
-        channel_id: channel.id,
-        data: new mailDataHelpers.Store(DiscussChannel.browse(channel.id)).get_result(),
-    };
-}
-
-registerRoute("/discuss/channel/create_channel", discuss_create_channel);
-/** @type {RouteCallback} */
-async function discuss_create_channel(request) {
-    const { name, group_id } = await parseRequestParams(request);
-
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_channel(name, group_id);
-}
-
-registerRoute("/discuss/channel/create_group", discuss_create_group);
-/** @type {RouteCallback} */
-async function discuss_create_group(request) {
-    const kwargs = await parseRequestParams(request);
-    const partners_to = kwargs.partners_to || [];
-    const name = kwargs.name || "";
-
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_group(partners_to, name);
 }
 
 registerRoute("/discuss/channel/members", discuss_channel_members);
@@ -544,13 +509,15 @@ async function discuss_inbox_messages(request) {
     };
 }
 
-registerRoute("/mail/link_preview", mail_link_preview);
+registerRoute("/mail/link_preview$", mail_link_preview);
 /** @type {RouteCallback} */
 async function mail_link_preview(request) {
     /** @type {import("mock_models").BusBus} */
     const BusBus = this.env["bus.bus"];
     /** @type {import("mock_models").MailLinkPreview} */
     const MailLinkPreview = this.env["mail.link.preview"];
+    /** @type {import("mock_models").MailLinkPreviewMessage} */
+    const MailMessageLinkPreview = this.env["mail.message.link.preview"];
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
@@ -558,45 +525,47 @@ async function mail_link_preview(request) {
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
     if (message.body.includes("https://make-link-preview.com")) {
         const linkPreviewId = MailLinkPreview.create({
-            message_id: message.id,
             og_description: "test description",
             og_title: "Article title",
             og_type: "article",
             source_url: "https://make-link-preview.com",
         });
+        MailMessageLinkPreview.create({
+            message_id: message.id,
+            link_preview_id: linkPreviewId,
+        });
         BusBus._sendone(
             MailMessage._bus_notification_target(message_id),
             "mail.record/insert",
-            new mailDataHelpers.Store(MailLinkPreview.browse(linkPreviewId)).get_result()
+            new mailDataHelpers.Store(MailMessage.browse(message_id)).get_result()
         );
     }
 }
 
-registerRoute("/mail/link_preview/hide", mail_link_preview_hide);
+registerRoute("/mail/link_preview/hide$", mail_link_preview_hide);
 /** @type {RouteCallback} */
 async function mail_link_preview_hide(request) {
     /** @type {import("mock_models").BusBus} */
     const BusBus = this.env["bus.bus"];
-    /** @type {import("mock_models").MailLinkPreview} */
-    const MailLinkPreview = this.env["mail.link.preview"];
+    /** @type {import("mock_models").MailMessageLinkPreview} */
+    const MailMessageLinkPreview = this.env["mail.message.link.preview"];
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
-    const { link_preview_ids } = await parseRequestParams(request);
-    for (const linkPreview of MailLinkPreview.browse(link_preview_ids)) {
+    const { message_link_preview_ids } = await parseRequestParams(request);
+    const messageLinkPreviews = MailMessageLinkPreview.browse(
+        MailMessageLinkPreview.search([["id", "in", message_link_preview_ids]])
+    );
+    for (const messageLinkPreview of messageLinkPreviews) {
+        messageLinkPreview.is_hidden = true;
         BusBus._sendone(
-            MailMessage._bus_notification_target(linkPreview.message_id),
+            MailMessage._bus_notification_target(messageLinkPreview.message_id),
             "mail.record/insert",
-            new mailDataHelpers.Store(MailMessage.browse(linkPreview.message_id), {
-                link_preview_ids: mailDataHelpers.Store.many(
-                    MailLinkPreview.browse(linkPreview.id),
-                    "DELETE",
-                    makeKwArgs({ only_id: true })
-                ),
-            }).get_result()
+            new mailDataHelpers.Store(
+                MailMessage.browse(messageLinkPreview.message_id)
+            ).get_result()
         );
     }
-    return { link_preview_ids };
 }
 
 registerRoute("/mail/message/post", mail_message_post);
@@ -645,6 +614,11 @@ export async function mail_message_post(request) {
     ];
     if (thread_model === "discuss.channel") {
         allowedParams.push("parent_id", "special_mentions");
+    }
+    if (post_data.role_ids?.length) {
+        const userIds = this.env["res.users"].search([["role_ids", "in", post_data.role_ids]]);
+        const partnerIds = this.env["res.partner"].search([["user_ids", "in", userIds]]);
+        post_data.partner_ids = [...new Set([...(post_data.partner_ids || []), ...partnerIds])];
     }
     for (const allowedParam of allowedParams) {
         if (post_data[allowedParam] !== undefined) {
@@ -725,7 +699,7 @@ async function mail_message_update_content(request) {
         "mail.record/insert",
         new mailDataHelpers.Store(MailMessage.browse(message.id), {
             attachment_ids: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
-            body: message.body,
+            body: ["markup", message.body],
             pinned_at: message.pinned_at,
             recipients: mailDataHelpers.Store.many(
                 this.env["res.partner"].browse(message.partner_ids),
@@ -885,13 +859,15 @@ async function mail_thread_update_suggested_recipients(request) {
 registerRoute("/mail/action", mail_action);
 /** @type {RouteCallback} */
 async function mail_action(request) {
-    return (await processRequest.call(this, request)).get_result();
+    const args = await parseRequestParams(request);
+    return processRequest.call(this, args.fetch_params, args.context).get_result();
 }
 
 registerRoute("/mail/data", mail_data);
 /** @type {RouteCallback} */
 export async function mail_data(request) {
-    return (await processRequest.call(this, request)).get_result();
+    const args = await parseRequestParams(request);
+    return processRequest.call(this, args.fetch_params, args.context).get_result();
 }
 
 registerRoute("/discuss/search", search);
@@ -955,18 +931,18 @@ async function mail_thread_subscribe(request) {
     ).get_result();
 }
 
-/** @type {RouteCallback} */
-async function processRequest(request) {
+function processRequest(fetchParams, context) {
     const store = new mailDataHelpers.Store();
-    const args = await parseRequestParams(request);
-    for (const fetchParam of args.fetch_params) {
-        const [name, params] =
+    for (const fetchParam of fetchParams) {
+        const [name, params, data_id] =
             typeof fetchParam === "string" || fetchParam instanceof String
-                ? [fetchParam, undefined]
+                ? [fetchParam, undefined, undefined]
                 : fetchParam;
-        mailDataHelpers._process_request_for_all.call(this, store, name, params, args.context);
+        store.data_id = data_id;
+        mailDataHelpers._process_request_for_all.call(this, store, name, params, context);
         mailDataHelpers._process_request_for_internal_user.call(this, store, name, params);
     }
+    store.data_id = null;
     return store;
 }
 
@@ -1055,6 +1031,24 @@ function _process_request_for_all(store, name, params, context = {}) {
             store.add(channel, makeKwArgs({ delete: true }));
         }
     }
+    if (name === "/discuss/get_or_create_chat") {
+        const channelId = DiscussChannel._get_or_create_chat(params.partners_to);
+        store.add(channelId).resolve_data_request({
+            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
+        });
+    }
+    if (name === "/discuss/create_channel") {
+        const channelId = DiscussChannel._create_channel(params.name, params.group_id);
+        store.add(channelId).resolve_data_request({
+            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
+        });
+    }
+    if (name === "/discuss/create_group") {
+        const channelId = DiscussChannel._create_group(params.partners_to, params.name);
+        store.add(channelId).resolve_data_request({
+            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
+        });
+    }
 }
 
 function _process_request_for_internal_user(store, name, params) {
@@ -1095,6 +1089,7 @@ const ONE = Symbol("ONE");
 class Store {
     constructor(data, values, as_thread, _delete, kwargs) {
         this.data = new Map();
+        this.data_id = null;
         if (data) {
             this.add(...arguments);
         }
@@ -1290,6 +1285,13 @@ class Store {
             }
         }
         return res;
+    }
+
+    resolve_data_request(values) {
+        if (this.data_id) {
+            this.add("DataResponse", { id: this.data_id, _resolve: true, ...values });
+        }
+        return this;
     }
 
     toJSON() {

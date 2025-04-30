@@ -13,6 +13,12 @@
     color: inherit !important;
     &.o-quick {
         opacity: 15%;
+        .o-mail-ChatWindow.o-mobile & {
+            opacity: 50%
+        }
+    }
+    &.o-actionsMenu {
+        background-color: inherit !important;
     }
     &:not(.o-actionsMenu) {
         padding: map-get($spacers, 1) / 2;
@@ -47,9 +53,18 @@
     width: 24px;
 }
 
-.o-mail-ChatWindow-header .o-mail-ChatWindow-threadAvatar img {
-    height: $o-mail-Avatar-sizeSmall;
-    width: $o-mail-Avatar-sizeSmall;
+.o-mail-ChatWindow-header {
+    --border-opacity: .25;
+
+    .o-mail-ChatWindow-threadAvatar img {
+        height: $o-mail-Avatar-sizeSmall;
+        width: $o-mail-Avatar-sizeSmall;
+    }
+}
+
+.o-mail-ChatWindow-imStatus {
+    bottom: -2px;
+    right: -2px;
 }
 
 .o-mail-ChatWindow-typing {

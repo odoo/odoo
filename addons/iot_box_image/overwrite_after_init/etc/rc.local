@@ -11,6 +11,9 @@
 #
 # By default this script does nothing.
 
+# Ensure Wi-Fi radio is enabled
+nmcli radio wifi on
+
 # Print the IP address
 _IP=$(hostname -I) || true
 if [ "$_IP" ]; then
@@ -24,6 +27,12 @@ chown odoo:odoo /var/run/odoo
 start_wifi=/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/wireless_ap.sh
 if [ -f $start_wifi ]; then
   $start_wifi &
+fi
+
+update_odoo=/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh
+if [ -f $update_odoo ]; then
+  printf "Updating Odoo service...\n"
+  $update_odoo &
 fi
 
 exit 0

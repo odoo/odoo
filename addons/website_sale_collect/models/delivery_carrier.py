@@ -3,7 +3,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools.misc import format_duration
 
 from odoo.addons.website_sale_collect import utils
 
@@ -72,50 +71,21 @@ class DeliveryCarrier(models.Model):
         pickup_locations = []
         order_sudo = request.cart
         for wh in self.warehouse_ids:
+            pickup_location_values = wh._prepare_pickup_location_data()
+            if not pickup_location_values:  # Ignore warehouses with badly configured addresses.
+                continue
+
             # Prepare the stock data based on either the product or the order.
             if product:  # Called from the product page.
                 in_store_stock_data = utils.format_product_stock_values(product, wh.id)
             else:  # Called from the checkout page.
                 in_store_stock_data = {'in_stock': order_sudo._is_in_stock(wh.id)}
 
-            # Prepare the warehouse location.
-            wh_location = wh.partner_id
-            if not wh_location.partner_latitude or not wh_location.partner_longitude:
-                wh_location.geo_localize()  # Find the longitude and latitude of the warehouse.
-
-            # Format the pickup location values of the warehouse.
-            try:
-                pickup_location_values = {
-                    'id': wh.id,
-                    'name': wh_location['name'].title(),
-                    'street': wh_location['street'].title(),
-                    'city': wh_location.city.title(),
-                    'zip_code': wh_location.zip,
-                    'country_code': wh_location.country_code,
-                    'state': wh_location.state_id.code,
-                    'latitude': wh_location.partner_latitude,
-                    'longitude': wh_location.partner_longitude,
-                    'additional_data': {'in_store_stock': in_store_stock_data},
-                }
-            except AttributeError:
-                continue  # Ignore warehouses with badly configured address.
-
-            # Prepare the opening hours data.
-            if wh.opening_hours:
-                opening_hours_dict = {str(i): [] for i in range(7)}
-                for att in wh.opening_hours.attendance_ids:
-                    if att.day_period in ('morning', 'afternoon'):
-                        opening_hours_dict[att.dayofweek].append(
-                            f'{format_duration(att.hour_from)} - {format_duration(att.hour_to)}'
-                        )
-                pickup_location_values['opening_hours'] = opening_hours_dict
-            else:
-                pickup_location_values['opening_hours'] = {}
-
             # Calculate the distance between the partner address and the warehouse location.
-            pickup_location_values['distance'] = utils.calculate_partner_distance(
-                partner_address, wh_location
-            )
+            pickup_location_values.update({
+                'additional_data': {'in_store_stock_data': in_store_stock_data},
+                'distance': utils.calculate_partner_distance(partner_address, wh.partner_id),
+            })
             pickup_locations.append(pickup_location_values)
 
         return sorted(pickup_locations, key=lambda k: k['distance'])

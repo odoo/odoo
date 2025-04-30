@@ -15,7 +15,7 @@ class TestIrQweb(TransactionCase):
         })
         partner = self.env["res.partner"].create({
             "name": "test image partner",
-            "image_128": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAF0lEQVR4nGJxKFrEwMDAxAAGgAAAAP//D+IBWx9K7TUAAAAASUVORK5CYII=",
+            "image_1920": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAF0lEQVR4nGJxKFrEwMDAxAAGgAAAAP//D+IBWx9K7TUAAAAASUVORK5CYII=",
         })
 
         html = view._render_template(view.id, {"is_raw_image": True, "record": partner})

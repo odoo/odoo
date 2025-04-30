@@ -79,6 +79,20 @@ class TestVariants(ProductVariantsCommon):
         self.assertEqual({True}, set(v.is_product_variant for v in variants),
                          'Product variants are variants')
 
+    def test_variants_pricelist_code(self):
+        vendor = self.env['res.partner'].create({'name': 'Bidou', 'email': 'bidou@odoo.com'})
+        codes = ['bidou-red', 'bidou-green', 'bidou-blue']
+        self.env['product.supplierinfo'].create([{
+            'partner_id': vendor.id,
+            'product_tmpl_id': self.product_template_sofa.id,
+            'product_id': product.id,
+            'product_code': code,
+        } for product, code in zip(self.product_template_sofa.product_variant_ids, codes)])
+        variants = self.product_template_sofa.product_variant_ids.with_context(partner_id=vendor.id)
+        self.assertEqual(variants[0].code, codes[0], "sofa red should have code bidou-red")
+        self.assertEqual(variants[1].code, codes[1], "sofa green should have code bidou-green")
+        self.assertEqual(variants[2].code, codes[2], "sofa blue should have code bidou-blue")
+
     def test_variants_creation_mono(self):
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
@@ -371,6 +385,16 @@ class TestVariants(ProductVariantsCommon):
         self.assertTrue(variant_1.active, 'Should activate variant')
         self.assertFalse(variant_2.active, 'Should not re-activate other variant')
         self.assertTrue(template.active, 'Should re-activate template')
+
+    def test_open_product_form_with_default_uom_id_is_false(self):
+        """ Test default UoM is False when creating a product. """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        product_form = Form(self.env['product.product'].with_context(
+            default_uom_id=False,
+        ))
+        product_form.name = 'Test Product'
+        product = product_form.save()
+        self.assertEqual(uom_unit, product.uom_id)
 
 @tagged('post_install', '-at_install')
 class TestVariantsNoCreate(ProductAttributesCommon):

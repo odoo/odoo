@@ -104,14 +104,14 @@ test("click on the button x triggers the service close", async () => {
     }
     await makeDialogMockEnv({
         dialogData: {
-            close: () => expect.step("close"),
+            close: (params) => expect.step(`close ${JSON.stringify(params)}`),
             dismiss: () => expect.step("dismiss"),
         },
     });
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog header button[aria-label='Close']").click();
-    expect.verifySteps(["dismiss", "close"]);
+    expect.verifySteps(["dismiss", 'close {"dismiss":true}']);
 });
 
 test("click on the button x triggers the close and dismiss defined by a Child component", async () => {

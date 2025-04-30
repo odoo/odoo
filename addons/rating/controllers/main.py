@@ -8,21 +8,32 @@ from odoo import http
 from odoo.http import request
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
+from odoo.addons.rating.models.rating_data import (
+    RATING_HAPPY_VALUE,
+    RATING_NEUTRAL_VALUE,
+    RATING_UNHAPPY_VALUE,
+)
 
 _logger = logging.getLogger(__name__)
 
 MAPPED_RATES = {
-    1: 1,
-    5: 3,
-    10: 5,
+    1: RATING_UNHAPPY_VALUE,
+    5: RATING_NEUTRAL_VALUE,
+    10: RATING_HAPPY_VALUE,
 }
 
 class Rating(http.Controller):
 
     @http.route('/rate/<string:token>/<int:rate>', type='http', auth="public", website=True)
     def action_open_rating(self, token, rate, **kwargs):
-        if rate not in (1, 3, 5):
-            raise ValueError(_("Incorrect rating: should be 1, 3 or 5 (received %d)"), rate)
+        if rate not in (RATING_HAPPY_VALUE, RATING_NEUTRAL_VALUE, RATING_UNHAPPY_VALUE):
+            raise ValueError(
+                _("Incorrect rating: should be %(rating_unhappy)d, %(rating_neutral)d or %(rating_happy)d (received %(rate)d)"),
+                rating_unhappy=RATING_UNHAPPY_VALUE,
+                rating_neutral=RATING_NEUTRAL_VALUE,
+                rating_happy=RATING_HAPPY_VALUE,
+                rate=rate,
+            )
 
         # This route used to allow sending a rating with a GET, the
         # feature proved incompatible with various email provider URL crawlers and
@@ -42,9 +53,9 @@ class Rating(http.Controller):
             'rating': rating,
             'token': token,
             'rate_names': {
-                5: _("Satisfied"),
-                3: _("Okay"),
-                1: _("Dissatisfied"),
+                RATING_HAPPY_VALUE: _("Happy"),
+                RATING_NEUTRAL_VALUE: _("Neutral"),
+                RATING_UNHAPPY_VALUE: _("Unhappy"),
             },
             'rate': rate,
         })
@@ -55,8 +66,14 @@ class Rating(http.Controller):
         rating, record_sudo = self._get_rating_and_record(token)
         if request.httprequest.method == "POST":
             rate = int(rate)
-            if rate not in (1, 3, 5):
-                raise ValueError(_("Incorrect rating: should be 1, 3 or 5 (received %d)"), rate)
+            if rate not in (RATING_HAPPY_VALUE, RATING_NEUTRAL_VALUE, RATING_UNHAPPY_VALUE):
+                raise ValueError(
+                    _("Incorrect rating: should be %(rating_unhappy)d, %(rating_neutral)d or %(rating_happy)d (received %(rate)d)"),
+                    rating_unhappy=RATING_UNHAPPY_VALUE,
+                    rating_neutral=RATING_NEUTRAL_VALUE,
+                    rating_happy=RATING_HAPPY_VALUE,
+                    rate=rate,
+                )
             record_sudo.rating_apply(
                 rate,
                 rating=rating,

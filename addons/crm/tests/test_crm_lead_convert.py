@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from itertools import product
 
 from odoo import SUPERUSER_ID
 from odoo.addons.crm.tests import common as crm_common
@@ -64,7 +63,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestLeadConvert, cls).setUpClass()
+        super().setUpClass()
         date = Datetime.from_string('2020-01-20 16:00:00')
         cls.crm_lead_dt_mock.now.return_value = date
 
@@ -78,6 +77,11 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
              'type': 'lead',
              'email_from': test_lead.email_from,
              'probability': 0, 'active': False,
+            },
+            {'name': 'Duplicate lead: same email_from, archived (not lost)',
+             'type': 'lead',
+             'email_from': test_lead.email_from,
+             'probability': 50, 'active': False,
             },
             {'name': 'Duplicate lead: same email_from, proba 0 but not lost',
              'type': 'lead',
@@ -93,30 +97,44 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
              'type': 'opportunity',
              'email_from': test_lead.email_from,
              'probability': 100, 'stage_id': self.stage_team1_2.id,
+            },
+            {'name': 'Duplicate opp: same email_from, archived (not lost)',
+             'type': 'opportunity',
+             'email_from': test_lead.email_from,
+             'probability': 50, 'stage_id': self.stage_team1_2.id,
+             'active': False,
             }
         ])
-        lead_lost = dup_leads.filtered(lambda lead: lead.name == 'Duplicate lead: same email_from, lost')
-        _opp_proba100 = dup_leads.filtered(lambda lead: lead.name == 'Duplicate opp: same email_from, proba 100 but not won')
-        opp_won = dup_leads.filtered(lambda lead: lead.name == 'Duplicate opp: same email_from, won')
-        opp_lost = dup_leads.filtered(lambda lead: lead.name == 'Duplicate: lost opportunity')
+        self.assertEqual(len(dup_leads), 10, 'Be sure below quick access are relevant')
+        opp_lost = dup_leads[3]
+        lead_lost = dup_leads[4]
+        lead_archived = dup_leads[5]
+        opp_won = dup_leads[7]
+        _opp_proba100 = dup_leads[8]
+        opp_archived = dup_leads[9]
 
         test_lead.write({'partner_id': customer.id})
 
-        # not include_lost = remove archived leads as well as 'won' opportunities
+        # not include_lost = remove archived leads/opps, lost leads/opps as well
+        # as 'won' opportunities
         result = test_lead._get_lead_duplicates(
             partner=test_lead.partner_id,
             email=test_lead.email_from,
             include_lost=False
         )
-        self.assertEqual(result, test_lead + dup_leads - (lead_lost + opp_won + opp_lost))
+        self.assertEqual(
+            result,
+            test_lead + dup_leads - (lead_lost + lead_archived + opp_won + opp_archived + opp_lost),
+            'Should not include: lost lead or opp, archived lead / opp (aka: only active lead/opp not won nor lost)'
+        )
 
-        # include_lost = remove archived opp only
+        # include_lost = remove archived lead only (archived opp is ok)
         result = test_lead._get_lead_duplicates(
             partner=test_lead.partner_id,
             email=test_lead.email_from,
-            include_lost=True
+            include_lost=True,
         )
-        self.assertEqual(result, test_lead + dup_leads - (lead_lost))
+        self.assertEqual(result, test_lead + dup_leads - (lead_lost + lead_archived + opp_won))
 
     def test_initial_data(self):
         """ Ensure initial data to avoid spaghetti test update afterwards """
@@ -315,24 +333,6 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(self.lead_1.partner_id, self.contact_1)
 
     @users('user_sales_manager')
-    def test_lead_convert_action_nothing(self):
-        """ Test specific use case of 'nothing' action in conver wizard """
-        self.lead_1.write({'contact_name': False})
-
-        convert = self.env['crm.lead2opportunity.partner'].with_context({
-            'active_model': 'crm.lead',
-            'active_id': self.lead_1.id,
-            'active_ids': self.lead_1.ids,
-        }).create({})
-        self.assertEqual(convert.action, 'nothing')
-        convert.action_apply()
-        self.assertEqual(self.lead_1.type, 'opportunity')
-        self.assertEqual(self.lead_1.user_id, self.user_sales_leads)
-        self.assertEqual(self.lead_1.team_id, self.sales_team_1)
-        self.assertEqual(self.lead_1.stage_id, self.stage_team1_1)
-        self.assertEqual(self.lead_1.partner_id, self.env['res.partner'])
-
-    @users('user_sales_manager')
     def test_lead_convert_contact_mutlicompany(self):
         """ Check the wizard convert to opp don't find contact
         You are not able to see because they belong to another company """
@@ -412,6 +412,58 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.lead_1.convert_opportunity(False, user_ids=self.user_sales_salesman.ids)
         self.assertNotEqual(self.lead_1.team_id, initial_team)
         self.assertFalse(self.lead_1.lead_properties)
+
+    @users('user_sales_manager')
+    def test_lead_convert_wizard_new_partner(self):
+        no_partner = self.env['res.partner']
+        test_partner_lead, test_partner_wizard, commercial_partner = self.env['res.partner'].create([
+            {'name': 'Lead Test Partner'},
+            {'name': 'Wizard Test Partner'},
+            {'name': 'Company Partner', 'is_company': True},
+        ])
+        case_values = product(
+            [no_partner, test_partner_lead],
+            [False, 'New Company'],
+            [no_partner, commercial_partner],
+            [no_partner, test_partner_wizard],
+            ['create', 'exist'],
+        )
+        for (lead_partner, lead_company_name, wizard_company, wizard_contact, wizard_action) in case_values:
+            (test_partner_lead + test_partner_wizard).parent_id = False
+            commercial_partner.invalidate_recordset()
+            lead_contact_name = lead_partner.name or 'Test Contact Name'
+            lead = self.env['crm.lead'].create({
+                'name': 'Test Lead',
+                'contact_name': lead_contact_name,
+                'partner_id': lead_partner.id,
+                'partner_name': lead_company_name,
+            })
+            wizard = self.env['crm.lead2opportunity.partner'].with_context({
+                'active_model': 'crm.lead',
+                'active_id': lead.id,
+                'active_ids': lead.ids,
+            }).create({})
+            wizard.write({'action': wizard_action, 'name': 'convert'})
+            if wizard_contact:
+                wizard.partner_id = wizard_contact
+            if wizard_company:
+                wizard.commercial_partner_id = wizard_company
+            with self.subTest(
+                lead_company_name=lead_company_name, lead_partner=lead_partner.name,
+                wizard_company=wizard_company.name, wizard_contact=wizard_contact.name, wizard_action=wizard_action
+            ):
+                wizard.action_apply()
+                self.assertEqual(lead.type, 'opportunity')
+                self.assertEqual(bool(lead.partner_id), bool(wizard_action == 'create' or lead_partner or wizard_contact))
+                if wizard_action == 'exist' and (lead_partner or wizard_contact):
+                    self.assertEqual(lead.partner_id, wizard_contact or lead_partner)
+                if wizard_action == 'create' and not lead_partner and not wizard_contact and wizard_company:
+                    self.assertTrue(lead.partner_id)
+                    self.assertEqual(lead.partner_id.name, lead_contact_name)
+                    self.assertEqual(lead.partner_id.parent_id, wizard_company)
+                if wizard_action == 'create' and (wizard_contact or lead_partner):
+                    self.assertEqual(lead.partner_id, wizard_contact or lead_partner)
+                    self.assertFalse(lead.partner_id.parent_id)
 
     @users('user_sales_manager')
     def test_lead_merge(self):

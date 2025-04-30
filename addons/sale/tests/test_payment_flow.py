@@ -244,7 +244,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         # Set automatic invoice
         self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
         # Lock the sale orders when confirmed
-        self.env.user.group_ids += self.env.ref('sale.group_auto_done_setting')
+        self.group_user.implied_ids += self.env.ref('sale.group_auto_done_setting')
 
         # Create the payment
         self.amount = self.sale_order.amount_total

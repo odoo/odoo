@@ -3,7 +3,6 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ImageCrop } from "./image_crop";
 import { loadBundle } from "@web/core/assets";
-import { withSequence } from "@html_editor/utils/resource";
 
 export class ImageCropPlugin extends Plugin {
     static id = "imageCrop";
@@ -13,19 +12,15 @@ export class ImageCropPlugin extends Plugin {
             {
                 id: "cropImage",
                 run: this.openCropImage.bind(this),
-                title: _t("Crop image"),
+                description: _t("Crop image"),
                 icon: "fa-crop",
             },
         ],
-        toolbar_groups: withSequence(27, {
-            id: "image_crop",
-            namespace: "image",
-        }),
         toolbar_items: [
             {
                 id: "image_crop",
                 commandId: "cropImage",
-                groupId: "image_crop",
+                groupId: "image_modifiers",
             },
         ],
     };

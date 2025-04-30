@@ -595,9 +595,7 @@ QUnit.module("Base Import Tests", (hooks) => {
     QUnit.test("Import view: default import options are correctly", async function (assert) {
         registerFakeHTTPService();
         await createImportAction({
-            "base_import.import/parse_preview": async (route, args) => {
-                return parsePreview(args[1]);
-            },
+            "base_import.import/parse_preview": async (route, args) => parsePreview(args[1]),
             "base_import.import/execute_import": (route, args) => {
                 assert.step("execute_import");
                 assert.deepEqual(
@@ -673,7 +671,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         });
         await createImportAction();
         const file = new File(["fake_file"], "fake_file.csv", {
-            type: "text/plain"
+            type: "text/plain",
         });
         await dragenterFiles(".o_import_action", [file]);
         await dropFiles(".o-Dropzone", [file]);
@@ -686,7 +684,7 @@ QUnit.module("Base Import Tests", (hooks) => {
     });
 
     QUnit.test("Import view: additional options in debug", async function (assert) {
-        patchWithCleanup(odoo, { debug: true });
+        patchWithCleanup(odoo, { debug: "1" });
         registerFakeHTTPService();
 
         await createImportAction({
@@ -1326,8 +1324,8 @@ QUnit.module("Base Import Tests", (hooks) => {
 
             registerFakeHTTPService();
             await createImportAction({
-                "base_import.import/parse_preview": async (route, args) => {
-                    return customParsePreview(args[1], {
+                "base_import.import/parse_preview": async (route, args) =>
+                    customParsePreview(args[1], {
                         fields: [
                             { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
                             {
@@ -1365,8 +1363,7 @@ QUnit.module("Base Import Tests", (hooks) => {
                             ["Name 1", "Name 2", "Name 3"],
                             ["", "1", "2"],
                         ],
-                    });
-                },
+                    }),
                 "base_import.import/execute_import": (route, args) => {
                     assert.deepEqual(
                         args[1],
@@ -1409,15 +1406,16 @@ QUnit.module("Base Import Tests", (hooks) => {
         registerFakeHTTPService();
 
         patchWithCleanup(ImportAction.prototype, {
-            get isBatched() { // Make sure the UI displays the batched import options
+            get isBatched() {
+                // Make sure the UI displays the batched import options
                 return true;
             },
         });
 
         await createImportAction({
-            "base_import.import/parse_preview": (route, args) => {
+            "base_import.import/parse_preview": (route, args) =>
                 // Parse a file where all rows besides the first are used for relational data
-                return customParsePreview(args[1], {
+                customParsePreview(args[1], {
                     fields: [
                         { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
                         {
@@ -1450,13 +1448,8 @@ QUnit.module("Base Import Tests", (hooks) => {
                         1: ["display_name"],
                         2: ["many2many_field", "id"],
                     },
-                    preview: [
-                        ["1"],
-                        ["Record Name"],
-                        ["1", "2", "3", "4", "5"],
-                    ],
-                });
-            },
+                    preview: [["1"], ["Record Name"], ["1", "2", "3", "4", "5"]],
+                }),
             "base_import.import/execute_import": async (route, args) => {
                 ++executeImportCount;
                 const res = await executeImport(args);
@@ -1489,8 +1482,8 @@ QUnit.module("Base Import Tests", (hooks) => {
         });
 
         await createImportAction({
-            "base_import.import/parse_preview": async (route, args) => {
-                return customParsePreview(args[1], {
+            "base_import.import/parse_preview": async (route, args) =>
+                customParsePreview(args[1], {
                     fields: [
                         { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
                         {
@@ -1528,11 +1521,9 @@ QUnit.module("Base Import Tests", (hooks) => {
                         ["Name 1", "Name 2", "Name 3"],
                         ["", "1", "2"],
                     ],
-                });
-            },
-            "base_import.import/execute_import": (route, args) => {
-                return executeFailingImport(args[1][0], true, ["many2many_field", "id"]);
-            },
+                }),
+            "base_import.import/execute_import": (route, args) =>
+                executeFailingImport(args[1][0], true, ["many2many_field", "id"]),
         });
 
         // Set and trigger the change of a file for the input

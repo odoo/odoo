@@ -14,6 +14,9 @@
                             class="self_order_product_card d-flex flex-row-reverse flex-md-column align-items-start gap-2 user-select-none"
                             role="button"
                             >
+                            <div t-if="line.product_id.public_description" class="product-information-tag" t-on-click.prevent.stop="() => this.showProductInfo(line)">
+                                <i class="product-information-tag-logo fa fa-info fs-4" role="img" aria-label="Product Information" title="Product Information" />
+                            </div>
                             <div class="ratio ratio-1x1 w-25 w-sm-50 w-md-100" t-att-class="{'d-none d-md-block': !product.image_128}">
                                 <div class="placeholder-glow">
                                     <div class="placeholder w-100 h-100 bg-300 rounded"/>
@@ -25,7 +28,7 @@
                                     onerror="this.remove()"/>
                             </div>
                             <div class="product-infos d-flex flex-column justify-content-between text-start flex-grow-1 w-100 lh-1">
-                                <span t-esc="product.display_name" class="fs-4 fw-bold mb-1 mb-sm-2"/>
+                                <span t-esc="product.name" class="fs-4 fw-bold mb-1 mb-sm-2"/>
                                 <div class="d-flex justify-content-between gap-3">
                                     <span t-if="line.extra_price" class="badge rounded-pill fs-4" t-att-class="isOutOfStock ? 'text-bg-secondary' : 'text-bg-primary'">
                                         + <t t-out="selfOrder.formatMonetary(line.extra_price)"/>

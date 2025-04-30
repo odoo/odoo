@@ -205,7 +205,7 @@
                                     <b t-if="sale_order.payment_term_id" t-field="sale_order.payment_term_id.note"/>
                                     <t t-call="portal.signature_form">
                                         <t t-set="call_url" t-value="sale_order.get_portal_url(suffix='/accept')"/>
-                                        <t t-set="default_name" t-value="sale_order.partner_id.name"/>
+                                        <t t-set="default_name" t-value="sale_order.partner_id.name or sale_order.partner_id.commercial_partner_id.name"/>
                                     </t>
                                 </main>
                             </form>
@@ -510,6 +510,7 @@
                 </t>
 
                 <t t-set="display_discount" t-value="True in [line.discount > 0 for line in sale_order.order_line]"/>
+                <t t-set="display_taxes" t-value="any(line.tax_ids for line in sale_order.order_line)"/>
 
                 <div class="table-responsive">
                     <table t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="table table-sm" id="sales_order_table">
@@ -523,7 +524,7 @@
                                 <th t-if="display_discount" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}" id="product_discount_header">
                                     <span>Disc.%</span>
                                 </th>
-                                <th t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" id="taxes_header">
+                                <th t-if="display_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" id="taxes_header">
                                     <span>Taxes</span>
                                 </th>
                                 <th class="text-end" id="subtotal_header">
@@ -539,13 +540,13 @@
                             <t t-foreach="lines_to_report" t-as="line">
 
                                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
-
+                                <t t-set="is_note" t-value="line.display_type == 'line_note'"/>
                                 <tr
                                     t-att-class="'fw-bold o_line_section' if (
                                         line.display_type == 'line_section'
                                         or line.product_type == 'combo'
                                     )
-                                    else 'fst-italic o_line_note' if line.display_type == 'line_note'
+                                    else 'fst-italic o_line_note' if is_note
                                     else ''"
                                 >
                                     <t
@@ -577,7 +578,7 @@
                                                 <t t-out="((line.discount % 1) and '%s' or '%d') % line.discount"/>%
                                             </strong>
                                         </td>
-                                        <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" id="taxes">
+                                        <td t-if="display_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" id="taxes">
                                             <span t-out="', '.join(map(lambda x: (x.name), line.tax_ids))"/>
                                         </td>
                                         <td t-if="not line.is_downpayment" class="text-end" id="subtotal">
@@ -591,7 +592,7 @@
                                         <t t-set="current_section" t-value="line"/>
                                         <t t-set="current_subtotal" t-value="0"/>
                                     </t>
-                                    <t t-if="line.display_type == 'line_note'">
+                                    <t t-if="is_note">
                                         <td colspan="99">
                                             <span t-field="line.name"/>
                                         </td>

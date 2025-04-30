@@ -45,7 +45,7 @@ export class SelectionField extends Component {
         switch (this.type) {
             case "many2one":
                 return this.props.record.data[this.props.name]
-                    ? this.props.record.data[this.props.name][1]
+                    ? this.props.record.data[this.props.name].display_name
                     : "";
             case "selection":
                 return this.props.record.data[this.props.name] !== false
@@ -57,7 +57,7 @@ export class SelectionField extends Component {
     }
     get value() {
         const rawValue = this.props.record.data[this.props.name];
-        return this.type === "many2one" && rawValue ? rawValue[0] : rawValue;
+        return this.type === "many2one" && rawValue ? rawValue.id : rawValue;
     }
 
     stringify(value) {
@@ -77,9 +77,10 @@ export class SelectionField extends Component {
                         { save: this.props.autosave }
                     );
                 } else {
+                    const option = this.options.find((option) => option[0] === value);
                     this.props.record.update(
                         {
-                            [this.props.name]: this.options.find((option) => option[0] === value),
+                            [this.props.name]: { id: option[0], display_name: option[1] },
                         },
                         { save: this.props.autosave }
                     );
@@ -98,12 +99,20 @@ export class SelectionField extends Component {
 export const selectionField = {
     component: SelectionField,
     displayName: _t("Selection"),
+    supportedOptions: [
+        {
+            label: _t("Dynamic Placeholder"),
+            name: "placeholder_field",
+            type: "field",
+            availableTypes: ["char"],
+        },
+    ],
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
-    extractProps({ attrs, viewType }, dynamicInfo) {
+    extractProps({ viewType, placeholder }, dynamicInfo) {
         const props = {
             autosave: viewType === "kanban",
-            placeholder: attrs.placeholder,
+            placeholder,
             required: dynamicInfo.required,
             domain: dynamicInfo.domain,
         };

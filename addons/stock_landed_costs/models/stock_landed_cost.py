@@ -66,7 +66,7 @@ class StockLandedCost(models.Model):
     company_id = fields.Many2one('res.company', string="Company", required=True, default=lambda self: self.env.company)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_landed_cost_id')
     vendor_bill_id = fields.Many2one(
-        'account.move', 'Vendor Bill', copy=False, domain=[('move_type', '=', 'in_invoice')])
+        'account.move', 'Vendor Bill', copy=False, domain=[('move_type', '=', 'in_invoice')], index='btree_not_null')
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
     @api.depends('cost_lines.price_unit')
@@ -121,7 +121,7 @@ class StockLandedCost(models.Model):
             }
             valuation_layer_ids = []
             cost_to_add_byproduct = defaultdict(lambda: 0.0)
-            cost_to_add_bylot = defaultdict(lambda: 0.0)
+            cost_to_add_bylot = defaultdict(lambda: defaultdict(float))
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id._get_stock_valuation_layer_ids().mapped('remaining_qty'))
                 linked_layer = line.move_id._get_stock_valuation_layer_ids()
@@ -137,7 +137,7 @@ class StockLandedCost(models.Model):
                             lot_layer = linked_layer.filtered(lambda l: l.lot_id == lot_id)[:1]
                             value = cost_to_add * sum(sml.mapped('quantity')) / line.move_id.quantity
                             if product.cost_method in ['average', 'fifo']:
-                                cost_to_add_bylot[lot_id] += value
+                                cost_to_add_bylot[product][lot_id] += value
                             vals_list.append({
                                 'value': value,
                                 'unit_cost': 0,
@@ -189,7 +189,7 @@ class StockLandedCost(models.Model):
                 if not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
                     product.sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add_byproduct[product] / product.quantity_svl
                 if product.lot_valuated:
-                    for lot, value in cost_to_add_bylot.items():
+                    for lot, value in cost_to_add_bylot[product].items():
                         if float_is_zero(lot.quantity_svl, precision_rounding=product.uom_id.rounding):
                             continue
                         lot.sudo().with_context(disable_auto_svl=True).standard_price += value / lot.quantity_svl
@@ -346,7 +346,7 @@ class StockLandedCostLines(models.Model):
     name = fields.Char('Description')
     cost_id = fields.Many2one(
         'stock.landed.cost', 'Landed Cost',
-        required=True, ondelete='cascade')
+        required=True, index=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', 'Product', required=True)
     price_unit = fields.Monetary('Cost', required=True)
     split_method = fields.Selection(
@@ -358,7 +358,7 @@ class StockLandedCostLines(models.Model):
              "By Current cost: Cost will be divided according to product's current cost.\n"
              "By Weight: Cost will be divided depending on its weight.\n"
              "By Volume: Cost will be divided depending on its volume.")
-    account_id = fields.Many2one('account.account', 'Account', domain=[('deprecated', '=', False)])
+    account_id = fields.Many2one('account.account', 'Account')
     currency_id = fields.Many2one('res.currency', related='cost_id.currency_id')
 
     @api.onchange('product_id')
@@ -378,7 +378,7 @@ class StockValuationAdjustmentLines(models.Model):
         'Description', compute='_compute_name', store=True)
     cost_id = fields.Many2one(
         'stock.landed.cost', 'Landed Cost',
-        ondelete='cascade', required=True)
+        ondelete='cascade', required=True, index=True)
     cost_line_id = fields.Many2one(
         'stock.landed.cost.lines', 'Cost Line', readonly=True)
     move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True)

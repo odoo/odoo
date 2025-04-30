@@ -62,7 +62,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                             THEN aggregate_allocation.number_of_hours - COALESCE(aggregate_leave.number_of_hours, 0)
                             ELSE 0
                     END as number_of_hours,
-                    allocation.department_id as department_id,
+                    employee.department_id as department_id,
                     allocation.holiday_status_id as leave_type,
                     allocation.state as state,
                     allocation.date_from as date_from,
@@ -102,7 +102,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                     employee.active as active_employee,
                     request.number_of_days as number_of_days,
                     request.number_of_hours as number_of_hours,
-                    request.department_id as department_id,
+                    employee.department_id as department_id,
                     request.holiday_status_id as leave_type,
                     request.state as state,
                     request.date_from as date_from,
@@ -126,12 +126,20 @@ class HrLeaveEmployeeTypeReport(models.Model):
                       ('state', '!=', 'cancel')]
 
         return {
-            'name': _('Time Off Analysis'),
+            'name': _('Balance'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave.employee.type.report',
             'view_mode': 'pivot',
             'search_view_id': [self.env.ref('hr_holidays.view_search_hr_holidays_employee_type_report').id],
             'domain': domain,
+            'help': _("""
+                <p class="o_view_nocontent_empty_folder">
+                    No Balance yet!
+                </p>
+                <p>
+                    Why don't you start by <a type="action" class="text-link" name="%d">Allocating Time off</a> ?
+                </p>
+            """, self.env.ref("hr_holidays.hr_leave_allocation_action_form").id),
             'context': {
                 'search_default_year': True,
                 'search_default_company': True,

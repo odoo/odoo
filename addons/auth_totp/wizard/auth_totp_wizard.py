@@ -29,7 +29,7 @@ class Auth_TotpWizard(models.TransientModel):
         attachment=False, store=True, readonly=True,
         compute='_compute_qrcode',
     )
-    code = fields.Char(string="Verification Code", size=7)
+    code = fields.Char(string="Verification Code", size=7, store=False)
 
     @api.depends('user_id.login', 'user_id.company_id.display_name', 'secret')
     def _compute_qrcode(self):
@@ -58,7 +58,7 @@ class Auth_TotpWizard(models.TransientModel):
     @check_identity
     def enable(self):
         try:
-            c = int(compress(self.code))
+            c = int(compress(self.env.context.get('code', '')))
         except ValueError:
             raise UserError(_("The verification code should only contain numbers"))
         if self.user_id._totp_try_setting(self.secret, c):

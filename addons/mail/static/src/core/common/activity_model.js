@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 
 export class Activity extends Record {
@@ -39,14 +39,11 @@ export class Activity extends Record {
     can_write;
     /** @type {'suggest'|'trigger'} */
     chaining_type;
-    /** @type {luxon.DateTime} */
-    create_date = Record.attr(undefined, { type: "datetime" });
+    create_date = fields.Datetime();
     /** @type {[number, string]} */
     create_uid;
-    /** @type {luxon.DateTime} */
-    date_deadline = Record.attr(undefined, { type: "date" });
-    /** @type {luxon.DateTime} */
-    date_done = Record.attr(undefined, { type: "date" });
+    date_deadline = fields.Date();
+    date_done = fields.Date();
     /** @type {string} */
     display_name;
     /** @type {boolean} */
@@ -57,8 +54,8 @@ export class Activity extends Record {
     icon = "fa-tasks";
     /** @type {Object[]} */
     mail_template_ids;
-    note = Record.attr("", { html: true });
-    persona = Record.one("Persona");
+    note = fields.Html("");
+    persona = fields.One("Persona");
     /** @type {number|false} */
     previous_activity_type_id;
     /** @type {number|false} */
@@ -83,7 +80,7 @@ export class Activity extends Record {
     write_uid;
 
     serialize() {
-        return JSON.parse(JSON.stringify(this.toData()));
+        return JSON.parse(JSON.stringify(this.toData(["persona"])));
     }
 }
 

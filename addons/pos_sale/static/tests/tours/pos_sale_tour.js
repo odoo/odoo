@@ -369,46 +369,26 @@ registry.category("web_tour.tours").add("PosSaleWarning", {
                 trigger: ".modal-footer button",
                 run: "click",
             },
-            // Check if no customer is selected
-            ProductScreen.customerIsSelected("Customer"),
+            ProductScreen.customerIsSelected("A Test Customer 2"),
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "1"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("A Test Customer"),
+            ProductScreen.clickCustomer("A Test Customer 1"),
             {
                 content: "Check warning popup are displayed",
                 trigger:
-                    '.modal-dialog:has(.modal-header:contains("Warning for A Test Customer")):has(.modal-body:contains("Highly infectious disease"))',
+                    '.modal-dialog:has(.modal-header:contains("Warning for A Test Customer 1")):has(.modal-body:contains("Highly infectious disease"))',
             },
             {
                 trigger: ".modal-footer button",
                 run: "click",
             },
-            ProductScreen.customerIsSelected("A Test Customer"),
+            ProductScreen.customerIsSelected("A Test Customer 1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.remainingIs("0.0"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.downPaymentFirstOrder("+20"),
-            Order.hasLine({
-                productName: "Down Payment",
-                quantity: "1.0",
-                price: "1.00",
-            }),
-            Order.hasLine({
-                productName: "Down Payment",
-                quantity: "1.0",
-                price: "22.00",
-            }),
         ].flat(),
 });
 
@@ -422,5 +402,32 @@ registry.category("web_tour.tours").add("PoSSettleQuotation", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("POSSalePaymentScreenInvoiceOrder", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settle_order_with_lot", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1, { loadSN: true }),
+            PosSale.selectedOrderLinesHasLots("Product A", ["1001", "1002"]),
         ].flat(),
 });

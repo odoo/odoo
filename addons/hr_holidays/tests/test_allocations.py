@@ -16,7 +16,7 @@ class TestAllocations(TestHrHolidaysCommon):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Time Off with no validation for approval',
             'time_type': 'leave',
-            'requires_allocation': 'yes',
+            'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
         })
         cls.department = cls.env['hr.department'].create({
@@ -34,7 +34,7 @@ class TestAllocations(TestHrHolidaysCommon):
 
         cls.leave_type_paid = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
-            'requires_allocation': 'yes',
+            'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
         })
 
@@ -345,12 +345,12 @@ class TestAllocations(TestHrHolidaysCommon):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Hourly Leave Type',
             'time_type': 'leave',
-            'requires_allocation': 'yes',
+            'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
             'request_unit': 'hour',
         })
 
-        with Form(self.env['hr.leave.allocation']) as allocation_form:
+        with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
             allocation_form.allocation_type = 'regular'
             allocation_form.employee_id = employee
             allocation_form.holiday_status_id = leave_type
@@ -358,3 +358,47 @@ class TestAllocations(TestHrHolidaysCommon):
             allocation = allocation_form.save()
 
         self.assertEqual(allocation.number_of_hours_display, 10.0)
+
+    def test_automatic_allocation_type(self):
+        """
+        Make sure that an allocation with an accrual plan imported will automatically set the allocation_type to 'accrual'
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Hourly Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+        })
+
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Alloc with accrual plan',
+            'employee_id': self.employee.id,
+            'holiday_status_id': leave_type.id,
+            'accrual_plan_id': accrual_plan.id,
+        })
+
+        self.assertEqual(allocation.allocation_type, 'accrual')
+
+        allocation.update({
+            'accrual_plan_id': False,
+        })
+
+        self.assertEqual(allocation.allocation_type, 'regular')
+
+    def test_create_allocation_from_company_with_no_employee_for_current_user(self):
+        """
+            This test makes sure that the allocation can be created if the current company doesn't have an employee
+            linked to the loggedIn user.
+        """
+        self.user_hrmanager.employee_id = False
+        allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager))
+        self.assertFalse(allocation_form.employee_id)
+        allocation_form.employee_id = self.employee
+        allocation_form.holiday_status_id = self.leave_type
+        allocation = allocation_form.save()
+        self.assertTrue(allocation)

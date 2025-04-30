@@ -39,12 +39,18 @@ def _create_accounting_data(env):
         'account_type': 'expense',
         'reconcile': True,
     })
+    income_account = env['account.account'].create({
+        'name': 'Income Account',
+        'code': 'IncomeAccount',
+        'account_type': 'income',
+        'reconcile': True,
+    })
     stock_journal = env['account.journal'].create({
         'name': 'Stock Journal',
         'code': 'STJTEST',
         'type': 'general',
     })
-    return stock_input_account, stock_output_account, stock_valuation_account, expense_account, stock_journal
+    return stock_input_account, stock_output_account, stock_valuation_account, expense_account, income_account, stock_journal
 
 
 class TestStockValuationBase(TransactionCase):
@@ -77,7 +83,7 @@ class TestStockValuationBase(TransactionCase):
             'group_ids': [(6, 0, [cls.env.ref('stock.group_stock_user').id])]
         })
 
-        cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)
+        cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.income_account, cls.stock_journal = _create_accounting_data(cls.env)
         cls.product1.categ_id.write({
             'property_stock_account_input_categ_id': cls.stock_input_account.id,
             'property_stock_account_output_categ_id': cls.stock_output_account.id,
@@ -87,6 +93,7 @@ class TestStockValuationBase(TransactionCase):
         cls.product1.categ_id.property_valuation = 'real_time'
         cls.product2.categ_id.property_valuation = 'real_time'
         cls.product1.write({
+            'property_account_income_id': cls.income_account.id,
             'property_account_expense_id': cls.expense_account.id,
         })
 
@@ -105,14 +112,14 @@ class TestStockValuationBase(TransactionCase):
             ('account_id', '=', self.stock_valuation_account.id),
         ], order='date, id')
 
-    def _make_in_move(self, product, quantity, unit_cost=None, location_dest_id=False, picking_type_id=False):
+    def _make_in_move(self, product, quantity, unit_cost=None, location_id=False, location_dest_id=False, picking_type_id=False):
         """ Helper to create and validate a receipt move.
         """
         unit_cost = unit_cost or product.standard_price
         in_move = self.env['stock.move'].create({
             'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
             'product_id': product.id,
-            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_id': location_id or self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': location_dest_id or self.env.ref('stock.stock_location_stock').id,
             'product_uom': self.env.ref('uom.product_uom_unit').id,
             'product_uom_qty': quantity,
@@ -128,14 +135,14 @@ class TestStockValuationBase(TransactionCase):
 
         return in_move.with_context(svl=True)
 
-    def _make_out_move(self, product, quantity):
+    def _make_out_move(self, product, quantity, location_dest_id=False):
         """ Helper to create and validate a delivery move.
         """
         out_move = self.env['stock.move'].create({
             'name': 'out %s units' % str(quantity),
             'product_id': product.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': location_dest_id or self.env.ref('stock.stock_location_customers').id,
             'product_uom': self.env.ref('uom.product_uom_unit').id,
             'product_uom_qty': quantity,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
@@ -4351,3 +4358,111 @@ class TestStockValuation(TestStockValuationBase):
         self.assertEqual(len(in_move.stock_valuation_layer_ids), 1)
         self.assertEqual(in_move.stock_valuation_layer_ids.value, 100)
         self.assertEqual(in_move.stock_valuation_layer_ids.quantity, 10)
+
+    def test_scrap_reception_valuation(self):
+        product = self.product1
+        product.categ_id.property_cost_method = 'fifo'
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_in'),
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'name': f'in {product.name}',
+                'product_id': product.id,
+                'product_uom_qty': 10,
+                'quantity': 10,
+                'price_unit': 15,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        })
+        receipt.button_validate()
+        scrap_form = Form(self.env['stock.scrap'].with_context(default_picking_id=receipt.id))
+        scrap_form.product_id = product
+        scrap_form.scrap_qty = 2
+        scrap = scrap_form.save()
+        scrap.action_validate()
+        svls = product.stock_valuation_layer_ids
+        self.assertRecordValues(
+            svls,
+            [
+                {'quantity': 10.0, 'remaining_qty': 8.0, 'value': 150.0, 'remaining_value': 120.0},
+                {'quantity': -2.0, 'remaining_qty': 0.0, 'value': -30.0, 'remaining_value': 0.0},
+            ]
+        )
+
+    def test_positive_stock_adjustment_valuation(self):
+        accounts_data = self.product1.product_tmpl_id.get_product_accounts()
+        inventory_adjustment_loc = self.env['stock.location'].search(
+            [('usage', '=', 'inventory'), ('company_id', '=', self.env.company.id)], limit=1
+        )
+        self.product1.standard_price = 10
+        inventory_gain_move = self._make_in_move(self.product1, 10, location_id=inventory_adjustment_loc.id)
+        self.assertTrue(inventory_gain_move.stock_valuation_layer_ids)
+        self.assertEqual(len(inventory_gain_move.stock_valuation_layer_ids.account_move_id.line_ids), 2)
+        debit_line = inventory_gain_move.stock_valuation_layer_ids.account_move_id.line_ids.filtered(lambda l: l.debit > 0)
+        credit_line = inventory_gain_move.stock_valuation_layer_ids.account_move_id.line_ids.filtered(lambda l: l.credit > 0)
+        self.assertEqual(debit_line.account_id, accounts_data['stock_valuation'])
+        self.assertEqual(credit_line.account_id, accounts_data['income'])
+
+    def test_negative_stock_adjustment_valuation(self):
+        accounts_data = self.product1.product_tmpl_id.get_product_accounts()
+        inventory_adjustment_loc = self.env['stock.location'].search(
+            [('usage', '=', 'inventory'), ('company_id', '=', self.env.company.id)], limit=1
+        )
+        self.product1.standard_price = 10
+        self._make_in_move(self.product1, 10)
+        inventory_loss_move = self._make_out_move(self.product1, 5, location_dest_id=inventory_adjustment_loc.id)
+        self.assertTrue(inventory_loss_move.stock_valuation_layer_ids)
+        self.assertEqual(len(inventory_loss_move.stock_valuation_layer_ids.account_move_id.line_ids), 2)
+        debit_line = inventory_loss_move.stock_valuation_layer_ids.account_move_id.line_ids.filtered(lambda l: l.debit > 0)
+        credit_line = inventory_loss_move.stock_valuation_layer_ids.account_move_id.line_ids.filtered(lambda l: l.credit > 0)
+        self.assertEqual(debit_line.account_id, accounts_data['expense'])
+        self.assertEqual(credit_line.account_id, accounts_data['stock_valuation'])
+
+    def test_valuation_rounding_method(self):
+        uom_g = self.env.ref('uom.product_uom_gram')
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        self.product1.uom_id = uom_kg
+
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_in'),
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'name': 'IN 11g',
+                'product_id': self.product1.id,
+                'product_uom': uom_g.id,
+                'product_uom_qty': 11,
+                'quantity': 11,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        })
+        receipt.button_validate()
+
+        self.assertEqual(receipt.move_ids.quantity, 11)
+        self.assertEqual(receipt.move_ids.product_qty, 0.01)
+        self.assertEqual(receipt.move_ids.stock_valuation_layer_ids.quantity, 0.01)
+        self.assertEqual(self.product1.qty_available, 0.01)
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': 'OUT 11g',
+                'product_id': self.product1.id,
+                'product_uom': uom_g.id,
+                'product_uom_qty': 11,
+                'quantity': 11,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        delivery.button_validate()
+
+        self.assertEqual(delivery.move_ids.quantity, 11)
+        self.assertEqual(delivery.move_ids.product_qty, 0.01)
+        self.assertEqual(delivery.move_ids.stock_valuation_layer_ids.quantity, -0.01)
+        self.assertEqual(self.product1.qty_available, 0.00)

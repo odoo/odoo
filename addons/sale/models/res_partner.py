@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.osv import expression
-
-from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
 
 
 class ResPartner(models.Model):
@@ -15,7 +13,6 @@ class ResPartner(models.Model):
         compute='_compute_sale_order_count',
     )
     sale_order_ids = fields.One2many('sale.order', 'partner_id', 'Sales Order')
-    sale_warn = fields.Selection(WARNING_MESSAGE, 'Sales Warnings', default='no-message', help=WARNING_HELP)
     sale_warn_msg = fields.Text('Message for Sales Order')
 
     @api.model
@@ -43,6 +40,16 @@ class ResPartner(models.Model):
                 if partner.id in self_ids:
                     partner.sale_order_count += count
                 partner = partner.parent_id
+
+    def _compute_application_statistics_hook(self):
+        data_list = super()._compute_application_statistics_hook()
+        if not self.env.user.has_group('sales_team.group_sale_salesman'):
+            return data_list
+        for partner in self.filtered('sale_order_count'):
+            data_list[partner.id].append(
+                {'iconClass': 'fa-usd', 'value': partner.sale_order_count, 'label': _('Sale Orders')}
+            )
+        return data_list
 
     def _has_order(self, partner_domain):
         self.ensure_one()

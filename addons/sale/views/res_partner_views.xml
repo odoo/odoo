@@ -6,7 +6,7 @@
         <field name="res_model">sale.order</field>
         <field name="view_mode">list,kanban,form,graph</field>
         <field name="domain">[('partner_id', 'child_of', active_ids)]</field>
-        <field name="context">{'default_partner_id': active_id, 'active_test': False}</field>
+        <field name="context">{'default_partner_id': active_id}</field>
         <field name="group_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -14,26 +14,6 @@
             </p><p>
             Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
             </p>
-        </field>
-    </record>
-
-    <record id="crm_lead_partner_kanban_view" model="ir.ui.view">
-        <field name="name">res.partner.kanban.saleorder.inherit</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
-        <field name="priority" eval="20"/>
-        <field name="arch" type="xml">
-            <xpath expr="//footer/div" position="inside">
-                <a t-if="record.sale_order_count?.value"
-                    class="btn btn-sm btn-link smaller"
-                    groups="sales_team.group_sale_salesman"
-                    name="sale.act_res_partner_2_sale_order"
-                    role="button"
-                    type="action">
-                    <i class="fa fa-usd me-1" role="img" aria-label="Sale orders" title="Sales orders"/>
-                    <field name="sale_order_count"/>
-                </a>
-            </xpath>
         </field>
     </record>
 
@@ -53,17 +33,14 @@
                     <field string="Sales" name="sale_order_count" widget="statinfo"/>
                 </button>
             </div>
-            <xpath expr="//page[@name='internal_notes']//field[@name='comment']" position="after">
-                <group groups="sales_team.group_sale_salesman">
-                    <group groups="sale.group_warning_sale" col="2">
-                        <separator string="Warning on the Sales Order" colspan="2"/>
-                        <field name="sale_warn" nolabel="1" colspan="2" required="1"/>
-                        <field name="sale_warn_msg" nolabel="1" string="Message" placeholder="Type a message..." colspan="2"
-                                invisible="sale_warn in (False, 'no-message')"
-                                required="sale_warn and sale_warn != 'no-message'"/>
-                    </group>
+            <group name="warnings" position="inside">
+                <group groups="sale.group_warning_sale" col="2">
+                    <separator string="Warning on Sales Orders and Invoices" colspan="2"/>
+                    <field name="sale_warn_msg"
+                           placeholder="e.g. This customer has reported recurring issues with previous orders."
+                           nolabel="1" colspan="2"/>
                 </group>
-            </xpath>
+            </group>
         </field>
     </record>
 

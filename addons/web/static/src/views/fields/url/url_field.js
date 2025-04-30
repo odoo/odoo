@@ -42,12 +42,18 @@ export const urlField = {
             type: "boolean",
             help: _t("If True, the url will be used as it is, without any prefix added to it."),
         },
+        {
+            label: _t("Dynamic Placeholder"),
+            name: "placeholder_field",
+            type: "field",
+            availableTypes: ["char"],
+        },
     ],
     supportedTypes: ["char"],
-    extractProps: ({ attrs, options }) => ({
+    extractProps: ({ attrs, options, placeholder }) => ({
+        placeholder,
         text: attrs.text,
         websitePath: options.website_path,
-        placeholder: attrs.placeholder,
     }),
 };
 

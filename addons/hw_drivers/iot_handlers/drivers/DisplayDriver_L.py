@@ -13,18 +13,20 @@ from odoo import http
 from odoo.addons.hw_drivers.browser import Browser, BrowserState
 from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.main import iot_devices
-from odoo.addons.hw_drivers.tools import helpers, wifi
+from odoo.addons.hw_drivers.tools import helpers, route
 from odoo.addons.hw_drivers.tools.helpers import Orientation
 from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
+
+MIN_IMAGE_VERSION_WAYLAND = 25.03
 
 
 class DisplayDriver(Driver):
     connection_type = 'display'
 
     def __init__(self, identifier, device):
-        super(DisplayDriver, self).__init__(identifier, device)
+        super().__init__(identifier, device)
         self.device_type = 'display'
         self.device_connection = 'hdmi'
         self.device_name = device['name']
@@ -43,6 +45,11 @@ class DisplayDriver(Driver):
         self._actions.update({
             'update_url': self._action_update_url,
             'display_refresh': self._action_display_refresh,
+            'open_kiosk': self._action_open_kiosk,
+            'rotate_screen': self._action_rotate_screen,
+            'open': self._action_open_customer_display,
+            'close': self._action_close_customer_display,
+            'set': self._action_set_customer_display,
         })
 
         self.set_orientation(self.orientation)
@@ -98,45 +105,65 @@ class DisplayDriver(Driver):
         if self.device_identifier != 'distant_display':
             self.browser.refresh()
 
+    def _action_open_kiosk(self, data):
+        if self.device_identifier != 'distant_display':
+            origin = helpers.get_odoo_server_url()
+            self.update_url(f"{origin}/pos-self/{data.get('pos_id')}?access_token={data.get('access_token')}")
+            self.set_orientation(Orientation.RIGHT)
+
+    def _action_rotate_screen(self, data):
+        if self.device_identifier == 'distant_display':
+            return
+
+        orientation = data.get('orientation', 'NORMAL').upper()
+        self.set_orientation(Orientation[orientation])
+
+    def _action_open_customer_display(self, data):
+        if self.device_identifier == 'distant_display' or not data.get('pos_id') or not data.get('access_token'):
+            return
+
+        origin = helpers.get_odoo_server_url() or http.request.httprequest.origin
+        self.update_url(f"{origin}/pos_customer_display/{data['pos_id']}/{data['access_token']}")
+
+    def _action_close_customer_display(self, data):
+        if self.device_identifier == 'distant_display':
+            return
+
+        helpers.update_conf({"browser_url": "", "screen_orientation": ""})
+        self.browser.disable_kiosk_mode()
+        self.update_url()
+
+    def _action_set_customer_display(self, data):
+        if self.device_identifier == 'distant_display' or not data.get('data'):
+            return
+
+        self.data['customer_display_data'] = data['data']
+
     def set_orientation(self, orientation=Orientation.NORMAL):
         if self.device_identifier == 'distant_display':
-            # Avoid calling xrandr if no display is connected
             return
 
         if type(orientation) is not Orientation:
             raise TypeError("orientation must be of type Orientation")
-        subprocess.run(['xrandr', '-o', orientation.value], check=True)
-        subprocess.run([file_path('hw_drivers/tools/sync_touchscreen.sh'), str(int(self._x_screen) + 1)], check=False)
+
+        if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION_WAYLAND:
+            subprocess.run(['wlr-randr', '--output', self.device_identifier, '--transform', orientation.value], check=True)
+            # Update touchscreen mapping to this display
+            with helpers.writable():
+                subprocess.run(['sed', '-i', f's/HDMI-A-[12]/{self.device_identifier}/', '/home/odoo/.config/labwc/rc.xml'])
+            # Tell labwc to reload its configuration
+            subprocess.run(['pkill', '-HUP', 'labwc'])
+        else:
+            subprocess.run(['xrandr', '-o', orientation.name.lower()], check=True)
+            subprocess.run([file_path('hw_drivers/tools/sync_touchscreen.sh'), str(int(self._x_screen) + 1)], check=False)
         helpers.save_browser_state(orientation=orientation)
 
 
 class DisplayController(http.Controller):
-    @http.route('/hw_proxy/customer_facing_display', type='jsonrpc', auth='none', cors='*')
-    def customer_facing_display(self, action, pos_id=None, access_token=None, data=None):
+    @route.iot_route('/hw_proxy/customer_facing_display', type='jsonrpc', cors='*')
+    def customer_facing_display(self):
         display = self.ensure_display()
-        if action in ['open', 'open_kiosk']:
-            origin = helpers.get_odoo_server_url()
-            if action == 'open_kiosk':
-                url = f"{origin}/pos-self/{pos_id}?access_token={access_token}"
-                display.set_orientation(Orientation.RIGHT)
-            else:
-                url = f"{origin}/pos_customer_display/{pos_id}/{access_token}"
-            display.update_url(url)
-            return {'status': 'opened'}
-        if action == 'close':
-            helpers.unlink_file('browser-url.conf')
-            helpers.unlink_file('screen-orientation.conf')
-            display.browser.disable_kiosk_mode()
-            display.update_url()
-            return {'status': 'closed'}
-        if action == 'set':
-            display.customer_display_data = data
-            return {'status': 'updated'}
-        if action == 'get':
-            return {'status': 'retrieved', 'data': display.customer_display_data}
-        if action == 'rotate_screen':
-            display.set_orientation(Orientation(data))
-            return {'status': 'rotated'}
+        return display.data.get('customer_display_data', {})
 
     def ensure_display(self):
         display: DisplayDriver = DisplayDriver.get_default_display()

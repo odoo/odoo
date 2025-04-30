@@ -181,6 +181,21 @@ class PortalAccount(CustomerPortal):
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
         return request.render("account.portal_invoice_page", values)
 
+    @http.route(['/my/journal/<int:journal_id>/unsubscribe'], type='http', auth="user", methods=['GET', 'POST'], website=True)
+    def portal_my_journal_unsubscribe(self, journal_id, **kw):
+        journal = request.env['account.journal'].browse(int(journal_id)).exists()
+        if not journal:
+            return request.not_found()
+
+        journal = journal.with_company(journal.sudo().company_id.id)
+        completed = False
+
+        if request.httprequest.method == 'POST':
+            journal.button_unsubscribe_from_invoice_notifications()
+            completed = True
+
+        return request.render("account.portal_my_journal_mail_notifications", {'completed': completed})
+
     # ------------------------------------------------------------
     # My Home
     # ------------------------------------------------------------

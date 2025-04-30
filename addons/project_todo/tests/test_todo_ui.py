@@ -40,9 +40,9 @@ class TestTodoUi(HttpCaseWithUserDemo):
         }])
 
         subtask = task.child_ids
-        task.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
-        subtask.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
-        private_task.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
+        task.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo', user_id=self.env.uid)
+        subtask.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo', user_id=self.env.uid)
+        private_task.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo', user_id=self.env.uid)
 
         # Ensure that all activities appear in the systray under the good category
         # name and that clicking on this category opens the correct view where only
@@ -62,3 +62,14 @@ class TestTodoUi(HttpCaseWithUserDemo):
             'email': 'mitchell.admin@example.com',
         })
         self.start_tour("/odoo", 'project_todo_main_functions', login='admin')
+
+    @users('admin')
+    def test_project_todo_history(self):
+        """This tour will check that the history works properly."""
+
+        self.env['project.task'].create({
+            'name': 'Test History Todo',
+            'project_id': False
+        })
+
+        self.start_tour('/odoo', 'project_todo_history_tour', login='admin')

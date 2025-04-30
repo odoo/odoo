@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
@@ -20,11 +19,11 @@ from markupsafe import Markup
 import pytz
 from passlib.context import CryptContext as _CryptContext
 
-from odoo import api, fields, models, tools, _, Command
+from odoo import api, fields, models, tools, _
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
+from odoo.fields import Command, Domain
 from odoo.http import request, DEFAULT_LANG
-from odoo.osv import expression
 from odoo.tools import is_html_empty, frozendict, lazy_property, SQL
 
 
@@ -193,10 +192,13 @@ class ResUsers(models.Model):
     def _default_groups(self):
         """Default groups for employees
 
-        All the groups of the Template User
+        All the groups of the Default User Group
         """
-        default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-        return default_user.sudo().group_ids if default_user else []
+        groups = self.env.ref('base.group_user')
+        default_group = self.env.ref('base.default_user_group', raise_if_not_found=False)
+        if default_group:
+            groups += default_group.implied_ids
+        return groups
 
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True, index=True,
         string='Related Partner', help='Partner-related data of the user')
@@ -250,6 +252,12 @@ class ResUsers(models.Model):
                                  compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
+
+    def _default_view_group_hierarchy(self):
+        return self.env['res.groups']._get_view_group_hierarchy()
+
+    view_group_hierarchy = fields.Json(string='Technical field for user group setting', store=False, default=_default_view_group_hierarchy)
+    role = fields.Selection([('group_user', 'Member'), ('group_system', 'Administrator')], compute='_compute_role', readonly=False, string="Role")
 
     _login_key = models.Constraint("UNIQUE (login)",
         'You can not have two users with the same login!')
@@ -387,6 +395,24 @@ class ResUsers(models.Model):
             else:
                 user.password = user.new_password
 
+    @api.depends('group_ids')
+    def _compute_role(self):
+        for user in self:
+            user.role = (
+                'group_system' if user.has_group('base.group_system') else
+                'group_user' if user.has_group('base.group_user') else
+                False
+            )
+
+    @api.onchange('role')
+    def _onchange_role(self):
+        group_admin = self.env['res.groups'].new(origin=self.env.ref('base.group_system'))
+        group_user = self.env['res.groups'].new(origin=self.env.ref('base.group_user'))
+        for user in self:
+            if user.role and user.has_group('base.group_user'):
+                groups = user.group_ids - (group_admin + group_user)
+                user.group_ids = groups + (group_admin if user.role == 'group_system' else group_user)
+
     @api.depends('group_ids.all_implied_ids')
     def _compute_all_group_ids(self):
         for user in self:
@@ -443,7 +469,7 @@ class ResUsers(models.Model):
         return self.partner_id.onchange_parent_id()
 
     @api.constrains('company_id', 'company_ids', 'active')
-    def _check_company(self):
+    def _check_user_company(self):
         for user in self.filtered(lambda u: u.active):
             if user.company_id not in user.company_ids:
                 raise ValidationError(
@@ -491,6 +517,12 @@ class ResUsers(models.Model):
                     groups=", ".join(repr(g.display_name) for g in disjoint_groups),
                 ))
 
+    @api.constrains('group_ids')
+    def _check_at_least_one_administrator(self):
+        system = self.env.ref('base.group_system', raise_if_not_found=False)
+        if system and not system.user_ids:
+            raise ValidationError(_("You must have at least an administrator user."))
+
     def onchange(self, values, field_names, fields_spec):
         # Hacky fix to access fields in `SELF_READABLE_FIELDS` in the onchange logic.
         # Put field values in the cache.
@@ -507,8 +539,8 @@ class ResUsers(models.Model):
 
     def _has_field_access(self, field, operation):
         return super()._has_field_access(field, operation) or (
-            self == self.env.user
-            and operation == 'read'
+            operation == 'read'
+            and self._origin == self.env.user
             and field.name in self.SELF_READABLE_FIELDS
         )
 
@@ -529,15 +561,6 @@ class ResUsers(models.Model):
         if setting_vals:
             self.env['res.users.settings'].sudo().create(setting_vals)
         return users
-
-    def _apply_groups_to_existing_employees(self):
-        """ Should new groups be added to existing employees?
-
-        If the template user is being modified, the groups should be applied to
-        every other base_user users
-        """
-        default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-        return default_user and default_user in self
 
     def write(self, values):
         if values.get('active') and SUPERUSER_ID in self._ids:
@@ -560,23 +583,7 @@ class ResUsers(models.Model):
                 # safe fields only, so we write as super-user to bypass access rights
                 self = self.sudo()
 
-        old_groups = []
-        if 'group_ids' in values:
-            users_before = self.filtered(lambda u: u._is_internal())
-            if self._apply_groups_to_existing_employees():
-                # if modify group_ids content, compute the delta of groups to apply
-                # the new ones to other existing users
-                old_groups = self._default_groups()
-
         res = super().write(values)
-
-        if old_groups:
-            # new elements in _default_groups() means new groups for default users
-            # that needs to be added to existing ones as well for consistency
-            added_groups = self._default_groups() - old_groups
-            if added_groups:
-                internal_users = self.env.ref('base.group_user').all_user_ids - self
-                internal_users.write({'group_ids': [Command.link(gid) for gid in added_groups.ids]})
 
         if 'company_id' in values:
             for user in self:
@@ -609,23 +616,22 @@ class ResUsers(models.Model):
     @api.ondelete(at_uninstall=True)
     def _unlink_except_master_data(self):
         portal_user_template = self.env.ref('base.template_portal_user_id', False)
-        default_user_template = self.env.ref('base.default_user', False)
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         user_admin = self.env.ref('base.user_admin', raise_if_not_found=False)
         if user_admin and user_admin in self:
             raise UserError(_('You cannot delete the admin user because it is utilized in various places (such as security configurations,...). Instead, archive it.'))
         self.env.registry.clear_cache()
-        if (portal_user_template and portal_user_template in self) or (default_user_template and default_user_template in self):
+        if portal_user_template and portal_user_template in self:
             raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
 
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
-        domain = domain or []
+        domain = Domain(domain or Domain.TRUE)
         # first search only by login, then the normal search
         if (
-            name and operator not in expression.NEGATIVE_TERM_OPERATORS
-            and (user := self.search_fetch(expression.AND([[('login', '=', name)], domain]), ['display_name']))
+            name and not Domain.is_negative_operator(operator)
+            and (user := self.search_fetch(Domain('login', '=', name) & domain, ['display_name']))
         ):
             return [(user.id, user.display_name)]
         return super().name_search(name, domain, operator, limit)
@@ -633,8 +639,10 @@ class ResUsers(models.Model):
     @api.model
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
-        if operator in ('=', 'ilike') and value:
-            name_domain = [('login', '=', value)]
+        if operator in ('in', 'ilike') and value:
+            name_domain = [('login', 'in', [value] if isinstance(value, str) else value)]
+            # avoid searching both by login and name because they reside in two different tables
+            # doing so prevents from using indexes and introduces a performance issue
             if users := self.search(name_domain):
                 domain = [('id', 'in', users.ids)]
         return domain
@@ -801,7 +809,7 @@ class ResUsers(models.Model):
             if not self._fields[fname].relational
         )
         return {
-            "select": SQL("(%s), %s", database_secret, fields),
+            "select": SQL("(%s) as database_secret, %s", database_secret, fields),
             "from": SQL("res_users"),
             "joins": SQL(""),
             "where": SQL("res_users.id = %s", self.id),
@@ -812,6 +820,10 @@ class ResUsers(models.Model):
     def _compute_session_token(self, sid):
         """ Compute a session token given a session id and a user id """
         # retrieve the fields used to generate the session token
+        field_values = self._session_token_get_values()
+        return self._session_token_hash_compute(sid, field_values)
+
+    def _session_token_get_values(self):
         self.env.cr.execute(SQL(
             "SELECT %(select)s FROM %(from)s %(joins)s WHERE %(where)s GROUP BY %(group_by)s",
             **self._get_session_token_query_params(),
@@ -820,10 +832,29 @@ class ResUsers(models.Model):
             self.env.registry.clear_cache()
             return False
         data_fields = self.env.cr.fetchone()
-        # generate hmac key
-        key = (u'%s' % (data_fields,)).encode('utf-8')
+        # create tuple with column name and value, allowing for overrides to manipulate the values
+        cr_description = self.env.cr.description
+        return tuple((column.name, data_fields[index]) for index, column in enumerate(cr_description))
+
+    def _session_token_hash_compute(self, sid, field_values):
+        # Generate hmac key using the column name and its value, only if the value is not None
+        # To avoid invalidating sessions when installing a new feature modifying the session token computation
+        # while not still being used.
+        key_tuple = tuple((k, v) for k, v in field_values if v is not None)
+        # encode the key tuple to a bytestring
+        key = str(key_tuple).encode()
         # hmac the session id
-        data = sid.encode('utf-8')
+        data = sid.encode()
+        h = hmac.new(key, data, sha256)
+        # return the session token with a prefix version
+        return h.hexdigest()
+
+    def _legacy_session_token_hash_compute(self, sid):
+        field_values = self._session_token_get_values()
+        # generate hmac key
+        key = ('%s' % (tuple(f[1] for f in field_values),)).encode()
+        # hmac the session id
+        data = sid.encode()
         h = hmac.new(key, data, sha256)
         # keep in the cache the token
         return h.hexdigest()
@@ -1320,7 +1351,7 @@ class ResUsersIdentitycheck(models.TransientModel):
 
     request = fields.Char(readonly=True, groups=fields.NO_ACCESS)
     auth_method = fields.Selection([('password', 'Password')], default=lambda self: self._get_default_auth_method())
-    password = fields.Char()
+    password = fields.Char(store=False)
 
     def _get_default_auth_method(self):
         return 'password'
@@ -1329,7 +1360,7 @@ class ResUsersIdentitycheck(models.TransientModel):
         try:
             credential = {
                 'login': self.env.user.login,
-                'password': self.password,
+                'password': self.env.context.get('password'),
                 'type': 'password',
             }
             self.create_uid._check_credentials(credential, {'interactive': True})
@@ -1337,9 +1368,9 @@ class ResUsersIdentitycheck(models.TransientModel):
             raise UserError(_("Incorrect Password, try again or click on Forgot Password to reset your password."))
 
     def run_check(self):
+        # The password must be in the context with the key name `'password'`
         assert request, "This method can only be accessed over HTTP"
         self._check_identity()
-        self.password = False
 
         request.session['identity-check-last'] = time.time()
         ctx, model, ids, method, args, kwargs = json.loads(self.sudo().request)

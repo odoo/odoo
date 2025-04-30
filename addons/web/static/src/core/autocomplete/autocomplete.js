@@ -18,7 +18,6 @@ export class AutoComplete extends Component {
                 type: Object,
                 shape: {
                     placeholder: { type: String, optional: true },
-                    optionTemplate: { type: String, optional: true },
                     options: [Array, Function],
                     optionSlot: { type: String, optional: true },
                 },
@@ -65,6 +64,7 @@ export class AutoComplete extends Component {
         this.nextOptionId = 0;
         this.sources = [];
         this.inEdition = false;
+        this.mouseSelectionActive = false;
 
         this.state = useState({
             navigationRev: 0,
@@ -101,6 +101,7 @@ export class AutoComplete extends Component {
 
         useExternalListener(window, "scroll", this.externalClose, true);
         useExternalListener(window, "pointerdown", this.externalClose, true);
+        useExternalListener(window, "mousemove", () => this.mouseSelectionActive = true, true);
 
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
@@ -159,6 +160,9 @@ export class AutoComplete extends Component {
     }
 
     get activeOption() {
+        if (!this.state.activeSourceOption) {
+            return null;
+        }
         const [sourceIndex, optionIndex] = this.state.activeSourceOption;
         return this.sources[sourceIndex].options[optionIndex];
     }
@@ -171,6 +175,7 @@ export class AutoComplete extends Component {
     close() {
         this.state.open = false;
         this.state.activeSourceOption = null;
+        this.mouseSelectionActive = false;
     }
 
     cancel() {
@@ -232,7 +237,6 @@ export class AutoComplete extends Component {
             options: [],
             isLoading: false,
             placeholder: source.placeholder,
-            optionTemplate: source.optionTemplate,
             optionSlot: source.optionSlot,
         };
     }
@@ -248,8 +252,6 @@ export class AutoComplete extends Component {
     selectOption(option, params = {}) {
         this.inEdition = false;
         if (option.unselectable) {
-            this.inputRef.el.value = "";
-            this.close();
             return;
         }
 
@@ -274,14 +276,30 @@ export class AutoComplete extends Component {
             this.state.navigationRev++;
         }
 
-        if (this.state.activeSourceOption) {
-            let [sourceIndex, optionIndex] = this.state.activeSourceOption;
-            let source = this.sources[sourceIndex];
+        do {
+            if (this.state.activeSourceOption) {
+                let [sourceIndex, optionIndex] = this.state.activeSourceOption;
+                let source = this.sources[sourceIndex];
 
-            optionIndex += step;
-            if (0 > optionIndex || optionIndex >= source.options.length) {
-                sourceIndex += step;
-                source = this.sources[sourceIndex];
+                optionIndex += step;
+                if (0 > optionIndex || optionIndex >= source.options.length) {
+                    sourceIndex += step;
+                    source = this.sources[sourceIndex];
+
+                    while (source && source.isLoading) {
+                        sourceIndex += step;
+                        source = this.sources[sourceIndex];
+                    }
+
+                    if (source) {
+                        optionIndex = step < 0 ? source.options.length - 1 : 0;
+                    }
+                }
+
+                this.state.activeSourceOption = source ? [sourceIndex, optionIndex] : null;
+            } else {
+                let sourceIndex = step < 0 ? this.sources.length - 1 : 0;
+                let source = this.sources[sourceIndex];
 
                 while (source && source.isLoading) {
                     sourceIndex += step;
@@ -289,27 +307,13 @@ export class AutoComplete extends Component {
                 }
 
                 if (source) {
-                    optionIndex = step < 0 ? source.options.length - 1 : 0;
+                    const optionIndex = step < 0 ? source.options.length - 1 : 0;
+                    if (optionIndex < source.options.length) {
+                        this.state.activeSourceOption = [sourceIndex, optionIndex];
+                    }
                 }
             }
-
-            this.state.activeSourceOption = source ? [sourceIndex, optionIndex] : null;
-        } else {
-            let sourceIndex = step < 0 ? this.sources.length - 1 : 0;
-            let source = this.sources[sourceIndex];
-
-            while (source && source.isLoading) {
-                sourceIndex += step;
-                source = this.sources[sourceIndex];
-            }
-
-            if (source) {
-                const optionIndex = step < 0 ? source.options.length - 1 : 0;
-                if (optionIndex < source.options.length) {
-                    this.state.activeSourceOption = [sourceIndex, optionIndex];
-                }
-            }
-        }
+        } while (this.activeOption?.unselectable);
     }
 
     onInputBlur() {
@@ -433,7 +437,16 @@ export class AutoComplete extends Component {
     }
 
     onOptionMouseEnter(indices) {
-        this.state.activeSourceOption = indices;
+        if (!this.mouseSelectionActive) {
+            return;
+        }
+
+        const [sourceIndex, optionIndex] = indices;
+        if (this.sources[sourceIndex].options[optionIndex]?.unselectable) {
+            this.state.activeSourceOption = null;
+        } else {
+            this.state.activeSourceOption = indices;
+        }
     }
     onOptionMouseLeave() {
         this.state.activeSourceOption = null;
@@ -441,6 +454,12 @@ export class AutoComplete extends Component {
     onOptionClick(option) {
         this.selectOption(option);
         this.inputRef.el.focus();
+    }
+    onOptionPointerDown(option, ev) {
+        this.ignoreBlur = true;
+        if (option.unselectable) {
+            ev.preventDefault();
+        }
     }
 
     externalClose(ev) {

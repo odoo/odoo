@@ -39,7 +39,7 @@ class PurchaseOrderLine(models.Model):
         compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True)
     price_unit_discounted = fields.Float('Unit Price (Discounted)', compute='_compute_price_unit_discounted')
 
-    price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', aggregator=None, store=True)
+    price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
     price_tax = fields.Float(compute='_compute_amount', string='Tax', store=True)
 
@@ -84,6 +84,7 @@ class PurchaseOrderLine(models.Model):
     )
     product_template_attribute_value_ids = fields.Many2many(related='product_id.product_template_attribute_value_ids', readonly=True)
     product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants', ondelete='restrict')
+    purchase_line_warn_msg = fields.Text(related='product_id.purchase_line_warn_msg')
 
     @api.depends('product_qty', 'price_unit', 'tax_ids', 'discount')
     def _compute_amount(self):
@@ -285,26 +286,6 @@ class PurchaseOrderLine(models.Model):
 
         self._compute_tax_id()
 
-    @api.onchange('product_id')
-    def onchange_product_id_warning(self):
-        if not self.product_id or not self.env.user.has_group('purchase.group_warning_purchase'):
-            return
-        warning = {}
-        title = False
-        message = False
-
-        product_info = self.product_id
-
-        if product_info.purchase_line_warn != 'no-message':
-            title = _("Warning for %s", product_info.name)
-            message = product_info.purchase_line_warn_msg
-            warning['title'] = title
-            warning['message'] = message
-            if product_info.purchase_line_warn == 'block':
-                self.product_id = False
-            return {'warning': warning}
-        return {}
-
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
     def _compute_allowed_uom_ids(self):
         for line in self:
@@ -424,8 +405,7 @@ class PurchaseOrderLine(models.Model):
         the product is read-only or not.
 
         A product is considered read-only if the order is considered read-only (see
-        ``PurchaseOrder._is_readonly`` for more details) or if `self` contains multiple records
-        or if it has purchase_line_warn == "block".
+        ``PurchaseOrder._is_readonly`` for more details) or if `self` contains multiple records.
 
         Note: This method cannot be called with multiple records that have different products linked.
 
@@ -436,29 +416,20 @@ class PurchaseOrderLine(models.Model):
                 'quantity': float,
                 'price': float,
                 'readOnly': bool,
-                'uom': dict,
-                'purchase_uom': dict,
+                'uomDisplayName': String,
                 'packaging': dict,
                 'warning': String,
             }
         """
         if len(self) == 1:
             catalog_info = self.order_id._get_product_price_and_data(self.product_id)
-            uom = {
-                'display_name': self.product_id.uom_id.display_name,
-                'id': self.product_id.uom_id.id,
-            }
             catalog_info.update(
                 quantity=self.product_qty,
                 price=self.price_unit * (1 - self.discount / 100),
                 readOnly=self.order_id._is_readonly(),
-                uom=uom,
             )
             if self.product_id.uom_id != self.product_uom_id:
-                catalog_info['purchase_uom'] = {
-                'display_name': self.product_uom_id.display_name,
-                'id': self.product_uom_id.id,
-            }
+                catalog_info['uomDisplayName'] = self.product_uom_id.display_name
             return catalog_info
         elif self:
             self.product_id.ensure_one()
@@ -533,9 +504,12 @@ class PurchaseOrderLine(models.Model):
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
 
-        price_unit = (seller.product_uom_id._compute_price(seller.price, product_uom) if product_uom else seller.price) if seller else product_id.standard_price
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(
+        if seller:
+            price_unit = (seller.product_uom_id._compute_price(seller.price, product_uom) if product_uom else seller.price)
+            price_unit = self.env['account.tax']._fix_tax_included_price_company(
             price_unit, product_taxes, taxes, company_id)
+        else:
+            price_unit = 0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
             price_unit = seller.currency_id._convert(
                 price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())

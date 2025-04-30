@@ -1,7 +1,10 @@
-import { _t } from "@web/core/l10n/translation";
+import { Component, onPatched, onWillDestroy, useEffect, useRef, useState } from "@odoo/owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { _t } from "@web/core/l10n/translation";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -12,17 +15,6 @@ import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import {
-    Component,
-    onPatched,
-    onWillDestroy,
-    onWillPatch,
-    useEffect,
-    useRef,
-    useState,
-} from "@odoo/owl";
-import { evaluateExpr } from "@web/core/py_js/py";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
@@ -110,6 +102,7 @@ export class KanbanRenderer extends Component {
                 groups: () => this.props.list.isGrouped && ".o_kanban_group",
                 connectGroups: () => this.canMoveRecords,
                 cursor: "move",
+                placeholderClasses: ["visible", "opacity-50", "my-2"],
                 // Hooks
                 onDragStart: (params) => {
                     const { element, group } = params;
@@ -229,14 +222,6 @@ export class KanbanRenderer extends Component {
         useHotkey("ArrowDown", ({ area }) => this.focusNextCard(area, "down"), arrowsOptions);
         useHotkey("ArrowLeft", ({ area }) => this.focusNextCard(area, "left"), arrowsOptions);
         useHotkey("ArrowRight", ({ area }) => this.focusNextCard(area, "right"), arrowsOptions);
-
-        let previousScrollTop = 0;
-        onWillPatch(() => {
-            previousScrollTop = this.rootRef.el.scrollTop;
-        });
-        onPatched(() => {
-            this.rootRef.el.scrollTop = previousScrollTop;
-        });
         const handleAltKeyDown = (ev) => {
             if (ev.key === "Alt") {
                 this.state.selectionAvailable = true;
@@ -258,6 +243,34 @@ export class KanbanRenderer extends Component {
             },
             () => []
         );
+
+        // After a group is unfolded through onGroupClick, we want to scroll towards
+        // the next group if it exists and is folded, and to the unfolded group
+        // itself otherwise
+        onPatched(() => {
+            if (this.lastOpenedGroupId) {
+                const groups = this.getGroupsOrRecords();
+                const lastOpenedGroupIndex = groups.findIndex(
+                    (g) => g.group.id === this.lastOpenedGroupId
+                );
+                let groupIdToFocus = this.lastOpenedGroupId;
+                if (
+                    lastOpenedGroupIndex < groups.length - 1 &&
+                    groups[lastOpenedGroupIndex + 1].group.isFolded
+                ) {
+                    groupIdToFocus = groups[lastOpenedGroupIndex + 1].group.id;
+                }
+                const groupEl = this.rootRef.el.querySelector(
+                    `.o_kanban_group[data-id="${groupIdToFocus}"]`
+                );
+                const rect = groupEl.getBoundingClientRect();
+                // Don't scroll if the group to focus is completely inside of the viewport
+                if (rect.x + rect.width > window.innerWidth) {
+                    groupEl.scrollIntoView({ behavior: "smooth", inline: "end" });
+                }
+                delete this.lastOpenedGroupId;
+            }
+        });
     }
 
     // ------------------------------------------------------------------------
@@ -445,20 +458,13 @@ export class KanbanRenderer extends Component {
     }
 
     async validateQuickCreate(recordId, mode, group) {
-        this.props.quickCreateState.groupId = false;
-        if (mode === "add") {
-            this.props.quickCreateState.groupId = group.id;
-        }
         const record = await group.addExistingRecord(recordId, true);
-        group.model.bus.trigger("group-updated", {
-            group: group,
-            withProgressBars: true,
-        });
         if (mode === "edit") {
             await this.props.openRecord(record);
         } else {
             this.props.progressBarState?.updateCounts(group);
         }
+        this.props.quickCreateState.groupId = mode === "add" ? group.id : false;
     }
 
     cancelQuickCreate() {
@@ -520,6 +526,7 @@ export class KanbanRenderer extends Component {
 
     async onGroupClick(group, ev) {
         if (!this.env.isSmall && group.isFolded) {
+            this.lastOpenedGroupId = group.id;
             await group.toggle();
             this.props.scrollTop();
         }

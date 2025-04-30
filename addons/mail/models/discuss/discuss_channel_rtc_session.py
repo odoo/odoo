@@ -5,6 +5,7 @@ import requests
 
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.addons.mail.tools import discuss, jwt
@@ -20,8 +21,8 @@ class DiscussChannelRtcSession(models.Model):
     _rec_name = 'channel_member_id'
 
     channel_member_id = fields.Many2one('discuss.channel.member', required=True, ondelete='cascade')
-    channel_id = fields.Many2one('discuss.channel', related='channel_member_id.channel_id', store=True, readonly=True)
-    partner_id = fields.Many2one('res.partner', related='channel_member_id.partner_id', string="Partner")
+    channel_id = fields.Many2one('discuss.channel', related='channel_member_id.channel_id', store=True, readonly=True, index='btree_not_null')
+    partner_id = fields.Many2one('res.partner', related='channel_member_id.partner_id', string="Partner", store=True, index=True)
     guest_id = fields.Many2one('mail.guest', related='channel_member_id.guest_id')
 
     write_date = fields.Datetime("Last Updated On", index=True)
@@ -43,33 +44,53 @@ class DiscussChannelRtcSession(models.Model):
         for rtc_session in rtc_sessions:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            channel._bus_send_store(channel, {"rtcSessions": Store.Many(rtc_sessions, mode="ADD")})
+            channel._bus_send_store(channel, {"rtc_session_ids": Store.Many(rtc_sessions, mode="ADD")})
+        for channel in rtc_sessions.channel_id.filtered(lambda c: len(c.rtc_session_ids) == 1):
+            body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
+            message = channel.message_post(body=body, message_type="notification")
+            # sudo - discuss.call.history: can create call history when call is created.
+            self.env["discuss.call.history"].sudo().create(
+                {
+                    "channel_id": channel.id,
+                    "start_dt": fields.Datetime.now(),
+                    "start_call_message_id": message.id,
+                },
+            )
+            channel._bus_send_store(message, [Store.Many("call_history_ids", [])])
         return rtc_sessions
 
     def unlink(self):
-        channels = self.channel_id
-        for channel in channels:
-            if channel.rtc_session_ids and len(channel.rtc_session_ids - self) == 0:
-                # If there is no member left in the RTC call, all invitations are cancelled.
-                # Note: invitation depends on field `rtc_inviting_session_id` so the cancel must be
-                # done before the delete to be able to know who was invited.
-                channel._rtc_cancel_invitations()
-                # If there is no member left in the RTC call, we remove the SFU channel uuid as the SFU
-                # server will timeout the channel. It is better to obtain a new channel from the SFU server
-                # than to attempt recycling a possibly stale channel uuid.
-                channel.sfu_channel_uuid = False
-                channel.sfu_server_url = False
+        call_ended_channels = self.channel_id.filtered(lambda c: not (c.rtc_session_ids - self))
+        for channel in call_ended_channels:
+            # If there is no member left in the RTC call, all invitations are cancelled.
+            # Note: invitation depends on field `rtc_inviting_session_id` so the cancel must be
+            # done before the delete to be able to know who was invited.
+            channel._rtc_cancel_invitations()
+            # If there is no member left in the RTC call, we remove the SFU channel uuid as the SFU
+            # server will timeout the channel. It is better to obtain a new channel from the SFU server
+            # than to attempt recycling a possibly stale channel uuid.
+            channel.sfu_channel_uuid = False
+            channel.sfu_server_url = False
         rtc_sessions_by_channel = defaultdict(lambda: self.env["discuss.channel.rtc.session"])
         for rtc_session in self:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
             channel._bus_send_store(
-                channel, {"rtcSessions": Store.Many(rtc_sessions, [], mode="DELETE")}
+                channel, {"rtc_session_ids": Store.Many(rtc_sessions, [], mode="DELETE")}
             )
         for rtc_session in self:
             rtc_session._bus_send(
                 "discuss.channel.rtc.session/ended", {"sessionId": rtc_session.id}
             )
+        # sudo - dicuss.rtc.call.history: setting the end date of the call
+        # after it ends is allowed.
+        for history in (
+            self.env["discuss.call.history"]
+            .sudo()
+            .search([("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)])
+        ):
+            history.end_dt = fields.Datetime.now()
+            history.channel_id._bus_send_store(history, ["duration_hour", "end_dt"])
         return super().unlink()
 
     def _bus_channel(self):

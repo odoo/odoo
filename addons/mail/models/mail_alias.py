@@ -103,7 +103,12 @@ class MailAlias(models.Model):
         domain should match the one used on the related record. """
 
         # in sudo, to be able to read alias_parent_model_id (ir.model)
-        tocheck = self.sudo().filtered(lambda domain: domain.alias_domain_id.company_ids)
+        tocheck = self.sudo().filtered(lambda alias: alias.alias_domain_id.company_ids)
+        # transient check, mainly for tests / install
+        tocheck = tocheck.filtered(lambda alias:
+            (not alias.alias_model_id.model or alias.alias_model_id.model in self.env) and
+            (not alias.alias_parent_model_id.model or alias.alias_parent_model_id.model in self.env)
+        )
         if not tocheck:
             return
 
@@ -504,8 +509,7 @@ Please try again later or contact %(company_name)s instead."""
         }, minimal_qcontext=True)
 
     def _alias_bounce_incoming_email(self, message, message_dict, set_invalid=True):
-        """Set alias status to invalid and create bounce message to the sender
-        and the alias responsible.
+        """Set alias status to invalid and create bounce message to the sender.
 
         This method must be called when a message received on the alias has
         caused an error due to the mis-configuration of the alias.
@@ -526,6 +530,4 @@ Please try again later or contact %(company_name)s instead."""
         self.env['mail.thread']._routing_create_bounce_email(
             message_dict['email_from'], body, message,
             references=message_dict['message_id'],
-            # add the alias creator as recipient if set
-            recipient_ids=self.create_uid.partner_id.ids if self.create_uid.active else [],
         )

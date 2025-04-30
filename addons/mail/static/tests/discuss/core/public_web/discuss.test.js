@@ -82,7 +82,10 @@ test.skip("bus subscription kept after receiving a message as non member", async
 
 test("open channel in discuss from push notification", async () => {
     patchWithCleanup(window.navigator, {
-        serviceWorker: Object.assign(new EventBus(), { register: () => Promise.resolve() }),
+        serviceWorker: Object.assign(new EventBus(), {
+            register: () => Promise.resolve(),
+            ready: Promise.resolve(),
+        }),
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

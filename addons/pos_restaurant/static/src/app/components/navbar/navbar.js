@@ -29,12 +29,15 @@ patch(Navbar.prototype, {
         return true;
     },
     onTicketButtonClick() {
-        return this.canClick() && this.pos.showScreen("TicketScreen");
+        return this.canClick() && this.pos.navigate("TicketScreen");
     },
     onClickPlanButton() {
-        return this.canClick() && this.pos.showScreen("FloorScreen");
+        return this.canClick() && this.pos.navigate("FloorScreen");
     },
     get mainButton() {
-        return this.pos.mainScreen.component.name === "FloorScreen" ? "table" : super.mainButton;
+        return this.pos.router.state.current === "FloorScreen" ? "table" : super.mainButton;
+    },
+    get currentOrderName() {
+        return this.pos.getOrder().getName().replace("T ", "");
     },
 });

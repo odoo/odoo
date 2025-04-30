@@ -14,9 +14,9 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         cls.public_channel = cls.env["discuss.channel"]._create_channel(
             name="Public Channel", group_id=None
         )
-        cls.partner_ids = (
+        cls.users = (
             cls.user_public + cls.user_portal + cls.user_employee + cls.user_admin
-        ).partner_id.ids
+        )
 
     def test_open_guest_avatar(self):
         """Test access to open the avatar of a guest.
@@ -39,7 +39,7 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - target joins the channel: True
         - other users join the channel: True
         - target sends a message: False"""
-        self.private_channel.add_members(self.partner_ids, (self.guest + self.guest_2).ids)
+        self.private_channel._add_members(users=self.users, guests=self.guest | self.guest_2)
         self._execute_subtests(
             self.guest_2,
             (
@@ -58,8 +58,8 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - target joins the channel: True
         - other users join the channel: True
         - target sends a message: False"""
-        self.private_channel.add_members(
-            self.partner_ids + [self.user_employee_nopartner.partner_id.id], self.guest.id
+        self.private_channel._add_members(
+            users=self.users | self.user_employee_nopartner, guests=self.guest
         )
         self._execute_subtests(
             self.user_employee_nopartner.partner_id,
@@ -79,7 +79,7 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - target joins the channel: True
         - other users join the channel: True
         - target sends a message: True"""
-        self.private_channel.add_members(self.partner_ids, (self.guest + self.guest_2).ids)
+        self.private_channel._add_members(users=self.users, guests=self.guest | self.guest_2)
         self._post_message(self.private_channel, self.guest_2)
         self._execute_subtests(
             self.guest_2,
@@ -99,8 +99,8 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - target joins the channel: True
         - other users join the channel: True
         - target sends a message: True"""
-        self.private_channel.add_members(
-            self.partner_ids + [self.user_employee_nopartner.partner_id.id], self.guest.id
+        self.private_channel._add_members(
+            users=self.users | self.user_employee_nopartner, guests=self.guest
         )
         self._post_message(self.private_channel, self.user_employee_nopartner)
         self._execute_subtests(
@@ -122,7 +122,7 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - other users join the channel: True
         - target sends a message: False
         - target leaves the channel: True"""
-        self.private_channel.add_members(self.partner_ids, (self.guest + self.guest_2).ids)
+        self.private_channel._add_members(users=self.users, guests=self.guest | self.guest_2)
         self.env["discuss.channel.member"].search(
             [("guest_id", "=", self.guest_2.id), ("channel_id", "=", self.private_channel.id)]
         ).unlink()
@@ -145,8 +145,8 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - other users join the channel: True
         - target sends a message: False
         - target leaves the channel: True"""
-        self.private_channel.add_members(
-            self.partner_ids + [self.user_employee_nopartner.partner_id.id], self.guest.id
+        self.private_channel._add_members(
+            users=self.users | self.user_employee_nopartner, guests=self.guest
         )
         self.env["discuss.channel.member"].search(
             [
@@ -173,7 +173,7 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - other users join the channel: True
         - target sends a message: True
         - target leaves the channel: True"""
-        self.private_channel.add_members(self.partner_ids, (self.guest + self.guest_2).ids)
+        self.private_channel._add_members(users=self.users, guests=self.guest | self.guest_2)
         self._post_message(self.private_channel, self.guest_2)
         self.env["discuss.channel.member"].search(
             [("guest_id", "=", self.guest_2.id), ("channel_id", "=", self.private_channel.id)]
@@ -197,8 +197,8 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - other users join the channel: True
         - target sends a message: True
         - target leaves the channel: True"""
-        self.private_channel.add_members(
-            self.partner_ids + [self.user_employee_nopartner.partner_id.id], self.guest.id
+        self.private_channel._add_members(
+            users=self.users | self.user_employee_nopartner, guests=self.guest
         )
         self._post_message(self.private_channel, self.user_employee_nopartner)
         self.env["discuss.channel.member"].search(
@@ -311,7 +311,7 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - other users join the channel: False
         - target sends a message: False
         - target leaves the channel: True"""
-        target_member = self.public_channel.add_members(guest_ids=self.guest_2.id)
+        target_member = self.public_channel._add_members(guests=self.guest_2)
         target_member.unlink()
         self._execute_subtests(
             self.guest_2,
@@ -332,7 +332,7 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - other users join the channel: False
         - target sends a message: False
         - target leaves the channel: True"""
-        target_member = self.public_channel.add_members(self.user_employee_nopartner.partner_id.id)
+        target_member = self.public_channel._add_members(users=self.user_employee_nopartner)
         target_member.unlink()
         self._execute_subtests(
             self.user_employee_nopartner.partner_id,
@@ -353,7 +353,7 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - other users join the channel: False
         - target sends a message: True
         - target leaves the channel: True"""
-        target_member = self.public_channel.add_members(guest_ids=self.guest_2.id)
+        target_member = self.public_channel._add_members(guests=self.guest_2)
         self._post_message(self.public_channel, self.guest_2)
         target_member.unlink()
         self._execute_subtests(
@@ -375,7 +375,7 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         - other users join the channel: False
         - target sends a message: True
         - target leaves the channel: True"""
-        target_member = self.public_channel.add_members(self.user_employee_nopartner.partner_id.id)
+        target_member = self.public_channel._add_members(users=self.user_employee_nopartner)
         self._post_message(self.public_channel, self.user_employee_nopartner)
         target_member.unlink()
         self._execute_subtests(

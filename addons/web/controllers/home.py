@@ -71,11 +71,11 @@ class Home(http.Controller):
         except AccessError:
             return request.redirect('/web/login?error=access')
 
-    @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'], readonly=True)
-    def web_load_menus(self, unique, lang=None):
+    @http.route('/web/webclient/load_menus', type='http', auth='user', methods=['GET'], readonly=True)
+    def web_load_menus(self, unique=None, lang=None):
         """
         Loads the menus for the webclient
-        :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :param unique: this parameters is not used: it is used by the HTTP stack to make a unique request
         :param lang: language in which the menus should be loaded (only works if language is installed)
         :return: the menus (including the images in Base64)
         """
@@ -95,7 +95,7 @@ class Home(http.Controller):
     def _login_redirect(self, uid, redirect=None):
         return _get_login_redirect_url(uid, redirect)
 
-    @http.route('/web/login', type='http', auth='none', readonly=False, captcha='login')
+    @http.route('/web/login', type='http', auth='none', readonly=False)
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False
@@ -122,6 +122,8 @@ class Home(http.Controller):
             try:
                 credential = {key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS and value}
                 credential.setdefault('type', 'password')
+                if request.env['res.users']._should_captcha_login(credential):
+                    request.env['ir.http']._verify_request_recaptcha_token('login')
                 auth_info = request.session.authenticate(request.env, credential)
                 request.params['login_success'] = True
                 return request.redirect(self._login_redirect(auth_info['uid'], redirect=redirect))

@@ -2,6 +2,7 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
+import { localization } from "@web/core/l10n/localization";
 
 const { DateTime } = luxon;
 
@@ -39,19 +40,19 @@ export class PresetSlotsPopup extends Component {
         const isPast = slot.datetime < DateTime.now();
 
         if (!isSelected && isFull) {
-            return "o_colorlist_item_color_transparent_1"; // Red
+            return "o_colorlist_item_numpad_color_1"; // Red
         }
 
         return isSelected
             ? "btn-primary"
             : isPast
             ? "btn-secondary"
-            : "o_colorlist_item_color_transparent_10"; // Green
+            : "o_colorlist_item_numpad_color_10"; // Green
     }
 
     isSelected(slot, preset) {
         const order = this.pos.getOrder();
-        return order.preset_time.ts === slot.datetime.ts && order.preset_id?.id === preset.id;
+        return order.preset_time?.ts === slot.datetime.ts && order.preset_id?.id === preset.id;
     }
 
     getSlotsForDate(preset, date) {
@@ -82,7 +83,7 @@ export class PresetSlotsPopup extends Component {
 
     formatDate(date) {
         const dateObj = DateTime.fromFormat(date, "yyyy-MM-dd");
-        return dateObj.toFormat("dd/MM/yyyy");
+        return dateObj.toFormat(localization.dateFormat);
     }
 
     confirm(slot, preset) {

@@ -91,6 +91,19 @@ class GoogleService(models.AbstractModel):
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired")
             raise self.env['res.config.settings'].get_config_warning(error_msg)
 
+    def _refresh_google_token(self, service, rtoken):
+        ICP = self.env['ir.config_parameter'].sudo()
+
+        headers = {"content-type": "application/x-www-form-urlencoded"}
+        data = {
+            'refresh_token': rtoken,
+            'client_id': self._get_client_id(service),
+            'client_secret': _get_client_secret(ICP, service),
+            'grant_type': 'refresh_token',
+        }
+        dummy, response, dummy = self._do_request(GOOGLE_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri='')
+        return response.get('access_token'), response.get('expires_in')
+
     @api.model
     def _do_request(self, uri, params=None, headers=None, method='POST', preuri=GOOGLE_API_BASE_URL, timeout=TIMEOUT):
         """ Execute the request to Google API. Return a tuple ('HTTP_CODE', 'HTTP_RESPONSE')
@@ -115,7 +128,7 @@ class GoogleService(models.AbstractModel):
         else:
             _log_params = (params or {}).copy()
         if _log_params.get('client_secret'):
-            _log_params['client_secret'] = _log_params['client_secret'][0:4] + 'x' * 12
+            _log_params['client_secret'] = str(_log_params['client_secret'])[0:4] + 'x' * 12
 
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s!", uri, method, headers, _log_params)
 

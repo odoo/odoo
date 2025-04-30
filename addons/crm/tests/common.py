@@ -466,6 +466,8 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         :param leads: merged leads (including opportunity)
         """
         self.assertIn(opportunity, leads)
+        opportunity = opportunity.sudo()
+        leads = leads.sudo()
 
         # save opportunity value before being modified by merge process
         fields_all = self.FIELDS_FIRST_SET + self.merge_fields

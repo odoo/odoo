@@ -30,9 +30,9 @@
                     t-thumbnail="/website/static/src/img/snippets_thumbs/s_instagram_page.svg"/>
                 <t t-if="debug" snippet-group="debug" t-snippet="website.s_snippet_group" string="Debug"
                     t-thumbnail="/website/static/src/img/snippets_thumbs/s_debug_group.png"/>
-                <t id="installed_snippets_hook"/>
-                <t snippet-group="products" string="Products" t-install="website_sale"
+                <t snippet-group="products" t-snippet="website.s_snippet_group" string="Products"
                     t-thumbnail="/website/static/src/img/snippets_thumbs/s_dynamic_products.svg"/>
+                <t id="installed_snippets_hook"/>
                 <t snippet-group="blogs" string="Blogs" t-install="website_blog"
                     t-thumbnail="/website/static/src/img/snippets_thumbs/s_blog_posts.svg"/>
                 <t snippet-group="events" string="Events" t-install="website_event"
@@ -45,16 +45,16 @@
                 <t t-snippet="website.s_banner" string="Banner" group="intro">
                     <keywords>hero, jumbotron, headline, header, branding, intro, home, showcase, spotlight, lead, welcome, announcement, splash, top, main</keywords>
                 </t>
-                <t t-snippet="website.s_cover" string="Cover" group="intro">
-                    <keywords>hero, jumbotron, headline, header, branding, intro, home, showcase, spotlight, main, landing, presentation, top, splash</keywords>
+                <t t-snippet="website.s_cover" string="Cover" group="intro" label="Parallax">
+                    <keywords>hero, jumbotron, headline, header, branding, intro, home, showcase, spotlight, main, landing, presentation, top, splash, parallax</keywords>
                 </t>
                 <t t-snippet="website.s_text_cover" string="Text Cover" group="intro">
                     <keywords>hero, jumbotron, headline, header, intro, home, content, description, primary, highlight, lead</keywords>
                 </t>
-                <t t-snippet="website.s_carousel" string="Carousel" group="intro">
+                <t t-snippet="website.s_carousel" string="Carousel" group="intro" label="Carousel">
                     <keywords>gallery, carousel, slider, slideshow, picture, photo, image-slider, rotating, swipe, transition, media-carousel, movement</keywords>
                 </t>
-                <t t-snippet="website.s_carousel_intro" string="Carousel Intro" group="intro">
+                <t t-snippet="website.s_carousel_intro" string="Carousel Intro" group="intro" label="Carousel">
                     <keywords>gallery, carousel, slider, slideshow, picture, photo, image-slider, rotating, swipe, transition, media-carousel, movement</keywords>
                 </t>
                 <t t-snippet="website.s_adventure" string="Adventure" group="intro">
@@ -66,8 +66,8 @@
                 <t t-snippet="website.s_motto" string="Motto" group="intro">
                     <keywords>cite, slogan, tagline, mantra, catchphrase, statements, sayings, comments, mission, citations, maxim, quotes, principle, ethos, values</keywords>
                 </t>
-                <t t-snippet="website.s_kickoff" string="Kickoff" group="intro">
-                    <keywords>picture, photo, illustration, media, visual, start, launch, commencement, initiation, opening, kick-off, kickoff, beginning, events</keywords>
+                <t t-snippet="website.s_kickoff" string="Kickoff" group="intro" label="Parallax">
+                    <keywords>picture, photo, illustration, media, visual, start, launch, commencement, initiation, opening, kick-off, kickoff, beginning, events, parallax</keywords>
                 </t>
                 <t t-snippet="website.s_closer_look" string="Closer Look" group="intro">
                     <keywords>content, picture, photo, illustration, media, visual, focus, in-depth, analysis, more, contact, detailed, mockup, explore, insight</keywords>
@@ -170,7 +170,7 @@
                 <t t-snippet="website.s_color_blocks_2" string="Big Boxes" group="content">
                     <keywords>columns, containers, layouts, large, panels, modules</keywords>
                 </t>
-                <t t-snippet="website.s_popup" string="Popup" group="content"/>
+                <t t-snippet="website.s_popup" string="Popup" group="content" label="Popup"/>
                 <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg" group="content">
                     <keywords>celebration, launch</keywords>
                 </t>
@@ -182,6 +182,9 @@
                 </t>
                 <t t-snippet="website.s_numbers_boxed" string="Numbers boxed" group="content">
                     <keywords>statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, performance, achievements, benchmarks, milestones, indicators, data, measurements, reports, trends, results, analytics, summaries, summary</keywords>
+                </t>
+                <t t-snippet="website.s_numbers_framed" string="Numbers framed" group="content">
+                    <keywords>statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, performance, achievements, benchmarks, milestones, indicators, data, measurements, reports, trends, results</keywords>
                 </t>
                 <t t-snippet="website.s_numbers_list" string="Numbers list" group="content">
                     <keywords>statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, skills, achievements, benchmarks, milestones, indicators, data, measurements, reports, trends, results, analytics, cta, call to action, button</keywords>
@@ -213,8 +216,11 @@
                 <t t-snippet="website.s_features_grid" string="Features Grid" group="content">
                     <keywords>promotion, characteristic, quality, highlights, specs, advantages, functionalities, exhibit, details, capabilities, attributes, promotion</keywords>
                 </t>
-                <t t-snippet="website.s_tabs" string="Tabs" group="content">
+                <t t-snippet="website.s_tabs" string="Tabs" group="content" label="Tab">
                     <keywords>navigation, sections, multi-tab, panel, toggle</keywords>
+                </t>
+                <t t-snippet="website.s_tabs_images" string="Tabs Images" group="content">
+                    <keywords>images, pictures, photos, illustrations, media, visual, slider, tabs, switch, tabbed, sections, navigation</keywords>
                 </t>
                 <t t-snippet="website.s_timeline" string="Timeline" group="content">
                     <keywords>history, story, events, milestones, chronology, sequence, progression, achievements</keywords>
@@ -234,7 +240,7 @@
                 <t t-snippet="website.s_accordion_image" string="Accordion Image" group="content">
                     <keywords>common answers, common questions, faq, QA, collapse, expandable, toggle, collapsible, hide-show, movement, information, image, picture, photo, illustration, media, visual</keywords>
                 </t>
-                <t t-snippet="website.s_carousel_cards" string="Carousel Cards" group="content">
+                <t t-snippet="website.s_carousel_cards" string="Carousel Cards" group="content" label="Carousel">
                     <keywords>gallery, carousel, slider, slideshow, picture, photo, image-slider, rotating, swipe, transition, media-carousel, movement, cta, engagement, call to action</keywords>
                 </t>
 
@@ -269,17 +275,17 @@
                 <t t-snippet="website.s_quadrant" string="Quadrant" group="images">
                     <keywords>four sections, column, grid, division, split, segments, pictures, illustration, media, photos, tiles, arrangement, gallery, images-grid, mixed, collection, stacking, visual-grid, showcase, visuals, portfolio, thumbnails, engage, call to action, cta, showcase</keywords>
                 </t>
-                <t t-snippet="website.s_image_gallery" string="Image Gallery" group="images">
+                <t t-snippet="website.s_image_gallery" string="Image Gallery" group="images" label="Carousel">
                     <keywords>gallery, carousel, pictures, photos, album, showcase, visuals, portfolio, thumbnails, slideshow</keywords>
                 </t>
-                <t t-snippet="website.s_images_wall" string="Images Wall" group="images">
+                <t t-snippet="website.s_images_wall" string="Images Wall" group="images" label="Gallery">
                     <keywords>grid, gallery, pictures, photos, album, showcase, visuals, portfolio, mosaic, collage, arrangement, collection, visual-grid</keywords>
                 </t>
                 <t t-snippet="website.s_image_punchy" string="Punchy Image" group="images">
                     <keywords>headline, header, content, picture, photo, illustration, media, visual, article, combination, trendy, pattern, design, bold, impactful, vibrant, standout</keywords>
                 </t>
-                <t t-snippet="website.s_parallax" string="Parallax" group="images">
-                    <keywords>scrolling, depth, effect, background, layer, visual, movement</keywords>
+                <t t-snippet="website.s_parallax" string="Parallax" group="images" label="Parallax">
+                    <keywords>scrolling, depth, effect, background, layer, visual, movement, parallax</keywords>
                 </t>
                 <t t-snippet="website.s_unveil" string="Unveil" group="images">
                     <keywords>reveal, showcase, launch, presentation, announcement, content, picture, photo, illustration, media, visual, article, combination</keywords>
@@ -328,11 +334,14 @@
                 <t t-snippet="website.s_references_grid" string="References Grid" group="people">
                     <keywords>customers, clients, sponsors, partners, supporters, case-studies, collaborators, associations, associates, testimonials, endorsements</keywords>
                 </t>
-                <t t-snippet="website.s_quotes_carousel" string="Quotes" group="people">
-                    <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations</keywords>
+                <t t-snippet="website.s_quotes_carousel" string="Quotes" group="people" label="Carousel">
+                    <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations, carousel</keywords>
                 </t>
-                <t t-snippet="website.s_quotes_carousel_minimal" string="Quotes Minimal" group="people">
-                    <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations</keywords>
+                <t t-snippet="website.s_quotes_carousel_minimal" string="Quotes Minimal" group="people" label="Carousel">
+                    <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations, carousel</keywords>
+                </t>
+                <t t-snippet="website.s_quotes_carousel_compact" string="Quotes Compact" group="people" label="Carousel">
+                    <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations, carousel</keywords>
                 </t>
 
                 <!-- Text group -->
@@ -348,8 +357,8 @@
                 <t t-snippet="website.s_faq_list" string="FAQ List" group="text">
                     <keywords>questions, answers, common answers, common questions, faq, help, support, information, knowledge, guide, troubleshooting, assistance, columns, QA</keywords>
                 </t>
-                <t t-snippet="website.s_table_of_content" string="Table of Content" group="text">
-                    <keywords>navigation, index, outline, chapters, sections, overview, menu</keywords>
+                <t t-snippet="website.s_table_of_content" string="Table of Content" group="text" label="Tab">
+                    <keywords>navigation, index, outline, chapters, sections, overview, menu, tab</keywords>
                 </t>
                 <t t-snippet="website.s_faq_horizontal" string="Topics List" group="text">
                     <keywords>questions, answers, common answers, common questions, faq, help, support, information, knowledge, guide, troubleshooting, assistance, QA, terms of services</keywords>
@@ -370,20 +379,23 @@
                 </t>
                 <t t-snippet="website.s_opening_hours" string="Opening Hours" group="contact_and_forms"/>
                 <t t-snippet="website.s_contact_info" string="Contact Info" group="contact_and_forms"/>
-                <t t-snippet="website.s_website_form_overlay" string="Form Overlay" group="contact_and_forms">
+                <t t-snippet="website.s_website_form_overlay" string="Form Overlay" t-forbid-sanitize="form" group="contact_and_forms">
                     <keywords>contact, collect, submission, input, fields, questionnaire, survey, registration, request</keywords>
                 </t>
-                <t t-snippet="website.s_website_form_info" string="Form Info" group="contact_and_forms">
+                <t t-snippet="website.s_website_form_info" string="Form Info" t-forbid-sanitize="form" group="contact_and_forms">
                     <keywords>contact, collect, submission, input, fields, questionnaire, survey, registration, request, image, picture, photo, illustration, media, visual, company, organization, address, phone, email, location, get-in-touch</keywords>
                 </t>
-                <t t-snippet="website.s_website_form_cover" string="Form Cover" group="contact_and_forms">
+                <t t-snippet="website.s_website_form_cover" string="Form Cover" t-forbid-sanitize="form" group="contact_and_forms">
                     <keywords>contact, collect, submission, input, fields, questionnaire, survey, registration, request, image, picture, photo, illustration, media, visual</keywords>
                 </t>
-                <t t-snippet="website.s_form_aside" string="Form Aside" group="contact_and_forms">
+                <t t-snippet="website.s_form_aside" string="Form Aside" t-forbid-sanitize="form" group="contact_and_forms">
                     <keywords>contact, collect, submission, input, fields, questionnaire, survey, registration, request, image, picture, photo, illustration, media, visual, get-in-touch</keywords>
                 </t>
 
                 <!-- Products group -->
+                <t t-snippet="website.s_floating_blocks" string="Floating Cards" group="products">
+                    <keywords>hero, animation, animated, cards, float, stacked, promo, categories, ecommerce, shop</keywords>
+                </t>
                 <t id="sale_products_hook"/>
 
                 <!-- Blogs group -->
@@ -487,7 +499,7 @@
             t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_centered_preview.jpg"/>
         <t t-install="mass_mailing" string="Newsletter Grid" group="contact_and_forms"
             t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_grid_preview.jpg"/>
-        <t t-install="mass_mailing" string="Newsletter Popup" group="contact_and_forms"
+        <t t-install="mass_mailing" string="Newsletter Popup" group="contact_and_forms" label="Popup"
             t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_subscribe_popup_preview.png"/>
         <t t-install="mass_mailing" string="Newsletter Box" group="contact_and_forms"
             t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_box_preview.jpg"/>
@@ -495,6 +507,8 @@
             t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_sms_notifications_preview.png"/>
         <t t-install="website_payment" string="Donation" group="contact_and_forms"
             t-image-preview="/website/static/src/img/snippets_previews/s_donation_preview.png"/>
+        <t t-install="website_sale" string="Products Carousel" group="products"
+            t-image-preview="/website/static/src/img/snippets_previews/s_dynamic_snippet_products_preview.jpg"/>
     </xpath>
     <xpath expr="//snippets[@id='snippet_content']" position="inside">
         <t id="newsletter_snippet" t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg"/>
@@ -590,10 +604,67 @@
     </xpath>
 </template>
 
+<template id="snippet_options_tabs">
+    <div data-js="NavTabs" data-selector=".s_tabs">
+        <we-button data-add-item="" data-item=".tab-content:first > .tab-pane.active" data-no-preview="true" class="fa fa-fw fa-plus o_we_bg_success" title="Add Tab" aria-label="Add Tab"/>
+        <we-button data-remove-item="" data-item=".tab-content:first > .tab-pane.active" data-name="remove_tab_opt" data-no-preview="true" class="fa fa-fw fa-minus o_we_bg_danger" title="Remove Tab" aria-label="Remove Tab"/>
+    </div>
+    <div data-js="NavTabsStyle" data-selector=".s_tabs" data-target=".s_tabs_main">
+        <we-select string="Style">
+            <we-button data-set-style="nav-underline" data-name="underline_opt">Underline</we-button>
+            <we-button data-set-style="nav-tabs" data-name="tabs_opt" data-trigger="horizontal_opt">Tabs</we-button>
+            <we-button data-set-style="nav-buttons" data-name="buttons_opt" data-trigger="horizontal_opt">Buttons</we-button>
+            <we-button data-set-style="nav-pills" data-name="pills_opt">Pills</we-button>
+        </we-select>
+        <we-colorpicker
+            string="Background"
+            class="o_we_sublevel_1"
+            data-apply-to=".s_tabs_nav"
+            data-select-style="true"
+            data-css-property="--tabs-bg-color"
+            data-no-transparency="true"
+            data-color-prefix="bg-"
+            data-dependencies="tabs_opt, buttons_opt"
+        />
+        <we-colorpicker
+            string="Links Color"
+            class="o_we_sublevel_1"
+            data-apply-to=".s_tabs_nav .nav-link"
+            data-select-style="true"
+            data-css-property="--tabs-link-color"
+            data-no-transparency="true"
+            data-color-prefix="text-"
+            data-dependencies="tabs_opt, buttons_opt"
+        />
+        <we-select string="Direction" data-dependencies="pills_opt, underline_opt">
+            <we-button data-set-direction="horizontal" data-select-class="o_direction_horizontal" data-name="horizontal_opt">Horizontal</we-button>
+            <we-button data-set-direction="vertical" data-select-class="" data-name="vertical_opt">Vertical</we-button>
+        </we-select>
+        <we-select string="Fill and Justify" data-apply-to=".s_tabs_nav:first .nav" data-dependencies="horizontal_opt">
+            <we-button data-select-class="">Regular</we-button>
+            <we-button data-select-class="nav-fill">Full Width</we-button>
+            <we-button data-select-class="nav-justified">Equal Widths</we-button>
+        </we-select>
+        <we-select string="Alignment" class="o_we_sublevel_1" data-apply-to=".s_tabs_nav:first .nav" data-name="alignment_opt" data-dependencies="horizontal_opt">
+            <we-button data-select-class="">Left</we-button>
+            <we-button data-select-class="justify-content-center mx-auto">Center</we-button>
+            <we-button data-select-class="justify-content-end ms-auto">Right</we-button>
+        </we-select>
+        <we-button-group string="Slide Effect" data-apply-to=".s_tabs_content:first">
+            <we-button class="fa fa-fw fa-long-arrow-right" title="Slide Left" data-select-class="s_tabs_slide_left"/>
+            <we-button class="fa fa-fw fa-long-arrow-down" title="Slide Up" data-select-class="s_tabs_slide_up"/>
+            <we-button class="fa fa-fw fa-long-arrow-up" title="Slide Down" data-select-class="s_tabs_slide_down"/>
+            <we-button class="fa fa-fw fa-long-arrow-left" title="Slide Right" data-select-class="s_tabs_slide_right"/>
+            <we-button class="fa fa-fw fa-ban" title="No Slide Effect" data-select-class=""/>
+        </we-button-group>
+        <div data-js="TabsNavItems" data-selector=".nav-item"/>
+    </div>
+</template>
+
 <template id="snippet_options_carousel">
     <div data-js="Carousel"
          data-selector="section"
-         data-exclude=".s_carousel_intro_wrapper, .s_carousel_cards_wrapper"
+         data-exclude=".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper"
          data-target="> .carousel">
         <we-row string="Slide">
             <we-button data-add-slide="true" data-no-preview="true" class="o_we_bg_brand_primary">Add Slide</we-button>
@@ -616,20 +687,19 @@
             <we-button data-select-class="s_carousel_indicators_hidden">Hidden</we-button>
         </we-select>
         <we-select string="Transition">
-            <we-button data-select-class="slide">Slide</we-button>
-            <we-button data-select-class="carousel-fade slide">Fade</we-button>
-            <we-divider/>
-            <we-button data-select-class="">None</we-button>
+            <we-button data-select-class="slide" data-name="slide_opt">Slide</we-button>
+            <we-button data-select-class="carousel-fade slide" data-name="fade_opt">Fade</we-button>
+            <we-button data-select-class="" data-name="none_opt">None</we-button>
         </we-select>
-        <we-input string="Speed"
-                  data-select-data-attribute="0s" data-attribute-name="bsInterval"
-                  data-unit="s" data-save-unit="ms" data-step="0.1"/>
+        <we-input string="Speed" class="o_we_sublevel_1" data-select-data-attribute="0s" data-attribute-name="bsInterval"
+                  data-unit="s" data-save-unit="ms" data-step="0.1" data-dependencies="slide_opt, fade_opt"/>
+        <we-checkbox string="Autoplay" class="autoplay o_we_sublevel_1" data-attribute-name="bsRide" data-select-data-attribute="carousel" data-dependencies="slide_opt, fade_opt"/>
     </div>
 </template>
 
 <template id="snippet_options_carousel_bottom_controllers" inherit_id="website.snippet_options_carousel" primary="True">
     <xpath expr="//div" position="attributes">
-        <attribute name="data-target">.s_carousel_intro</attribute>
+        <attribute name="data-target">.s_carousel_intro, .s_quotes_carousel_compact</attribute>
         <attribute name="data-exclude"/>
         <attribute name="data-js">Carousel</attribute>
     </xpath>
@@ -980,7 +1050,7 @@
     <div data-js="layout_column"
         data-selector="section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item"
         data-target="> *:has(> .row), > .s_allow_columns"
-        data-exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info">
+        data-exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs_common, .s_floating_blocks .s_floating_blocks_block">
         <we-row>
             <we-button-group string="Layout" data-no-preview="true">
                 <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
@@ -1021,7 +1091,7 @@
     <t t-set="only_bg_color_selector" t-value="'section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer, .s_hr, .s_cta_badge'"/>
     <t t-set="only_bg_color_exclude" t-valuef=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .s_image_gallery .row > div, .s_text_cover .row > .o_not_editable, [data-snippet] :not(.oe_structure) > .s_hr, #{card_parent_handlers}, .s_website_form_cover .row > .o_not_editable"/>
 
-    <t t-set="base_only_bg_image_selector" t-value="'.s_tabs .oe_structure > *, footer .oe_structure > *'"/>
+    <t t-set="base_only_bg_image_selector" t-value="'.s_tabs_common .oe_structure > *, footer .oe_structure > *'"/>
     <t t-set="only_bg_image_selector" t-value="base_only_bg_image_selector"/>
     <t t-set="only_bg_image_exclude" t-value="''"/>
 
@@ -1427,15 +1497,21 @@
          data-no-check="true"
          groups="website.group_website_designer">
 
+        <we-select data-variable="hamburger-position" data-reload="/" string="Desktop Alignment" data-dependencies="header_sidebar_opt, header_hamburger_opt">
+            <we-button data-customize-website-variable="'left'"
+                       data-customize-website-views="">Left</we-button>
+            <we-button data-customize-website-variable="'right'"
+                       data-customize-website-views="website.template_header_hamburger_align_right">Right</we-button>
+        </we-select>
+
         <we-select string="Mobile Alignment"
                    data-name="header_mobile_alignment_opt"
                    data-variable="hamburger-position-mobile"
                    data-reload="/">
-            <we-button data-customize-website-views="" data-customize-website-variable="'left'">Left</we-button>
-            <we-button data-customize-website-views="website.template_header_mobile_align_center, website.template_header_hamburger_mobile_align_center"
-                       data-customize-website-variable="'center'">Center</we-button>
-            <we-button data-customize-website-views="website.template_header_mobile_align_right, website.template_header_hamburger_mobile_align_right"
-                       data-customize-website-variable="'right'">Right</we-button>
+            <we-button data-customize-website-variable="'right'"
+                       data-customize-website-views="">Right</we-button>
+            <we-button data-customize-website-variable="'left'"
+                       data-customize-website-views="website.template_header_mobile_position_left">Left</we-button>
         </we-select>
 
         <we-fontfamilypicker string="Font" data-variable="navbar-font"/>
@@ -1446,16 +1522,12 @@
             <!-- Generic alignment option controling all the template at once. -->
             <!-- Currently needed to be this way as the SCSS variable controls -->
             <!-- the mobile alignement which is the same for all templates. -->
-            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-variable="hamburger-position" data-reload="/" title="Alignment" data-dependencies="header_default_opt, header_hamburger_opt, header_boxed_opt, header_stretch_opt, header_search_opt, header_sales_one_opt, header_sales_two_opt, header_sales_four_opt, header_sidebar_opt">
+            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-reload="/" title="Alignment" data-dependencies="header_default_opt, header_hamburger_opt, header_boxed_opt, header_stretch_opt, header_search_opt, header_sales_one_opt, header_sales_two_opt, header_sales_four_opt, header_sidebar_opt">
                 <we-button data-customize-website-views=""
-                           data-customize-website-variable="'left'"
                            data-icon="fa-align-left"/>
-                <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_boxed_align_center, website.template_header_stretch_align_center, website.template_header_search_align_center, website.template_header_sales_one_align_center, website.template_header_sales_two_align_center, website.template_header_sales_four_align_center, website.template_header_sidebar_align_center"
-                           data-customize-website-variable="'center'"
-                           data-icon="fa-align-center"
-                           data-dependencies="!header_hamburger_opt"/>
-                <we-button data-customize-website-views="website.template_header_default_align_right, website.template_header_hamburger_align_right, website.template_header_boxed_align_right, website.template_header_stretch_align_right, website.template_header_search_align_right, website.template_header_sales_one_align_right, website.template_header_sales_two_align_right, website.template_header_sales_four_align_right, website.template_header_sidebar_align_right"
-                           data-customize-website-variable="'right'"
+                <we-button data-customize-website-views="website.template_header_mobile_align_center, website.template_header_hamburger_mobile_align_center, website.template_header_default_align_center, website.template_header_boxed_align_center, website.template_header_stretch_align_center, website.template_header_search_align_center, website.template_header_sales_one_align_center, website.template_header_sales_two_align_center, website.template_header_sales_four_align_center, website.template_header_sidebar_align_center"
+                           data-icon="fa-align-center"/>
+                <we-button data-customize-website-views="website.template_header_mobile_align_right, website.template_header_hamburger_mobile_align_right, website.template_header_default_align_right, website.template_header_boxed_align_right, website.template_header_stretch_align_right, website.template_header_search_align_right, website.template_header_sales_one_align_right, website.template_header_sales_two_align_right, website.template_header_sales_four_align_right, website.template_header_sidebar_align_right"
                            data-icon="fa-align-right"/>
             </we-select>
         </we-row>
@@ -1716,24 +1788,15 @@
     <!-- Mega Menu settings -->
     <div data-js="MegaMenuLayout" data-selector=".o_mega_menu">
         <we-select string="Template" data-name="mega_menu_template_opt">
-            <t t-set="_label">Multi Menus</t>
-            <we-button t-att-data-select-label="_label" data-select-template="website.s_mega_menu_multi_menus" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_multi_menus.svg" t-out="_label"/>
-            <t t-set="_label">Image Menu</t>
-            <we-button t-att-data-select-label="_label" data-select-template="website.s_mega_menu_menu_image_menu" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_menu_image_menu.svg" t-out="_label"/>
-            <t t-set="_label">Odoo Menu</t>
-            <we-button t-att-data-select-label="_label" data-select-template="website.s_mega_menu_odoo_menu" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_odoo_menu.svg" t-out="_label"/>
-            <t t-set="_label">Little Icons</t>
-            <we-button t-att-data-select-label="_label" data-select-template="website.s_mega_menu_little_icons" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_little_icons.svg" t-out="_label"/>
-            <t t-set="_label">Big Icons Subtitles</t>
-            <we-button t-att-data-select-label="_label" data-select-template="website.s_mega_menu_big_icons_subtitles" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_big_icons_subtitles.svg" t-out="_label"/>
-            <t t-set="_label">Images Subtitles</t>
-            <we-button t-att-data-select-label="_label" data-select-template="website.s_mega_menu_images_subtitles" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_images_subtitles.svg" t-out="_label"/>
-            <t t-set="_label">Logos</t>
-            <we-button t-att-data-select-label="_label" data-select-template="website.s_mega_menu_menus_logos" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_menus_logos.svg" t-out="_label"/>
-            <t t-set="_label">Thumbnails</t>
-            <we-button t-att-data-select-label="_label" data-select-template="website.s_mega_menu_thumbnails" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_thumbnails.svg" t-out="_label"/>
-            <t t-set="_label">Cards</t>
-            <we-button t-att-data-select-label="_label" data-select-template="website.s_mega_menu_cards" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_cards.svg" t-out="_label"/>
+            <we-button data-select-label.translate="Multi Menus" data-select-template="website.s_mega_menu_multi_menus" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_multi_menus.svg">Multi Menus</we-button>
+            <we-button data-select-label.translate="Image Menu" data-select-template="website.s_mega_menu_menu_image_menu" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_menu_image_menu.svg">Image Menu</we-button>
+            <we-button data-select-label.translate="Odoo Menu" data-select-template="website.s_mega_menu_odoo_menu" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_odoo_menu.svg">Odoo Menu</we-button>
+            <we-button data-select-label.translate="Little Icons" data-select-template="website.s_mega_menu_little_icons" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_little_icons.svg">Little Icons</we-button>
+            <we-button data-select-label.translate="Big Icons Subtitles" data-select-template="website.s_mega_menu_big_icons_subtitles" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_big_icons_subtitles.svg">Big Icons Subtitles</we-button>
+            <we-button data-select-label.translate="Images Subtitles" data-select-template="website.s_mega_menu_images_subtitles" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_images_subtitles.svg">Images Subtitles</we-button>
+            <we-button data-select-label.translate="Logos" data-select-template="website.s_mega_menu_menus_logos" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_menus_logos.svg">Logos</we-button>
+            <we-button data-select-label.translate="Thumbnails" data-select-template="website.s_mega_menu_thumbnails" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_thumbnails.svg">Thumbnails</we-button>
+            <we-button data-select-label.translate="Cards" data-select-template="website.s_mega_menu_cards" data-img="/website/static/src/img/snippets_thumbs/s_mega_menu_cards.svg">Cards</we-button>
         </we-select>
         <we-select string="Size">
             <we-button data-select-class="">Full-Width</we-button>
@@ -1795,7 +1858,7 @@
     </div>
 
     <!-- Scroll to next section button (only for full height) -->
-    <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page">
+    <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page, .o_mega_menu > section, .s_tabs_images">
         <!-- Min height of section -->
         <we-button-group string="Height" data-show-scroll-button="">
             <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
@@ -2447,6 +2510,9 @@
     <div data-js="SwitchableViews" data-selector="#wrapwrap > main" data-no-check="true" groups="website.group_website_designer">
             <!-- Options will be populated by JS -->
     </div>
+
+    <!-- Tabs snippets -->
+    <t t-call="website.snippet_options_tabs"/>
 
     </xpath>
 </template>

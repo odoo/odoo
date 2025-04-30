@@ -689,17 +689,6 @@ font[class*='bg-'] {
 
 // Background Images
 .oe_img_bg {
-    background-size: cover;
-    background-repeat: no-repeat;
-
-    &.o_bg_img_opt_repeat {
-        background-size: auto;
-        background-repeat: repeat;
-    }
-    &.o_bg_img_center {
-        background-position: center;
-    }
-
     // Compatibility <= 13.0, TODO remove?
     // -----------------------------------
     &.o_bg_img_opt_contain {
@@ -1260,7 +1249,6 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     }
 }
 
-
 .carousel .container {
     .carousel-img img {
         max-height: 95%;
@@ -1325,6 +1313,52 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         }
         > .carousel-image {
             display: none !important;
+        }
+    }
+}
+
+// Multiple visible items configuration for carousels
+.carousel.o_carousel_multi_items {
+    --o-carousel-item-width-percentage: 25%;
+
+    @include media-breakpoint-up(md) {
+        .carousel-inner {
+            // Display the carousel items in a row
+            display: flex;
+            flex-wrap: nowrap;
+
+            // Slide right animation
+            .carousel-item.active,
+            .carousel-item-end:not(.active),
+            .carousel-item-prev:not(.active) {
+                &, ~ .carousel-item {
+                    display: block;
+                    flex: 0 0 var(--o-carousel-item-width-percentage);
+                    margin-right: 0;
+                }
+            }
+            .active.carousel-item-end + .carousel-item-prev.carousel-item-end,
+            .carousel-item-prev.carousel-item-end ~ .carousel-item {
+                right: var(--o-carousel-item-width-percentage);
+                transform: translateX(100%);
+                display: block;
+                margin-right: 0;
+            }
+
+            // Slide left animation
+            .carousel-item-start.active,
+            .carousel-item-start:not(.active),
+            .carousel-item-start:not(.active) ~ .carousel-item {
+                transform: translateX(-100%);
+            }
+            .carousel-item.active:not(.carousel-item-start):not(.carousel-item-end),
+            .carousel-item.active:not(.carousel-item-start):not(.carousel-item-end) ~ .carousel-item {
+                transition: none;
+                margin-right: initial;
+            }
+            .carousel-item-next:not(.carousel-item-start) {
+                transform: translateX(0%);
+            }
         }
     }
 }
@@ -1395,14 +1429,21 @@ $-transition-duration: 200ms;
 .navbar .o_extra_menu_items > .show {
     > li {
         + li {
-            border-top: 1px solid map-get($grays, '200');
+            border-top: $border-width solid $border-color;
         }
         > a.dropdown-toggle {
-            color: inherit; // Useful when the toggle is active
+            background-color: $body-tertiary-bg;
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
 
-            &:not(.active) {
-                background-color: map-get($grays, '200');
+            &.active {
+                color: inherit !important;
+            }
+        }
+        > .dropdown-menu {
+            border-radius: 0;
+
+            .dropdown-item {
+                padding-left: $dropdown-item-padding-x + map-get($spacers, 2);
             }
         }
         > ul, > .o_mega_menu { // remove dropdown-menu default style as it is nested in another one
@@ -1534,15 +1575,24 @@ header {
             // We need to combine both using `calc`. The `border` solution does
             // not work on Safari.
             $padding-size: o-website-value('sidebar-width');
+            $-hamburger-right: o-website-value("hamburger-position") == "right";
             @if o-website-value('layout') != 'full' {
                 $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
             }
-            padding-left: $padding-size;
+            @if $-hamburger-right {
+                padding-right: $padding-size;
+            } @else {
+                padding-left: $padding-size;
+            }
 
             > header {
                 --Offcanvas-horizontal-width: #{o-website-value('sidebar-width')};
 
-                inset: 0 auto 0 0;
+                @if $-hamburger-right {
+                    inset: 0 0 0 auto;
+                } @else {
+                    inset: 0 auto 0 0;
+                }
                 position: fixed;
                 z-index: $zindex-fixed;
                 display: flex;
@@ -2105,6 +2155,10 @@ $ribbon-padding: 100px;
 // Search results
 .o_search_result_item_detail {
     flex: 1;
+
+    button:disabled {
+        color: inherit;
+    }
 }
 
 ul.o_checklist > li.o_checked::after {

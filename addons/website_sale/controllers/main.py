@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import itertools
 import json
 
 from datetime import datetime
 
+from werkzeug import urls
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
@@ -14,16 +16,20 @@ from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
 from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
+from odoo.tools.image import image_data_uri
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import _
 
 from odoo.addons.payment.controllers import portal as payment_portal
-from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.web_editor.tools import get_video_thumbnail
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website_sale.models.website import PRICELIST_SESSION_CACHE_KEY
+from odoo.addons.website_sale.const import SHOP_PATH
+from odoo.addons.website_sale.models.website import (
+    PRICELIST_SESSION_CACHE_KEY,
+    PRICELIST_SELECTED_SESSION_CACHE_KEY,
+)
 
 
 class TableCompute:
@@ -119,7 +125,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _add_search_subdomains_hook(self, search):
         return []
 
-    def _get_shop_domain(self, search, category, attrib_values, search_in_description=True):
+    def _get_shop_domain(self, search, category, attribute_value_dict, search_in_description=True):
         domains = [request.website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
@@ -138,8 +144,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if category:
             domains.append([('public_categ_ids', 'child_of', int(category))])
 
-        if attrib_values:
-            domains.extend(request.env['product.template']._get_attrib_values_domain(attrib_values))
+        if attribute_value_dict:
+            domains.extend(
+                request.env['product.template']._get_attribute_value_domain(attribute_value_dict)
+            )
 
         return expression.AND(domains)
 
@@ -150,14 +158,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # and no autocomplete query string is provided
             return
 
-        if not qs or qs.lower() in '/shop':
-            yield {'loc': '/shop'}
+        if not qs or qs.lower() in SHOP_PATH:
+            yield {'loc': SHOP_PATH}
 
         Category = env['product.public.category']
-        dom = sitemap_qs2dom(qs, '/shop/category', Category._rec_name)
+        dom = sitemap_qs2dom(qs, f'{SHOP_PATH}/category', Category._rec_name)
         dom += website.website_domain()
         for cat in Category.search(dom):
-            loc = '/shop/category/%s' % env['ir.http']._slug(cat)
+            loc = f'{SHOP_PATH}/category/{env["ir.http"]._slug(cat)}'
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
@@ -169,16 +177,22 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return
 
         ProductTemplate = env['product.template']
-        dom = sitemap_qs2dom(qs, '/shop', ProductTemplate._rec_name)
+        dom = sitemap_qs2dom(qs, SHOP_PATH, ProductTemplate._rec_name)
         dom += website.sale_product_domain()
         for product in ProductTemplate.search(dom):
-            loc = '/shop/%s' % env['ir.http']._slug(product)
+            loc = f'{SHOP_PATH}/{env["ir.http"]._slug(product)}'
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
     def _get_search_options(
-        self, category=None, attrib_values=None, tags=None, min_price=0.0, max_price=0.0,
-        conversion_rate=1, **post
+        self,
+        category=None,
+        attribute_value_dict=None,
+        tags=None,
+        min_price=0.0,
+        max_price=0.0,
+        conversion_rate=1,
+        **post,
     ):
         return {
             'displayDescription': True,
@@ -191,11 +205,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'tags': tags,
             'min_price': min_price / conversion_rate,
             'max_price': max_price / conversion_rate,
-            'attrib_values': attrib_values,
+            'attribute_value_dict': attribute_value_dict,
             'display_currency': post.get('display_currency'),
         }
 
-    def _shop_lookup_products(self, attrib_set, options, post, search, website):
+    def _shop_lookup_products(self, options, post, search, website):
         # No limit because attributes are obtained from complete product list
         product_count, details, fuzzy_search_term = website._search_with_fuzzy("products_only", search,
                                                                                limit=None,
@@ -206,35 +220,52 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return fuzzy_search_term, product_count, search_result
 
     def _shop_get_query_url_kwargs(
-        self, category, search, min_price, max_price, order=None, tags=None, attribute_value=None, **post
+        self, search, min_price, max_price, order=None, tags=None, **kwargs
     ):
+        attribute_values = request.session.get('attribute_values', [])
         return {
-            'category': category,
             'search': search,
-            'tags': tags,
             'min_price': min_price,
             'max_price': max_price,
             'order': order,
-            'attribute_value': attribute_value,
+            'tags': tags,
+            'attribute_values': attribute_values,
         }
 
-    def _get_additional_shop_values(self, values):
+    def _get_additional_shop_values(self, values, **kwargs):
         """ Hook to update values used for rendering website_sale.products template """
         return {}
 
-    def _get_additional_extra_shop_values(self, values, **post):
-        """ Hook to update values used for rendering website_sale.products template """
-        return self._get_additional_shop_values(values)
+    def _get_product_query_string(self, **kwargs):
+        """ Hook to set the product page URL's query string. """
+        return ''
 
-    @route([
-        '/shop',
-        '/shop/page/<int:page>',
-        '/shop/category/<model("product.public.category"):category>',
-        '/shop/category/<model("product.public.category"):category>/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_shop)
-    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
+    @route(
+        [
+            SHOP_PATH,
+            f'{SHOP_PATH}/page/<int:page>',
+            f'{SHOP_PATH}/category/<model("product.public.category"):category>',
+            f'{SHOP_PATH}/category/<model("product.public.category"):category>/page/<int:page>',
+        ],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=sitemap_shop,
+    )
+    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, tags='', **post):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
+
+        is_category_in_query = category and isinstance(category, str)
+        category = self._validate_and_get_category(category)
+        # If the category is provided as a query parameter (which is deprecated), we redirect to the
+        # "correct" shop URL, where the category has been removed from the query parameters and
+        # added to the path.
+        if is_category_in_query:
+            query = self._get_filtered_query_string(
+                request.httprequest.query_string.decode(), keys_to_remove=['category']
+            )
+            return request.redirect(f'{self._get_shop_path(category, page)}?{query}', code=301)
 
         try:
             min_price = float(min_price)
@@ -245,49 +276,36 @@ class WebsiteSale(payment_portal.PaymentPortal):
         except ValueError:
             max_price = 0
 
-        Category = request.env['product.public.category']
-        if category:
-            category = Category.search([('id', '=', int(category))], limit=1)
-            if not category or not category.can_access_from_current_website():
-                raise NotFound()
-        else:
-            category = Category
-
         website = request.env['website'].get_current_website()
         website_domain = website.website_domain()
-        if ppg:
-            try:
-                ppg = int(ppg)
-                post['ppg'] = ppg
-            except ValueError:
-                ppg = False
-        if not ppg:
-            ppg = website.shop_ppg or 20
 
+        ppg = website.shop_ppg or 20
         ppr = website.shop_ppr or 4
-
         gap = website.shop_gap or "16px"
 
         request_args = request.httprequest.args
-        attrib_list = request_args.getlist('attribute_value')
-        attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
-        attributes_ids = {v[0] for v in attrib_values}
-        attrib_set = {v[1] for v in attrib_values}
-        if attrib_list:
-            post['attribute_value'] = attrib_list
+        attribute_values = request_args.getlist('attribute_values')
+        attribute_value_dict = self._get_attribute_value_dict(attribute_values)
+        attribute_ids = set(attribute_value_dict.keys())
+        attribute_value_ids = set(itertools.chain.from_iterable(attribute_value_dict.values()))
+        if attribute_values:
+            request.session['attribute_values'] = attribute_values
+        else:
+            request.session.pop('attribute_values', None)
 
         filter_by_tags_enabled = website.is_view_active('website_sale.filter_products_tags')
         if filter_by_tags_enabled:
-            tags = request_args.getlist('tags')
-            # Allow only numeric tag values to avoid internal error.
-            if tags and all(tag.isnumeric() for tag in tags):
+            if tags:
                 post['tags'] = tags
-                tags = {int(tag) for tag in tags}
+                tags = {self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')}
             else:
                 post['tags'] = None
                 tags = {}
 
-        keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
+        url = self._get_shop_path(category)
+        keep = QueryURL(
+            url, **self._shop_get_query_url_kwargs(search, min_price, max_price, **post)
+        )
 
         # Check if we need to refresh the cached pricelist
         now = datetime.timestamp(datetime.now())
@@ -306,26 +324,27 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             conversion_rate = 1
 
-        url = '/shop'
         if search:
             post['search'] = search
 
         options = self._get_search_options(
             category=category,
-            attrib_values=attrib_values,
+            attribute_value_dict=attribute_value_dict,
             min_price=min_price,
             max_price=max_price,
             conversion_rate=conversion_rate,
             display_currency=website.currency_id,
             **post
         )
-        fuzzy_search_term, product_count, search_product = self._shop_lookup_products(attrib_set, options, post, search, website)
+        fuzzy_search_term, product_count, search_product = self._shop_lookup_products(
+            options, post, search, website
+        )
 
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
             Product = request.env['product.template'].with_context(bin_size=True)
-            domain = self._get_shop_domain(search, category, attrib_values)
+            domain = self._get_shop_domain(search, category, attribute_value_dict)
 
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
             query = Product._where_calc(domain)
@@ -356,14 +375,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if filter_by_tags_enabled and search_product:
             all_tags = ProductTag.search(
                 expression.AND([
-                    [('product_ids.is_published', '=', True), ('visible_on_ecommerce', '=', True)],
+                    [('product_ids.is_published', '=', True), ('visible_to_customers', '=', True)],
                     website_domain
                 ])
             )
         else:
             all_tags = ProductTag
 
+        Category = request.env['product.public.category']
         categs_domain = [('parent_id', '=', False)] + website_domain
+        if not self.env.user._is_internal():
+            categs_domain = expression.AND([categs_domain, [('has_published_products', '=', True)]])
         if search:
             search_categories = Category.search(
                 [('product_tmpl_ids', 'in', search_product.ids)] + website_domain
@@ -372,9 +394,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             search_categories = Category
         categs = lazy(lambda: Category.search(categs_domain))
-
-        if category:
-            url = "/shop/category/%s" % request.env['ir.http']._slug(category)
 
         pager = website.pager(url=url, total=product_count, page=page, step=ppg, scope=5, url_args=post)
         offset = pager['offset']
@@ -388,19 +407,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ('visibility', '=', 'visible'),
             ]))
         else:
-            attributes = lazy(lambda: ProductAttribute.browse(attributes_ids))
+            attributes = lazy(lambda: ProductAttribute.browse(attribute_ids))
 
-        layout_mode = request.session.get('website_sale_shop_layout_mode')
-        if not layout_mode:
-            if website.viewref('website_sale.products_list_view').active:
-                layout_mode = 'list'
-            else:
-                layout_mode = 'grid'
-            request.session['website_sale_shop_layout_mode'] = layout_mode
+        if website.viewref('website_sale.products_list_view').active:
+            layout_mode = 'list'
+        else:
+            layout_mode = 'grid'
 
         products_prices = lazy(lambda: products._get_sales_prices(website))
 
-        attributes_values = request.env['product.attribute.value'].browse(attrib_set)
+        attributes_values = request.env['product.attribute.value'].browse(attribute_value_ids)
         sorted_attributes_values = attributes_values.sorted('sequence')
         multi_attributes_values = sorted_attributes_values.filtered(lambda av: av.display_type == 'multi')
         single_attributes_values = sorted_attributes_values - multi_attributes_values
@@ -416,8 +432,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'original_search': fuzzy_search_term and search,
             'order': post.get('order', ''),
             'category': category,
-            'attrib_values': attrib_values,
-            'attrib_set': attrib_set,
+            'attrib_values': attribute_value_dict,
+            'attrib_set': attribute_value_ids,
             'pager': pager,
             'products': products,
             'search_product': search_product,
@@ -435,6 +451,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'products_prices': products_prices,
             'get_product_prices': lambda product: lazy(lambda: products_prices[product.id]),
             'float_round': float_round,
+            'shop_path': SHOP_PATH,
+            'product_query_string': self._get_product_query_string(**post),
         }
         if filter_by_price_enabled:
             values['min_price'] = min_price or available_min_price
@@ -445,15 +463,55 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values.update({'all_tags': all_tags, 'tags': tags})
         if category:
             values['main_object'] = category
-        values.update(self._get_additional_extra_shop_values(values, **post))
+        values.update(self._get_additional_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
-    @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products, readonly=True)
-    def product(self, product, category='', search='', **kwargs):
+    @route(
+        [
+            f'{SHOP_PATH}/<model("product.template"):product>',
+            f'{SHOP_PATH}/<model("product.public.category"):category>/<model("product.template"):product>',
+        ],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=sitemap_products,
+    )
+    def product(self, product, category=None, pricelist=None, **kwargs):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
 
-        return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
+        if pricelist is not None:
+            try:
+                pricelist_id = int(pricelist)
+            except ValueError:
+                raise ValidationError(request.env._(
+                    "Wrong format: got `pricelist=%s`, expected an integer", pricelist,
+                ))
+            if not self._apply_selectable_pricelist(pricelist_id):
+                return request.redirect(self._get_shop_path(category))
+
+        is_category_in_query = category and isinstance(category, str)
+        category = self._validate_and_get_category(category)
+        query = self._get_filtered_query_string(
+            request.httprequest.query_string.decode(), keys_to_remove=['category']
+        )
+        # If the product doesn't belong to the category, we redirect to the canonical product URL,
+        # which doesn't include the category.
+        if (
+            category
+            and not product.filtered_domain([('public_categ_ids', 'child_of', category.id)])
+        ):
+            return request.redirect(f'{self._get_product_path(product)}?{query}', code=301)
+        # If the category is provided as a query parameter (which is deprecated), we redirect to the
+        # "correct" shop URL, where the category has been removed from the query parameters and
+        # added to the path.
+        if is_category_in_query:
+            return request.redirect(
+                f'{self._get_product_path(product, category)}?{query}', code=301
+            )
+        return request.render(
+            'website_sale.product', self._prepare_product_values(product, category, **kwargs)
+        )
 
     @route(
         '/shop/<model("product.template"):product_template>/document/<int:document_id>',
@@ -468,22 +526,34 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         document = request.env['product.document'].browse(document_id).sudo().exists()
         if not document or not document.active:
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
         if not document.shown_on_product_page or not (
             document.res_id == product_template.id
             and document.res_model == 'product.template'
         ):
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
         return request.env['ir.binary']._get_stream_from(
             document.ir_attachment_id,
         ).get_response(as_attachment=True)
 
-    @route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=False)
-    def old_product(self, product, category='', search='', **kwargs):
+    @route(
+        [f'{SHOP_PATH}/product/<model("product.template"):product>'],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=False,
+    )
+    def old_product(self, product, category='', **kwargs):
         # Compatibility pre-v14
-        return request.redirect(_build_url_w_params("/shop/%s" % request.env['ir.http']._slug(product), request.params), code=301)
+        # Redirect to the "correct" product URL, which doesn't include `/product`, and where the
+        # category has been removed from the query parameters and added to the path.
+        category = self._validate_and_get_category(category)
+        query = self._get_filtered_query_string(
+            request.httprequest.query_string.decode(), keys_to_remove=['category']
+        )
+        return request.redirect(f'{self._get_product_path(product, category)}?{query}', code=301)
 
     @route(['/shop/product/extra-media'], type='jsonrpc', auth='user', website=True)
     def add_product_media(self, media, type, product_product_id, product_template_id, combination_ids=None):
@@ -649,38 +719,23 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # In sudo mode to check fields and conditions not accessible to the customer directly.
         return product.sudo()._is_add_to_cart_allowed()
 
-    def _product_get_query_url_kwargs(self, category, search, **kwargs):
-        return {
-            'category': category,
-            'search': search,
-            'tags': kwargs.get('tags'),
-            'min_price': kwargs.get('min_price'),
-            'max_price': kwargs.get('max_price'),
-        }
-
-    def _prepare_product_values(self, product, category, search, **kwargs):
+    def _prepare_product_values(self, product, category, **kwargs):
         ProductCategory = request.env['product.public.category']
         product_markup_data = [product._to_markup_data(request.website)]
         if category:
-            category = ProductCategory.browse(int(category)).exists()
             # Add breadcrumb's SEO data.
             product_markup_data.append(self._prepare_breadcrumb_markup_data(
                 request.website.get_base_url(), category, product.name
             ))
         keep = QueryURL(
-            '/shop',
-            **self._product_get_query_url_kwargs(
-                category=category and category.id,
-                search=search,
-                **kwargs,
-            ),
+            self._get_shop_path(category),
+            attribute_values=request.session.get('attribute_values', [])
         )
 
         # Needed to trigger the recently viewed product rpc
         view_track = request.website.viewref("website_sale.product").track
 
         return {
-            'search': search,
             'category': category,
             'keep': keep,
             'categories': ProductCategory.search([('parent_id', '=', False)]),
@@ -691,6 +746,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'product': product,
             'view_track': view_track,
             'product_markup_data': json_scriptsafe.dumps(product_markup_data, indent=2),
+            'shop_path': SHOP_PATH,
         }
 
     def _prepare_breadcrumb_markup_data(self, base_url, category, product_name):
@@ -712,13 +768,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     '@type': 'ListItem',
                     'position': 1,
                     'name': 'All Products',
-                    'item': f'{base_url}/shop',
+                    'item': f'{base_url}{self._get_shop_path()}',
                 },
                 {
                     '@type': 'ListItem',
                     'position': 2,
                     'name': category.name,
-                    'item': f'{base_url}/shop/category/{self.env["ir.http"]._slug(category)}',
+                    'item': f'{base_url}{self._get_shop_path(category)}',
                 },
                 {
                     '@type': 'ListItem',
@@ -738,37 +794,44 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def pricelist_change(self, pricelist, **post):
         website = request.env['website'].get_current_website()
         redirect_url = request.httprequest.referrer
+        prev_pricelist = request.pricelist
         if (
-            website.is_pricelist_available(pricelist.id)
-            and (
-                pricelist.selectable
-                or pricelist == request.env.user.partner_id.property_product_pricelist
-            )
+            self._apply_selectable_pricelist(pricelist.id)
+            and redirect_url
+            and website.is_view_active('website_sale.filter_products_price')
+            and prev_pricelist != pricelist
         ):
-            if redirect_url and request.website.is_view_active('website_sale.filter_products_price'):
-                decoded_url = url_parse(redirect_url)
-                args = url_decode(decoded_url.query)
-                min_price = args.get('min_price')
-                max_price = args.get('max_price')
-                if min_price or max_price:
-                    previous_price_list = request.pricelist
-                    try:
-                        min_price = float(min_price)
-                        args['min_price'] = min_price and str(
-                            previous_price_list.currency_id._convert(min_price, pricelist.currency_id, request.website.company_id, fields.Date.today(), round=False)
-                        )
-                    except (ValueError, TypeError):
-                        pass
-                    try:
-                        max_price = float(max_price)
-                        args['max_price'] = max_price and str(
-                            previous_price_list.currency_id._convert(max_price, pricelist.currency_id, request.website.company_id, fields.Date.today(), round=False)
-                        )
-                    except (ValueError, TypeError):
-                        pass
-                    redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
-            self._apply_pricelist(pricelist)
-        return request.redirect(redirect_url or '/shop')
+            # Convert prices to the new priceslist currency in the query params of the referrer
+            decoded_url = url_parse(redirect_url)
+            args = url_decode(decoded_url.query)
+            min_price = args.get('min_price')
+            max_price = args.get('max_price')
+            if min_price or max_price:
+                try:
+                    min_price = float(min_price)
+                    args['min_price'] = min_price and str(prev_pricelist.currency_id._convert(
+                        min_price,
+                        pricelist.currency_id,
+                        request.website.company_id,
+                        fields.Date.today(),
+                        round=False,
+                    ))
+                except (ValueError, TypeError):
+                    pass
+                try:
+                    max_price = float(max_price)
+                    args['max_price'] = max_price and str(prev_pricelist.currency_id._convert(
+                        max_price,
+                        pricelist.currency_id,
+                        request.website.company_id,
+                        fields.Date.today(),
+                        round=False,
+                    ))
+                except (ValueError, TypeError):
+                    pass
+            redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
+
+        return request.redirect(redirect_url or self._get_shop_path())
 
     @route('/shop/pricelist', type='http', auth='public', website=True, sitemap=False)
     def pricelist(self, promo, **post):
@@ -778,10 +841,44 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if not (pricelist_sudo and request.website.is_pricelist_available(pricelist_sudo.id)):
                 return request.redirect("%s?code_not_available=1" % redirect)
 
-            self._apply_pricelist(pricelist_sudo)
+            self._apply_pricelist(pricelist=pricelist_sudo)
         else:
             # Reset the pricelist if empty promo code is given
+            self._apply_pricelist(pricelist=None)
+
+        return request.redirect(redirect)
+
+    def _apply_selectable_pricelist(self, pricelist_id):
+        """ Change the request pricelist if selectable on the website.
+
+        A pricelist is applied if:
+        - it is available on the current website
+        - it is selectable or on the current partner
+
+        :param int pricelist_id: the pricelist ID
+        :return: True or False if the pricelist was applied or not
+        :rtype: bool
+        """
+        if (
+            request.env['website'].get_current_website().is_pricelist_available(pricelist_id)
+            and (pricelist := request.env['product.pricelist'].browse(pricelist_id))
+            and (
+                pricelist.selectable
+                or pricelist == request.env.user.partner_id.property_product_pricelist
+            )
+        ):
+            self._apply_pricelist(pricelist=pricelist)
+            return True
+        return False
+
+    def _apply_pricelist(self, pricelist=None):
+        """ Changes the pricelist of the request and recomputes the current cart prices.
+
+        :param 'product.pricelist'|None pricelist: The new pricelist. If None resets the pricelist.
+        """
+        if pricelist is None:  # Reset the pricelist
             request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
+            request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
             request.pricelist = lazy(request.website._get_and_cache_current_pricelist)
 
             if order_sudo := request.cart:
@@ -789,10 +886,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo._compute_pricelist_id()
                 if order_sudo.pricelist_id != pl_before:
                     order_sudo._recompute_prices()
+            return
 
-        return request.redirect(redirect)
-
-    def _apply_pricelist(self, pricelist):
         pricelist.ensure_one()
 
         if pricelist.id == request.pricelist.id:
@@ -800,6 +895,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return
 
         request.session[PRICELIST_SESSION_CACHE_KEY] = pricelist.id
+        request.session[PRICELIST_SELECTED_SESSION_CACHE_KEY] = pricelist.id
         request.pricelist = pricelist.sudo()
 
         if order_sudo := request.cart:
@@ -855,6 +951,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if try_skip_step and can_skip_delivery:
             return request.redirect('/shop/confirm_order')
+
+        checkout_page_values.update(
+            request.website._get_checkout_step_values()
+        )
 
         return request.render('website_sale.checkout', checkout_page_values)
 
@@ -922,6 +1022,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order_sudo=order_sudo,
             use_delivery_as_billing=use_delivery_as_billing,
             **query_params
+        )
+        address_form_values.update(
+            request.website._get_checkout_step_values()
         )
         return request.render('website_sale.address', address_form_values)
 
@@ -1005,7 +1108,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         order_sudo = request.cart
         if redirection := self._check_cart(order_sudo):
-            return redirection
+            return json.dumps({'redirectUrl': redirection.location})
 
         # Retrieve the partner whose address to update, if any, and its address type.
         partner_sudo, address_type = self._prepare_address_update(
@@ -1056,6 +1159,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order_sudo.message_unsubscribe(order_sudo.website_id.partner_id.ids)
 
         return json.dumps(feedback_dict)
+
+    def _needs_address(self):
+        if cart := request.cart:
+            return cart._needs_customer_address()
+        return super()._needs_address()
 
     def _prepare_address_update(self, order_sudo, partner_id=None, address_type=None):
         """ Find the partner whose address to update and return it along with its address type.
@@ -1181,11 +1289,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 use_delivery_as_billing=False,
                 order_sudo=order_sudo,
             )
-            with request.env.protecting(['pricelist_id'], order_sudo):
+            with request.env.protecting([order_sudo._fields['pricelist_id']], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
-
-            # Add the new partner as follower of the cart
-            order_sudo._message_subscribe(order_sudo.partner_id.ids)
         elif not self._are_same_addresses(billing_address, order_sudo.partner_invoice_id):
             # Check if a child partner doesn't already exist with the same informations. The
             # phone isn't always checked because it isn't sent in shipping information with
@@ -1208,7 +1313,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if shipping_address:
             #in order to not override shippig address, it's checked separately from shipping option
             self._include_country_and_state_in_address(shipping_address)
-            shipping_address, _side_values = self._parse_form_data(billing_address)
+            shipping_address, _side_values = self._parse_form_data(shipping_address)
 
             if order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
                 # The existing partner was created by `process_express_checkout_delivery_choice`, it
@@ -1350,6 +1455,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'partner': order_sudo.partner_id.id,
             'order': order_sudo,
         }
+
+        values.update(request.website._get_checkout_step_values())
+
         return request.render("website_sale.extra_info", values)
 
     # === CHECKOUT FLOW - PAYMENT/CONFIRMATION METHODS === #
@@ -1413,6 +1521,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             render_values.pop('payment_methods_sudo', '')
             render_values.pop('tokens_sudo', '')
 
+        # As the initial page sending us to payment is /shop/confirm_order
+        render_values.update(request.website._get_checkout_step_values('/shop/confirm_order'))
+
         return request.render("website_sale.payment", render_values)
 
     @route('/shop/payment/validate', type='http', auth="public", website=True, sitemap=False)
@@ -1435,9 +1546,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             assert order_sudo.id == request.session.get('sale_last_order_id')
 
         if not order_sudo:
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
-        errors = self._get_shop_payment_errors(order_sudo)
+        errors = self._get_shop_payment_errors(order_sudo) if order_sudo.state != 'sale' else []
         if errors:
             first_error = errors[0]  # only display first error
             error_msg = f"{first_error[0]}\n{first_error[1]}"
@@ -1445,7 +1556,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         tx_sudo = order_sudo.get_portal_last_transaction()
         if order_sudo.amount_total and not tx_sudo:
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
         if not order_sudo.amount_total and not tx_sudo:
             if order_sudo.state != 'sale':
@@ -1459,7 +1570,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset()
         if tx_sudo and tx_sudo.state == 'draft':
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
         return request.redirect('/shop/confirmation')
 
@@ -1477,7 +1588,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             values = self._prepare_shop_payment_confirmation_values(order)
             return request.render("website_sale.confirmation", values)
-        return request.redirect('/shop')
+        return request.redirect(self._get_shop_path())
 
     def _prepare_shop_payment_confirmation_values(self, order):
         """
@@ -1497,7 +1608,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             pdf, _ = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [sale_order_id])
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', '%s' % len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
-        return request.redirect('/shop')
+        return request.redirect(self._get_shop_path())
 
     # === CHECK METHODS === #
 
@@ -1531,7 +1642,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not order_sudo or order_sudo.state != 'draft':
             request.session['sale_order_id'] = None
             request.session['sale_transaction_id'] = None
-            return request.redirect('/shop')
+            return request.redirect(self._get_shop_path())
 
         # Check that the cart is not empty.
         if not order_sudo.order_line:
@@ -1630,6 +1741,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if 'product_page_grid_columns' in options:
             options['product_page_grid_columns'] = int(options['product_page_grid_columns'])
 
+        # Checkout Extra Step
+        if 'extra_step' in options:
+            extra_step_view = current_website.viewref('website_sale.extra_info')
+            extra_step = current_website._get_checkout_step('/shop/extra_info')
+            extra_step_view.active = extra_step.is_published = options.get('extra_step') == 'true'
+
         write_vals = {k: v for k, v in options.items() if k in writable_fields}
         if write_vals:
             current_website.write(write_vals)
@@ -1694,3 +1811,76 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'currency_id': website.currency_id.id,
             'pricelist_id': request.pricelist.id,
         })
+
+    @staticmethod
+    def _validate_and_get_category(category):
+        """ Validate and return the `product.public.category` record corresponding to the provided
+        category, which can be a record, a record id, or a slug.
+
+        - If no category is provided, return an empty recordset.
+        - If a category is provided, but it doesn't exist or can't be accessed, raise a 404.
+        - If a valid category is provided, return the corresponding record.
+
+        :param str|product.public.category category: The category to validate and return.
+        :return: The validated category.
+        :rtype: product.public.category
+        """
+        ProductCategory = request.env['product.public.category']
+        if (
+            (category := ProductCategory.browse(category and int(category)).exists())
+            and category.can_access_from_current_website()
+        ):
+            return category
+        else:
+            return ProductCategory
+
+    @staticmethod
+    def _get_shop_path(category=None, page=0):
+        path = SHOP_PATH
+        if category:
+            slug = request.env['ir.http']._slug
+            path += f'/category/{slug(category)}'
+        if page:
+            path += f'/page/{page}'
+        return path
+
+    @staticmethod
+    def _get_product_path(product, category=None):
+        slug = request.env['ir.http']._slug
+        path = SHOP_PATH
+        if category:
+            path += f'/{slug(category)}'
+        path += f'/{slug(product)}'
+        return path
+
+    @staticmethod
+    def _get_filtered_query_string(query_string, keys_to_remove):
+        """ Return a filtered copy of the provided query string, where all keys in `keys_to_remove`
+        are removed.
+
+        Note: the query string shouldn't include the leading '?'.
+
+        :param str query_string: The query string to filter.
+        :param list(str) keys_to_remove: The keys to remove from the query string.
+        :return: The filtered query string.
+        :rtype: str
+        """
+        query = urls.url_parse(f'?{query_string}').decode_query()
+        for key in keys_to_remove:
+            query.pop(key, False)
+        return urls.url_encode(query)
+
+    @staticmethod
+    def _get_attribute_value_dict(attribute_values):
+        """ Parses a list of attribute value query params, and returns a dict grouping attribute
+        value ids by attribute id.
+
+        :param list(str) attribute_values: The list of attribute value query parameters to parse.
+        :return: A dict grouping attribute value ids by attribute id.
+        :rtype: dict(int, list(int))
+        """
+        attribute_value_pairs = [value.split('-') for value in attribute_values if value]
+        return {
+            int(pair[0]): [int(value_id) for value_id in pair[1].split(',')]
+            for pair in attribute_value_pairs
+        }

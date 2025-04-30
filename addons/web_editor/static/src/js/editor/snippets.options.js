@@ -6635,6 +6635,17 @@ registry.ImageTools = ImageHandlerOption.extend({
         return this._super(...arguments);
     },
 
+    /**
+     * @override
+     */
+    selectAttribute(previewMode, widgetValue, params) {
+        this._super(...arguments);
+        if (params.attributeName === "alt" && params.activeValue.trim() !== "") {
+            if (this.$target[0].getAttribute("role") === "presentation") {
+                this.$target[0].removeAttribute("role");
+            }
+        }
+    },
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -8317,12 +8328,13 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         const parts = backgroundImageCssToParts(this.$target.css('background-image'));
         if (backgroundURL) {
             parts.url = `url('${backgroundURL}')`;
-            this.$target.addClass('oe_img_bg o_bg_img_center');
+            this.$target.addClass('oe_img_bg o_bg_img_center o_bg_img_origin_border_box');
         } else {
             delete parts.url;
             this.$target[0].classList.remove(
                 "oe_img_bg",
                 "o_bg_img_center",
+                "o_bg_img_origin_border_box",
                 "o_modified_image_to_save",
             );
         }

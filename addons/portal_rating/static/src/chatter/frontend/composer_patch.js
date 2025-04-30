@@ -26,11 +26,15 @@ patch(Composer.prototype, {
     },
 
     async savePublisherComment() {
+        if (!this.state.active) {
+            return;
+        }
+        this.state.active = false;
         const data = await rpc("/website/rating/comment", {
-            rating_id: this.message.rating.id,
+            rating_id: this.message.rating_id.id,
             publisher_comment: this.props.composer.text.trim(),
         });
-        this.message.rating = data;
+        this.message.rating_id = data;
         this.props.onPostCallback();
     },
 

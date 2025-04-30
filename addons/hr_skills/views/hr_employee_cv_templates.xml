@@ -79,7 +79,7 @@
                             <div class="o_main_panel_resume_title_dates">
                                 <t t-set="present">Present</t>
                                 <div class="o_main_panel_resume_year">
-                                    <span t-out="resume_line.date_start.year">2022</span> - <span t-out="resume_line.date_end.year if resume_line.date_end else 'Present'">2023</span>
+                                    <span t-out="resume_line.date_start.year">2022</span> - <span t-out="resume_line.date_end.year if resume_line.date_end else present">2023</span>
                                 </div>
                             </div>
                         </div>

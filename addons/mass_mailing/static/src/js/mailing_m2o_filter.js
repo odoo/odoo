@@ -141,7 +141,7 @@ export class FieldMany2OneMailingFilter extends Component {
      * @param {event} ev
      */
     async onRemoveFilter(ev) {
-        const filterId = this.props.record.data.mailing_filter_id[0];
+        const filterId = this.props.record.data.mailing_filter_id.id;
         const mailingDomain = this.props.record.data[this.props.domain_field];
         // Prevent multiple clicks to avoid trying to deleting same record multiple times.
         ev.target.disabled = true;
@@ -178,9 +178,11 @@ export class FieldMany2OneMailingFilter extends Component {
             const [newFilterId] = await this.env.model.orm.create("mailing.filter", [{
                 name: filterName,
                 mailing_domain: this.props.record.data[this.props.domain_field],
-                mailing_model_id: this.props.record.data[this.props.model_field][0],
+                mailing_model_id: this.props.record.data[this.props.model_field].id,
             }]);
-            this.props.record.update({ [this.props.name]: [newFilterId, filterName] });
+            this.props.record.update({
+                [this.props.name]: { id: newFilterId, display_name: filterName },
+            });
         }
     }
 }

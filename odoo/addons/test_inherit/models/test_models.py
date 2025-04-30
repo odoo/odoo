@@ -7,6 +7,7 @@ from odoo import models, fields, api
 class Test_Inherit_Daughter(models.Model):
     _name = 'test_inherit_daughter'
     _description = 'Test Inherit Daughter'
+    _inherits = {'test.inherit.mother': 'template_id'}
 
     template_id = fields.Many2one('test.inherit.mother', 'Template',
                                   delegate=True, required=True, ondelete='cascade')

@@ -174,7 +174,7 @@ test("properly compile no sheet", () => {
         <t t-translation="off">
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_statusbar d-flex justify-content-between py-2">
-                    <StatusBarButtons t-if="!__comp__.env.isSmall or __comp__.env.inDialog"/>
+                    <StatusBarButtons/>
                 </div>
                 <div>someDiv</div>
             </div>
@@ -198,7 +198,7 @@ test("properly compile sheet", () => {
         <t t-translation="off">
             <div class="o_form_renderer" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex d-print-block {{ __comp__.uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_sheet_bg">
-                    <div class="o_form_statusbar d-flex justify-content-between py-2"><StatusBarButtons t-if="!__comp__.env.isSmall or __comp__.env.inDialog"/></div>
+                    <div class="o_form_statusbar d-flex justify-content-between py-2"><StatusBarButtons/></div>
                     <div>someDiv</div>
                     <div class="o_form_sheet position-relative">
                         <div>inside sheet</div>
@@ -293,7 +293,7 @@ test("properly compile status bar with content", () => {
         <t t-translation="off">
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_statusbar d-flex justify-content-between py-2">
-                    <StatusBarButtons t-if="!__comp__.env.isSmall or __comp__.env.inDialog">
+                    <StatusBarButtons>
                         <t t-set-slot="button_0" isVisible="true">
                             <div>someDiv</div>
                         </t>
@@ -315,7 +315,7 @@ test("properly compile status bar without content", () => {
         <t t-translation="off">
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_statusbar d-flex justify-content-between py-2">
-                    <StatusBarButtons t-if="!__comp__.env.isSmall or __comp__.env.inDialog"/>
+                    <StatusBarButtons/>
                 </div>
             </div>
         </t>
@@ -407,7 +407,7 @@ test("invisible is correctly computed with another t-if", () => {
     expect(compileTemplate(arch)).toHaveOuterHTML(expected);
 });
 
-test("keep nosheet style if a sheet is part of a nested form", (assert) => {
+test("keep nosheet style if a sheet is part of a nested form", () => {
     const arch = `
         <form>
             <field name="move_line_ids" field_id="move_line_ids">
@@ -434,4 +434,24 @@ test("keep nosheet style if a sheet is part of a nested form", (assert) => {
         </div>
     </t>`;
     expect(compileTemplate(arch)).toHaveOuterHTML(expected);
+});
+
+test("form with t-translation directive", () => {
+    patchWithCleanup(console, { warn: (message) => expect.step(message) });
+    const arch = `
+        <form>
+            <div t-translation="off">Hello</div>
+        </form>`;
+
+    const expected = `<t t-translation="off">
+        <div
+            class="o_form_renderer o_form_nosheet"
+            t-att-class="__comp__.props.class"
+            t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}"
+            t-ref="compiled_view_root">
+                <div> Hello </div>
+        </div>
+    </t>`;
+    expect(compileTemplate(arch)).toHaveOuterHTML(expected);
+    expect.verifySteps([]); // should no log any warning
 });

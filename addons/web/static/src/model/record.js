@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { pick } from "@web/core/utils/objects";
+import { isObject, pick } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
 import { Component, xml, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
@@ -13,7 +13,7 @@ class StandaloneRelationalModel extends RelationalModel {
             const config = this._getNextConfig(this.config, params);
             this.root = this._createRoot(config, data);
             this.config = config;
-            return;
+            return Promise.resolve();
         }
         return super.load(params);
     }
@@ -36,11 +36,7 @@ class _Record extends Component {
                 mode: this.props.info.mode,
                 context: this.props.info.context,
             },
-            hooks: {
-                onRecordSaved: this.props.info.onRecordSaved || (() => {}),
-                onWillSaveRecord: this.props.info.onWillSaveRecord || (() => {}),
-                onRecordChanged: this.props.info.onRecordChanged || (() => {}),
-            },
+            hooks: this.props.info.hooks,
         };
         const modelServices = Object.fromEntries(
             StandaloneRelationalModel.services.map((servName) => [servName, useService(servName)])
@@ -107,6 +103,21 @@ class _Record extends Component {
                             id: values[fieldName][0],
                             display_name: values[fieldName][1],
                         };
+                    } else if (isObject(values[fieldName])) {
+                        if (values[fieldName].display_name === undefined) {
+                            const prom = loadDisplayName(values[fieldName].id);
+                            prom.then((displayName) => {
+                                values[fieldName] = {
+                                    id: values[fieldName].id,
+                                    display_name: displayName,
+                                };
+                            });
+                            proms.push(prom);
+                        }
+                        values[fieldName] = {
+                            id: values[fieldName].id,
+                            display_name: values[fieldName].display_name,
+                        };
                     }
                 }
                 await Promise.all(proms);
@@ -116,10 +127,11 @@ class _Record extends Component {
         onWillStart(async () => {
             if (this.props.values) {
                 const values = await prepareLoadWithValues(this.props.values);
-                return this.model.load({ values });
+                await this.model.load({ values });
             } else {
-                return this.model.load();
+                await this.model.load();
             }
+            this.model.whenReady.resolve();
         });
         onWillUpdateProps(async (nextProps) => {
             const params = {};
@@ -162,9 +174,7 @@ export class Record extends Component {
         "mode?",
         "values?",
         "context?",
-        "onRecordChanged?",
-        "onRecordSaved?",
-        "onWillSaveRecord?",
+        "hooks?",
     ];
     static defaultProps = {
         context: {},

@@ -4,20 +4,28 @@ import { Domain } from "@web/core/domain";
 import { DynamicList } from "./dynamic_list";
 import { getGroupServerValue } from "./utils";
 
+/**
+ * @typedef {import("./record").Record} RelationalRecord
+ */
+
 export class DynamicGroupList extends DynamicList {
     static type = "DynamicGroupList";
 
     /**
-     * @param {import("./relational_model").Config} config
-     * @param {Object} data
+     * @type {DynamicList["setup"]}
      */
-    setup(config, data) {
+    setup(_config, data) {
         super.setup(...arguments);
+
         this.isGrouped = true;
         this._nbRecordsMatchingDomain = null;
         this._setData(data);
     }
 
+    /**
+     * x
+     * @param {Record<string, unknown>} data
+     */
     _setData(data) {
         /** @type {import("./group").Group[]} */
         this.groups = data.groups.map((g) => this._createGroupDatapoint(g));
@@ -47,7 +55,7 @@ export class DynamicGroupList extends DynamicList {
 
     /**
      * List of loaded records inside groups.
-     * @returns {import("./record").Record[]}
+     * @returns {RelationalRecord[]}
      */
     get records() {
         return this.groups
@@ -123,7 +131,7 @@ export class DynamicGroupList extends DynamicList {
         // step 2: update record value
         const value =
             targetGroup.groupByField.type === "many2one"
-                ? [targetGroup.value, targetGroup.displayName]
+                ? { id: targetGroup.value, display_name: targetGroup.displayName }
                 : targetGroup.value;
         const revert = () => {
             targetGroup._removeRecords([record.id]);

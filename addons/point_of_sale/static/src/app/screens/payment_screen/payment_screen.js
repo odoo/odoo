@@ -18,6 +18,7 @@ import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dial
 import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { sprintf } from "@web/core/utils/strings";
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -43,6 +44,7 @@ export class PaymentScreen extends Component {
             .sort((a, b) => a.sequence - b.sequence);
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use(this._getNumberBufferConfig);
+        useRouterParamsChecker();
         useErrorHandlers();
         this.payment_interface = null;
         this.error = false;
@@ -67,7 +69,7 @@ export class PaymentScreen extends Component {
 
         //Activate the invoice option for refund orders if the original order was invoiced.
         if (
-            this.currentOrder._isRefundOrder() &&
+            this.currentOrder.isRefund &&
             this.currentOrder.lines[0].refunded_orderline_id?.order_id?.isToInvoice()
         ) {
             this.currentOrder.setToInvoice(true);
@@ -112,7 +114,7 @@ export class PaymentScreen extends Component {
         return this.pos.models["pos.order"].getBy("uuid", this.props.orderUuid);
     }
     get isRefundOrder() {
-        return this.currentOrder._isRefundOrder();
+        return this.currentOrder.isRefund;
     }
     get paymentLines() {
         return this.currentOrder.payment_ids;
@@ -292,9 +294,7 @@ export class PaymentScreen extends Component {
         if (!this.checkCashRoundingHasBeenWellApplied()) {
             return;
         }
-        const linesToRemove = this.currentOrder.lines.filter((line) =>
-            line.product_id.uom_id.isZero(line.qty)
-        );
+        const linesToRemove = this.currentOrder.lines.filter((line) => line.canBeRemoved);
         for (const line of linesToRemove) {
             this.currentOrder.removeOrderline(line);
         }
@@ -351,16 +351,7 @@ export class PaymentScreen extends Component {
                 }
             }
         } catch (error) {
-            if (error instanceof ConnectionLostError) {
-                this.pos.showScreen(this.nextScreen);
-                Promise.reject(error);
-            } else if (error instanceof RPCError) {
-                this.currentOrder.state = "draft";
-                handleRPCError(error, this.dialog);
-            } else {
-                throw error;
-            }
-            return error;
+            return this.handleValidationError(error);
         } finally {
             this.env.services.ui.unblock();
         }
@@ -372,6 +363,18 @@ export class PaymentScreen extends Component {
         }
 
         await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
+    }
+    handleValidationError(error) {
+        if (error instanceof ConnectionLostError) {
+            this.pos.navigate(this.nextPage.page, this.nextPage.params);
+            Promise.reject(error);
+        } else if (error instanceof RPCError) {
+            this.currentOrder.state = "draft";
+            handleRPCError(error, this.dialog);
+        } else {
+            throw error;
+        }
+        return error;
     }
     async postPushOrderResolve(ordersServerId) {
         const postPushResult = await this._postPushOrderResolve(this.currentOrder, ordersServerId);
@@ -385,11 +388,11 @@ export class PaymentScreen extends Component {
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
-        let nextScreen = this.nextScreen;
-        let switchScreen = false;
+        let nextPage = this.nextPage;
+        let switchScreen = true;
 
         if (
-            nextScreen === "ReceiptScreen" &&
+            nextPage.page === "ReceiptScreen" &&
             this.currentOrder.nb_print === 0 &&
             this.pos.config.iface_print_auto
         ) {
@@ -398,25 +401,29 @@ export class PaymentScreen extends Component {
                 : true;
 
             if (invoiced_finalized) {
-                this.pos.printReceipt(this.currentOrder);
+                this.pos.printReceipt({ order: this.currentOrder });
 
                 if (this.pos.config.iface_print_skip_screen) {
-                    this.currentOrder.uiState.screen_data["value"] = "";
+                    this.currentOrder.setScreenData({ name: "" });
                     this.currentOrder.uiState.locked = true;
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
-                    nextScreen = "ProductScreen";
-
+                    nextPage = this.pos.defaultPage;
                     if (switchScreen) {
-                        this.pos.addNewOrder();
+                        this.selectNextOrder();
                     }
                 }
             }
-        } else {
-            switchScreen = true;
         }
 
         if (switchScreen) {
-            this.pos.showScreen(nextScreen);
+            this.pos.navigate(nextPage.page, nextPage.params);
+        }
+    }
+    selectNextOrder() {
+        if (this.currentOrder.originalSplittedOrder) {
+            this.pos.selectedOrderUuid = this.currentOrder.uiState.splittedOrderUuid;
+        } else {
+            this.pos.addNewOrder();
         }
     }
     /**
@@ -427,8 +434,15 @@ export class PaymentScreen extends Component {
     shouldDownloadInvoice() {
         return true;
     }
-    get nextScreen() {
-        return !this.error ? "ReceiptScreen" : "ProductScreen";
+    get nextPage() {
+        return !this.error
+            ? {
+                  page: "ReceiptScreen",
+                  params: {
+                      orderUuid: this.currentOrder.uuid,
+                  },
+              }
+            : this.pos.defaultPage;
     }
     paymentMethodImage(id) {
         if (this.paymentMethod.image) {
@@ -676,4 +690,12 @@ export class PaymentScreen extends Component {
     }
 }
 
-registry.category("pos_screens").add("PaymentScreen", PaymentScreen);
+registry.category("pos_pages").add("PaymentScreen", {
+    name: "PaymentScreen",
+    component: PaymentScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/payment/{string:orderUuid}`,
+    params: {
+        orderUuid: true,
+        orderFinalized: false,
+    },
+});

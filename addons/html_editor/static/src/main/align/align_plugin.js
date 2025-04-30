@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isVisibleTextNode } from "@html_editor/utils/dom_info";
-import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { AlignSelector } from "./align_selector";
 import { reactive } from "@odoo/owl";
@@ -35,12 +34,11 @@ export class AlignPlugin extends Plugin {
                 run: () => this.setAlignment("justify"),
             },
         ],
-        toolbar_groups: withSequence(29, { id: "alignment" }),
         toolbar_items: [
             {
                 id: "alignment",
-                groupId: "alignment",
-                title: _t("Text align"),
+                groupId: "layout",
+                description: _t("Align text"),
                 Component: AlignSelector,
                 props: {
                     getItems: () => alignmentItems,

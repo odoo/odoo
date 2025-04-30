@@ -11,13 +11,14 @@ import {
 } from "./calendar_test_helpers";
 
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
+import { SIDE_PANEL_MODES } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
 
 const FAKE_PROPS = {
     model: FAKE_MODEL,
     createRecord() {},
     deleteRecord() {},
     editRecord() {},
-    displayName: "Plop",
+    sidePanelMode: SIDE_PANEL_MODES.filter,
 };
 
 async function start(props = {}, target) {
@@ -159,4 +160,9 @@ test(`Week: automatically scroll to 6am`, async () => {
     const containerDimensions = queryRect(`.fc-scrollgrid-section-liquid .fc-scroller`);
     const dayStartDimensions = queryRect(`.fc-timegrid-slot[data-time="06:00:00"]:eq(0)`);
     expect(Math.abs(dayStartDimensions.y - containerDimensions.y)).toBeLessThan(2);
+});
+
+test("Month: remove row when no day of current month", async () => {
+    await start({ model: { ...FAKE_MODEL, scale: "month" } });
+    expect(".fc-day-other, .fc-day-disabled").toHaveCount(4);
 });

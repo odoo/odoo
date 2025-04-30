@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { getActiveElement, press, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { press, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -210,22 +210,12 @@ test("restore a selection when you are not in the editable shouldn't move the fo
     await insertText(editor, "/test");
     await press("enter");
     await animationFrame();
-    expect(getActiveElement()).toBe(queryOne("input.test"));
+    expect("input.test").toBeFocused();
 
     // Something trigger restore
     const cursors = editor.shared.selection.preserveSelection();
     cursors.restore();
-    expect(getActiveElement()).toBe(queryOne("input.test"));
-});
-
-test("set a collapse selection in a contenteditable false should move it after this node", async () => {
-    const { el, editor } = await setupEditor(`<p>ab<span contenteditable="false">cd</span>ef</p>`);
-    editor.shared.selection.setSelection({
-        anchorNode: queryOne("span[contenteditable='false']"),
-        anchorOffset: 1,
-    });
-    editor.shared.selection.focusEditable();
-    expect(getContent(el)).toBe(`<p>ab<span contenteditable="false">cd</span>[]ef</p>`);
+    expect("input.test").toBeFocused();
 });
 
 test("preserveSelection's restore should always set the selection, even if it's the same as the current one", async () => {

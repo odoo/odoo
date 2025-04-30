@@ -3,6 +3,9 @@ import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { insertText, splitBlock } from "../_helpers/user_actions";
 
+const base64Img =
+    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
 describe("Selection collapsed", () => {
     describe("Ordered", () => {
         describe("Basic", () => {
@@ -78,6 +81,33 @@ describe("Selection collapsed", () => {
                             <li><br></li>
                             <li>c</li>
                             <li>[]<br></li>
+                        </ol>`),
+                });
+            });
+
+            test("should split list item containing image", async () => {
+                await testEditor({
+                    contentBefore: unformat(`
+                        <ol>
+                            <li><img src="${base64Img}">[]</li>
+                        </ol>`),
+                    stepFunction: splitBlock,
+                    contentAfter: unformat(`
+                        <ol>
+                            <li><img src="${base64Img}"></li>
+                            <li>[]<br></li>
+                        </ol>`),
+                });
+                await testEditor({
+                    contentBefore: unformat(`
+                        <ol>
+                            <li>[]<img src="${base64Img}"></li>
+                        </ol>`),
+                    stepFunction: splitBlock,
+                    contentAfter: unformat(`
+                        <ol>
+                            <li><br></li>
+                            <li>[]<img src="${base64Img}"></li>
                         </ol>`),
                 });
             });
@@ -203,7 +233,7 @@ describe("Selection collapsed", () => {
                                 <li class="oe-nested">
                                     <ul>
                                         <li><font style="color: red;">cd</font></li>
-                                        <li>b</li>
+                                        <li><font style="color: red;">b</font></li>
                                         <li>[]<br></li>
                                     </ul>
                                 </li>
@@ -360,7 +390,7 @@ describe("Selection collapsed", () => {
                             </ul>`),
                     stepFunction: splitBlock,
                     contentAfter: unformat(`
-                        <ul>
+                        <ul style="padding-inline-start: 36px;">
                             <li style="list-style: cambodian;">a</li>
                             <li style="list-style: cambodian;">[]<br></li>
                         </ul>`),
@@ -598,7 +628,7 @@ describe("Selection collapsed", () => {
                                 <li class="oe-nested">
                                     <ul class="o_checklist">
                                         <li><font style="color: red;">cd</font></li>
-                                        <li>0</li>
+                                        <li><font style="color: red;">0</font></li>
                                         <li>[]<br></li>
                                     </ul>
                                 </li>
@@ -691,7 +721,7 @@ describe("Selection collapsed", () => {
                                 <li class="oe-nested">
                                     <ul class="o_checklist">
                                         <li class="o_checked"><font style="color: red;">cd</font></li>
-                                        <li>0</li>
+                                        <li><font style="color: red;">0</font></li>
                                         <li>[]<br></li>
                                     </ul>
                                 </li>

@@ -21,7 +21,7 @@ class WebsitePage(models.Model):
     _order = 'website_id'
 
     url = fields.Char('Page URL', required=True)
-    view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
+    view_id = fields.Many2one('ir.ui.view', string='View', required=True, index=True, ondelete="cascade")
     website_indexed = fields.Boolean('Is Indexed', default=True)
     date_publish = fields.Datetime('Publishing Date')
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
@@ -56,6 +56,14 @@ class WebsitePage(models.Model):
     def _compute_website_url(self):
         for page in self:
             page.website_url = page.url
+
+    @api.depends_context('uid')
+    def _compute_can_publish(self):
+        if self.env.user.has_group('website.group_website_designer'):
+            for record in self:
+                record.can_publish = True
+        else:
+            super()._compute_can_publish()
 
     def _get_most_specific_pages(self):
         ''' Returns the most specific pages in self. '''

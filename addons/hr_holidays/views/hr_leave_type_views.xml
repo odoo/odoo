@@ -26,7 +26,7 @@
                                 type="object"
                                 name="action_see_days_allocated"
                                 icon="fa-calendar"
-                                invisible="requires_allocation == 'no' or not id"
+                                invisible="not requires_allocation or not id"
                                 help="Count of allocations for this time off type (approved or waiting for approbation) with a validity period starting this year.">
                             <div class="o_stat_info">
                                 <field name="allocation_count" class="o_stat_value"/>
@@ -57,17 +57,18 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <label for="name">Time off type</label>
                     <div class="oe_title">
-                        <h1><field name="name" placeholder="Time Off Type's Name"/></h1>
+                        <field name="name" placeholder="e.g. Yearly Vacation" class="h1"/>
                     </div>
                     <group>
                         <group>
-                                <field name="request_unit"/>
+                                <field name="request_unit" widget="radio" options="{'horizontal': True}"/>
                                 <field name="time_type" required="1"/>
                                 <field name="responsible_ids"
                                     widget="many2many_tags"
-                                    placeholder="Nobody will be notified"
-                                    invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type not in ['hr', 'both'])"/>
+                                    placeholder="Nobody to notify"
+                                    invisible="leave_validation_type in ['no_validation', 'manager'] and (not requires_allocation or allocation_validation_type not in ['hr', 'both'])"/>
                         </group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" readonly="is_used" placeholder="Visible to all"/>
@@ -81,37 +82,38 @@
                             <field name="leave_validation_type" string="Approval" widget="radio"/>
                         </group>
                         <group name="allocation_validation" id="allocation_requests" string="Allocation Requests">
-                            <field name="requires_allocation" widget="radio" options="{'horizontal':true}"/>
-                            <field name="employee_requests" widget="radio" invisible="requires_allocation == 'no'"/>
-                            <field name="allocation_validation_type" string="Approval" widget="radio" invisible="requires_allocation == 'no'"/>
+                            <field name="requires_allocation" widget="checkbox"/>
+                            <field name="employee_requests" widget="checkbox" invisible="not requires_allocation"/>
+                            <field name="allocation_validation_type" string="Approval" widget="radio" invisible="not requires_allocation"/>
                         </group>
                     </group>
-                    <group style="justify-content: unset;">
+                    <group>
                         <group name="configuration" id="configuration" string="Configuration">
-                                <field name="include_public_holidays_in_duration" nolabel="1"/>
-                                <label for="include_public_holidays_in_duration"/>
-                                <field name="show_on_dashboard" nolabel="1"/>
-                                <label for="show_on_dashboard"/>
-                                <field name="support_document" nolabel="1"/>
-                                <label for="support_document" string="Allow To Attach Supporting Document"/>
+                            <div class="d-flex flex-row" colspan="2">
+                                <div class="d-flex flex-column gap-2">
+                                    <label for="include_public_holidays_in_duration" class="fw-bold me-4"/>
+                                    <label for="hide_on_dashboard" class="fw-bold me-4"/>
+                                    <label for="support_document" class="fw-bold me-4" string="Require Supporting Document"/>
+                                </div>
+                                <div class="d-flex flex-column gap-1">
+                                    <field name="include_public_holidays_in_duration" class="mb-2" nolabel="1"/>
+                                    <field name="hide_on_dashboard" class="mb-2" nolabel="1"/>
+                                    <field name="support_document" nolabel="1"/>
+                                </div>
+                            </div>
                         </group>
-                        <group>
-                            <group name="negative_cap" id="negative_cap"
-                                string="Negative Cap"
-                                invisible="requires_allocation == 'no'"
-                                colspan="2">
-                                <group colspan="2">
-                                    <field name="allows_negative" nolabel="1"/>
-                                    <label for="allows_negative"/>
-                                </group>
-                                <group colspan="2">
-                                    <field name="max_allowed_negative"
-                                        class="o_hr_narrow_field"
-                                        invisible="not allows_negative"
-                                        required="requires_allocation == 'yes' and allows_negative"
-                                        />
-                                </group>
-                            </group>
+                        <group name="negative_cap" id="negative_cap" string="Negative Cap"
+                            invisible="not requires_allocation">
+                            <div class="o_row" colspan="2">
+                                <label for="allows_negative" class="fw-bold me-4" readonly="0"/>
+                                <field name="allows_negative" nolabel="1"/>
+                                <div invisible="not allows_negative">
+                                    <span class="mx-2">up to</span>
+                                    <field name="max_allowed_negative" class="oe_inline"/>
+                                    <span class="mx-2" invisible="request_unit == 'hour'">days</span>
+                                    <span class="mx-2" invisible="request_unit != 'hour'">hours</span>
+                                </div>
+                            </div>
                         </group>
                     </group>
                     <group name="visual" id="visual" string="Display Option" class="mw-100 col-lg-12">
@@ -149,7 +151,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
                 <field name="leave_validation_type" optional="hide" string="Time Off Approval"/>
-                <field name="responsible_ids" widget="many2many_tags" invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type != 'hr')" optional="hide"/>
+                <field name="responsible_ids" widget="many2many_tags" invisible="leave_validation_type in ['no_validation', 'manager'] and (not requires_allocation or allocation_validation_type != 'hr')" optional="hide"/>
                 <field name="requires_allocation" optional="hide"/>
                 <field name="allocation_validation_type" string="Allocation Approval"/>
                 <field name="employee_requests" optional="hide"/>

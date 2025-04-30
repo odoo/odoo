@@ -1,37 +1,57 @@
+import { RPCError } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { Deferred, Race } from "@web/core/utils/concurrency";
+import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/search/action_hook";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "./sample_server";
 
-import { EventBus, onWillStart, onWillUpdateProps, status, useComponent } from "@odoo/owl";
+import {
+    EventBus,
+    onWillStart,
+    onWillUnmount,
+    onWillUpdateProps,
+    status,
+    useComponent,
+} from "@odoo/owl";
 
 /**
+ * @typedef {import("@web/env").OdooEnv} OdooEnv
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
+ * @typedef {import("services").ServiceFactories} Services
  */
 
 export class Model {
+    static services = [];
+
     /**
-     * @param {Object} env
-     * @param {Object} services
+     * @param {OdooEnv} env
+     * @param {SearchParams} params
+     * @param {Services} services
      */
     constructor(env, params, services) {
         this.env = env;
         this.orm = services.orm;
         this.bus = new EventBus();
+        this.isReady = false;
+        this.whenReady = new Deferred();
+        this.whenReady.then(() => {
+            this.isReady = true;
+            this.notify();
+        });
         this.setup(params, services);
     }
 
     /**
-     * @param {Object} params
-     * @param {Object} services
+     * @param {SearchParams} params
+     * @param {Services} services
      */
     setup(/* params, services */) {}
 
     /**
-     * @param {SearchParams} searchParams
+     * @param {Partial<SearchParams>} _params
      */
-    async load(/* searchParams */) {}
+    async load(_params) {}
 
     /**
      * This function is meant to be overriden by models that want to implement
@@ -60,10 +80,9 @@ export class Model {
         this.bus.trigger("update");
     }
 }
-Model.services = [];
 
 /**
- * @param {Object} props
+ * @param {Record<string, unknown>} props
  * @returns {SearchParams}
  */
 function getSearchParams(props) {
@@ -92,7 +111,8 @@ export function useModel(ModelClass, params, options = {}) {
     const model = new ModelClass(component.env, params, services);
     onWillStart(async () => {
         await options.beforeFirstLoad?.();
-        return model.load(component.props);
+        await model.load(component.props);
+        model.whenReady.resolve();
     });
     onWillUpdateProps((nextProps) => model.load(nextProps));
     return model;
@@ -103,9 +123,7 @@ export function useModel(ModelClass, params, options = {}) {
  * @param {T} ModelClass
  * @param {Object} params
  * @param {Object} [options]
- * @param {Function} [options.onUpdate]
- * @param {Function} [options.onWillStart]
- * @param {Function} [options.onWillStartAfterLoad]
+ * @param {Function} [options.lazy=false]
  * @returns {InstanceType<T>}
  */
 export function useModelWithSampleData(ModelClass, params, options = {}) {
@@ -125,26 +143,23 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
 
     const model = new ModelClass(component.env, params, services);
 
-    useBus(
-        model.bus,
-        "update",
-        options.onUpdate ||
-            (() => {
-                component.render(true); // FIXME WOWL reactivity
-            })
-    );
+    const onUpdate = () => component.render(true);
+    model.bus.addEventListener("update", onUpdate);
+    onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
 
     const globalState = component.props.globalState || {};
     const localState = component.props.state || {};
     let useSampleModel =
         component.props.useSampleModel &&
         (!("useSampleModel" in globalState) || globalState.useSampleModel);
-    model.useSampleModel = useSampleModel;
+    model.useSampleModel = false;
     const orm = model.orm;
     let sampleORM = localState.sampleORM;
-    let started = false;
 
-    async function load(props) {
+    /**
+     * @param {Record<string, unknown>} props
+     */
+    async function _load(props) {
         const searchParams = getSearchParams(props);
         await model.load(searchParams);
         if (useSampleModel && !model.hasData()) {
@@ -154,23 +169,31 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
             model.orm = sampleORM;
             await model.load(searchParams);
             model.orm = orm;
+            model.useSampleModel = true;
         } else {
             useSampleModel = false;
             model.useSampleModel = useSampleModel;
         }
-        if (started) {
+        model.whenReady.resolve(); // resolve after the first successful load
+        if (status(component) === "mounted") {
             model.notify();
         }
     }
-    onWillStart(async () => {
-        if (options.onWillStart) {
-            await options.onWillStart();
+    const race = new Race();
+    const load = (props) => race.add(_load(props));
+    onWillStart(() => {
+        const prom = load(component.props);
+        if (options.lazy) {
+            // in-house error handling as we're out of willStart
+            prom.catch((e) => {
+                if (e instanceof RPCError) {
+                    component.env.config.historyBack();
+                }
+                throw e;
+            });
+        } else {
+            return prom;
         }
-        await load(component.props);
-        if (options.onWillStartAfterLoad) {
-            await options.onWillStartAfterLoad();
-        }
-        started = true;
     });
     onWillUpdateProps((nextProps) => {
         useSampleModel = false;
@@ -183,9 +206,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
                 return { useSampleModel };
             }
         },
-        getLocalState: () => {
-            return { sampleORM };
-        },
+        getLocalState: () => ({ sampleORM }),
     });
 
     return model;

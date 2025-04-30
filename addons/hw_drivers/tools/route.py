@@ -1,18 +1,14 @@
 import functools
-import hashlib
-import hmac
-import json
 import logging
-import time
-from urllib.parse import urlparse, parse_qsl
+import platform
 
-from odoo import tools
+from odoo.addons.iot_base.tools.payload_signature import verify_hmac_signature
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.http import request
+from odoo import http
 from werkzeug.exceptions import Forbidden
 
 _logger = logging.getLogger(__name__)
-WINDOW = 5
 
 
 def protect(endpoint):
@@ -30,7 +26,7 @@ def protect(endpoint):
         signature = request.httprequest.headers.get('Authorization')
         url = request.httprequest.url
         payload = dict(kwargs)
-        if not signature or not verify_hmac_signature(url, payload, signature):
+        if not signature or not verify_hmac_signature(url, payload, signature, helpers.get_token()):
             _logger.error('%s: Authentication failed.', fname)
             return Forbidden('Authentication failed.')
 
@@ -38,50 +34,27 @@ def protect(endpoint):
     return protect_wrapper
 
 
-def hmac_sign(url, payload, t=None):
-    """Compute HMAC signature for the url and the payload of a request with
-    the IoT Box `token` as key.
+def iot_route(route=None, sign=False, linux_only=False, **kwargs):
+    """A wrapper for the http.route function that sets useful defaults for IoT:
+      - ``auth = 'none'``
+      - ``save_session = False``
 
-    :param url: url of the request
-    :param payload: payload of the request
-    :param float t: timestamp to use for the signature, if not provided, the current
-        time is used
-    :return: HMAC signature of the timestamp, url and payload
+    Both auth and sessions are useless on IoT since we have no DB and no users.
+
+    :param route: The route to be decorated.
+    :param sign: If ``True``, the route will be wrapped with ``@route.protect``.
+    :param linux_only: If ``True``, the route will be forbidden for virtual IoT Boxes.
     """
-    if not t:
-        t = time.time()
+    if 'auth' not in kwargs:
+        kwargs['auth'] = 'none'
+    if 'save_session' not in kwargs:
+        kwargs['save_session'] = False
 
-    parsed_url = urlparse(url)
-    query_params = dict(parse_qsl(parsed_url.query, keep_blank_values=True))
+    http_decorator = http.route(route, **kwargs)
 
-    payload = "%s|%s|%s|%s" % (
-        int(t),
-        parsed_url.path,
-        json.dumps(query_params, sort_keys=True),
-        json.dumps(payload, sort_keys=True),
-    )
-    return hmac.new(helpers.get_token().encode(), payload.encode(), hashlib.sha256).hexdigest()
+    def decorator(endpoint):
+        if linux_only and platform.system() != 'Linux':
+            return None  # Remove the route if not Linux (will return 404)
+        return protect(http_decorator(endpoint)) if sign else http_decorator(endpoint)
 
-
-def verify_hmac_signature(url, payload, signature, t=None, window=WINDOW):
-    """Verify the signature of a payload.
-
-    :param url: url of the request
-    :param payload: payload of the request
-    :param signature: signature to verify
-    :param float t: timestamp to use for the signature, if not provided, the
-        current time is used
-    :param int window: fuzz window to account for slow fingers, network
-        latency, desynchronised clocks, ..., every signature valid between
-        t-window and t+window is considered valid
-    """
-    if not t:
-        t = time.time()
-
-    low = int(t - window)
-    high = int(t + window)
-
-    return next((
-        counter for counter in range(low, high)
-        if tools.consteq(signature, hmac_sign(url, payload, counter))
-    ), None)
+    return decorator

@@ -2,6 +2,7 @@
 
 from hashlib import sha256
 import copy
+import json
 import unittest
 from unittest.mock import patch
 from itertools import zip_longest
@@ -286,7 +287,7 @@ class TestViewSaving(TestViewSavingCommon):
 
 
 @tagged('-at_install', 'post_install')
-class TestCowViewSaving(TestViewSavingCommon):
+class TestCowViewSaving(TestViewSavingCommon, HttpCase):
     def setUp(self):
         super(TestCowViewSaving, self).setUp()
         View = self.env['ir.ui.view']
@@ -305,6 +306,7 @@ class TestCowViewSaving(TestViewSavingCommon):
             'arch': '<div position="inside">, extended content</div>',
             'key': 'website.extension_view',
         })
+        self.headers = {"Content-Type": "application/json"}
 
     def test_cow_on_base_after_extension(self):
         View = self.env['ir.ui.view']
@@ -1161,6 +1163,7 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertTrue(specific_child_view in base_view_2.inherit_children_ids, "D' should be under B")
 
     def test_no_cow_on_translate(self):
+        self.authenticate('admin', 'admin')
         french = self.env['res.lang']._activate_lang('fr_FR')
         self.env['ir.module.module']._load_module_terms(['website'], [french.code])
         # Make sure res.lang.get_installed is recomputed
@@ -1173,8 +1176,13 @@ class TestCowViewSaving(TestViewSavingCommon):
         root = html.fromstring(self.base_view.arch, parser=html.HTMLParser(encoding="utf-8"))
         to_translate = root.text_content()
         sha = sha256(to_translate.encode()).hexdigest()
-        view.web_update_field_translations('arch_db', {french.code: {sha: 'contenu de base'}})
-
+        payload = self.build_rpc_payload({
+            'model': view._name,
+            'record_id': view.id,
+            'field_name': 'arch_db',
+            'translations': {french.code: {sha: 'contenu de base'}},
+        })
+        self.url_open('/web_editor/field/translation/update', data=json.dumps(payload), headers=self.headers)
         new_specific_views = View.search([('website_id', '!=', None)])
         self.assertEqual(len(old_specific_views), len(new_specific_views), "No additional specific view must have been created")
         self.assertTrue(view.arch.index('contenu de base') > 0, "New translation must appear in view")
@@ -1263,7 +1271,7 @@ class Crawler(HttpCase):
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
         json = {'params': {'key': '_website_event.index'}}
-        response = self.opener.post(url=url, json=json)
+        response = self.url_open(url=url, json=json)
         res = response.json()['result']
 
         self.assertEqual(
@@ -1301,7 +1309,7 @@ class Crawler(HttpCase):
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
         json = {'params': {'key': '_website_event.index'}}
-        response = self.opener.post(url=url, json=json)
+        response = self.url_open(url=url, json=json)
         res = response.json()['result']
         self.assertEqual(
             [v['name'] for v in res],
@@ -1336,7 +1344,7 @@ class Crawler(HttpCase):
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
         json = {'params': {'key': '_website_event.index'}}
-        response = self.opener.post(url=url, json=json)
+        response = self.url_open(url=url, json=json)
         res = response.json()['result']
         self.assertEqual(
             [v['name'] for v in res],
@@ -1474,7 +1482,7 @@ class Crawler(HttpCase):
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
         json = {'params': {'key': '_website_sale.products'}}
-        response = self.opener.post(url=url, json=json)
+        response = self.url_open(url=url, json=json)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()['result']), 1, "Only '_theme_kea_sale.products' should be returned as it is the only customize_show related view in website 2 context")
         self.assertEqual(response.json()['result'][0]['key'], '_theme_kea_sale.products', "Only '_theme_kea_sale.products' should be returned")
@@ -1485,7 +1493,7 @@ class Crawler(HttpCase):
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
         json = {'params': {'key': '_website_sale.products'}}
-        response = self.opener.post(url=url, json=json)
+        response = self.url_open(url=url, json=json)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()['result']), 1, "Only '_website_sale.child_view_w1' should be returned as it is the only customize_show related view in website 1 context")
         self.assertEqual(response.json()['result'][0]['key'], '_website_sale.child_view_w1', "Only '_website_sale.child_view_w1' should be returned")

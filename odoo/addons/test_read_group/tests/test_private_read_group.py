@@ -910,7 +910,7 @@ class TestPrivateReadGroup(common.TransactionCase):
                     AND "test_read_group_task__user_ids"."user_id" IN (
                         SELECT "test_read_group_user"."id"
                         FROM "test_read_group_user"
-                        WHERE "test_read_group_user"."id" = %s
+                        WHERE "test_read_group_user"."id" IN %s
                     )
                 )
             GROUP BY "test_read_group_task__user_ids"."user_id"
@@ -1153,7 +1153,7 @@ class TestPrivateReadGroup(common.TransactionCase):
                     AND "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id" IN (
                         SELECT "test_read_group_related_base"."id"
                         FROM "test_read_group_related_base"
-                        WHERE "test_read_group_related_base"."id" = %s
+                        WHERE "test_read_group_related_base"."id" IN %s
                     )
                 )
             GROUP BY "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id"
@@ -1175,3 +1175,13 @@ class TestPrivateReadGroup(common.TransactionCase):
         Model = self.env['test_read_group.related_bar']
         field_info = Model.fields_get(['computed_base_ids'], ['groupable'])
         self.assertFalse(field_info['computed_base_ids']['groupable'])
+
+    def test_duplicate_arguments(self):
+        Model = self.env['test_read_group.aggregate']
+        Model.create({'key': 1, 'value': 5})
+        self.assertEqual(
+            Model._read_group([], groupby=['key', 'key'], aggregates=['value:sum', 'value:sum', 'key:sum']),
+            [
+                (1, 1, 5, 5, 1),
+            ],
+        )

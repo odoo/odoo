@@ -19,7 +19,7 @@ const getRandomTable = () => {
 
 const getRandomTableWithOrder = () => {
     const tables = posmodel.currentFloor.table_ids.filter(
-        (table) => table["<-pos.order.table_id"].length > 0
+        (table) => table.backLink("<-pos.order.table_id").length > 0
     );
     return tables[Math.floor(Math.random() * tables.length)].table_number;
 };

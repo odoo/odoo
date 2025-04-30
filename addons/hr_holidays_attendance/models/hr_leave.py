@@ -19,7 +19,7 @@ class HrLeave(models.Model):
     @api.depends('holiday_status_id')
     def _compute_overtime_deductible(self):
         for leave in self:
-            leave.overtime_deductible = leave.holiday_status_id.overtime_deductible and leave.holiday_status_id.requires_allocation == 'no'
+            leave.overtime_deductible = leave.holiday_status_id.overtime_deductible and not leave.holiday_status_id.requires_allocation
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -67,12 +67,6 @@ class HrLeave(models.Model):
                     'duration': -1 * duration,
                 })
 
-    def action_reset_confirm(self):
-        overtime_leaves = self.filtered('overtime_deductible')
-        res = super().action_reset_confirm()
-        overtime_leaves.overtime_id.sudo().unlink()
-        return res
-    
     def action_confirm(self):
         res = super().action_confirm()
         self._check_overtime_deductible(self)

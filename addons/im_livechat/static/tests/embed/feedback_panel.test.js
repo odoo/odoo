@@ -21,6 +21,7 @@ import {
     waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
+
 defineLivechatModels();
 
 test("Do not ask feedback if empty", async () => {

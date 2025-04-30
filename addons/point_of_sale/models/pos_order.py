@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import json
 from datetime import datetime
 from markupsafe import Markup
 from itertools import groupby
@@ -27,6 +28,7 @@ class PosOrder(models.Model):
     _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin", "mail.thread"]
     _description = "Point of Sale Orders"
     _order = "date_order desc, name desc, id desc"
+    _mailing_enabled = True
 
     # This function deals with orders that belong to a closed session. It attempts to find
     # any open session that can be used to capture the order. If no open session is found,
@@ -47,7 +49,7 @@ class PosOrder(models.Model):
         ], limit=1)
 
         if open_session:
-            _logger.warning('Using open session %s for saving order %s', open_session.name, order['name'])
+            _logger.warning('Using open session %s for uuid number %s', open_session.name, order['uuid'])
             return open_session
 
         raise UserError(_('No open session available. Please open a new session to capture the order.'))
@@ -88,7 +90,11 @@ class PosOrder(models.Model):
             })
             pos_order = pos_order.with_company(pos_order.company_id)
         else:
-            pos_order = self.env['pos.order'].browse(order.get('id'))
+            pos_order = existing_order
+
+            # If the order is belonging to another session, it must be moved to the current session first
+            if order.get('session_id') and order['session_id'] != pos_order.session_id.id:
+                pos_order.write({'session_id': order['session_id']})
 
             # Save lines and payments before to avoid exception if a line is deleted
             # when vals change the state to 'paid'
@@ -97,6 +103,8 @@ class PosOrder(models.Model):
                     pos_order.write({field: order.get(field)})
                     order[field] = []
 
+            del order['uuid']
+            del order['access_token']
             pos_order.write(order)
 
         for model_name, mapping in record_uuid_mapping.items():
@@ -117,7 +125,7 @@ class PosOrder(models.Model):
 
     def _process_saved_order(self, draft):
         self.ensure_one()
-        if not draft:
+        if not draft and self.state != 'cancel':
             try:
                 self.action_pos_order_paid()
             except psycopg2.DatabaseError:
@@ -159,7 +167,7 @@ class PosOrder(models.Model):
         prec_acc = order.currency_id.decimal_places
 
         # Recompute amount paid because we don't trust the client
-        order.amount_paid = order._compute_amount_paid()
+        order.write({'amount_paid': order._compute_amount_paid()})
 
         if not draft and not float_is_zero(pos_order['amount_return'], prec_acc):
             cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
@@ -190,11 +198,21 @@ class PosOrder(models.Model):
     @api.model
     def _get_invoice_lines_values(self, line_values, pos_line, move_type):
         # correct quantity sign based on move type and if line is refund.
-        is_refund = line_values.get('is_refund', False)
+        is_refund_order = pos_line.order_id.amount_total < 0.0
         qty_sign = -1 if (
-            (move_type == 'out_invoice' and is_refund)
-            or (move_type == 'out_refund' and not is_refund)
+            (move_type == 'out_invoice' and is_refund_order)
+            or (move_type == 'out_refund' and not is_refund_order)
         ) else 1
+
+        if line_values['product_id'].type == 'combo':
+            quantity = int(line_values['quantity']) if line_values['quantity'] == int(
+                line_values['quantity']) else line_values['quantity']
+            return {
+                'display_type': 'line_section',
+                'name': f"{line_values['product_id'].name} x {quantity}",
+                'quantity': qty_sign * line_values['quantity'],
+                'product_uom_id': line_values['uom_id'].id,
+            }
 
         return {
             'product_id': line_values['product_id'].id,
@@ -204,6 +222,7 @@ class PosOrder(models.Model):
             'name': line_values['name'],
             'tax_ids': [(6, 0, line_values['tax_ids'].ids)],
             'product_uom_id': line_values['uom_id'].id,
+            'extra_tax_data': self.env['account.tax']._export_base_line_extra_tax_data(line_values),
         }
 
     def _prepare_invoice_lines(self, move_type):
@@ -280,6 +299,7 @@ class PosOrder(models.Model):
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=0, readonly=True,
         help='The rate of the currency to the currency of rate applicable at the date of the order')
 
+    is_refund = fields.Boolean(string='Is Refund', readonly=True, default=False)
     state = fields.Selection(
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted')],
         'Status', readonly=True, copy=False, default='draft', index=True)
@@ -507,7 +527,7 @@ class PosOrder(models.Model):
         for order in self:
             if vals.get('payment_ids'):
                 order._compute_prices()
-                totally_paid_or_more = float_compare(order.amount_paid, order.amount_total, precision_rounding=order.currency_id.rounding)
+                totally_paid_or_more = order.currency_id.compare_amounts(order.amount_paid, order.amount_total)
                 if totally_paid_or_more < 0 and order.state in ['paid', 'done']:
                     raise UserError(_('The paid amount is different from the total amount of the order.'))
                 elif totally_paid_or_more > 0 and order.state == 'paid':
@@ -797,7 +817,7 @@ class PosOrder(models.Model):
             'invoice_user_id': self.user_id.id,
             'fiscal_position_id': fiscal_position.id,
             'invoice_line_ids': self._prepare_invoice_lines(move_type),
-            'invoice_payment_term_id': self.partner_id.property_payment_term_id.id or False,
+            'invoice_payment_term_id': False,
             'invoice_cash_rounding_id': rounding_method.id,
         }
         if is_single_order and self.refunded_order_id.account_move:
@@ -998,13 +1018,16 @@ class PosOrder(models.Model):
             'res_id': move.id,
         }
 
+    def _get_invoice_post_context(self):
+        return {"skip_invoice_sync": True}
+
     def _generate_pos_order_invoice(self):
         self.state = 'done'
 
         company = self.company_id
         invoice_vals = self._prepare_invoice_vals()
         invoice = self._create_invoice(invoice_vals)
-        invoice.sudo().with_company(company).with_context(skip_invoice_sync=True)._post()
+        invoice.sudo().with_company(company).with_context(**self._get_invoice_post_context())._post()
 
         # invoice payments
         payment_moves_from_closed_sessions = {}
@@ -1112,14 +1135,19 @@ class PosOrder(models.Model):
         _logger.info("PoS synchronisation #%d finished", sync_token)
         return pos_order_ids.read_pos_data(orders, config_id)
 
+    @api.model
+    def read_pos_data_uuid(self, uuid):
+        order = self.search([('uuid', '=', uuid)], limit=1)
+        if not order:
+            return {}
+        return order.read_pos_data([], order.config_id.id)
+
     def read_pos_data(self, data, config_id):
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
-        session_ids = set({order.get('session_id') for order in data})
-        is_new_session = any(order.get('session_id') not in session_ids for order in data)
 
         return {
             'pos.order': self.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.session': self.session_id._load_pos_data({})['data'] if config_id and is_new_session else [],
+            'pos.session': [],
             'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.pack.operation.lot': self.lines.pack_lot_ids.read(self.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
@@ -1385,16 +1413,18 @@ class PosOrderLine(models.Model):
     full_product_name = fields.Char('Full Product Name')
     customer_note = fields.Char('Customer Note')
     refund_orderline_ids = fields.One2many('pos.order.line', 'refunded_orderline_id', 'Refund Order Lines', help='Orderlines in this field are the lines that refunded this orderline.')
-    refunded_orderline_id = fields.Many2one('pos.order.line', 'Refunded Order Line', help='If this orderline is a refund, then the refunded orderline is specified in this field.')
+    refunded_orderline_id = fields.Many2one('pos.order.line', 'Refunded Order Line', index='btree_not_null', help='If this orderline is a refund, then the refunded orderline is specified in this field.')
     refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
     uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
     note = fields.Char('Product Note')
 
-    combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent') # FIXME rename to parent_line_id
+    combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent', index='btree_not_null') # FIXME rename to parent_line_id
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids
 
     combo_item_id = fields.Many2one('product.combo.item', string='Combo Item')
     is_edited = fields.Boolean('Edited', default=False)
+    # Technical field holding custom data for the taxes computation engine.
+    extra_tax_data = fields.Json()
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -1404,7 +1434,8 @@ class PosOrderLine(models.Model):
     def _load_pos_data_fields(self, config_id):
         return [
             'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit', 'uuid', 'price_subtotal', 'price_subtotal_incl', 'order_id', 'note', 'price_type',
-            'product_id', 'discount', 'tax_ids', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids', 'combo_item_id', 'refund_orderline_ids'
+            'product_id', 'discount', 'tax_ids', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids', 'combo_item_id', 'refund_orderline_ids',
+            'extra_tax_data',
         ]
 
     @api.model
@@ -1594,7 +1625,7 @@ class PosOrderLine(models.Model):
             group_id = line._get_procurement_group()
             if not group_id:
                 group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
-                line.order_id.with_context(backend_recomputation=True).write({'procurement_group_id': group_id})
+                line.order_id.write({'procurement_group_id': group_id})
 
             values = line._prepare_procurement_values(group_id=group_id)
             product_qty = line.qty
@@ -1732,7 +1763,7 @@ class PosPackOperationLot(models.Model):
     _rec_name = "lot_name"
     _inherit = ['pos.load.mixin']
 
-    pos_order_line_id = fields.Many2one('pos.order.line')
+    pos_order_line_id = fields.Many2one('pos.order.line', index='btree_not_null')
     order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
     lot_name = fields.Char('Lot Name')
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)

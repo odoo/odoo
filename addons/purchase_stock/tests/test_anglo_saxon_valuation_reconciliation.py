@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from freezegun import freeze_time
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
@@ -303,6 +304,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'code': 'cash.basis.transfer.account',
             'name': 'cash_basis_transfer_account',
             'account_type': 'income',
+            'reconcile': True,
         })
 
         tax_account_1 = self.env['account.account'].create({
@@ -311,10 +313,10 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'account_type': 'income',
         })
 
-        tax_tags = self.env['account.account.tag'].create({
+        tax_tags = self.env['account.account.tag'].create([{
             'name': 'tax_tag_%s' % str(i),
             'applicability': 'taxes',
-        } for i in range(8))
+        } for i in range(8)])
 
         cash_basis_tax_a_third_amount = self.env['account.tax'].create({
             'name': 'tax_1',
@@ -525,6 +527,8 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         units when calculated by valuation mechanisms.
         """
         self.env.company.currency_id = self.env.ref('base.IQD').id
+        # FIXME: when rounding method is `round_per_line` ?
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
         self.test_product_order.standard_price = 500
         self.stock_account_product_categ.property_cost_method = 'average'
         self.env['res.currency.rate'].create({
@@ -552,6 +556,11 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         purchase_order.invoice_ids.action_post()
         post_bill_remaining_value = purchase_order.picking_ids.move_ids.stock_valuation_layer_ids.remaining_value
         self.assertEqual(post_bill_remaining_value, pre_bill_remaining_value)
+        amls = self.env['account.move.line'].search([('product_id', '=', self.test_product_order.id)])
+        self.assertRecordValues(
+            amls,
+            [{'debit': 0.0, 'credit': 6435.0}, {'debit': 6435.0, 'credit': 0.0}, {'debit': 6435.0, 'credit': 0.0}]
+        )
 
     def test_manual_cost_adjustment_journal_items_quantity(self):
         """ The quantity field of `account.move.line` should be permitted to be zero, e.g., in the
@@ -648,3 +657,55 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                 {'journal_id': stock_journal_id,    'balance':  -1.79},
             ],
         )
+
+    def test_exchange_rate_difference_post_bill_prior_to_reception(self):
+        """ Billing/invoicing before validating a reception for some product that is valuated which
+        has incurred some (foreign) currency exchange difference in the time between those two
+        actions should result in that difference appearing under the 'Stock Valuation' account
+
+        (as opposed to the regular exchange account)
+        """
+        avco_prod = self.test_product_order
+        avco_prod.purchase_method = 'purchase'
+        tomorrow = fields.Date.today() + timedelta(days=1)
+        self.env.ref('base.EUR').active = True
+        self.env['res.currency.rate'].create([
+            {'name': fields.Date.today(), 'currency_id': self.ref('base.EUR'), 'rate': 0.9},
+            {'name': tomorrow, 'currency_id': self.ref('base.EUR'), 'rate': 0.8},
+        ])
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': self.ref('base.EUR'),
+            'order_line': [Command.create({
+                'product_id': avco_prod.id,
+                'product_qty': 10,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+        with (freeze_time(tomorrow)):
+            receipt = purchase_order.picking_ids
+            receipt.button_validate()
+
+            cd = self.company_data
+            stock_input_account, tax_purchase_account, account_payable_account, stock_valuation_account = (
+                cd['default_account_stock_in'],
+                cd['default_account_tax_purchase'],
+                cd['default_account_payable'],
+                cd['default_account_stock_valuation'],
+            )
+            self.assertRecordValues(
+                self.env['account.move.line'].search([], order='id asc'),
+                [
+                    {'account_id': stock_input_account.id,       'debit': 420.00,   'credit':   0.00},
+                    {'account_id': tax_purchase_account.id,      'debit':  63.00,   'credit':   0.00},
+                    {'account_id': account_payable_account.id,   'debit':   0.00,   'credit': 483.00},
+                    {'account_id': stock_input_account.id,       'debit':   0.00,   'credit': 420.00},
+                    {'account_id': stock_valuation_account.id,   'debit': 420.00,   'credit':   0.00},
+                    {'account_id': stock_input_account.id,       'debit':  46.67,   'credit':   0.00},
+                    {'account_id': stock_valuation_account.id,   'debit':   0.00,   'credit':  46.67},
+                ]
+            )

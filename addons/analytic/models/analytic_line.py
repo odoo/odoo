@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from dateutil.relativedelta import relativedelta
 from lxml.builder import E
 
 from odoo import api, fields, models, _
+from odoo.tools import date_utils
 from odoo.exceptions import ValidationError
-from odoo.osv.expression import OR
+from odoo.fields import Domain
 
 
 class AnalyticPlanFieldsMixin(models.AbstractModel):
@@ -36,13 +37,19 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
         for line in self:
             line.auto_account_id = bool(plan) and line[plan._column_name()]
 
+    def _compute_partner_id(self):
+        # TO OVERRIDE
+        pass
+
     def _inverse_auto_account(self):
         for line in self:
             line[line.auto_account_id.plan_id._column_name()] = line.auto_account_id
 
     def _search_auto_account(self, operator, value):
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
         project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
-        return OR([
+        return Domain.OR([
             [(plan._column_name(), operator, value)]
             for plan in project_plan + other_plans
         ])
@@ -192,3 +199,12 @@ class AccountAnalyticLine(models.Model):
         [('other', 'Other')],
         default='other',
     )
+    fiscal_year_search = fields.Boolean(
+        search='_search_fiscal_date',
+        store=False, exportable=False,
+        export_string_translation=False,
+    )
+
+    def _search_fiscal_date(self, operator, value):
+        fiscalyear_date_range = self.env.company.compute_fiscalyear_dates(fields.Date.today())
+        return [('date', '>=', fiscalyear_date_range['date_from'] - relativedelta(years=1))]

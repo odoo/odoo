@@ -4,6 +4,7 @@ import os
 from collections import defaultdict
 from datetime import date, datetime
 from functools import wraps
+from markupsafe import Markup
 
 import odoo
 from odoo import models
@@ -80,6 +81,7 @@ class Store:
 
     def __init__(self, records=None, fields=None, extra_fields=None, as_thread=False, **kwargs):
         self.data = {}
+        self.data_id = None
         if records:
             self.add(records, fields, extra_fields, as_thread=as_thread, **kwargs)
 
@@ -197,6 +199,15 @@ class Store:
                 res[model_name] = [dict(sorted(record.items())) for record in records.values()]
         return res
 
+    def resolve_data_request(self, **values):
+        """Add values to the store for the current data request.
+
+        Use case: resolve a specific data request from a client."""
+        if not self.data_id:
+            return self
+        self.add_model_values("DataResponse", {"id": self.data_id, "_resolve": True, **values})
+        return self
+
     def _add_values(self, values, model_name, index=None):
         """Adds values to the store for a given model name and index."""
         target = self.data[model_name][index] if index else self.data[model_name]
@@ -208,6 +219,8 @@ class Store:
                 target[key] = odoo.fields.Datetime.to_string(val)
             elif isinstance(val, date):
                 target[key] = odoo.fields.Date.to_string(val)
+            elif isinstance(val, Markup):
+                target[key] = ["markup", val]
             else:
                 target[key] = val
 
@@ -370,6 +383,8 @@ class Store:
                 return {"id": self.records.id, "type": "guest"}
             if self.records._name == "res.partner":
                 return {"id": self.records.id, "type": "partner"}
+            if self.records._name == "website.visitor":
+                return {"id": self.records.id, "type": "visitor"}
             return self.records.id
 
     class Many(Relation):

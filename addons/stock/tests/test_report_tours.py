@@ -12,7 +12,7 @@ class TestStockReportTour(HttpCase):
     def test_stock_route_diagram_report(self):
         """ Open the route diagram report."""
         # Do not make the test rely on demo data
-        self.env['product.template'].search([('type', '!=', 'service')]).action_archive()
+        self.env['product.template'].search([('type', '!=', 'service')]).write({'active': False})
         self.env['product.template'].create({
             'name': 'Test Storable Product',
             'is_storable': True,

@@ -4,6 +4,7 @@
     <t t-name="web.TreeEditor">
         <div class="o_tree_editor w-100" aria-atomic="true" t-att-class="className">
             <div t-attf-class="o_tree_editor_node d-flex flex-column #{props.readonly ? (props.isSubTree ? 'gap-0' : 'gap-2') : 'gap-1'}">
+                <t t-set="ancestors" t-value="[]"/>
                 <t t-set="node" t-value="tree" />
                 <div class="o_tree_editor_row d-flex align-items-center flex-wrap" t-att-class="{'ps-4': props.isSubTree}">
                     <div class="o_tree_editor_connector d-flex flex-grow-1 align-items-center">
@@ -65,7 +66,7 @@
                 role="button"
                 title="Delete node"
                 aria-label="Delete node"
-                t-on-click="() => this.delete(parent, node)"
+                t-on-click="() => this.delete(ancestors, node)"
                 t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
                 t-on-mouseleave="(ev) => this.highlightNode(ev.target, false)"
             >
@@ -113,6 +114,7 @@
         <t t-foreach="node.children" t-as="child" t-key="child.type + '_' + child_index">
             <div class="o_tree_editor_node" t-att-class="{ 'ps-4': addPadding || props.isSubTree }">
                 <t t-call="web.TreeEditor.{{ child.type }}">
+                    <t t-set="ancestors" t-value="[...ancestors, node]" />
                     <t t-set="parent" t-value="node" />
                     <t t-set="node" t-value="child" />
                 </t>

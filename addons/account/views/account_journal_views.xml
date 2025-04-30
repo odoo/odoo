@@ -45,7 +45,6 @@
                         <div class="oe_title">
                             <label for="name"/>
                             <field name="name_placeholder" invisible="1" force_save="1"/>
-                            <field name="type" invisible="1"/>
                             <h1><field name="name" options="{'placeholder_field': 'name_placeholder'}" required="not type"/></h1>
                         </div>
                         <group>
@@ -111,7 +110,7 @@
                                     </group>
                                     <group name="bank_source" invisible="type != 'credit'">
                                         <label for="bank_statements_source" string="Transaction Feeds" invisible="type != 'credit'" groups="account.group_account_readonly"/>
-                                        <field name="bank_statements_source" nolabel="1" widget="radio" required="type != 'credit'" groups="account.group_account_basic"/>
+                                        <field name="bank_statements_source" nolabel="1" widget="radio" required="type == 'credit'" groups="account.group_account_basic"/>
                                     </group>
                                 </group>
                             </page>
@@ -159,7 +158,7 @@
                                         />
                                         <field name="autocheck_on_post"/>
                                     </group>
-                                    <group string="Email Alias" name="group_email_alias"
+                                    <group string="Emails" name="group_email_alias"
                                            invisible="type not in ('general', 'sale', 'purchase')">
                                         <field name="display_alias_fields" invisible="1"/>
                                         <div class="o_row" colspan="2" invisible="display_alias_fields">
@@ -172,6 +171,7 @@
                                             <field name="alias_name" placeholder="alias"/>@
                                             <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}"/>
                                         </div>
+                                        <field name="incoming_einvoice_notification_email" invisible="type != 'purchase'" placeholder="Enter an email to get notified"/>
                                     </group>
                                     <!-- edi -->
                                     <group name="group_edi_config" string="Electronic Data Interchange" invisible="1"/>
@@ -215,6 +215,8 @@
             <field name="arch" type="xml">
                 <search string="Search Account Journal">
                     <field name="name" string="Journal" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    <field name="activity_user_id" string="Activities of"/>
+                    <field name="activity_type_id" string="Activity type"/> 
                     <filter name="dashboard" string="Favorites" domain="[('show_on_dashboard', '=', True)]"/>
                     <separator/>
                     <filter name="sales" string="Sales" domain="[('type', '=', 'sale')]"/>

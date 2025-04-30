@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_pricelist_item_form" model="ir.ui.view">
+        <field name="name">product.pricelist.item.view.form.inherit</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="sale.product_pricelist_item_form"/>
+        <field name="arch" type="xml">
+            <div id="discount_price_warning" position="after">
+                <div>On the website original price is crossed out.</div>
+            </div>
+            <div id="formula_fixed_price_warning" position="replace">
+                <div>
+                    When prices are calculated through a formula or fixed, the original price is
+                    generally not displayed in the sale order lines or checkout. However, for
+                    specific formula-based pricing rules, the discount can be shown on the shop
+                    page (e.g. product pages and configurators), but not in the cart or at checkout.
+                    In these cases, the calculated/fixed price is set as the unit price with 0% discount
+                    in the order.
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

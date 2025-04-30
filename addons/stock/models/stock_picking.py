@@ -10,9 +10,10 @@ from collections import defaultdict
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.osv import expression
-from odoo.tools import format_datetime, format_date, format_list, groupby, SQL
+from odoo.tools import format_datetime, format_date, groupby, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
@@ -41,6 +42,7 @@ class StockPickingType(models.Model):
     code = fields.Selection([('incoming', 'Receipt'), ('outgoing', 'Delivery'), ('internal', 'Internal Transfer')], 'Type of Operation', default='incoming', required=True)
     return_picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type for Returns',
+        index='btree_not_null',
         check_company=True)
     show_entire_packs = fields.Boolean('Move Entire Packages', help="If ticked, you will be able to select entire packages to move")
     warehouse_id = fields.Many2one(
@@ -218,9 +220,9 @@ class StockPickingType(models.Model):
 
     @api.model
     def _search_is_favorite(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise NotImplementedError(_('Operation not supported'))
-        return [('favorite_user_ids', 'in' if (operator == '=') == value else 'not in', self.env.uid)]
+        if operator != 'in':
+            return NotImplemented
+        return [('favorite_user_ids', 'in', [self.env.uid])]
 
     def _compute_is_favorite(self):
         for picking_type in self:
@@ -299,9 +301,16 @@ class StockPickingType(models.Model):
     @api.model
     def _search_display_name(self, operator, value):
         # Try to reverse the `display_name` structure
+        if operator == 'in':
+            return expression.OR(self._search_display_name('=', v) for v in value)
+        if operator == 'not in':
+            return NotImplemented
         parts = isinstance(value, str) and value.split(': ')
         if parts and len(parts) == 2:
             return ['&', ('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]
+        if operator == '=':
+            operator = 'in'
+            value = [value]
         return super()._search_display_name(operator, value)
 
     @api.depends('code')
@@ -373,7 +382,8 @@ class StockPickingType(models.Model):
             }
             for p_date in dates:
                 date_category = self.env["stock.picking"].calculate_date_category(p_date)
-                summaries[picking_type_id]['total_' + date_category] += 1
+                if date_category:
+                    summaries[picking_type_id]['total_' + date_category] += 1
 
         self._prepare_graph_data(summaries)
 
@@ -403,12 +413,6 @@ class StockPickingType(models.Model):
                         "to avoid issues and/or repeated reference values or assign the existing reference sequence to this operation type.")
                 }
             }
-
-    @api.constrains('default_location_dest_id')
-    def _check_default_location(self):
-        for record in self:
-            if record.code == 'mrp_operation' and record.default_location_dest_id.scrap_location:
-                raise ValidationError(_("You cannot set a scrap location as the destination location for a manufacturing type operation."))
 
     @api.model
     def action_redirect_to_barcode_installation(self):
@@ -673,7 +677,7 @@ class StockPicking(models.Model):
     weight_bulk = fields.Float(
         'Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
     shipping_weight = fields.Float(
-        "Weight for Shipping", compute='_compute_shipping_weight', readonly=False,
+        "Weight for Shipping", compute='_compute_shipping_weight', readonly=False, store=True,
         help="Total weight of packages and products not in a package. "
         "Packages with no shipping weight specified will default to their products' total weight. "
         "This is the weight used to compute the cost of the shipping.")
@@ -712,6 +716,11 @@ class StockPicking(models.Model):
         string='Date Category', store=False,
         search='_search_date_category', readonly=True
     )
+    partner_country_id = fields.Many2one('res.country', related='partner_id.country_id')
+    picking_warning_text = fields.Text(
+        "Picking Instructions",
+        help="Internal instructions for the partner or its parent company as set by the user.",
+        compute='_compute_picking_warning_text')
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -734,12 +743,12 @@ class StockPicking(models.Model):
             picking.has_deadline_issue = picking.date_deadline and picking.date_deadline < picking.scheduled_date or False
 
     def _search_date_category(self, operator, value):
-        if operator != '=':
-            raise NotImplementedError(_('Operation not supported'))
-        search_domain = self.date_category_to_domain(value)
-        return expression.AND([
-            [('scheduled_date', operator, value)] for operator, value in search_domain
-        ])
+        if operator != 'in':
+            return NotImplemented
+        return expression.OR(
+            self.date_category_to_domain('scheduled_date', item)
+            for item in value
+        )
 
     @api.depends('move_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -964,18 +973,12 @@ class StockPicking(models.Model):
                 continue
             picking = picking.with_company(picking.company_id)
             if picking.picking_type_id:
-                # To be removed in 17.3+, as default location src/dest are now required.
-                location_dest, location_src = self.env['stock.warehouse']._get_partner_locations()
-                if picking.picking_type_id.default_location_src_id:
-                    location_src = picking.picking_type_id.default_location_src_id
+                location_src = picking.picking_type_id.default_location_src_id
                 if location_src.usage == 'supplier' and picking.partner_id:
                     location_src = picking.partner_id.property_stock_supplier
-
-                if picking.picking_type_id.default_location_dest_id:
-                    location_dest = picking.picking_type_id.default_location_dest_id
+                location_dest = picking.picking_type_id.default_location_dest_id
                 if location_dest.usage == 'customer' and picking.partner_id:
                     location_dest = picking.partner_id.property_stock_customer
-
                 picking.location_id = location_src.id
                 picking.location_dest_id = location_dest.id
 
@@ -983,6 +986,16 @@ class StockPicking(models.Model):
     def _compute_return_count(self):
         for picking in self:
             picking.return_count = len(picking.return_ids)
+
+    @api.depends('partner_id.name', 'partner_id.parent_id.name')
+    def _compute_picking_warning_text(self):
+        for picking in self:
+            text = ''
+            if partner_msg := picking.partner_id.picking_warn_msg:
+                text += partner_msg + '\n'
+            if parent_msg := picking.partner_id.parent_id.picking_warn_msg:
+                text += parent_msg + '\n'
+            picking.picking_warning_text = text
 
     def _get_next_transfers(self):
         next_pickings = self.move_ids.move_dest_ids.picking_id
@@ -993,17 +1006,28 @@ class StockPicking(models.Model):
         self.show_next_pickings = len(self._get_next_transfers()) != 0
 
     def _search_products_availability_state(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+
+        invalid_states = ('done', 'cancel', 'draft')
+        if False in value:
+            return ['|', ('state', 'in', invalid_states), *self._search_products_availability_state('in', value - {False})]
+        value = set(self._fields['products_availability_state'].get_values(self.env)) & value
+        if not value:
+            return expression.FALSE_DOMAIN
+
         def _get_comparison_date(move):
             return move.picking_id.scheduled_date
 
-        if not value:
-            raise UserError(_('Search not supported without a value.'))
+        def _filter_picking_moves(picking):
+            try:
+                return picking.move_ids._match_searched_availability(operator, value, _get_comparison_date)
+            except UserError:
+                # invalid value for search
+                return False
 
-        selected_picking_ids = []
-        for picking in self.env['stock.picking'].search([('state', 'not in', ('done', 'cancel', 'draft'))]):
-            if picking.move_ids._match_searched_availability(operator, value, _get_comparison_date):
-                selected_picking_ids.append(picking.id)
-        return [('id', 'in', selected_picking_ids)]
+        pickings = self.env['stock.picking'].search([('state', 'not in', invalid_states)], order='id').filtered(_filter_picking_moves)
+        return [('id', 'in', pickings.ids)]
 
     def _get_show_allocation(self, picking_type_id):
         """ Helper method for computing "show_allocation" value.
@@ -1037,8 +1061,9 @@ class StockPicking(models.Model):
 
     @api.model
     def _search_delay_alert_date(self, operator, value):
-        late_stock_moves = self.env['stock.move'].search([('delay_alert_date', operator, value)])
-        return [('move_ids', 'in', late_stock_moves.ids)]
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        return [('move_ids.delay_alert_date', operator, value)]
 
     @api.onchange('picking_type_id', 'partner_id')
     def _onchange_picking_type(self):
@@ -1053,21 +1078,6 @@ class StockPicking(models.Model):
                 if not move.product_id:
                     continue
                 move.description_picking = move.product_id._get_description(move.picking_type_id)
-
-        if self.partner_id and self.partner_id.picking_warn:
-            if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
-                partner = self.partner_id.parent_id
-            elif self.partner_id.picking_warn not in ('no-message', 'block') and self.partner_id.parent_id.picking_warn == 'block':
-                partner = self.partner_id.parent_id
-            else:
-                partner = self.partner_id
-            if partner.picking_warn != 'no-message':
-                if partner.picking_warn == 'block':
-                    self.partner_id = False
-                return {'warning': {
-                    'title': ("Warning for %s") % partner.name,
-                    'message': partner.picking_warn_msg
-                }}
 
     @api.onchange('location_dest_id')
     def _onchange_location_dest_id(self):
@@ -1121,10 +1131,6 @@ class StockPicking(models.Model):
         pickings._autoconfirm_picking()
 
         for picking, vals in zip(pickings, vals_list):
-            # set partner as follower
-            if vals.get('partner_id'):
-                if picking.location_id.usage == 'supplier' or picking.location_dest_id.usage == 'customer':
-                    picking.message_subscribe([vals.get('partner_id')])
             if vals.get('picking_type_id'):
                 for move in picking.move_ids:
                     if not move.description_picking:
@@ -1134,18 +1140,13 @@ class StockPicking(models.Model):
     def write(self, vals):
         if vals.get('picking_type_id') and any(picking.state in ('done', 'cancel') for picking in self):
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
-        # set partner as a follower and unfollow old partner
-        if vals.get('partner_id'):
-            for picking in self:
-                if picking.location_id.usage == 'supplier' or picking.location_dest_id.usage == 'customer':
-                    if picking.partner_id:
-                        picking.message_unsubscribe(picking.partner_id.ids)
-                    picking.message_subscribe([vals.get('partner_id')])
         if vals.get('picking_type_id'):
             picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
             for picking in self:
                 if picking.picking_type_id != picking_type:
                     picking.name = picking_type.sequence_id.next_by_id()
+                    vals['location_id'] = picking_type.default_location_src_id.id
+                    vals['location_dest_id'] = picking_type.default_location_dest_id.id
         res = super().write(vals)
         if vals.get('signature'):
             for picking in self:
@@ -1401,8 +1402,8 @@ class StockPicking(models.Model):
             if pickings_without_lots:
                 message += _(
                     '\n\nTransfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s.',
-                    transfer_list=format_list(self.env, pickings_without_lots.mapped('name')),
-                    product_list=format_list(self.env, products_without_lots.mapped('display_name')),
+                    transfer_list=pickings_without_lots.mapped('name'),
+                    product_list=products_without_lots.mapped('display_name'),
                 )
             if message:
                 raise UserError(message.lstrip())
@@ -1422,7 +1423,6 @@ class StockPicking(models.Model):
         # Sanity checks.
         if not self.env.context.get('skip_sanity_check', False):
             self._sanity_check()
-        self.message_subscribe([self.env.user.partner_id.id])
 
         # Run the pre-validation wizards. Processing a pre-validation wizard should work on the
         # moves and/or the context and never call `_action_done`.
@@ -1698,7 +1698,7 @@ class StockPicking(models.Model):
                 'mail.mail_activity_data_warning',
                 date.today(),
                 note=note,
-                user_id=responsible.id or SUPERUSER_ID
+                user_id=responsible.id,
             )
 
     def _log_less_quantities_than_expected(self, moves):
@@ -1807,7 +1807,7 @@ class StockPicking(models.Model):
 
         The categories are based on current user's timezone (e.g. "today" will last
         between 00:00 and 23:59 local time). The datetime itself is assumed to be
-        in UTC. If the datetime is falsy, this function returns "none".
+        in UTC. If the datetime is falsy, this function returns "".
         """
         start_today = fields.Datetime.context_timestamp(
             self.env.user, fields.Datetime.now()
@@ -1818,7 +1818,7 @@ class StockPicking(models.Model):
         start_day_2 = start_today + timedelta(days=2)
         start_day_3 = start_today + timedelta(days=3)
 
-        date_category = "none"
+        date_category = ""
 
         if datetime:
             datetime = datetime.astimezone(pytz.UTC)
@@ -1838,7 +1838,7 @@ class StockPicking(models.Model):
         return date_category
 
     @api.model
-    def date_category_to_domain(self, date_category):
+    def date_category_to_domain(self, field_name, date_category):
         """
         Given a date category, returns a list of tuples of operator and value
         that can be used in a domain to filter records based on their scheduled date.
@@ -1864,7 +1864,7 @@ class StockPicking(models.Model):
             self.env.user, fields.Datetime.now()
         ).replace(hour=0, minute=0, second=0, microsecond=0)
 
-        start_today = start_today.astimezone(pytz.UTC)
+        start_today = start_today.astimezone(pytz.UTC).replace(tzinfo=None)
 
         start_yesterday = start_today + timedelta(days=-1)
         start_day_1 = start_today + timedelta(days=1)
@@ -1872,12 +1872,12 @@ class StockPicking(models.Model):
         start_day_3 = start_today + timedelta(days=3)
 
         date_category_to_search_domain = {
-            "before": [("<", start_yesterday)],
-            "yesterday": [(">=", start_yesterday), ("<", start_today)],
-            "today": [(">=", start_today), ("<", start_day_1)],
-            "day_1": [(">=", start_day_1), ("<", start_day_2)],
-            "day_2": [(">=", start_day_2), ("<", start_day_3)],
-            "after": [(">=", start_day_3)],
+            "before": [(field_name, "<", start_yesterday)],
+            "yesterday": [(field_name, ">=", start_yesterday), (field_name, "<", start_today)],
+            "today": [(field_name, ">=", start_today), (field_name, "<", start_day_1)],
+            "day_1": [(field_name, ">=", start_day_1), (field_name, "<", start_day_2)],
+            "day_2": [(field_name, ">=", start_day_2), (field_name, "<", start_day_3)],
+            "after": [(field_name, ">=", start_day_3)],
         }
 
         return date_category_to_search_domain.get(date_category)

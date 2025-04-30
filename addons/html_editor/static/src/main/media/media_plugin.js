@@ -11,6 +11,7 @@ import { rpc } from "@web/core/network/rpc";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
 
@@ -23,11 +24,16 @@ export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
     static shared = ["savePendingImages"];
+    static defaultConfig = {
+        allowImage: true,
+        allowMediaDialogVideo: true,
+    };
     resources = {
         user_commands: [
             {
                 id: "replaceImage",
-                title: _t("Replace media"),
+                description: _t("Replace media"),
+                icon: "fa-exchange",
                 run: this.replaceImage.bind(this),
             },
             {
@@ -39,32 +45,30 @@ export class MediaPlugin extends Plugin {
                 run: this.openMediaDialog.bind(this),
             },
         ],
-        toolbar_groups: withSequence(29, {
-            id: "replace_image",
-            namespace: "image",
-        }),
+        toolbar_groups: withSequence(31, { id: "replace_image", namespaces: ["image"] }),
         toolbar_items: [
             {
                 id: "replace_image",
                 groupId: "replace_image",
                 commandId: "replaceImage",
-                text: "Replace",
             },
         ],
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
         powerbox_items: [
-            ...(this.config.disableImage
-                ? []
-                : [{ categoryId: "media", commandId: "insertMedia" }]),
+            ...(this.config.allowImage ? [{ categoryId: "media", commandId: "insertMedia" }] : []),
         ],
         power_buttons: withSequence(1, { commandId: "insertMedia" }),
 
         /** Handlers */
-        clean_handlers: this.clean.bind(this),
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalizeMedia.bind(this),
+        selectionchange_handlers: this.selectAroundIcon.bind(this),
 
         unsplittable_node_predicates: isIconElement, // avoid merge
+        clipboard_content_processors: this.clean.bind(this),
+        clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
+
+        selectors_for_feff_providers: () => ICON_SELECTOR,
     };
 
     get recordInfo() {
@@ -157,8 +161,8 @@ export class MediaPlugin extends Plugin {
                 this.onSaveMediaDialog(element, { node: params.node });
             },
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
-            noVideos: !!this.config.disableVideo,
-            noImages: !!this.config.disableImage,
+            noVideos: !this.config.allowMediaDialogVideo,
+            noImages: !this.config.allowImage,
             extraTabs: this.getResource("media_dialog_extra_tabs"),
             ...this.config.mediaModalParams,
             ...params,
@@ -339,6 +343,15 @@ export class MediaPlugin extends Plugin {
             delete el.dataset.bgSrc;
         } else {
             el.setAttribute("src", newAttachmentSrc);
+        }
+    }
+
+    /**
+     * @param {import("@html_editor/core/selection_plugin").SelectionData} param0
+     */
+    selectAroundIcon({ editableSelection: { anchorNode, isCollapsed } }) {
+        if (isCollapsed && closestElement(anchorNode, isIconElement)) {
+            this.dependencies.selection.selectAroundNonEditable();
         }
     }
 }

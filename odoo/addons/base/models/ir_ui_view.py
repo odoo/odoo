@@ -8,19 +8,20 @@ import logging
 import pprint
 import re
 import uuid
-import warnings
 
 from lxml import etree
 from lxml.etree import LxmlError
 from lxml.builder import E
 from markupsafe import Markup
+from contextlib import suppress
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError, AccessError, UserError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path
 from odoo.service.model import get_public_method
-from odoo.tools import config, lazy_property, frozendict, SQL
+from odoo.tools import _, config, frozendict, SQL
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path, get_diff, ConstantMapping
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
@@ -65,7 +66,7 @@ def att_names(name):
 class IrUiViewCustom(models.Model):
     _name = 'ir.ui.view.custom'
     _description = 'Custom View'
-    _order = 'create_date desc'  # search(limit=1) should return the last customization
+    _order = 'create_date desc, id desc'  # search(limit=1) should return the last customization
     _rec_name = 'user_id'
     _allow_sudo_commands = False
 
@@ -201,6 +202,8 @@ actual arch.
          """)
     model_id = fields.Many2one("ir.model", string="Model of the view", compute='_compute_model_id', inverse='_inverse_compute_model_id')
 
+    invalid_locators = fields.Json(compute='_compute_invalid_locators')
+
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')
     def _compute_arch(self):
@@ -300,10 +303,12 @@ actual arch.
             view.model_data_id = data['id']
 
     def _search_model_data_id(self, operator, value):
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
         name = 'name' if isinstance(value, str) else 'id'
         domain = [('model', '=', 'ir.ui.view'), (name, operator, value)]
-        data = self.env['ir.model.data'].sudo().search(domain)
-        return [('id', 'in', data.mapped('res_id'))]
+        query = self.env['ir.model.data'].sudo()._search(domain)
+        return [('id', 'in', query.subselect('res_id'))]
 
     @api.depends('model')
     def _compute_model_id(self):
@@ -313,6 +318,53 @@ actual arch.
     def _inverse_compute_model_id(self):
         for record in self:
             record.model = record.model_id.model
+
+    @api.depends('arch', 'inherit_id')
+    def _compute_invalid_locators(self):
+        self.invalid_locators = []
+        for view in self:
+            if not view.inherit_id or not view.arch:
+                continue
+            source = view.with_context(ir_ui_view_tree_cut_off_view=view)._get_combined_arch()
+            invalid_locators = []
+            specs = collections.deque([etree.fromstring(view.arch)])
+            while specs:
+                spec = specs.popleft()
+                if isinstance(spec, etree._Comment):
+                    continue
+                if spec.tag == 'data':
+                    specs.extend(spec)
+                    continue
+                # Capture 'move' nodes to handles cases where move operations are nested within other xpath operations
+                # <xpath expr="parent" position="after">
+                #   <xpath expr="child" position="move"/>
+                # </xpath>
+                specs.extend(c for c in spec if c.get("position") == 'move')
+                node = None
+                with suppress(ValidationError):  # Syntax error
+                    # If locate_node returns None here:
+                    # Invalid expression: Ok Syntax, but cannot be anchored to the parent view.
+                    node = self.locate_node(source, spec)
+                if node is None:
+                    invalid_locators.append({
+                        "tag": spec.tag,
+                        "attrib": dict(spec.attrib),
+                        "sourceline": spec.sourceline
+                    })
+                else:
+                    try:
+                        # Since subsequent xpaths may be dependent on previous xpaths, we apply the spec.
+                        source = apply_inheritance_specs(source, spec)
+                    except ValueError as e:
+                        # This function is only interested in locating invalid locators.
+                        # Here, ValueError is raised for:
+                        #   Invalid mode attribute
+                        #   Invalid attributes attribute
+                        #   Invalid position
+                        #   Element <attribute> with 'add' or 'remove' cannot contain text
+                        #   Invalid separator for python expressions in attributes
+                        pass
+            view.invalid_locators = invalid_locators
 
     def _compute_xml_id(self):
         xml_ids = collections.defaultdict(list)
@@ -540,8 +592,8 @@ actual arch.
         self.env.registry.clear_cache('templates')
         return super().unlink()
 
-    def _update_field_translations(self, fname, translations, digest=None, source_lang=None):
-        return super(IrUiView, self.with_context(no_save_prev=True))._update_field_translations(fname, translations, digest=digest, source_lang=source_lang)
+    def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
+        return super(IrUiView, self.with_context(no_save_prev=True))._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
 
     def copy_data(self, default=None):
         has_default_without_key = default and 'key' not in default
@@ -572,7 +624,11 @@ actual arch.
     @api.model
     def _get_inheriting_views_domain(self):
         """ Return a domain to filter the sub-views to inherit from. """
-        return [('active', '=', True)]
+        tree_cut_off_view = self.env.context.get("ir_ui_view_tree_cut_off_view")
+        if not tree_cut_off_view:
+            return [('active', '=', True)]
+        else:
+            return ['|', ('active', '=', True), ('id','=', tree_cut_off_view.id)]
 
     @api.model
     def _get_filter_xmlid_query(self):
@@ -797,7 +853,7 @@ actual arch.
                 node.append(E.attribute('1', name='__validate__'))
 
     @api.model
-    def apply_inheritance_specs(self, source, specs_tree, pre_locate=lambda s: True):
+    def apply_inheritance_specs(self, source, specs_tree, pre_locate=None):
         """ Apply an inheriting view (a descendant of the base view)
 
         Apply to a source architecture all the spec nodes (i.e. nodes
@@ -877,8 +933,11 @@ actual arch.
         # pushed at the other end of the queue, so that they are applied after
         # all extensions have been applied.
         queue = collections.deque(sorted(hierarchy[self], key=lambda v: v.mode))
+        tree_cut_off_view = self.env.context.get("ir_ui_view_tree_cut_off_view")
         while queue:
             view = queue.popleft()
+            if view == tree_cut_off_view:
+                break
             arch = etree.fromstring(view.arch or '<data/>')
             if view.env.context.get('inherit_branding'):
                 view.inherit_branding(arch)
@@ -1074,6 +1133,7 @@ actual arch.
             debug = node.attrib.pop('__debug__') == 'True'
             if debug != is_debug:
                 node.attrib['invisible'] = '1'
+                node.attrib['column_invisible'] = '1'
         return tree
 
     def _postprocess_view(self, node, model_name, editable=True, node_info=None, **options):
@@ -1279,8 +1339,10 @@ actual arch.
     #------------------------------------------------------
     def _postprocess_tag_calendar(self, node, name_manager, node_info):
         for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
-            if fnames := node.get(additional_field):
-                name_manager.has_field(node, fnames.split('.', 1)[0], node_info)
+            if fname := node.get(additional_field):
+                name_manager.has_field(node, fname, node_info)
+        if fname := node.get('aggregate'):
+            name_manager.has_field(node, fname.split(':')[0], node_info)
         for f in node:
             if f.tag == 'filter':
                 name_manager.has_field(node, f.get('name'), node_info)
@@ -1319,6 +1381,8 @@ actual arch.
                 if isinstance(domain, str):
                     vnames = get_expression_field_names(domain)
                     name_manager.must_have_fields(node, vnames, node_info, ('domain', domain))
+            if field.type == 'properties':
+                name_manager.must_have_fields(node, [field.definition_record], node_info, ('fieldname', field.name))
             context = node.get('context')
             if context:
                 vnames = get_expression_field_names(context)
@@ -1636,7 +1700,7 @@ actual arch.
             if type_ != 'action' and type_ != 'object':
                 return
             elif not name:
-                self._raise_view_error(_("Button must have a name"), node)
+                return
             elif type_ == 'object':
                 func = getattr(name_manager.model, name, None)
                 if not func:
@@ -2418,7 +2482,7 @@ class Base(models.AbstractModel):
     # Override this method if you need a window title that depends on the context
     #
     @api.model
-    def view_header_get(self, view_id=None, view_type='form'):
+    def view_header_get(self, view_id, view_type):
         return False
 
     @api.model
@@ -2962,7 +3026,7 @@ class NameManager:
         # this maps field names to the group of users that have access to the field
         self.field_groups = {}
 
-    @lazy_property
+    @functools.cached_property
     def field_info(self):
         field_info = self.model.fields_get(attributes=['readonly', 'required'])
         if not (self.model.has_access('write') or self.model.has_access('create')):

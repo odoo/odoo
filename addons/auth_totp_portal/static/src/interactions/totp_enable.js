@@ -166,9 +166,11 @@ export class TOTPEnable extends Interaction {
                 }
 
                 try {
-                    await this.services.orm.write(model, [record.id], { code: inputEl.value });
                     await handleCheckIdentity(
-                        this.waitFor(this.services.orm.call(model, "enable", [record.id])),
+                        this.waitFor(this.services.orm.call(model, "enable",
+                            [ record.id ],
+                            { 'context': {'code': inputEl.value} },
+                        )),
                         this.services.orm,
                         this.services.dialog
                     );

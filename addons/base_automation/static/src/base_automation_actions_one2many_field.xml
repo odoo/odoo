@@ -11,19 +11,21 @@
                     <div class="fs-5 d-flex align-items-center">
                         <i
                             data-name="server_action_icon"
-                            t-att-title="getActionType(action)"
                             class="fa"
                             t-att-class="{
-                                'code': 'fa-file-code-o',
-                                'object_create': 'fa-edit',
-                                'object_write': 'fa-refresh',
+                                'code': 'fa-code',
+                                'object_create': 'fa-plus-square',
+                                'object_copy': 'fa-clone',
+                                'object_write': 'fa-pencil',
                                 'multi': 'fa-list-ul',
                                 'mail_post': 'fa-envelope',
-                                'followers': 'fa-user-o',
+                                'followers': 'fa-user',
                                 'remove_followers': 'fa-user-times',
                                 'next_activity': 'fa-clock-o',
-                                'sms': 'fa-comments-o',
-                            }[action.data.state]"
+                                'sms': 'fa-mobile',
+                                'webhook': 'fa-paper-plane',
+                                'whatsapp': 'fa-whatsapp',
+                            }[action.data.state] || 'fa-circle-thin'"
                         />
                         <div class="ps-2" t-esc="action.data.name" />
                     </div>

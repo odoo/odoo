@@ -28,6 +28,27 @@ import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass } from "@html_editor/utils/formatting";
 import { getTextColorOrClass } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
+import { ListSelector } from "./list_selector";
+import { reactive } from "@odoo/owl";
+import { composeToolbarButton } from "../toolbar/toolbar";
+
+const listSelectorItems = [
+    {
+        id: "bulleted_list",
+        commandId: "toggleListUL",
+        mode: "UL",
+    },
+    {
+        id: "numbered_list",
+        commandId: "toggleListOL",
+        mode: "OL",
+    },
+    {
+        id: "checklist",
+        commandId: "toggleListCL",
+        mode: "CL",
+    },
+];
 
 export class ListPlugin extends Plugin {
     static id = "list";
@@ -42,12 +63,9 @@ export class ListPlugin extends Plugin {
         "dom",
         "color",
     ];
+    toolbarListSelectorKey = reactive({ value: 0 });
     resources = {
         user_commands: [
-            {
-                id: "toggleList",
-                run: this.toggleListCommand.bind(this),
-            },
             {
                 id: "toggleListUL",
                 title: _t("Bulleted list"),
@@ -70,26 +88,23 @@ export class ListPlugin extends Plugin {
                 run: () => this.toggleListCommand({ mode: "CL" }),
             },
         ],
-        toolbar_groups: withSequence(30, { id: "list" }),
+        shortcuts: [
+            { hotkey: "control+shift+7", commandId: "toggleListOL" },
+            { hotkey: "control+shift+8", commandId: "toggleListUL" },
+            { hotkey: "control+shift+9", commandId: "toggleListCL" },
+        ],
         toolbar_items: [
-            {
-                id: "bulleted_list",
-                groupId: "list",
-                commandId: "toggleListUL",
-                isActive: this.isListActive("UL"),
-            },
-            {
-                id: "numbered_list",
-                groupId: "list",
-                commandId: "toggleListOL",
-                isActive: this.isListActive("OL"),
-            },
-            {
-                id: "checklist",
-                groupId: "list",
-                commandId: "toggleListCL",
-                isActive: this.isListActive("CL"),
-            },
+            withSequence(5, {
+                id: "list",
+                groupId: "layout",
+                description: _t("Toggle List"),
+                Component: ListSelector,
+                props: {
+                    getButtons: () => this.listSelectorButtons,
+                    getListMode: this.getListMode.bind(this),
+                    key: this.toolbarListSelectorKey,
+                },
+            }),
         ],
         powerbox_items: [
             {
@@ -104,20 +119,20 @@ export class ListPlugin extends Plugin {
                 categoryId: "structure",
                 commandId: "toggleListCL",
             },
-        ],
+        ].map((item) => withSequence(5, item)),
         power_buttons: [
             { commandId: "toggleListUL" },
             { commandId: "toggleListOL" },
             { commandId: "toggleListCL" },
-        ],
+        ].map((item) => withSequence(15, item)),
 
         hints: [{ selector: "LI", text: _t("List") }],
-        system_style_properties: ["--placeholder-left"],
 
         /** Handlers */
         input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
-        make_hint_handlers: this.handleListPlaceholderPosition.bind(this),
+        step_added_handlers: this.updateToolbarButtons.bind(this),
+        delete_handlers: this.adjustListPaddingOnDelete.bind(this),
 
         /** Overrides */
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
@@ -127,14 +142,14 @@ export class ListPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         color_apply_overrides: this.applyColorToListItem.bind(this),
         format_selection_overrides: this.applyFormatToListItem.bind(this),
-        set_tag_overrides: this.handleListStylePosition.bind(this),
         node_to_insert_processors: this.processNodeToInsert.bind(this),
-        move_node_whitelist_selectors: "ol, ul",
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
     };
 
     setup() {
         this.addDomListener(this.editable, "touchstart", this.onPointerdown);
         this.addDomListener(this.editable, "mousedown", this.onPointerdown);
+        this.listSelectorButtons = this.getListSelectorButtons();
     }
 
     toggleListCommand({ mode } = {}) {
@@ -310,7 +325,7 @@ export class ListPlugin extends Plugin {
             // possible.
             const callingNode = element.firstChild;
             const group = getAdjacents(callingNode, (n) => !isBlock(n));
-            list = insertListAfter(this.document, callingNode, mode, [group]);
+            list = insertListAfter(this.document, callingNode, mode, group);
         } else {
             const parent = element.parentNode;
             const childIndex = childNodeIndex(element);
@@ -339,10 +354,15 @@ export class ListPlugin extends Plugin {
      */
     baseContainerToList(baseContainer, mode) {
         const cursors = this.dependencies.selection.preserveSelection();
-        const list = insertListAfter(this.document, baseContainer, mode, [
-            childNodes(baseContainer),
-        ]);
+        const list = insertListAfter(this.document, baseContainer, mode, childNodes(baseContainer));
+        const textAlign = baseContainer.style.getPropertyValue("text-align");
+        if (textAlign) {
+            // Copy text-align style from base container to li.
+            list.firstElementChild.style.setProperty("text-align", textAlign);
+            baseContainer.style.removeProperty("text-align");
+        }
         this.dependencies.dom.copyAttributes(baseContainer, list);
+        this.adjustListPadding(list);
         baseContainer.remove();
         cursors.remapNode(baseContainer, list.firstChild).restore();
         return list;
@@ -350,7 +370,7 @@ export class ListPlugin extends Plugin {
 
     blockContentsToList(block, mode) {
         const cursors = this.dependencies.selection.preserveSelection();
-        const list = insertListAfter(this.document, block.lastChild, mode, [[...block.childNodes]]);
+        const list = insertListAfter(this.document, block.lastChild, mode, [...block.childNodes]);
         cursors.remapNode(block, list.firstChild).restore();
         return list;
     }
@@ -380,6 +400,10 @@ export class ListPlugin extends Plugin {
         return node;
     }
 
+    /**
+     * @param {HTMLElement} element
+     * @returns {"UL"|"OL"|"CL"|undefined}
+     */
     getListMode(listContainerEl) {
         if (!["UL", "OL"].includes(listContainerEl.tagName)) {
             return;
@@ -388,13 +412,6 @@ export class ListPlugin extends Plugin {
             return "OL";
         }
         return listContainerEl.classList.contains("o_checklist") ? "CL" : "UL";
-    }
-
-    isListActive(listMode) {
-        return (selection) => {
-            const block = closestBlock(selection.anchorNode);
-            return block?.tagName === "LI" && this.getListMode(block.parentNode) === listMode;
-        };
     }
 
     /**
@@ -420,6 +437,7 @@ export class ListPlugin extends Plugin {
         if (newMode === "CL") {
             newList.classList.add("o_checklist");
         }
+        this.adjustListPadding(newList);
         return newList;
     }
 
@@ -468,7 +486,7 @@ export class ListPlugin extends Plugin {
             previousSibling.append(...element.childNodes);
             // @todo @phoenix: what if unremovable/unmergeable?
             element.remove();
-
+            this.adjustListPadding(previousSibling);
             cursors.restore();
         }
     }
@@ -519,19 +537,23 @@ export class ListPlugin extends Plugin {
      */
     indentLI(li) {
         const lip = this.document.createElement("li");
+        const parentLi = li.parentElement;
+        const nextSiblingLi = li.nextSibling;
         lip.classList.add("oe-nested");
         const destul =
             li.previousElementSibling?.querySelector("ol, ul") ||
             li.nextElementSibling?.querySelector("ol, ul") ||
             li.closest("ol, ul");
-
+        const cursors = this.dependencies.selection.preserveSelection();
+        // Remove the LI first to force a removal mutation in collaboration.
+        parentLi.removeChild(li);
         const ul = createList(this.document, this.getListMode(destul));
         lip.append(ul);
 
-        const cursors = this.dependencies.selection.preserveSelection();
         // lip replaces li
         li.before(lip);
         ul.append(li);
+        parentLi.insertBefore(lip, nextSiblingLi);
         cursors.update((cursor) => {
             if (cursor.node === lip.parentNode) {
                 const childIndex = childNodeIndex(lip);
@@ -592,6 +614,8 @@ export class ListPlugin extends Plugin {
         cursors.update(callbacksForCursorUpdate.prepend(newList, li));
         newList.prepend(li);
         cursors.restore();
+        this.adjustListPadding(currentList);
+        this.adjustListPadding(newList);
         return newList;
     }
 
@@ -614,6 +638,7 @@ export class ListPlugin extends Plugin {
             cursors.update(callbacksForCursorUpdate.remove(lip));
             lip.remove();
         }
+        this.adjustListPadding(li.parentElement);
         cursors.restore();
     }
 
@@ -643,7 +668,7 @@ export class ListPlugin extends Plugin {
         }
         // Preserve style properties
         const dir = li.getAttribute("dir") || ul.getAttribute("dir");
-        const textAlign = ul.style.getPropertyValue("text-align");
+        const textAlign = li.style.getPropertyValue("text-align");
         const liColorStyle = getTextColorOrClass(li);
         const liFontSizeStyle = getFontSizeOrClass(li);
         const wrapChildren = (parent, tag) => {
@@ -684,6 +709,8 @@ export class ListPlugin extends Plugin {
         if (!ul.firstElementChild) {
             cursors.update(callbacksForCursorUpdate.remove(ul));
             ul.remove();
+        } else {
+            this.adjustListPadding(ul);
         }
         cursors.restore();
     }
@@ -733,11 +760,11 @@ export class ListPlugin extends Plugin {
             return nodeToInsert;
         }
         const mode = container && this.getListMode(listEl);
-        if (
-            (isListItemElement(nodeToInsert) && nodeToInsert.classList.contains("oe-nested")) ||
-            isListElement(nodeToInsert)
-        ) {
+        if (isListItemElement(nodeToInsert) && nodeToInsert.classList.contains("oe-nested")) {
             return this.convertList(nodeToInsert, mode);
+        }
+        if (isListElement(nodeToInsert)) {
+            return this.convertList(nodeToInsert, this.getListMode(nodeToInsert));
         }
         return nodeToInsert;
     }
@@ -800,7 +827,7 @@ export class ListPlugin extends Plugin {
         if (!closestLI || isBlockUnsplittable) {
             return;
         }
-        if (!closestLI.textContent) {
+        if (isEmptyBlock(closestLI)) {
             this.outdentLI(closestLI);
             return true;
         }
@@ -813,6 +840,7 @@ export class ListPlugin extends Plugin {
         }
         const [anchorNode, anchorOffset] = getDeepestPosition(newLI, 0);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        this.adjustListPadding(newLI.parentElement);
         return true;
     }
 
@@ -878,6 +906,19 @@ export class ListPlugin extends Plugin {
         }
 
         return true;
+    }
+
+    /**
+     * @param {DocumentFragment} clonedContents
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     */
+    processContentForClipboard(clonedContents, selection) {
+        if (clonedContents.firstChild.nodeName === "LI") {
+            const list = selection.commonAncestorContainer.cloneNode();
+            list.replaceChildren(...childNodes(clonedContents));
+            clonedContents = list;
+        }
+        return clonedContents;
     }
 
     // --------------------------------------------------------------------------
@@ -962,7 +1003,7 @@ export class ListPlugin extends Plugin {
         if (!selectedNodes.size || !["setFontSizeClassName", "fontSize"].includes(formatName)) {
             return false;
         }
-
+        const listsSet = new Set();
         for (const listItem of selectedNodes) {
             // Skip list items with block descendants
             if ([...descendants(listItem)].some(isBlock)) {
@@ -981,49 +1022,77 @@ export class ListPlugin extends Plugin {
                 } else if (formatName === "fontSize") {
                     listItem.style.fontSize = formatProps.size;
                 }
-                listItem.style.listStylePosition = "inside";
             }
+            listsSet.add(listItem.parentElement);
+        }
+        for (const list of listsSet) {
+            this.adjustListPadding(list);
         }
         return true;
     }
 
-    handleListStylePosition(block, newEl) {
-        if (block.style.listStylePosition !== "inside" || newEl.tagName === "LI") {
+    /**
+     * Adjusts the left padding of a list (`ul` or `ol`) to ensure that
+     * its `::marker` is always visible and doesn't overflow, especially
+     * when the marker width exceeds the default padding.
+     *
+     * @param {HTMLElement} list - The `<ul>` element used to determine the parent list and marker width.
+     */
+    adjustListPadding(list) {
+        if (!isListElement(list)) {
             return;
         }
-
-        const fontSizeStyle = getFontSizeOrClass(block);
-        const cursors = this.dependencies.selection.preserveSelection();
-
-        if (fontSizeStyle) {
-            const span = document.createElement("span");
-            span.append(...newEl.childNodes);
-            newEl.replaceChildren(span);
-
-            if (fontSizeStyle.type === "font-size") {
-                block.style.fontSize = "";
-                span.style.fontSize = fontSizeStyle.value;
-            } else if (fontSizeStyle.type === "class") {
-                removeClass(block, ...FONT_SIZE_CLASSES);
-                span.classList.add(fontSizeStyle.value);
-            }
+        list.style.removeProperty("padding-inline-start");
+        if (list.classList.contains("o_checklist")) {
+            return;
         }
-        block.style.listStylePosition = "";
-        cursors.restore();
+        const defaultPadding =
+            parseFloat(
+                this.document.defaultView.getComputedStyle(document.documentElement).fontSize
+            ) * 2; // 2rem
+        // Align the whole list based on the item that requires the largest padding.
+        const requiredPaddings = [...list.children].map((li) => {
+            const markerWidth = Math.floor(
+                parseFloat(this.document.defaultView.getComputedStyle(li, "::marker").width)
+            );
+            // For `UL` with large font size the marker width is so big that more padding is needed.
+            const paddingForMarker =
+                li.parentElement.nodeName === "UL" ? markerWidth * 2 : markerWidth;
+            // For smaller font sizes, doubling the width of the dot marker is still lower than the
+            // default. The default is kept in that case.
+            return Math.max(defaultPadding, paddingForMarker);
+        });
+        const largestPadding = Math.max(...requiredPaddings);
+        if (largestPadding > defaultPadding) {
+            list.style.paddingInlineStart = `${largestPadding}px`;
+        }
     }
 
-    handleListPlaceholderPosition(el) {
-        if (el.tagName === "LI" && el.style.listStylePosition === "inside") {
-            this.dependencies.history.disableObserver();
-            const rangeEl = document.createElement("range-el");
-            el.prepend(rangeEl);
-            el.style.listStylePosition = "";
-            const initialRect = rangeEl.getBoundingClientRect();
-            el.style.listStylePosition = "inside";
-            const afterRect = rangeEl.getBoundingClientRect();
-            el.style.setProperty("--placeholder-left", `${afterRect.left - initialRect.left}px`);
-            rangeEl.remove();
-            this.dependencies.history.enableObserver();
+    adjustListPaddingOnDelete() {
+        const selection = this.document.getSelection();
+        if (!selection.isCollapsed) {
+            return;
         }
+        const listItem = closestElement(selection.anchorNode);
+        if (isListItem(listItem)) {
+            this.adjustListPadding(listItem.parentElement);
+        }
+    }
+
+    // --------------------------------------------------------------------------
+    // Toolbar buttons
+    // --------------------------------------------------------------------------
+
+    updateToolbarButtons() {
+        this.toolbarListSelectorKey.value++;
+    }
+
+    getListSelectorButtons() {
+        return listSelectorItems.map((item) => {
+            const command = this.resources.user_commands.find((cmd) => cmd.id === item.commandId);
+            // We want short descriptions for these buttons.
+            item.description = command.title;
+            return composeToolbarButton(command, item);
+        });
     }
 }

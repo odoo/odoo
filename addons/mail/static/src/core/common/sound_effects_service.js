@@ -17,10 +17,10 @@ export class SoundEffects {
             "ptt-press": { defaultVolume: 0.1, path: "/mail/static/src/audio/ptt-press" },
             "ptt-release": { defaultVolume: 0.1, path: "/mail/static/src/audio/ptt-release" },
             "call-invitation": {
-                defaultVolume: 0.15,
+                defaultVolume: 0.5,
                 path: "/mail/static/src/audio/call-invitation",
             },
-            "new-message": { path: "/mail/static/src/audio/new-message", defaultVolume: 0.5 },
+            "new-message": { defaultVolume: 1, path: "/mail/static/src/audio/new-message" },
             "screen-sharing": {
                 defaultVolume: 0.75,
                 path: "/mail/static/src/audio/screen-sharing",

@@ -5,8 +5,9 @@ from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from os.path import basename, join as opj
 from unittest.mock import patch
+from urllib.parse import urlsplit
+
 from freezegun import freeze_time
-from urllib3.util import parse_url
 
 from odoo import api, http
 from odoo.tests import new_test_user, tagged, RecordCapturer
@@ -277,10 +278,10 @@ class TestHttpStatic(TestHttpStaticCommon):
 
     def test_static16_public_access_rights(self):
         self.authenticate(None, None)
-        default_user = self.env.ref('base.default_user')
+        user_template = self.env.ref('base.template_portal_user_id')
 
         with self.subTest('model access rights'):
-            res = self.url_open(f'/web/content/res.users/{default_user.id}/image_128')
+            res = self.url_open(f'/web/content/res.users/{user_template.id}/image_128')
             self.assertEqual(res.status_code, 404)
 
         with self.subTest('attachment + field access rights'):
@@ -334,7 +335,7 @@ class TestHttpStatic(TestHttpStaticCommon):
         })
 
         res = self.url_open(bad_path, allow_redirects=False)
-        location = parse_url(res.headers.get('Location', ''))
+        location = urlsplit(res.headers.get('Location', ''))
         self.assertNotEqual(location.path, bad_path, "loop detected")
         self.assertEqual(res.status_code, 404)
 
@@ -665,7 +666,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
             file_content = file.read()
             file_size = len(file_content)
             file.seek(0)
-            res = self.opener.post(
+            res = self.url_open(
                 f'{self.base_url()}/web/binary/upload_attachment',
                 files={'ufile': file},
                 data={
@@ -711,7 +712,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
             self.env['ir.config_parameter'].sudo().set_param(
                 'web.max_file_upload_size', file_size - 1,
             )
-            res = self.opener.post(
+            res = self.url_open(
                 f'{self.base_url()}/web/binary/upload_attachment',
                 files={'ufile': file},
                 data={

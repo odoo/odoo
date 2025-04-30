@@ -159,6 +159,7 @@ class MailTestTrack(models.Model):
     company_id = fields.Many2one('res.company')
     track_fields_tofilter = fields.Char()  # comma-separated list of field names
     track_enable_default_log = fields.Boolean(default=False)
+    parent_id = fields.Many2one('mail.test.track', string='Parent')
 
     def _track_filter_for_display(self, tracking_values):
         values = super()._track_filter_for_display(tracking_values)
@@ -187,7 +188,8 @@ class MailTestActivity(models.Model):
     def action_start(self, action_summary):
         return self.activity_schedule(
             'test_mail.mail_act_test_todo',
-            summary=action_summary
+            summary=action_summary,
+            user_id=self.env.uid,
         )
 
     def action_close(self, action_feedback, attachment_ids=None):

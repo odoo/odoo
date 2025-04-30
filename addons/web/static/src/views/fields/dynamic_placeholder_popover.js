@@ -4,7 +4,7 @@ import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { user } from "@web/core/user";
 
-const allowedQwebExpressions = memoize(async (model, orm) => {
+export const allowedQwebExpressions = memoize(async (model, orm) => {
     return await orm.call(model, "mail_allowed_qweb_expressions");
 });
 
@@ -38,6 +38,9 @@ export class DynamicPlaceholderPopover extends Component {
         if (!this.isTemplateEditor && !this.allowedQwebExpressions.includes(fullPath)) {
             return false;
         }
+        if (fieldDef.is_property && fieldDef.type === "separator") {
+            return false;
+        }
         return !["one2many", "boolean", "many2many"].includes(fieldDef.type) && fieldDef.searchable;
     }
     closeFieldSelector(isPathSelected = false) {
@@ -50,12 +53,13 @@ export class DynamicPlaceholderPopover extends Component {
     setPath(path, fieldInfo) {
         this.state.path = path;
         this.state.fieldName = fieldInfo?.string;
+        this.fieldType = fieldInfo?.type
     }
     setDefaultValue(value) {
         this.state.defaultValue = value;
     }
     validate() {
-        this.props.validate(this.state.path, this.state.defaultValue);
+        this.props.validate(this.state.path, this.state.defaultValue, this.fieldType);
         this.props.close();
     }
 

@@ -1,4 +1,5 @@
 import { describe, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { toggleUnorderedList } from "../_helpers/user_actions";
@@ -8,9 +9,17 @@ describe("Range collapsed", () => {
         test("should turn an empty paragraph into a list", async () => {
             await testEditor({
                 contentBefore: "<p>[]<br></p>",
-                contentBeforeEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+                contentBeforeEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 stepFunction: toggleUnorderedList,
-                contentAfterEdit: `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`,
+                contentAfterEdit: `<ul><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`,
+                contentAfter: "<ul><li>[]<br></li></ul>",
+            });
+        });
+
+        test("should turn an empty paragraph into a list with shortcut", async () => {
+            await testEditor({
+                contentBefore: "<p>[]<br></p>",
+                stepFunction: () => press(["control", "shift", "8"]),
                 contentAfter: "<ul><li>[]<br></li></ul>",
             });
         });
@@ -162,9 +171,9 @@ describe("Range collapsed", () => {
         test("should turn an empty list into a paragraph", async () => {
             await testEditor({
                 contentBefore: "<ul><li>[]<br></li></ul>",
-                contentBeforeEdit: `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`,
+                contentBeforeEdit: `<ul><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`,
                 stepFunction: toggleUnorderedList,
-                contentAfterEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+                contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 contentAfter: "<p>[]<br></p>",
             });
         });
@@ -301,7 +310,7 @@ describe("Range collapsed", () => {
             await testEditor({
                 contentBefore: "<ol><li>[]<br></li></ol>",
                 stepFunction: toggleUnorderedList,
-                contentAfterEdit: `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`,
+                contentAfterEdit: `<ul><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`,
                 contentAfter: "<ul><li>[]<br></li></ul>",
             });
         });
@@ -310,7 +319,7 @@ describe("Range collapsed", () => {
             await testEditor({
                 contentBefore: '<ul class="o_checklist"><li>[]<br></li></ul>',
                 stepFunction: toggleUnorderedList,
-                contentAfterEdit: `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`,
+                contentAfterEdit: `<ul><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`,
                 contentAfter: "<ul><li>[]<br></li></ul>",
             });
         });
@@ -324,6 +333,14 @@ describe("Range not collapsed", () => {
                 contentBefore: "<p>ab</p><p>cd[ef]gh</p>",
                 stepFunction: toggleUnorderedList,
                 contentAfter: "<p>ab</p><ul><li>cd[ef]gh</li></ul>",
+            });
+        });
+
+        test("should turn a paragraph into a list with shortcut", async () => {
+            await testEditor({
+                contentBefore: "<p>[abc]</p>",
+                stepFunction: () => press(["control", "shift", "8"]),
+                contentAfter: "<ul><li>[abc]</li></ul>",
             });
         });
 
@@ -443,6 +460,22 @@ describe("Range not collapsed", () => {
                     '<ul><li style="text-align: center;">[abc</li><li style="text-align: center;">def]</li></ul>',
             });
         });
+        test("should apply text-align right when creating unordered list", async () => {
+            await testEditor({
+                contentBefore: '<p style="text-align: right;">[ab]</p>',
+                stepFunction: toggleUnorderedList,
+                contentAfter: '<ul><li style="text-align: right;">[ab]</li></ul>',
+            });
+        });
+        test("should apply text-align format when creating unordered list from multiple selected blocks", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p style="text-align: right;">[ab</p><p style="text-align: center;">cd]</p>',
+                stepFunction: toggleUnorderedList,
+                contentAfter:
+                    '<ul><li style="text-align: right;">[ab</li><li style="text-align: center;">cd]</li></ul>',
+            });
+        });
     });
     describe("Remove", () => {
         test("should turn a list into a paragraph", async () => {
@@ -483,6 +516,16 @@ describe("Range not collapsed", () => {
                     '<ul><li>[ab</li></ul><p contenteditable="false">cd</p><ul><li>ef]</li></ul>',
                 stepFunction: toggleUnorderedList,
                 contentAfter: '<p>[ab</p><p contenteditable="false">cd</p><p>ef]</p>',
+            });
+        });
+
+        test("should turn an unordered list into paragraphs with text alignment", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul><li style="text-align: center;">[abc</li><li style="text-align: right;">def]</li></ul>',
+                stepFunction: toggleUnorderedList,
+                contentAfter:
+                    '<p style="text-align: center;">[abc</p><p style="text-align: right;">def]</p>',
             });
         });
     });

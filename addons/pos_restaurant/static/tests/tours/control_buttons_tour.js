@@ -17,10 +17,10 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             // Test merging table, transfer is already tested in pos_restaurant_sync_second_login.
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("104"),
+            FloorScreen.clickTable("4"),
             ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
             // Extra line is added to test merging table.
             // Merging this order to another should also include this extra line.
@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             ProductScreen.selectedOrderlineHas("Coca-Cola", "1"),
 
             ProductScreen.clickControlButton("Transfer"),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             Order.hasLine({ productName: "Water", quantity: "5" }),
             Order.hasLine({ productName: "Minute Maid", quantity: "3" }),
             Order.hasLine({ productName: "Coca-Cola", quantity: "1" }),
@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             }),
             // Check that note is imported if come back to the table
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             Order.hasLine({
                 productName: "Water",
                 quantity: "5",
@@ -56,11 +56,6 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             }),
 
             ProductScreen.addOrderline("Water", "8", "1", "8.0"),
-
-            // Test PrintBillButton
-            ProductScreen.clickControlButton("Bill"),
-            Dialog.is({ title: "Bill Printing" }),
-            Dialog.cancel(),
 
             // Test GuestButton
             ProductScreen.clickControlButton("Guests"),
@@ -98,5 +93,13 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             Dialog.confirm(),
             Order.doesNotHaveLine(),
             FloorScreen.isShown(),
+
+            // Test moving order to a table on a different floor
+            FloorScreen.clickTable("5"),
+            ProductScreen.addOrderline("Water", "5", "2", "10.0"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickFloor("Second Floor"),
+            FloorScreen.clickTable("1"),
+            Order.hasLine({ productName: "Water", quantity: "5" }),
         ].flat(),
 });

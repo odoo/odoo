@@ -14,6 +14,10 @@
                 (3, ref('hr_contract.group_hr_contract_manager')),
                 (3, ref('hr_contract.group_hr_contract_employee_manager'))]"/>
         </record>
+
+        <record id="base.default_user_group" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('hr_contract.group_hr_contract_manager'))]"/>
+        </record>
     </data>
 
     <record id="hr_contract_admin" model="hr.contract">

@@ -296,7 +296,7 @@ class test_search(TransactionCase):
         with self.assertQueries(["""
             SELECT "res_country"."id"
             FROM "res_country"
-            ORDER BY "res_country"."name"->>%s
+            ORDER BY "res_country"."name"->>%s, "res_country"."id"
         """]):
             Model.search([('code', 'ilike', '')])
             Model.search([('code', 'not ilike', '')])

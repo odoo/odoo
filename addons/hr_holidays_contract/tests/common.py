@@ -14,7 +14,7 @@ class TestHolidayContract(TransactionCase):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
             'time_type': 'leave',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'responsible_ids': [Command.link(cls.env.ref('base.user_admin').id)],
         })
         cls.env.ref('base.user_admin').notification_type = 'inbox'

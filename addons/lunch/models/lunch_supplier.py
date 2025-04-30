@@ -320,17 +320,16 @@ class LunchSupplier(models.Model):
                 supplier.order_deadline_passed = not supplier.available_today
 
     def _search_available_today(self, operator, value):
-        if (not operator in ['=', '!=']) or (not value in [True, False]):
-            return []
-
-        searching_for_true = (operator == '=' and value) or (operator == '!=' and not value)
+        if operator not in ('in', 'not in'):
+            return NotImplemented
 
         now = fields.Datetime.now().replace(tzinfo=pytz.UTC).astimezone(pytz.timezone(self.env.user.tz or 'UTC'))
         fieldname = WEEKDAY_TO_NAME[now.weekday()]
+        truth = operator == 'in'
 
         recurrency_domain = expression.OR([
             [('recurrency_end_date', '=', False)],
-            [('recurrency_end_date', '>' if searching_for_true else '<', now)]
+            [('recurrency_end_date', '>' if truth else '<', now)]
         ])
 
         return expression.AND([

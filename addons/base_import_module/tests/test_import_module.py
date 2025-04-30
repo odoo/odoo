@@ -357,6 +357,30 @@ class TestImportModule(odoo.tests.TransactionCase):
         ):
             self.import_zipfile(files)
 
+    def test_import_modules_with_dependencies(self):
+        files = [
+            ('baz/__manifest__.py', b"{'data': ['partner.xml'], 'depends': ['base', 'bar', 'foo']}"),
+            ('baz/partner.xml', b"""
+                <data>
+                    <record id="foo.baz" model="res.partner">
+                        <field name="name">baz</field>
+                    </record>
+                </data>
+            """),
+            ('foo/__manifest__.py', b"{'data': ['partner.xml'], 'depends': ['base']}"),
+            ('foo/partner.xml', b"""
+                <data>
+                    <record id="baz" model="res.partner">
+                        <field name="name">foo</field>
+                    </record>
+                </data>
+            """),
+            ('bar/__manifest__.py', b"{'depends': ['base', 'foo']}"),
+        ]
+        self.import_zipfile(files)
+        module = self.env['ir.module.module'].search([('name', '=', 'baz')])
+        self.assertEqual(set(module.dependencies_id.mapped('name')), {'bar', 'base', 'foo'})
+
 
 class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
     def test_import_module_icon(self):

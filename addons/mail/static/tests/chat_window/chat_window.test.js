@@ -7,7 +7,7 @@ import {
     inputFiles,
     insertText,
     isInViewportOf,
-    onRpcBefore,
+    listenStoreFetch,
     openDiscuss,
     openFormView,
     openListView,
@@ -18,18 +18,17 @@ import {
     start,
     startServer,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
 import {
-    asyncStep,
     Command,
     getService,
     patchWithCleanup,
     preloadBundle,
     serverState,
-    waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
@@ -183,11 +182,12 @@ test("chat window: basic rendering", async () => {
     await contains("[title='Open Actions Menu']");
     await contains("[title='Fold']");
     await contains("[title*='Close Chat Window']");
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-ChatWindow .o-mail-Thread", { text: "Welcome to #General!" });
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await contains(".o-mail-ChatWindow-command", { count: 15 });
+    await contains(".o-dropdown-item", { text: "Open in Discuss" });
     await contains(".o-dropdown-item", { text: "Attachments" });
     await contains(".o-dropdown-item", { text: "Pinned Messages" });
     await contains(".o-dropdown-item", { text: "Members" });
@@ -195,7 +195,6 @@ test("chat window: basic rendering", async () => {
     await contains(".o-dropdown-item", { text: "Invite People" });
     await contains(".o-dropdown-item", { text: "Search Messages" });
     await contains(".o-dropdown-item", { text: "Rename Thread" });
-    await contains(".o-dropdown-item", { text: "Open in Discuss" });
     await contains(".o-dropdown-item", { text: "Notification Settings" });
     await contains(".o-dropdown-item", { text: "Call Settings" });
 });
@@ -554,13 +553,9 @@ test("chat window should open when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps(["init_messaging"]);
+    await waitStoreFetch("init_messaging");
     await contains(".o-mail-ChatHub");
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -949,7 +944,10 @@ test("Notification settings rendering in chatwindow", async () => {
 
 test("open channel in chat window from push notification", async () => {
     patchWithCleanup(window.navigator, {
-        serviceWorker: Object.assign(new EventBus(), { register: () => Promise.resolve() }),
+        serviceWorker: Object.assign(new EventBus(), {
+            register: () => Promise.resolve(),
+            ready: Promise.resolve(),
+        }),
     });
     const pyEnv = await startServer();
     const [channelId, salesId] = pyEnv["discuss.channel"].create([
@@ -1060,4 +1058,60 @@ test("Ctrl+k opens the @ command palette", async () => {
     await focus(".o-mail-ChatWindow", { text: "General" });
     triggerHotkey("control+k");
     await contains(".o_command_palette_search", { text: "@" });
+});
+
+test("Do not squash logged notes", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    const messageId = pyEnv["mail.message"].create([
+        {
+            model: "res.partner",
+            body: "Test Message",
+            author_id: partnerId,
+            needaction: true,
+            res_id: partnerId,
+        },
+        {
+            model: "res.partner",
+            body: "Message",
+            author_id: serverState.partnerId,
+            needaction: true,
+            res_id: partnerId,
+        },
+        {
+            model: "res.partner",
+            body: "Message Squashed",
+            author_id: serverState.partnerId,
+            needaction: true,
+            res_id: partnerId,
+        },
+        {
+            model: "res.partner",
+            body: "Hello",
+            author_id: serverState.partnerId,
+            needaction: true,
+            res_id: partnerId,
+            is_note: true,
+        },
+        {
+            model: "res.partner",
+            body: "World!",
+            author_id: serverState.partnerId,
+            needaction: true,
+            res_id: partnerId,
+            is_note: true,
+        },
+    ]);
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId[0],
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-Message.o-squashed", { text: "Message Squashed" });
+    await contains(".o-mail-Message:not(.o-squashed)", { text: "Hello" });
+    await contains(".o-mail-Message:not(.o-squashed)", { text: "World!" });
 });

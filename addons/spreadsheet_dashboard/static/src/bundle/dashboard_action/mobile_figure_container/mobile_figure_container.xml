@@ -11,7 +11,7 @@
                     <t t-else="">
                         <t t-set="minHeight" t-value="figureRow.length === 1 ? `min-height: ${figure.height}px;` : ''"/>
                         <div t-att-style="minHeight" class="w-100 h-100">
-                            <t figure="figure" t-component="getFigureComponent(figure)" onFigureDeleted="() => {}"/>
+                            <t figureUI="figure" t-component="getFigureComponent(figure)" onFigureDeleted="() => {}"/>
                         </div>
                     </t>
                 </t>

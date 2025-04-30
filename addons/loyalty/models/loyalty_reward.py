@@ -45,7 +45,7 @@ class LoyaltyReward(models.Model):
             reward.display_name = f"{reward.program_id.name} - {reward.description}"
 
     active = fields.Boolean(default=True)
-    program_id = fields.Many2one(comodel_name='loyalty.program', ondelete='cascade', required=True)
+    program_id = fields.Many2one(comodel_name='loyalty.program', ondelete='cascade', required=True, index=True)
     program_type = fields.Selection(related='program_id.program_type')
     # Stored for security rules
     company_id = fields.Many2one(related='program_id.company_id', store=True)
@@ -109,12 +109,6 @@ class LoyaltyReward(models.Model):
         copy=False,
     )
     is_global_discount = fields.Boolean(compute='_compute_is_global_discount')
-    tax_ids = fields.Many2many(
-        string="Taxes",
-        help="Taxes to add on the discount line.",
-        comodel_name='account.tax',
-        domain="[('type_tax_use', '=', 'sale'), ('company_id', '=', company_id)]",
-    )
 
     # Product rewards
     reward_product_id = fields.Many2one(
@@ -223,8 +217,8 @@ class LoyaltyReward(models.Model):
             reward.reward_product_ids = reward.reward_type == 'product' and products or self.env['product.product']
 
     def _search_reward_product_ids(self, operator, value):
-        if operator not in ('=', '!=', 'in'):
-            raise NotImplementedError("Unsupported search operator")
+        if operator != 'in':
+            return NotImplemented
         return [
             '&', ('reward_type', '=', 'product'),
             '|', ('reward_product_id', operator, value),

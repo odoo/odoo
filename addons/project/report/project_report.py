@@ -33,8 +33,10 @@ class ReportProjectTaskUser(models.Model):
     rating_last_value = fields.Float('Last Rating (1-5)', aggregator="avg", readonly=True, groups="project.group_project_rating")
     rating_avg = fields.Float('Average Rating (1-5)', readonly=True, aggregator='avg', groups="project.group_project_rating")
     priority = fields.Selection([
-        ('0', 'Low'),
-        ('1', 'High')
+        ('0', 'Low priority'),
+        ('1', 'Medium priority'),
+        ('2', 'High priority'),
+        ('3', 'Urgent'),
         ], readonly=True, string="Priority")
 
     state = fields.Selection([
@@ -63,6 +65,8 @@ class ReportProjectTaskUser(models.Model):
         column2='task_id', string='Block', readonly=True,
         domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
     description = fields.Text(readonly=True)
+    # We exclude template tasks, but we still need the field for the views
+    is_template = fields.Boolean(readonly=True)
 
     def _select(self):
         return """
@@ -94,7 +98,8 @@ class ReportProjectTaskUser(models.Model):
                 NULLIF(t.working_hours_open, 0) as working_hours_open,
                 NULLIF(t.working_hours_close, 0) as working_hours_close,
                 (extract('epoch' from (t.date_deadline-(now() at time zone 'UTC'))))/(3600*24) as delay_endings_days,
-                COUNT(td.task_id) as dependent_ids_count
+                COUNT(td.task_id) as dependent_ids_count,
+                t.is_template
         """
 
     def _group_by(self):
@@ -139,6 +144,7 @@ class ReportProjectTaskUser(models.Model):
     def _where(self):
         return """
                 t.project_id IS NOT NULL
+                AND t.is_template IS NOT TRUE
         """
 
     def init(self):

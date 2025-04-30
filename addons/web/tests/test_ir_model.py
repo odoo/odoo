@@ -88,8 +88,7 @@ class TestIrModel(TransactionCase):
         # the database before setUpClass(), which is not correct.  Instead, a
         # test cursor will correspond to the state of the database of cls.cr at
         # that point, i.e., before the call to setUp().
-        cls.registry.enter_test_mode(cls.cr)
-        cls.addClassCleanup(cls.registry.leave_test_mode)
+        cls.registry_enter_test_mode_cls()
 
         # model and records for banana stages
         cls.env['ir.model'].create({
@@ -156,7 +155,7 @@ class TestIrModel(TransactionCase):
 
         INVALID_ORDERS = ['', 'x_wat', 'id esc', 'create_uid,', 'id, x_is_yellow']
         for order in INVALID_ORDERS:
-            with self.assertRaises(ValidationError), self.cr.savepoint():
+            with self.assertRaises(ValidationError):
                 self.bananas_model.order = order
 
         # check that the constraint is checked at model creation
@@ -199,10 +198,18 @@ class TestIrModel(TransactionCase):
             bananas = self.env['x_bananas'].search([])
             self.assertEqual(bananas.mapped('x_name'), names, 'failed to order by %s' % order)
 
+    def test_model_fold_search(self):
+        """Check that custom orders are applied when querying a model."""
+        self.assertEqual(self.bananas_model.fold_name, False)
+        self.assertEqual(self.env['x_bananas']._fold_name, None)
+
+        self.bananas_model.fold_name = 'x_name'
+        self.assertEqual(self.env['x_bananas']._fold_name, 'x_name')
+
     def test_group_expansion(self):
         """Check that the basic custom group expansion works."""
         model = self.env['x_bananas'].with_context(read_group_expand=True)
-        groups = model.web_read_group([], ['x_ripeness_id'], ['__count'])['groups']
+        groups = model.formatted_read_group([], ['x_ripeness_id'], ['__count'])
         expected = [{
             'x_ripeness_id': self.ripeness_green,
             '__count': 3,

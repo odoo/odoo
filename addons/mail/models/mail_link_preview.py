@@ -3,12 +3,13 @@
 import re
 import requests
 
-from datetime import timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from lxml import html
+from urllib.parse import urlparse
 
 from odoo import api, models, fields, tools
 from odoo.tools.misc import OrderedSet
-from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.link_preview import get_link_preview_from_url
 
 
@@ -17,8 +18,6 @@ class MailLinkPreview(models.Model):
     _inherit = ["bus.listener.mixin"]
     _description = "Store link preview data"
 
-    message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade')
-    is_hidden = fields.Boolean()
     source_url = fields.Char('URL', required=True)
     og_type = fields.Char('Type')
     og_title = fields.Char('Title')
@@ -28,78 +27,100 @@ class MailLinkPreview(models.Model):
     og_mimetype = fields.Char('MIME type')
     image_mimetype = fields.Char('Image MIME type')
     create_date = fields.Datetime(index=True)
+    message_link_preview_ids = fields.One2many(
+        "mail.message.link.preview", "link_preview_id", groups="base.group_erp_manager"
+    )
 
-    def _bus_channel(self):
-        return self.message_id._bus_channel()
+    _unique_source_url = models.UniqueIndex("(source_url)")
 
     @api.model
     def _create_from_message_and_notify(self, message, request_url=None):
-        if tools.is_html_empty(message.body):
-            return self
-        urls = OrderedSet(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
-        link_previews = self.env['mail.link.preview']
+        urls = []
+        if not tools.is_html_empty(message.body):
+            urls = OrderedSet(html.fromstring(message.body).xpath("//a[not(@data-oe-model)]/@href"))
+            if request_url:
+                ignore_pattern = re.compile(f"{re.escape(request_url)}(odoo|web|chat)(/|$|#|\\?)")
+                urls = list(filter(lambda url: not ignore_pattern.match(url), urls))
         requests_session = requests.Session()
-        link_preview_values = []
-        link_previews_by_url = {
-            preview.source_url: preview for preview in message.sudo().link_preview_ids
+        message_link_previews_ok = self.env["mail.message.link.preview"]
+        link_previews_values = []  # list of (sequence, values)
+        message_link_previews_values = []  # list of (sequence, mail.link.preview record)
+        message_link_preview_by_url = {
+            message_link_preview.link_preview_id.source_url: message_link_preview
+            for message_link_preview in message.sudo().message_link_preview_ids
         }
-        ignore_pattern = (
-            re.compile(f"{re.escape(request_url)}(odoo|web|chat)(/|$|#|\\?)") if request_url else None
-        )
-        for url in urls:
-            if ignore_pattern and ignore_pattern.match(url):
-                continue
-            if url in link_previews_by_url:
-                preview = link_previews_by_url.pop(url)
-                if not preview.is_hidden:
-                    link_previews += preview
-                continue
-            if preview := get_link_preview_from_url(url, requests_session):
-                preview['message_id'] = message.id
-                link_preview_values.append(preview)
-            if len(link_preview_values) + len(link_previews) > 5:
+        link_preview_by_url = {}
+        if len(message_link_preview_by_url) != len(urls):
+            # don't make the query if all `mail.message.link.preview` have been found
+            link_preview_by_url = {
+                link_preview.source_url: link_preview
+                for link_preview in self.env["mail.link.preview"].search(
+                    [("source_url", "in", urls)]
+                )
+            }
+        for index, url in enumerate(urls):
+            if message_link_preview := message_link_preview_by_url.get(url):
+                message_link_preview.sequence = index
+                message_link_previews_ok += message_link_preview
+            else:
+                if link_preview := link_preview_by_url.get(url):
+                    message_link_previews_values.append((index, link_preview))
+                elif not self._is_domain_thottled(url):
+                    if link_preview_values := get_link_preview_from_url(url, requests_session):
+                        link_previews_values.append((index, link_preview_values))
+            if (
+                len(message_link_previews_ok)
+                + len(message_link_previews_values)
+                + len(link_previews_values)
+                > 5
+            ):
                 break
-        for unused_preview in link_previews_by_url.values():
-            unused_preview._unlink_and_notify()
-        if link_preview_values:
-            link_previews += link_previews.create(link_preview_values)
-        if link_previews := link_previews.sorted(key=lambda p: list(urls).index(p.source_url)):
-            message._bus_send_store(message, {"link_preview_ids": Store.Many(link_previews)})
-
-    def _hide_and_notify(self):
-        if not self:
-            return True
-        for link_preview in self:
-            link_preview._bus_send_store(
-                link_preview.message_id,
-                {"link_preview_ids": Store.Many(link_preview, [], mode="DELETE")},
+        new_link_preview_by_url = {
+            link_preview.source_url: link_preview
+            for link_preview in self.env["mail.link.preview"].create(
+                [values for sequence, values in link_previews_values]
             )
-        self.is_hidden = True
-
-    def _unlink_and_notify(self):
-        if not self:
-            return True
-        for link_preview in self:
-            link_preview._bus_send_store(
-                link_preview.message_id,
-                {"link_preview_ids": Store.Many(link_preview, [], mode="DELETE")},
+        }
+        for sequence, values in link_previews_values:
+            message_link_previews_values.append(
+                (sequence, new_link_preview_by_url[values["source_url"]])
             )
-        self.unlink()
+        message_link_previews_ok += self.env["mail.message.link.preview"].create(
+            [
+                {
+                    "sequence": sequence,
+                    "link_preview_id": link_preview.id,
+                    "message_id": message.id,
+                }
+                for sequence, link_preview in message_link_previews_values
+            ]
+        )
+        (message.sudo().message_link_preview_ids - message_link_previews_ok)._unlink_and_notify()
+        message._bus_send_store(message, "message_link_preview_ids")
 
     @api.model
     def _is_link_preview_enabled(self):
         link_preview_throttle = int(self.env['ir.config_parameter'].sudo().get_param('mail.link_preview_throttle', 99))
         return link_preview_throttle > 0
 
+    def _is_domain_thottled(self, url):
+        domain = urlparse(url).netloc
+        date_interval = fields.Datetime.to_string((datetime.now() - relativedelta(seconds=10)))
+        call_counter = self.env["mail.link.preview"].search_count(
+            [("source_url", "ilike", domain), ("create_date", ">", date_interval)]
+        )
+        link_preview_throttle = int(
+            self.env["ir.config_parameter"].get_param("mail.link_preview_throttle", 99)
+        )
+        return call_counter > link_preview_throttle
+
     @api.model
     def _search_or_create_from_url(self, url):
         """Return the URL preview, first from the database if available otherwise make the request."""
-        lifetime = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail_link_preview_lifetime_days', 3))
-        preview = self.env['mail.link.preview'].search([
-            ('source_url', '=', url),
-            ('create_date', '>=', fields.Datetime.now() - timedelta(days=lifetime)),
-        ], order='create_date DESC', limit=1)
+        preview = self.env["mail.link.preview"].search([("source_url", "=", url)])
         if not preview:
+            if self._is_domain_thottled(url):
+                return self.env["mail.link.preview"]
             preview_values = get_link_preview_from_url(url)
             if not preview_values:
                 return self.env["mail.link.preview"]
@@ -109,7 +130,6 @@ class MailLinkPreview(models.Model):
     def _to_store_defaults(self):
         return [
             "image_mimetype",
-            "message_id",
             "og_description",
             "og_image",
             "og_mimetype",
@@ -118,11 +138,3 @@ class MailLinkPreview(models.Model):
             "og_type",
             "source_url",
         ]
-
-    @api.autovacuum
-    def _gc_mail_link_preview(self):
-        lifetime = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail_link_preview_lifetime_days', 3))
-        self.env['mail.link.preview'].search([
-            ('message_id', '=', False),
-            ('create_date', '<', fields.Datetime.now() - timedelta(days=lifetime)),
-        ], order='create_date ASC', limit=1000).unlink()

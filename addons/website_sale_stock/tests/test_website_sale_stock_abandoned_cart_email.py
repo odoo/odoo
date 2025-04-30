@@ -18,6 +18,14 @@ class TestWebsiteSaleStockAbandonedCartEmail(
 
         website = self.env['website'].get_current_website()
         website.send_abandoned_cart_email = True
+        website.write(
+            {
+                "send_abandoned_cart_email_activation_time": (
+                    datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)
+                )
+                - relativedelta(minutes=10)
+            }
+        )
 
         storable_product_product = self._create_product()
         order_line = [[0, 0, {

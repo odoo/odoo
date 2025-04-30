@@ -476,6 +476,44 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(production.name.split('-')[0], backorder_ids.name.split('-')[0])
         self.assertEqual(int(production.name.split('-')[1]) + 1, int(backorder_ids.name.split('-')[1]))
 
+    def test_backorder_name_with_multiple_backorder(self):
+        """ Test that the backorder name is correct when splitting and creating
+        multiple backorders.s"""
+        # create a mo for 5 units and split it into 2
+        mo = self.generate_mo(qty_final=5)[0]
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.max_batch_size = 2.5
+        wizard.save().action_split()
+
+        # Ensure that the MO was correctly split into 2 MOs
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
+        mo_2 = mo.procurement_group_id.mrp_production_ids[1]
+
+        # Check that the sequence names are correct after splitting
+        self.assertEqual(mo.name.split('-')[1], '001')
+        self.assertEqual(mo_2.name.split('-')[1], '002')
+
+        # Validate the first MO and create a backorder
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        backorder_mo1 = mo.procurement_group_id.mrp_production_ids[-1]
+        self.assertEqual(backorder_mo1.name.split('-')[1], '003')
+
+        # Validate the second MO and create another backorder
+        mo_form = Form(mo_2)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        backorder_mo2 = mo_2.procurement_group_id.mrp_production_ids[-1]
+        self.assertEqual(backorder_mo2.name.split('-')[1], '004')
+
     def test_split_draft(self):
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.bom_1.product_id
@@ -486,7 +524,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
 
         action = mo.action_split()
         wizard = Form.from_action(self.env, action)
-        wizard.counter = 2
+        wizard.max_batch_size = 1
         wizard.save().action_split()
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
 
@@ -503,7 +541,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         # Split in 3 parts
         action = mo.action_split()
         wizard = Form.from_action(self.env, action)
-        wizard.counter = 3
+        wizard.max_batch_size = 4
         action = wizard.save().action_split()
         # Should have 3 mos
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 3)
@@ -511,16 +549,16 @@ class TestMrpProductionBackorder(TestMrpCommon):
         mo2 = mo.procurement_group_id.mrp_production_ids[1]
         mo3 = mo.procurement_group_id.mrp_production_ids[2]
         # Check quantities
-        self.assertEqual(mo1.product_qty, 3)
-        self.assertEqual(mo2.product_qty, 3)
-        self.assertEqual(mo3.product_qty, 4)
+        self.assertEqual(mo1.product_qty, 4)
+        self.assertEqual(mo2.product_qty, 4)
+        self.assertEqual(mo3.product_qty, 2)
         # Check raw movew quantities
-        self.assertEqual(mo1.move_raw_ids.filtered(lambda m: m.product_id == p1).product_qty, 12)
-        self.assertEqual(mo2.move_raw_ids.filtered(lambda m: m.product_id == p1).product_qty, 12)
-        self.assertEqual(mo3.move_raw_ids.filtered(lambda m: m.product_id == p1).product_qty, 16)
-        self.assertEqual(mo1.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 3)
-        self.assertEqual(mo2.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 3)
-        self.assertEqual(mo3.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 4)
+        self.assertEqual(mo1.move_raw_ids.filtered(lambda m: m.product_id == p1).product_qty, 16)
+        self.assertEqual(mo2.move_raw_ids.filtered(lambda m: m.product_id == p1).product_qty, 16)
+        self.assertEqual(mo3.move_raw_ids.filtered(lambda m: m.product_id == p1).product_qty, 8)
+        self.assertEqual(mo1.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 4)
+        self.assertEqual(mo2.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 4)
+        self.assertEqual(mo3.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 2)
 
         # Merge them back
         expected_origin = ",".join([mo1.name, mo2.name, mo3.name])
@@ -619,7 +657,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.state, 'draft')
         action = mo.action_split()
         wizard = Form.from_action(self.env, action)
-        wizard.counter = 10
+        wizard.max_batch_size = 1
         action = wizard.save().action_split()
         # check that the MO is split in 10 and the components are split accordingly
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 10)
@@ -642,7 +680,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         mo.action_assign()
         action = mo.action_split()
         wizard = Form.from_action(self.env, action)
-        wizard.counter = 10
+        wizard.max_batch_size = 1
         action = wizard.save().action_split()
         # check that the MO is split in 10 and exactly one of the components is not available
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 10)
@@ -992,5 +1030,5 @@ class TestMrpWorkorderBackorder(TransactionCase):
         self.assertEqual(mo.state, 'draft')
         action = mo.action_split()
         wizard = Form(self.env[action['res_model']].with_context(action['context']))
-        wizard.counter = 10
+        wizard.max_batch_size = 1
         wizard.save().action_split()

@@ -130,6 +130,10 @@ registerWebsitePreviewTour('test_restricted_editor_test_admin', {
         trigger: "body:not(:has(.modal))",
     },
     {
+        content: "Check that html fields are not content editable when translating",
+        trigger: ":iframe [data-oe-expression='record.website_description']:not([contenteditable='true'])",
+    },
+    {
         content: "Translate name",
         trigger: ":iframe [data-oe-expression='record.name']",
         run: "editor Nouvelle valeur",

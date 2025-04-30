@@ -87,11 +87,17 @@ export default class DevicesSynchronisation {
         const serverOpenOrders = this.pos.getOpenOrders().filter((o) => typeof o.id === "number");
         const recordIds = this.getDynamicRecordServerIds();
         const domain = this.constructOrdersDomain(serverOpenOrders);
-        const response = await this.pos.data.call("pos.config", "read_config_open_orders", [
-            odoo.pos_config_id,
-            domain,
-            recordIds,
-        ]);
+        let response = {};
+        try {
+            response = await this.pos.data.call("pos.config", "read_config_open_orders", [
+                odoo.pos_config_id,
+                domain,
+                recordIds,
+            ]);
+        } catch (error) {
+            console.warn("Error while reading open orders data from server", error);
+            return;
+        }
 
         if (Object.keys(response.dynamic_records).length) {
             const missing = await this.pos.data.missingRecursive(response.dynamic_records);
@@ -122,7 +128,7 @@ export default class DevicesSynchronisation {
      * @param {Object} staticRecords - Records data that need to be synchronized.
      */
     processStaticRecords(staticRecords) {
-        return this.models.loadData(staticRecords, [], false, true);
+        return this.models.connectNewData(staticRecords);
     }
 
     /**
@@ -131,7 +137,7 @@ export default class DevicesSynchronisation {
      * @param {Object} dynamicRecords - Record write dates by ids and models.
      */
     processDynamicRecords(dynamicRecords) {
-        return this.models.loadData(dynamicRecords, [], false, true);
+        return this.models.connectNewData(dynamicRecords);
     }
 
     /**

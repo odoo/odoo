@@ -238,13 +238,16 @@
                 <filter string="Purchase" name="filter_to_purchase" domain="[('purchase_ok', '=', True)]"/>
                 <separator/>
                 <field string="Attributes" name="attribute_line_ids" groups="product.group_product_variant"/>
+                <filter invisible="1" string="My Activities" name="filter_activities_my"
+                    domain="[('activity_user_id', '=', uid)]"/>
+                <separator invisible="1"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"/>
+                    domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records whose next activity date is past"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                    domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                     ]"/>
                 <separator/>
                 <filter string="Favorites" name="favorites" domain="[('is_favorite', '=', True)]"/>
@@ -360,14 +363,14 @@
                         <group>
                             <group name="weight" string="Logistics" invisible="type != 'consu'">
                                 <label for="volume"/>
-                                <div class="o_row">
+                                <div class="d-flex">
                                     <field name="volume" class="oe_inline"/>
-                                    <span><field name="volume_uom_name"/></span>
+                                    <field name="volume_uom_name"/>
                                 </div>
                                 <label for="weight"/>
-                                <div class="o_row">
+                                <div class="d-flex">
                                     <field name="weight" class="oe_inline"/>
-                                    <span><field name="weight_uom_name"/></span>
+                                    <field name="weight_uom_name"/>
                                 </div>
                             </group>
                             <group name="sales" string="Sales">
@@ -427,7 +430,7 @@
                     <field name="product_tag_ids" widget="many2many_tags" readonly="1" optional="hide"/>
                     <field name="additional_product_tag_ids" widget="many2many_tags" optional="hide"/>
                     <field name="type" optional="hide" readonly="1"/>
-                    <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" optional="show" readonly="1"/>
+                    <field name="uom_id" groups="uom.group_uom" optional="show" readonly="1"/>
                     <field name="product_tmpl_id" readonly="1" column_invisible="True"/>
                     <field name="active" column_invisible="True"/>
                 </list>
@@ -646,22 +649,23 @@ action = {
                         <div class="o_product_catalog_cancel_global_click">
                             <a role="menuitem" type="open" class="dropdown-item border-top-0">Edit</a>
                         </div>
+                        <div class="container p-0">
+                            <field name="is_favorite" widget="boolean_favorite" class="col-12 pe-0"/>
+                        </div>
                     </t>
                     <t t-name="card" class="p-0">
                     <!-- TODO : not getting border when select record -->
                         <div class="d-flex flex-grow-1 m-2">
-                            <div class="p-2 pt-1 d-flex flex-column m-0"
+                            <div class="ps-2 d-flex flex-column m-0"
                                     t-attf-id="product-{{record.id.raw_value}}">
                                 <div class="d-flex">
+                                    <field name="name" class="fw-bold fs-4 text-reset mb-1 me-2"/>
                                     <field class="mt-1 me-1"
                                         name="is_favorite"
                                         widget="boolean_favorite"
+                                        invisible="not is_favorite"
                                         nolabel="1"
                                         readonly="1"/>
-                                    <field name="name" class="fw-bolder fs-4 text-reset mb-1"/>
-                                </div>
-                                <div t-if="record.default_code.value">
-                                    [<field name="default_code"/>]
                                 </div>
                                 <!-- Used by @web/product/js/product_catalog/order_line to
                                         show the price using a t-portal. -->
@@ -671,7 +675,8 @@ action = {
                                         widget="many2many_tags"
                                         domain="[('id', 'in', parent.ids)]"
                                         groups="product.group_product_variant"
-                                        options="{'color_field': 'color'}"/>
+                                        options="{'color_field': 'color'}"
+                                        invisible="not product_template_attribute_value_ids"/>
                             </div>
                             <field name="image_128" widget="image" alt="Product" invisible="not image_128" class="ms-auto" options="{'size': [55, 55]}"/>
                         </div>

@@ -27,7 +27,6 @@
         'data/mail_templates_email_layouts.xml',
         'data/res_partner_data.xml',
         'security/ir.model.access.csv',
-        'views/account_journal_dashboard_views.xml',
         'views/account_move_views.xml',
         'views/account_portal_templates.xml',
         'views/res_partner_views.xml',

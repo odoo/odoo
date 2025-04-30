@@ -62,6 +62,12 @@ class PosConfig(models.Model):
         string="Add images",
         help="Image to display on the self order screen",
     )
+    self_ordering_image_background_ids = fields.Many2many(
+        'ir.attachment',
+        string="Set background image",
+        help="Image to be displayed in the background",
+        relation="pos_self_order_background_rels",
+    )
     self_ordering_default_user_id = fields.Many2one(
         "res.users",
         string="Default User",
@@ -111,6 +117,14 @@ class PosConfig(models.Model):
                     'res_model': 'pos.config',
                     'type': 'binary',
                 }) for image_name in ['landing_01.jpg', 'landing_02.jpg', 'landing_03.jpg']]
+
+            if not vals.get('self_ordering_image_background_ids'):
+                vals['self_ordering_image_background_ids'] = [(0, 0, {
+                    'name': "background.jpg",
+                    'datas': base64.b64encode(file_open(opj("pos_self_order/static/img", "kiosk_background.jpg"), "rb").read()),
+                    'res_model': 'pos.config',
+                    'type': 'binary',
+                })]
 
         return True
 
@@ -261,11 +275,11 @@ class PosConfig(models.Model):
 
     def _load_self_data_models(self):
         return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.partner',
-            'res.currency', 'pos.category', 'product.template', 'product.product',  'product.combo', 'product.combo.item', 'res.company', 'account.tax',
-            'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',
+            'res.currency', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
+            'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value',
             'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
-            'res.country', 'res.country.state']
+            'res.country', 'res.country.state', 'mail.template']
 
     def load_self_data(self):
         # Init our first record, in case of self_order is pos_config
@@ -274,13 +288,18 @@ class PosConfig(models.Model):
             'pos.config': self.env['pos.config'].search_read([('id', '=', self.id)], config_fields, load=False),
         }
         response['pos.config'][0]['_self_ordering_image_home_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_home_ids)
+        response['pos.config'][0]['_self_ordering_image_background_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_background_ids)
         response['pos.config'][0]['_pos_special_products_ids'] = self._get_special_products().ids
+        response["pos.config"][0]["_self_ordering_style"] = {
+            "primaryBgColor": self.env.company.email_secondary_color,
+            "primaryTextColor": self.env.company.email_primary_color,
+        }
         self.env['pos.session']._load_pos_data_relations('pos.config', response)
 
         # Classic data loading
         for model in self._load_self_data_models():
             try:
-                response[model] = self.env[model]._load_pos_self_data(response)
+                response[model] = self.env[model]._post_read_pos_self_data(self.env[model]._load_pos_self_data(response))
                 self.env['pos.session']._load_pos_data_relations(model, response)
             except AccessError:
                 response[model] = self.env[model]._load_pos_self_data_fields(self.id)
@@ -339,18 +358,16 @@ class PosConfig(models.Model):
         self.ensure_one()
 
         if not self.current_session_id:
+            self._check_before_creating_new_session()
             session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
             session.set_opening_control(0, "")
             self._notify('STATUS', {'status': 'open'})
 
-        ctx = dict(self._context, app_id='pos_self_order', footer=False)
-
         return {
-            'res_model': 'pos.config',
-            'type': 'ir.actions.client',
-            'tag': 'install_kiosk_pwa',
+            'type': 'ir.actions.act_url',
+            'name': _('Self Order'),
             'target': 'new',
-            'context': ctx
+            'url': self.get_kiosk_url(),
         }
 
     def get_kiosk_url(self):

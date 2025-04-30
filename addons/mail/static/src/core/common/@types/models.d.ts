@@ -6,14 +6,18 @@ declare module "models" {
     import { ChatWindow as ChatWindowClass } from "@mail/core/common/chat_window_model";
     import { Composer as ComposerClass } from "@mail/core/common/composer_model";
     import { Country as CountryClass } from "@mail/core/common/country_model";
+    import { DataResponse as DataResponseClass } from "@mail/core/common/data_request_model";
     import { Failure as FailureClass } from "@mail/core/common/failure_model";
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
+    import { MessageLinkPreview as MessageLinkPreviewClass } from "@mail/core/common/message_link_preview_model";
     import { MessageReactions as MessageReactionsClass } from "@mail/core/common/message_reactions_model";
     import { Notification as NotificationClass } from "@mail/core/common/notification_model";
     import { Persona as PersonaClass } from "@mail/core/common/persona_model";
+    import { ResGroupsPrivilege as ResGroupsPrivilegeClass } from "@mail/core/common/res_groups_privilege_model";
     import { ResGroups as ResGroupsClass } from "@mail/core/common/res_groups_model";
+    import { ResRole as ResRoleClass } from "@mail/core/common/res_role_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
     import { Volume as VolumeClass } from "@mail/core/common/volume_model";
@@ -25,14 +29,18 @@ declare module "models" {
     export interface ChatWindow extends ChatWindowClass {}
     export interface Composer extends ComposerClass {}
     export interface Country extends CountryClass {}
+    export interface DataResponse extends DataResponseClass {}
     export interface Failure extends FailureClass {}
     export interface Follower extends FollowerClass {}
     export interface LinkPreview extends LinkPreviewClass {}
     export interface Message extends MessageClass {}
+    export interface MessageLinkPreview extends MessageLinkPreviewClass {}
     export interface MessageReactions extends MessageReactionsClass {}
     export interface Notification extends NotificationClass {}
     export interface Persona extends PersonaClass {}
+    export interface ResGroupsPrivilege extends ResGroupsPrivilegeClass {}
     export interface ResGroups extends ResGroupsClass {}
+    export interface ResRole extends ResRoleClass {}
     export interface Settings extends SettingsClass {}
     export interface Thread extends ThreadClass {}
     export interface Volume extends VolumeClass {}
@@ -41,6 +49,7 @@ declare module "models" {
         ChatHub: StaticMailRecord<ChatHub, typeof ChatHubClass>;
         ChatWindow: StaticMailRecord<ChatWindow, typeof ChatWindowClass>;
         Composer: StaticMailRecord<Composer, typeof ComposerClass>;
+        DataResponse: StaticMailRecord<DataResponse, typeof DataResponseClass>;
         Failure: StaticMailRecord<Failure, typeof FailureClass>;
         "ir.attachment": StaticMailRecord<Attachment, typeof AttachmentClass>;
         "mail.activity": StaticMailRecord<Activity, typeof ActivityClass>;
@@ -48,11 +57,13 @@ declare module "models" {
         "mail.followers": StaticMailRecord<Follower, typeof FollowerClass>;
         "mail.link.preview": StaticMailRecord<LinkPreview, typeof LinkPreviewClass>;
         "mail.message": StaticMailRecord<Message, typeof MessageClass>;
+        "mail.message.link.preview": StaticMailRecord<MessageLinkPreview, typeof MessageLinkPreviewClass>;
         "mail.notification": StaticMailRecord<Notification, typeof NotificationClass>;
         MessageReactions: StaticMailRecord<MessageReactions, typeof MessageReactionsClass>;
         Persona: StaticMailRecord<Persona, typeof PersonaClass>;
         "res.country": StaticMailRecord<Country, typeof CountryClass>;
         "res.groups": StaticMailRecord<ResGroups, typeof ResGroupsClass>;
+        "res.role": StaticMailRecord<ResRole, typeof ResRoleClass>;
         Settings: StaticMailRecord<Settings, typeof SettingsClass>;
         Thread: StaticMailRecord<Thread, typeof ThreadClass>;
         Volume: StaticMailRecord<Volume, typeof VolumeClass>;
@@ -62,6 +73,7 @@ declare module "models" {
         ChatHub: ChatHub;
         ChatWindow: ChatWindow;
         Composer: Composer;
+        DataResponse: DataResponse;
         Failure: Failure;
         "ir.attachment": Attachment;
         "mail.activity": Activity;
@@ -69,11 +81,14 @@ declare module "models" {
         "mail.followers": Follower;
         "mail.link.preview": LinkPreview;
         "mail.message": Message;
+        "mail.message.link.preview": MessageLinkPreview;
         "mail.notification": Notification;
         MessageReactions: MessageReactions;
         Persona: Persona;
         "res.country": Country;
+        "res.groups.privilege": ResGroupsPrivilege;
         "res.groups": ResGroups;
+        "res.role": ResRole;
         Settings: Settings;
         Thread: Thread;
         Volume: Volume;

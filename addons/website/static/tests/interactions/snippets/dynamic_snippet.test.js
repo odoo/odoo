@@ -1,15 +1,12 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
-import { describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
 
-import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { Interaction } from "@web/public/interaction";
 
 class TestDynamicItem extends Interaction {
     static selector = ".s_test_dynamic_item";
@@ -18,9 +15,9 @@ class TestDynamicItem extends Interaction {
     };
 }
 
-registry
-    .category("public.interactions")
-    .add("website.test_dynamic_item", TestDynamicItem);
+beforeEach(() => {
+    registry.category("public.interactions").add("website.test_dynamic_item", TestDynamicItem);
+});
 
 setupInteractionWhiteList(["website.dynamic_snippet", "website.test_dynamic_item"]);
 

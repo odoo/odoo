@@ -11,7 +11,6 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { deduceUrl } from "@point_of_sale/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { PaymentMethodBreakdown } from "@point_of_sale/app/components/payment_method_breakdown/payment_method_breakdown";
 
@@ -44,6 +43,15 @@ export class ClosePosPopup extends Component {
         this.state.payments[this.props.default_cash_details.id].counted =
             this.env.utils.formatCurrency(count, false);
         this.setManualCashInput(count);
+    }
+    autoFillPMCount(paymentId) {
+        const pm = this.props.non_cash_payment_methods.find((pm) => pm.id === paymentId);
+        if (pm) {
+            this.state.payments[paymentId].counted = this.env.utils.formatCurrency(
+                pm.amount,
+                false
+            );
+        }
     }
     get cashMoveData() {
         const { total, moves } = this.props.default_cash_details.moves.reduce(
@@ -183,18 +191,9 @@ export class ClosePosPopup extends Component {
     }
     async closeSession() {
         this.pos._resetConnectedCashier();
-        if (this.pos.config.customer_display_type === "proxy") {
-            const proxyIP = this.pos.getDisplayDeviceIP();
-            fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ params: { action: "close" } }),
-            }).catch(() => {
-                console.log("Failed to send data to customer display");
-            });
+        const proxyIP = this.pos.getDisplayDeviceIP();
+        if (proxyIP) {
+            this.pos.hardwareProxy.deviceControllers.customerDisplay.action({ action: "close" });
         }
         // If there are orders in the db left unsynced, we try to sync.
         const syncSuccess = await this.pos.pushOrdersWithClosingPopup();
@@ -250,7 +249,7 @@ export class ClosePosPopup extends Component {
                 return this.handleClosingError(response);
             }
             this.pos.session.state = "closed";
-            location.reload();
+            this.pos.router.close();
         } catch (error) {
             if (error instanceof ConnectionLostError) {
                 throw error;
@@ -285,7 +284,7 @@ export class ClosePosPopup extends Component {
                                     this.pos.session.id,
                                 ]);
                                 if (session[0] && session[0].state === "closed") {
-                                    location.reload();
+                                    this.pos.router.close();
                                 } else {
                                     this.pos.redirectToBackend();
                                 }
@@ -305,7 +304,7 @@ export class ClosePosPopup extends Component {
             confirm: () => {
                 if (!response.redirect) {
                     this.props.close();
-                    this.pos.showScreen("TicketScreen");
+                    this.pos.navigate("TicketScreen");
                 }
             },
             cancel: async () => {
@@ -319,7 +318,7 @@ export class ClosePosPopup extends Component {
         });
 
         if (response.redirect) {
-            window.location.reload();
+            this.pos.router.close();
         }
     }
     getMovesTotalAmount() {

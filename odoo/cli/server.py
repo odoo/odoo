@@ -13,7 +13,6 @@ GNU Public Licence.
 import atexit
 import logging
 import os
-import re
 import sys
 
 from psycopg2.errors import InsufficientPrivilege
@@ -28,7 +27,6 @@ from . import Command
 # Also use the `odoo` logger for the main script.
 _logger = logging.getLogger('odoo')
 
-re._MAXCACHE = 4096  # default is 512, a little too small for odoo
 
 def check_root_user():
     """Warn if the process's user is 'root' (on POSIX system)."""
@@ -59,6 +57,8 @@ def report_configuration():
     _logger.info('addons paths: %s', odoo.addons.__path__)
     if config.get('upgrade_path'):
         _logger.info('upgrade path: %s', config['upgrade_path'])
+    if config.get('pre_upgrade_scripts'):
+        _logger.info('extra upgrade scripts: %s', config['pre_upgrade_scripts'])
     host = config['db_host'] or os.environ.get('PGHOST', 'default')
     port = config['db_port'] or os.environ.get('PGPORT', 'default')
     user = config['db_user'] or os.environ.get('PGUSER', 'default')

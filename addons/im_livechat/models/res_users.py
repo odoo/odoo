@@ -2,6 +2,7 @@
 
 from odoo import fields, models, api
 from odoo.addons.mail.tools.discuss import Store
+from odoo.fields import Command
 
 
 class ResUsers(models.Model):
@@ -10,18 +11,31 @@ class ResUsers(models.Model):
     """
     _inherit = 'res.users'
 
-    livechat_username = fields.Char(string='Livechat Username', compute='_compute_livechat_username', inverse='_inverse_livechat_username', store=False)
-    livechat_lang_ids = fields.Many2many('res.lang', string='Livechat Languages', compute='_compute_livechat_lang_ids', inverse='_inverse_livechat_lang_ids', store=False)
+    livechat_username = fields.Char(
+        string="Livechat Username",
+        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
+        compute="_compute_livechat_username",
+        inverse="_inverse_livechat_username",
+        store=False,
+    )
+    livechat_lang_ids = fields.Many2many(
+        "res.lang",
+        string="Livechat Languages",
+        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
+        compute="_compute_livechat_lang_ids",
+        inverse="_inverse_livechat_lang_ids",
+        store=False,
+    )
     livechat_expertise_ids = fields.Many2many(
         "im_livechat.expertise",
         string="Live Chat Expertise",
+        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
         compute="_compute_livechat_expertise_ids",
         inverse="_inverse_livechat_expertise_ids",
         store=False,
         help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
     has_access_livechat = fields.Boolean(compute='_compute_has_access_livechat', string='Has access to Livechat', store=False, readonly=True)
-    is_in_call = fields.Boolean("Is in call", compute="_compute_is_in_call")
 
     @property
     def SELF_READABLE_FIELDS(self):
@@ -43,7 +57,8 @@ class ResUsers(models.Model):
     @api.depends('res_users_settings_id.livechat_username')
     def _compute_livechat_username(self):
         for user in self:
-            user.livechat_username = user.res_users_settings_id.livechat_username
+            # sudo: livechat user can see the livechat username of any other user
+            user.livechat_username = user.sudo().res_users_settings_id.livechat_username
 
     def _inverse_livechat_username(self):
         for user in self:
@@ -53,7 +68,8 @@ class ResUsers(models.Model):
     @api.depends('res_users_settings_id.livechat_lang_ids')
     def _compute_livechat_lang_ids(self):
         for user in self:
-            user.livechat_lang_ids = user.res_users_settings_id.livechat_lang_ids
+            # sudo: livechat user can see the livechat languages of any other user
+            user.livechat_lang_ids = user.sudo().res_users_settings_id.livechat_lang_ids
 
     def _inverse_livechat_lang_ids(self):
         for user in self:
@@ -63,7 +79,8 @@ class ResUsers(models.Model):
     @api.depends("res_users_settings_id.livechat_expertise_ids")
     def _compute_livechat_expertise_ids(self):
         for user in self:
-            user.livechat_expertise_ids = user.res_users_settings_id.livechat_expertise_ids
+            # sudo: livechat user can see the livechat expertise of any other user
+            user.livechat_expertise_ids = user.sudo().res_users_settings_id.livechat_expertise_ids
 
     def _inverse_livechat_expertise_ids(self):
         for user in self:
@@ -75,13 +92,18 @@ class ResUsers(models.Model):
         for user in self.sudo():
             user.has_access_livechat = user.has_group('im_livechat.im_livechat_group_user')
 
-    @api.depends("partner_id.channel_member_ids.rtc_session_ids")
-    def _compute_is_in_call(self):
-        rtc_sessions = self.env["discuss.channel.rtc.session"].search(
-            [("partner_id", "in", self.partner_id.ids)]
-        )
-        for user in self:
-            user.is_in_call = user.partner_id in rtc_sessions.partner_id
+    def write(self, vals):
+        if vals.get("group_ids"):
+            operator_group = self.env.ref("im_livechat.im_livechat_group_user")
+            if operator_group in self.all_group_ids:
+                result = super().write(vals)
+                lost_operators = self.filtered_domain([("all_group_ids", "not in", operator_group.id)])
+                # sudo - im_livechat.channel: user manager can remove user from livechat channels
+                self.env["im_livechat.channel"].sudo() \
+                    .search([("user_ids", "in", lost_operators.ids)]) \
+                    .write({"user_ids": [Command.unlink(operator.id) for operator in lost_operators]})
+                return result
+        return super().write(vals)
 
     def _init_store_data(self, store: Store):
         super()._init_store_data(store)

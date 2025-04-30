@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.exceptions import ValidationError
 
 
@@ -37,8 +38,9 @@ class HrEmployee(models.Model):
                 employee.license_plate = ' '.join(employee.car_ids.filtered('license_plate').mapped('license_plate')) or employee.private_car_plate
 
     def _search_license_plate(self, operator, value):
-        employees = self.env['hr.employee'].search(['|', ('car_ids.license_plate', operator, value), ('private_car_plate', operator, value)])
-        return [('id', 'in', employees.ids)]
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        return ['|', ('car_ids.license_plate', operator, value), ('private_car_plate', operator, value)]
 
     def _compute_employee_cars_count(self):
         rg = self.env['fleet.vehicle.assignation.log']._read_group([

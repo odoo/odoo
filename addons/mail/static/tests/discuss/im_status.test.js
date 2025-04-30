@@ -1,10 +1,9 @@
-import { AWAY_DELAY } from "@mail/core/common/im_status_service";
 import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
-
 import { beforeEach, describe, test } from "@odoo/hoot";
 import { advanceTime, freezeTime } from "@odoo/hoot-dom";
-
 import { asyncStep, mockService, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
+
+import { AWAY_DELAY } from "@mail/core/common/im_status_service";
 
 defineMailModels();
 beforeEach(freezeTime);
@@ -16,6 +15,7 @@ test("update presence if IM status changes to offline while this device is onlin
     await start();
     await waitForSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+        presence_status: "offline",
         im_status: "offline",
         partner_id: serverState.partnerId,
     });
@@ -29,6 +29,7 @@ test("update presence if IM status changes to away while this device is online",
     await start();
     await waitForSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+        presence_status: "away",
         im_status: "away",
         partner_id: serverState.partnerId,
     });
@@ -42,6 +43,7 @@ test("do not update presence if IM status changes to away while this device is a
     await start();
     await waitForSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+        presence_status: "away",
         im_status: "away",
         partner_id: serverState.partnerId,
     });
@@ -55,6 +57,7 @@ test("do not update presence if other user's IM status changes to away", async (
     await start();
     await waitForSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+        presence_status: "away",
         im_status: "away",
         partner_id: serverState.publicPartnerId,
     });

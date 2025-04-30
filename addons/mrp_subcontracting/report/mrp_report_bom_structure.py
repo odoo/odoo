@@ -16,7 +16,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'partner_id': seller.partner_id.id,
             'quantity': bom_quantity,
             'uom': bom.product_uom_id.name,
-            'prod_cost': price / ratio_uom_seller * bom_quantity,
             'bom_cost': price / ratio_uom_seller * bom_quantity,
             'level': level or 0
         }
@@ -34,7 +33,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                     res['bom_cost'] += res['subcontracting']['bom_cost']
         return res
 
-    def _get_bom_array_lines(self, data, level, unfolded_ids, unfolded, parent_unfolded):
+    def _get_bom_array_lines(self, data, level, unfolded_ids, unfolded, parent_unfolded=True):
         lines = super()._get_bom_array_lines(data, level, unfolded_ids, unfolded, parent_unfolded)
 
         if data.get('subcontracting'):
@@ -45,7 +44,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 'uom': False,
                 'quantity': subcontract_info['quantity'],
                 'bom_cost': subcontract_info['bom_cost'],
-                'prod_cost': subcontract_info['prod_cost'],
                 'level': subcontract_info['level'],
                 'visible': level == 1 or unfolded or parent_unfolded
             })

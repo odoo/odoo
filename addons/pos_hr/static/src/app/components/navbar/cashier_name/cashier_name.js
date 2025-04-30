@@ -5,7 +5,7 @@ import { useCashierSelector } from "@pos_hr/app/utils/select_cashier_mixin";
 patch(CashierName.prototype, {
     setup() {
         super.setup(...arguments);
-        this.selectCashier = useCashierSelector();
+        this.cashierSelector = useCashierSelector();
     },
     //@Override
     get avatar() {
@@ -24,5 +24,8 @@ patch(CashierName.prototype, {
             return { oe_status: true };
         }
         return super.cssClass;
+    },
+    async selectCashier(pin = false, login = false, list = false) {
+        return await this.cashierSelector(...arguments);
     },
 });

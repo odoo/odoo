@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, _
@@ -18,16 +17,12 @@ class ProductProduct(models.Model):
         self.product_catalog_product_is_in_repair = False
 
     def _search_product_is_in_repair(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_("Operation not supported"))
+        if operator != 'in':
+            return NotImplemented
         product_ids = self.env['repair.order'].search([
             ('id', 'in', [self.env.context.get('order_id', '')]),
         ]).move_ids.product_id.ids
-        if (operator == '!=' and value is True) or (operator == '=' and value is False):
-            domain_operator = 'not in'
-        else:
-            domain_operator = 'in'
-        return [('id', domain_operator, product_ids)]
+        return [('id', 'in', product_ids)]
 
     def _count_returned_sn_products_domain(self, sn_lot, or_domains):
         or_domains.append([

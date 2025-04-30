@@ -4,7 +4,7 @@ from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools import SQL
 from odoo.addons.mail.tools.discuss import Store
-
+from odoo.exceptions import AccessError
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
@@ -18,6 +18,13 @@ class ResPartner(models.Model):
         copy=False,
     )
     channel_member_ids = fields.One2many("discuss.channel.member", "partner_id")
+    is_in_call = fields.Boolean(compute="_compute_is_in_call", groups="base.group_system")
+    rtc_session_ids = fields.One2many("discuss.channel.rtc.session", "partner_id")
+
+    @api.depends("rtc_session_ids")
+    def _compute_is_in_call(self):
+        for partner in self:
+            partner.is_in_call = bool(partner.rtc_session_ids)
 
     @api.readonly
     @api.model
@@ -35,12 +42,10 @@ class ResPartner(models.Model):
     def _search_for_channel_invite(self, store: Store, search_term, channel_id=None, limit=30):
         domain = expression.AND(
             [
-                expression.OR(
-                    [
-                        [("name", "ilike", search_term)],
-                        [("email", "ilike", search_term)],
-                    ]
-                ),
+                expression.OR([
+                    [("name", "ilike", search_term)],
+                    [("email", "ilike", search_term)],
+                ]),
                 [('id', '!=', self.env.user.partner_id.id)],
                 [("active", "=", True)],
                 [("user_ids", "!=", False)],
@@ -107,4 +112,9 @@ class ResPartner(models.Model):
         if allowed_group:
             for p in partners:
                 store.add(p, {"group_ids": [("ADD", (allowed_group & p.user_ids.all_group_ids).ids)]})
+        try:
+            roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
+            store.add(roles, "name")
+        except AccessError:
+            pass
         return store.get_result()

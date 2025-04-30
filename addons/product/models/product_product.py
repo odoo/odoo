@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
 from operator import itemgetter
 
-from odoo import api, fields, models, tools, _
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare, format_list, groupby
+from odoo.tools import float_compare, groupby
 from odoo.tools.image import is_image_size_above
 from odoo.tools.misc import unique
 
@@ -105,7 +104,7 @@ class ProductProduct(models.Model):
     # There could be no variant for a combination if using dynamic attributes.
     _combination_unique = models.UniqueIndex("(product_tmpl_id, combination_indices) WHERE active IS TRUE")
 
-    is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite', readonly=True, store=True)
+    is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite', readonly=False, store=True)
     _is_favorite_index = models.Index("(is_favorite) WHERE is_favorite IS TRUE")
 
     @api.depends('image_variant_1920', 'image_variant_1024')
@@ -195,8 +194,11 @@ class ProductProduct(models.Model):
     def _get_placeholder_filename(self, field):
         image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
         if field in image_fields:
-            return 'product/static/img/placeholder_thumbnail.png'
+            return self._get_product_placeholder_filename()
         return super()._get_placeholder_filename(field)
+
+    def _get_product_placeholder_filename(self):
+        return self.product_tmpl_id._get_product_placeholder_filename()
 
     def _get_barcodes_by_company(self):
         return [
@@ -217,9 +219,9 @@ class ProductProduct(models.Model):
         )
 
         duplicates_as_str = "\n".join(
-            _(
+            self.env._(
                 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s",
-                barcode=barcode, product_list=format_list(self.env, duplicate_products._filtered_access('read').mapped('display_name')),
+                barcode=barcode, product_list=duplicate_products._filtered_access('read').mapped('display_name'),
             )
             for barcode, duplicate_products in products_by_barcode
         )
@@ -239,9 +241,10 @@ class ProductProduct(models.Model):
         """ With GS1 nomenclature, products and packagings use the same pattern. Therefore, we need
         to ensure the uniqueness between products' barcodes and packagings' ones"""
         # Barcodes should only be unique within a company
-        for company_id, barcodes_within_company in self._get_barcodes_by_company():
-            self._check_duplicated_product_barcodes(barcodes_within_company, company_id)
-            self._check_duplicated_packaging_barcodes(barcodes_within_company, company_id)
+        self_ctx = self.with_context(skip_preprocess_gs1=True)
+        for company_id, barcodes_within_company in self_ctx._get_barcodes_by_company():
+            self_ctx._check_duplicated_product_barcodes(barcodes_within_company, company_id)
+            self_ctx._check_duplicated_packaging_barcodes(barcodes_within_company, company_id)
 
     @api.constrains('company_id')
     def _check_company_id(self):
@@ -290,13 +293,19 @@ class ProductProduct(models.Model):
 
     @api.depends_context('partner_id')
     def _compute_product_code(self):
+        read_access = self.env['ir.model.access'].check('product.supplierinfo', 'read', False)
         for product in self:
             product.code = product.default_code
-            if self.env['ir.model.access'].check('product.supplierinfo', 'read', False):
+            if read_access:
                 for supplier_info in product.seller_ids:
                     if supplier_info.partner_id.id == product._context.get('partner_id'):
+                        if supplier_info.product_id and supplier_info.product_id != product:
+                            # Supplier info specific for another variant.
+                            continue
                         product.code = supplier_info.product_code or product.default_code
-                        break
+                        if product == supplier_info.product_id:
+                            # Supplier info specific for this variant.
+                            break
 
     @api.depends_context('partner_id')
     def _compute_partner_ref(self):
@@ -336,8 +345,13 @@ class ProductProduct(models.Model):
 
     def _search_all_product_tag_ids(self, operator, operand):
         if operator in expression.NEGATIVE_TERM_OPERATORS:
-            return [('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
+            return NotImplemented
         return ['|', ('product_tag_ids', operator, operand), ('additional_product_tag_ids', operator, operand)]
+
+    @api.onchange('standard_price')
+    def _onchange_standard_price(self):
+        if self.standard_price < 0:
+            raise ValidationError(_("The cost of a product can't be negative."))
 
     @api.onchange('default_code')
     def _onchange_default_code(self):
@@ -437,7 +451,7 @@ class ProductProduct(models.Model):
         self.env.registry.clear_cache()
         return res
 
-    def _filter_to_unlink(self, check_access=True):
+    def _filter_to_unlink(self):
         return self
 
     def _unlink_or_archive(self, check_access=True):
@@ -574,11 +588,13 @@ class ProductProduct(models.Model):
             [('name', operator, value)],
             [('default_code', operator, value)],
         ]
-        if operator in ('=', 'in') or (operator.endswith('like') and is_positive):
-            barcode_values = [value] if operator != 'in' else value
-            domains.append([('barcode', 'in', barcode_values)])
-        if operator == '=' and isinstance(value, str) and (m := re.search(r'(\[(.*?)\])', value)):
-            domains.append([('default_code', '=', m.group(2))])
+        if operator == 'in':
+            domains.append([('barcode', 'in', value)])
+            for v in value:
+                if isinstance(v, str) and (m := re.search(r'(\[(.*?)\])', v)):
+                    domains.append([('default_code', '=', m.group(2))])
+        elif operator.endswith('like') and is_positive:
+            domains.append([('barcode', 'in', [value])])
         if partner_id := self.env.context.get('partner_id'):
             supplier_domain = [
                 ('partner_id', '=', partner_id),

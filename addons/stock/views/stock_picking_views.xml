@@ -131,6 +131,9 @@
                     <field name="state" widget="statusbar" invisible="picking_type_code == 'incoming'" statusbar_visible="draft,confirmed,assigned,done"/>
                     <button name="action_cancel" invisible="state not in ('assigned', 'confirmed', 'draft', 'waiting')" string="Cancel" groups="base.group_user" type="object" confirm="Are you sure you want to cancel this transfer?" data-hotkey="x"/>
                 </header>
+                <div class="alert alert-info" role="alert" invisible="not picking_warning_text">
+                    <field name="picking_warning_text" class="fw-bold"/>
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_see_returns" type="object"
@@ -283,13 +286,7 @@
                                     <field name="display_import_lot" column_invisible="True"/>
                                     <field name="picking_type_entire_packs" column_invisible="True"/>
                                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
-                                    <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart"
-                                        invisible="not product_id or product_uom_qty == 0 or quantity == 0 and forecast_availability &lt;= 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
-                                    <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger"
-                                        invisible="not product_id or product_uom_qty == 0 or quantity &gt; 0 or forecast_availability &gt; 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
                                     <field name="forecast_expected_date" column_invisible="True"/>
-                                    <field name="forecast_availability" string="Forecast" optional="hide"
-                                        column_invisible="parent.state in ('draft', 'done') or parent.picking_type_code != 'outgoing'" widget="forecast_widget"/>
                                     <field name="product_qty" readonly="1" column_invisible="True"/>
                                     <field name="quantity" string="Quantity" readonly="not is_quantity_done_editable" column_invisible="parent.state=='draft'" decoration-danger="product_uom_qty and quantity > product_uom_qty and parent.state not in ['done', 'cancel']"/>
                                     <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
@@ -304,8 +301,10 @@
                                         context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"
                                         domain="[('product_id','=',product_id)]"
                                     />
-                                    <button name="action_show_details" type="object" icon="fa-list" title="Details"
+                                    <button name="action_show_details" type="object" string="Details" title="Details"
                                             invisible="not show_details_visible"/>
+                                    <field name="forecast_availability" string=""
+                                        column_invisible="parent.state in ('draft', 'done')" widget="forecast_widget"/>
                                 </list>
                             </field>
                             <field name="id" invisible="1"/>
@@ -348,6 +347,8 @@
                         filter_domain="['|', ('move_line_ids.package_id.name', 'ilike', self), ('move_line_ids.result_package_id.name', 'ilike', self)]"
                         groups="stock.group_tracking_lot"/>
                     <field name="lot_id" groups="stock.group_production_lot"/>
+                    <field name="activity_user_id" string="Activities of"/>
+                    <field name="activity_type_id" string="Activity type"/>
                     <filter name="to_do_transfers" string="To Do" domain="['&amp;',('user_id', 'in', [uid, False]),('state','not in',['done','cancel'])]"/>
                     <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
@@ -360,26 +361,28 @@
                     <filter name="delivery" invisible="1" string="Deliveries" domain="[('picking_type_code', '=', 'outgoing')]"/>
                     <filter name="internal" invisible="1" string="Internal" domain="[('picking_type_code', '=', 'internal')]"/>
                     <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
+                    <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
+                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
                     <filter name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
                     <filter name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
                     <filter name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
                     <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
                     <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
-                    <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
-                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
-                    <filter string="Planning Issues" name="planning_issues" help="Transfers that are late on scheduled time or one of pickings will be late"
-                        domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('scheduled_date','&lt;', time.strftime('%Y-%m-%d %H:%M:%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]"/>
+                    <separator/>
                     <filter string="Late Availability" name="late_availability" domain="[('products_availability_state', '=', 'late')]"/>
                     <separator/>
                     <filter name="backorder" string="Backorders" domain="[('backorder_id', '!=', False), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Remaining parts of picking partially processed"/>
                     <separator/>
+                    <filter invisible="1" string="My Activities" name="filter_activities_my"
+                        domain="[('activity_user_id', '=', uid)]"/>
+                    <separator invisible="1"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                        help="Show all records which has next action date is before today"/>
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records whose next activity date is past"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
@@ -387,6 +390,7 @@
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Scheduled Date" name="expected_date" domain="[]" context="{'group_by': 'scheduled_date'}"/>
                         <filter string="Source Document" name="origin" domain="[]" context="{'group_by': 'origin'}"/>
+                        <filter string="Destination Country" name="partner_country" context="{'group_by': 'partner_country_id'}"/>
                         <filter string="Operation Type" name="picking_type" domain="[]" context="{'group_by': 'picking_type_id'}"/>
                         <filter string="Properties" name="group_by_picking_properties" context="{'group_by': 'picking_properties'}"/>
                     </group>
@@ -426,6 +430,7 @@
         <record id="action_picking_tree_internal" model="ir.actions.act_window">
             <field name="name">Internal Transfers</field>
             <field name="res_model">stock.picking</field>
+            <field name="path">internal</field>
             <field name="view_mode">list,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'restricted_picking_type_code': 'internal', 'search_default_internal': 1}</field>
@@ -450,7 +455,7 @@
             <field name="name">Unreserve</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_view_types">list,kanban,form</field>
+            <field name="binding_view_types">form</field>
             <field name="state">code</field>
             <field name="code">
             if records:

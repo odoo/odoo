@@ -4,6 +4,7 @@ import json
 import math
 import re
 
+import psycopg2
 from werkzeug import urls
 from werkzeug.exceptions import Forbidden
 
@@ -21,6 +22,11 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
 
     This method computes url, page range to display, ... in the pager.
 
+    Enhanced pager logic for SEO optimization:
+    - Shows first and last page in pagination
+    - Shows current page with -1 and +1 neighbors
+    - Adds ellipses when necessary
+
     :param str url : base url of the page link
     :param int total : number total of item to be splitted into pages
     :param int page : current page
@@ -33,19 +39,30 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
     page_count = int(math.ceil(float(total) / step))
 
     page = max(1, min(int(page if str(page).isdigit() else 1), page_count))
-    scope -= 1
 
-    pmin = max(page - int(math.floor(scope/2)), 1)
-    pmax = min(pmin + scope, page_count)
-
-    if pmax - pmin < scope:
-        pmin = pmax - scope if pmax - scope > 0 else 1
+    page_previous = max(1, page - 1)
+    page_next = min(page_count, page + 1)
 
     def get_url(page):
         _url = "%s/page/%s" % (url, page) if page > 1 else url
         if url_args:
             _url = "%s?%s" % (_url, urls.url_encode(url_args))
         return _url
+
+    # Build page list based on conditions
+    if page_count <= 5:
+        page_list = list(range(1, page_count + 1))
+    elif page <= 3:
+        page_list = [1, 2, 3, 4, "…", page_count]
+    elif page >= page_count - 2:
+        page_list = [1, "…"] + list(range(page_count - 3, page_count + 1))
+    else:
+        page_list = [1, "…", page - 1, page, page + 1, "…", page_count]
+
+    pages = [
+        {"num": p, "url": get_url(p) if p != "…" else None, "is_current": p == page}
+        for p in page_list
+    ]
 
     return {
         "page_count": page_count,
@@ -58,29 +75,19 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
             'url': get_url(1),
             'num': 1
         },
-        "page_start": {
-            'url': get_url(pmin),
-            'num': pmin
-        },
         "page_previous": {
-            'url': get_url(max(pmin, page - 1)),
-            'num': max(pmin, page - 1)
+            'url': get_url(page_previous),
+            'num': page_previous
         },
         "page_next": {
-            'url': get_url(min(pmax, page + 1)),
-            'num': min(pmax, page + 1)
-        },
-        "page_end": {
-            'url': get_url(pmax),
-            'num': pmax
+            'url': get_url(page_next),
+            'num': page_next
         },
         "page_last": {
             'url': get_url(page_count),
             'num': page_count
         },
-        "pages": [
-            {'url': get_url(page_num), 'num': page_num} for page_num in range(pmin, pmax+1)
-        ]
+        "pages": pages
     }
 
 
@@ -284,7 +291,11 @@ class CustomerPortal(Controller):
         :return: The set of mandatory billing field names.
         :rtype: set
         """
-        return self._get_mandatory_address_fields(country_sudo)
+        base_fields = {'name', 'email'}
+        if not self._needs_address():
+            return base_fields
+        base_fields.add('phone')  # not required for quick checkout (event)
+        return base_fields | self._get_mandatory_address_fields(country_sudo)
 
     def _check_delivery_address(self, partner_sudo):
         """ Check that all mandatory delivery fields are filled for the given partner.
@@ -305,7 +316,15 @@ class CustomerPortal(Controller):
         :return: The set of mandatory delivery field names.
         :rtype: set
         """
-        return self._get_mandatory_address_fields(country_sudo)
+        base_fields = {'name', 'email'}
+        if not self._needs_address():
+            return base_fields
+        base_fields.add('phone')  # not required for quick checkout (event)
+        return base_fields | self._get_mandatory_address_fields(country_sudo)
+
+    def _needs_address(self):
+        """ Hook meant to be overridden in other modules. """
+        return True
 
     def _get_mandatory_address_fields(self, country_sudo):
         """ Return the set of common mandatory address fields.
@@ -314,7 +333,7 @@ class CustomerPortal(Controller):
         :return: The set of common mandatory address field names.
         :rtype: set
         """
-        field_names = {'name', 'email', 'street', 'city', 'country_id', 'phone'}
+        field_names = {'street', 'city', 'country_id'}
         if country_sudo.state_required:
             field_names.add('state_id')
         if country_sudo.zip_required:
@@ -406,6 +425,8 @@ class CustomerPortal(Controller):
             'current_partner': current_partner,
             'commercial_partner': current_partner.commercial_partner_id,
             'is_commercial_address': not current_partner or partner_sudo == commercial_partner,
+            # To whether display the login field
+            'login_field': request.httprequest.full_path == "/my/account?",
             'commercial_address_update_url': (
                 # Only redirect to account update if the logged in user is their own commercial
                 # partner.
@@ -472,6 +493,7 @@ class CustomerPortal(Controller):
         use_delivery_as_billing=False,
         callback='/my/addresses',
         required_fields=False,
+        verify_address_values=True,
         **form_data
     ):
         """ Create or update an address if there is no error else return error dict.
@@ -484,6 +506,7 @@ class CustomerPortal(Controller):
         :param str callback: The URL to redirect to in case of successful address creation/update.
         :param str required_fields: The additional required address values, as a comma-separated
                                     list of `res.partner` fields.
+        :param bool verify_address_values: Whether we want to check the given address values.
         :return: Partner record and A JSON-encoded feedback, with either the success URL or
                  an error message.
         :rtype: res.partner, dict
@@ -493,20 +516,25 @@ class CustomerPortal(Controller):
         # Parse form data into address values, and extract incompatible data as extra form data.
         address_values, extra_form_data = self._parse_form_data(form_data)
 
-        # Validate the address values and highlights the problems in the form, if any.
-        invalid_fields, missing_fields, error_messages = self._validate_address_values(
-            address_values,
-            partner_sudo,
-            address_type,
-            use_delivery_as_billing,
-            required_fields or '',
-            **extra_form_data,
-        )
-        if error_messages:
-            return partner_sudo, {
-                'invalid_fields': list(invalid_fields | missing_fields),
-                'messages': error_messages,
-            }
+        if verify_address_values:
+            # Validate the address values and highlights the problems in the form, if any.
+            invalid_fields, missing_fields, error_messages = self._validate_address_values(
+                address_values,
+                partner_sudo,
+                address_type,
+                use_delivery_as_billing,
+                required_fields or '',
+                **extra_form_data,
+            )
+            if form_data.get("login_field"):
+                # Validate login and highlights the problems in the form, if any.
+                login = extra_form_data.get("login", "").strip()
+                self._validate_login_and_update(login, invalid_fields, missing_fields, error_messages)
+            if error_messages:
+                return partner_sudo, {
+                    'invalid_fields': list(invalid_fields | missing_fields),
+                    'messages': error_messages,
+                }
 
         if not partner_sudo:  # Creation of a new address.
             self._complete_address_values(
@@ -531,7 +559,7 @@ class CustomerPortal(Controller):
 
         self._handle_extra_form_data(extra_form_data, address_values)
 
-        return partner_sudo, {'successUrl': callback}
+        return partner_sudo, {'redirectUrl': callback}
 
     def _parse_form_data(self, form_data):
         """ Parse the form data and return them converted into address values and extra form data.
@@ -558,16 +586,6 @@ class CustomerPortal(Controller):
                     address_values[key] = field.convert_to_cache(value, ResPartner)
             elif value:  # The value cannot be saved on the `res.partner` model.
                 extra_form_data[key] = value
-
-        if (
-            hasattr(ResPartner, 'check_vat')  # The `base_vat` module is installed.
-            and address_values.get('vat')
-            and address_values.get('country_id')
-        ):
-            address_values['vat'] = ResPartner.fix_eu_vat_number(
-                address_values['country_id'],
-                address_values['vat'],
-            )
 
         if 'zipcode' in form_data and not form_data.get('zip'):
             address_values['zip'] = form_data.pop('zipcode', '')
@@ -662,6 +680,10 @@ class CustomerPortal(Controller):
                     else:
                         address_values.pop(commercial_field_name, None)
 
+                # Company name shouldn't be updated on a child address, even if it's not in the
+                # fields returned by _commercial_fields.
+                address_values.pop('company_name', None)
+
             # Prevent changing the VAT number on a commercial partner if documents have been issued.
             elif (
                 'vat' in address_values
@@ -687,7 +709,7 @@ class CustomerPortal(Controller):
         ResPartnerSudo = request.env['res.partner'].sudo()
         if (
             address_values.get('vat')
-            and hasattr(ResPartnerSudo, 'check_vat')  # base_vat module is installed
+            and hasattr(ResPartnerSudo, '_check_vat')  # account module is installed
             and 'vat' not in invalid_fields
         ):
             partner_dummy = ResPartnerSudo.new({
@@ -696,7 +718,7 @@ class CustomerPortal(Controller):
                 if fname in address_values
             })
             try:
-                partner_dummy.check_vat()
+                partner_dummy._check_vat()
             except ValidationError as exception:
                 invalid_fields.add('vat')
                 error_messages.append(exception.args[0])
@@ -717,6 +739,12 @@ class CustomerPortal(Controller):
                     if fname in required_field_set and fname not in address_values:
                         required_field_set.remove(fname)
 
+        address_fields = self._get_mandatory_address_fields(country)
+        if any(address_values.get(fname) for fname in address_fields):
+            # If the customer provided any address information, they should provide their whole
+            # address, even if the address wasn't required (e.g. the order only contains services).
+            required_field_set |= address_fields
+
         # Verify that no required field has been left empty.
         for field_name in required_field_set:
             if not address_values.get(field_name):
@@ -725,6 +753,37 @@ class CustomerPortal(Controller):
             error_messages.append(_("Some required fields are empty."))
 
         return invalid_fields, missing_fields, error_messages
+
+    def _validate_login_and_update(
+        self,
+        login,
+        invalid_fields,
+        missing_fields,
+        error_messages
+    ):
+        """ Validate login and update the user login if necessary.
+
+        :param str login: Login to validate and update.
+        :param set invalid_fields: The set of invalid fields.
+        :param set missing_fields: The set of missing fields.
+        :param list error_messages: The list of error messages.
+        :return: None
+        """
+        old_login = request.env.user.login
+        if not login:
+            missing_fields.add("login")
+            error_messages.append(_("Some required fields are empty."))
+        elif old_login != login:
+            try:
+                with request.env.cr.savepoint():
+                    request.env.user.write({"login": login})
+                    if error_messages:
+                        request.env.user.write({"login": old_login})
+                # update session token so the user does not get logged out
+                request.session.session_token = request.env.user._compute_session_token(request.session.sid)
+            except (ValidationError, psycopg2.errors.UniqueViolation):
+                invalid_fields.add("login")
+                error_messages.append(_("The user name %s is already taken. Please choose another one.", login))
 
     def _get_vat_validation_fields(self):
         return {'country_id', 'vat'}

@@ -213,6 +213,12 @@ function patchBodyAddEventListener() {
 function patchOdoo() {
     patchWithCleanup(odoo, {
         debug: "",
+        info: {
+            db: sessionInfo.db,
+            server_version: sessionInfo.server_version,
+            server_version_info: sessionInfo.server_version_info,
+            isEnterprise: sessionInfo.server_version_info.slice(-1)[0] === "e",
+        },
     });
 }
 
@@ -225,7 +231,6 @@ function cleanLoadedLanguages() {
 function patchSessionInfo() {
     patchWithCleanup(sessionInfo, {
         cache_hashes: {
-            load_menus: "161803",
             translations: "314159",
         },
         qweb: "owl",
@@ -240,6 +245,7 @@ function patchSessionInfo() {
             tz: "taht",
         },
         db: "test",
+        registry_hash: "05500d71e084497829aa807e3caa2e7e9782ff702c15b2f57f87f2d64d049bd0",
         is_admin: true,
         is_system: true,
         username: "thewise@odoo.com",
@@ -365,8 +371,8 @@ export async function setupTests() {
         patchCookie();
         patchBodyAddEventListener();
         patchEventBus();
-        patchOdoo();
         patchSessionInfo();
+        patchOdoo();
         patchOwlApp();
     });
 

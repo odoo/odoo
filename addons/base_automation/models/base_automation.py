@@ -117,12 +117,12 @@ def get_webhook_request_payload():
 class BaseAutomation(models.Model):
     _name = 'base.automation'
     _description = 'Automation Rule'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(string="Automation Rule Name", required=True, translate=True)
+    name = fields.Char(string="Automation Rule Name", required=True, translate=True, tracking=True)
     description = fields.Html(string="Description")
     model_id = fields.Many2one(
-        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade",
-        help="Model on which the automation rule runs."
+        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade", tracking=True
     )
     model_name = fields.Char(related="model_id.model", string="Model Name", readonly=True, inverse="_inverse_model_name")
     model_is_mail_thread = fields.Boolean(related="model_id.is_mail_thread")
@@ -133,7 +133,7 @@ class BaseAutomation(models.Model):
         store=True,
         readonly=False,
     )
-    url = fields.Char(compute='_compute_url')
+    url = fields.Char(compute='_compute_url', help="Use this URL in the third-party app to call this webhook.")
     webhook_uuid = fields.Char(string="Webhook UUID", readonly=True, copy=False, default=lambda self: str(uuid4()))
     record_getter = fields.Char(default="model.env[payload.get('_model')].browse(int(payload.get('_id')))",
                                 help="This code will be run to find on which record the automation rule should be run.")
@@ -171,7 +171,7 @@ class BaseAutomation(models.Model):
 
             ('on_webhook', "On webhook"),
         ], string='Trigger',
-        compute='_compute_trigger', readonly=False, store=True, required=True)
+        compute='_compute_trigger', readonly=False, store=True, required=True, tracking=True)
     trg_selection_field_id = fields.Many2one(
         'ir.model.fields.selection',
         string='Trigger Field',
@@ -192,27 +192,29 @@ class BaseAutomation(models.Model):
     trg_date_id = fields.Many2one(
         'ir.model.fields', string='Trigger Date',
         compute='_compute_trg_date_id',
-        readonly=False, store=True,
+        readonly=False, store=True, tracking=True,
         domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]",
         help="""When should the condition be triggered.
                 If present, will be checked by the scheduler. If empty, will be checked at creation and update.""")
     trg_date_range = fields.Integer(
-        string='Delay after trigger date',
+        string='Delay',
         compute='_compute_trg_date_range_data',
-        readonly=False, store=True,
-        help="Delay after the trigger date. "
-        "You can put a negative number if you need a delay before the "
-        "trigger date, like sending a reminder 15 minutes before a meeting.")
+        readonly=False, store=True, tracking=True)
+    trg_date_range_mode = fields.Selection(
+        [('after', 'After'), ('before', 'Before')],
+        string='Delay mode',
+        compute='_compute_trg_date_range_data',
+        readonly=False, store=True, tracking=True)
     trg_date_range_type = fields.Selection(
         [('minutes', 'Minutes'), ('hour', 'Hours'), ('day', 'Days'), ('month', 'Months')],
-        string='Delay type',
+        string='Delay unit',
         compute='_compute_trg_date_range_data',
-        readonly=False, store=True)
+        readonly=False, store=True, tracking=True)
     trg_date_calendar_id = fields.Many2one(
         "resource.calendar", string='Use Calendar',
         compute='_compute_trg_date_calendar_id',
         readonly=False, store=True,
-        help="When calculating a day-based timed condition, it is possible"
+        help="When calculating a day-based timed condition, it is possible "
              "to use a calendar to compute the date based on working days.")
     filter_pre_domain = fields.Char(
         string='Before Update Domain',
@@ -241,7 +243,6 @@ class BaseAutomation(models.Model):
         compute='_compute_trigger_field_ids', readonly=False, store=True,
         help="The automation rule will be triggered if and only if one of these fields is updated."
              "If empty, all fields are watched.")
-    least_delay_msg = fields.Char(compute='_compute_least_delay_msg')
 
     # which fields have an impact on the registry and the cron
     CRITICAL_FIELDS = ['model_id', 'active', 'trigger', 'on_change_field_ids']
@@ -271,6 +272,12 @@ class BaseAutomation(models.Model):
     def _inverse_model_name(self):
         for rec in self:
             rec.model_id = self.env["ir.model"]._get(rec.model_name)
+
+    @api.constrains('trigger', 'trg_date_range')
+    def _check_time_trigger(self):
+        for record in self:
+            if record.trigger in TIME_TRIGGERS and record.trg_date_range < 0:
+                raise exceptions.ValidationError(_("Delay must be positive. Set 'Delay mode' to 'Before' to negate the delay."))
 
     @api.constrains('trigger', 'action_server_ids')
     def _check_trigger_state(self):
@@ -312,12 +319,25 @@ class BaseAutomation(models.Model):
         for record in (self - to_reset):
             record.trg_date_id = record._get_trigger_specific_field()
 
+    @api.onchange('trg_date_range')
+    def _onchange_trg_date_range_data(self):
+        if self.trg_date_range < 0:
+            self.trg_date_range = abs(self.trg_date_range)
+            if self.trigger == 'on_time':
+                self.trg_date_range_mode = 'before' if self.trg_date_range_mode == 'after' else 'after'
+
     @api.depends('trigger')
     def _compute_trg_date_range_data(self):
-        to_reset = self.filtered(lambda a: a.trigger not in TIME_TRIGGERS)
-        to_reset.trg_date_range = False
-        to_reset.trg_date_range_type = False
-        (self - to_reset).filtered(lambda a: not a.trg_date_range_type).trg_date_range_type = 'hour'
+        for record in self:
+            if record.trigger not in TIME_TRIGGERS:
+                record.trg_date_range = False
+                record.trg_date_range_type = False
+                record.trg_date_range_mode = False
+                continue
+            if not record.trg_date_range_type:
+                record.trg_date_range_type = 'hour'
+            if not record.trg_date_range_mode or record.trigger not in 'on_time':
+                record.trg_date_range_mode = 'after'
 
     @api.depends('trigger', 'trg_date_id', 'trg_date_range_type')
     def _compute_trg_date_calendar_id(self):
@@ -419,6 +439,7 @@ class BaseAutomation(models.Model):
 
     @api.onchange('trigger')
     def _onchange_trigger(self):
+        self.ensure_one()
         field = (
             self._get_trigger_specific_field()
             if self.trigger not in TIME_TRIGGERS
@@ -499,6 +520,19 @@ class BaseAutomation(models.Model):
         record_copy = super().copy(default)
         record_copy.action_server_ids = actions
         return record_copy
+
+    def action_open_scheduled_action(self):
+        cron = self.env.ref('base_automation.ir_cron_data_base_automation_check', raise_if_not_found=False)
+        if not cron:
+            message = _("The scheduled action for Automation Rules seems to have vanished.")
+            raise exceptions.MissingError(message)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Scheduled Action'),
+            'view_mode': 'form',
+            'res_model': 'ir.cron',
+            'res_id': cron.id,
+        }
 
     def action_rotate_webhook_uuid(self):
         for automation in self:
@@ -668,13 +702,9 @@ class BaseAutomation(models.Model):
         if automations is None:
             automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
 
-        # Minimum 1 minute, maximum 4 hours, 10% tolerance
-        delay = min(automations.mapped(get_delay), default=0)
-        return min(max(1, delay // 10), 4 * 60) if delay else 4 * 60
-
-    def _compute_least_delay_msg(self):
-        msg = _("Note that this automation rule can be triggered up to %d minutes after its schedule.")
-        self.least_delay_msg = msg % self._get_cron_interval()
+        # Minimum 1 minute, maximum 4 hours, 10% tolerance, ignore automations with no delay
+        delays = [d for d in automations.mapped(get_delay) if d]
+        return min(max(1, min(delays) // 10), 4 * 60) if delays else 4 * 60
 
     def _filter_pre(self, records, feedback=False):
         """ Filter the records that satisfy the precondition of automation ``self``. """
@@ -1024,6 +1054,8 @@ class BaseAutomation(models.Model):
         # get the time information and find the records
         last_run = automation.last_run or datetime.datetime.fromtimestamp(0, tz=None)
         is_date_automation_last = date_field.name == "date_automation_last" and "create_date" in Model._fields
+        range_sign = 1 if automation.trg_date_range_mode == 'before' else -1
+        date_range = range_sign * automation.trg_date_range
 
         def get_record_dt(record):
             # the field can be a date or datetime, cast always to a datetime
@@ -1051,12 +1083,12 @@ class BaseAutomation(models.Model):
                 calendar = self._get_calendar(automation, record)
                 if calendar.id not in past_until:
                     past_until[calendar.id] = calendar.plan_days(
-                        - automation.trg_date_range,
+                        date_range,
                         until,
                         compute_leaves=True,
                     )
                     past_last_run[calendar.id] = calendar.plan_days(
-                        - automation.trg_date_range,
+                        date_range,
                         last_run,
                         compute_leaves=True,
                     )
@@ -1066,7 +1098,7 @@ class BaseAutomation(models.Model):
 
         # we can search for the records to trigger
         # find the relative dates
-        relative_offset = DATE_RANGE[automation.trg_date_range_type] * automation.trg_date_range
+        relative_offset = DATE_RANGE[automation.trg_date_range_type] * date_range
         relative_until = until + relative_offset
         relative_last_run = last_run + relative_offset
         if date_field.type == 'date':
@@ -1095,6 +1127,7 @@ class BaseAutomation(models.Model):
             self = self.with_context(__action_done={})
 
         # retrieve all the automation rules to run based on a timed condition
+        final_exception = None
         automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
         self.env['ir.cron']._commit_progress(remaining=len(automations))
 
@@ -1109,14 +1142,20 @@ class BaseAutomation(models.Model):
             now = self.env.cr.now()
             records = automation._search_time_based_automation_records(until=now)
             # run the automation on the records
-            for record in records:
-                try:
-                    with self.env.cr.savepoint():
-                        automation._process(record)
-                except Exception:
-                    _logger.error(traceback.format_exc())
+            try:
+                for record in records:
+                    automation._process(record)
+                self.env.flush_all()
+            except Exception as e:
+                self.env.cr.rollback()
+                _logger.exception("Error in time-based automation rule `%s`.", automation.name)
+                final_exception = e
+                continue
 
             automation.write({'last_run': now})
             _logger.info("Time-based automation rule `%s` done.", automation.name)
             if not self.env['ir.cron']._commit_progress(1):
                 break
+        if final_exception is not None:
+            # raise the last found exception to mark the cron job as failing
+            raise final_exception

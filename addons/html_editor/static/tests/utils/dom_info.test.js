@@ -425,6 +425,12 @@ describe("isEmptyBlock", () => {
         const result = isEmptyBlock(p);
         expect(result).toBe(false);
     });
+
+    test("should identify a div contains button without text content as non-empty", () => {
+        const [div] = insertTestHtml("<div><button></button></div>");
+        const result = isEmptyBlock(div);
+        expect(result).toBe(false);
+    });
 });
 
 describe("isShrunkBlock", () => {

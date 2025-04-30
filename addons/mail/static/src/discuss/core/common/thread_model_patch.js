@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 
@@ -56,12 +56,12 @@ patch(Thread, threadStaticPatch);
 const threadPatch = {
     setup() {
         super.setup();
-        this.channel_member_ids = Record.many("discuss.channel.member", {
+        this.channel_member_ids = fields.Many("discuss.channel.member", {
             inverse: "thread",
             onDelete: (r) => r.delete(),
             sort: (m1, m2) => m1.id - m2.id,
         });
-        this.correspondent = Record.one("discuss.channel.member", {
+        this.correspondent = fields.One("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
                 return this.computeCorrespondent();
@@ -73,25 +73,25 @@ const threadPatch = {
         this.fetchChannelInfoDeferred = undefined;
         /** @type {"not_fetched"|"fetching"|"fetched"} */
         this.fetchChannelInfoState = "not_fetched";
-        this.hasOtherMembersTyping = Record.attr(false, {
+        this.hasOtherMembersTyping = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
                 return this.otherTypingMembers.length > 0;
             },
         });
-        this.hasSeenFeature = Record.attr(false, {
+        this.hasSeenFeature = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
                 return this.store.channel_types_with_seen_infos.includes(this.channel_type);
             },
         });
-        this.firstUnreadMessage = Record.one("mail.message", {
+        this.firstUnreadMessage = fields.One("mail.message", {
             /** @this {import("models").Thread} */
             compute() {
                 if (!this.selfMember) {
                     return null;
                 }
-                const messages = this.messages;
+                const messages = this.messages.filter((m) => !m.isNotification);
                 const separator = this.selfMember.localNewMessageSeparator;
                 if (separator === 0 && !this.loadOlder) {
                     return messages[0];
@@ -108,11 +108,9 @@ const threadPatch = {
             },
             inverse: "threadAsFirstUnread",
         });
-        this.invitedMembers = Record.many("discuss.channel.member");
-        this.last_interest_dt = Record.attr(undefined, { type: "datetime" });
-        /** @type {luxon.DateTime} */
-        this.lastInterestDt = Record.attr(undefined, {
-            type: "datetime",
+        this.invited_member_ids = fields.Many("discuss.channel.member");
+        this.last_interest_dt = fields.Datetime();
+        this.lastInterestDt = fields.Datetime({
             /** @this {import("models").Thread} */
             compute() {
                 const selfMemberLastInterestDt = this.selfMember?.last_interest_dt;
@@ -122,7 +120,7 @@ const threadPatch = {
                     : lastInterestDt;
             },
         });
-        this.lastMessageSeenByAllId = Record.attr(undefined, {
+        this.lastMessageSeenByAllId = fields.Attr(undefined, {
             /** @this {import("models").Thread} */
             compute() {
                 if (!this.hasSeenFeature) {
@@ -133,11 +131,13 @@ const threadPatch = {
                         return lastMessageSeenByAllId
                             ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
                             : member.seen_message_id.id;
+                    } else {
+                        return lastMessageSeenByAllId;
                     }
                 }, undefined);
             },
         });
-        this.lastSelfMessageSeenByEveryone = Record.one("mail.message", {
+        this.lastSelfMessageSeenByEveryone = fields.One("mail.message", {
             compute() {
                 if (!this.lastMessageSeenByAllId) {
                     return false;
@@ -162,7 +162,7 @@ const threadPatch = {
         this.member_count = undefined;
         /** @type {string} name: only for channel. For generic thread, @see display_name */
         this.name = undefined;
-        this.onlineMembers = Record.many("discuss.channel.member", {
+        this.onlineMembers = fields.Many("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
                 return this.channel_member_ids
@@ -172,24 +172,24 @@ const threadPatch = {
                     .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
             },
         });
-        this.offlineMembers = Record.many("discuss.channel.member", {
+        this.offlineMembers = fields.Many("discuss.channel.member", {
             compute() {
                 return this._computeOfflineMembers().sort(
                     (m1, m2) => this.store.sortMembers(m1, m2) // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
                 );
             },
         });
-        this.otherTypingMembers = Record.many("discuss.channel.member", {
+        this.otherTypingMembers = fields.Many("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
                 return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
             },
         });
-        this.selfMember = Record.one("discuss.channel.member", {
+        this.selfMember = fields.One("discuss.channel.member", {
             inverse: "threadAsSelf",
         });
         this.scrollUnread = true;
-        this.toggleBusSubscription = Record.attr(false, {
+        this.toggleBusSubscription = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
                 return (
@@ -201,7 +201,7 @@ const threadPatch = {
                 this.store.updateBusSubscription();
             },
         });
-        this.typingMembers = Record.many("discuss.channel.member", { inverse: "threadAsTyping" });
+        this.typingMembers = fields.Many("discuss.channel.member", { inverse: "threadAsTyping" });
     },
     /** @returns {import("models").ChannelMember[]} */
     _computeOfflineMembers() {
@@ -245,12 +245,10 @@ const threadPatch = {
     },
     get displayName() {
         if (this.channel_type === "chat" && this.correspondent) {
-            return this.custom_channel_name || this.correspondent.persona.name;
+            return this.custom_channel_name || this.correspondent.name;
         }
         if (this.channel_type === "group" && !this.name) {
-            return formatList(
-                this.channel_member_ids.map((channelMember) => channelMember.persona.name)
-            );
+            return formatList(this.channel_member_ids.map((channelMember) => channelMember.name));
         }
         if (this.model === "discuss.channel" && this.name) {
             return this.name;

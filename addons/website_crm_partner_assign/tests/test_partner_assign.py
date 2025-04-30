@@ -5,7 +5,11 @@ from datetime import date, timedelta
 from unittest.mock import patch
 
 from odoo.exceptions import AccessError
-from odoo.tests.common import TransactionCase
+from odoo.fields import Command
+from odoo.tests.common import tagged, new_test_user, TransactionCase
+from odoo.tools import mute_logger
+
+from odoo.addons.base.tests.common import HttpCase
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website.tools import MockRequest
@@ -41,66 +45,6 @@ class TestPartnerAssign(TransactionCase):
 
         patcher = patch('odoo.addons.base_geolocalize.models.base_geocoder.BaseGeocoder.geo_find', wraps=geo_find)
         self.startPatcher(patcher)
-
-    def test_opportunity_count(self):
-        self.customer_uk.write({
-            'is_company': True,
-            'child_ids': [
-                (0, 0, {'name': 'Uk Children 1',
-                       }),
-                (0, 0, {'name': 'Uk Children 2',
-                       }),
-            ],
-        })
-        lead_uk_assigned = self.env['crm.lead'].create({
-            'name': 'Office Design and Architecture',
-            'partner_assigned_id': self.customer_uk.id,
-            'type': 'opportunity',
-        })
-        children_leads = self.env['crm.lead'].create([
-            {'name': 'Children 1 Lead 1',
-             'partner_id': self.customer_uk.child_ids[0].id,
-             'type': 'lead'},
-            {'name': 'Children 1 Lead 2',
-             'partner_id': self.customer_uk.child_ids[0].id,
-             'type': 'lead'},
-            {'name': 'Children 2 Lead 1',
-             'partner_id': self.customer_uk.child_ids[1].id,
-             'type': 'lead'},
-            {'name': 'Children 2 Lead 2',
-             'partner_id': self.customer_uk.child_ids[1].id,
-             'type': 'lead'},
-        ])
-        children_leads_assigned = self.env['crm.lead'].create([
-            {'name': 'Children 1 Lead 1',
-             'partner_assigned_id': self.customer_uk.child_ids[0].id,
-             'type': 'lead'},
-            {'name': 'Children 1 Lead 2',
-             'partner_assigned_id': self.customer_uk.child_ids[0].id,
-             'type': 'lead'},
-            {'name': 'Children 2 Lead 1',
-             'partner_assigned_id': self.customer_uk.child_ids[1].id,
-             'type': 'lead'},
-            {'name': 'Children 2 Lead 2',
-             'partner_assigned_id': self.customer_uk.child_ids[1].id,
-             'type': 'lead'},
-        ])
-
-        self.assertEqual(
-            repr(self.customer_uk.action_view_opportunity()['domain']),
-            repr([('id', 'in', sorted(self.lead_uk.ids + lead_uk_assigned.ids + children_leads.ids))]),
-            'Parent: own + children leads + assigned'
-        )
-        self.assertEqual(
-            repr(self.customer_uk.child_ids[0].action_view_opportunity()['domain']),
-            repr([('id', 'in', sorted(children_leads[0:2].ids + children_leads_assigned[0:2].ids))]),
-            'Children: own leads + assigned'
-        )
-        self.assertEqual(
-            repr(self.customer_uk.child_ids[1].action_view_opportunity()['domain']),
-            repr([('id', 'in', sorted(children_leads[2:].ids + children_leads_assigned[2:].ids))]),
-            'Children: own leads + assigned'
-        )
 
     def test_partner_assign(self):
         """ Test the automatic assignation using geolocalisation """
@@ -235,9 +179,15 @@ class TestPartnerLeadPortal(TestCrmCommon):
 
         (lead_today | lead_yesterday).type = "opportunity"
 
-        lead_today.activity_schedule("crm.lead_test_activity_1", date.today())
+        lead_today.activity_schedule(
+            "crm.lead_test_activity_1",
+            date.today(),
+            user_id=self.env.uid,
+        )
         lead_yesterday.activity_schedule(
-            "crm.lead_test_activity_1", date.today() - timedelta(days=1)
+            "crm.lead_test_activity_1",
+            date.today() - timedelta(days=1),
+            user_id=self.env.uid,
         )
 
         def render_function(_, values, *args, **kwargs):
@@ -291,3 +241,81 @@ class TestPartnerLeadPortal(TestCrmCommon):
             mock_request.render = render_function
             res = WebsiteCrmPartnerAssign().partners()
             self.assertEqual([b'rendered'], res.response, "render_function wasn't called")
+
+
+@tagged('post_install', '-at_install')
+class TestPublish(HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.group_partner_manager = cls.env.ref('base.group_partner_manager')
+        cls.group_restricted_editor = cls.env.ref('website.group_website_restricted_editor')
+        cls.group_sale_salesman = cls.env.ref('sales_team.group_sale_salesman')
+        # Do not rely on HttpCaseWithUserDemo to avoid having different user
+        # definitions with and without demo data.
+        cls.user_test = new_test_user(cls.env, login='testtest', website_id=False)
+
+        # Partner Grade
+        grade = cls.env['res.partner.grade'].create({
+            'name': "Grade Test",
+            'partner_weight': 42,
+            'sequence': 3,
+        })
+        cls.partner = cls.env['res.partner'].create({
+            'name': "Agrolait",
+            'is_company': True,
+            'city': "Wavre",
+            'zip': "1300",
+            'country_id': cls.env.ref('base.be').id,
+            'street': "69 rue de Namur",
+            'partner_weight': 10,
+            'website_published': True,
+            'grade_id': grade.id,
+        })
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_01_admin(self):
+        self.start_tour(self.env['website'].get_client_action_url('/partners'), 'test_can_publish_partner', login="admin")
+        self.assertTrue(self.partner.website_published, "Partner should have been published")
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_02_reditor_salesman(self):
+        self.user_test.group_ids = [
+            Command.link(self.group_restricted_editor.id),
+            Command.link(self.group_sale_salesman.id),
+        ]
+        self.start_tour(self.env['website'].get_client_action_url('/partners'), 'test_can_publish_partner', login="testtest")
+        self.assertTrue(self.partner.website_published, "Partner should have been published")
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_03_reditor_not_salesman(self):
+        self.user_test.group_ids = [
+            Command.link(self.group_restricted_editor.id),
+            Command.unlink(self.group_sale_salesman.id),
+            Command.unlink(self.group_partner_manager.id)
+        ]
+        self.assertNotIn(self.group_sale_salesman.id, self.user_test.group_ids.ids, "User should not be a group_sale_salesman")
+        self.assertNotIn(self.group_partner_manager.id, self.user_test.group_ids.ids, "User should not be a group_partner_manager")
+        self.start_tour(self.env['website'].get_client_action_url('/partners'), 'test_cannot_publish_partner', login="testtest")
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_04_not_reditor_salesman(self):
+        self.user_test.group_ids = [
+            Command.unlink(self.group_restricted_editor.id),
+            Command.link(self.group_sale_salesman.id),
+        ]
+        self.assertNotIn(self.group_restricted_editor.id, self.user_test.group_ids.ids, "User should not be a group_restricted_editor")
+        self.start_tour(self.env['website'].get_client_action_url('/partners'), 'test_can_publish_partner', login="testtest")
+        self.assertTrue(self.partner.website_published, "Partner should have been published")
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_05_not_reditor_not_salesman(self):
+        self.user_test.group_ids = [
+            Command.unlink(self.group_restricted_editor.id),
+            Command.unlink(self.group_sale_salesman.id),
+            Command.unlink(self.group_partner_manager.id)
+        ]
+        self.assertNotIn(self.group_sale_salesman.id, self.user_test.group_ids.ids, "User should not be a group_sale_salesman")
+        self.assertNotIn(self.group_partner_manager.id, self.user_test.group_ids.ids, "User should not be a group_partner_manager")
+        self.assertNotIn(self.group_restricted_editor.id, self.user_test.group_ids.ids, "User should not be a group_restricted_editor")
+        self.start_tour(self.env['website'].get_client_action_url('/partners'), 'test_cannot_publish_partner', login="testtest")

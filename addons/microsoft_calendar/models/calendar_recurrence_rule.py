@@ -156,12 +156,12 @@ class CalendarRecurrence(models.Model):
 
         return recurrence
 
-    def _microsoft_values(self, fields_to_sync):
+    def _microsoft_values(self, fields_to_sync, initial_values=()):
         """
         Get values to update the whole Outlook event recurrence.
         (done through the first event of the Outlook recurrence).
         """
-        return self.base_event_id._microsoft_values(fields_to_sync, initial_values={'type': 'seriesMaster'})
+        return self.base_event_id._microsoft_values(fields_to_sync, initial_values={**dict(initial_values), 'type': 'seriesMaster'})
 
     def _ensure_attendees_have_email(self):
         self.calendar_event_ids.filtered(lambda e: e.active)._ensure_attendees_have_email()

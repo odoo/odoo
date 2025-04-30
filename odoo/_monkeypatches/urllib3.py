@@ -8,5 +8,5 @@ def pool_init(self, *args, **kwargs):
     self.pool_classes_by_scheme = {**self.pool_classes_by_scheme}
 
 
-def patch_urllib3():
+def patch_module():
     PoolManager.__init__ = pool_init

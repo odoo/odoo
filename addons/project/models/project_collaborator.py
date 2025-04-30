@@ -7,7 +7,7 @@ class ProjectCollaborator(models.Model):
     _name = 'project.collaborator'
     _description = 'Collaborators in project shared'
 
-    project_id = fields.Many2one('project.project', 'Project Shared', domain=[('privacy_visibility', '=', 'portal')], required=True, readonly=True, export_string_translation=False)
+    project_id = fields.Many2one('project.project', 'Project Shared', domain=[('privacy_visibility', '=', 'portal')], required=True, readonly=True, export_string_translation=False, index=True)
     partner_id = fields.Many2one('res.partner', 'Collaborator', required=True, readonly=True, export_string_translation=False)
     partner_email = fields.Char(related='partner_id.email', export_string_translation=False)
     limited_access = fields.Boolean('Limited Access', default=False, export_string_translation=False)

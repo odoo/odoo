@@ -58,14 +58,15 @@ export class ImageField extends Component {
                 "ImageField: previewImage must be provided when set on a many2one field"
             );
         }
-        if (this.props.record.fields[this.props.name].related) {
-            this.lastUpdate = DateTime.now();
+        const field = this.props.record.fields[this.props.name];
+        if (field.related?.includes(".")) {
+            this.uniqueId = DateTime.now();
             let key = this.props.value;
             onWillRender(() => {
                 const nextKey = this.props.value;
 
                 if (key !== nextKey) {
-                    this.lastUpdate = DateTime.now();
+                    this.uniqueId = DateTime.now();
                 }
 
                 key = nextKey;
@@ -75,7 +76,7 @@ export class ImageField extends Component {
 
     get imgAlt() {
         if (this.fieldType === "many2one" && this.props.record.data[this.props.name]) {
-            return this.props.record.data[this.props.name][1];
+            return this.props.record.data[this.props.name].display_name;
         }
         return this.props.alt;
     }
@@ -89,10 +90,7 @@ export class ImageField extends Component {
     }
 
     get rawCacheKey() {
-        if (this.props.record.fields[this.props.name].related) {
-            return this.lastUpdate;
-        }
-        return this.props.record.data.write_date;
+        return this.uniqueId || this.props.record.data.write_date;
     }
 
     get sizeStyle() {
@@ -132,7 +130,7 @@ export class ImageField extends Component {
         if (this.fieldType === "many2one") {
             this.lastURL = imageUrl(
                 this.props.record.fields[this.props.name].relation,
-                this.props.record.data[this.props.name][0],
+                this.props.record.data[this.props.name].id,
                 imageFieldName,
                 { unique: this.rawCacheKey }
             );
@@ -190,6 +188,8 @@ export class ImageField extends Component {
                 const ctx = canvas.getContext("2d");
                 ctx.fillStyle = "transparent";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
                 ctx.drawImage(
                     image,
                     0,

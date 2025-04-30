@@ -144,7 +144,6 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title pe-0">
                         <h1 class="d-flex flex-row justify-content-between">
-                            <field name="priority" widget="priority" class="me-3"/>
                             <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
                             <div class="d-flex justify-content-end o_state_container" invisible="not active">
                                 <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
@@ -167,6 +166,7 @@
                             <field name="portal_user_names"
                                 string="Assignees"
                                 class="o_task_user_field"/>
+                            <field name="priority" widget="priority"/>
                             <field name="tag_ids" context="{'project_id': project_id}" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True, 'no_edit': True, 'no_edit_color': True}"/>
                         </group>
                         <group>
@@ -181,7 +181,7 @@
                             <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']"/>
                             <field name="recurring_task" groups="project.group_project_recurring_tasks"/>
                             <label for="repeat_interval" invisible="not recurring_task" groups="project.group_project_recurring_tasks"/>
-                            <div invisible="not recurring_task" class="d-flex" groups="project.group_project_recurring_tasks">
+                            <div invisible="not recurring_task" class="d-flex" groups="project.group_project_recurring_tasks" name="repeat_intervals">
                                 <field name="repeat_interval" required="recurring_task"
                                        class="me-2" style="max-width: 2rem !important;" />
                                 <field name="repeat_unit" required="recurring_task"
@@ -196,7 +196,7 @@
                     <notebook>
                         <page name="description_page" string="Description">
                             <field name="description" type="html" placeholder="Add details about this task..."
-                                options="{'collaborative': true, 'disableImage': true, 'disableVideo': true, 'disableFile': true}"/>
+                                options="{'collaborative': true, 'allowAttachmentCreation': false, 'allowMediaDialogVideo': false}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks">
                             <field name="child_ids" context="{
@@ -286,7 +286,7 @@
         <field name="mode">primary</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
-            <filter name="date_last_stage_update" position="after">
+            <filter name="creation_date_filter" position="after">
                 <filter string="Deadline" name="date_deadline" date="date_deadline">
                     <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;', datetime.datetime.combine(context_today(), datetime.time(23,59,59)).to_utc())]"/>
                     <filter name="deadline_this_week" string="This Week" domain="[
@@ -300,7 +300,7 @@
                     <filter name="deadline_past_due" string="Overdue" domain="[('date_deadline', '&lt;', datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc())]"/>
                 </filter>
             </filter>
-            <filter name="last_stage_update" position="after">
+            <filter name="create_date" position="after">
                 <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
             </filter>
         </field>
@@ -321,7 +321,6 @@
             <field name="user_ids" position="after">
                 <field name="portal_user_names" string="Assignees" optional="show"/>
             </field>
-            
         </field>
     </record>
 

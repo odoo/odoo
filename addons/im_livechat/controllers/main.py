@@ -27,15 +27,19 @@ class LivechatController(http.Controller):
             raise request.not_found()
         return self.assets_embed(ext, **kwargs)
 
+    def _is_cors_request(self):
+        headers = request.httprequest.headers
+        origin_url = urlsplit(headers.get("referer"))
+        return (
+            origin_url.netloc != headers.get("host")
+            or origin_url.scheme != request.httprequest.scheme
+        )
+
     @http.route('/im_livechat/assets_embed.<any(css, js):ext>', type='http', auth='public', cors='*')
     def assets_embed(self, ext, **kwargs):
         # If the request comes from a different origin, we must provide the CORS
         # assets to enable the redirection of routes to the CORS controller.
-        headers = request.httprequest.headers
-        origin_url = urlsplit(headers.get('referer'))
-        bundle = 'im_livechat.assets_embed_external'
-        if origin_url.netloc != headers.get('host') or origin_url.scheme != request.httprequest.scheme:
-            bundle = 'im_livechat.assets_embed_cors'
+        bundle = "im_livechat.assets_embed_cors" if self._is_cors_request() else "im_livechat.assets_embed_external"
         asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
         if ext not in ('css', 'js'):
             raise request.not_found()
@@ -78,6 +82,8 @@ class LivechatController(http.Controller):
         store = Store()
         user_id = None
         country_id = None
+        channel = request.env["discuss.channel"]
+        guest = request.env["mail.guest"]
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
         if request.session.uid:
             user_id = request.env.user.id
@@ -148,21 +154,26 @@ class LivechatController(http.Controller):
                     guest_name=self._get_guest_name(),
                     country_code=request.geoip.country_code,
                     timezone=request.env['mail.guest']._get_timezone_from_request(request),
+                    create_member_params={"livechat_member_type": "visitor"},
                     post_joined_message=False
                 )
             channel = channel.with_context(guest=guest)  # a new guest was possibly created
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
-            store.add(
-                channel,
-                extra_fields={
-                    "isLoaded": not chatbot_script,
-                    "scrollUnread": False,
-                },
-            )
             if guest:
-                store.add_global_values(guest_token=guest._format_auth_cookie())
-        request.env["res.users"]._init_store_data(store)
+                store.add_global_values(guest_token=guest.sudo()._format_auth_cookie())
+        request.env["res.users"].with_context(guest=guest)._init_store_data(store)
+        guest._bus_send_store(store)
+        # Make sure not to send "isLoaded" value on the guest bus, otherwise it
+        # could be overwritten.
+        if channel:
+             store.add(
+                 channel,
+                 extra_fields={
+                     "isLoaded": not chatbot_script,
+                     "scrollUnread": False,
+                 },
+             )
         return {
             "store_data": store.get_result(),
             "channel_id": channel_id,

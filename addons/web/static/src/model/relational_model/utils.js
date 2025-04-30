@@ -16,6 +16,7 @@ import { batched } from "@web/core/utils/timing";
 import { orderByToString } from "@web/search/utils/order_by";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
+import { uniqueId } from "@web/core/utils/functions";
 
 const granularityToInterval = {
     hour: { hours: 1 },
@@ -264,7 +265,7 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                 activeField.required = "False";
             }
         }
-        if (fields[fieldName].type === "many2one_reference" && fieldNode.views) {
+        if (["many2one", "many2one_reference"].includes(fields[fieldName].type) && fieldNode.views) {
             const viewDescr = fieldNode.views.default;
             activeField.related = extractFieldsFromArchInfo(viewDescr, viewDescr.fields);
         }
@@ -392,6 +393,13 @@ export function getFieldsSpec(activeFields, fields, evalContext, { orderBys, wit
             case "reference": {
                 fieldsSpec[fieldName].fields = {};
                 if (!isAlwaysInvisible) {
+                    if (related) {
+                        fieldsSpec[fieldName].fields = getFieldsSpec(
+                            related.activeFields,
+                            related.fields,
+                            evalContext
+                        );
+                    }
                     fieldsSpec[fieldName].fields.display_name = {};
                     fieldsSpec[fieldName].context = getFieldContextForSpec(
                         activeFields,
@@ -502,16 +510,18 @@ export function parseServerValue(field, value) {
         case "many2one": {
             if (Array.isArray(value)) {
                 // Used for web_read_group, where the value is an array of [id, display_name]
-                return value;
+                value = { id: value[0], display_name: value[1] };
             }
-            return value ? [value.id, value.display_name] : false;
+            return value;
         }
         case "properties": {
             return value
-                ? value.map((property) => ({
-                      ...property,
-                      value: parseServerValue(property, property.value ?? false),
-                  }))
+                ? value.map((property) => {
+                      if (property.value !== undefined) {
+                          property.value = parseServerValue(property, property.value ?? false);
+                      }
+                      return property;
+                  })
                 : [];
         }
     }
@@ -631,7 +641,10 @@ function getValueFromGroupData(field, rawValue) {
         return parseServerValue(field, rawValue[0]);
     }
     const value = parseServerValue(field, rawValue);
-    if (["many2one", "many2many"].includes(field.type)) {
+    if (field.type === "many2one") {
+        return value && value.id;
+    }
+    if (field.type === "many2many") {
         return value ? value[0] : false;
     }
     return value;
@@ -717,12 +730,14 @@ export function isRelational(field) {
  */
 export function useRecordObserver(callback) {
     const component = useComponent();
-    let alive = true;
+    let currentId;
     const observeRecord = (props) => {
+        currentId = uniqueId();
         if (!props.record) {
             return;
         }
         const def = new Deferred();
+        const effectId = currentId;
         let firstCall = true;
         effect(
             (record) => {
@@ -734,7 +749,7 @@ export function useRecordObserver(callback) {
                 } else {
                     return batched(
                         (record) => {
-                            if (!alive) {
+                            if (effectId !== currentId) {
                                 // effect doesn't clean up when the component is unmounted.
                                 // We must do it manually.
                                 return;
@@ -752,7 +767,7 @@ export function useRecordObserver(callback) {
         return def;
     };
     onWillDestroy(() => {
-        alive = false;
+        currentId = uniqueId();
     });
     onWillStart(() => observeRecord(component.props));
     onWillUpdateProps((nextProps) => {

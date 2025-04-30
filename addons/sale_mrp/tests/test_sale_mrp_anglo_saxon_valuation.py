@@ -3,30 +3,28 @@
 
 from odoo.tests import Form, tagged
 
+from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 
 
 @tagged('post_install', '-at_install')
-class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
+class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTestCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
         cls.env.user.company_id.anglo_saxon_accounting = True
-        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
     @classmethod
-    def _create_product(cls, **kwargs):
-        return super()._create_product(
-            categ_id=cls.stock_account_product_categ.id if kwargs.get('is_storable') else cls.env.ref('product.product_category_goods').id,
-            **kwargs
-        )
+    def _create_product(cls, **create_vals):
+        if create_vals.get('is_storable'):
+            create_vals['categ_id'] = cls.stock_account_product_categ.id
+        return super()._create_product(**create_vals)
 
     def test_sale_mrp_kit_bom_cogs(self):
         """Check invoice COGS aml after selling and delivering a product
         with Kit BoM having another product with Kit BoM as component"""
-
         # ----------------------------------------------
         # BoM of Kit A:
         #   - BoM Type: Kit
@@ -56,7 +54,6 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Create BoM for Kit A
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.kit_a
         bom_product_form.product_tmpl_id = self.kit_a.product_tmpl_id
         bom_product_form.product_qty = 3.0
         bom_product_form.type = 'phantom'
@@ -70,7 +67,6 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Create BoM for Kit B
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.kit_b
         bom_product_form.product_tmpl_id = self.kit_b.product_tmpl_id
         bom_product_form.product_qty = 10.0
         bom_product_form.type = 'phantom'

@@ -119,20 +119,17 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment', 'state')
+    @api.depends('partner_id.vat', 'partner_id.country_id', 'partner_id.l10n_in_gst_treatment')
     def _compute_l10n_in_gst_treatment(self):
-        indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
-        for record in indian_invoice:
-            if record.state == 'draft':
-                gst_treatment = record.partner_id.l10n_in_gst_treatment
-                if not gst_treatment:
-                    gst_treatment = 'unregistered'
-                    if record.partner_id.country_id.code == 'IN' and record.partner_id.vat:
-                        gst_treatment = 'regular'
-                    elif record.partner_id.country_id and record.partner_id.country_id.code != 'IN':
-                        gst_treatment = 'overseas'
-                record.l10n_in_gst_treatment = gst_treatment
-        (self - indian_invoice).l10n_in_gst_treatment = False
+        for invoice in self.filtered(lambda m: m.country_code == 'IN' and m.state == 'draft'):
+            partner = invoice.partner_id
+            invoice.l10n_in_gst_treatment = (
+                partner.l10n_in_gst_treatment
+                or (
+                    'overseas' if partner.country_id and partner.country_id.code != 'IN'
+                    else partner.check_vat_in(partner.vat) and 'regular' or 'consumer'
+                )
+            )
 
     @api.depends('partner_id', 'partner_shipping_id', 'company_id')
     def _compute_l10n_in_state_id(self):
@@ -155,7 +152,7 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_state_id = False
 
-    @api.depends('l10n_in_state_id')
+    @api.depends('l10n_in_state_id', 'l10n_in_gst_treatment')
     def _compute_fiscal_position_id(self):
 
         def _get_fiscal_state(move):
@@ -195,13 +192,18 @@ class AccountMove(models.Model):
                     )
             return False
 
+        FiscalPosition = self.env['account.fiscal.position']
         for state_id, moves in self.grouped(_get_fiscal_state).items():
             if state_id:
                 virtual_partner = self.env['res.partner'].new({
                     'state_id': state_id.id,
                     'country_id': state_id.country_id.id,
                 })
-                moves.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(virtual_partner)
+                # Group moves by company to avoid multi-company conflicts
+                for company_id, company_moves in moves.grouped('company_id').items():
+                    company_moves.fiscal_position_id = FiscalPosition.with_company(
+                        company_id
+                    )._get_fiscal_position(virtual_partner)
             else:
                 super(AccountMove, moves)._compute_fiscal_position_id()
 
@@ -600,19 +602,8 @@ class AccountMove(models.Model):
 
     def _l10n_in_get_hsn_summary_table(self):
         self.ensure_one()
+        base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
         display_uom = self.env.user.has_group('uom.group_uom')
-
-        base_lines = []
-        for line in self.invoice_line_ids.filtered(lambda x: x.display_type == 'product'):
-            base_lines.append({
-                'l10n_in_hsn_code': line.l10n_in_hsn_code,
-                'quantity': line.quantity,
-                'price_unit': line.price_unit,
-                'discount': line.discount or 0.0,
-                'product': line.product_id,
-                'uom': line.product_uom_id,
-                'taxes_data': line.tax_ids,
-            })
         return self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, display_uom)
 
     def _l10n_in_get_bill_from_irn(self, irn):

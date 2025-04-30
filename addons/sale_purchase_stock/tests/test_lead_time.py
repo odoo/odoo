@@ -23,6 +23,7 @@ class TestLeadTime(TestCommonSalePurchaseNoChart):
             'name': 'Le Grand Horus',
             'login': 'grand.horus',
             'email': 'grand.horus@chansonbelge.dz',
+            'group_ids': cls.env.ref('sales_team.group_sale_salesman'),
         })
 
     def test_supplier_lead_time(self):

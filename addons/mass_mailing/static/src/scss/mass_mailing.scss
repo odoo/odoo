@@ -80,18 +80,36 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
         }
         &.o_kanban_ungrouped {
             padding: 0;
-            .o_mailing_list_kanban_grouped {
-                display: none !important;
-            }
             .o_kanban_record {
                 width: 100%;
                 margin: 0;
             }
         }
-        &.o_kanban_grouped .o_mailing_list_kanban_ungrouped {
-            display: none !important;
+        @mixin kanban-stats-button-style {
+            font-size: 150% !important;
+            margin-bottom: 30px;
+            min-width: 90px;
+            width: 40%;
+            margin-right: 1rem !important;
         }
-        .o_mailing_list_kanban_ungrouped {
+        &.o_kanban_grouped {
+            .flex-row > div {
+                flex: 1 1 100% !important;
+                max-width: 100% !important;
+
+                &.col-6 {
+                    flex: 1 1 50% !important;
+                    max-width: 50% !important;
+                }
+                &.d-none {
+                    display: none !important; //forcing the d-none to override the d-lg or d-sm classes for grouped view
+                }
+                &.o_mailing_list_kanban_stats > a {
+                    @include kanban-stats-button-style;
+                }
+            }
+        }
+        article > div {
             --KanbanRecord-padding-h: #{$o-horizontal-padding};
 
             .o_mailing_list_kanban_stats > div {
@@ -103,11 +121,7 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
                     color: rgb(1, 126, 132) !important;
                 }
                 @include media-breakpoint-down(sm) {
-                    font-size: 1.4rem !important;
-                    height: 40px;
-                    margin-bottom: 30px;
-                    min-width: 90px;
-                    width: 30%;
+                    @include kanban-stats-button-style;
                 }
             }
             .o_mailing_list_kanban_button {

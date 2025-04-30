@@ -24,9 +24,9 @@ from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
 
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import UserError, AccessError, RedirectWarning
+from odoo.fields import Domain
 from odoo.service import security
 from odoo.http import request, root
-from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
 from odoo.tools.misc import find_in_path
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError
@@ -59,6 +59,21 @@ except Exception:
 
 def _get_wkhtmltopdf_bin():
     return find_in_path('wkhtmltopdf')
+
+
+def _run_wkhtmltopdf(args):
+    """
+    Runs the given arguments against the wkhtmltopdf binary.
+
+    Returns:
+        The process
+    """
+    return subprocess.run(
+        [_get_wkhtmltopdf_bin(), *args],
+        capture_output=True,
+        encoding='utf-8',
+        check=False,
+    )
 
 
 def _get_wkhtmltoimage_bin():
@@ -162,7 +177,7 @@ class IrActionsReport(models.Model):
     group_ids = fields.Many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', string='Groups')
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
-    paperformat_id = fields.Many2one('report.paperformat', 'Paper Format')
+    paperformat_id = fields.Many2one('report.paperformat', 'Paper Format', index='btree_not_null')
     print_report_name = fields.Char('Printed Report Name', translate=True,
                                     help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the 'object' and 'time' variables.")
     attachment_use = fields.Boolean(string='Reload from Attachment',
@@ -177,28 +192,22 @@ class IrActionsReport(models.Model):
             action.model_id = self.env['ir.model']._get(action.model).id
 
     def _search_model_id(self, operator, value):
-        ir_model_ids = None
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        models = self.env['ir.model']
         if isinstance(value, str):
-            names = self.env['ir.model'].name_search(value, operator=operator)
-            ir_model_ids = [n[0] for n in names]
-
-        elif operator in ('any', 'not any'):
-            ir_model_ids = self.env['ir.model']._search(value)
-
-        elif isinstance(value, Iterable):
-            ir_model_ids = value
-
-        elif isinstance(value, int) and not isinstance(value, bool):
-            ir_model_ids = [value]
-
-        if ir_model_ids:
-            operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-            ir_model = self.env['ir.model'].browse(ir_model_ids)
-            return [('model', operator, ir_model.mapped('model'))]
-        elif isinstance(value, bool) or value is None:
-            return [('model', operator, value)]
-        else:
-            return FALSE_DOMAIN
+            models = models.search(Domain('display_name', operator, value))
+        elif isinstance(value, Domain):
+            models = models.search(value)
+        elif operator == 'any' or isinstance(value, int):
+            models = models.search(Domain('id', operator, value))
+        elif operator == 'in':
+            models = models.search(Domain.OR(
+                Domain('id' if isinstance(v, int) else 'display_name', operator, v)
+                for v in value
+                if v
+            ))
+        return Domain('model', 'in', models.mapped('model'))
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
@@ -600,9 +609,8 @@ class IrActionsReport(models.Model):
             os.close(pdf_report_fd)
             stack.callback(delete_file, pdf_report_path)
 
-            wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
-            process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
-            _out, err = process.communicate()
+            process = _run_wkhtmltopdf(command_args + files_command_args + paths + [pdf_report_path])
+            err = process.stderr
 
             match process.returncode:
                 case 0:

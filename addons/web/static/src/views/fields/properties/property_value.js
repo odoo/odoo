@@ -18,11 +18,20 @@ import { TagsList } from "@web/core/tags_list/tags_list";
 import { useService } from "@web/core/utils/hooks";
 import { formatInteger, formatMany2one } from "@web/views/fields/formatters";
 import { formatFloat } from "@web/core/utils/numbers";
-import { m2oTupleFromData } from "@web/views/fields/many2one/many2one";
 import { parseFloat, parseInteger } from "@web/views/fields/parsers";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { PropertyTags } from "./property_tags";
 import { imageUrl } from "@web/core/utils/urls";
+
+function extractData(record) {
+    let name;
+    if ("display_name" in record) {
+        name = record.display_name;
+    } else if ("name" in record) {
+        name = record.name.id ? record.name.display_name : record.name;
+    }
+    return { id: record.id, display_name: name };
+}
 
 /**
  * Represent one property value.
@@ -60,7 +69,6 @@ export class PropertyValue extends Component {
         context: { type: Object },
         readonly: { type: Boolean, optional: true },
         canChangeDefinition: { type: Boolean, optional: true },
-        checkDefinitionWriteAccess: { type: Function, optional: true },
         selection: { type: Array, optional: true },
         tags: { type: Array, optional: true },
         onChange: { type: Function, optional: true },
@@ -85,8 +93,8 @@ export class PropertyValue extends Component {
                 }
                 // maybe the record display name has changed
                 await record.load();
-                const recordData = m2oTupleFromData(record.data);
-                await this.onValueChange([{ id: recordData[0], name: recordData[1] }]);
+                const recordData = extractData(record.data);
+                await this.onValueChange([recordData]);
             },
             fieldString: this.props.string,
         });
@@ -120,8 +128,6 @@ export class PropertyValue extends Component {
             const options = this.props.selection || [];
             const option = options.find((option) => option[0] === value);
             return option && option.length === 2 && option[0] ? option[0] : "";
-        } else if (this.props.type === "many2one") {
-            return !value || value.length !== 2 || !value[0] ? false : value;
         } else if (this.props.type === "many2many") {
             if (!value || !value.length) {
                 return [];
@@ -249,29 +255,24 @@ export class PropertyValue extends Component {
                 newValue = 0;
             }
         } else if (["many2one", "many2many"].includes(this.props.type)) {
-            // {id: 5, name: 'Demo'} => [5, 'Demo']
-            newValue =
-                newValue && newValue.length && newValue[0].id
-                    ? [newValue[0].id, newValue[0].name]
-                    : false;
-
-            if (newValue && newValue[0] && newValue[1] === undefined) {
-                // The "Search More" option in the Many2XAutocomplete component
+            newValue = newValue[0];
+            if (newValue && newValue.id && newValue.display_name === undefined) {
+                // The "Search more" option in the Many2XAutocomplete component
                 // only return the record ID, and not the name. But we need to name
                 // in the component props to be able to display it.
                 // Make a RPC call to resolve the display name of the record.
-                newValue = await this._nameGet(newValue[0]);
+                newValue = await this._nameGet(newValue.id);
             }
 
             if (this.props.type === "many2many" && newValue) {
                 // add the record in the current many2many list
                 const currentValue = this.props.value || [];
-                const recordId = newValue[0];
-                const exists = currentValue.find((rec) => rec[0] === recordId);
+                const recordId = newValue.id;
+                const exists = currentValue.find((rec) => rec.id === recordId);
                 if (exists) {
                     return;
                 }
-                newValue = [...currentValue, newValue];
+                newValue = [...currentValue, [newValue.id, newValue.display_name]];
             }
         }
 
@@ -287,7 +288,7 @@ export class PropertyValue extends Component {
     async onMany2oneClick(event) {
         if (this.props.readonly) {
             event.stopPropagation();
-            await this._openRecord(this.props.comodel, this.propertyValue[0]);
+            await this._openRecord(this.props.comodel, this.propertyValue.id);
         }
     }
 
@@ -296,7 +297,7 @@ export class PropertyValue extends Component {
      */
     onExternalLinkClick() {
         return this.openMany2X({
-            resId: this.propertyValue[0],
+            resId: this.propertyValue.id,
             forceModel: this.props.comodel,
             context: this.context,
         });
@@ -324,7 +325,7 @@ export class PropertyValue extends Component {
         const result = await this.orm.call(this.props.comodel, "name_create", [name], {
             context: this.props.context,
         });
-        this.onValueChange([{ id: result[0], name: result[1] }]);
+        this.onValueChange([{ id: result[0], display_name: result[1] }]);
     }
 
     /* --------------------------------------------------------
@@ -356,6 +357,6 @@ export class PropertyValue extends Component {
         const result = await this.orm.read(this.props.comodel, [recordId], ["display_name"], {
             context: this.props.context,
         });
-        return [result[0].id, result[0].display_name];
+        return result[0];
     }
 }

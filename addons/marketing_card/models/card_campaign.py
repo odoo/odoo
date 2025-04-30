@@ -49,7 +49,7 @@ class CardCampaign(models.Model):
 
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user, domain="[('share', '=', False)]")
 
-    reward_message = fields.Html(string='Thanks to You Message')
+    reward_message = fields.Html(string='Thank You Message')
     reward_target_url = fields.Char(string='Reward Link')
     request_title = fields.Char('Request', default=lambda self: _('Help us share the news'))
     request_description = fields.Text('Request Description')
@@ -113,7 +113,8 @@ class CardCampaign(models.Model):
             'content_header_dyn', 'content_header_path', 'content_header_color', 'content_sub_header',
             'content_sub_header_dyn', 'content_sub_header_path', 'content_section', 'content_section_dyn',
             'content_section_path', 'content_sub_section1', 'content_sub_section1_dyn', 'content_sub_header_color',
-            'content_sub_section1_path', 'content_sub_section2', 'content_sub_section2_dyn', 'content_sub_section2_path'
+            'content_sub_section1_path', 'content_sub_section2', 'content_sub_section2_dyn', 'content_sub_section2_path',
+            'card_template_id',
         ]
 
     def _check_access_right_dynamic_template(self):
@@ -159,7 +160,7 @@ class CardCampaign(models.Model):
             campaign.res_model = preview_model or campaign.res_model or 'res.partner'
 
     @api.model_create_multi
-    def create(self, create_vals):
+    def create(self, vals_list):
         utm_source = self.env.ref('marketing_card.utm_source_marketing_card', raise_if_not_found=False)
         link_trackers = self.env['link.tracker'].sudo().create([
             {
@@ -168,12 +169,12 @@ class CardCampaign(models.Model):
                 'source_id': utm_source.id if utm_source else None,
                 'label': f"marketing_card_campaign_{vals.get('name', '')}_{fields.Datetime.now()}",
             }
-            for vals in create_vals
+            for vals in vals_list
         ])
         return super().create([{
             **vals,
             'link_tracker_id': link_tracker_id,
-        } for vals, link_tracker_id in zip(create_vals, link_trackers.ids)])
+        } for vals, link_tracker_id in zip(vals_list, link_trackers.ids)])
 
     def write(self, vals):
         link_tracker_vals = {}
@@ -373,8 +374,8 @@ class CardCampaign(models.Model):
         """Helper to get the right value for dynamic fields."""
         self.ensure_one()
         result = {
-            'image1': images[0] if (images := self.content_image1_path and record.mapped(self.content_image1_path)) else False,
-            'image2': images[0] if (images := self.content_image2_path and record.mapped(self.content_image2_path)) else False,
+            'image1': images[0] if (images := self.content_image1_path and self.content_image1_path in record and record.mapped(self.content_image1_path)) else False,
+            'image2': images[0] if (images := self.content_image2_path and self.content_image2_path in record and record.mapped(self.content_image2_path)) else False,
         }
         campaign_text_element_fields = (
             ('header', 'content_header', 'content_header_dyn', 'content_header_path'),

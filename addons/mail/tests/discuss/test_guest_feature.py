@@ -14,7 +14,7 @@ class TestGuestFeature(WebsocketCase, MailCommon):
         channel = self.env["discuss.channel"]._create_channel(
             group_id=None, name="General"
         )
-        channel.add_members(guest_ids=[guest.id], partner_ids=[partner.id])
+        channel._add_members(guests=guest, partners=partner)
         channel.message_post(
             body="Hello World!", message_type="comment", subtype_xmlid="mail.mt_comment"
         )
@@ -28,9 +28,7 @@ class TestGuestFeature(WebsocketCase, MailCommon):
                 "channel_id": channel.id,
                 "last_message_id": channel.message_ids[0].id,
             },
-            headers={
-                "Cookie": f"{guest._cookie_name}={guest._format_auth_cookie()};"
-            },
+            cookies={guest._cookie_name: guest._format_auth_cookie()}
         )
         self.assertEqual(guest_member.seen_message_id, channel.message_ids[0])
 
@@ -51,7 +49,7 @@ class TestGuestFeature(WebsocketCase, MailCommon):
         channel = self.env["discuss.channel"]._create_channel(
             group_id=None, name="General"
         )
-        channel.add_members(guest_ids=[guest.id])
+        channel._add_members(guests=guest)
         self._reset_bus()
         guest_websocket = self.websocket_connect()
         self.subscribe(guest_websocket, [f"mail.guest_{guest._format_auth_cookie()}"], guest.id)

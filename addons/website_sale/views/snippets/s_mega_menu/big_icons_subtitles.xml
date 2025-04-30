@@ -8,18 +8,17 @@
     >
         <section
             class="s_mega_menu_big_icons_subtitles pt24 pb24 o_colored_level o_cc o_cc1"
-            data-oe-shape-data="{'shape':'web_editor/Zigs/03','flip':[]}"
+            data-oe-shape-data="{'shape':'web_editor/Grids/07','colors':{'c5':'o-color-3'},'flip':[]}"
         >
-            <div class="o_we_shape o_web_editor_Zigs_03"/>
+            <div class="o_we_shape o_web_editor_Grids_07" style="background-image: url('/web_editor/shape/web_editor/Grids/07.svg?c5=o-color-3');"/>
             <div class="container">
                 <div class="row">
                     <t
-                        t-set="categories"
-                        t-value="request.env['product.public.category'].search([
-                            ('parent_id', '=', False)
-                        ])[:9]"
-                    />
-                    <t t-foreach="categories" t-as="category">
+                        t-foreach="request.env['product.public.category'].search([
+                            ('parent_id', '=', False), ('has_published_products', '=', True),
+                        ], limit=9)"
+                        t-as="category"
+                    >
                         <div class="col-12 col-lg-4">
                             <nav class="nav flex-column w-100">
                                 <a

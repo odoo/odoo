@@ -3,12 +3,13 @@
     <t t-name="pos_self_order.OutOfPaperPopup">
         <div class="self_order_out_of_paper_popup o_dialog" t-att-id="id">
             <div role="dialog" class="modal d-block" tabindex="-1">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content rounded">
-                        <div class="modal-body p-5">
-                            <div class="pb-5 fs-3 text-center">
-                                <t t-esc="this.props.title"/>
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body p-4 overflow-visible">
+                            <div class="position-absolute top-0 start-50 translate-middle px-4 py-3 rounded-4 text-bg-danger border border-white border-5">
+                                <i class="fa fa-print" aria-hidden="true"/>
                             </div>
+                            <h1 class="mt-4 pb-4 text-center"><t t-esc="this.props.title"/></h1>
                             <div class="d-flex align-items-center justify-content-center w-100">
                                 <button type="button" class="btn btn-secondary btn-lg popup_button" t-on-click="() => this.props.close()">Close</button>
                             </div>

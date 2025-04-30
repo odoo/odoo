@@ -174,6 +174,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
     def test_04_apply_empty_pl(self):
         ''' Ensure empty pl code reset the applied pl '''
+        self._enable_pricelists()
         so = self._create_so(partner_id=self.env.user.partner_id.id)
         eur_pl = self.env['product.pricelist'].create({
             'name': 'EUR_test',
@@ -189,6 +190,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             self.assertNotEqual(so.pricelist_id, eur_pl, "Pricelist should be removed when sending an empty pl code")
 
     def test_04_pl_reset_on_login(self):
+        self._enable_pricelists()
         """Check that after login, the SO pricelist is correctly recomputed."""
         test_user = self.env['res.users'].create({
             'name': 'Toto',
@@ -287,27 +289,26 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             },
         ]
 
-        tax_10_incl, tax_20_excl, tax_15_incl = self.env['account.tax'].create([
-            {'name': 'Tax 10% incl', 'amount': 10, 'price_include_override': 'tax_included'},
-            {'name': 'Tax 20% excl', 'amount': 20, 'price_include_override': 'tax_excluded'},
-            {'name': 'Tax 15% incl', 'amount': 15, 'price_include_override': 'tax_included'},
-        ])
         fpos_be, fpos_nl = self.env['account.fiscal.position'].create([
             {
                 'sequence': 1,
                 'name': 'BE',
                 'auto_apply': True,
                 'country_id': self.env.ref('base.be').id,
-                'tax_ids': [Command.create({'tax_src_id': tax_10_incl.id, 'tax_dest_id': tax_20_excl.id})],
             },
             {
                 'sequence': 2,
                 'name': 'NL',
                 'auto_apply': True,
                 'country_id': self.env.ref('base.nl').id,
-                'tax_ids': [Command.create({'tax_src_id': tax_10_incl.id, 'tax_dest_id': tax_15_incl.id})],
             },
         ])
+        tax_10_incl, tax_20_excl, tax_15_incl = self.env['account.tax'].create([
+            {'name': 'Tax 10% incl', 'amount': 10, 'price_include_override': 'tax_included'},
+            {'name': 'Tax 20% excl', 'amount': 20, 'price_include_override': 'tax_excluded', 'fiscal_position_ids': fpos_be},
+            {'name': 'Tax 15% incl', 'amount': 15, 'price_include_override': 'tax_included', 'fiscal_position_ids': fpos_nl},
+        ])
+        (tax_20_excl | tax_15_incl).original_tax_ids = tax_10_incl
 
         product = self.env['product.product'].create({
             'name': 'Product test',

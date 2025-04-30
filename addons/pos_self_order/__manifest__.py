@@ -8,6 +8,7 @@
     "auto_install": ["pos_restaurant"],
     "data": [
         "security/ir.model.access.csv",
+        "data/mail_template_data.xml",
         "data/preset_data.xml",
         "views/pos_self_order.index.xml",
         "views/qr_code.xml",
@@ -76,11 +77,13 @@
             # Related models from point_of_sale
             "point_of_sale/static/src/app/models/data_service_options.js",
             "point_of_sale/static/src/app/models/utils/indexed_db.js",
-            "point_of_sale/static/src/app/models/related_models.js",
+            "point_of_sale/static/src/app/models/related_models/**/*",
             "point_of_sale/static/src/app/services/data_service.js",
             "point_of_sale/static/src/app/models/**/*",
             "pos_restaurant/static/src/app/models/restaurant_table.js",
             "point_of_sale/static/src/app/utils/numbers.js",
+            "point_of_sale/static/src/app/hooks/hooks.js",
+            "point_of_sale/static/src/app/utils/debug-formatter.js",
         ],
         # Assets tests
         "pos_self_order.assets_tests": [

@@ -72,6 +72,7 @@ class WebsiteEventBoothController(WebsiteEventController):
             'event': event.sudo(),
             'event_booths': event_booths,
             'hide_sponsors': True,
+            'redirect_url': werkzeug.urls.url_quote(request.httprequest.full_path),
         }
 
     @http.route('/event/<model("event.event"):event>/booth/confirm',
@@ -79,8 +80,10 @@ class WebsiteEventBoothController(WebsiteEventController):
     def event_booth_registration_confirm(self, event, booth_category_id, event_booth_ids, **kwargs):
         booths = self._get_requested_booths(event, event_booth_ids)
 
-        if not booths:
-            return json.dumps({'error': 'boothError'})
+        error_code = self._check_booth_registration_values(booths, kwargs['contact_email'])
+        if error_code:
+            return json.dumps({'error': error_code})
+
         booth_values = self._prepare_booth_registration_values(event, kwargs)
         booths.action_confirm(booth_values)
 
@@ -96,6 +99,23 @@ class WebsiteEventBoothController(WebsiteEventController):
         if booth_ids != booths.ids or len(booths.booth_category_id) != 1:
             return request.env['event.booth']
         return booths
+
+    def _check_booth_registration_values(self, booths, contact_email, booth_category=False):
+        if not booths:
+            return 'boothError'
+
+        if booth_category and not booth_category.exists():
+            return 'boothCategoryError'
+
+        email_normalized = tools.email_normalize(contact_email)
+        if request.env.user._is_public() and email_normalized:
+            partner = request.env['res.partner'].sudo().search([
+                ('email_normalized', '=', email_normalized)
+            ], limit=1)
+            if partner:
+                return 'existingPartnerError'
+
+        return False
 
     def _prepare_booth_main_values(self, event, booth_category_id=False, booth_ids=False):
         event_sudo = event.sudo()
@@ -118,13 +138,16 @@ class WebsiteEventBoothController(WebsiteEventController):
     def _prepare_booth_registration_partner_values(self, event, kwargs):
         if request.env.user._is_public():
             contact_email_normalized = tools.email_normalize(kwargs['contact_email'])
-            partner = request.env['res.partner'].sudo()._find_or_create_from_emails(
-                [contact_email_normalized],
-                additional_values={contact_email_normalized: {
-                    'phone': kwargs.get('contact_phone'),
-                    'name': kwargs.get('contact_name'),
-                }}
-            )[0]
+            if contact_email_normalized:
+                partner = event.sudo()._partner_find_from_emails_single(
+                    [contact_email_normalized],
+                    additional_values={contact_email_normalized: {
+                        'phone': kwargs.get('contact_phone'),
+                        'name': kwargs.get('contact_name'),
+                    }},
+                )
+            else:
+                partner = request.env['res.partner']
         else:
             partner = request.env.user.partner_id
         return {

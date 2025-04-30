@@ -61,7 +61,7 @@ export class PortalSecurity extends Interaction {
             )
         );
 
-        const { duration } = await this.bindService("field").loadFields("res.users.apikeys.description", {
+        const { duration } = await this.services.field.loadFields("res.users.apikeys.description", {
             fieldNames: ["duration"],
         });
 
@@ -74,7 +74,7 @@ export class PortalSecurity extends Interaction {
             confirmLabel: _t("Confirm"),
             confirm: async ({ inputEl }) => {
                 const formData = Object.fromEntries(new FormData(inputEl.closest("form")));
-                const wizardId = await this.sevices.orm.create("res.users.apikeys.description", [{
+                const wizardId = await this.services.orm.create("res.users.apikeys.description", [{
                     name: formData['description'],
                     duration: formData['duration']
                 }]);
@@ -107,12 +107,14 @@ export class PortalSecurity extends Interaction {
         });
     }
     async onRemoveApiKeyClick(ev) {
-        await handleCheckIdentity(
-            this.waitFor(
-                this.services.orm.call("res.users.apikeys", "remove", [parseInt(ev.target.id)])
-            ),
-            this.services.orm,
-            this.services.dialog
+        await this.waitFor(
+            await handleCheckIdentity(
+                this.waitFor(
+                    this.services.orm.call("res.users.apikeys", "remove", [parseInt(ev.target.id)])
+                ),
+                this.services.orm,
+                this.services.dialog
+            )
         );
         window.location.reload();
     }
@@ -170,13 +172,11 @@ export async function handleCheckIdentity(wrapped, ormService, dialogService) {
                         return false;
                     }
                     let result;
-                    await ormService.write("res.users.identitycheck", [checkId], {
-                        password: inputEl.value,
-                    });
                     try {
-                        result = await ormService.call("res.users.identitycheck", "run_check", [
-                            checkId,
-                        ]);
+                        result = await ormService.call("res.users.identitycheck", "run_check",
+                            [ checkId ],
+                            { 'context': {'password': inputEl.value} },
+                        );
                     } catch {
                         inputEl.classList.add("is-invalid");
                         inputEl.setCustomValidity(_t("Check failed"));

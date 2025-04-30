@@ -31,8 +31,8 @@ test("Messages are received cross-tab", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await contains(".o-mail-Thread:contains('The conversation is empty.')", { target: env1 }); // wait for loaded and focus in input
-    await contains(".o-mail-Thread:contains('The conversation is empty.')", { target: env2 }); // wait for loaded and focus in input
+    await contains(".o-mail-Thread:contains('Welcome to #General!')", { target: env1 }); // wait for loaded and focus in input
+    await contains(".o-mail-Thread:contains('Welcome to #General!')", { target: env2 }); // wait for loaded and focus in input
     await insertText(".o-mail-Composer-input", "Hello World!", { target: env1 });
     await press("Enter");
     await contains(".o-mail-Message-content", { target: env1, text: "Hello World!" });

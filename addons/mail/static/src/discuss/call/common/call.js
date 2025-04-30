@@ -2,6 +2,7 @@ import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import {
     Component,
@@ -17,6 +18,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 /**
  * @typedef CardData
@@ -44,6 +46,8 @@ export class Call extends Component {
         this.grid = useRef("grid");
         this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
+        this.isMobileOs = isMobileOS();
+        this.ui = useService("ui");
         this.state = useState({
             isFullscreen: false,
             sidebar: false,
@@ -66,6 +70,8 @@ export class Call extends Component {
             browser.clearTimeout(this.overlayTimeout);
         });
         useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
+        useHotkey("shift+d", () => this.rtc.toggleDeafen());
+        useHotkey("shift+m", () => this.rtc.toggleMicrophone());
     }
 
     get isActiveCall() {
@@ -88,7 +94,7 @@ export class Call extends Component {
         const sessionCards = [];
         const invitationCards = [];
         const filterVideos = this.store.settings.showOnlyVideo && this.props.thread.videoCount > 0;
-        for (const session of this.props.thread.rtcSessions) {
+        for (const session of this.props.thread.rtc_session_ids) {
             const target = session.raisingHand ? raisingHandCards : sessionCards;
             const cameraStream = session.is_camera_on
                 ? session.videoStreams.get("camera")
@@ -114,7 +120,7 @@ export class Call extends Component {
             }
         }
         if (!filterVideos) {
-            for (const member of this.props.thread.invitedMembers) {
+            for (const member of this.props.thread.invited_member_ids) {
                 invitationCards.push({
                     key: "member_" + member.id,
                     member,
@@ -191,9 +197,7 @@ export class Call extends Component {
     }
 
     get isControllerFloating() {
-        return (
-            this.state.isFullscreen || (this.props.thread.activeRtcSession && !this.props.compact)
-        );
+        return this.state.isFullscreen || (this.props.thread.activeRtcSession && !this.ui.isSmall);
     }
 
     onMouseleaveMain(ev) {

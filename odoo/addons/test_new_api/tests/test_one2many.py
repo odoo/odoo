@@ -454,10 +454,7 @@ class One2manyCase(TransactionExpressionCase):
         self._search(Team, [('id', 'parent_of', team1.id)])
         self._search(Team, [('id', 'child_of', team1.id)])
 
-    @mute_logger('odoo.domains')
     def test_create_one2many_with_unsearchable_field(self):
-        # odoo.domains is muted as reading a non-stored and unsearchable field will log an error and makes the runbot red
-
         unsearchableO2M = self.env['test_new_api.unsearchable.o2m']
 
         # Create a parent record
@@ -493,8 +490,6 @@ class One2manyCase(TransactionExpressionCase):
 
         # invalidating the cache to force reading one2many again
         self.env.invalidate_all()
-        # Make sure the parent_record1 only has its own child records
-        self.assertEqual(parent_record1.child_ids.ids, children[parent_record1.id])
-
-        # Make sure the parent_record2 only has its own child records
-        self.assertEqual(parent_record2.child_ids.ids, children[parent_record2.id])
+        with self.assertRaisesRegex(ValueError, r'it is not stored'):
+            # Make sure the parent_record1 only has its own child records
+            self.assertEqual(parent_record1.child_ids.ids, children[parent_record1.id])

@@ -65,7 +65,7 @@ class SerialDriver(Driver):
         :type device: str
         """
 
-        super(SerialDriver, self).__init__(identifier, device)
+        super().__init__(identifier, device)
         self._actions.update({
             'get_status': self._push_status,
         })
@@ -81,7 +81,6 @@ class SerialDriver(Driver):
         """Updates the current status and pushes it to the frontend."""
 
         self.data['status'] = self._status
-        event_manager.device_changed(self)
 
     def _set_name(self):
         """Tries to build the device's name based on its type and protocol name but falls back on a default name if that doesn't work."""

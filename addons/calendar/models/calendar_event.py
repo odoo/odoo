@@ -3,12 +3,12 @@
 import itertools
 import logging
 import math
+import uuid
 from datetime import datetime, timedelta
 from itertools import repeat
-from werkzeug.urls import url_parse
 
 import pytz
-import uuid
+from werkzeug.urls import url_parse
 
 from odoo import api, fields, models, Command
 from odoo.osv.expression import AND
@@ -82,21 +82,26 @@ class CalendarEvent(models.Model):
     @api.model
     def default_get(self, fields):
         # super default_model='crm.lead' for easier use in addons
-        if self.env.context.get('default_res_model') and not self.env.context.get('default_res_model_id'):
-            self = self.with_context(
-                default_res_model_id=self.env['ir.model']._get_id(self.env.context['default_res_model'])
+        context = dict(self.env.context)
+        if context.get('default_res_model') and not context.get('default_res_model_id'):
+            context.update(
+                default_res_model_id=self.env['ir.model']._get_id(context['default_res_model'])
+            )
+        if context.get('default_res_model_id') and not context.get('default_res_model'):
+            context.update(
+                default_res_model=self.env['ir.model'].browse(self.env.context['default_res_model_id']).sudo().model
             )
 
-        defaults = super().default_get(fields)
+        defaults = super(CalendarEvent, self.with_context(context)).default_get(fields)
 
         # support active_model / active_id as replacement of default_* if not already given
         if 'res_model_id' not in defaults and 'res_model_id' in fields and \
-                self.env.context.get('active_model') and self.env.context['active_model'] != 'calendar.event':
-            defaults['res_model_id'] = self.env['ir.model']._get_id(self.env.context['active_model'])
-            defaults['res_model'] = self.env.context.get('active_model')
+                context.get('active_model') and context['active_model'] != 'calendar.event':
+            defaults['res_model_id'] = self.env['ir.model']._get_id(context['active_model'])
+            defaults['res_model'] = context.get('active_model')
         if 'res_id' not in defaults and 'res_id' in fields and \
-                defaults.get('res_model_id') and self.env.context.get('active_id'):
-            defaults['res_id'] = self.env.context['active_id']
+                defaults.get('res_model_id') and context.get('active_id'):
+            defaults['res_id'] = context['active_id']
 
         return defaults
 
@@ -201,7 +206,7 @@ class CalendarEvent(models.Model):
     # RECURRENCE FIELD
     recurrency = fields.Boolean('Recurrent')
     recurrence_id = fields.Many2one(
-        'calendar.recurrence', string="Recurrence Rule")
+        'calendar.recurrence', string="Recurrence Rule", index='btree_not_null')
     follow_recurrence = fields.Boolean(default=False) # Indicates if an event follows the recurrence, i.e. is not an exception
     recurrence_update = fields.Selection([
         ('self_only', "This event"),
@@ -447,6 +452,12 @@ class CalendarEvent(models.Model):
                     ),
                 )
 
+    def _check_organizer_validation_conditions(self, vals_list):
+        """ Method for check in the microsoft_calendar module that needs to be
+            overridden in appointment.
+        """
+        return [True] * len(vals_list)
+
     @api.depends('recurrence_id', 'recurrency')
     def _compute_rrule_type_ui(self):
         defaults = self.env["calendar.recurrence"].default_get(["interval", "rrule_type"])
@@ -560,7 +571,16 @@ class CalendarEvent(models.Model):
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
         model_name = defaults.get('res_model')
         valid_activity_model_ids = model_name and model_name not in self._get_activity_excluded_models() and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
-        if meeting_activity_type and not defaults.get('activity_ids'):
+
+        # if user is creating an event for an activity that already has one, create a second activity
+        existing_event = False
+        orig_activity_ids = self.env['mail.activity'].browse(self._context.get('orig_activity_ids', []))
+        if len(orig_activity_ids) == 1:
+            existing_event = orig_activity_ids.calendar_event_id
+            if existing_event and orig_activity_ids.activity_type_id.category == 'meeting':
+                meeting_activity_type = orig_activity_ids.activity_type_id
+
+        if meeting_activity_type and (not defaults.get('activity_ids') or existing_event):
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
                 if values.get('activity_ids'):
@@ -872,7 +892,7 @@ class CalendarEvent(models.Model):
                 'default_use_template': bool(template),
                 'default_template_id': template.id,
                 'default_attendee_id': attendee_id,
-                'default_record': self.id,
+                'default_calendar_event_id': self.id,
                 'default_recurrence': recurrence,
                 'model_description': self.with_context(lang=lang),
             }
@@ -1067,11 +1087,6 @@ class CalendarEvent(models.Model):
     def _skip_send_mail_status_update(self):
         """Overridable getter to identify whether to send invitation/cancelation emails."""
         return False
-
-    def _get_attendee_emails(self):
-        """ Get comma-separated attendee email addresses. """
-        self.ensure_one()
-        return ",".join([e for e in self.attendee_ids.mapped("email") if e])
 
     def _get_mail_tz(self):
         self.ensure_one()
@@ -1479,6 +1494,7 @@ class CalendarEvent(models.Model):
 
         for meeting in self:
             cal = vobject.iCalendar()
+            cal.add('method').value = 'REQUEST'
             event = cal.add('vevent')
 
             if not meeting.start or not meeting.stop:

@@ -23,7 +23,7 @@ class ChatbotScript(models.Model):
     script_step_ids = fields.One2many('chatbot.script.step', 'chatbot_script_id',
         copy=True, string='Script Steps')
     operator_partner_id = fields.Many2one('res.partner', string='Bot Operator',
-        ondelete='restrict', required=True, copy=False)
+        ondelete='restrict', required=True, copy=False, index=True)
     livechat_channel_count = fields.Integer(string='Livechat Channel Count', compute='_compute_livechat_channel_count')
     first_step_warning = fields.Selection([
         ('first_step_operator', 'First Step Operator'),

@@ -21,7 +21,7 @@
                                 onSelected="element.callback"
                                 attrs="{ href: element.href }"
                             >
-                                <span t-att-style="entry[0] and 'padding-left: 12px;'" t-esc="element.description"/>
+                                <span t-att-class="entry[0] and 'ps-3'" t-esc="element.description"/>
                             </DropdownItem>
                             <t t-if="element.type == 'component'" t-component="element.Component" t-props="element.props"/>
                         </t>

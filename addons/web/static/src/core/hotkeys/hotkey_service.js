@@ -16,7 +16,7 @@ import { getVisibleElements } from "../utils/ui";
  *  allow registration to perform no matter the UI active element
  * @property {() => HTMLElement} [area]
  *  adds a restricted operating area for this hotkey
- * @property {() => boolean} [isAvailable]
+ * @property {(target: HTMLElement) => boolean} [isAvailable]
  *  adds a validation before calling the hotkey registration's callback
  * @property {() => HTMLElement} [withOverlay]
  *  provides the element on which the overlay should be displayed
@@ -240,7 +240,7 @@ export const hotkeyService = {
                     (reg.allowRepeat || !isRepeated) &&
                     (reg.bypassEditableProtection || !shouldProtectEditable) &&
                     (reg.global || reg.activeElement === activeElement) &&
-                    (!reg.isAvailable || reg.isAvailable()) &&
+                    (!reg.isAvailable || reg.isAvailable(target)) &&
                     (!reg.area || (target && reg.area() && reg.area().contains(target)))
             );
 

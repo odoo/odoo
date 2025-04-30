@@ -2,19 +2,22 @@
 
 import logging
 import re
-import time
 
 from collections import defaultdict
+from psycopg2 import errors as pgerrors
 
 from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, SQL, mute_logger, unique
-
-from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 
 _logger = logging.getLogger(__name__)
+
+
+_ref_company_registry = {
+    'jp': '7000012050002',
+}
 
 
 class AccountFiscalPosition(models.Model):
@@ -30,20 +33,28 @@ class AccountFiscalPosition(models.Model):
         help="By unchecking the active field, you may hide a fiscal position without deleting it.")
     company_id = fields.Many2one(
         comodel_name='res.company',
-        string='Company', required=True, readonly=True,
+        string='Company', required=True, readonly=True, index=True,
         default=lambda self: self.env.company)
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     account_map = fields.Binary(compute='_compute_account_map')
-    tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
+    tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        relation='account_fiscal_position_account_tax_rel',
+        column1='account_fiscal_position_id',
+        column2='account_tax_id',
+        string='Taxes',
+        context={'active_test': False},
+    )
     tax_map = fields.Binary(compute='_compute_tax_map')
     note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply tax & account mappings on invoices automatically if the matching criterias (VAT/Country) are met.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     company_country_id = fields.Many2one(string="Company Country", related='company_id.account_fiscal_country_id')
     fiscal_country_codes = fields.Char(string="Company Fiscal Country Code", related='company_country_id.code')
-    country_id = fields.Many2one('res.country', string='Country',
+    country_id = fields.Many2one('res.country', string='Country', inverse='_inverse_foreign_vat',
         help="Apply only if delivery country matches.")
-    country_group_id = fields.Many2one('res.country.group', string='Country Group',
+    is_domestic = fields.Boolean(compute='_compute_is_domestic', store=True)
+    country_group_id = fields.Many2one('res.country.group', string='Country Group', inverse='_inverse_foreign_vat',
         help="Apply only if delivery country matches the group.")
     state_ids = fields.Many2many('res.country.state', string='Federal States')
     zip_from = fields.Char(string='Zip Range From')
@@ -58,9 +69,10 @@ class AccountFiscalPosition(models.Model):
         selection=[('templates_found', "Templates Found"), ('no_template', "No Template")],
         compute='_compute_foreign_vat_header_mode')
 
-    def _inverse_foreign_vat(self):
-        # Hook for extension
-        pass
+    @api.depends('company_id.domestic_fiscal_position_id')
+    def _compute_is_domestic(self):
+        for position in self:
+            position.is_domestic = position == position.company_id.domestic_fiscal_position_id
 
     def _compute_states_count(self):
         for position in self:
@@ -81,15 +93,13 @@ class AccountFiscalPosition(models.Model):
                 # 'no_template' kept for compatibility in stable. To remove in master
                 fiscal_position.foreign_vat_header_mode = 'templates_found' if template['installed'] else 'no_template'
 
-    @api.depends('tax_ids.tax_src_id', 'tax_ids.tax_dest_id')
+    @api.depends('tax_ids')
     def _compute_tax_map(self):
         for position in self:
             tax_map = defaultdict(list)
-            for tl in position.tax_ids:
-                if tl.tax_dest_id:
-                    tax_map[tl.tax_src_id.id].append(tl.tax_dest_id.id)
-                else:
-                    tax_map[tl.tax_src_id.id]  # map to an empty list
+            for dest_tax in position.tax_ids:
+                for src_tax in dest_tax.original_tax_ids:
+                    tax_map[src_tax.id].append(dest_tax.id)
             position.tax_map = dict(tax_map)
 
     @api.depends('account_ids.account_src_id', 'account_ids.account_dest_id')
@@ -107,6 +117,8 @@ class AccountFiscalPosition(models.Model):
     def _validate_foreign_vat_country(self):
         for record in self:
             if record.foreign_vat:
+                if not record.country_id:
+                    raise ValidationError(_("The country of the foreign VAT number could not be detected. Please assign a country to the fiscal position."))
                 if record.country_id == record.company_id.account_fiscal_country_id:
                     if not record.state_ids:
                         if record.company_id.account_fiscal_country_id.state_ids:
@@ -115,30 +127,33 @@ class AccountFiscalPosition(models.Model):
                     if record.country_id not in record.country_group_id.country_ids:
                         raise ValidationError(_("You cannot create a fiscal position with a country outside of the selected country group."))
 
-                similar_fpos_domain = [
+                similar_fpos_count = self.env['account.fiscal.position'].search_count([
                     *self.env['account.fiscal.position']._check_company_domain(record.company_id),
-                    ('foreign_vat', '!=', False),
+                    ('foreign_vat', 'not in', (False, record.foreign_vat)),
                     ('id', '!=', record.id),
-                ]
-
-                if record.country_group_id:
-                    foreign_vat_country = self.country_group_id.country_ids.filtered(lambda c: c.code == record.foreign_vat[:2].upper())
-                    if not foreign_vat_country:
-                        raise ValidationError(_("The country code of the foreign VAT number does not match any country in the group."))
-                    similar_fpos_domain += [('country_group_id', '=', record.country_group_id.id), ('country_id', '=', foreign_vat_country.id)]
-                elif record.country_id:
-                    similar_fpos_domain += [('country_id', '=', record.country_id.id), ('country_group_id', '=', False)]
-
-                if record.state_ids:
-                    similar_fpos_domain.append(('state_ids', 'in', record.state_ids.ids))
-                else:
-                    similar_fpos_domain.append(('state_ids', '=', False))
-
-                similar_fpos_count = self.env['account.fiscal.position'].search_count(similar_fpos_domain)
+                    ('country_id', '=', record.country_id.id),
+                ])
                 if similar_fpos_count:
-                    raise ValidationError(_("A fiscal position with a foreign VAT already exists in this region."))
+                    raise ValidationError(_("A fiscal position with a foreign VAT already exists in this country."))
+
+    @api.onchange('country_id', 'foreign_vat')
+    def _onchange_foreign_vat(self):
+        self.foreign_vat, _country_code = self.env['res.partner']._run_vat_checks(self.country_id, self.foreign_vat, validation=False)
+
+    def _inverse_foreign_vat(self):
+        for record in self:
+            if not record.foreign_vat:
+                continue
+
+            if record.country_id:
+                fp_label = _("fiscal position [%s]", record.name)
+                record.foreign_vat, _country_code = self.env['res.partner']._run_vat_checks(record.country_id, record.foreign_vat, partner_name=fp_label)
 
     def map_tax(self, taxes):
+        if not self:
+            return taxes
+        if not self.tax_ids:  # empty fiscal positions (like those created by tax units) remove all taxes
+            return self.env['account.tax']
         return self.env['account.tax'].browse(unique(
             tax_id
             for tax in taxes
@@ -188,10 +203,6 @@ class AccountFiscalPosition(models.Model):
                 vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from or rec.zip_from, zip_to or rec.zip_to)
         return super(AccountFiscalPosition, self).write(vals)
 
-    def _get_vat_valid(self, delivery, company=None):
-        """ Hook for determining VAT validity with more complex VAT requirements """
-        return bool(delivery.vat)
-
     def _get_fpos_ranking_functions(self, partner):
         """Get comparison functions to rank fiscal positions.
 
@@ -211,7 +222,7 @@ class AccountFiscalPosition(models.Model):
         return [
             ('vat_required', lambda fpos: (
                 not fpos.vat_required
-                or (self._get_vat_valid(partner, self.env.company) and 2)
+                or (partner._get_vat_required_valid(company=self.env.company) and 2)
             )),
             ('company_id', lambda fpos: len(fpos.company_id.parent_ids)),
             ('zipcode', lambda fpos:(
@@ -279,6 +290,9 @@ class AccountFiscalPosition(models.Model):
             default=(self.env['account.fiscal.position'], False)
         )[0]
 
+    def action_open_related_taxes(self):
+        return self.tax_ids._get_records_action(name=_("%s taxes", self.display_name))
+
     def action_create_foreign_taxes(self):
         self.ensure_one()
         template_code = self.env['account.chart.template']._guess_chart_template(self.country_id)
@@ -287,26 +301,6 @@ class AccountFiscalPosition(models.Model):
             localization_module = self.env['ir.module.module'].search([('name', '=', template['module'])])
             localization_module.sudo().button_immediate_install()
         self.env["account.chart.template"]._instantiate_foreign_taxes(self.country_id, self.company_id)
-
-
-class AccountFiscalPositionTax(models.Model):
-    _name = 'account.fiscal.position.tax'
-    _description = 'Tax Mapping of Fiscal Position'
-    _rec_name = 'position_id'
-    _check_company_auto = True
-    _check_company_domain = models.check_company_domain_parent_of
-
-    position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
-        required=True, ondelete='cascade')
-    company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
-    tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True, check_company=True)
-    tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply', check_company=True)
-    tax_dest_active = fields.Boolean(related="tax_dest_id.active")
-
-    _tax_src_dest_uniq = models.Constraint(
-        'unique (position_id,tax_src_id,tax_dest_id)',
-        'A tax fiscal position could be defined only one time on same taxes.',
-    )
 
 
 class AccountFiscalPositionAccount(models.Model):
@@ -321,10 +315,10 @@ class AccountFiscalPositionAccount(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
     account_src_id = fields.Many2one('account.account', string='Account on Product',
         check_company=True, required=True,
-        domain="[('deprecated', '=', False)]")
+    )
     account_dest_id = fields.Many2one('account.account', string='Account to Use Instead',
         check_company=True, required=True,
-        domain="[('deprecated', '=', False)]")
+    )
 
     _account_src_dest_uniq = models.Constraint(
         'unique (position_id,account_src_id,account_dest_id)',
@@ -337,6 +331,7 @@ class ResPartner(models.Model):
 
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
+    partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -420,7 +415,7 @@ class ResPartner(models.Model):
               JOIN res_company line_company ON line_company.id = aml.company_id
         RIGHT JOIN account_account acc ON aml.account_id = acc.id
              WHERE acc.account_type = %s
-               AND NOT acc.deprecated
+               AND acc.active
                AND SPLIT_PART(line_company.parent_path, '/', 1)::int = %s
                AND move.state = 'posted'
           GROUP BY aml.partner_id
@@ -481,11 +476,6 @@ class ResPartner(models.Model):
             days_since_oldest_invoice = (fields.Date.context_today(self) - oldest_invoice_date).days
             partner.days_sales_outstanding = ((partner.credit / total_invoiced_tax_included) * days_since_oldest_invoice) if total_invoiced_tax_included else 0
 
-    def _compute_journal_item_count(self):
-        AccountMoveLine = self.env['account.move.line']
-        for partner in self:
-            partner.journal_item_count = AccountMoveLine.search_count([('partner_id', 'in', partner.ids)])
-
     def _compute_available_invoice_template_pdf_report_ids(self):
         moves = self.env['account.move']
 
@@ -527,7 +517,6 @@ class ResPartner(models.Model):
         compute='_compute_use_partner_credit_limit', inverse='_inverse_use_partner_credit_limit',
         help='Set a value greater than 0.0 to activate a credit limit check')
     show_credit_limit = fields.Boolean(
-        default=lambda self: self.env.company.account_use_credit_limit,
         compute='_compute_show_credit_limit', groups='account.group_account_invoice,account.group_account_readonly')
     days_sales_outstanding = fields.Float(
         string='Days Sales Outstanding (DSO)',
@@ -537,19 +526,17 @@ class ResPartner(models.Model):
         compute='_credit_debit_get', search=_debit_search, string='Total Payable',
         help="Total amount you have to pay to this vendor.",
         groups='account.group_account_invoice,account.group_account_readonly')
-    debit_limit = fields.Monetary('Payable Limit')
     total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced",
         groups='account.group_account_invoice,account.group_account_readonly')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency") # currency of amount currency
-    journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
-        domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False)]",
+        domain="[('account_type', '=', 'liability_payable')]",
         ondelete='restrict')
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Receivable",
-        domain="[('account_type', '=', 'asset_receivable'), ('deprecated', '=', False)]",
+        domain="[('account_type', '=', 'asset_receivable')]",
         ondelete='restrict')
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
@@ -563,14 +550,13 @@ class ResPartner(models.Model):
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
     supplier_invoice_count = fields.Integer(compute='_compute_supplier_invoice_count', string='# Vendor Bills')
+    account_move_count = fields.Integer(compute='_compute_account_move_count', groups='account.group_account_invoice,account.group_account_readonly')
     invoice_ids = fields.One2many('account.move', 'partner_id', string='Invoices', readonly=True, copy=False)
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Partner Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', company_dependent=True)
     ignore_abnormal_invoice_date = fields.Boolean(company_dependent=True)
     ignore_abnormal_invoice_amount = fields.Boolean(company_dependent=True)
-    invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
-    invoice_warn_msg = fields.Text('Message for Invoice')
     invoice_sending_method = fields.Selection(
         string="Invoice sending",
         selection=[
@@ -584,6 +570,7 @@ class ResPartner(models.Model):
         selection=[],  # to extend
         compute='_compute_invoice_edi_format',
         inverse='_inverse_invoice_edi_format',
+        compute_sudo=True,
     )
     invoice_edi_format_store = fields.Char(company_dependent=True)
     display_invoice_edi_format = fields.Boolean(default=lambda self: len(self._fields['invoice_edi_format'].selection), store=False)
@@ -670,9 +657,10 @@ class ResPartner(models.Model):
         return self.env['res.partner.bank'].search(domain)
 
     @api.depends_context('company')
+    @api.depends('commercial_partner_id.country_code')
     def _compute_invoice_edi_format(self):
         for partner in self:
-            if partner.commercial_partner_id.invoice_edi_format_store == 'none':
+            if not partner.commercial_partner_id or partner.commercial_partner_id.invoice_edi_format_store == 'none':
                 partner.invoice_edi_format = False
             else:
                 partner.invoice_edi_format = partner.commercial_partner_id.invoice_edi_format_store or partner.commercial_partner_id._get_suggested_invoice_edi_format()
@@ -705,8 +693,19 @@ class ResPartner(models.Model):
 
     @api.depends_context('company')
     def _compute_show_credit_limit(self):
-        for partner in self:
-            partner.show_credit_limit = self.env.company.account_use_credit_limit
+        self.show_credit_limit = self.env.company.account_use_credit_limit
+
+    def _compute_application_statistics_hook(self):
+        data_list = super()._compute_application_statistics_hook()
+        if not self.env.user.has_group('account.group_account_invoice'):
+            return data_list
+        for partner in self.filtered(lambda p: p._get_account_statistics_count()):
+            stat_info = {'iconClass': 'fa-pencil-square-o', 'value': partner._get_account_statistics_count(), 'label': _('Invoices/Bills/Mandates')}
+            data_list[partner.id].append(stat_info)
+        return data_list
+
+    def _get_account_statistics_count(self):
+        return self.account_move_count + self.supplier_invoice_count
 
     def _get_suggested_invoice_edi_format(self):
         # TO OVERRIDE
@@ -720,7 +719,7 @@ class ResPartner(models.Model):
     @api.model
     def _commercial_fields(self):
         return super(ResPartner, self)._commercial_fields() + \
-            ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
+            ['property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
              'property_payment_term_id', 'property_supplier_payment_term_id', 'credit_limit']
 
     def action_view_partner_invoices(self):
@@ -811,51 +810,76 @@ class ResPartner(models.Model):
         if moves:
             raise UserError(_("The partner cannot be deleted because it is used in Accounting"))
 
-    def _increase_rank(self, field, n=1):
-        assert isinstance(n, int) and field in ('customer_rank', 'supplier_rank')
-        try:
-            self.lock_for_update(allow_referencing=True)
-        except LockError:
-            _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
+    def _increase_rank(self, field: str, n: int = 1):
+        assert field in ('customer_rank', 'supplier_rank')
+        if not self:
             return
-        records = self.sudo()
-        for record in records:
-            record[field] += n
+        postcommit = self.env.cr.postcommit
+        data = postcommit.data.setdefault(f'account.res.partner.increase_rank.{field}', defaultdict(int))
+        already_registered = bool(data)
+        for record in self.sudo():
+            # In case we alrady have a value, we will increase the rank in
+            # postcommit to avoid serialization errors.  However, if the record
+            # has a rank of 0, we increase it directly so that filtering on
+            # partner_type is correctly set to customer or supplier.
+            if record[field] and record.id:
+                data[record.id] += n
+            else:
+                record[field] += n
 
-    @api.model
-    def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
-        """ Checks a VAT number syntactically to ensure its validity upon saving.
+        if already_registered or not data:
+            return
 
-        :param vat_number: a string with the VAT number to check.
-        :param default_country: a res.country object
-        :param partner_is_company: True if the partner is a company, else False.
-            .. deprecated:: 16.0
-                Will be removed in 16.2
-
-        :return: The country code (in lower case) of the country the VAT number
-                 was validated for, if it was validated. False if it could not be validated
-                 against the provided or guessed country. None if no country was available
-                 for the check, and no conclusion could be made with certainty.
-        """
-        return default_country.code.lower()
-
-    @api.model
-    def _build_vat_error_message(self, country_code, wrong_vat, record_label):
-        """ Prepare an error message for the VAT number that failed validation
-
-        :param country_code: string of lowercase country code
-        :param wrong_vat: the vat number that was validated
-        :param record_label: a string to desribe the record that failed a VAT validation check
-
-        :return: The error message string
-        """
-        return ""
+        @postcommit.add
+        def increase_partner_rank():
+            try:
+                with self.env.registry.cursor() as cr:
+                    partners = (
+                        self.env(cr=cr)[self._name]
+                        .sudo().browse(data)
+                        .with_context(prefetch_fields=False)
+                    )
+                    for partner in partners:
+                        partner[field] += data[partner.id]
+                    data.clear()
+            except pgerrors.OperationalError:
+                _logger.debug('Cannot update partner ranks.')
 
     def _get_frontend_writable_fields(self):
         frontend_writable_fields = super()._get_frontend_writable_fields()
         frontend_writable_fields.update({'invoice_sending_method', 'invoice_edi_format'})
 
         return frontend_writable_fields
+
+    def _check_vat(self, validation="error"):
+        for partner in self:
+            vat, _country_code = self._run_vat_checks(partner.commercial_partner_id.country_id, partner.vat,
+                                               partner_name=partner.name, validation=validation)
+            if vat != partner.vat:  # To avoid unnecessary queries (perf tested)
+                partner.vat = vat
+
+    @api.model
+    def _run_vat_checks(self, country, vat, partner_name='', validation='error'):
+        """ Checks a VAT number syntactically to ensure its validity upon saving.
+
+        :param country: a country to check for
+        :param vat: a string with the VAT number to check.
+        :param partner_name: to put into the error message
+        :param validation: if False, it will only return the formatted vat without checking if it valid.
+            if 'error', an incorrect number will raise and if 'setnull' it will just return an empty vat
+
+        :return: The vat number
+                The country code of the country the VAT number
+                 was validated for, if it was validated. False if it could not be validated
+                 against the provided or guessed country.
+        """
+        assert validation in (False, 'error', 'setnull')
+        return vat, country and country.code or ''
+
+    def _get_vat_required_valid(self, company=None):
+        """ Hook for determining VAT validity with more complex VAT requirements. (like VIES)"""
+        self.ensure_one()
+        return bool(self.vat)
 
     # TODO accounting/JCO, seems strange that this address validation logic is only there for pos, and
     # not for standard address management on portal/ecommerce
@@ -1003,19 +1027,47 @@ class ResPartner(models.Model):
         - if the VAT number has no ISO country code, use the country_code in that case.
         """
         self.ensure_one()
-
-        country_code = self.country_code
-        if self.vat and self.vat[:2].isalpha():
-            country_code = self.vat[:2].upper()
-        return country_code
+        _vat, country_code = self._run_vat_checks(self.country_id, self.vat, validation=False)
+        return country_code or self.country_code
 
     @api.depends('country_id')
     def _compute_partner_vat_placeholder(self):
         for partner in self:
-            placeholder = _("/ if not applicable")
+            placeholder = _("not applicable")
             if partner.country_id:
                 expected_vat = _ref_vat.get(partner.country_id.code.lower())
                 if expected_vat:
-                    placeholder = _("%s, or / if not applicable", expected_vat)
+                    placeholder = _("%s, or not applicable", expected_vat)
 
             partner.partner_vat_placeholder = placeholder
+
+    @api.depends('country_id')
+    def _compute_partner_company_registry_placeholder(self):
+        """ Provides a dynamic placeholder on the company registry field for countries that may need it.
+        Add your country and the value you want in the _ref_company_registry map.
+        """
+        for partner in self:
+            country_code = partner.country_id.code or ''
+            partner.partner_company_registry_placeholder = _ref_company_registry.get(country_code.lower(), '')
+
+    def _compute_account_move_count(self):
+        # retrieve all children partners and prefetch 'parent_id' on them
+        all_partners = self.with_context(active_test=False).search_fetch(
+            [("id", "child_of", self.ids)],
+            ["parent_id"],
+        )
+        domain = [
+            ("partner_id", "in", all_partners.ids),
+            ("move_type", "in", ("out_invoice", "out_refund")),
+        ]
+        account_move_groups = self.env["account.move"]._read_group(
+            domain=domain, groupby=["partner_id"], aggregates=["__count"],
+        )
+        self_ids = set(self._ids)
+
+        self.account_move_count = 0
+        for partner, count in account_move_groups:
+            while partner:
+                if partner.id in self_ids:
+                    partner.account_move_count += count
+                partner = partner.parent_id

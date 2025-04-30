@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { formatTime, stringify } from "../hoot_utils";
+import { stringify } from "../hoot_utils";
 import { urlParams } from "./url";
 
 //-----------------------------------------------------------------------------
@@ -26,18 +26,20 @@ const {
 
 /**
  * @param {any[]} args
+ * @param {string} [prefix]
+ * @param {string} [prefixColor]
  */
-const styledArguments = (args) => {
-    const prefix = `%c[HOOT]%c`;
-    const styles = [`color:#ff0080;font-weight:bold`, ""];
+const styledArguments = (args, prefix, prefixColor) => {
+    const fullPrefix = `%c[${prefix || "HOOT"}]%c`;
+    const styles = [`color:${prefixColor || "#ff0080"};font-weight:bold`, ""];
     let firstArg = args.shift() ?? "";
     if (typeof firstArg === "function") {
         firstArg = firstArg();
     }
     if (typeof firstArg === "string") {
-        args.unshift(`${prefix} ${firstArg}`, ...styles);
+        args.unshift(`${fullPrefix} ${firstArg}`, ...styles);
     } else {
-        args.unshift(prefix, ...styles, firstArg);
+        args.unshift(fullPrefix, ...styles, firstArg);
     }
     return args;
 };
@@ -74,7 +76,7 @@ export function makeNetworkLogger(prefix, title) {
          * @param {() => any} getData
          */
         async logRequest(getData) {
-            if (logger.level < logLevels.DEBUG) {
+            if (logger.level < LOG_LEVELS.debug) {
                 return;
             }
             const color = `color: #66e`;
@@ -88,7 +90,7 @@ export function makeNetworkLogger(prefix, title) {
          * @param {() => any} getData
          */
         async logResponse(getData) {
-            if (logger.level < logLevels.DEBUG) {
+            if (logger.level < LOG_LEVELS.debug) {
                 return;
             }
             const color = `color: #f80`;
@@ -98,15 +100,15 @@ export function makeNetworkLogger(prefix, title) {
     };
 }
 
-export const logLevels = {
-    RUNNER: 0,
-    SUITES: 1,
-    TESTS: 2,
-    DEBUG: 3,
+export const LOG_LEVELS = {
+    runner: 0,
+    suites: 1,
+    tests: 2,
+    debug: 3,
 };
 
 export const logger = {
-    level: urlParams.loglevel ?? logLevels.RUNNER,
+    level: urlParams.loglevel ?? LOG_LEVELS.runner,
 
     // Standard console methods
 
@@ -141,24 +143,26 @@ export const logger = {
      * @param {...any} args
      */
     logDebug(...args) {
-        if (logger.level < logLevels.DEBUG) {
+        if (logger.level < LOG_LEVELS.debug) {
             return;
         }
-        $debug(...styledArguments(args));
+        $debug(...styledArguments(args, "DEBUG", "#ffb000"));
     },
     /**
      * @param {import("./test").Test} test
      */
     logTest(test) {
-        if (logger.level < logLevels.TESTS) {
+        if (logger.level < LOG_LEVELS.tests) {
             return;
         }
         const { fullName, lastResults } = test;
         $log(
             ...styledArguments([
-                `Test ${stringify(fullName)} passed`,
-                lastResults.assertions.length,
-                `assertions (time: ${formatTime(lastResults.duration)})`,
+                `Test ${stringify(fullName)} passed (assertions:`,
+                lastResults.counts.assertion || 0,
+                `/ time:`,
+                lastResults.duration,
+                `ms)`,
             ])
         );
     },
@@ -166,22 +170,28 @@ export const logger = {
      * @param {import("./suite").Suite} suite
      */
     logSuite(suite) {
-        if (logger.level < logLevels.SUITES) {
+        if (logger.level < LOG_LEVELS.suites) {
             return;
         }
         const args = [`${stringify(suite.fullName)} ended`];
         const withArgs = [];
         if (suite.reporting.passed) {
-            withArgs.push(suite.reporting.passed, "passed");
+            withArgs.push("passed:", suite.reporting.passed, "/");
         }
         if (suite.reporting.failed) {
-            withArgs.push(suite.reporting.failed, "failed");
+            withArgs.push("failed:", suite.reporting.failed, "/");
         }
         if (suite.reporting.skipped) {
-            withArgs.push(suite.reporting.skipped, "skipped");
+            withArgs.push("skipped:", suite.reporting.skipped, "/");
         }
         if (withArgs.length) {
-            args.push("(", ...withArgs, ")");
+            args.push(
+                `(${withArgs.shift()}`,
+                ...withArgs,
+                "time:",
+                suite.jobs.reduce((acc, job) => acc + (job.duration || 0), 0),
+                "ms)"
+            );
         }
         $log(...styledArguments(args));
     },
@@ -189,7 +199,7 @@ export const logger = {
      * @param {...any} args
      */
     logRun(...args) {
-        if (logger.level < logLevels.RUNNER) {
+        if (logger.level < LOG_LEVELS.runner) {
             return;
         }
         $log(...styledArguments(args));

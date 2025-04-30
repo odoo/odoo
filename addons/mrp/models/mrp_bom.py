@@ -467,6 +467,12 @@ class MrpBom(models.Model):
     # CATALOG
     # -------------------------------------------------------------------------
 
+    def _get_action_add_from_catalog_extra_context(self):
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'product_catalog_currency_id': self.env.company.currency_id.id,
+        }
+
     def _default_order_line_values(self, child_field=False):
         default_data = super()._default_order_line_values(child_field)
         new_default_data = self[child_field]._get_product_catalog_lines_data(default=True)
@@ -483,13 +489,13 @@ class MrpBom(models.Model):
         self.ensure_one()
         return {'price': product.standard_price}
 
-    def _get_product_catalog_record_lines(self, product_ids, child_field=False, **kwargs):
+    def _get_product_catalog_record_lines(self, product_ids, *, child_field=False, **kwargs):
         if not child_field:
             return {}
         lines = self[child_field].filtered(lambda line: line.product_id.id in product_ids)
         return lines.grouped('product_id')
 
-    def _update_order_line_info(self, product_id, quantity, child_field=False, **kwargs):
+    def _update_order_line_info(self, product_id, quantity, *, child_field=False, **kwargs):
         if not child_field:
             return 0
         entity = self[child_field].filtered(lambda line: line.product_id.id == product_id)
@@ -536,6 +542,39 @@ class MrpBom(models.Model):
         attachements = self.env['product.document'].search(final_domain).ir_attachment_id
         return attachements
 
+    @api.model
+    def _skip_for_no_variant(self, product, bom_attribule_values, never_attribute_values=False):
+        """ Controls if a Component/Operation/Byproduct line should be skipped based on the 'no_variant' attributes
+            Cases:
+                - no_variant:
+                    1. attribute present on the line
+                        => need to be at least one attribute value matching between the one passed as args and the ones one the line
+                    2. attribute not present on the line
+                        => valid if the line has no attribute value selected for that attribute
+                - always and dynamic: match_all_variant_values()
+        """
+        no_variant_bom_attributes = bom_attribule_values.filtered(lambda av: av.attribute_id.create_variant == 'no_variant')
+
+        # Attributes create_variant 'always' and 'dynamic'
+        other_attribute_valid = product._match_all_variant_values(bom_attribule_values - no_variant_bom_attributes)
+
+        # If there are no never attribute values on the line => 'always' and 'dynamic'
+        if not no_variant_bom_attributes:
+            return not other_attribute_valid
+
+        # Or if there are never attribute on the line values but no value is passed => impossible to match
+        if not never_attribute_values:
+            return True
+
+        bom_values_by_attribute = no_variant_bom_attributes.grouped('attribute_id')
+        never_values_by_attribute = never_attribute_values.grouped('attribute_id')
+
+        for attribute, values in bom_values_by_attribute.items():
+            if any(val.id in never_values_by_attribute[attribute].ids for val in values):
+                continue
+            return True
+        return not other_attribute_valid
+
 
 class MrpBomLine(models.Model):
     _name = 'mrp.bom.line'
@@ -547,7 +586,7 @@ class MrpBomLine(models.Model):
     def _get_default_product_uom_id(self):
         return self.env['uom.uom'].search([], limit=1, order='id').id
 
-    product_id = fields.Many2one('product.product', 'Component', required=True, check_company=True)
+    product_id = fields.Many2one('product.product', 'Component', required=True, check_company=True, index=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', store=True, index=True)
     company_id = fields.Many2one(
         related='bom_id.company_id', store=True, index=True, readonly=True)
@@ -583,11 +622,6 @@ class MrpBomLine(models.Model):
         compute='_compute_child_line_ids')
     attachments_count = fields.Integer('Attachments Count', compute='_compute_attachments_count')
     tracking = fields.Selection(related='product_id.tracking')
-    manual_consumption = fields.Boolean(
-        'Highlight Consumption', default=False,
-        readonly=False, store=True, copy=True,
-        help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
-             "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
 
     _bom_qty_zero = models.Constraint(
         'CHECK (product_qty>=0)',
@@ -651,29 +685,7 @@ class MrpBomLine(models.Model):
         if not product or product._name == 'product.template':
             return False
 
-        # attributes create_variant 'always' and 'dynamic'
-        other_attribute_valid = product._match_all_variant_values(self.bom_product_template_attribute_value_ids.filtered(lambda a: a.attribute_id.create_variant != 'no_variant'))
-
-        # if there are no never attribute values on the bom line => always and dynamic
-
-        if not self.bom_product_template_attribute_value_ids.filtered(lambda a: a.attribute_id.create_variant == 'no_variant'):
-            return not other_attribute_valid
-
-        # or if there are never attribute on the line values but no value is passed => impossible to match
-        if not never_attribute_values:
-            return True
-
-        bom_values_by_attribute = self.bom_product_template_attribute_value_ids.filtered(
-                lambda a: a.attribute_id.create_variant == 'no_variant'
-            ).grouped('attribute_id')
-
-        never_values_by_attribute = never_attribute_values.grouped('attribute_id')
-
-        for a_id, a_values in bom_values_by_attribute.items():
-            if any(a.id in never_values_by_attribute[a_id].ids for a in a_values):
-                continue
-            return True
-        return not other_attribute_valid
+        return self.env['mrp.bom']._skip_for_no_variant(product, self.bom_product_template_attribute_value_ids, never_attribute_values)
 
     def action_see_attachments(self):
         domain = [
@@ -730,6 +742,7 @@ class MrpBomLine(models.Model):
                     )
                 ),
                 'readOnly': len(self) > 1,
+                'uomDisplayName': len(self) == 1 and self.product_uom_id.display_name or self.product_id.uom_id.display_name,
             }
         return {
             'quantity': 0,
@@ -772,14 +785,15 @@ class MrpBomByproduct(models.Model):
         for record in self:
             record.product_uom_id = record.product_id.uom_id.id
 
-    def _skip_byproduct_line(self, product):
+    def _skip_byproduct_line(self, product, never_attribute_values=False):
         """ Control if a byproduct line should be produced, can be inherited to add
         custom control.
         """
         self.ensure_one()
         if not product or product._name == 'product.template':
             return False
-        return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
+
+        return self.env['mrp.bom']._skip_for_no_variant(product, self.bom_product_template_attribute_value_ids, never_attribute_values)
 
     # -------------------------------------------------------------------------
     # CATALOG
@@ -802,7 +816,8 @@ class MrpBomByproduct(models.Model):
                         )
                     )
                 ),
-                'readOnly': len(self) > 1
+                'readOnly': len(self) > 1,
+                'uomDisplayName': len(self) == 1 and self.product_uom_id.display_name or self.product_id.uom_id.display_name,
             }
         return {
             'quantity': 0,

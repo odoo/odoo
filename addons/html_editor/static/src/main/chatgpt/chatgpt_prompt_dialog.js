@@ -1,4 +1,5 @@
 import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { useAutofocus, useChildRef } from "@web/core/utils/hooks";
 import { useState, useEffect, useRef } from "@odoo/owl";
@@ -62,6 +63,11 @@ export class ChatGPTPromptDialog extends ChatGPTDialog {
             },
             () => [this.state.conversationHistory.length]
         );
+    }
+
+    /** @returns {string} */
+    get authorName() {
+        return this.message.author === "user" ? _t("You") : _t("OdooBot");
     }
 
     onTextareaKeydown(ev) {

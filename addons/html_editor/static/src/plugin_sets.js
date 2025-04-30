@@ -53,6 +53,7 @@ import { TabulationPlugin } from "./main/tabulation_plugin";
 import { TextDirectionPlugin } from "./main/text_direction_plugin";
 import { ToolbarPlugin } from "./main/toolbar/toolbar_plugin";
 import { YoutubePlugin } from "./main/youtube_plugin";
+import { PlaceholderPlugin } from "./main/placeholder_plugin";
 import { CollaborationOdooPlugin } from "./others/collaboration/collaboration_odoo_plugin";
 import { CollaborationPlugin } from "./others/collaboration/collaboration_plugin";
 import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/collaboration_selection_avatar_plugin";
@@ -109,7 +110,6 @@ export const CORE_PLUGINS = [
     DeletePlugin,
     DialogPlugin,
     DomPlugin,
-    EditorVersionPlugin,
     FormatPlugin,
     HistoryPlugin,
     InputPlugin,
@@ -163,6 +163,7 @@ export const MAIN_PLUGINS = [
     InlineCodePlugin,
     TableResizePlugin,
     FilePlugin,
+    PlaceholderPlugin,
 ];
 
 export const COLLABORATION_PLUGINS = [
@@ -185,5 +186,6 @@ export const EXTRA_PLUGINS = [
     ...COLLABORATION_PLUGINS,
     ...MAIN_PLUGINS,
     ...EMBEDDED_COMPONENT_PLUGINS,
+    EditorVersionPlugin,
     QWebPlugin,
 ];

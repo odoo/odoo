@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "@odoo/owl";
+import { onWillUnmount, useEffect, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { scrollTo } from "@web/core/utils/scrolling";
@@ -25,14 +25,17 @@ class NavigationItem {
      */
     target = undefined;
 
-    constructor({ index, el, setActiveItem, options }) {
+    constructor({ index, el, options, navigator }) {
         this.index = index;
 
         /**@private */
         this._options = options;
 
-        /**@private*/
-        this._setActiveItem = setActiveItem;
+        /**
+         * @private
+         * @type {Navigator}
+        */
+        this._navigator = navigator;
 
         this.el = el;
         if (this._options.shouldFocusChildInput) {
@@ -43,15 +46,15 @@ class NavigationItem {
         }
 
         const onFocus = () => this.setActive(false);
-        const onMouseEnter = () => this._onMouseEnter();
+        const onMouseMove = () => this._onMouseMove();
 
         this.target.addEventListener("focus", onFocus);
-        this.target.addEventListener("mouseenter", onMouseEnter);
+        this.target.addEventListener("mousemove", onMouseMove);
 
         /**@private*/
         this._removeListeners = () => {
             this.target.removeEventListener("focus", onFocus);
-            this.target.removeEventListener("mouseenter", onMouseEnter);
+            this.target.removeEventListener("mousemove", onMouseMove);
         };
     }
 
@@ -62,7 +65,7 @@ class NavigationItem {
 
     setActive(focus = true) {
         scrollTo(this.target);
-        this._setActiveItem(this.index);
+        this._navigator._setActiveItem(this.index);
         this.target.classList.add(ACTIVE_ELEMENT_CLASS);
 
         if (focus && !this._options.virtualFocus) {
@@ -81,13 +84,15 @@ class NavigationItem {
     /**
      * @private
      */
-    _onMouseEnter() {
-        this.setActive(false);
-        this._options.onMouseEnter?.(this);
+    _onMouseMove() {
+        if (this._navigator.activeItem !== this) {
+            this.setActive(false);
+            this._options.onMouseEnter?.(this);
+        }
     }
 }
 
-class Navigator {
+export class Navigator {
     /**@type {NavigationItem|undefined}*/
     activeItem = undefined;
 
@@ -193,11 +198,12 @@ class Navigator {
             const callback = isFunction ? hotkeyInfo : hotkeyInfo.callback;
             const isAvailable = hotkeyInfo?.isAvailable ?? (() => true);
             const bypassEditableProtection = hotkeyInfo?.bypassEditableProtection ?? false;
+            const allowRepeat = "allowRepeat" in hotkeyInfo ? hotkeyInfo.allowRepeat : true;
 
             this._hotkeyRemoves.push(
                 this._hotkeyService.add(hotkey, () => callback(this), {
-                    allowRepeat: true,
-                    isAvailable: () => isAvailable(this),
+                    allowRepeat,
+                    isAvailable: (target) => isAvailable(this, target),
                     bypassEditableProtection,
                 })
             );
@@ -269,7 +275,7 @@ class Navigator {
                 index: i,
                 el: elements[i],
                 options: this._options,
-                setActiveItem: (index) => this._setActiveItem(index),
+                navigator: this,
             });
 
             if (i >= this.items.length) {
@@ -288,7 +294,14 @@ class Navigator {
             this.activeItemIndex < this.items.length &&
             oldActiveItem !== this.items[this.activeItemIndex]
         ) {
-            this.items[this.activeItemIndex]?.setActive();
+            const index = elements.indexOf(oldActiveItem?.el);
+            if (index < 0) {
+                this.items[this.activeItemIndex]?.setActive();
+            } else {
+                // set the new active item's index
+                this.activeItemIndex = index;
+                this.activeItem = this.items[this.activeItemIndex];
+            }
         }
     }
 
@@ -347,6 +360,7 @@ class Navigator {
  * @param {hotkeyHandler} callback
  * @param {Function} isAvailable
  * @param {boolean} bypassEditableProtection
+ * @param {boolean} [allowRepeat=true]
  */
 
 /**
@@ -390,6 +404,7 @@ export function useNavigation(containerRef, options = {}) {
         },
         () => [containerRef.el]
     );
+    onWillUnmount(() => navigator._disable());
 
     return {
         enable: () => navigator._enable(),

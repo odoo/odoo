@@ -16,6 +16,7 @@ from odoo.tools import float_is_zero
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
+    PRICELIST_SELECTED_SESSION_CACHE_KEY,
 )
 
 
@@ -113,23 +114,20 @@ class SaleOrder(models.Model):
                 ], limit=1)
 
     def _search_abandoned_cart(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
         website_ids = self.env['website'].search_read(fields=['id', 'cart_abandoned_delay', 'partner_id'])
         deadlines = [[
             '&', '&',
             ('website_id', '=', website_id['id']),
-            ('date_order', '<=', fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=website_id['cart_abandoned_delay'] or 1.0))),
+            ('date_order', '<=', fields.Datetime.to_string(fields.Datetime.now() - relativedelta(hours=website_id['cart_abandoned_delay'] or 1.0))),
             ('partner_id', '!=', website_id['partner_id'][0])
         ] for website_id in website_ids]
-        abandoned_domain = [
+        return [
             ('state', '=', 'draft'),
-            ('order_line', '!=', False)
+            ('order_line', '!=', False),
+            *expression.OR(deadlines),
         ]
-        abandoned_domain.extend(expression.OR(deadlines))
-        abandoned_domain = expression.normalize_domain(abandoned_domain)
-        # is_abandoned domain possibilities
-        if (operator not in expression.NEGATIVE_TERM_OPERATORS and value) or (operator in expression.NEGATIVE_TERM_OPERATORS and not value):
-            return abandoned_domain
-        return expression.distribute_not(['!'] + abandoned_domain)  # negative domain
 
     def _compute_user_id(self):
         """Do not assign self.env.user as salesman for e-commerce orders.
@@ -235,6 +233,14 @@ class SaleOrder(models.Model):
             return self.env['website'].browse(website_id).get_base_url()
         return super()._get_note_url()
 
+    def _needs_customer_address(self):
+        """Return whether we need the address details of the customer (country, street, ...).
+
+        If an order only has services, unless the customer wants an invoice, their checkout can
+        be sped up by allowing them to only provide their name, email and phone numbers.
+        """
+        return not self.only_services
+
     def _update_address(self, partner_id, fnames=None):
         if not fnames:
             return
@@ -253,6 +259,22 @@ class SaleOrder(models.Model):
             request.session[FISCAL_POSITION_SESSION_CACHE_KEY] = new_fpos.id
             request.fiscal_position = new_fpos
 
+        #If user explicitely selected a valid pricelist, we don't want to change it
+        if selected_pricelist_id := request.session.get(PRICELIST_SELECTED_SESSION_CACHE_KEY):
+            selected_pricelist = (
+                self.env['product.pricelist'].browse(selected_pricelist_id).exists()
+            )
+            if (
+                selected_pricelist
+                and selected_pricelist._is_available_on_website(self.website_id)
+                and selected_pricelist._is_available_in_country(
+                    self.partner_id.country_id.code
+                )
+            ):
+                self.pricelist_id = selected_pricelist
+            else:
+                request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
+
         if self.pricelist_id != pricelist_before or fpos_changed:
             # Pricelist may have been recomputed by the `partner_id` field update
             # we need to recompute the prices to match the new pricelist if it changed
@@ -267,10 +289,6 @@ class SaleOrder(models.Model):
             delivery_methods = self._get_delivery_methods()
             delivery_method = self._get_preferred_delivery_method(delivery_methods)
             self._set_delivery_method(delivery_method)
-
-        if 'partner_id' in fnames:
-            # Only add the main partner as follower of the order
-            self._message_subscribe([partner_id])
 
     def _cart_add(self, product_id:int, quantity:int|float=1.0, **kwargs):
         """Add quantity of the given product to the current sales order.
@@ -313,7 +331,7 @@ class SaleOrder(models.Model):
         }
 
     def _cart_find_product_line(
-        self, product_id, linked_line_id=False, no_variant_attribute_value_ids=None, **kwargs
+        self, product_id, *, linked_line_id=False, no_variant_attribute_value_ids=None, **kwargs
     ):
         """Find the cart line matching the given parameters.
 
@@ -343,6 +361,7 @@ class SaleOrder(models.Model):
             ('product_id', '=', product_id),
             ('product_custom_attribute_value_ids', '=', False),
             ('linked_line_id', '=', linked_line_id),
+            ('combo_item_id', '=', False),
         ]
 
         filtered_sol = self.order_line.filtered_domain(domain)
@@ -410,21 +429,31 @@ class SaleOrder(models.Model):
         # Update existing line
         update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
         if update_values:
-            order_line.write(update_values)
-
-            # If the line is a combo product line, and it already has combo items, we need to update
-            # the combo item quantities as well.
+            combo_item_lines = order_line.linked_line_ids.filtered('combo_item_id')
             if (
                 order_line.product_type == 'combo'
-                and order_line.linked_line_ids
+                and combo_item_lines
                 and 'product_uom_qty' in update_values
             ):
-                for linked_line_id in order_line.linked_line_ids:
-                    if quantity != linked_line_id.product_uom_qty:
-                        self.with_context(skip_cart_verification=True)._cart_update_line_quantity(
-                            line_id=linked_line_id.id,
-                            quantity=quantity,
+                # A combo product and its items should have the same quantity (by design). If the
+                # requested quantity isn't available for one or more combo items, we should lower
+                # the quantity of the combo product and its items to the maximum available quantity
+                # of the combo item with the least available quantity.
+                combo_quantity = quantity
+                for item_line in combo_item_lines:
+                    if quantity != item_line.product_uom_qty:
+                        combo_item_quantity, _warning = self._verify_updated_quantity(
+                            item_line, item_line.product_id.id, quantity, **kwargs
                         )
+                        combo_quantity = min(combo_quantity, combo_item_quantity)
+                for item_line in combo_item_lines:
+                    if combo_quantity != item_line.product_uom_qty:
+                        self.with_context(skip_cart_verification=True)._cart_update_line_quantity(
+                            line_id=item_line.id, quantity=combo_quantity
+                        )
+                update_values['product_uom_qty'] = combo_quantity
+
+            order_line.write(update_values)
 
             order_line._check_validity()
 
@@ -447,13 +476,17 @@ class SaleOrder(models.Model):
             self._prepare_order_line_values(product_id, quantity, **kwargs)
         )
 
-        line._check_validity()
+        # The validity of a combo product line can only be checked after creating all of its combo
+        # item lines.
+        if line.product_type != 'combo':
+            line._check_validity()
         return line
 
     def _prepare_order_line_values(
         self,
         product_id,
         quantity,
+        *,
         linked_line_id=False,
         no_variant_attribute_value_ids=None,
         product_custom_attribute_values=None,
@@ -614,7 +647,9 @@ class SaleOrder(models.Model):
 
     def _is_reorder_allowed(self):
         self.ensure_one()
-        return self.state == 'sale' and any(line._is_reorder_allowed() for line in self.order_line if not line.display_type)
+        return self.state == 'sale' and any(
+            line._is_reorder_allowed() for line in self.order_line if line.product_id
+        )
 
     def _filter_can_send_abandoned_cart_mail(self):
         self.website_id.ensure_one()
@@ -664,7 +699,7 @@ class SaleOrder(models.Model):
         :return: Whether the order has deliverable products.
         :rtype: bool
         """
-        return not self.only_services
+        return bool(self.order_line.product_id) and not self.only_services
 
     def _remove_delivery_line(self):
         super()._remove_delivery_line()

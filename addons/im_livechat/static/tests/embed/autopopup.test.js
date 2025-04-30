@@ -39,8 +39,8 @@ test("rule received in init", async () => {
         action: "auto_popup",
     });
     patchWithCleanup(mailDataHelpers, {
-        async _process_request_for_all(store) {
-            await super._process_request_for_all(...arguments);
+        _process_request_for_all(store) {
+            super._process_request_for_all(...arguments);
             store.add(pyEnv["im_livechat.channel.rule"].browse(autopopupRuleId), {
                 action: "auto_popup",
                 auto_popup_timer: 0,

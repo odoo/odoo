@@ -195,6 +195,8 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         super().setUp()
         # warm up group access cache: 5 queries + 1 query per user
         self.user_employee.has_group('base.group_user')
+        # we don't use mock_mail_gateway thus want to mock smtp to test the stack
+        self._mock_smtplib_connection()
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @warmup

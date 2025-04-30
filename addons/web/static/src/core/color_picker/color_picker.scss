@@ -2,25 +2,123 @@
     --bg: #{$o-we-toolbar-bg};
     --text-rgb: #{red($o-we-toolbar-color-text)}, #{green($o-we-toolbar-color-text)}, #{blue($o-we-toolbar-color-text)};
     --border-rgb: var(--text-rgb);
-    width: 222px;
+    width: 204px;
     box-shadow: $box-shadow;
 }
 
 .o_color_button {
-    width: 25px;
-    height: 24px;
+    width: 23px;
+    height: 22px;
+    padding: 0px;
     box-shadow: inset 0 0 0 1px rgba(var(--border-rgb), .5);
-    margin: 1px;
+    margin: 0.5px;
+
+    &:not(.o_gradient_color_button) {
+        &:focus,
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+.o_gradient_color_button {
+  border-width: 0px;
+}
+
+.o_custom_gradient_button,
+.o_color_button {
+    &:focus,
+    &:hover {
+        outline: solid $o-enterprise-action-color;
+        transition: transform 0.1s ease-out;
+    }
+}
+
+.o_font_color_selector {
+    .btn-tab {
+        min-width: 57px;
+        padding: 3px;
+        font-size: 12px;
+    }
 }
 
 .o_font_color_selector .o_colorpicker_section {
     display: flex;
     margin-bottom: 3px;
+    width: fit-content;
+    margin-left: 2px;
 }
 
 .o_font_color_selector .o_color_button.selected {
     // todo: check web_editor
     border: 3px solid $o-enterprise-action-color;
+}
+// custom gradients
+.custom-gradient-configurator {
+    .gradient-checkers {
+        background-image: url('/web/static/img/transparent.png');
+        background-size: var(--PreviewAlphaBg-background-size, 10px) auto;
+        padding: 10px 0;
+        margin-bottom: -20px;
+    }
+    .gradient-preview {
+        padding: 10px 0;
+        cursor: copy;
+    }
+    .gradient-colors {
+        height: 18px;
+        div {
+            height: 0;
+            overflow: visible;
+        }
+    }
+    input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        width: 100%;
+        pointer-events: none;
+        position: relative;
+    }
+    input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 8px;
+        height: 16px;
+        cursor: pointer;
+        pointer-events: auto;
+        background: #000;
+        border-radius: 4px;
+        border: 1px solid #666;
+    }
+    input::-moz-range-thumb {
+        width: 8px;
+        height: 16px;
+        cursor: pointer;
+        pointer-events: auto;
+        background: #000;
+        border-radius: 4px;
+        border: 1px solid #666;
+    }
+}
+.gradient-color-bin {
+    position: relative;
+    margin: 0 12px;
+    height: 22px;
+    > a.btn {
+        padding: 0 2px 2px;
+        margin-top: 0;
+        margin-left: -12px;
+        position: absolute;
+    }
+}
+.o_font_color_selector .o_colorpicker_widget {
+    .o_hex_input {
+        border: 1px solid !important;
+        padding: 0 2px !important;
+        width: 10ch !important;
+        opacity: 0.7;
+    }
 }
 
 :root {

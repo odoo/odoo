@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """
@@ -39,37 +38,40 @@ class IrQweb(models.AbstractModel):
     """
     _inherit = 'ir.qweb'
 
-    def _compile_node(self, el, compile_context, indent):
+    def _compile_node(self, el, compile_context, level):
         snippet_key = compile_context.get('snippet-key')
-        if snippet_key == compile_context['template'] \
-                or compile_context.get('snippet-sub-call-key') == compile_context['template']:
-            # Get the path of element to only consider the first node of the
-            # snippet template content (ignoring all ancestors t elements which
-            # are not t-call ones)
-            nb_real_elements_in_hierarchy = 0
-            node = el
-            while node is not None and nb_real_elements_in_hierarchy < 2:
-                if node.tag != 't' or 't-call' in node.attrib:
-                    nb_real_elements_in_hierarchy += 1
-                node = node.getparent()
-            if nb_real_elements_in_hierarchy == 1:
-                # The first node might be a call to a sub template
-                sub_call = el.get('t-call')
-                if sub_call:
-                    el.set('t-options', f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}")
-                else:
-                    # If it already has a data-snippet it is a saved or an
-                    # inherited snippet. Do not override it.
-                    if 'data-snippet' not in el.attrib:
-                        el.attrib['data-snippet'] = snippet_key.split('.', 1)[-1]
+        template = compile_context['template']
+        sub_call_key = compile_context.get('snippet-sub-call-key')
+        # We only add the 'data-snippet' & 'data-name' attrib once when
+        # compiling the root node of the template.
+        if template not in {snippet_key, sub_call_key} or el.getparent() is not None:
+            return super()._compile_node(el, compile_context, level)
 
-                    # If it already has a data-name it is a saved or an
-                    # inherited snippet. Do not override it.
-                    snippet_name = compile_context.get('snippet-name')
-                    if snippet_name and 'data-name' not in el.attrib:
-                        el.attrib['data-name'] = snippet_name
-
-        return super()._compile_node(el, compile_context, indent)
+        snippet_base_node = el
+        if el.tag == 't':
+            el_children = [child for child in list(el) if isinstance(child.tag, str) and child.tag != 't']
+            if len(el_children) == 1:
+                snippet_base_node = el_children[0]
+            elif not el_children:
+                # If there's not a valid base node we check if the base node is
+                # a t-call to another template. If so the called template's base
+                # node must take the current snippet key.
+                el_children = [child for child in list(el) if isinstance(child.tag, str)]
+                if len(el_children) == 1:
+                    sub_call = el_children[0].get('t-call')
+                    if sub_call:
+                        el_children[0].set('t-options', f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}")
+        # If it already has a data-snippet it is a saved or an
+        # inherited snippet. Do not override it.
+        if 'data-snippet' not in snippet_base_node.attrib:
+            snippet_base_node.attrib['data-snippet'] = \
+                snippet_key.split('.', 1)[-1]
+        # If it already has a data-name it is a saved or an
+        # inherited snippet. Do not override it.
+        snippet_name = compile_context.get('snippet-name')
+        if snippet_name and 'data-name' not in snippet_base_node.attrib:
+            snippet_base_node.attrib['data-name'] = snippet_name
+        return super()._compile_node(el, compile_context, level)
 
     # compile directives
 
@@ -91,7 +93,8 @@ class IrQweb(models.AbstractModel):
         forbid_sanitize = el.attrib.pop('t-forbid-sanitize', None)
         snippet_group = el.attrib.pop('snippet-group', None)
         group = el.attrib.pop('group', None)
-        div = Markup('<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-snippet-key="%s" data-oe-keywords="%s" %s %s %s>') % (
+        label = el.attrib.pop('label', None)
+        div = Markup('<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-snippet-key="%s" data-oe-keywords="%s" %s %s %s %s>') % (
             name,
             escape_silent(image_preview),
             thumbnail,
@@ -101,6 +104,7 @@ class IrQweb(models.AbstractModel):
             Markup('data-oe-forbid-sanitize="%s"') % forbid_sanitize if forbid_sanitize else '',
             Markup('data-o-snippet-group="%s"') % snippet_group if snippet_group else '',
             Markup('data-o-group="%s"') % group if group else '',
+            Markup('data-o-label="%s"') % label if label else '',
         )
         self._append_text(div, compile_context)
         code = self._compile_node(el, compile_context, indent)
@@ -119,17 +123,20 @@ class IrQweb(models.AbstractModel):
         thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
         image_preview = el.attrib.pop('t-image-preview', None)
         group = el.attrib.pop('group', None)
+        label = el.attrib.pop('label', None)
         if self.env.user.has_group('base.group_system'):
             module = self.env['ir.module.module'].search([('name', '=', key)])
             if not module or module.state == 'installed':
                 return []
             name = el.attrib.get('string') or 'Snippet'
-            div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s><section/></div>') % (
+            div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-module-display-name="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s %s><section/></div>') % (
                 name,
                 module.id,
+                module.display_name,
                 escape_silent(image_preview),
                 thumbnail,
                 Markup('data-o-group="%s"') % group if group else '',
+                Markup('data-o-label="%s"') % label if label else '',
             )
             self._append_text(div, compile_context)
         return []
@@ -166,7 +173,7 @@ class IrQwebField(models.AbstractModel):
     _inherit = ['ir.qweb.field']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
         field = record._fields[field_name]
 
@@ -225,7 +232,7 @@ class IrQwebFieldMany2one(models.AbstractModel):
     _inherit = ['ir.qweb.field.many2one']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             many2one = record[field_name]
@@ -266,7 +273,7 @@ class IrQwebFieldContact(models.AbstractModel):
     _inherit = ['ir.qweb.field.contact']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             attrs['data-oe-contact-options'] = json.dumps(options)
@@ -284,7 +291,7 @@ class IrQwebFieldDate(models.AbstractModel):
     _inherit = ['ir.qweb.field.date']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             attrs['data-oe-original'] = record[field_name]
@@ -322,7 +329,7 @@ class IrQwebFieldDatetime(models.AbstractModel):
     _inherit = ['ir.qweb.field.datetime']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
 
         if options.get('inherit_branding'):
@@ -557,7 +564,7 @@ class IrQwebFieldDuration(models.AbstractModel):
     _inherit = ['ir.qweb.field.duration']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             attrs['data-oe-original'] = record[field_name]

@@ -1,6 +1,13 @@
-import { before, createJobScopedGetter, expect, getCurrent, registerDebugInfo } from "@odoo/hoot";
+import {
+    after,
+    before,
+    createJobScopedGetter,
+    expect,
+    getCurrent,
+    registerDebugInfo,
+} from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
-import { RPCError } from "@web/core/network/rpc";
+import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ensureArray, isIterable } from "@web/core/utils/arrays";
 import { isObject } from "@web/core/utils/objects";
@@ -14,6 +21,7 @@ import {
     makeServerError,
     safeSplit,
 } from "./mock_server_utils";
+import { PersistentCache } from "@web/core/utils/persistent_cache";
 
 const { DateTime } = luxon;
 
@@ -29,12 +37,14 @@ const { DateTime } = luxon;
  *
  * @typedef {{
  *  actionID?: string | number;
- *  appID?: number | "root";
- *  children?: MenuDefinition[];
- *  id: Number | "root";
+ *  appID?: MenuId;
+ *  children?: (MenuId | MenuDefinition)[];
+ *  id: MenuId;
  *  name: string;
- *  xmlId?: string;
+ *  xmlid?: string;
  * }} MenuDefinition
+ *
+ * @typedef {number | "root"} MenuId
  *
  * @typedef {MockServerBaseEnvironment & { [modelName: string]: Model }} MockServerEnvironment
  *
@@ -161,7 +171,7 @@ const ensureError = (error) => (error instanceof Error ? error : new Error(error
 const getAssignAction = (options) => {
     const shouldAdd = options?.mode === "add";
     return function assign(target, key, value) {
-        if (shouldAdd && isObject(target[key])) {
+        if (shouldAdd && target[key] === Object(target[key])) {
             // Add value
             if (Array.isArray(target[key])) {
                 target[key].push(...value);
@@ -307,11 +317,16 @@ const ALLOWED_CHARS = {
     string: "[\\w:.-]",
 };
 const DEFAULT_MENU = {
-    id: 99999,
+    id: 1,
     appID: 1,
-    children: [],
-    name: "App0",
+    name: "App1",
 };
+const ROOT_MENU = {
+    id: "root",
+    name: "root",
+    appID: "root",
+};
+
 const R_DATASET_ROUTE = /\/web\/dataset\/call_(button|kw)\/[\w.-]+\/(?<step>\w+)/;
 const R_ROUTE_PARAM = /<((?<type>\w+):)?(?<name>[\w-]+)>/g;
 const R_WILDCARD = /\*+/g;
@@ -383,6 +398,10 @@ export class MockServer {
     websockets = [];
 
     constructor() {
+        // Add RPC cache
+        rpc.setCache(new PersistentCache("mockRpc", 1));
+        after(() => rpc.setCache(null));
+
         // Set default routes
         this._onRoute(["/web/action/load"], this.loadAction);
         this._onRoute(["/web/action/load_breadcrumbs"], this.loadActionBreadcrumbs);
@@ -398,7 +417,7 @@ export class MockServer {
         this._onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.loadImage, {
             pure: true,
         });
-        this._onRoute(["/web/webclient/load_menus/<string:unique>"], this.loadMenus, {
+        this._onRoute(["/web/webclient/load_menus"], this.loadMenus, {
             pure: true,
         });
         this._onRoute(["/web/webclient/translations/<string:unique>"], this.loadTranslations, {
@@ -542,12 +561,8 @@ export class MockServer {
                 errorName: "odoo.addons.web.controllers.action.MissingActionError",
                 message: `The action ${JSON.stringify(id)} does not exist`,
             });
-        } else if (actions.length > 1) {
-            throw new MockServerError(
-                `found ${actions.length} actions matching the same id: ${JSON.stringify(id)}`
-            );
         }
-        return this._getAction(actions[0]);
+        return this._getAction(Object.assign({}, ...actions));
     }
 
     /**
@@ -1171,21 +1186,36 @@ export class MockServer {
      * @type {RouteCallback<"unique">}
      */
     async loadMenus() {
-        const root = { id: "root", children: [], name: "root", appID: "root" };
-        const menuDict = { root };
-
-        const recursive = [{ isRoot: true, menus: this.menus }];
-        for (const { isRoot, menus } of recursive) {
-            for (const _menu of menus) {
-                if (isRoot) {
-                    root.children.push(_menu.id);
+        /** @type {MenuId[]} */
+        const allChildIds = new Set();
+        /** @type {Record<MenuId, MenuDefinition>} */
+        const menuDict = {};
+        /** @type {MenuDefinition[]} */
+        const menuStack = [{ ...ROOT_MENU, children: this.menus }];
+        while (menuStack.length) {
+            const menu = menuStack.shift();
+            /** @type {Set<MenuId>} */
+            const childIds = new Set();
+            menuDict[menu.id] = { ...menuDict[menu.id], ...menu };
+            for (const childMenuOrId of menuDict[menu.id].children) {
+                let childId = childMenuOrId;
+                if (isObject(childMenuOrId)) {
+                    childId = childMenuOrId.id;
+                    menuStack.push({
+                        appID: childId,
+                        children: [],
+                        name: `App${childId}`,
+                        ...childMenuOrId,
+                    });
                 }
-                const menu = { ..._menu };
-                const children = menu.children || [];
-                menu.children = children.map((m) => m.id);
-                recursive.push({ isRoot: false, menus: children });
-                menuDict[menu.id] = menu;
+                allChildIds.add(childId);
+                childIds.add(childId);
             }
+            menuDict[menu.id].children = [...childIds].sort((a, b) => a - b);
+        }
+        const missingMenuIds = [...allChildIds].filter((id) => !(id in menuDict));
+        if (missingMenuIds.length) {
+            throw new MockServerError(`missing menu ID(s): ${missingMenuIds.join(", ")}`);
         }
         return menuDict;
     }
@@ -1310,7 +1340,7 @@ export async function makeMockServer() {
     // Add other ambiant params
     mockServer.configure(getCurrentParams());
 
-    registerDebugInfo(mockServer);
+    registerDebugInfo("mock server", mockServer);
 
     return mockServer.start();
 }

@@ -66,7 +66,7 @@ class SurveyQuestion(models.Model):
     question_placeholder = fields.Char("Placeholder", translate=True, compute="_compute_question_placeholder", store=True, readonly=False)
     background_image = fields.Image("Background Image", compute="_compute_background_image", store=True, readonly=False)
     background_image_url = fields.Char("Background Url", compute="_compute_background_image_url")
-    survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
+    survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade', index='btree_not_null')
     scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
     session_available = fields.Boolean(related='survey_id.session_available', string='Live Session available', readonly=True)
@@ -421,6 +421,7 @@ class SurveyQuestion(models.Model):
                 new_question.triggering_answer_ids = old_question.triggering_answer_ids
         return new_questions
 
+    @api.model_create_multi
     def create(self, vals_list):
         questions = super().create(vals_list)
         questions.filtered(
@@ -628,7 +629,12 @@ class SurveyQuestion(models.Model):
             table_data, graph_data = question._get_stats_data(answer_lines)
             question_data['table_data'] = table_data
             question_data['graph_data'] = json.dumps(graph_data)
-
+            if question.question_type in ["text_box", "char_box", "numerical_box", "date", "datetime"]:
+                answers_data = [
+                    [input_line.id, input_line._get_answer_value(), input_line.user_input_id.get_print_url()]
+                    for input_line in table_data if not input_line.skipped
+                ]
+                question_data["answers_data"] = json.dumps(answers_data, default=str)
             all_questions_data.append(question_data)
         return all_questions_data
 

@@ -21,7 +21,7 @@ class OnboardingProgress(models.Model):
     is_onboarding_closed = fields.Boolean('Was panel closed?')
     company_id = fields.Many2one('res.company', ondelete='cascade')
     onboarding_id = fields.Many2one(
-        'onboarding.onboarding', 'Related onboarding tracked', required=True, ondelete='cascade')
+        'onboarding.onboarding', 'Related onboarding tracked', required=True, index=True, ondelete='cascade')
     progress_step_ids = fields.Many2many('onboarding.progress.step', string='Progress Steps Trackers')
 
     # not in _sql_constraint because COALESCE is not supported for PostgreSQL constraint

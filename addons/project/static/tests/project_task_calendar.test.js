@@ -111,3 +111,43 @@ test("test task_stage_with_state_selection widget with editable state", async ()
     await animationFrame();
     expect(".o-dropdown .o_status").toHaveStyle({ color: "rgb(0, 136, 24)" });
 });
+
+test("Display closed tasks as past event", async () => {
+    ProjectTask._records.push({
+        id: 2,
+        name: "Task-2",
+        date_deadline: "2024-01-09 07:00:00",
+        create_date: "2024-01-03 12:00:00",
+        project_id: 1,
+        stage_id: 1,
+        state: "1_done",
+        user_ids: [],
+        display_name: "Task-2",
+    });
+    ProjectTask._records.push({
+        id: 3,
+        name: "Task-3",
+        date_deadline: "2024-01-09 07:00:00",
+        create_date: "2024-01-03 12:00:00",
+        project_id: 1,
+        stage_id: 1,
+        state: "1_canceled",
+        user_ids: [],
+        display_name: "Task-3",
+    });
+    ProjectTask._records.push({
+        id: 4,
+        name: "Task-4",
+        date_deadline: "2024-01-09 07:00:00",
+        create_date: "2024-01-03 12:00:00",
+        project_id: 1,
+        stage_id: 1,
+        state: "1_canceled",
+        user_ids: [],
+        display_name: "Task-4",
+        is_closed: true,
+    });
+    await mountView(calendarMountParams);
+    expect(".o_event").toHaveCount(4);
+    expect(".o_event.o_past_event").toHaveCount(3);
+})

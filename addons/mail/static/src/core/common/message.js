@@ -1,8 +1,8 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
-import { LinkPreviewList } from "@mail/core/common/link_preview_list";
 import { MessageInReply } from "@mail/core/common/message_in_reply";
+import { MessageLinkPreviewList } from "@mail/core/common/message_link_preview_list";
 import { MessageNotificationPopover } from "@mail/core/common/message_notification_popover";
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
@@ -35,12 +35,12 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
-import { messageActionsRegistry, useMessageActions } from "./message_actions";
+import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
-import { escape } from "@web/core/utils/strings";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
+import { NotificationMessage } from "./notification_message";
 
 /**
  * @typedef {Object} Props
@@ -48,7 +48,6 @@ import { discussComponentRegistry } from "./discuss_component_registry";
  * @property {boolean} [highlighted]
  * @property {function} [onParentMessageClick]
  * @property {import("models").Message} message
- * @property {import("@mail/utils/common/hooks").MessageToReplyTo} [messageToReplyTo]
  * @property {boolean} [squashed]
  * @property {import("models").Thread} [thread]
  * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
@@ -66,12 +65,13 @@ export class Message extends Component {
         Composer,
         Dropdown,
         DropdownItem,
-        LinkPreviewList,
-        MessageInReply,
-        MessageReactions,
         ImStatus,
+        MessageInReply,
+        MessageLinkPreviewList,
+        MessageReactions,
         Popover: MessageNotificationPopover,
         RelativeTime,
+        NotificationMessage,
     };
     static defaultProps = {
         hasActions: true,
@@ -85,8 +85,6 @@ export class Message extends Component {
         "isInChatWindow?",
         "onParentMessageClick?",
         "message",
-        "messageEdition?",
-        "messageToReplyTo?",
         "previousMessage?",
         "squashed?",
         "thread?",
@@ -94,15 +92,14 @@ export class Message extends Component {
         "className?",
         "showDates?",
         "isFirstMessage?",
+        "isReadOnly?",
     ];
     static template = "mail.Message";
 
     setup() {
         super.setup();
-        this.escape = escape;
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({
-            isEditing: false,
             isHovered: false,
             isClicked: false,
             expandOptions: false,
@@ -132,14 +129,6 @@ export class Message extends Component {
             message: this.props.message,
             alignedRight: this.isAlignedRight,
         });
-        useEffect(
-            (editingMessage) => {
-                if (this.props.message.eq(editingMessage)) {
-                    messageActionsRegistry.get("edit").onClick(this);
-                }
-            },
-            () => [this.props.messageEdition?.editingMessage]
-        );
         onMounted(() => {
             if (this.shadowBody.el) {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
@@ -163,6 +152,30 @@ export class Message extends Component {
                 if (cookie.get("color_scheme") === "dark") {
                     this.shadowRoot.appendChild(shadowStyle);
                 }
+                const ellipsisStyle = document.createElement("style");
+                ellipsisStyle.textContent = `
+                    .o-mail-ellipsis {
+                        min-width: 2.7ch;
+                        background-color: ButtonFace;
+                        border-radius: 50rem;
+                        border: 0;
+                        display: block
+                        font: -moz-button;
+                        font-size: .75rem;
+                        font-weight: 500;
+                        line-height: 1.1;
+                        cursor: pointer;
+                        padding: 0 4px;
+                        vertical-align: top;
+                        color #ffffff;
+                        text-decoration: none;
+                        text-align: center;
+                        &:hover {
+                            background-color: -moz-buttonhoverface;
+                        }
+                    }
+                `;
+                this.shadowRoot.appendChild(ellipsisStyle);
             }
         });
         useEffect(
@@ -171,9 +184,9 @@ export class Message extends Component {
                     const bodyEl = createElementWithContent(
                         "span",
                         this.state.showTranslation
-                            ? this.message.translationValue
-                            : this.props.messageSearch?.highlight(this.message.body) ??
-                                  this.message.body
+                            ? this.message.richTranslationValue
+                            : this.props.messageSearch?.highlight(this.message.richBody) ??
+                                  this.message.richBody
                     );
                     this.prepareMessageBody(bodyEl);
                     this.shadowRoot.appendChild(bodyEl);
@@ -184,44 +197,40 @@ export class Message extends Component {
             },
             () => [
                 this.state.showTranslation,
-                this.message.translationValue,
+                this.message.richTranslationValue,
                 this.props.messageSearch?.searchTerm,
-                this.message.body,
+                this.message.richBody,
+                this.isEditing,
             ]
         );
         useEffect(
             () => {
-                if (!this.state.isEditing) {
+                if (!this.isEditing) {
                     this.prepareMessageBody(this.messageBody.el);
                 }
             },
-            () => [this.state.isEditing, this.message.body]
+            () => [this.isEditing, this.message.richBody]
         );
     }
 
     get attClass() {
         return {
             [this.props.className]: true,
-            "o-card p-2 mt-2 border border-secondary": this.props.asCard,
-            "pt-1": !this.props.asCard,
+            "o-card p-2 ps-1 mx-1 mt-2 mb-2 border border-secondary rounded-3": this.props.asCard,
+            "pt-1": !this.props.asCard && !this.props.squashed,
+            "o-pt-0_5": !this.props.asCard && this.props.squashed,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
-            "o-selected": this.props.messageToReplyTo?.isSelected(
-                this.props.thread,
-                this.props.message
-            ),
+            "o-selected": this.props.thread?.composer.replyToMessage?.eq(this.props.message),
             "o-squashed": this.props.squashed,
             "mt-1":
                 !this.props.squashed &&
                 this.props.thread &&
                 !this.env.messageCard &&
                 !this.props.asCard,
-            "px-2": this.props.isInChatWindow,
-            "opacity-50": this.props.messageToReplyTo?.isNotSelected(
-                this.props.thread,
-                this.props.message
-            ),
+            "px-1": this.props.isInChatWindow,
+            "opacity-50": this.props.thread?.composer.replyToMessage?.notEq(this.props.message),
             "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
-            "o-editing": this.state.isEditing,
+            "o-editing": this.isEditing,
         };
     }
 
@@ -230,13 +239,6 @@ export class Message extends Component {
             o_object_fit_contain: this.props.message.author?.is_company,
             o_object_fit_cover: !this.props.message.author?.is_company,
         };
-    }
-
-    get authorName() {
-        if (this.message.author) {
-            return this.message.author.name;
-        }
-        return this.message.email_from;
     }
 
     get authorAvatarUrl() {
@@ -259,13 +261,17 @@ export class Message extends Component {
         return _t("Expand");
     }
 
+    get isEditing() {
+        return !this.props.isReadOnly && this.props.message.composer;
+    }
+
     get message() {
         return this.props.message;
     }
 
     /** Max amount of quick actions, including "..." */
     get quickActionCount() {
-        return this.env.inChatter ? 3 : this.env.inChatWindow ? 2 : 4;
+        return this.env.inChatWindow ? 2 : 4;
     }
 
     get showSubtypeDescription() {
@@ -310,14 +316,11 @@ export class Message extends Component {
     }
 
     get isPersistentMessageFromAnotherThread() {
-        return !this.isOriginThread && !this.message.is_transient && this.message.thread;
-    }
-
-    get isOriginThread() {
-        if (!this.props.thread) {
-            return false;
-        }
-        return this.props.thread.eq(this.message.thread);
+        return (
+            !this.message.is_transient &&
+            this.message.thread &&
+            this.message.thread.notEq(this.props.thread)
+        );
     }
 
     get translatedFromText() {
@@ -383,30 +386,13 @@ export class Message extends Component {
         }
     }
 
-    /**
-     * @param {MouseEvent} ev
-     */
-    async onClickNotificationMessage(ev) {
-        this.store.handleClickOnLink(ev, this.props.thread);
-        const { oeType, oeId } = ev.target.dataset;
-        if (oeType === "highlight") {
-            await this.env.messageHighlight?.highlightMessage(
-                this.store["mail.message"].insert({
-                    id: Number(oeId),
-                    res_id: this.props.thread.id,
-                    model: this.props.thread.model,
-                    thread: this.props.thread,
-                }),
-                this.props.thread
-            );
-        }
-    }
-
     /** @param {HTMLElement} bodyEl */
     prepareMessageBody(bodyEl) {
         if (!bodyEl) {
             return;
         }
+        const editedEl = bodyEl.querySelector(".o-mail-Message-edited");
+        editedEl?.replaceChildren(renderToElement("mail.Message.edited"));
         const linkEls = bodyEl.querySelectorAll(".o_channel_redirect");
         for (const linkEl of linkEls) {
             const text = linkEl.textContent.substring(1); // remove '#' prefix
@@ -431,19 +417,15 @@ export class Message extends Component {
     }
 
     exitEditMode() {
-        const message = toRaw(this.props.message);
-        this.props.messageEdition?.exitEditMode();
-        message.composer = undefined;
-        this.state.isEditing = false;
+        this.message.exitEditMode(this.props.thread);
     }
 
     onClickNotification(ev) {
         const message = toRaw(this.message);
         if (message.failureNotifications.length > 0) {
-            this.onClickFailure(ev);
-        } else {
-            this.popover.open(ev.target, { message });
+            markEventHandled(ev, "Message.ClickFailure");
         }
+        this.popover.open(ev.target, { message });
     }
 
     onClickFailure(ev) {
@@ -469,7 +451,6 @@ export class Message extends Component {
                 message: this.props.message,
                 thread: this.props.thread,
                 isFirstMessage: this.props.isFirstMessage,
-                messageToReplyTo: this.props.messageToReplyTo,
                 openReactionMenu: () => this.openReactionMenu(),
                 state: this.state,
             },

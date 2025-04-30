@@ -4,12 +4,11 @@ import contextlib
 import logging
 
 from ast import literal_eval
-from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.auth_signup.models.res_partner import SignupError
@@ -24,29 +23,12 @@ class ResUsers(models.Model):
                  selection=[('new', 'Never Connected'), ('active', 'Confirmed')])
 
     def _search_state(self, operator, value):
-        negative = operator in expression.NEGATIVE_TERM_OPERATORS
-
-        # In case we have no value
-        if not value:
-            return expression.TRUE_DOMAIN if negative else expression.FALSE_DOMAIN
-
-        if operator in ['in', 'not in']:
-            if len(value) > 1:
-                return expression.FALSE_DOMAIN if negative else expression.TRUE_DOMAIN
-            if value[0] == 'new':
-                comp = '!=' if negative else '='
-            if value[0] == 'active':
-                comp = '=' if negative else '!='
-            return [('log_ids', comp, False)]
-
-        if operator in ['=', '!=']:
-            # In case we search against anything else than new, we have to invert the operator
-            if value != 'new':
-                operator = expression.TERM_OPERATORS_NEGATION[operator]
-
-            return [('log_ids', operator, False)]
-
-        return expression.TRUE_DOMAIN
+        if operator != 'in':
+            return NotImplemented
+        if len(value) > 1:
+            return Domain.TRUE
+        in_log = 'active' in value
+        return Domain('log_ids', '!=' if in_log else '=', False)
 
     def _compute_state(self):
         for user in self:
@@ -235,37 +217,33 @@ class ResUsers(models.Model):
             }
         }
 
-    def send_unregistered_user_reminder(self, after_days=5, batch_size=100):
+    def send_unregistered_user_reminder(self, *, after_days=5, batch_size=100):
         email_template = self.env.ref('auth_signup.mail_template_data_unregistered_users', raise_if_not_found=False)
         if not email_template:
             _logger.warning("Template 'auth_signup.mail_template_data_unregistered_users' was not found. Cannot send reminder notifications.")
+            self.env['ir.cron']._commit_progress(deactivate=True)
             return
         datetime_min = fields.Datetime.today() - relativedelta(days=after_days)
-        datetime_max = datetime_min + relativedelta(hours=23, minutes=59, seconds=59)
+        datetime_max = datetime_min + relativedelta(days=1)
 
-        domain = [('share', '=', False),
+        invited_by_users = self.search_fetch([
+            ('share', '=', False),
             ('create_uid.email', '!=', False),
             ('create_date', '>=', datetime_min),
-            ('create_date', '<=', datetime_max),
-            ('log_ids', '=', False)]
+            ('create_date', '<', datetime_max),
+            ('log_ids', '=', False),
+        ], ['name', 'login', 'create_uid']).grouped('create_uid')
 
-        res_users_with_details = self.env['res.users'].search_read(domain, ['create_uid', 'name', 'login'], limit=batch_size)
+        # Do not use progress since we have no way of knowing to whom we have
+        # already sent e-mails.
 
-        # group by invited by
-        invited_users = defaultdict(list)
-        for user in res_users_with_details:
-            invited_users[user.get('create_uid')[0]].append("%s (%s)" % (user.get('name'), user.get('login')))
-
-        # For sending mail to all the invitors about their invited users
-        for user in invited_users:
-            template = email_template.with_context(dbname=self._cr.dbname, invited_users=invited_users[user])
-            template.send_mail(user, email_layout_xmlid='mail.mail_notification_light', force_send=False)
-
-        done = len(res_users_with_details)
-        self.env['ir.cron']._notify_progress(
-            done=done,
-            remaining=0 if done < batch_size else self.env['res.users'].search_count(domain)
-        )
+        for user, invited_users in invited_by_users.items():
+            invited_user_emails = [f"{u.name} ({u.login})" for u in invited_users]
+            template = email_template.with_context(dbname=self.env.cr.dbname, invited_users=invited_user_emails)
+            template.send_mail(user.id, email_layout_xmlid='mail.mail_notification_light', force_send=False)
+            if not self.env['ir.cron']._commit_progress(len(invited_users)):
+                _logger.info("send_unregistered_user_reminder: timeout reached, stopping")
+                break
 
     @api.model
     def web_create_users(self, emails):

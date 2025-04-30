@@ -46,6 +46,10 @@ class TestModel(models.Model):
             'order': 'name asc, id desc',
         }
 
+    def open_website_url(self):
+        self.ensure_one()
+        return self.env['website'].get_client_action(f'/test_model/{self.id}')
+
 
 class TestSubmodel(models.Model):
     _name = 'test.submodel'

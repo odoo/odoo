@@ -932,6 +932,10 @@ action = {
         lead.unlink()
         self.assertEqual(called_count, 1)
 
+    @property
+    def automation_cron(self):
+        return self.env.ref('base_automation.ir_cron_data_base_automation_check')
+
     def test_004_check_method_trigger_field(self):
         model = self.env["ir.model"]._get("base.automation.lead.test")
         TIME_TRIGGERS = [
@@ -951,13 +955,13 @@ action = {
         # this does not happen using the UI where the trigger is forced to be set
         self.assertFalse(automation.last_run)
         with self.assertLogs('odoo.addons.base_automation', 'WARNING') as capture, self.enter_registry_test_mode():
-            self.env["base.automation"]._cron_process_time_based_actions()
+            self.automation_cron.method_direct_trigger()
         self.assertRegex(capture.output[0], r"Missing date trigger")
         automation.trg_date_id = model.field_id.filtered(lambda f: f.name == 'date_automation_last')
 
         # normal run
         with self.enter_registry_test_mode():
-            self.env["base.automation"]._cron_process_time_based_actions()
+            self.automation_cron.method_direct_trigger()
         self.assertTrue(automation.last_run)
 
     @common.freeze_time('2020-01-01 03:00:00')
@@ -975,6 +979,9 @@ action = {
             "trigger": "on_time",
             "model_id": model.id,
             "trg_date_id": model.field_id.filtered(lambda f: f.name == 'date_automation_last').id,
+            "trg_date_range": 2,
+            "trg_date_range_type": "minutes",
+            "trg_date_range_mode": "after",
         })
 
         with (
@@ -983,20 +990,20 @@ action = {
         ):
             with patch.object(self.env.cr, '_now', now := datetime.datetime.now()):
                 past_date = now - datetime.timedelta(1)
-                self.env["base.automation.lead.test"].create({
+                self.env["base.automation.lead.test"].create([{
                     'name': f'lead {i}',
-                    # 2 without a date, 8 set in past, 5 set in future
+                    # 2 without a date, 8 set in past, 5 set in future (10, 11, ... minutes after now)
                     'date_automation_last': False if i < 2 else past_date if i < 10 else now + datetime.timedelta(minutes=i),
-                } for i in range(15))
-            with common.freeze_time('2020-01-01 03:01:01'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
+                } for i in range(15)])
+            with common.freeze_time('2020-01-01 03:02:01'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
                 # process records
-                self.env["base.automation"]._cron_process_time_based_actions()
+                self.automation_cron.method_direct_trigger()
                 self.assertEqual(mock.call_count, 10)
                 self.assertEqual(automation.last_run, self.env.cr.now())
-            with common.freeze_time('2020-01-01 03:11:59'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
+            with common.freeze_time('2020-01-01 03:13:59'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
                 # 2 in the future (because of timing)
                 # 10 previously done records because we use the date_automation_last as trigger without delay
-                self.env["base.automation"]._cron_process_time_based_actions()
+                self.automation_cron.method_direct_trigger()
                 self.assertEqual(mock.call_count, 22)
                 self.assertEqual(automation.last_run, self.env.cr.now())
                 # test triggering using a calendar
@@ -1004,7 +1011,7 @@ action = {
                 automation.trg_date_range_type = 'day'
                 self.env["base.automation.lead.test"].create({'name': 'calendar'})  # for the run
             with common.freeze_time('2020-02-02 03:11:00'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
-                self.env["base.automation"]._cron_process_time_based_actions()
+                self.automation_cron.method_direct_trigger()
                 self.assertEqual(mock.call_count, 38)
 
     def test_005_check_model_with_different_rec_name_char(self):
@@ -1577,6 +1584,39 @@ class TestCompute(common.TransactionCase):
         res_users_model = self.env["ir.model"]._get("res.users")
         self.assertEqual(f.update_related_model_id, res_users_model)
 
+    def test_01_form_object_write_o2m_field(self):
+        aks_partner = self.env["res.partner"].create({"name": "A Kind Shepherd"})
+        bs_partner = self.env["res.partner"].create({"name": "Black Sheep"})
+
+        # test the 'object_write' type shows a resource_ref field for o2many
+        f = Form(self.env['ir.actions.server'], view="base.view_server_action_form")
+        f.name = "Adopt The Black Sheep"
+        f.model_id = self.env["ir.model"]._get("res.partner")
+        f.state = "object_write"
+        f.evaluation_type = "value"
+        f.update_path = "child_ids"
+        self.assertEqual(f.update_m2m_operation, "add")
+        self.assertEqual(f.value_field_to_show, "resource_ref")
+        f.resource_ref = f"res.partner,{bs_partner.id}"
+        action = f.save()
+
+        # test the action runs correctly
+        action.with_context(
+            active_model="res.partner",
+            active_id=aks_partner.id,
+        ).run()
+        self.assertEqual(aks_partner.child_ids, bs_partner)
+        self.assertEqual(bs_partner.parent_id, aks_partner)
+
+        # also check with 'remove' operation
+        f.update_m2m_operation = "remove"
+        action = f.save()
+        action.with_context(
+            active_model="res.partner",
+            active_id=aks_partner.id,
+        ).run()
+        self.assertEqual(aks_partner.child_ids.ids, [])
+        self.assertEqual(bs_partner.parent_id.id, False)
 
 @common.tagged("post_install", "-at_install")
 class TestHttp(common.HttpCase):
@@ -1643,9 +1683,11 @@ class TestHttp(common.HttpCase):
             "webhook_url": automation_receiver.url,
         })
 
-        obj.name = "new_name"
+        with self.allow_requests(all_requests=True):  # Changing the name will make an http request.
+            obj.name = "new_name"
         self.cr.flush()
         self.cr.clear()
+        self._wait_remaining_requests()  # just in case the request timeouts
         self.assertEqual(json.loads(obj.another_field), {
             '_action': f'Send Webhook Notification(#{automation_sender.action_server_ids[0].id})',
             "_id": obj.id,

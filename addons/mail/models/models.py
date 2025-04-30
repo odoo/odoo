@@ -105,6 +105,9 @@ class Base(models.AbstractModel):
             ]
         return partner_fnames
 
+    def mail_get_partner_fields(self):
+        return self._mail_get_partner_fields()
+
     def _mail_get_partners(self, introspect_fields=False):
         """ Give the default partners (customers) associated to customers.
 
@@ -223,36 +226,22 @@ class Base(models.AbstractModel):
             sequence = 100
         return sequence
 
-    def _message_get_default_recipients(self, with_cc=False, all_tos=False):
+    def _message_add_default_recipients(self):
         """ Generic implementation for finding default recipient to mail on
         a recordset. This method is a generic implementation available for
         all models as we could send an email through mail templates on models
-        not inheriting from mail.thread.
-
-        Heuristics is to find a customer (res.partner record) holding a
-        email. Then we fallback on email fields, beginning with field optionally
-        defined using `_primary_email` attribute. Email can be prioritized
-        compared to partner if `_mail_defaults_to_email` class parameter is set.
+        not inheriting from mail.thread. For that purpose we use mail methods
+        to find partners (customers) and primary emails.
 
         Override this method on a specific model to implement model-specific
-        behavior. Also consider inheriting from ``mail.thread``.
-
-        :param with_cc: take into account CC-like field. By default those are
-          not considered as valid for 'default recipients' e.g. in mailings,
-          automated actions, ...
-        :param all_tos: fetch all TOs, not only email or customer. Both are
-          fine. Used notably when default acts for suggested and should be
-          broader;
-        """
+        behavior. """
         res = {}
         customers = self._mail_get_partners()
-        prioritize_email = getattr(self, '_mail_defaults_to_email', False)
         primary_emails = self._mail_get_primary_email()
         for record in self:
             email_cc_lst, email_to_lst = [], []
-            # main recipients (res.partner) (filter twice, otherwise prefetch is lost /shrug)
-            recipients_all = customers.get(record.id).filtered(lambda p: not p.is_public)
-            recipients = customers.get(record.id).filtered(lambda p: not p.is_public and p.email_normalized)
+            # consider caller is going to filter / handle so don't filter anything
+            recipients_all = customers.get(record.id)
             # to computation
             email_to = primary_emails[record.id]
             if not email_to:
@@ -275,15 +264,64 @@ class Base(models.AbstractModel):
                     fname for fname in ['email_cc', 'partner_email_cc', 'x_email_cc']
                     if fname in record and record[fname]
                 ), False
-            ) if with_cc else ''
+            )
             if cc_fn:
                 email_cc_lst = tools.mail.email_split_and_format_normalize(record[cc_fn]) or [record[cc_fn]]
-            # take all default recipients
-            if all_tos:
-                partner_ids = recipients.ids or recipients_all.ids
-                email_to = ','.join(email_to_lst)
+
+            res[record.id] = {
+                'email_cc_lst': email_cc_lst,
+                'email_to_lst': email_to_lst,
+                'partners': recipients_all,
+            }
+        return res
+
+    def _message_get_default_recipients(self, with_cc=False, all_tos=False):
+        """ Compute and filter default recipients to mail on a recordset.
+        Heuristics is to find a customer (res.partner record) holding a
+        email. Then we fallback on email fields, beginning with field optionally
+        defined using `_primary_email` attribute. Email can be prioritized
+        compared to partner if `_mail_defaults_to_email` class parameter is set.
+
+        :param with_cc: take into account CC-like field. By default those are
+          not considered as valid for 'default recipients' e.g. in mailings,
+          automated actions, ...
+        :param all_tos: DEPRECATED
+        """
+        def email_key(email):
+            return email_normalize(email, strict=False) or email.strip()
+
+        res = {}
+        prioritize_email = getattr(self, '_mail_defaults_to_email', False)
+        found = self._message_add_default_recipients()
+
+        # ban emails: never propose odoobot nor aliases
+        all_emails = []
+        for defaults in found.values():
+            all_emails += defaults['email_to_lst']
+            if with_cc:
+                all_emails += defaults['email_cc_lst']
+            all_emails += defaults['partners'].mapped('email_normalized')
+        ban_emails = [self.env.ref('base.partner_root').email_normalized]
+        ban_emails += self.env['mail.alias.domain'].sudo()._find_aliases(
+            [email_key(e) for e in all_emails if e and e.strip()]
+        )
+
+        # fetch default recipients for each record
+        for record in self:
+            defaults = found[record.id]
+            customers = defaults['partners']
+            email_cc_lst = defaults['email_cc_lst'] if with_cc else []
+            email_to_lst = defaults['email_to_lst']
+
+            # pure default recipients, skip public and banned emails
+            recipients_all = customers.filtered(lambda p: not p.is_public and (not p.email_normalized or p.email_normalized not in ban_emails))
+            recipients = customers.filtered(lambda p: not p.is_public and p.email_normalized and p.email_normalized not in ban_emails)
+            # filter emails, skip banned mails
+            email_cc_lst = [e for e in email_cc_lst if e not in ban_emails]
+            email_to_lst = [e for e in email_to_lst if e not in ban_emails]
+
             # prioritize recipients: default unless asked through '_mail_defaults_to_email', or when no email_to
-            elif not prioritize_email or not email_to_lst:
+            if not prioritize_email or not email_to_lst:
                 # if no valid recipients nor emails, fallback on recipients even
                 # invalid to have at least some information
                 if recipients:
@@ -315,11 +353,13 @@ class Base(models.AbstractModel):
         return res
 
     def _message_add_suggested_recipients(self, force_primary_email=False):
+        """ Generic implementation for finding suggested recipient to mail on
+        a recordset. """
         suggested = {
             record.id: {'email_to_lst': [], 'partners': self.env['res.partner']}
             for record in self
         }
-        defaults = self._message_get_default_recipients(with_cc=False, all_tos=True)
+        defaults = self._message_add_default_recipients()
 
         # add responsible
         user_field = self._fields.get('user_id')
@@ -330,26 +370,28 @@ class Base(models.AbstractModel):
 
         # add customers
         for record_id, values in defaults.items():
-            suggested[record_id]['partners'] += self.env['res.partner'].browse(values['partner_ids'])
+            suggested[record_id]['partners'] |= values['partners']
 
         # add email
         for record in self:
             if force_primary_email:
-                suggested[record.id]['email_to_lst'].append(force_primary_email)
+                suggested[record.id]['email_to_lst'] += tools.mail.email_split_and_format_normalize(force_primary_email)
             else:
-                suggested[record.id]['email_to_lst'].append(defaults[record.id]['email_to'])
+                suggested[record.id]['email_to_lst'] += defaults[record.id]['email_to_lst']
 
         return suggested
 
     def _message_get_suggested_recipients_batch(self, reply_discussion=False, reply_message=None,
                                                 no_create=True, primary_email=False, additional_partners=None):
         """ Get suggested recipients, contextualized depending on discussion.
+        This method automatically filters out emails and partners linked to
+        aliases or alias domains.
 
         :param bool reply_discussion: consider user replies to the discussion.
           Last relevant message is fetched and used to search for additional
           'To' and 'Cc' to propose;
-        :param bool reply_message: specific message user is replying-to. Bypasses
-          'reply_discussion';
+        :param <mail.message> reply_message: specific message user is replying-to.
+          Bypasses 'reply_discussion';
         :param bool no_create: do not create partners when emails are not linked
           to existing partners, see '_partner_find_from_emails';
         :param bool primary_email: new primary_email that isn't stored inside DB;
@@ -364,21 +406,20 @@ class Base(models.AbstractModel):
         def email_key(email):
             return email_normalize(email, strict=False) or email.strip()
         is_mail_thread = 'message_partner_ids' in self
-        suggested = self._message_add_suggested_recipients(force_primary_email=primary_email)
-        if additional_partners:
-            for record in self:
-                suggested[record.id]['partners'] += additional_partners
+        suggested_record = self._message_add_suggested_recipients(force_primary_email=primary_email)
+
+        # copy suggested based on records, then add those from context
+        suggested = {}
+        for record in self:
+            suggested[record.id] = {
+                'email_to_lst': suggested_record[record.id]['email_to_lst'].copy(),
+                'partners': suggested_record[record.id]['partners'] + (additional_partners or self.env['res.partner']),
+            }
 
         # find last relevant message
         messages = self.env['mail.message']
         if reply_discussion and 'message_ids' in self:
-            messages = self.message_ids.sorted(
-                lambda msg: (
-                    msg.message_type == 'email',              # incoming email = probably customer
-                    msg.message_type == 'comment',            # user input > other input
-                    msg.date, msg.id,                         # newer first
-                ), reverse=True,
-            )
+            messages = self._sort_suggested_messages(self.message_ids)
         # fetch answer-based recipients as well as author
         if reply_message or messages:
             for record in self:
@@ -398,6 +439,7 @@ class Base(models.AbstractModel):
 
         # make a record-based list of emails to give to '_partner_find_from_emails'
         records_emails = {}
+        all_emails = set()
         for record in self:
             email_to_lst, partners = suggested[record.id]['email_to_lst'], suggested[record.id]['partners']
             # organize and deduplicate partners, exclude followers, keep ordering
@@ -408,10 +450,12 @@ class Base(models.AbstractModel):
                 e for email_input in email_to_lst for e in email_split_and_format(email_input)
                 if e and e.strip() and email_key(e) not in skip_emails_normalized
             ]
+            all_emails |= set(records_emails[record]) | set(partners.mapped('email_normalized'))
         # ban emails: never propose odoobot nor aliases
-        ban_emails = [self.env.ref('base.partner_root').email_normalized] + self.env['mail.alias'].sudo().search(
-            [('alias_full_name', 'in', [email_key(e) for values in records_emails.values() for e in values])]
-        ).mapped('alias_full_name')
+        ban_emails = [self.env.ref('base.partner_root').email_normalized]
+        ban_emails += self.env['mail.alias.domain'].sudo()._find_aliases(
+            [email_key(e) for e in all_emails if e and e.strip()]
+        )
         thread_recs = self if is_mail_thread else self.env['mail.thread']
         records_partners = thread_recs._partner_find_from_emails(
             records_emails,
@@ -426,7 +470,17 @@ class Base(models.AbstractModel):
         for record in self:
             followers = record.message_partner_ids if is_mail_thread else record.env['res.partner']
             partners = self.env['res.partner'].browse(tools.misc.unique(
-                p.id for p in (suggested[record.id]['partners'] + records_partners[record.id]) if p not in followers
+                p.id for p in (suggested[record.id]['partners'] + records_partners[record.id])
+                if (
+                    # skip followers, unless being a customer suggested by record (mostly defaults)
+                    (
+                        p not in followers or (
+                            p in suggested_record[record.id]['partners'] and
+                            p.partner_share
+                    )) and
+                    p.email_normalized not in ban_emails and
+                    not p.is_public
+                )
             ))
             email_to_lst = list(tools.misc.unique(
                 e for email_input in suggested[record.id]['email_to_lst'] for e in email_split_and_format(email_input)
@@ -453,6 +507,24 @@ class Base(models.AbstractModel):
                 })
             suggested_recipients[record.id] = recipients
         return suggested_recipients
+
+    def _sort_suggested_messages(self, messages):
+        """ Sort messages for suggestion. Keep only discussions: incoming email
+        or user comments, with subtype being 'comment' to exclude notes,
+        logs, trackings, ... then take the most recent one. If no matching
+        message is found, no suggested message is given, as other messages
+        should not trigger a 'reply-all' behavior.
+
+        Dedicated method to ease override and csutom behavior for filtering
+        and sorting messages in '_message_get_suggested_recipients' """
+        subtype_ids = self._creation_subtype().ids if hasattr(self, '_creation_subtype') else []
+        subtype_ids.append(self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'))
+        return messages.filtered(
+            lambda msg: (
+                msg.message_type in ('email', 'comment') and
+                msg.subtype_id.id in subtype_ids
+            )
+        ).sorted(lambda msg: (msg.date, msg.id), reverse=True)
 
     def _message_get_suggested_recipients(self, reply_discussion=False, reply_message=None,
                                             no_create=True, primary_email=False, additional_partners=None):

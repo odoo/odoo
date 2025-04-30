@@ -5,7 +5,7 @@
             <field name="name">account.analytic.line.list.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <list editable="bottom" string="Timesheet Activities" sample="1" decoration-muted="readonly_timesheet == True">
+                <list editable="top" string="Timesheet Activities" sample="1" decoration-muted="readonly_timesheet == True">
                     <field name="readonly_timesheet" column_invisible="True"/>
                     <field name="date" readonly="readonly_timesheet"/>
                     <field name="employee_id" column_invisible="True" readonly="readonly_timesheet"/>

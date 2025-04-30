@@ -788,6 +788,44 @@ test("pivot renders group dropdown same as search groupby dropdown if group bys 
     ]);
 });
 
+test("headers group dropdown should close on selection", async () => {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+            <pivot>
+                <field name="product_id" type="row"/>
+                <field name="foo" type="measure"/>
+            </pivot>`,
+    });
+    // 1. with first-level dropdown groupby
+    // open a header group dropdown
+    await contains("tbody tr .o_pivot_header_cell_closed").click();
+    expect(".o-dropdown--menu").toHaveCount(1);
+    // select an item
+    await contains(".o-dropdown-item").click();
+    expect(".o-dropdown--menu").toHaveCount(0);
+
+    // 2. with sub dropdown groupby
+    // open a header group dropdown
+    await contains("tbody tr .o_pivot_header_cell_closed").click();
+    expect(".o-dropdown--menu").toHaveCount(1);
+    // open a subdropdown
+    await contains(".o-dropdown--menu .dropdown-toggle").click();
+    expect(".o-dropdown--menu").toHaveCount(2);
+    // select an item
+    const subDropdownMenu = getDropdownMenu(".o-dropdown--menu .dropdown-toggle");
+    await contains(queryFirst(".o-dropdown-item", { root: subDropdownMenu })).click();
+    expect(".o-dropdown--menu").toHaveCount(0);
+
+    // 3. with custom groupby
+    // open a header group dropdown
+    await contains("tbody tr .o_pivot_header_cell_closed").click();
+    expect(".o-dropdown--menu").toHaveCount(1);
+    await contains(`.o_add_custom_group_menu`).select("date");
+    expect(".o-dropdown--menu").toHaveCount(0);
+});
+
 test("pivot group dropdown sync with search groupby dropdown", async () => {
     await mountView({
         type: "pivot",
@@ -1319,7 +1357,7 @@ test("correctly save measures and groupbys to favorite", async () => {
     expect.assertions(3);
 
     let expectedContext;
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContext);
         return true;
     });
@@ -1385,7 +1423,7 @@ test("correctly remove pivot_ keys from the context", async () => {
 
     let expectedContext;
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContext);
         return true;
     });
@@ -1531,7 +1569,7 @@ test("Add a group by on the CP when a favorite already exists", async () => {
             is_default: true,
             name: "My favorite",
             sort: "[]",
-            user_id: [2, "Mitchell Admin"],
+            user_ids: [2],
         },
     ];
 
@@ -1567,7 +1605,7 @@ test("Adding a Favorite at anytime should modify the row/column groupby", async 
     Partner._views["search,false"] = `<search/>`;
     Partner._filters = [
         {
-            user_id: [2, "Mitchell Admin"],
+            user_ids: [2],
             name: "My favorite",
             id: 5,
             context: `{"pivot_row_groupby":["product_id"], "pivot_column_groupby": ["bar"]}`,
@@ -1703,7 +1741,7 @@ test("Reload, group by columns, reload", async () => {
 
     let expectedContext;
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContext);
         return true;
     });
@@ -1833,7 +1871,7 @@ test("Empty results keep groupbys", async () => {
         pivot_row_groupby: [],
     };
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContext);
         return true;
     });
@@ -2214,7 +2252,7 @@ test("Row and column groupbys plus a domain", async () => {
         pivot_row_groupby: ["product_id"],
     };
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContext);
         return true;
     });
@@ -2701,12 +2739,12 @@ test("non empty pivot view with sample data", async () => {
         },
     });
 
-    expect("document").not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(0);
     expect("table").toHaveCount(1);
     await toggleSearchBarMenu();
     await toggleMenuItem("Small Than 0");
-    expect("document").not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(1);
     expect("table").toHaveCount(0);
 });
@@ -2722,7 +2760,7 @@ test("pivot is reloaded when leaving and coming back", async () => {
     onRpc("partner", "*", ({ method }) => {
         expect.step(method);
     });
-    onRpc("/web/webclient/load_menus/*", () => {
+    onRpc("/web/webclient/load_menus", () => {
         expect.step("/web/webclient/load_menus");
     });
 
@@ -3226,7 +3264,7 @@ test("pivot_row_groupby should be also used after first load", async () => {
         },
     ];
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContexts.shift());
         return [ids.shift()];
     });
@@ -3288,7 +3326,7 @@ test("pivot_row_groupby should be also used after first load (2)", async () => {
         arch: `<pivot/>`,
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "Favorite",
                 id: 1,
                 context: `
@@ -3327,7 +3365,7 @@ test("specific pivot keys in action context must have less importance than in fa
         },
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "My favorite",
                 id: 1,
                 context: `{
@@ -3342,7 +3380,7 @@ test("specific pivot keys in action context must have less importance than in fa
                 action_id: false,
             },
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "My favorite 2",
                 id: 2,
                 context: `{
@@ -3391,7 +3429,7 @@ test("favorite pivot_measures should be used even if found also in global contex
         groupable: false,
     });
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual({
             group_by: [],
             pivot_column_groupby: [],
@@ -3654,7 +3692,7 @@ test("missing property field definition is fetched", async function () {
         arch: `<pivot/>`,
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "My Filter",
                 id: 5,
                 context: `{"group_by": ['properties.my_char']}`,
@@ -3696,7 +3734,7 @@ test("missing deleted property field definition is created", async function (ass
         arch: `<pivot/>`,
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "My Filter",
                 id: 5,
                 context: `{"group_by": ['properties.my_char']}`,
@@ -3800,4 +3838,27 @@ test("display the field's falsy_value_label for false group, if defined", async 
     });
 
     expect(queryAllTexts("tbody th")).toEqual(["Total", "xpad", "I'm the false group"]);
+});
+
+test.tags("desktop");
+test("pivot views make their control panel available directly", async () => {
+    const def = new Deferred();
+    onRpc("formatted_read_group", () => def);
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+            <pivot>
+                <field name="foo" type="row"/>
+            </pivot>`,
+        groupBy: ["product_id"],
+    });
+
+    expect(".o_pivot_view").toHaveCount(1);
+    expect(".o_pivot_view .o_control_panel .o_searchview").toHaveCount(1);
+    expect(".o_pivot_view .o_pivot").toHaveCount(0);
+
+    def.resolve();
+    await animationFrame();
+    expect(".o_pivot_view .o_pivot").toHaveCount(1);
 });

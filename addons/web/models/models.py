@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 import base64
@@ -12,9 +11,8 @@ import datetime
 import pytz
 
 from odoo import api, models
-from odoo.fields import Command, Date
+from odoo.fields import Command, Date, Domain
 from odoo.api import NewId
-from odoo.osv.expression import AND, OR, TRUE_DOMAIN, normalize_domain
 from odoo.models import READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBER_GRANULARITY, READ_GROUP_TIME_GRANULARITY, BaseModel
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, date_utils, get_lang, unique, OrderedSet
 from odoo.exceptions import AccessError, UserError
@@ -23,15 +21,21 @@ from odoo.tools.translate import LazyTranslate
 _lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
 
-def is_true_domain(domain):
-    return normalize_domain(domain) == TRUE_DOMAIN
-
 
 class lazymapping(defaultdict):
     def __missing__(self, key):
         value = self.default_factory(key)
         self[key] = value
         return value
+
+
+def AND(domains):
+    return list(Domain.AND(domains))
+
+
+def OR(domains):
+    return list(Domain.OR(domains))
+
 
 DISPLAY_DATE_FORMATS = {
     'day': 'dd MMM yyyy',
@@ -50,7 +54,7 @@ class Base(models.AbstractModel):
     def web_name_search(self, name, specification, domain=None, operator='ilike', limit=100):
         id_name_pairs = self.name_search(name, domain, operator, limit)
         if len(specification) == 1 and 'display_name' in specification:
-            return [{ 'id': id, 'display_name': name } for id, name in id_name_pairs]
+            return [{'id': id, 'display_name': name, '__formatted_display_name': self.with_context(formatted_display_name=True).browse(id).display_name} for id, name in id_name_pairs]
         records = self.browse([id for id, _ in id_name_pairs])
         return records.web_read(specification)
 
@@ -195,9 +199,14 @@ class Base(models.AbstractModel):
                     if not record[field_name]:
                         continue
 
+                    record_values = values_by_id[record.id]
+
                     if field.type == 'reference':
                         co_record = record[field_name]
                     else:  # field.type == 'many2one_reference'
+                        if not record[field.model_field]:
+                            record_values[field_name] = False
+                            continue
                         co_record = self.env[record[field.model_field]].browse(record[field_name])
 
                     if 'context' in field_spec:
@@ -219,8 +228,6 @@ class Base(models.AbstractModel):
                         # This ensures the record actually exists
                         co_record_exists = co_record.exists()
 
-                    record_values = values_by_id[record.id]
-
                     if not co_record_exists:
                         record_values[field_name] = False
                         if field.type == 'many2one_reference':
@@ -234,6 +241,30 @@ class Base(models.AbstractModel):
                                 'id': co_record.id,
                                 'model': co_record._name
                             }
+
+            elif field.type == "properties":
+                if not field_spec or 'fields' not in field_spec:
+                    continue
+
+                for values in values_list:
+                    old_values = values[field_name]
+                    next_values = []
+                    for property_name, spec in field_spec['fields'].items():
+                        property_ = next((p for p in old_values if p.get('name') == property_name), None)
+                        if not property_:
+                            continue
+
+                        if property_.get('type') == 'many2one' and property_.get('comodel') and property_.get('value'):
+                            record = self.env[property_['comodel']].with_context(field_spec.get('context')).browse(property_['value'][0])
+                            property_['value'] = record.web_read(spec['fields']) if 'fields' in spec else property_['value']
+
+                        if property_.get('type') == 'many2many' and property_.get('comodel') and property_.get('value'):
+                            records = self.env[property_['comodel']].with_context(field_spec.get('context')).browse([r[0] for r in property_['value']])
+                            property_['value'] = records.web_read(spec['fields']) if 'fields' in spec else property_['value']
+
+                        next_values.append(property_)
+
+                    values[field_name] = next_values
 
         return values_list
 
@@ -316,7 +347,7 @@ class Base(models.AbstractModel):
                 Each element is `'field:agg'` (aggregate field with aggregation function `'agg'`).
                 The possible aggregation functions are the ones provided by
                 `PostgreSQL <https://www.postgresql.org/docs/current/static/functions-aggregate.html>`_,
-                `'count_distinct'` with the expected meaning.
+                 except `'count_distinct'` and `'array_agg_distinct'` with the expected meaning.
         :param list having: A domain where the valid "fields" are the aggregates.
         :param int offset: optional number of groups to skip
         :param int limit: optional max number of groups to return
@@ -334,15 +365,13 @@ class Base(models.AbstractModel):
         :raise AccessError: if user is not allowed to access requested information
         """
         groupby = tuple(groupby)
-        aggregates = tuple(aggregates)
+        aggregates = self._web_pre_process_aggregates(aggregates)
 
         if not order:
             order = ', '.join(groupby)
 
         groups = self._read_group(
-            domain, groupby,
-            # Avoid recordset in _web_read_group_format as aggregate
-            tuple(agg.replace(':recordset', ':array_agg') for agg in aggregates),
+            domain, groupby, aggregates,
             having=having, offset=offset, limit=limit, order=order,
         )
 
@@ -370,6 +399,21 @@ class Base(models.AbstractModel):
             groups = self._web_read_group_fill_temporal(groups, groupby, aggregates, **fill_temporal)
 
         return self._web_read_group_format(groupby, aggregates, groups)
+
+    def _web_pre_process_aggregates(self, aggregates):
+        # Avoid recordset in _web_read_group_format as aggregate + Add currency_field aggregates for monetary aggregates
+        return tuple(OrderedSet(
+            [agg.replace(':recordset', ':array_agg') for agg in aggregates]
+            + list(self._get_mapping_currency_aggregates(aggregates).values())
+        ))
+
+    def _get_mapping_currency_aggregates(self, aggregates):
+        return {
+            aggregate: f'{field.get_currency_field(self)}:array_agg_distinct'
+            for aggregate in aggregates
+            if (field := self._fields.get(aggregate.split(':')[0].split('.')[0]))
+            if field.type == 'monetary'
+        }
 
     def _web_read_group_field_expand(self, groupby):
         """ Return the field that should be expand """
@@ -616,9 +660,16 @@ class Base(models.AbstractModel):
         for dict_group in result:
             dict_group['__extra_domain'] = AND(dict_group.pop('__extra_domains'))
 
-        for aggregate_spec, values in zip(aggregates, column_iterator, strict=True):
-            for value, dict_group in zip(values, result, strict=True):
-                dict_group[aggregate_spec] = value
+        column_mapping = dict(zip(aggregates, column_iterator, strict=True))
+        mapping_currency_aggregates = self._get_mapping_currency_aggregates(aggregates)
+
+        for aggregate_spec, values in column_mapping.items():
+            if currency_agg := mapping_currency_aggregates.get(aggregate_spec):
+                for value, currencies, dict_group in zip(values, column_mapping[currency_agg], result):
+                    dict_group[aggregate_spec] = value if len(currencies) == 1 and currencies != [None] else False
+            else:
+                for value, dict_group in zip(values, result, strict=True):
+                    dict_group[aggregate_spec] = value
 
         return result
 
@@ -633,8 +684,7 @@ class Base(models.AbstractModel):
             # Special case for many2many because (<many2many>, '=', False) domain bypass ir.rule.
             def formatter_many2many(value):
                 if not value:
-                    other_values = [other_value.id for other_value in values if other_value]
-                    return False, [(field_name, 'not in', other_values)]
+                    return False, [(field_name, 'not any', [])]
                 id_ = value.id
                 return (id_, value.sudo().display_name), [(field_name, '=', id_)]
 
@@ -862,10 +912,10 @@ class Base(models.AbstractModel):
 
         enable_counters = kwargs.get('enable_counters')
         only_counters = kwargs.get('only_counters')
-        extra_domain = kwargs.get('extra_domain', [])
-        no_extra = is_true_domain(extra_domain)
-        model_domain = kwargs.get('model_domain', [])
-        count_domain = AND([model_domain, extra_domain])
+        extra_domain = Domain(kwargs.get('extra_domain', []))
+        no_extra = extra_domain.is_true()
+        model_domain = Domain(kwargs.get('model_domain', []))
+        count_domain = model_domain & extra_domain
 
         limit = kwargs.get('limit')
         set_limit = kwargs.get('set_limit')

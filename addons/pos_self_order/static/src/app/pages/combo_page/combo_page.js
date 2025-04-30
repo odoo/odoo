@@ -34,6 +34,7 @@ export class ComboPage extends Component {
             showQtyButtons: false,
             editMode: false,
             qty: 1,
+            selectedValues: this.env.selectedValues,
         });
 
         onWillUnmount(() => {
@@ -60,6 +61,36 @@ export class ComboPage extends Component {
         );
     }
 
+    getGroupedSelectedValues(attrValIds) {
+        const selectedValues = this.getSelectedValues(attrValIds);
+        const groupedByAttribute = {};
+
+        for (const value of selectedValues) {
+            const attrId = value.attribute_id.id;
+
+            if (!groupedByAttribute[attrId]) {
+                groupedByAttribute[attrId] = {
+                    attribute_id: value.attribute_id,
+                    values: [],
+                };
+            }
+
+            groupedByAttribute[attrId].values.push(value);
+        }
+        return Object.values(groupedByAttribute);
+    }
+
+    isEveryValueSelected() {
+        return Object.values(this.state.selectedValues).every((value) => value);
+    }
+
+    isArchivedCombination() {
+        const variantAttributeValueIds = Object.values(this.state.selectedValues)
+            .filter((attr) => typeof attr !== "object")
+            .map((attr) => Number(attr));
+        return this.props.productTemplate._isArchivedCombination(variantAttributeValueIds);
+    }
+
     resetState() {
         this.state.selectedProduct = null;
         this.state.showQtyButtons = false;
@@ -84,7 +115,16 @@ export class ComboPage extends Component {
             combo_item_id: comboItem,
             configuration: {
                 attribute_custom_values: Object.values(this.env.customValues),
-                attribute_value_ids: Object.values(this.env.selectedValues).map((s) => parseInt(s)),
+                attribute_value_ids: Object.values(this.env.selectedValues).flatMap((value) => {
+                    if (typeof value === "string") {
+                        return [parseInt(value)];
+                    } else if (typeof value === "object") {
+                        return Object.keys(value)
+                            .filter((nestedKey) => value[nestedKey] === true)
+                            .map((nestedKey) => parseInt(nestedKey));
+                    }
+                    return [];
+                }),
                 price_extra: 0,
             },
         };
@@ -125,11 +165,14 @@ export class ComboPage extends Component {
 
         this.selfOrder.addToCart(
             this.props.productTemplate,
-            1,
+            this.state.qty,
             "",
             {},
             {},
-            this.state.selectedCombos
+            this.state.selectedCombos.map((combo) => ({
+                ...combo,
+                qty: 1,
+            }))
         );
         this.router.back();
     }

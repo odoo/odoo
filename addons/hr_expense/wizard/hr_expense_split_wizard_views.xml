@@ -17,7 +17,6 @@
                             <field name="currency_id" column_invisible="True"/>
                             <field name="expense_id" column_invisible="True"/>
                             <field name="company_id" column_invisible="True"/>
-                            <field name="product_has_tax" column_invisible="True"/>
                             <field name="product_has_cost" column_invisible="True"/>
                             <field name="name"/>
                             <field name="product_id"
@@ -29,7 +28,7 @@
                                 }"
                             />
                             <field name="employee_id" widget="many2one_avatar_user"/>
-                            <field name="tax_ids" widget="many2many_tags" readonly="not product_has_tax"/>
+                            <field name="tax_ids" widget="many2many_tags"/>
                             <field name="tax_amount_currency"/>
                             <field name="analytic_distribution" widget="analytic_distribution"
                                 optional="show"
@@ -47,7 +46,8 @@
                     </group>
                     <field name="split_possible" invisible="1"/>
                     <footer>
-                        <button name="action_split_expense" string="Split Expense" type="object" class="oe_highlight"  data-hotkey="q"/>
+                        <button name="action_split_expense" invisible="split_possible" string="Split Expense" type="object" class="oe_highlight" disabled="disabled"  data-hotkey="q"/>
+                        <button name="action_split_expense" string="Split Expense" invisible="not split_possible" type="object" class="oe_highlight"  data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>

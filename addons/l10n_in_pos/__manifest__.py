@@ -23,7 +23,9 @@
         'point_of_sale._assets_pos': [
             'l10n_in/static/src/helpers/hsn_summary.js',
             'l10n_in_pos/static/src/**/*',
-            'l10n_in_pos/static/src/customer_display/customer_display_adapter.js',
+        ],
+        'web.assets_tests': [
+            'l10n_in_pos/static/tests/tours/**/*',
         ],
     },
     'author': 'Odoo S.A.',

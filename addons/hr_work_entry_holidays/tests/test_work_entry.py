@@ -44,7 +44,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'request_hour_from': 11,
             'request_hour_to': 17,
         })
-        leave.action_validate()
+        leave.action_approve()
 
         work_entries = self.richard_emp.contract_id.generate_work_entries(self.start.date(), self.end.date())
         work_entries.action_validate()
@@ -81,7 +81,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'name': 'Sick',
             'request_unit': 'hour',
             'leave_validation_type': 'both',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'company_id': company.id,
         })
         leave1 = self.env['hr.leave'].create({
@@ -92,7 +92,6 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'request_date_to': '2019-12-27',
         })
         leave1.action_approve()
-        leave1.action_validate()
 
         # The work entries generation shouldn't raise an error
 
@@ -128,7 +127,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'name': 'Sick',
             'request_unit': 'hour',
             'leave_validation_type': 'both',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         leave = self.env['hr.leave'].create({
@@ -142,9 +141,8 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         # TODO I don't know what this test is supposed to test, but I feel that
         # in any case it should raise a Validation Error, as it's trying to
         # validate a leave in a period the employee is not supposed to work.
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             leave.action_approve()
-            leave.action_validate()
 
         work_entries = contract.generate_work_entries(date(2020, 7, 1), date(2020, 9, 30))
 
@@ -172,7 +170,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'request_date_from': date(2023, 2, 3),
             'request_date_to': date(2023, 2, 9),
         })
-        leave.action_validate()
+        leave.action_approve()
 
         self.richard_emp.generate_work_entries(date_from, date_to, True)
         work_entries = self.env['hr.work.entry'].search([

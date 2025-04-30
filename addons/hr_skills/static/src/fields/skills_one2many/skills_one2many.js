@@ -41,7 +41,7 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
 
     async openSkillsReport() {
         // fetch id through employee or public.employee
-        const id = this.env.model.root.data.id || this.env.model.root.data.employee_id[0];
+        const id = this.env.model.root.data.id || this.env.model.root.data.employee_id.id;
 -        this.actionService.doAction({
             type: "ir.actions.act_window",
             name: _t("Skills Report"),
@@ -63,7 +63,7 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
     get SkillsRight() {
         let isSubordinate = false;
         if (this.env.model.root.data.employee_id) {
-            isSubordinate = this.userSubordinates.includes(this.env.model.root.data.employee_id[0]);
+            isSubordinate = this.userSubordinates.includes(this.env.model.root.data.employee_id.id);
         }
         return this.IsHrUser || isSubordinate;
     }
@@ -105,7 +105,7 @@ export class SkillsX2ManyField extends X2ManyField {
     }
 
     async onAdd({ context, editable } = {}) {
-        const employeeId = this.props.record.resModel === "res.users" ? this.props.record.data.employee_id[0] : this.props.record.resId;
+        const employeeId = this.props.record.resModel === "res.users" ? this.props.record.data.employee_id.id : this.props.record.resId;
         return super.onAdd({
             editable,
             context: {

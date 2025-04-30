@@ -8,10 +8,17 @@
         sequence="5"
     />
     <menuitem
+        id="mail.main_menu_discuss"
+        name="Conversations"
+        parent="mail.menu_root_discuss"
+        action="action_discuss"
+        sequence="1"
+    />
+    <menuitem
         id="mail.menu_configuration"
         name="Configuration"
         parent="mail.menu_root_discuss"
-        sequence="1"
+        sequence="2"
     />
     <menuitem name="Notifications"
         id="mail.menu_notification_settings"
@@ -31,6 +38,12 @@
         parent="mail.menu_configuration"
         action="mail.mail_canned_response_action"
         sequence="15"
+    />
+    <menuitem name="Roles"
+        id="mail.menu_roles"
+        parent="mail.menu_configuration"
+        action="mail.res_role_action"
+        sequence="25"
     />
 
     <record id="base.menu_email" model="ir.ui.menu">

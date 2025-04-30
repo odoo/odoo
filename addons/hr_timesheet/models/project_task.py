@@ -52,8 +52,8 @@ class ProjectTask(models.Model):
         Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !""",
     )
     @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS | PROJECT_TASK_READABLE_FIELDS
+    def TASK_PORTAL_READABLE_FIELDS(self):
+        return super().TASK_PORTAL_READABLE_FIELDS | PROJECT_TASK_READABLE_FIELDS
 
     @api.constrains('project_id')
     def _check_project_root(self):
@@ -110,7 +110,9 @@ class ProjectTask(models.Model):
 
     def _search_remaining_hours_percentage(self, operator, value):
         if operator not in OPERATOR_MAPPING:
-            raise NotImplementedError(_('This operator %s is not supported in this search method.', operator))
+            return NotImplemented
+        if operator in ('in', 'not in'):
+            value = tuple(value)
         sql = SQL("""(
             SELECT id
               FROM %s

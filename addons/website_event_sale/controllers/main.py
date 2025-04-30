@@ -4,6 +4,7 @@
 from collections import defaultdict
 from odoo.http import request, route
 
+from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 
 
@@ -34,26 +35,29 @@ class WebsiteEventSaleController(WebsiteEventController):
         order_sudo = request.cart or request.website._create_cart()
         tickets_data = defaultdict(int)
         for data in registration_data:
-            event_ticket_id = data.get('event_ticket_id')
+            event_slot_id = data.get('event_slot_id', False)
+            event_ticket_id = data.get('event_ticket_id', False)
             if event_ticket_id:
-                tickets_data[event_ticket_id] += 1
+                tickets_data[event_slot_id, event_ticket_id] += 1
 
         cart_data = {}
-        for ticket_id, count in tickets_data.items():
+        for (slot_id, ticket_id), count in tickets_data.items():
             ticket_sudo = event_ticket_by_id.get(ticket_id)
             cart_values = order_sudo._cart_add(
                 product_id=ticket_sudo.product_id.id,
                 quantity=count,
                 event_ticket_id=ticket_id,
+                event_slot_id=slot_id,
             )
-            cart_data[ticket_id] = cart_values['line_id']
+            cart_data[slot_id, ticket_id] = cart_values['line_id']
 
         for data in registration_data:
-            event_ticket_id = data.get('event_ticket_id')
+            event_slot_id = data.get('event_slot_id', False)
+            event_ticket_id = data.get('event_ticket_id', False)
             event_ticket = event_ticket_by_id.get(event_ticket_id)
             if event_ticket:
                 data['sale_order_id'] = order_sudo.id
-                data['sale_order_line_id'] = cart_data[event_ticket_id]
+                data['sale_order_line_id'] = cart_data[event_slot_id, event_ticket_id]
 
         return super()._create_attendees_from_registration_post(event, registration_data)
 
@@ -70,8 +74,17 @@ class WebsiteEventSaleController(WebsiteEventController):
         # we have at least one registration linked to a ticket -> sale mode activate
         if any(info['event_ticket_id'] for info in registrations):
             if order_sudo.amount_total:
+                if order_sudo._is_anonymous_cart():
+                    booked_by_partner, feedback_dict = CustomerPortal()._create_or_update_address(
+                        request.env['res.partner'].sudo(),
+                        order_sudo=order_sudo,
+                        verify_address_values=False,
+                        **registrations[0]
+                    )
+                    if not feedback_dict.get('invalid_fields'):
+                        order_sudo._update_address(booked_by_partner.id, ['partner_id'])
                 request.session['sale_last_order_id'] = order_sudo.id
-                return request.redirect("/shop/checkout")
+                return request.redirect("/shop/checkout?try_skip_step=true")
             else:
                 # Free order -> auto confirmation without checkout
                 order_sudo.action_confirm()  # tde notsure: email sending ?

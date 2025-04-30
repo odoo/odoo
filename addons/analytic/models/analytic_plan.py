@@ -27,6 +27,7 @@ class AccountAnalyticPlan(models.Model):
         'account.analytic.plan',
         string="Parent",
         inverse='_inverse_parent_id',
+        index='btree_not_null',
         ondelete='cascade',
         domain="['!', ('id', 'child_of', id)]",
     )
@@ -272,7 +273,7 @@ class AccountAnalyticPlan(models.Model):
                 prev.field_description = plan.name
             elif not plan.parent_id:
                 column = plan._strict_column_name()
-                self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
+                field = self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
                     'name': column,
                     'field_description': plan.name,
                     'state': 'manual',
@@ -288,6 +289,31 @@ class AccountAnalyticPlan(models.Model):
                     tablename = Model._table
                     indexname = make_index_name(tablename, column)
                     create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
+                    field['index'] = True
+
+    def write(self, vals):
+        new_parent = self.env['account.analytic.plan'].browse(vals.get('parent_id'))
+        plan2previous_parent = {plan: plan.parent_id for plan in self if plan.parent_id}
+        if 'parent_id' in vals and new_parent:
+            # Update accounts in analytic lines before _sync_plan_column() unlinks child plan's column
+            for plan in self:
+                self.env['account.analytic.account']._update_accounts_in_analytic_lines(
+                    new_fname=new_parent._column_name(),
+                    current_fname=plan._column_name(),
+                    accounts=plan.account_ids,
+                )
+
+        res = super().write(vals)
+
+        if 'parent_id' in vals and not new_parent:
+            # Update accounts in analytic lines after _sync_plan_column() creates the new column
+            for plan, previous_parent in plan2previous_parent.items():
+                self.env['account.analytic.account']._update_accounts_in_analytic_lines(
+                    new_fname=plan._column_name(),
+                    current_fname=previous_parent._column_name(),
+                    accounts=plan.account_ids,
+                )
+        return res
 
 
 class AccountAnalyticApplicability(models.Model):
@@ -296,7 +322,7 @@ class AccountAnalyticApplicability(models.Model):
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
-    analytic_plan_id = fields.Many2one('account.analytic.plan')
+    analytic_plan_id = fields.Many2one('account.analytic.plan', index='btree_not_null')
     business_domain = fields.Selection(
         selection=[
             ('general', 'Miscellaneous'),

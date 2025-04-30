@@ -186,3 +186,15 @@ class HrWorkEntryType(models.Model):
 
     is_leave = fields.Boolean(
         default=False, string="Time Off", help="Allow the work entry type to be linked with time off types.")
+    is_work = fields.Boolean(
+        compute='_compute_is_work', inverse='_inverse_is_work', string="Working Time", readonly=False,
+        help="If checked, the work entry is counted as work time in the working schedule")
+
+    @api.depends('is_leave')
+    def _compute_is_work(self):
+        for record in self:
+            record.is_work = not record.is_leave
+
+    def _inverse_is_work(self):
+        for record in self:
+            record.is_leave = not record.is_work

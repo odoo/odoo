@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rotate } from "@web/core/utils/arrays";
@@ -78,21 +77,6 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
  */
 
 /**
- * @param {SelectionData} selectionData
- */
-function target(selectionData) {
-    const node = selectionData.editableSelection.anchorNode;
-    const el = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
-    if (
-        selectionData.documentSelectionIsInEditable &&
-        el.matches(baseContainerGlobalSelector) &&
-        isEmptyBlock(el)
-    ) {
-        return el;
-    }
-}
-
-/**
  * @typedef { Object } PowerboxShared
  * @property { PowerboxPlugin['closePowerbox'] } closePowerbox
  * @property { PowerboxPlugin['getAvailablePowerboxCommands'] } getAvailablePowerboxCommands
@@ -124,13 +108,13 @@ export class PowerboxPlugin extends Plugin {
         ],
         power_buttons: withSequence(100, {
             commandId: "openPowerbox",
-            title: _t("More options"),
-            icon: "fa-ellipsis-v",
+            description: _t("More options"),
+            icon: "oi-ellipsis-v",
         }),
-        hints: {
+        hints: withSequence(30, {
+            selector: baseContainerGlobalSelector,
             text: _t('Type "/" for commands'),
-            target,
-        },
+        }),
     };
 
     setup() {

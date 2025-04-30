@@ -6,8 +6,10 @@ export class RestaurantTable extends Base {
 
     setup(vals) {
         super.setup(vals);
-
         this.table_number = vals.table_number || 0;
+    }
+    initState() {
+        super.initState();
         this.uiState = {
             initialPosition: {},
             orderCount: 0,
@@ -74,7 +76,8 @@ export class RestaurantTable extends Base {
     }
     getOrder() {
         return (
-            this.parent_id?.getOrder?.() || this["<-pos.order.table_id"].find((o) => !o.finalized)
+            this.parent_id?.getOrder?.() ||
+            this.backLink("<-pos.order.table_id").find((o) => !o.finalized)
         );
     }
     setPositionAsIfLinked(parent, side) {
@@ -88,7 +91,7 @@ export class RestaurantTable extends Base {
         return this.table_number.toString();
     }
     get children() {
-        return this["<-restaurant.table.parent_id"];
+        return this.backLink("<-restaurant.table.parent_id");
     }
     get rootTable() {
         let table = this;

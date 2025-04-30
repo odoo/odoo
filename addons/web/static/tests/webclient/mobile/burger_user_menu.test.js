@@ -101,7 +101,7 @@ test("can execute the callback of settings", async () => {
     }));
     mockService("action", {
         async doAction(actionId) {
-            expect.step(String(actionId.res_id));
+            expect.step(actionId.res_id);
             expect.step(actionId.name);
             return true;
         },
@@ -111,5 +111,5 @@ test("can execute the callback of settings", async () => {
     expect("a").toHaveCount(1);
     expect("a").toHaveText("Preferences");
     await click("a");
-    expect.verifySteps(["7", "Change My Preferences"]);
+    await expect.waitForSteps([7, "Change My Preferences"]);
 });

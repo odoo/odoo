@@ -414,6 +414,40 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             self.assertEqual(sol.price_unit, 80.0, 'Reduction should be applied')
             self.assertEqual(sol.price_total, 160)
 
+    def test_pricelist_anonymous_user(self):
+        list_benelux_2 = self.list_benelux.sudo().copy({
+            'name': 'Benelux 2',
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'percentage',
+                    'base': 'list_price',
+                    'percent_price': 20,
+                }),
+            ]
+        })
+        order_sudo = self.env['sale.order'].sudo().create({
+            'partner_id': self.public_partner.id,
+            'pricelist_id': list_benelux_2.id,
+            'order_line': [Command.create({
+                'name': self.product.name,
+                'product_id': self.product.id,
+            })],
+        })
+        # Creating partner with address of belgium
+        partner = self.env['res.partner'].create({
+            'name': 'Test Partner',
+            'company_id': False,
+            'country_id': self.env.ref('base.be').id,
+        })
+        website = self.website.with_user(self.public_user)
+        with MockRequest(
+            website.env, website=website,
+            website_sale_current_pl=list_benelux_2.id,
+            website_sale_selected_pl_id=list_benelux_2.id
+        ) as request:
+            order_sudo._update_address({'partner_id': partner.id})
+        self.assertEqual(order_sudo.pricelist_id, list_benelux_2)
+
 def simulate_frontend_context(self, website_id=1):
     # Mock this method will be enough to simulate frontend context in most methods
     def get_request_website():
@@ -428,6 +462,7 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._enable_pricelists()
         Pricelist = cls.env['product.pricelist']
         Website = cls.env['website']
 
@@ -775,6 +810,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
 
         # The test is here: while having access only to self.company2 records,
         # archive should not raise an error
+        self.demo_user.group_ids += self.env.ref('product.group_product_manager')
         self.c2_pl.with_user(self.demo_user).with_context(allowed_company_ids=self.company2.ids).write({'active': False})
 
 
@@ -786,6 +822,9 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
             The objective is to verify that the pricelist
             changes correctly according to the user.
         """
+        self.env.user.write(
+            {'group_ids': [Command.link(self.env.ref('product.group_product_pricelist').id)]}
+        )
         website = self.env.ref('website.default_website')
         test_user = self.env['res.users'].create({
             'name': 'Toto',

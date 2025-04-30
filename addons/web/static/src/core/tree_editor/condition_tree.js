@@ -1,7 +1,7 @@
 import { Domain } from "@web/core/domain";
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
-import { deepCopy, deepEqual } from "../utils/objects";
+import { deepCopy, deepEqual } from "@web/core/utils/objects";
 
 /** @typedef { import("@web/core/py_js/py_parser").AST } AST */
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
@@ -19,7 +19,7 @@ import { deepCopy, deepEqual } from "../utils/objects";
  * @property {"condition"} type
  * @property {Value} path
  * @property {Value} operator
- * @property {Value} value
+ * @property {Value|Tree} value
  * @property {boolean} negate
  */
 
@@ -43,7 +43,7 @@ import { deepCopy, deepEqual } from "../utils/objects";
 
 /**
  * @typedef {Object} Options
- * @property {(value: Value) => (null|Object)} [getFieldDef]
+ * @property {(value: Value | Couple) => (null|Object)} [getFieldDef]
  * @property {boolean} [distributeNot]
  */
 
@@ -81,8 +81,9 @@ const EXCHANGE = {
 
 const COMPARATORS = ["<", "<=", ">", ">=", "in", "not in", "==", "is", "!=", "is not"];
 
-const DATETIME_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
-const DATE_TODAY_STRING_EXPRESSION = `context_today().strftime("%Y-%m-%d")`;
+export const DATETIME_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
+export const DATETIME_END_OF_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(23, 59, 59)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
+export const DATE_TODAY_STRING_EXPRESSION = `context_today().strftime("%Y-%m-%d")`;
 const DELTA_DATE_AST = parseExpr(
     `(context_today() + relativedelta(period=amount)).strftime('%Y-%m-%d')`
 );
@@ -120,6 +121,10 @@ function getDelta(ast, fieldType) {
     return [toValue(amountAST), option];
 }
 
+function getProcessedDelta(val, fieldType) {
+    return getDelta(toAST(val), fieldType);
+}
+
 function getDeltaExpression(value, fieldType) {
     const ast = replaceKwargs(
         fieldType === "date" ? DELTA_DATE_AST : DELTA_DATETIME_AST,
@@ -129,11 +134,22 @@ function getDeltaExpression(value, fieldType) {
     return expression(formatAST(ast));
 }
 
-function isTodayExpr(val, type) {
+export function isTodayExpr(val, type) {
     return (
         val._expr ===
         (type === "date" ? DATE_TODAY_STRING_EXPRESSION : DATETIME_TODAY_STRING_EXPRESSION)
     );
+}
+
+export function isEndOfTodayExpr(val) {
+    return val._expr === DATETIME_END_OF_TODAY_STRING_EXPRESSION;
+}
+
+export class Couple {
+    constructor(x, y) {
+        this.fst = x;
+        this.snd = y;
+    }
 }
 
 export class Expression {
@@ -175,7 +191,7 @@ export function connector(value, children = [], negate = false) {
 /**
  * @param {Value} path
  * @param {Value} operator
- * @param {Value} value
+ * @param {Value|Tree} value
  * @param {boolean} [negate=false]
  * @returns {Condition}
  */
@@ -216,6 +232,58 @@ export function cloneTree(tree) {
         clone[key] = cloneValue(tree[key]);
     }
     return clone;
+}
+
+function _areEquivalentTrees(tree, otherTree) {
+    if (tree.type !== otherTree.type) {
+        return false;
+    }
+    if (tree.negate !== otherTree.negate) {
+        return false;
+    }
+    if (tree.type === "condition") {
+        if (formatValue(tree.path) !== formatValue(otherTree.path)) {
+            return false;
+        }
+        if (formatValue(tree.operator) !== formatValue(otherTree.operator)) {
+            return false;
+        }
+        if (isTree(tree.value)) {
+            if (isTree(otherTree.value)) {
+                return _areEquivalentTrees(tree.value, otherTree.value);
+            }
+            return false;
+        } else if (isTree(otherTree.value)) {
+            return false;
+        }
+        if (formatValue(tree.value) !== formatValue(otherTree.value)) {
+            return false;
+        }
+        return true;
+    }
+    if (tree.value !== otherTree.value) {
+        return false;
+    }
+    if (tree.type === "complex_condition") {
+        return true;
+    }
+    if (tree.children.length !== otherTree.children.length) {
+        return false;
+    }
+    for (let i = 0; i < tree.children.length; i++) {
+        const child = tree.children[i];
+        const otherChild = otherTree.children[i];
+        if (!_areEquivalentTrees(child, otherChild)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export function areEquivalentTrees(tree, otherTree) {
+    const simplifiedTree = applyTransformations(VIRTUAL_OPERATORS_DESTRUCTION, tree);
+    const otherSimplifiedTree = applyTransformations(VIRTUAL_OPERATORS_DESTRUCTION, otherTree);
+    return _areEquivalentTrees(simplifiedTree, otherSimplifiedTree);
 }
 
 export function formatValue(value) {
@@ -277,7 +345,7 @@ function toAST(value) {
 }
 
 /**
- * @param {AND|OR} parent
+ * @param {Connector} parent
  * @param {Tree} child
  */
 function addChild(parent, child) {
@@ -307,21 +375,21 @@ function normalizeCondition(condition) {
 
 /**
  * @param {AST[]} ASTs
- * @param {boolean} distributeNot
+ * @param {Options} [options={}]
  * @param {boolean} [negate=false]
  * @returns {{ tree: Tree, remaimingASTs: AST[] }}
  */
-function _construcTree(ASTs, distributeNot, negate = false) {
+function _construcTree(ASTs, options = {}, negate = false) {
     const [firstAST, ...tailASTs] = ASTs;
 
     if (firstAST.type === 1 && firstAST.value === "!") {
-        return _construcTree(tailASTs, distributeNot, !negate);
+        return _construcTree(tailASTs, options, !negate);
     }
 
     const tree = { type: firstAST.type === 1 ? "connector" : "condition" };
     if (tree.type === "connector") {
         tree.value = firstAST.value;
-        if (distributeNot && negate) {
+        if (options.distributeNot && negate) {
             tree.value = tree.value === "&" ? "|" : "&";
             tree.negate = false;
         } else {
@@ -336,7 +404,10 @@ function _construcTree(ASTs, distributeNot, negate = false) {
         tree.value = toValue(valueAST);
         if (["any", "not any"].includes(tree.operator)) {
             try {
-                tree.value = treeFromDomain(formatAST(valueAST));
+                tree.value = treeFromDomain(formatAST(valueAST), {
+                    ...options,
+                    getFieldDef: (p) => options.getFieldDef?.(new Couple(tree.path, p)) || null,
+                });
             } catch {
                 tree.value = Array.isArray(tree.value) ? tree.value : [tree.value];
             }
@@ -348,8 +419,8 @@ function _construcTree(ASTs, distributeNot, negate = false) {
         for (let i = 0; i < 2; i++) {
             const { tree: child, remaimingASTs: otherASTs } = _construcTree(
                 remaimingASTs,
-                distributeNot,
-                distributeNot && negate
+                options,
+                options.distributeNot && negate
             );
             remaimingASTs = otherASTs;
             addChild(tree, child);
@@ -360,15 +431,14 @@ function _construcTree(ASTs, distributeNot, negate = false) {
 
 /**
  * @param {AST[]} initialASTs
- * @param {Object} options
- * @param {boolean} [options.distributeNot=false]
+ * @param {Options} [options={}]
  * @returns {Tree}
  */
-function construcTree(initialASTs, options) {
+function construcTree(initialASTs, options = {}) {
     if (!initialASTs.length) {
         return connector("&");
     }
-    const { tree } = _construcTree(initialASTs, options.distributeNot);
+    const { tree } = _construcTree(initialASTs, options);
     return tree;
 }
 
@@ -754,10 +824,280 @@ function _expressionFromTree(tree, options, isRoot = false) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  PUBLIC: CREATE/REMOVE
-//    between operator
-//    is, is_not, set, not_set operators
-//    complex conditions
+// some helpers
+////////////////////////////////////////////////////////////////////////////////
+
+function getFieldType(path, options) {
+    return options.getFieldDef?.(path)?.type;
+}
+
+function allEqual(...values) {
+    return values.slice(1).every((v) => v === values[0]);
+}
+
+function applyTransformations(transformations, transformed, ...fixedParams) {
+    for (let i = transformations.length - 1; i >= 0; i--) {
+        const fn = transformations[i];
+        transformed = fn(transformed, ...fixedParams);
+    }
+    return transformed;
+}
+
+function rewriteNConsecutiveConditions(transformation, connector, options = {}, N = 2) {
+    const children = [];
+    const currentChildren = connector.children;
+    for (let i = 0; i < currentChildren.length; i++) {
+        const NconsecutiveChildren = currentChildren.slice(i, i + N);
+        let replacement = null;
+        if (
+            NconsecutiveChildren.length === N &&
+            allEqual("condition", ...NconsecutiveChildren.map((c) => c.type))
+        ) {
+            replacement = transformation(connector, NconsecutiveChildren, options);
+        }
+        if (replacement) {
+            children.push(replacement);
+            i += N - 1;
+        } else {
+            children.push(NconsecutiveChildren[0]);
+        }
+    }
+    return { ...connector, children };
+}
+
+function normalizeConnector(connector) {
+    const newTree = { ...connector, children: [] };
+    for (const child of connector.children) {
+        addChild(newTree, child);
+    }
+    if (newTree.children.length === 1) {
+        const child = newTree.children[0];
+        if (newTree.negate) {
+            return { ...child, negate: !child.negate };
+        }
+        return child;
+    }
+    return newTree;
+}
+
+/**
+ * @param {Function} transformation
+ * @param {Tree} tree
+ * @param {Options} [options={}]
+ * @param {"condition"|"connector"|"complex_condition"} [treeType="condition"]
+ * @returns {Tree}
+ */
+function operate(transformation, tree, options = {}, treeType = "condition") {
+    if (tree.type === "connector") {
+        const newTree = {
+            ...tree,
+            children: tree.children.map((c) => operate(transformation, c, options, treeType)),
+        };
+        if (treeType === "connector") {
+            return normalizeConnector(transformation(newTree, options) || newTree);
+        }
+        return normalizeConnector(newTree);
+    }
+    const clone = cloneTree(tree);
+    if (treeType === tree.type) {
+        return transformation(clone, options) || clone;
+    }
+    return clone;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// between - is_not_between
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @param {Connector} c
+ * @param {[Condition, Condition]} param
+ */
+function _createBetweenOperator(c, [child1, child2]) {
+    if (formatValue(child1.path) !== formatValue(child2.path)) {
+        return;
+    }
+    if (c.value === "&" && child1.operator === ">=" && child2.operator === "<=") {
+        return condition(child1.path, "between", normalizeValue([child1.value, child2.value]));
+    }
+    if (c.value === "|" && child1.operator === "<" && child2.operator === ">") {
+        return condition(
+            child1.path,
+            "is_not_between",
+            normalizeValue([child1.value, child2.value])
+        );
+    }
+}
+
+/**
+ * @param {Condition} c
+ */
+function _removeBetweenOperator(c) {
+    const { negate, path, operator, value } = c;
+    if (!Array.isArray(value)) {
+        return;
+    }
+    if (operator === "between") {
+        return connector(
+            "&",
+            [condition(path, ">=", value[0]), condition(path, "<=", value[1])],
+            negate
+        );
+    } else if (operator === "is_not_between") {
+        return connector(
+            "|",
+            [condition(path, "<", value[0]), condition(path, ">", value[1])],
+            negate
+        );
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+// set - not_set - starts_with - ends_with - next - not_next - last - not_last
+// today - not_today
+/////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @param {Condition} c
+ * @param {Options} [options={}]
+ */
+function _createVirtualOperator(c, options = {}) {
+    const { negate, path, operator, value } = c;
+    const fieldType = getFieldType(path, options);
+    if (typeof operator === "string" && ["=", "!="].includes(operator)) {
+        if (fieldType) {
+            if (fieldType === "boolean" && value === true) {
+                return condition(path, operator === "=" ? "set" : "not_set", value, negate);
+            } else if (!["many2one", "date", "datetime"].includes(fieldType) && value === false) {
+                return condition(path, operator === "=" ? "not_set" : "set", value, negate);
+            }
+        }
+    }
+    if (typeof value === "string" && operator === "=ilike") {
+        if (value.endsWith("%")) {
+            return condition(path, "starts_with", value.slice(0, -1), negate);
+        }
+        if (value.startsWith("%")) {
+            return condition(path, "ends_with", value.slice(1), negate);
+        }
+    }
+    if (
+        ["between", "is_not_between"].includes(operator) &&
+        ["date", "datetime"].includes(fieldType)
+    ) {
+        let delta;
+        let virtualOperator;
+        if (isTodayExpr(value[0], fieldType)) {
+            delta = getProcessedDelta(value[1], fieldType);
+            virtualOperator = operator === "between" ? "next" : "not_next";
+        } else if (isTodayExpr(value[1], fieldType)) {
+            delta = getProcessedDelta(value[0], fieldType);
+            if (delta) {
+                delta[0] = Number.isInteger(delta[0]) ? -delta[0] : delta[0];
+            }
+            virtualOperator = operator === "between" ? "last" : "not_last";
+        }
+        if (delta) {
+            return condition(path, virtualOperator, [...delta, fieldType], negate);
+        }
+    }
+    if (fieldType === "date" && ["=", "!="].includes(operator) && isTodayExpr(value, fieldType)) {
+        return condition(path, operator === "=" ? "today" : "not_today", value, negate);
+    }
+    if (
+        fieldType === "datetime" &&
+        ["between", "is_not_between"].includes(operator) &&
+        isTodayExpr(value[0], fieldType) &&
+        isEndOfTodayExpr(value[1])
+    ) {
+        return condition(path, operator === "between" ? "today" : "not_today", value, negate);
+    }
+}
+
+/**
+ * @param {Condition} c
+ */
+function _removeVirtualOperator(c) {
+    const { negate, path, operator, value } = c;
+    if (typeof operator !== "string") {
+        return;
+    }
+    if (["set", "not_set"].includes(operator)) {
+        if (value === true) {
+            return condition(path, operator === "set" ? "=" : "!=", value, negate);
+        }
+        return condition(path, operator === "set" ? "!=" : "=", value, negate);
+    }
+    if (["starts_with", "ends_with"].includes(operator)) {
+        return condition(
+            path,
+            "=ilike",
+            operator === "starts_with" ? `${value}%` : `%${value}`,
+            negate
+        );
+    }
+    if (["next", "not_next", "last", "not_last"].includes(operator)) {
+        const fieldType = value[2];
+        const val =
+            ["last", "not_last"].includes(operator) && Number.isInteger(value[0])
+                ? [-value[0], value[1], value[2]]
+                : value;
+
+        const expressions = [
+            expression(
+                fieldType === "date"
+                    ? DATE_TODAY_STRING_EXPRESSION
+                    : DATETIME_TODAY_STRING_EXPRESSION
+            ),
+            getDeltaExpression(val, fieldType),
+        ];
+        if (["last", "not_last"].includes(operator)) {
+            expressions.reverse();
+        }
+        return condition(
+            path,
+            ["next", "last"].includes(operator) ? "between" : "is_not_between",
+            expressions,
+            negate
+        );
+    }
+    if (["today", "not_today"].includes(operator)) {
+        if (Array.isArray(value)) {
+            return condition(
+                path,
+                operator === "today" ? "between" : "is_not_between",
+                value,
+                negate
+            );
+        } else {
+            return condition(path, operator === "today" ? "=" : "!=", value, negate);
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// complex conditions
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @param {Condition} c
+ */
+function _createComplexCondition(c) {
+    if (c.path instanceof Expression && c.operator === "=" && c.value === 1) {
+        return complexCondition(String(c.path));
+    }
+}
+
+/**
+ * @param {ComplexCondition} c
+ */
+function _removeComplexCondition(c) {
+    const ast = parseExpr(c.value);
+    return condition(new Expression(bool(ast)), "=", 1);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  operations on trees
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -765,192 +1105,29 @@ function _expressionFromTree(tree, options, isRoot = false) {
  * @returns {Tree}
  */
 function createBetweenOperators(tree) {
-    if (["condition", "complex_condition"].includes(tree.type)) {
-        return tree;
-    }
-    const processedChildren = tree.children.map(createBetweenOperators);
-    const children = [];
-    for (let i = 0; i < processedChildren.length; i++) {
-        const child1 = processedChildren[i];
-        const child2 = processedChildren[i + 1];
-        if (
-            child1.type === "condition" &&
-            child2 &&
-            child2.type === "condition" &&
-            formatValue(child1.path) === formatValue(child2.path) &&
-            ((tree.value === "&" && child1.operator === ">=" && child2.operator === "<=") ||
-                (tree.value === "|" && child1.operator === "<" && child2.operator === ">"))
-        ) {
-            children.push(
-                condition(
-                    child1.path,
-                    tree.value === "|" ? "is_not_between" : "between",
-                    normalizeValue([child1.value, child2.value])
-                )
-            );
-            i += 1;
-        } else {
-            children.push(child1);
-        }
-    }
-    if (children.length === 1) {
-        return { ...children[0] };
-    }
-    return { ...tree, children };
-}
-
-/**
- * @param {Tree} tree
- * @param {Options} [options={}]
- * @returns {Tree}
- */
-function createWithinOperators(tree, options = {}) {
-    if (tree.children) {
-        return {
-            ...tree,
-            children: tree.children.map((child) => createWithinOperators(child, options)),
-        };
-    }
-    const fieldType = options.getFieldDef?.(tree.path)?.type;
-    if (
-        !["between", "is_not_between"].includes(tree.operator) ||
-        !["date", "datetime"].includes(fieldType)
-    ) {
-        return tree;
-    }
-
-    function getProcessedDelta(val, periodShouldBePositive = true) {
-        const delta = getDelta(toAST(val), fieldType);
-        if (delta) {
-            const [amount] = delta;
-            if (
-                Number.isInteger(amount) &&
-                // @ts-ignore
-                ((amount < 0 && periodShouldBePositive) || (amount > 0 && !periodShouldBePositive))
-            ) {
-                return null;
-            }
-        }
-        return delta;
-    }
-
-    const newTree = { ...tree };
-
-    if (isTodayExpr(newTree.value[0], fieldType)) {
-        const delta = getProcessedDelta(newTree.value[1]);
-        if (delta) {
-            newTree.operator = tree.operator === "between" ? "within" : "is_not_within";
-            newTree.value = [...delta, fieldType];
-        }
-    } else if (isTodayExpr(newTree.value[1], fieldType)) {
-        const delta = getProcessedDelta(newTree.value[0], false);
-        if (delta) {
-            newTree.operator = tree.operator === "between" ? "within" : "is_not_within";
-            newTree.value = [...delta, fieldType];
-        }
-    }
-
-    return newTree;
+    return operate(
+        (connector) => rewriteNConsecutiveConditions(_createBetweenOperator, connector),
+        tree,
+        {},
+        "connector"
+    );
 }
 
 /**
  * @param {Tree} tree
  * @returns {Tree}
  */
-export function removeBetweenOperators(tree) {
-    if (tree.type === "complex_condition") {
-        return tree;
-    }
-    if (tree.type === "condition") {
-        if (!["between", "is_not_between"].includes(tree.operator)) {
-            return tree;
-        }
-        const { negate, path, value } = tree;
-        return connector(
-            tree.operator === "between" ? "&" : "|",
-            [
-                condition(path, tree.operator === "between" ? ">=" : "<", value[0]),
-                condition(path, tree.operator === "between" ? "<=" : ">", value[1]),
-            ],
-            negate
-        );
-    }
-    const processedChildren = tree.children.map(removeBetweenOperators);
-    const newTree = { ...tree, children: [] };
-    // after processing a child might have become a connector "&" --> normalize
-    for (let i = 0; i < processedChildren.length; i++) {
-        addChild(newTree, processedChildren[i]);
-    }
-    return newTree;
-}
-
-export function removeWithinOperators(tree) {
-    if (tree.type === "complex_condition") {
-        return tree;
-    }
-    if (tree.type === "condition") {
-        if (!["within", "is_not_within"].includes(tree.operator)) {
-            return tree;
-        }
-        const { negate, path, value } = tree;
-        const fieldType = value[2];
-        const expressions = [
-            expression(
-                fieldType === "date"
-                    ? DATE_TODAY_STRING_EXPRESSION
-                    : DATETIME_TODAY_STRING_EXPRESSION
-            ),
-            getDeltaExpression(value, fieldType),
-        ];
-        const reverse = Number.isInteger(value[0]) && value[0] > 0;
-        return condition(
-            path,
-            tree.operator === "within" ? "between" : "is_not_between",
-            reverse ? Object.values(expressions) : Object.values(expressions).reverse(),
-            negate
-        );
-    }
-    const processedChildren = tree.children.map(removeWithinOperators);
-    return { ...tree, children: processedChildren };
+function removeBetweenOperators(tree) {
+    return operate(_removeBetweenOperator, tree);
 }
 
 /**
  * @param {Tree} tree
- * @param {options} [options={}]
- * @param {Function} [options.getFieldDef]
+ * @param {Options} [options=[]]
  * @returns {Tree}
  */
 export function createVirtualOperators(tree, options = {}) {
-    if (tree.type === "condition") {
-        const { path, operator, value } = tree;
-        if (["=", "!="].includes(operator)) {
-            const fieldDef = options.getFieldDef?.(path) || null;
-            if (fieldDef) {
-                if (fieldDef.type === "boolean") {
-                    return { ...tree, operator: operator === "=" ? "is" : "is_not" };
-                } else if (
-                    !["many2one", "date", "datetime"].includes(fieldDef?.type) &&
-                    value === false
-                ) {
-                    return { ...tree, operator: operator === "=" ? "not_set" : "set" };
-                }
-            }
-        }
-        if (operator === "=ilike") {
-            if (value.endsWith?.("%")) {
-                return { ...tree, operator: "starts_with", value: value.slice(0, -1) };
-            }
-            if (value.startsWith?.("%")) {
-                return { ...tree, operator: "ends_with", value: value.slice(1) };
-            }
-        }
-        return tree;
-    }
-    if (tree.type === "complex_condition") {
-        return tree;
-    }
-    const processedChildren = tree.children.map((c) => createVirtualOperators(c, options));
-    return { ...tree, children: processedChildren };
+    return operate(_createVirtualOperator, tree, options);
 }
 
 /**
@@ -958,28 +1135,7 @@ export function createVirtualOperators(tree, options = {}) {
  * @returns {Tree}
  */
 export function removeVirtualOperators(tree) {
-    if (tree.type === "condition") {
-        const { operator, value } = tree;
-        if (["is", "is_not"].includes(operator)) {
-            return { ...tree, operator: operator === "is" ? "=" : "!=" };
-        }
-        if (["set", "not_set"].includes(operator)) {
-            return { ...tree, operator: operator === "set" ? "!=" : "=" };
-        }
-        if (["starts_with", "ends_with"].includes(operator)) {
-            return {
-                ...tree,
-                value: operator === "starts_with" ? `${value}%` : `%${value}`,
-                operator: "=ilike",
-            };
-        }
-        return tree;
-    }
-    if (tree.type === "complex_condition") {
-        return tree;
-    }
-    const processedChildren = tree.children.map((c) => removeVirtualOperators(c));
-    return { ...tree, children: processedChildren };
+    return operate(_removeVirtualOperator, tree);
 }
 
 /**
@@ -987,21 +1143,7 @@ export function removeVirtualOperators(tree) {
  * @returns {Tree} the conditions better expressed as complex conditions become complex conditions
  */
 function createComplexConditions(tree) {
-    if (tree.type === "condition") {
-        if (tree.path instanceof Expression && tree.operator === "=" && tree.value === 1) {
-            // not sure about this one -> we should maybe evaluate the condition and check
-            // if it does not become something e.g. the name of a integer field?
-            return complexCondition(String(tree.path));
-        }
-        return cloneTree(tree);
-    }
-    if (tree.type === "complex_condition") {
-        return cloneTree(tree);
-    }
-    return {
-        ...tree,
-        children: tree.children.map((child) => createComplexConditions(child)),
-    };
+    return operate(_createComplexCondition, tree);
 }
 
 /**
@@ -1009,17 +1151,7 @@ function createComplexConditions(tree) {
  * @returns {Tree} a simple tree (without complex conditions)
  */
 function removeComplexConditions(tree) {
-    if (tree.type === "condition") {
-        return cloneTree(tree);
-    }
-    if (tree.type === "complex_condition") {
-        const ast = parseExpr(tree.value);
-        return condition(new Expression(bool(ast)), "=", 1);
-    }
-    return {
-        ...tree,
-        children: tree.children.map((child) => removeComplexConditions(child)),
-    };
+    return operate(_removeComplexCondition, tree, {}, "complex_condition");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1029,6 +1161,10 @@ function removeComplexConditions(tree) {
 //    expression <-> tree
 ////////////////////////////////////////////////////////////////////////////////
 
+const VIRTUAL_OPERATORS_CREATION = [createVirtualOperators, createBetweenOperators];
+
+const VIRTUAL_OPERATORS_DESTRUCTION = [removeBetweenOperators, removeVirtualOperators];
+
 /**
  * @param {string} expression
  * @param {Options} [options={}]
@@ -1037,10 +1173,7 @@ function removeComplexConditions(tree) {
 export function treeFromExpression(expression, options = {}) {
     const ast = parseExpr(expression);
     const tree = _treeFromAST(ast, options);
-    return createVirtualOperators(
-        createWithinOperators(createBetweenOperators(tree), options),
-        options
-    );
+    return applyTransformations(VIRTUAL_OPERATORS_CREATION, tree, options);
 }
 
 /**
@@ -1049,8 +1182,9 @@ export function treeFromExpression(expression, options = {}) {
  * @returns {string} an expression
  */
 export function expressionFromTree(tree, options = {}) {
-    const simplifiedTree = createComplexConditions(
-        removeBetweenOperators(removeWithinOperators(removeVirtualOperators(tree)))
+    const simplifiedTree = applyTransformations(
+        [createComplexConditions, ...VIRTUAL_OPERATORS_DESTRUCTION],
+        tree
     );
     return _expressionFromTree(simplifiedTree, options, true);
 }
@@ -1060,8 +1194,9 @@ export function expressionFromTree(tree, options = {}) {
  * @returns {string} a string representation of a domain
  */
 export function domainFromTree(tree) {
-    const simplifiedTree = removeBetweenOperators(
-        removeWithinOperators(removeVirtualOperators(removeComplexConditions(tree)))
+    const simplifiedTree = applyTransformations(
+        [...VIRTUAL_OPERATORS_DESTRUCTION, removeComplexConditions],
+        tree
     );
     const domainAST = {
         type: 4,
@@ -1079,10 +1214,7 @@ export function treeFromDomain(domain, options = {}) {
     domain = new Domain(domain);
     const domainAST = domain.ast;
     const tree = construcTree(domainAST.value, options); // a simple tree
-    return createVirtualOperators(
-        createWithinOperators(createBetweenOperators(tree), options),
-        options
-    );
+    return applyTransformations(VIRTUAL_OPERATORS_CREATION, tree, options);
 }
 
 /**

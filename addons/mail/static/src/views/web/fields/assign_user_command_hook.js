@@ -21,7 +21,7 @@ export function useAssignUserCommand() {
 
     const getCurrentIds = () => {
         if (type === "many2one" && component.props.record.data[component.props.name]) {
-            return [component.props.record.data[component.props.name][0]];
+            return [component.props.record.data[component.props.name].id];
         } else if (type === "many2many") {
             return component.props.record.data[component.props.name].currentIds;
         }
@@ -30,7 +30,10 @@ export function useAssignUserCommand() {
 
     const add = async (record) => {
         if (type === "many2one") {
-            component.props.record.update({ [component.props.name]: record });
+            component.props.record.update({ [component.props.name]: {
+                id: record[0],
+                display_name: record[1],
+            } });
         } else if (type === "many2many") {
             component.props.record.data[component.props.name].linkTo(record[0], {
                 display_name: record[1],

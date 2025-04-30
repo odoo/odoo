@@ -8,7 +8,7 @@ from odoo.addons.mail.tools.discuss import Store
 class MailActivity(models.Model):
     _inherit = "mail.activity"
 
-    calendar_event_id = fields.Many2one('calendar.event', string="Calendar Meeting", ondelete='cascade')
+    calendar_event_id = fields.Many2one('calendar.event', string="Calendar Meeting", index='btree_not_null', ondelete='cascade')
 
     def action_create_calendar_event(self):
         self.ensure_one()
@@ -24,6 +24,8 @@ class MailActivity(models.Model):
             'default_user_id': self.user_id.id,
             'initial_date': self.date_deadline,
             'default_calendar_event_id': self.calendar_event_id.id,
+            'orig_activity_ids': self.ids,
+            'return_to_parent_breadcrumb': True,
         }
         return action
 

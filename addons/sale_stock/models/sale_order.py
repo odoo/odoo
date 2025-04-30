@@ -283,3 +283,6 @@ class SaleOrder(models.Model):
             return self.env['ir.qweb']._render('sale_stock.exception_on_so', values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
+
+    def _is_display_stock_in_catalog(self):
+        return True

@@ -8,7 +8,7 @@ Allows to create task from your sales order
 =============================================
 This module allows to generate a project/task from sales orders.
 """,
-    'category': 'Hidden',
+    'category': 'Sales/Sales',
     'depends': ['sale_management', 'sale_service', 'project_account'],
     'auto_install': ['sale_management', 'project_account'],
     'data': [
@@ -29,7 +29,7 @@ This module allows to generate a project/task from sales orders.
     ],
     'assets': {
         'web.assets_backend': [
-            'sale_project/static/src/components/project_right_side_panel/**/*',
+            'sale_project/static/src/components/**/*',
             'sale_project/static/src/views/**/*',
         ],
         'web.assets_tests': [

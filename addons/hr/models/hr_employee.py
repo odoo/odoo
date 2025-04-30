@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import re
 
-from collections import defaultdict
 from pytz import timezone, UTC
 from datetime import datetime, time
 from random import choice
@@ -12,9 +10,9 @@ from string import digits
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, tools
 from odoo.fields import Domain
-from odoo.exceptions import ValidationError, AccessError
+from odoo.exceptions import ValidationError, AccessError, RedirectWarning
 from odoo.osv import expression
 from odoo.tools import convert, format_date
 
@@ -48,6 +46,7 @@ class HrEmployee(models.Model):
         readonly=False,
         check_company=True,
         precompute=True,
+        index='btree_not_null',
         ondelete='restrict')
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
@@ -137,8 +136,9 @@ class HrEmployee(models.Model):
         ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
         help="Categorize your Employees by type. This field also has an impact on contracts. Only Employees, Students and Trainee will have contract history.")
 
-    job_id = fields.Many2one(tracking=True)
+    job_id = fields.Many2one(tracking=True, index=True)
     # employee in company
+    parent_id = fields.Many2one(tracking=True)
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
@@ -186,6 +186,8 @@ class HrEmployee(models.Model):
     message_has_error = fields.Boolean(groups="hr.group_hr_user")
     message_has_error_counter = fields.Integer(groups="hr.group_hr_user")
     message_attachment_count = fields.Integer(groups="hr.group_hr_user")
+    address_id = fields.Many2one(tracking=True)
+    work_phone = fields.Char(tracking=True)
 
     _barcode_uniq = models.Constraint(
         'unique (barcode)',
@@ -320,6 +322,68 @@ class HrEmployee(models.Model):
                 'default_partner_id': self.work_contact_id.id,
             })
         }
+
+    def action_create_users_confirmation(self):
+        raise RedirectWarning(
+                message=_("You're about to invite new users. %s users will be created with the default user template's rights. "
+                "Adding new users may increase your subscription cost. Do you wish to continue?", len(self.ids)),
+                action=self.env.ref('hr.action_hr_employee_create_users').id,
+                button_text=_('Confirm'),
+                additional_context={
+                    'selected_ids': self.ids,
+                },
+            )
+
+    def action_create_users(self):
+        def _get_user_creation_notification_action(message, message_type, next_action):
+            return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _("User Creation Notification"),
+                        'type': message_type,
+                        'message': message,
+                        'next': next_action
+                    }
+                }
+
+        old_users = []
+        new_users = []
+        users_without_emails = []
+        for employee in self:
+            if employee.user_id:
+                old_users.append(employee.name)
+                continue
+            if not employee.work_email:
+                users_without_emails.append(employee.name)
+                continue
+            new_users.append({
+                'create_employee_id': employee.id,
+                'name': employee.name,
+                'phone': employee.work_phone,
+                'login': tools.email_normalize(employee.work_email),
+                'partner_id': employee.work_contact_id.id,
+            })
+
+        next_action = {'type': 'ir.actions.act_window_close'}
+        if new_users:
+            self.env['res.users'].create(new_users)
+            message = _('Users %s creation successful', ', '.join([user['name'] for user in new_users]))
+            next_action = _get_user_creation_notification_action(message, 'success', {
+                "type": "ir.actions.client",
+                "tag": "soft_reload",
+                "params": {"next": next_action},
+            })
+
+        if old_users:
+            message = _('User already exists for Those Employees %s', ', '.join(old_users))
+            next_action = _get_user_creation_notification_action(message, 'warning', next_action)
+
+        if users_without_emails:
+            message = _("You need to set the work email address for %s", ', '.join(users_without_emails))
+            next_action = _get_user_creation_notification_action(message, 'danger', next_action)
+
+        return next_action
 
     def _compute_display_name(self):
         if self.browse().has_access('read'):
@@ -564,8 +628,6 @@ class HrEmployee(models.Model):
                         if vals['work_contact_id']:
                             bank_account.partner_id = vals['work_contact_id']
             self.message_unsubscribe(self.work_contact_id.ids)
-            if vals['work_contact_id']:
-                self._message_subscribe([vals['work_contact_id']])
         if vals.get('user_id'):
             # Update the profile pictures with user, except if provided
             user = self.env['res.users'].browse(vals['user_id'])
@@ -670,9 +732,13 @@ class HrEmployee(models.Model):
     def _get_calendar_tz_batch(self, dt=None):
         """ Return a mapping { employee id : employee's effective schedule's (at dt) timezone }
         """
+        employees_by_id = self.grouped('id')
         if not dt:
             calendars = self._get_calendars()
-            return {emp_id: calendar.tz for emp_id, calendar in calendars.items()}
+            return {
+                emp_id: calendar.sudo().tz or employees_by_id[emp_id].tz \
+                    for emp_id, calendar in calendars.items()
+            }
 
         employees_by_tz = self.grouped(lambda emp: emp._get_tz())
 
@@ -680,7 +746,10 @@ class HrEmployee(models.Model):
         for tz, employee_ids in employees_by_tz.items():
             date_at = timezone(tz).localize(dt).date()
             calendars = self._get_calendars(date_at)
-            employee_timezones |= {emp_id: cal.tz for emp_id, cal in calendars.items()}
+            employee_timezones |= {
+                emp_id: cal.sudo().tz or employees_by_id[emp_id].tz \
+                    for emp_id, cal in calendars.items()
+            }
         return employee_timezones
 
     def _employee_attendance_intervals(self, start, stop, lunch=False):

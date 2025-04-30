@@ -74,6 +74,15 @@
                         </div>
                     </div>
                 </t>
+                <t t-set="optProducts" t-value="optionalProducts"/>
+                <div t-if="optProducts.length" class="upsale-content border-top bg-view mt-2 px-3 py-4 py-md-5">
+                    <h2 class="mb-5">Want to add something ?</h2>
+                    <div class="upsale-product row justify-content-between justify-content-md-start row-cols-sm-2 row-cols-md-4 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 mb-1">
+                        <t t-foreach="optProducts" t-as="product" t-key="product.id">
+                            <ProductCard productTemplate="product" />
+                        </t>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="order-price d-flex-column flex-grow-0">

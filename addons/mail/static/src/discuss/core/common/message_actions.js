@@ -14,7 +14,7 @@ messageActionsRegistry.add("set-new-message-separator", {
         return (
             thread &&
             thread.selfMember &&
-            component.isOriginThread &&
+            thread.eq(component.message.thread) &&
             !component.message.hasNewMessageSeparator
         );
     },

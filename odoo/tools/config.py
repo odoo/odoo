@@ -37,7 +37,7 @@ class _OdooOption(optparse.Option):
     config = None  # must be overriden
 
     TYPES = ['int', 'float', 'string', 'choice', 'bool', 'path', 'comma',
-             'addons_path', 'upgrade_path', 'without_demo']
+             'addons_path', 'upgrade_path', 'pre_upgrade_scripts', 'without_demo']
 
     @classproperty
     def TYPE_CHECKER(cls):
@@ -51,6 +51,7 @@ class _OdooOption(optparse.Option):
             'comma': cls.config._check_comma,
             'addons_path': cls.config._check_addons_path,
             'upgrade_path': cls.config._check_upgrade_path,
+            'pre_upgrade_scripts': cls.config._check_scripts,
             'without_demo': cls.config._check_without_demo,
         }
 
@@ -66,6 +67,7 @@ class _OdooOption(optparse.Option):
             'comma': cls.config._format_list,
             'addons_path': cls.config._format_list,
             'upgrade_path': cls.config._format_list,
+            'pre_upgrade_scripts': cls.config._format_list,
             'without_demo': cls.config._format_without_demo,
         }
 
@@ -200,8 +202,10 @@ class configmanager:
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update", type='comma',  metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
-        group.add_option("--without-demo", dest="without_demo", my_default=False, type='without_demo', metavar='BOOL', nargs='?', const=True,
-                         help="use with -i/--init, skip installing fake demonstration data (e.g. Mitchel Admin/Azure Interior)")
+        group.add_option("--with-demo", dest="with_demo", action='store_true', my_default=False,
+                         help="install demo data in new databases")
+        group.add_option("--without-demo", dest="with_demo", type='without_demo', metavar='BOOL', nargs='?', const=True,
+                         help="don't install demo data in new databases (default)")
         group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='',
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", type='path', my_default='',
@@ -210,6 +214,8 @@ class configmanager:
                          help="specify additional addons paths (separated by commas).")
         group.add_option("--upgrade-path", dest="upgrade_path", type='upgrade_path', metavar='PATH,...', my_default=[],
                          help="specify an additional upgrade path.")
+        group.add_option('--pre-upgrade-scripts', dest='pre_upgrade_scripts', type='pre_upgrade_scripts', metavar='PATH,...', my_default=[],
+                         help="Run specific upgrade scripts before loading any module when -u is provided.")
         group.add_option("--load", dest="server_wide_modules", type='comma', metavar='MODULE,...', my_default=DEFAULT_SERVER_WIDE_MODULES,
                          help="Comma-separated list of server-wide modules.")
         group.add_option("-D", "--data-dir", dest="data_dir", type='path',  # sensitive default set in _load_default_options
@@ -251,7 +257,7 @@ class configmanager:
                          help="Enable unit tests. Implies --stop-after-init")
         group.add_option("--test-tags", dest="test_tags",
                          help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
-                         "A filter spec has the format: [-][tag][/module][:class][.method] "
+                         "A filter spec has the format: [-][tag][/module][:class][.method][[params]] "
                          "The '-' specifies if we want to include or exclude tests matching this spec. "
                          "The tag will match tags added on a class with a @tagged decorator "
                          "(all Test classes have 'standard' and 'at_install' tags "
@@ -261,6 +267,9 @@ class configmanager:
                          "If tag is omitted on exclude mode, its value is '*'. "
                          "The module, class, and method will respectively match the module name, test class name and test method name. "
                          "Example: --test-tags :TestClass.test_func,/test_module,external "
+                         "It is also possible to provide parameters to a test method that supports them"
+                         "Example: --test-tags /web.test_js[mail]"
+                         "If negated, a test-tag with parameter will negate the parameter when passing it to the test"
 
                          "Filtering and executing the tests happens twice: right "
                          "after each module installation/update and at the end "
@@ -764,6 +773,17 @@ class configmanager:
         return upgrade_path
 
     @classmethod
+    def _check_scripts(cls, option, opt, value):
+        pre_upgrade_scripts = []
+        for path in map(cls._normalize, cls._check_comma(option, opt, value)):
+            if not os.path.isfile(path):
+                cls._log(logging.WARNING, "option %s, no such file %r, skipped", opt, path)
+                continue
+            if path not in pre_upgrade_scripts:
+                pre_upgrade_scripts.append(path)
+        return pre_upgrade_scripts
+
+    @classmethod
     def _is_upgrades_path(cls, path):
         module = '*'
         version = '*'
@@ -792,11 +812,12 @@ class configmanager:
 
     @classmethod
     def _check_without_demo(cls, option, opt, value):
+        # invert the result because it is stored in "with_demo"
         try:
-            return cls._check_bool(option, opt, value)
+            return not cls._check_bool(option, opt, value)
         except optparse.OptionValueError:
             cls._log(logging.WARNING, "option %s: since 19.0, invalid boolean value: %r, assume %s", opt, value, value != 'None')
-            return value != 'None'
+            return value == 'None'
 
     def parse(self, option_name, value):
         if not isinstance(value, str):
@@ -841,6 +862,9 @@ class configmanager:
         try:
             p.read([rcfile])
             for (name,value) in p.items('options'):
+                if name == 'without_demo':
+                    name = 'with_demo'
+                    value = str(self._check_without_demo(None, 'without_demo', value))
                 option = self.options_index.get(name)
                 if not option:
                     self._log(logging.WARNING,

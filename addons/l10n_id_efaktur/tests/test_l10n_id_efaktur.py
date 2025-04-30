@@ -21,7 +21,8 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
             'street': 'test',
             'phone': '12345',
         })
-        cls.partner_id = cls.env['res.partner'].create({"name": "l10ntest", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "12345", "vat": "000000000000000"})
+        indonesia = cls.env.ref('base.id')
+        cls.partner_id = cls.env['res.partner'].create({"name": "l10ntest", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "12345", "vat": "000000000000000", "country_id": indonesia.id})
         cls.partner_id_vat = cls.env['res.partner'].create({"name": "l10ntest3", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "67890", "vat": "010000000000000"})
         cls.tax_id = cls.env['account.tax'].create({"name": "test tax", "type_tax_use": "sale", "amount": 10.0, "price_include_override": "tax_included"})
 
@@ -89,7 +90,7 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
             _csv_row(OF_HEAD_LIST, ','),
         )
         # remaining lines
-        line_4 = '"FK","01","0","0000000000001","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","","100","10","0","","0","0","0","0","INV/2019/00001","0"\n'
+        line_4 = '"FK","01","0","0000000000001","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","Indonesia","100","10","0","","0","0","0","0","INV/2019/00001","0"\n'
         line_5 = '"OF","","","100.00","1.0","100.00","0","100.00","10.00","0","0"\n'
 
         efaktur_csv_expected = output_head + line_4 + line_5
@@ -163,7 +164,7 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
             _csv_row(LT_HEAD_LIST, ','),
             _csv_row(OF_HEAD_LIST, ','),
         )
-        line_4 = '"FK","01","0","0000000000001","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","","40040","4004","0","","0","0","0","0","INV/2019/00001","0"\n'
+        line_4 = '"FK","01","0","0000000000001","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","Indonesia","40040","4004","0","","0","0","0","0","INV/2019/00001","0"\n'
         line_5 = '"OF","","","100.10","400.0","40040.00","0","40040.00","4004.00","0","0"\n'
 
         efaktur_csv_expected = output_head + line_4 + line_5
@@ -334,7 +335,7 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
         # No codes have been consumed.
         self.assertEqual(self.efaktur.available, available_code)
 
-        with self.assertRaises(ValidationError, msg='E-faktur is not available for invoices without any taxes.'), self.cr.savepoint():
+        with self.assertRaises(ValidationError, msg='E-faktur is not available for invoices without any taxes.'):
             out_invoice_no_taxes.download_efaktur()
 
     def test_efaktur_consume_code(self):

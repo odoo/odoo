@@ -141,8 +141,12 @@
         <meta name="generator" content="Odoo"/>
         <t t-set="website_meta" t-value="seo_object and seo_object.get_website_meta() or {}"/>
         <meta name="default_title" t-att-content="default_title" groups="website.group_website_designer"/>
-        <meta t-if="(main_object and 'website_indexed' in main_object
-        and not main_object.website_indexed) or (website.domain and not website._is_indexable_url(request.httprequest.url_root))" name="robots" content="noindex"/>
+        <t t-set="no_index" t-value="
+            (main_object and 'website_indexed' in main_object and not main_object.website_indexed)
+            or (website.domain and not website._is_indexable_url(request.httprequest.url_root))
+            or (pager and isinstance(pager, dict) and pager.get('page', {}).get('num', 1) != 1)
+        "/>
+        <meta t-if="no_index" name="robots" content="noindex"/>
         <t t-set="seo_object" t-value="seo_object or main_object"/>
         <t t-set="meta_description" t-value="seo_object and 'website_meta_description' in seo_object
             and seo_object.website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
@@ -182,7 +186,7 @@
             </t>
         <link rel="alternate" hreflang="x-default" t-att-href="url_localized(lang_code=website.env['res.lang']._get_data(id=website._get_cached('default_lang_id')).code, canonical_domain=canonical_domain)"/>
         </t>
-        <link rel="canonical" t-att-href="url_localized(lang_code=lang,canonical_domain=canonical_domain)"/>
+        <link rel="canonical" t-att-href="website._get_canonical_url()"/>
         <!-- TODO: Once we have style in DB, add this preconnect only if a
         google font is actually used. Note that if no font is used, the
         preconnect is actually not connecting to the google servers. -->
@@ -399,26 +403,26 @@
         <t t-set="_navbar_classes" t-valuef="o_header_mobile d-block d-lg-none shadow-sm"/>
         <t t-set="_navbar_expand_class" t-valuef=""/>
         <t t-set="_navbar_name" t-valuef="Mobile"/>
+        <t t-set="_side" t-valuef="offcanvas-end"></t>
 
         <div class="o_main_nav container flex-wrap justify-content-between">
-            <!-- Brand -->
-            <t t-call="website.placeholder_header_brand"/>
-            <ul class="o_header_mobile_buttons_wrap navbar-nav flex-row align-items-center gap-2 mb-0">
-                <li class="o_not_editable">
-                    <button
-                        class="nav-link btn me-auto p-2"
-                        type="button"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#top_menu_collapse_mobile"
-                        aria-controls="top_menu_collapse_mobile"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                        >
-                        <span class="navbar-toggler-icon"/>
-                    </button>
-                </li>
-            </ul>
-            <div t-attf-class="offcanvas offcanvas-end o_navbar_mobile" id="top_menu_collapse_mobile">
+            <div class="d-flex flex-grow-1">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand"/>
+                <ul class="o_header_mobile_buttons_wrap navbar-nav d-flex flex-row align-items-center gap-2 mb-0 ms-auto"/>
+            </div>
+            <button
+                class="nav-link btn p-2 o_not_editable"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#top_menu_collapse_mobile"
+                aria-controls="top_menu_collapse_mobile"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                >
+                <span class="navbar-toggler-icon"/>
+            </button>
+            <div t-attf-class="offcanvas #{_side} o_navbar_mobile" id="top_menu_collapse_mobile">
                 <div class="offcanvas-header justify-content-end o_not_editable">
                     <button type="button" class="nav-link btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                 </div>
@@ -486,6 +490,18 @@
             </div>
         </div>
     </t>
+</template>
+
+<template id="template_header_mobile_position_left" inherit_id="website.template_header_mobile" active="False">
+    <xpath expr="//t[@t-set='_side']" position="replace">
+        <t t-set="_side" t-valuef="offcanvas-start"/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_main_nav')]" position="attributes">
+        <attribute name="class" add="flex-row-reverse" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('o_main_nav')]//button" position="attributes">
+        <attribute name="class" add="me-2" separator=" "/>
+    </xpath>
 </template>
 
 <template id="template_header_mobile_align_center" inherit_id="website.template_header_mobile" active="False">
@@ -1790,8 +1806,8 @@
                             </ul>
                             <div class="s_social_media text-start no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
-                                <a href="/website/social/github" class="s_social_media_github" target="_blank">
-                                    <i class="fa fa-2x fa-github m-1 o_editable_media"/>
+                                <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
+                                    <i class="fa fa-2x fa-facebook m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
                                     <i class="fa fa-2x fa-twitter m-1 o_editable_media"/>
@@ -1927,8 +1943,8 @@
                         <div class="col-lg-3 pt16 pb16">
                             <div class="s_social_media text-end no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
-                                <a href="/website/social/github" class="s_social_media_github" target="_blank">
-                                    <i class="fa fa-2x fa-github m-1 o_editable_media"/>
+                                <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank">
+                                    <i class="fa fa-2x fa-facebook m-1 o_editable_media"/>
                                 </a>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
                                     <i class="fa fa-2x fa-twitter m-1 o_editable_media"/>
@@ -2062,7 +2078,7 @@
                             <p><i class="fa fa-1x fa-fw fa-map-marker me-2"/>250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States</p>
                         </div>
                         <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-1" style="grid-area: 6 / 10 / 7 / 13; z-index; --grid-item-padding-x: 10px; --grid-item-padding-y: 0px;">
-                            <p><i class="fa fa-1x fa-fw fa-envelope me-2"/><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></p>
+                            <p><i class="fa fa-1x fa-fw fa-envelope me-2"/><a class="o_translate_inline" href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></p>
                         </div>
                     </div>
                 </div>
@@ -2190,7 +2206,7 @@
                                     <div class="col-lg-8 pt16">
                                         <p>
                                             <span class="pe-1">We use cookies to provide you a better user experience on this website.</span>
-                                            <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm px-0">Cookie Policy</a>
+                                            <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm px-0 o_translate_inline">Cookie Policy</a>
                                         </p>
                                     </div>
                                     <div class="col-lg-4 text-end pt16 pb16">
@@ -2429,7 +2445,7 @@
                     <small groups='base.group_no_one'>Odoo Version <t t-out="version.get('server_version')"/></small>
                 </h1>
                 <p>
-                    Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
+                    Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a class="o_translate_inline" target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
                 </p>
 
                 <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_restricted_editor" role="status">
@@ -2860,34 +2876,38 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="step_wizard" name="Step Checkout">
-    <!-- parameters:
-        - wizard_step: An ordered list of steps. Each step must contain:
-                       - (1): A list of the xmlid of the templates for which the step applies for
-                       - (2): A dict that must contain the following keys: ['name', 'current_href']
-    -->
+    <!-- wizard_step: A recordset of all published website.checkout.steps-->
     <div class="o_wizard d-flex flex-wrap justify-content-between justify-content-md-start my-3 my-sm-4">
         <div class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-center">
             <!-- Large screen views -->
             <t t-foreach="wizard_step" t-as="step">
-                <t t-set="is_current_step" t-value="xmlid in step[0]"/>
-                <t t-if="is_current_step" t-set="current_step" t-value="step"/>
+                <t
+                    t-set="is_current_step"
+                    t-value="step.step_href == current_website_checkout_step_href"
+                />
+                <t t-if="is_current_step">
+                    <t t-set="current_step" t-value="step"/>
+                    <t t-set="current_step_index" t-value="step_index"/>
+                </t>
                 <span t-if="current_step"
                         t-attf-class="#{not is_current_step and 'o_disabled'} d-none d-md-flex no-decoration">
                     <div t-attf-class="d-flex align-items-center {{'o_wizard_step_active fw-bold' if is_current_step else 'text-muted'}}">
                         <p class="o_wizard_steplabel text-center mb-0">
-                            <t t-out="step[1]['name']"/>
+                            <span t-field="step.name"/>
                         </p>
                         <span t-if="not step_last"
                                 class="fa fa-angle-right d-inline-block align-middle mx-sm-3 text-muted fs-5"/>
                     </div>
                 </span>
-                <a t-else=""
+                <a
+                    t-else=""
                     class="d-none d-md-flex no-decoration"
-                    t-att-href="step[1]['current_href']"
-                    t-att-title="step[1]['name']">
+                    t-att-href="step.step_href"
+                    t-att-title="step.name"
+                >
                     <div class="d-flex align-items-center o_wizard_step-done">
                         <p class="o_wizard_steplabel text-center mb-0">
-                            <t t-out="step[1]['name']"/>
+                            <span t-field="step.name"/>
                         </p>
                         <span t-if="not step_last"
                                 class="fa fa-angle-right d-inline-block align-middle mx-sm-3 text-muted fs-5"/>
@@ -2902,12 +2922,15 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                         title="Steps">
-                        <t t-out="list(filter(lambda step: xmlid in step[0],wizard_step))[0][1]['name']"/>
+                        <span t-field="current_step.name"/>
                     </a>
                     <ul class="dropdown-menu">
                         <t t-set="current_step" t-value="None"/>
                         <li t-foreach="wizard_step" t-as="step">
-                            <t t-set="is_current_step" t-value="xmlid in step[0]"/>
+                            <t
+                                t-set="is_current_step"
+                                t-value="step.step_href == current_website_checkout_step_href"
+                            />
                             <t t-if="is_current_step">
                                 <t t-set="current_step" t-value="step"/>
                                 <t t-set="_steps_in_deg"
@@ -2917,19 +2940,19 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                             </t>
                             <a t-if="not current_step"
                                 class="dropdown-item"
-                                t-att-href="step[1]['current_href']"
-                                t-out="step[1]['name']"
-                                t-att-title="step[1]['name']"/>
+                                t-att-href="step.step_href"
+                                t-field="step.name"
+                                t-att-title="step.name"/>
                             <span t-else=""
                                     t-attf-class="dropdown-item {{'fw-bold' if is_current_step else 'text-muted o_disabled'}}"
-                                    t-out="step[1]['name']"
-                                    t-att-title="step[1]['name']"/>
+                                    t-field="step.name"
+                                    t-att-title="step.name"/>
                         </li>
                     </ul>
                 </div>
                 <span t-if="next_step"
                         class="d-inline-block d-md-none text-muted">
-                        Next: <t t-out="next_step[1]['name']"/>
+                        Next: <span t-field="next_step.name"/>
                 </span>
             </div>
         </div>
@@ -2942,7 +2965,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 <span class="progress-bar position-absolute top-0 end-100 w-100 h-100 border border-5 border-end-0 border-primary bg-transparent"/>
             </span>
             <p class="mx-auto fw-bold">
-                <t t-out="wizard_step.index(current_step)+1"/>
+                <t t-out="current_step_index+1"/>
                 of
                 <t t-out="len(wizard_step)"/>
             </p>

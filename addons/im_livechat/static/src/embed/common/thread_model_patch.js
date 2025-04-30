@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import "@mail/discuss/core/common/thread_model_patch";
 
@@ -24,15 +24,15 @@ patch(Thread, threadStaticPatch);
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        this.livechat_operator_id = Record.one("Persona");
-        this.chatbotTypingMessage = Record.one("mail.message", {
+        this.livechat_operator_id = fields.One("Persona");
+        this.chatbotTypingMessage = fields.One("mail.message", {
             compute() {
                 if (this.chatbot) {
                     return { id: -0.1 - this.id, thread: this, author: this.livechat_operator_id };
                 }
             },
         });
-        this.livechatWelcomeMessage = Record.one("mail.message", {
+        this.livechatWelcomeMessage = fields.One("mail.message", {
             compute() {
                 if (this.hasWelcomeMessage) {
                     const livechatService = this.store.env.services["im_livechat.livechat"];
@@ -53,9 +53,9 @@ patch(Thread.prototype, {
          * @type {Deferred}
          */
         this.readyToSwapDeferred = new Deferred();
-        this.chatbot = Record.one("Chatbot");
+        this.chatbot = fields.One("Chatbot");
         this.livechat_active = false;
-        this._toggleChatbot = Record.attr(false, {
+        this._toggleChatbot = fields.Attr(false, {
             compute() {
                 return this.chatbot && this.isLoaded && this.livechat_active;
             },
@@ -68,11 +68,10 @@ patch(Thread.prototype, {
             },
             eager: true,
         });
-        this.storeAsActiveLivechats = Record.one("Store", {
+        this.storeAsActiveLivechats = fields.One("Store", {
             compute() {
                 return this.livechat_active ? this.store : null;
             },
-            eager: true,
         });
         this.requested_by_operator = false;
     },
@@ -93,9 +92,7 @@ patch(Thread.prototype, {
     },
     get displayName() {
         if (this.channel_type === "livechat" && this.livechat_operator_id) {
-            return (
-                this.livechat_operator_id.user_livechat_username || this.livechat_operator_id.name
-            );
+            return this.getPersonaName(this.livechat_operator_id);
         }
         return super.displayName;
     },
@@ -104,6 +101,13 @@ patch(Thread.prototype, {
     },
     /** @returns {Promise<import("models").Message} */
     async post(body, postData, extraData = {}) {
+        if (
+            this.chatbot &&
+            !this.chatbot.forwarded &&
+            this.chatbot.currentStep?.type !== "free_input_multi"
+        ) {
+            this.chatbot.isProcessingAnswer = true;
+        }
         if (this.channel_type === "livechat" && this.isTransient) {
             // For smoother transition: post the temporary message and set the
             // selected chat bot answer if any. Then, simulate the chat bot is
@@ -146,8 +150,12 @@ patch(Thread.prototype, {
 
     get composerDisabled() {
         const step = this.chatbot?.currentStep;
+        if (this.chatbot?.forwarded && this.livechat_active) {
+            return false;
+        }
         return (
             super.composerDisabled ||
+            this.chatbot?.isProcessingAnswer ||
             (step &&
                 !step.operatorFound &&
                 (step.completed || !step.expectAnswer || step.answers.length > 0))

@@ -3,9 +3,10 @@ import { on } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { getService, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 
-import { rpcBus } from "@web/core/network/rpc";
+import { rpc, rpcBus } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
+import { PersistentCache } from "@web/core/utils/persistent_cache";
 
 describe.current.tags("headless");
 
@@ -245,7 +246,7 @@ test("webReadGroup method", async () => {
             method: "web_read_group",
             model: "sale.order",
         });
-        return {length: 0, groups: []};
+        return { length: 0, groups: [] };
     });
 
     const { services } = await makeMockEnv();
@@ -455,4 +456,19 @@ test("optimize read and unlink if no ids", async () => {
 
     await services.orm.unlink("res.partner", [], {});
     expect.verifySteps([]);
+});
+
+test("Cache: can cache a simple orm call", async () => {
+    rpc.setCache(new PersistentCache("mockRpc", 1));
+    onRpc(() => {
+        expect.step("Fetch");
+        return { name: 123 };
+    });
+
+    const { services } = await makeMockEnv();
+
+    expect(await services.orm.cached.read("res.partner", [1], [])).toEqual({ name: 123 });
+    expect(await services.orm.cached.read("res.partner", [1], [])).toEqual({ name: 123 });
+    expect(await services.orm.cached.read("res.partner", [1], [])).toEqual({ name: 123 });
+    expect.verifySteps(["Fetch"]);
 });

@@ -23,7 +23,14 @@
                         required="1"
                         context="{'name_with_seats_availability': True}"
                         options="{'no_open': True, 'no_create': True}"
+                        placeholder="All Events"
                     />
+                    <field name="event_slot_id"
+                        domain="[('event_id', '=', event_id)]"
+                        invisible="not is_multi_slots"
+                        required="is_multi_slots"
+                        context="{'name_with_seats_availability': True}"
+                        options="{'no_open': True, 'no_create': True}"/>
                     <field
                         name="event_ticket_id"
                         domain="[('event_id', '=', event_id), ('product_id', '=', product_id)]"

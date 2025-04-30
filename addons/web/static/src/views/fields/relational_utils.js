@@ -47,6 +47,7 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
+import { odoomark } from "@web/core/utils/strings";
 
 //
 // Commons
@@ -193,7 +194,6 @@ export class Many2XAutocomplete extends Component {
         dropdown: { type: Boolean, optional: true },
         fieldString: String,
         getDomain: Function,
-        getOptionClassnames: { type: Function, optional: true },
         id: { type: String, optional: true },
         isToMany: { type: Boolean, optional: true },
         nameCreateField: { type: String, optional: true },
@@ -205,6 +205,7 @@ export class Many2XAutocomplete extends Component {
         searchLimit: { type: Number, optional: true },
         searchMoreLabel: { type: String, optional: true },
         searchMoreLimit: { type: Number, optional: true },
+        searchThreshold: { type: Number, optional: true },
         setInputFloats: { type: Function, optional: true },
         slots: { optional: true },
         specification: { type: Object, optional: true },
@@ -214,11 +215,11 @@ export class Many2XAutocomplete extends Component {
     static defaultProps = {
         context: {},
         dropdown: true,
-        getOptionClassnames: () => "",
         nameCreateField: "name",
         otherSources: [],
         quickCreate: null,
         searchLimit: 7,
+        searchThreshold: 0,
         searchMoreLimit: 320,
         setInputFloats: () => {},
         specification: {},
@@ -336,62 +337,116 @@ export class Many2XAutocomplete extends Component {
             abort: originalPromise.abort ? originalPromise.abort.bind(originalPromise) : () => {},
         };
     }
+
+    get searchSpecification() {
+        return {
+            display_name: {},
+            ...this.props.specification,
+        };
+    }
+
     search(name) {
+        if (name.length < this.props.searchThreshold) {
+            return [];
+        }
         return this.orm.call(this.props.resModel, "web_name_search", [], {
             name: name,
             operator: "ilike",
             domain: this.props.getDomain(),
             limit: this.props.searchLimit + 1,
             context: this.props.context,
-            specification: {
-                display_name: {},
-                ...this.props.specification,
-            },
+            specification: this.searchSpecification,
         });
     }
     mapRecordToOption(record) {
+        const label = record.__formatted_display_name || record.display_name;
         return {
             value: record.id,
-            label: record.display_name ? record.display_name.split("\n")[0] : _t("Unnamed"),
-            classList: this.props.getOptionClassnames(record),
+            label: label ? odoomark(label.split("\n")[0]) : _t("Unnamed"),
         };
     }
+
     async loadOptionsSource(request) {
         if (this.lastProm) {
             this.lastProm.abort(false);
+            this.lastProm = null;
         }
-        this.lastProm = this.abortableSearch(request);
-        const records = await this.lastProm.promise;
 
-        const options = records.map((record) => ({
-            ...this.mapRecordToOption(record),
-            record,
-        }));
+        const canCreateEdit =
+            "createEdit" in this.activeActions
+                ? this.activeActions.createEdit
+                : this.activeActions.create;
+        let addSearchMore = true;
 
-        if (this.props.quickCreate && request.length) {
-            options.push({
-                label: _t('Create "%s"', request),
-                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
-                action: async (params) => {
-                    try {
-                        await this.props.quickCreate(request, params);
-                    } catch (e) {
-                        if (
-                            e instanceof RPCError &&
-                            e.exceptionName === "odoo.exceptions.ValidationError"
-                        ) {
-                            return this.openMany2X({
-                                context: this.getCreationContext(request),
-                                nextRecordsContext: this.props.context,
-                            });
+        const options = [];
+        if (request.length < this.props.searchThreshold) {
+            if (!this.props.value) {
+                options.push({
+                    label:
+                        this.props.searchThreshold > 1
+                            ? _t("Start typing %s characters", this.props.searchThreshold)
+                            : _t("Start typing..."),
+                    classList: "o_m2o_start_typing",
+                    unselectable: true,
+                });
+            }
+        } else {
+            this.lastProm = this.abortableSearch(request);
+            const records = await this.lastProm.promise;
+            addSearchMore = records.length > 0;
+            if (records.length) {
+                for (const record of records) {
+                    options.push({
+                        ...this.mapRecordToOption(record),
+                        record,
+                    });
+                }
+            } else if (!this.activeActions.createEdit && !this.props.quickCreate) {
+                options.push({
+                    label: _t("No records"),
+                    classList: "o_m2o_no_result",
+                    unselectable: true,
+                });
+            }
+        }
+
+        if (request.length) {
+            const slowCreate = () =>
+                this.openMany2X({
+                    context: this.getCreationContext(request),
+                    nextRecordsContext: this.props.context,
+                });
+
+            if (this.props.quickCreate) {
+                options.push({
+                    label: _t('Create "%s"', request),
+                    classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
+                    action: async (params) => {
+                        try {
+                            await this.props.quickCreate(request, params);
+                        } catch (e) {
+                            if (
+                                e instanceof RPCError &&
+                                e.exceptionName === "odoo.exceptions.ValidationError"
+                            ) {
+                                return slowCreate();
+                            }
+                            throw e;
                         }
-                        throw e;
-                    }
-                },
-            });
+                    },
+                });
+            }
+
+            if (canCreateEdit) {
+                options.push({
+                    label: _t("Create and edit..."),
+                    classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
+                    action: slowCreate,
+                });
+            }
         }
 
-        if (!this.props.noSearchMore && records.length > 0) {
+        if (!this.props.noSearchMore && addSearchMore) {
             options.push({
                 label: this.SearchMoreButtonLabel,
                 action: this.onSearchMore.bind(this, request),
@@ -399,43 +454,11 @@ export class Many2XAutocomplete extends Component {
             });
         }
 
-        const canCreateEdit =
-            "createEdit" in this.activeActions
-                ? this.activeActions.createEdit
-                : this.activeActions.create;
-        if (!request.length && !this.props.value && (this.props.quickCreate || canCreateEdit)) {
-            options.push({
-                label: _t("Start typing..."),
-                classList: "o_m2o_start_typing",
-                unselectable: true,
-            });
-        }
-
-        if (request.length && canCreateEdit) {
-            options.push({
-                label: _t("Create and edit..."),
-                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
-                action: () =>
-                    this.openMany2X({
-                        context: this.getCreationContext(request),
-                        nextRecordsContext: this.props.context,
-                    }),
-            });
-        }
-
-        if (!records.length && !this.activeActions.createEdit && !this.props.quickCreate) {
-            options.push({
-                label: _t("No records"),
-                classList: "o_m2o_no_result",
-                unselectable: true,
-            });
-        }
-
         return options;
     }
 
     get SearchMoreButtonLabel() {
-        return this.props.searchMoreLabel ?? _t("Search More...");
+        return this.props.searchMoreLabel ?? _t("Search more...");
     }
 
     async onBarcodeSearch() {
@@ -478,21 +501,6 @@ export class Many2XAutocomplete extends Component {
         if (!inputValue.length) {
             this.props.update(false);
         }
-    }
-}
-
-export class AvatarMany2XAutocomplete extends Many2XAutocomplete {
-    mapRecordToOption(result) {
-        return {
-            ...super.mapRecordToOption(result),
-            resModel: this.props.resModel,
-        };
-    }
-    get optionsSource() {
-        return {
-            ...super.optionsSource,
-            optionTemplate: "web.AvatarMany2XAutocomplete",
-        };
     }
 }
 
@@ -617,16 +625,21 @@ export class X2ManyFieldDialog extends Component {
             this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
         }
 
-        const { autofocusFieldId, disableAutofocus } = this.archInfo;
+        const { autofocusFieldIds, disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
             // to simplify
             useEffect(
                 (isInEdition) => {
                     let elementToFocus;
                     if (isInEdition) {
+                        for (const id of autofocusFieldIds) {
+                            elementToFocus = this.modalRef.el.querySelector(`#${id}`);
+                            if (elementToFocus) {
+                                break;
+                            }
+                        }
                         elementToFocus =
-                            (autofocusFieldId &&
-                                this.modalRef.el.querySelector(`#${autofocusFieldId}`)) ||
+                            elementToFocus ||
                             this.modalRef.el.querySelector(".o_field_widget input");
                     } else {
                         elementToFocus = this.modalRef.el.querySelector("button.btn-primary");

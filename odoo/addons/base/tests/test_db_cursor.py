@@ -10,9 +10,10 @@ from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 
 from odoo import api
 from odoo.modules.registry import Registry
-from odoo.sql_db import db_connect, TestCursor
+from odoo.sql_db import db_connect
 from odoo.tests import common
 from odoo.tests.common import BaseCase, HttpCase
+from odoo.tests.test_cursor import TestCursor
 from odoo.tools.misc import config
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
@@ -127,8 +128,7 @@ class TestTestCursor(common.TransactionCase):
     def setUp(self):
         super().setUp()
         # make the registry in test mode
-        self.registry.enter_test_mode(self.cr)
-        self.addCleanup(self.registry.leave_test_mode)
+        self.registry_enter_test_mode()
         # now we make a test cursor for self.cr
         self.cr = self.registry.cursor()
         self.addCleanup(self.cr.close)
@@ -218,7 +218,10 @@ class TestTestCursor(common.TransactionCase):
             RELEASE SAVEPOINT B -- "savepoint b does not exist"
         """
         a = self.registry.cursor()
-        _b = self.registry.cursor()
+        b = self.registry.cursor()
+        # This forces the savepoint to be created
+        a._check_savepoint()
+        b._check_savepoint()
         # `a` should warn that it found un-closed cursor `b` when trying to close itself
         with self.assertLogs('odoo.sql_db', level=logging.WARNING) as cm:
             a.close()
@@ -226,7 +229,9 @@ class TestTestCursor(common.TransactionCase):
         self.assertIn('WARNING:odoo.sql_db:Found different un-closed cursor', msg)
         # avoid a warning on teardown (when self.cr finds a still on the stack)
         # as well as ensure the stack matches our expectations
-        self.assertEqual(a._cursors_stack.pop(), a)
+        with self.assertRaises(psycopg2.errors.InvalidSavepointSpecification):
+            with self.assertLogs('odoo.sql_db', level=logging.WARNING) as cm:
+                b.close()
 
     def test_borrow_connection(self):
         """Tests the behavior of the postgresql connection pool recycling/borrowing"""
@@ -310,8 +315,7 @@ class TestCursorHooks(common.TransactionCase):
         self.assertEqual(self.log, ['preR', 'postR'])
 
     def test_hooks_on_testcursor(self):
-        self.registry.enter_test_mode(self.cr)
-        self.addCleanup(self.registry.leave_test_mode)
+        self.registry_enter_test_mode()
 
         cr = self.registry.cursor()
 
@@ -334,24 +338,55 @@ class TestCursorHooks(common.TransactionCase):
 
 class TestCursorHooksTransactionCaseCleanup(common.TransactionCase):
     """Check savepoint cases handle commit hooks properly."""
-    def test_isolation_first(self):
-        def mutate_second_test_ref():
-            for name in ['precommit', 'postcommit', 'prerollback', 'postrollback']:
-                del self.env.cr.precommit.data.get(f'test_cursor_hooks_savepoint_case_cleanup_test_second_{name}', [''])[0]
-        self.env.cr.precommit.add(mutate_second_test_ref)
+    @staticmethod
+    def initial_callback():
+        pass
 
-    def test_isolation_second(self):
-        references = [['not_empty']] * 4
-        cr = self.env.cr
-        commit_callbacks = [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]
-        callback_names = ['precommit', 'postcommit', 'prerollback', 'postrollback']
+    @staticmethod
+    def other_callback():
+        pass
 
-        for callback_name, callbacks, reference in zip(callback_names, commit_callbacks, references):
-            callbacks.data.setdefault(f"test_cursor_hooks_savepoint_case_cleanup_test_second_{callback_name}", reference)
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        for callback in commit_callbacks:
+        cr = cls.env.cr
+        cls.callback_names = ['precommit', 'postcommit', 'prerollback', 'postrollback']
+        cls.callbacks = [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]
+
+        for callback, name in zip(cls.callbacks, cls.callback_names):
+            callback.data[f'test_cursor_hooks_{name}'] = ['keep']
+            callback.add(cls.initial_callback)
+
+    def assertHookData(self):
+        for callback, name in zip(self.callbacks, self.callback_names):
+            self.assertEqual(
+                callback.data[f'test_cursor_hooks_{name}'],
+                ['keep'],
+                f"{name} failed to clean up between transaction tests"
+            )
+            self.assertIn(self.initial_callback, callback._funcs)
+            self.assertNotIn(self.other_callback, callback._funcs)
+
+    def test_1_isolation(self):
+        self.assertHookData()
+        for callback, name in zip(self.callbacks, self.callback_names):
+            callback.data[f'test_cursor_hooks_{name}'].append("don't keep")
+            callback.add(self.other_callback)
+
+    def test_2_isolation(self):
+        self.assertHookData()
+        for callback in self.callbacks:
             callback.run()
 
-        for callback_name, reference in zip(callback_names, references):
-            self.assertTrue(bool(reference), f"{callback_name} failed to clean up between transaction tests")
-            self.assertTrue(reference[0] == 'not_empty', f"{callback_name} failed to clean up between transaction tests")
+    def test_3_isolation(self):
+        self.assertHookData()
+        for callback in self.callbacks:
+            callback.clear()
+
+    def test_4_isolation(self):
+        self.assertHookData()
+        self.env.cr.clear()
+
+    def test_5_isolation(self):
+        self.assertHookData()

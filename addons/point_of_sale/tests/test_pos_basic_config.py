@@ -856,9 +856,8 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         def open_and_check(pos_data):
             self.config = pos_data['config']
-            self.open_new_session()
+            self.open_new_session(pos_data['amount_paid'])
             session = self.pos_session
-            session.set_opening_control(pos_data['amount_paid'], False)
             self.assertEqual(session.cash_register_balance_start, pos_data['amount_paid'])
 
         pos01_config = self.config
@@ -986,7 +985,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             # Check the credit note
             self.assertTrue(return_to_invoice.account_move, 'Invoice should be created.')
             self.assertEqual(return_to_invoice.account_move.move_type, 'out_refund', 'Invoice should be a credit note.')
-            self.assertEqual(return_to_invoice.account_move.invoice_date, new_session_date, 'Invoice date should be the same as the session it is created in.')
+            self.assertEqual(return_to_invoice.account_move.invoice_date, new_session_date.date(), 'Invoice date should be the same as the session it is created in.')
             self.assertRecordValues(return_to_invoice.account_move, [{
                 'amount_untaxed': 30,
                 'amount_tax': 0,

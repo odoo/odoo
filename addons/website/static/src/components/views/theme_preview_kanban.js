@@ -26,13 +26,6 @@ class ThemePreviewControlPanel extends ControlPanel {
     close() {
         this.website.goToWebsite();
     }
-
-    get display() {
-        return {
-            layoutActions: false,
-            ...this.props.display,
-        };
-    }
 }
 class ThemePreviewKanbanrecord extends KanbanRecord {
 
@@ -54,9 +47,6 @@ const ThemePreviewKanbanView = {
     Controller: ThemePreviewKanbanController,
     ControlPanel: ThemePreviewControlPanel,
     Renderer: ThemePreviewKanbanRenderer,
-    display: {
-        controlPanel: {},
-    },
 };
 
 

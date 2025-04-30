@@ -280,8 +280,12 @@ class IrUiView(models.Model):
         # website_id. (It will then always fallback on a website, this
         # method should never be called in a generic context, even for
         # tests)
-        self = self.with_context(website_id=self.env['website'].get_current_website().id)
-        return super().get_related_views(key, bundles=bundles)
+        current_website = self.env['website'].get_current_website()
+        return super(IrUiView, self.with_context(
+            website_id=current_website.id
+        )).get_related_views(key, bundles=bundles).with_context(
+            lang=current_website.default_lang_id.code,
+        )
 
     def filter_duplicate(self):
         """ Filter current recordset only keeping the most suitable view per distinct key.
@@ -518,8 +522,8 @@ class IrUiView(models.Model):
             res['website_id'] = website_id
         return res
 
-    def _update_field_translations(self, fname, translations, digest=None, source_lang=None):
-        return super(IrUiView, self.with_context(no_cow=True))._update_field_translations(fname, translations, digest=digest, source_lang=source_lang)
+    def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
+        return super(IrUiView, self.with_context(no_cow=True))._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
 
     def _get_base_lang(self):
         """ Returns the default language of the website as the base language if the record is bound to it """

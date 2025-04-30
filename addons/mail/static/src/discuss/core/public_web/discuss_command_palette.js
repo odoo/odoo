@@ -3,7 +3,6 @@ import { cleanTerm } from "@mail/utils/common/format";
 import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useService } from "@web/core/utils/hooks";
@@ -112,14 +111,17 @@ commandSetupRegistry.add("@", {
     placeholder: _t("Search a conversation"),
 });
 
+/**
+ * @param {string} name
+ * @param {import("models").Store} store
+ */
 async function makeNewChannel(name, store) {
-    const data = await rpc("/discuss/channel/create_channel", {
-        name: name,
-        group_id: store.internalUserGroupId,
-    });
-    const { Thread } = store.insert(data);
-    const [channel] = Thread;
-    channel.open({ focus: true });
+    const { channel } = await store.fetchStoreData(
+        "/discuss/create_channel",
+        { name, group_id: store.internalUserGroupId },
+        { readonly: false, requestData: true }
+    );
+    await channel.open({ focus: true, bypassCompact: true });
 }
 
 export class DiscussCommandPalette {
@@ -156,7 +158,7 @@ export class DiscussCommandPalette {
             personas = Object.values(this.store.Persona.records).filter(
                 (persona) =>
                     persona.isInternalUser &&
-                    cleanTerm(persona.name).includes(this.cleanedTerm) &&
+                    cleanTerm(persona.displayName).includes(this.cleanedTerm) &&
                     (!filtered || !filtered.has(persona))
             );
             personas = this.suggestion
@@ -224,7 +226,7 @@ export class DiscussCommandPalette {
                 Component: DiscussCommand,
                 action: async () => {
                     const channel = await this.store.Thread.getOrFetch(thread);
-                    channel.open({ focus: true });
+                    channel.open({ focus: true, bypassCompact: true });
                 },
                 name: thread.displayName,
                 category,
@@ -246,7 +248,7 @@ export class DiscussCommandPalette {
                 action: () => {
                     this.store.openChat({ partnerId: persona.id });
                 },
-                name: persona.name,
+                name: persona.displayName,
                 category,
                 props: {
                     imgUrl: persona.avatarUrl,

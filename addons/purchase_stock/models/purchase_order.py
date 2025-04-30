@@ -6,7 +6,6 @@ from markupsafe import Markup
 from odoo import api, Command, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.exceptions import UserError
-from odoo.tools import format_list
 from odoo.tools.misc import OrderedSet
 
 
@@ -130,7 +129,7 @@ class PurchaseOrder(models.Model):
 
         purchase_orders_with_receipt = self.filtered(lambda po: any(move.state == 'done' for move in po.order_line.move_ids))
         if purchase_orders_with_receipt:
-            raise UserError(_("Unable to cancel purchase order(s): %s since they have receipts that are already done.", format_list(self.env, purchase_orders_with_receipt.mapped('display_name'))))
+            raise UserError(_("Unable to cancel purchase order(s): %s since they have receipts that are already done.", purchase_orders_with_receipt.mapped('display_name')))
         for order in self:
             # If the product is MTO, change the procure_method of the closest move to purchase to MTS.
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
@@ -227,6 +226,29 @@ class PurchaseOrder(models.Model):
         invoice_vals = super()._prepare_invoice()
         invoice_vals['invoice_incoterm_id'] = self.incoterm_id.id
         return invoice_vals
+
+    def action_display_suggest(self, product_domain=False):
+        self.ensure_one()
+        product_ids = self.order_line.product_id.ids
+        if product_domain:
+            product_ids = self.env['product.product'].with_context(order_id=self.id).search(product_domain).ids
+        context = {
+            'dialog_size': 'medium',
+            'default_purchase_order_id': self.id,
+            'default_warehouse_id': self.picking_type_id.warehouse_id.id,
+            'default_product_ids': product_ids,
+        }
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Suggest Quantities based on Sales & Demands"),
+            'target': 'new',
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'res_id': False,
+            'view_id': self.env.ref('purchase_stock.purchase_order_suggest_view_form').id,
+            'res_model': 'purchase.order.suggest',
+            'context': context,
+        }
 
     # --------------------------------------------------
     # Business methods
@@ -366,3 +388,6 @@ class PurchaseOrder(models.Model):
         """When auto sending reminder mails, don't send for purchase order with
         validated receipts."""
         return super()._get_orders_to_remind().filtered(lambda p: not p.effective_date)
+
+    def _is_display_stock_in_catalog(self):
+        return True

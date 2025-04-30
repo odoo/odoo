@@ -36,12 +36,12 @@
 
     <t t-name="web.Dialog.header">
         <t t-if="fullscreen">
-            <button class="btn oi oi-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="dismiss" />
+            <button class="btn oi oi-arrow-left" aria-label="Close" t-on-click="dismiss" />
         </t>
         <h4 class="modal-title text-break flex-grow-1" t-att-class="{ 'me-auto': fullscreen }">
             <t t-esc="props.title"/>
         </h4>
-        <t t-if="!isFullscreen and onExpand">
+        <t t-if="onExpand">
             <button type="button" class="fa fa-expand btn o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand"/>
         </t>
         <t t-if="!fullscreen">

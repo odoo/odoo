@@ -141,7 +141,7 @@ class SurveySurvey(models.Model):
     #       So it can be edited but not removed or replaced.
     certification_give_badge = fields.Boolean('Give Badge', compute='_compute_certification_give_badge',
                                               readonly=False, store=True, copy=False)
-    certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge', copy=False)
+    certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge', copy=False, index='btree_not_null')
     certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
     # live sessions
     session_available = fields.Boolean('Live session available', compute='_compute_session_available')
@@ -248,8 +248,8 @@ class SurveySurvey(models.Model):
 
         for survey_stats in stat.values():
             avg_total = survey_stats.pop('answer_score_avg_total')
-            survey_stats['answer_score_avg'] = avg_total / (survey_stats['answer_done_count'] or 1)
-            survey_stats['success_ratio'] = (survey_stats['success_count'] / (survey_stats['answer_done_count'] or 1.0))*100
+            survey_stats['answer_score_avg'] = avg_total / (survey_stats['answer_count'] or 1)
+            survey_stats['success_ratio'] = (survey_stats['success_count'] / (survey_stats['answer_count'] or 1.0))*100
 
         for survey in self:
             survey.update(stat.get(survey._origin.id, default_vals))

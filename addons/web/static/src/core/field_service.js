@@ -1,4 +1,3 @@
-import { Cache } from "@web/core/utils/cache";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 
@@ -12,21 +11,6 @@ export const fieldService = {
     dependencies: ["orm"],
     async: ["loadFields", "loadPath", "loadPropertyDefinitions"],
     start(env, { orm }) {
-        const cache = new Cache(
-            (resModel, options) => {
-                return orm
-                    .call(resModel, "fields_get", [options.fieldNames, options.attributes])
-                    .catch((error) => {
-                        cache.clear(resModel, options);
-                        return Promise.reject(error);
-                    });
-            },
-            (resModel, options) =>
-                JSON.stringify([resModel, options.fieldNames, options.attributes])
-        );
-
-        env.bus.addEventListener("CLEAR-CACHES", () => cache.invalidate());
-
         /**
          * @param {string} resModel
          * @param {LoadFieldsOptions} [options]
@@ -36,7 +20,10 @@ export const fieldService = {
             if (typeof resModel !== "string" || !resModel) {
                 throw new Error(`Invalid model name: ${resModel}`);
             }
-            return cache.read(resModel, options);
+            return orm.cached.call(resModel, "fields_get", [
+                options.fieldNames,
+                options.attributes,
+            ]);
         }
 
         /**
@@ -71,6 +58,7 @@ export const fieldService = {
                         // differentiate definitions with same name but on different parent
                         record_id: record.id,
                         record_name: record.display_name,
+                        ...(definition.comodel ? { relation: definition.comodel } : {}),
                         ...definition,
                     };
                 }
@@ -93,8 +81,9 @@ export const fieldService = {
          * @param {string|null} resModel valid model name or null (case virtual)
          * @param {Object|null} fieldDefs
          * @param {string[]} names
+         * @param {boolean} followRelationalProperties
          */
-        async function _loadPath(resModel, fieldDefs, names) {
+        async function _loadPath(resModel, fieldDefs, names, followRelationalProperties) {
             if (!fieldDefs) {
                 return { isInvalid: "path", names, modelsInfo: [] };
             }
@@ -115,15 +104,16 @@ export const fieldService = {
             }
 
             let subResult;
-            if (fieldDef.relation) {
+            if (fieldDef.relation || (fieldDef.comodel && followRelationalProperties)) {
+                // Properties use `comodel`
                 subResult = await _loadPath(
-                    fieldDef.relation,
-                    await loadFields(fieldDef.relation),
+                    fieldDef.relation || fieldDef.comodel,
+                    await loadFields(fieldDef.relation || fieldDef.comodel),
                     remainingNames
                 );
             } else if (fieldDef.type === "properties") {
                 subResult = await _loadPath(
-                    "*",
+                    followRelationalProperties ? resModel : "*",
                     await _loadPropertyDefinitions(fieldDefs, name),
                     remainingNames
                 );
@@ -150,12 +140,12 @@ export const fieldService = {
          * @param {string} path
          * @returns {Promise<Object>}
          */
-        async function loadPath(resModel, path = "*") {
+        async function loadPath(resModel, path = "*", followRelationalProperties = false) {
             const fieldDefs = await loadFields(resModel);
             if (typeof path !== "string" || !path) {
                 throw new Error(`Invalid path: ${path}`);
             }
-            return _loadPath(resModel, fieldDefs, path.split("."));
+            return _loadPath(resModel, fieldDefs, path.split("."), followRelationalProperties);
         }
 
         return { loadFields, loadPath, loadPropertyDefinitions };

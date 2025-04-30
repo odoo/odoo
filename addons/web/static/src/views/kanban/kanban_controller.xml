@@ -6,7 +6,7 @@
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
                 <t t-set-slot="control-panel-create-button">
                     <t t-if="canCreate and props.showButtons">
-                        <button type="button" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
+                        <button type="button" t-att-disabled="isNewButtonDisabled" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
                             New
                         </button>
                     </t>
@@ -81,7 +81,7 @@
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-if="!hasSelectedRecords" t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
-                <t t-component="props.Renderer"
+                <t t-component="props.Renderer" t-if="model.isReady"
                     list="model.root"
                     archInfo="props.archInfo"
                     Compiler="props.Compiler"

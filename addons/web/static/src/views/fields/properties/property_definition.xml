@@ -91,14 +91,13 @@
                     />
                 </div>
                 <div t-if="state.propertyDefinition.type === 'tags'" class="d-contents mb-3 mb-sm-0">
-                    <label t-att-for="getUniqueDomID('tags')" class="o_form_label text-900">Tag</label>
+                    <label t-att-for="getUniqueDomID('tags')" class="o_form_label text-900">Tags</label>
                     <PropertyTags
                         id="getUniqueDomID('tags')"
                         selectedTags="propertyTagValues"
                         tags="state.propertyDefinition.tags || []"
                         readonly="props.readonly"
                         canChangeTags="props.canChangeDefinition"
-                        checkDefinitionWriteAccess.bind="props.checkDefinitionWriteAccess ? props.checkDefinitionWriteAccess : () => {}"
                         deleteAction="'tags'"
                         onTagsChange.bind="onTagsChange"/>
                 </div>
@@ -115,7 +114,7 @@
                     />
                 </div>
                 <div t-if="(state.propertyDefinition.type === 'many2one' || state.propertyDefinition.type === 'many2many')
-                    and state.propertyDefinition.comodel and state.propertyDefinition.comodel.length" class="d-contents mb-3 mb-sm-0">
+                    and state.propertyDefinition.comodel and state.propertyDefinition.comodel.length" class="o_field_property_definition_domain d-contents mb-3 mb-sm-0">
                     <label class="o_form_label text-900">Domain</label>
                     <div>
                         <DomainSelector
@@ -167,6 +166,17 @@
                         value="props.propertyDefinition.view_in_cards"
                         disabled="props.readonly"
                         onChange.bind="onViewInKanbanChange"
+                    />
+                </div>
+                <div t-else="" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
+                    <label t-att-for="getUniqueDomID('fold')" class="o_form_label align-self-center text-900">
+                        Fold by default
+                    </label>
+                    <CheckBox
+                        id="getUniqueDomID('fold')"
+                        value="props.propertyDefinition.fold_by_default"
+                        disabled="props.readonly"
+                        onChange.bind="onFoldByDefaultChange"
                     />
                 </div>
             </div>

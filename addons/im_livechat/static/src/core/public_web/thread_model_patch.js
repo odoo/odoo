@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { _t } from "@web/core/l10n/translation";
 
@@ -7,19 +7,21 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     setup() {
         super.setup(...arguments);
-        this.appAsLivechats = Record.one("DiscussApp", {
+        this.appAsLivechats = fields.One("DiscussApp", {
             compute() {
                 return this.channel_type === "livechat" ? this.store.discuss : null;
             },
         });
-        this.livechatChannel = Record.one("im_livechat.channel", { inverse: "threads" });
-        this.anonymous_country = Record.one("res.country");
+        this.country_id = fields.One("res.country");
+        this.livechat_channel_id = fields.One("im_livechat.channel", { inverse: "threads" });
     },
     _computeDiscussAppCategory() {
         if (this.channel_type !== "livechat") {
             return super._computeDiscussAppCategory();
         }
-        return this.livechatChannel?.appCategory ?? this.appAsLivechats?.defaultLivechatCategory;
+        return (
+            this.livechat_channel_id?.appCategory ?? this.appAsLivechats?.defaultLivechatCategory
+        );
     },
     get hasMemberList() {
         return this.channel_type === "livechat" || super.hasMemberList;
@@ -49,8 +51,8 @@ patch(Thread.prototype, {
         if (!this.correspondent.persona.is_public && this.correspondent.persona.country) {
             return `${this.correspondent.name} (${this.correspondent.persona.country.name})`;
         }
-        if (this.anonymous_country) {
-            return `${this.correspondent.name} (${this.anonymous_country.name})`;
+        if (this.country_id) {
+            return `${this.correspondent.name} (${this.country_id.name})`;
         }
         return this.correspondent.name;
     },

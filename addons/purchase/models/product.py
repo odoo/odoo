@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
@@ -18,7 +17,6 @@ class ProductTemplate(models.Model):
     ], string="Control Policy", compute='_compute_purchase_method', precompute=True, store=True, readonly=False,
         help="On ordered quantities: Control bills based on ordered quantities.\n"
             "On received quantities: Control bills based on received quantities.")
-    purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line Warning', help=WARNING_HELP, required=True, default="no-message")
     purchase_line_warn_msg = fields.Text('Message for Purchase Order Line')
 
     @api.depends('type')
@@ -97,8 +95,8 @@ class ProductProduct(models.Model):
             product.is_in_purchase_order = bool(data.get(product.id, 0))
 
     def _search_is_in_purchase_order(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise UserError(_("Operation not supported"))
+        if operator != 'in':
+            return NotImplemented
         product_ids = self.env['purchase.order.line'].search([
             ('order_id', 'in', [self.env.context.get('order_id', '')]),
         ]).product_id.ids
@@ -147,7 +145,7 @@ class ProductSupplierinfo(models.Model):
     def _onchange_partner_id(self):
         self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
 
-    def _get_filtered_supplier(self, company_id, product_id, params):
+    def _get_filtered_supplier(self, company_id, product_id, params=False):
         if params and 'order_id' in params and params['order_id'].company_id:
             company_id = params['order_id'].company_id
         return super()._get_filtered_supplier(company_id, product_id, params)

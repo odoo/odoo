@@ -26,8 +26,13 @@ export class BoothRegistration extends Interaction {
                 "d-none": !this.inError,
             }),
         },
+        ".o_wbooth_registration_error_signin": {
+            "t-att-class": () => ({
+                "d-none": !this.inSigninError,
+            }),
+        },
         "button.o_wbooth_registration_submit": {
-            "t-att-disabled": () => this.isSelectionEmpty,
+            "t-att-disabled": () => !this.isSelectionEmpty,
         },
     };
 
@@ -129,6 +134,12 @@ export class BoothRegistration extends Interaction {
         if (errors.includes("boothCategoryError")) {
             errorMessages.push(_t("The booth category doesn't exist."));
         }
+        if (errors.includes('existingPartnerError')) {
+            errorMessages.push(_t("It looks like your email is linked to an existing account."));
+            this.inSigninError = true;
+        } else {
+            this.inSigninError = false;
+        }
 
         const errorMessageEl = this.el.querySelector(".o_wbooth_registration_error_message");
         errorMessageEl.textContent = errorMessages.join(" ");
@@ -154,7 +165,7 @@ export class BoothRegistration extends Interaction {
         }
         this.updateBoothsList();
         this.showBoothCategoryDescription();
-        this.isSelectionEmpty = !this.countSelectedBooths().length;
+        this.isSelectionEmpty = !!this.countSelectedBooths();
     }
 
     /**
@@ -172,7 +183,7 @@ export class BoothRegistration extends Interaction {
      */
     onBoothChange(ev, currentTargetEl) {
         currentTargetEl.closest(".form-check").classList.remove("text-danger");
-        this.isSelectionEmpty = !!this.countSelectedBooths().length;
+        this.isSelectionEmpty = !!this.countSelectedBooths();
     }
 
     async onSubmitClick() {

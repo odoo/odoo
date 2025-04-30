@@ -2,32 +2,67 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import chardet
 import codecs
 import collections
-import csv
 import contextlib
-import difflib
-import unicodedata
-
-import chardet
+import csv
 import datetime
+import difflib
 import io
 import itertools
 import logging
-import psycopg2
 import operator
 import os
 import re
-import requests
+import unicodedata
+from collections import defaultdict
 
+import psycopg2
+import requests
 from PIL import Image
 
-from collections import defaultdict
+try:
+    import xlrd
+except ImportError:
+    xlrd = xlsx = None
+else:
+    try:
+        from xlrd import xlsx
+    except ImportError:
+        xlsx = None
+    else:
+        from lxml import etree
+        # xlrd.xlsx supports defusedxml, defusedxml's etree interface is broken
+        # (missing ElementTree and thus ElementTree.iter) which causes a fallback to
+        # Element.getiterator(), triggering a warning before 3.9 and an error from 3.9.
+        #
+        # Historically we had defusedxml installed because zeep had a hard dep on
+        # it. They have dropped it as of 4.1.0 which we now require (since 18.0),
+        # but keep this patch for now as Odoo might get updated in a legacy env
+        # which still has defused.
+        #
+        # Directly instruct xlsx to use lxml as we have a hard dependency on that.
+        xlsx.ET = etree
+        xlsx.ET_has_iterparse = True
+        xlsx.Element_has_iter = True
+
+try:
+    from . import odf_ods_reader
+except ImportError:
+    odf_ods_reader = None
+
+try:
+    from openpyxl import load_workbook
+except ImportError:
+    load_workbook = None
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, parse_version
+
 
 FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
@@ -43,41 +78,6 @@ BOM_MAP = {
     'utf-32le': codecs.BOM_UTF32_LE,
     'utf-32be': codecs.BOM_UTF32_BE,
 }
-
-try:
-    import xlrd
-    try:
-        from xlrd import xlsx
-    except ImportError:
-        xlsx = None
-except ImportError:
-    xlrd = xlsx = None
-
-if xlsx:
-    from lxml import etree
-    # xlrd.xlsx supports defusedxml, defusedxml's etree interface is broken
-    # (missing ElementTree and thus ElementTree.iter) which causes a fallback to
-    # Element.getiterator(), triggering a warning before 3.9 and an error from 3.9.
-    #
-    # We have defusedxml installed because zeep has a hard dep on defused and
-    # doesn't want to drop it (mvantellingen/python-zeep#1014).
-    #
-    # Ignore the check and set the relevant flags directly using lxml as we have a
-    # hard dependency on it.
-    xlsx.ET = etree
-    xlsx.ET_has_iterparse = True
-    xlsx.Element_has_iter = True
-
-try:
-    from . import odf_ods_reader
-except ImportError:
-    odf_ods_reader = None
-
-try:
-    from openpyxl import load_workbook
-except ImportError:
-    load_workbook = None
-
 
 FILE_TYPE_DICT = {
     'text/csv': ('csv', True, None),
@@ -369,14 +369,16 @@ class Base_ImportImport(models.TransientModel):
 
             if field['type'] in ('many2many', 'many2one'):
                 field_value['fields'] = [
-                    dict(field_value, name='id', string=_("External ID"), type='id'),
-                    dict(field_value, name='.id', string=_("Database ID"), type='id'),
+                    dict(field_value, model_name=field['relation'], name='id', string=_("External ID"), type='id'),
+                    dict(field_value, model_name=field['relation'], name='.id', string=_("Database ID"), type='id'),
                 ]
                 field_value['comodel_name'] = field['relation']
             elif field['type'] == 'one2many':
                 field_value['fields'] = self.get_fields_tree(field['relation'], depth=depth-1)
                 if self.env.user.has_group('base.group_no_one'):
-                    field_value['fields'].append({'id': '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': [], 'type': 'id'})
+                    field_value['fields'].append(
+                        dict(field_value, model_name=field['relation'], fields=[], name='.id', string=_("Database ID"), type='id')
+                    )
                 field_value['comodel_name'] = field['relation']
 
             importable_fields.append(field_value)
@@ -476,9 +478,9 @@ class Base_ImportImport(models.TransientModel):
                     # emulate xldate_as_datetime for pre-0.9.3
                     dt = datetime.datetime(*xlrd.xldate.xldate_as_tuple(cell.value, book.datemode))
                     values.append(
-                        dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                        dt
                         if is_datetime
-                        else dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                        else dt.date()
                     )
                 elif cell.ctype is xlrd.XL_CELL_BOOLEAN:
                     values.append(u'True' if cell.value else u'False')
@@ -492,7 +494,7 @@ class Base_ImportImport(models.TransientModel):
                     )
                 else:
                     values.append(cell.value)
-            if any(x for x in values if x.strip()):
+            if any(x and (not isinstance(x, str) or x.strip()) for x in values):
                 rows.append(values)
 
         # return the file length as first value
@@ -528,9 +530,9 @@ class Base_ImportImport(models.TransientModel):
                 elif cell.is_date:
                     d_fmt = styles.is_datetime(cell.number_format)
                     if d_fmt == "datetime":
-                        values.append(cell.value.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+                        values.append(cell.value)
                     elif d_fmt == "date":
-                        values.append(cell.value.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                        values.append(cell.value.date())
                     else:
                         raise ValueError(
                         _("Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with format: %(cell_format)s, as (%(format_type)s) formats are not supported.", row=rowx, col=colx, cell_value=cell.value, cell_format=cell.number_format, format_type=d_fmt)
@@ -538,7 +540,7 @@ class Base_ImportImport(models.TransientModel):
                 else:
                     values.append(str(cell.value))
 
-            if any(x.strip() for x in values):
+            if any(x and (not isinstance(x, str) or x.strip()) for x in values):
                 rows.append(values)
         return sheet.max_row, rows
 
@@ -637,66 +639,68 @@ class Base_ImportImport(models.TransientModel):
                                see :meth:`parse_preview` for more details.
         :param options: parsing options
         """
-        values = set(preview_values)
-        # If all values are empty in preview than can be any field
-        if values == {''}:
-            return ['all']
+        if all(isinstance(v, str) for v in preview_values):
+            preview_values = [v.strip() for v in preview_values]
+            values = set(preview_values)
+            # If all values are empty in preview than can be any field
+            if values == {''}:
+                return ['all']
 
-        # If all values starts with __export__ this is probably an id
-        if all(v.startswith('__export__') for v in values):
-            return ['id', 'many2many', 'many2one', 'one2many']
+            # If all values starts with __export__ this is probably an id
+            if all(v.startswith('__export__') for v in values):
+                return ['id', 'many2many', 'many2one', 'one2many']
 
-        # If all values can be cast to int type is either id, float or monetary
-        # Exception: if we only have 1 and 0, it can also be a boolean
-        if all(v.isdigit() for v in values if v):
-            field_type = ['integer', 'float', 'monetary']
-            if {'0', '1', ''}.issuperset(values):
-                field_type.append('boolean')
-            return field_type
+            # If all values can be cast to int type is either id, float or monetary
+            # Exception: if we only have 1 and 0, it can also be a boolean
+            if all(v.isdigit() for v in values if v):
+                field_type = ['integer', 'float', 'monetary']
+                if {'0', '1', ''}.issuperset(values):
+                    field_type.append('boolean')
+                return field_type
 
-        # If all values are either True or False, type is boolean
-        if all(val.lower() in ('true', 'false', 't', 'f', '') for val in preview_values):
-            return ['boolean']
+            # If all values are either True or False, type is boolean
+            if all(val.lower() in ('true', 'false', 't', 'f', '') for val in preview_values):
+                return ['boolean']
 
-        # If all values can be cast to float, type is either float or monetary
-        try:
-            thousand_separator = decimal_separator = False
-            for val in preview_values:
-                val = val.strip()
-                if not val:
-                    continue
-                # value might have the currency symbol left or right from the value
-                val = self._remove_currency_symbol(val)
-                if val:
-                    if options.get('float_thousand_separator') and options.get('float_decimal_separator'):
-                        if options['float_decimal_separator'] == '.' and val.count('.') > 1:
-                            # This is not a float so exit this try
-                            float('a')
-                        val = val.replace(options['float_thousand_separator'], '').replace(options['float_decimal_separator'], '.')
-                    # We are now sure that this is a float, but we still need to find the
-                    # thousand and decimal separator
+            # If all values can be cast to float, type is either float or monetary
+            try:
+                thousand_separator = decimal_separator = False
+                for val in preview_values:
+                    val = val.strip()
+                    if not val:
+                        continue
+                    # value might have the currency symbol left or right from the value
+                    val = self._remove_currency_symbol(val)
+                    if val:
+                        if options.get('float_thousand_separator') and options.get('float_decimal_separator'):
+                            if options['float_decimal_separator'] == '.' and val.count('.') > 1:
+                                # This is not a float so exit this try
+                                float('a')
+                            val = val.replace(options['float_thousand_separator'], '').replace(options['float_decimal_separator'], '.')
+                        # We are now sure that this is a float, but we still need to find the
+                        # thousand and decimal separator
+                        else:
+                            if val.count('.') > 1:
+                                options['float_thousand_separator'] = '.'
+                                options['float_decimal_separator'] = ','
+                            elif val.count(',') > 1:
+                                options['float_thousand_separator'] = ','
+                                options['float_decimal_separator'] = '.'
+                            elif val.find('.') > val.find(','):
+                                thousand_separator = ','
+                                decimal_separator = '.'
+                            elif val.find(',') > val.find('.'):
+                                thousand_separator = '.'
+                                decimal_separator = ','
                     else:
-                        if val.count('.') > 1:
-                            options['float_thousand_separator'] = '.'
-                            options['float_decimal_separator'] = ','
-                        elif val.count(',') > 1:
-                            options['float_thousand_separator'] = ','
-                            options['float_decimal_separator'] = '.'
-                        elif val.find('.') > val.find(','):
-                            thousand_separator = ','
-                            decimal_separator = '.'
-                        elif val.find(',') > val.find('.'):
-                            thousand_separator = '.'
-                            decimal_separator = ','
-                else:
-                    # This is not a float so exit this try
-                    float('a')
-            if thousand_separator and not options.get('float_decimal_separator'):
-                options['float_thousand_separator'] = thousand_separator
-                options['float_decimal_separator'] = decimal_separator
-            return ['float', 'monetary']  # Allow float to be mapped on a text field.
-        except ValueError:
-            pass
+                        # This is not a float so exit this try
+                        float('a')
+                if thousand_separator and not options.get('float_decimal_separator'):
+                    options['float_thousand_separator'] = thousand_separator
+                    options['float_decimal_separator'] = decimal_separator
+                return ['float', 'monetary']  # Allow float to be mapped on a text field.
+            except ValueError:
+                pass
 
         results = self._try_match_date_time(preview_values, options)
         if results:
@@ -759,7 +763,7 @@ class Base_ImportImport(models.TransientModel):
         """
         headers_types = {}
         for column_index, header_name in enumerate(headers):
-            preview_values = [record[column_index].strip() for record in preview]
+            preview_values = [record[column_index] for record in preview]
             type_field = self._extract_header_types(preview_values, options)
             headers_types[(column_index, header_name)] = type_field
         return headers_types
@@ -1081,8 +1085,13 @@ class Base_ImportImport(models.TransientModel):
             for column_index, _unused in enumerate(preview[0]):
                 vals = []
                 for record in preview:
-                    if record[column_index]:
+                    val = record[column_index]
+                    if val and isinstance(val, str):
                         vals.append("%s%s" % (record[column_index][:50], "..." if len(record[column_index]) > 50 else ""))
+                    elif isinstance(val, datetime.datetime):
+                        vals.append(val.strftime(options.get('datetime_format') or DEFAULT_SERVER_DATETIME_FORMAT))
+                    elif isinstance(val, datetime.date):
+                        vals.append(val.strftime(options.get('date_format') or DEFAULT_SERVER_DATE_FORMAT))
                     if len(vals) == 5:
                         break
                 column_example.append(
@@ -1320,7 +1329,7 @@ class Base_ImportImport(models.TransientModel):
         d_fmt = options.get('date_format') or DEFAULT_SERVER_DATE_FORMAT
         dt_fmt = options.get('datetime_format') or DEFAULT_SERVER_DATETIME_FORMAT
         for num, line in enumerate(data):
-            if not line[index]:
+            if not line[index] or isinstance(line[index], datetime.date):
                 continue
 
             v = line[index].strip()
@@ -1702,6 +1711,8 @@ def check_patterns(patterns, values):
     for pattern in patterns:
         p = to_re(pattern)
         for val in values:
+            if isinstance(val, datetime.date):
+                continue
             if val and not p.match(val):
                 break
 

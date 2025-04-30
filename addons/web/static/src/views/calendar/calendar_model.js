@@ -5,6 +5,7 @@ import {
     deserializeDateTime,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
+import { Time } from "@web/core/l10n/time";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -13,15 +14,20 @@ import { Model } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
+import { groupBy } from "@web/core/utils/arrays";
 import { Cache } from "@web/core/utils/cache";
+import { formatFloat } from "@web/core/utils/numbers";
 import { useDebounced } from "@web/core/utils/timing";
+import { computeAggregatedValue } from "@web/views/utils";
 
 export class CalendarModel extends Model {
     static DEBOUNCED_LOAD_DELAY = 600;
+    static services = ["notification"];
 
-    setup(params, services) {
+    setup(params, { notification }) {
         /** @protected */
         this.keepLast = new KeepLast();
+        this.notification = notification;
 
         const formViewFromConfig = (this.env.config.views || []).find((view) => view[1] === "form");
         const formViewIdFromConfig = formViewFromConfig ? formViewFromConfig[0] : false;
@@ -34,12 +40,25 @@ export class CalendarModel extends Model {
             firstDayOfWeek: (localization.weekStart || 0) % 7,
             formViewId: params.formViewId || formViewIdFromConfig,
         };
+        if (this.meta.aggregate?.split(":").length === 1) {
+            const aggregator = this.fields[this.meta.aggregate].aggregator || "sum";
+            this.meta.aggregate = `${this.meta.aggregate}:${aggregator}`;
+        }
         this.meta.scale = this.getLocalStorageScale();
         this.data = {
             filterSections: {},
             range: null,
             records: {},
             unusualDays: [],
+            multiCreateRecord: null,
+            multiCreateTimeRange: {
+                start: new Time(
+                    this.getItemFromStorage("multiCreateTimeStart", { hour: 12, minute: 0 })
+                ),
+                end: new Time(
+                    this.getItemFromStorage("multiCreateTimeEnd", { hour: 13, minute: 0 })
+                ),
+            },
         };
 
         const debouncedLoadDelay = this.constructor.DEBOUNCED_LOAD_DELAY;
@@ -73,6 +92,9 @@ export class CalendarModel extends Model {
     // Public
     //--------------------------------------------------------------------------
 
+    get aggregate() {
+        return this.meta.aggregate;
+    }
     get date() {
         return this.meta.date;
     }
@@ -87,6 +109,12 @@ export class CalendarModel extends Model {
     }
     get dateStartType() {
         return this.fields[this.fieldMapping.date_start].type;
+    }
+    get dateStopType() {
+        if (this.fieldMapping.date_stop) {
+            return this.fields[this.fieldMapping.date_stop].type;
+        }
+        return null;
     }
     get eventLimit() {
         return this.meta.eventLimit;
@@ -117,6 +145,9 @@ export class CalendarModel extends Model {
     }
     get hasEditDialog() {
         return this.meta.hasEditDialog;
+    }
+    get hasMultiCreate() {
+        return !!this.meta.multiCreateView && !this.env.isSmall;
     }
     get hasQuickCreate() {
         return this.meta.quickCreate;
@@ -156,6 +187,9 @@ export class CalendarModel extends Model {
     }
     get showDatePicker() {
         return this.meta.showDatePicker;
+    }
+    get showMultiCreateTimeRange() {
+        return this.dateStartType === "datetime" && this.dateStopType === "datetime";
     }
     get storageKey() {
         return `scaleOf-viewId-${this.env.config.viewId}`;
@@ -199,6 +233,74 @@ export class CalendarModel extends Model {
         await this.orm.create(this.meta.resModel, [rawRecord], { context });
         await this.load();
     }
+
+    /**
+     * Create multi records of the specify dates and values.
+     * Optionally time range can be specified to set the start and end time.
+     * Also, if there is a filter section, the first filter section will be chosen as additional value for the record.
+     *
+     * @param {DateTime[]} dates array of Date
+     * @returns {Promise<*>}
+     */
+    async multiCreateRecords(dates) {
+        const records = [];
+        const values = await this.data.multiCreateRecord.getChanges();
+        const timeRange = this.data.multiCreateTimeRange;
+
+        if (this.showMultiCreateTimeRange) {
+            if (!timeRange.start || !timeRange.end) {
+                this.notification.add(_t("Invalid time range"), {
+                    title: "User Error",
+                    type: "warning",
+                });
+                return;
+            }
+            if (
+                luxon.DateTime.fromObject(timeRange.start.toObject()) >
+                luxon.DateTime.fromObject(timeRange.end.toObject())
+            ) {
+                this.notification.add(_t("Start time should be before end time"), {
+                    title: "User Error",
+                    type: "warning",
+                });
+                return;
+            }
+        }
+
+        // we deliberately only use the values of the first filter section, to avoid combinatorial explosion
+        const [section] = this.filterSections;
+        for (const date of dates) {
+            const initialRecordValue = {};
+            if (this.showMultiCreateTimeRange) {
+                initialRecordValue.start = date.plus(timeRange.start.toObject());
+                initialRecordValue.end = date.plus(timeRange.end.toObject());
+            } else {
+                initialRecordValue.start = date;
+            }
+            const rawRecord = this.buildRawRecord(initialRecordValue);
+            if (!section) {
+                records.push({
+                    ...rawRecord,
+                    ...values,
+                });
+                continue;
+            }
+            for (const filter of section.filters) {
+                if (filter.active && filter.type === "record") {
+                    records.push({
+                        ...rawRecord,
+                        ...values,
+                        [section.fieldName]: filter.value,
+                    });
+                }
+            }
+        }
+        if (records.length) {
+            await this.orm.create(this.meta.resModel, records, { context: this.meta.context });
+            return this.load();
+        }
+    }
+
     async unlinkFilter(fieldName, recordId) {
         const info = this.meta.filtersInfo[fieldName];
         const section = this.data.filterSections[fieldName];
@@ -216,6 +318,14 @@ export class CalendarModel extends Model {
         await this.orm.unlink(this.meta.resModel, [recordId]);
         await this.load();
     }
+
+    async unlinkRecords(recordsId) {
+        if (recordsId.length) {
+            await this.orm.unlink(this.meta.resModel, recordsId);
+            await this.load();
+        }
+    }
+
     async updateFilters(fieldName, filters, active) {
         // update filters directly, to provide a direct feedback to the user
         this.keepLast.add(Promise.resolve());
@@ -249,6 +359,9 @@ export class CalendarModel extends Model {
     }
 
     //--------------------------------------------------------------------------
+    getAllDayDates(start, end) {
+        return [start.set({ hours: 7 }), end.set({ hours: 19 })];
+    }
 
     buildRawRecord(partialRecord, options = {}) {
         const data = {};
@@ -273,8 +386,7 @@ export class CalendarModel extends Model {
         if (partialRecord.isAllDay) {
             if (!this.hasAllDaySlot && !isDateEvent && !partialRecord.id) {
                 // default hours in the user's timezone
-                start = start.set({ hours: 7 });
-                end = end.set({ hours: 19 });
+                [start, end] = this.getAllDayDates(start, end);
             }
         }
 
@@ -366,6 +478,16 @@ export class CalendarModel extends Model {
         }
 
         await unusualDaysProm;
+
+        // Compute aggregate values
+        if (this.aggregate) {
+            for (const [fieldName, { filters }] of Object.entries(data.filterSections)) {
+                const aggregates = this.computeAggregatedValues(fieldName, data);
+                for (const filter of filters) {
+                    filter.aggregatedValue = aggregates[filter.value] || 0;
+                }
+            }
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -400,6 +522,29 @@ export class CalendarModel extends Model {
     //--------------------------------------------------------------------------
 
     /**
+     * @param {string} fieldName
+     * @param {Object} [data=this.data]
+     * @returns Object
+     */
+    computeAggregatedValues(fieldName, data = this.data) {
+        const records = Object.values(data.records);
+        const fieldType = this.meta.fields[fieldName].type;
+        const groups = groupBy(records, ({ rawRecord }) => {
+            const rawValue = rawRecord[fieldName];
+            // FIXME: many2many not supported, but not supported for filters either
+            return fieldType === "many2one" ? rawValue?.[0] || false : rawValue;
+        });
+        const aggregates = {};
+        const [aggregateField, aggregator] = this.aggregate.split(":");
+        for (const group in groups) {
+            const values = groups[group].map(({ rawRecord }) => rawRecord[aggregateField]);
+            aggregates[group] = formatFloat(computeAggregatedValue(values, aggregator), {
+                trailingZeros: false,
+            });
+        }
+        return aggregates;
+    }
+    /**
      * @protected
      */
     computeDomain(data) {
@@ -419,27 +564,22 @@ export class CalendarModel extends Model {
         const avoidValues = {};
 
         for (const [fieldName, filterSection] of Object.entries(data.filterSections)) {
-            // Skip "all" filters because they do not affect the domain
-            const filterAll = filterSection.filters.find((f) => f.type === "all");
-            if (!(filterAll && filterAll.active)) {
-                const filterSectionInfo = this.meta.filtersInfo[fieldName];
-
-                // Loop over subfilters to complete authorizedValues
-                for (const filter of filterSection.filters) {
-                    if (filterSectionInfo.writeResModel) {
-                        if (!authorizedValues[fieldName]) {
-                            authorizedValues[fieldName] = [];
+            const filterSectionInfo = this.meta.filtersInfo[fieldName];
+            // Loop over subfilters to complete authorizedValues
+            for (const filter of filterSection.filters) {
+                if (filterSectionInfo.writeResModel) {
+                    if (!authorizedValues[fieldName]) {
+                        authorizedValues[fieldName] = [];
+                    }
+                    if (filter.active) {
+                        authorizedValues[fieldName].push(filter.value);
+                    }
+                } else {
+                    if (!filter.active) {
+                        if (!avoidValues[fieldName]) {
+                            avoidValues[fieldName] = [];
                         }
-                        if (filter.active) {
-                            authorizedValues[fieldName].push(filter.value);
-                        }
-                    } else {
-                        if (!filter.active) {
-                            if (!avoidValues[fieldName]) {
-                                avoidValues[fieldName] = [];
-                            }
-                            avoidValues[fieldName].push(filter.value);
-                        }
+                        avoidValues[fieldName].push(filter.value);
                     }
                 }
             }
@@ -702,6 +842,7 @@ export class CalendarModel extends Model {
         const previousFilters = previousSection ? previousSection.filters : [];
 
         const rawFilters = Object.values(data.records).reduce((filters, record) => {
+            // FIXME: doesn't work for many2many/one2Many
             const rawValues = ["many2many", "one2many"].includes(field.type)
                 ? record.rawRecord[fieldName]
                 : [record.rawRecord[fieldName]];
@@ -869,5 +1010,32 @@ export class CalendarModel extends Model {
             colorIndex,
             hasAvatar: !!value,
         };
+    }
+
+    setMultiCreateTimeRange(timeRange) {
+        if (timeRange.start) {
+            this.setItemInStorage("multiCreateTimeStart", timeRange.start);
+        }
+        if (timeRange.end) {
+            this.setItemInStorage("multiCreateTimeEnd", timeRange.end);
+        }
+        Object.assign(this.data.multiCreateTimeRange, timeRange);
+    }
+
+    generateLocalStorageKey(key) {
+        return `calendar_${this.resModel}_${key}`;
+    }
+
+    getItemFromStorage(key, defaultValue) {
+        const item = browser.localStorage.getItem(this.generateLocalStorageKey(key));
+        try {
+            return item ? JSON.parse(item) : defaultValue;
+        } catch {
+            return defaultValue;
+        }
+    }
+
+    setItemInStorage(key, value) {
+        browser.localStorage.setItem(this.generateLocalStorageKey(key), JSON.stringify(value));
     }
 }

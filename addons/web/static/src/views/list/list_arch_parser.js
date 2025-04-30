@@ -138,6 +138,7 @@ export class ListArchParser {
                     // can decode it later...
                     node: encodeObjectForTemplate({ attrs: widgetInfo.attrs }).slice(1, -1),
                     className: node.getAttribute("class") || "",
+                    widgetInfo,
                 };
                 columns.push({
                     ...widgetInfo,
@@ -156,9 +157,6 @@ export class ListArchParser {
                 };
                 return false;
             } else if (node.tagName === "header") {
-                // AAB: not sure we need to handle invisible="True" button as the usecase seems way
-                // less relevant than for fields (so for buttons, relying on the modifiers logic
-                // that applies later on could be enough, even if the value is always true)
                 headerButtons = [...node.children].map((node) => ({
                     ...this.processButton(node),
                     type: "button",

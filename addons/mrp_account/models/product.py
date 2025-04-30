@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.osv import expression
 from odoo.tools import float_round, groupby
 
 
@@ -96,10 +97,7 @@ class ProductProduct(models.Model):
             if opt._skip_operation_line(self):
                 continue
 
-            duration_expected = (
-                opt.workcenter_id._get_expected_duration(self) +
-                opt.time_cycle * 100 / opt.workcenter_id.time_efficiency)
-            total += (duration_expected / 60) * opt._total_cost_per_hour()
+            total += opt.cost
 
         for line in bom.bom_line_ids:
             if line._skip_bom_line(self):
@@ -131,7 +129,7 @@ class ProductCategory(models.Model):
 
     property_stock_account_production_cost_id = fields.Many2one(
         'account.account', 'Production Account', company_dependent=True, ondelete='restrict',
-        domain="[('deprecated', '=', False)]", check_company=True,
+        check_company=True,
         help="""This account will be used as a valuation counterpart for both components and final products for manufacturing orders.
                 If there are any workcenter/employee costs, this value will remain on the account once the production is completed.""")
 

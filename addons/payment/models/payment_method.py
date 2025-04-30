@@ -24,6 +24,7 @@ class PaymentMethod(models.Model):
         help="The primary payment method of the current payment method, if the latter is a brand."
              "\nFor example, \"Card\" is the primary payment method of the card brand \"VISA\".",
         comodel_name='payment.method',
+        index='btree_not_null',
     )
     brand_ids = fields.One2many(
         string="Brands",
@@ -113,12 +114,9 @@ class PaymentMethod(models.Model):
             payment_method.is_primary = not payment_method.primary_payment_method_id
 
     def _search_is_primary(self, operator, value):
-        if operator == '=' and value is True:
-            return [('primary_payment_method_id', '=', False)]
-        elif operator == '=' and value is False:
-            return [('primary_payment_method_id', '!=', False)]
-        else:
-            raise NotImplementedError(_("Operation not supported."))
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+        return [('primary_payment_method_id', operator, [False])]
 
     #=== ONCHANGE METHODS ===#
 
@@ -224,6 +222,12 @@ class PaymentMethod(models.Model):
                     ))
 
         return super().write(values)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_not_default_payment_method(self):
+        payment_method_unknown = self.env.ref('payment.payment_method_unknown')
+        if payment_method_unknown in self:
+            raise UserError(_("You cannot delete the default payment method."))
 
     # === BUSINESS METHODS === #
 

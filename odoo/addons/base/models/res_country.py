@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
 import logging
 from odoo import api, fields, models, tools
-from odoo.osv import expression
 from odoo.exceptions import UserError
-from psycopg2 import IntegrityError
+from odoo.fields import Domain
 from odoo.tools.translate import _
+
 _logger = logging.getLogger(__name__)
 
 
@@ -32,7 +31,7 @@ NO_FLAG_COUNTRIES = [
 class ResCountry(models.Model):
     _name = 'res.country'
     _description = 'Country'
-    _order = 'name'
+    _order = 'name, id'
     _rec_names_search = ['name', 'code']
 
     name = fields.Char(
@@ -65,6 +64,7 @@ class ResCountry(models.Model):
     phone_code = fields.Integer(string='Country Calling Code')
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
+    country_group_codes = fields.Json(compute="_compute_country_group_codes")
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
     name_position = fields.Selection([
             ('before', 'Before Address'),
@@ -88,12 +88,12 @@ class ResCountry(models.Model):
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         result = []
-        domain = domain or []
+        domain = Domain(domain or Domain.TRUE)
         # first search by code
-        if operator not in expression.NEGATIVE_TERM_OPERATORS and name and len(name) == 2:
-            countries = self.search_fetch(expression.AND([domain, [('code', operator, name)]]), ['display_name'], limit=limit)
+        if not Domain.is_negative_operator(operator) and name and len(name) == 2:
+            countries = self.search_fetch(domain & Domain('code', operator, name), ['display_name'], limit=limit)
             result.extend((country.id, country.display_name) for country in countries.sudo())
-            domain = expression.AND([domain, [('id', 'not in', countries.ids)]])
+            domain &= Domain('id', 'not in', countries.ids)
             if limit is not None:
                 limit -= len(countries)
                 if limit <= 0:
@@ -150,23 +150,50 @@ class ResCountry(models.Model):
                 except (ValueError, KeyError):
                     raise UserError(_('The layout contains an invalid format key'))
 
+    @api.depends('country_group_ids')
+    def _compute_country_group_codes(self):
+        '''If a country has no associated country groups, assign [''] to country_group_codes.
+        This prevents storing [] as False, which helps avoid iteration over a False value and
+        maintains a valid structure.
+        '''
+        for country in self:
+            country.country_group_codes = [g.code for g in country.country_group_ids if g.code] or ['']
+
 
 class ResCountryGroup(models.Model):
     _name = 'res.country.group'
     _description = "Country Group"
 
     name = fields.Char(required=True, translate=True)
+    code = fields.Char(string="Code")
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
+
+    _check_code_uniq = models.Constraint(
+        'unique(code)',
+        'The country group code must be unique!',
+    )
+
+    def _sanitize_vals(self, vals):
+        if code := vals.get('code'):
+            vals['code'] = code.upper()
+        return vals
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        return super().create([self._sanitize_vals(vals) for vals in vals_list])
+
+    def write(self, vals):
+        return super().write(self._sanitize_vals(vals))
 
 
 class ResCountryState(models.Model):
     _name = 'res.country.state'
     _description = "Country state"
-    _order = 'code'
+    _order = 'code, id'
     _rec_names_search = ['name', 'code']
 
-    country_id = fields.Many2one('res.country', string='Country', required=True)
+    country_id = fields.Many2one('res.country', string='Country', required=True, index=True)
     name = fields.Char(string='State Name', required=True,
                help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton')
     code = fields.Char(string='State Code', help='The state code.', required=True)
@@ -179,7 +206,7 @@ class ResCountryState(models.Model):
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         result = []
-        domain = domain or []
+        domain = Domain(domain or Domain.TRUE)
         # accepting 'in' as operator (see odoo/addons/base/tests/test_res_country.py)
         if operator == 'in':
             if limit is None:
@@ -190,10 +217,10 @@ class ResCountryState(models.Model):
                     break
             return result
         # first search by code (with =ilike)
-        if operator not in expression.NEGATIVE_TERM_OPERATORS and name:
-            states = self.search_fetch(expression.AND([domain, [('code', '=like', name)]]), ['display_name'], limit=limit)
+        if not Domain.is_negative_operator(operator) and name:
+            states = self.search_fetch(domain & Domain('code', '=like', name), ['display_name'], limit=limit)
             result.extend((state.id, state.display_name) for state in states.sudo())
-            domain = expression.AND([domain, [('id', 'not in', states.ids)]])
+            domain &= Domain('id', 'not in', states.ids)
             if limit is not None:
                 limit -= len(states)
                 if limit <= 0:
@@ -205,34 +232,32 @@ class ResCountryState(models.Model):
     @api.model
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
-        if value and operator not in expression.NEGATIVE_TERM_OPERATORS:
+        if value and not Domain.is_negative_operator(operator):
             if operator in ('ilike', '='):
-                domain = expression.OR([
-                    domain, self._get_name_search_domain(value, operator),
-                ])
+                domain |= self._get_name_search_domain(value, operator)
             elif operator == 'in':
-                domain = expression.OR([
-                    domain,
-                    *(self._get_name_search_domain(name, '=') for name in value),
-                ])
+                domain |= Domain.OR(
+                    self._get_name_search_domain(name, '=') for name in value
+                )
         if country_id := self.env.context.get('country_id'):
-            domain = expression.AND([domain, [('country_id', '=', country_id)]])
+            domain &= Domain('country_id', '=', country_id)
         return domain
 
     def _get_name_search_domain(self, name, operator):
         m = re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", name)
         if m:
-            return [
+            return Domain([
                 ('name', operator, m['name'].strip()),
                 '|', ('country_id.name', 'ilike', m['country'].strip()),
                 ('country_id.code', '=', m['country'].strip()),
-            ]
-        return [expression.FALSE_LEAF]
+            ])
+        return Domain.FALSE
 
     @api.depends('country_id')
+    @api.depends_context('formatted_display_name')
     def _compute_display_name(self):
-        if self.env.context.get('hide_country_from_state'):
-            return super()._compute_display_name()
-
         for record in self:
-            record.display_name = f"{record.name} ({record.country_id.code})"
+            if self.env.context.get('formatted_display_name'):
+                record.display_name = f"{record.name} <tab> --{record.country_id.code}--"
+            else:
+                record.display_name = f"{record.name} ({record.country_id.code})"

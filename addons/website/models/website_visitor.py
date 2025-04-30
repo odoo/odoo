@@ -133,13 +133,12 @@ class WebsiteVisitor(models.Model):
 
         for visitor in self:
             visitor_info = mapped_data.get(visitor.id, {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
-            visitor.page_ids = [(6, 0, visitor_info['page_ids'])]
+            # sudo - website.visitor: access to page_ids is restricted to group_website_designer
+            visitor.sudo().page_ids = [(6, 0, visitor_info['page_ids'])]
             visitor.visitor_page_count = visitor_info['visitor_page_count']
             visitor.page_count = visitor_info['page_count']
 
     def _search_page_ids(self, operator, value):
-        if operator not in ('like', 'ilike', 'not like', 'not ilike', '=like', '=ilike', '=', '!='):
-            raise ValueError(_('This operator is not supported'))
         return [('website_track_ids.page_id.name', operator, value)]
 
     @api.depends('website_track_ids.page_id')

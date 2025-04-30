@@ -144,6 +144,9 @@
         <field name="arch" type="xml">
             <!-- <xpath expr="//div[@name='crm_team_id']" position="replace"/> -->
             <xpath expr="//group[@name='crm_team_id']" position="replace"/>
+            <xpath expr="//group[@name='member_partner_info']/group" position="attributes">
+                <attribute name="class">px-0</attribute>
+            </xpath>
         </field>
     </record>
 

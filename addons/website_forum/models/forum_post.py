@@ -26,7 +26,7 @@ class ForumPost(models.Model):
     _order = "is_correct DESC, vote_count DESC, last_activity_date DESC"
 
     name = fields.Char('Title')
-    forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
+    forum_id = fields.Many2one('forum.forum', string='Forum', required=True, index=True)
     content = fields.Html('Content', strip_style=True)
     plain_content = fields.Text(
         'Plain Content',
@@ -268,11 +268,8 @@ class ForumPost(models.Model):
             post.can_use_full_editor = is_admin or user.karma >= post.forum_id.karma_editor
 
     def _search_can_view(self, operator, value):
-        if operator not in ('=', '!=', '<>'):
-            raise ValueError('Invalid operator: %s' % (operator,))
-
-        if not value:
-            operator = '!=' if operator == '=' else '='
+        if operator != 'in':
+            return NotImplemented
 
         user = self.env.user
         # Won't impact sitemap, search() in converter is forced as public user
@@ -292,8 +289,7 @@ class ForumPost(models.Model):
                     and (p.active or p.create_uid = %(user_id)s)
                 )
         )""", user_id=user.id, karma=user.karma)
-        op = 'in' if operator == '=' else "not in"
-        return [('id', op, sql)]
+        return [('id', 'in', sql)]
 
     # EXTENDS WEBSITE.SEO.METADATA
 
@@ -828,7 +824,7 @@ class ForumPost(models.Model):
         res = {
             "upvoteCount": self.vote_count,
             "datePublished": self.create_date.isoformat() + 'Z',
-            "url": self.website_url,
+            "url": self.env['ir.http']._url_for(self.website_url),
             "author": {
                 "@type": "Person",
                 "name": self.create_uid.sudo().name,
@@ -843,7 +839,7 @@ class ForumPost(models.Model):
             res["text"] = self.plain_content or self.name
             res["answerCount"] = self.child_count
         if self.create_uid.sudo().website_published:
-            res["author"]["url"] = f"/forum/user/{ self.create_uid.sudo().id }"
+            res["author"]["url"] = self.env['ir.http']._url_for(f"/forum/user/{ self.create_uid.sudo().id }")
         return res
 
     def go_to_website(self):

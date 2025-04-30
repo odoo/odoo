@@ -36,6 +36,20 @@ export const m2oSupportedOptions = [
             "If checked, users will not be able to create records based through a popup form; they will still be able to create records based on the text input."
         ),
     },
+    {
+        label: _t("Typeahead search"),
+        name: "search_threshold",
+        type: "number",
+        help: _t(
+            "Defines the minimum number of characters to perform the search. If not set, the search is performed on focus."
+        ),
+    },
+    {
+        label: _t("Dynamic placeholder"),
+        name: "placeholder_field",
+        type: "field",
+        availableTypes: ["char"],
+    },
 ];
 /** @type {import("registries").FieldsRegistryItemShape["supportedTypes"]} */
 export const m2oSupportedTypes = ["many2one"];
@@ -55,7 +69,7 @@ export function buildM2OFieldDescription(component) {
 }
 
 export function extractM2OFieldProps(staticInfo, dynamicInfo) {
-    const { attrs, context, decorations, options, string } = staticInfo;
+    const { attrs, context, decorations, options, string, placeholder } = staticInfo;
 
     const hasCreatePermission = attrs.can_create ? evaluateBooleanExpr(attrs.can_create) : true;
     const hasWritePermission = attrs.can_write ? evaluateBooleanExpr(attrs.can_write) : true;
@@ -72,7 +86,8 @@ export function extractM2OFieldProps(staticInfo, dynamicInfo) {
         domain: dynamicInfo.domain,
         nameCreateField: options.create_name_field,
         openActionContext: context || "{}",
-        placeholder: attrs.placeholder,
+        placeholder,
+        searchThreshold: options.search_threshold,
         string,
     };
 }
@@ -95,6 +110,7 @@ export class Many2OneField extends Component {
         openActionContext: { type: String, optional: true },
         placeholder: { type: String, optional: true },
         searchLimit: { type: Number, optional: true },
+        searchThreshold: { type: Number, optional: true },
         string: { type: String, optional: true },
     };
 

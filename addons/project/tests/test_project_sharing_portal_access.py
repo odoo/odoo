@@ -29,25 +29,26 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         })
 
         Task = cls.env['project.task']
+        readable_fields, writeable_fields = Task._portal_accessible_fields()
         cls.read_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in Task.SELF_READABLE_FIELDS
+            if k in readable_fields
         ])
         cls.write_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in Task.SELF_WRITABLE_FIELDS
+            if k in writeable_fields
         ])
         cls.readonly_protected_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k in Task.SELF_READABLE_FIELDS and k not in Task.SELF_WRITABLE_FIELDS
+            if k in readable_fields and k not in writeable_fields
         ])
         cls.other_fields_task = OrderedDict([
             (k, v)
             for k, v in Task._fields.items()
-            if k not in Task.SELF_READABLE_FIELDS
+            if k not in readable_fields
         ])
 
     def test_mention_suggestions(self):
@@ -87,19 +88,36 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
                     form.__setattr__(field, 'coucou')
 
     def test_read_task_with_portal_user(self):
-        self.task_portal.with_user(self.user_portal).read(self.read_protected_fields_task)
-
-        with self.assertRaises(AccessError):
-            self.task_portal.with_user(self.user_portal).read(self.other_fields_task)
-
-    def test_write_with_portal_user(self):
-        for field in self.readonly_protected_fields_task:
-            with self.assertRaises(AccessError):
-                self.task_portal.with_user(self.user_portal).write({field: 'dummy'})
+        task = self.task_portal.with_user(self.user_portal)
+        task.check_access('read')
+        task.read(self.read_protected_fields_task)
 
         for field in self.other_fields_task:
-            with self.assertRaises(AccessError):
-                self.task_portal.with_user(self.user_portal).write({field: 'dummy'})
+            task.invalidate_recordset()
+            with self.assertRaises(AccessError, msg=f"Field {field} should be inaccessible"):
+                task.read([field])
+
+    def test_write_task_with_portal_user(self):
+        task = self.task_portal.with_user(self.user_portal)
+        task.check_access('write')
+
+        def dummy_value(field_name):
+            field = task._fields[field_name]
+            if field.is_text:
+                return 'dummy'
+            if field.relational:
+                return task.env[field.comodel_name].search([], limit=1).id
+            if field.name == 'id':
+                return 42
+            return task.default_get([field_name]).get(field_name, False)
+
+        for field in self.readonly_protected_fields_task:
+            with self.assertRaises(AccessError, msg=f"Field {field} should be readonly"):
+                task.write({field: dummy_value(field)})
+
+        for field in self.other_fields_task:
+            with self.assertRaises(AccessError, msg=f"Field {field} should be inaccessible"):
+                task.write({field: dummy_value(field)})
 
     def test_wizard_confirm(self):
         partner_portal_no_user = self.env['res.partner'].create({

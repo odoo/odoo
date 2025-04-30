@@ -1,7 +1,8 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import {
     EMOJI_REGEX,
     convertBrToLineBreak,
+    decorateEmojis,
     htmlToTextContentInline,
     prettifyMessageContent,
 } from "@mail/utils/common/format";
@@ -9,6 +10,7 @@ import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
 import { browser } from "@web/core/browser/browser";
 import { stateToUrl } from "@web/core/browser/router";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
@@ -29,16 +31,32 @@ export class Message extends Record {
         }
     }
 
-    attachment_ids = Record.many("ir.attachment", { inverse: "message" });
-    author = Record.one("Persona");
-    body = Record.attr("", { html: true });
-    composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
-    /** @type {DateTime} */
-    date = Record.attr(undefined, { type: "datetime" });
+    attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
+    author = fields.One("Persona");
+    body = fields.Html("");
+    call_history_ids = fields.Many("discuss.call.history");
+    richBody = fields.Html("", {
+        compute() {
+            if (!this.store.emojiLoader.loaded) {
+                loadEmoji();
+            }
+            return decorateEmojis(this.body) ?? "";
+        },
+    });
+    richTranslationValue = fields.Html("", {
+        compute() {
+            if (!this.store.emojiLoader.loaded) {
+                loadEmoji();
+            }
+            return decorateEmojis(this.translationValue) ?? "";
+        },
+    });
+    composer = fields.One("Composer", { inverse: "message", onDelete: (r) => r.delete() });
+    date = fields.Datetime();
     /** @type {string} */
     default_subject;
     /** @type {boolean} */
-    edited = Record.attr(false, {
+    edited = fields.Attr(false, {
         compute() {
             return Boolean(
                 // ".o-mail-Message-edited" is the class added by the mail.thread in _message_update_content
@@ -47,7 +65,7 @@ export class Message extends Record {
             );
         },
     });
-    hasLink = Record.attr(false, {
+    hasLink = fields.Attr(false, {
         compute() {
             if (this.isBodyEmpty) {
                 return false;
@@ -68,12 +86,9 @@ export class Message extends Record {
     is_note;
     /** @type {boolean} */
     is_transient;
-    link_preview_ids = Record.many("mail.link.preview", {
-        inverse: "message_id",
-        onDelete: (r) => r.delete(),
-    });
+    message_link_preview_ids = fields.Many("mail.message.link.preview", { inverse: "message_id" });
     /** @type {number[]} */
-    parentMessage = Record.one("mail.message");
+    parent_id = fields.One("mail.message");
     /**
      * When set, this temporary/pending message failed message post, and the
      * value is a callback to re-attempt to post the message.
@@ -81,7 +96,7 @@ export class Message extends Record {
      * @type {() => {} | undefined}
      */
     postFailRedo = undefined;
-    reactions = Record.many("MessageReactions", {
+    reactions = fields.Many("MessageReactions", {
         inverse: "message",
         /**
          * @param {import("models").MessageReactions} r1
@@ -89,20 +104,26 @@ export class Message extends Record {
          */
         sort: (r1, r2) => r1.sequence - r2.sequence,
     });
-    notification_ids = Record.many("mail.notification", { inverse: "mail_message_id" });
-    recipients = Record.many("Persona");
-    thread = Record.one("Thread");
-    threadAsNeedaction = Record.one("Thread", {
+    notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
+    recipients = fields.Many("Persona");
+    thread = fields.One("Thread");
+    threadAsNeedaction = fields.One("Thread", {
         compute() {
             if (this.needaction) {
                 return this.thread;
             }
         },
     });
-    threadAsNewest = Record.one("Thread");
-    /** @type {DateTime} */
-    scheduledDatetime = Record.attr(undefined, { type: "datetime" });
-    onlyEmojis = Record.attr(false, {
+    threadAsNewest = fields.One("Thread");
+    threadAsInEdition = fields.One("Thread", {
+        compute() {
+            if (this.composer) {
+                return this.thread;
+            }
+        },
+    });
+    scheduledDatetime = fields.Datetime();
+    onlyEmojis = fields.Attr(false, {
         compute() {
             const bodyWithoutTags = createElementWithContent("div", this.body).textContent;
             const withoutEmojis = bodyWithoutTags.replace(EMOJI_REGEX, "");
@@ -129,10 +150,8 @@ export class Message extends Record {
     message_type;
     /** @type {string|undefined} */
     notificationType;
-    /** @type {luxon.DateTime} */
-    create_date = Record.attr(undefined, { type: "datetime" });
-    /** @type {luxon.DateTime} */
-    write_date = Record.attr(undefined, { type: "datetime" });
+    create_date = fields.Datetime();
+    write_date = fields.Datetime();
     /** @type {undefined|Boolean} */
     needaction;
     starred = false;
@@ -184,9 +203,7 @@ export class Message extends Record {
     get dateSimpleWithDay() {
         const userLocale = { locale: user.lang };
         if (this.datetime.hasSame(DateTime.now(), "day")) {
-            return _t("Today at %(time)s", {
-                time: this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
-            });
+            return this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale);
         }
         if (this.datetime.hasSame(DateTime.now().minus({ day: 1 }), "day")) {
             return _t("Yesterday at %(time)s", {
@@ -218,7 +235,7 @@ export class Message extends Record {
         return this.isSelfMentioned && this.thread?.model === "discuss.channel";
     }
 
-    isSelfAuthored = Record.attr(false, {
+    isSelfAuthored = fields.Attr(false, {
         compute() {
             if (!this.author) {
                 return false;
@@ -261,6 +278,7 @@ export class Message extends Record {
 
     isTranslatable(thread) {
         return (
+            !this.isEmpty &&
             this.store.hasMessageTranslationFeature &&
             !["discuss.channel", "mail.box"].includes(thread?.model)
         );
@@ -270,7 +288,7 @@ export class Message extends Record {
         return !this.isBodyEmpty;
     }
 
-    isEmpty = Record.attr(false, {
+    isEmpty = fields.Attr(false, {
         /** @this {import("models").Message} */
         compute() {
             return (
@@ -281,7 +299,7 @@ export class Message extends Record {
             );
         },
     });
-    isBodyEmpty = Record.attr(undefined, {
+    isBodyEmpty = fields.Attr(undefined, {
         compute() {
             return (
                 !this.body ||
@@ -316,25 +334,44 @@ export class Message extends Record {
             this.body.startsWith("<a") &&
             this.body.endsWith("/a>") &&
             this.body.match(/<\/a>/im)?.length === 1 &&
-            this.link_preview_ids.length === 1 &&
-            this.link_preview_ids[0].isImage
+            this.message_link_preview_ids.length === 1 &&
+            this.message_link_preview_ids[0].link_preview_id.isImage
         );
     }
 
-    get inlineBody() {
-        if (this.isEmpty) {
-            return _t("This message has been removed");
+    get authorName() {
+        if (this.author) {
+            return this.getPersonaName(this.author);
         }
-        if (!this.body) {
-            return "";
-        }
-        return htmlToTextContentInline(this.body);
+        return this.email_from;
     }
+
+    get notificationHidden() {
+        return false;
+    }
+
+    inlineBody = fields.Html("", {
+        /** @this {import("models").Message} */
+        compute() {
+            if (this.notificationType === "call") {
+                return _t("%(caller)s started a call", { caller: this.author.name });
+            }
+            if (this.isEmpty) {
+                return _t("This message has been removed");
+            }
+            if (!this.body) {
+                return "";
+            }
+            return decorateEmojis(htmlToTextContentInline(this.body));
+        },
+    });
 
     get notificationIcon() {
         switch (this.notificationType) {
             case "pin":
                 return "fa fa-thumb-tack";
+            case "call":
+                return "fa fa-phone";
         }
         return null;
     }
@@ -362,30 +399,33 @@ export class Message extends Record {
         return this.isBodyEmpty && this.attachment_ids.length > 0;
     }
 
-    get previewText() {
-        if (!this.hasOnlyAttachments) {
-            return this.inlineBody || this.subtype_description;
-        }
-        const { attachment_ids: attachments } = this;
-        if (!attachments || attachments.length === 0) {
-            return "";
-        }
-        switch (attachments.length) {
-            case 1:
-                return attachments[0].previewName;
-            case 2:
-                return _t("%(file1)s and %(file2)s", {
-                    file1: attachments[0].previewName,
-                    file2: attachments[1].previewName,
-                    count: attachments.length - 1,
-                });
-            default:
-                return _t("%(file1)s and %(count)s other attachments", {
-                    file1: attachments[0].previewName,
-                    count: attachments.length - 1,
-                });
-        }
-    }
+    previewText = fields.Html("", {
+        /** @this {import("models").Message} */
+        compute() {
+            if (!this.hasOnlyAttachments) {
+                return this.inlineBody || this.subtype_description;
+            }
+            const { attachment_ids: attachments } = this;
+            if (!attachments || attachments.length === 0) {
+                return "";
+            }
+            switch (attachments.length) {
+                case 1:
+                    return attachments[0].previewName;
+                case 2:
+                    return _t("%(file1)s and %(file2)s", {
+                        file1: attachments[0].previewName,
+                        file2: attachments[1].previewName,
+                        count: attachments.length - 1,
+                    });
+                default:
+                    return _t("%(file1)s and %(count)s other attachments", {
+                        file1: attachments[0].previewName,
+                        count: attachments.length - 1,
+                    });
+            }
+        },
+    });
 
     get previewIcon() {
         const { attachment_ids: attachments } = this;
@@ -407,7 +447,7 @@ export class Message extends Record {
 
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canAddReaction(thread) {
-        return Boolean(!this.is_transient && this.thread && !this.thread.isTransient);
+        return Boolean(!this.is_transient && this.thread?.can_react && !this.thread.isTransient);
     }
 
     /** @param {import("models").Thread} thread the thread where the message is shown */
@@ -435,14 +475,20 @@ export class Message extends Record {
         this.store.env.services.notification.add(notification, { type });
     }
 
-    async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
+    async edit(
+        body,
+        attachments = [],
+        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
+    ) {
         if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {
             mentionedChannels,
             mentionedPartners,
+            mentionedRoles,
         });
+        const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
         const data = await rpc("/mail/message/update_content", {
             attachment_ids: attachments
                 .concat(this.attachment_ids)
@@ -453,12 +499,47 @@ export class Message extends Record {
             body: await prettifyMessageContent(body, { validMentions }),
             message_id: this.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
+            role_ids: validMentions?.roles?.map((role) => role.id),
             ...this.thread.rpcParams,
         });
-        this.store.insert(data, { html: true });
-        if (this.hasLink && this.store.hasLinkPreviewFeature) {
+        this.store.insert(data);
+        if ((hadLink || this.hasLink) && this.store.hasLinkPreviewFeature) {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }
+    }
+
+    /** @param {import("models").Thread} thread the thread where the message is being viewed when starting edition */
+    enterEditMode(thread) {
+        const text = convertBrToLineBreak(this.body);
+        if (thread?.messageInEdition) {
+            thread.messageInEdition.composer = undefined;
+        }
+        this.composer = {
+            mentionedPartners: this.recipients,
+            text,
+            selection: {
+                start: text.length,
+                end: text.length,
+                direction: "none",
+            },
+        };
+    }
+
+    /** @param {import("models").Thread} thread the thread where the message is being viewed when stopping edition */
+    exitEditMode(thread) {
+        const threadAsInEdition = this.threadAsInEdition;
+        this.composer = undefined;
+        if (threadAsInEdition && threadAsInEdition.eq(thread)) {
+            threadAsInEdition.composer.autofocus++;
+        }
+    }
+
+    /**
+     * @param {import("models").Persona} persona
+     * @returns {string}
+     */
+    getPersonaName(persona) {
+        return this.thread?.getPersonaName(persona) || persona.displayName;
     }
 
     async react(content) {
@@ -516,6 +597,12 @@ export class Message extends Record {
             }),
             { type: "success" }
         );
+    }
+
+    hideAllLinkPreviews() {
+        rpc("/mail/link_preview/hide", {
+            message_link_preview_ids: this.message_link_preview_ids.map((lpm) => lpm.id),
+        });
     }
 }
 

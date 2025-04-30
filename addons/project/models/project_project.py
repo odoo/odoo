@@ -2,6 +2,8 @@
 
 import ast
 import json
+
+from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, Command, fields, models
@@ -32,14 +34,13 @@ class ProjectProject(models.Model):
     ]
     _order = "sequence, name, id"
     _rating_satisfaction_days = 30  # takes 30 days by default
-    _systray_view = 'activity'
     _track_duration_field = 'stage_id'
 
     def __compute_task_count(self, count_field='task_count', additional_domain=None):
         count_fields = {fname for fname in self._fields if 'count' in fname}
         if count_field not in count_fields:
             raise ValueError(f"Parameter 'count_field' can only be one of {count_fields}, got {count_field} instead.")
-        domain = [('project_id', 'in', self.ids)]
+        domain = [('project_id', 'in', self.ids), ('is_template', '=', False)]
         if additional_domain:
             domain = AND([domain, additional_domain])
         tasks_count_by_project = dict(self.env['project.task'].with_context(
@@ -69,9 +70,9 @@ class ProjectProject(models.Model):
 
     @api.model
     def _search_is_favorite(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise NotImplementedError(_('Operation not supported'))
-        return [('favorite_user_ids', 'in' if (operator == '=') == value else 'not in', self.env.uid)]
+        if operator != 'in':
+            return NotImplemented
+        return [('favorite_user_ids', 'in', [self.env.uid])]
 
     def _compute_is_favorite(self):
         for project in self:
@@ -88,7 +89,7 @@ class ProjectProject(models.Model):
     description = fields.Html(help="Description to provide more information and context about this project")
     active = fields.Boolean(default=True, copy=False, export_string_translation=False)
     sequence = fields.Integer(default=10, export_string_translation=False)
-    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]")
+    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", index='btree_not_null')
     company_id = fields.Many2one('res.company', string='Company', compute="_compute_company_id", inverse="_inverse_company_id", store=True, readonly=False)
     currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", string="Currency", readonly=True, export_string_translation=False)
     analytic_account_balance = fields.Monetary(related="account_id.balance")
@@ -108,7 +109,7 @@ class ProjectProject(models.Model):
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count", export_string_translation=False)
     open_task_count = fields.Integer(compute='_compute_open_task_count', string="Open Task Count", export_string_translation=False)
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
-                               domain=lambda self: [('is_closed', '=', False)])
+                               domain=lambda self: [('is_closed', '=', False), ('is_template', '=', False)])
     color = fields.Integer(string='Color Index', export_string_translation=False)
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True, falsy_value_label=_lt("👤 Unassigned"))
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
@@ -137,7 +138,7 @@ class ProjectProject(models.Model):
     date_start = fields.Date(string='Start Date', copy=False)
     date = fields.Date(string='Expiration Date', copy=False, index=True, tracking=True,
         help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
-    allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
+    allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'), inverse='_inverse_allow_task_dependencies')
     allow_milestones = fields.Boolean('Milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
     task_properties_definition = fields.PropertiesDefinition('Task Properties')
@@ -169,6 +170,7 @@ class ProjectProject(models.Model):
     # Not `required` since this is an option to enable in project settings.
     stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
         tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_expand_full')
+    duration_tracking = fields.Json(groups="project.group_project_stages")
 
     update_ids = fields.One2many('project.update', 'project_id', export_string_translation=False)
     update_count = fields.Integer(compute='_compute_total_update_ids', export_string_translation=False)
@@ -208,19 +210,46 @@ class ProjectProject(models.Model):
 
     @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline')
     def _compute_next_milestone_id(self):
-        milestone_ids_per_project_id = {
-            project.id: milestone_ids
-            for project, milestone_ids in self.env['project.milestone']._read_group(
+        milestones_per_project_id = {
+            project.id: milestones
+            for project, milestones in self.env['project.milestone']._read_group(
                 [('project_id', 'in', self.ids), ('is_reached', '=', False)],
                 ['project_id'],
                 ['id:recordset'],
             )
         }
+        milestones = self.env['project.milestone'].concat(*milestones_per_project_id.values())
+        task_read_group = self.env['project.task']._read_group(
+            [('milestone_id', 'in', milestones.ids)],
+            ['milestone_id', 'state'],
+            ['__count'],
+        )
+        task_count_per_milestones = defaultdict(lambda: (0, 0))
+        for milestone, state, count in task_read_group:
+            opened_task_count, closed_task_count = task_count_per_milestones[milestone.id]
+            if state in CLOSED_STATES:
+                closed_task_count += count
+            else:
+                opened_task_count += count
+            task_count_per_milestones[milestone.id] = opened_task_count, closed_task_count
         for project in self:
-            milestone = milestone_ids_per_project_id.get(project.id, self.env['project.milestone'])[:1]
-            project.next_milestone_id = milestone
-            project.can_mark_milestone_as_done = milestone.can_be_marked_as_done
-            project.is_milestone_deadline_exceeded = milestone.is_deadline_exceeded
+            milestones = milestones_per_project_id.get(project.id, self.env['project.milestone'])
+            project.next_milestone_id = milestones[:1]
+            milestone_deadline_exceeded = False
+            milestone_marked_as_done = False
+            for m in milestones:
+                opened_task_count, closed_task_count = task_count_per_milestones[m.id]
+                if (
+                    not milestone_deadline_exceeded
+                    and m.is_deadline_exceeded
+                    and (opened_task_count > 0 or closed_task_count == 0)
+                ):
+                    milestone_deadline_exceeded = True
+                    break
+                if not milestone_marked_as_done and opened_task_count == 0 and closed_task_count > 0:
+                    milestone_marked_as_done = True
+            project.is_milestone_deadline_exceeded = milestone_deadline_exceeded
+            project.can_mark_milestone_as_done = milestone_marked_as_done
 
     def _compute_access_url(self):
         super()._compute_access_url()
@@ -320,10 +349,8 @@ class ProjectProject(models.Model):
 
     @api.model
     def _search_is_milestone_exceeded(self, operator, value):
-        if not isinstance(value, bool):
-            raise ValueError(_('Invalid value: %s', value))
-        if operator not in ['=', '!=']:
-            raise ValueError(_('Invalid operator: %s', operator))
+        if operator != 'in':
+            return NotImplemented
 
         sql = SQL("""(
             SELECT P.id
@@ -333,11 +360,7 @@ class ProjectProject(models.Model):
                AND P.allow_milestones IS true
                AND M.deadline <= CAST(now() AS date)
         )""")
-        if (operator == '=' and value is True) or (operator == '!=' and value is False):
-            operator_new = 'in'
-        else:
-            operator_new = 'not in'
-        return [('id', operator_new, sql)]
+        return [('id', 'any', sql)]
 
     @api.depends('collaborator_ids', 'privacy_visibility')
     def _compute_collaborator_count(self):
@@ -384,6 +407,35 @@ class ProjectProject(models.Model):
         )
         for project in self:
             project.update_count = update_count_per_project.get(project, 0)
+
+    def _inverse_allow_task_dependencies(self):
+        """ Reset state for waiting tasks in the project if the feature is disabled
+            or recompute the tasks with dependencies if the project has the feature enabled again
+        """
+        project_with_task_dependencies_feature = self.filtered('allow_task_dependencies')
+        projects_without_task_dependencies_feature = self - project_with_task_dependencies_feature
+        ProjectTask = self.env['project.task']
+        if (
+            project_with_task_dependencies_feature
+            and (
+                open_tasks_with_dependencies := ProjectTask.search([
+                    ('project_id', 'in', project_with_task_dependencies_feature.ids),
+                    ('depend_on_ids.state', 'in', ProjectTask.OPEN_STATES),
+                    ('state', 'in', ProjectTask.OPEN_STATES),
+                ])
+            )
+        ):
+            open_tasks_with_dependencies.state = '04_waiting_normal'
+        if (
+            projects_without_task_dependencies_feature
+            and (
+                waiting_tasks := ProjectTask.search([
+                    ('project_id', 'in', projects_without_task_dependencies_feature.ids),
+                    ('state', '=', '04_waiting_normal'),
+                ])
+            )
+        ):
+            waiting_tasks.state = '01_in_progress'
 
     @api.model
     def _map_tasks_default_values(self, project):
@@ -642,6 +694,13 @@ class ProjectProject(models.Model):
                     'There are a couple of options to consider: either change the project\'s company '
                     'to align with the stage\'s company or remove the company designation from the stage', project.stage_id.company_id.name)
                 )
+
+    def get_template_tasks(self):
+        self.ensure_one()
+        return self.env['project.task'].search_read(
+            [('project_id', '=', self.id), ('is_template', '=', True)],
+            ['id', 'name'],
+        )
 
     # ---------------------------------------------------
     # Mail gateway

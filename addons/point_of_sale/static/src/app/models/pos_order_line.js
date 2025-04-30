@@ -1,9 +1,9 @@
 import { registry } from "@web/core/registry";
-import { constructFullProductName, uuidv4, constructAttributeString } from "@point_of_sale/utils";
+import { constructFullProductName, constructAttributeString } from "@point_of_sale/utils";
 import { Base } from "./related_models";
 import { parseFloat } from "@web/views/fields/parsers";
 import { formatFloat } from "@web/core/utils/numbers";
-import { roundCurrency, formatCurrency } from "./utils/currency";
+import { formatCurrency } from "./utils/currency";
 import { _t } from "@web/core/l10n/translation";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { getTaxesAfterFiscalPosition } from "@point_of_sale/app/models/utils/tax_utils";
@@ -18,12 +18,15 @@ export class PosOrderline extends Base {
             this.delete();
             return;
         }
-        this.uuid = vals.uuid ? vals.uuid : uuidv4();
         this.setFullProductName();
+    }
 
+    initState() {
+        super.initState();
         // Data that are not saved in the backend
         this.uiState = {
             hasChange: true,
+            savedQuantity: 0,
         };
     }
 
@@ -80,7 +83,7 @@ export class PosOrderline extends Base {
                 } else {
                     const formatted = formatFloat(this.qty, { digits: [69, ProductUnit.digits] });
                     const parts = formatted.split(decimalPoint);
-                    unitPart = parts[0] + decimalPoint;
+                    unitPart = parts[0];
                     decimalPart = parts[1] || "";
                 }
             } else {
@@ -92,6 +95,7 @@ export class PosOrderline extends Base {
         return {
             qtyStr: unitPart + (decimalPart ? decimalPoint + decimalPart : ""),
             unitPart: unitPart,
+            decimalPoint: decimalPoint,
             decimalPart: decimalPart,
         };
     }
@@ -179,7 +183,6 @@ export class PosOrderline extends Base {
         if (!this.product_id.to_weight && setQuantity) {
             this.setQuantityByLot();
         }
-        this.setDirty();
     }
 
     setDiscount(discount) {
@@ -193,7 +196,6 @@ export class PosOrderline extends Base {
         const disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
         this.discount = disc;
         this.order_id.recomputeOrderData();
-        this.setDirty();
     }
 
     setLinePrice() {
@@ -266,8 +268,6 @@ export class PosOrderline extends Base {
                 )
             );
         }
-
-        this.setDirty();
         return true;
     }
 
@@ -387,7 +387,6 @@ export class PosOrderline extends Base {
             ? 0
             : parseFloat("" + price);
         this.price_unit = ProductPrice.round(parsed_price || 0);
-        this.setDirty();
     }
 
     getUnitPrice() {
@@ -573,11 +572,10 @@ export class PosOrderline extends Base {
 
     setCustomerNote(note) {
         this.customer_note = note || "";
-        this.setDirty();
     }
 
     getCustomerNote() {
-        return this.customer_note;
+        return this.customer_note || "";
     }
 
     getTotalCost() {
@@ -621,15 +619,6 @@ export class PosOrderline extends Base {
         return allLines.reduce((total, line) => total + line.getBasePrice() / line.qty, 0);
     }
 
-    getOldUnitDisplayPrice() {
-        return (
-            this.displayDiscountPolicy() === "without_discount" &&
-            roundCurrency(this.unitDisplayPrice, this.currency) <
-                roundCurrency(this.getTaxedlstUnitPrice(), this.currency) &&
-            this.getTaxedlstUnitPrice()
-        );
-    }
-
     getPriceString() {
         return this.getDiscountStr() === "100"
             ? // free if the discount is 100
@@ -658,7 +647,11 @@ export class PosOrderline extends Base {
     get taxGroupLabels() {
         return [
             ...new Set(
-                this.product_id.taxes_id
+                getTaxesAfterFiscalPosition(
+                    this.product_id.taxes_id,
+                    this.order_id.fiscal_position_id,
+                    this.models
+                )
                     ?.map((tax) => tax.tax_group_id.pos_receipt_label)
                     .filter((label) => label)
             ),
@@ -675,7 +668,7 @@ export class PosOrderline extends Base {
     }
     // FIXME what is the use of this ?
     updateSavedQuantity() {
-        this.saved_quantity = this.qty;
+        this.uiState.savedQuantity = this.qty;
     }
     getPriceExtra() {
         return this.price_extra;
@@ -684,11 +677,10 @@ export class PosOrderline extends Base {
         this.price_extra = parseFloat(price_extra) || 0.0;
     }
     getNote() {
-        return this.note || "";
+        return this.note || "[]";
     }
     setNote(note) {
-        this.setDirty();
-        this.note = note;
+        this.note = note || "[]";
     }
     setHasChange(isChange) {
         this.uiState.hasChange = isChange;
@@ -721,20 +713,8 @@ export class PosOrderline extends Base {
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
     }
-    setDirty(processedLines = new Set()) {
-        if (processedLines.has(this)) {
-            return;
-        }
-        processedLines.add(this);
-        super.setDirty();
-        const linesToSetDirty = [
-            this.combo_parent_id,
-            ...(this.combo_parent_id?.combo_line_ids || []),
-            ...(this.combo_line_ids || []),
-        ].filter(Boolean);
-        for (const line of linesToSetDirty) {
-            line.setDirty(processedLines);
-        }
+    get canBeRemoved() {
+        return this.product_id.uom_id.isZero(this.qty);
     }
 }
 

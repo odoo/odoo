@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="sale_order_line_wizard_form" model="ir.ui.view">
-        <field name="name">sale.order.line.wizard.form</field>
+        <field name="name">sale.order.discount.form</field>
         <field name="model">sale.order.discount</field>
         <field name="arch" type="xml">
             <form>
@@ -21,7 +21,6 @@
                                 <field name="discount_percentage"
                                        invisible="discount_type not in ('so_discount', 'sol_discount')"
                                        widget="percentage" nolabel="1"/>
-                                <field name="tax_ids" invisible="1"/>
                             </group>
                         </div>
                         <div class="col-sm-7 col-md-8 col-lg-8 col-8">

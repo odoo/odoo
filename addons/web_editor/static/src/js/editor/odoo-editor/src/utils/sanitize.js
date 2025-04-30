@@ -270,6 +270,7 @@ function sanitizeNode(node, root) {
         }
         if (isEditorTab(tabPreviousSibling)) {
             node.style.width = '40px';
+            node.style.tabSize = '40px';
         } else {
             const editable = closestElement(node, '.odoo-editor-editable');
             if (editable?.firstElementChild) {
@@ -281,6 +282,7 @@ function sanitizeNode(node, root) {
                 if (nodeRect.width && referenceRect.width) {
                     const width = (nodeRect.left - referenceRect.left) % 40;
                     node.style.width = (40 - width) + 'px';
+                    node.style.tabSize = (40 - width) + 'px';
                 }
             }
         }

@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 
 class SaleOrderLine(models.Model):
@@ -17,19 +18,6 @@ class SaleOrderLine(models.Model):
     event_booth_registration_ids = fields.One2many(
         'event.booth.registration', 'sale_order_line_id', string='Confirmed Registration')
     event_booth_ids = fields.One2many('event.booth', 'sale_order_line_id', string='Confirmed Booths')
-    is_event_booth = fields.Boolean(compute='_compute_is_event_booth')
-
-    @api.depends('product_id.type')
-    def _compute_is_event_booth(self):
-        for record in self:
-            record.is_event_booth = record.product_id.service_tracking == 'event_booth'
-
-    @api.depends('event_booth_ids')
-    def _compute_name_short(self):
-        wbooth = self.filtered(lambda line: line.event_booth_pending_ids)
-        for record in wbooth:
-            record.name_short = record.event_booth_pending_ids.event_id.name
-        super(SaleOrderLine, self - wbooth)._compute_name_short()
 
     @api.depends('event_booth_registration_ids')
     def _compute_event_booth_pending_ids(self):
@@ -55,6 +43,8 @@ class SaleOrderLine(models.Model):
             } for booth in selected_booths - existing_booths])
 
     def _search_event_booth_pending_ids(self, operator, value):
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
         return [('event_booth_registration_ids.event_booth_id', operator, value)]
 
     @api.constrains('event_booth_registration_ids')
@@ -83,7 +73,7 @@ class SaleOrderLine(models.Model):
         super()._compute_name()
 
     def _update_event_booths(self, set_paid=False):
-        for so_line in self.filtered('is_event_booth'):
+        for so_line in self.filtered(lambda sol: sol.product_id.service_tracking == 'event_booth'):
             if so_line.event_booth_pending_ids and not so_line.event_booth_ids:
                 unavailable = so_line.event_booth_pending_ids.filtered(lambda booth: not booth.is_available)
                 if unavailable:

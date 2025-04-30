@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models, Command
+from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools.misc import format_datetime
 from odoo.exceptions import UserError, ValidationError
@@ -121,36 +122,21 @@ class AccountLock_Exception(models.Model):
                     exception[field] = date.max
 
     def _search_state(self, operator, value):
-        if operator not in ['=', '!='] or value not in ['revoked', 'expired', 'active']:
-            raise UserError(_('Operation not supported'))
+        if operator != 'in':
+            return NotImplemented
 
-        normal_domain_for_equals = []
-        if value == 'revoked':
-            normal_domain_for_equals = [
-                ('active', '=', False),
-            ]
-        elif value == 'expired':
-            normal_domain_for_equals = [
-                '&',
-                    ('active', '=', True),
-                    ('end_datetime', '<', self.env.cr.now()),
-            ]
-        elif value == 'active':
-            normal_domain_for_equals = [
-                '&',
-                    ('active', '=', True),
-                    '|',
-                        ('end_datetime', '=', None),
-                        ('end_datetime', '>=', self.env.cr.now()),
-            ]
-        if operator == '=':
-            return normal_domain_for_equals
-        else:
-            return ['!'] + normal_domain_for_equals
+        domain = Domain.FALSE
+        if 'revoked' in value:
+            domain |= Domain('active', '=', False)
+        if 'expired' in value:
+            domain |= Domain('active', '=', True) & Domain('end_datetime', '<', self.env.cr.now())
+        if 'active' in value:
+            domain |= Domain('active', '=', True) & (Domain('end_datetime', '=', False) | Domain('end_datetime', '>=', self.env.cr.now()))
+        return domain
 
     def _search_lock_date(self, field, operator, value):
         if operator not in ['<', '<='] or not value:
-            raise UserError(_('Operation not supported'))
+            return NotImplemented
         return ['&',
                   ('lock_date_field', '=', field),
                   '|',

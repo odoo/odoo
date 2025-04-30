@@ -105,3 +105,42 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
         sale_order.action_confirm()
 
         self.assertTrue(sale_order.picking_ids.move_ids)
+
+    def test_intercompany_transfer_sale_order_workflow(self):
+        company2 = self.company_data_2['company']
+
+        so = self.env['sale.order'].create({
+            'partner_id': company2.partner_id.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 5.0,
+                'product_uom_id': self.product_a.uom_id.id,
+                'price_unit': self.product_a.list_price})],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+
+        # create another move
+        self.env['stock.move'].create({
+            'picking_id': picking.id,
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'name': self.product_b.name,
+            'product_id': self.product_b.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product_b.uom_id.id,
+            'quantity': 1,
+        })
+
+        # ensure we have to moves in the picking
+        self.assertEqual(len(picking.move_ids), 2)
+
+        # make the moves as picked
+        picking.move_ids.picked = True
+
+        picking.button_validate()
+
+        # make sure an order line is created for the new stock move
+        self.assertEqual(len(picking.sale_id.order_line), 2)

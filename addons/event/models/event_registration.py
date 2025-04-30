@@ -32,9 +32,13 @@ class EventRegistration(models.Model):
 
     # event
     event_id = fields.Many2one(
-        'event.event', string='Event', required=True, tracking=True)
+        'event.event', string='Event', required=True, tracking=True, index=True)
+    is_multi_slots = fields.Boolean(string="Is Event Multi Slots", related="event_id.is_multi_slots")
+    event_slot_id = fields.Many2one(
+        "event.slot", string="Slot", ondelete='restrict', tracking=True, index="btree_not_null",
+        domain="[('event_id', '=', event_id)]")
     event_ticket_id = fields.Many2one(
-        'event.event.ticket', string='Ticket Type', ondelete='restrict', tracking=True)
+        'event.event.ticket', string='Ticket Type', ondelete='restrict', tracking=True, index='btree_not_null')
     active = fields.Boolean(default=True)
     barcode = fields.Char(string='Barcode', default=lambda self: self._get_random_barcode(), readonly=True, copy=False)
     # utm informations
@@ -42,7 +46,7 @@ class EventRegistration(models.Model):
     utm_source_id = fields.Many2one('utm.source', 'Source', index=True, ondelete='set null')
     utm_medium_id = fields.Many2one('utm.medium', 'Medium', index=True, ondelete='set null')
     # attendee
-    partner_id = fields.Many2one('res.partner', string='Booked by', tracking=1)
+    partner_id = fields.Many2one('res.partner', string='Booked by', tracking=1, index='btree_not_null')
     name = fields.Char(
         string='Attendee Name', index='trigram',
         compute='_compute_name', readonly=False, store=True, tracking=2)
@@ -54,8 +58,8 @@ class EventRegistration(models.Model):
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
         readonly=False, store=True)
-    event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
-    event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
+    event_begin_date = fields.Datetime("Event Start Date", compute="_compute_event_begin_date")
+    event_end_date = fields.Datetime("Event End Date", compute="_compute_event_end_date")
     event_date_range = fields.Char("Date Range", compute="_compute_date_range")
     event_organizer_id = fields.Many2one(string='Event Organizer', related='event_id.organizer_id', readonly=True)
     event_user_id = fields.Many2one(string='Event Responsible', related='event_id.user_id', readonly=True)
@@ -90,11 +94,17 @@ class EventRegistration(models.Model):
         'Barcode should be unique',
     )
 
-    @api.constrains('state', 'event_id', 'event_ticket_id')
+    @api.constrains('active', 'state', 'event_id', 'event_slot_id', 'event_ticket_id')
     def _check_seats_availability(self):
-        registrations_confirmed = self.filtered(lambda registration: registration.state in ('open', 'done'))
-        registrations_confirmed.event_id._check_seats_availability()
-        registrations_confirmed.event_ticket_id._check_seats_availability()
+        tocheck = self.filtered(lambda registration: registration.state in ('open', 'done') and registration.active)
+        for event, registrations in tocheck.grouped('event_id').items():
+            event._verify_seats_availability([
+                (slot, ticket, 0)
+                for slot, ticket in self.env['event.registration']._read_group(
+                    [('id', 'in', registrations.ids)],
+                    ['event_slot_id', 'event_ticket_id']
+                )
+            ])
 
     def default_get(self, fields):
         ret_vals = super().default_get(fields)
@@ -154,10 +164,30 @@ class EventRegistration(models.Model):
                 else:
                     registration.date_closed = False
 
-    @api.depends("event_id", "partner_id")
+    @api.depends("event_id", "event_slot_id", "partner_id")
     def _compute_date_range(self):
         for registration in self:
-            registration.event_date_range = registration.event_id._get_date_range_str(registration.partner_id.lang)
+            registration.event_date_range = registration.event_id._get_date_range_str(
+                start_datetime=registration.event_slot_id.start_datetime,
+                lang_code=registration.partner_id.lang,
+            )
+
+    @api.depends("event_id", "event_slot_id")
+    def _compute_event_begin_date(self):
+        for registration in self:
+            registration.event_begin_date = registration.event_slot_id.start_datetime or registration.event_id.date_begin
+
+    @api.depends("event_id", "event_slot_id")
+    def _compute_event_end_date(self):
+        for registration in self:
+            registration.event_end_date = registration.event_slot_id.end_datetime or registration.event_id.date_end
+
+    @api.constrains('event_id', 'event_slot_id')
+    def _check_event_slot(self):
+        if any(registration.event_id != registration.event_slot_id.event_id for registration in self if registration.event_slot_id):
+            raise ValidationError(_('Invalid event / slot choice'))
+        if any(not registration.event_slot_id for registration in self if registration.is_multi_slots):
+            raise ValidationError(_('Slot choice is mandatory on multi-slots events.'))
 
     @api.constrains('event_id', 'event_ticket_id')
     def _check_event_ticket(self):
@@ -173,6 +203,13 @@ class EventRegistration(models.Model):
                 contact = self.env['res.partner'].browse(contact_id)
                 return dict((fname, contact[fname]) for fname in fnames if contact[fname])
         return {}
+
+    @api.onchange('event_id')
+    def _onchange_event(self):
+        if self.event_slot_id and self.event_id != self.event_slot_id.event_id:
+            self.event_slot_id = False
+        if self.event_ticket_id and self.event_id != self.event_ticket_id.event_id:
+            self.event_ticket_id = False
 
     @api.onchange('phone', 'event_id', 'partner_id')
     def _onchange_phone_validation(self):
@@ -225,7 +262,7 @@ class EventRegistration(models.Model):
                 related_country = self.env.company.country_id
             values['phone'] = self._phone_format(number=values['phone'], country=related_country) or values['phone']
 
-        registrations = super(EventRegistration, self).create(vals_list)
+        registrations = super().create(vals_list)
         registrations._update_mail_schedulers()
         return registrations
 
@@ -233,7 +270,7 @@ class EventRegistration(models.Model):
         confirming = vals.get('state') in {'open', 'done'}
         to_confirm = (self.filtered(lambda registration: registration.state in {'draft', 'cancel'})
                       if confirming else None)
-        ret = super(EventRegistration, self).write(vals)
+        ret = super().write(vals)
         if confirming:
             to_confirm._update_mail_schedulers()
 
@@ -244,15 +281,6 @@ class EventRegistration(models.Model):
         """
         for registration in self:
             registration.display_name = registration.name or f"#{registration.id}"
-
-    def action_unarchive(self):
-        res = super().action_unarchive()
-        # Necessary triggers as changing registration states cannot be used as triggers for the
-        # Event(Ticket) models constraints.
-        if unarchived := self.filtered(self._active_name):
-            unarchived.event_id._check_seats_availability()
-            unarchived.event_ticket_id._check_seats_availability()
-        return res
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS
@@ -360,17 +388,16 @@ class EventRegistration(models.Model):
             registration_id=self.id,
         )
 
-    def _message_get_default_recipients(self, with_cc=False, all_tos=False):
+    def _message_add_default_recipients(self):
         # Prioritize registration email over partner_id, which may be shared when a single
         # partner booked multiple seats
-        results = super()._message_get_default_recipients(with_cc=with_cc, all_tos=all_tos)
+        results = super()._message_add_default_recipients()
         for record in self:
-            email_to = results[record.id]['email_to']
-            if email_to:
-                results[record.id]['email_to'] = ','.join(
-                    formataddr((record.name or "", email))
-                    for email in email_normalize_all(email_to) if email
-                )
+            email_to_lst = results[record.id]['email_to_lst']
+            if len(email_to_lst) == 1:
+                email_normalized = email_normalize(email_to_lst[0])
+                if email_normalized and email_normalized == email_normalize(record.email):
+                    results[record.id]['email_to_lst'] = [formataddr((record.name or "", email_normalized))]
         return results
 
     def _message_post_after_hook(self, message, msg_vals):
@@ -414,6 +441,7 @@ class EventRegistration(models.Model):
             'id': self.id,
             'name': self.name,
             'partner_id': self.partner_id.id,
+            'slot_name': self.event_slot_id.display_name,
             'ticket_name': self.event_ticket_id.name,
             'event_id': self.event_id.id,
             'event_display_name': self.event_id.display_name,

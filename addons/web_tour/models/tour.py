@@ -87,15 +87,24 @@ class Web_TourTourStep(models.Model):
 
     trigger = fields.Char(required=True)
     content = fields.Char()
-    tour_id = fields.Many2one("web_tour.tour", required=True, ondelete="cascade")
+    tooltip_position = fields.Selection(selection=[
+        ["bottom", "Bottom"],
+        ["top", "Top"],
+        ["right", "Right"],
+        ["left", "left"],
+    ], default="bottom")
+    tour_id = fields.Many2one("web_tour.tour", required=True, index=True, ondelete="cascade")
     run = fields.Char()
     sequence = fields.Integer()
 
     def get_steps_json(self):
         steps = []
 
-        for step in self.read(fields=["trigger", "content", "run"]):
+        for step in self.read(fields=["trigger", "content", "run", "tooltip_position"]):
             del step["id"]
+            step["tooltipPosition"] = step["tooltip_position"]
+            del step["tooltip_position"]
+
             if not step["content"]:
                 del step["content"]
             steps.append(step)

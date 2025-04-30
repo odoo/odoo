@@ -9,13 +9,13 @@ class PosSelfOrderControllerStripe(PosSelfOrderController):
     @http.route("/pos-self-order/stripe-connection-token/", auth="public", type="jsonrpc", website=True)
     def get_stripe_creditentials(self, access_token, payment_method_id):
         # stripe_connection_token
-        pos_config, _ = self._verify_authorization(access_token, "", False)
+        pos_config, _ = self._verify_authorization(access_token, "", {})
         payment_method = pos_config.payment_method_ids.filtered(lambda p: p.id == payment_method_id)
         return payment_method.stripe_connection_token()
 
     @http.route("/pos-self-order/stripe-capture-payment/", auth="public", type="jsonrpc", website=True)
     def stripe_capture_payment(self, access_token, order_access_token, payment_intent_id, payment_method_id):
-        pos_config, _ = self._verify_authorization(access_token, "", False)
+        pos_config, _ = self._verify_authorization(access_token, "", {})
         stripe_confirmation = pos_config.env['pos.payment.method'].stripe_capture_payment(payment_intent_id)
         order = pos_config.env['pos.order'].search([('access_token', '=', order_access_token), ('config_id', '=', pos_config.id)])
 

@@ -194,6 +194,25 @@ test("suggested recipients should not be notified when posting an internal note"
     await waitForSteps(["message_post"]);
 });
 
+test("update email for the partner on the fly", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "John Jane",
+    });
+    const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
+    registerArchs(archs);
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-RecipientsInputTagsListPopover input", "john@jane.be");
+    await click(".o-mail-RecipientsInputTagsListPopover .btn-primary");
+
+    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Followers-counter", { text: "0" });
+});
+
 test("suggested recipients should not be added as follower when posting a message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({

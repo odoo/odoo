@@ -5,6 +5,7 @@ import json
 import odoo
 from odoo.tests import tagged, users
 from odoo.tools import mute_logger
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.base.tests.common import HttpCase, HttpCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.http import STATIC_CACHE_LONG
@@ -45,7 +46,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             )
         )
         cls.guest = cls.env["mail.guest"].create({"name": "Guest"})
-        cls.channel.add_members(guest_ids=cls.guest.ids)
+        cls.channel._add_members(guests=cls.guest)
 
     @mute_logger("odoo.addons.http_routing.models.ir_http", "odoo.http")
     def test_channel_message_attachments(self):
@@ -104,6 +105,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "id": self.attachments[0].id,
                     "name": "File 1",
+                    "raw_access_token": limited_field_access_token(self.attachments[0], "raw"),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
@@ -160,6 +162,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "id": self.attachments[0].id,
                     "name": "File 1",
+                    "raw_access_token": limited_field_access_token(self.attachments[0], "raw"),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
@@ -172,6 +175,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
                     "id": self.attachments[1].id,
                     "name": "File 2",
+                    "raw_access_token": limited_field_access_token(self.attachments[1], "raw"),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
@@ -206,6 +210,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "id": self.attachments[0].id,
                     "name": "File 1",
+                    "raw_access_token": limited_field_access_token(self.attachments[0], "raw"),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
@@ -218,6 +223,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
                     "id": self.attachments[1].id,
                     "name": "File 2",
+                    "raw_access_token": limited_field_access_token(self.attachments[1], "raw"),
                     "res_name": "Test channel",
                     "mimetype": "application/octet-stream",
                     "thread": {"id": self.channel.id, "model": "discuss.channel"},
@@ -307,7 +313,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         })
         test_user = self.authenticate("testuser", "testuser")
         partner = self.env["res.users"].browse(test_user.uid).partner_id
-        self.channel.add_members(testuser.partner_id.ids)
+        self.channel._add_members(users=testuser)
         res = self.url_open(
             url=f"/web/image/?field=avatar_128&id={self.channel.id}&model=discuss.channel&unique={self.channel.avatar_cache_key}"
         )

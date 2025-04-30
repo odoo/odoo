@@ -58,15 +58,16 @@ class RatingMixin(models.AbstractModel):
             record.rating_avg = mapping.get(record.id, {}).get('rating_avg', 0)
 
     def _search_rating_avg(self, operator, value):
-        if operator not in rating_data.OPERATOR_MAPPING:
-            raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
+        op = rating_data.OPERATOR_MAPPING.get(operator)
+        if not op:
+            return NotImplemented
         rating_read_group = self.env['rating.rating'].sudo()._read_group(
             [('res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', rating_data.RATING_LIMIT_MIN)],
             ['res_id'], ['rating:avg'])
         res_ids = [
             res_id
             for res_id, rating_avg in rating_read_group
-            if rating_data.OPERATOR_MAPPING[operator](float_compare(rating_avg, value, 2), 0)
+            if op(float_compare(rating_avg, value, 2), 0)
         ]
         return [('id', 'in', res_ids)]
 
@@ -97,13 +98,13 @@ class RatingMixin(models.AbstractModel):
     def write(self, values):
         """ If the rated ressource name is modified, we should update the rating res_name too.
             If the rated ressource parent is changed we should update the parent_res_id too"""
-        result = super(RatingMixin, self).write(values)
-        for record in self:
+        result = super().write(values)
+        for record in self.sudo():  # ratings may be inaccessible
             if record._rec_name in values:  # set the res_name of ratings to be recomputed
                 res_name_field = self.env['rating.rating']._fields['res_name']
                 self.env.add_to_compute(res_name_field, record.rating_ids)
             if record._rating_get_parent_field_name() in values:
-                record.rating_ids.sudo().write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
+                record.rating_ids.write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
 
         return result
 

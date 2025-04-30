@@ -3,9 +3,9 @@ import { mockDate } from "@odoo/hoot-mock";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { describe, expect, test } from "@odoo/hoot";
 
-import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { createSpreadsheetWithChart } from "@spreadsheet/../tests/helpers/chart";
 import { addGlobalFilter, setGlobalFilterValue } from "@spreadsheet/../tests/helpers/commands";
+import { globalFieldMatchingRegistry } from "@spreadsheet/global_filters/helpers";
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -41,7 +41,7 @@ test("Can add a chart global filter", async function () {
 test("Chart is loaded with computed domain", async function () {
     const { model } = await createSpreadsheetWithChart({
         mockRPC: function (route, { model, method, kwargs }) {
-            if (model === "partner" && method === "web_read_group") {
+            if (model === "partner" && method === "formatted_read_group") {
                 expect(kwargs.domain.length).toBe(3);
                 expect(kwargs.domain[0]).toBe("&");
                 expect(kwargs.domain[1][0]).toBe("date");
@@ -90,15 +90,15 @@ test("field matching is removed when chart is deleted", async function () {
     expect(model.getters.getChartFieldMatch(chartId)[filter.id]).toEqual(matching);
     model.dispatch("DELETE_FIGURE", {
         sheetId: model.getters.getActiveSheetId(),
-        id: chartId,
+        figureId: chartId,
     });
-    expect(globalFiltersFieldMatchers["chart"].getIds()).toEqual([], {
+    expect(globalFieldMatchingRegistry.get("chart").getIds(model.getters)).toEqual([], {
         message: "it should have removed the chart and its fieldMatching and datasource altogether",
     });
     model.dispatch("REQUEST_UNDO");
     expect(model.getters.getChartFieldMatch(chartId)[filter.id]).toEqual(matching);
     model.dispatch("REQUEST_REDO");
-    expect(globalFiltersFieldMatchers["chart"].getIds()).toEqual([]);
+    expect(globalFieldMatchingRegistry.get("chart").getIds(model.getters)).toEqual([]);
 });
 
 test("field matching is removed when filter is deleted", async function () {

@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
             run: "fill Live Chat",
         },
         {
-            trigger: ".o_command:contains(Sessions History)",
+            trigger: ".o_command:contains(Sessions)",
             run: "click",
         },
         {
@@ -31,33 +31,29 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
             run: "click",
         },
         {
-            trigger: ".o_data_cell:contains(Visitor operator)",
+            trigger: ".o_data_cell:contains(Visitor)",
             run: "click",
         },
         {
-            trigger: ".o-mail-DiscussSidebar-item:contains(Visitor).o-active",
+            trigger: ".o-mail-Discuss-threadName[title='Visitor']",
             run() {
                 history.back();
             },
         },
         {
-            trigger: ".o_data_cell:contains(Visitor operator)",
+            trigger: ".o_data_cell:contains(Visitor)",
             run() {
                 history.forward();
             },
         },
         {
-            trigger: ".o-mail-DiscussSidebar-item:contains(Visitor).o-active",
-            run: "click",
-        },
-        {
-            trigger: ".o-mail-DiscussSidebar-item:contains(Visitor).o-active",
+            trigger: ".o-mail-Discuss-threadName[title='Visitor']",
             run() {
                 history.back();
             },
         },
         {
-            trigger: ".o_data_cell:contains(Visitor operator)",
+            trigger: ".o_data_cell:contains(Visitor)",
         },
     ],
 });

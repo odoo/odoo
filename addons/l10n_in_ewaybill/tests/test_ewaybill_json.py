@@ -16,9 +16,6 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             "invoice_line_ids": [(1, l_id, {"discount": 10}) for l_id in cls.invoice.invoice_line_ids.ids]
         })
         cls.invoice.action_post()
-        with freeze_time('2023-12-25'):
-            cls.invoice_reverse = cls.invoice._reverse_moves()
-            cls.invoice_reverse.action_post()
         cls.invoice_full_discount = cls.init_invoice("out_invoice", post=False, products=cls.product_a)
         cls.invoice_full_discount.write({
             "invoice_line_ids": [(1, l_id, {"discount": 100}) for l_id in cls.invoice_full_discount.invoice_line_ids.ids]})
@@ -39,10 +36,6 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         Ewaybill = self.env['l10n.in.ewaybill']
         ewaybill_invoice = Ewaybill.create({
             'account_move_id': self.invoice.id,
-            **default_ewaybill_vals
-        })
-        ewaybill_credit_note = Ewaybill.create({
-            'account_move_id': self.invoice_reverse.id,
             **default_ewaybill_vals
         })
         ewaybill_invoice_full_discount = Ewaybill.create({
@@ -115,34 +108,39 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         }
         self.assertDictEqual(json_value, expected, "Indian EDI send json value is not matched")
 
-        # =================================== Credit Note test =====================================
-        credit_note_expected = expected.copy()
-        credit_note_expected.update({
-            'docDate': '25/12/2023',
-            'docNo': 'RINV/23-24/0001',
-            'supplyType': 'I',
-            "fromGstin": expected['toGstin'],
-            "fromTrdName": expected['toTrdName'],
-            "fromAddr1": expected['toAddr1'],
-            "fromAddr2": expected['toAddr2'],
-            "fromPlace": expected['toPlace'],
-            "fromPincode": expected['toPincode'],
-            "fromStateCode": expected['toStateCode'],
-            "actFromStateCode": expected['actToStateCode'],
-            "toGstin": expected['fromGstin'],
-            "toTrdName": expected['fromTrdName'],
-            "toAddr1": expected['fromAddr1'],
-            "toAddr2": expected['fromAddr2'],
-            "toPlace": expected['fromPlace'],
-            "toPincode": expected['fromPincode'],
-            "toStateCode": expected['fromStateCode'],
-            "actToStateCode": expected['actFromStateCode'],
-        })
-        self.assertDictEqual(
-            ewaybill_credit_note._ewaybill_generate_direct_json(),
-            credit_note_expected,
-            "Indian E-waybill Credit Note send json value is not matched",
+        # =================================== Different UOM Test ===========================================
+        self.invoice.button_draft()
+        self.invoice.invoice_line_ids.product_uom_id = self.env.ref('uom.product_uom_dozen')
+        self.invoice.action_post()
+        json_value = ewaybill_invoice._ewaybill_generate_direct_json()
+        self.assertListEqual(
+            json_value['itemList'],
+            [
+                {
+                  "productName": "product_a",
+                  "hsnCode": "111111",
+                  "productDesc": "product_a",
+                  "quantity": 1.0,
+                  "qtyUnit": "DOZ",
+                  "taxableAmount": 900.0 * 12,
+                  "cgstRate": 2.5,
+                  "sgstRate": 2.5
+                },
+                {
+                  "productName": "product_with_cess",
+                  "hsnCode": "333333",
+                  "productDesc": "product_with_cess",
+                  "quantity": 1.0,
+                  "qtyUnit": "DOZ",
+                  "taxableAmount": 900.0 * 12,
+                  "cgstRate": 6.0,
+                  "sgstRate": 6.0,
+                  "cessRate": 5.0
+                }
+            ],
+            "Indian EDI send json UOM value is not matched"
         )
+
         # =================================== Full discount test =====================================
         json_value = ewaybill_invoice_full_discount._ewaybill_generate_direct_json()
         expected.update({
@@ -194,16 +192,36 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             'transportation_doc_no': 123456789,
             'transportation_doc_date': '2024-04-26'
         })
-        expected_distance = 118
-        response = {
-            'status_cd': '1',
-            'status_desc': 'EWAYBILL request succeeds',
-            'data': {
-                'ewayBillNo': 123456789012,
-                'ewayBillDate': '26/02/2024 12:09:43 PM',
-                'validUpto': '27/02/2024 12:09:43 PM',
-                "alert": ", Distance between these two pincodes is 118, "
+
+        # Sub-test: Extract `Distance` when multiple alerts in response
+        with self.subTest(scenario="Extract distance when multiple alerts in response"):
+            expected_distance = 118
+            response = {
+                'status_cd': '1',
+                'status_desc': 'EWAYBILL request succeeds',
+                'data': {
+                    'ewayBillNo': 123456789012,
+                    'ewayBillDate': '26/02/2024 12:09:43 PM',
+                    'validUpto': '27/02/2024 12:09:43 PM',
+                    "alert": ", Distance between these two pincodes is 118, "
+                }
             }
-        }
-        distance_val = ewaybill._l10n_in_ewaybill_handle_zero_distance_alert_if_present(response.get('data'))
-        self.assertEqual(distance_val['distance'], expected_distance)
+            distance_val = ewaybill._l10n_in_ewaybill_handle_zero_distance_alert_if_present(response.get('data'))
+            self.assertEqual(distance_val['distance'], expected_distance)
+
+        # Sub-test: Extract `Distance` when single alert in response
+        with self.subTest(scenario="Extract distance when single alert in response"):
+            ewaybill.distance = 0
+            expected_distance = 222
+            response = {
+                'status_cd': '1',
+                'status_desc': 'EWAYBILL request succeeds',
+                'data': {
+                    'ewayBillNo': 987654321012,
+                    'ewayBillDate': '08/04/2025 11:04:04 AM',
+                    'validUpto': '09/04/2025 11:04:04 AM',
+                    'alert': 'Distance between these two pincodes is 222'
+                }
+            }
+            distance_val = ewaybill._l10n_in_ewaybill_handle_zero_distance_alert_if_present(response.get('data'))
+            self.assertEqual(distance_val['distance'], expected_distance)

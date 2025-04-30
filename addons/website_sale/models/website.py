@@ -1,11 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug import urls
+from werkzeug.exceptions import NotFound
+
 from odoo import SUPERUSER_ID, api, fields, models
-from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import lazy, ormcache
+from odoo.tools import ormcache
 from odoo.tools.translate import LazyTranslate, _
+
+from odoo.addons.website_sale import const
 
 
 _lt = LazyTranslate(__name__)
@@ -13,6 +18,7 @@ _lt = LazyTranslate(__name__)
 CART_SESSION_CACHE_KEY = 'sale_order_id'
 FISCAL_POSITION_SESSION_CACHE_KEY = 'fiscal_position_id'
 PRICELIST_SESSION_CACHE_KEY = 'website_sale_current_pl'
+PRICELIST_SELECTED_SESSION_CACHE_KEY = 'website_sale_selected_pl_id'
 
 
 class Website(models.Model):
@@ -41,6 +47,7 @@ class Website(models.Model):
     salesteam_id = fields.Many2one(
         string="Sales Team",
         comodel_name='crm.team',
+        index='btree_not_null',
         ondelete='set null',
         default=_default_salesteam_id,
     )
@@ -84,6 +91,11 @@ class Website(models.Model):
     cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
     send_abandoned_cart_email = fields.Boolean(
         string="Send email to customers who abandoned their cart.",
+    )
+    send_abandoned_cart_email_activation_time = fields.Datetime(
+        string="Time when the 'Send abandoned cart email' feature was activated.",
+        compute='_compute_send_abandoned_cart_email_activation_time',
+        store=True,
     )
     shop_ppg = fields.Integer(
         string="Number of products in the grid on the shop", default=20,
@@ -140,11 +152,8 @@ class Website(models.Model):
     product_page_grid_columns = fields.Integer(default=2)
 
     prevent_zero_price_sale = fields.Boolean(string="Hide 'Add To Cart' when price = 0")
-    prevent_zero_price_sale_text = fields.Char(
-        string="Text to show instead of price",
-        translate=True,
-        default="Not Available For Sale",
-    )
+
+    enabled_gmc_src = fields.Boolean(string="Google Merchant Center Data Source")
 
     currency_id = fields.Many2one(
         string="Default Currency",
@@ -155,6 +164,11 @@ class Website(models.Model):
         string="Price list available for this Ecommerce/Website",
         comodel_name='product.pricelist',
         compute="_compute_pricelist_ids",
+    )
+
+    _check_gmc_ecommerce_access = models.Constraint(
+        'CHECK (NOT enabled_gmc_src OR ecommerce_access = \'everyone\')',
+        "eCommerce must be accessible to all users for Google Merchant Center to operate properly.",
     )
 
     #=== COMPUTE METHODS ===#
@@ -174,6 +188,12 @@ class Website(models.Model):
                 request and request.pricelist.currency_id or website.company_id.currency_id
             )
 
+    @api.depends('send_abandoned_cart_email')
+    def _compute_send_abandoned_cart_email_activation_time(self):
+        for website in self:
+            if website.send_abandoned_cart_email:
+                website.send_abandoned_cart_email_activation_time = fields.Datetime.now()
+
     #=== SELECTION METHODS ===#
 
     @staticmethod
@@ -187,6 +207,78 @@ class Website(models.Model):
         ]
 
     #=== BUSINESS METHODS ===#
+
+    @api.model
+    def get_configurator_shop_page_styles(self):
+        """Format and return the ids and images of each shop page style for website onboarding.
+
+        :return: The shop page style information.
+        :rtype: list[dict]
+        """
+        return [
+            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
+            for option, config in const.SHOP_PAGE_STYLE_MAPPING.items()
+        ]
+
+    @api.model
+    def get_configurator_product_page_styles(self):
+        """Format and return ids and images of each product page style for website onboarding.
+
+        :return: The product page style information.
+        :rtype: list[dict]
+        """
+        return [
+            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
+            for option, config in const.PRODUCT_PAGE_STYLE_MAPPING.items()
+        ]
+
+    @api.model
+    def configurator_apply(
+        self, *, shop_page_style_option=None, product_page_style_option=None, **kwargs
+    ):
+        """Override of `website` to apply eCommerce page style configurations.
+
+        :param str shop_page_style_option: The key of the selected shop page style option. See
+                                           `const.SHOP_PAGE_STYLE_MAPPING`.
+        :param str product_page_style_option: The key of the selected product page style option. See
+                                              `const.PRODUCT_PAGE_STYLE_MAPPING`.
+        """
+        res = super().configurator_apply(**kwargs)
+
+        website = self.get_current_website()
+        website_settings = {}
+        views_to_disable = []
+        views_to_enable = []
+        IrUiView = self.env['ir.ui.view'].with_context(active_test=False, website_id=website.id)
+
+        def get_views(xmlids_):
+            domain = expression.AND([[('key', 'in', xmlids_)], website.website_domain()])
+            return IrUiView.search(domain).filter_duplicate()
+
+        def parse_style_config(style_config_):
+            website_settings.update(style_config_['website_fields'])
+            views_to_disable.extend(style_config_['views']['disable'])
+            views_to_enable.extend(style_config_['views']['enable'])
+
+        # Extract shop page settings.
+        if shop_page_style_option:
+            style_config = const.SHOP_PAGE_STYLE_MAPPING[shop_page_style_option]
+            parse_style_config(style_config)
+
+        # Extract product page settings.
+        if product_page_style_option:
+            style_config = const.PRODUCT_PAGE_STYLE_MAPPING[product_page_style_option]
+            parse_style_config(style_config)
+
+        # Apply eCommerce page style configurations.
+        if website_settings:
+            website.write(website_settings)
+        if views_to_disable:
+            get_views(views_to_disable).active = False
+        if views_to_enable:
+            get_views(views_to_enable).active = True
+
+        return res
 
     # This method is cached, must not return records! See also #8795
     @ormcache(
@@ -258,6 +350,11 @@ class Website(models.Model):
         """
         self.ensure_one()
 
+        ProductPricelist = self.env['product.pricelist']
+
+        if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
+            return ProductPricelist  # Skip pricelist computation if pricelists are disabled.
+
         country_code = self._get_geoip_country_code()
         website = self.with_company(self.company_id)
 
@@ -281,7 +378,7 @@ class Website(models.Model):
             partner_pl_id=partner_pricelist_id,
         )
 
-        return self.env['product.pricelist'].browse(pricelist_ids)
+        return ProductPricelist.browse(pricelist_ids)
 
     def is_pricelist_available(self, pl_id):
         """ Return a boolean to specify if a specific pricelist can be manually set on the website.
@@ -350,7 +447,9 @@ class Website(models.Model):
         self.ensure_one()
 
         ProductPricelistSudo = self.env['product.pricelist'].sudo()
-        pricelist_sudo = ProductPricelistSudo
+        if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
+            return ProductPricelistSudo  # Skip pricelist computation if pricelists are disabled.
+
         if PRICELIST_SESSION_CACHE_KEY in request.session:
             pricelist_sudo = ProductPricelistSudo.browse(
                 request.session[PRICELIST_SESSION_CACHE_KEY]
@@ -481,6 +580,7 @@ class Website(models.Model):
         request.session.pop('website_sale_cart_quantity', None)
         request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
         request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
+        request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
 
     @api.model
     def action_dashboard_redirect(self):
@@ -534,6 +634,7 @@ class Website(models.Model):
                 ('is_abandoned_cart', '=', True),
                 ('cart_recovery_email_sent', '=', False),
                 ('website_id', '=', website.id),
+                ('date_order', '>=', website.send_abandoned_cart_email_activation_time),
             ])
             if not all_abandoned_carts:
                 continue
@@ -546,75 +647,88 @@ class Website(models.Model):
                 template.send_mail(sale_order.id, email_values={'email_to': sale_order.partner_id.email})
                 sale_order.cart_recovery_email_sent = True
 
-    def _get_checkout_step_list(self):
-        """ Return an ordered list of steps according to the current template rendered.
+    @api.model_create_multi
+    def create(self, vals_list):
+        websites = super().create(vals_list)
+        for website in websites:
+            website._create_checkout_steps()
+        return websites
 
-        :rtype: list
-        :return: A list with the following structure:
-            [
-                [xmlid],
-                {
-                    'name': str,
-                    'current_href': str,
-                    'main_button': str,
-                    'main_button_href': str,
-                    'back_button': str,
-                    'back_button_href': str
-                }
-            ]
-        """
-        self.ensure_one()
-        is_extra_step_active = self.viewref('website_sale.extra_info').active
-        redirect_to_sign_in = self.account_on_checkout == 'mandatory' and self.is_public_user()
+    def _create_checkout_steps(self):
+        generic_steps = self.env['website.checkout.step'].sudo().search([
+            ('website_id', '=', False),
+        ])
+        for step in generic_steps:
+            is_published = bool(step.step_href != '/shop/extra_info')
+            step.copy({'website_id': self.id, 'is_published': is_published})
 
-        steps = [(['website_sale.cart'], {
-            'name': _lt("Review Order"),
-            'current_href': '/shop/cart',
-            'main_button': _lt("Sign In") if redirect_to_sign_in else _lt("Checkout"),
-            'main_button_href': f'{"/web/login?redirect=" if redirect_to_sign_in else ""}/shop/checkout?try_skip_step=true',
-            'back_button':  _lt("Continue shopping"),
-            'back_button_href': '/shop',
-        }), (['website_sale.checkout', 'website_sale.address'], {
-            'name': _lt("Delivery"),
-            'current_href': '/shop/checkout',
-            'main_button': _lt("Confirm"),
-            'main_button_href': f'{"/shop/extra_info" if is_extra_step_active else "/shop/confirm_order"}',
-            'back_button':  _lt("Back to cart"),
-            'back_button_href': '/shop/cart',
-        })]
-        if is_extra_step_active:
-            steps.append((['website_sale.extra_info'], {
-                'name': _lt("Extra Info"),
-                'current_href': '/shop/extra_info',
-                'main_button': _lt("Continue checkout"),
-                'main_button_href': '/shop/confirm_order',
-                'back_button':  _lt("Back to delivery"),
-                'back_button_href': '/shop/checkout',
-            }))
-        steps.append((['website_sale.payment'], {
-            'name': _lt("Payment"),
-            'current_href': '/shop/payment',
-            'back_button':  _lt("Back to delivery"),
-            'back_button_href': '/shop/checkout',
-        }))
+    def _get_checkout_step(self, href):
+        return self.env['website.checkout.step'].sudo().search([
+            ('website_id', '=', self.id),
+            ('step_href', '=', href),
+        ], limit=1)
+
+    def _get_allowed_steps_domain(self):
+        return [
+            ('website_id', '=', self.id),
+            ('is_published', '=', True)
+        ]
+
+    def _get_checkout_steps(self):
+        steps = self.env['website.checkout.step'].sudo().search(
+            self._get_allowed_steps_domain(), order='sequence'
+        )
         return steps
 
-    def _get_checkout_steps(self, current_step=None):
-        """ Return an ordered list of steps according to the current template rendered.
-        If `current_step` is provided, returns only the corresponding step.
-        Note: self.ensure_one()
-        :param str current_step: The xmlid of the current step, defaults to None.
-        :rtype: list
-        :return: A list containing the steps generated by :meth:`_get_checkout_step_list`.
-        """
-        self.ensure_one()
+    def _get_checkout_step_values(self, href=None):
+        href = href or request.httprequest.path
+        # /shop/address is associated with the delivery step
+        if href == '/shop/address':
+            href = '/shop/checkout'
 
-        steps = self._get_checkout_step_list()
+        allowed_steps_domain = self._get_allowed_steps_domain()
+        current_step = request.env['website.checkout.step'].sudo().search(
+            Domain.AND([allowed_steps_domain, [('step_href', '=', href)]]), limit=1
+        )
+        next_step = current_step._get_next_checkout_step(allowed_steps_domain)
+        previous_step = current_step._get_previous_checkout_step(allowed_steps_domain)
 
-        if current_step:
-            return next(step for step in steps if current_step in step[0])[1]
-        return steps
+        next_href = next_step.step_href
+        # try_skip_step option required on /shop/checkout next button
+        if next_step.step_href == '/shop/checkout':
+            next_href = '/shop/checkout?try_skip_step=true'
+        # redirect handled by '/shop/address/submit' route when all values are properly filled
+        if request.httprequest.path == '/shop/address':
+            next_href = False
+
+        return {
+            'current_website_checkout_step_href': href,
+            'previous_website_checkout_step': previous_step,
+            'next_website_checkout_step': next_step,
+            'next_website_checkout_step_href': next_href,
+        }
 
     def has_ecommerce_access(self):
         """ Return whether the current user is allowed to access eCommerce-related content. """
         return not (self.env.user._is_public() and self.ecommerce_access == 'logged_in')
+
+    def _get_canonical_url(self):
+        """ Override of `website` to customize the canonical URL for product pages.
+
+        A product page URL can have a category in its path. However, since the page is exactly the
+        same whether the category is present or not, the canonical URL shouldn't include the
+        category.
+        """
+        canonical_url = urls.url_parse(super()._get_canonical_url())
+
+        try:
+            rule = self.env['ir.http']._match(canonical_url.path)[0].rule
+        except NotFound:
+            rule = None
+        if rule == (
+            '/shop/<model("product.public.category"):category>/<model("product.template"):product>'
+        ):
+            path_parts = canonical_url.path.split('/')
+            path_parts.pop(2)
+            canonical_url = canonical_url.replace(path='/'.join(path_parts))
+        return canonical_url.to_url()

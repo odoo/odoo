@@ -4,7 +4,6 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, _, api, Command
 from odoo.exceptions import UserError
-from odoo.tools import format_list
 
 
 class MrpAccountWipAccountingLine(models.TransientModel):
@@ -51,7 +50,7 @@ class MrpAccountWipAccounting(models.TransientModel):
             if default:
                 res['journal_id'] = default.id
         if 'reference' in fields_list:
-            res['reference'] = _("Manufacturing WIP - %(orders_list)s", orders_list=productions and format_list(self.env, productions.mapped('name')) or _("Manual Entry"))
+            res['reference'] = _("Manufacturing WIP - %(orders_list)s", orders_list=productions.mapped('name') or _("Manual Entry"))
         if 'mo_ids' in fields_list:
             res['mo_ids'] = [Command.set(productions.ids)]
         return res
@@ -100,7 +99,7 @@ class MrpAccountWipAccounting(models.TransientModel):
                 'account_id': self._get_overhead_account(),
             }),
             Command.create({
-                'label': _("Manufacturing WIP - %(orders_list)s", orders_list=productions and format_list(self.env, productions.mapped('name')) or _("Manual Entry")),
+                'label': _("Manufacturing WIP - %(orders_list)s", orders_list=productions.mapped('name') or _("Manual Entry")),
                 'debit': compo_value + overhead_value,
                 'account_id': self.env.company.account_production_wip_account_id.id,
             })

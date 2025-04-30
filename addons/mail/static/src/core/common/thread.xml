@@ -2,14 +2,15 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Thread">
-    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto" t-att-class="{ 'pb-5': env.inChatter?.aside, 'pb-4': !env.inChatter?.aside, 'px-3': !env.inChatter and !props.isInChatWindow }" t-att-data-transient="props.thread.isTransient" t-ref="messages" tabindex="-1">
+    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto bg-inherit" t-att-class="{ 'pb-5': env.inChatter?.aside, 'pb-4': !env.inChatter?.aside, 'px-2': !env.inChatter and !props.isInChatWindow }" t-att-data-transient="props.thread.isTransient" t-ref="messages" tabindex="-1">
         <t t-if="!props.thread.isEmpty or props.thread.loadOlder or props.thread.hasLoadingFailed" name="content">
-            <div class="d-flex flex-column position-relative flex-grow-1" t-att-class="{'justify-content-end': !env.inChatter and props.thread.model !== 'mail.box'}">
+            <div class="d-flex flex-column position-relative flex-grow-1 bg-inherit" t-att-class="{'justify-content-end': !env.inChatter and props.thread.model !== 'mail.box'}">
                 <span class="position-absolute w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
                 <t t-set="currentDay" t-value="0"/>
                 <t t-if="props.order === 'asc'">
                     <t t-if="props.thread.loadOlder and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.Thread.loadOlder"/>
-                    <t t-if="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
+                    <t t-elif="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
+                    <t t-elif="showStartMessage" t-call="mail.Thread.startMessage"/>
                 </t>
                 <span t-else="" class="pt-1" t-ref="load-newer"/>
                 <t t-set="messages" t-value="orderedMessages"/>
@@ -19,21 +20,21 @@
                         <DateSection date="msg.dateDay" className="'pt-2 px-2'"/>
                         <t t-set="currentDay" t-value="msg.dateDay"/>
                     </t>
-                    <div t-if="msg.threadAsFirstUnread?.eq(props.thread)" class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder z-1 px-2">
-                        <hr class="flex-grow-1 border-danger opacity-100"/><span class="ps-2 pe-1 bg-danger o-text-white rounded text-uppercase">New</span>
+                    <div t-if="msg.threadAsFirstUnread?.eq(props.thread)" class="o-mail-Thread-newMessage d-flex align-items-center fw-bold z-1 px-2">
+                        <div class="o-mail-Thread-newMessageLine flex-grow-1 border border-danger opacity-100 shadow-sm"/><span class="ps-2 pe-1 bg-danger o-text-white rounded text-uppercase shadow-sm">New</span>
                     </div>
+                    <NotificationMessage t-if="msg.isNotification and !msg.notificationHidden" message="msg" thread="props.thread" registerMessageRef="registerMessageRef" />
                     <Message
+                        t-elif="!msg.isNotification"
                         asCard="props.thread.model === 'mail.box'"
                         className="getMessageClassName(msg)"
                         isInChatWindow="props.isInChatWindow"
                         message="msg"
                         previousMessage="prevMsg"
                         registerMessageRef="registerMessageRef"
-                        messageToReplyTo="props.messageToReplyTo"
                         squashed="isSquashed(msg, prevMsg)"
-                        onParentMessageClick.bind="() => msg.parentMessage and env.messageHighlight?.highlightMessage(msg.parentMessage, props.thread)"
+                        onParentMessageClick.bind="() => msg.parent_id and env.messageHighlight?.highlightMessage(msg.parent_id, props.thread)"
                         thread="props.thread"
-                        messageEdition="props.messageEdition"
                         isFirstMessage="msg_first"
                         hasActions="props.messageActions and !msg.eq(props.thread.from_message_id)"
                         showDates="props.showDates"
@@ -47,11 +48,19 @@
             </div>
         </t>
         <t t-else="">
-            <div class="o-mail-Thread-empty d-flex flex-column align-items-center justify-content-center text-muted h-100 opacity-75" t-att-class="{'p-4': props.showEmptyMessage}">
+            <div class="o-mail-Thread-empty d-flex flex-column text-muted h-100"
+                t-att-class="{
+                    'p-4': props.showEmptyMessage and !showStartMessage,
+                    'align-items-start justify-content-end': showStartMessage,
+                    'align-items-center justify-content-center opacity-75': !showStartMessage
+                }">
                 <t t-if="props.thread.isLoaded and props.showEmptyMessage">
                     <t name="empty-message">
-                        <span class="fs-1" style="filter: grayscale(1);">😶</span>
-                        <span>The conversation is empty.</span>
+                        <t t-if="showStartMessage" t-call="mail.Thread.startMessage"/>
+                        <div t-else="" class="d-flex flex-column align-items-center">
+                            <span class="fs-1" style="filter: grayscale(1);">😶</span>
+                            <span>The conversation is empty.</span>
+                        </div>
                     </t>
                 </t>
             </div>
@@ -76,6 +85,36 @@
         <button class="btn btn-link" t-on-click="onClickLoadOlder">
             Click here to retry
         </button>
+    </div>
+</t>
+
+<!--
+    @param {Number} counter
+    @param {string} [badgeClass]
+    @param {string} [iconClass]
+    @param {boolean} [floating=false]
+-->
+<t t-name="mail.discuss_badge">
+    <span class="badge rounded-pill o-discuss-badge flex-shrink-0 bg-inherit d-flex align-items-center justify-content-center" t-attf-class="{{ badgeClass }}" t-att-style="'margin: 0px; background-color: inherit !important;' + (floating ? 'padding: 1px;' : 'padding: 0px;')">
+        <span class="rounded-pill o-innerBadge" t-attf-class="{{ counterClass }}" t-esc="counter" style="top: 0 !important;"/>
+    </span>
+</t>
+
+<t t-name="mail.Thread.startMessage">
+    <div class="pt-4" t-att-class="{ 'px-3': env.inChatWindow, 'px-1': !env.inChatWindow }">
+        <div class="d-flex align-items-end" t-att-class="{
+            'mt-2 mb-1': !props.thread.parent_channel_id,
+            'mt-1': props.thread.parent_channel_id,
+            'gap-1': env.inChatWindow,
+            'gap-2': !env.inChatWindow,
+        }">
+            <div class="o-mail-Thread-avatar d-inline" t-att-class="{'o-mail-Thread-avatarChatWindow': env.inChatWindow }">
+                <img t-if="!props.thread.parent_channel_id" class="rounded o_object_fit_cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
+                <i t-else="" class="fa fa-comments-o opacity-75"/>
+            </div>
+            <h1 class="opacity-75" t-att-class="{ 'fs-3': env.inChatWindow, 'mb-0': env.inChatWindow, 'mb-1': !env.inChatWindow }" t-esc="startMessageTitle"/>
+        </div>
+        <p class="text-muted mb-0 small opacity-75" t-esc="startMessageSubtitle"/>
     </div>
 </t>
 </templates>

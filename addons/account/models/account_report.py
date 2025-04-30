@@ -35,7 +35,7 @@ class AccountReport(models.Model):
     active = fields.Boolean(string="Active", default=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
     column_ids = fields.One2many(string="Columns", comodel_name='account.report.column', inverse_name='report_id')
-    root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report', help="The report this report is a variant of.")
+    root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report', index='btree_not_null', help="The report this report is a variant of.")
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
     section_report_ids = fields.Many2many(string="Sections", comodel_name='account.report', relation="account_report_section_rel", column1="main_report_id", column2="sub_report_id")
     section_main_report_ids = fields.Many2many(string="Section Of", comodel_name='account.report', relation="account_report_section_rel", column1="sub_report_id", column2="main_report_id")
@@ -48,7 +48,9 @@ class AccountReport(models.Model):
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
     only_tax_exigible = fields.Boolean(
         string="Only Tax Exigible Lines",
-        compute=lambda x: x._compute_report_option_filter('only_tax_exigible'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('only_tax_exigible'),
+        precompute=True,
+        readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     availability_condition = fields.Selection(
         string="Availability",
@@ -59,6 +61,11 @@ class AccountReport(models.Model):
     search_bar = fields.Boolean(string="Search Bar")
     prefix_groups_threshold = fields.Integer(string="Prefix Groups Threshold", default=4000)
     integer_rounding = fields.Selection(string="Integer Rounding", selection=[('HALF-UP', "Nearest"), ('UP', "Up"), ('DOWN', "Down")])
+    allow_foreign_vat = fields.Boolean(
+        string="Allow Foreign VAT",
+        compute=lambda x: x._compute_report_option_filter('allow_foreign_vat'),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+    )
 
     default_opening_date_filter = fields.Selection(
         string="Default Opening",
@@ -70,10 +77,11 @@ class AccountReport(models.Model):
             ('previous_month', "Last Month"),
             ('previous_quarter', "Last Quarter"),
             ('previous_year', "Last Year"),
-            ('this_tax_period', "This Tax Period"),
-            ('previous_tax_period', "Last Tax Period"),
+            ('this_return_period', "This Return Period"),
+            ('previous_return_period', "Last Return Period"),
         ],
         compute=lambda x: x._compute_report_option_filter('default_opening_date_filter', 'previous_month'),
+        precompute=True,
         readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
@@ -84,6 +92,7 @@ class AccountReport(models.Model):
             ('cta', "Use CTA"),
         ],
         compute=lambda x: x._compute_report_option_filter('currency_translation', 'cta'),
+        precompute=True,
         readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
@@ -93,71 +102,82 @@ class AccountReport(models.Model):
     filter_multi_company = fields.Selection(
         string="Multi-Company",
         selection=[('selector', "Use Company Selector"), ('tax_units', "Use Tax Units")],
-        compute=lambda x: x._compute_report_option_filter('filter_multi_company', 'selector'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_multi_company', 'selector'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_date_range = fields.Boolean(
         string="Date Range",
-        compute=lambda x: x._compute_report_option_filter('filter_date_range', True), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_date_range', True),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_show_draft = fields.Boolean(
         string="Draft Entries",
-        compute=lambda x: x._compute_report_option_filter('filter_show_draft', True), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_show_draft', True),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_unreconciled = fields.Boolean(
         string="Unreconciled Entries",
-        compute=lambda x: x._compute_report_option_filter('filter_unreconciled', False), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_unreconciled', False),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_unfold_all = fields.Boolean(
         string="Unfold All",
-        compute=lambda x: x._compute_report_option_filter('filter_unfold_all'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_unfold_all'),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_hide_0_lines = fields.Selection(
         string="Hide lines at 0",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
-        compute=lambda x: x._compute_report_option_filter('filter_hide_0_lines', 'optional'), readonly=False, store=True, depends=['root_report_id'],
+        compute=lambda x: x._compute_report_option_filter('filter_hide_0_lines', 'optional'),
+        precompute=True, readonly=False, store=True, depends=['root_report_id'],
     )
     filter_period_comparison = fields.Boolean(
         string="Period Comparison",
-        compute=lambda x: x._compute_report_option_filter('filter_period_comparison', True), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_period_comparison', True),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_growth_comparison = fields.Boolean(
         string="Growth Comparison",
-        compute=lambda x: x._compute_report_option_filter('filter_growth_comparison', True), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_growth_comparison', True),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_journals = fields.Boolean(
         string="Journals",
-        compute=lambda x: x._compute_report_option_filter('filter_journals'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_journals'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_analytic = fields.Boolean(
         string="Analytic Filter",
-        compute=lambda x: x._compute_report_option_filter('filter_analytic'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_analytic'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_hierarchy = fields.Selection(
         string="Account Groups",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
-        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'optional'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'optional'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_account_type = fields.Selection(
         string="Account Types",
         selection=[('both', "Payable and receivable"), ('payable', "Payable"), ('receivable', "Receivable"), ('disabled', 'Disabled')],
-        compute=lambda x: x._compute_report_option_filter('filter_account_type', 'disabled'), readonly=False, store=True, depends=['root_report_id'],
+        compute=lambda x: x._compute_report_option_filter('filter_account_type', 'disabled'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id'],
     )
     filter_partner = fields.Boolean(
         string="Partners",
-        compute=lambda x: x._compute_report_option_filter('filter_partner'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
-    )
-    filter_fiscal_position = fields.Boolean(
-        string="Filter Multivat",
-        compute=lambda x: x._compute_report_option_filter('filter_fiscal_position'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_partner'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_aml_ir_filters = fields.Boolean(
         string="Favorite Filters", help="If activated, user-defined filters on journal items can be selected on this report",
-        compute=lambda x: x._compute_report_option_filter('filter_aml_ir_filters'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_aml_ir_filters'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
     filter_budgets = fields.Boolean(
         string="Budgets",
-        compute=lambda x: x._compute_report_option_filter('filter_budgets'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+        compute=lambda x: x._compute_report_option_filter('filter_budgets'), readonly=False,
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
     def _compute_report_option_filter(self, field_name, default_value=False):
@@ -318,6 +338,7 @@ class AccountReportLine(models.Model):
         required=True,
         recursive=True,
         precompute=True,
+        index=True,
         ondelete='cascade'
     )
     hierarchy_level = fields.Integer(
@@ -329,7 +350,7 @@ class AccountReportLine(models.Model):
         required=True,
         precompute=True,
     )
-    parent_id = fields.Many2one(string="Parent Line", comodel_name='account.report.line', ondelete='set null')
+    parent_id = fields.Many2one(string="Parent Line", comodel_name='account.report.line', ondelete='set null', index='btree_not_null')
     children_ids = fields.One2many(string="Child Lines", comodel_name='account.report.line', inverse_name='parent_id')
     groupby = fields.Char(string="Group By", help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.")
     user_groupby = fields.Char(
@@ -536,7 +557,7 @@ class AccountReportExpression(models.Model):
     _description = "Accounting Report Expression"
     _rec_name = 'report_line_name'
 
-    report_line_id = fields.Many2one(string="Report Line", comodel_name='account.report.line', required=True, ondelete='cascade')
+    report_line_id = fields.Many2one(string="Report Line", comodel_name='account.report.line', required=True, index=True, ondelete='cascade')
     report_line_name = fields.Char(string="Report Line Name", related="report_line_id.name")
     label = fields.Char(string="Label", required=True)
     engine = fields.Selection(
@@ -561,7 +582,7 @@ class AccountReportExpression(models.Model):
             ('to_beginning_of_fiscalyear', 'At the beginning of the fiscal year'),
             ('to_beginning_of_period', 'At the beginning of the period'),
             ('strict_range', 'Strictly on the given dates'),
-            ('previous_tax_period', "From previous tax period")
+            ('previous_return_period', "From previous return period")
         ],
         required=True,
         default='strict_range',
@@ -875,7 +896,7 @@ class AccountReportColumn(models.Model):
     name = fields.Char(string="Name", translate=True, required=True)
     expression_label = fields.Char(string="Expression Label", required=True)
     sequence = fields.Integer(string="Sequence")
-    report_id = fields.Many2one(string="Report", comodel_name='account.report')
+    report_id = fields.Many2one(string="Report", comodel_name='account.report', index='btree_not_null')
     sortable = fields.Boolean(string="Sortable")
     figure_type = fields.Selection(string="Figure Type", selection=FIGURE_TYPE_SELECTION_VALUES, default="monetary", required=True)
     blank_if_zero = fields.Boolean(string="Blank if Zero", help="When checked, 0 values will not show in this column.")
@@ -900,20 +921,6 @@ class AccountReportExternalValue(models.Model):
 
     company_id = fields.Many2one(string='Company', comodel_name='res.company', required=True, default=lambda self: self.env.company)
 
-    foreign_vat_fiscal_position_id = fields.Many2one(
-        string="Fiscal position",
-        comodel_name='account.fiscal.position',
-        domain="[('country_id', '=', report_country_id), ('foreign_vat', '!=', False)]",
-        check_company=True,
-        help="The foreign fiscal position for which this external value is made.",
-    )
-
     # Carryover fields
     carryover_origin_expression_label = fields.Char(string="Origin Expression Label")
     carryover_origin_report_line_id = fields.Many2one(string="Origin Line", comodel_name='account.report.line')
-
-    @api.constrains('foreign_vat_fiscal_position_id', 'target_report_expression_id')
-    def _check_fiscal_position(self):
-        for record in self:
-            if record.foreign_vat_fiscal_position_id and record.foreign_vat_fiscal_position_id.country_id != record.report_country_id:
-                raise ValidationError(_("The country set on the foreign VAT fiscal position must match the one set on the report."))

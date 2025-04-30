@@ -101,7 +101,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'date_maturity': False,
         }
         cls.term_line_vals_1 = {
-            'name': '',
+            'name': False,
             'product_id': False,
             'account_id': cls.company_data['default_account_receivable'].id,
             'partner_id': cls.partner_a.id,
@@ -204,6 +204,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Test mapping a price-included tax (10%) with a price-excluded tax (20%) on a price_unit of 110.0.
         The price_unit should be 100.0 after applying the fiscal position.
         '''
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_a',
+        })
         tax_price_include = self.env['account.tax'].create({
             'name': '10% incl',
             'type_tax_use': 'sale',
@@ -217,16 +220,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'type_tax_use': 'sale',
             'amount_type': 'percent',
             'amount': 15,
-        })
-
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'fiscal_pos_a',
-            'tax_ids': [
-                (0, None, {
-                    'tax_src_id': tax_price_include.id,
-                    'tax_dest_id': tax_price_exclude.id,
-                }),
-            ],
+            'fiscal_position_ids': [Command.link(fiscal_position.id)],
+            'original_tax_ids': [Command.link(tax_price_include.id)],
         })
 
         product = self.env['product.product'].create({
@@ -374,6 +369,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Test mapping a price-included tax (10%) with another price-included tax (20%) on a price_unit of 110.0.
         The price_unit should be 120.0 after applying the fiscal position.
         '''
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_a',
+        })
         tax_price_include_1 = self.env['account.tax'].create({
             'name': '10% incl',
             'type_tax_use': 'sale',
@@ -389,17 +387,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount': 20,
             'price_include_override': 'tax_included',
             'include_base_amount': True,
+            'fiscal_position_ids': [Command.link(fiscal_position.id)],
+            'original_tax_ids': [Command.link(tax_price_include_1.id)],
         })
 
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'fiscal_pos_a',
-            'tax_ids': [
-                (0, None, {
-                    'tax_src_id': tax_price_include_1.id,
-                    'tax_dest_id': tax_price_include_2.id,
-                }),
-            ],
-        })
 
         product = self.env['product.product'].create({
             'name': 'product',
@@ -934,7 +925,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # == Test with a fiscal position ==
 
         fiscal_position = self.env['account.fiscal.position'].create({'name': 'fiscal_position'})
-
+        self.env['account.tax'].create({'name': 'Useless Tax', 'fiscal_position_ids': [Command.link(fiscal_position.id)]})
         move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
         move_form.invoice_date = fields.Date.from_string('2017-01-01')
         move_form.partner_id = self.partner_a
@@ -1839,7 +1830,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': '',
+                'name': False,
                 'amount_currency': -1410.0,
                 'debit': 0.0,
                 'credit': 1410.0,
@@ -1902,7 +1893,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': '',
+                'name': False,
                 'amount_currency': 1410.0,
                 'debit': 1410.0,
                 'credit': 0.0,
@@ -1970,7 +1961,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': '',
+                'name': False,
                 'amount_currency': -1410.0,
                 'currency_id': self.other_currency.id,
                 'debit': 0.0,
@@ -2027,7 +2018,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': '',
+                'name': False,
                 'amount_currency': 1410.0,
                 'currency_id': self.other_currency.id,
                 'debit': 705.0,
@@ -2236,11 +2227,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         not_receivable_lines = move.line_ids - receivable_lines
 
         # Write a receivable account on a not-receivable line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             not_receivable_lines.write({'account_id': receivable_lines[0].account_id.copy().id})
 
         # Write a not-receivable account on a receivable line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             receivable_lines.write({'account_id': not_receivable_lines[0].account_id.copy().id})
 
         # Write another receivable account on a receivable line.
@@ -2637,7 +2628,23 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move.action_switch_move_type()
 
         self.assertEqual(move.fiscal_position_id, self.fiscal_pos_a)
-        
+
+    def test_out_invoice_switch_out_refund_4(self):
+        # Test to check that when switching from out_invoice to out_refund the bank partner is changed accordingly
+        bank = self.env["res.partner.bank"].create({
+            "bank_name": "FAKE",
+            "acc_number": "1234567890",
+            "partner_id": self.partner_a.id,
+        })
+
+        move = self.env["account.move"].with_context(default_move_type="out_invoice").new({
+            "partner_id": self.partner_a.id,
+        })
+        move.action_switch_move_type()
+
+        self.assertEqual(move.bank_partner_id, self.partner_a)
+        self.assertEqual(move.partner_bank_id, bank)
+
     def test_out_invoice_reverse_move_tags(self):
         country = self.env.ref('base.us')
         tags = self.env['account.account.tag'].create([{
@@ -3885,8 +3892,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 })
             ],
         })
-        self.product_a.property_account_income_id.deprecated = True
-        with self.assertRaises(UserError), self.cr.savepoint():
+        self.product_a.property_account_income_id.active = False
+        with self.assertRaises(UserError):
             move.action_post()
 
     def test_change_currency_id(self):
@@ -4510,7 +4517,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ])
 
     def test_invoice_with_empty_currency(self):
-
         move = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,

@@ -4,6 +4,7 @@
 import operator as py_operator
 from ast import literal_eval
 from collections import defaultdict
+from collections.abc import Iterable
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
@@ -14,14 +15,33 @@ from odoo.tools.float_utils import float_round
 from odoo.tools.mail import html2plaintext, is_html_empty
 from odoo.tools.misc import groupby
 
-OPERATORS = {
+PY_OPERATORS = {
     '<': py_operator.lt,
     '>': py_operator.gt,
     '<=': py_operator.le,
     '>=': py_operator.ge,
     '=': py_operator.eq,
-    '!=': py_operator.ne
+    '!=': py_operator.ne,
+    'in': lambda elem, container: elem in container,
+    'not in': lambda elem, container: elem not in container,
 }
+
+SERIAL_PREFIX_FORMAT_HELP_TEXT = """
+    If multiple products share the same prefix, they will share the same sequence, otherwise the sequence will be dedicated to the product.
+
+    * Legend (for prefix):
+    - Current Year with Century: %(year)s
+    - Current Year without Century: %(y)s
+    - Month: %(month)s
+    - Day: %(day)s
+    - Day of the Year: %(doy)s
+    - Week of the Year: %(woy)s
+    - Day of the Week (0:Monday): %(weekday)s
+    - Hour 00->24: %(h24)s
+    - Hour 00->12: %(h12)s
+    - Minute: %(min)s
+    - Second: %(sec)s
+"""
 
 
 class ProductProduct(models.Model):
@@ -392,30 +412,20 @@ class ProductProduct(models.Model):
         return self._search_product_quantity(operator, value, 'free_qty')
 
     def _search_product_quantity(self, operator, value, field):
-        # TDE FIXME: should probably clean the search methods
-        # to prevent sql injections
-        if field not in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty', 'free_qty'):
-            raise UserError(_('Invalid domain left operand %s', field))
-        if operator not in ('<', '>', '=', '!=', '<=', '>='):
-            raise UserError(_('Invalid domain operator %s', operator))
-        if not isinstance(value, (float, int)):
-            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
-
-        # TODO: Still optimization possible when searching virtual quantities
-        ids = []
         # Order the search on `id` to prevent the default order on the product name which slows
-        # down the search because of the join on the translation table to get the translated names.
-        for product in self.with_context(prefetch_fields=False).search([], order='id'):
-            if OPERATORS[operator](product[field], value):
-                ids.append(product.id)
+        # down the search.
+        ids = self.with_context(prefetch_fields=False).search_fetch([], [field], order='id').filtered_domain([(field, operator, value)]).ids
         return [('id', 'in', ids)]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
-        if operator not in ('<', '>', '=', '!=', '<=', '>='):
-            raise UserError(_('Invalid domain operator %s', operator))
-        if not isinstance(value, (float, int)):
-            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
+        op = PY_OPERATORS.get(operator)
+        if not op:
+            return NotImplemented
+        if isinstance(value, Iterable) and not isinstance(value, str):
+            value = {float(v) for v in value}
+        else:
+            value = float(value)
 
         product_ids = set()
         domain_quant = self._get_domain_locations()[0]
@@ -428,18 +438,14 @@ class ProductProduct(models.Model):
         quants_groupby = self.env['stock.quant']._read_group(domain_quant, ['product_id'], ['quantity:sum'])
 
         # check if we need include zero values in result
-        include_zero = (
-            value < 0.0 and operator in ('>', '>=') or
-            value > 0.0 and operator in ('<', '<=') or
-            value == 0.0 and operator in ('>=', '<=', '=')
-        )
+        include_zero = op(0.0, value)
 
         processed_product_ids = set()
         for product, quantity_sum in quants_groupby:
             product_id = product.id
             if include_zero:
                 processed_product_ids.add(product_id)
-            if OPERATORS[operator](quantity_sum, value):
+            if op(quantity_sum, value):
                 product_ids.add(product_id)
 
         if include_zero:
@@ -762,6 +768,13 @@ class ProductTemplate(models.Model):
         string="Tracking", required=True, default='none', # Not having a default value here causes issues when migrating.
         compute='_compute_tracking', store=True, readonly=False, precompute=True,
         help="Ensure the traceability of a storable product in your warehouse.")
+    lot_sequence_id = fields.Many2one(
+        'ir.sequence', 'Serial/Lot Numbers Sequence', default=lambda self: self.env.ref('stock.sequence_production_lots', raise_if_not_found=False),
+        help='Technical Field: The Ir.Sequence record that is used to generate serial/lot numbers for this product')
+    serial_prefix_format = fields.Char(
+        'Custom Lot/Serial', compute='_compute_serial_prefix_format', inverse='_inverse_serial_prefix_format',
+        help=SERIAL_PREFIX_FORMAT_HELP_TEXT)
+    next_serial = fields.Char(compute='_compute_next_serial')
     description_picking = fields.Text('Description on Picking', translate=True)
     description_pickingout = fields.Text('Description on Delivery Orders', translate=True)
     description_pickingin = fields.Text('Description on Receptions', translate=True)
@@ -806,6 +819,43 @@ class ProductTemplate(models.Model):
     @api.depends('type')
     def compute_is_storable(self):
         self.filtered(lambda t: t.type != 'consu' and t.is_storable).is_storable = False
+
+    @api.depends('lot_sequence_id', 'lot_sequence_id.prefix')
+    def _compute_serial_prefix_format(self):
+        for template in self:
+            template.serial_prefix_format = template.lot_sequence_id.prefix or ""
+
+    def _inverse_serial_prefix_format(self):
+        valid_sequences = self.env['ir.sequence'].search([('prefix', 'in', self.mapped('serial_prefix_format'))])
+        sequences_by_prefix = {seq.prefix: seq for seq in valid_sequences}
+        for template in self:
+            if template.serial_prefix_format:
+                if template.serial_prefix_format in sequences_by_prefix:
+                    template.lot_sequence_id = sequences_by_prefix[template.serial_prefix_format]
+                else:
+                    new_sequence = self.env['ir.sequence'].create({
+                        'name': f'{template.name} Serial Sequence',
+                        'code': 'stock.lot.serial',
+                        'prefix': template.serial_prefix_format,
+                        'padding': 7,
+                        'company_id': False,
+                    })
+                    template.lot_sequence_id = new_sequence
+                    sequences_by_prefix[template.serial_prefix_format] = new_sequence
+            else:
+                template.lot_sequence_id = False
+
+    @api.depends('serial_prefix_format', 'lot_sequence_id')
+    def _compute_next_serial(self):
+        for template in self:
+            if template.lot_sequence_id:
+                template.next_serial = '{:0{}d}{}'.format(
+                    template.lot_sequence_id.number_next_actual,
+                    template.lot_sequence_id.padding,
+                    template.lot_sequence_id.suffix or ""
+                )
+            else:
+                template.next_serial = '0000001'
 
     @api.depends('is_storable')
     def _compute_show_qty_status_button(self):
@@ -1162,7 +1212,8 @@ class ProductCategory(models.Model):
             category.parent_route_ids = routes - category.route_ids
 
     def _search_total_route_ids(self, operator, value):
-        categ_ids = self.filtered_domain([('total_route_ids', operator, value)]).ids
+        categories = self.with_context(active_test=False).search([])
+        categ_ids = categories.filtered_domain([('total_route_ids', operator, value)]).ids
         return [('id', 'in', categ_ids)]
 
     @api.depends('route_ids', 'parent_route_ids')
@@ -1171,16 +1222,17 @@ class ProductCategory(models.Model):
             category.total_route_ids = category.route_ids | category.parent_route_ids
 
     def _search_filter_for_stock_putaway_rule(self, operator, value):
-        assert operator == '='
-        assert value
+        if operator != 'in':
+            return NotImplemented
 
+        domain = expression.TRUE_DOMAIN
         active_model = self.env.context.get('active_model')
         if active_model in ('product.template', 'product.product') and self.env.context.get('active_id'):
             product = self.env[active_model].browse(self.env.context.get('active_id'))
             product = product.exists()
             if product:
-                return [('id', '=', product.categ_id.id)]
-        return []
+                domain = [('id', '=', product.categ_id.id)]
+        return domain
 
 
 class UomUom(models.Model):

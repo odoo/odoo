@@ -72,10 +72,10 @@ export class DomPlugin extends Plugin {
             { id: "setTag", run: this.setTag.bind(this) },
         ],
         /** Handlers */
-        clean_handlers: this.removeEmptyClassAndStyleAttributes.bind(this),
         clean_for_save_handlers: ({ root }) => {
             this.removeEmptyClassAndStyleAttributes(root);
         },
+        clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
     };
     contentEditableToRemove = new Set();
 
@@ -179,7 +179,11 @@ export class DomPlugin extends Plugin {
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
         // <p> or <li>.
-        if (container.childElementCount === 1 && shouldUnwrap(container.firstChild)) {
+        if (
+            container.childElementCount === 1 &&
+            (this.dependencies.baseContainer.isCandidateForBaseContainer(container.firstChild) ||
+                shouldUnwrap(container.firstChild))
+        ) {
             const nodeToUnwrap = container.firstElementChild;
             container.replaceChildren(...childNodes(nodeToUnwrap));
         } else if (container.childElementCount > 1) {
@@ -456,15 +460,13 @@ export class DomPlugin extends Plugin {
      * @param {HTMLElement} target
      */
     copyAttributes(source, target) {
-        this.dispatchTo("clean_handlers", source);
         if (source?.nodeType !== Node.ELEMENT_NODE || target?.nodeType !== Node.ELEMENT_NODE) {
             return;
         }
-        // TODO: provide a resource to ignore some attributes.
-        const ignoredAttrs = new Set();
+        const ignoredAttrs = new Set(this.getResource("system_attributes"));
         const ignoredClasses = new Set(this.getResource("system_classes"));
         for (const attr of source.attributes) {
-            if (ignoredAttrs.has(attr)) {
+            if (ignoredAttrs.has(attr.name)) {
                 continue;
             }
             if (attr.name !== "class" || ignoredClasses.size === 0) {

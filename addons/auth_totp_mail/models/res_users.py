@@ -70,7 +70,7 @@ class ResUsers(models.Model):
                 )
                 _logger.info("New device alert email sent for user <%s> to <%s>", user.login, user.email)
 
-    def _notify_security_setting_update_prepare_values(self, content, suggest_2fa=True, **kwargs):
+    def _notify_security_setting_update_prepare_values(self, content, *, suggest_2fa=True, **kwargs):
         """" Prepare rendering values for the 'mail.account_security_alert' qweb template
 
           :param bool suggest_2fa:
@@ -136,21 +136,25 @@ class ResUsers(models.Model):
         if self._mfa_type() == 'totp_mail':
             return '/web/login/totp'
 
-    def _totp_check(self, code):
-        self._totp_rate_limit('code_check')
-        user = self.sudo()
-        if user._mfa_type() != 'totp_mail':
-            return super()._totp_check(code)
-
-        key = user._get_totp_mail_key()
-        match = TOTP(key).match(code, window=3600, timestep=3600)
-        if match is None:
-            _logger.info("2FA check (mail): FAIL for %s %r", user, user.login)
-            raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
-        _logger.info("2FA check(mail): SUCCESS for %s %r", user, user.login)
-        self._totp_rate_limit_purge('code_check')
-        self._totp_rate_limit_purge('send_email')
-        return True
+    def _check_credentials(self, credentials, env):
+        if credentials['type'] == 'totp_mail':
+            self._totp_rate_limit('code_check')
+            user = self.sudo()
+            key = user._get_totp_mail_key()
+            match = TOTP(key).match(credentials['token'], window=3600, timestep=3600)
+            if match is None:
+                _logger.info("2FA check (mail): FAIL for %s %r", user, user.login)
+                raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
+            _logger.info("2FA check(mail): SUCCESS for %s %r", user, user.login)
+            self._totp_rate_limit_purge('code_check')
+            self._totp_rate_limit_purge('send_email')
+            return {
+                'uid': self.env.user.id,
+                'auth_method': 'totp_mail',
+                'mfa': 'default',
+            }
+        else:
+            return super()._check_credentials(credentials, env)
 
     def _get_totp_mail_key(self):
         self.ensure_one()

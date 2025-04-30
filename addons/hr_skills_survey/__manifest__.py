@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Skills Certification',
-    'category': 'Hidden',
+    'category': 'Human Resources/Employees',
     'version': '1.0',
     'summary': 'Add certification to resume of your employees',
     'description':

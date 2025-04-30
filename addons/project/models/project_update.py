@@ -57,7 +57,7 @@ class ProjectUpdate(models.Model):
     user_id = fields.Many2one('res.users', string='Author', required=True, default=lambda self: self.env.user)
     description = fields.Html()
     date = fields.Date(default=fields.Date.context_today, tracking=True)
-    project_id = fields.Many2one('project.project', required=True, export_string_translation=False)
+    project_id = fields.Many2one('project.project', required=True, index=True, export_string_translation=False)
     name_cropped = fields.Char(compute="_compute_name_cropped", export_string_translation=False)
     task_count = fields.Integer("Task Count", readonly=True, export_string_translation=False)
     closed_task_count = fields.Integer("Closed Task Count", readonly=True, export_string_translation=False)

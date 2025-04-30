@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from dateutil.relativedelta import relativedelta
 from odoo import _, api, Command, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
 from odoo.exceptions import ValidationError
 
@@ -12,7 +11,7 @@ from odoo.exceptions import ValidationError
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
-    workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
+    workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True, index='btree_not_null')
     production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
     description_bom_line = fields.Char(related='move_id.description_bom_line')
 
@@ -20,28 +19,20 @@ class StockMoveLine(models.Model):
     def _compute_picking_type_id(self):
         line_to_remove = self.env['stock.move.line']
         for line in self:
-            if not line.production_id:
-                continue
-            line.picking_type_id = line.production_id.picking_type_id
-            line_to_remove |= line
+            if production_id := line.production_id or line.move_id.production_id:
+                line.picking_type_id = production_id.picking_type_id
+                line_to_remove |= line
         return super(StockMoveLine, self - line_to_remove)._compute_picking_type_id()
 
     def _search_picking_type_id(self, operator, value):
-        res = super()._search_picking_type_id(operator=operator, value=value)
-        if operator in ['not in', '!=', 'not ilike']:
-            if value is False:
-                return expression.OR([[('production_id.picking_type_id', operator, value)], res])
-            else:
-                return expression.AND([[('production_id.picking_type_id', operator, value)], res])
-        else:
-            if value is False:
-                return expression.AND([[('production_id.picking_type_id', operator, value)], res])
-            else:
-                return expression.OR([[('production_id.picking_type_id', operator, value)], res])
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+        domain = super()._search_picking_type_id(operator, value)
+        return (Domain('production_id', '=', False) & domain) | Domain('production_id.picking_type_id', operator, value)
 
     @api.model_create_multi
-    def create(self, values):
-        res = super(StockMoveLine, self).create(values)
+    def create(self, vals_list):
+        res = super().create(vals_list)
         for line in res:
             # If the line is added in a done production, we need to map it
             # manually to the produced move lines in order to see them in the
@@ -149,9 +140,9 @@ class StockMove(models.Model):
     raw_material_production_id = fields.Many2one(
         'mrp.production', 'Production Order for components', check_company=True, index='btree_not_null')
     unbuild_id = fields.Many2one(
-        'mrp.unbuild', 'Disassembly Order', check_company=True)
+        'mrp.unbuild', 'Disassembly Order', check_company=True, index='btree_not_null')
     consume_unbuild_id = fields.Many2one(
-        'mrp.unbuild', 'Consumed Disassembly Order', check_company=True)
+        'mrp.unbuild', 'Consumed Disassembly Order', check_company=True, index='btree_not_null')
     allowed_operation_ids = fields.One2many(
         'mrp.routing.workcenter', related='raw_material_production_id.bom_id.operation_ids')
     operation_id = fields.Many2one(
@@ -202,7 +193,19 @@ class StockMove(models.Model):
             elif not move.manual_consumption:
                 move.manual_consumption = move._is_manual_consumption()
 
-    @api.depends('raw_material_production_id', 'raw_material_production_id.location_dest_id', 'production_id', 'production_id.location_dest_id')
+    @api.depends('raw_material_production_id.location_src_id', 'production_id.location_src_id')
+    def _compute_location_id(self):
+        ids_to_super = set()
+        for move in self:
+            if move.production_id:
+                move.location_id = move.product_id.with_company(move.company_id).property_stock_production.id
+            elif move.raw_material_production_id:
+                move.location_id = move.raw_material_production_id.location_src_id
+            else:
+                ids_to_super.add(move.id)
+        return super(StockMove, self.browse(ids_to_super))._compute_location_id()
+
+    @api.depends('raw_material_production_id.location_dest_id', 'production_id.location_dest_id')
     def _compute_location_dest_id(self):
         ids_to_super = set()
         for move in self:
@@ -313,9 +316,10 @@ class StockMove(models.Model):
 
     @api.onchange('quantity', 'product_uom', 'picked')
     def _onchange_quantity(self):
-        if self.raw_material_production_id and not self.manual_consumption and self.picked and self.product_uom and \
+        if self.raw_material_production_id and self.product_uom and \
            float_compare(self.product_uom_qty, self.quantity, precision_rounding=self.product_uom.rounding) != 0:
             self.manual_consumption = True
+            self.picked = True
 
     @api.constrains('quantity', 'raw_material_production_id')
     def _check_negative_quantity(self):
@@ -350,6 +354,7 @@ class StockMove(models.Model):
         if self.env.context.get('force_manual_consumption'):
             for vals in vals_list:
                 vals['manual_consumption'] = True
+                vals['picked'] = True
         mo_id_to_mo = defaultdict(lambda: self.env['mrp.production'])
         product_id_to_product = defaultdict(lambda: self.env['product.product'])
         for values in vals_list:
@@ -397,6 +402,7 @@ class StockMove(models.Model):
                 self = other_move + updated_product_move
         if self.env.context.get('force_manual_consumption'):
             vals['manual_consumption'] = True
+            vals['picked'] = True
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve
             # so possibly unlink lines
@@ -455,6 +461,13 @@ class StockMove(models.Model):
         # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
 
+    def _action_done(self, cancel_backorder=False):
+        # explode kit moves that avoided the action_explode of any confirmation process
+        moves_to_explode = self.filtered(lambda m: m.product_id.is_kits and m.state not in ('draft', 'cancel'))
+        exploded_moves = moves_to_explode.action_explode()
+        moves = (self - moves_to_explode) | exploded_moves
+        return super(StockMove, moves)._action_done(cancel_backorder)
+
     def _should_bypass_reservation(self, forced_location=False):
         return super()._should_bypass_reservation(forced_location) or self.product_id.is_kits
 
@@ -467,7 +480,7 @@ class StockMove(models.Model):
         moves_ids_to_unlink = OrderedSet()
         phantom_moves_vals_list = []
         for move in self:
-            if (not move.picking_type_id and not self.env.context.get('is_scrap')) or (move.production_id and move.production_id.product_id == move.product_id):
+            if (not move.picking_type_id and not (self.env.context.get('is_scrap') or self.env.context.get('skip_picking_assignation'))) or (move.production_id and move.production_id.product_id == move.product_id):
                 moves_ids_to_return.add(move.id)
                 continue
             bom = self.env['mrp.bom'].sudo()._bom_find(move.product_id, company_id=move.company_id.id, bom_type='phantom')[move.product_id]
@@ -605,6 +618,8 @@ class StockMove(models.Model):
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         vals = super()._prepare_move_line_vals(quantity, reserved_quant)
+        if self.raw_material_production_id:
+            vals['production_id'] = self.raw_material_production_id.id
         if self.production_id.product_tracking == 'lot' and self.product_id == self.production_id.product_id:
             vals['lot_id'] = self.production_id.lot_producing_id.id
         return vals
@@ -710,7 +725,7 @@ class StockMove(models.Model):
 
     @api.model
     def _determine_is_manual_consumption(self, bom_line):
-        return bom_line and (bom_line.manual_consumption or bom_line.operation_id)
+        return bom_line and bom_line.operation_id
 
     def _get_relevant_state_among_moves(self):
         res = super()._get_relevant_state_among_moves()

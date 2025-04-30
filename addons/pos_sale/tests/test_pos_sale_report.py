@@ -14,6 +14,18 @@ class TestPoSSaleReport(TestPoSCommon):
         self.config = self.basic_config
         self.product0 = self.create_product('Product 0', self.categ_basic, 0.0, 0.0)
         self.partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
+        # Ensure that adding a uom to the product with a factor != 1
+        # does not cause an error in weight and volume calculation
+        self.uom_reference = self.env['uom.uom'].create({
+            'name': 'Reference Unit',
+            'relative_factor': 1,
+        })
+        self.uom_dozen = self.env['uom.uom'].create({
+            'name': 'Dozen',
+            'relative_factor': 12,
+            'relative_uom_id': self.uom_reference.id,
+        })
+        self.product0.uom_id = self.uom_dozen
 
     def test_weight_and_volume(self):
         self.product0.product_tmpl_id.weight = 3
@@ -83,7 +95,7 @@ class TestPoSSaleReport(TestPoSCommon):
 
     def test_different_shipping_address(self):
         product_0 = self.create_product('Product 0', self.categ_basic, 0.0, 0.0)
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.customer.id,
             'partner_shipping_id': self.other_customer.id,
             'order_line': [(0, 0, {

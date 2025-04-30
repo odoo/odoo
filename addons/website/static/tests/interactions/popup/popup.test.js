@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
@@ -58,7 +55,9 @@ function getPopupTemplate(options = {}) {
     return `
         <div class="s_popup o_snippet_invisible" data-vcss="001" data-snippet="s_popup"
              data-name="Popup" id="sPopup" data-invisible="1">
-            <div class="modal fade s_popup_middle modal_shown ${backdrop ? "" : "s_popup_no_backdrop"}"
+            <div class="modal fade s_popup_middle modal_shown ${
+                backdrop ? "" : "s_popup_no_backdrop"
+            }"
                  id="${modalId}"
                  style="background-color: var(--black-50) !important; display: none;"
                  data-show-after="${showAfter}"
@@ -135,7 +134,9 @@ describe("close popup", () => {
     });
 
     test("click on primary button which is a form submit doesn't close popup", async () => {
-        const { core } = await startInteractions(getPopupTemplate({ extraPrimaryBtnClasses: "o_website_form_send" }));
+        const { core } = await startInteractions(
+            getPopupTemplate({ extraPrimaryBtnClasses: "o_website_form_send" })
+        );
         expect(core.interactions).toHaveLength(1);
         await tick();
         await animationFrame();
@@ -166,11 +167,14 @@ describe("show popup", () => {
         const modal = "#sPopup #modal[data-display='onClick']";
         expect(modal).not.toBeVisible();
         await click("a[href='#modal']");
-        await manuallyDispatchProgrammaticEvent(window, "hashchange", { newURL: browser.location.hash });
+        await manuallyDispatchProgrammaticEvent(window, "hashchange", {
+            newURL: browser.location.hash,
+        });
         expect(modal).toBeVisible();
     });
 
-    test.tags("desktop")("show popup when mouse leaves document", async () => {
+    test.tags("desktop");
+    test("show popup when mouse leaves document", async () => {
         const { core } = await startInteractions(getPopupTemplate({ display: "mouseExit" }));
         expect(core.interactions).toHaveLength(1);
         const modalEl = queryOne("#sPopup .modal");
@@ -238,7 +242,9 @@ describe("trap focus", () => {
         await press("Tab");
         expect("[href='#modal']").toBeFocused();
         await press("Enter");
-        await manuallyDispatchProgrammaticEvent(window, "hashchange", { newURL: browser.location.hash });
+        await manuallyDispatchProgrammaticEvent(window, "hashchange", {
+            newURL: browser.location.hash,
+        });
         expect(modal).toBeVisible();
         await tick();
         await animationFrame();

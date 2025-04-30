@@ -1,5 +1,4 @@
 import { _t } from "@web/core/l10n/translation";
-import { parseFloat } from "@web/views/fields/parsers";
 import { Transition } from "@web/core/transition";
 import { useBus, useService } from "@web/core/utils/hooks";
 
@@ -73,16 +72,6 @@ export class DebugWidget extends Component {
     toggleWidget() {
         this.state.isShown = !this.state.isShown;
     }
-    setWeight() {
-        var weightInKg = parseFloat(this.state.weightInput);
-        if (!isNaN(weightInKg)) {
-            this.hardwareProxy.setDebugWeight(weightInKg);
-        }
-    }
-    resetWeight() {
-        this.state.weightInput = "";
-        this.hardwareProxy.resetDebugWeight();
-    }
     async barcodeScan() {
         if (!this.barcodeReader) {
             return;
@@ -130,7 +119,7 @@ export class DebugWidget extends Component {
     exportOrders({ paid = true } = {}) {
         const orders = this.pos.models["pos.order"]
             .filter((order) => order.finalized === paid)
-            .map((o) => o.serialize({ orm: true }));
+            .map((o) => o.serializeForORM());
 
         const blob = this._createBlob(orders);
         const url = URL.createObjectURL(blob);
@@ -182,7 +171,7 @@ export class DebugWidget extends Component {
             }
 
             const missing = await this.pos.data.missingRecursive(data);
-            this.pos.data.models.loadData(missing, [], true);
+            this.pos.data.models.connectNewData(missing);
             this.notification.add(_t("%s orders imported", data["pos.order"].length));
         }
     }

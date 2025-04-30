@@ -1,11 +1,13 @@
 import {
     SIZES,
+    STORE_FETCH_ROUTES,
     click,
     contains,
     defineMailModels,
     dragenterFiles,
     dropFiles,
     insertText,
+    listenStoreFetch,
     onRpcBefore,
     openFormView,
     patchUiSize,
@@ -13,6 +15,7 @@ import {
     start,
     startServer,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
@@ -21,8 +24,6 @@ import {
     defineActions,
     getService,
     mockService,
-    onRpc,
-    serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
@@ -35,48 +36,46 @@ defineMailModels();
 test("simple chatter on a record", async () => {
     const pyEnv = await startServer();
     onRpcBefore((route, args) => {
-        if (route.startsWith("/mail") || route.startsWith("/discuss")) {
+        if (
+            (route.startsWith("/mail") || route.startsWith("/discuss")) &&
+            !STORE_FETCH_ROUTES.includes(route)
+        ) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
     });
+    listenStoreFetch(undefined, { logParams: ["mail.thread"] });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitStoreFetch(["failures", "systray_get_activities", "init_messaging"]);
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
     await contains(".o-mail-Thread");
-    await waitForSteps(
+    await waitStoreFetch(
         [
-            '/mail/thread/recipients/fields - {"thread_model":"res.partner"}',
-            '/mail/thread/recipients/fields - {"thread_model":"res.partner"}',
-            `/mail/data - ${JSON.stringify({
-                fetch_params: [
-                    [
-                        "mail.thread",
-                        {
-                            access_params: {},
-                            request_list: [
-                                "activities",
-                                "attachments",
-                                "followers",
-                                "scheduledMessages",
-                                "suggestedRecipients",
-                            ],
-                            thread_id: partnerId,
-                            thread_model: "res.partner",
-                        },
+            [
+                "mail.thread",
+                {
+                    access_params: {},
+                    request_list: [
+                        "activities",
+                        "attachments",
+                        "followers",
+                        "scheduledMessages",
+                        "suggestedRecipients",
                     ],
-                ],
-                context: { lang: "en", tz: "taht", uid: 7, allowed_company_ids: [1] },
-            })}`,
-            `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","fetch_params":{"limit":30}}`,
+                    thread_id: partnerId,
+                    thread_model: "res.partner",
+                },
+            ],
         ],
-        { ignoreOrder: true }
+        {
+            ignoreOrder: true,
+            stepsAfter: [
+                '/mail/thread/recipients/fields - {"thread_model":"res.partner"}',
+                '/mail/thread/recipients/fields - {"thread_model":"res.partner"}',
+                `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","fetch_params":{"limit":30}}`,
+            ],
+        }
     );
 });
 
@@ -150,13 +149,14 @@ test("No attachment loading spinner when creating records", async () => {
 });
 
 test("No attachment loading spinner when switching from loading record to creation of record", async () => {
-    onRpc("/mail/data", async (request) => {
-        const { params } = await request.json();
-        if (params.fetch_params.some((fetchParam) => fetchParam[0] === "mail.thread")) {
-            await new Deferred();
-        }
-    });
+    const def = new Deferred();
     const pyEnv = await startServer();
+    listenStoreFetch("mail.thread", {
+        async onRpc() {
+            asyncStep("before mail.thread");
+            await def;
+        },
+    });
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John" });
     await openFormView("res.partner", partnerId);
@@ -165,6 +165,9 @@ test("No attachment loading spinner when switching from loading record to creati
     await contains("button[aria-label='Attach files'] .fa-spin");
     await click(".o_control_panel_main_buttons .o_form_button_create");
     await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
+    await waitForSteps(["before mail.thread"]);
+    def.resolve();
+    await waitStoreFetch("mail.thread");
 });
 
 test("Composer toggle state is kept when switching from aside to bottom", async () => {
@@ -622,7 +625,7 @@ test("schedule activities on draft record should prompt with scheduling an activ
                 <chatter/>
             </form>`,
     });
-    await click("button", { text: "Activities" });
+    await click("button", { text: "Activity" });
     await wizardOpened;
     await waitForSteps(["mail.activity.schedule"]);
 });

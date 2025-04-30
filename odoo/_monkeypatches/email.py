@@ -1,7 +1,7 @@
 from email._policybase import _PolicyBase
 
 
-def patch_email():
+def patch_module():
     def policy_clone(self, **kwargs):
         for arg in kwargs:
             if arg.startswith("_") or "__" in arg:

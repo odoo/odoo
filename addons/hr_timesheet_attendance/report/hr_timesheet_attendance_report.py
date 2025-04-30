@@ -40,10 +40,17 @@ class HrTimesheetAttendanceReport(models.Model):
                     hr_attendance.employee_id AS employee_id,
                     hr_attendance.worked_hours AS attendance,
                     NULL AS timesheet,
-                    hr_attendance.check_in::date AS date,
+                    CAST(hr_attendance.check_in
+                            at time zone 'utc'
+                            at time zone
+                                (SELECT calendar.tz FROM resource_calendar as calendar
+                                INNER JOIN hr_employee as employee ON employee.id = employee_id
+                                WHERE calendar.id = employee.resource_calendar_id)
+                    as DATE) as date,
                     hr_employee.company_id as company_id
                 FROM hr_attendance
                 LEFT JOIN hr_employee ON hr_employee.id = hr_attendance.employee_id
+                WHERE check_in::date <= CURRENT_DATE
             UNION ALL
                 SELECT
                     ts.id AS id,
@@ -56,6 +63,7 @@ class HrTimesheetAttendanceReport(models.Model):
                 FROM account_analytic_line AS ts
                 LEFT JOIN hr_employee ON hr_employee.id = ts.employee_id
                 WHERE ts.project_id IS NOT NULL
+                  AND date <= CURRENT_DATE
             ) AS t
             GROUP BY t.employee_id, t.date, t.company_id, t.emp_cost
             ORDER BY t.date

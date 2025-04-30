@@ -15,18 +15,18 @@ patch(PosOrder.prototype, {
         return this.company.country_id?.code === "SA";
     },
 
-    is_to_invoice() {
+    isToInvoice() {
         if (this.isSACompany()) {
             return true;
         }
-        return super.is_to_invoice(...arguments);
+        return super.isToInvoice(...arguments);
     },
-    set_to_invoice(to_invoice) {
+    setToInvoice(to_invoice) {
         if (this.isSACompany()) {
-            this.assert_editable();
+            this.assertEditable();
             this.to_invoice = true;
         } else {
-            super.set_to_invoice(...arguments);
+            super.setToInvoice(...arguments);
         }
     },
 });

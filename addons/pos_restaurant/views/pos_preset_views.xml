@@ -5,8 +5,14 @@
         <field name="model">pos.preset</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_preset_form"></field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='identification']" position="after">
-                <field name="use_guest" />
+            <xpath expr="//page[@name='resource']" position="after">
+                <page string="Options" name="options">
+                    <group>
+                        <group name="restaurant" string="Restaurant">
+                            <field name="use_guest" />
+                        </group>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>

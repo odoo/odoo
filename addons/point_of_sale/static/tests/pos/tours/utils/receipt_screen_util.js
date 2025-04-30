@@ -96,6 +96,14 @@ export function receiptRoundingAmountIs(value) {
         },
     ];
 }
+export function paymentLineContains(paymentMethodName, amount) {
+    return [
+        {
+            content: `Check if payment line contains ${paymentMethodName} with amount ${amount}`,
+            trigger: `.receipt-screen .paymentlines:contains("${paymentMethodName}"):has(.pos-receipt-right-align:contains("${amount}"))`,
+        },
+    ];
+}
 export function receiptRoundingAmountIsNotThere() {
     return [
         {
@@ -158,11 +166,16 @@ export function emailIsSuccessful() {
         },
     ];
 }
-export function trackingMethodIsLot() {
+export function trackingMethodIsLot(lot) {
     return [
         {
             content: `tracking method is Lot`,
-            trigger: `li:contains("Lot Number")`,
+            trigger: `li.lot-number:contains("Lot Number ${lot}")`,
+            run: function () {
+                if (document.querySelectorAll("li.lot-number").length !== 1) {
+                    throw new Error(`Expected exactly one 'Lot Number ${lot}' element.`);
+                }
+            },
         },
     ];
 }
@@ -194,6 +207,24 @@ export function shippingDateIsToday() {
         {
             content: "Shipping date must be today",
             trigger: `.pos-receipt-order-data:contains('Expected delivery:') > div:contains('${expectedDelivery}')`,
+        },
+    ];
+}
+
+export function cashierNameExists(name) {
+    return [
+        {
+            content: `Cashier ${name} exists on the receipt`,
+            trigger: `.pos-receipt-contact .cashier:contains(Served by):contains(${name})`,
+        },
+    ];
+}
+
+export function containsOrderLine(name, quantity, price_unit, line_price) {
+    return [
+        {
+            content: `Order line with name: ${name}, quantity: ${quantity}, price per unit: ${price_unit}, and line price: ${line_price} exists`,
+            trigger: `.pos-receipt .orderline:has(.product-name:contains('${name}') .qty:contains('${quantity}')):has(.product-price:contains('${line_price}')):has(.price-per-unit:contains('${price_unit}'))`,
         },
     ];
 }

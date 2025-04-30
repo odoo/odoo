@@ -1,4 +1,3 @@
-import { animationFrame } from "@odoo/hoot-mock";
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { OdooPivot } from "@spreadsheet/pivot/odoo_pivot";
 import { getBasicPivotArch, getPyEnv } from "@spreadsheet/../tests/helpers/data";
@@ -24,6 +23,40 @@ function addEmptyGranularity(dimensions, fields) {
     });
 }
 
+async function insertStaticPivot(model, pivotId, params) {
+    const ds = model.getters.getPivot(pivotId);
+    if (!(ds instanceof OdooPivot)) {
+        throw new Error("The pivot data source is not an OdooPivot");
+    }
+    const [col, row] = params.anchor || [0, 0];
+    await ds.load();
+    const { cols, rows, measures, fieldsType } = ds.getTableStructure().export();
+    const table = {
+        cols,
+        rows,
+        measures,
+        fieldsType,
+    };
+    model.dispatch("INSERT_PIVOT", {
+        pivotId,
+        sheetId: params.sheetId || model.getters.getActiveSheetId(),
+        col,
+        row,
+        table,
+    });
+}
+
+function insertDynamicPivot(model, pivotId, params) {
+    const pivotFormulaId = model.getters.getPivotFormulaId(pivotId);
+    const [col, row] = params.anchor || [0, 0];
+    model.dispatch("UPDATE_CELL", {
+        sheetId: params.sheetId || model.getters.getActiveSheetId(),
+        col,
+        row,
+        content: `=PIVOT(${pivotFormulaId})`,
+    });
+}
+
 /**
  * @param {OdooSpreadsheetModel} model
  * @param {string} pivotId
@@ -32,6 +65,7 @@ function addEmptyGranularity(dimensions, fields) {
  * @param {string} [params.resModel]
  * @param {object} [params.serverData]
  * @param {string} [params.sheetId]
+ * @param {["static"|"dynamic"]} [params.pivotType]
  * @param {[number, number]} [params.anchor]
  */
 export async function insertPivotInSpreadsheet(model, pivotId, params) {
@@ -65,27 +99,11 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
         pivotId,
         pivot,
     });
-    const ds = model.getters.getPivot(pivotId);
-    if (!(ds instanceof OdooPivot)) {
-        throw new Error("The pivot data source is not an OdooPivot");
+    if (params.pivotType === "static") {
+        await insertStaticPivot(model, pivotId, params);
+    } else {
+        insertDynamicPivot(model, pivotId, params);
     }
-    await ds.load();
-    const { cols, rows, measures, fieldsType } = ds.getTableStructure().export();
-    const table = {
-        cols,
-        rows,
-        measures,
-        fieldsType,
-    };
-    const [col, row] = params.anchor || [0, 0];
-    model.dispatch("INSERT_PIVOT", {
-        pivotId,
-        sheetId: params.sheetId || model.getters.getActiveSheetId(),
-        col,
-        row,
-        table,
-    });
-    await animationFrame();
 }
 
 /**
@@ -93,6 +111,7 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
  * @param {string} [params.arch]
  * @param {object} [params.serverData]
  * @param {function} [params.mockRPC]
+ * @param {"dynamic"|"static"} [params.pivotType]
  * @returns {Promise<{ model: OdooSpreadsheetModel, env: object, pivotId: string}>}
  */
 export async function createSpreadsheetWithPivot(params = {}) {
@@ -102,7 +121,7 @@ export async function createSpreadsheetWithPivot(params = {}) {
     });
     const arch = params.arch || getBasicPivotArch();
     const pivotId = "PIVOT#1";
-    await insertPivotInSpreadsheet(model, pivotId, { arch });
+    await insertPivotInSpreadsheet(model, pivotId, { arch, pivotType: params.pivotType });
     await waitForDataLoaded(model);
     return { model, env, pivotId };
 }

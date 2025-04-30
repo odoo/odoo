@@ -1,4 +1,4 @@
-import { reactive } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 
@@ -33,23 +33,24 @@ export class DiscussCoreCommon {
             });
             this._handleNotificationChannelDelete(thread, metadata);
         });
-        this.busService.subscribe("discuss.channel/new_message", (payload, metadata) =>
-            this._handleNotificationNewMessage(payload, metadata)
-        );
+        this.busService.subscribe("discuss.channel/new_message", (payload, metadata) => {
+            // Insert should always be done before any async operation. Indeed,
+            // awaiting before the insertion could lead to overwritting newer
+            // state coming from more recent `mail.record/insert` notifications.
+            this.store.insert(payload.data);
+            this._handleNotificationNewMessage(payload, metadata);
+        });
         this.busService.subscribe("discuss.channel/transient_message", (payload) => {
             const { body, channel_id } = payload;
             const lastMessageId = this.store.getLastMessageId();
-            const message = this.store["mail.message"].insert(
-                {
-                    author: this.store.odoobot,
-                    body,
-                    id: lastMessageId + 0.01,
-                    is_note: true,
-                    is_transient: true,
-                    thread: { id: channel_id, model: "discuss.channel" },
-                },
-                { html: true }
-            );
+            const message = this.store["mail.message"].insert({
+                author: this.store.odoobot,
+                body: markup(body),
+                id: lastMessageId + 0.01,
+                is_note: true,
+                is_transient: true,
+                thread: { id: channel_id, model: "discuss.channel" },
+            });
             message.thread.messages.push(message);
             message.thread.transientMessages.push(message);
         });
@@ -94,9 +95,10 @@ export class DiscussCoreCommon {
         if (!channel) {
             return;
         }
-        const { "mail.message": messages = [] } = this.store.insert(data, { html: true });
-        /** @type {import("models").Message} */
-        const message = messages[0];
+        const message = this.store["mail.message"].get(data["mail.message"][0]);
+        if (!message) {
+            return;
+        }
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
                 channel.addOrReplaceMessage(message, this.store["mail.message"].get(temporary_id));
@@ -110,7 +112,10 @@ export class DiscussCoreCommon {
                     channel.selfMember.syncUnread = true;
                     channel.scrollUnread = true;
                 }
-                if (notifId > channel.selfMember?.message_unread_counter_bus_id) {
+                if (
+                    notifId > channel.selfMember?.message_unread_counter_bus_id &&
+                    !message.isNotification
+                ) {
                     channel.selfMember.message_unread_counter++;
                 }
             }

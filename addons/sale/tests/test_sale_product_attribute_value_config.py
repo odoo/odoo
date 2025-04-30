@@ -1,73 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields
 from odoo.tests import tagged
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.product.tests.test_product_attribute_value_config import (
     TestProductAttributeValueCommon,
 )
-
-
-@tagged("post_install", "-at_install")
-class TestSaleProductAttributeValueCommon(AccountTestInvoicingCommon, TestProductAttributeValueCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.computer.company_id = cls.env.company
-        cls.computer = cls.computer.with_env(cls.env)
-        cls.env['product.pricelist'].sudo().search([]).action_archive()
-        cls.pricelist = cls.env['product.pricelist'].create({'name': 'Base Pricelist'})
-
-    @classmethod
-    def _setup_currency(cls, currency_ratio=2):
-        """Get or create a currency. This makes the test non-reliant on demo.
-
-        With an easy currency rate, for a simple 2 ratio in the following tests.
-        """
-        from_currency = cls.computer.currency_id
-        cls._set_or_create_rate_today(from_currency, rate=1)
-
-        to_currency = cls._get_or_create_currency("my currency", "C")
-        cls._set_or_create_rate_today(to_currency, currency_ratio)
-        return to_currency
-
-    @classmethod
-    def _set_or_create_rate_today(cls, currency, rate):
-        """Get or create a currency rate for today. This makes the test
-        non-reliant on demo data."""
-        name = fields.Date.today()
-        currency_id = currency.id
-        company_id = cls.env.company.id
-
-        CurrencyRate = cls.env['res.currency.rate']
-
-        currency_rate = CurrencyRate.search([
-            ('company_id', '=', company_id),
-            ('currency_id', '=', currency_id),
-            ('name', '=', name),
-        ])
-
-        if currency_rate:
-            currency_rate.rate = rate
-        else:
-            CurrencyRate.create({
-                'company_id': company_id,
-                'currency_id': currency_id,
-                'name': name,
-                'rate': rate,
-            })
-
-    @classmethod
-    def _get_or_create_currency(cls, name, symbol):
-        """Get or create a currency based on name. This makes the test
-        non-reliant on demo data."""
-        currency = cls.env['res.currency'].search([('name', '=', name)])
-        return currency or currency.create({
-            'name': name,
-            'symbol': symbol,
-        })
 
 
 @tagged('post_install', '-at_install')

@@ -4,7 +4,7 @@
  * @param {HTMLElement} container
  * @param {Object} env
  */
-export function upgrade(container) {
+export function migrate(container) {
     const excalidrawContainers = container.querySelectorAll("[data-embedded='draw']");
     for (const excalidrawContainer of excalidrawContainers) {
         const source = JSON.parse(excalidrawContainer.dataset.embeddedProps).source;

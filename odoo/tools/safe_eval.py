@@ -387,7 +387,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     if globals_dict is None:
         globals_dict = {}
 
-    globals_dict['__builtins__'] = _BUILTINS
+    globals_dict['__builtins__'] = dict(_BUILTINS)
     if locals_builtins:
         if locals_dict is None:
             locals_dict = {}
@@ -473,7 +473,7 @@ mods = ['parser', 'relativedelta', 'rrule', 'tz']
 for mod in mods:
     __import__('dateutil.%s' % mod)
 # make sure to patch pytz before exposing
-from odoo._monkeypatches.pytz import patch_pytz  # noqa: E402, F401
+from odoo._monkeypatches.pytz import patch_module as patch_pytz  # noqa: E402, F401
 patch_pytz()
 
 datetime = wrap_module(__import__('datetime'), ['date', 'datetime', 'time', 'timedelta', 'timezone', 'tzinfo', 'MAXYEAR', 'MINYEAR'])

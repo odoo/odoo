@@ -4,7 +4,6 @@ from odoo.exceptions import UserError, ValidationError
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import format_list
 from odoo.tools.misc import unquote
 
 TIMESHEET_INVOICE_TYPES = [
@@ -39,7 +38,7 @@ class AccountAnalyticLine(models.Model):
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet", index='btree_not_null')
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False,
-        domain=_domain_so_line,
+        domain=_domain_so_line, falsy_value_label="Non-billable",
         help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.")
     # we needed to store it only in order to be able to groupby in the portal
     order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=True, index=True)
@@ -104,7 +103,7 @@ class AccountAnalyticLine(models.Model):
     def _check_can_write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda t: t.timesheet_invoice_id and t.timesheet_invoice_id.state != 'cancel'):
-            if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']):
+            if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'date']):
                 raise UserError(_('You cannot modify timesheets that are already invoiced.'))
         return super()._check_can_write(values)
 
@@ -231,7 +230,7 @@ class AccountAnalyticLine(models.Model):
         if missing_plan_names:
             raise ValidationError(_(
                 "'%(missing_plan_names)s' analytic plan(s) required on the analytic distribution of the sale order item '%(so_line_name)s' linked to the timesheet.",
-                missing_plan_names=format_list(self.env, missing_plan_names),
+                missing_plan_names=missing_plan_names,
                 so_line_name=so_line.name,
             ))
 

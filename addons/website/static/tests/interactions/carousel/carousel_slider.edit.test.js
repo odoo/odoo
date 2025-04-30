@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, queryFirst, queryOne } from "@odoo/hoot-dom";
@@ -56,7 +53,7 @@ test("[EDIT] carousel_slider prevents ride", async () => {
     core.stopInteractions();
 
     expect(core.interactions).toHaveLength(0);
-    expect(carouselEl).toHaveAttribute("data-bs-ride", "ride");
+    expect(carouselEl).toHaveAttribute("data-bs-ride", "noAutoSlide");
 });
 
 test("[EDIT] carousel_slider updates min height on content_changed", async () => {

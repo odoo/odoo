@@ -174,6 +174,14 @@ export class IrModel extends webModels.IrModel {
         }));
     }
 
+    has_searchable_parent_relation() {
+        return false;
+    }
+
+    get_available_models() {
+        return this.env["ir.model"].search_read([], ["display_name", "model"]);
+    }
+
     _records = [
         {
             id: 37,
@@ -221,7 +229,7 @@ export class SpreadsheetMixin extends models.Model {
 
     spreadsheet_binary_data = fields.Binary({ string: "Spreadsheet file" });
     spreadsheet_data = fields.Text();
-    thumbnail = fields.Binary();
+    display_thumbnail = fields.Binary();
 
     get_display_names_for_spreadsheet(args) {
         const result = [];
@@ -281,6 +289,32 @@ export class ResCurrency extends models.Model {
             position: "before",
             decimal_places: 2,
         },
+    ];
+}
+
+export class ResCountry extends webModels.ResCountry {
+    _name = "res.country";
+    name = fields.Char({ string: "Country" });
+    code = fields.Char({ string: "Code" });
+
+    _records = [
+        { id: 1, name: "Belgium", code: "BE" },
+        { id: 2, name: "France", code: "FR" },
+        { id: 3, name: "United States", code: "US" },
+    ];
+}
+
+export class ResCountryState extends models.Model {
+    _name = "res.country.state";
+    name = fields.Char({ string: "Name" });
+    code = fields.Char({ string: "Code" });
+    country_id = fields.Many2one({ relation: "res.country" });
+    display_name = fields.Char({ string: "Display Name" });
+
+    _records = [
+        { id: 1, name: "California", code: "CA", country_id: 3, display_name: "California (US)" },
+        { id: 2, name: "New York", code: "NY", country_id: 3, display_name: "New York (US)" },
+        { id: 3, name: "Texas", code: "TX", country_id: 3, display_name: "Texas (US)" },
     ];
 }
 
@@ -517,6 +551,8 @@ export const SpreadsheetModels = {
     IrActions,
     ResGroup,
     ResUsers,
+    ResCountry,
+    ResCountryState,
     SpreadsheetMixin,
     ResCurrency,
     Partner,

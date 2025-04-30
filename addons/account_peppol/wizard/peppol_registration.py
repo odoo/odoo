@@ -97,13 +97,9 @@ class PeppolRegistration(models.TransientModel):
                     'message': _("The endpoint number might not be correct. "
                                 "Please check if you entered the right identification number."),
                 }
-            if wizard.company_id.country_code == 'BE' and wizard.peppol_eas not in (False, '0208'):
-                peppol_warnings['company_peppol_eas_warning'] = {
-                    'message': _("The recommended identification method for Belgium is your Company Registry Number."),
-                }
             if not wizard.smp_registration:
-                peppol_warnings['company_on_another_smp'] = {
-                    'message': _("Your company is already registered on another Access Point (%s) for receiving invoices."
+                peppol_warnings['company_already_on_smp'] = {
+                    'message': _("Your company is already registered on an Access Point (%s) for receiving invoices. "
                                  "We will register you on Odoo as a sender only.", wizard.peppol_external_provider)
                 }
             wizard.peppol_warnings = peppol_warnings or False
@@ -121,8 +117,10 @@ class PeppolRegistration(models.TransientModel):
             if wizard.peppol_eas and wizard.peppol_endpoint:
                 edi_identification = f'{wizard.peppol_eas}:{wizard.peppol_endpoint}'
                 peppol_info = wizard.company_id._get_company_info_on_peppol(edi_identification)
-            wizard.smp_registration = not peppol_info['is_on_peppol']  # Register on smp if not on Peppol
-            wizard.peppol_external_provider = peppol_info['external_provider']
+                is_company_on_peppol = peppol_info['is_on_peppol']
+                external_provider = peppol_info['external_provider']
+            wizard.smp_registration = not is_company_on_peppol  # Register on smp if not on Peppol
+            wizard.peppol_external_provider = external_provider
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -202,15 +200,12 @@ class PeppolRegistration(models.TransientModel):
         # success or rejected
         notifications = {
             'sender': {
-                'title': _('Registered as a sender.'),
                 'message': _('You can now send electronic invoices via Peppol.'),
             },
             'smp_registration': {
-                'title': _('Registered to receive documents via Peppol.'),
-                'message': _('Your registration on Peppol network should be activated within a day. The updated status will be visible in Settings.'),
+                'message': _('Your Peppol registration will be activated soon. You can already send invoices.'),
             },
             'receiver': {
-                'title': _('Registered as a receiver.'),
                 'message': _('You can now send and receive electronic invoices via Peppol'),
             },
             'rejected': {
@@ -219,7 +214,13 @@ class PeppolRegistration(models.TransientModel):
             },
         }
         state = self.company_id.account_peppol_proxy_state
+
+        if state == 'sender':
+            # if user asked to register as a receiver, state would've been 'smp_registration'
+            # so this is the final registration state for sender-only registration
+            self.company_id._account_peppol_send_welcome_email()
+
         return self._action_send_notification(
-            title=notifications[state]['title'],
+            title=None,
             message=notifications[state]['message'],
         )

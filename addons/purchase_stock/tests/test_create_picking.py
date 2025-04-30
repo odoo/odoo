@@ -234,6 +234,76 @@ class TestCreatePicking(common.TestProductCommon):
         # check the delivered quantity
         self.assertEqual(po.order_line.qty_received, 3.0)
 
+    def test_mtso_multi_pg_order(self):
+        """ Run 2 procurements for a product at the same times then receipt them via a purchase
+        order. Check the reservation search for stock move of the same procurement group in priority
+        even if the stock move are in MTS. """
+        partner_demo_customer = self.partner
+        final_location = partner_demo_customer.property_stock_customer
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        mto_route.rule_ids.procure_method = 'mts_else_mto'
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+        buy_route.rule_ids.group_propagation_option = 'propagate'
+        seller = self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_id.id,
+            'price': 12.0,
+        })
+        self.product_id_1 = self.env['product.product'].create({
+            'name': 'ProductA',
+            'is_storable': True,
+            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
+            'seller_ids': [(6, 0, [seller.id])],
+        })
+
+        pg1 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-1'})
+        pg2 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-2'})
+
+        self.env['procurement.group'].run([
+            pg1.Procurement(
+                self.product_id_1,
+                2.0,
+                self.product_id_1.uom_id,
+                final_location,
+                'test_mtso_mts_1',
+                'test_mtso_mts_1',
+                warehouse.company_id,
+                {
+                    'warehouse_id': warehouse,
+                    'group_id': pg1
+                }
+            ),
+            pg2.Procurement(
+                self.product_id_1,
+                2.0,
+                self.product_id_1.uom_id,
+                final_location,
+                'test_mtso_mts_2',
+                'test_mtso_mts_2',
+                warehouse.company_id,
+                {
+                    'warehouse_id': warehouse,
+                    'group_id': pg2
+                }
+            ),
+        ])
+
+        lines = self.env['purchase.order.line'].search([
+            ('product_id', '=', self.product_id_1.id),
+        ])
+        lines.order_id.button_confirm()
+        self.assertEqual(len(lines.order_id), 2)
+
+        lines[1].move_ids.picking_id.button_validate()
+        reserved_delivery = self.env['stock.move'].search([
+            ('product_id', '=', self.product_id_1.id),
+            ('picking_type_id', '=', self.ref('stock.picking_type_out')),
+            ('state', '=', 'assigned'),
+        ])
+        self.assertEqual(len(reserved_delivery), 1)
+        self.assertEqual(reserved_delivery.group_id, lines[1].order_id.group_id)
+
     def test_04_mto_multiple_po(self):
         """ Simulate a mto chain with 2 purchase order.
         Create a move with qty 1, confirm the RFQ then create a new
@@ -749,3 +819,35 @@ class TestCreatePicking(common.TestProductCommon):
 
         self.assertTrue(exchange_return_picking)
         self.assertEqual(exchange_return_picking.origin, 'Return of ' + stock_picking.name)
+
+    def test_po_with_return_for_exchange_shows_3_transfers(self):
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+
+        stock_picking = po.picking_ids
+        stock_picking.button_validate()
+
+        return_picking_wizard = self.env['stock.return.picking'].with_context(
+            active_ids=stock_picking.ids, active_id=stock_picking.id, active_model='stock.picking'
+        ).create({})
+
+        return_picking_wizard.product_return_moves.quantity = 1.0
+        return_picking_wizard.action_create_exchanges()
+
+        self.assertEqual(
+            po.incoming_picking_count, 3,
+            'All 3 transfers (orig, return, exchange) should be associated with the PO.'
+        )
+
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        picking_type_in = self.env.ref('stock.picking_type_in')
+
+        # Orig: receipt for 5 items
+        self.assertEqual(po.picking_ids[0].picking_type_id, picking_type_in)
+        self.assertEqual(po.picking_ids[0].move_ids.quantity, 5)
+        # Return: delivery for 1 item
+        self.assertEqual(po.picking_ids[1].picking_type_id, picking_type_out)
+        self.assertEqual(po.picking_ids[1].move_ids.quantity, 1)
+        # Exchange: receipt for 1 item
+        self.assertEqual(po.picking_ids[2].picking_type_id, picking_type_in)
+        self.assertEqual(po.picking_ids[2].move_ids.quantity, 1)

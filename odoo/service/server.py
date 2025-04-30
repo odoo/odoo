@@ -2,6 +2,7 @@
 # Threaded, Gevent and Prefork Servers
 #-----------------------------------------------------------
 import contextlib
+import collections
 import datetime
 import errno
 import logging
@@ -207,6 +208,12 @@ class RequestHandler(CommonRequestHandler):
         if self.headers.get('Upgrade') == 'websocket':
             self.rfile = BytesIO()
             self.wfile = BytesIO()
+
+    def log_error(self, format, *args):
+        if format == "Request timed out: %r" and config['test_enable']:
+            _logger.info(format, *args)
+        else:
+            super().log_error(format, *args)
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
@@ -561,6 +568,7 @@ class ThreadedServer(CommonServer):
             conn = sql_db.db_connect('postgres')
             with contextlib.closing(conn.cursor()) as cr:
                 _run_cron(cr)
+                cr._cnx.close()
             _logger.info('cron%d max age (%ss) reached, releasing connection.', number, config['limit_time_worker_cron'])
 
     def cron_spawn(self):
@@ -571,10 +579,6 @@ class ThreadedServer(CommonServer):
         threads it spawns are not marked daemon).
 
         """
-        # Force call to strptime just before starting the cron thread
-        # to prevent time.strptime AttributeError within the thread.
-        # See: http://bugs.python.org/issue7980
-        datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
         for i in range(config['max_cron_threads']):
             t = threading.Thread(target=self.cron_thread, args=(i,), name=f"odoo.service.cron.cron{i}")
             t.daemon = True
@@ -601,6 +605,7 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGXCPU, self.signal_handler)
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
+            signal.signal(signal.SIGUSR2, log_ormcache_stats)
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
@@ -661,7 +666,7 @@ class ThreadedServer(CommonServer):
             if config['test_enable']:
                 from odoo.tests.result import _logger as logger  # noqa: PLC0415
                 with Registry.registries._lock:
-                    for db, registry in Registry.registries.d.items():
+                    for db, registry in Registry.registries.items():
                         report = registry._assertion_report
                         log = logger.error if not report.wasSuccessful() \
                          else logger.warning if not report.testsRun \
@@ -794,6 +799,7 @@ class GeventServer(CommonServer):
             # Set process memory limit as an extra safeguard
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
+            signal.signal(signal.SIGUSR2, log_ormcache_stats)
             gevent.spawn(self.watchdog)
 
         self.httpd = WSGIServer(
@@ -841,7 +847,7 @@ class PreforkServer(CommonServer):
         self.workers_cron = {}
         self.workers = {}
         self.generation = 0
-        self.queue = []
+        self.queue = collections.deque()
         self.long_polling_pid = None
 
     def pipe_new(self):
@@ -909,8 +915,8 @@ class PreforkServer(CommonServer):
                 self.worker_pop(pid)
 
     def process_signals(self):
-        while len(self.queue):
-            sig = self.queue.pop(0)
+        while self.queue:
+            sig = self.queue.popleft()
             if sig in [signal.SIGINT, signal.SIGTERM]:
                 raise KeyboardInterrupt
             elif sig == signal.SIGHUP:
@@ -921,9 +927,9 @@ class PreforkServer(CommonServer):
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
                 dumpstacks()
-            elif sig == signal.SIGUSR1:
-                # log ormcache stats on kill -SIGUSR1
-                log_ormcache_stats()
+            elif sig in [signal.SIGUSR1, signal.SIGUSR2]:
+                # log ormcache stats on kill -SIGUSR1 or kill -SIGUSR2
+                log_ormcache_stats(sig)
             elif sig == signal.SIGTTIN:
                 # increase number of workers
                 self.population += 1
@@ -998,6 +1004,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGTTOU, self.signal_handler)
         signal.signal(signal.SIGQUIT, dumpstacks)
         signal.signal(signal.SIGUSR1, log_ormcache_stats)
+        signal.signal(signal.SIGUSR2, log_ormcache_stats)
 
         if config['http_enable']:
             # listen to socket
@@ -1184,7 +1191,8 @@ class Worker(object):
     def _runloop(self):
         signal.pthread_sigmask(signal.SIG_BLOCK, {
             signal.SIGXCPU,
-            signal.SIGINT, signal.SIGQUIT, signal.SIGUSR1,
+            signal.SIGINT, signal.SIGQUIT,
+            signal.SIGUSR1, signal.SIGUSR2,
         })
         try:
             while self.alive:
@@ -1335,6 +1343,7 @@ class WorkerCron(Worker):
 
     def stop(self):
         super().stop()
+        self.dbcursor._cnx.close()
         self.dbcursor.close()
 
 #----------------------------------------------------------
@@ -1396,7 +1405,7 @@ def preload_registries(dbnames):
                     with registry.cursor() as cr:
                         env = api.Environment(cr, api.SUPERUSER_ID, {})
                         env['ir.qweb']._pregenerate_assets_bundles()
-                result = loader.run_suite(post_install_suite)
+                result = loader.run_suite(post_install_suite, global_report=registry._assertion_report)
                 registry._assertion_report.update(result)
                 _logger.info("%d post-tests in %.2fs, %s queries",
                              registry._assertion_report.testsRun - tests_before,

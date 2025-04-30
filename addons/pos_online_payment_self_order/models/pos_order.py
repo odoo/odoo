@@ -10,6 +10,18 @@ class PosOrder(models.Model):
 
     use_self_order_online_payment = fields.Boolean(compute='_compute_use_self_order_online_payment', store=True, readonly=True)
 
+    def get_order_to_print(self):
+        self.ensure_one()
+
+        # Lock the line
+        self.env.cr.execute("SELECT id FROM pos_order WHERE id = %s FOR UPDATE NOWAIT", (self.id))
+
+        if self.nb_print > 0:
+            raise ValueError("This order has already been printed automatically.")
+
+        self.nb_print += 1
+        return self.read_pos_data([], self.config_id.id)
+
     @api.depends('config_id.self_order_online_payment_method_id')
     def _compute_use_self_order_online_payment(self):
         for order in self:

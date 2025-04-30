@@ -68,6 +68,14 @@ export function checkProduct(name, price, quantity) {
     };
 }
 
+export function checkKioskProduct(name, price) {
+    return {
+        content: `Check product card with ${name} and ${price}`,
+        trigger: `.product-item:has(div:contains("${name}")):has(div .o-so-tabular-nums:contains("${price}"))`,
+        run: "click",
+    };
+}
+
 export function checkAttribute(productName, attributes) {
     let attributeString = "";
     let attributeStringReadable = "";
@@ -107,4 +115,11 @@ export function checkCombo(comboName, products) {
     }
 
     return steps;
+}
+
+export function checkTotalPrice(price) {
+    return {
+        content: `The total price to pay is ${price}`,
+        trigger: `.order-price :contains(Total):contains(${price})`,
+    };
 }

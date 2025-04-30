@@ -39,7 +39,7 @@ class SaleOrderLine(models.Model):
                     line.is_mto = True
                     break
 
-    def _get_qty_procurement(self, previous_product_uom_qty):
+    def _get_qty_procurement(self, previous_product_uom_qty=False):
         # People without purchase rights should be able to do this operation
         purchase_lines_sudo = self.sudo().purchase_line_ids
         if purchase_lines_sudo.filtered(lambda r: r.state != 'cancel'):

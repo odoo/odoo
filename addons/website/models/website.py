@@ -2,6 +2,7 @@
 
 import base64
 import fnmatch
+import functools
 import hashlib
 import inspect
 import json
@@ -153,6 +154,9 @@ class Website(models.Model):
     def _default_social_tiktok(self):
         return self.env.ref('base.main_company').social_tiktok
 
+    def _default_social_discord(self):
+        return self.env.ref('base.main_company').social_discord
+
     def _default_logo(self):
         with tools.file_open('website/static/src/img/website_logo.svg', 'rb') as f:
             return base64.b64encode(f.read())
@@ -165,6 +169,7 @@ class Website(models.Model):
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
     social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
     social_tiktok = fields.Char('TikTok Account', default=_default_social_tiktok)
+    social_discord = fields.Char('Discord Account', default=_default_social_discord)
     social_default_image = fields.Binary(string="Default Social Share Image", help="If set, replaces the website logo as the default social share image.")
     has_social_default_image = fields.Boolean(compute='_compute_has_social_default_image', store=True)
 
@@ -248,10 +253,18 @@ class Website(models.Model):
     def _compute_blocked_third_party_domains(self):
         for website in self:
             custom_list = website.sudo().custom_blocked_third_party_domains
+
+            full_list = DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS
             if custom_list:
-                full_list = f'{DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS}\n{custom_list}'
-            else:
-                full_list = DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS
+                # Note: each line of the custom list is already ensured to not
+                # have leading or trailing whitespaces.
+                lines = custom_list.splitlines()
+                custom_domains = '\n'.join([line for line in lines if line[0] != '#'])
+                if lines[0].startswith("#ignore_default"):
+                    full_list = custom_domains
+                else:
+                    full_list += f"\n{custom_domains}"
+
             website.blocked_third_party_domains = full_list
 
     def _get_blocked_third_party_domains_list(self):
@@ -417,6 +430,9 @@ class Website(models.Model):
         configurator_action_todo = self.env.ref('website.website_configurator_todo')
         return configurator_action_todo.action_launch()
 
+    def _idna_url(self, url):
+        return get_base_domain(url.lower(), True).encode('idna').decode('ascii')
+
     def _is_indexable_url(self, url):
         """
         Returns True if the given url has to be indexed by search engines.
@@ -429,7 +445,7 @@ class Website(models.Model):
         :param url: the url to check
         :return: True if the url has to be indexed, False otherwise
         """
-        return get_base_domain(url.lower(), True) == get_base_domain(self.domain.lower(), True)
+        return self._idna_url(url) == self._idna_url(self.domain)
 
     # ----------------------------------------------------------
     # Configurator
@@ -1270,11 +1286,7 @@ class Website(models.Model):
             url = 'website_url' in record and record.website_url or record.url
             search_criteria.append((url, website.website_domain()))
 
-        # Search the URL in every relevant field
-        html_fields = self._get_html_fields() + [
-            ('website.menu', 'url'),
-        ]
-        for model_name, field_name in html_fields:
+        for model_name, field_name in self._get_html_fields():
             Model = self.env[model_name]
             if not Model.has_access('read'):
                 continue
@@ -1554,9 +1566,12 @@ class Website(models.Model):
 
         for rule in router.iter_rules():
             if 'sitemap' in rule.endpoint.routing and rule.endpoint.routing['sitemap'] is not True:
-                if rule.endpoint.func.__func__ in sitemap_endpoint_done:
+                endpoint_func = rule.endpoint.func
+                if isinstance(endpoint_func, functools.partial): # follow partial in case of redirect
+                    endpoint_func = endpoint_func.func
+                if endpoint_func.__func__ in sitemap_endpoint_done:
                     continue
-                sitemap_endpoint_done.add(rule.endpoint.func.__func__)
+                sitemap_endpoint_done.add(endpoint_func.__func__)
 
                 func = rule.endpoint.routing['sitemap']
                 if func is False:
@@ -1708,6 +1723,13 @@ class Website(models.Model):
         self._force()
         return self.get_client_action(path)
 
+    def _get_canonical_url(self):
+        """ Returns the canonical URL of the current request. """
+        self.ensure_one()
+        return self.env['ir.http']._url_localized(
+            lang_code=request.lang.code, canonical_domain=self.get_base_url()
+        )
+
     def _is_canonical_url(self):
         """Returns whether the current request URL is canonical."""
         self.ensure_one()
@@ -1715,7 +1737,7 @@ class Website(models.Model):
         # the language in the path. It is important to also test the domain of
         # the current URL.
         current_url = request.httprequest.url_root[:-1] + request.httprequest.environ['REQUEST_URI']
-        canonical_url = self.env['ir.http']._url_localized(lang_code=request.lang.code, canonical_domain=self.get_base_url())
+        canonical_url = self._get_canonical_url()
         # A request path with quotable characters (such as ",") is never
         # canonical because request.httprequest.base_url is always unquoted,
         # and canonical url is always quoted, so it is never possible to tell

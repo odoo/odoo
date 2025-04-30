@@ -9,8 +9,11 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
                 <data>
-                    <field name="email" position="before">
-                        <field name="notification_type" widget="radio" readonly="0"/>
+                    <field name="signature" position="before">
+                        <group string="Discuss" name="discuss">
+                            <field name="notification_type" widget="radio" readonly="0"/>
+                            <field name="role_ids" widget="many2many_tags" readonly="not can_edit_role"/>
+                        </group>
                     </field>
                     <field name="signature" position="attributes">
                         <attribute name="widget">html_mail</attribute>
@@ -27,8 +30,10 @@
             <field name="arch" type="xml">
                 <data>
                     <field name="signature" position="before">
-                        <field name="notification_type" widget="radio"
-                            invisible="share"/>
+                        <group string="Discuss" name="discuss">
+                            <field name="notification_type" widget="radio" invisible="share"/>
+                            <field name="role_ids" widget="many2many_tags" readonly="not can_edit_role"/>
+                        </group>
                     </field>
                     <field name="signature" position="attributes">
                         <attribute name="widget">html_mail</attribute>

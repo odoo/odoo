@@ -11,9 +11,9 @@
         <field name="search_view_id" ref="hr.view_employee_filter"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new employee
+                Create an employee.
             </p><p>
-                Quickly find all the information you need for your employees such as contact data, job position, availability, etc.
+                Find all the information on employees.
             </p>
         </field>
     </record>
@@ -23,26 +23,35 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="%(hr_org_chart.action_hr_employee_org_chart)d"
-                    icon="fa-users"
-                    type="action"
-                    context="{'hierarchy_res_id': id}"
-                    invisible="(not parent_id and not child_ids) or parent_id == id">
-                    <div class="o_stat_info">
-                        <span class="o_stat_text">Org Chart</span>
-                    </div>
-                </button>
-            </xpath>
             <div id="o_work_employee_main" position="after">
                 <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5 pe-lg-0">
-                    <separator string="Organization Chart"/>
+                    <a name="%(hr_org_chart.action_hr_employee_org_chart)d"
+                        type="action"
+                        role="button"
+                        context="{'hierarchy_res_id': id}"
+                        invisible="not subordinate_ids and (not parent_id or parent_id == id)">
+                            <div class="d-flex flex-column align-items-start mt-0 pt-4">
+                                <div class="d-flex align-items-left mb-0">
+                                    <span class="text-uppercase fw-bolder" style="font-size: 13px">Organization Chart</span>
+                                    <i class="fa fa-users ms-1 mt-1" style="font-size: 0.7rem;"/>
+                                </div>
+                                <div class="w-100 border-top border-1 border-secondary mt-0 mb-3"></div>
+                            </div>
+                    </a>
+                    <div invisible="subordinate_ids or (parent_id and not parent_id == id)">
+                        <div class="d-flex flex-column align-items-start mt-0 pt-4" style="cursor: default;">
+                            <div class="d-flex align-items-left mb-0">
+                                <span class="text-uppercase fw-bolder" style="font-size: 13px">Organization Chart</span>
+                            </div>
+                            <div class="w-100 border-top border-1 border-secondary mt-0 mb-3"></div>
+                        </div>
+                    </div>
                     <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
                 </div>
             </div>
         </field>
     </record>
-    
+
     <record id="hr_employee_view_pivot_inherit_org_chart" model="ir.ui.view">
         <field name="name">hr.employee.view.pivot.inherit.org_chart</field>
         <field name="model">hr.employee</field>
@@ -53,7 +62,7 @@
             </xpath>
         </field>
     </record>
-    
+
     <record id="hr_employee_view_graph_inherit_org_chart" model="ir.ui.view">
         <field name="name">hr.employee.view.graph.inherit.org_chart</field>
         <field name="model">hr.employee</field>
@@ -102,7 +111,27 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='o_work_employee_main']" position="after">
                 <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">
-                    <separator string="Organization Chart"/>
+                    <a name="%(hr_org_chart.action_hr_employee_public_org_chart)d"
+                        type="action"
+                        role="button"
+                        context="{'hierarchy_res_id': id}"
+                        invisible="not subordinate_ids and (not parent_id or parent_id == id)">
+                            <div class="d-flex flex-column align-items-start mt-0 pt-4">
+                                <div class="d-flex align-items-left mb-0">
+                                    <span class="text-uppercase fw-bolder" style="font-size: 13px">Organization Chart</span>
+                                    <i class="fa fa-users ms-1 mt-1" style="font-size: 0.7rem;"/>
+                                </div>
+                                <div class="w-100 border-top border-1 border-secondary mt-0 mb-3"></div>
+                            </div>
+                    </a>
+                    <div invisible="subordinate_ids or (parent_id and not parent_id == id)">
+                        <div class="d-flex flex-column align-items-start mt-0 pt-4" style="cursor: default;">
+                            <div class="d-flex align-items-left mb-0">
+                                <span class="text-uppercase fw-bolder" style="font-size: 13px">Organization Chart</span>
+                            </div>
+                            <div class="w-100 border-top border-1 border-secondary mt-0 mb-3"></div>
+                        </div>
+                    </div>
                     <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
                 </div>
             </xpath>
@@ -116,7 +145,27 @@
         <field name="arch" type="xml">
             <div id="o_work_employee_main" position="after">
                 <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">
-                    <separator string="Organization Chart"/>
+                    <a name="%(hr_org_chart.action_hr_employee_public_org_chart)d"
+                        type="action"
+                        role="button"
+                        context="{'hierarchy_res_id': id}"
+                        invisible="not employee_id.subordinate_ids and (not employee_parent_id or employee_parent_id == id)">
+                            <div class="d-flex flex-column align-items-start mt-0 pt-4">
+                                <div class="d-flex align-items-left mb-0">
+                                    <span class="text-uppercase fw-bolder" style="font-size: 13px">Organization Chart</span>
+                                    <i class="fa fa-users ms-1 mt-1" style="font-size: 0.7rem;"/>
+                                </div>
+                                <div class="w-100 border-top border-1 border-secondary mt-0 mb-3"></div>
+                            </div>
+                    </a>
+                    <div invisible="employee_id.subordinate_ids or (employee_parent_id and not employee_parent_id == id)">
+                        <div class="d-flex flex-column align-items-start mt-0 pt-4" style="cursor: default;">
+                            <div class="d-flex align-items-left mb-0">
+                                <span class="text-uppercase fw-bolder" style="font-size: 13px">Organization Chart</span>
+                            </div>
+                            <div class="w-100 border-top border-1 border-secondary mt-0 mb-3"></div>
+                        </div>
+                    </div>
                     <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
                 </div>
             </div>
@@ -124,7 +173,7 @@
     </record>
 
     <record id="act_open_view_employee_list_my_hierarchy_view" model="ir.actions.act_window.view">
-        <field name="sequence" eval="40"/>
+        <field name="sequence" eval="16"/>
         <field name="view_mode">hierarchy</field>
         <field name="act_window_id" ref="hr.open_view_employee_list_my"/>
     </record>

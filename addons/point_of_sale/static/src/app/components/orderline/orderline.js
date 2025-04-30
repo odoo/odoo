@@ -1,7 +1,9 @@
 import { Component } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
+import { TagsList } from "@web/core/tags_list/tags_list";
 
 export class Orderline extends Component {
+    static components = { TagsList };
     static template = "point_of_sale.Orderline";
     static props = {
         line: Object,
@@ -37,16 +39,7 @@ export class Orderline extends Component {
             ),
         ].join(" ");
     }
-    get priceChange() {
-        const oldUnitPrice = this.line.getOldUnitDisplayPrice()
-            ? this.formatCurrency(this.line.getOldUnitDisplayPrice())
-            : "";
-        const price = this.line.getPriceString();
-
-        return Boolean(
-            this.line.price_type !== "original" ||
-                this.line.getDiscount() != 0 ||
-                (oldUnitPrice && oldUnitPrice !== price)
-        );
+    getInternalNotes() {
+        return JSON.parse(this.line.note || "[]");
     }
 }

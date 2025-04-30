@@ -34,6 +34,6 @@ threadActionsRegistry.add("expand-discuss", {
             }
         );
     },
-    sequence: 40,
-    sequenceGroup: 20,
+    sequence: 10,
+    sequenceGroup: 5,
 });

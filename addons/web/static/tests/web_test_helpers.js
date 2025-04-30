@@ -13,6 +13,7 @@ import { IrUiView } from "./_framework/mock_server/mock_models/ir_ui_view";
 import { ResCompany } from "./_framework/mock_server/mock_models/res_company";
 import { ResCountry } from "./_framework/mock_server/mock_models/res_country";
 import { ResCurrency } from "./_framework/mock_server/mock_models/res_currency";
+import { ResGroupsPrivilege } from "./_framework/mock_server/mock_models/res_groups_privilege";
 import { ResGroups } from "./_framework/mock_server/mock_models/res_groups";
 import { ResPartner } from "./_framework/mock_server/mock_models/res_partner";
 import { ResUsers } from "./_framework/mock_server/mock_models/res_users";
@@ -40,12 +41,7 @@ export {
     getDropdownMenu,
     mountWithCleanup,
 } from "./_framework/component_test_helpers";
-export {
-    contains,
-    defineStyle,
-    editAce,
-    sortableDrag,
-} from "./_framework/dom_test_helpers";
+export { contains, defineStyle, editAce, sortableDrag } from "./_framework/dom_test_helpers";
 export {
     clearRegistry,
     getMockEnv,
@@ -120,6 +116,7 @@ export {
     pagerPrevious,
     removeFacet,
     saveFavorite,
+    saveAndEditFavorite,
     selectGroup,
     switchView,
     toggleActionMenu,
@@ -182,6 +179,7 @@ export const webModels = {
     ResCompany,
     ResCountry,
     ResCurrency,
+    ResGroupsPrivilege,
     ResGroups,
     ResPartner,
     ResUsers,

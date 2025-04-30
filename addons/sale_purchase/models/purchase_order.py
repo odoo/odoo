@@ -13,7 +13,8 @@ class PurchaseOrder(models.Model):
         groups='sales_team.group_sale_salesman')
     has_sale_order = fields.Boolean(
         "Technical field for whether the purchase order has associated sale orders",
-        compute='_compute_sale_order_count')
+        compute='_compute_sale_order_count',
+        groups='sales_team.group_sale_salesman')
 
     @api.depends('order_line.sale_order_id')
     def _compute_sale_order_count(self):

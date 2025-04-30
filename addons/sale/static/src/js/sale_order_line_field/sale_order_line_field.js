@@ -28,8 +28,8 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         super.getCellTitle(column, record);
     }
 
-    getActiveColumns(list) {
-        let activeColumns = super.getActiveColumns(list);
+    getActiveColumns() {
+        let activeColumns = super.getActiveColumns();
         let productTmplCol = activeColumns.find((col) => col.name === 'product_template_id');
         let productCol = activeColumns.find((col) => col.name === 'product_id');
 

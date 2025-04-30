@@ -5,12 +5,6 @@
         <field name="model">mailing.list</field>
         <field name="inherit_id" ref="mass_mailing.mailing_list_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('o_mass_mailing_kanban_contact_links')]" position="inside">
-              <a name="action_view_contacts_sms" type="object">
-                  <span >Valid SMS Recipients</span>
-                  <field name="contact_count_sms" class="ms-3"/>
-              </a>
-            </xpath>
             <xpath expr="//div[hasclass('o_mailing_list_kanban_stats')]//a" position="after">
                 <a class="me-sm-0 me-3 fs-4 fw-light lh-1" tabindex="-1"
                     name="action_view_contacts_sms" type="object">

@@ -10,6 +10,7 @@ import {
     useOpenMany2XRecord,
 } from "@web/views/fields/relational_utils";
 import { registry } from "@web/core/registry";
+import { Mutex } from "@web/core/utils/concurrency";
 import { standardFieldProps } from "../standard_field_props";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -51,6 +52,7 @@ export class Many2ManyTagsField extends Component {
         context: { type: Object, optional: true },
         placeholder: { type: String, optional: true },
         nameCreateField: { type: String, optional: true },
+        searchThreshold: { type: Number, optional: true },
         string: { type: String, optional: true },
         noSearchMore: { type: Boolean, optional: true },
     };
@@ -71,11 +73,13 @@ export class Many2ManyTagsField extends Component {
         this.popover = usePopover(this.constructor.components.Popover);
         this.dialog = useService("dialog");
         this.dialogClose = [];
-        this.onTagKeydown = useTagNavigation(
-            "many2ManyTagsField",
-            this.deleteTagByIndex.bind(this)
-        );
+        useTagNavigation("many2ManyTagsField", {
+            isEnabled: () => !this.props.readonly,
+            delete: (index) => this.deleteTagByIndex(index),
+        });
         this.autoCompleteRef = useRef("autoComplete");
+        this.mutex = new Mutex();
+
         const { saveRecord, removeRecord } = useX2ManyCrud(
             () => this.props.record.data[this.props.name],
             true
@@ -148,12 +152,6 @@ export class Many2ManyTagsField extends Component {
             colorIndex: record.data[this.props.colorField],
             canEdit: this.props.canEditTags,
             onDelete: !this.props.readonly ? () => this.deleteTag(record.id) : undefined,
-            onKeydown: (ev) => {
-                if (this.props.readonly) {
-                    return;
-                }
-                this.onTagKeydown(ev);
-            },
         };
     }
 
@@ -168,8 +166,11 @@ export class Many2ManyTagsField extends Component {
     }
 
     async deleteTagByIndex(index) {
-        const { id } = this.tags[index] || {};
-        this.deleteTag(id);
+        this.mutex.exec(() => {
+            if (this.tags[index]) {
+                return this.deleteTag(this.tags[index].id);
+            }
+        });
     }
 
     async deleteTag(id) {
@@ -185,10 +186,9 @@ export class Many2ManyTagsField extends Component {
         ]).toList(this.props.context);
     }
 
-    getOptionClassnames(record) {
+    isSelected(record) {
         const records = this.props.record.data[this.props.name].records;
-        const isSelected = records.some((r) => r.resId === record.id);
-        return isSelected ? "dropdown-item-selected" : "";
+        return records.some((r) => r.resId === record.id);
     }
 }
 
@@ -233,6 +233,20 @@ export const many2ManyTagsField = {
             availableTypes: ["integer"],
             help: _t("Set an integer field to use colors with the tags."),
         },
+        {
+            label: _t("Typeahead search"),
+            name: "search_threshold",
+            type: "number",
+            help: _t(
+                "Defines the minimum number of characters to perform the search. If not set, the search is performed on focus."
+            ),
+        },
+        {
+            label: _t("Dynamic Placeholder"),
+            name: "placeholder_field",
+            type: "field",
+            availableTypes: ["char"],
+        },
     ],
     supportedTypes: ["many2many", "one2many"],
     relatedFields: ({ options }) => {
@@ -242,7 +256,7 @@ export const many2ManyTagsField = {
         }
         return relatedFields;
     },
-    extractProps({ attrs, options, string }, dynamicInfo) {
+    extractProps({ attrs, options, string, placeholder }, dynamicInfo) {
         const hasCreatePermission = attrs.can_create ? evaluateBooleanExpr(attrs.can_create) : true;
         const noCreate = Boolean(options.no_create);
         const canCreate = noCreate ? false : hasCreatePermission;
@@ -257,7 +271,8 @@ export const many2ManyTagsField = {
             createDomain: options.create,
             context: dynamicInfo.context,
             domain: dynamicInfo.domain,
-            placeholder: attrs.placeholder,
+            placeholder,
+            searchThreshold: options.search_threshold,
             string,
         };
     },

@@ -132,7 +132,6 @@ export class NewContentModal extends Component {
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-comments"/>`,
                     title: _t('Livechat Widget'),
-                    redirectUrl: '/livechat'
                 },
             ]
         });
@@ -296,6 +295,7 @@ class NewContentSystray extends Component {
 
 export const systrayItem = {
     Component: NewContentSystray,
+    isDisplayed: (env) => env.services.website.isRestrictedEditor,
 };
 
 registry.category("website_systray").add("NewContent", systrayItem, { sequence: 9 });

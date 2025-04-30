@@ -65,7 +65,6 @@
         'data/crm_team_demo.xml',
         'data/mail_template_demo.xml',
         'data/crm_team_member_demo.xml',
-        'data/mail_activity_type_demo.xml',
         'data/crm_lead_demo.xml',
     ],
     'installable': True,
@@ -85,13 +84,9 @@
         ],
         'web.assets_unit_tests': [
             'crm/static/tests/mock_server/**/*',
-            'crm/static/tests/crm_test_helpers.js'
-        ],
-        'web.qunit_suite_tests': [
-            'crm/static/tests/**/*',
-            ('remove', 'crm/static/tests/tours/**/*'),
-            ('remove', 'crm/static/tests/mock_server/**/*'),
-            ('remove', 'crm/static/tests/crm_test_helpers.js')
+            'crm/static/tests/crm_test_helpers.js',
+            'crm/static/tests/**/*.test.js',
+            'crm/static/tests/crm_mock_server.js'
         ],
     },
     'author': 'Odoo S.A.',

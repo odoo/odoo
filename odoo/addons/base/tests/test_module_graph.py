@@ -32,7 +32,7 @@ class TestGraph(BaseCase):
         }
         with (
             patch('odoo.modules.module_graph.ModuleGraph._update_from_database'),
-            patch('odoo.modules.module_graph.get_manifest', lambda name: manifests.get(name, {})),
+            patch('odoo.modules.module_graph._get_manifest_cached', lambda name: manifests.get(name, {})),
             patch('odoo.modules.module_graph.ModuleGraph._imported_modules', {'studio_customization'}),
         ):
             dummy_cr = None
@@ -109,4 +109,22 @@ class TestGraph(BaseCase):
             dependency,
             [['base'], ['module3', 'module4', 'module1', 'module5', 'module2']],
             ['base', 'module1', 'module2']
+        )
+
+    def test_graph_order_with_test_modules(self):
+        dependency = {
+            'base': [],
+            'module1': ['base'],
+            'test_z': ['base'],
+            'test_a': ['test_z'],
+            'module2': ['module1'],
+            'module3': ['module1'],
+            'module4': ['module2', 'module3'],
+            'test_c': ['module1'],
+            'test_b': ['test_z', 'module4'],
+        }
+        self._test_graph_order(
+            dependency,
+            [['base'], ['test_c', 'module4', 'module2', 'test_a', 'module3', 'test_b', 'module1', 'test_z']],
+            ['base', 'test_z', 'test_a', 'module1', 'test_c', 'module2', 'module3', 'module4', 'test_b']
         )

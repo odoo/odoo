@@ -22,11 +22,10 @@ import { session } from "@web/session";
 import { ListCogMenu } from "./list_cog_menu";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { SelectionBox } from "@web/views/view_components/selection_box";
-import { useExportRecords } from "@web/views/view_hook";
+import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
 import {
     Component,
-    onMounted,
     onWillPatch,
     onWillRender,
     onWillStart,
@@ -78,7 +77,9 @@ export class ListController extends Component {
         this.onOpenFormView = this.openRecord.bind(this);
         this.editable = (!this.props.readonly && this.archInfo.editable) || false;
         this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
-        this.model = useState(useModelWithSampleData(this.props.Model, this.modelParams));
+        this.model = useState(
+            useModelWithSampleData(this.props.Model, this.modelParams, this.modelOptions)
+        );
 
         // In multi edition, we save or notify invalidity directly when a field is updated, which
         // occurs on the change event for input fields. But we don't want to do it when clicking on
@@ -101,12 +102,15 @@ export class ListController extends Component {
             this.isExportEnable = await user.hasGroup("base.group_allow_export");
         });
 
-        onMounted(() => {
-            const { rendererScrollPositions } = this.props.state || {};
+        let { rendererScrollPositions } = this.props.state || {};
+        useEffect(() => {
             if (rendererScrollPositions) {
                 const renderer = this.rootRef.el.querySelector(".o_list_renderer");
-                renderer.scrollLeft = rendererScrollPositions.left;
-                renderer.scrollTop = rendererScrollPositions.top;
+                if (renderer) {
+                    renderer.scrollLeft = rendererScrollPositions.left;
+                    renderer.scrollTop = rendererScrollPositions.top;
+                    rendererScrollPositions = null;
+                }
             }
         });
 
@@ -139,8 +143,8 @@ export class ListController extends Component {
                 return {
                     modelState: this.model.exportState(),
                     rendererScrollPositions: {
-                        left: renderer.scrollLeft,
-                        top: renderer.scrollTop,
+                        left: renderer?.scrollLeft || 0,
+                        top: renderer?.scrollTop || 0,
                     },
                 };
             },
@@ -148,6 +152,9 @@ export class ListController extends Component {
         });
 
         usePager(() => {
+            if (this.model.useSampleModel) {
+                return;
+            }
             const { count, hasLimitedCount, isGrouped, limit, offset } = this.model.root;
             return {
                 offset: offset,
@@ -183,6 +190,7 @@ export class ListController extends Component {
         this.exportRecords = useExportRecords(this.env, this.props.context, () =>
             this.getExportableFields()
         );
+        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
     }
 
     get modelParams() {
@@ -224,6 +232,10 @@ export class ListController extends Component {
         };
     }
 
+    get modelOptions() {
+        return { lazy: !this.env.inDialog && !!this.props.display.controlPanel };
+    }
+
     get actionMenuProps() {
         return {
             getActiveIds: () => this.model.root.selection.map((r) => r.resId),
@@ -256,7 +268,7 @@ export class ListController extends Component {
     }
 
     onDeleteSelectedRecords() {
-        this.model.root.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps);
+        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps);
     }
 
     /**
@@ -283,6 +295,11 @@ export class ListController extends Component {
     async onWillSaveRecord(record) {}
 
     async createRecord({ group } = {}) {
+        if (!this.model.isReady && !this.model.config.groupBy.length && this.editable) {
+            // If the view isn't grouped and the list is editable, a new record row will be added,
+            // in edition. In this situation, we must wait for the model to be ready.
+            await this.model.whenReady;
+        }
         const list = (group && group.list) || this.model.root;
         if (this.editable && !list.isGrouped) {
             if (!(list instanceof DynamicRecordList)) {
@@ -381,9 +398,16 @@ export class ListController extends Component {
                 description: _t("Export"),
                 callback: () => this.exportRecords(),
             },
+            duplicate: {
+                isAvailable: () => this.activeActions.duplicate,
+                sequence: 30,
+                icon: "fa fa-clone",
+                description: _t("Duplicate"),
+                callback: () => this.model.root.duplicateRecords(),
+            },
             archive: {
                 isAvailable: () => this.archiveEnabled,
-                sequence: 20,
+                sequence: 40,
                 icon: "oi oi-archive",
                 description: _t("Archive"),
                 callback: () =>
@@ -391,23 +415,17 @@ export class ListController extends Component {
             },
             unarchive: {
                 isAvailable: () => this.archiveEnabled,
-                sequence: 30,
+                sequence: 45,
                 icon: "oi oi-unarchive",
                 description: _t("Unarchive"),
                 callback: () => this.model.root.toggleArchiveWithConfirmation(false),
             },
-            duplicate: {
-                isAvailable: () => this.activeActions.duplicate,
-                sequence: 35,
-                icon: "fa fa-clone",
-                description: _t("Duplicate"),
-                callback: () => this.model.root.duplicateRecords(),
-            },
             delete: {
                 isAvailable: () => this.activeActions.delete,
-                sequence: 40,
+                sequence: 50,
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),
+                class: "text-danger",
                 callback: () => this.onDeleteSelectedRecords(),
             },
         };

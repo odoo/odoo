@@ -111,7 +111,7 @@ export class RatingPopupComposer extends Interaction {
         const defaultOptions = {
             default_message:
                 data.default_message ||
-                (data["mail.message"] && data["mail.message"][0].body.replace(/<[^>]+>/g, "")),
+                (data["mail.message"] && data["mail.message"][0].body[1].replace(/<[^>]+>/g, "")),
             default_message_id: data.default_message_id || data["mail.message"][0].id,
             default_attachment_ids: data.default_attachment_ids || data["ir.attachment"],
             default_rating_value: data.default_rating_value || this.rating_value,

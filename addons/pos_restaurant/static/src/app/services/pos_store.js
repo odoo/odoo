@@ -3,7 +3,6 @@ import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/popup/edit_order_name_popup/edit_order_name_popup";
-import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -18,28 +17,67 @@ patch(PosStore.prototype, {
         this.tableSelectorState = false;
         await super.setup(...arguments);
     },
+    get firstPage() {
+        const screen = super.firstPage;
+
+        if (!this.config.module_pos_restaurant) {
+            return screen;
+        }
+
+        return screen.page === "LoginScreen"
+            ? { page: "LoginScreen", params: {} }
+            : this.defaultPage;
+    },
+    get defaultPage() {
+        const screen = super.defaultPage;
+        if (this.config.module_pos_restaurant) {
+            const screens = {
+                register: "ProductScreen",
+                tables: "FloorScreen",
+            };
+            screen.page = screens[this.config.default_screen];
+            screen.params = {};
+        }
+        return screen;
+    },
     get idleTimeout() {
         return [
             ...super.idleTimeout,
             {
                 timeout: 180000, // 3 minutes
                 action: () =>
+                    this.dialog.closeAll() &&
                     this.config.module_pos_restaurant &&
-                    !["PaymentScreen", "TicketScreen", "ActionScreen"].includes(
-                        this.mainScreen.component.name
+                    !["PaymentScreen", "TicketScreen", "ActionScreen", "LoginScreen"].includes(
+                        this.router.state.current
                     ) &&
-                    this.showScreen("FloorScreen"),
+                    this.navigate("FloorScreen"),
             },
         ];
     },
     get firstScreen() {
         const screen = super.firstScreen;
+        const isFirstSession = this.config.raw.session_ids.length === 1;
+        const hasNoProducts = this.productsToDisplay.length === 0;
 
         if (!this.config.module_pos_restaurant) {
             return screen;
         }
 
-        return screen === "LoginScreen" ? "LoginScreen" : this.defaultScreen;
+        if (screen.page === "LoginScreen") {
+            return { page: "LoginScreen", params: {} };
+        }
+
+        if (isFirstSession && hasNoProducts) {
+            return {
+                page: "ProductScreen",
+                params: {
+                    orderUuid: this.getOrder()?.uuid,
+                },
+            };
+        }
+
+        return this.defaultPage;
     },
     get defaultScreen() {
         if (this.config.module_pos_restaurant) {
@@ -51,6 +89,7 @@ patch(PosStore.prototype, {
         }
         return super.defaultScreen;
     },
+
     createNewOrder(data) {
         const order = super.createNewOrder(data);
 
@@ -73,7 +112,7 @@ patch(PosStore.prototype, {
         const guestCount = parseInt(count, 10) || 0;
         if (guestCount == 0 && currentOrder.lines.length === 0) {
             this.removeOrder(currentOrder);
-            this.showScreen("FloorScreen");
+            this.navigate("FloorScreen");
             return false;
         }
         currentOrder.setCustomerCount(guestCount);
@@ -127,7 +166,7 @@ patch(PosStore.prototype, {
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
         while (sourceOrder.lines.length) {
             const orphanLine = sourceOrder.lines[0];
-            const destinationLine = destOrder.lines.find((l) => l.canBeMergedWith(orphanLine));
+            const destinationLine = destOrder?.lines?.find((l) => l.canBeMergedWith(orphanLine));
             let uuid = "";
             if (destinationLine) {
                 destinationLine.merge(orphanLine);
@@ -140,7 +179,7 @@ patch(PosStore.prototype, {
                     orphanLine.qty
                 );
             } else {
-                const serializedLine = orphanLine.serialize();
+                const serializedLine = { ...orphanLine.raw };
                 serializedLine.order_id = destOrder.id;
                 delete serializedLine.uuid;
                 delete serializedLine.id;
@@ -196,8 +235,8 @@ patch(PosStore.prototype, {
             }
         }
 
-        await this.deleteOrders([sourceOrder], [], true);
-        await this.syncAllOrders({ orders: [destOrder] });
+        this.deleteOrders([sourceOrder], [], true);
+        this.syncAllOrders({ orders: [destOrder] });
         return destOrder;
     },
     mergeCourses(sourceOrder, destOrder) {
@@ -298,7 +337,7 @@ patch(PosStore.prototype, {
 
             for (const detail of beforeMergeDetails) {
                 const line = order.lines.find((l) => l.uuid === detail.uuid);
-                const serializedLine = line.serialize();
+                const serializedLine = { ...line.raw };
                 delete serializedLine.uuid;
                 delete serializedLine.id;
                 const course = courseByLines[detail.uuid];
@@ -338,9 +377,9 @@ patch(PosStore.prototype, {
         if (
             orderIsDeleted &&
             this.config.module_pos_restaurant &&
-            this.mainScreen.component.name !== "TicketScreen"
+            this.router.state.current !== "TicketScreen"
         ) {
-            this.showScreen("FloorScreen");
+            this.navigate("FloorScreen");
         }
     },
     async closingSessionNotification(data) {
@@ -418,36 +457,42 @@ patch(PosStore.prototype, {
     get selectedTable() {
         return this.getOrder()?.table_id;
     },
-    showScreen(screenName, props = {}, newOrder = false) {
+    navigate(routeName, routeParams = {}) {
         const order = this.getOrder();
         if (
             this.config.module_pos_restaurant &&
-            this.mainScreen.component === ProductScreen &&
+            this.router.state.current === "ProductScreen" &&
             order &&
             !order.isBooked
         ) {
             this.removeOrder(order);
         }
-        super.showScreen(...arguments);
-    },
-    closeScreen() {
-        if (this.config.module_pos_restaurant && !this.getOrder()) {
-            return this.showScreen("FloorScreen");
-        }
-        return super.closeScreen(...arguments);
+        super.navigate(routeName, routeParams);
     },
     showDefault() {
-        this.showScreen(this.defaultScreen, {}, this.defaultScreen == "ProductScreen");
+        const page = this.defaultPage;
+        this.navigate(page.page, page.params);
     },
     addOrderIfEmpty(forceEmpty) {
         if (!this.config.module_pos_restaurant || forceEmpty) {
             return super.addOrderIfEmpty(...arguments);
         }
     },
+    async handleUrlParams(event) {
+        await super.handleUrlParams(...arguments);
+        if (this.config.module_pos_restaurant && this.router.state.current === "ProductScreen") {
+            const orderUuid = this.router.state.params.orderUuid;
+            const order = this.models["pos.order"].getBy("uuid", orderUuid);
+            if (order && order.table_id) {
+                this.setTable(order.table_id);
+            }
+        }
+    },
     //@override
     async afterProcessServerData() {
         this.floorPlanStyle =
             localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
+
         if (this.config.module_pos_restaurant) {
             this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
         }
@@ -565,13 +610,10 @@ patch(PosStore.prototype, {
         }
         this.setOrder(floatingOrder);
 
-        const props = {};
         const screenName = floatingOrder.getScreenData().name;
-        if (screenName === "PaymentScreen") {
-            props.orderUuid = floatingOrder.uuid;
-        }
-
-        this.showScreen(screenName || "ProductScreen", props);
+        this.navigate(screenName || "ProductScreen", {
+            orderUuid: floatingOrder.uuid,
+        });
     },
     findTable(tableNumber) {
         const find_table = (t) => t.table_number === parseInt(tableNumber);
@@ -610,14 +652,14 @@ patch(PosStore.prototype, {
             const orders = this.getTableOrders(table.id);
             if (orders.length > 0) {
                 this.setOrder(orders[0]);
-                const props = {};
-                if (orders[0].getScreenData().name === "PaymentScreen") {
-                    props.orderUuid = orders[0].uuid;
-                }
-                this.showScreen(orders[0].getScreenData().name, props);
+                this.navigate(orders[0].getScreenData().name, {
+                    orderUuid: orders[0].uuid,
+                });
             } else {
                 this.addNewOrder({ table_id: table });
-                this.showScreen("ProductScreen");
+                this.navigate("ProductScreen", {
+                    orderUuid: this.getOrder().uuid,
+                });
             }
         }
     },
@@ -630,7 +672,7 @@ patch(PosStore.prototype, {
             this.removeOrder(order);
         } else if (order) {
             if (!this.isOrderTransferMode) {
-                this.syncAllOrders({ orders: [order] });
+                this.syncAllOrders();
             } else if (order && this.previousScreen !== "ReceiptScreen") {
                 await this.syncAllOrders({ orders: [order] });
             }
@@ -651,27 +693,28 @@ patch(PosStore.prototype, {
         this.isOrderTransferMode = true;
         const orderUuid = this.getOrder().uuid;
         this.getOrder().setBooked(true);
-        this.showScreen("FloorScreen");
-        document.addEventListener(
-            "click",
-            async (ev) => {
-                this.isOrderTransferMode = false;
-                const tableElement = ev.target.closest(".table");
-                if (!tableElement) {
-                    return;
-                }
-                const table = this.getTableFromElement(tableElement);
-                await this.transferOrder(orderUuid, table);
-                this.setTableFromUi(table);
-            },
-            { once: true }
-        );
+        this.navigate("FloorScreen");
+        const onClickWhileTransfer = async (ev) => {
+            if (ev.target.closest(".button-floor")) {
+                return;
+            }
+            this.isOrderTransferMode = false;
+            const tableElement = ev.target.closest(".table");
+            if (!tableElement) {
+                return;
+            }
+            const table = this.getTableFromElement(tableElement);
+            await this.transferOrder(orderUuid, table);
+            this.setTableFromUi(table);
+            document.removeEventListener("click", onClickWhileTransfer);
+        };
+        document.addEventListener("click", onClickWhileTransfer);
     },
     prepareOrderTransfer(order, destinationTable) {
         const originalTable = order.table_id;
         this.alert.dismiss();
 
-        if (destinationTable.id === originalTable?.id) {
+        if (destinationTable.rootTable.id === originalTable?.id) {
             this.setOrder(order);
             this.setTable(destinationTable);
             return false;
@@ -680,11 +723,12 @@ patch(PosStore.prototype, {
         if (!this.tableHasOrders(destinationTable)) {
             order.table_id = destinationTable;
             this.setOrder(order);
-            this.addPendingOrder([order.id]);
+            this.syncAllOrders({ orders: [order] });
             return false;
         }
         return true;
     },
+
     async transferOrder(orderUuid, destinationTable = null, destinationOrder = null) {
         if (!destinationTable && !destinationOrder) {
             return;
@@ -720,7 +764,7 @@ patch(PosStore.prototype, {
             Object.fromEntries(
                 tables.map((t) => [
                     t.id,
-                    { ...t.serialize({ orm: true }), parent_id: t.parent_id?.id || false },
+                    { ...t.serializeForORM(), parent_id: t.parent_id?.id || false },
                 ])
             ),
         ]);

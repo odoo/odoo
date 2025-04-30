@@ -16,40 +16,41 @@ from odoo import http, tools
 
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices, manager
-from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_drivers.tools import route
+from odoo.addons.hw_drivers.tools import helpers, route
 
 _logger = logging.getLogger(__name__)
 
+DEVICE_TYPES = [
+    "display", "printer", "scanner", "keyboard", "camera", "device", "payment", "scale", "fiscal_data_module"
+]
+
 
 class DriverController(http.Controller):
-    @route.protect
-    @http.route('/hw_drivers/action', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
+    @route.iot_route('/hw_drivers/action', type='jsonrpc', cors='*', csrf=False, sign=True)
     def action(self, session_id, device_identifier, data):
-        """
-        This route is called when we want to make a action with device (take picture, printing,...)
+        """This route is called when we want to make an action with device (take picture, printing,...)
         We specify in data from which session_id that action is called
         And call the action of specific device
         """
+        # If device_identifier is a type of device, we take the first device of this type
+        # required for longpolling with community db
+        if device_identifier in DEVICE_TYPES:
+            device_identifier = next((d for d in iot_devices if iot_devices[d].device_type == device_identifier), None)
+
         iot_device = iot_devices.get(device_identifier)
-        if iot_device:
-            iot_device.data['owner'] = session_id
-            data = json.loads(data)
 
-            # Skip the request if it was already executed (duplicated action calls)
-            iot_idempotent_id = data.get("iot_idempotent_id")
-            if iot_idempotent_id:
-                idempotent_session = iot_device._check_idempotency(iot_idempotent_id, session_id)
-                if idempotent_session:
-                    _logger.info("Ignored request from %s as iot_idempotent_id %s already received from session %s",
-                                 session_id, iot_idempotent_id, idempotent_session)
-                    return False
-            _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
-            iot_device.action(data)
-            return True
-        return False
+        if not iot_device:
+            _logger.warning("IoT Device with identifier %s not found", device_identifier)
+            return False
 
-    @http.route('/hw_drivers/check_certificate', type='http', auth='none', cors='*', csrf=False, save_session=False)
+        iot_device.data['owner'] = session_id
+        data = json.loads(data)
+
+        _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
+        iot_device.action(data)
+        return True
+
+    @route.iot_route('/hw_drivers/check_certificate', type='http', cors='*', csrf=False)
     def check_certificate(self):
         """
         This route is called when we want to check if certificate is up-to-date
@@ -57,8 +58,7 @@ class DriverController(http.Controller):
         """
         helpers.get_certificate_status()
 
-    @route.protect
-    @http.route('/hw_drivers/event', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
+    @route.iot_route('/hw_drivers/event', type='jsonrpc', cors='*', csrf=False, sign=True)
     def event(self, listener):
         """
         listener is a dict in witch there are a sessions_id and a dict of device_identifier to listen
@@ -81,7 +81,7 @@ class DriverController(http.Controller):
             req['result']['session_id'] = req['session_id']
             return req['result']
 
-    @http.route('/hw_drivers/download_logs', type='http', auth='none', cors='*', csrf=False, save_session=False)
+    @route.iot_route('/hw_drivers/download_logs', type='http', cors='*', csrf=False)
     def download_logs(self):
         """
         Downloads the log file

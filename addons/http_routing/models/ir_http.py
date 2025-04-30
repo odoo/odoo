@@ -17,14 +17,14 @@ from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.ir_qweb import keep_query, QWebException
 from odoo.addons.base.models.res_lang import LangData
 from odoo.exceptions import AccessError, MissingError
+from odoo.fields import Domain
 from odoo.http import request, Response
-from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
 # NOTE: the second pattern is used for the ModelConverter, do not use nor flags nor groups
-_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|\/|#|\?)')
-_UNSLUG_ROUTE_PATTERN = r'(?:(?:\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(?:-?\d+)(?=$|\/|#|\?)'
+_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[\w-]+?\w)-)?(-?\d+)(?=$|\/|#|\?)')
+_UNSLUG_ROUTE_PATTERN = r'(?:(?:\w{1,2}|\w[\w-]+?\w)-)?(?:-?\d+)(?=$|\/|#|\?)'
 
 
 class ModelConverter(ir_http.ModelConverter):
@@ -282,12 +282,10 @@ class IrHttp(models.AbstractModel):
     @api.model
     def get_translation_frontend_modules(self) -> list[str]:
         Modules = request.env['ir.module.module'].sudo()
-        extra_modules_domain = self._get_translation_frontend_modules_domain()
         extra_modules_name = self._get_translation_frontend_modules_name()
-        if extra_modules_domain:
-            new = Modules.search(
-                expression.AND([extra_modules_domain, [('state', '=', 'installed')]])
-            ).mapped('name')
+        extra_modules_domain = Domain(self._get_translation_frontend_modules_domain())
+        if not extra_modules_domain.is_true():
+            new = Modules.search(extra_modules_domain & Domain('state', '=', 'installed')).mapped('name')
             extra_modules_name += new
         return extra_modules_name
 

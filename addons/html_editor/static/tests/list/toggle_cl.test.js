@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
@@ -11,6 +12,14 @@ describe("Range collapsed", () => {
             await testEditor({
                 contentBefore: "<p>[]<br></p>",
                 stepFunction: toggleCheckList,
+                contentAfter: '<ul class="o_checklist"><li>[]<br></li></ul>',
+            });
+        });
+
+        test("should turn an empty paragraph into a checklist with shortcut", async () => {
+            await testEditor({
+                contentBefore: "<p>[]<br></p>",
+                stepFunction: () => press(["control", "shift", "9"]),
                 contentAfter: '<ul class="o_checklist"><li>[]<br></li></ul>',
             });
         });
@@ -49,11 +58,11 @@ describe("Range collapsed", () => {
 
         test("should turn an empty heading into a checklist and display the right hint", async () => {
             const { el, editor } = await setupEditor("<h1>[]</h1>");
-            expect(getContent(el)).toBe(`<h1 placeholder="Heading 1" class="o-we-hint">[]</h1>`);
+            expect(getContent(el)).toBe(`<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]</h1>`);
 
             toggleCheckList(editor);
             expect(getContent(el)).toBe(
-                `<ul class="o_checklist"><li><h1 placeholder="Heading 1" class="o-we-hint">[]</h1></li></ul>`
+                `<ul class="o_checklist"><li><h1 o-we-hint-text="Heading 1" class="o-we-hint">[]</h1></li></ul>`
             );
 
             await insertText(editor, "a");
@@ -417,6 +426,14 @@ describe("Range not collapsed", () => {
                 contentBefore: "<p>ab</p><p>cd[ef]gh</p>",
                 stepFunction: toggleCheckList,
                 contentAfter: '<p>ab</p><ul class="o_checklist"><li>cd[ef]gh</li></ul>',
+            });
+        });
+
+        test("should turn a paragraph into a checklist with shortcut", async () => {
+            await testEditor({
+                contentBefore: "<p>[abc]</p>",
+                stepFunction: () => press(["control", "shift", "9"]),
+                contentAfter: '<ul class="o_checklist"><li>[abc]</li></ul>',
             });
         });
 

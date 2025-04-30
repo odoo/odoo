@@ -16,14 +16,24 @@
                                 string="here"
                                 type="object"
                                 name="action_create_foreign_taxes"
-                                class="oe_link"
-                                style="padding: 0; vertical-align: baseline;"/>
+                                class="oe_link p-0 align-baseline"
+                            />
                             to create the taxes for this country.
                         </div>
                     </div>
 
                     <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_open_related_taxes"
+                                type="object" icon="fa-bars"
+                                invisible="not tax_ids">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    Taxes
+                                </span>
+                            </div>
+                        </button>
+                    </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <group>
                         <group>
@@ -40,9 +50,9 @@
                             <field name="auto_apply"/>
                             <field name="vat_required" invisible="not auto_apply"/>
                             <field name="foreign_vat"/>
-                            <field name="country_group_id" invisible="not auto_apply and not foreign_vat" required="foreign_vat and not country_id"/>
+                            <field name="country_group_id" invisible="not auto_apply"/>
                             <field name="country_id"
-                                required="foreign_vat and not country_group_id"
+                                required="foreign_vat"
                                 options="{'no_open': True, 'no_create': True}"/>
                             <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
                                 invisible="(not auto_apply and not foreign_vat) or not country_id or states_count == 0"/>
@@ -58,35 +68,6 @@
                         </group>
                     </group>
                     <notebook>
-                        <page name="tax_mapping" string="Tax Mapping">
-                            <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
-                                <list name="tax_map_tree" string="Tax Mapping" editable="bottom" no_open="1" decoration-muted="tax_dest_id and not tax_dest_active">
-                                    <field name="tax_dest_active" column_invisible="1"/>
-                                    <field name="tax_src_id" widget="many2one_tax_tags"
-                                        domain="[
-                                            ('type_tax_use', '!=', 'none'),
-                                            ('country_id', '=', parent.company_country_id),
-                                            '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)
-                                        ]"
-                                        context="{'append_type_to_tax_name': True}"
-                                    />
-
-                                    <field name="tax_dest_id" widget="many2one_tax_tags"
-                                        domain="[
-                                            ('type_tax_use', '!=', 'none'),
-                                            ('country_id', '=', parent.country_id if parent.foreign_vat else parent.company_country_id),
-                                            '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"
-                                        context="{'append_type_to_tax_name': True}"
-                                    />
-                                </list>
-                                <form name="tax_map_form" string="Tax Mapping">
-                                    <group>
-                                        <field name="tax_src_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
-                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
-                                    </group>
-                                </form>
-                            </field>
-                        </page>
                         <page name="account_mapping" string="Account Mapping" groups="account.group_account_readonly">
                             <field name="account_ids" widget="one2many" nolabel="1">
                                 <list string="Account Mapping" editable="bottom">
@@ -112,6 +93,7 @@
                 <search string="Search Fiscal Positions">
                     <field name="name" string="Fiscal Position"/>
                     <filter name="active" string="Archived" domain="[('active', '=', False)]"/>
+                    <filter name="domestic" string="Domestic" domain="[('is_domestic', '=', True)]"/>
                 </search>
             </field>
         </record>
@@ -175,23 +157,18 @@
                     </button>
                 </div>
 
-                <page name="internal_notes" position="inside">
-                    <group groups="account.group_account_invoice,account.group_account_readonly">
-                        <group groups="account.group_warning_account" col="2">
-                            <separator string="Warning on the Invoice" colspan="2"/>
-                            <field name="invoice_warn" nolabel="1" colspan="2" required="1"/>
-                            <field name="invoice_warn_msg" placeholder="Type a message..." colspan="2" nolabel="1"
-                                invisible="invoice_warn in (False, 'no-message')"
-                                required="invoice_warn and invoice_warn != 'no-message'"/>
-                        </group>
-                    </group>
-                </page>
-
                 <field name="vat" position="before">
                     <field name="partner_vat_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
                 </field>
                 <field name="vat" position="attributes">
                     <attribute name="options">{'placeholder_field': 'partner_vat_placeholder'}</attribute>
+                </field>
+
+                <field name="company_registry" position="before">
+                    <field name="partner_company_registry_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                </field>
+                <field name="company_registry" position="attributes">
+                    <attribute name="options">{'placeholder_field': 'partner_company_registry_placeholder'}</attribute>
                 </field>
             </field>
         </record>
@@ -231,7 +208,6 @@
                 <page name="sales_purchases" position="after">
                     <page string="Invoicing" name="accounting" invisible="not is_company and parent_id" groups="account.group_account_invoice,account.group_account_readonly">
                         <field name="duplicated_bank_account_partners_count" invisible="1"/>
-                        <field name="show_credit_limit" invisible="1"/>
                         <group>
                             <group string="General" name="general" groups="account.group_account_invoice,account.group_account_readonly">
                                 <field name="bank_ids" context="{'default_partner_id': id}" domain="[('partner_id','=', id)]" widget="many2many_tags_banks" options="{'color_field': 'color', 'allow_out_payment_field': 'allow_out_payment', 'edit_tags': True}"/>
@@ -245,7 +221,9 @@
                                    string="Customer Invoices"
                                    groups="account.group_account_invoice,account.group_account_readonly">
                                 <field name="invoice_sending_method" placeholder="e-Invoicing &amp; Email"/>
-                                <field name="invoice_edi_format" invisible="not display_invoice_edi_format"/>
+                                <field name="invoice_edi_format"
+                                       placeholder="XML format"
+                                       invisible="not display_invoice_edi_format"/>
                                 <field name="invoice_template_pdf_report_id"
                                        invisible="not display_invoice_template_pdf_report_id"
                                        options="{'no_create': True, 'no_edit': True}"/>
@@ -323,7 +301,7 @@
             <field name="name">Customers</field>
             <field name="res_model">res.partner</field>
             <field name="path">customers</field>
-            <field name="view_mode">kanban,list,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="context">{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -338,7 +316,7 @@
             <field name="name">Vendors</field>
             <field name="res_model">res.partner</field>
             <field name="path">vendors</field>
-            <field name="view_mode">kanban,list,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_is_company': True, 'default_supplier_rank': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

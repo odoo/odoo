@@ -41,15 +41,14 @@
         <field name="model">crm.team.member</field>
         <field name="inherit_id" ref="sales_team.crm_team_member_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='member_partner_info']" position="after">
-                <field name="assignment_enabled" invisible="1"/>
+            <xpath expr="//sheet" position="inside">
                 <notebook>
                     <page string="Lead Assignment" name="lead_assign" invisible="not assignment_enabled">
                         <group>
                             <div invisible="assignment_optout" colspan="2">
                                 <field name="lead_month_count" class="oe_inline"/>
                                 <span> leads assigned the last 30 days out of a maximum of </span>
-                                <field name="assignment_max" class="oe_inline o_field_highlight o_input_3ch"/>
+                                <field name="assignment_max" class="oe_inline o_field_highlight o_input_6ch"/>
                             </div>
                             <field name="assignment_optout"/>
                             <field name="assignment_domain_preferred" string="Lead Priority Filter" widget="domain"

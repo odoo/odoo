@@ -145,6 +145,17 @@ class MailTestTicketMc(models.Model):
             res.update(super()._notify_get_reply_to(default=default, author_id=author_id))
         return res
 
+    def _creation_subtype(self):
+        if self.container_id:
+            return self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd')
+        return super()._creation_subtype()
+
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'container_id' in init_values and self.container_id:
+            return self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd')
+        return super()._track_subtype(init_values)
+
 
 class MailTestTicketPartner(models.Model):
     """ Mail.test.ticket.mc, with complete partner support. More functional

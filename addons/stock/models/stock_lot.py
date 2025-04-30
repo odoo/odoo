@@ -2,20 +2,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import operator as py_operator
-from operator import attrgetter
+from collections.abc import Iterable
 from re import findall as regex_findall, split as regex_split
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 from odoo.osv import expression
 
-OPERATORS = {
+PY_OPERATORS = {
     '<': py_operator.lt,
     '>': py_operator.gt,
     '<=': py_operator.le,
     '>=': py_operator.ge,
     '=': py_operator.eq,
-    '!=': py_operator.ne
+    '!=': py_operator.ne,
+    'in': lambda elem, container: elem in container,
+    'not in': lambda elem, container: elem not in container,
 }
 
 
@@ -37,9 +40,7 @@ class StockLot(models.Model):
         partner_locations = locations.search([('usage', 'in', ('customer', 'supplier'))])
         return partner_locations + locations.warehouse_id.search([]).lot_stock_id
 
-    name = fields.Char(
-        'Lot/Serial Number', default=lambda self: self.env['ir.sequence'].next_by_code('stock.lot.serial'),
-        required=True, help="Unique Lot/Serial Number", index='trigram')
+    name = fields.Char('Lot/Serial Number', required=True, compute='_compute_name', store=True, readonly=False, help="Unique Lot/Serial Number", index='trigram', precompute=True)
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
     product_id = fields.Many2one(
         'product.product', 'Product', index=True,
@@ -61,6 +62,12 @@ class StockLot(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False,
         inverse='_set_single_location', domain="[('usage', '!=', 'view')]", group_expand='_read_group_location_id')
+
+    @api.depends('product_id')
+    def _compute_name(self):
+        for lot in self:
+            if not lot.name:
+                lot.name = lot.product_id.lot_sequence_id.next_by_id() if lot.product_id.lot_sequence_id else False
 
     @api.model
     def generate_lot_names(self, first_lot, count):
@@ -174,7 +181,8 @@ class StockLot(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self._check_create()
+        lot_product_ids =  {val.get('product_id') for val in vals_list} | {self.env.context.get('default_product_id')}
+        self.with_context(lot_product_ids=lot_product_ids)._check_create()
         return super(StockLot, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
     def write(self, vals):
@@ -208,10 +216,13 @@ class StockLot(models.Model):
             lot.product_qty = sum(quants.mapped('quantity'))
 
     def _search_product_qty(self, operator, value):
-        if operator not in OPERATORS:
-            raise UserError(_("Invalid domain operator %s", operator))
-        if not isinstance(value, (float, int)):
-            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
+        op = PY_OPERATORS.get(operator)
+        if not op:
+            return NotImplemented
+        if isinstance(value, Iterable) and not isinstance(value, str):
+            value = {float(v) for v in value}
+        else:
+            value = float(value)
         domain = [
             ('lot_id', '!=', False),
             '|', ('location_id.usage', '=', 'internal'),
@@ -223,34 +234,42 @@ class StockLot(models.Model):
         for lot, quantity_sum in lots_w_qty:
             lot_id = lot.id
             lot_ids_w_qty.append(lot_id)
-            if OPERATORS[operator](quantity_sum, value):
+            if op(quantity_sum, value):
                 ids.append(lot_id)
-        if value == 0.0 and operator == '=':
-            return [('id', 'not in', lot_ids_w_qty)]
-        if value == 0.0 and operator == '!=':
-            return [('id', 'in', lot_ids_w_qty)]
+
         # check if we need include zero values in result
-        include_zero = (
-            value < 0.0 and operator in ('>', '>=') or
-            value > 0.0 and operator in ('<', '<=') or
-            value == 0.0 and operator in ('>=', '<=')
-        )
+        include_zero = op(0.0, value)
         if include_zero:
             return ['|', ('id', 'in', ids), ('id', 'not in', lot_ids_w_qty)]
         return [('id', 'in', ids)]
 
     def _search_partner_ids(self, operator, value):
-        domain = []
-        if isinstance(value, (int, list)):
-            domain.append(('id', operator, value))
-        elif isinstance(value, str):
-            domain.append(('name', operator, value))
+        """ returns partner_ids that are directly delivered the product of the lot/SN, i.e. not
+        lots/SNs that are consumed within a MO. This means this search is NOT symmetric with the
+        partner_ids field within the form view since it uses different logic that isn't efficient
+        enough for this search due to it being usable within the list view.
+        """
+        if operator in expression.NEGATIVE_TERM_OPERATORS or not isinstance(value, (Iterable)):
+            return NotImplemented
+        is_no_partner = operator == 'in' and list(value) == [False]
+        domain = Domain([
+            ('lot_id', '!=', False),
+            ('state', '=', 'done'),
+        ])
+        if is_no_partner:
+            # reverse the search, get all lots sent to partner so we can return all lots NOT sent
+            domain &= Domain('picking_partner_id', 'not in', value)
+        else:
+            domain &= Domain.OR([
+                Domain('picking_partner_id', operator, value),
+                Domain('move_partner_id', operator, value),
+            ])
+        domain &= Domain(self._get_outgoing_domain())
+        move_lines = self.env['stock.move.line'].search(domain)
 
-        if not domain:
-            return [('id', 'in', [])]
-        partners = self.env['res.partner'].search(domain)
-        filtered_lot_ids = self.env['stock.lot'].search([]).filtered(lambda lot: any(partner.id in partners.ids for partner in lot.partner_ids))
-        return [('id', 'in', filtered_lot_ids.ids)]
+        if is_no_partner:
+            return [('id', 'not in', move_lines.lot_id.ids)]
+        return [('id', 'in', move_lines.lot_id.ids)]
 
     def action_lot_open_quants(self):
         self = self.with_context(search_default_lot_id=self.id, create=False)

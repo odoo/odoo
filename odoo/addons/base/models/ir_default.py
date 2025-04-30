@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
 from datetime import date
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.tools import SQL
@@ -32,7 +31,7 @@ class IrDefault(models.Model):
             try:
                 json.loads(record.json_value)
             except json.JSONDecodeError:
-                raise ValidationError(_('Invalid JSON format in Default Value field.'))
+                raise ValidationError(self.env._('Invalid JSON format in Default Value field.'))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -89,11 +88,11 @@ class IrDefault(models.Model):
                 value = field.to_string(value)
             json_value = json.dumps(value, ensure_ascii=False)
         except KeyError:
-            raise ValidationError(_("Invalid field %(model)s.%(field)s", model=model_name, field=field_name))
+            raise ValidationError(self.env._("Invalid field %(model)s.%(field)s", model=model_name, field=field_name))
         except Exception:
-            raise ValidationError(_("Invalid value for %(model)s.%(field)s: %(value)s", model=model_name, field=field_name, value=value))
+            raise ValidationError(self.env._("Invalid value for %(model)s.%(field)s: %(value)s", model=model_name, field=field_name, value=value))
         if field.type == 'integer' and not (-2**31 < parsed < 2**31-1):
-            raise ValidationError(_("Invalid value for %(model)s.%(field)s: %(value)s is out of bounds (integers should be between -2,147,483,648 and 2,147,483,647)", model=model_name, field=field_name, value=value))
+            raise ValidationError(self.env._("Invalid value for %(model)s.%(field)s: %(value)s is out of bounds (integers should be between -2,147,483,648 and 2,147,483,647)", model=model_name, field=field_name, value=value))
 
         # update existing default for the same scope, or create one
         field = self.env['ir.model.fields']._get(model_name, field_name)

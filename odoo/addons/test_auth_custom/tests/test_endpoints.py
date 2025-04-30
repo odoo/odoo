@@ -16,7 +16,7 @@ class TestCustomAuth(HttpCase):
         # but preflight should work
         self.env.flush_all()
         url = f"{self.base_url()}/test_auth_custom/json"
-        r = self.opener.options(url, headers={
+        r = self.url_open(url, method='OPTIONS', headers={
             'Origin': 'localhost',
             'Access-Control-Request-Method': 'QUX',
             'Access-Control-Request-Headers': 'XYZ',
@@ -35,7 +35,7 @@ class TestCustomAuth(HttpCase):
         # but preflight should work
         self.env.flush_all()
         url = f"{self.base_url()}/test_auth_custom/http"
-        r = self.opener.options(url, headers={
+        r = self.url_open(url, method='OPTIONS', headers={
             'Origin': 'localhost',
             'Access-Control-Request-Method': 'QUX',
             'Access-Control-Request-Headers': 'XYZ',

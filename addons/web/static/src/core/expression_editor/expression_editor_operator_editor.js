@@ -5,16 +5,20 @@ const EXPRESSION_VALID_OPERATORS = [
     "<=",
     ">",
     ">=",
+    "today",
+    "not_today",
     "between",
-    "within",
+    "is_not_between",
+    "last",
+    "not_last",
+    "next",
+    "not_next",
     "in",
     "not in",
     "=",
     "!=",
     "set",
     "not_set",
-    "is",
-    "is_not",
 ];
 
 export function getExpressionDisplayedOperators(fieldDef) {

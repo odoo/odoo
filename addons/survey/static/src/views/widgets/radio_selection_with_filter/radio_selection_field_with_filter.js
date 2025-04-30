@@ -5,13 +5,12 @@ import { registry } from "@web/core/registry";
 export class RadioSelectionFieldWithFilter extends RadioField {
     static props = {
         ...RadioField.props,
-        allowed_selection: { type: Array },
+        allowedSelectionField: { type: String },
     };
 
     get items() {
-        return super.items.filter(([value, label]) => {
-            return this.props.allowed_selection.includes(value);
-        });
+        const allowedItems = this.props.record.data[this.props.allowedSelectionField];
+        return super.items.filter(([value]) => allowedItems.includes(value));
     }
 }
 
@@ -20,10 +19,10 @@ export const radioSelectionFieldWithFilter = {
     component: RadioSelectionFieldWithFilter,
     displayName: _t("Radio for Selection With Filter"),
     supportedTypes: ["selection"],
-    extractProps({ options }, { context: { allowed_selection } }) {
+    extractProps({ options }) {
         return {
             ...radioField.extractProps(...arguments),
-            allowed_selection: allowed_selection,
+            allowedSelectionField: options.allowed_selection_field,
         };
     },
 };

@@ -33,7 +33,7 @@ export class SignatureWidget extends Component {
             let signName;
             const fullNameData = record.data[fullName];
             if (record.fields[fullName].type === "many2one") {
-                signName = fullNameData && fullNameData[1];
+                signName = fullNameData && fullNameData.display_name;
             } else {
                 signName = fullNameData;
             }

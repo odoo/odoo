@@ -8,26 +8,40 @@ $o-discuss-talkingColor: lighten($success, 10%);
     filter: brightness(1.2);
 }
 
+.o-mail-emoji {
+    font-size: 121%;
+    line-height: $display-line-height;
+}
+
 .o-bg-black {
     background-color: rgba(0, 0, 0, var(--bg-opacity, 1));
 }
 
-.o-discuss-badge {
-    --o-discuss-badge-bg: #{$o-success}; // sync with --o-navbar-badge-bg
-    color: white !important;
-    background-color: var(--o-discuss-badge-bg) !important;
-    align-items: center;
-    justify-content: center;
-    padding: 3px 4px;
+.o-bg-body {
+    background-color: $body-bg !important;
+}
 
-    &.o-muted {
-        --o-discuss-badge-bg: #{$gray-400};
+.o-discuss-badge {
+    &, & .o-innerBadge {
+        --o-discuss-badge-bg: #{$o-success}; // sync with --o-navbar-badge-bg
+        color: white !important;
+        background-color: var(--o-discuss-badge-bg) !important;
+        align-items: center;
+        justify-content: center;
+        padding: 3px 4px;
+    
+        &.o-muted {
+            --o-discuss-badge-bg: #{$gray-400};
+        }
+    }
+
+    & .o-innerBadge {
+        min-width: 2.7ch; // same as .badge, without using .badge to keep semantics of a single .badge
     }
 }
 
 .o-discuss-mobileContextMenu {
     top: auto !important;
-    border-top: $border-width solid $border-color !important;
 }
 
 .o-discuss-separator {
@@ -35,10 +49,12 @@ $o-discuss-talkingColor: lighten($success, 10%);
 }
 
 .o-discuss-badge, .o-discuss-badgeShape {
-    display: flex;
-    transform: translate(0, 0) !important; // cancel systray style on badge
-    font-size: .78572 * $font-size-base !important; // roughly 11px, small but readable
-    user-select: none;
+    &, & .o-innerBadge {
+        display: flex;
+        transform: translate(0, 0) !important; // cancel systray style on badge
+        font-size: .78572 * $font-size-base !important; // roughly 11px, small but readable
+        user-select: none;
+    }
 }
 
 .o-min-height-0 {
@@ -57,9 +73,32 @@ $o-discuss-talkingColor: lighten($success, 10%);
     gap: map-get($spacers, 1) / 2;
 }
 
+.o-mx-0_5 {
+    margin-left: map-get($spacers, 1) / 2;
+    margin-right: map-get($spacers, 1) / 2;
+}
+
+.o-my-0_5 {
+    margin-top: map-get($spacers, 1) / 2;
+    margin-bottom: map-get($spacers, 1) / 2;
+}
+
+.o-mt-0_5 {
+    margin-top: map-get($spacers, 1) / 2;
+}
+
 .o-py-0_5 {
     padding-top: map-get($spacers, 1) / 2;
     padding-bottom: map-get($spacers, 1) / 2;
+}
+
+.o-py-1_5 {
+    padding-top: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
+    padding-bottom: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
+}
+
+.o-pt-0_5 {
+    padding-top: map-get($spacers, 1) / 2;
 }
 
 .o-hover-text-underline:hover {
@@ -126,7 +165,6 @@ $o-discuss-talkingColor: lighten($success, 10%);
 }
 
 a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
-    @include rfs($btn-font-size-sm, $btn-font-size-sm);
     border-radius: $btn-border-radius-sm;
     padding: 0rem 0.1875rem;
     border: 1px solid;

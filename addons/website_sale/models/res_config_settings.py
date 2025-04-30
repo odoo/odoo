@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from urllib.parse import urljoin
+
 from odoo import _, api, fields, models
 
 
@@ -16,12 +18,12 @@ class ResConfigSettings(models.TransientModel):
         string="Base Unit Price",
         default=False,
         implied_group="website_sale.group_show_uom_price",
-        group='base.group_portal,base.group_user,base.group_public',
+        group='base.group_user',
     )
     group_product_price_comparison = fields.Boolean(
         string="Comparison Price",
         implied_group="website_sale.group_product_price_comparison",
-        group='base.group_portal,base.group_user,base.group_public',
+        group='base.group_user',
         help="Add a strikethrough price to your /shop and product pages for comparison purposes."
              "It will not be displayed if pricelists apply."
     )
@@ -95,6 +97,12 @@ class ResConfigSettings(models.TransientModel):
                                                  compute='_compute_checkout_process_steps', readonly=False, store=True)
     enabled_buy_now_button = fields.Boolean(string="Buy Now",
                                             compute='_compute_checkout_process_steps', readonly=False, store=True)
+    enabled_gmc_src = fields.Boolean(
+        string="Google Merchant Center Data Source",
+        related='website_id.enabled_gmc_src',
+        readonly=False,
+    )
+    gmc_xml_url = fields.Char(compute='_compute_gmc_xml_url')
 
     #=== COMPUTE METHODS ===#
 
@@ -119,6 +127,13 @@ class ResConfigSettings(models.TransientModel):
                 'website_sale.product_buy_now'
             )
 
+    @api.depends('website_domain')
+    def _compute_gmc_xml_url(self):
+        for config in self:
+            # Uses `config.get_base_url()` which fallbacks to `web․base․url` if `website_domain` is
+            # not set.
+            config.gmc_xml_url = urljoin(config.get_base_url(), '/gmc.xml')
+
     def _inverse_account_on_checkout(self):
         for record in self:
             if not record.website_id:
@@ -137,10 +152,11 @@ class ResConfigSettings(models.TransientModel):
         if self.website_id:
             website = self.with_context(website_id=self.website_id.id).website_id
             extra_step_view = website.viewref('website_sale.extra_info')
+            extra_step = website._get_checkout_step('/shop/extra_info')
             buy_now_view = website.viewref('website_sale.product_buy_now')
 
             if extra_step_view.active != self.enabled_extra_checkout_step:
-                extra_step_view.active = self.enabled_extra_checkout_step
+                extra_step_view.active = extra_step.is_published = self.enabled_extra_checkout_step
             if buy_now_view.active != self.enabled_buy_now_button:
                 buy_now_view.active = self.enabled_buy_now_button
 

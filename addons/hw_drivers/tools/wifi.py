@@ -269,7 +269,7 @@ def is_access_point():
     :return: True if the device is in access point mode
     :rtype: bool
     """
-    return subprocess.run(['systemctl', 'is-active', 'hostapd']).returncode == 0
+    return subprocess.run(['systemctl', 'is-active', 'hostapd'], stdout=subprocess.DEVNULL).returncode == 0
 
 @cache
 def generate_qr_code_image(qr_code_data):

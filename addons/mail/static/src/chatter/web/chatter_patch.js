@@ -110,7 +110,6 @@ patch(Chatter.prototype, {
             isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
-            showNotifiedBcc: false,
             showScheduledMessages: true,
         });
         this.messageSearch = useMessageSearch();
@@ -161,7 +160,8 @@ patch(Chatter.prototype, {
                 } else {
                     this.state.showAttachmentLoading = false;
                     this.state.isAttachmentBoxOpened =
-                        this.props.isAttachmentBoxVisibleInitially && this.attachments.length > 0;
+                        this.state.isAttachmentBoxOpened ||
+                        (this.props.isAttachmentBoxVisibleInitially && this.attachments.length > 0);
                 }
                 return () => browser.clearTimeout(this.loadingAttachmentTimeout);
             },
@@ -196,7 +196,7 @@ patch(Chatter.prototype, {
         this.mailImpactingFields.recordFields.forEach((field) => {
             const value = record._changes[field];
             if (record.data[field] !== undefined && value) {
-                partnerIds.push(value[0]);
+                partnerIds.push(value.id);
             }
         });
         this.mailImpactingFields.emailFields.forEach((field) => {
@@ -317,16 +317,6 @@ patch(Chatter.prototype, {
         this.state.isSearchOpen = false;
     },
 
-    async _follow(thread) {
-        const data = await rpc("/mail/thread/subscribe", {
-            res_model: thread.model,
-            res_id: thread.id,
-            partner_ids: [this.store.self.id],
-        });
-        this.store.insert(data);
-        this.onFollowerChanged(thread);
-    },
-
     onActivityChanged(thread) {
         this.load(thread, [...this.requestList, "messages"]);
     },
@@ -359,26 +349,9 @@ patch(Chatter.prototype, {
         }
     },
 
-    async onClickFollow() {
-        if (this.state.thread.id) {
-            this._follow(this.state.thread);
-        } else {
-            this.onThreadCreated = this._follow;
-            await this.props.saveRecord?.();
-        }
-    },
-
     onClickSearch() {
         this.state.composerType = false;
         this.state.isSearchOpen = !this.state.isSearchOpen;
-    },
-
-    async onClickUnfollow() {
-        const thread = this.state.thread;
-        if (thread.selfFollower) {
-            await thread.selfFollower.remove();
-            this.onFollowerChanged(thread);
-        }
     },
 
     onCloseFullComposerCallback() {
@@ -387,7 +360,7 @@ patch(Chatter.prototype, {
         this.props.record?.load();
     },
 
-    onFollowerChanged(thread) {
+    onFollowerChanged() {
         document.body.click(); // hack to close dropdown
         this.reloadParentView();
     },
@@ -449,10 +422,6 @@ patch(Chatter.prototype, {
             this.onThreadCreated = schedule;
             this.props.saveRecord?.();
         }
-    },
-
-    showNotifiedBcc() {
-        this.state.showNotifiedBcc = true;
     },
 
     toggleActivities() {

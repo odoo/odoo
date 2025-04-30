@@ -8,10 +8,10 @@ export const lazySession = {
         let lazyConfigPromise;
         const fetchServerData = async () => {
             await webClientReadyPromise;
-            return orm.call("ir.http", "lazy_session_info", [[]]);
+            return orm.call("ir.http", "lazy_session_info");
         };
         const webClientReadyPromise = new Promise((r) => (resolveWebClientReady = r));
-        env.bus.addEventListener("WEB_CLIENT_READY", resolveWebClientReady);
+        env.bus.addEventListener("WEB_CLIENT_READY", resolveWebClientReady, { once: true });
         return {
             getValue(key, callback) {
                 if (!lazyConfigPromise) {

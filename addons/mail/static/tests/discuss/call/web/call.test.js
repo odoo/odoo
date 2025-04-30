@@ -10,13 +10,12 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
-import { mockUserAgent } from "@odoo/hoot-mock";
+import { test } from "@odoo/hoot";
 import { mockService } from "@web/../tests/web_test_helpers";
 
-describe.current.tags("desktop");
 defineMailModels();
 
+test.tags("desktop");
 test("no auto-call on joining chat", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
@@ -31,6 +30,7 @@ test("no auto-call on joining chat", async () => {
     await contains(".o-discuss-Call", { count: 0 });
 });
 
+test.tags("desktop");
 test("no auto-call on joining group chat", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
@@ -51,9 +51,8 @@ test("no auto-call on joining group chat", async () => {
 });
 
 test.tags("mobile");
-test("show Push-to-Talk button on mobile", async () => {
+test.skip("show Push-to-Talk button on mobile", async () => {
     mockGetMedia();
-    mockUserAgent("android");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     mockService("discuss.ptt_extension", {

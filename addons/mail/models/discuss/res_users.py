@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
 
 
 class ResUsers(models.Model):
     _inherit = "res.users"
+
+    is_in_call = fields.Boolean("Is in call", related="partner_id.is_in_call")
 
     @api.model_create_multi
     def create(self, vals_list):

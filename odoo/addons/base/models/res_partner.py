@@ -24,17 +24,16 @@ if typing.TYPE_CHECKING:
     from .res_country import ResCountry, ResCountryState
     from .res_company import ResCompany
 
-# Global variables used for the warning fields declared on the res.partner
-# in the following modules : sale, purchase, account, stock
-WARNING_MESSAGE = [
-                   ('no-message','No Message'),
-                   ('warning','Warning'),
-                   ('block','Blocking Message')
-                   ]
-WARNING_HELP = 'Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.'
-
 
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
+
+
+EU_EXTRA_VAT_CODES = {
+    'GR': 'EL',
+    'GB': 'XI',
+}
+
+
 @api.model
 def _lang_get(self):
     return self.env['res.lang'].get_installed()
@@ -140,7 +139,7 @@ class FormatAddressMixin(models.AbstractModel):
 class ResPartnerCategory(models.Model):
     _name = 'res.partner.category'
     _description = 'Partner Tags'
-    _order = 'name'
+    _order = 'name, id'
     _parent_store = True
 
     def _get_default_color(self):
@@ -176,6 +175,8 @@ class ResPartnerCategory(models.Model):
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
         if operator.endswith('like'):
+            if operator.startswith('not'):
+                return NotImplemented
             return [('id', 'child_of', tuple(self._search(domain)))]
         return domain
 
@@ -197,15 +198,11 @@ class ResPartner(models.Model):
 
     @api.model
     def default_get(self, default_fields):
-        """Add the company of the parent as default if we are creating a child partner.
-        Also take the parent lang by default if any, otherwise, fallback to default DB lang."""
+        """Add the company of the parent as default if we are creating a child partner. """
         values = super().default_get(default_fields)
-        parent = self.env["res.partner"]
         if 'parent_id' in default_fields and values.get('parent_id'):
             parent = self.browse(values.get('parent_id'))
             values['company_id'] = parent.company_id.id
-        if 'lang' in default_fields:
-            values['lang'] = values.get('lang') or parent.lang or self.env.lang
         # protection for `default_type` values leaking from menu action context (e.g. for crm's email)
         if 'type' in default_fields and values.get('type'):
             if values['type'] not in self._fields['type'].get_values(self.env):
@@ -219,6 +216,7 @@ class ResPartner(models.Model):
     child_ids: ResPartner = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)], context={'active_test': False})
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language',
+                            compute='_compute_lang', readonly=False, store=True,
                             help="All the emails and documents sent to this contact will be translated in this language.")
     active_lang_count = fields.Integer(compute='_compute_active_lang_count')
     tz = fields.Selection(_tzs, string='Timezone', default=lambda self: self._context.get('tz'),
@@ -257,6 +255,7 @@ class ResPartner(models.Model):
          ('other', 'Other'),
         ], string='Address Type',
         default='contact')
+    type_address_label = fields.Char('Address Type Description', compute='_compute_type_address_label')
     # address fields
     street = fields.Char()
     street2 = fields.Char()
@@ -278,7 +277,7 @@ class ResPartner(models.Model):
     industry_id: ResPartnerIndustry = fields.Many2one('res.partner.industry', 'Industry')
     # company_type is only an interface field, do not use it in business logic
     company_type = fields.Selection(string='Company Type',
-        selection=[('person', 'Individual'), ('company', 'Company')],
+        selection=[('person', 'Person'), ('company', 'Company')],
         compute='_compute_company_type', inverse='_write_company_type')
     company_id: ResCompany = fields.Many2one('res.company', 'Company', index=True)
     color = fields.Integer(string='Color Index', default=0)
@@ -301,6 +300,18 @@ class ResPartner(models.Model):
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self: ResPartner = fields.Many2one(comodel_name='res.partner', compute='_compute_get_ids')
+    application_statistics = fields.Json(string="Stats", compute="_compute_application_statistics")
+
+    def _compute_application_statistics(self):
+        result = self._compute_application_statistics_hook()
+        for p in self:
+            p.application_statistics = result.get(p.id, [])
+
+    def _compute_application_statistics_hook(self):
+        """ Hook for override, as overriding compute method does not update
+        cache accordingly. All overrides receive False instead of previously
+        assigned value. """
+        return defaultdict(list)
 
     _check_name = models.Constraint(
         "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )",
@@ -332,7 +343,8 @@ class ResPartner(models.Model):
         super()._compute_avatar_128()
 
     def _compute_avatar(self, avatar_field, image_field):
-        partners_with_internal_user = self.filtered(lambda partner: partner.user_ids - partner.user_ids.filtered('share'))
+        partners_with_internal_user = self.filtered(
+            lambda partner: partner.user_ids - partner.user_ids.filtered('share') or partner.type == 'contact')
         super(ResPartner, partners_with_internal_user)._compute_avatar(avatar_field, image_field)
         partners_without_image = (self - partners_with_internal_user).filtered(lambda p: not p[image_field])
         for _, group in tools.groupby(partners_without_image, key=lambda p: p._avatar_get_placeholder_path()):
@@ -363,7 +375,7 @@ class ResPartner(models.Model):
         if self.company_name or self.parent_id:
             if not name and self.type in displayed_types:
                 name = type_description[self.type]
-            if not self.is_company:
+            if not self.is_company and not self.env.context.get('partner_display_name_hide_company'):
                 name = f"{self.commercial_company_name or self.sudo().parent_id.name}, {name}"
         return name.strip()
 
@@ -371,6 +383,13 @@ class ResPartner(models.Model):
     def _compute_complete_name(self):
         for partner in self:
             partner.complete_name = partner.with_context({})._get_complete_name()
+
+    @api.depends('parent_id')
+    def _compute_lang(self):
+        """ While creating / updating child contact, take the parent lang by
+        default if any. 0therwise, fallback to default context / DB lang """
+        for partner in self.filtered('parent_id'):
+            partner.lang = partner.parent_id.lang or self.default_get(['lang'])['lang'] or self.env.lang
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
@@ -397,23 +416,35 @@ class ResPartner(models.Model):
         for partner in self - super_partner:
             partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
 
-    @api.depends('vat', 'company_id', 'company_registry')
+    @api.depends('vat', 'company_id', 'company_registry', 'country_id')
     def _compute_same_vat_partner_id(self):
         for partner in self:
             # use _origin to deal with onchange()
             partner_id = partner._origin.id
-            #active_test = False because if a partner has been deactivated you still want to raise the error,
-            #so that you can reactivate it instead of creating a new one, which would loose its history.
+            # active_test = False because if a partner has been deactivated you still want to raise the error,
+            # so that you can reactivate it instead of creating a new one, which would lose its history.
             Partner = self.with_context(active_test=False).sudo()
+            vats = [partner.vat]
+            should_check_vat = partner.vat and len(partner.vat) != 1
+
+            if should_check_vat and partner.country_id and 'EU_PREFIX' in partner.country_id.country_group_codes:
+                if partner.vat[:2].isalpha():
+                    vats.append(partner.vat[2:])
+                else:
+                    vats.append(partner.country_id.code + partner.vat)
+                    if new_code := EU_EXTRA_VAT_CODES.get(partner.country_id.code):
+                        vats.append(new_code + partner.vat)
             domain = [
-                ('vat', '=', partner.vat),
+                ('vat', 'in', vats),
             ]
+            if partner.country_id:
+                domain += [('country_id', 'in', [partner.country_id.id, False])]
             if partner.company_id:
                 domain += [('company_id', 'in', [False, partner.company_id.id])]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
             # For VAT number being only one character, we will skip the check just like the regular check_vat
-            should_check_vat = partner.vat and len(partner.vat) != 1
+
             partner.same_vat_partner_id = should_check_vat and not partner.parent_id and Partner.search(domain, limit=1)
             # check company_registry
             domain = [
@@ -427,6 +458,18 @@ class ResPartner(models.Model):
     @api.depends_context('company')
     def _compute_vat_label(self):
         self.vat_label = self.env.company.country_id.vat_label or _("Tax ID")
+
+    @api.depends('parent_id', 'type')
+    def _compute_type_address_label(self):
+        for partner in self:
+            if partner.type == 'invoice':
+                partner.type_address_label = _('Invoice Address')
+            elif partner.type == 'delivery':
+                partner.type_address_label = _('Delivery Address')
+            elif partner.type == 'contact' and partner.parent_id:
+                partner.type_address_label = _('Company Address')
+            else:
+                partner.type_address_label = _('Address')
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
@@ -501,30 +544,13 @@ class ResPartner(models.Model):
             return
         result = {}
         partner = self._origin
-        if partner.parent_id and partner.parent_id != self.parent_id:
-            result['warning'] = {
-                'title': _('Warning'),
-                'message': _('Changing the company of a contact should only be done if it '
-                             'was never correctly set. If an existing contact starts working for a new '
-                             'company then a new contact should be created under that new '
-                             'company. You can use the "Discard" button to abandon this change.')}
-        if partner.type == 'contact' or self.type == 'contact':
+        if (partner.type or self.type) == 'contact':
             # for contacts: copy the parent address, if set (aka, at least one
             # value is set in the address: otherwise, keep the one from the
             # contact)
-            address_fields = self._address_fields()
-            if any(self.parent_id[key] for key in address_fields):
-                def convert(value):
-                    return value.id if isinstance(value, models.BaseModel) else value
-                result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
+            if address_values := self.parent_id._get_address_values():
+                result['value'] = address_values
         return result
-
-    @api.onchange('parent_id')
-    def _onchange_parent_id_for_lang(self):
-        # While creating / updating child contact, take the parent lang by default if any
-        # otherwise, fallback to default context / DB lang
-        if self.parent_id:
-            self.lang = self.parent_id.lang or self.env.context.get('default_lang') or self.env.lang
 
     @api.onchange('country_id')
     def _onchange_country_id(self):
@@ -535,11 +561,6 @@ class ResPartner(models.Model):
     def _onchange_state(self):
         if self.state_id.country_id and self.country_id != self.state_id.country_id:
             self.country_id = self.state_id.country_id
-
-    @api.onchange('email')
-    def onchange_email(self):
-        if not self.image_1920 and self._context.get('gravatar_image') and self.email:
-            self.image_1920 = self._get_gravatar_image(self.email)
 
     @api.onchange('parent_id', 'company_id')
     def _onchange_company_id(self):
@@ -598,20 +619,11 @@ class ResPartner(models.Model):
             if partner.barcode and self.env['res.partner'].search_count([('barcode', '=', partner.barcode)]) > 1:
                 raise ValidationError(_('Another partner already has this barcode'))
 
-    def _update_fields_values(self, fields):
-        """ Returns dict of write() values for synchronizing ``fields`` """
-        values = {}
-        for fname in fields:
-            field = self._fields[fname]
-            if field.type == 'many2one':
-                values[fname] = self[fname].id
-            elif field.type == 'one2many':
-                raise AssertionError(_('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
-            elif field.type == 'many2many':
-                values[fname] = [Command.set(self[fname].ids)]
-            else:
-                values[fname] = self[fname]
-        return values
+    def _convert_fields_to_values(self, field_names):
+        """ Returns dict of write() values for synchronizing ``field_names`` """
+        if any(self._fields[fname].type == 'one2many' for fname in field_names):
+            raise AssertionError(_('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
+        return self._convert_to_write({fname: self[fname] for fname in field_names})
 
     @api.model
     def _address_fields(self):
@@ -623,44 +635,107 @@ class ResPartner(models.Model):
         """Returns the list of address fields usable to format addresses."""
         return self._address_fields()
 
-    def update_address(self, vals):
+    def _get_address_values(self):
+        """ Get address values from record if at least one value is set. Otherwise
+        it is considered empty and nothing is returned. """
+        address_fields = self._address_fields()
+        if any(self[key] for key in address_fields):
+            return self._convert_fields_to_values(address_fields)
+        return {}
+
+    def _update_address(self, vals):
+        """ Filter values from vals that are liked to address definition, and
+        update recordset using super().write to avoid loops and side effects
+        due to synchronization of address fields through partner hierarchy. """
         addr_vals = {key: vals[key] for key in self._address_fields() if key in vals}
         if addr_vals:
-            return super().write(addr_vals)
+            super().write(addr_vals)
 
     @api.model
     def _commercial_fields(self):
         """ Returns the list of fields that are managed by the commercial entity
         to which a partner belongs. These fields are meant to be hidden on
-        partners that aren't `commercial entities` themselves, and will be
+        partners that aren't `commercial entities` themselves, or synchronized
+        at update (if present in _synced_commercial_fields), and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat', 'company_registry', 'industry_id']
+        return self._synced_commercial_fields() + ['company_registry', 'industry_id']
+
+    @api.model
+    def _synced_commercial_fields(self):
+        """ Returns the list of fields that are managed by the commercial entity
+        to which a partner belongs. When modified on a children, update is
+        propagated until the commercial entity. """
+        return ['vat']
+
+    def _get_commercial_values(self):
+        """ Get commercial values from record. Return only set values, as they
+        are considered individually, and only set values should be taken into
+        account. """
+        set_commercial_fields = [fname for fname in self._commercial_fields() if self[fname]]
+        if set_commercial_fields:
+            return self._convert_fields_to_values(set_commercial_fields)
+        return {}
+
+    def _get_synced_commercial_values(self):
+        """ Get synchronized commercial values from ercord. Return only set values
+        as for other commercial values. """
+        set_synced_fields = [fname for fname in self._synced_commercial_fields() if self[fname]]
+        if set_synced_fields:
+            return self._convert_fields_to_values(set_synced_fields)
+        return {}
+
+    @api.model
+    def _company_dependent_commercial_fields(self):
+        return [
+            fname for fname in self._commercial_fields()
+            if self._fields[fname].company_dependent
+        ]
 
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
         as if they were related fields """
         commercial_partner = self.commercial_partner_id
         if commercial_partner != self:
-            sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
-            self.write(sync_vals)
-            self._commercial_sync_to_children()
+            sync_vals = commercial_partner._get_commercial_values()
+            if sync_vals:
+                self.write(sync_vals)
+                self._company_dependent_commercial_sync()
+                self._commercial_sync_to_descendants()
 
-    def _commercial_sync_to_children(self, fields_to_sync=None):
+    def _company_dependent_commercial_sync(self):
+        """ Propagate sync of company dependant commercial fields to other
+        commpanies. """
+        if not (fields_to_sync := self._company_dependent_commercial_fields()):
+            return
+
+        for company_sudo in self.env['res.company'].sudo().search([]):
+            if company_sudo == self.env.company:
+                continue  # already handled by _commercial_sync_from_company
+            self_in_company = self.with_company(company_sudo)
+            self_in_company.write(
+                self_in_company.commercial_partner_id._convert_fields_to_values(fields_to_sync)
+            )
+
+    def _commercial_sync_to_descendants(self, fields_to_sync=None):
         """ Handle sync of commercial fields to descendants """
         commercial_partner = self.commercial_partner_id
         if fields_to_sync is None:
             fields_to_sync = self._commercial_fields()
-        sync_vals = commercial_partner._update_fields_values(fields_to_sync)
+        sync_vals = commercial_partner._convert_fields_to_values(fields_to_sync)
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
-            child._commercial_sync_to_children(fields_to_sync)
-        res = sync_children.write(sync_vals)
-        return res
+            child._commercial_sync_to_descendants(fields_to_sync)
+        sync_children.write(sync_vals)
 
     def _fields_sync(self, values):
-        """ Sync commercial fields and address fields from company and to children after create/update,
-        just as if those were all modeled as fields.related to the parent """
+        """ Sync commercial fields and address fields from company and to children.
+        Also synchronize address to parent. This somehow mimics related fields
+        to the parent, with more control. This method should be called after
+        updating values in cache e.g. self should contain new values.
+
+        :param dict values: updated values, triggering sync
+        """
         # 1. From UPSTREAM: sync from parent
         if values.get('parent_id') or values.get('type') == 'contact':
             # 1a. Commercial fields: sync if parent changed
@@ -668,10 +743,34 @@ class ResPartner(models.Model):
                 self.sudo()._commercial_sync_from_company()
             # 1b. Address fields: sync if parent or use_parent changed *and* both are now set
             if self.parent_id and self.type == 'contact':
-                onchange_vals = self.onchange_parent_id().get('value', {})
-                self.update_address(onchange_vals)
+                if address_values := self.parent_id._get_address_values():
+                    self._update_address(address_values)
 
-        # 2. To DOWNSTREAM: sync children
+        # 2. To UPSTREAM: sync parent address, as well as editable synchronized commercial fields
+        address_to_upstream = (
+            # parent is set, potential address update as contact address = parent address
+            bool(self.parent_id) and bool(self.type == 'contact') and
+            # address updated, or parent updated
+            (any(field in values for field in self._address_fields()) or 'parent_id' in values) and
+            # something is actually updated
+            any(self[fname] != self.parent_id[fname] for fname in self._address_fields())
+        )
+        if address_to_upstream:
+            new_address = self._get_address_values()
+            self.parent_id.write(new_address)  # is going to trigger _fields_sync again
+        commercial_to_upstream = (
+            # has a parent and is not a commercial entity itself
+            bool(self.parent_id) and (self.commercial_partner_id != self) and
+            # actually updated, or parent updated
+            (any(field in values for field in self._synced_commercial_fields()) or 'parent_id' in values) and
+            # something is actually updated
+            any(self[fname] != self.parent_id[fname] for fname in self._synced_commercial_fields())
+        )
+        if commercial_to_upstream:
+            new_synced_commercials = self._get_synced_commercial_values()
+            self.parent_id.write(new_synced_commercials)
+
+        # 3. To DOWNSTREAM: sync children
         self._children_sync(values)
 
     def _children_sync(self, values):
@@ -680,12 +779,12 @@ class ResPartner(models.Model):
         # 2a. Commercial Fields: sync if commercial entity
         if self.commercial_partner_id == self:
             fields_to_sync = values.keys() & self._commercial_fields()
-            self.sudo()._commercial_sync_to_children(fields_to_sync)
+            self.sudo()._commercial_sync_to_descendants(fields_to_sync)
         # 2b. Address fields: sync if address changed
         address_fields = self._address_fields()
         if any(field in values for field in address_fields):
             contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
-            contacts.update_address(values)
+            contacts._update_address(values)
 
     def _handle_first_contact_creation(self):
         """ On creation of first contact for a company (or root) that has no address, assume contact address
@@ -698,8 +797,8 @@ class ResPartner(models.Model):
             and not any(parent[f] for f in address_fields)
             and len(parent.child_ids) == 1
         ):
-            addr_vals = self._update_fields_values(address_fields)
-            parent.update_address(addr_vals)
+            addr_vals = self._convert_fields_to_values(address_fields)
+            parent._update_address(addr_vals)
 
     def _clean_website(self, website):
         url = urls.url_parse(website)
@@ -737,15 +836,23 @@ class ResPartner(models.Model):
                     raise ValidationError(_('You cannot archive contacts linked to an active user.\n'
                                             'Ask an administrator to archive their associated user first.\n\n'
                                             'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
+        if vals.get('website'):
+            vals['website'] = self._clean_website(vals['website'])
+        if vals.get('parent_id'):
+            vals['company_name'] = False
+
+        # filter to keep only really updated values -> field synchronize goes through
+        # partner tree and we should avoid infinite loops in case same value is
+        # updated due to cycles. Use case: updating a property field, which updated
+        # a computed field, which has an inverse writing the same value on property
+        # field. Yay.
+        pre_values_list = [{fname: partner[fname] for fname in vals} for partner in self]
+
         # res.partner must only allow to set the company_id of a partner if it
         # is the same as the company of all users that inherit from this partner
         # (this is to allow the code from res_users to write to the partner!) or
         # if setting the company_id to False (this is compatible with any user
         # company)
-        if vals.get('website'):
-            vals['website'] = self._clean_website(vals['website'])
-        if vals.get('parent_id'):
-            vals['company_name'] = False
         if 'company_id' in vals:
             company_id = vals['company_id']
             for partner in self:
@@ -763,10 +870,12 @@ class ResPartner(models.Model):
             result = super(ResPartner, self.sudo()).write({'is_company': vals.get('is_company')})
             del vals['is_company']
         result = result and super().write(vals)
-        for partner in self:
+        for partner, pre_values in zip(self, pre_values_list, strict=True):
             if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access('write')
-            partner._fields_sync(vals)
+            updated = {fname: fvalue for fname, fvalue in vals.items() if partner[fname] != pre_values[fname]}
+            if updated:
+                partner._fields_sync(updated)
         return result
 
     @api.model_create_multi
@@ -779,16 +888,17 @@ class ResPartner(models.Model):
             if vals.get('parent_id'):
                 vals['company_name'] = False
         partners = super().create(vals_list)
+        # due to ir.default, compute is not called as there is a default value
+        # hence calling the compute manually
+        for partner, values in zip(partners, vals_list):
+            if 'lang' not in values and partner.parent_id:
+                partner._compute_lang()
 
         if self.env.context.get('_partners_skip_fields_sync'):
             return partners
 
         for partner, vals in zip(partners, vals_list):
             partner._fields_sync(vals)
-            # Lang: propagate from parent if no value was given
-            if 'lang' not in vals and partner.parent_id:
-                partner._onchange_parent_id_for_lang()
-            partner._handle_first_contact_creation()
         return partners
 
     @api.ondelete(at_uninstall=False)
@@ -828,7 +938,7 @@ class ResPartner(models.Model):
             to_write = {}
             # commercial fields from commercial partner
             if cp_id:
-                to_write = self.browse(cp_id)._update_fields_values(self._commercial_fields())
+                to_write = self.browse(cp_id)._convert_fields_to_values(self._commercial_fields())
             # address fields from parent
             if add_id:
                 parent = self.browse(add_id)
@@ -850,7 +960,7 @@ class ResPartner(models.Model):
         if self.company_name:
             # Create parent company
             values = dict(name=self.company_name, is_company=True, vat=self.vat)
-            values.update(self._update_fields_values(self._address_fields()))
+            values.update(self._convert_fields_to_values(self._address_fields()))
             new_company = self.create(values)
             # Set new company as my parent
             self.write({
@@ -870,7 +980,10 @@ class ResPartner(models.Model):
                 }
 
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
-    @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang')
+    @api.depends_context(
+        'show_address', 'partner_display_name_hide_company', 'partner_show_db_id', 'address_inline',
+        'show_email', 'show_vat', 'lang', 'formatted_display_name'
+    )
     def _compute_display_name(self):
         for partner in self:
             name = partner.with_context(lang=self.env.lang)._get_complete_name()
@@ -886,6 +999,8 @@ class ResPartner(models.Model):
                 name = f"{name} <{partner.email}>"
             if partner._context.get('show_vat') and partner.vat:
                 name = f"{name} ‒ {partner.vat}"
+            if partner._context.get("formatted_display_name") and (partner.parent_id or partner.company_name):
+                name = f"{partner.company_name or partner.parent_id.name}<tab>--{partner.name}--"
 
             partner.display_name = name.strip()
 
@@ -938,19 +1053,6 @@ class ResPartner(models.Model):
         if parsed_email_normalized:  # keep default_email in context
             create_values['email'] = parsed_email_normalized
         return self.create(create_values)
-
-    def _get_gravatar_image(self, email):
-        email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
-        url = "https://www.gravatar.com/avatar/" + email_hash
-        try:
-            res = requests.get(url, params={'d': '404', 's': '128'}, timeout=5)
-            if res.status_code != requests.codes.ok:
-                return False
-        except requests.exceptions.ConnectionError as e:
-            return False
-        except requests.exceptions.Timeout as e:
-            return False
-        return base64.b64encode(res.content)
 
     def address_get(self, adr_pref=None):
         """ Find contacts/addresses of the right type(s) by doing a depth-first-search
@@ -1089,7 +1191,7 @@ class ResPartner(models.Model):
 class ResPartnerIndustry(models.Model):
     _name = 'res.partner.industry'
     _description = 'Industry'
-    _order = "name"
+    _order = "name, id"
 
     name = fields.Char('Name', translate=True)
     full_name = fields.Char('Full Name', translate=True)

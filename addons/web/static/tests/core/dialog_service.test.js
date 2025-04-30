@@ -205,3 +205,30 @@ test("dialog component crashes", async () => {
     expect(".modal .o_error_dialog").toHaveCount(1);
     expect.verifyErrors(["Error: Some Error"]);
 });
+
+test("two dialogs, close the first one, closeAll", async () => {
+    class CustomDialog extends Component {
+        static components = { Dialog };
+        static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static props = ["*"];
+    }
+    expect(".o_dialog").toHaveCount(0);
+    const close = getService("dialog").add(CustomDialog, { title: "Hello" });
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Hello");
+
+    getService("dialog").add(CustomDialog, { title: "Sauron" });
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(2);
+    expect(queryAllTexts("header .modal-title")).toEqual(["Hello", "Sauron"]);
+
+    close();
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Sauron");
+
+    getService("dialog").closeAll();
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(0);
+});

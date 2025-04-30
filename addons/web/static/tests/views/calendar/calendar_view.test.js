@@ -19,14 +19,13 @@ import {
     mockTimeZone,
     runAllTimers,
 } from "@odoo/hoot-mock";
-import { Component, onRendered, onWillRender, onWillStart, xml } from "@odoo/owl";
+import { Component, onRendered, onWillStart, xml } from "@odoo/owl";
 import {
     MockServer,
     contains,
     defineActions,
     defineModels,
     defineParams,
-    defineStyle,
     fields,
     getMockEnv,
     getService,
@@ -275,13 +274,6 @@ beforeEach(() => {
     });
     patchWithCleanup(CalendarYearRenderer.prototype, patchFullCalendarOptions());
     patchWithCleanup(CalendarCommonRenderer.prototype, patchFullCalendarOptions());
-
-    // Disable action swiper transitions
-    defineStyle(/* css */ `
-        .o_actionswiper_target_container {
-            transition: none !important;
-        }
-    `);
 });
 
 onRpc("has_group", () => true);
@@ -1463,7 +1455,7 @@ test(`create event with timezone in week mode European locale`, async () => {
     });
 
     await selectTimeRange("2016-12-13 08:00:00", "2016-12-13 10:00:00");
-    expect(`.fc-event-main .fc-event-time`).toHaveText("8:00 - 10:00");
+    expect(`.fc-event-main .fc-event-time`).toHaveText("08:00 - 10:00");
 
     await contains(`.o-calendar-quick-create--input`).edit("new event", { confirm: false });
     await contains(`.o-calendar-quick-create--create-btn`).click();
@@ -3343,6 +3335,154 @@ test(`events starting at midnight on mobile`, async () => {
     expect(`.o_event[data-event-id="8"]`).toHaveText("new event in quick create");
 });
 
+test(`single day event from midnight to midnight`, async () => {
+    mockDate("2016-12-12T08:00:00", 0);
+    Event._records = [
+        {
+            id: 1,
+            name: "event 1",
+            start: "2016-12-12 00:00:00",
+            stop: "2016-12-13 00:00:00",
+        },
+    ];
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
+    });
+
+    expect(`.o_event`).toHaveCount(1);
+    let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
+    expect(eventWidth).toBe(cellWidth); // over a single day
+    await changeScale("month");
+    expect(`.o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-daygrid-day-events`).getBoundingClientRect().width;
+    expect(eventWidth).not.toBeGreaterThan(cellWidth);
+    await changeScale("week");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-day`).getBoundingClientRect().width;
+    expect(eventWidth).not.toBeGreaterThan(cellWidth);
+    await changeScale("day");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    await navigate("next");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(0);
+});
+
+test(`event over two days but lasting less than 24h`, async () => {
+    mockDate("2016-12-12T08:00:00", 0);
+    Event._records = [
+        {
+            id: 1,
+            name: "event 1",
+            start: "2016-12-12 19:00:00",
+            stop: "2016-12-13 09:00:00",
+        },
+    ];
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
+    });
+
+    expect(`.o_event`).toHaveCount(1);
+    let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
+    expect(eventWidth).toBe(2 * cellWidth); // over 2 days
+    await changeScale("month");
+    expect(`.o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-daygrid-day-events`).getBoundingClientRect().width;
+    expect(eventWidth).toBeGreaterThan(cellWidth);
+    expect(eventWidth).not.toBeGreaterThan(2 * cellWidth);
+    await changeScale("week");
+    expect(`.fc-day-mon .o_event`).toHaveCount(1);
+    expect(`.fc-day-tue .o_event`).toHaveCount(1);
+    await changeScale("day");
+    expect(`.fc-day-mon .o_event`).toHaveCount(1);
+    await navigate("next");
+    expect(`.fc-day-tue .o_event`).toHaveCount(1);
+});
+
+test(`event over two days lasting longer than 24h`, async () => {
+    mockDate("2016-12-12T08:00:00", 0);
+    Event._records = [
+        {
+            id: 1,
+            name: "event 1",
+            start: "2016-12-12 09:00:00",
+            stop: "2016-12-13 19:00:00",
+        },
+    ];
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
+    });
+
+    expect(`.o_event`).toHaveCount(1);
+    let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
+    expect(eventWidth).toBe(2 * cellWidth); // over 2 days
+    await changeScale("month");
+    expect(`.o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-daygrid-day-events`).getBoundingClientRect().width;
+    expect(eventWidth).toBeGreaterThan(cellWidth);
+    expect(eventWidth).not.toBeGreaterThan(2 * cellWidth);
+    await changeScale("week");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-day`).getBoundingClientRect().width;
+    expect(eventWidth).toBeGreaterThan(cellWidth);
+    expect(eventWidth).not.toBeGreaterThan(2 * cellWidth);
+    await changeScale("day");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    await navigate("next");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+});
+
+test(`all day event lasting 2 days`, async () => {
+    mockDate("2016-12-12T08:00:00", 0);
+    Event._records = [
+        {
+            id: 1,
+            name: "event 1",
+            start: "2016-12-12 00:00:00",
+            stop: "2016-12-13 00:00:00",
+            is_all_day: true,
+        },
+    ];
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start_date" date_stop="stop_date" all_day="is_all_day" mode="year"/>`,
+    });
+
+    expect(`.o_event`).toHaveCount(1);
+    let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
+    expect(eventWidth).toBe(2 * cellWidth); // over 2 days
+    await changeScale("month");
+    expect(`.o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-daygrid-day-events`).getBoundingClientRect().width;
+    expect(eventWidth).toBeGreaterThan(cellWidth);
+    expect(eventWidth).not.toBeGreaterThan(2 * cellWidth);
+    await changeScale("week");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-day`).getBoundingClientRect().width;
+    expect(eventWidth).toBeGreaterThan(cellWidth);
+    expect(eventWidth).not.toBeGreaterThan(2 * cellWidth);
+    await changeScale("day");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    await navigate("next");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+});
+
 test(`set event as all day when field is date`, async () => {
     mockTimeZone(-8);
     Event._fields.start_date = fields.Date();
@@ -3478,8 +3618,9 @@ test(`timezone does not affect drag and drop on desktop`, async () => {
     expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
     expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00");
 });
-// TODO JUM
-test.tags("mobile").skip(`timezone does not affect drag and drop on mobile`, async () => {
+
+test.tags("mobile");
+test(`timezone does not affect drag and drop on mobile`, async () => {
     mockTimeZone(-40);
     patchWithCleanup(CalendarRenderer.prototype, {
         get actionSwiperProps() {
@@ -3504,26 +3645,27 @@ test.tags("mobile").skip(`timezone does not affect drag and drop on mobile`, asy
             </calendar>
         `,
     });
+
     await clickEvent(1);
-    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00event 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00:00");
+    expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
+    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00");
     await closeCwPopOver();
 
     await clickEvent(6);
-    expect(`.o_event[data-event-id="6"]`).toHaveText("16:00event 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/16/2016 16:00:00");
+    expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
+    expect(`.o_field_widget[name="start"]`).toHaveText("12/16/2016 16:00");
     await closeCwPopOver();
 
     await moveEventToDate(6, "2016-11-27");
     await clickEvent(6);
-    expect(`.o_event[data-event-id="6"]`).toHaveText("16:00event 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("11/27/2016 16:00:00");
+    expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
+    expect(`.o_field_widget[name="start"]`).toHaveText("11/27/2016 16:00");
     await closeCwPopOver();
     expect.verifySteps(["write"]);
 
     await clickEvent(1);
-    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00event 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00:00");
+    expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
+    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00");
 });
 
 test.tags("desktop");
@@ -3568,16 +3710,6 @@ test(`timezone does not affect calendar with date field on desktop`, async () =>
     expect(
         `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
     ).toHaveText("11/27/2016");
-
-    await closeCwPopOver();
-    await moveEventToDate(8, "2017-01-07");
-    expect.verifySteps(["write 2017-01-07"]);
-
-    await clickEvent(8);
-    expect(`.o_cw_popover`).toHaveCount(1);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
-    ).toHaveText("01/07/2017");
 });
 
 test.tags("mobile");
@@ -3628,16 +3760,6 @@ test(`timezone does not affect calendar with date field on mobile`, async () => 
     expect(`.modal`).toHaveCount(1);
     expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
         "11/27/2016"
-    );
-
-    await closeCwPopOver();
-    await moveEventToDate(8, "2017-01-07");
-    expect.verifySteps(["write 2017-01-07"]);
-
-    await clickEvent(8);
-    expect(`.modal`).toHaveCount(1);
-    expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
-        "01/07/2017"
     );
 });
 
@@ -3879,8 +4001,8 @@ test(`default week start (US) month mode on desktop`, async () => {
     expect(`.fc-daygrid-day:eq(0) .fc-daygrid-week-number`).toHaveText("36");
     expect(`.fc-daygrid-day:eq(0) .fc-daygrid-day-number`).toHaveText("1");
     expect(`.fc-daygrid-day:eq(0)`).toHaveAttribute("data-date", "2019-09-01");
-    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("12");
-    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-12");
+    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("5");
+    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-05");
 });
 
 test.tags("mobile");
@@ -3906,8 +4028,8 @@ test(`default week start (US) month mode on mobile`, async () => {
     expect(`.o-fc-week:eq(0)`).toHaveText("36");
     expect(`.fc-daygrid-day:eq(0) .fc-daygrid-day-number`).toHaveText("1");
     expect(`.fc-daygrid-day:eq(0)`).toHaveAttribute("data-date", "2019-09-01");
-    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("12");
-    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-12");
+    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("5");
+    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-05");
 });
 
 test.tags("desktop");
@@ -4677,14 +4799,6 @@ test(`calendar with option month_overflow not set (default)`, async () => {
             user_id: serverState.userId,
             partner_id: 1,
         },
-        {
-            id: 3,
-            name: "event january",
-            start: "2017-01-02 10:00:00",
-            stop: "2016-01-02 15:00:00",
-            user_id: serverState.userId,
-            partner_id: 1,
-        },
     ];
 
     onRpc("search_read", ({ kwargs }) => {
@@ -4703,7 +4817,7 @@ test(`calendar with option month_overflow not set (default)`, async () => {
             </calendar>
         `,
     });
-    expect(`.o_event`).toHaveCount(3);
+    expect(`.o_event`).toHaveCount(2);
     expect(".fc-day-disabled").toHaveCount(0);
     expect.verifySteps(["search_read"]);
 });
@@ -4753,7 +4867,7 @@ test(`calendar with option month_overflow set to false`, async () => {
         `,
     });
     expect(".o_event").toHaveCount(1);
-    expect(".fc-day-disabled").toHaveCount(11);
+    expect(".fc-day-disabled").toHaveCount(4);
     expect.verifySteps(["search_read"]);
 });
 
@@ -4794,33 +4908,6 @@ test(`calendar with custom quick create view`, async () => {
     });
     await clickAllDaySlot("2016-12-01");
     expect.verifySteps(["add dialog 2"]);
-});
-
-test(`check onWillStartModel is exectuted`, async () => {
-    class TestCalendarController extends CalendarController {
-        setup() {
-            super.setup();
-            onWillRender(() => {
-                expect.step("render");
-            });
-        }
-        onWillStartModel() {
-            expect.step("onWillStartModel");
-        }
-    }
-
-    registry.category("views").add("test_calendar_view", {
-        ...calendarView,
-        Controller: TestCalendarController,
-    });
-
-    await mountView({
-        resModel: "event",
-        type: "calendar",
-        arch: `<calendar js_class="test_calendar_view" date_start="start" date_stop="stop" all_day="is_all_day" mode="month"/>`,
-        limit: 3,
-    });
-    expect.verifySteps(["onWillStartModel", "render"]);
 });
 
 test(`check apply default record label`, async () => {
@@ -4898,7 +4985,13 @@ test(`calendar render properties in popover`, async () => {
 
     await clickEvent(1);
     const popover = getMockEnv().isSmall ? ".modal" : ".o_popover";
-    expect(queryAllTexts(`${popover} .o_field_properties .o_card_property_field`)).toEqual([
+    // Labels:
+    expect(queryAllTexts(`${popover} .o_calendar_property_field span.fw-bold`)).toEqual([
+        "My Char",
+        "My Selection",
+    ]);
+    // Values:
+    expect(queryAllTexts(`${popover} .o_calendar_property_field div.text-truncate`)).toEqual([
         "hello",
         "B",
     ]);
@@ -5636,4 +5729,70 @@ test(`calendar renderer is rendered once after search refresh`, async () => {
     expect.verifySteps(["rendered"]);
     await validateSearch();
     expect.verifySteps(["rendered"]);
+});
+
+test.tags("desktop");
+test(`calendar with filters and count aggregate`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" aggregate="id:count">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" filter_field="is_checked"/>
+            </calendar>
+        `,
+    });
+
+    expect(queryAllTexts(".o_calendar_filter_item span")).toEqual(["partner 1", "2", "partner 2"]);
+});
+
+test.tags("desktop");
+test(`calendar with dynamic filters and sum aggregate`, async () => {
+    Event._fields.revenue = fields.Float();
+    Event._records[0].revenue = 1200;
+    Event._records[1].revenue = 350;
+    Event._records[2].revenue = 800;
+    Event._records[3].revenue = 3000;
+    Event._records[4].revenue = 1900;
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" aggregate="revenue:sum">
+                <field name="partner_id" filters="1"/>
+            </calendar>
+        `,
+    });
+
+    expect(queryAllTexts(".o_calendar_filter_item span")).toEqual([
+        "partner 1",
+        "4,550",
+        "partner 4",
+        "2,700",
+    ]);
+});
+
+test.tags("desktop");
+test(`Hour format mirror event`, async () => {
+    onRpc("create", ({ args }) => {
+        expect.step("create");
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="year"/>`,
+    });
+
+    await changeScale("week");
+
+    await selectTimeRange("2016-12-13 11:00:00", "2016-12-13 16:30:00");
+    // Verify highlighted event
+    expect(`.fc-event-mirror`).toHaveText("11:00 - 16:30");
+    await contains(`.o-calendar-quick-create--input`).edit("mirror_event", { confirm: false });
+    await contains(`.o-calendar-quick-create--create-btn`).click();
+
+    expect.verifySteps(["create"]);
+
+    expect(`.o_event[data-event-id="8"] .fc-event-main .o_event_title`).toHaveText("mirror_event");
+    expect(`.o_event[data-event-id="8"] .fc-event-main .fc-time`).toHaveText("11:00");
 });

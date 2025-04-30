@@ -74,14 +74,9 @@ export function makeTemplateFactory(name, factory) {
                     // Used outside of Owl.
                     return getTemplate(name);
                 }
-                let rawTemplate = getTemplate(name) || this.rawTemplates[name];
+                const rawTemplate = getTemplate(name) || this.rawTemplates[name];
                 if (typeof rawTemplate === "function" && !(rawTemplate instanceof Element)) {
                     return rawTemplate;
-                }
-                // TO REMOVE
-                // this condition is temporary, the real fix should be in owl
-                if (rawTemplate instanceof Element) {
-                    rawTemplate = rawTemplate.cloneNode(true);
                 }
                 if (!compiledTemplates.has(rawTemplate)) {
                     compiledTemplates.set(rawTemplate, this._compileTemplate(name, rawTemplate));

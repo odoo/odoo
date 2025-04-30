@@ -14,7 +14,6 @@ const {
     getRadarChartScales,
     getRadarChartLegend,
     getRadarChartTooltip,
-    truncateLabel,
 } = chartHelpers;
 
 export class OdooRadarChart extends OdooChart {
@@ -58,7 +57,7 @@ function createOdooChartRuntime(chart, getters) {
     const config = {
         type: "radar",
         data: {
-            labels: chartData.labels.map(truncateLabel),
+            labels: chartData.labels,
             datasets: getRadarChartDatasets(definition, chartData),
         },
         options: {

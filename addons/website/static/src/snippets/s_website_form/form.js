@@ -24,6 +24,10 @@ const { DateTime } = luxon;
 
 export class Form extends Interaction {
     static selector = ".s_website_form form, form.s_website_form"; // !compatibility
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _endMessage: () => this.el.parentNode.querySelector(".s_website_form_end_message"),
+    };
     dynamicContent = {
         ".s_website_form_send, .o_website_form_send": { "t-on-click.prevent": this.send }, // !compatibility
         _root: {
@@ -32,7 +36,7 @@ export class Form extends Interaction {
                 "d-none": this.isHidden,
             })
         },
-        ".s_website_form_end_message": {
+        _endMessage: {
             "t-att-class": () => ({
                 "d-none": !this.isHidden,
             })
@@ -265,7 +269,7 @@ export class Form extends Interaction {
         buttonEl.classList.add("disabled"); // !compatibility
         buttonEl.setAttribute("disabled", "disabled");
         this.restoreBtnLoading = addLoadingEffect(buttonEl);
-        this.el.querySelector("#s_website_form_result, #o_website_form_result").replaceChildren(); // !compatibility
+        this.el.querySelector("#s_website_form_result, #o_website_form_result")?.replaceChildren(); // !compatibility
         if (!this.checkErrorFields({})) {
             if (this.fileInputError) {
                 const errorMessage = this.fileInputError.type === "number"
@@ -288,7 +292,10 @@ export class Form extends Interaction {
         // Prepare form inputs
         const formFields = [];
         new FormData(this.el).forEach((value, key) => {
-            formFields.push({ name: key, value: value });
+            const inputElement = this.el.querySelector(`[name="${CSS.escape(key)}"]`);
+            if (inputElement && inputElement.type !== 'file') {
+                formFields.push({ name: key, value: value });
+            }
         });
         let outerIndex = 0;
         for (const inputEl of this.el.querySelectorAll("input[type=file]:not([disabled])")) {
@@ -331,7 +338,7 @@ export class Form extends Interaction {
                 const inputEl = dateEl.querySelector("input");
                 const { value } = inputEl;
                 if (!value) {
-                    return;
+                    continue;
                 }
 
                 formValues[inputEl.getAttribute("name")] = dateEl.matches(".s_website_form_date")
@@ -432,7 +439,7 @@ export class Form extends Interaction {
                             // Prevent double-clicking on the send button and
                             // add a upload loading effect (delay before success
                             // message)
-                            await delay(400);
+                            await this.waitFor(delay(400));
 
                             this.isHidden = true;
                             break;
@@ -578,9 +585,16 @@ export class Form extends Interaction {
             message = _t("An error has occured, the form has not been sent.");
         }
 
-        this.renderAt(`website.s_website_form_status_${status}`, {
+        const renderedEls = this.renderAt(`website.s_website_form_status_${status}`, {
             message: message,
-        }, resultEl, "afterend");
+        }, resultEl, "afterend", undefined, false);
+        // Handle cleanup manually to keep s_website_form_result in DOM.
+        this.registerCleanup(() => {
+            for (const el of renderedEls) {
+                const renderedResultEl = el.matches("#s_website_form_result") ? el : el.querySelector("#s_website_form_result");
+                renderedResultEl.replaceChildren();
+            }
+        });
         resultEl.remove();
     }
 

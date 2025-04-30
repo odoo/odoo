@@ -1,6 +1,7 @@
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 import { waitFor } from "@odoo/hoot-dom";
+const { DateTime } = luxon;
 
 export function confirmPopup() {
     return [Dialog.confirm()];
@@ -27,6 +28,17 @@ export function isCashMoveButtonHidden() {
         {
             trigger: ".pos-topheader:not(:contains(Cash In/Out))",
         },
+    ];
+}
+export function doCashMove(amount, reason) {
+    return [
+        ...clickMenuOption("Cash In/Out"),
+        fillTextArea(".cash-reason", reason),
+        {
+            trigger: ".modal .input-amount input",
+            run: "edit " + amount,
+        },
+        Dialog.confirm(),
     ];
 }
 export function endTour() {
@@ -141,4 +153,15 @@ export function isSynced() {
         content: "Check if the request is proceeded",
         trigger: negate(".fa-spin", ".status-buttons"),
     };
+}
+
+export function freezeDateTime(millis) {
+    return [
+        {
+            trigger: "body",
+            run: () => {
+                DateTime.now = () => DateTime.fromMillis(millis);
+            },
+        },
+    ];
 }

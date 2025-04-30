@@ -33,7 +33,7 @@ class TestWorkEntryHolidaysPerformance(TestWorkEntryHolidaysBase):
         leave = self.create_leave(datetime(2018, 1, 1, 7, 0), datetime(2018, 1, 1, 18, 0))
 
         with self.assertQueryCount(__system__=109, admin=110):
-            leave.action_validate()
+            leave.action_approve()
         leave.action_refuse()
 
     @users('__system__', 'admin')
@@ -66,7 +66,7 @@ class TestWorkEntryHolidaysPerformancesBigData(TestWorkEntryHolidaysBase):
             'request_unit': 'day',
             'leave_validation_type': 'both',
             'company_id': cls.company.id,
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.employees = cls.env['hr.employee'].create([{
@@ -94,7 +94,6 @@ class TestWorkEntryHolidaysPerformancesBigData(TestWorkEntryHolidaysBase):
         } for employee in cls.employees])
         cls.leaves._compute_date_from_to()
         cls.leaves.action_approve()
-        cls.leaves.action_validate()
 
     def test_work_entries_generation_perf(self):
         # Test Case 7: Try to generate work entries for

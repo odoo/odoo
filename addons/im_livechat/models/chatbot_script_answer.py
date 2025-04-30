@@ -19,7 +19,7 @@ class ChatbotScriptAnswer(models.Model):
         help="The visitor will be redirected to this link upon clicking the option "
              "(note that the script will end if the link is external to the livechat website).")
     script_step_id = fields.Many2one(
-        'chatbot.script.step', string='Script Step', required=True, ondelete='cascade')
+        'chatbot.script.step', string='Script Step', required=True, index=True, ondelete='cascade')
     chatbot_script_id = fields.Many2one(related='script_step_id.chatbot_script_id')
 
     @api.depends('script_step_id')

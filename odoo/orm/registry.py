@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import functools
 import inspect
 import logging
 import os
@@ -38,7 +39,7 @@ from .utils import SUPERUSER_ID
 from . import model_classes
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
+    from collections.abc import Callable, Collection, Iterable, Iterator
     from odoo.fields import Field
     from odoo.models import BaseModel
     from odoo.sql_db import BaseCursor, Connection, Cursor
@@ -89,7 +90,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
     _saved_lock: threading.RLock | DummyRLock | None = None
 
     @lazy_classproperty
-    def registries(cls) -> MutableMapping[str, Registry]:
+    def registries(cls) -> LRU[str, Registry]:
         """ A mapping from database names to registries. """
         size = config.get('registry_lru_size', None)
         if not size:
@@ -101,7 +102,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # A registry takes 10MB of memory on average, so we reserve
                 # 10Mb (registry) + 5Mb (working memory) per registry
                 avgsz = 15 * 1024 * 1024
-                size = int(config['limit_memory_soft'] / avgsz)
+                limit_memory_soft = config['limit_memory_soft'] if config['limit_memory_soft'] > 0 else (2048 * 1024 * 1024)
+                size = (limit_memory_soft // avgsz) or 1
         return LRU(size)
 
     def __new__(cls, db_name: str):
@@ -142,7 +144,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                                 modules will also be upgraded. Defaults to an empty tuple.
 
         :param new_db_demo: Whether to install demo data for the new database. If set to ``None``, the value will be
-                            determined by the ``not config['without_demo']``. Defaults to ``None``
+                            determined by the ``config['with_demo']``. Defaults to ``None``
         """
         t0 = time.time()
         registry: Registry = object.__new__(cls)
@@ -161,7 +163,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
             try:
                 if new_db_demo is None:
-                    new_db_demo = not config['without_demo']
+                    new_db_demo = config['with_demo']
                 load_modules(
                     registry,
                     update_module=update_module or bool(upgrade_modules or install_modules),
@@ -221,17 +223,16 @@ class Registry(Mapping[str, type["BaseModel"]]):
         if config['db_replica_host'] or config['test_enable'] or 'replica' in config['dev_mode']:  # by default, only use readonly pool if we have a db_replica_host defined.
             self._db_readonly = sql_db.db_connect(db_name, readonly=True)
 
-        # cursor for test mode; None means "normal" mode
-        self.test_cr: Cursor | None = None
-        self.test_lock: threading.RLock | None = None
-
         # field dependencies
         self.field_depends: Collector[Field, Field] = Collector()
         self.field_depends_context: Collector[Field, str] = Collector()
         self.field_inverses: Collector[Field, Field] = Collector()
 
         # company dependent
-        self.many2one_company_dependents: Collector[str, tuple[Field, ...]] = Collector()  # {model_name: (field1, field2, ...)}
+        self.many2one_company_dependents: Collector[str, Field] = Collector()  # {model_name: (field1, field2, ...)}
+
+        # constraint checks
+        self.not_null_fields: set[Field] = set()
 
         # cache of methods get_field_trigger_tree() and is_modifying_relations()
         self._field_trigger_trees: dict[Field, TriggerTree] = {}
@@ -316,15 +317,17 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 queue.extend(func(model))
         return models
 
-    def load(self, cr: Cursor, module: module_graph.ModuleNode) -> OrderedSet[str]:
+    def load(self, module: module_graph.ModuleNode) -> list[str]:
         """ Load a given module in the registry, and return the names of the
-        modified models.
+        directly modified models.
 
         At the Python level, the modules are already loaded, but not yet on a
         per-registry level. This method populates a registry with the given
         modules, i.e. it instantiates all the classes of a the given module
         and registers them in the registry.
 
+        In order to determine all the impacted models, one should invoke method
+        :meth:`descendants` with `'_inherit'` and `'_inherits'`.
         """
         from . import models  # noqa: PLC0415
 
@@ -344,7 +347,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             model_cls = model_classes.add_to_registry(self, model_def)
             model_names.append(model_cls._name)
 
-        return self.descendants(model_names, '_inherit', '_inherits')
+        return model_names
 
     @locked
     def _setup_models__(self, cr: BaseCursor) -> None:
@@ -394,7 +397,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 model._register_hook()
             env.flush_all()
 
-    @lazy_property
+    @functools.cached_property
     def field_computed(self) -> dict[Field, list[Field]]:
         """ Return a dict mapping each field to the fields computed by the same method. """
         computed: dict[Field, list[Field]] = {}
@@ -521,7 +524,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         return tree
 
-    @lazy_property
+    @functools.cached_property
     def _field_triggers(self) -> defaultdict[Field, defaultdict[tuple[str, ...], OrderedSet[Field]]]:
         """ Return the field triggers, i.e., the inverse of field dependencies,
         as a dictionary like ``{field: {path: fields}}``, where ``field`` is a
@@ -653,6 +656,29 @@ class Registry(Mapping[str, type["BaseModel"]]):
             del self._post_init_queue
             del self._foreign_keys
             del self._is_install
+
+    def check_null_constraints(self, cr: Cursor) -> None:
+        """ Check that all not-null constraints are set. """
+        cr.execute('''
+            SELECT c.relname, a.attname
+            FROM pg_attribute a
+            JOIN pg_class c ON a.attrelid = c.oid
+            JOIN pg_namespace n ON c.relnamespace = n.oid
+            WHERE n.nspname = 'public'
+            AND a.attnotnull = true
+            AND a.attnum > 0;
+        ''')
+        not_null_columns = set(cr.fetchall())
+
+        self.not_null_fields.clear()
+        for Model in self.models.values():
+            if Model._auto and not Model._abstract:
+                for field in Model._fields.values():
+                    if field.column_type and field.store and field.required:
+                        if (Model._table, field.name) in not_null_columns:
+                            self.not_null_fields.add(field)
+                        else:
+                            _schema.warning("Missing not-null constraint on %s", field)
 
     def check_indexes(self, cr: Cursor, model_names: Iterable[str]) -> None:
         """ Create or drop column indexes for the given models. """
@@ -860,9 +886,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
     def setup_signaling(self) -> None:
         """ Setup the inter-process signaling on this registry. """
-        if self.in_test_mode():
-            return
-
         with self.cursor() as cr:
             # The `orm_signaling_registry` sequence indicates when the registry
             # must be reloaded.
@@ -904,9 +927,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Check whether the registry has changed, and performs all necessary
         operations to update the registry. Return an up-to-date registry.
         """
-        if self.in_test_mode():
-            return self
-
         with nullcontext(cr) if cr is not None else closing(self.cursor(readonly=True)) as cr:
             assert cr is not None
             db_registry_sequence, db_cache_sequences = self.get_sequences(cr)
@@ -992,30 +1012,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
             self.reset_changes()
             raise
 
-    def in_test_mode(self) -> bool:
-        """ Test whether the registry is in 'test' mode. """
-        return self.test_cr is not None
-
-    def enter_test_mode(self, cr: Cursor, test_readonly_enabled: bool = True) -> None:
-        """ Enter the 'test' mode, where one cursor serves several requests. """
-        assert self.test_cr is None
-        self.test_cr = cr
-        self.test_readonly_enabled = test_readonly_enabled
-        self.test_lock = threading.RLock()
-        assert Registry._saved_lock is None
-        Registry._saved_lock = Registry._lock
-        Registry._lock = DummyRLock()
-
-    def leave_test_mode(self) -> None:
-        """ Leave the test mode. """
-        assert self.test_cr is not None
-        self.test_cr = None
-        del self.test_readonly_enabled
-        del self.test_lock
-        assert Registry._saved_lock is not None
-        Registry._lock = Registry._saved_lock
-        Registry._saved_lock = None
-
     def cursor(self, /, readonly: bool = False) -> BaseCursor:
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
@@ -1024,13 +1020,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 Acquire a read/write cursor on the primary database in case no
                 replica exists or that no readonly cursor could be acquired.
         """
-        if self.test_cr is not None:
-            # in test mode we use a proxy object that uses 'self.test_cr' underneath
-            if readonly and not self.test_readonly_enabled:
-                _logger.info('Explicitly ignoring readonly flag when generating a cursor')
-            assert self.test_lock is not None
-            return sql_db.TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled)
-
         if readonly and self._db_readonly is not None:
             try:
                 return self._db_readonly.cursor()

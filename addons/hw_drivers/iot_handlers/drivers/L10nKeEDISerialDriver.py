@@ -11,6 +11,7 @@ from functools import reduce
 from odoo import http
 from odoo.addons.hw_drivers.iot_handlers.drivers.SerialBaseDriver import SerialDriver, SerialProtocol, serial_connection
 from odoo.addons.hw_drivers.main import iot_devices
+from odoo.addons.hw_drivers.tools import route
 
 _logger = logging.getLogger(__name__)
 
@@ -226,7 +227,7 @@ class TremolG03Driver(SerialDriver):
 
 class TremolG03Controller(http.Controller):
 
-    @http.route('/hw_proxy/l10n_ke_cu_send', type='http', auth='none', cors='*', csrf=False, save_session=False, methods=['POST'])
+    @route.iot_route('/hw_proxy/l10n_ke_cu_send', type='http', cors='*', csrf=False, methods=['POST'])
     def l10n_ke_cu_send(self, messages, company_vat):
         """ Posts the messages sent to this endpoint to the fiscal device connected to the server
 

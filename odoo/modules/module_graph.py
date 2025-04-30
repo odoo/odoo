@@ -4,13 +4,14 @@
 
 from __future__ import annotations
 
+import functools
 import logging
 import typing
 
 from odoo.tools import lazy_property, OrderedSet
 from odoo.tools.sql import column_exists
 
-from .module import get_manifest
+from .module import _get_manifest_cached
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator
@@ -67,7 +68,7 @@ _logger = logging.getLogger(__name__)
 #
 # If the ModuleGraph is in the 'load' mode
 # all non-base modules are loaded in the same phase
-# the loading order of modules in the same phase are sorted by the (depth, name)
+# the loading order of modules in the same phase are sorted by the (depth, order_name)
 # where depth is the longest distance from the module to the base module along the dependency graph.
 # For example: the depth of module6 is 4 (path: module6 -> module4 -> module2 -> module1 -> base)
 # As a result, the loading order is
@@ -88,6 +89,12 @@ _logger = logging.getLogger(__name__)
 # phase 0: base
 # phase odd: (modules: 1. don't need init; 2. all depends modules have been loaded or going to be loaded in this phase)
 # phase even: (modules: 1. need init; 2. all depends modules have been loaded or going to be loaded in this phase)
+#
+#
+# Test modules
+# For a module starting with 'test_', we want it to be loaded right after its last loaded dependency in the 'load' mode,
+# let's call that module 'xxx'.
+# Therefore, the depth will be 'xxx.depth' and the name will be prefixed by 'xxx ' as its order_name.
 #
 #
 # Corner case
@@ -134,7 +141,9 @@ class ModuleNode:
     def __init__(self, name: str, module_graph: ModuleGraph) -> None:
         # manifest data
         self.name: str = name
-        self.manifest: dict = get_manifest(name)
+        # for performance reasons, use the cached value to avoid deepcopy; it is
+        # acceptable in this context since we don't modify it
+        self.manifest: dict = _get_manifest_cached(name)
 
         # ir_module_module data                     # column_name
         self.id: int = 0                            # id
@@ -150,12 +159,25 @@ class ModuleNode:
         self.depends: OrderedSet[ModuleNode] = OrderedSet()
         self.module_graph: ModuleGraph = module_graph
 
-    @lazy_property
+    @functools.cached_property
+    def order_name(self) -> str:
+        if self.name.startswith('test_'):
+            # The 'space' was chosen because it's smaller than any character that can be used by the module name.
+            last_installed_dependency = max(self.depends, key=lambda m: (m.depth, m.order_name))
+            return last_installed_dependency.order_name + ' ' + self.name
+
+        return self.name
+
+    @functools.cached_property
     def depth(self) -> int:
         """ Return the longest distance from self to module 'base' along dependencies. """
+        if self.name.startswith('test_'):
+            last_installed_dependency = max(self.depends, key=lambda m: (m.depth, m.order_name))
+            return last_installed_dependency.depth
+
         return max(module.depth for module in self.depends) + 1 if self.depends else 0
 
-    @lazy_property
+    @functools.cached_property
     def phase(self) -> int:
         if self.name == 'base':
             return 0
@@ -197,7 +219,7 @@ class ModuleGraph:
         return self._modules[name]
 
     def __iter__(self) -> Iterator[ModuleNode]:
-        return iter(sorted(self._modules.values(), key=lambda p: (p.phase, p.depth, p.name)))
+        return iter(sorted(self._modules.values(), key=lambda p: (p.phase, p.depth, p.order_name)))
 
     def __len__(self) -> int:
         return len(self._modules)
@@ -205,6 +227,8 @@ class ModuleGraph:
     def extend(self, names: Collection[str]) -> None:
         for module in self._modules.values():
             lazy_property.reset_all(module)
+
+        names = [name for name in names if name not in self._modules]
 
         for name in names:
             module = self._modules[name] = ModuleNode(name, self)
@@ -219,7 +243,7 @@ class ModuleGraph:
         self._update_depth(names)
         self._update_from_database(names)
 
-    @lazy_property
+    @functools.cached_property
     def _imported_modules(self) -> OrderedSet[str]:
         result = ['studio_customization']
         if column_exists(self._cr, 'ir_module_module', 'imported'):

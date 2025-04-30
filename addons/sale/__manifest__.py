@@ -25,7 +25,6 @@ This module contains all the common features of Sales Management and eCommerce.
 
         'data/ir_cron.xml',
         'data/ir_sequence_data.xml',
-        'data/mail_activity_type_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
         'data/sale_tour.xml',
@@ -47,6 +46,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/mail_activity_plan_views.xml',
         'views/payment_views.xml',
         'views/product_document_views.xml',
+        'views/product_pricelist_item_views.xml',
         'views/product_template_views.xml',
         'views/product_views.xml',
         'views/res_partner_views.xml',
@@ -95,11 +95,7 @@ This module contains all the common features of Sales Management and eCommerce.
         ],
         'web.assets_unit_tests': [
             'sale/static/tests/mock_server/**/*',
-        ],
-        'web.qunit_suite_tests': [
-            'sale/static/tests/**/*',
-            ('remove', 'sale/static/tests/tours/**/*'),
-            ('remove', 'sale/static/tests/mock_server/**/*'),
+            'sale/static/tests/**/*.test.js',
         ],
         'web.report_assets_common': [
             'sale/static/src/scss/sale_report.scss',

@@ -6,6 +6,14 @@ from odoo import Command
 
 class test_inherits(common.TransactionCase):
 
+    def test_ir_model_inherit(self):
+        imi = self.env['ir.model.inherit'].search(
+            [('model_id.model', '=', 'test.box')]
+        )
+        self.assertEqual(len(imi), 1)
+        self.assertEqual(imi.parent_id.model, 'test.unit')
+        self.assertEqual(imi.parent_field_id.name, 'unit_id')
+
     def test_create_3_levels_inherits(self):
         """ Check that we can create an inherits on 3 levels """
         pallet = self.env['test.pallet'].create({

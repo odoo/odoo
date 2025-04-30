@@ -92,8 +92,8 @@ class TestPortalControllers(TestPortal):
             f"/mail/avatar/mail.message/{mail_record.id}/author_avatar/50x50?access_token={token}"
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.headers.get('Content-Type'), 'image/png')
-        self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.png')
+        self.assertEqual(response.headers.get('Content-Type'), 'image/svg+xml; charset=utf-8')
+        self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.svg')
 
         placeholder_response = self.url_open(
             f'/mail/avatar/mail.message/{mail_record.id}/author_avatar/50x50?access_token={token + "a"}'
@@ -112,7 +112,7 @@ class TestPortalControllers(TestPortal):
         post_url = f"{self.record_portal.get_base_url()}/mail/message/post"
         pid = self.partner_2.id
         _hash = self.record_portal._sign_token(pid)
-        res = self.opener.post(
+        res = self.url_open(
             url=post_url,
             json={
                 'params': {
@@ -136,8 +136,8 @@ class TestPortalControllers(TestPortal):
             f"/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={_hash}&pid={pid}"
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.headers.get('Content-Type'), 'image/png')
-        self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.png')
+        self.assertEqual(response.headers.get('Content-Type'), 'image/svg+xml; charset=utf-8')
+        self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.svg')
 
         placeholder_response = self.url_open(
             f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={_hash + "a"}&pid={pid}'
@@ -153,7 +153,7 @@ class TestPortalControllers(TestPortal):
         post_url = f"{self.record_portal.get_base_url()}/mail/message/post"
 
         # test as not logged
-        self.opener.post(
+        self.url_open(
             url=post_url,
             json={
                 'params': {

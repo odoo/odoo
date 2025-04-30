@@ -1,11 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date, timezone, timedelta
-from dateutil.relativedelta import relativedelta
+from datetime import date, timezone, timedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools import SQL
+from odoo.exceptions import ValidationError
 from odoo.tools.date_intervals import HOURS_PER_DAY
 from odoo.tools.float_utils import float_round
 
@@ -19,10 +17,6 @@ class HrEmployeeBase(models.AbstractModel):
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         help='Select the user responsible for approving "Time Off" of this employee.\n'
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
-    remaining_leaves = fields.Float(
-        compute='_compute_remaining_leaves', string='Available Time Off Days',
-        help='Total number of paid time off allocated to this employee, change this value to create allocation/time off request. '
-             'Total based on all the time off types without overriding limit.')
     current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Time Off Status",
         selection=[
             ('confirm', 'Waiting Approval'),
@@ -33,7 +27,6 @@ class HrEmployeeBase(models.AbstractModel):
         ])
     leave_date_from = fields.Date('From Date', compute='_compute_leave_status')
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
-    leaves_count = fields.Float('Number of Time Off', compute='_compute_remaining_leaves')
     allocation_count = fields.Float('Total number of days allocated.', compute='_compute_allocation_count')
     allocations_count = fields.Integer('Total number of allocations', compute="_compute_allocation_count")
     show_leaves = fields.Boolean('Able to see Remaining Time Off', compute='_compute_show_leaves')
@@ -49,51 +42,13 @@ class HrEmployeeBase(models.AbstractModel):
         employees = self.filtered(lambda employee: employee.hr_presence_state != 'present' and employee.is_absent)
         employees.update({'hr_presence_state': 'absent'})
 
-    def _get_remaining_leaves(self):
-        """ Helper to compute the remaining leaves for the current employees
-            :returns dict where the key is the employee id, and the value is the remain leaves
-        """
-        for model_name in ('hr.leave', 'hr.leave.allocation'):
-            self.env[model_name].flush_model()
-        return self.env.execute_query_dict(SQL("""
-            SELECT
-                h.employee_id,
-                sum(h.number_of_days) AS days
-            FROM
-                (
-                    SELECT holiday_status_id, number_of_days,
-                        state, employee_id
-                    FROM hr_leave_allocation
-                    UNION ALL
-                    SELECT holiday_status_id, (number_of_days * -1) as number_of_days,
-                        state, employee_id
-                    FROM hr_leave
-                ) h
-                join hr_leave_type s ON (s.id=h.holiday_status_id)
-            WHERE
-                s.active = true AND h.state='validate' AND
-                s.requires_allocation='yes' AND
-                h.employee_id in %s
-            GROUP BY h.employee_id
-            """, (tuple(self.ids),)
-        ))
-
-    def _compute_remaining_leaves(self):
-        remaining = {}
-        if self.ids:
-            remaining = self._get_remaining_leaves()
-        for employee in self:
-            value = float_round(remaining.get(employee.id, 0.0), precision_digits=2)
-            employee.leaves_count = value
-            employee.remaining_leaves = value
-
     def _compute_allocation_count(self):
         # Don't get allocations that are expired
         current_date = date.today()
         data = self.env['hr.leave.allocation']._read_group([
             ('employee_id', 'in', self.ids),
             ('holiday_status_id.active', '=', True),
-            ('holiday_status_id.requires_allocation', '=', 'yes'),
+            ('holiday_status_id.requires_allocation', '=', True),
             ('state', '=', 'validate'),
             ('date_from', '<=', current_date),
             '|',
@@ -114,7 +69,7 @@ class HrEmployeeBase(models.AbstractModel):
             employee_remaining_leaves = 0
             employee_max_leaves = 0
             for leave_type in leaves_taken[employee]:
-                if leave_type.requires_allocation == 'no' or not leave_type.show_on_dashboard:
+                if not leave_type.requires_allocation or leave_type.hide_on_dashboard:
                     continue
                 for allocation in leaves_taken[employee][leave_type]:
                     if allocation and allocation.date_from <= current_date\
@@ -197,21 +152,19 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.show_leaves = False
 
     def _search_absent_employee(self, operator, value):
-        if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise UserError(_('Operation not supported'))
+        if operator != 'in':
+            return NotImplemented
         # This search is only used for the 'Absent Today' filter however
         # this only returns employees that are absent right now.
-        today_date = datetime.now(timezone.utc).date()
-        today_start = fields.Datetime.to_string(today_date)
-        today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
+        today_start = date.today()
+        today_end = today_start + timedelta(1)
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
             ('state', '=', 'validate'),
-            ('date_from', '<=', today_end),
+            ('date_from', '<', today_end),
             ('date_to', '>=', today_start),
         ])
-        operator = ['in', 'not in'][(operator == '=') != value]
-        return [('id', operator, holidays.mapped('employee_id').ids)]
+        return [('id', 'in', holidays.employee_id.ids)]
 
     @api.model_create_multi
     def create(self, vals_list):

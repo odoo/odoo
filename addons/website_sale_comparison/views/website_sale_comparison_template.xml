@@ -53,27 +53,6 @@
                                         <t t-call="website_sale_comparison.specifications_table"/>
                                     </div>
                                 </t>
-                                <t t-if="is_view_active('website_sale.product_tags')">
-                                    <div class="col-lg-6">
-                                        <table class="table">
-                                            <t t-if="product.product_variant_ids.all_product_tag_ids">
-                                                <tr>
-                                                    <th class="text-start" t-att-colspan="2">
-                                                        <span>Tags</span>
-                                                    </th>
-                                                </tr>
-                                                <tr class="d-flex">
-                                                    <td class="w-25 d-flex align-items-center"><span>Tags</span></td>
-                                                    <td class="w-75 text-muted">
-                                                        <t t-call="website_sale.product_tags">
-                                                            <t t-set="all_product_tags" t-value="product.product_variant_ids.all_product_tag_ids"/>
-                                                        </t>
-                                                    </td>
-                                                </tr>
-                                            </t>
-                                        </table>
-                                    </div>
-                                </t>
                             </div>
                         </div>
                     </div>
@@ -195,17 +174,13 @@
                                 </tr>
                                 <tr>
                                     <td t-if="len(attrib_categories)" class='td-top-left border-top-0'/>
-                                    <td t-foreach="products" t-as="product" class="border-top-0">
+                                    <td t-foreach="products" t-as="product" class="border-top-0 align-top">
                                         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
                                         <div class='product_summary'>
                                             <a class="o_product_comparison_table" t-att-href="product.website_url">
                                                 <span t-esc="combination_info['display_name']"></span><br/>
                                             </a>
-
-                                            <span class="o_comparison_price" t-if="combination_info['prevent_zero_price_sale']">
-                                                <strong t-field="website.prevent_zero_price_sale_text"/>
-                                            </span>
-                                            <span class="o_comparison_price" t-else="">
+                                            <span class="o_comparison_price" t-if="not combination_info['prevent_zero_price_sale']">
                                                 <strong>Price:</strong>
                                                 <span t-out="combination_info['price']"
                                                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
@@ -219,10 +194,11 @@
                                                      style="white-space: nowrap;"
                                                      t-out="combination_info['list_price']"
                                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                                                <small t-if="combination_info['base_unit_price']"
-                                                       class="d-block text-muted"
-                                                       groups="website_sale.group_show_uom_price">
-                                                    <t t-call='website_sale.base_unit_price'/>
+                                                <small t-if="combination_info.get('base_unit_price')"
+                                                       class="d-block text-muted">
+                                                    <t t-call="website_sale.base_unit_price">
+                                                        <t t-set="base_unit_price" t-value="combination_info['base_unit_price']"/>
+                                                    </t>
                                                 </small>
                                             </span>
                                             <form class="text-center o_add_cart_form_compare">
@@ -238,7 +214,7 @@
                                                     t-att-value="product.id"
                                                 />
                                                 <a t-if="combination_info['prevent_zero_price_sale']"
-                                                   t-att-href="website.contact_us_button_url"
+                                                   t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"
                                                    class="btn btn-primary btn_cta">
                                                    Contact Us
                                                 </a>
@@ -316,7 +292,6 @@
                              t-esc="combination_info['list_price']"
                              t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                     </div>
-                    <div t-attf-class="{{'' if combination_info['prevent_zero_price_sale'] else 'd-none'}}" t-field="website.prevent_zero_price_sale_text"/>
                 </h6>
             </div>
             <div class="col-1 text-end">

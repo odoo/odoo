@@ -41,7 +41,7 @@ test("can add a table using the powerbox and keyboard", async () => {
         <table class="table table-bordered o_table">
             <tbody>
                 <tr>
-                    <td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                    <td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
                     <td><p><br></p></td>
                     <td><p><br></p></td>
                 </tr>
@@ -179,7 +179,7 @@ test("add table inside empty list", async () => {
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                            <td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
                             <td><p><br></p></td>
                             <td><p><br></p></td>
                         </tr>
@@ -232,7 +232,7 @@ test("add table inside non-empty list", async () => {
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                            <td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
                             <td><p><br></p></td>
                             <td><p><br></p></td>
                         </tr>

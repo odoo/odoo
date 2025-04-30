@@ -48,7 +48,8 @@ class Intersection {
             if (observation.isIntersecting) {
                 this._targetPosition = "in";
             } else {
-                const scrollParentElement = getScrollParent(this.currentTarget);
+                const scrollParentElement =
+                    getScrollParent(this.currentTarget) || document.documentElement;
                 const targetBounds = this.currentTarget.getBoundingClientRect();
                 if (targetBounds.bottom > scrollParentElement.clientHeight) {
                     this._targetPosition = "out-below";

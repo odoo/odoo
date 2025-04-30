@@ -1483,7 +1483,8 @@ const _getEmojisData1 = () => `{
     ],
     "name": "` + _t("face with steam from nose") + `",
     "shortcodes": [
-        ":face_with_steam_from_nose:"
+        ":face_with_steam_from_nose:",
+        ":triumph:"
     ]
 },
 {
@@ -21859,42 +21860,6 @@ const _getEmojisData8 = () => `{
     "name": "` + _t("pirate flag") + `",
     "shortcodes": [
         ":pirate_flag:"
-    ]
-},
-{
-    "category": "Symbols",
-    "codepoints": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-    "emoticons": [],
-    "keywords": [
-        "` + _t("flag") + `"
-    ],
-    "name": "` + _t("flag: England") + `",
-    "shortcodes": [
-        ":england:"
-    ]
-},
-{
-    "category": "Symbols",
-    "codepoints": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-    "emoticons": [],
-    "keywords": [
-        "` + _t("flag") + `"
-    ],
-    "name": "` + _t("flag: Scotland") + `",
-    "shortcodes": [
-        ":scotland:"
-    ]
-},
-{
-    "category": "Symbols",
-    "codepoints": "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
-    "emoticons": [],
-    "keywords": [
-        "` + _t("flag") + `"
-    ],
-    "name": "` + _t("flag: Wales") + `",
-    "shortcodes": [
-        ":wales:"
     ]
 }`;
 

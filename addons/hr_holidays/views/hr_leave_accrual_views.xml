@@ -29,27 +29,27 @@
                         </div>
                         <div name="monthly" invisible="frequency != 'monthly'">
                             <field name="frequency" style="width: 4.5rem"/>
-                            <label for="first_day_display" string="on the" class="me-1"/>
-                            <field name="first_day_display" required="1" style="width: 4rem"/>
+                            <label for="first_day" string="on the" class="me-1"/>
+                            <field name="first_day" required="1" style="width: 4rem"/>
                             of the month
                         </div>
                         <div name="bimonthly" invisible="frequency != 'bimonthly'" style="width: 100%">
                             <field name="frequency" style="width: 7rem"/>
-                            <label for="first_day_display" string="on the" class="me-1"/><field name="first_day_display" required="1" style="width: 4rem"/>
-                            <label for="second_day_display" string="and on the" class="me-1"/><field name="second_day_display" required="1" style="width: 4.1rem"/>
+                            <label for="first_day" string="on the" class="me-1"/><field name="first_day" required="1" style="width: 4rem"/>
+                            <label for="second_day" string="and on the" class="me-1"/><field name="second_day" required="1" style="width: 4.1rem"/>
                             of the month
                         </div>
                         <div name="biyearly" invisible="frequency != 'biyearly'">
                             <field name="frequency" style="width: 6rem"/>
-                            <label for="first_month_day_display" string="on the" class="me-1"/>
-                            <field name="first_month_day_display" required="1" style="width: 4.1rem"/>of <field name="first_month" required="1" style="width: 4.55rem"/>
-                            <label for="second_month_day_display" string="and" class="me-1"/>
-                            <field name="second_month_day_display" required="1" style="width: 4.1rem"/>of <field name="second_month" required="1" style="width: 5.4rem"/>
+                            <label for="first_month_day" string="on the" class="me-1"/>
+                            <field name="first_month_day" widget="day_selection" required="1" style="width: 4.1rem" month_field="first_month"/>of <field name="first_month" required="1" style="width: 4.55rem"/>
+                            <label for="second_month_day" string="and" class="me-1"/>
+                            <field name="second_month_day" widget="day_selection" required="1" style="width: 4.1rem" month_field="second_month"/>of <field name="second_month" required="1" style="width: 5.4rem"/>
                         </div>
                         <div name="yearly" invisible="frequency != 'yearly'">
                             <field name="frequency" style="width: 4rem"/>
-                            <label for="yearly_day_display" string="on the" class="me-1"/>
-                            <field name="yearly_day_display" required="1" style="width: 4rem"/> of <field name="yearly_month" required="1" style="width: 5.4rem"/>
+                            <label for="yearly_day" string="on the" class="me-1"/>
+                            <field name="yearly_day" widget="day_selection" required="1" style="width: 4rem" month_field="yearly_month"/> of <field name="yearly_month" required="1" style="width: 5.4rem"/>
                         </div>
                     </group>
                     <group name="maximum_leave">
@@ -117,7 +117,7 @@
         <field name="name">hr.leave.accrual.plan.list</field>
         <field name="model">hr.leave.accrual.plan</field>
         <field name="arch" type="xml">
-            <list string="Accrual Plans">
+            <list string="Accrual Plans" sample="1">
                 <field name="name"/>
                 <field name="level_count"/>
                 <field name="employees_count"/>
@@ -145,9 +145,8 @@
                             <field name="carryover_date" widget="radio"/>
                             <label for="carryover_month" string="Carry-Over Date" invisible="carryover_date != 'other'"/>
                             <div name="carryover" invisible="carryover_date != 'other'">
-                                <field name="carryover_day" invisible="1"/>
-                                <field name="carryover_day_display"  required="1" style="width: 4.75rem;"/> of
-                                <field name="carryover_month"  required="1" style="width: 6rem;"/>
+                                <field name="carryover_day" widget="day_selection" required="1" style="width: 3rem;" month_field="carryover_month"/> of
+                                <field name="carryover_month"  required="1" style="width: 14ch;"/>
                             </div>
                         </group>
                         <group>
@@ -273,7 +272,8 @@
         <field name="name">hr.leave.accrual.plan.search</field>
         <field name="model">hr.leave.accrual.plan</field>
         <field name="arch" type="xml">
-            <search string="Group By">
+            <search string="Accrual Plan">
+                <field name="name"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <filter string="Company" name='company_id' context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
             </search>
@@ -284,6 +284,14 @@
         <field name="name">Accrual Plans</field>
         <field name="res_model">hr.leave.accrual.plan</field>
         <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Accrual Plan
+            </p>
+            <p>
+                Use accrual plans to give determined amount of time following the rules you define
+            </p>
+        </field>
     </record>
 
 </odoo>

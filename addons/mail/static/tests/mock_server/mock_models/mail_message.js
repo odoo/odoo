@@ -79,8 +79,8 @@ export class MailMessage extends models.ServerModel {
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
-        /** @type {import("mock_models").MailLinkPreview} */
-        const MailLinkPreview = this.env["mail.link.preview"];
+        /** @type {import("mock_models").MailMessageLinkPreview} */
+        const MailMessageLinkPreview = this.env["mail.message.link.preview"];
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").MailMessageReaction} */
@@ -148,6 +148,7 @@ export class MailMessage extends models.ServerModel {
                 attachment_ids: mailDataHelpers.Store.many(
                     IrAttachment.browse(message.attachment_ids).sort((a1, a2) => a1.id - a2.id)
                 ),
+                body: ["markup", data.body],
                 default_subject:
                     message.model &&
                     message.res_id &&
@@ -155,15 +156,17 @@ export class MailMessage extends models.ServerModel {
                         ? ResFake._message_compute_subject([message.res_id])
                         : MailThread._message_compute_subject([message.res_id])
                     ).get(message.res_id),
-                link_preview_ids: mailDataHelpers.Store.many(
-                    MailLinkPreview.browse(message.link_preview_ids)
+                message_link_preview_ids: mailDataHelpers.Store.many(
+                    MailMessageLinkPreview.browse(message.message_link_preview_ids).filter(
+                        (lpm) => !lpm.is_hidden
+                    )
                 ),
                 notification_ids: mailDataHelpers.Store.many(
                     notifications.filter(
                         (notification) => notification.mail_message_id == message.id
                     )
                 ),
-                parentMessage: mailDataHelpers.Store.one(
+                parent_id: mailDataHelpers.Store.one(
                     MailMessage.browse(message.parent_id),
                     makeKwArgs({ format_reply: false })
                 ),

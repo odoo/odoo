@@ -79,6 +79,37 @@ class TestCRMLead(TestCrmCommon):
             self.assertEqual(lead.lang_id, self.lang_en)
 
     @users('user_sales_leads')
+    def test_crm_lead_compute_commercial_partner(self):
+        company_partner, child_partner, orphan_partner = self.env['res.partner'].create([
+            {
+                'name': 'test_crm_lead_compute_commercial_partner',
+                'is_company': True,
+                'email': 'test_crm_lead_compute_commercial_partner@test.lan',
+            },
+            {'name': 'Test Child'},
+            {'name': 'Test Orphan'},
+        ])
+        child_partner.parent_id = company_partner
+        lead = self.env['crm.lead'].create({
+            'name': 'Test Lead',
+            'partner_name': 'test_crm_lead_compute_commercial_partner',
+        })
+        self.assertEqual(lead.commercial_partner_id, company_partner)
+        lead.partner_id = orphan_partner
+        self.assertFalse(lead.commercial_partner_id)
+        lead.partner_id = child_partner
+        self.assertEqual(lead.commercial_partner_id, company_partner)
+        lead.write({
+            'partner_id': False,
+            'partner_name': False,
+        })
+        self.assertFalse(lead.commercial_partner_id)
+        lead.partner_id = company_partner
+        # this is mostly because we use it to set "parent_id" in most flows
+        # and it doesn't really make sense to have it be its own parent
+        self.assertFalse(lead.commercial_partner_id, "If a partner is its own commercial_partner_id, the lead is considered to have none.")
+
+    @users('user_sales_leads')
     def test_crm_lead_creation_no_partner(self):
         lead_data = {
             'name': 'Test',
@@ -800,9 +831,9 @@ class TestCRMLead(TestCrmCommon):
         for team in teams:
             with self.subTest(team=team):
                 if team != team_other_comp:
-                    self.assertIn(f"<a href='mailto:{team.display_name}'>{team.display_name}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                    self.assertIn(f"<a href='mailto:{team.alias_email}'>{team.alias_email}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
                 else:
-                    self.assertNotIn(f"<a href='mailto:{team.display_name}'>{team.display_name}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                    self.assertNotIn(f"<a href='mailto:{team.alias_email}'>{team.alias_email}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
                 team.active = False
 
     @mute_logger('odoo.addons.mail.models.mail_thread')

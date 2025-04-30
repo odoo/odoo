@@ -6,6 +6,7 @@ import re
 from werkzeug.urls import url_join
 
 from odoo import api, fields, models, _
+from odoo.fields import Domain
 from odoo.addons.website.tools import text_from_html
 from odoo.http import request
 from odoo.osv import expression
@@ -247,12 +248,22 @@ class WebsitePublishedMixin(models.AbstractModel):
     def create_and_get_website_url(self, **kwargs):
         return self.create(kwargs).website_url
 
+    @api.depends_context('uid')
     def _compute_can_publish(self):
-        """ This method can be overridden if you need more complex rights management than just 'website_restricted_editor'
-        The publish widget will be hidden and the user won't be able to change the 'website_published' value
-        if this method sets can_publish False """
+        """ This method can be overridden if you need more complex rights
+        management than just write access to the model.
+        The publish widget will be hidden and the user won't be able to change
+        the 'website_published' value if this method sets can_publish False """
         for record in self:
-            record.can_publish = True
+            try:
+                # Some main_record might be in sudo because their content needs
+                # to be rendered by a template even if they were not supposed
+                # to be accessible
+                plain_record = record.sudo(flag=False) if self._context.get('can_publish_unsudo_main_object', False) else record
+                self.env['website'].get_current_website()._check_user_can_modify(plain_record)
+                record.can_publish = True
+            except AccessError:
+                record.can_publish = False
 
     @api.model
     def _get_can_publish_error_message(self):
@@ -286,18 +297,15 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
             record.is_published = record.website_published
 
     def _search_website_published(self, operator, value):
-        if not isinstance(value, bool) or operator not in ('=', '!='):
-            logger.warning('unsupported search on website_published: %s, %s', operator, value)
-            return [()]
-
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            value = not value
+        if operator != 'in':
+            return NotImplemented
+        assert list(value) == [True]
 
         current_website_id = self._context.get('website_id')
-        is_published = [('is_published', '=', value)]
+        is_published = Domain('is_published', '=', True)
         if current_website_id:
             on_current_website = self.env['website'].website_domain(current_website_id)
-            return (['!'] if value is False else []) + expression.AND([is_published, on_current_website])
+            return is_published & Domain(on_current_website)
         else:  # should be in the backend, return things that are published anywhere
             return is_published
 

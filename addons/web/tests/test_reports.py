@@ -113,7 +113,7 @@ class TestReports(odoo.tests.HttpCase):
         report = report.with_user(admin)
 
         with (MockRequest(report.env) as mock_request,
-            patch('subprocess.Popen') as mock_popen,
+            patch('subprocess.run') as mock_popen,
             patch.object(root.session_store, 'delete') as mock_delete,
             patch.object(os, 'unlink') as mock_unlink):
 
@@ -121,7 +121,7 @@ class TestReports(odoo.tests.HttpCase):
 
             mock_process = Mock()
             mock_process.returncode = -1
-            mock_process.communicate.return_value = ("output", "")
+            mock_process.stderr = ""
             mock_popen.return_value = mock_process
 
             with self.assertRaises(UserError):

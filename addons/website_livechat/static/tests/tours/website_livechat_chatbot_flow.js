@@ -248,8 +248,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 trigger: messagesContain("I will transfer you to a human."),
             },
             {
-                trigger:
-                    ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(joined the channel)",
+                // Wait for the operator to be added: composer is only enabled at that point.
+                trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
             },
         ];
     },

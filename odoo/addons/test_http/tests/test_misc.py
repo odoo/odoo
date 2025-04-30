@@ -153,7 +153,7 @@ class TestHttpMisc(TestHttpBase):
 @tagged('post_install', '-at_install')
 class TestHttpCors(TestHttpBase):
     def test_cors0_http_default(self):
-        res_opt = self.opener.options(f'{self.base_url()}/test_http/cors_http_default', timeout=10, allow_redirects=False)
+        res_opt = self.url_open(f'{self.base_url()}/test_http/cors_http_default', timeout=10, method='OPTIONS')
         self.assertIn(res_opt.status_code, (200, 204))
         self.assertEqual(res_opt.headers.get('Access-Control-Allow-Origin'), '*')
         self.assertEqual(res_opt.headers.get('Access-Control-Allow-Methods'), 'GET, POST')
@@ -166,7 +166,7 @@ class TestHttpCors(TestHttpBase):
         self.assertEqual(res_get.headers.get('Access-Control-Allow-Methods'), 'GET, POST')
 
     def test_cors1_http_methods(self):
-        res_opt = self.opener.options(f'{self.base_url()}/test_http/cors_http_methods', timeout=10, allow_redirects=False)
+        res_opt = self.url_open(f'{self.base_url()}/test_http/cors_http_methods', timeout=10, method='OPTIONS')
         self.assertIn(res_opt.status_code, (200, 204))
         self.assertEqual(res_opt.headers.get('Access-Control-Allow-Origin'), '*')
         self.assertEqual(res_opt.headers.get('Access-Control-Allow-Methods'), 'GET, PUT')
@@ -179,7 +179,7 @@ class TestHttpCors(TestHttpBase):
         self.assertEqual(res_post.headers.get('Access-Control-Allow-Methods'), 'GET, PUT')
 
     def test_cors2_json(self):
-        res_opt = self.opener.options(f'{self.base_url()}/test_http/cors_json', timeout=10, allow_redirects=False)
+        res_opt = self.url_open(f'{self.base_url()}/test_http/cors_json', timeout=10, method='OPTIONS')
         self.assertIn(res_opt.status_code, (200, 204), res_opt.text)
         self.assertEqual(res_opt.headers.get('Access-Control-Allow-Origin'), '*')
         self.assertEqual(res_opt.headers.get('Access-Control-Allow-Methods'), 'POST')

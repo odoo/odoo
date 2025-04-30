@@ -188,6 +188,7 @@ class AccountMove(models.Model):
             company=self.company_id,
             xml_data=xml_data,
             move_type=self.move_type,
+            is_b2b=self.partner_id.commercial_partner_id.is_company,
         )
         result['attachment_raw'] = xml_data
         if 'error' in result:  # result == {'error': <str>, 'attachment_raw': <bytes>}

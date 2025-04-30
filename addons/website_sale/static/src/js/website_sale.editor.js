@@ -13,9 +13,18 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      * @override
      */
     start: function () {
-        this.ppg = parseInt(this.$target.closest('[data-ppg]').data('ppg'));
-        this.ppr = parseInt(this.$target.closest('[data-ppr]').data('ppr'));
-        this.default_sort = this.$target.closest('[data-default-sort]').data('default-sort');
+        const gridEl = this.$target[0].querySelector('#o_wsale_products_grid');
+        this.ppg = parseInt(gridEl.dataset.ppg);
+        this.ppr = parseInt(gridEl.dataset.ppr);
+        this.gap = this.$target[0].style.getPropertyValue('--o-wsale-products-grid-gap');
+        this.default_sort = gridEl.dataset.defaultSort;
+
+        // Activate HTML previews when necessary only
+        // See 'website_sale.editor_previews' XML template
+        if(this.$target[0].classList.contains('o_wsale_edit_preview_enabled')) {
+            this._handlePreviews();
+        }
+
         return this._super.apply(this, arguments);
     },
     /**
@@ -59,6 +68,14 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @see this.selectClass for params
      */
+    setDefaultGap: function (previewMode, widgetValue, params) {
+        this.gap = widgetValue + "px";
+        this.$target[0].style.setProperty('--o-wsale-products-grid-gap', this.gap);
+        return rpc('/shop/config/website', { 'shop_gap':  this.gap });
+    },
+    /**
+     * @see this.selectClass for params
+     */
     setDefaultSort: function (previewMode, widgetValue, params) {
         this.default_sort = widgetValue;
         return rpc('/shop/config/website', { 'shop_default_sort': this.default_sort });
@@ -82,6 +99,63 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * The 'selectClass' method is not triggered for editor options that require a page
+     * reload (see 'data-reload'). '_handlePreviews' binds 'mouseover' functions on these
+     * UI element directly.
+     *
+     * @private
+     */
+    _handlePreviews() {
+        const targetEl = this.$target[0];
+        const previewsEls = this.el.querySelectorAll('[data-wsale-preview-classes]');
+
+        previewsEls.forEach((el) => {
+            const additionalClasses = el.getAttribute('data-wsale-preview-classes')
+                ?.split(',')
+                .map(cls => cls.trim())
+                .filter(cls => !targetEl.classList.contains(cls)) || [];
+
+            const previewId = el.getAttribute('data-wsale-preview-id');
+            const xmlTemplate = previewId ? renderToElement(previewId) : null;
+            const placeBeforeEls = targetEl.querySelectorAll(el.getAttribute('data-wsale-preview-place-before'));
+            const placeAfterEls = targetEl.querySelectorAll(el.getAttribute('data-wsale-preview-place-after'));
+
+            // Since actionable elements can be either a single element (el) or a NodeList (when
+            // `el` has the class o_we_checkbox_wrapper), we handle both cases properly.
+            const uiEl = el.classList.contains('o_we_checkbox_wrapper')
+                ? el.querySelectorAll('we-title, we-checkbox')
+                : el;
+            const actionableEls = uiEl instanceof NodeList ? [...uiEl] : [uiEl];
+
+            actionableEls.forEach(actionableEl => {
+                actionableEl.addEventListener('mouseover', () => {
+                    if (xmlTemplate && (placeBeforeEls.length || placeAfterEls.length)) {
+                        placeBeforeEls.forEach(placeBeforeEl =>
+                            placeBeforeEl.insertAdjacentElement('beforebegin', xmlTemplate.cloneNode(true))
+                        );
+
+                        placeAfterEls.forEach(placeAfterEl =>
+                            placeAfterEl.insertAdjacentElement('afterend', xmlTemplate.cloneNode(true))
+                        );
+                    }
+
+                    requestAnimationFrame(() => {
+                        targetEl.classList.add(...additionalClasses);
+                    });
+                });
+
+                actionableEl.addEventListener('mouseout', () => {
+                    requestAnimationFrame(() => {
+                        targetEl.classList.remove(...additionalClasses);
+                    });
+                    if (xmlTemplate) {
+                        targetEl.querySelectorAll('[data-wsale-injected-preview]').forEach(el => el.remove());
+                    }
+                });
+            });
+        });
+    },
+    /**
      * @override
      */
     _computeWidgetState: function (methodName, params) {
@@ -91,6 +165,9 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
             }
             case 'setPpr': {
                 return this.ppr;
+            }
+            case 'setGap': {
+                return this.gap;
             }
             case 'setDefaultSort': {
                 return this.default_sort;
@@ -113,6 +190,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     willStart: async function () {
         const _super = this._super.bind(this);
+        this.isLayoutList = this.$target[0].closest('#o_wsale_container').classList.contains('o_wsale_layout_list');
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.defaultSort = this.$target[0].closest('[data-default-sort]').dataset.defaultSort
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
@@ -262,6 +340,8 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         // of arbitrary DOM elements and not just widgets.
         await this._super(...arguments);
         this.$el.find('[data-name="ribbon_customize_opt"]').toggleClass('d-none', !this.ribbonEditMode);
+        this.$el[0].querySelector('.o_wsale_soptions_menu_sizes').classList.toggle('d-none', this.isLayoutList);
+        this.$el[0].querySelector('[data-name="o_wsale_change_sequence_widget"]').classList.toggle('d-none', this.isLayoutList);
     },
 
     //--------------------------------------------------------------------------
@@ -454,6 +534,12 @@ class AttachmentMediaDialog extends MediaDialog {
         this.props.close();
     }
 }
+
+options.registry.WebsiteSaleCheckoutPage = options.Class.extend({
+    setExtraStep: function (previewMode, widgetValue, params) {
+        return rpc("/shop/config/website", { "extra_step": widgetValue });
+    },
+});
 
 options.registry.WebsiteSaleProductPage = options.Class.extend({
     init() {

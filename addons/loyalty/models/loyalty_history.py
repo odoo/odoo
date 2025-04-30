@@ -8,7 +8,7 @@ class LoyaltyHistory(models.Model):
     _description = "History for Loyalty cards and Ewallets"
     _order = 'id desc'
 
-    card_id = fields.Many2one(comodel_name='loyalty.card', required=True, ondelete='cascade')
+    card_id = fields.Many2one(comodel_name='loyalty.card', required=True, index=True, ondelete='cascade')
     company_id = fields.Many2one(related='card_id.company_id')
 
     description = fields.Text(required=True)

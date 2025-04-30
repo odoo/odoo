@@ -15,7 +15,6 @@ const {
     getLineChartLegend,
     getChartShowValues,
     getTrendDatasetForLineChart,
-    truncateLabel,
 } = chartHelpers;
 
 export class OdooLineChart extends OdooChart {
@@ -77,7 +76,7 @@ function createOdooChartRuntime(chart, getters) {
     const config = {
         type: "line",
         data: {
-            labels: chartData.labels.map(truncateLabel),
+            labels: chartData.labels,
             datasets: chartJsDatasets,
         },
         options: {

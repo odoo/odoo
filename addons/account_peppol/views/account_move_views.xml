@@ -13,21 +13,11 @@
                         string="Cancel PEPPOL"
                         invisible="peppol_move_state != 'to_send' or state == 'draft'"/>
             </header>
-
-            <xpath expr="//div[@name='journal_div']" position="after">
-                <label for="peppol_move_state"
-                       invisible="not peppol_move_state or state == 'draft' or move_type in ('in_invoice', 'in_refund')"/>
-                <div name="peppol_div"
-                     class="d-flex"
-                     invisible="not peppol_move_state or state == 'draft' or move_type in ('in_invoice', 'in_refund')">
-                    <field name="peppol_move_state" class="oe_inline"/>
-                    <span class="mx-1" invisible="'demo_' not in peppol_message_uuid"> (Demo)</span>
-                    <span class="text-muted mx-3"
-                          invisible="peppol_move_state != 'to_send'">
-                        The invoice will be sent automatically via Peppol
-                    </span>
+            <sheet position="before">
+                <div class="alert alert-danger" role="alert" invisible="peppol_move_state != 'error'">
+                    There was an error while sending this invoice via Peppol.
                 </div>
-            </xpath>
+            </sheet>
         </field>
     </record>
 

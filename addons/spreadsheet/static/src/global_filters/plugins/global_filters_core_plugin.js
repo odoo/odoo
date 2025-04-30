@@ -1,9 +1,10 @@
 /** @ts-check */
 
-export const globalFiltersFieldMatchers = {};
-
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import { checkFilterValueIsValid } from "@spreadsheet/global_filters/helpers";
+import {
+    checkFilterValueIsValid,
+    globalFieldMatchingRegistry,
+} from "@spreadsheet/global_filters/helpers";
 import { _t } from "@web/core/l10n/translation";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
@@ -192,13 +193,17 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
             return {};
         }
 
-        for (const matcher of Object.values(globalFiltersFieldMatchers)) {
-            for (const dataSourceId of matcher.getIds()) {
-                const model = matcher.getModel(dataSourceId);
+        for (const matcher of globalFieldMatchingRegistry.getAll()) {
+            for (const dataSourceId of matcher.getIds(this.getters)) {
+                const model = matcher.getModel(this.getters, dataSourceId);
                 if (model === newModel) {
                     const fieldMatching = {};
                     for (const filter of globalFilters) {
-                        const matchedField = matcher.getFieldMatching(dataSourceId, filter.id);
+                        const matchedField = matcher.getFieldMatching(
+                            this.getters,
+                            dataSourceId,
+                            filter.id
+                        );
                         if (matchedField) {
                             fieldMatching[filter.id] = {
                                 chain: matchedField.chain,

@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import datetime
 
 from odoo import _, api, fields, models
 from odoo.osv import expression
@@ -24,8 +25,12 @@ class FleetVehicleModel(models.Model):
     _description = 'Model of a vehicle'
     _order = 'name asc'
 
+    def _get_year_selection(self):
+        current_year = datetime.now().year
+        return [(str(i), i) for i in range(1970, current_year + 1)]
+
     name = fields.Char('Model name', required=True, tracking=True)
-    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Manufacturer', required=True, tracking=True)
+    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Manufacturer', required=True, tracking=True, index='btree_not_null')
     category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', tracking=True)
     vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
     image_128 = fields.Image(related='brand_id.image_128', readonly=True)
@@ -33,35 +38,43 @@ class FleetVehicleModel(models.Model):
     vehicle_type = fields.Selection([('car', 'Car'), ('bike', 'Bike')], default='car', required=True, tracking=True)
     transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', tracking=True)
     vehicle_count = fields.Integer(compute='_compute_vehicle_count', search='_search_vehicle_count')
-    model_year = fields.Integer(tracking=True)
+    model_year = fields.Selection(selection='_get_year_selection', tracking=True)
     color = fields.Char(tracking=True)
-    seats = fields.Integer(string='Seats Number', tracking=True)
-    doors = fields.Integer(string='Doors Number', tracking=True)
-    trailer_hook = fields.Boolean(default=False, string='Trailer Hitch', tracking=True)
-    default_co2 = fields.Float('CO2 Emissions', tracking=True)
-    co2_standard = fields.Char(tracking=True)
+    seats = fields.Integer(string='Seating Capacity', tracking=True)
+    doors = fields.Integer(string='Number of Doors', tracking=True,
+        help="Specifies the total number of doors, including the truck and hatch doors, if applicable.")
+    trailer_hook = fields.Boolean(default=False, string='Trailer Hitch', tracking=True,
+        help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes,\
+            such as pulling trailers, boats, or other vehicles.")
+    default_co2 = fields.Float('CO₂ Emissions', tracking=True)
+    co2_emission_unit = fields.Selection([('g/km', 'g/km'), ('g/mi', 'g/mi')], compute='_compute_co2_emission_unit', required=True)
+    co2_standard = fields.Char(string="Emission Standard", tracking=True,
+        help='''Emission Standard specifies the regulatory test procedure or \
+            guideline under which a vehicle's emissions are measured.''')
     default_fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', default='electric', tracking=True)
-    power = fields.Integer('Power', tracking=True)
-    horsepower = fields.Integer(tracking=True)
+    power = fields.Float('Power', tracking=True)
+    horsepower = fields.Float(tracking=True)
     horsepower_tax = fields.Float('Horsepower Taxation', tracking=True)
     electric_assistance = fields.Boolean(default=False, tracking=True)
     power_unit = fields.Selection([
         ('power', 'kW'),
-        ('horsepower', 'Horsepower')
+        ('horsepower', 'Horsepower (hp)')
         ], 'Power Unit', default='power', required=True)
     vehicle_properties_definition = fields.PropertiesDefinition('Vehicle Properties')
     vehicle_range = fields.Integer(string="Range")
+    range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')], default="km", required=True)
+    drive_type = fields.Selection([
+        ('fwd', 'Front-Wheel Drive (FWD)'),
+        ('awd', 'All-Wheel Drive (AWD)'),
+        ('rwd', 'Rear-Wheel Drive (RWD)'),
+        ('4wd', 'Four-Wheel Drive (4WD)'),
+    ])
 
     @api.model
     def _search_display_name(self, operator, value):
         if operator in expression.NEGATIVE_TERM_OPERATORS:
-            positive_operator = expression.TERM_OPERATORS_NEGATION[operator]
-        else:
-            positive_operator = operator
-        domain = expression.OR([[('name', positive_operator, value)], [('brand_id.name', positive_operator, value)]])
-        if positive_operator != operator:
-            domain = ['!', *domain]
-        return domain
+            return NotImplemented
+        return ['|', ('name', operator, value), ('brand_id.name', operator, value)]
 
     @api.depends('brand_id')
     def _compute_display_name(self):
@@ -79,19 +92,18 @@ class FleetVehicleModel(models.Model):
         for model in self:
             model.vehicle_count = count_by_model.get(model.id, 0)
 
+    @api.depends('range_unit')
+    def _compute_co2_emission_unit(self):
+        for record in self:
+            if record.range_unit == 'km':
+                record.co2_emission_unit = 'g/km'
+            else:
+                record.co2_emission_unit = 'g/mi'
+
     @api.model
     def _search_vehicle_count(self, operator, value):
-        if operator not in ['=', '!=', '<', '>'] or not isinstance(value, int):
-            raise NotImplementedError(_('Operation not supported.'))
-        fleet_models = self.env['fleet.vehicle.model'].search([])
-        if operator == '=':
-            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count == value)
-        elif operator == '!=':
-            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count != value)
-        elif operator == '<':
-            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count < value)
-        elif operator == '>':
-            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count > value)
+        fleet_models = self.env['fleet.vehicle.model'].search_fetch([], ['vehicle_count'])
+        fleet_models = fleet_models.filtered_domain([('vehicle_count', operator, value)])
         return [('id', 'in', fleet_models.ids)]
 
     def action_model_vehicle(self):

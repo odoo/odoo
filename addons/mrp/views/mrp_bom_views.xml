@@ -61,7 +61,7 @@
                             <field name="product_id" groups="!product.group_product_variant" invisible="1"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row">
-                                <field name="product_qty"/>
+                                <field name="product_qty" class="mw-25"/>
                                 <field name="product_uom_id" options="{'no_open':True, 'no_create':True, 'product_field': 'product_tmpl_id', 'quantity_field': 'product_qty'}" groups="uom.group_uom" widget="many2one_uom"/>
                             </div>
                         </group>
@@ -104,7 +104,6 @@
                                     <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" column_invisible="parent.product_id" groups="product.group_product_variant"/>
                                     <field name="allowed_operation_ids" column_invisible="True"/>
                                     <field name="operation_id" groups="mrp.group_mrp_routings" optional="hidden" column_invisible="parent.type not in ('normal', 'phantom')" options="{'no_quick_create':True,'no_create_edit':True}"/>
-                                    <field name="manual_consumption" optional="hide" force_save="1"/>
                                 </list>
                             </field>
                         </page>
@@ -183,6 +182,7 @@
                     <field name="code" optional="show"/>
                     <field name="type"/>
                     <field name="product_id" groups="product.group_product_variant" optional="hide"/>
+                    <field name="product_id" groups="!product.group_product_variant" column_invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="product_qty" optional="hide"/>
                     <field name="product_uom_id" groups="uom.group_uom" optional="hide" widget="many2one_uom"/>

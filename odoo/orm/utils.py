@@ -126,22 +126,24 @@ def expand_ids(id0, ids):
             seen.add(id_)
 
 
-def origin_ids(ids):
-    """ Return an iterator over the origin ids corresponding to ``ids``.
+class OriginIds:
+    """ A reversible iterable returning the origin ids of a collection of ``ids``.
         Actual ids are returned as is, and ids without origin are not returned.
     """
-    return ((id_ or id_.origin) for id_ in ids if (id_ or getattr(id_, "origin", None)))
-
-
-class OriginIds:
-    """ A reversible iterable returning the origin ids of a collection of ``ids``. """
     __slots__ = ['ids']
 
     def __init__(self, ids):
         self.ids = ids
 
     def __iter__(self):
-        return origin_ids(self.ids)
+        for id_ in self.ids:
+            if id_ := id_ or getattr(id_, 'origin', None):
+                yield id_
 
     def __reversed__(self):
-        return origin_ids(reversed(self.ids))
+        for id_ in reversed(self.ids):
+            if id_ := id_ or getattr(id_, 'origin', None):
+                yield id_
+
+
+origin_ids = OriginIds

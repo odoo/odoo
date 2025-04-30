@@ -2,7 +2,7 @@
 
 {
     'name': 'United States - Accounting',
-    'website': 'https://www.odoo.com/documentation/18.0/applications/finance/fiscal_localizations.html',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['us'],
     'version': '1.0',
@@ -12,12 +12,10 @@
     'depends': ['l10n_us', 'account'],
     'data': [
         'views/res_bank_views.xml',
+        'data/uom_data.xml',
     ],
     'installable': True,
     'auto_install': ['account'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
-    'data': [
-        'data/uom_data.xml',
-    ],
 }

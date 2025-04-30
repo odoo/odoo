@@ -13,10 +13,7 @@ patch(PosData.prototype, {
         return await rpc(`/pos-self/relations/${parseInt(configId)}`);
     },
     get databaseName() {
-        return `self_order-config-id_${session.data.config_id}_${session.data.access_token}`;
-    },
-    initializeWebsocket() {
-        return false;
+        return `pos-self-order-${odoo.pos_config_id}-${odoo.info?.db}`;
     },
     initIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
@@ -46,4 +43,5 @@ patch(PosData.prototype, {
     async missingRecursive(recordMap) {
         return recordMap;
     },
+    async checkAndDeleteMissingOrders(results) {},
 });

@@ -1,9 +1,12 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import * as CashMoveList from "@point_of_sale/../tests/pos/tours/utils/cash_move_list_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
+import { refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 
@@ -140,5 +143,85 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
 
             // Allow order changes after the error
             ProductScreen.clickDisplayedProduct("Test Product", true, "2"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_tracking_number_closing_session", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.isShown(),
+            Chrome.clickMenuOption("Close Register"),
+            Utils.selectButton("Close Register"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Pad", true, "1.0"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.enterPaymentLineAmount("Bank", "20"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_reload_page_before_payment_with_customer_account", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
+            refresh(),
+            ProductScreen.productIsDisplayed("Desk Organizer"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Customer Account"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cash_in_out", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.doCashMove("10", "MOBT in"),
+            Chrome.doCashMove("5", "MOBT out"),
+            Chrome.clickMenuOption("Close Register"),
+            Utils.selectButton("Cash In/Out"),
+            Utils.selectButton("Details"),
+            CashMoveList.checkNumberOfRows(2),
+            CashMoveList.checkCashMoveShown("10"),
+            CashMoveList.checkCashMoveShown("5"),
+            CashMoveList.deleteCashMove("10"),
+            CashMoveList.checkNumberOfRows(1),
+            CashMoveList.checkCashMoveShown("5"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product", true, "1.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            ReceiptScreen.totalAmountContains("100"),
         ].flat(),
 });

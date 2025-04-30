@@ -50,7 +50,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'bank_fees_template': {
                 'name': 'Bank Fees',
-                'rule_type': 'writeoff_button',
                 'line_ids': [
                     Command.create({
                         'account_id': 'lu_2011_account_61333',
@@ -62,7 +61,6 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'cash_discount_template': {
                 'name': 'Cash Discount',
-                'rule_type': 'writeoff_button',
                 'line_ids': [
                     Command.create({
                         'account_id': 'lu_2020_account_65562',

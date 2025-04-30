@@ -12,6 +12,7 @@ from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 class DiscussChannelWebclientController(WebclientController):
     """Override to add discuss channel specific features."""
 
+    @classmethod
     def _process_request_loop(self, store: Store, fetch_params):
         """Override to add discuss channel specific features."""
         # aggregate of channels to return, to batch them in a single query when all the fetch params
@@ -28,6 +29,7 @@ class DiscussChannelWebclientController(WebclientController):
             # prefetch a lot of data that message format could use)
             store.add(channels._get_last_messages(), for_current_user=True)
 
+    @classmethod
     def _process_request_for_all(self, store: Store, name, params):
         """Override to return channel as member and last messages."""
         super()._process_request_for_all(store, name, params)
@@ -48,27 +50,24 @@ class DiscussChannelWebclientController(WebclientController):
                 OrderedSet(int(cid) for cid in params) - OrderedSet(channels.ids)
             ):
                 store.delete(not_found_channels)
+        if name == "/discuss/get_or_create_chat":
+            channel = request.env["discuss.channel"]._get_or_create_chat(
+                params["partners_to"], params.get("pin", True)
+            )
+            store.add(channel).resolve_data_request(channel=Store.One(channel, []))
+        if name == "/discuss/create_channel":
+            channel = request.env["discuss.channel"]._create_channel(params["name"], params["group_id"])
+            store.add(channel).resolve_data_request(channel=Store.One(channel, []))
+        if name == "/discuss/create_group":
+            channel = request.env["discuss.channel"]._create_group(
+                params["partners_to"],
+                params.get("default_display_mode", False),
+                params.get("name", ""),
+            )
+            store.add(channel).resolve_data_request(channel=Store.One(channel, []))
 
 
 class ChannelController(http.Controller):
-    @http.route("/discuss/channel/get_or_create_chat", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
-    def discuss_get_or_create_chat(self, partners_to, pin=True):
-        channel = request.env["discuss.channel"]._get_or_create_chat(partners_to, pin)
-        return {"channel_id": channel.id, "data": Store(channel).get_result()}
-
-    @http.route("/discuss/channel/create_channel", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
-    def discuss_create_channel(self, name, group_id):
-        channel = request.env["discuss.channel"]._create_channel(name, group_id)
-        return Store(channel).get_result()
-
-    @http.route("/discuss/channel/create_group", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
-    def discuss_create_group(self, partners_to, default_display_mode=False, name=''):
-        channel = request.env["discuss.channel"]._create_group(partners_to, default_display_mode, name)
-        return Store(channel).get_result()
-
     @http.route("/discuss/channel/members", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context
     def discuss_channel_members(self, channel_id, known_member_ids):
@@ -142,10 +141,19 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise request.not_found()
-        member = channel._find_or_create_member_for_self()
-        if not member:
-            raise NotFound()
-        member._notify_typing(is_typing)
+        if is_typing:
+            member = channel._find_or_create_member_for_self()
+        else:
+            # Do not create member automatically when setting typing to `False`
+            # as it could be resulting from the user leaving.
+            member = request.env["discuss.channel.member"].search(
+                [
+                    ("channel_id", "=", channel_id),
+                    ("is_self", "=", True),
+                ]
+            )
+        if member:
+            member._notify_typing(is_typing)
 
     @http.route("/discuss/channel/attachments", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context

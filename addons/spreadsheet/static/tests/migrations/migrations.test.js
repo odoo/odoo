@@ -1,6 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { ODOO_VERSION } from "@spreadsheet/o_spreadsheet/migration";
-import { Model, load } from "@odoo/o-spreadsheet";
+import { load } from "@odoo/o-spreadsheet";
 import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data";
 
 defineSpreadsheetModels();
@@ -516,14 +515,14 @@ test("Pivot sorted columns are migrated (12 to 13)", () => {
                 sortedColumn: { groupId: [[], []], measure: "testMeasure", order: "desc" },
                 columns: [],
                 rows: [],
-                measures: [],
+                measures: [{ id: "testMeasure", fieldName: "testMeasure" }],
             },
             2: {
                 name: "test2",
                 sortedColumn: { groupId: [[], [1]], measure: "testMeasure", order: "desc" },
                 columns: [{ fieldName: "product_id" }],
                 rows: [],
-                measures: [],
+                measures: [{ id: "testMeasure", fieldName: "testMeasure" }],
             },
         },
     };
@@ -534,9 +533,4 @@ test("Pivot sorted columns are migrated (12 to 13)", () => {
         order: "desc",
     });
     expect(migratedData.pivots["2"].sortedColumn).toBe(undefined);
-});
-
-test("Odoo version is exported", () => {
-    const model = new Model();
-    expect(model.exportData().odooVersion).toBe(ODOO_VERSION);
 });

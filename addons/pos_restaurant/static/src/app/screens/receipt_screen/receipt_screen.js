@@ -8,12 +8,13 @@ patch(ReceiptScreen.prototype, {
         this.currentOrder.uiState.locked = true;
         this.pos.selectedOrderUuid = originalOrderUuid;
         const nextOrderScreen = this.pos.getOrder().getCurrentScreenData().name;
-        this.pos.showScreen(nextOrderScreen || "ProductScreen");
+        this.pos.navigate(nextOrderScreen || "ProductScreen", {
+            orderUuid: originalOrderUuid,
+        });
     },
     isContinueSplitting() {
         if (this.pos.config.module_pos_restaurant && !this.pos.selectedTable) {
-            const splittedUuid = this.currentOrder.uiState.splittedOrderUuid;
-            const splittedOrder = this.pos.models["pos.order"].getBy("uuid", splittedUuid);
+            const splittedOrder = this.currentOrder.originalSplittedOrder;
 
             if (!splittedOrder) {
                 return false;

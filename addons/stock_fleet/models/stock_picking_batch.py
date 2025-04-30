@@ -62,6 +62,8 @@ class StockPickingBatch(models.Model):
                 batch.used_volume_percentage = 100 * (batch.estimated_shipping_volume / batch.vehicle_volume_capacity)
 
     # CRUD
+
+    @api.model_create_multi
     def create(self, vals_list):
         batches = super().create(vals_list)
         batches.order_on_zip()

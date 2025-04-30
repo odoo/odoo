@@ -170,9 +170,9 @@ test("ReferenceField respects no_quick_create", async () => {
     await edit("new partner");
     await runAllTimers();
     expect(".ui-autocomplete .o_m2o_dropdown_option").toHaveCount(1, {
-        message: "Dropdown should be opened and have only one item",
+        message: "Dropdown should be opened and have one item",
     });
-    expect(".ui-autocomplete .o_m2o_dropdown_option").toHaveClass(
+    expect(".ui-autocomplete .o_m2o_dropdown_option:eq(0)").toHaveClass(
         "o_m2o_dropdown_option_create_edit"
     );
 });
@@ -403,7 +403,7 @@ test("Many2One 'Search more...' updates on resModel change", async () => {
     await select("product");
     await animationFrame();
 
-    // Opening the Search More... option
+    // Opening the Search more... option
     await click("div.o_field_reference input.o_input");
     await animationFrame();
     await click("div.o_field_reference .o_m2o_dropdown_option_search_more");

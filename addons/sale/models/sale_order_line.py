@@ -87,7 +87,8 @@ class SaleOrderLine(models.Model):
         comodel_name='product.product',
         string="Product",
         change_default=True, ondelete='restrict', index='btree_not_null',
-        domain="[('sale_ok', '=', True)]")
+        domain=lambda self: self._domain_product_id(),
+        check_company=True)
     product_template_id = fields.Many2one(
         string="Product Template",
         comodel_name='product.template',
@@ -97,7 +98,11 @@ class SaleOrderLine(models.Model):
         # previously related='product_id.product_tmpl_id'
         # not anymore since the field must be considered editable for product configurator logic
         # without modifying the related product_id when updated.
-        domain=[('sale_ok', '=', True)])
+
+        # magic way to make sure the domain integrates the check_company _domain_product_id logics
+        # despite not being a check_company=True field
+        domain=lambda self: self._fields['product_id']._description_domain(self.env),
+    )
 
     product_template_attribute_value_ids = fields.Many2many(
         related='product_id.product_template_attribute_value_ids',
@@ -161,7 +166,9 @@ class SaleOrderLine(models.Model):
         compute='_compute_tax_ids',
         store=True, readonly=False, precompute=True,
         context={'active_test': False},
-        check_company=True)
+        check_company=True,
+        domain="[('type_tax_use', '=', 'sale'), ('country_id', '=', tax_country_id)]",
+    )
 
     # Tech field caching pricelist rule used for price & discount computation
     pricelist_item_id = fields.Many2one(
@@ -270,14 +277,20 @@ class SaleOrderLine(models.Model):
         store=True)
     amount_invoiced = fields.Monetary(
         string="Invoiced Amount",
-        compute='_compute_amount_invoiced')
+        compute='_compute_amount_invoiced',
+        compute_sudo=True,  # ensure same access as `untaxed_amount_invoiced`
+    )
     untaxed_amount_to_invoice = fields.Monetary(
         string="Untaxed Amount To Invoice",
         compute='_compute_untaxed_amount_to_invoice',
         store=True)
     amount_to_invoice = fields.Monetary(
         string="Un-invoiced Balance",
-        compute='_compute_amount_to_invoice')
+        compute='_compute_amount_to_invoice',
+        compute_sudo=True,  # ensure same access as `untaxed_amount_to_invoice`
+    )
+    # Technical field holding custom data for the taxes computation engine.
+    extra_tax_data = fields.Json()
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
     product_type = fields.Selection(related='product_id.type', depends=['product_id'])
@@ -291,6 +304,7 @@ class SaleOrderLine(models.Model):
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
     company_price_include = fields.Selection(related="company_id.account_price_include")
+    sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
 
     #=== COMPUTE METHODS ===#
 
@@ -303,6 +317,9 @@ class SaleOrderLine(models.Model):
             if additional_name:
                 name = f'{name} {additional_name}'
             so_line.display_name = name
+
+    def _domain_product_id(self):
+        return [('sale_ok', '=', True)]
 
     @api.depends('product_id')
     def _compute_product_template_id(self):
@@ -378,12 +395,10 @@ class SaleOrderLine(models.Model):
             + self._get_sale_order_line_multiline_description_variants()
         )
         if self.linked_line_id and not self.combo_item_id:
-            description += "\n" + _("Option for: %s", self.linked_line_id.product_id.display_name)
-        if self.linked_line_ids and self.product_type != 'combo':
-            description += "\n" + "\n".join([
-                _("Option: %s", linked_line.product_id.display_name)
-                for linked_line in self.linked_line_ids
-            ])
+            description += "\n" + _(
+                "Option for: %s",
+                self.linked_line_id.product_id.with_context(display_default_code=False).display_name
+            )
         return description
 
     def _get_sale_order_line_multiline_description_variants(self):
@@ -401,7 +416,7 @@ class SaleOrderLine(models.Model):
         if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
             return ""
 
-        name = "\n"
+        name = ""
 
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == 'multi').sorted()
@@ -520,9 +535,11 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
     def _compute_price_unit(self):
         for line in self:
-            # Don't compute the price for deleted lines.
-            if not line.order_id:
+            # Don't compute the price for deleted lines or lines for which the
+            # price unit doesn't come from the product.
+            if not line.order_id or line.is_downpayment or line._is_global_discount():
                 continue
+
             # check if the price has been manually set or there is already invoiced amount.
             # if so, the price shouldn't change as it might have been manually edited.
             if (
@@ -731,17 +748,23 @@ class SaleOrderLine(models.Model):
         :return: A python dictionary.
         """
         self.ensure_one()
-        return self.env['account.tax']._prepare_base_line_for_taxes_computation(
-            self,
-            **{
-                'tax_ids': self.tax_ids,
-                'quantity': self.product_uom_qty,
-                'partner_id': self.order_id.partner_id,
-                'currency_id': self.order_id.currency_id or self.order_id.company_id.currency_id,
-                'rate': self.order_id.currency_rate,
-                **kwargs,
-            },
-        )
+        base_values = {
+            'tax_ids': self.tax_ids,
+            'quantity': self.product_uom_qty,
+            'partner_id': self.order_id.partner_id,
+            'currency_id': self.order_id.currency_id or self.order_id.company_id.currency_id,
+            'rate': self.order_id.currency_rate,
+        }
+        if self._is_global_discount():
+            base_values['special_type'] = 'global_discount'
+        elif self.is_downpayment:
+            base_values['special_type'] = 'down_payment'
+        base_values.update(kwargs)
+        return self.env['account.tax']._prepare_base_line_for_taxes_computation(self, **base_values)
+
+    def _is_global_discount(self):
+        self.ensure_one()
+        return self.extra_tax_data and self.extra_tax_data.get('computation_key', '').startswith('global_discount,')
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_ids')
     def _compute_amount(self):
@@ -899,15 +922,28 @@ class SaleOrderLine(models.Model):
         """
         Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is
         calculated from the ordered quantity. Otherwise, the quantity delivered is used.
+        For combo product lines, first compute all other lines, and then set quantity to invoice
+        only if at least one of its combo item lines is invoiceable.
         """
+        combo_lines = []
         for line in self:
             if line.state == 'sale' and not line.display_type:
-                if line.product_id.invoice_policy == 'order':
+                if line.product_id.type == 'combo':
+                    combo_lines.append(line)
+                elif line.product_id.invoice_policy == 'order':
                     line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
                 else:
                     line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
             else:
                 line.qty_to_invoice = 0
+        for combo_line in combo_lines:
+            if any(
+                line.combo_item_id and line.qty_to_invoice
+                for line in combo_line.linked_line_ids
+            ):
+                combo_line.qty_to_invoice = combo_line.product_uom_qty - combo_line.qty_invoiced
+            else:
+                combo_line.qty_to_invoice = 0
 
     @api.depends('state', 'product_uom_qty', 'qty_delivered', 'qty_to_invoice', 'qty_invoiced')
     def _compute_invoice_status(self):
@@ -1037,8 +1073,7 @@ class SaleOrderLine(models.Model):
                 uom_qty_to_consider = line.qty_delivered if line.product_id.invoice_policy == 'delivery' else line.product_uom_qty
                 qty_to_invoice = uom_qty_to_consider - line.qty_invoiced_posted
                 unit_price_total = line.price_total / line.product_uom_qty
-                price_reduce = unit_price_total * (1 - (line.discount or 0.0) / 100.0)
-                line.amount_to_invoice = price_reduce * qty_to_invoice
+                line.amount_to_invoice = unit_price_total * qty_to_invoice
             else:
                 line.amount_to_invoice = 0.0
 
@@ -1096,25 +1131,6 @@ class SaleOrderLine(models.Model):
                     "A sale order line's product must match its combo item's product."
                 ))
 
-    #=== ONCHANGE METHODS ===#
-
-    @api.onchange('product_id')
-    def _onchange_product_id_warning(self):
-        if not self.product_id:
-            return
-
-        product = self.product_id
-        if product.sale_line_warn != 'no-message':
-            if product.sale_line_warn == 'block':
-                self.product_id = False
-
-            return {
-                'warning': {
-                    'title': _("Warning for %s", product.name),
-                    'message': product.sale_line_warn_msg,
-                }
-            }
-
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
@@ -1153,6 +1169,13 @@ class SaleOrderLine(models.Model):
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError(_("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type."))
+
+        if 'product_id' in values and any(
+            sol.product_id.id != values['product_id']
+            and not sol.product_updatable
+            for sol in self
+        ):
+            raise UserError(_("You cannot modify the product of this order line."))
 
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit')
@@ -1290,6 +1313,10 @@ class SaleOrderLine(models.Model):
                 'display_type': 'line_section',
                 'sequence': self.sequence,
                 'name': f'{self.product_id.name} x {qty_to_invoice}',
+                'product_uom_id': self.product_uom_id.id,
+                'quantity': self.qty_to_invoice,
+                'sale_line_ids': [Command.link(self.id)],
+                **optional_values,
             }
         res = {
             'display_type': self.display_type or 'product',
@@ -1303,6 +1330,7 @@ class SaleOrderLine(models.Model):
             'tax_ids': [Command.set(self.tax_ids.ids)],
             'sale_line_ids': [Command.link(self.id)],
             'is_downpayment': self.is_downpayment,
+            'extra_tax_data': self.extra_tax_data,
         }
         self._set_analytic_distribution(res, **optional_values)
         downpayment_lines = self.invoice_lines.filtered('is_downpayment')
@@ -1359,9 +1387,15 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return False
 
-    def _is_not_sellable_line(self):
-        # True if the line is a computed line (reward, delivery, ...) that user cannot add manually
-        return False
+    def _is_sellable(self):
+        """ Check if a line is sellable or not.
+
+        A line is not sellable if the product is unpublished.
+
+        :return: Whether the line is sellable or not.
+        :rtype: bool
+        """
+        return self.product_id.is_published
 
     def _get_product_catalog_lines_data(self, **kwargs):
         """ Return information about sale order lines in `self`.
@@ -1373,8 +1407,7 @@ class SaleOrderLine(models.Model):
         the product is read-only or not.
 
         A product is considered read-only if the order is considered read-only (see
-        ``SaleOrder._is_readonly`` for more details) or if `self` contains multiple records
-        or if it has sale_line_warn == "block".
+        ``SaleOrder._is_readonly`` for more details) or if `self` contains multiple records.
 
         Note: This method cannot be called with multiple records that have different products linked.
 
@@ -1385,27 +1418,24 @@ class SaleOrderLine(models.Model):
                 'quantity': float,
                 'price': float,
                 'readOnly': bool,
-                'warning': String
+                'uomDisplayName': String,
             }
         """
         if len(self) == 1:
-            res = {
+            return {
                 'quantity': self.product_uom_qty,
                 'price': self.price_unit,
                 'readOnly': (
                     self.order_id._is_readonly()
-                    or self.product_id.sale_line_warn == 'block'
                     or bool(self.combo_item_id)
                 ),
+                'uomDisplayName': self.product_uom_id.display_name,
             }
-            if self.product_id.sale_line_warn != 'no-message' and self.product_id.sale_line_warn_msg:
-                res['warning'] = self.product_id.sale_line_warn_msg
-            return res
         elif self:
             self.product_id.ensure_one()
             order_line = self[0]
             order = order_line.order_id
-            res = {
+            return {
                 'readOnly': True,
                 'price': order.pricelist_id._get_product_price(
                     product=order_line.product_id,
@@ -1421,11 +1451,9 @@ class SaleOrderLine(models.Model):
                             to_unit=line.product_id.uom_id,
                         )
                     )
-                )
+                ),
+                'uomDisplayName': self.product_id.uom_id.display_name,
             }
-            if self.product_id.sale_line_warn != 'no-message' and self.product_id.sale_line_warn_msg:
-                res['warning'] = self.product_id.sale_line_warn_msg
-            return res
         else:
             return {
                 'quantity': 0,
@@ -1502,3 +1530,9 @@ class SaleOrderLine(models.Model):
                 [('product_id', 'not in', discount_products_ids)],
             ])
         return domain
+
+    def _get_lines_with_price(self):
+        """ A combo product line always has a zero price (by design). The actual price of the combo
+        product can be computed by summing the prices of its combo items (i.e. its linked lines).
+        """
+        return self.linked_line_ids if self.product_type == 'combo' else self

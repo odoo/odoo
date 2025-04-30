@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderDisplay">
-        <t t-set="lines" t-value="order.getSortedOrderlines()"/>
+        <t t-set="lines" t-value="order.lines"/>
         <t t-if="lines.length">
             <div class="d-flex flex-column flex-grow-1 overflow-hidden">
                 <div t-ref="scrollable" class="order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
@@ -10,14 +10,10 @@
                         <Orderline t-else="" line="line" mode="this.props.mode" />
                     </t>
                     <div t-if="order.general_customer_note"
-                        t-attf-class="{{this.props.mode === 'receipt' ? 'mt-1 bg-opacity-75 p-0 ' : 'customer-note w-100 p-2 mt-2 text-break bg-warning bg-opacity-25 mt-0 text-warning'}}">
-                        <div class="row flex-wrap w-100 m-0">
-                            <div class="col-auto px-1">
-                                <i class="fa fa-sticky-note me-1 fa-lg" role="img"
-                                    aria-label="Customer Note" title="Customer Note"/>
-                            </div>
-                            <div class="col ps-0">
-                                <t t-foreach="order.general_customer_note.split('\n')" t-as="subNote" t-key="subNote_index">
+                        t-attf-class="{{this.props.mode === 'receipt' ? 'mt-1 bg-opacity-75 p-0 ' : 'customer-note w-100 p-2 text-break bg-warning bg-opacity-25 mt-0 text-warning'}}">
+                        <div class="flex-wrap w-100 m-0">
+                            <div class="ps-1">
+                                <t t-foreach="order.general_customer_note.trim().split('\n')" t-as="subNote" t-key="subNote_index">
                                     <div class="d-inline text-break">
                                         <t t-esc="subNote"/><br/>
                                     </div>
@@ -25,14 +21,8 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="order.internal_note"
-                        class="internal-note-container d-flex gap-2 flex-wrap">
-                        <t t-foreach="order.internal_note.split('\n') or []" t-as="note"
-                            t-key="note_index">
-                            <li t-if="note.trim() !== ''" t-esc="note"
-                                class="internal-note badge rounded text-bg-info"
-                                style="font-size: 0.85rem;"/>
-                        </t>
+                    <div t-if="order.internal_note" class="internal-note-container d-flex flex-wrap gap-2" t-attf-class="{{this.props.mode === 'receipt' ? 'py-2' : 'p-2'}}">
+                        <TagsList tags="getInternalNotes()"/>
                     </div>
                 </div>
                 <t t-set="taxTotals" t-value="order.taxTotals" />
@@ -52,7 +42,7 @@
             </div>
             <t t-slot="details"/>
         </t>
-        <t t-else="">
+        <t t-elif="props.mode !== 'receipt'">
             <div t-if="!props.slots?.emptyCart" class="d-flex flex-column align-items-center justify-content-center flex-grow-1 rounded-3 gap-3">
                 <CenteredIcon icon="'fa-shopping-cart fa-4x'" text="emptyCartText()" class="'h-unset'"/>
                 <t t-slot="details"/>

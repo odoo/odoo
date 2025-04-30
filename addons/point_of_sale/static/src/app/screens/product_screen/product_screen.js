@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
+import { useLongPress } from "@point_of_sale/app/hooks/long_press_hook";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -16,13 +17,15 @@ import {
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
-import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
 import {
     ControlButtons,
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
+import { OptionalProductPopup } from "@point_of_sale/app/components/popups/optional_products_popup/optional_products_popup";
+import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
+import { debounce } from "@web/core/utils/timing";
 
 const { DateTime } = luxon;
 
@@ -39,7 +42,9 @@ export class ProductScreen extends Component {
         ProductCard,
         BarcodeVideoScanner,
     };
-    static props = {};
+    static props = {
+        orderUuid: { type: String },
+    };
 
     setup() {
         super.setup();
@@ -53,7 +58,10 @@ export class ProductScreen extends Component {
             currentOffset: 0,
             quantityByProductTmplId: {},
         });
+
+        useRouterParamsChecker();
         onMounted(() => {
+            this.currentOrder.deselectOrderline();
             this.pos.openOpeningControl();
             this.pos.addPendingOrder([this.currentOrder.id]);
             // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
@@ -101,18 +109,29 @@ export class ProductScreen extends Component {
         });
 
         this.doLoadSampleData = useTrackedAsync(() => this.pos.loadSampleData());
+        this.longPressHandlers = useLongPress((product) => this.pos.onProductInfoClick(product));
+        this.onScroll = debounce(this.longPressHandlers.onScroll, 200, { leading: true });
 
         useEffect(
             () => {
                 this.state.quantityByProductTmplId = this.currentOrder?.lines?.reduce((acc, ol) => {
-                    acc[ol.product_id.product_tmpl_id.id]
-                        ? (acc[ol.product_id.product_tmpl_id.id] += ol.qty)
-                        : (acc[ol.product_id.product_tmpl_id.id] = ol.qty);
+                    if (!ol.combo_parent_id) {
+                        const productTmplId = ol.product_id.product_tmpl_id.id;
+                        acc[productTmplId] = (acc[productTmplId] || 0) + ol.qty;
+                    }
                     return acc;
                 }, {});
             },
             () => [this.currentOrder, this.currentOrder.totalQuantity]
         );
+    }
+
+    onMouseDown(event, product) {
+        this.longPressHandlers.onMouseDown(event, product);
+    }
+
+    onTouchStart(product) {
+        this.longPressHandlers.onTouchStart(product);
     }
 
     getNumpadButtons() {
@@ -168,7 +187,10 @@ export class ProductScreen extends Component {
         return this.env.utils.formatCurrency(this.currentOrder?.getTotalWithTax() ?? 0);
     }
     get items() {
-        return this.currentOrder.lines?.reduce((items, line) => items + line.qty, 0) ?? 0;
+        return this.env.utils.formatProductQty(
+            this.currentOrder.lines?.reduce((items, line) => items + line.qty, 0) ?? 0,
+            false
+        );
     }
     getProductName(product) {
         return product.name;
@@ -203,10 +225,8 @@ export class ProductScreen extends Component {
                 [odoo.pos_session_id, code.base_code, this.pos.config.id]
             );
             await this.pos.processProductAttributes();
-
             if (records && records["product.product"].length > 0) {
-                product = records["product.product"][0];
-                await this.pos._loadMissingPricelistItems([product]);
+                return records["product.product"][0];
             }
         }
 
@@ -248,7 +268,7 @@ export class ProductScreen extends Component {
     _barcodeDiscountAction(code) {
         var last_orderline = this.currentOrder.getLastOrderline();
         if (last_orderline) {
-            last_orderline.setDiscount(code.value);
+            this.pos.setDiscountFromUI(last_orderline, code.value);
         }
     }
     /**
@@ -288,21 +308,6 @@ export class ProductScreen extends Component {
             this.currentOrder.getSelectedOrderline()?.getDisplayPrice()
         );
     }
-    /**
-     * This getter is used to restart the animation on the product-reminder.
-     * When the information present on the product-reminder will change,
-     * the key will change and thus a new product-reminder will be created
-     * and the old one will be garbage collected leading to the animation
-     * being retriggered.
-     */
-    get animationKey() {
-        return [
-            this.currentOrder.getSelectedOrderline()?.uuid,
-            this.selectedOrderlineQuantity,
-            this.selectedOrderlineDisplayName,
-            this.selectedOrderlineTotal,
-        ].join(",");
-    }
 
     switchPane() {
         this.pos.scanning = false;
@@ -330,13 +335,8 @@ export class ProductScreen extends Component {
             this.state.currentOffset = 0;
         }
         const result = await this.loadProductFromDB();
-        if (result.length > 0) {
-            this.notification.add(
-                _t('%s product(s) found for "%s".', result.length, searchProductWord),
-                3000
-            );
-        } else {
-            this.notification.add(_t('No more product found for "%s".', searchProductWord));
+        if (result.length === 0) {
+            this.notification.add(_t('No other products found for "%s".', searchProductWord), 3000);
         }
         if (this.state.previousSearchWord === searchProductWord) {
             this.state.currentOffset += result.length;
@@ -346,14 +346,8 @@ export class ProductScreen extends Component {
         }
     }
 
-    async loadProductFromDB() {
-        const { searchProductWord } = this.pos;
-        if (!searchProductWord) {
-            return;
-        }
-
-        this.pos.setSelectedCategory(0);
-        const domain = [
+    loadProductFromDBDomain(searchProductWord) {
+        return [
             "|",
             "|",
             ["name", "ilike", searchProductWord],
@@ -362,6 +356,16 @@ export class ProductScreen extends Component {
             ["available_in_pos", "=", true],
             ["sale_ok", "=", true],
         ];
+    }
+
+    async loadProductFromDB() {
+        const { searchProductWord } = this.pos;
+        if (!searchProductWord) {
+            return;
+        }
+
+        this.pos.setSelectedCategory(0);
+        const domain = this.loadProductFromDBDomain(searchProductWord);
 
         const { limit_categories, iface_available_categ_ids } = this.pos.config;
         if (limit_categories && iface_available_categ_ids.length > 0) {
@@ -384,13 +388,21 @@ export class ProductScreen extends Component {
     }
 
     async addProductToOrder(product) {
-        await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, {});
-    }
-
-    async onProductInfoClick(productTemplate) {
-        const info = await this.pos.getProductInfo(productTemplate, 1);
-        this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
+        const line = await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, {});
+        if (line?.product_id?.product_tmpl_id?.pos_optional_product_ids?.length) {
+            this.dialog.add(OptionalProductPopup, {
+                productTemplate: product,
+            });
+        }
     }
 }
 
-registry.category("pos_screens").add("ProductScreen", ProductScreen);
+registry.category("pos_pages").add("ProductScreen", {
+    name: "ProductScreen",
+    component: ProductScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/product/{string:orderUuid}`,
+    params: {
+        orderUuid: true,
+        orderFinalized: false,
+    },
+});

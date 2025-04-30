@@ -257,7 +257,7 @@ def distribute_not(domain):
          ['|',('user_id','!=',4),('partner_id','not in',[1,2])]
 
     """
-    # TODO warnings.warn("Use Domain() instead of distribute_not()", DeprecationWarning)
+    warnings.warn("Since 19.0, use Domain() instead of distribute_not()", DeprecationWarning)
     return list(orm_domains.Domain(domain))
 
 
@@ -266,7 +266,7 @@ def domain_combine_anies(domain, model):
     conditions have been combined in order to generate less subqueries.
     """
     warnings.warn("Since 19.0, use Domain() object", DeprecationWarning)
-    return orm_domains.Domain(domain)._optimize(model)
+    return orm_domains.Domain(domain).optimize(model)
 
 
 def prettify_domain(domain, pre_indent=0):
@@ -300,7 +300,7 @@ def prettify_domain(domain, pre_indent=0):
     # craft the final string. All terms are indented according to their
     # commit indentation level and separated by a new line.
 
-    # TODO deprecate
+    warnings.warn("Since 19.0, prettify_domain is deprecated", DeprecationWarning)
     stack = [{'left_count': 1, 'terms': []}]
     commits = []
 
@@ -443,7 +443,7 @@ class expression(object):
 
         # normalize and prepare the expression for parsing
         domain = orm_domains.Domain(domain)
-        domain = domain._optimize_for_sql(self.root_model)
+        domain = domain.optimize(self.root_model, full=True)
         self.expression = domain
 
         # this object handles all the joins

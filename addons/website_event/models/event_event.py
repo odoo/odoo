@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 import json
 import werkzeug.urls
 
+from markupsafe import Markup
 from pytz import utc, timezone
 
 from odoo import api, fields, models, _
@@ -62,12 +63,6 @@ class EventEvent(models.Model):
     introduction_menu_ids = fields.One2many(
         "website.event.menu", "event_id", string="Introduction Menus",
         domain=[("menu_type", "=", "introduction")])
-    location_menu = fields.Boolean(
-        "Location Menu", compute="_compute_website_menu_data",
-        readonly=False, store=True)
-    location_menu_ids = fields.One2many(
-        "website.event.menu", "event_id", string="Location Menus",
-        domain=[("menu_type", "=", "location")])
     address_name = fields.Char(related='address_id.name')
     register_menu = fields.Boolean(
         "Register Menu", compute="_compute_website_menu_data",
@@ -82,6 +77,9 @@ class EventEvent(models.Model):
     community_menu_ids = fields.One2many(
         "website.event.menu", "event_id", string="Event Community Menus",
         domain=[("menu_type", "=", "community")])
+    other_menu_ids = fields.One2many(
+        "website.event.menu", "event_id", string="Other Menus",
+        domain=[("menu_type", "=", "other")])
     # live information
     is_ongoing = fields.Boolean(
         'Is Ongoing', compute='_compute_time_data', search='_search_is_ongoing',
@@ -110,13 +108,9 @@ class EventEvent(models.Model):
 
     @api.model
     def _search_is_participating(self, operator, value):
-        if operator not in ['=', '!=']:
-            raise NotImplementedError(_('This operator is not supported'))
-        if not isinstance(value, bool):
-            raise UserError(_('Value should be True or False (not %)', value))
-        check_is_participating = operator == '=' and value or operator == '!=' and not value
-
-        return [('id', 'in' if check_is_participating else 'not in', self._fetch_is_participating_events().ids)]
+        if operator != 'in':
+            return NotImplemented
+        return [('id', 'in', self._fetch_is_participating_events().ids)]
 
     @api.model
     def _fetch_is_participating_events(self):
@@ -170,21 +164,13 @@ class EventEvent(models.Model):
 
     @api.model
     def _search_is_visible_on_website(self, operator, value):
-        if operator not in ['=', '!=']:
-            raise NotImplementedError(_('This operator is not supported'))
-        if not isinstance(value, bool):
-            raise UserError(_('Value should be True or False (not %)', value))
-        check_is_visible_on_website = operator == '=' and value or operator == '!=' and not value
+        if operator != 'in':
+            return NotImplemented
         user = self.env.user
-        domain = [('is_participating', '=', True)]
-
+        visibility = ['public']
         if not user._is_public():
-            domain = expression.OR([domain, [('website_visibility', 'in', ['public', 'logged_users'])]])
-        else:
-            domain = expression.OR([domain, [('website_visibility', '=', 'public')]])
-
-        event_ids = self.env['event.event']._search(domain)
-        return [('id', 'in' if check_is_visible_on_website else 'not in', event_ids)]
+            visibility.append('logged_users')
+        return ['|', ('is_participating', '=', True), ('website_visibility', 'in', visibility)]
 
     @api.depends('website_url')
     def _compute_event_register_url(self):
@@ -214,7 +200,6 @@ class EventEvent(models.Model):
         at will afterwards. """
         for event in self:
             event.introduction_menu = event.website_menu
-            event.location_menu = event.website_menu
             event.register_menu = event.website_menu
 
     @api.depends('date_begin', 'date_end')
@@ -265,8 +250,8 @@ class EventEvent(models.Model):
             default_menu_values = {'event_id': new_event.id}
             new_event.menu_id = old_event.menu_id.copy({'name': new_event.name, 'website_id': new_event.website_id.id})
             new_event.introduction_menu_ids = old_event.introduction_menu_ids.copy(default_menu_values)
-            new_event.location_menu_ids = old_event.location_menu_ids.copy(default_menu_values)
-            (new_event.introduction_menu_ids + new_event.location_menu_ids + new_event.community_menu_ids + new_event.register_menu_ids).menu_id.parent_id = new_event.menu_id
+            new_event.other_menu_ids = old_event.other_menu_ids.copy(default_menu_values)
+            (new_event.introduction_menu_ids + new_event.other_menu_ids + new_event.community_menu_ids + new_event.register_menu_ids).menu_id.parent_id = new_event.menu_id
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -295,13 +280,12 @@ class EventEvent(models.Model):
 
         :return list: list of fields, each of which triggering a menu update
           like website_menu, website_track, ... """
-        return ['community_menu', 'introduction_menu', 'location_menu', 'register_menu']
+        return ['community_menu', 'introduction_menu', 'register_menu']
 
     def _get_menu_type_field_matching(self):
         return {
             'community': 'community_menu',
             'introduction': 'introduction_menu',
-            'location': 'location_menu',
             'register': 'register_menu',
         }
 
@@ -359,13 +343,14 @@ class EventEvent(models.Model):
           * menu_type: type of menu entry (used in inheriting modules to ease
             menu management; not used in this module in 13.3 due to technical
             limitations);
+          * parent_menu_type: menu_type of already created menu entry (used for
+            making submenu of existing menu entry)
         """
         self.ensure_one()
         return [
-            (_('Introduction'), False, 'website_event.template_intro', 1, 'introduction'),
-            (_('Location'), False, 'website_event.template_location', 50, 'location'),
-            (_('Info'), '/event/%s/register' % self.env['ir.http']._slug(self), False, 100, 'register'),
-            (_('Community'), '/event/%s/community' % self.env['ir.http']._slug(self), False, 80, 'community'),
+            (_('Home'), False, 'website_event.template_intro', 1, 'introduction', False),
+            (_('Practical'), '/event/%s/register' % self.env['ir.http']._slug(self), False, 100, 'register', False),
+            (_('Rooms'), '/event/%s/community' % self.env['ir.http']._slug(self), False, 80, 'community', False),
         ]
 
     def _update_website_menus(self, menus_update_by_field=None):
@@ -384,8 +369,6 @@ class EventEvent(models.Model):
                 event._update_website_menu_entry('community_menu', 'community_menu_ids', 'community')
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('introduction_menu')):
                 event._update_website_menu_entry('introduction_menu', 'introduction_menu_ids', 'introduction')
-            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('location_menu')):
-                event._update_website_menu_entry('location_menu', 'location_menu_ids', 'location')
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('register_menu')):
                 event._update_website_menu_entry('register_menu', 'register_menu_ids', 'register')
 
@@ -408,15 +391,15 @@ class EventEvent(models.Model):
                      if menu_info[4] == fmenu_type]
         if self[fname_bool] and not self[fname_o2m]:
             # menus not found but boolean True: get menus to create
-            for name, url, xml_id, menu_sequence, menu_type in menu_data:
-                new_menu = self._create_menu(menu_sequence, name, url, xml_id, menu_type)
+            for name, url, xml_id, menu_sequence, menu_type, parent_menu_type in menu_data:
+                new_menu = self._create_menu(menu_sequence, name, url, xml_id, menu_type, parent_menu_type)
         elif not self[fname_bool]:
             # will cascade delete to the website.event.menu
             self[fname_o2m].mapped('menu_id').sudo().unlink()
 
         return new_menu
 
-    def _create_menu(self, sequence, name, url, xml_id, menu_type):
+    def _create_menu(self, sequence, name, url, xml_id, menu_type, parent_menu_type=False):
         """ Create a new menu for the current event.
 
         If url: create a website menu. Menu leads directly to the URL that
@@ -426,10 +409,12 @@ class EventEvent(models.Model):
         xml_id. Take its url back thanks to new_page of website, then link
         it to a menu. Template is duplicated and linked to a new url, meaning
         each menu will have its own copy of the template. This is currently
-        limited to two menus: introduction and location.
+        limited to one menu: introduction(Home).
 
         :param menu_type: type of menu. Mainly used for inheritance purpose
           allowing more fine-grain tuning of menus.
+        :param parent_menu_type: The type of the parent menu. If specified, the
+          menu will be created as a child of the parent menu with the given type.
         """
         self.browse().check_access('write')
         view_id = False
@@ -443,10 +428,18 @@ class EventEvent(models.Model):
             view = self.env["ir.ui.view"].browse(view_id)
             url = f"/event/{self.env['ir.http']._slug(self)}/page/{view.key.split('.')[-1]}"  # url contains starting "/"
 
+        parent_id = self.menu_id.id
+        if parent_menu_type:
+            parent_menu = self.env['website.event.menu'].search([
+                ('event_id', '=', self.id),
+                ('menu_type', '=', parent_menu_type)
+            ], limit=1)
+            if parent_menu:
+                parent_id = parent_menu.menu_id.id
         website_menu = self.env['website.menu'].sudo().create({
             'name': name,
             'url': url,
-            'parent_id': self.menu_id.id,
+            'parent_id': parent_id,
             'sequence': sequence,
             'website_id': self.website_id.id,
         })
@@ -480,9 +473,16 @@ class EventEvent(models.Model):
             return self.env.ref('website_event.mt_event_unpublished', raise_if_not_found=False)
         return super()._track_subtype(init_values)
 
-    def _get_event_resource_urls(self):
-        url_date_start = self.date_begin.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
-        url_date_stop = self.date_end.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
+    def _get_event_resource_urls(self, slot=False):
+        """ Prepare the Google and iCal urls for the event.
+        :param slot: If a slot is given, prepare the urls for the given slot.
+        Returns:
+            The google and iCal url in a dictionnary
+        """
+        start = slot.start_datetime if slot else self.date_begin
+        end = slot.end_datetime if slot else self.date_end
+        url_date_start = start.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
+        url_date_stop = end.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
         params = {
             'action': 'TEMPLATE',
             'text': self.name,
@@ -494,7 +494,9 @@ class EventEvent(models.Model):
             params.update(location=self.address_inline)
         encoded_params = werkzeug.urls.url_encode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
-        iCal_url = f'/event/{self.id:d}/ics?{encoded_params}'
+        iCal_url = f'/event/{self.id:d}/ics'
+        if slot:
+            iCal_url += '?' + werkzeug.urls.url_encode({'slot_id': slot.id})
         return {'google_url': google_url, 'iCal_url': iCal_url}
 
     def _default_website_meta(self):
@@ -561,7 +563,7 @@ class EventEvent(models.Model):
         search_tags = self.env['event.tag']
         if tags:
             try:
-                tag_ids = literal_eval(tags)
+                tag_ids = list(filter(None, [self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')])) or literal_eval(tags)
             except SyntaxError:
                 pass
             else:
@@ -636,5 +638,8 @@ class EventEvent(models.Model):
             for event, data in zip(self, results_data):
                 begin = self.env['ir.qweb.field.date'].record_to_html(event, 'date_begin', {})
                 end = self.env['ir.qweb.field.date'].record_to_html(event, 'date_end', {})
-                data['range'] = '%s🠖%s' % (begin, end) if begin != end else begin
+                data['range'] = (
+                    Markup('{} <i class="fa fa-long-arrow-right"></i> {}').format(begin, end)
+                    if begin != end else begin
+                )
         return results_data

@@ -8,7 +8,7 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty
+from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_date, is_html_empty
 
 
 _logger = logging.getLogger(__name__)
@@ -144,6 +144,11 @@ class HrExpense(models.Model):
     duplicate_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_duplicate_expense_ids')  # Used to trigger warnings
     same_receipt_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_same_receipt_expense_ids')  # Used to trigger warnings
 
+    split_expense_origin_id = fields.Many2one(
+        comodel_name='hr.expense',
+        string="Origin Split Expense",
+        help="Original expense from a split.",
+    )
     # Amount fields
     tax_amount_currency = fields.Monetary(
         string="Tax amount in Currency",
@@ -232,6 +237,7 @@ class HrExpense(models.Model):
         comodel_name='account.move',
         readonly=True,
         copy=False,
+        index='btree_not_null',
     )
     payment_mode = fields.Selection(
         selection=[
@@ -683,7 +689,7 @@ class HrExpense(models.Model):
     def _compute_same_receipt_expense_ids(self):
         self.same_receipt_expense_ids = [Command.clear()]
 
-        expenses_with_attachments = self.filtered(lambda expense: expense.attachment_ids)
+        expenses_with_attachments = self.filtered(lambda expense: expense.attachment_ids and not expense.split_expense_origin_id)
         if not expenses_with_attachments:
             return
 
@@ -800,7 +806,7 @@ class HrExpense(models.Model):
             raise UserError(_("You cannot edit the security fields of an expense manually"))
 
         if any(field in vals for field in {'tax_ids', 'analytic_distribution', 'account_id', 'manager_id'}):
-            if any(not expense.is_editable for expense in self):
+            if any((not expense.is_editable and not self.env.su) for expense in self):
                 raise UserError(_('You are not authorized to edit this expense.'))
 
         res = super().write(vals)
@@ -1089,6 +1095,11 @@ class HrExpense(models.Model):
     # Actions
     # ----------------------------------------
 
+    def action_open_split_expense(self):
+        self.ensure_one()
+        split_expense_ids = self.search([('split_expense_origin_id', '=', self.split_expense_origin_id.id)])
+        return split_expense_ids._get_records_action(name=_("Split Expenses"))
+
     def action_submit(self):
         """ Submit a draft expense to an approve, may skip to the approval step if no approver on the employee nor the expense """
         user = self.env.user
@@ -1098,7 +1109,7 @@ class HrExpense(models.Model):
             if not expense.product_id:
                 raise UserError(_("You can not submit an expense without a category."))
             if not expense.manager_id:
-                expense.manager_id = expense._get_default_responsible_for_approval()
+                expense.sudo().manager_id = expense._get_default_responsible_for_approval()
         expenses_autovalidated = self.filtered(lambda expense: not expense.manager_id and not expense.employee_id.expense_manager_id)
         (self - expenses_autovalidated).approval_state = 'submitted'
         if expenses_autovalidated:  # Note, this will and should bypass the duplicate check. May be changed later
@@ -1196,9 +1207,8 @@ class HrExpense(models.Model):
             raise UserError(_("You need to have at least one category that can be expensed in your database to proceed!"))
 
         for attachment in attachments:
-            attachment_name = '.'.join(attachment.name.split('.')[:-1])
             vals = {
-                'name': attachment_name,
+                'name': _("Untitled Expense %s", format_date(self.env, fields.Date.context_today(self))),
                 'price_unit': 0,
                 'product_id': product.id,
             }
@@ -1209,14 +1219,7 @@ class HrExpense(models.Model):
 
             expense._message_set_main_attachment_id(attachment, force=True)
             expenses += expense
-        return {
-            'name': _("Generated Expense(s)"),
-            'res_model': 'hr.expense',
-            'type': 'ir.actions.act_window',
-            'views': [[False, view_type], [False, "form"]],
-            'domain': [('id', 'in', expenses.ids)],
-            'context': self.env.context,
-        }
+        return expenses.ids
 
     def action_show_same_receipt_expense_ids(self):
         self.ensure_one()
@@ -1768,3 +1771,8 @@ class HrExpense(models.Model):
             partner = self.employee_id.sudo().work_contact_id.with_company(self.company_id)
             account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
         return account_dest.id
+
+    def _creation_message(self):
+        if self.env.context.get('from_split_wizard'):
+            return _("Expense created from a split.")
+        return super()._creation_message()

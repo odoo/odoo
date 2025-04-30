@@ -296,28 +296,31 @@ class TestUsers2(UsersCommonCase):
                 "Setting a valid email as login should update the partner's email"
             )
 
-    def test_reified_groups(self):
+    def test_default_groups(self):
         """ The groups handler doesn't use the "real" view with pseudo-fields
         during installation, so it always works (because it uses the normal
         group_ids field).
         """
+        default_group = self.env.ref('base.default_user_group')
+        test_group = self.env['res.groups'].create({'name': 'test_group'})
+        default_group.implied_ids = test_group
+
         # use the specific views which has the pseudo-fields
         f = Form(self.env['res.users'], view='base.view_users_form')
         f.name = "bob"
         f.login = "bob"
         user = f.save()
 
-        self.assertIn(self.env.ref('base.group_user'), user.group_ids)
+        group_user = self.env.ref('base.group_user')
 
-        # all template user groups are copied
-        default_user = self.env.ref('base.default_user')
-        self.assertEqual(default_user.group_ids, user.group_ids)
+        self.assertIn(group_user, user.group_ids)
+        self.assertEqual(default_group.implied_ids + group_user, user.group_ids)
 
     def test_selection_groups(self):
         # create 3 groups that should be in a selection
-        app = self.env['ir.module.category'].create({'name': 'Foo'})
+        app = self.env['res.groups.privilege'].create({'name': 'Foo'})
         group_user, group_manager, group_visitor = self.env['res.groups'].create([
-            {'name': name, 'category_id': app.id}
+            {'name': name, 'privilege_id': app.id}
             for name in ('User', 'Manager', 'Visitor')
         ])
         # THIS PART IS NECESSARY TO REPRODUCE AN ISSUE: group1.id < group2.id < group0.id
@@ -356,15 +359,21 @@ class TestUsers2(UsersCommonCase):
         self.assertEqual(set(user.read(['group_ids'])[0]['group_ids']), set((group_manager + group_user).ids))
         self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user).ids))
 
+        groups = self.env['res.groups'].search([('all_user_ids', '=', user.id)])
+        self.assertEqual(groups, user.all_group_ids)
+
     def test_implied_groups_on_change(self):
         """Test that a change on a reified fields trigger the onchange of group_ids."""
         group_public = self.env.ref('base.group_public')
         group_portal = self.env.ref('base.group_portal')
         group_user = self.env.ref('base.group_user')
 
-        app = self.env['ir.module.category'].create({'name': 'Foo'})
+        app = self.env['res.groups.privilege'].create({'name': 'Foo'})
         group_contain_user = self.env['res.groups'].create({
-            'name': 'Small user group', 'category_id': app.id, 'implied_ids': [group_user.id]})
+            'name': 'Small user group',
+            'privilege_id': app.id,
+            'implied_ids': [group_user.id],
+        })
 
         user_form = Form(self.env['res.users'], view='base.view_users_form')
         user_form.name = "Test"
@@ -374,16 +383,23 @@ class TestUsers2(UsersCommonCase):
         user_form['group_ids'] = group_portal
         self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
 
-        user_form['group_ids'] = group_user
-        self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
+        user = user_form.save()
 
-        user_form['group_ids'] = group_public
-        self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
+        # in debug mode, show the group widget for external user
 
-        user_form['group_ids'] = group_user
-        user_form['group_ids'] = group_user + group_contain_user
+        with self.debug_mode():
+            user_form = Form(user, view='base.view_users_form')
 
-        user_form.save()
+            user_form['group_ids'] = group_user
+            self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
+
+            user_form['group_ids'] = group_public
+            self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
+
+            user_form['group_ids'] = group_user
+            user_form['group_ids'] = group_user + group_contain_user
+
+            user_form.save()
 
         # in debug mode, allow extra groups
 
@@ -399,7 +415,7 @@ class TestUsers2(UsersCommonCase):
             user_form['group_ids'] = group_portal + group_contain_user
             self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
 
-            with self.assertRaises(ValidationError, msg="The user cannot be at the same time in groups: ['User types / Internal User', 'User types / Portal', 'Foo / Small user group']"):
+            with self.assertRaises(ValidationError, msg="The user cannot be at the same time in groups: ['Membre', 'Portal', 'Foo / Small user group']"):
                 user_form.save()
 
     @users('portal_1')
@@ -496,7 +512,7 @@ class TestUsersIdentitycheck(HttpCase):
         form.password = 'admin@odoo'
         # The user clicks the button "Log out from all devices", which triggers a save then a call to the button method
         user_identity_check = form.save()
-        action = user_identity_check.run_check()
+        action = user_identity_check.with_context(password=form.password).run_check()
 
         # Test the session is no longer valid
         # Invalid session -> redirected from /web to /web/login

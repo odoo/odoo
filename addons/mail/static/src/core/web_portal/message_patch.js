@@ -129,11 +129,9 @@ patch(Message.prototype, {
         for (const group of groups) {
             const index = this.state.lastReadMoreIndex++;
             const ellipsisbtnEl = document.createElement("button");
-            ellipsisbtnEl.style.display = "block";
-            ellipsisbtnEl.style.marginLeft = "-3px";
             ellipsisbtnEl.className = "o-mail-ellipsis badge rounded-pill border-0 py-0 px-1";
             const iconellipsisEl = document.createElement("i");
-            iconellipsisEl.className = "fa fa-ellipsis-h fa-lg";
+            iconellipsisEl.className = "oi oi-ellipsis-h oi-large";
             ellipsisbtnEl.append(iconellipsisEl);
             group[0].parentNode.insertBefore(ellipsisbtnEl, group[0]);
             // Toggle All next nodes

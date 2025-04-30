@@ -1,26 +1,24 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
-from odoo import api, fields, models, tools, _, Command
-from odoo.exceptions import MissingError, ValidationError, AccessError, UserError
-from odoo.fields import Domain
-from odoo.tools import frozendict
+import base64
+import contextlib
+import json
+import logging
+import re
+from collections import defaultdict
+from functools import reduce
+from operator import getitem
+
+import requests
+from pytz import timezone
+
+from odoo import api, fields, models, tools
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
+from odoo.fields import Command, Domain
+from odoo.tools import _, frozendict
+from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
-from odoo.tools.float_utils import float_compare
-from odoo.http import request
-import base64
-from collections import defaultdict
-from functools import partial, reduce
-import logging
-from operator import getitem
-import requests
-import json
-import re
-import contextlib
-
-from pytz import timezone
 
 _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
@@ -55,7 +53,7 @@ class IrActionsActions(models.Model):
     _name = 'ir.actions.actions'
     _description = 'Actions'
     _table = 'ir_actions'
-    _order = 'name'
+    _order = 'name, id'
     _allow_sudo_commands = False
 
     _path_unique = models.Constraint(
@@ -262,7 +260,7 @@ class IrActionsAct_Window(models.Model):
     _description = 'Action Window'
     _table = 'ir_act_window'
     _inherit = ['ir.actions.actions']
-    _order = 'name'
+    _order = 'name, id'
     _allow_sudo_commands = False
 
     @api.constrains('res_model', 'binding_model_id')
@@ -420,7 +418,7 @@ class IrActionsAct_WindowView(models.Model):
     sequence = fields.Integer()
     view_id = fields.Many2one('ir.ui.view', string='View')
     view_mode = fields.Selection(VIEW_TYPES, string='View Type', required=True)
-    act_window_id = fields.Many2one('ir.actions.act_window', string='Action', ondelete='cascade')
+    act_window_id = fields.Many2one('ir.actions.act_window', string='Action', ondelete='cascade', index='btree_not_null')
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
 
@@ -446,7 +444,7 @@ class IrActionsAct_Url(models.Model):
     _description = 'Action URL'
     _table = 'ir_act_url'
     _inherit = ['ir.actions.actions']
-    _order = 'name'
+    _order = 'name, id'
     _allow_sudo_commands = False
 
     type = fields.Char(default='ir.actions.act_url')
@@ -546,10 +544,11 @@ class IrActionsServer(models.Model):
     state = fields.Selection([
         ('object_write', 'Update Record'),
         ('object_create', 'Create Record'),
+        ('object_copy', 'Duplicate Record'),
         ('code', 'Execute Code'),
         ('webhook', 'Send Webhook Notification'),
         ('multi', 'Multi Actions')], string='Type',
-        default='object_write', required=True, copy=True,
+        required=True, copy=True,
         help="Type of server action. The following values are available:\n"
              "- 'Update a Record': update the values of a record\n"
              "- 'Create Activity': create an activity (Discuss)\n"
@@ -560,6 +559,7 @@ class IrActionsServer(models.Model):
              "- 'Execute Code': a block of Python code that will be executed\n"
              "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
              "- 'Multi Actions': define an action that triggers several other server actions\n")
+    allowed_states = fields.Json(string='Allowed states', compute="_compute_allowed_states")
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "
@@ -569,24 +569,26 @@ class IrActionsServer(models.Model):
     available_model_ids = fields.Many2many('ir.model', string='Available Models', compute='_compute_available_model_ids', store=False)
     model_name = fields.Char(related='model_id.model', string='Model Name')
     warning = fields.Text(string='Warning', compute='_compute_warning', recursive=True)
+    # Inverse relation of ir.cron.ir_actions_server_id (has delegate=True, so either 0 or 1 cron, even if o2m field)
+    ir_cron_ids = fields.One2many('ir.cron', 'ir_actions_server_id', 'Scheduled Action', context={'active_test': False})
     # Python code
     code = fields.Text(string='Python Code', groups='base.group_system',
                        default=DEFAULT_PYTHON_CODE,
                        help="Write Python code that the action will execute. Some variables are "
                             "available for use; help about python expression is given in the help tab.")
     # Multi
-    parent_id = fields.Many2one('ir.actions.server', string='Parent Action', ondelete='cascade')
+    parent_id = fields.Many2one('ir.actions.server', string='Parent Action', index=True, ondelete='cascade')
     child_ids = fields.One2many('ir.actions.server', 'parent_id', copy=True, domain=lambda self: str(self._get_children_domain()),
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
     # Create
     crud_model_id = fields.Many2one(
         'ir.model', string='Record to Create',
-        compute='_compute_crud_relations', readonly=False, store=True,
+        compute='_compute_crud_relations', inverse='_set_crud_model_id',
+        readonly=False, store=True,
         help="Specify which kind of record should be created. Set this field only to specify a different model than the base model.")
     crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model Name', readonly=True)
     link_field_id = fields.Many2one(
         'ir.model.fields', string='Link Field',
-        compute='_compute_link_field_id', readonly=False, store=True,
         help="Specify a field used to link the newly created record on the record used by the server action.")
     group_ids = fields.Many2many('res.groups', 'ir_act_server_group_rel',
                                  'act_id', 'gid', string='Allowed Groups', help='Groups that can execute the server action. Leave empty to allow everybody.')
@@ -613,6 +615,7 @@ class IrActionsServer(models.Model):
         ('value', 'Update'),
         ('equation', 'Compute')
     ], 'Value Type', default='value', change_default=True)
+    html_value = fields.Html()
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model', inverse='_set_resource_ref')
     selection_value = fields.Many2one('ir.model.fields.selection', string="Custom Value", ondelete='cascade',
@@ -620,6 +623,7 @@ class IrActionsServer(models.Model):
 
     value_field_to_show = fields.Selection([
         ('value', 'value'),
+        ('html_value', 'html_value'),
         ('resource_ref', 'reference'),
         ('update_boolean_value', 'update_boolean_value'),
         ('selection_value', 'selection_value'),
@@ -676,7 +680,7 @@ class IrActionsServer(models.Model):
         if (relation_chain := self._get_relation_chain("update_path")) and relation_chain[0] and isinstance(relation_chain[0][-1], fields.Json):
             warnings.append(_("I'm sorry to say that JSON fields (such as '%s') are currently not supported.", relation_chain[0][-1].string))
 
-        if self.state == 'webhook':
+        if self.state == 'webhook' and self.model_id:
             restricted_fields = []
             Model = self.env[self.model_id.model]
             for model_field in self.webhook_field_ids:
@@ -692,6 +696,9 @@ class IrActionsServer(models.Model):
                                 "have to remove the following fields from the webhook payload:\n%(restricted_fields)s", restricted_fields="\n".join(restricted_fields)))
 
         return warnings
+
+    def _compute_allowed_states(self):
+        self.allowed_states = [value for value, __ in self._fields['state'].selection]
 
     @api.depends(lambda self: self._warning_depends())
     def _compute_warning(self):
@@ -719,6 +726,12 @@ class IrActionsServer(models.Model):
                     return _("Update %(field_chain_str)s", field_chain_str=field_chain_str)
                 else:
                     return _("Compute %(field_chain_str)s", field_chain_str=field_chain_str)
+            case "object_copy":
+                if self.crud_model_id and self.resource_ref:
+                    return _("Duplicate %(model)s: %(record)s",
+                             model=self.crud_model_id.name,
+                             record=self.env[self.crud_model_id.model].browse(self.resource_ref.id).display_name)
+                return _("Duplicate ...")
             case 'object_create':
                 return _(
                     "Create %(model_name)s with name %(value)s",
@@ -736,6 +749,7 @@ class IrActionsServer(models.Model):
             "update_field_id",
             "crud_model_id",
             "value",
+            "resource_ref",
             "evaluation_type",
         ]
 
@@ -773,8 +787,8 @@ class IrActionsServer(models.Model):
         be updated by the action - only used for object_write actions.
         """
         for action in self:
-            if action.model_id and action.state in ('object_write', 'object_create'):
-                if action.state == 'object_create':
+            if action.model_id and action.state in ('object_write', 'object_create', 'object_copy'):
+                if action.state in ('object_create', 'object_copy'):
                     action.crud_model_id = action.model_id
                     action.update_field_id = False
                     action.update_path = False
@@ -836,25 +850,19 @@ class IrActionsServer(models.Model):
                 action.webhook_sample_payload = False
                 continue
             payload = {
-                'id': 1,
+                '_id': 1,
                 '_model': self.model_id.model,
-                '_name': action.name,
+                '_action': f'{action.name}(#{action.id})',
             }
             if self.model_id:
                 sample_record = self.env[self.model_id.model].with_context(active_test=False).search([], limit=1)
                 for field in action.webhook_field_ids:
                     if sample_record:
-                        payload['id'] = sample_record.id
+                        payload['_id'] = sample_record.id
                         payload.update(sample_record.read(self.webhook_field_ids.mapped('name'), load=None)[0])
                     else:
                         payload[field.name] = WEBHOOK_SAMPLE_VALUES[field.ttype] if field.ttype in WEBHOOK_SAMPLE_VALUES else WEBHOOK_SAMPLE_VALUES[None]
             action.webhook_sample_payload = json.dumps(payload, indent=4, sort_keys=True, default=str)
-
-    @api.depends('model_id')
-    def _compute_link_field_id(self):
-        invalid = self.filtered(lambda act: act.link_field_id.model_id != act.model_id)
-        if invalid:
-            invalid.link_field_id = False
 
     @api.constrains('code')
     def _check_python_code(self):
@@ -959,6 +967,19 @@ class IrActionsServer(models.Model):
         except Exception as e:  # noqa: BLE001
             raise UserError(_("Wow, your webhook call failed with a really unusual error: %s", e)) from e
 
+    def _run_action_object_copy(self, eval_context=None):
+        """ Duplicate specified model object.
+            If applicable, link active_id.<self.link_field_id> to the new record.
+        """
+        dupe = self.env[self.crud_model_id.model].browse(self.resource_ref.id).copy()
+
+        if self.link_field_id:
+            record = self.env[self.model_id.model].browse(self._context.get('active_id'))
+            if self.link_field_id.ttype in ['one2many', 'many2many']:
+                record.write({self.link_field_id.name: [Command.link(dupe.id)]})
+            else:
+                record.write({self.link_field_id.name: dupe.id})
+
     def _run_action_object_create(self, eval_context=None):
         """Create specified model object with specified name contained in value.
 
@@ -1003,7 +1024,7 @@ class IrActionsServer(models.Model):
             'env': self.env,
             'model': model,
             # Exceptions
-            'UserError': odoo.exceptions.UserError,
+            'UserError': UserError,
             # record
             'record': record,
             'records': records,
@@ -1053,16 +1074,7 @@ class IrActionsServer(models.Model):
             eval_context = self._get_eval_context(action)
             records = eval_context.get('record') or eval_context['model']
             records |= eval_context.get('records') or eval_context['model']
-            if not action_groups and records.ids:
-                # check access rules on real records only; base automations of
-                # type 'onchange' can run server actions on new records
-                try:
-                    records.check_access('write')
-                except AccessError:
-                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                        action.name, self.env.user.login, records,
-                    )
-                    raise
+            self._can_execute_action_on_records(records)
 
             if action.warning:
                 raise ServerActionWithWarningsError(_("Server action %(action_name)s has one or more warnings, address them first.", action_name=action.name))
@@ -1093,21 +1105,45 @@ class IrActionsServer(models.Model):
                 )
         return res or False
 
+    def _can_execute_action_on_records(self, records):
+        self.ensure_one()
+        if not self.group_ids and records.ids:
+            # check access rules on real records only; base automations of
+            # type 'onchange' can run server actions on new records
+            try:
+                records.check_access('write')
+            except AccessError:
+                _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
+                    self.name, self.env.user.login, records,
+                )
+                raise
+
     @api.depends('evaluation_type', 'update_field_id')
     def _compute_value_field_to_show(self):  # check if value_field_to_show can be removed and use ttype in xml view instead
         for action in self:
-            if action.update_field_id.ttype in ('many2one', 'many2many'):
+            if action.update_field_id.ttype in ('one2many', 'many2one', 'many2many'):
                 action.value_field_to_show = 'resource_ref'
             elif action.update_field_id.ttype == 'selection':
                 action.value_field_to_show = 'selection_value'
             elif action.update_field_id.ttype == 'boolean':
                 action.value_field_to_show = 'update_boolean_value'
+            elif action.update_field_id.ttype == 'html':
+                action.value_field_to_show = 'html_value'
             else:
                 action.value_field_to_show = 'value'
 
     @api.model
     def _selection_target_model(self):
         return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
+
+    @api.onchange('crud_model_id')
+    def _set_crud_model_id(self):
+        invalid = self.filtered(lambda a: a.state == 'object_copy' and a.resource_ref and a.resource_ref._name != a.crud_model_id.model)
+        invalid.resource_ref = False
+        invalid = self.filtered(lambda a: a.link_field_id and not (
+            a.link_field_id.model == a.model_id.model and a.link_field_id.relation == a.crud_model_id.model
+        ))
+        invalid.link_field_id = False
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
@@ -1127,7 +1163,7 @@ class IrActionsServer(models.Model):
             expr = action.value
             if action.evaluation_type == 'equation':
                 expr = safe_eval(action.value, eval_context)
-            elif action.update_field_id.ttype == 'many2many':
+            elif action.update_field_id.ttype in ['one2many', 'many2many']:
                 operation = action.update_m2m_operation
                 if operation == 'add':
                     expr = [Command.link(int(action.value))]
@@ -1149,6 +1185,8 @@ class IrActionsServer(models.Model):
             elif action.update_field_id.ttype == 'float':
                 with contextlib.suppress(Exception):
                     expr = float(action.value)
+            elif action.update_field_id.ttype == 'html':
+                expr = action.html_value
             result[action.id] = expr
         return result
 
@@ -1159,6 +1197,24 @@ class IrActionsServer(models.Model):
             for vals in vals_list:
                 vals['name'] = _('%s (copy)', vals.get('name', ''))
         return vals_list
+
+    def action_open_parent_action(self):
+        return {
+            "type": "ir.actions.act_window",
+            "target": "current",
+            "views": [[False, "form"]],
+            "res_model": self._name,
+            "res_id": self.parent_id.id,
+        }
+
+    def action_open_scheduled_action(self):
+        return {
+            "type": "ir.actions.act_window",
+            "target": "current",
+            "views": [[False, "form"]],
+            "res_model": "ir.cron",
+            "res_id": self.ir_cron_ids.ids[0],
+        }
 
 
 class IrActionsTodo(models.Model):
@@ -1245,7 +1301,7 @@ class IrActionsClient(models.Model):
     _description = 'Client Action'
     _inherit = ['ir.actions.actions']
     _table = 'ir_act_client'
-    _order = 'name'
+    _order = 'name, id'
     _allow_sudo_commands = False
 
     type = fields.Char(default='ir.actions.client')

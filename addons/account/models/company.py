@@ -11,6 +11,7 @@ from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.account.models.product import ACCOUNT_DOMAIN
+from odoo.addons.account.models.partner import _ref_company_registry
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 
 
@@ -102,7 +103,7 @@ class ResCompany(models.Model):
     user_hard_lock_date = fields.Date(compute='_compute_user_hard_lock_date')
     transfer_account_id = fields.Many2one('account.account',
         check_company=True,
-        domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current'), ('deprecated', '=', False)]", string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
+        domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current')]", string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
     chart_template = fields.Selection(selection='_chart_template_selection')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts')
@@ -124,20 +125,19 @@ class ResCompany(models.Model):
         comodel_name='account.account',
         string="Gain Exchange Rate Account",
         check_company=True,
-        domain="[('deprecated', '=', False),\
-                ('internal_group', '=', 'income')]")
+        domain="[('internal_group', '=', 'income')]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
         check_company=True,
-        domain="[('deprecated', '=', False), \
-                ('account_type', '=', 'expense')]")
+        domain="[('account_type', '=', 'expense')]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
     qr_code = fields.Boolean(string='Display QR-code on invoices')
+    link_qr_code = fields.Boolean(string='Display Link QR-code')
 
     display_invoice_amount_total_words = fields.Boolean(string='Total amount of invoice in letters')
     display_invoice_tax_company_currency = fields.Boolean(
@@ -164,7 +164,7 @@ class ResCompany(models.Model):
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
     account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.", readonly=False)
-    account_opening_date = fields.Date(string='Opening Entry', default=lambda self: fields.Date.context_today(self).replace(month=1, day=1), required=True, help="That is the date of the opening entry.")
+    account_opening_date = fields.Date(string='Opening Entry', help="That is the date of the opening entry.")
 
     invoice_terms = fields.Html(string='Default Terms and Conditions', translate=True)
     terms_type = fields.Selection([('plain', 'Add a Note'), ('html', 'Add a link to a Web Page')],
@@ -193,6 +193,11 @@ class ResCompany(models.Model):
     )
 
     # Taxes
+    domestic_fiscal_position_id = fields.Many2one(
+        comodel_name='account.fiscal.position',
+        compute='_compute_domestic_fiscal_position_id',
+        store=True,
+    )
     account_fiscal_country_id = fields.Many2one(
         string="Fiscal Country",
         comodel_name='res.country',
@@ -217,7 +222,6 @@ class ResCompany(models.Model):
     account_cash_basis_base_account_id = fields.Many2one(
         comodel_name='account.account',
         check_company=True,
-        domain=[('deprecated', '=', False)],
         string="Base Tax Received Account",
         help="Account that will be set on lines created in cash basis journal entry and used to keep track of the "
              "tax base amount.")
@@ -247,7 +251,15 @@ class ResCompany(models.Model):
     account_discount_expense_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for expense discount')
 
     # Audit trail
-    check_account_audit_trail = fields.Boolean(string='Audit Trail')
+    restrictive_audit_trail = fields.Boolean(
+        string='Restrictive Audit Trail',
+        tracking=True,
+        help="Enable this option to prevent deletion of journal item related logs",
+    )
+    force_restrictive_audit_trail = fields.Boolean(
+        string='Force Audit Trail',
+        compute='_compute_force_restrictive_audit_trail',
+    )  # Force the restrictive audit trail mode, and hide the corresponding setting.",
 
     # Autopost Wizard
     autopost_bills = fields.Boolean(string='Auto-validate bills', default=True)
@@ -261,6 +273,7 @@ class ResCompany(models.Model):
         help="Default on whether the sales price used on the product and invoices with this Company includes its taxes."
     )
     company_vat_placeholder = fields.Char(compute='_compute_company_vat_placeholder')
+    company_registry_placeholder = fields.Char(compute='_compute_company_registry_placeholder')
 
     income_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -293,11 +306,11 @@ class ResCompany(models.Model):
             'tax_exigibility',
         ]
 
-    def cache_invalidation_fields(self):
-        # EXTENDS base
-        invalidation_fields = super().cache_invalidation_fields()
-        invalidation_fields.add('check_account_audit_trail')
-        return invalidation_fields
+    @api.constrains('restrictive_audit_trail')
+    def _check_audit_trail_restriction(self):
+        companies = self.filtered(lambda c: not c.restrictive_audit_trail and c.force_restrictive_audit_trail)
+        if companies:
+            raise ValidationError(_("Can't disable restricted audit trail: forced by localization."))
 
     @api.constrains("account_price_include")
     def _check_set_account_price_include(self):
@@ -321,11 +334,15 @@ class ResCompany(models.Model):
             if rec.fiscalyear_last_day > max_day:
                 raise ValidationError(_("Invalid fiscal year last day"))
 
-    @api.constrains('check_account_audit_trail')
-    def _check_audit_trail_records(self):
-        companies = self.filtered(lambda c: not c.check_account_audit_trail)
-        if self.env['account.move'].search_count([('company_id', 'in', companies.ids)], limit=1):
-            raise UserError(_("Can't disable audit trail when there are existing records."))
+    def _compute_force_restrictive_audit_trail(self):
+        for company in self:
+            company.force_restrictive_audit_trail = False
+
+    @api.depends('fiscal_position_ids', 'fiscal_position_ids.sequence', 'fiscal_position_ids.country_id')
+    def _compute_domestic_fiscal_position_id(self):
+        for company in self:
+            potential_domestic_fps = company.fiscal_position_ids.filtered_domain([('country_id', '=', company.country_id.id)]).sorted('sequence')
+            company.domestic_fiscal_position_id = potential_domestic_fps[0] if potential_domestic_fps else False
 
     @api.depends('fiscal_position_ids.foreign_vat')
     def _compute_multi_vat_foreign_country(self):
@@ -748,7 +765,7 @@ class ResCompany(models.Model):
             'ref': _('Opening Journal Entry'),
             'company_id': self.id,
             'journal_id': default_journal.id,
-            'date': self.account_opening_date - timedelta(days=1),
+            'date': (self.account_opening_date or fields.Date.start_of(fields.Date.today(), 'year')) - timedelta(days=1),
         }
 
     def opening_move_posted(self):
@@ -1059,3 +1076,12 @@ class ResCompany(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             company.company_vat_placeholder = placeholder
+
+    @api.depends('country_id', 'account_fiscal_country_id')
+    def _compute_company_registry_placeholder(self):
+        """ Provides a dynamic placeholder on the company registry field for countries that may need it.
+        Add your country and the value you want in the _ref_company_registry map in the partner.py file.
+        """
+        for company in self:
+            country_code = (company.account_fiscal_country_id or company.country_id).code or ''
+            company.company_registry_placeholder = _ref_company_registry.get(country_code.lower(), '')

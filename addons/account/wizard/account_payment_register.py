@@ -141,7 +141,6 @@ class AccountPaymentRegister(models.TransientModel):
         comodel_name='account.account',
         string="Difference Account",
         copy=False,
-        domain="[('deprecated', '=', False)]",
         check_company=True,
     )
     writeoff_label = fields.Char(string='Journal Item Label', default='Write-Off',

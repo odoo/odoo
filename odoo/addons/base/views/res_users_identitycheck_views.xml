@@ -17,7 +17,9 @@
                         </div>
                     </sheet>
                     <footer>
-                        <button string="Confirm Password" id="password_confirm" type="object" name="run_check" class="btn btn-primary" data-hotkey="q" invisible="auth_method != 'password'"/>
+                        <button string="Confirm Password" id="password_confirm" type="object" name="run_check"
+                            class="btn btn-primary" data-hotkey="q" invisible="auth_method != 'password'"
+                            context="{'password': password}"/>
                         <button string="Cancel" special="cancel" data-hotkey="z" class="btn btn-secondary"/>
                     </footer>
                 </form>

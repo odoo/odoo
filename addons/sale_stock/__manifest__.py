@@ -4,7 +4,7 @@
 {
     'name': 'Sales and Warehouse Management',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales/Sales',
     'summary': 'Quotation, Sales Orders, Delivery & Invoicing Control',
     'description': """
 Manage sales quotations and orders
@@ -25,6 +25,7 @@ Preferences
         'security/ir.model.access.csv',
 
         'views/sale_order_views.xml',
+        'views/sale_order_line_views.xml',
         'views/stock_route_views.xml',
         'views/res_config_settings_views.xml',
         'views/sale_stock_portal_template.xml',

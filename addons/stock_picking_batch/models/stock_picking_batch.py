@@ -6,7 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import AND
-from odoo.tools import float_is_zero, format_list
+from odoo.tools import float_is_zero
 
 
 class StockPickingBatch(models.Model):
@@ -259,6 +259,12 @@ class StockPickingBatch(models.Model):
                     picking.batch_id.id,
                     picking.batch_id.name))
 
+        if empty_waiting_pickings:
+            self.message_post(body=_(
+                "%s was removed from the batch, no quantity processed",
+                Markup(', ').join([picking._get_html_link() for picking in empty_waiting_pickings])
+            ))
+
         return pickings.with_context(**context).button_validate()
 
     def action_assign(self):
@@ -316,7 +322,7 @@ class StockPickingBatch(models.Model):
                     "Please check their states and operation types.\n\n"
                     "Incompatibilities: %(incompatible_transfers)s",
                     batch=batch.name,
-                    incompatible_transfers=format_list(self.env, erroneous_pickings.mapped('name'))))
+                    incompatible_transfers=erroneous_pickings.mapped('name')))
 
     def _track_subtype(self, init_values):
         if 'state' in init_values:

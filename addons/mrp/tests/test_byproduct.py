@@ -383,17 +383,17 @@ class TestMrpByProduct(common.TransactionCase):
             })
 
         # Update byproduct has cost share > 100%
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             byproduct_1.cost_share = 120
             mo.write({'move_byproduct_ids': [(4, byproduct_1.id)]})
 
         # Update byproduct has cost share < 0%
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             byproduct_1.cost_share = -10
             mo.write({'move_byproduct_ids': [(4, byproduct_1.id)]})
 
         # Update byproducts have total cost share > 100%
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             byproduct_1.cost_share = 60
             byproduct_2.cost_share = 70
             mo.write({'move_byproduct_ids': [(6, 0, [byproduct_1.id, byproduct_2.id])]})
@@ -542,3 +542,35 @@ class TestMrpByProduct(common.TransactionCase):
 
         # the two docs linked to the byproduct should be in the chatter
         self.assertEqual(bom._get_extra_attachments(), attachments)
+
+    def test_3_steps_byproduct(self):
+        """ Test that non-bom byproducts are correctly pushed from
+        post-production to the stock location in 3-steps manufacture. """
+        self.warehouse.manufacture_steps = 'pbm_sam'
+        self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
+        component, final_product, byproduct = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+        } for name in ['Old Blood', 'Insight', 'Eyes on the Inside']])
+        self.env['stock.quant']._update_available_quantity(component, self.warehouse.lot_stock_id, 1)
+        mo = self.env["mrp.production"].create({
+            'product_id': final_product.id,
+            'product_qty': 1.0,
+        })
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as line:
+            line.product_id = component
+            line.product_uom_qty = 1
+        with mo_form.move_byproduct_ids.new() as line:
+            line.product_id = byproduct
+            line.product_uom_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        preprod_picking = mo.picking_ids.filtered(lambda p: p.state == 'assigned')
+        preprod_picking.button_validate()
+        mo.button_mark_done()
+        postprod_picking = mo.picking_ids.filtered(lambda p: p.state == 'assigned')
+
+        self.assertEqual(len(postprod_picking.move_ids), 2)
+        self.assertEqual(postprod_picking.move_ids.product_id, final_product + byproduct)
+        self.assertEqual(postprod_picking.location_dest_id, self.warehouse.lot_stock_id)

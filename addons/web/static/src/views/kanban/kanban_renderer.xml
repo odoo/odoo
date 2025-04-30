@@ -10,7 +10,7 @@
                 <t t-if="groupOrRecord.group">
                     <t t-set="group" t-value="groupOrRecord.group" />
                     <t t-set="isGroupProcessing" t-value="isProcessing(group.id)" />
-                    <div class="o_kanban_group flex-shrink-0 flex-grow-1 flex-md-grow-0"
+                    <div class="o_kanban_group"
                         t-att-class="getGroupClasses(group, isGroupProcessing)"
                         t-attf-class="{{ !env.isSmall and group.isFolded ? 'opacity-trigger-hover' : '' }}"
                         t-att-data-id="group.id"
@@ -57,7 +57,7 @@
                                 />
                             </t>
                             <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
-                            <div t-if="unloadedCount > 0" class="o_kanban_load_more">
+                            <div t-if="unloadedCount > 0" class="o_kanban_load_more" t-key="unloadedCount">
                                 <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
                             </div>
                         </t>

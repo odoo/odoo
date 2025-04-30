@@ -1,11 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
+import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
-
-const leaveType = "NotLimitedHR";
-const leaveDateFrom = "01/17/2022";
-const leaveDateTo = "01/17/2022";
-const description = "Days off";
 
 registry.category("web_tour.tours").add("hr_holidays_tour", {
     url: "/odoo",
@@ -13,53 +9,57 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         stepUtils.showAppsMenuItem(),
         {
             trigger: '.o_app[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',
-            content: _t("Let's discover the Time Off application"),
+            content: markup(_t("Let's discover the <strong>Time Off</strong> app!")),
             tooltipPosition: "bottom",
             run: "click",
         },
         {
             trigger: "button.btn-time-off",
-            content: _t("Click on any date or on this button to request a time-off"),
+            content: _t("Click on this button to request a time-off"),
             tooltipPosition: "bottom",
             run: "click",
         },
         {
             trigger: 'div[name="holiday_status_id"] input',
             content: _t("Let's try to create a Sick Time Off, select it in the list"),
-            run: `edit ${leaveType.slice(0, leaveType.length - 1)}`,
-        },
-        {
-            isActive: ["auto"],
-            trigger: `.ui-autocomplete .ui-menu-item a:contains("${leaveType}")`,
             run: "click",
         },
         {
-            trigger: `.o_field_widget[name='holiday_status_id'] input:value("${leaveType}")`,
+            trigger: ".ui-autocomplete .ui-menu-item a:contains('Sick Time Off')",
+            tooltipPosition: "right",
+            run: "click",
         },
         {
             trigger: "input[data-field=request_date_from]",
             content: _t(
-                "You can select the period you need to take off, from start date to end date"
+                "You can select the period you need to take off"
             ),
             tooltipPosition: "right",
-            run: `edit ${leaveDateFrom}`,
+            run: "click",
         },
         {
-            trigger: "input[data-field=request_date_to]",
-            content: _t(
-                "You can select the period you need to take off, from start date to end date"
-            ),
-            tooltipPosition: "right",
-            run: `edit ${leaveDateTo}`,
+            content: _t("Click on the 22nd"),
+            trigger: '.o_date_item_cell:nth-child(31)',
+            run: "click"
+        },
+        {
+            content: _t("Click on the 25st"),
+            trigger: '.o_date_item_cell:nth-child(34)',
+            run: "click"
+        },
+        {
+            content: "click outside to go back to the time off record",
+            trigger: '.modal-content',
+            run: "click",
         },
         {
             trigger: 'div[name="name"] textarea',
             content: _t("Add some description for the people that will validate it"),
-            run: `edit ${description}`,
+            run: "click",
             tooltipPosition: "right",
         },
         {
-            trigger: `button:contains(${_t("Save")})`,
+            trigger: `button:contains(${_t("Submit Request")})`,
             content: _t("Submit your request"),
             tooltipPosition: "bottom",
             run: "click",
@@ -77,9 +77,14 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
+            content: "Switch to list view",
+            trigger: ".o_switch_view.o_list",
+            run: "click",
+        },
+        {
             tooltipPosition: "bottom",
             content: _t("Select the request you just created"),
-            trigger: "table.o_list_table tr.o_data_row:eq(0)",
+            trigger: "table.o_list_table tr.o_data_row:nth-child(1)",
             run: "click",
         },
         {
@@ -89,6 +94,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
+            isActive: ["auto"],
             trigger: `tr.o_data_row:first:not(:has(button[name="action_approve"])),table tbody:not(tr.o_data_row)`,
             content: "Verify leave is approved",
         },

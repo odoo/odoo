@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
 import { Component } from "@odoo/owl";
 
@@ -45,7 +46,6 @@ export class PropertyTags extends Component {
         deleteAction: { type: String },
         readonly: { type: Boolean, optional: true },
         canChangeTags: { type: Boolean, optional: true },
-        checkDefinitionWriteAccess: { type: Function, optional: true },
         // Select a new value
         onValueChange: { type: Function, optional: true },
         // Change the tags definition (can also receive a second
@@ -55,6 +55,9 @@ export class PropertyTags extends Component {
     setup() {
         this.notification = useService("notification");
         this.popover = usePopover(this.constructor.components.Popover);
+        useTagNavigation("propertyTags", {
+            delete: (index) => this.deleteTagByIndex(index),
+        });
     }
 
     /* --------------------------------------------------------
@@ -223,17 +226,9 @@ export class PropertyTags extends Component {
             return;
         }
 
-        if (!(await this.props.checkDefinitionWriteAccess())) {
-            this.notification.add(
-                _t("You need to be able to edit parent first to add property tags"),
-                { type: "warning" }
-            );
-            return;
-        }
-
         const newValue = newLabel ? newLabel.toLowerCase().replace(" ", "_") : "";
-
         const existingTag = this.props.tags.find((tag) => tag[0] === newValue);
+
         if (existingTag) {
             this.notification.add(_t("This tag is already available"), {
                 type: "warning",
@@ -310,6 +305,15 @@ export class PropertyTags extends Component {
 
         // close the color popover
         this.popover.close();
+    }
+
+    /**
+     * Delete tags by pressing backspace.
+     *
+     * @param {integer} index
+     */
+    deleteTagByIndex(index) {
+        this.onTagDelete(this.tagListItems[index].id);
     }
 }
 

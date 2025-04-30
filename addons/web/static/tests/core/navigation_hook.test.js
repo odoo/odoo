@@ -1,10 +1,15 @@
-import { Component, xml } from "@odoo/owl";
-import { useNavigation } from "@web/core/navigation/navigation";
+import { Component, useState, xml } from "@odoo/owl";
+import { Navigator, useNavigation } from "@web/core/navigation/navigation";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { describe, expect, test } from "@odoo/hoot";
-import { hover, press } from "@odoo/hoot-dom";
+import { describe, destroy, expect, test } from "@odoo/hoot";
+import { hover, press, queryAllTexts, queryOne, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    mountWithCleanup,
+    patchWithCleanup,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 class BasicHookParent extends Component {
     static props = [];
@@ -188,4 +193,88 @@ test("hovering an item makes it active but doesn't focus", async () => {
     await animationFrame();
     expect(".four").toBeFocused();
     expect(".four").toHaveClass("focus");
+});
+
+test("navigation disabled when component is destroyed", async () => {
+    patchWithCleanup(Navigator.prototype, {
+        _enable() {
+            asyncStep("enable");
+            super._enable();
+        },
+        _disable() {
+            asyncStep("disable");
+            super._disable();
+        },
+    });
+    const component = await mountWithCleanup(BasicHookParent);
+    await waitForSteps(["enable"]);
+    destroy(component);
+    await waitForSteps(["disable"]);
+});
+
+test("insert item before current", async () => {
+    class TestComp extends Component {
+        static props = [];
+        static template = xml`
+            <div class="container" t-ref="containerRef">
+                <t t-foreach="state.items" t-as="item" t-key="item">
+                    <div class="o-navigable" t-attf-class="item-{{item}}" tabindex="0" t-esc="item"/>
+                </t>
+            </div>
+        `;
+
+        setup() {
+            this.navigation = useNavigation("containerRef");
+            this.state = useState({ items: [1, 2, 3] });
+        }
+    }
+
+    const component = await mountWithCleanup(TestComp);
+    await press("arrowup");
+    expect(queryAllTexts(".o-navigable")).toEqual(["1", "2", "3"]);
+    expect(".item-3").toBeFocused();
+    expect(".item-3").toHaveClass("focus");
+
+    component.state.items.splice(2, 0, 10);
+    await animationFrame();
+
+    expect(queryAllTexts(".o-navigable")).toEqual(["1", "2", "10", "3"]);
+    expect(".item-3").toBeFocused();
+    expect(".item-3").toHaveClass("focus");
+
+    await press("arrowup");
+    expect(".item-10").toBeFocused();
+    expect(".item-10").toHaveClass("focus");
+});
+
+test("items are focused only on mousemove, not on mouseenter", async () => {
+    class Parent extends BasicHookParent {
+        navOptions = {
+            onMouseEnter: () => expect.step("onMouseEnter"),
+        };
+    }
+    await mountWithCleanup(Parent);
+
+    expect(".one").toBeFocused();
+
+    manuallyDispatchProgrammaticEvent(queryOne(".two"), "mouseenter");
+    await animationFrame();
+    // mouseenter should be ignored
+    expect(".two").not.toHaveClass("focus");
+
+    await press("arrowdown");
+    await animationFrame();
+    expect(".two").toHaveClass("focus");
+
+    manuallyDispatchProgrammaticEvent(queryOne(".three"), "mousemove");
+    await animationFrame();
+    // mousemove should not be ignored
+    expect(".three").toHaveClass("focus");
+    expect(".two").not.toHaveClass("focus");
+    expect.verifySteps(["onMouseEnter"]);
+
+    manuallyDispatchProgrammaticEvent(queryOne(".three"), "mousemove");
+    await animationFrame();
+    expect(".three").toHaveClass("focus");
+    expect.verifySteps([]); // onMouseEnter is not triggered again
 });

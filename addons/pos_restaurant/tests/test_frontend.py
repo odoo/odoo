@@ -65,23 +65,21 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
         cls.main_floor = cls.env['restaurant.floor'].create({
             'name': 'Main Floor',
             'pos_config_ids': [(4, cls.pos_config.id)],
-            'floor_prefix': 1,
         })
         cls.second_floor = cls.env['restaurant.floor'].create({
             'name': 'Second Floor',
             'pos_config_ids': [(4, cls.pos_config.id)],
-            'floor_prefix': 2,
         })
 
         cls.main_floor_table_5 = cls.env['restaurant.table'].create([{
-            'table_number': 105,
+            'table_number': 5,
             'floor_id': cls.main_floor.id,
             'seats': 4,
             'position_h': 100,
             'position_v': 100,
         }])
         cls.env['restaurant.table'].create([{
-            'table_number': 104,
+            'table_number': 4,
             'floor_id': cls.main_floor.id,
             'seats': 4,
             'shape': 'square',
@@ -89,7 +87,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'position_v': 100,
         },
         {
-            'table_number': 102,
+            'table_number': 2,
             'floor_id': cls.main_floor.id,
             'seats': 4,
             'position_h': 250,
@@ -97,7 +95,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
         },
         {
 
-            'table_number': 201,
+            'table_number': 1,
             'floor_id': cls.second_floor.id,
             'seats': 4,
             'shape': 'square',
@@ -105,7 +103,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'position_v': 150,
         },
         {
-            'table_number': 203,
+            'table_number': 3,
             'floor_id': cls.second_floor.id,
             'seats': 4,
             'position_h': 100,
@@ -119,7 +117,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             company_id=main_company.id,
         )
 
-        cls.env['product.product'].create({
+        cls.coca_cola_test = cls.env['product.product'].create({
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'Coca-Cola',
@@ -128,7 +126,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'taxes_id': [(6, 0, [])],
         })
 
-        cls.env['product.product'].create({
+        cls.water_test = cls.env['product.product'].create({
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'Water',
@@ -137,7 +135,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'taxes_id': [(6, 0, [])],
         })
 
-        cls.env['product.product'].create({
+        cls.minute_maid_test = cls.env['product.product'].create({
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'Minute Maid',
@@ -291,13 +289,6 @@ class TestFrontend(TestFrontendCommon):
         self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change, "There should be a last order preparation change")
         self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change, "The last order preparation change should contain 'Coca'")
 
-    def test_11_bill_screen_qrcode_data(self):
-        self.pos_config.write({'printer_ids': False})
-        self.pos_config.company_id.point_of_sale_use_ticket_qr_code = True
-        self.pos_config.company_id.point_of_sale_ticket_portal_url_display_mode = 'qr_code_and_url'
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('BillScreenTour')
-
     def test_12_order_tracking(self):
         self.pos_config.write({'order_edit_tracking': True})
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -399,11 +390,26 @@ class TestFrontend(TestFrontendCommon):
                 'value_ids': [(6, 0, [attribute_2_value.id, attribute_2_value_2.id])],
             })
             self.main_pos_config.with_user(self.pos_user).open_ui()
-            self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")
+            self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")
 
     def test_create_floor_tour(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_create_floor_tour', login="pos_admin")
+
+    def test_combo_preparation_receipt(self):
+        setup_product_combo_items(self)
+        pos_printer = self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+        self.pos_config.write({
+            'is_order_printer' : True,
+            'printer_ids': [Command.set(pos_printer.ids)],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_combo_preparation_receipt')
 
     def test_multiple_preparation_printer(self):
         """This test make sure that no empty receipt are sent when using multiple printer with different categories
@@ -442,4 +448,86 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'MultiPreparationPrinter', login="pos_user")
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'MultiPreparationPrinter', login="pos_user")
+
+    def test_user_on_residual_order(self):
+        self.pos_config.write({'printer_ids': False})
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('LeaveResidualOrder', login="pos_admin")
+        self.start_pos_tour('FinishResidualOrder', login="pos_user")
+        orders = self.env['pos.order'].search([])
+        self.assertEqual(orders[0].user_id.id, self.pos_user.id, "Pos user not registered on order")
+        self.assertEqual(orders[1].user_id.id, self.pos_admin.id, "Pos admin not registered on order")
+
+    def test_tax_in_merge_table_order_line(self):
+        """
+        Test that when merging orders of two tables in POS restaurant, the product tax is applied on the order lines of the destination table.
+        """
+        drinks_category = self.env['pos.category'].search([('name', '=', 'Drinks'), ('sequence', '=', 2)])
+        product_1 = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 2.20,
+            'name': 'product_1',
+            'taxes_id': self.tax_sale_a,
+            'pos_categ_ids': [(4, drinks_category.id)]
+        })
+        product_2 = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 2.20,
+            'name': 'product_2',
+            'taxes_id': self.tax_sale_a,
+            'pos_categ_ids': [(4, drinks_category.id)]
+        })
+        self.pos_config.is_order_printer = False
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_tax_in_merge_table_order_line_tour', login="pos_admin")
+        line_1 = self.env['pos.order.line'].search([('full_product_name', '=', 'product_1')])
+        line_2 = self.env['pos.order.line'].search([('full_product_name', '=', 'product_2')])
+        self.assertEqual(line_1.tax_ids, self.tax_sale_a)
+        self.assertEqual(line_2.tax_ids, self.tax_sale_a)
+
+    def test_multiple_preparation_printer_different_categories(self):
+        """This test make sure that no empty receipt are sent when using multiple printer with different categories
+           The tour will check that we tried did not try to print two receipt. We can achieve that by checking the content
+           of the error message. Because we do not have real printer an error message will be displayed, this will contain
+           all the receipt that failed to print. If it contains more than 1 it means that we tried to print a second receipt
+           and it should not be the case here. The only one we should see is 'Detailed Receipt'
+        """
+        pos_category_1 = self.env['pos.category'].create({'name': 'Category 1'})
+        pos_category_2 = self.env['pos.category'].create({'name': 'Category 2'})
+        printer_1 = self.env['pos.printer'].create({
+            'name': 'Printer 1',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(pos_category_2.ids)],
+        })
+        printer_2 = self.env['pos.printer'].create({
+            'name': 'Printer 2',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(pos_category_1.ids)],
+        })
+
+        self.main_pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set([printer_1.id, printer_2.id])],
+        })
+
+        self.product_1 = self.env['product.product'].create({
+            'name': 'Product 1',
+            'available_in_pos': True,
+            'list_price': 10,
+            'pos_categ_ids': [(6, 0, [pos_category_1.id])],
+            'taxes_id': False,
+        })
+
+        self.product_2 = self.env['product.product'].create({
+            'name': 'Product 2',
+            'available_in_pos': True,
+            'list_price': 10,
+            'pos_categ_ids': [(6, 0, [pos_category_2.id])],
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_multiple_preparation_printer_different_categories', login="pos_user")

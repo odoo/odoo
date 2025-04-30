@@ -23,7 +23,7 @@ class HrLeaveType(models.Model):
         if employee.total_overtime <= 0:
             return super()._compute_display_name()
 
-        overtime_leaves = self.filtered(lambda l_type: l_type.overtime_deductible and l_type.requires_allocation == 'no')
+        overtime_leaves = self.filtered(lambda l_type: l_type.overtime_deductible and not l_type.requires_allocation)
         for leave_type in overtime_leaves:
             leave_type.display_name = "%(name)s (%(count)s)" % {
                 'name': leave_type.name,
@@ -32,11 +32,11 @@ class HrLeaveType(models.Model):
             }
         super(HrLeaveType, self - overtime_leaves)._compute_display_name()
 
-    def get_allocation_data(self, employees, date=None):
-        res = super().get_allocation_data(employees, date)
+    def get_allocation_data(self, employees, target_date=None):
+        res = super().get_allocation_data(employees, target_date)
         deductible_time_off_types = self.env['hr.leave.type'].search([
             ('overtime_deductible', '=', True),
-            ('requires_allocation', '=', 'no')])
+            ('requires_allocation', '=', False)])
         leave_type_names = deductible_time_off_types.mapped('name')
         for employee in res:
             for leave_data in res[employee]:
@@ -45,9 +45,4 @@ class HrLeaveType(models.Model):
                     leave_data[1]['overtime_deductible'] = True
                 else:
                     leave_data[1]['overtime_deductible'] = False
-        return res
-
-    def _get_days_request(self, date=None):
-        res = super()._get_days_request(date)
-        res[1]['overtime_deductible'] = self.overtime_deductible
         return res

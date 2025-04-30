@@ -15,6 +15,15 @@ export const DEVICE_ICONS = {
     printer: "fa-print",
     scale: "fa-balance-scale",
     scanner: "fa-barcode",
+    unsupported: "fa-question",
+};
+
+export const CONNECTION_ICONS = {
+    hdmi: "fa-desktop",
+    direct: "fa-usb",
+    serial: "fa-usb",
+    network: "fa-sitemap",
+    bluetooth: "fa-bluetooth",
 };
 
 export class DeviceDialog extends Component {
@@ -24,12 +33,15 @@ export class DeviceDialog extends Component {
     setup() {
         this.store = useStore();
         this.icons = DEVICE_ICONS;
+        this.connectionIcons = CONNECTION_ICONS;
     }
 
     formatDeviceType(deviceType, numDevices) {
         const formattedDeviceType =
             deviceType[0].toUpperCase() + deviceType.replaceAll("_", " ").slice(1);
-        return numDevices === 1 ? formattedDeviceType : `${formattedDeviceType}s`;
+        return numDevices === 1 || deviceType === "unsupported"
+            ? formattedDeviceType
+            : `${formattedDeviceType}s`;
     }
 
     get devices() {
@@ -58,7 +70,10 @@ export class DeviceDialog extends Component {
                             <div class="d-flex flex-column p-1 gap-2">
                                 <div t-foreach="devices[deviceType]" t-as="device" t-key="device.identifier" class="d-flex flex-column bg-light rounded p-2 gap-1">
                                     <span t-out="device.name" class="one-line"/>
-                                    <span t-out="device.identifier" class="text-secondary one-line"/>
+                                    <span class="text-secondary one-line">
+                                        <span t-att-class="'me-2 fa fa-fw ' + connectionIcons[device.connection]"/>
+                                        <t t-out="device.identifier"/>
+                                    </span>
                                     <div t-if="device.value" class="text-secondary one-line">
                                         <i>Last sent value was <t t-out="device.value"/></i>
                                     </div>

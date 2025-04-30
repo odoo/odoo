@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -8,7 +8,7 @@ export class Notification extends Record {
 
     /** @type {number} */
     id;
-    mail_message_id = Record.one("mail.message", {
+    mail_message_id = fields.One("mail.message", {
         onDelete() {
             this.delete();
         },
@@ -17,7 +17,7 @@ export class Notification extends Record {
     notification_status;
     /** @type {string} */
     notification_type;
-    failure = Record.one("Failure", {
+    failure = fields.One("Failure", {
         inverse: "notifications",
         /** @this {import("models").Notification} */
         compute() {
@@ -41,7 +41,25 @@ export class Notification extends Record {
     });
     /** @type {string} */
     failure_type;
-    persona = Record.one("Persona");
+    get failureMessage() {
+        switch (this.failure_type) {
+            case "mail_smtp":
+                return _t("Connection failed");
+            case "mail_bounce":
+                return _t("Bounce");
+            case "mail_email_invalid":
+                return _t("Invalid email address");
+            case "mail_email_missing":
+                return _t("Missing email address");
+            case "mail_from_invalid":
+                return _t("Invalid from address");
+            case "mail_from_missing":
+                return _t("Missing from address");
+            default:
+                return _t("Exception");
+        }
+    }
+    persona = fields.One("Persona");
 
     get isFailure() {
         return ["exception", "bounce"].includes(this.notification_status);
@@ -71,11 +89,11 @@ export class Notification extends Record {
             case "pending":
                 return "fa fa-paper-plane-o";
             case "sent":
-                return "fa fa-check";
+                return `fa ${!this.isFollowerNotification ? "fa-check" : "fa-user-o"}`;
             case "bounce":
                 return "fa fa-exclamation";
             case "exception":
-                return "fa fa-exclamation";
+                return "fa fa-times text-danger";
             case "ready":
                 return `fa ${!this.isFollowerNotification ? "fa-send-o" : "fa-user-o"}`;
             case "canceled":

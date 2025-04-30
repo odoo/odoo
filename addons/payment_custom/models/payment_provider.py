@@ -26,8 +26,8 @@ class PaymentProvider(models.Model):
         string="Enable QR Codes", help="Enable the use of QR-codes when paying by wire transfer.")
 
     @api.model_create_multi
-    def create(self, values_list):
-        providers = super().create(values_list)
+    def create(self, vals_list):
+        providers = super().create(vals_list)
         providers.filtered(lambda p: p.custom_mode == 'wire_transfer').pending_msg = None
         return providers
 
@@ -51,7 +51,7 @@ class PaymentProvider(models.Model):
                     f'</div>'
 
     @api.model
-    def _get_removal_domain(self, provider_code, custom_mode='', **kwargs):
+    def _get_removal_domain(self, provider_code, *, custom_mode='', **kwargs):
         res = super()._get_removal_domain(provider_code, custom_mode=custom_mode, **kwargs)
         if provider_code == 'custom' and custom_mode:
             return AND([res, [('custom_mode', '=', custom_mode)]])

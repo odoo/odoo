@@ -20,6 +20,7 @@ class ResConfigSettings(models.TransientModel):
     pos_self_ordering_default_language_id = fields.Many2one(related="pos_config_id.self_ordering_default_language_id", readonly=False)
     pos_self_ordering_available_language_ids = fields.Many2many(related="pos_config_id.self_ordering_available_language_ids", readonly=False)
     pos_self_ordering_image_home_ids = fields.Many2many(related="pos_config_id.self_ordering_image_home_ids", readonly=False)
+    pos_self_ordering_image_background_ids = fields.Many2many(related="pos_config_id.self_ordering_image_background_ids", readonly=False)
     pos_self_ordering_image_brand = fields.Image(related="pos_config_id.self_ordering_image_brand", readonly=False)
     pos_self_ordering_image_brand_name = fields.Char(related="pos_config_id.self_ordering_image_brand_name", readonly=False)
     pos_self_ordering_pay_after = fields.Selection(related="pos_config_id.self_ordering_pay_after", readonly=False, required=True)
@@ -72,9 +73,6 @@ class ResConfigSettings(models.TransientModel):
 
         if self.pos_self_ordering_service_mode == 'counter' and self.pos_self_ordering_mode == 'mobile':
             self.pos_self_ordering_pay_after = "each"
-
-        if self.pos_self_ordering_mode not in ['nothing', 'consultation'] and self.pos_self_ordering_pay_after == "each" and not self.module_pos_preparation_display:
-            self.module_pos_preparation_display = True
 
     def custom_link_action(self):
         self.ensure_one()

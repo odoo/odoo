@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
 
 from itertools import chain
-from odoo.tools import groupby
+from odoo.tools import groupby, OrderedSet
 from collections import defaultdict
 
 
@@ -20,7 +20,7 @@ class StockValuationLayer(models.Model):
     _rec_name = 'product_id'
 
     company_id = fields.Many2one('res.company', 'Company', readonly=True, required=True)
-    product_id = fields.Many2one('product.product', 'Product', readonly=True, required=True, check_company=True, auto_join=True)
+    product_id = fields.Many2one('product.product', 'Product', readonly=True, required=True, check_company=True, auto_join=True, index=True)
     categ_id = fields.Many2one('product.category', related='product_id.categ_id')
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     quantity = fields.Float('Quantity', readonly=True, digits='Product Unit')
@@ -51,18 +51,23 @@ class StockValuationLayer(models.Model):
                 svl.warehouse_id = svl.stock_move_id.location_dest_id.warehouse_id.id
 
     def _search_warehouse_id(self, operator, value):
-        layer_ids = self.search([
+        return [
             '|',
             ('stock_move_id.location_dest_id.warehouse_id', operator, value),
             '&',
             ('stock_move_id.location_id.usage', '=', 'internal'),
             ('stock_move_id.location_id.warehouse_id', operator, value),
-        ]).ids
-        return [('id', 'in', layer_ids)]
+        ]
+
+    def _candidate_sort_key(self):
+        self.ensure_one()
+        return tuple()
 
     def _validate_accounting_entries(self):
         am_vals = []
         aml_to_reconcile = defaultdict(set)
+        move_ids = OrderedSet()
+        svl_move_list = defaultdict(int) 
         for svl in self:
             if not svl.with_company(svl.company_id).product_id.valuation == 'real_time':
                 continue
@@ -71,7 +76,16 @@ class StockValuationLayer(models.Model):
             move = svl.stock_move_id
             if not move:
                 move = svl.stock_valuation_layer_id.stock_move_id
-            am_vals += move.with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+            move_ids.add(move.id)
+            svl_move_list[svl.id] = move.id
+        
+        moves = self.env['stock.move'].browse(move_ids)
+        move_directions = moves._get_move_directions()
+        for svl in self:
+            linked_move = moves.browse(svl_move_list[svl.id])
+            if linked_move:
+                am_vals += linked_move.with_context(move_directions=move_directions).with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
             account_moves._post()
@@ -120,6 +134,24 @@ class StockValuationLayer(models.Model):
             "target": "new",
             "type": "ir.actions.act_window",
             "context": context,
+        }
+
+    def action_stock_adjust_valuation(self):
+        """Perform Stock Valuation Adjustment from the stock valuation layer list view."""
+        if len(self.product_id) > 1:
+            raise UserError(_("You cannot revalue multiple products at once"))
+
+        return {
+            'name': _('Adjust Valuation - %s', self.product_id.display_name),
+            'view_mode': 'form',
+            'res_model': 'stock.valuation.layer.revaluation',
+            'view_id': self.env.ref('stock_account.stock_valuation_layer_revaluation_form_view').id,
+            'type': 'ir.actions.act_window',
+            'context': {
+                'active_model': 'stock.valuation.layer',
+                'active_ids': self.ids,
+            },
+            'target': 'new'
         }
 
     def action_open_reference(self):

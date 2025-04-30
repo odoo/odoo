@@ -3,6 +3,7 @@
 
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.addons.survey.tests import common
@@ -121,7 +122,7 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
             self._answer_question(q05, q05_answers, answer_token, csrf_token,
                                   submit_query_count=28, access_page_query_count=24)
             self._answer_question(q06, q06.suggested_answer_ids.ids[0], answer_token, csrf_token,
-                                  submit_query_count=104, access_page_query_count=24)
+                                  submit_query_count=108, access_page_query_count=24)
 
         user_inputs.invalidate_recordset()
         # Check that certification is successfully passed
@@ -166,6 +167,26 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
                 'subject': f'Certification: {certification.title}',
             },
         )
+
+        # Check that the certification can be printed without access to the participant's company
+        with self.with_user('admin'):
+            new_company = self.env['res.company'].create({
+                'name': 'newB',
+            })
+            user_new_company = self.env['res.users'].create({
+                'name': 'No access right user',
+                'login': 'user_new_company',
+                'password': 'user_new_company',
+                'group_ids': [
+                    Command.set(self.env.ref('base.group_user').ids),
+                    Command.link(self.env.ref('survey.group_survey_user').id),
+                ],
+                'company_id': new_company.id,
+                'company_ids': [new_company.id],
+            })
+            new_company.invalidate_model()  # cache pollution
+        self.env['ir.actions.report'].with_user(user_new_company).with_company(new_company)\
+            ._render_qweb_pdf('survey.certification_report_view', res_ids=user_inputs.ids)
 
     def test_randomized_certification(self):
         # Step: survey user creates the randomized certification

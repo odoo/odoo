@@ -1,18 +1,44 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
+import { Deferred } from "@web/core/utils/concurrency";
 
 export class RtcSession extends Record {
     static _name = "discuss.channel.rtc.session";
     static id = "id";
+    static awaitedRecords = new Map();
     static _insert() {
         /** @type {import("models").RtcSession} */
         const session = super._insert(...arguments);
-        session.channel?.rtcSessions.add(session);
+        session.channel?.rtc_session_ids.add(session);
         return session;
+    }
+    /** @returns {Promise<import("models").RtcSession>} */
+    static async getWhenReady(id) {
+        const session = this.get(id);
+        if (!session) {
+            let deferred = this.awaitedRecords.get(id);
+            if (!deferred) {
+                deferred = new Deferred();
+                this.awaitedRecords.set(id, deferred);
+                setTimeout(() => {
+                    deferred.resolve();
+                    this.awaitedRecords.delete(id);
+                }, 120_000);
+            }
+            return deferred;
+        }
+        return session;
+    }
+    /** @returns {import("models").RtcSession} */
+    static new() {
+        const record = super.new(...arguments);
+        this.awaitedRecords.get(record.id)?.resolve(record);
+        this.awaitedRecords.delete(record.id);
+        return record;
     }
 
     // Server data
-    channel_member_id = Record.one("discuss.channel.member", { inverse: "rtcSession" });
-    persona = Record.one("Persona", {
+    channel_member_id = fields.One("discuss.channel.member", { inverse: "rtcSession" });
+    persona = fields.One("Persona", {
         compute() {
             return this.channel_member_id?.persona;
         },
@@ -36,7 +62,7 @@ export class RtcSession extends Record {
     dataChannel;
     audioError;
     videoError;
-    isTalking = Record.attr(false, {
+    isTalking = fields.Attr(false, {
         /** @this {import("models").RtcSession} */
         onUpdate() {
             if (this.isTalking && !this.isMute) {
@@ -44,19 +70,19 @@ export class RtcSession extends Record {
             }
         },
     });
-    isActuallyTalking = Record.attr(false, {
+    isActuallyTalking = fields.Attr(false, {
         /** @this {import("models").RtcSession} */
         compute() {
             return this.isTalking && !this.isMute;
         },
     });
-    isVideoStreaming = Record.attr(false, {
+    isVideoStreaming = fields.Attr(false, {
         /** @this {import("models").RtcSession} */
         compute() {
             return this.is_screen_sharing_on || this.is_camera_on;
         },
     });
-    shortStatus = Record.attr(undefined, {
+    shortStatus = fields.Attr(undefined, {
         compute() {
             if (this.is_screen_sharing_on) {
                 return "live";
@@ -80,6 +106,14 @@ export class RtcSession extends Record {
     videoStreams = new Map();
     /** @type {string} */
     mainVideoStreamType;
+    /**
+     * Represents the sequence of the last valid connection with that session. This can be used to
+     * compare connection attempts (if they follow the last valid connection) and to validate information
+     * (if they match the sequence).
+     *
+     *  @type {number}
+     */
+    sequence = 0;
     // RTC stats
     connectionState;
     logStep;
@@ -142,7 +176,7 @@ export class RtcSession extends Record {
      * @returns {string}
      */
     get name() {
-        return this.channel_member_id?.persona.name;
+        return this.channel_member_id?.name;
     }
 
     /**

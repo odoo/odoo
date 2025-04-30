@@ -18,6 +18,7 @@
                 <field name="phone" optional="show"/>
                 <field name="company_name" optional="hide"/>
                 <field name="event_id" column_invisible="context.get('default_event_id')"/>
+                <field name="event_slot_id" domain="[('event_id', '=', event_id)]"/>
                 <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
                 <field name="activity_ids" widget="list_activity"/>
                 <field name="state" decoration-info="state in ('draft', 'open')"
@@ -68,10 +69,14 @@
                         <group string="Event Information" name="event">
                             <field class="text-break" name="event_id"
                                    context="{'name_with_seats_availability': True}" options="{'no_create': True}"/>
-                            <field name="barcode" groups="base.group_no_one"/>
-                            <field name="event_ticket_id" invisible="not event_id"
+                            <field name="event_slot_id" invisible="not is_multi_slots" required="is_multi_slots"
                                    context="{'name_with_seats_availability': True}" options="{'no_open': True, 'no_create': True}"
                                    domain="[('event_id', '=', event_id)]"/>
+                            <field name="event_ticket_id" invisible="not event_id"
+                                   context="{'name_with_seats_availability': True, 'is_event_multi_slots': is_multi_slots}"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   domain="[('event_id', '=', event_id)]"/>
+                            <field name="barcode" groups="base.group_no_one"/>
                             <field name="partner_id"/>
                             <field name="create_date" string="Registration Date" groups="base.group_no_one"/>
                             <field name="date_closed" groups="base.group_no_one"/>
@@ -142,10 +147,14 @@
                             </span>
                             <div id="event_ticket_id">
                                 <field name="registration_properties"/>
-                                <t t-if="record.event_ticket_id.raw_value">
+                                <div t-if="record.event_slot_id.raw_value">
+                                    <i class="fa fa-calendar" title="Slot"/>
+                                    <field name="event_slot_id" class="fw-bold text-truncate ms-1"/>
+                                </div>
+                                <div t-if="record.event_ticket_id.raw_value">
                                     <i class="fa fa-ticket" title="Ticket type"/>
                                     <field name="event_ticket_id" class="fw-bold text-truncate ms-1"/>
-                                </t>
+                                </div>
                             </div>
                         </div>
                     </t>
@@ -211,13 +220,16 @@
                 <filter string="Event Start Date" name="filter_event_begin_date" date="event_begin_date"/>
                 <filter string="Attended Date" name="filter_date_closed" date="date_closed"/>
                 <separator/>
+                <filter invisible="1" string="My Activities" name="filter_activities_my"
+                    domain="[('activity_user_id', '=', uid)]"/>
+                <separator invisible="1"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"/>
+                    domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records whose next activity date is past"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter string="Last 30 days" name="filter_last_month_creation" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>

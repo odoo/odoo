@@ -47,6 +47,9 @@ registry.category("fields").add("many2one_avatar_employee", {
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),
             relation: staticInfo.options.relation,
+            canOpen: "no_open" in staticInfo.options
+                ? !staticInfo.options.no_open
+                : staticInfo.viewType === "form",
         };
     },
 });

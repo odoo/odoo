@@ -61,12 +61,12 @@ export class ReferenceField extends Component {
         } else if (this.props.modelField) {
             /** Fetch the technical name of the co model */
             useRecordObserver(async (record, props) => {
-                if (this.currentModelId !== record.data[props.modelField]?.[0]) {
+                if (this.currentModelId !== record.data[props.modelField]?.id) {
                     this.state.modelName = await this._fetchModelTechnicalName(props);
                     if (this.currentModelId !== undefined) {
                         record.update({ [props.name]: false });
                     }
-                    this.currentModelId = record.data[props.modelField]?.[0];
+                    this.currentModelId = record.data[props.modelField]?.id;
                 }
             });
         }
@@ -77,7 +77,7 @@ export class ReferenceField extends Component {
         return {
             ...computeM2OProps(this.props),
             relation: this.getRelation(),
-            value: value && [value.resId, value.displayName],
+            value: value && { id: value.resId, display_name: value.displayName },
             update: this.updateM2O.bind(this),
         };
     }
@@ -134,8 +134,8 @@ export class ReferenceField extends Component {
         this.props.record.update({
             [this.props.name]: value && {
                 resModel,
-                resId: value[0],
-                displayName: value[1],
+                resId: value.id,
+                displayName: value.display_name,
             },
         });
     }
@@ -197,7 +197,7 @@ export class ReferenceField extends Component {
     async _fetchModelTechnicalName(props) {
         this._assertMany2OneToIrModel(props);
         const record = props.record;
-        const modelId = record.data[props.modelField]?.[0];
+        const modelId = record.data[props.modelField]?.id;
         if (!modelId) {
             return false;
         }

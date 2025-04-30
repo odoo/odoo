@@ -3,7 +3,7 @@
 import itertools
 
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from functools import partial
 from itertools import chain
 
@@ -14,7 +14,7 @@ from pytz import timezone, utc
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.date_intervals import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime
 from odoo.tools.float_utils import float_round
 
@@ -87,7 +87,7 @@ class ResourceCalendar(models.Model):
                             help="If the active field is set to false, it will allow you to hide the Working Time without removing it.")
     company_id = fields.Many2one(
         'res.company', 'Company', domain=lambda self: [('id', 'in', self.env.companies.ids)],
-        default=lambda self: self.env.company)
+        default=lambda self: self.env.company, index='btree_not_null')
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', 'Working Time',
         compute='_compute_attendance_ids', store=True, readonly=False, copy=True)
@@ -152,13 +152,20 @@ class ResourceCalendar(models.Model):
 
     @api.model
     def _search_work_time_rate(self, operator, value):
-        if operator not in ['=', '!=', '<', '>'] or not isinstance(value, int):
-            raise NotImplementedError(_('Operation not supported.'))
+        if operator in ('in', 'not in'):
+            if not all(isinstance(v, int) for v in value):
+                return NotImplemented
+        elif operator in ('<', '>'):
+            if not isinstance(value, int):
+                return NotImplemented
+        else:
+            return NotImplemented
+
         calendar_ids = self.env['resource.calendar'].search([])
-        if operator == '=':
-            calender = calendar_ids.filtered(lambda m: m.work_time_rate == value)
-        elif operator == '!=':
-            calender = calendar_ids.filtered(lambda m: m.work_time_rate != value)
+        if operator == 'in':
+            calender = calendar_ids.filtered(lambda m: m.work_time_rate in value)
+        elif operator == 'not in':
+            calender = calendar_ids.filtered(lambda m: m.work_time_rate not in value)
         elif operator == '<':
             calender = calendar_ids.filtered(lambda m: m.work_time_rate < value)
         elif operator == '>':
@@ -346,13 +353,13 @@ class ResourceCalendar(models.Model):
         else:
             resources_list = list(resources) + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
-        domain = domain if domain is not None else []
-        domain = expression.AND([domain, [
-            ('calendar_id', '=', self.id),
-            ('resource_id', 'in', resource_ids),
-            ('display_type', '=', False),
-            ('day_period', '!=' if not lunch else '=', 'lunch'),
-        ]])
+        domain = Domain.AND([
+            Domain(domain or Domain.TRUE),
+            Domain('calendar_id', '=', self.id),
+            Domain('resource_id', 'in', resource_ids),
+            Domain('display_type', '=', False),
+            Domain('day_period', '!=' if not lunch else '=', 'lunch'),
+        ])
 
         attendances = self.env['resource.calendar.attendance'].search(domain)
         # Since we only have one calendar to take in account
@@ -424,13 +431,27 @@ class ResourceCalendar(models.Model):
             res = result_per_tz[tz]
             res_intervals = WorkIntervals(res)
             for resource in resources:
-                if resource in per_resource_result:
+                if resource and resource._is_flexible():
+                # If the resource is flexible, return the whole period from start_dt to end_dt with a dummy attendance
+                    dummy_attendance = self.env['resource.calendar.attendance'].new({
+                        'duration_hours': (end - start).total_seconds() / 3600,
+                        'duration_days': (end - start).days + 1,
+                    })
+                    result_per_resource_id[resource.id] = WorkIntervals([(start, end, dummy_attendance)])
+                elif resource in per_resource_result:
                     resource_specific_result = [(max(bounds_per_tz[tz][0], tz.localize(val[0])), min(bounds_per_tz[tz][1], tz.localize(val[1])), val[2])
                         for val in per_resource_result[resource]]
                     result_per_resource_id[resource.id] = WorkIntervals(itertools.chain(res, resource_specific_result))
                 else:
                     result_per_resource_id[resource.id] = res_intervals
         return result_per_resource_id
+
+    def _handle_flexible_leave_interval(self, dt0, dt1, leave):
+        """Hook method to handle flexible leave intervals. Can be overridden in other modules."""
+        tz = dt0.tzinfo  # Get the timezone information from dt0
+        dt0 = datetime.combine(dt0.date(), time.min).replace(tzinfo=tz)
+        dt1 = datetime.combine(dt1.date(), time.max).replace(tzinfo=tz)
+        return dt0, dt1
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         if resource is None:
@@ -488,6 +509,8 @@ class ResourceCalendar(models.Model):
                     tz_dates[(tz, end_dt)] = end
                 dt0 = string_to_datetime(leave_date_from).astimezone(tz)
                 dt1 = string_to_datetime(leave_date_to).astimezone(tz)
+                if leave_resource and leave_resource._is_flexible():
+                    dt0, dt1 = self._handle_flexible_leave_interval(dt0, dt1, leave)
                 result[resource.id].append((max(start, dt0), min(end, dt1), leave))
 
         return {r.id: Intervals(result[r.id]) for r in resources_list}
@@ -529,7 +552,7 @@ class ResourceCalendar(models.Model):
         resources_work_intervals = self._work_intervals_batch(start_dt, end_dt, resources, domain, tz)
         result = {}
         for resource in resources_list:
-            if resource and resource._is_flexible():
+            if resource and resource._is_fully_flexible():
                 continue
             work_intervals = [(start, stop) for start, stop, meta in resources_work_intervals[resource.id]]
             # start + flatten(intervals) + end
@@ -562,7 +585,10 @@ class ResourceCalendar(models.Model):
             # take durations in days proportionally to what is left of the interval.
             interval_hours = (stop - start).total_seconds() / 3600
             day_hours[start.date()] += interval_hours
-            day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / sum(meta.mapped('duration_hours'))
+            if len(self) == 1 and self.flexible_hours:
+                day_days[start.date()] += interval_hours / self.hours_per_day if self.hours_per_day else 0
+            else:
+                day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / sum(meta.mapped('duration_hours'))
 
         return {
             # Round the number of days to the closest 16th of a day.

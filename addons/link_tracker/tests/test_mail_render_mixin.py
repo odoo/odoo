@@ -44,7 +44,8 @@ class TestMailRenderMixin(common.HttpCase):
             '<a >Without href</a>'
         ]
 
-        self.env["mail.render.mixin"]._shorten_links("".join(test_links), {})
+        with self.allow_requests(all_requests=True):  # Creating link will query url to infer title
+            self.env["mail.render.mixin"]._shorten_links("".join(test_links), {})
 
         trackers_to_find = [
             [("url", "=", "https://gitlab.com"), ("label", "=", "test_label")],
@@ -177,7 +178,8 @@ And a 7th: <a href="{self.base_url}/r/(\w+)">Here2</a><br/>
 And a last, more complex: <a href="{self.base_url}/r/(\w+)">There!</a>
 </p>"""
         )
-        new_content = self.env["mail.render.mixin"]._shorten_links(content, {})
+        with self.allow_requests(all_requests=True):  # shorten_links queries the url
+            new_content = self.env["mail.render.mixin"]._shorten_links(content, {})
 
         self.assertRegex(new_content, expected_pattern)
         matches = expected_pattern.search(new_content).groups()
@@ -235,7 +237,8 @@ A third: {self.base_url}/r/(\w+)
 A forth: {self.base_url}/r/(\w+)
 And a last, with question mark: {self.base_url}/r/(\w+)"""
         )
-        new_content = self.env["mail.render.mixin"]._shorten_links_text(content, {})
+        with self.allow_requests(all_requests=True):  # Creating link will query url to infer title
+            new_content = self.env["mail.render.mixin"]._shorten_links_text(content, {})
 
         self.assertRegex(new_content, expected_pattern)
         matches = expected_pattern.search(new_content).groups()

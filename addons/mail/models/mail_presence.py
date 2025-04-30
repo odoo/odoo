@@ -40,8 +40,9 @@ class MailPresence(models.Model):
         "A mail presence must have a user or a guest.",
     )
 
-    def create(self, values):
-        presences = super().create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        presences = super().create(vals_list)
         presences._send_presence()
         return presences
 
@@ -98,7 +99,8 @@ class MailPresence(models.Model):
             target._bus_send(
                 "bus.bus/im_status_updated",
                 {
-                    "im_status": im_status or presence.status,
+                    "presence_status": im_status or presence.status,
+                    "im_status": target.im_status,
                     "guest_id": presence.guest_id.id,
                     "partner_id": presence.user_id.partner_id.id,
                 },

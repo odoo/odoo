@@ -1,10 +1,10 @@
-import { presenceService } from "@bus/services/presence_service";
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import {
     click,
     contains,
     defineMailModels,
     insertText,
-    onRpcBefore,
+    listenStoreFetch,
     openDiscuss,
     openFormView,
     scroll,
@@ -12,18 +12,12 @@ import {
     start,
     startServer,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { press, queryFirst } from "@odoo/hoot-dom";
+import { click as hootClick, press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import {
-    asyncStep,
-    Command,
-    mockService,
-    serverState,
-    waitForSteps,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -110,20 +104,22 @@ test("keep new message separator until user goes back to the thread", async () =
     await openDiscuss(channelId);
     await contains(".o-mail-Thread");
     await contains(".o-mail-Message", { text: "hello" });
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
-    await click(".o-mail-DiscussSidebar-item", { text: "History" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
+    await hootClick(document.body); // Force "focusin" back on the textarea
+    await hootClick(".o-mail-Composer-input");
+    await waitNotifications([
+        "mail.record/insert",
+        (n) => n["discuss.channel.member"][0].new_message_separator,
+    ]);
+    await hootClick(".o-mail-DiscussSidebar-item:contains(History)");
     await contains(".o-mail-Discuss-threadName", { value: "History" });
-    await click(".o-mail-DiscussSidebar-item", { text: "test" });
+    await hootClick(".o-mail-DiscussSidebar-item:contains(test)");
     await contains(".o-mail-Discuss-threadName", { value: "test" });
     await contains(".o-mail-Message", { text: "hello" });
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')", { count: 0 });
 });
 
 test("show new message separator on receiving new message when out of odoo focus", async () => {
-    mockService("presence", () => ({
-        ...presenceService.start(),
-        isOdooFocused: () => false,
-    }));
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
     const userId = pyEnv["res.users"].create({
@@ -141,7 +137,7 @@ test("show new message separator on receiving new message when out of odoo focus
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')", { count: 0 });
     // simulate receiving a message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -151,7 +147,7 @@ test("show new message separator on receiving new message when out of odoo focus
         })
     );
     await contains(".o-mail-Message", { text: "hu" });
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "hu" });
 });
 
@@ -165,11 +161,11 @@ test("keep new message separator until current user sends a message", async () =
     await contains(".o-mail-Message", { text: "hello" });
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 1, text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
     await insertText(".o-mail-Composer-input", "hey!");
     await press("Enter");
     await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')", { count: 0 });
 });
 
 test("keep new message separator when switching between chat window and discuss of same thread", async () => {
@@ -232,7 +228,7 @@ test("show new message separator when message is received in chat window", async
     );
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New'):contains('New')");
     await contains(".o-mail-Thread-newMessage + .o-mail-Message", { text: "hu" });
 });
 
@@ -250,24 +246,10 @@ test("show new message separator when message is received while chat window is c
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
-        }
-    });
     setupChatHub({ opened: [channelId] });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: [
-                "failures",
-                "systray_get_activities",
-                "init_messaging",
-                ["discuss.channel", [channelId]],
-            ],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitStoreFetch("init_messaging");
     await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // send after init_messaging because bus subscription is done after init_messaging
@@ -282,7 +264,7 @@ test("show new message separator when message is received while chat window is c
     await contains(".o-mail-ChatBubble");
     await contains(".o-mail-ChatBubble-counter", { text: "1" });
     await click(".o-mail-ChatBubble");
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
 });
 
 test("only show new message separator in its thread", async () => {

@@ -1,3 +1,5 @@
+import { session } from "@web/session";
+
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -138,3 +140,9 @@ export class Counter {
         return this.value;
     }
 }
+
+export function isValidEmail(email) {
+    return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+export const LONG_PRESS_DURATION = session.test_mode ? 100 : 1000;

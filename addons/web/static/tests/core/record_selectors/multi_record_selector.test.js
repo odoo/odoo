@@ -107,6 +107,35 @@ test("Can be updated from autocomplete", async () => {
     expect(".o_tag").toHaveText("Bob");
 });
 
+test("Can display avatars with the right model", async () => {
+    Partner._name = "res.partner";
+    await mountMultiRecordSelector({
+        resModel: "res.partner",
+        resIds: [],
+    });
+
+    expect(".o_multi_record_selector input").toHaveValue("");
+    expect(".o_tag").toHaveCount(0);
+    expect(".o-autocomplete--dropdown-menu").toHaveCount(0);
+    await click(".o_multi_record_selector input");
+    await animationFrame();
+    expect(".o-autocomplete--dropdown-menu").toHaveCount(1);
+    expect("span.o_avatar img").toHaveCount(3);
+    expect("span.o_avatar img:eq(1)").toHaveAttribute(
+        "data-src",
+        "/web/image/res.partner/2/avatar_128"
+    );
+    await click("li.o-autocomplete--dropdown-item:eq(1)");
+    await animationFrame();
+    expect(".o_tag").toHaveCount(1);
+    expect(".o_tag").toHaveText("Bob");
+    expect(".o_tag img.o_m2m_avatar").toHaveCount(1);
+    expect(".o_tag img.o_m2m_avatar").toHaveAttribute(
+        "data-src",
+        "https://www.hoot.test/web/image/res.partner/2/avatar_128"
+    );
+});
+
 test("Display name is correctly fetched", async () => {
     expect.assertions(4);
     onRpc("partner", "web_search_read", ({ kwargs }) => {

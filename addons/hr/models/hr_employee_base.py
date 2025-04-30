@@ -16,7 +16,7 @@ class HrEmployeeBase(models.AbstractModel):
     name = fields.Char()
     active = fields.Boolean("Active")
     color = fields.Integer('Color Index', default=0)
-    department_id = fields.Many2one('hr.department', 'Department', check_company=True)
+    department_id = fields.Many2one('hr.department', 'Department', check_company=True, index='btree_not_null')
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
         help="Whether the employee is a member of the active user's department or one of it's child department.")
     job_id = fields.Many2one('hr.job', 'Job Position', check_company=True)
@@ -35,7 +35,7 @@ class HrEmployeeBase(models.AbstractModel):
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     email = fields.Char(related="user_id.email")
-    work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False)
+    work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False, index='btree_not_null')
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', domain="[('address_id', '=', address_id)]")
     work_location_name = fields.Char("Work Location Name", compute="_compute_work_location_name_type")
     work_location_type = fields.Selection([
@@ -48,7 +48,7 @@ class HrEmployeeBase(models.AbstractModel):
     resource_calendar_id = fields.Many2one('resource.calendar', check_company=True)
     is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True)
     is_fully_flexible = fields.Boolean(compute='_compute_is_flexible', store=True)
-    parent_id = fields.Many2one('hr.employee', 'Manager', compute="_compute_parent_id", store=True, readonly=False,
+    parent_id = fields.Many2one('hr.employee', 'Manager', compute="_compute_parent_id", store=True, readonly=False, index=True,
         domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     coach_id = fields.Many2one(
         'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,
@@ -91,13 +91,13 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.newly_hired = employee[new_hire_field] > new_hire_date
 
     def _search_newly_hired(self, operator, value):
+        if operator not in ('in', 'not in'):
+            return NotImplemented
         new_hire_field = self._get_new_hire_field()
         new_hires = self.env['hr.employee'].sudo().search([
             (new_hire_field, '>', fields.Datetime.now() - timedelta(days=90))
         ])
-
-        op = 'in' if value and operator == '=' or not value and operator != '=' else 'not in'
-        return [('id', op, new_hires.ids)]
+        return [('id', operator, new_hires.ids)]
 
     @api.depends("work_location_id.name", "work_location_id.location_type")
     def _compute_work_location_name_type(self):
@@ -137,16 +137,13 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.member_of_department = employee.department_id in child_departments
 
     def _search_part_of_department(self, operator, value):
-        if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise UserError(_('Operation not supported'))
+        if operator != 'in':
+            return NotImplemented
 
         user_employee = self._get_valid_employee_for_user()
-        # Double negation
-        if not value:
-            operator = '!=' if operator == '=' else '='
         if not user_employee.department_id:
-            return [('id', operator, user_employee.id)]
-        return (['!'] if operator == '!=' else []) + [('department_id', 'child_of', user_employee.department_id.id)]
+            return [('id', 'in', user_employee.ids)]
+        return [('department_id', 'child_of', user_employee.department_id.ids)]
 
     @api.depends('user_id.im_status')
     def _compute_presence_state(self):
@@ -203,14 +200,11 @@ class HrEmployeeBase(models.AbstractModel):
         for employee in self.filtered('job_id'):
             employee.job_title = employee.job_id.name
 
-    @api.depends('address_id')
+    @api.depends('address_id.phone')
     def _compute_phones(self):
         for employee in self:
-            if employee.address_id and employee.address_id.phone:
-                employee.work_phone = employee.address_id.phone
-            else:
-                employee.work_phone = False
-
+            employee.work_phone = employee.address_id.phone
+    
     @api.depends('work_contact_id', 'work_contact_id.phone', 'work_contact_id.email')
     def _compute_work_contact_details(self):
         for employee in self:
@@ -265,7 +259,7 @@ class HrEmployeeBase(models.AbstractModel):
             employee.hr_icon_display = 'presence_' + employee.hr_presence_state
             employee.show_hr_icon_display = bool(employee.user_id)
 
-    @api.depends('resource_calendar_id')
+    @api.depends('resource_calendar_id.flexible_hours')
     def _compute_is_flexible(self):
         for employee in self:
             employee.is_fully_flexible = not employee.resource_calendar_id

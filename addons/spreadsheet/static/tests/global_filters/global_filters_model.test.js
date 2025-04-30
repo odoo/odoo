@@ -4,7 +4,11 @@ import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 
 import { DispatchResult, Model, helpers, tokenize } from "@odoo/o-spreadsheet";
 import { Domain } from "@web/core/domain";
-import { defineSpreadsheetModels, getBasicPivotArch } from "@spreadsheet/../tests/helpers/data";
+import {
+    defineSpreadsheetModels,
+    getBasicPivotArch,
+    getBasicServerData,
+} from "@spreadsheet/../tests/helpers/data";
 import {
     createModelWithDataSource,
     createModelFromGrid,
@@ -26,6 +30,8 @@ import {
     setCellContent,
     setCellFormat,
     setGlobalFilterValue,
+    undo,
+    redo,
 } from "@spreadsheet/../tests/helpers/commands";
 import {
     assertDateDomainEqual,
@@ -441,6 +447,42 @@ test("Can import/export filters", async function () {
     expect(computedDomain.length).toBe(7, {
         message: "it should have updated the pivot domain",
     });
+    listDomain = newModel.getters.getListComputedDomain("1");
+    expect(listDomain.length).toBe(7, {
+        message: "it should have updated the list domain",
+    });
+});
+
+test("Can import/export filters of only list", async function () {
+    const spreadsheetData = {
+        version: 16,
+        lists: {
+            1: {
+                id: 1,
+                columns: ["foo", "contact_name"],
+                domain: [],
+                model: "partner",
+                orderBy: [],
+                context: {},
+                fieldMatching: {
+                    41: { type: "date", chain: "date" },
+                    42: { type: "date", chain: "date" },
+                },
+            },
+        },
+        globalFilters: [LAST_YEAR_LEGACY_FILTER, LAST_YEAR_GLOBAL_FILTER],
+    };
+    const { model } = await createModelWithDataSource({ spreadsheetData });
+
+    let listDomain = model.getters.getListComputedDomain("1");
+    expect(listDomain.length).toBe(7, {
+        message: "it should have updated the list domain",
+    });
+
+    const newModel = new Model(model.exportData(), {
+        custom: model.config.custom,
+    });
+
     listDomain = newModel.getters.getListComputedDomain("1");
     expect(listDomain.length).toBe(7, {
         message: "it should have updated the list domain",
@@ -1162,6 +1204,7 @@ test("pivot headers won't change when adding a filter ", async function () {
                     <field name="product_id" type="row"/>
                     <field name="probability" type="measure"/>
                 </pivot>`,
+        pivotType: "static",
     });
     expect(getCellValue(model, "A3")).toBe("xphone");
     expect(getCellValue(model, "A4")).toBe("xpad");
@@ -1975,7 +2018,15 @@ test("Can set a value to a date filter from the SET_MANY_GLOBAL_FILTER_VALUE com
 
 test("getFiltersMatchingPivot return correctly matching filter according to cell formula", async function () {
     mockDate("2022-07-14 00:00:00");
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        {
+            id: 10000,
+            product_id: false,
+        },
+    ];
     const { model } = await createSpreadsheetWithPivot({
+        serverData,
         arch: /*xml*/ `
                 <pivot>
                     <field name="product_id" type="row"/>
@@ -2002,7 +2053,6 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
             type: "date",
             label: "date filter 1",
             rangeType: "fixedPeriod",
-            defaultValue: "this_month",
         },
         {
             pivot: { "PIVOT#1": { chain: "date", type: "date" } },
@@ -2012,6 +2062,11 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
     expect(relationalFilters1).toEqual([{ filterId: "42", value: [37] }]);
     const relationalFilters2 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"product_id","41")');
     expect(relationalFilters2).toEqual([{ filterId: "42", value: [41] }]);
+    const relationalFiltersWithNoneValue = getFiltersMatchingPivot(
+        model,
+        '=PIVOT.HEADER(1,"#product_id",1)'
+    );
+    expect(relationalFiltersWithNoneValue).toEqual([{ filterId: "42", value: undefined }]);
     const dateFilters1 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:month","08/2016")');
     expect(dateFilters1).toEqual([{ filterId: "43", value: { yearOffset: -6, period: "august" } }]);
     const dateFilters2 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:year","2016")');
@@ -2237,7 +2292,7 @@ test("field matching is removed when an Odoo chart is deleted", async function (
         type: "date",
     };
     expect(model.getters.getOdooChartFieldMatching(chartId, filter.id)).toEqual(matching);
-    model.dispatch("DELETE_FIGURE", { id: chartId, sheetId });
+    model.dispatch("DELETE_FIGURE", { figureId: chartId, sheetId });
     expect(() => model.getters.getOdooChartFieldMatching(chartId, filter.id)).toThrow(undefined, {
         message: "Chart does not exist",
     });
@@ -2563,4 +2618,111 @@ test("Updating the list domain should keep the global filter domain", async () =
     expect(computedDomain.toString()).toBe(
         `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
     );
+});
+
+test("Can add a boolean filter", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "boolean",
+        defaultValue: [],
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true] });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual([true]);
+});
+
+test("Add a boolean filter with a default value", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "boolean",
+        defaultValue: [true],
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual([true]);
+});
+
+test("Can set a boolean filter with both true and false", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "boolean",
+        defaultValue: [],
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true, false] });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual([true, false]);
+});
+
+test("Check boolean filter domain", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "boolean",
+        defaultValue: [],
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [] });
+    const fieldMatching = { chain: "active", type: "boolean" };
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual("[]");
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true] });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `[("active", "=", True)]`
+    );
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [false] });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `[("active", "=", False)]`
+    );
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true, false] });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `[("active", "in", [True, False])]`
+    );
+});
+
+test("Undo/Redo of global filter update", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const filter = {
+        id: "43",
+        type: "date",
+        label: "This Year",
+        rangeType: "fixedPeriod",
+        defaultValue: "this_year",
+        defaultsToCurrentPeriod: true,
+    };
+    await addGlobalFilter(model, filter, {
+        pivot: { [pivotId]: { chain: "date", type: "date", offset: 0 } },
+    });
+    expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual({
+        chain: "date",
+        type: "date",
+        offset: 0,
+    });
+    model.dispatch("EDIT_GLOBAL_FILTER", {
+        filter,
+        pivot: {
+            [pivotId]: { chain: "date", type: "date", offset: -1 },
+        },
+    });
+    expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual({
+        chain: "date",
+        type: "date",
+        offset: -1,
+    });
+    undo(model);
+    expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual({
+        chain: "date",
+        type: "date",
+        offset: 0,
+    });
+    redo(model);
+    expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual({
+        chain: "date",
+        type: "date",
+        offset: -1,
+    });
 });

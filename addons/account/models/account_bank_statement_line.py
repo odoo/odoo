@@ -45,6 +45,7 @@ class AccountBankStatementLine(models.Model):
     statement_id = fields.Many2one(
         comodel_name='account.bank.statement',
         string='Statement',
+        index=True,
     )
 
     # Payments generated during the reconciliation of this bank statement lines.
@@ -67,7 +68,7 @@ class AccountBankStatementLine(models.Model):
 
     # This field is used to record the third party name when importing bank statement in electronic format,
     # when the partner doesn't exist yet in the database (or cannot be found).
-    partner_name = fields.Char()
+    partner_name = fields.Char(index='btree_not_null')
 
     # Transaction type is used in electronic format, when the type of transaction is available in the imported file.
     transaction_type = fields.Char()
@@ -398,20 +399,21 @@ class AccountBankStatementLine(models.Model):
             'name': False,
             **vals,
         } for vals in vals_list])
-
+        to_create_lines_vals = []
         for i, (st_line, vals) in enumerate(zip(st_lines, vals_list)):
-            counterpart_account_id = counterpart_account_ids[i]
-
-            to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration, 'name': False}
             if 'line_ids' not in vals_list[i]:
-                to_write['line_ids'] = [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals(
-                    counterpart_account_id=counterpart_account_id)]
+                to_create_lines_vals.extend(
+                    line_vals
+                    for line_vals in st_line._prepare_move_line_default_vals(counterpart_account_ids[i])
+                )
+            to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration, 'name': False}
             with self.env.protecting(self.env['account.move']._get_protected_vals(vals, st_line)):
                 st_line.move_id.write(to_write)
-            self.env.add_to_compute(self.env['account.move']._fields['name'], st_line.move_id)
+        self.env['account.move.line'].create(to_create_lines_vals)
+        self.env.add_to_compute(self.env['account.move']._fields['name'], st_lines.move_id)
 
-            # Otherwise field narration will be recomputed silently (at next flush) when writing on partner_id
-            self.env.remove_to_compute(st_line.move_id._fields['narration'], st_line.move_id)
+        # Otherwise field narration will be recomputed silently (at next flush) when writing on partner_id
+        self.env.remove_to_compute(self.env['account.move']._fields['narration'], st_lines.move_id)
 
         # No need for the user to manage their status (from 'Draft' to 'Posted')
         st_lines.move_id.action_post()
@@ -426,7 +428,7 @@ class AccountBankStatementLine(models.Model):
 
     def unlink(self):
         # OVERRIDE to unlink the inherited account.move (move_id field) as well.
-        tracked_lines = self.filtered(lambda stl: stl.company_id.check_account_audit_trail)
+        tracked_lines = self.filtered(lambda stl: stl.company_id.restrictive_audit_trail)
         tracked_lines.move_id.button_cancel()
         moves_to_delete = (self - tracked_lines).move_id
         res = super().unlink()
@@ -474,8 +476,6 @@ class AccountBankStatementLine(models.Model):
 
     def _find_or_create_bank_account(self):
         self.ensure_one()
-        if str2bool(self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")):
-            return self.env['res.partner.bank']
 
         # There is a sql constraint on res.partner.bank ensuring an unique pair <partner, account number>.
         # Since it's not dependent of the company, we need to search on others company too to avoid the creation
@@ -486,7 +486,9 @@ class AccountBankStatementLine(models.Model):
             ('acc_number', '=', self.account_number),
             ('partner_id', '=', self.partner_id.id),
         ])
-        if not bank_account:
+        if not bank_account and not str2bool(
+                self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")
+        ):
             bank_account = self.env['res.partner.bank'].create({
                 'acc_number': self.account_number,
                 'partner_id': self.partner_id.id,

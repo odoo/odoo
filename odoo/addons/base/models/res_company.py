@@ -3,10 +3,10 @@
 import base64
 import logging
 
-from odoo import api, fields, models, modules, tools, _, Command
+from odoo import api, fields, models, modules, tools
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 from odoo.tools import html2plaintext, file_open, ormcache
 
 _logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ class ResCompany(models.Model):
     _parent_store = True
 
     def copy(self, default=None):
-        raise UserError(_('Duplicating a company is not allowed. Please create a new company instead.'))
+        raise UserError(self.env._('Duplicating a company is not allowed. Please create a new company instead.'))
 
     def _get_logo(self):
         with file_open('base/static/img/res_company_logo.png', 'rb') as file:
@@ -38,7 +38,7 @@ class ResCompany(models.Model):
     parent_path = fields.Char(index=True)
     parent_ids = fields.Many2many('res.company', compute='_compute_parent_ids', compute_sudo=True)
     root_id = fields.Many2one('res.company', compute='_compute_parent_ids', compute_sudo=True)
-    partner_id = fields.Many2one('res.partner', string='Partner', required=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', required=True, index=True)
     report_header = fields.Html(string='Company Tagline', translate=True, help="Company tagline, which is included in a printed document's header or footer (depending on the selected layout).")
     report_footer = fields.Html(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
     company_details = fields.Html(string='Company Details', translate=True, help="Header text displayed at the top of all reports.")
@@ -248,18 +248,18 @@ class ResCompany(models.Model):
     def _search_display_name(self, operator, value):
         context = dict(self.env.context)
         newself = self
-        constraint = []
+        constraint = Domain.TRUE
         if context.pop('user_preference', None):
             # We browse as superuser. Otherwise, the user would be able to
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
             companies = self.env.user.company_ids
-            constraint = [('id', 'in', companies.ids)]
+            constraint = Domain('id', 'in', companies.ids)
             newself = newself.sudo()
         newself = newself.with_context(context)
         domain = super(ResCompany, newself)._search_display_name(operator, value)
-        return expression.AND([domain, constraint])
+        return domain & constraint
 
     @api.depends('company_details')
     def _compute_empty_company_details(self):
@@ -327,6 +327,15 @@ class ResCompany(models.Model):
             'sequence', # user._get_company_ids and other potential cached search
         }
 
+    def unlink(self):
+        """
+        Unlink the companies and clear the cache to make sure that
+        _get_company_ids of res.users gets only existing company ids.
+        """
+        res = super().unlink()
+        self.env.registry.clear_cache()
+        return res
+
     def write(self, values):
         invalidation_fields = self.cache_invalidation_fields()
         asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
@@ -345,7 +354,7 @@ class ResCompany(models.Model):
             self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case
 
         if 'parent_id' in values:
-            raise UserError(_("The company hierarchy cannot be changed."))
+            raise UserError(self.env._("The company hierarchy cannot be changed."))
 
         if values.get('currency_id'):
             currency = self.env['res.currency'].browse(values['currency_id'])
@@ -388,7 +397,7 @@ class ResCompany(models.Model):
                 ])
                 if company_active_users:
                     # You cannot disable companies with active users
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         'The company %(company_name)s cannot be archived because it is still used '
                         'as the default company of %(active_users)s users.',
                         company_name=company.name,
@@ -402,7 +411,7 @@ class ResCompany(models.Model):
                 for fname in company._get_company_root_delegated_field_names():
                     if company[fname] != company.parent_id[fname]:
                         description = self.env['ir.model.fields']._get("res.company", fname).field_description
-                        raise ValidationError(_("The %s of a subsidiary must be the same as it's root company.", description))
+                        raise ValidationError(self.env._("The %s of a subsidiary must be the same as it's root company.", description))
 
     @api.model
     def _get_main_company(self):
@@ -449,7 +458,7 @@ class ResCompany(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Branches'),
+            'name': self.env._('Branches'),
             'res_model': 'res.company',
             'domain': [('parent_id', '=', self.id)],
             'context': {

@@ -262,7 +262,7 @@
                 <div t-attf-class="collapse {{ '' if tracks_info['default_collapsed'] else 'show' }}"
                     t-attf-id="collapse_session_list_{{ tracks_info_index }}">
                     <t t-foreach="tracks" t-as="track">
-                        <a t-if="track.website_published or is_event_user"
+                        <a t-if="not (is_html_empty(track.description) and is_html_empty(track.partner_biography)) and (track.website_published or is_event_user)"
                             t-att-href="track.website_url"
                             t-att-class="'o_wesession_list_item o_color_%d d-block text-decoration-none' % (track.color)">
                             <t t-call="website_event_track.track_list_item"/>
@@ -283,7 +283,7 @@
 
 <template id="track_cards_section" name="Track Cards">
     <div t-foreach="tracks" t-as="track" class="col-md-6 col-lg-4 col-xl-3 mb-4">
-        <t t-if="track.website_published or is_event_user">
+        <t t-if="not (is_html_empty(track.description) and is_html_empty(track.partner_biography)) and (track.website_published or is_event_user)">
             <a t-att-href="'/event/%s/track/%s' % (slug(track.event_id), slug(track))" class="text-decoration-none text-reset">
                 <t t-call="website_event_track.track_card"/>
             </a>
@@ -304,7 +304,7 @@
 
                 <div t-if="track.website_image_url" class="card-img-top"
                     t-attf-style="padding-top: 50%; background-image: url(#{track.website_image_url}); background-size: cover; background-position:center">
-                    <span t-if="option_track_wishlist and not track.is_track_live" class="position-absolute h3 mt-2 me-2 text-white" style="right: 0; top: 0;">
+                    <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))" class="position-absolute h3 mt-2 me-2 text-white" style="right: 0; top: 0;">
                         <t t-call="website_event_track.track_widget_reminder">
                             <t t-set="reminder_light" t-value="True"/>
                         </t>
@@ -312,7 +312,7 @@
                 </div>
                 <div t-else="" class="o_wesession_gradient card-img-top position-relative"
                     style="padding-top: 50%;">
-                    <span t-if="option_track_wishlist" class="position-absolute h3 mt-2 me-2" style="right: 0; top: 0;">
+                    <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))" class="position-absolute h3 mt-2 me-2" style="right: 0; top: 0;">
                         <t t-call="website_event_track.track_widget_reminder">
                             <t t-set="reminder_light" t-value="True"/>
                         </t>
@@ -384,8 +384,8 @@
                 </div>
             </div>
             <!-- reminder -->
-            <div t-if="not event.is_done and (not track.date or today_tz &lt;= tracks_date) and option_track_wishlist"
-                class="d-none d-md-block py-1">
+            <div t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))"
+                 class="d-none d-md-block py-1">
                 <t t-call="website_event_track.track_widget_reminder">
                     <t t-set="reminder_small" t-value="False"/>
                     <t t-set="reminder_light" t-value="False"/>

@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { hover, leave } from "@odoo/hoot-dom";
@@ -23,13 +20,13 @@ const dropdownTemplate = `
     </header>
 `;
 
-
 test("hoverable_dropdown is started when there is an element header.o_hoverable_dropdown", async () => {
     const { core } = await startInteractions(dropdownTemplate);
     expect(core.interactions).toHaveLength(1);
 });
 
-test.tags("desktop")("[hover] show / hide content", async () => {
+test.tags("desktop");
+test("[hover] show / hide content", async () => {
     await startInteractions(dropdownTemplate);
     expect(".dropdown-toggle").not.toHaveClass("show");
     expect(".dropdown-menu > a").not.toBeVisible();

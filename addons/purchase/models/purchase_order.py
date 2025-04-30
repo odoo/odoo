@@ -10,7 +10,7 @@ from werkzeug.urls import url_encode
 
 from odoo import api, Command, fields, models, _
 from odoo.osv import expression
-from odoo.tools import format_amount, format_date, format_list, formatLang, groupby, SQL
+from odoo.tools import format_amount, format_date, formatLang, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr
 from odoo.exceptions import UserError, ValidationError
 
@@ -19,7 +19,6 @@ class PurchaseOrder(models.Model):
     _name = 'purchase.order'
     _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Purchase Order"
-    _mail_thread_customer = True
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
 
@@ -165,6 +164,11 @@ class PurchaseOrder(models.Model):
     is_late = fields.Boolean('Is Late', store=False, search='_search_is_late')
     show_comparison = fields.Boolean('Show Comparison', compute='_compute_show_comparison')
 
+    purchase_warning_text = fields.Text(
+        "Purchase Warning",
+        help="Internal warning for the partner or the products as set by the user.",
+        compute='_compute_purchase_warning_text')
+
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
         for order in self:
@@ -251,6 +255,8 @@ class PurchaseOrder(models.Model):
                 currency=order.currency_id or order.company_id.currency_id,
                 company=order.company_id,
             )
+            if order.currency_id != order.company_currency_id:
+                order.tax_totals['amount_total_cc'] = f"({formatLang(self.env, order.amount_total_cc, currency_obj=self.company_currency_id)})"
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -272,21 +278,27 @@ class PurchaseOrder(models.Model):
         for record in self:
             record.show_comparison = any(set(record.ids) != order_by_product[p] for p in record.order_line.product_id if p in order_by_product)
 
+    @api.depends('partner_id.name', 'partner_id.purchase_warn_msg', 'order_line.purchase_line_warn_msg')
+    def _compute_purchase_warning_text(self):
+        for order in self:
+            warnings = OrderedSet()
+            if partner_msg := order.partner_id.purchase_warn_msg:
+                warnings.add(order.partner_id.name + ' - ' + partner_msg)
+            for line in order.order_line:
+                if product_msg := line.purchase_line_warn_msg:
+                    warnings.add(line.product_id.display_name + ' - ' + product_msg)
+            order.purchase_warning_text = '\n'.join(warnings)
+
     @api.onchange('date_planned')
     def onchange_date_planned(self):
         if self.date_planned:
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
     def _search_is_late(self, operator, value):
-        if operator not in ["=", "!="]:
-            raise ValidationError(_("Unsupported operator"))
-        purchase_ids = self._search([('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())])
-        if operator == "=" and value or operator == "!=" and not value:
-            purchase_lines_late = self.env['purchase.order.line'].search([('order_id', 'in', purchase_ids), ('qty_received', '<', SQL('product_qty'))])
-            return [('id', 'in', purchase_lines_late.order_id.ids)]
-        else:
-            purchase_lines_on_time = self.env['purchase.order.line']._search([('order_id', 'in', purchase_ids), ('qty_received', '>=', SQL('product_qty'))])
-            return [('id', 'in', purchase_lines_on_time.order_id.ids)]
+        if operator != 'in':
+            return NotImplemented
+        purchase_domain = [('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())]
+        return [('order_line', 'any', [('order_id', 'any', purchase_domain), ('qty_received', '<', SQL('product_qty'))])]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -366,32 +378,6 @@ class PurchaseOrder(models.Model):
         Trigger the recompute of the taxes if the fiscal position is changed on the PO.
         """
         self.order_line._compute_tax_id()
-
-    @api.onchange('partner_id')
-    def onchange_partner_id_warning(self):
-        if not self.partner_id or not self.env.user.has_group('purchase.group_warning_purchase'):
-            return
-
-        partner = self.partner_id
-
-        # If partner has no warning, check its company
-        if partner.purchase_warn == 'no-message' and partner.parent_id:
-            partner = partner.parent_id
-
-        if partner.purchase_warn and partner.purchase_warn != 'no-message':
-            # Block if partner only has warning but parent company is blocked
-            if partner.purchase_warn != 'block' and partner.parent_id and partner.parent_id.purchase_warn == 'block':
-                partner = partner.parent_id
-            title = _("Warning for %s", partner.name)
-            message = partner.purchase_warn_msg
-            warning = {
-                'title': title,
-                'message': message
-            }
-            if partner.purchase_warn == 'block':
-                self.update({'partner_id': False})
-            return {'warning': warning}
-        return {}
 
     # ------------------------------------------------------------
     # MAIL.THREAD
@@ -526,7 +512,7 @@ class PurchaseOrder(models.Model):
         return action
 
     def print_quotation(self):
-        self.write({'state': "sent"})
+        self.filtered(lambda po: po.state == 'draft').write({'state': "sent"})
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
 
     def button_approve(self, force=False):
@@ -550,14 +536,12 @@ class PurchaseOrder(models.Model):
                 order.button_approve()
             else:
                 order.write({'state': 'to approve'})
-            if order.partner_id not in order.message_partner_ids:
-                order.message_subscribe([order.partner_id.id])
         return True
 
     def button_cancel(self):
         purchase_orders_with_invoices = self.filtered(lambda po: any(i.state not in ('cancel', 'draft') for i in po.invoice_ids))
         if purchase_orders_with_invoices:
-            raise UserError(_("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", format_list(self.env, purchase_orders_with_invoices.mapped('display_name'))))
+            raise UserError(_("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", purchase_orders_with_invoices.mapped('display_name')))
         self.write({'state': 'cancel'})
 
     def button_lock(self):
@@ -663,7 +647,7 @@ class PurchaseOrder(models.Model):
         ]  # a simple concatenation would cause all order_line to recompute, we do not want it to happen
         return downpayment_lines
 
-    def action_create_invoice(self):
+    def action_create_invoice(self, attachment_ids=False):
         """Create the invoice associated to the PO.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit')
@@ -672,9 +656,6 @@ class PurchaseOrder(models.Model):
         invoice_vals_list = []
         sequence = 10
         for order in self:
-            if order.invoice_status != 'to invoice':
-                continue
-
             order = order.with_company(order.company_id)
             pending_section = None
             # Invoice values.
@@ -684,28 +665,22 @@ class PurchaseOrder(models.Model):
                 if line.display_type == 'line_section':
                     pending_section = line
                     continue
-                if not float_is_zero(line.qty_to_invoice, precision_digits=precision):
-                    if pending_section:
-                        line_vals = pending_section._prepare_account_move_line()
-                        line_vals.update({'sequence': sequence})
-                        invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
-                        sequence += 1
-                        pending_section = None
-                    line_vals = line._prepare_account_move_line()
+                if pending_section:
+                    line_vals = pending_section._prepare_account_move_line()
                     line_vals.update({'sequence': sequence})
                     invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
                     sequence += 1
+                    pending_section = None
+                line_vals = line._prepare_account_move_line()
+                line_vals.update({'sequence': sequence})
+                invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
+                sequence += 1
             invoice_vals_list.append(invoice_vals)
-
-        if not invoice_vals_list:
-            raise UserError(_('There is no invoiceable line. If a product has a control policy based on received quantity, please make sure that a quantity has been received.'))
 
         # 2) group by (company_id, partner_id, currency_id) for batch creation
         new_invoice_vals_list = []
         for _grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: (x.get('company_id'), x.get('partner_id'), x.get('currency_id'))):
             origins = set()
-            payment_refs = set()
-            refs = set()
             ref_invoice_vals = None
             for invoice_vals in invoices:
                 if not ref_invoice_vals:
@@ -713,28 +688,39 @@ class PurchaseOrder(models.Model):
                 else:
                     ref_invoice_vals['invoice_line_ids'] += invoice_vals['invoice_line_ids']
                 origins.add(invoice_vals['invoice_origin'])
-                payment_refs.add(invoice_vals['payment_reference'])
-                refs.add(invoice_vals['ref'])
             ref_invoice_vals.update({
-                'ref': ', '.join(refs)[:2000],
                 'invoice_origin': ', '.join(origins),
-                'payment_reference': len(payment_refs) == 1 and payment_refs.pop() or False,
             })
             new_invoice_vals_list.append(ref_invoice_vals)
         invoice_vals_list = new_invoice_vals_list
 
         # 3) Create invoices.
-        moves = self.env['account.move']
+        invoices = self.env['account.move']
         AccountMove = self.env['account.move'].with_context(default_move_type='in_invoice')
         for vals in invoice_vals_list:
-            moves |= AccountMove.with_company(vals['company_id']).create(vals)
+            invoices |= AccountMove.with_company(vals['company_id']).create(vals)
 
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
-        moves.filtered(lambda m: m.currency_id.round(m.amount_total) < 0).action_switch_move_type()
+        invoices.filtered(lambda m: m.currency_id.round(m.amount_total) < 0).action_switch_move_type()
 
-        return self.action_view_invoice(moves)
+        # 5) Link the attachments to the invoice
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        if not attachments:
+            return self.action_view_invoice(invoices)
+
+        if len(invoices) != 1:
+            raise ValidationError(_("You can only upload a bill for a single partner at a time."))
+        invoices.with_context(skip_is_manually_modified=True)._extend_with_attachments(attachments, new=True)
+
+        invoices.with_context(
+            account_predictive_bills_disable_prediction=True,
+            no_new_invoice=True,
+        ).message_post(attachment_ids=attachments.ids)
+
+        attachments.write({'res_model': 'account.move', 'res_id': invoices.id})
+        return self.action_view_invoice(invoices)
 
     def action_merge(self):
         all_origin = []
@@ -824,13 +810,11 @@ class PurchaseOrder(models.Model):
         partner_bank_id = self.partner_id.commercial_partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
 
         invoice_vals = {
-            'ref': self.partner_ref or '',
             'move_type': move_type,
             'narration': self.notes,
             'currency_id': self.currency_id.id,
             'partner_id': partner_invoice.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(partner_invoice)).id,
-            'payment_reference': self.partner_ref or '',
             'partner_bank_id': partner_bank_id.id,
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
@@ -1048,7 +1032,6 @@ class PurchaseOrder(models.Model):
     def _get_action_add_from_catalog_extra_context(self):
         return {
             **super()._get_action_add_from_catalog_extra_context(),
-            'display_uom': self.env.user.has_group('uom.group_uom'),
             'precision': self.env['decimal.precision'].precision_get('Product Unit'),
             'product_catalog_currency_id': self.currency_id.id,
             'product_catalog_digits': self.order_line._fields['price_unit'].get_digits(self.env),
@@ -1064,7 +1047,7 @@ class PurchaseOrder(models.Model):
             res[product.id] |= self._get_product_price_and_data(product)
         return res
 
-    def _get_product_catalog_record_lines(self, product_ids, child_field=False):
+    def _get_product_catalog_record_lines(self, product_ids, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['purchase.order.line'])
         for line in self.order_line:
             if line.display_type or line.product_id.id not in product_ids:
@@ -1082,15 +1065,8 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         product_infos = {
             'price': product.standard_price,
-            'uom': {
-                'display_name': product.uom_id.display_name,
-                'id': product.uom_id.id,
-            },
+            'uomDisplayName': product.uom_id.display_name
         }
-        if product.purchase_line_warn_msg:
-            product_infos['warning'] = product.purchase_line_warn_msg
-        if product.purchase_line_warn == "block":
-            product_infos['readOnly'] = True
         params = {'order_id': self}
         # Check if there is a price and a minimum quantity for the order's vendor.
         seller = product._select_seller(

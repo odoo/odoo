@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { formatDate, parseDateTime } from "@web/core/l10n/dates";
+import { parseDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -28,8 +28,8 @@ import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
-const NBR_BY_PAGE = 30;
 const { DateTime } = luxon;
+const NBR_BY_PAGE = 30;
 
 export class TicketScreen extends Component {
     static storeOnOrder = false;
@@ -65,9 +65,7 @@ export class TicketScreen extends Component {
         this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.numberBuffer = useService("number_buffer");
-        this.doPrint = useTrackedAsync((_selectedSyncedOrder) =>
-            this.pos.printReceipt({ order: _selectedSyncedOrder })
-        );
+        this.doPrint = useTrackedAsync((_selectedSyncedOrder) => this.print(_selectedSyncedOrder));
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
         });
@@ -134,6 +132,9 @@ export class TicketScreen extends Component {
             }
         }
     }
+    async print(order) {
+        await this.pos.printReceipt({ order: order });
+    }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;
         this.pos.screenState.ticketSCreen.totalCount = 0;
@@ -156,8 +157,8 @@ export class TicketScreen extends Component {
     }
     async onClickScanOrder(qrcode) {
         if (qrcode) {
-            const ref = new URL(qrcode).searchParams.get("order_uuid");
-            const [order] = await this.pos.data.searchRead("pos.order", [["uuid", "=", ref]]);
+            const uuid = new URL(qrcode).searchParams.get("order_uuid");
+            const [order] = await this.pos.data.searchRead("pos.order", [["uuid", "=", uuid]]);
             if (order) {
                 this.state.filter = "SYNCED";
                 this.state.selectedOrder = order;
@@ -222,7 +223,7 @@ export class TicketScreen extends Component {
         // Open the refund order.
         const refundOrder = this.pos.models["pos.order"].find((order) => order.uuid == orderUuid);
         if (refundOrder) {
-            this._setOrder(refundOrder);
+            this.setOrder(refundOrder);
         }
     }
     _onUpdateSelectedOrderline({ key, buffer }) {
@@ -306,6 +307,7 @@ export class TicketScreen extends Component {
                 ? this.props.destinationOrder
                 : this._getEmptyOrder(partner);
 
+        destinationOrder.is_refund = true;
         // Add orderline for each toRefundDetail to the destinationOrder.
         const lines = [];
         for (const refundDetail of this._getRefundableDetails(partner, order)) {
@@ -354,12 +356,15 @@ export class TicketScreen extends Component {
         }
         // Set the partner to the destinationOrder.
         this.setPartnerToRefundOrder(partner, destinationOrder);
+        destinationOrder.refunded_order_id = order;
         this.pos.setOrder(destinationOrder);
         await this.addAdditionalRefundInfo(order, destinationOrder);
 
         this.postRefund(destinationOrder);
-
-        this.closeTicketScreen();
+        this.pos.ticket_screen_mobile_pane = "left";
+        this.pos.navigate("ProductScreen", {
+            orderUuid: destinationOrder.uuid,
+        });
     }
 
     async onDeleteOrder(order) {
@@ -447,15 +452,7 @@ export class TicketScreen extends Component {
         }
     }
     getDate(order) {
-        const todayTs = DateTime.now().startOf("day").ts;
-        if (order.date_order.startOf("day").ts === todayTs) {
-            return _t("Today");
-        } else {
-            return formatDate(order.date_order);
-        }
-    }
-    getTime(order) {
-        return order.date_order.toFormat("hh:mm");
+        return this.pos.getDate(order.date_order);
     }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.getTotalWithTax());
@@ -559,7 +556,8 @@ export class TicketScreen extends Component {
     }
     closeTicketScreen() {
         this.pos.ticket_screen_mobile_pane = "left";
-        this.pos.closeScreen();
+        const next = this.pos.defaultPage;
+        this.pos.navigate(next.page, next.params);
     }
     /**
      * Find the empty order with the following priority:
@@ -653,12 +651,12 @@ export class TicketScreen extends Component {
         );
     }
 
-    async _setOrder(order) {
+    async setOrder(order) {
         if (this.pos.config.isShareable) {
             await this.pos.syncAllOrders();
         }
         this.pos.setOrder(order);
-        this.closeTicketScreen();
+        this.pos.navigateToOrderScreen(order);
     }
     _getOrderList() {
         return this.pos.models["pos.order"].getAll();
@@ -818,6 +816,33 @@ export class TicketScreen extends Component {
             await this.pos.data.read("pos.order", Array.from(new Set(idsNotInCacheOrOutdated)));
         }
     }
+    //#endregion
+    getPresetTimeColor(order) {
+        const slot = order.preset_id.currentSlot;
+        const presetTime = order.preset_time;
+        if (!slot) {
+            if (presetTime < DateTime.now()) {
+                return "bg-danger text-white";
+            } else {
+                return "bg-light text-dark";
+            }
+        }
+        if (
+            slot.datetime <= presetTime &&
+            presetTime < slot.datetime.plus({ minutes: order.preset_id.interval_time })
+        ) {
+            return "bg-warning text-dark";
+        } else if (presetTime < slot.datetime) {
+            return "bg-danger text-white";
+        } else {
+            return "bg-light text-dark";
+        }
+    }
 }
 
-registry.category("pos_screens").add("TicketScreen", TicketScreen);
+registry.category("pos_pages").add("TicketScreen", {
+    name: "TicketScreen",
+    component: TicketScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/ticket`,
+    params: {},
+});

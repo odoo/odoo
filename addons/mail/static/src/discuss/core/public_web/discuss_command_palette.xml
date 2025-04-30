@@ -5,7 +5,7 @@
         <div class="o-mail-DiscussCommand o_command_default d-flex align-items-center ps-3 pe-4" t-att-class="{ 'o-uiSmall': ui.isSmall }">
             <i t-if="props.channel" class="fa-fw opacity-50 text-muted me-2" t-att-class="props.channel.parent_channel_id ? 'fa fa-comments-o' : props.channel.discussAppCategory?.icon ?? 'fa fa-user opacity-0'"/>
             <i t-elif="props.persona" class="fa fa-fw fa-user opacity-50 text-muted me-2"/>
-            <img class="rounded me-2 o_object_fit_cover" t-if="props.imgUrl" t-att-src="props.imgUrl"  style="width: 25px; height: 25px"/>
+            <img class="rounded-3 me-2 o_object_fit_cover shadow-sm" t-if="props.imgUrl" t-att-src="props.imgUrl"  style="width: 32px; height: 32px"/>
             <ImStatus t-if="props.persona" className="'me-1'" persona="props.persona"/>
             <span class="pe-1 text-ellipsis d-flex align-items-center fw-bold" t-att-class="{ 'o-action': props.action }">
                 <t t-if="props.channel?.parent_channel_id">
@@ -14,7 +14,7 @@
                 </t>
                 <t t-slot="name" />
             </span>
-            <span t-if="props.persona and props.persona.email" class="text-muted smaller" t-out="'- ' + props.persona.email"/>
+            <span t-if="props.persona and props.persona.email" class="text-muted smaller opacity-75" t-out="'- ' + props.persona.email"/>
             <i t-if="props.action?.icon" class="o-mail-DiscussCommand-actionIcon fa fa-fw opacity-75 o-action" t-attf-class="{{ props.action.icon }}"/>
             <span t-if="props.action?.searchValueSuffix" class="o-action fw-bold" t-esc="props.searchValue"/>
             <span class="flex-grow-1"/>

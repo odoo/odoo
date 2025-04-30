@@ -1,44 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError
 from odoo.tools.misc import formatLang
-
-
-class EventTypeTicket(models.Model):
-    _name = 'event.type.ticket'
-    _description = 'Event Template Ticket'
-    _order = 'sequence, name, id'
-
-    sequence = fields.Integer('Sequence', default=10)
-    # description
-    name = fields.Char(
-        string='Name', default=lambda self: _('Registration'),
-        required=True, translate=True)
-    description = fields.Text(
-        'Description', translate=True,
-        help="A description of the ticket that you want to communicate to your customers.")
-    event_type_id = fields.Many2one(
-        'event.type', string='Event Category', ondelete='cascade', required=True)
-    # seats
-    seats_limited = fields.Boolean(string='Limit Attendees', readonly=True, store=True,
-                                   compute='_compute_seats_limited')
-    seats_max = fields.Integer(
-        string='Maximum Attendees',
-        help="Define the number of available tickets. If you have too many registrations you will "
-             "not be able to sell tickets anymore. Set 0 to ignore this rule set as unlimited.")
-
-    @api.depends('seats_max')
-    def _compute_seats_limited(self):
-        for ticket in self:
-            ticket.seats_limited = ticket.seats_max
-
-    @api.model
-    def _get_event_ticket_fields_whitelist(self):
-        """ Whitelist of fields that are copied from event_type_ticket_ids to event_ticket_ids when
-        changing the event_type_id field of event.event """
-        return ['sequence', 'name', 'description', 'seats_max']
 
 
 class EventEventTicket(models.Model):
@@ -62,7 +26,7 @@ class EventEventTicket(models.Model):
     event_type_id = fields.Many2one(ondelete='set null', required=False)
     event_id = fields.Many2one(
         'event.event', string="Event",
-        ondelete='cascade', required=True)
+        ondelete='cascade', required=True, index=True)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     # sale
     start_sale_datetime = fields.Datetime(string="Registration Start")
@@ -153,26 +117,18 @@ class EventEventTicket(models.Model):
                 raise UserError(_('The stop date cannot be earlier than the start date. '
                                   'Please check ticket %(ticket_name)s', ticket_name=ticket.name))
 
-    @api.constrains('registration_ids', 'seats_max')
-    def _check_seats_availability(self, minimal_availability=0):
-        sold_out_tickets = []
-        for ticket in self:
-            if ticket.seats_max and ticket.seats_available < minimal_availability:
-                sold_out_tickets.append((_(
-                    '- the ticket "%(ticket_name)s" (%(event_name)s): Missing %(nb_too_many)i seats.',
-                    ticket_name=ticket.name, event_name=ticket.event_id.name, nb_too_many=-ticket.seats_available)))
-        if sold_out_tickets:
-            raise ValidationError(_('There are not enough seats available for:')
-                                  + '\n%s\n' % '\n'.join(sold_out_tickets))
-
     @api.depends('seats_max', 'seats_available')
     @api.depends_context('name_with_seats_availability')
     def _compute_display_name(self):
-        """Adds ticket seats availability if requested by context."""
+        """Adds ticket seats availability if requested by context.
+        Always display the name without availabilities if the event is multi slots
+        because the availability displayed won't be relative to the possible slot combinations
+        but only relative to the event and this will confuse the user.
+        """
         if not self.env.context.get('name_with_seats_availability'):
             return super()._compute_display_name()
         for ticket in self:
-            if not ticket.seats_max:
+            if not ticket.seats_max or ticket.event_id.is_multi_slots:
                 name = ticket.name
             elif not ticket.seats_available:
                 name = _('%(ticket_name)s (Sold out)', ticket_name=ticket.name)

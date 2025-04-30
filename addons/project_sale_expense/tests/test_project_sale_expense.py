@@ -15,7 +15,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         product_form.can_be_expensed = False
         self.product_a.product_tmpl_id = product_form.save()
 
-        project = self.env['project.project'].create({'name': 'SO Project'})
+        project = self.env['project.project'].sudo().create({'name': 'SO Project'})
         # Remove the analytic account auto-generated when creating a timesheetable project if it exists
         project.account_id = False
 
@@ -33,7 +33,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         self.assertFalse(so.project_account_id)
 
     def test_compute_analytic_distribution_expense(self):
-        project = self.env['project.project'].create({'name': 'SO Project'})
+        project = self.env['project.project'].sudo().create({'name': 'SO Project'})
         project.account_id = self.analytic_account_1
         so_values = {
             'partner_id': self.partner_a.id,

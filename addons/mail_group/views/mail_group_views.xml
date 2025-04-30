@@ -5,10 +5,10 @@
         <field name="model">mail.group</field>
         <field name="arch" type="xml">
             <list sample="1">
-                <field name="name"/>
-                <field name="alias_email" string="Alias"/>
-                <field name="moderation" string="Moderated"/>
-                <field name="member_count" string="Members"/>
+                <field name="name" width="100%"/>
+                <field name="member_count" string="#Members" width="100%"/>
+                <field name="mail_group_message_count" string="#Messages" width="100%"/>
+                <field name="mail_group_message_moderation_count" string="#To Review" width="100%"/>
             </list>
         </field>
     </record>
@@ -23,17 +23,28 @@
                         <aside>
                             <field name="image_128" widget="image" alt="Group"/>
                         </aside>
-                        <main>
+                        <main class="ms-2 d-flex flex-column">
                             <widget name="web_ribbon" title="Closed" bg_color="text-bg-danger" invisible="not is_closed"/>
                             <span class="fw-bold fs-5">#<field name="name"/></span>
-                            <field class="text-truncate text-nowrap" name="description"/>
-                            <span>
-                                <field name="member_count" class="me-1"/>
-                                <t t-if="record.member_count.raw_value > 1">Members</t>
-                                <t t-else="">Member</t>
-                            </span>
-                            <button type="object" invisible="is_member or is_closed" class="btn btn-primary ms-auto" name="action_join">Join</button>
-                            <button type="object" invisible="not is_member" class="btn btn-secondary ms-auto" name="action_leave">Leave</button>
+                            <field class="text-truncate text-nowrap d-block" name="description"/>
+                            <div class="d-flex flex-row mt-2">
+                                <a class="text-truncate"
+                                   t-if="record.mail_group_message_moderation_count.raw_value"
+                                   name="%(mail_group.mail_group_message_action)d"
+                                   type="action"
+                                   context="{'search_default_mail_group_id': id, 'search_default_moderation_status': 'pending_moderation'}">
+                                    <field name="mail_group_message_moderation_count"/>
+                                    messages to review
+                                </a>
+                                <div class="text-end ms-auto">
+                                    <button type="object" invisible="is_member or is_closed" class="btn btn-primary ms-auto"
+                                            name="action_join">Join
+                                    </button>
+                                    <button type="object" invisible="not is_member" class="btn btn-secondary ms-auto"
+                                            name="action_leave">Leave
+                                    </button>
+                                </div>
+                            </div>
                         </main>
                     </t>
                 </templates>
@@ -50,12 +61,6 @@
                         string="Join" invisible="is_member or is_closed"/>
                     <button type="object" invisible="not is_member"
                         class="btn btn-secondary" name="action_leave" string="Leave"/>
-                    <button name="action_send_guidelines" type="object" class="btn btn-secondary"
-                        string="Send Guidelines" invisible="is_closed"/>
-                    <button name="action_close" type="object" class="btn btn-secondary"
-                        string="Close" invisible="is_closed"/>
-                    <button name="action_open" type="object" class="btn btn-secondary"
-                        string="Re-Open" invisible="not is_closed"/>
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Closed" bg_color="text-bg-danger" invisible="not is_closed"/>
@@ -82,13 +87,13 @@
                                 class="oe_stat_button"
                                 icon="fa-commenting-o"
                                 help="Emails waiting an action for this group"
-                                invisible="not moderation">
+                                invisible="not (moderation and mail_group_message_moderation_count != 0)">
                             <field name="mail_group_message_moderation_count" widget="statinfo" string="To Review"/>
                         </button>
                         <button name="%(mail_group.mail_group_moderation_action)d"
                                 type="action"
                                 context="{'search_default_mail_group_id': id}"
-                                invisible="not moderation"
+                                invisible="not (moderation and moderation_rule_count != 0)"
                                 class="oe_stat_button"
                                 icon="fa-gavel"
                                 help="Moderated emails in this group">
@@ -96,7 +101,7 @@
                         </button>
                     </div>
                     <field name="image_128" widget="image" class="oe_avatar" options="{'size': [90, 90]}"/>
-                    <div class="oe_title">
+                    <div class="oe_title mb24">
                         <label for="name" string="Group Name"/>
                         <h1>
                             <field name="name" class="oe_inline" default_focus="1" placeholder='e.g. "Newsletter"'/>
@@ -119,13 +124,13 @@
                                             invisible="alias_domain_id"/>
                                 </div>
                             </div>
-                            <field name="description"/>
+                            <field name="description" placeholder='e.g. "This group is about ..."'/>
                             <field name="moderation"/>
                             <td class="o_td_label">
                                 <label for="moderator_ids" string="Moderators" invisible="not moderation"/>
-                                <label for="moderator_ids" string="Responsible Users" invisible="moderation"/>
+                                <label for="moderator_ids" string="Responsibles" invisible="moderation"/>
                             </td>
-                            <field name="moderator_ids" widget="many2many_tags" class="oe_inline" nolabel="1"/>
+                            <field name="moderator_ids" widget="many2many_avatar_user" class="oe_inline" nolabel="1" placeholder="Select users"/>
                             <field name="is_moderator" invisible="1"/>
                             <field name="can_manage_group" invisible="1"/>
                             <field name="is_member" invisible="1"/>
@@ -134,9 +139,12 @@
                     <notebook>
                         <page name="privacy" string="Privacy">
                             <group>
-                                <field name="access_mode" widget="radio"/>
-                                <field name="access_group_id" invisible="access_mode != 'groups'" required="access_mode == 'groups'"/>
-                                <field name="alias_contact" invisible="1"/>
+                                <group>
+                                    <field name="access_mode" widget="radio"/>
+                                    <field name="access_group_id" invisible="access_mode != 'groups'"
+                                           required="access_mode == 'groups'"/>
+                                    <field name="alias_contact" invisible="1"/>
+                                </group>
                             </group>
                         </page>
                         <page name="moderation" string="Notify Members" invisible="not moderation">
@@ -148,7 +156,7 @@
                         <page name="guidelines" string="Guidelines">
                             <group>
                                 <field name="moderation_guidelines"/>
-                                <field required="moderation_guidelines" name="moderation_guidelines_msg"/>
+                                <field required="moderation_guidelines" name="moderation_guidelines_msg" placeholder='e.g."Please be polite and ..."'/>
                             </group>
                         </page>
                     </notebook>

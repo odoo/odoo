@@ -3,7 +3,7 @@ import { cleanTextNode } from "@html_editor/utils/dom";
 import { isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { descendants, selectElements } from "@html_editor/utils/dom_traversal";
-import { leftPos } from "@html_editor/utils/position";
+import { leftPos, rightPos } from "@html_editor/utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 /** @typedef {import("../core/selection_plugin").Cursors} Cursors */
@@ -27,14 +27,15 @@ export class FeffPlugin extends Plugin {
 
     resources = {
         normalize_handlers: this.updateFeffs.bind(this),
-        clean_handlers: (root) => this.clean({ root, preserveSelection: true }),
-        clean_for_save_handlers: this.clean.bind(this),
+        clean_for_save_handlers: this.cleanForSave.bind(this),
         intangible_char_for_keyboard_navigation_predicates: (ev, char, lastSkipped) =>
             // Skip first FEFF, but not the second one (unless shift is pressed).
             char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF"),
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
+        clipboard_text_processors: (text) => text.replace(/\ufeff/g, ""),
     };
 
-    clean({ root, preserveSelection = false }) {
+    cleanForSave({ root, preserveSelection = false }) {
         if (preserveSelection) {
             const cursors = this.getCursors();
             this.removeFeffs(root, cursors);
@@ -50,15 +51,14 @@ export class FeffPlugin extends Plugin {
      * @param {Object} [options]
      */
     removeFeffs(root, cursors, { exclude = () => false } = {}) {
-        const hasFeff = (node) =>
-            isTextNode(node) &&
-            node.textContent.includes("\ufeff") &&
-            node.parentElement.isContentEditable;
+        const hasFeff = (node) => isTextNode(node) && node.textContent.includes("\ufeff");
+        const isEditable = (node) => node.parentElement.isContentEditable;
+        const composedFilter = (node) => hasFeff(node) && isEditable(node) && !exclude(node);
 
-        for (const node of descendants(root).filter((n) => hasFeff(n) && !exclude(n))) {
+        for (const node of descendants(root).filter(composedFilter)) {
             // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
             // nodes visible if needed.
-            const restoreSpaces = prepareUpdate(...leftPos(node));
+            const restoreSpaces = prepareUpdate(...leftPos(node), ...rightPos(node));
             cleanTextNode(node, "\ufeff", cursors);
             restoreSpaces();
         }
@@ -115,7 +115,11 @@ export class FeffPlugin extends Plugin {
         // returning a list of them.
         const customFeffNodes = this.getResource("feff_providers").flatMap((p) => p(root, cursors));
         const feffNodesToKeep = new Set([...feffNodesBasedOnSelectors, ...customFeffNodes]);
-        this.removeFeffs(root, cursors, { exclude: (node) => feffNodesToKeep.has(node) });
+        this.removeFeffs(root, cursors, {
+            exclude: (node) =>
+                feffNodesToKeep.has(node) ||
+                this.getResource("legit_feff_predicates").some((predicate) => predicate(node)),
+        });
         cursors.restore();
     }
 
@@ -138,6 +142,14 @@ export class FeffPlugin extends Plugin {
             }
         };
         return cursors;
+    }
+
+    processContentForClipboard(clonedContent) {
+        descendants(clonedContent)
+            .filter(isTextNode)
+            .filter((node) => node.textContent.includes("\ufeff"))
+            .forEach((node) => (node.textContent = node.textContent.replace(/\ufeff/g, "")));
+        return clonedContent;
     }
 }
 

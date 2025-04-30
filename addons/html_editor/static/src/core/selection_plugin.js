@@ -19,11 +19,13 @@ import { Plugin } from "../plugin";
 import { DIRECTIONS, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
-    normalizeCursorPosition,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
+    normalizeNotEditableNode,
+    normalizeSelfClosingElement,
 } from "../utils/selection";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { isElement } from "../utils/dom_info";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 /**
  * @typedef { Object } EditorSelection
@@ -113,6 +115,53 @@ function getUnselectedEdgeNodes(selection) {
 }
 
 /**
+ * Scrolls the view to a specific node's position in the document
+ * @param {Selection} selection - The current document selection
+ * @returns {void}
+ */
+function scrollToSelection(selection) {
+    const range = selection.getRangeAt(0);
+    const container = closestScrollableY(range.startContainer.parentElement);
+    if (!container) {
+        // If the container is not scrollable we don't scroll
+        return;
+    }
+    let rect = range.getBoundingClientRect();
+    // If the range is invisible (0 width & height) and selection is collapsed,
+    // it's likely inside an empty paragraph.
+    // In that case, we try to get the bounding rect from a nearby child element
+    // within the anchorNode to better get position the selection.
+    if (
+        rect.width === 0 &&
+        rect.height === 0 &&
+        selection.isCollapsed &&
+        selection.anchorNode.hasChildNodes()
+    ) {
+        const target =
+            selection.anchorNode.childNodes[selection.anchorOffset] ||
+            selection.anchorNode.childNodes[selection.anchorOffset - 1];
+        if (isElement(target)) {
+            rect = target.getBoundingClientRect();
+        }
+    }
+
+    const containerRect = container.getBoundingClientRect();
+    const offsetTop = rect.top - containerRect.top + container.scrollTop;
+    const offsetBottom = rect.bottom - containerRect.top + container.scrollTop;
+
+    if (rect.height >= containerRect.height) {
+        // Selection is larger than scrollable so we do nothing.
+        return;
+    }
+    // Simulate the "nearest" behavior by scrolling to the closest top/bottom edge
+    if (rect.top < containerRect.top) {
+        container.scrollTo({ top: offsetTop, behavior: "instant" });
+    } else if (rect.bottom > containerRect.bottom) {
+        container.scrollTo({ top: offsetBottom - container.clientHeight, behavior: "instant" });
+    }
+}
+
+/**
  * @typedef { Object } SelectionShared
  * @property { SelectionPlugin['extractContent'] } extractContent
  * @property { SelectionPlugin['focusEditable'] } focusEditable
@@ -130,6 +179,7 @@ function getUnselectedEdgeNodes(selection) {
  * @property { SelectionPlugin['setCursorEnd'] } setCursorEnd
  * @property { SelectionPlugin['setCursorStart'] } setCursorStart
  * @property { SelectionPlugin['setSelection'] } setSelection
+ * @property { SelectionPlugin['selectAroundNonEditable'] } selectAroundNonEditable
  */
 
 export class SelectionPlugin extends Plugin {
@@ -154,6 +204,7 @@ export class SelectionPlugin extends Plugin {
         "focusEditable",
         // "collapseIfZWS",
         "isSelectionInEditable",
+        "selectAroundNonEditable",
     ];
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
@@ -165,8 +216,8 @@ export class SelectionPlugin extends Plugin {
         this.addDomListener(this.document, "selectionchange", () => {
             this.updateActiveSelection();
             const selection = this.document.getSelection();
-            if (selection.isCollapsed && this.isSelectionInEditable(selection)) {
-                scrollTo(closestElement(selection.focusNode));
+            if (this.isSelectionInEditable(selection)) {
+                scrollToSelection(selection);
             }
         });
         this.addDomListener(this.editable, "mousedown", (ev) => {
@@ -265,16 +316,8 @@ export class SelectionPlugin extends Plugin {
                 // inside a protected zone.
                 return this.activeSelection;
             }
-            [anchorNode, anchorOffset] = normalizeCursorPosition(
-                anchorNode,
-                anchorOffset,
-                direction ? "left" : "right"
-            );
-            [focusNode, focusOffset] = normalizeCursorPosition(
-                focusNode,
-                focusOffset,
-                direction ? "right" : "left"
-            );
+            [anchorNode, anchorOffset] = normalizeSelfClosingElement(anchorNode, anchorOffset);
+            [focusNode, focusOffset] = normalizeSelfClosingElement(focusNode, focusOffset);
             const [startContainer, startOffset, endContainer, endOffset] =
                 direction === DIRECTIONS.RIGHT
                     ? [anchorNode, anchorOffset, focusNode, focusOffset]
@@ -437,6 +480,34 @@ export class SelectionPlugin extends Plugin {
     }
 
     /**
+     * Returns true if selection is valid and in the editable.
+     * Otherwise, returns false and logs a warning.
+     */
+    validateSelection({ anchorNode, anchorOffset, focusNode, focusOffset }) {
+        const validateNode = (node) => {
+            if (!this.editable.contains(node)) {
+                console.warn("Invalid selection. Node is not part of the editable:", node);
+                return false;
+            }
+            return true;
+        };
+        const validateOffset = (node, offset) => {
+            if (offset < 0 || offset > nodeSize(node)) {
+                console.warn("Invalid selection. Offset is out of bounds:", offset, node);
+                return false;
+            }
+            return true;
+        };
+        const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
+        return (
+            validateNode(anchorNode) &&
+            (focusNode === anchorNode || validateNode(focusNode)) &&
+            validateOffset(anchorNode, anchorOffset) &&
+            (isCollapsed || validateOffset(focusNode, focusOffset))
+        );
+    }
+
+    /**
      * Set the selection in the editor.
      *
      * @param { Object } selection
@@ -446,20 +517,20 @@ export class SelectionPlugin extends Plugin {
      * @param { number } [selection.focusOffset=selection.anchorOffset]
      * @param { Object } [options]
      * @param { boolean } [options.normalize=true] Normalize deep the selection
-     * @return { EditorSelection }
+     * @return { EditorSelection | null }
      */
     setSelection(
         { anchorNode, anchorOffset, focusNode = anchorNode, focusOffset = anchorOffset },
         { normalize = true } = {}
     ) {
-        if (!this.isSelectionInEditable({ anchorNode, focusNode })) {
-            throw new Error("Selection is not in editor");
+        if (!this.validateSelection({ anchorNode, anchorOffset, focusNode, focusOffset })) {
+            return null;
         }
         const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
-        [focusNode, focusOffset] = normalizeCursorPosition(focusNode, focusOffset, "right");
+        [focusNode, focusOffset] = normalizeSelfClosingElement(focusNode, focusOffset, "right");
         [anchorNode, anchorOffset] = isCollapsed
             ? [focusNode, focusOffset]
-            : normalizeCursorPosition(anchorNode, anchorOffset, "left");
+            : normalizeSelfClosingElement(anchorNode, anchorOffset, "left");
         if (normalize) {
             // normalize selection
             [anchorNode, anchorOffset] = normalizeDeepCursorPosition(anchorNode, anchorOffset);
@@ -527,7 +598,8 @@ export class SelectionPlugin extends Plugin {
      * @returns {Cursors}
      */
     preserveSelection() {
-        const hadSelection = this.document.getSelection().anchorNode !== null;
+        const hadSelection =
+            this.document.getSelection() && this.document.getSelection().anchorNode !== null;
         const selectionData = this.getSelectionData();
         const selection = selectionData.editableSelection;
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };
@@ -858,11 +930,34 @@ export class SelectionPlugin extends Plugin {
             return;
         }
         // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
-        this.editable.focus();
+        this.editable.focus({ preventScroll: true });
         const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
         const selection = this.document.getSelection();
         if (selection) {
             selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
         }
+    }
+
+    /**
+     * @returns {EditorSelection}
+     */
+    selectAroundNonEditable() {
+        // Get up-to-date selection
+        const { editableSelection } = this.getSelectionData();
+        // Avoid setting the selection if it's not inside an uneditable element
+        const isInUneditable = (node) => !!closestElement(node, (elem) => !elem.isContentEditable);
+        let { startContainer: start, endContainer: end } = editableSelection;
+        if (!(isInUneditable(start) || (end !== start && isInUneditable(end)))) {
+            return editableSelection;
+        }
+        // Normalize both sides
+        let { startOffset, endOffset, direction } = editableSelection;
+        [start, startOffset] = normalizeNotEditableNode(start, startOffset, "left");
+        [end, endOffset] = normalizeNotEditableNode(end, endOffset, "right");
+        // Set the new selection
+        const [anchorNode, anchorOffset, focusNode, focusOffset] = direction
+            ? [start, startOffset, end, endOffset]
+            : [end, endOffset, start, startOffset];
+        return this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
     }
 }

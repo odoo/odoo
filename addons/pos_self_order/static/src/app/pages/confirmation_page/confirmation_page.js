@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillStart, onWillUnmount, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState, useEffect } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
@@ -15,7 +15,6 @@ export class ConfirmationPage extends Component {
         this.router = useService("router");
         this.printer = useService("printer");
         this.dialog = useService("dialog");
-        this.confirmedOrder = {};
         this.changeToDisplay = [];
         this.state = useState({
             onReload: true,
@@ -24,62 +23,45 @@ export class ConfirmationPage extends Component {
 
         onMounted(() => {
             if (this.selfOrder.config.self_ordering_mode === "kiosk") {
-                setTimeout(() => {
-                    this.setDefautLanguage();
-                }, 5000);
-
-                setTimeout(() => this.printOrderAfterTime(), 500);
                 this.defaultTimeout = setTimeout(() => {
                     this.router.navigate("default");
                 }, 30000);
             }
         });
+        useEffect(
+            () => {
+                if (!this.confirmedOrder) {
+                    return;
+                }
+
+                this.printOrder();
+            },
+            () => [this.confirmedOrder?.uiState?.receiptReady]
+        );
         onWillUnmount(() => {
             clearTimeout(this.defaultTimeout);
         });
 
-        onWillStart(() => {
-            this.initOrder();
+        onMounted(async () => {
+            await this.initOrder();
         });
     }
 
-    async printOrderAfterTime() {
-        try {
-            if (this.confirmedOrder && Object.keys(this.confirmedOrder).length > 0) {
-                await this.printer.print(OrderReceipt, {
-                    order: this.confirmedOrder,
-                });
-                if (!this.selfOrder.has_paper) {
-                    this.updateHasPaper(true);
-                }
-            } else {
-                setTimeout(() => this.printOrderAfterTime(), 500);
-            }
-        } catch (e) {
-            if (e.errorCode === "EPTR_REC_EMPTY") {
-                this.dialog.add(OutOfPaperPopup, {
-                    title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
-                    close: () => {
-                        this.router.navigate("default");
-                    },
-                });
-                this.updateHasPaper(false);
-            } else {
-                console.error(e);
-            }
-        }
+    get confirmedOrder() {
+        return this.selfOrder.currentOrder;
     }
 
-    async initOrder() {
-        const data = await rpc(`/pos-self-order/get-user-data/`, {
-            access_token: this.selfOrder.access_token,
-            order_access_tokens: [this.props.orderAccessToken],
-        });
-        this.selfOrder.models.loadData(data);
+    async initOrder(retry = true) {
         const order = this.selfOrder.models["pos.order"].find(
             (o) => o.access_token === this.props.orderAccessToken
         );
-        this.confirmedOrder = order;
+
+        if (!order && retry) {
+            await this.selfOrder.getUserDataFromServer([this.props.orderAccessToken]);
+            return this.initOrder(false);
+        }
+
+        this.selfOrder.selectedOrderUuid = order.uuid;
 
         const paymentMethods = this.selfOrder.filterPaymentMethods(
             this.selfOrder.models["pos.payment.method"].getAll()
@@ -96,11 +78,72 @@ export class ConfirmationPage extends Component {
             return;
         }
 
+        this.selfOrder.selectedOrderUuid = order.uuid;
+        this.confirmedOrder.uiState.receiptReady = this.beforePrintOrder();
         this.state.onReload = false;
     }
 
+    canPrintReceipt() {
+        return (
+            !this.isPrinting &&
+            this.confirmedOrder.uiState.receiptReady &&
+            (!this.confirmedOrder.nb_print || this.confirmedOrder.nb_print < 1)
+        );
+    }
+
+    beforePrintOrder() {
+        // meant to be overriden.
+        return true;
+    }
+
+    async printOrder() {
+        if (this.selfOrder.config.self_ordering_mode === "kiosk" && this.canPrintReceipt()) {
+            try {
+                this.isPrinting = true;
+                const order = this.confirmedOrder;
+                await this.printer.print(
+                    OrderReceipt,
+                    {
+                        order: order,
+                    },
+                    this.printOptions
+                );
+                if (!this.selfOrder.has_paper) {
+                    this.updateHasPaper(true);
+                }
+                order.nb_print = 1;
+            } catch (e) {
+                if (e.errorCode === "EPTR_REC_EMPTY") {
+                    this.dialog.add(OutOfPaperPopup, {
+                        title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
+                        close: () => {
+                            this.router.navigate("default");
+                        },
+                    });
+                    this.updateHasPaper(false);
+                } else {
+                    console.error(e);
+                }
+            } finally {
+                this.isPrinting = false;
+            }
+        }
+    }
+
+    get backgroundImage() {
+        const bgImage = this.selfOrder.config._self_ordering_image_background_ids[0];
+        if (bgImage) {
+            return `url(data:image/png;base64,${bgImage.data})`;
+        }
+        return "none";
+    }
+
+    get printOptions() {
+        return {};
+    }
+
     backToHome() {
-        if (!this.setDefautLanguage()) {
+        if (this.confirmedOrder.uiState.receiptReady && !this.setDefautLanguage()) {
             this.router.navigate("default");
         }
     }

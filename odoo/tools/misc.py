@@ -127,17 +127,6 @@ NON_BREAKING_SPACE = u'\N{NO-BREAK SPACE}'
 # ensure we have a non patched time for query times when using freezegun
 real_time = time.time.__call__  # type: ignore
 
-# Configure csv
-class UNIX_LINE_TERMINATOR(csv.excel):
-    lineterminator = '\n'
-
-
-# the default limit for CSV fields in the module is 128KiB, which is not
-# quite sufficient to import images to store in attachment. 500MiB is a
-# bit overkill, but better safe than sorry I guess
-csv.field_size_limit(500 * 1024 * 1024)
-csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
-
 
 class Sentinel(enum.Enum):
     """Class for typing parameters with a sentinel as a default"""
@@ -432,48 +421,6 @@ def merge_sequences(*iterables: Iterable[T]) -> list[T]:
     return topological_sort(deps)
 
 
-try:
-    import xlwt
-
-    # add some sanitization to respect the excel sheet name restrictions
-    # as the sheet name is often translatable, can not control the input
-    class PatchedWorkbook(xlwt.Workbook):
-        def add_sheet(self, name, cell_overwrite_ok=False):
-            # invalid Excel character: []:*?/\
-            name = re.sub(r'[\[\]:*?/\\]', '', name)
-
-            # maximum size is 31 characters
-            name = name[:31]
-            return super(PatchedWorkbook, self).add_sheet(name, cell_overwrite_ok=cell_overwrite_ok)
-
-    xlwt.Workbook = PatchedWorkbook
-
-except ImportError:
-    xlwt = None
-
-try:
-    import xlsxwriter
-
-    # add some sanitization to respect the excel sheet name restrictions
-    # as the sheet name is often translatable, can not control the input
-    class PatchedXlsxWorkbook(xlsxwriter.Workbook):
-
-        # TODO when xlsxwriter bump to 0.9.8, add worksheet_class=None parameter instead of kw
-        def add_worksheet(self, name=None, **kw):
-            if name:
-                # invalid Excel character: []:*?/\
-                name = re.sub(r'[\[\]:*?/\\]', '', name)
-
-                # maximum size is 31 characters
-                name = name[:31]
-            return super(PatchedXlsxWorkbook, self).add_worksheet(name, **kw)
-
-    xlsxwriter.Workbook = PatchedXlsxWorkbook
-
-except ImportError:
-    xlsxwriter = None
-
-
 def get_iso_codes(lang: str) -> str:
     if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():
@@ -623,10 +570,12 @@ POSIX_TO_LDML = {
     'B': 'MMMM',
     #'c': '',
     'd': 'dd',
+    '-d': 'd',
     'H': 'HH',
     'I': 'hh',
     'j': 'DDD',
     'm': 'MM',
+    '-m': 'M',
     'M': 'mm',
     'p': 'a',
     'S': 'ss',
@@ -651,6 +600,7 @@ def posix_to_ldml(fmt: str, locale: babel.Locale) -> str:
     """
     buf = []
     pc = False
+    minus = False
     quoted = []
 
     for c in fmt:
@@ -671,7 +621,13 @@ def posix_to_ldml(fmt: str, locale: babel.Locale) -> str:
                 buf.append(locale.date_formats['short'].pattern)
             elif c == 'X': # time format, seems to include seconds. short does not
                 buf.append(locale.time_formats['medium'].pattern)
+            elif c == '-':
+                minus = True
+                continue
             else: # look up format char in static mapping
+                if minus:
+                    c = '-' + c
+                    minus = False
                 buf.append(POSIX_TO_LDML[c])
             pc = False
         elif c == '%':
@@ -1505,10 +1461,14 @@ def format_datetime(
     lang = get_lang(env, lang_code)
 
     locale = babel_locale_parse(lang.code or lang_code)  # lang can be inactive, so `lang`is empty
-    if not dt_format:
+    if not dt_format or dt_format == 'medium':
         date_format = posix_to_ldml(lang.date_format, locale=locale)
         time_format = posix_to_ldml(lang.time_format, locale=locale)
         dt_format = '%s %s' % (date_format, time_format)
+    elif dt_format == 'short':
+        short_date_format = posix_to_ldml(lang.short_date_format, locale=locale)
+        short_time_format = posix_to_ldml(lang.short_time_format, locale=locale)
+        dt_format = '%s %s' % (short_date_format, short_time_format)
 
     # Babel allows to format datetime in a specific language without change locale
     # So month 1 = January in English, and janvier in French
@@ -1557,8 +1517,10 @@ def format_time(
 
     lang = get_lang(env, lang_code)
     locale = babel_locale_parse(lang.code)
-    if not time_format:
+    if not time_format or time_format == 'medium':
         time_format = posix_to_ldml(lang.time_format, locale=locale)
+    elif time_format == 'short':
+        time_format = posix_to_ldml(lang.short_time_format, locale=locale)
 
     return babel.dates.format_time(localized_time, format=time_format, locale=locale)
 

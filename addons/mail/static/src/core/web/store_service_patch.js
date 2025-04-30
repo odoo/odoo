@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -12,7 +12,7 @@ const StorePatch = {
         this.activityCounter = 0;
         this.activity_counter_bus_id = 0;
         /** @type {Object[]} */
-        this.activityGroups = Record.attr([], {
+        this.activityGroups = fields.Attr([], {
             onUpdate() {
                 this.onUpdateActivityGroups();
             },
@@ -26,14 +26,16 @@ const StorePatch = {
                 return getSortId(g1) - getSortId(g2);
             },
         });
-        this.inbox = Record.one("Thread");
-        this.starred = Record.one("Thread");
-        this.history = Record.one("Thread");
+        this.inbox = fields.One("Thread");
+        this.starred = fields.One("Thread");
+        this.history = fields.One("Thread");
     },
     async initialize() {
-        this.fetchStoreData("failures");
-        this.fetchStoreData("systray_get_activities");
-        await super.initialize(...arguments);
+        await Promise.all([
+            this.fetchStoreData("failures"),
+            this.fetchStoreData("systray_get_activities"),
+            super.initialize(...arguments),
+        ]);
     },
     onStarted() {
         super.onStarted(...arguments);
@@ -91,7 +93,12 @@ const StorePatch = {
                     target: "new",
                     context,
                 },
-                { onClose: resolve }
+                { 
+                    onClose: resolve,
+                    additionalContext: { 
+                        dialog_size: "medium",
+                    },
+                }
             )
         );
     },
@@ -102,7 +109,7 @@ const StorePatch = {
     _onActivityBroadcastChannelMessage({ data }) {
         switch (data.type) {
             case "INSERT":
-                this["mail.activity"].insert(data.payload, { broadcast: false, html: true });
+                this.insert(data.payload, { broadcast: false });
                 break;
             case "DELETE": {
                 const activity = this["mail.activity"].insert(data.payload, { broadcast: false });

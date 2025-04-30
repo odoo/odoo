@@ -92,7 +92,7 @@ export class DiscussSidebarChannel extends Component {
 
     get attClassContainer() {
         return {
-            "border border-dark rounded-2 o-bordered": this.bordered,
+            "border border-dark rounded-3 o-bordered": this.bordered,
             "o-compact": this.store.discuss.isSidebarCompact,
         };
     }
@@ -138,6 +138,30 @@ export class DiscussSidebarChannel extends Component {
     /** @returns {import("models").Thread} */
     get thread() {
         return this.props.thread;
+    }
+
+    get subChannels() {
+        return this.env.filteredThreads?.(this.thread.sub_channel_ids) ?? [];
+    }
+
+    showThread(sub) {
+        if (sub.eq(this.store.discuss.thread)) {
+            return true;
+        }
+        if (!this.thread.discussAppCategory.open) {
+            return false;
+        }
+        if (!this.thread.isMuted || sub.selfMember?.message_unread_counter > 0) {
+            return true;
+        }
+        return this.isSelfOrThreadActive && !(this.thread.isMuted && sub.isMuted);
+    }
+
+    get isSelfOrThreadActive() {
+        return (
+            this.thread.eq(this.store.discuss.thread) ||
+            this.store.discuss.thread?.in(this.subChannels)
+        );
     }
 
     /** @param {MouseEvent} ev */

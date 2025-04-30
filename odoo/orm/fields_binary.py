@@ -3,8 +3,8 @@ from __future__ import annotations
 import base64
 import binascii
 import contextlib
+import functools
 import itertools
-import reprlib
 import typing
 import warnings
 from operator import attrgetter
@@ -12,10 +12,10 @@ from operator import attrgetter
 import psycopg2
 
 from odoo.exceptions import CacheMiss, UserError
-from odoo.tools import SQL, human_size, image_process, lazy_property
+from odoo.tools import SQL, human_size, image_process
 from odoo.tools.mimetypes import guess_mimetype
 
-from .fields import Field, _logger
+from .fields import Field
 from .utils import SQL_OPERATORS
 
 if typing.TYPE_CHECKING:
@@ -40,7 +40,7 @@ class Binary(Field):
     _depends_context = ('bin_size',)    # depends on context (content or size)
     attachment = True                   # whether value is stored in attachment
 
-    @lazy_property
+    @functools.cached_property
     def column_type(self):
         return None if self.attachment else ('bytea', 'bytea')
 
@@ -226,7 +226,7 @@ class Binary(Field):
             return super().condition_to_sql(field_expr, operator, value, model, alias, query)
         # check permission
         model._check_field_access(self, 'read')
-        assert (operator in ('in', 'not in') and set(value) == {False}) or (operator in ('=', '!=') and not value), "Should have been done in Domain optimization"
+        assert operator in ('in', 'not in') and set(value) == {False}, "Should have been done in Domain optimization"
         return SQL(
             "%s%s(SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s)",
             model._field_to_sql(alias, 'id', query),
@@ -272,7 +272,7 @@ class Image(Binary):
             # will be resized once the inverse has been applied
             cache_value = self.convert_to_cache(value if self.related else new_value, record)
             record.env.cache.update(record, self, itertools.repeat(cache_value))
-        super(Image, self).create(new_record_values)
+        super().create(new_record_values)
 
     def write(self, records, value):
         try:
@@ -287,7 +287,7 @@ class Image(Binary):
                 return
             raise
 
-        super(Image, self).write(records, new_value)
+        super().write(records, new_value)
         cache_value = self.convert_to_cache(value if self.related else new_value, records)
         dirty = self.column_type and self.store and any(records._ids)
         records.env.cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
@@ -308,8 +308,8 @@ class Image(Binary):
             return value
         try:
             img = base64.b64decode(value or '') or False
-        except:
-            raise UserError(env._("Image is not encoded in base64."))
+        except Exception as e:
+            raise UserError(env._("Image is not encoded in base64.")) from e
 
         if img and guess_mimetype(img, '') == 'image/webp':
             if not self.max_width and not self.max_height:

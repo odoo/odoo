@@ -68,11 +68,7 @@
                         </group>
                     </group>
                     <group name="partners" string="Address Details">
-                    <!--
-                    We require account_move_id in the view it to
-                    compute the Billing and Shipping partners if the
-                    field is removed the compute won't work as expected -->
-                    <field name="account_move_id" invisible="1"/>
+                    <field name="account_move_id" invisible="1"/> <!-- To compute the Billing and Shipping partners -->
                         <group>
                             <field name="partner_bill_from_id"
                                    force_save="1"

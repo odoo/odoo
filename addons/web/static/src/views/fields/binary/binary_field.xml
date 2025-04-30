@@ -7,6 +7,7 @@
                 <div class="w-100 d-inline-flex gap-1">
                     <FileUploader
                         acceptedFileExtensions="props.acceptedFileExtensions"
+                        allowedMIMETypes="props.allowedMIMETypes"
                         onUploaded.bind="update"
                     >
                         <t name="download" t-if="props.record.resId and !props.record.dirty">
@@ -41,6 +42,7 @@
                 <label class="o_select_file_button btn btn-primary">
                     <FileUploader
                         acceptedFileExtensions="props.acceptedFileExtensions"
+                        allowedMIMETypes="props.allowedMIMETypes"
                         onUploaded.bind="update"
                     >
                         <t t-set-slot="toggler">

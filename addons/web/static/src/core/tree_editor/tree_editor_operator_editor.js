@@ -29,20 +29,24 @@ const OPERATOR_DESCRIPTIONS = {
     parent_of: _t("parent of"),
 
     // virtual operators (replace = and != in some cases)
-    is: _t("is"),
-    is_not: _t("is not"),
-    set: _t("is set"),
-    not_set: _t("is not set"),
+    set: _t("set"),
+    not_set: _t("not set"),
 
     starts_with: _t("starts with"),
     ends_with: _t("ends with"),
 
-    // virtual operator (equivalent to a couple (>=,<=))
+    today: _t("today"),
+    not_today: _t("not today"),
+
+    // virtual operators (equivalent to a couple (>=,<=))
     between: _t("is between"),
-    within: _t("is within"),
-    // equivalent to a couple (<,>)
+    last: _t("last"),
+    next: _t("next"),
+
+    // virtual operators (equivalent to a couple (<,>))
     is_not_between: _t("is not between"),
-    is_not_within: _t("is not within"),
+    not_last: _t("not last"),
+    not_next: _t("not next"),
 
     any: (fieldDefType) => {
         switch (fieldDefType) {

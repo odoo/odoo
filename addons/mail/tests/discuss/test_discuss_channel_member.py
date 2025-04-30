@@ -59,13 +59,13 @@ class TestDiscussChannelMember(MailCommon):
         self.assertFalse(res)
 
         # User 1 can join group with SUDO
-        self.group.with_user(self.user_1).sudo().add_members(self.user_1.partner_id.ids)
+        self.group.with_user(self.user_1).sudo()._add_members(users=self.user_1)
         res = self.env['discuss.channel.member'].search([('channel_id', '=', self.group.id)])
         self.assertEqual(res.partner_id, self.user_1.partner_id)
 
         # User 2 can not join group
         with self.assertRaises(AccessError):
-            self.group.with_user(self.user_2).add_members(self.user_2.partner_id.ids)
+            self.group.with_user(self.user_2)._add_members(users=self.user_2)
 
         # User 2 can not create a `discuss.channel.member` to join the group
         with self.assertRaises(AccessError):
@@ -98,7 +98,7 @@ class TestDiscussChannelMember(MailCommon):
 
     def test_group_members(self):
         """Test invitation in group part 1 (invite using crud methods)."""
-        self.group.with_user(self.user_1).sudo().add_members(self.user_1.partner_id.ids)
+        self.group.with_user(self.user_1).sudo()._add_members(users=self.user_1)
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.group.id)])
         self.assertEqual(len(channel_members), 1)
 
@@ -127,25 +127,25 @@ class TestDiscussChannelMember(MailCommon):
 
     def test_group_invite(self):
         """Test invitation in group part 2 (use `invite` action)."""
-        self.group.with_user(self.user_1).sudo().add_members(self.user_1.partner_id.ids)
+        self.group.with_user(self.user_1).sudo()._add_members(users=self.user_1)
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.group.id)])
         self.assertEqual(channel_members.mapped('partner_id'), self.user_1.partner_id)
 
         # User 2 is not in the group, they can not invite user_portal
         with self.assertRaises(AccessError):
-            self.group.with_user(self.user_2).add_members(self.user_portal.partner_id.ids)
+            self.group.with_user(self.user_2)._add_members(users=self.user_portal)
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.group.id)])
         self.assertEqual(channel_members.mapped('partner_id'), self.user_1.partner_id)
 
         # User 1 is in the group, they can invite user_portal
-        self.group.with_user(self.user_1).add_members(self.user_portal.partner_id.ids)
+        self.group.with_user(self.user_1)._add_members(users=self.user_portal)
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.group.id)])
         self.assertEqual(channel_members.mapped('partner_id'), self.user_1.partner_id | self.user_portal.partner_id)
 
     def test_group_leave(self):
         """Test kick/leave channel."""
-        self.group.with_user(self.user_1).sudo().add_members(self.user_1.partner_id.ids)
-        self.group.with_user(self.user_portal).sudo().add_members(self.user_portal.partner_id.ids)
+        self.group.with_user(self.user_1).sudo()._add_members(users=self.user_1)
+        self.group.with_user(self.user_portal).sudo()._add_members(users=self.user_portal)
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.group.id)])
         self.assertEqual(len(channel_members), 2)
 
@@ -167,13 +167,13 @@ class TestDiscussChannelMember(MailCommon):
         self.assertFalse(channel_members)
 
         # user 1 is in the channel, they can join the channel
-        self.group_restricted_channel.with_user(self.user_1).add_members(self.user_1.partner_id.ids)
+        self.group_restricted_channel.with_user(self.user_1)._add_members(users=self.user_1)
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.group_restricted_channel.id)])
         self.assertEqual(channel_members.mapped('partner_id'), self.user_1.partner_id)
 
         # user 3 is not in the channel, they can not join
         with self.assertRaises(AccessError):
-            self.group_restricted_channel.with_user(self.user_portal).add_members(self.user_portal.partner_id.ids)
+            self.group_restricted_channel.with_user(self.user_portal)._add_members(users=self.user_portal)
 
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.group_restricted_channel.id)])
         with self.assertRaises(AccessError):
@@ -182,12 +182,12 @@ class TestDiscussChannelMember(MailCommon):
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.group_restricted_channel.id)])
         self.assertEqual(channel_members.mapped('partner_id'), self.user_1.partner_id)
 
-        self.group_restricted_channel.with_user(self.user_1).add_members(self.user_portal.partner_id.ids)
+        self.group_restricted_channel.with_user(self.user_1)._add_members(users=self.user_portal)
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.group_restricted_channel.id)])
         self.assertEqual(channel_members.mapped('partner_id'), self.user_1.partner_id | self.user_portal.partner_id)
 
         # but user 2 is in the channel and can be invited by user 1
-        self.group_restricted_channel.with_user(self.user_1).add_members(self.user_2.partner_id.ids)
+        self.group_restricted_channel.with_user(self.user_1)._add_members(users=self.user_2)
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.group_restricted_channel.id)])
         self.assertEqual(channel_members.mapped('partner_id'), self.user_1.partner_id | self.user_2.partner_id | self.user_portal.partner_id)
 
@@ -200,17 +200,17 @@ class TestDiscussChannelMember(MailCommon):
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.public_channel.id)])
         self.assertFalse(channel_members)
 
-        self.public_channel.with_user(self.user_1).add_members(self.user_1.partner_id.ids)
+        self.public_channel.with_user(self.user_1)._add_members(users=self.user_1)
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.public_channel.id)])
         self.assertEqual(channel_members.mapped('partner_id'), self.user_1.partner_id)
 
-        self.public_channel.with_user(self.user_2).add_members(self.user_2.partner_id.ids)
+        self.public_channel.with_user(self.user_2)._add_members(users=self.user_2)
         channel_members = self.env['discuss.channel.member'].search([('channel_id', '=', self.public_channel.id)])
         self.assertEqual(channel_members.mapped('partner_id'), self.user_1.partner_id | self.user_2.partner_id)
 
-        self.public_channel.with_user(self.user_portal).add_members(self.user_portal.partner_id.ids)
+        self.public_channel.with_user(self.user_portal)._add_members(users=self.user_portal)
         with self.assertRaises(ValidationError):  # public cannot join without having a guest
-            self.public_channel.with_user(self.user_public).add_members(self.user_public.partner_id.ids)
+            self.public_channel.with_user(self.user_public)._add_members(users=self.user_public)
 
     def test_channel_member_invite_with_guest(self):
         guest = self.env['mail.guest'].create({'name': 'Guest'})
@@ -220,7 +220,7 @@ class TestDiscussChannelMember(MailCommon):
             'type': 'contact',
             'user_ids': self.user_1,
         })
-        self.public_channel.add_members(guest_ids=[guest.id])
+        self.public_channel._add_members(guests=guest)
         data = self.env["res.partner"].search_for_channel_invite(
             partner.name, channel_id=self.public_channel.id
         )["data"]
@@ -233,8 +233,8 @@ class TestDiscussChannelMember(MailCommon):
 
     def test_unread_counter_with_message_post(self):
         channel_as_user_1 = self.env['discuss.channel'].with_user(self.user_1)._create_channel(group_id=None, name='Public channel')
-        channel_as_user_1.with_user(self.user_1).add_members(self.user_1.partner_id.ids)
-        channel_as_user_1.with_user(self.user_1).add_members(self.user_2.partner_id.ids)
+        channel_as_user_1.with_user(self.user_1)._add_members(users=self.user_1)
+        channel_as_user_1.with_user(self.user_1)._add_members(users=self.user_2)
         channel_1_rel_user_2 = self.env['discuss.channel.member'].search([
             ('channel_id', '=', channel_as_user_1.id),
             ('partner_id', '=', self.user_2.partner_id.id)
@@ -251,9 +251,9 @@ class TestDiscussChannelMember(MailCommon):
     def test_unread_counter_with_message_post_multi_channel(self):
         channel_1_as_user_1 = self.env['discuss.channel'].with_user(self.user_1)._create_channel(group_id=None, name='wololo channel')
         channel_2_as_user_2 = self.env['discuss.channel'].with_user(self.user_2)._create_channel(group_id=None, name='walala channel')
-        channel_1_as_user_1.add_members(self.user_2.partner_id.ids)
-        channel_2_as_user_2.add_members(self.user_1.partner_id.ids)
-        channel_2_as_user_2.add_members(self.user_3.partner_id.ids)
+        channel_1_as_user_1._add_members(users=self.user_2)
+        channel_2_as_user_2._add_members(users=self.user_1)
+        channel_2_as_user_2._add_members(users=self.user_3)
         channel_1_as_user_1.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
         channel_1_as_user_1.message_post(body='Test 2', message_type='comment', subtype_xmlid='mail.mt_comment')
         channel_2_as_user_2.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')

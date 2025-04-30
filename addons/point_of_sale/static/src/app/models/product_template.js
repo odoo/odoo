@@ -2,8 +2,8 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
 import { roundPrecision } from "@web/core/utils/numbers";
-import { getTaxesAfterFiscalPosition } from "./utils/tax_utils";
 import { markup } from "@odoo/owl";
+import { getTaxesAfterFiscalPosition, getTaxesValues } from "./utils/tax_utils";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 /**
@@ -26,7 +26,7 @@ export class ProductTemplate extends Base {
         const config = this.models["pos.config"].getFirst();
         const productTemplate = this instanceof ProductTemplate ? this : this.product_tmpl_id;
         const basePrice = this?.lst_price || productTemplate.getPrice(pricelist, 1);
-        const priceUnit = price === undefined ? basePrice : price;
+        const priceUnit = price || price === 0 ? price : basePrice;
         const currency = config.currency_id;
         const extraValues = { currency_id: currency };
 
@@ -67,6 +67,31 @@ export class ProductTemplate extends Base {
         } else {
             return baseLine.tax_details.total_excluded_currency;
         }
+    }
+    getProductPriceInfo(product, company, pricelist = false, fiscalPosition = false) {
+        if (!product) {
+            product = this.product_variant_ids[0];
+        }
+        const price = this.getPrice(pricelist, 1, 0, false, product);
+
+        const extraValues = this.prepareProductBaseLineForTaxesComputationExtraValues(
+            price,
+            pricelist,
+            fiscalPosition
+        );
+
+        // Taxes computation.
+        const taxesData = getTaxesValues(
+            extraValues.tax_ids,
+            extraValues.price_unit,
+            extraValues.quantity,
+            product,
+            extraValues.product_id,
+            company,
+            extraValues.currency_id
+        );
+
+        return taxesData;
     }
 
     isAllowOnlyOneLot() {
@@ -164,8 +189,10 @@ export class ProductTemplate extends Base {
         const productTmpl = variant.product_tmpl_id || this;
         const standardPrice = variant ? variant.standard_price : this.standard_price;
         const basePrice = variant ? variant.lst_price : this.list_price;
-        const productTmplRules = productTmpl["<-product.pricelist.item.product_tmpl_id"] || [];
-        const productRules = product["<-product.pricelist.item.product_id"] || [];
+        const productTmplRules =
+            productTmpl.backLink("<-product.pricelist.item.product_tmpl_id") || [];
+        const productRules =
+            (product && product.backLink("<-product.pricelist.item.product_id")) || [];
         const rulesIds = [...productTmplRules, ...productRules].map((rule) => rule.id);
 
         let price = basePrice + (price_extra || 0);
@@ -178,27 +205,7 @@ export class ProductTemplate extends Base {
                     (!rule.categ_id || rule.categ_id.id === product?.categ_id?.id)
             ) || [];
 
-        // We take in first assigned product rules instead of common one.
-        let commonRule = "";
-        let productVariantRule = "";
-        let productTemplateRule = "";
-        for (const rule of rules) {
-            if (!rule.product_id && !rule.product_tmpl_id) {
-                commonRule = rule;
-            }
-            if (rule.product_id?.id === product?.id) {
-                productVariantRule = rule;
-                break;
-            }
-            if (rule.product_tmpl_id?.id === productTmpl.id) {
-                // Prefer the rule with the highest `min_quantity`
-                if (!productTemplateRule || productTemplateRule.min_quantity < rule.min_quantity) {
-                    productTemplateRule = rule;
-                }
-            }
-        }
-
-        const rule = productVariantRule || productTemplateRule || commonRule;
+        const rule = rules.length && rules[0];
         if (!rule) {
             return price;
         }
@@ -304,6 +311,10 @@ export class ProductTemplate extends Base {
 
     get productDescriptionMarkup() {
         return this.public_description ? markup(this.public_description) : "";
+    }
+
+    get canBeDisplayed() {
+        return this.active && this.available_in_pos;
     }
 }
 registry.category("pos_available_models").add(ProductTemplate.pythonModel, ProductTemplate);

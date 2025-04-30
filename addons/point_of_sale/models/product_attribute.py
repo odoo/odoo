@@ -15,7 +15,7 @@ class ProductAttributeCustomValue(models.Model):
     _name = 'product.attribute.custom.value'
     _inherit = ["product.attribute.custom.value", "pos.load.mixin"]
 
-    pos_order_line_id = fields.Many2one('pos.order.line', string="PoS Order Line", ondelete='cascade')
+    pos_order_line_id = fields.Many2one('pos.order.line', string="PoS Order Line", ondelete='cascade', index='btree_not_null')
 
     @api.model
     def _load_pos_data_domain(self, data):

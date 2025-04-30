@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -21,6 +20,8 @@ class HrEmployeePublic(models.Model):
         return super()._get_manager_only_fields() + ['first_contract_date']
 
     def _search_first_contract_date(self, operator, value):
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return NotImplemented
         employees = self.env['hr.employee'].sudo().search([('id', 'child_of', self.env.user.employee_id.ids), ('first_contract_date', operator, value)])
         return [('id', 'in', employees.ids)]
 
@@ -97,7 +98,7 @@ class HrEmployee(models.Model):
             contracts = remove_gap(contracts)
         return min(contracts.mapped('date_start')) if contracts else False
 
-    @api.depends('contract_ids.state', 'contract_ids.date_start')
+    @api.depends('contract_ids.state', 'contract_ids.date_start', 'contract_ids.active')
     def _compute_first_contract_date(self):
         for employee in self:
             employee.first_contract_date = employee._get_first_contract_date()
@@ -314,6 +315,7 @@ class HrEmployee(models.Model):
                 # display current resource_calendar_id as the default one if it exists (if False, fully flexible calendar)
                 'default_resource_calendar_id': self.resource_calendar_id.id or False,
                 'from_action_open_contract': True,
+                'default_hr_responsible_id': self.env.uid,
             }
             action['target'] = 'current'
             return action

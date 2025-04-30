@@ -1,5 +1,5 @@
 import { compareDatetime } from "@mail/utils/common/misc";
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { browser } from "@web/core/browser/browser";
 
 export class DiscussAppCategory extends Record {
@@ -35,13 +35,13 @@ export class DiscussAppCategory extends Record {
     name;
     hideWhenEmpty = false;
     canView = false;
-    app = Record.one("DiscussApp", {
+    app = fields.One("DiscussApp", {
         compute() {
             return this.store.discuss;
         },
     });
     _openLocally = false;
-    localStateKey = Record.attr(null, {
+    localStateKey = fields.Attr(null, {
         compute() {
             if (this.saveStateToServer) {
                 return null;
@@ -90,7 +90,7 @@ export class DiscussAppCategory extends Record {
 
     /** @type {string} */
     serverStateKey;
-    threads = Record.many("Thread", {
+    threads = fields.Many("Thread", {
         sort(t1, t2) {
             return this.sortThreads(t1, t2);
         },

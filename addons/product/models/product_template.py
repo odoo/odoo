@@ -24,7 +24,7 @@ class ProductTemplate(models.Model):
 
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
-        if 'uom_id' in fields_list and not res.get('uom_id'):
+        if 'uom_id' in fields_list and not res.get('uom_id') or self.env.context.get('default_uom_id') is False:
             res['uom_id'] = self._get_default_uom_id().id
         return res
 
@@ -399,6 +399,11 @@ class ProductTemplate(models.Model):
         for template in self:
             template.product_variant_count = len(template.product_variant_ids)
 
+    @api.onchange('standard_price')
+    def _onchange_standard_price(self):
+        if self.standard_price < 0:
+            raise ValidationError(_("The cost of a product can't be negative."))
+
     @api.onchange('default_code')
     def _onchange_default_code(self):
         if not self.default_code:
@@ -526,6 +531,9 @@ class ProductTemplate(models.Model):
                 'image_128',
                 'can_image_1024_be_zoomed',
             ])
+        for product_template in self:
+            if "type" in vals and vals.get("type") != "combo":
+                product_template.combo_ids = False
         return res
 
     def copy_data(self, default=None):
@@ -630,7 +638,7 @@ class ProductTemplate(models.Model):
                     %s
                 </p>
                 <p>
-                    <a class="oe_link" href="https://www.odoo.com/documentation/18.0/_downloads/5f0840ed187116c425fdac2ab4b592e1/pdfquotebuilderexamples.zip">
+                    <a class="oe_link" href="https://www.odoo.com/documentation/18.0/_downloads/c2c6ce32294dfddffcfefcf2775f7a09/pdfquotebuilderexamples.zip">
                     %s
                     </a>
                 </p>
@@ -1393,8 +1401,11 @@ class ProductTemplate(models.Model):
     def _get_placeholder_filename(self, field):
         image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
         if field in image_fields:
-            return 'product/static/img/placeholder_thumbnail.png'
+            return self._get_product_placeholder_filename()
         return super()._get_placeholder_filename(field)
+
+    def _get_product_placeholder_filename(self):
+        return 'product/static/img/placeholder_thumbnail.png'
 
     def get_single_product_variant(self):
         """ Method used by the product configurator to check if the product is configurable or not.

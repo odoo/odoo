@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Website Live Chat',
-    'category': 'Hidden',
+    'category': 'Website/Live Chat',
     'summary': 'Chat with your website visitors',
     'version': '1.0',
-    'description': """
-Allow website visitors to chat with the collaborators. This module also brings a feedback tool for the livechat and web pages to display your channel with its ratings on the website.
-    """,
+    'description': "Allow website visitors to chat with the collaborators.",
     'depends': ['website', 'im_livechat'],
     'installable': True,
     'auto_install': True,
@@ -14,17 +12,19 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'views/website_livechat.xml',
         'views/res_config_settings_views.xml',
         'views/im_livechat_chatbot_script_view.xml',
-        'views/website_livechat_view.xml',
         'views/website_visitor_views.xml',
         'views/im_livechat_channel_add.xml',
         'security/ir.model.access.csv',
-        'security/website_livechat.xml',
         'data/website_livechat_data.xml',
     ],
     'demo': [
         'data/website_livechat_chatbot_demo.xml',
+        'demo/im_livechat_session_11.xml',
     ],
     'assets': {
+        "mail.assets_public": [
+            "website_livechat/static/src/**/common/**/*",
+        ],
         'website.assets_wysiwyg': [
             'website_livechat/static/src/scss/**/*',
         ],
@@ -35,6 +35,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/patch/assets_frontend/website.scss',
         ],
         'web.assets_backend': [
+            "website_livechat/static/src/**/common/**/*",
             'website_livechat/static/src/**/*',
             ('remove', 'website_livechat/static/src/scss/**/*'),
         ],

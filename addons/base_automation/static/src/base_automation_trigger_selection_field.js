@@ -79,7 +79,7 @@ export class TriggerSelectionField extends SelectionField {
         let relatedModelFields;
         useRecordObserver(async (record) => {
             const { data, fields } = record;
-            const modelId = data.model_id?.[0];
+            const modelId = data.model_id?.id;
             if (lastRelatedModelId !== modelId) {
                 lastRelatedModelId = modelId;
                 relatedModelFields = await orm.searchRead(

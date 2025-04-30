@@ -10,7 +10,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.osv import expression
-from odoo.tools import clean_context, format_list, groupby, SQL
+from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.tools.discuss import Store
 
@@ -91,9 +91,9 @@ class MailMessage(models.Model):
     preview = fields.Char(
         'Preview', compute='_compute_preview',
         help='The text-only beginning of the body used as email preview.')
-    link_preview_ids = fields.One2many(
-        'mail.link.preview', 'message_id', string='Link Previews',
-        groups="base.group_erp_manager")
+    message_link_preview_ids = fields.One2many(
+        "mail.message.link.preview", "message_id", groups="base.group_erp_manager"
+    )
     reaction_ids = fields.One2many(
         'mail.message.reaction', 'message_id', string="Reactions",
         groups="base.group_system")
@@ -229,7 +229,9 @@ class MailMessage(models.Model):
 
     @api.model
     def _search_needaction(self, operator, operand):
-        is_read = False if operator == '=' and operand else True
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+        is_read = operator == 'not in'
         notification_ids = self.env['mail.notification']._search([('res_partner_id', '=', self.env.user.partner_id.id), ('is_read', '=', is_read)])
         return [('notification_ids', 'in', notification_ids)]
 
@@ -241,9 +243,9 @@ class MailMessage(models.Model):
             message.has_error = message in error_from_notification
 
     def _search_has_error(self, operator, operand):
-        if operator == '=' and operand:
-            return [('notification_ids.notification_status', 'in', ('bounce', 'exception'))]
-        return ['!', ('notification_ids.notification_status', 'in', ('bounce', 'exception'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
+        if operator != 'in':
+            return NotImplemented
+        return [('notification_ids.notification_status', 'in', ('bounce', 'exception'))]
 
     @api.depends('starred_partner_ids')
     @api.depends_context('uid')
@@ -256,9 +258,9 @@ class MailMessage(models.Model):
 
     @api.model
     def _search_starred(self, operator, operand):
-        if operator == '=' and operand:
-            return [('starred_partner_ids', 'in', [self.env.user.partner_id.id])]
-        return [('starred_partner_ids', 'not in', [self.env.user.partner_id.id])]
+        if operator != 'in':
+            return NotImplemented
+        return [('starred_partner_ids', 'in', self.env.user.partner_id.ids)]
 
     # ------------------------------------------------------
     # CRUD / ORM
@@ -563,7 +565,7 @@ class MailMessage(models.Model):
             "Records: %(records)s, User: %(user)s",
             type=self._description,
             operation=operation,
-            records=format_list(self.env, list(map(str, self.ids[:6]))),
+            records=self.ids[:6],
             user=self.env.uid,
         ))
 
@@ -597,9 +599,9 @@ class MailMessage(models.Model):
         return self.browse()
 
     @api.model_create_multi
-    def create(self, values_list):
+    def create(self, vals_list):
         tracking_values_list = []
-        for values in values_list:
+        for values in vals_list:
             if 'email_from' not in values:  # needed to compute reply_to
                 _author_id, email_from = self.env['mail.thread']._message_compute_author(values.get('author_id'), email_from=None, raise_on_email=False)
                 values['email_from'] = email_from
@@ -640,7 +642,7 @@ class MailMessage(models.Model):
             # delegate creation of tracking after the create as sudo to avoid access rights issues
             tracking_values_list.append(values.pop('tracking_value_ids', False))
 
-        messages = super().create(values_list)
+        messages = super().create(vals_list)
 
         # link back attachments to records, to filter out attachments linked to
         # the same records as the message (considered as ok if message is ok)
@@ -648,9 +650,9 @@ class MailMessage(models.Model):
         attachments_tocheck = self.env['ir.attachment']
         doc_to_attachment_ids = defaultdict(set)
         if all(isinstance(command, int) or command[0] in (4, 6)
-               for values in values_list
+               for values in vals_list
                for command in values['attachment_ids']):
-            for values in values_list:
+            for values in vals_list:
                 message_attachment_ids = set()
                 for command in values['attachment_ids']:
                     if isinstance(command, int):
@@ -680,7 +682,7 @@ class MailMessage(models.Model):
         if attachments_tocheck:
             attachments_tocheck.check('read')
 
-        for message, values, tracking_values_cmd in zip(messages, values_list, tracking_values_list):
+        for message, values, tracking_values_cmd in zip(messages, vals_list, tracking_values_list):
             if tracking_values_cmd:
                 vals_lst = [dict(cmd[2], mail_message_id=message.id) for cmd in tracking_values_cmd if len(cmd) == 3 and cmd[0] == 0]
                 other_cmd = [cmd for cmd in tracking_values_cmd if len(cmd) != 3 or cmd[0] != 0]
@@ -917,6 +919,27 @@ class MailMessage(models.Model):
     # STORE / NOTIFICATIONS
     # ------------------------------------------------------
 
+    def _field_store_repr(self, field_name):
+        """Return the default Store representation of the given field name, which can be passed as
+        param to the various Store methods."""
+        if field_name == "message_link_preview_ids":
+            return [
+                Store.Many(
+                    "message_link_preview_ids",
+                    value=lambda m: m.sudo()
+                    .message_link_preview_ids.filtered(
+                        lambda message_link_preview: not message_link_preview.is_hidden
+                    )
+                    .sorted(
+                        lambda message_link_preview: (
+                            message_link_preview.sequence,
+                            message_link_preview.id,
+                        )
+                    ),
+                )
+            ]
+        return [field_name]
+
     def _to_store_defaults(self):
         com_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
         note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
@@ -931,18 +954,15 @@ class MailMessage(models.Model):
             Store.Attr("is_note", lambda m: m.subtype_id.id == note_id),
             Store.Attr("is_discussion", lambda m: m.subtype_id.id == com_id),
             # sudo: mail.message - reading link preview on accessible message is allowed
-            Store.Many(
-                "link_preview_ids",
-                value=lambda m: m.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden),
-            ),
             "message_format",
+            "message_link_preview_ids",
             "message_type",
             "model",  # keep for iOS app
             "pinned_at",
             # sudo: mail.message - reading reactions on accessible message is allowed
             Store.Many("reaction_ids", rename="reactions", sudo=True),
             # sudo: res.partner: reading limited data of recipients is acceptable
-            Store.Many("partner_ids", ["avatar_128", "name"], rename="recipients", sudo=True),
+            Store.Many("partner_ids", ["avatar_128", "name"], rename="recipients", sort="id", sudo=True),
             "res_id",  # keep for iOS app
             "subject",
             # sudo: mail.message.subtype - reading description on accessible message is allowed
@@ -1175,7 +1195,7 @@ class MailMessage(models.Model):
                 (not msg.body or tools.is_html_empty(msg.body)) and
                 (not msg.subtype_id or not msg.subtype_id.description) and
                 not msg.attachment_ids and
-                not msg.tracking_value_ids
+                not (msg._has_field_access(msg._fields['tracking_value_ids'], 'read') and msg.tracking_value_ids)
         )
 
     @api.model

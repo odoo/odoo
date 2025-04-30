@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="point_of_sale.QuantityButtons">
+        <div name="quantity_buttons_wrapper" class="input-group justify-content-end justify-content-md-center p-1 pt-0">
+            <button
+                t-attf-class="px-2-5 btn btn-secondary btn-sm {{ props.btnClasses or 'd-md-inline-block' }}"
+                name="pos_quantity_button_minus"
+                aria-label="Remove one"
+                t-on-click.stop="() => this.changeQuantity(-1)">
+                <i class="fa fa-minus"/>
+            </button>
+            <input
+                class="form-control quantity text-center"
+                name="pos_quantity"
+                type="number"
+                t-att-value="props.quantity"
+                t-on-click.stop=""
+                t-on-change="setQuantity"/>
+            <button
+                t-attf-class="px-2-5 btn btn-secondary btn-sm {{ props.btnClasses or 'd-md-inline-block' }}"
+                name="pos_quantity_button_plus"
+                aria-label="Add one"
+                t-att-disabled="props.isPlusButtonDisabled"
+                t-on-click.stop="() => this.changeQuantity(1)">
+                <i class="fa fa-plus"/>
+            </button>
+        </div>
+    </t>
+</templates>

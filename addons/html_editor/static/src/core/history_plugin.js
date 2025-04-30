@@ -125,8 +125,18 @@ export class HistoryPlugin extends Plugin {
     ];
     resources = {
         user_commands: [
-            { id: "historyUndo", title: _t("Undo"), icon: "fa-undo", run: this.undo.bind(this) },
-            { id: "historyRedo", title: _t("Redo"), icon: "fa-repeat", run: this.redo.bind(this) },
+            {
+                id: "historyUndo",
+                description: _t("Undo"),
+                icon: "fa-undo",
+                run: this.undo.bind(this),
+            },
+            {
+                id: "historyRedo",
+                description: _t("Redo"),
+                icon: "fa-repeat",
+                run: this.redo.bind(this),
+            },
         ],
         ...(hasTouch() && {
             toolbar_groups: withSequence(5, { id: "historyMobile" }),
@@ -136,12 +146,14 @@ export class HistoryPlugin extends Plugin {
                     groupId: "historyMobile",
                     commandId: "historyUndo",
                     isDisabled: () => !this.canUndo(),
+                    namespaces: ["compact", "expanded"],
                 },
                 {
                     id: "redo",
                     groupId: "historyMobile",
                     commandId: "historyRedo",
                     isDisabled: () => !this.canRedo(),
+                    namespaces: ["compact", "expanded"],
                 },
             ],
         }),
@@ -158,6 +170,7 @@ export class HistoryPlugin extends Plugin {
 
     setup() {
         this.mutationFilteredClasses = new Set(this.getResource("system_classes"));
+        this.mutationFilteredAttributes = new Set(this.getResource("system_attributes"));
         this._onKeyupResetContenteditableNodes = [];
         this.addDomListener(this.document, "beforeinput", this._onDocumentBeforeInput.bind(this));
         this.addDomListener(this.document, "input", this._onDocumentInput.bind(this));
@@ -319,8 +332,19 @@ export class HistoryPlugin extends Plugin {
     setIdOnRecords(records) {
         for (const record of records) {
             if (record.type === "childList" && record.addedNodes.length) {
-                for (const node of record.addedNodes) {
-                    this.setNodeId(node);
+                const { addedNodes, removedNodes } = record;
+                if (this.isSameTextContentMutation(record)) {
+                    const oldId = this.nodeToIdMap.get(removedNodes[0]);
+                    if (oldId) {
+                        this.nodeToIdMap.delete(removedNodes[0]);
+                        this.idToNodeMap.delete(oldId);
+                        this.nodeToIdMap.set(addedNodes[0], oldId);
+                        this.idToNodeMap.set(oldId, addedNodes[0]);
+                    }
+                } else {
+                    for (const node of addedNodes) {
+                        this.setNodeId(node);
+                    }
                 }
             }
         }
@@ -346,6 +370,9 @@ export class HistoryPlugin extends Plugin {
                     continue;
                 }
                 if (record.attributeName === "contenteditable") {
+                    continue;
+                }
+                if (this.mutationFilteredAttributes.has(record.attributeName)) {
                     continue;
                 }
                 // @todo @phoenix test attributeCache
@@ -386,11 +413,32 @@ export class HistoryPlugin extends Plugin {
                 if (!attributeCache.get(record.target)[record.attributeName]) {
                     continue;
                 }
+            } else if (record.type === "childList" && this.isSameTextContentMutation(record)) {
+                continue;
             }
             filteredRecords.push(record);
         }
         // @todo @phoenix allow an option to filter mutation records.
         return filteredRecords;
+    }
+
+    /**
+     * Check if a mutation consists of removing and adding a single text node
+     * with the same text content, which occurs in Firefox but is optimized
+     * away in Chrome.
+     *
+     * @param { MutationRecord } record
+     */
+    isSameTextContentMutation(record) {
+        const { addedNodes, removedNodes } = record;
+        return (
+            record.type === "childList" &&
+            addedNodes.length === 1 &&
+            removedNodes.length === 1 &&
+            addedNodes[0].nodeType === Node.TEXT_NODE &&
+            removedNodes[0].nodeType === Node.TEXT_NODE &&
+            addedNodes[0].textContent === removedNodes[0].textContent
+        );
     }
 
     /**

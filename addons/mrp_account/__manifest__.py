@@ -4,7 +4,7 @@
 {
     'name': 'Accounting - MRP',
     'version': '1.0',
-    'category': 'Manufacturing/Manufacturing',
+    'category': 'Supply Chain/Manufacturing',
     'summary': 'Analytic accounting in Manufacturing',
     'description': """
 Analytic Accounting in MRP

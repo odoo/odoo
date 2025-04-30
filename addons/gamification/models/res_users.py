@@ -14,7 +14,7 @@ class ResUsers(models.Model):
     gold_badge = fields.Integer('Gold badges count', compute="_get_user_badge_level")
     silver_badge = fields.Integer('Silver badges count', compute="_get_user_badge_level")
     bronze_badge = fields.Integer('Bronze badges count', compute="_get_user_badge_level")
-    rank_id = fields.Many2one('gamification.karma.rank', 'Rank')
+    rank_id = fields.Many2one('gamification.karma.rank', 'Rank', index='btree_not_null')
     next_rank_id = fields.Many2one('gamification.karma.rank', 'Next Rank')
 
     @api.depends('karma_tracking_ids.new_value')
@@ -68,8 +68,8 @@ class ResUsers(models.Model):
             self.browse(user_id)['{}_badge'.format(level)] = count
 
     @api.model_create_multi
-    def create(self, values_list):
-        res = super().create(values_list)
+    def create(self, vals_list):
+        res = super().create(vals_list)
 
         self._add_karma_batch({
             user: {
@@ -78,7 +78,7 @@ class ResUsers(models.Model):
                 'origin_ref': f'res.users,{self.env.uid}',
                 'reason': _('User Creation'),
             }
-            for user, vals in zip(res, values_list)
+            for user, vals in zip(res, vals_list)
             if vals.get('karma')
         })
 

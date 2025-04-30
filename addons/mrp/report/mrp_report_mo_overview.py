@@ -89,7 +89,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 line_cost = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * line.product_qty
                 initial_bom_cost += currency.round(line_cost * production.product_uom_qty / production.bom_id.product_qty)
             for operation in missing_operations:
-                cost = (operation._get_duration_expected(production.product_id, production.product_qty) / 60.0) * operation.workcenter_id.costs_hour
+                cost = operation.with_context(product=production.product_id, quantity=production.product_qty, unit=production.product_uom_id).cost
                 bom_cost = self.env.company.currency_id.round(cost)
                 initial_bom_cost += currency.round(bom_cost * production.product_uom_qty / production.bom_id.product_qty)
 
@@ -274,8 +274,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         operations = production.bom_id.operation_ids + kit_operation if kit_operation else production.bom_id.operation_ids
         if workorder.operation_id not in operations:
             return False
-        duration = workorder.operation_id._get_duration_expected(production.product_id, production.product_qty)
-        return self.env.company.currency_id.round(workorder.operation_id.with_context(op_duration=duration)._compute_operation_cost())
+        return workorder.operation_id.with_context(product=production.product_id, quantity=production.product_qty, unit=production.product_uom_id).cost
 
     def _get_operations_data(self, production, level=0, current_index=False):
         if production.state == "done":

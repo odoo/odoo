@@ -37,6 +37,14 @@ const dropInOnlySnippets = {
 };
 let steps = [];
 let n = 0;
+const subSnippetTemplates = {
+    "s_masonry_block_default_template": "s_masonry_block",
+    "s_masonry_block_reversed_template": "s_masonry_block",
+    "s_masonry_block_images_template": "s_masonry_block",
+    "s_masonry_block_mosaic_template": "s_masonry_block",
+    "s_masonry_block_alternation_text_image_template": "s_masonry_block",
+    "s_masonry_block_alternation_image_text_template": "s_masonry_block",
+};
 for (let snippet of snippetsNames) {
     n++;
     snippet = {
@@ -59,7 +67,7 @@ for (let snippet of snippetsNames) {
         run: "drag_and_drop :iframe #wrap .oe_drop_zone",
     }, {
         content: `Edit ${snippet.name} snippet`,
-        trigger: `:iframe #wrap.o_editable [data-snippet='${snippet.name}']${isModal ? ' .modal.show' : ''}`,
+        trigger: `:iframe #wrap.o_editable [data-snippet='${subSnippetTemplates[snippet.name] || snippet.name}']${isModal ? ' .modal.show' : ''}`,
         run: "click",
     }, {
         content: `check ${snippet.name} setting are loaded, wait panel is visible`,
@@ -96,14 +104,23 @@ for (let snippet of snippetsNames) {
             run: "click",
         });
     } else if (isModal) {
-        snippetSteps.splice(4, 3, {
-            content: `Hide the ${snippet.name} popup`,
-            trigger: `:iframe [data-snippet='${snippet.name}'] .s_popup_close`,
-            run: "click",
-        }, {
-            content: `Make sure ${snippet.name} is hidden`,
-            trigger: ":iframe body:not(.modal-open)",
-        });
+        snippetSteps.splice(
+            4,
+            3,
+            {
+                content: `Make sure ${snippet.name} is shown`,
+                trigger: ":iframe body.modal-open",
+            },
+            {
+                content: `Hide the ${snippet.name} popup`,
+                trigger: `:iframe [data-snippet='${snippet.name}'] .s_popup_close`,
+                run: "click",
+            },
+            {
+                content: `Make sure ${snippet.name} is hidden`,
+                trigger: ":iframe body:not(.modal-open)",
+            }
+        );
     } else if (isDropInOnlySnippet) {
         // The 'drop in only' snippets have their 'data-snippet' attribute
         // removed once they are dropped, so we need to use a different selector.

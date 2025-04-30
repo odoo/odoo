@@ -12,7 +12,7 @@ import { Model } from "../model";
 import { DynamicGroupList } from "./dynamic_group_list";
 import { DynamicRecordList } from "./dynamic_record_list";
 import { Group } from "./group";
-import { Record } from "./record";
+import { Record as RelationalRecord } from "./record";
 import { StaticList } from "./static_list";
 import {
     extractInfoFromGroupData,
@@ -25,76 +25,80 @@ import {
 import { FetchRecordError } from "./errors";
 
 /**
- * @typedef Params
- * @property {Config} config
- * @property {State} [state]
- * @property {Hooks} [hooks]
- * @property {number} [limit]
- * @property {number} [countLimit]
- * @property {number} [groupsLimit]
- * @property {string[]} [defaultOrderBy]
- * @property {number} [maxGroupByDepth]
- * @property {boolean} [multiEdit]
- * @property {Object} [groupByInfo]
- * @property {number} [activeIdsLimit]
- * @property {boolean} [useSendBeaconToSaveUrgently]
- */
-
-/**
- * @typedef Config
- * @property {string} resModel
- * @property {Object} fields
- * @property {Object} activeFields
- * @property {object} context
- * @property {boolean} isMonoRecord
- * @property {boolean} isRoot
- * @property {Array} [domain]
- * @property {Array} [groupBy]
- * @property {Array} [orderBy]
- * @property {number} [resId]
- * @property {number[]} [resIds]
- * @property {string} [mode]
- * @property {number} [limit]
- * @property {number} [offset]
- * @property {number} [countLimit]
- * @property {number} [groupsLimit]
- * @property {Object} [groups]
- * @property {Object} [currentGroups] // FIXME: could be cleaned
- * @property {boolean} [openGroupsByDefault]
- */
-
-/**
- * @typedef Hooks
- * @property {(nextConfiguration: Config) => void} [onWillLoadRoot]
- * @property {() => Promise} [onRootLoaded]
- * @property {Function} [onWillSaveRecord]
- * @property {Function} [onRecordSaved]
- * @property {Function} [onWillSaveMulti]
- * @property {Function} [onSavedMulti]
- * @property {Function} [onWillSetInvalidField]
- * @property {Function} [onRecordChanged]
- */
-
-/**
- * @typedef State
- * @property {Config} config
- * @property {Object} specialDataCaches
+ * @typedef {import("@web/core/context").Context} Context
+ * @typedef {import("./datapoint").DataPoint} DataPoint
+ * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
+ * @typedef {import("@web/search/search_model").Field} Field
+ * @typedef {import("@web/search/search_model").FieldInfo} FieldInfo
+ * @typedef {import("@web/search/search_model").SearchParams} SearchParams
+ * @typedef {import("services").ServiceFactories} Services
+ *
+ * @typedef {{
+ *  changes?: Record<string, unknown>;
+ *  fieldNames?: string[];
+ *  evalContext?: Context;
+ *  onError?: (error: unknown) => unknown;
+ * }} OnChangeParams
+ *
+ * @typedef {SearchParams & {
+ *  fields: Record<string, Field>;
+ *  activeFields: Record<string, FieldInfo>;
+ *  isMonoRecord: boolean;
+ *  isRoot: boolean;
+ *  resIds?: number[];
+ *  mode?: "edit" | "readonly";
+ *  limit?: number;
+ *  offset?: number;
+ *  countLimit?: number;
+ *  groupsLimit?: number;
+ *  groups?: Record<string, unknown>;
+ *  currentGroups?: Record<string, unknown>; // FIXME: could be cleaned: Object
+ *  openGroupsByDefault?: boolean;
+ * }} RelationalModelConfig
+ *
+ * @typedef {{
+ *  config: RelationalModelConfig;
+ *  state?: RelationalModelState;
+ *  hooks?: Partial<typeof DEFAULT_HOOKS>;
+ *  limit?: number;
+ *  countLimit?: number;
+ *  groupsLimit?: number;
+ *  defaultOrderBy?: string[];
+ *  maxGroupByDepth?: number;
+ *  multiEdit?: boolean;
+ *  groupByInfo?: Record<string, unknown>;
+ *  activeIdsLimit?: number;
+ *  useSendBeaconToSaveUrgently?: boolean;
+ * }} RelationalModelParams
+ *
+ * @typedef {{
+ *  config: RelationalModelConfig;
+ *  specialDataCaches: Record<string, unknown>;
+ * }} RelationalModelState
  */
 
 const DEFAULT_HOOKS = {
+    /** @type {(config: RelationalModelConfig) => any} */
     onWillLoadRoot: () => {},
+    /** @type {(root: DataPoint) => any} */
     onRootLoaded: () => {},
+    /** @type {(record: RelationalRecord) => any} */
     onWillSaveRecord: () => {},
+    /** @type {(record: RelationalRecord) => any} */
     onRecordSaved: () => {},
+    /** @type {(record: RelationalRecord) => any} */
     onWillSaveMulti: () => {},
+    /** @type {(records: RelationalRecord[]) => any} */
     onSavedMulti: () => {},
+    /** @type {(record: RelationalRecord, fieldName: string) => any} */
     onWillSetInvalidField: () => {},
+    /** @type {(record: RelationalRecord) => any} */
     onRecordChanged: () => {},
 };
 
 export class RelationalModel extends Model {
     static services = ["action", "dialog", "notification", "orm"];
-    static Record = Record;
+    static Record = RelationalRecord;
     static Group = Group;
     static DynamicRecordList = DynamicRecordList;
     static DynamicGroupList = DynamicGroupList;
@@ -106,7 +110,8 @@ export class RelationalModel extends Model {
     static MAX_NUMBER_OPENED_GROUPS = 10;
 
     /**
-     * @param {Params} params
+     * @param {RelationalModelParams} params
+     * @param {Services} services
      */
     setup(params, { action, dialog, notification }) {
         this.action = action;
@@ -118,7 +123,7 @@ export class RelationalModel extends Model {
         this.keepLast = markRaw(new KeepLast());
         this.mutex = markRaw(new Mutex());
 
-        /** @type {Config} */
+        /** @type {RelationalModelConfig} */
         this.config = {
             isMonoRecord: false,
             context: {},
@@ -126,7 +131,6 @@ export class RelationalModel extends Model {
             isRoot: true,
         };
 
-        /** @type {Hooks} */
         this.hooks = Object.assign({}, DEFAULT_HOOKS, params.hooks);
 
         this.initialLimit = params.limit || this.constructor.DEFAULT_LIMIT;
@@ -148,31 +152,42 @@ export class RelationalModel extends Model {
     // -------------------------------------------------------------------------
 
     exportState() {
+        const config = { ...toRaw(this.config) };
+        delete config.currentGroups;
         return {
-            config: toRaw(this.config),
+            config,
             specialDataCaches: this.specialDataCaches,
         };
     }
 
+    /**
+     * @override
+     * @type {Model["hasData"]}
+     */
     hasData() {
         return this.root.hasData;
     }
 
     /**
-     * @param {Object} [params={}]
-     * @param {Context} [params.context]
-     * @param {DomainListRepr} [params.domain]
-     * @param {string[]} [params.groupBy]
-     * @param {Object[]} [params.orderBy]
-     * @returns {Promise<void>}
+     * @override
+     * @type {Model["load"]}
      */
     async load(params = {}) {
         const config = this._getNextConfig(this.config, params);
+        if (!this.isReady) {
+            // We want the control panel to be displayed directly, without waiting for data to be
+            // loaded, for instance to be able to interact with the search view. For that reason, we
+            // create an empty root, without data, s.t. controllers can make the assumption that the
+            // root is set when they are rendered. The root is replaced later on by the real root,
+            // when data are loaded.
+            this.root = this._createEmptyRoot(config);
+            this.config = config;
+        }
         this.hooks.onWillLoadRoot(config);
         const data = await this.keepLast.add(this._loadData(config));
         this.root = this._createRoot(config, data);
         this.config = config;
-        return this.hooks.onRootLoaded();
+        await this.hooks.onRootLoaded(this.root);
     }
 
     // -------------------------------------------------------------------------
@@ -181,6 +196,9 @@ export class RelationalModel extends Model {
 
     /**
      * If we group by default based on a property, the property might not be loaded in `fields`.
+     *
+     * @param {RelationalModelConfig} config
+     * @param {string} propertyFullName
      */
     async _getPropertyDefinition(config, propertyFullName) {
         // dynamically load the property and add the definition in the fields attribute
@@ -203,16 +221,31 @@ export class RelationalModel extends Model {
         }
     }
 
-    _askChanges() {
+    async _askChanges() {
         const proms = [];
         this.bus.trigger("NEED_LOCAL_CHANGES", { proms });
-        return Promise.all([...proms, this.mutex.getUnlockedDef()]);
+        await Promise.all([...proms, this.mutex.getUnlockedDef()]);
     }
 
     /**
+     * Creates a root datapoint without data. Supported root types are DynamicRecordList and
+     * DynamicGroupList.
      *
-     * @param {Config} config
-     * @param {*} data
+     * @param {RelationalModelConfig} config
+     * @returns {DataPoint | undefined}
+     */
+    _createEmptyRoot(config) {
+        if (!config.isMonoRecord) {
+            if (config.groupBy.length) {
+                return this._createRoot(config, { groups: [], length: 0 });
+            }
+            return this._createRoot(config, { records: [], length: 0 });
+        }
+    }
+
+    /**
+     * @param {RelationalModelConfig} config
+     * @param {Record<string, unknown>} data
      * @returns {DataPoint}
      */
     _createRoot(config, data) {
@@ -226,8 +259,9 @@ export class RelationalModel extends Model {
     }
 
     /**
-     * @param {*} params
-     * @returns {Config}
+     * @param {RelationalModelConfig} currentConfig
+     * @param {Partial<SearchParams>} params
+     * @returns {RelationalModelConfig}
      */
     _getNextConfig(currentConfig, params) {
         const currentGroupBy = currentConfig.groupBy;
@@ -300,7 +334,7 @@ export class RelationalModel extends Model {
 
     /**
      *
-     * @param {Config} config
+     * @param {RelationalModelConfig} config
      */
     async _loadData(config) {
         if (config.isMonoRecord) {
@@ -342,7 +376,7 @@ export class RelationalModel extends Model {
     }
 
     /**
-     * @param {Config} config
+     * @param {RelationalModelConfig} config
      */
     async _loadGroupedList(config) {
         config.offset = config.offset || 0;
@@ -511,19 +545,17 @@ export class RelationalModel extends Model {
     }
 
     /**
-     * @param {Config} config
-     * @param {Object} [params={}]
-     * @returns Promise<Object>
+     * @param {RelationalModelConfig} config
+     * @param {Partial<RelationalModelParams>} [params={}]
+     * @returns {Promise<Record<string, unknown>>}
      */
     async _loadNewRecord(config, params = {}) {
         return this._onchange(config, params);
     }
 
     /**
-     *
-     * @param {Config} config
-     * @param {object} evalContext
-     * @returns
+     * @param {RelationalModelConfig} config
+     * @param {Context} evalContext
      */
     async _loadRecords(config, evalContext = config.context) {
         const { resModel, resIds, activeFields, fields, context } = config;
@@ -551,8 +583,7 @@ export class RelationalModel extends Model {
      * Load records from the server for an ungrouped list. Return the result
      * of unity read RPC.
      *
-     * @param {Config} config
-     * @returns
+     * @param {RelationalModelConfig} config
      */
     async _loadUngroupedList(config) {
         const orderBy = config.orderBy.filter((o) => o.name !== "__count");
@@ -569,12 +600,9 @@ export class RelationalModel extends Model {
     }
 
     /**
-     * @param {Config} config
-     * @param {Object} param
-     * @param {Object} [param.changes={}]
-     * @param {string[]} [param.fieldNames=[]]
-     * @param {Object} [param.evalContext=config.context]
-     * @returns Promise<Object>
+     * @param {RelationalModelConfig} config
+     * @param {OnChangeParams} params
+     * @returns {Promise<Record<string, unknown>>}
      */
     async _onchange(
         config,
@@ -593,7 +621,7 @@ export class RelationalModel extends Model {
             response = await this.orm.call(resModel, "onchange", args, { context });
         } catch (e) {
             if (onError) {
-                return onError(e);
+                return void onError(e);
             }
             throw e;
         }
@@ -614,12 +642,12 @@ export class RelationalModel extends Model {
     }
 
     /**
-     *
-     * @param {Config} config
-     * @param {Partial<Config>} patch
-     * @param {Object} [options]
-     * @param {boolean} [options.reload=true]
-     * @param {Function} [options.commit] Function to call once the data has been loaded
+     * @param {RelationalModelConfig} config
+     * @param {Partial<RelationalModelConfig>} patch
+     * @param {{
+     *  commit?: (data: Record<string, unknown>) => unknown;
+     *  reload?: boolean;
+     * }} [options]
      */
     async _updateConfig(config, patch, { reload = true, commit } = {}) {
         const tmpConfig = { ...config, ...patch };
@@ -638,13 +666,13 @@ export class RelationalModel extends Model {
             commit(data);
         }
         if (reload && config.isRoot) {
-            return this.hooks.onRootLoaded();
+            await this.hooks.onRootLoaded(this.root);
         }
     }
 
     /**
      *
-     * @param {Config} config
+     * @param {RelationalModelConfig} config
      * @returns {Promise<number>}
      */
     async _updateCount(config) {
@@ -661,6 +689,9 @@ export class RelationalModel extends Model {
      * occurrences to be updated. The purpose of this function is to find and
      * update all occurrences of a record that has been reloaded, in a grouped
      * list view.
+     *
+     * @param {RelationalRecord} reloadedRecord
+     * @param {Record<string, unknown>} serverValues
      */
     _updateSimilarRecords(reloadedRecord, serverValues) {
         if (this.config.isMonoRecord || !this.config.groupBy.length) {
@@ -676,14 +707,19 @@ export class RelationalModel extends Model {
         }
     }
 
+    /**
+     * @param {RelationalModelConfig} config
+     */
     async _webReadGroup(config) {
         const groupBy = config.groupBy[0];
         const aggregates = [
             "__count",
-            ...getAggregateSpecifications(pick(
-                config.fields,
-                ...Object.keys(config.activeFields).filter(fname => fname != groupBy)
-            )),
+            ...getAggregateSpecifications(
+                pick(
+                    config.fields,
+                    ...Object.keys(config.activeFields).filter((fname) => fname != groupBy)
+                )
+            ),
         ];
         const orderBy = [];
         let groupByInsideOrder = false;

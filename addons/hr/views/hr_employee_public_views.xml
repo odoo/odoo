@@ -62,7 +62,7 @@
                             <div class="o_employee_avatar m-0 p-0">
                                 <field name="avatar_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
-                                <field name="hr_icon_display" class="d-flex align-items-end fs-6 o_employee_availability" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                             </div>
                         </div>
                         <group>
@@ -141,8 +141,8 @@
                             <main class="ms-2">
                                 <div>
                                     <field class="fw-bolder" name="name" placeholder="Employee's Name"/>
-                                    <div t-if="record.show_hr_icon_display.raw_value" class="float-end">
-                                        <field name="hr_icon_display" class="o_employee_availability align-items-center" widget="hr_presence_status" />
+                                    <div t-if="record.show_hr_icon_display.raw_value" class="float-end w-25">
+                                        <field name="hr_icon_display" class=" align-items-center" widget="hr_presence_status" />
                                     </div>
                                 </div>
                                 <field t-if="record.job_title.raw_value" name="job_title"/>
@@ -177,9 +177,9 @@
             <field name="search_view_id" ref="hr_employee_public_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Add a new employee
+                Create an employee.
               </p><p>
-                Quickly find all the information you need for your employees such as contact data, job position, availability, etc.
+                Find all the information on employees.
               </p>
             </field>
         </record>

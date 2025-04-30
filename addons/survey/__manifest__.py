@@ -66,12 +66,10 @@ sent mails with personal token for the invitation of the survey.
             ('include', "web.chartjs_lib"),
             'survey/static/src/js/survey_image_zoomer.js',
             '/survey/static/src/xml/survey_image_zoomer_templates.xml',
-            'survey/static/src/js/survey_quick_access.js',
             'survey/static/src/js/survey_timer.js',
             'survey/static/src/js/survey_breadcrumb.js',
             'survey/static/src/js/survey_form.js',
             'survey/static/src/js/survey_preload_image_mixin.js',
-            'survey/static/src/js/survey_print.js',
             'survey/static/src/js/survey_result.js',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
@@ -82,6 +80,8 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/scss/survey_templates_form.scss',
             'survey/static/src/scss/survey_templates_results.scss',
             'survey/static/src/xml/survey_breadcrumb_templates.xml',
+            'survey/static/src/xml/survey_paginated_results_rows_template.xml',
+            'survey/static/src/interactions/*',
         ],
         'survey.survey_user_input_session_assets': [
             'survey/static/src/js/survey_session_colors.js',
@@ -108,10 +108,8 @@ sent mails with personal token for the invitation of the survey.
         'web.assets_tests': [
             'survey/static/tests/tours/*.js',
         ],
-        'web.qunit_suite_tests': [
-            'survey/static/tests/components/*.js',
-        ],
         'web.assets_unit_tests': [
+            'survey/static/tests/components/*.test.js',
             'survey/static/tests/fields/*.test.js',
         ],
         'web.assets_frontend': [

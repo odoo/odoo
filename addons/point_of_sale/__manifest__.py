@@ -3,11 +3,11 @@
 
 {
     'name': 'Point of Sale',
-    'version': '1.0.1',
+    'version': '1.0.2',
     'category': 'Sales/Point of Sale',
     'sequence': 40,
     'summary': 'Handle checkouts and payments for shops and restaurants.',
-    'depends': ['resource', 'stock_account', 'barcodes', 'web_editor', 'digest', 'phone_validation'],
+    'depends': ['resource', 'stock_account', 'barcodes', 'web_editor', 'digest', 'phone_validation', 'partner_autocomplete', 'iot_base'],
     'uninstall_hook': 'uninstall_hook',
     'data': [
         'security/point_of_sale_security.xml',
@@ -17,6 +17,7 @@
         'data/pos_note_data.xml',
         'data/point_of_sale_tour.xml',
         'data/mail_template_data.xml',
+        'data/ir_config_parameter_data.xml',
         'wizard/pos_details.xml',
         'wizard/pos_payment.xml',
         'wizard/pos_close_session_wizard.xml',
@@ -53,7 +54,8 @@
         'views/res_config_settings_views.xml',
         'views/customer_display_index.xml',
         'views/account_move_views.xml',
-        'views/pos_session_sales_details.xml'
+        'views/pos_session_sales_details.xml',
+        'views/product_tag_views.xml'
     ],
     'demo': [
         'data/demo_data.xml',
@@ -80,7 +82,6 @@
             'point_of_sale/static/src/backend/pos_kanban_view/*',
             'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
-            'point_of_sale/static/src/backend/many2one_with_placeholder_field/*',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
         ],
         "web.assets_web_dark": [
@@ -91,11 +92,11 @@
             'point_of_sale/static/tests/pos/tours/**/*',
             'point_of_sale/static/tests/generic_helpers/**/*',
             'point_of_sale/static/tests/customer_display/**/*',
+            'point_of_sale/static/src/utils.js'
         ],
         'web.assets_unit_tests': [
             # for the related_models.test.js
-            'point_of_sale/static/src/app/models/utils/recursive_serialization.js',
-            'point_of_sale/static/src/app/models/related_models.js',
+            'point_of_sale/static/src/app/models/related_models/**/*',
             # for the data_service.test.js
             'point_of_sale/static/src/app/models/utils/indexed_db.js',
             'point_of_sale/static/src/app/models/data_service_options.js',
@@ -137,6 +138,8 @@
             'bus/static/src/bus_parameters_service.js',
             'bus/static/src/multi_tab_service.js',
             'bus/static/src/workers/*',
+            'iot_base/static/src/network_utils/*',
+            'iot_base/static/src/device_controller.js',
         ],
 
         # Main PoS assets, they are loaded in the PoS UI
@@ -199,7 +202,7 @@
             'web/static/src/webclient/actions/**/*',
             ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
             ('remove', 'web/static/src/webclient/actions/**/*css'),
-            'point_of_sale/static/src/customer_display/customer_display_adapter.js',
+            'partner_autocomplete/static/src/**/*',
         ],
         'point_of_sale.base_tests': [
             "web/static/lib/hoot-dom/**/*",
@@ -209,6 +212,8 @@
             "barcodes/static/tests/legacy/helpers.js",
             "web/static/tests/legacy/helpers/utils.js",
             "web/static/tests/legacy/helpers/cleanup.js",
+            'iot_base/static/src/network_utils/*',
+            'iot_base/static/src/device_controller.js',
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [
@@ -225,7 +230,6 @@
             "point_of_sale/static/src/app/components/centered_icon/*",
             "point_of_sale/static/src/utils.js",
             "point_of_sale/static/src/customer_display/**/*",
-            ('remove', 'point_of_sale/static/src/customer_display/customer_display_adapter.js'),
         ],
         'point_of_sale.customer_display_assets_test': [
             ('include', 'point_of_sale.base_tests'),

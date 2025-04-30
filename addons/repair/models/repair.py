@@ -94,7 +94,6 @@ class RepairOrder(models.Model):
         compute='compute_product_uom', store=True, precompute=True)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
-        default=False,
         compute="compute_lot_id", store=True,
         domain="[('id', 'in', allowed_lot_ids)]", check_company=True,
         help="Products repaired are all belonging to this lot")
@@ -167,7 +166,7 @@ class RepairOrder(models.Model):
 
     # Sale Order Binding
     sale_order_id = fields.Many2one(
-        'sale.order', 'Sale Order', check_company=True, readonly=True,
+        'sale.order', 'Sale Order', check_company=True, readonly=True, index='btree_not_null',
         copy=False, help="Sale Order from which the Repair Order comes from.")
     sale_order_line_id = fields.Many2one(
         'sale.order.line', check_company=True, readonly=True,
@@ -179,7 +178,7 @@ class RepairOrder(models.Model):
 
     # Return Binding
     picking_id = fields.Many2one(
-        'stock.picking', 'Return', check_company=True,
+        'stock.picking', 'Return', check_company=True, index='btree_not_null',
         domain="[('return_id', '!=', False), ('product_id', '=?', product_id)]",
         copy=False, help="Return Order from which the product to be repaired comes from.")
     is_returned = fields.Boolean(
@@ -196,6 +195,15 @@ class RepairOrder(models.Model):
     reserve_visible = fields.Boolean(
         'Allowed to Reserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can reserve quantities')
+    picking_type_visible = fields.Boolean(compute='_compute_picking_type_visible')
+
+    def _compute_picking_type_visible(self):
+        repair_type_by_company = dict(self.env['stock.picking.type']._read_group([
+                ('code', '=', 'repair_operation'),
+                ('company_id', 'in', self.company_id.ids)
+            ], groupby=['company_id'], aggregates=['__count']))
+        for ro in self:
+            ro.picking_type_visible = repair_type_by_company.get(ro.company_id, 0) > 1
 
     @api.depends('product_id', 'picking_id', 'lot_id')
     def _compute_product_qty(self):
@@ -249,7 +257,7 @@ class RepairOrder(models.Model):
             elif len(repair.picking_id.move_ids.lot_ids) == 1:
                 repair.lot_id = repair.picking_id.move_ids.lot_ids
 
-    @api.depends('user_id', 'company_id')
+    @api.depends('company_id')
     def _compute_picking_type_id(self):
         picking_type_by_company = self._get_picking_type()
         for ro in self:
@@ -336,12 +344,9 @@ class RepairOrder(models.Model):
             )
 
     def _search_date_category(self, operator, value):
-        if operator != '=':
-            raise NotImplementedError(_('Operation not supported'))
-        search_domain = self.env['stock.picking'].date_category_to_domain(value)
-        return expression.AND([
-            [('schedule_date', operator, value)] for operator, value in search_domain
-        ])
+        if operator != 'in':
+            return NotImplemented
+        return self.env['stock.picking'].date_category_to_domain('scheduled_date', value)
 
     @api.onchange('product_uom')
     def onchange_product_uom(self):
@@ -365,6 +370,8 @@ class RepairOrder(models.Model):
         res = super().default_get(fields_list)
         if 'picking_id' not in res and 'picking_id' in fields_list and 'default_repair_picking_id' in self.env.context:
             res['picking_id'] = self.env.context.get('default_repair_picking_id')
+        if 'lot_id' not in res and 'lot_id' in fields_list and 'default_repair_lot_id' in self.env.context:
+            res['lot_id'] = self.env.context.get('default_repair_lot_id')
         return res
 
     @api.model_create_multi
@@ -383,11 +390,15 @@ class RepairOrder(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        moves_to_reassign = self.env['stock.move']
         if vals.get('picking_type_id'):
             picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
             for repair in self:
+                if repair.state in ('cancel', 'done'):
+                    continue
                 if picking_type != repair.picking_type_id:
                     repair.name = picking_type.sequence_id.next_by_id()
+                    moves_to_reassign |= repair.move_ids
         res = super().write(vals)
         if 'product_id' in vals and self.tracking == 'serial':
             self.write({'product_qty': 1.0})
@@ -400,6 +411,14 @@ class RepairOrder(models.Model):
                 (repair.move_id + repair.move_ids).filtered(lambda m: m.state not in ('done', 'cancel')).write({'date': repair.schedule_date})
             if 'under_warranty' in vals:
                 repair._update_sale_order_line_price()
+        if moves_to_reassign:
+            moves_to_reassign._do_unreserve()
+            moves_to_reassign = moves_to_reassign.filtered(
+                lambda move: move.state in ('confirmed', 'partially_available')
+                and (move._should_bypass_reservation()
+                    or move.picking_type_id.reservation_method == 'at_confirm'
+                    or (move.reservation_date and move.reservation_date <= fields.Date.today())))
+            moves_to_reassign._action_assign()
         return res
 
     @api.ondelete(at_uninstall=False)
@@ -409,7 +428,7 @@ class RepairOrder(models.Model):
 
     def action_generate_serial(self):
         self.ensure_one()
-        name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
+        name = self.product_id.lot_sequence_id.next_by_id()
         exist_lot = not name or self.env['stock.lot'].search([
             ('product_id', '=', self.product_id.id),
             '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id),
@@ -723,6 +742,9 @@ class RepairOrder(models.Model):
                 grouped_lines[line.product_id] |= line
 
         return grouped_lines
+
+    def _is_display_stock_in_catalog(self):
+        return True
 
     def _update_order_line_info(self, product_id, quantity, **kwargs):
         move = self.move_ids.filtered(lambda e: e.product_id.id == product_id)

@@ -21,7 +21,7 @@ class ChatbotScriptStep(models.Model):
     message = fields.Text(string='Message', translate=True)
     sequence = fields.Integer(string='Sequence')
     chatbot_script_id = fields.Many2one(
-        'chatbot.script', string='Chatbot', required=True, ondelete='cascade')
+        'chatbot.script', string='Chatbot', required=True, index=True, ondelete='cascade')
     step_type = fields.Selection([
         ('text', 'Text'),
         ('question_selection', 'Question'),
@@ -377,20 +377,26 @@ class ChatbotScriptStep(models.Model):
                 # first post the message of the step (if we have one)
                 posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
-            # next, add the human_operator to the channel and post a "Operator joined the channel" notification
-            discuss_channel.with_user(human_operator).sudo().add_members(
-                human_operator.partner_id.ids
+            # next, add the human_operator to the channel and post a "Operator invited to the channel" notification
+            discuss_channel.sudo()._add_members(
+                users=human_operator,
+                create_member_params={
+                    "livechat_member_type": "agent",
+                    "agent_expertise_ids": self.operator_expertise_ids.ids,
+                },
+                inviting_partner=self.chatbot_script_id.operator_partner_id,
             )
             # sudo - discuss.channel: let the chat bot proceed to the forward step (change channel operator, add human operator
             # as member, remove bot from channel, rename channel and finally broadcast the channel to the new operator).
             channel_sudo = discuss_channel.sudo()
             if bot_member := channel_sudo.channel_member_ids.filtered(
-                lambda m: m.partner_id == self.chatbot_script_id.operator_partner_id
+                lambda m: m.livechat_member_type == "bot"
             ):
                 channel_sudo._action_unfollow(partner=bot_member.partner_id, post_leave_message=False)
             # finally, rename the channel to include the operator's name
             channel_sudo.write(
                 {
+                    "livechat_failure": "no_answer",
                     "livechat_operator_id": human_operator.partner_id,
                     "name": " ".join(
                         [
@@ -404,8 +410,29 @@ class ChatbotScriptStep(models.Model):
                     )
                 }
             )
+            step_message = next((
+                # sudo - chatbot.message.id: visitor can access chat bot messages.
+                m.mail_message_id for m in discuss_channel.sudo().chatbot_message_ids.sorted("id")
+                if m.script_step_id == self
+                and m.mail_message_id.author_id == self.chatbot_script_id.operator_partner_id
+            ), self.env["mail.message"])
+            store = Store()
+            discuss_channel._bus_send_store(
+                store.add_model_values(
+                    "ChatbotStep",
+                    {
+                        "id": (self.id, step_message.id),
+                        "scriptStep": self.id,
+                        "message": step_message.id,
+                        "operatorFound": True,
+                    },
+                )
+            )
             channel_sudo._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)
+        else:
+            # sudo: discuss.channel - visitor tried getting operator, outcome must be updated
+            discuss_channel.sudo().livechat_failure = "no_agent"
 
         return posted_message
 

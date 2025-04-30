@@ -13,7 +13,7 @@ class SlideQuestion(models.Model):
 
     sequence = fields.Integer("Sequence")
     question = fields.Char("Question Name", required=True, translate=True)
-    slide_id = fields.Many2one('slide.slide', string="Content", required=True, ondelete='cascade')
+    slide_id = fields.Many2one('slide.slide', string="Content", required=True, index=True, ondelete='cascade')
     answer_ids = fields.One2many('slide.answer', 'question_id', string="Answer", copy=True)
     answers_validation_error = fields.Char("Error on Answers", compute='_compute_answers_validation_error')
     # statistics
@@ -66,7 +66,7 @@ class SlideAnswer(models.Model):
     _order = 'question_id, sequence, id'
 
     sequence = fields.Integer("Sequence")
-    question_id = fields.Many2one('slide.question', string="Question", required=True, ondelete='cascade')
+    question_id = fields.Many2one('slide.question', string="Question", required=True, index=True, ondelete='cascade')
     text_value = fields.Char("Answer", required=True, translate=True)
     is_correct = fields.Boolean("Is correct answer")
     comment = fields.Text("Comment", translate=True, help='This comment will be displayed to the user if they select this answer')

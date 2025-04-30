@@ -399,6 +399,46 @@ test("only show messaging seen indicator if authored by me, after last seen by a
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 1 });
 });
 
+test("all seen indicator in chat displayed only once (chat created by correspondent)", async () => {
+    const pyEnv = await startServer();
+    const demoPid = pyEnv["res.partner"].create({ name: "Demo User" });
+    const demoUid = pyEnv["res.users"].create({ partner_id: demoPid });
+    const selfPid = serverState.partnerId;
+    const channelId = await withUser(demoUid, () =>
+        pyEnv["discuss.channel"].create({
+            name: "test",
+            channel_type: "chat",
+            channel_member_ids: [
+                Command.create({ partner_id: demoPid }),
+                Command.create({ partner_id: selfPid }),
+            ],
+        })
+    );
+    const [, messageId] = pyEnv["mail.message"].create([
+        {
+            author_id: selfPid,
+            body: "<p>Test1</p>",
+            res_id: channelId,
+            model: "discuss.channel",
+        },
+        {
+            author_id: selfPid,
+            body: "<p>Test2</p>",
+            res_id: channelId,
+            model: "discuss.channel",
+        },
+    ]);
+    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    pyEnv["discuss.channel.member"].write(memberIds, {
+        fetched_message_id: messageId,
+        seen_message_id: messageId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 2 });
+    await contains(".o-mail-MessageSeenIndicator.text-primary .fa-check", { count: 2 });
+});
+
 test("no seen indicator in 'channel' channels (with is_typing)", async () => {
     // is_typing info contains fetched / seen message so this could mistakenly show seen indicators
     const pyEnv = await startServer();

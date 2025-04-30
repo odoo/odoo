@@ -9,6 +9,7 @@ export class Plugin {
     static id = "";
     static dependencies = [];
     static shared = [];
+    static defaultConfig = {};
 
     /**
      * @param {Editor['document']} document

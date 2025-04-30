@@ -185,6 +185,7 @@
     // Kanban Grouped Layout
     &.o_kanban_grouped {
         --KanbanGroup-width: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
+        --KanbanGroup-max-width: calc(1.25 * var(--KanbanGroup-width));
 
         min-height: 100%;
 
@@ -210,12 +211,12 @@
         }
 
         .o_kanban_group,
-        .o_column_quick_create {
-            flex-basis: var(--KanbanGroup-width);
-
-            @include media-breakpoint-up(md) {
-                max-width: var(--KanbanGroup-width);
+        .o_column_quick_create:not(.o_quick_create_folded) {
+            &:not(.o_column_folded) {
+                flex-grow: 1;
+                min-width: var(--KanbanGroup-width);
             }
+            max-width: var(--KanbanGroup-max-width);
         }
     }
 
@@ -240,7 +241,7 @@
                 cursor: default;
             }
         }
-       
+
         &.o_kanban_hover {
             background-color: var(--KanbanColumn__highlight-background) !important;
             box-shadow: -1px 0px 0px 0px var(--KanbanColumn__highlight-border) inset,
@@ -271,7 +272,18 @@
     }
 
     .o_quick_create_folded {
-        top: map-get($spacers, 3);
+        @include media-breakpoint-up(md) {
+            --KanbanGroup-padding-h: 0;
+        }
+        &:hover .o_quick_create_title {
+            display: flex !important;
+        }
+        .o_quick_create_title {
+            @include o-position-absolute(36px);
+            transform-origin: left bottom 0;
+            transform: rotate(90deg);
+            overflow: visible;
+        }
     }
 
     .o_column_quick_create,

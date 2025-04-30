@@ -1,6 +1,5 @@
 import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
-import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { _t } from "@web/core/l10n/translation";
 
 /**
@@ -20,7 +19,8 @@ patch(ActionpadWidget.prototype, {
     },
     get swapButton() {
         return (
-            this.pos.config.module_pos_restaurant && this.pos.mainScreen.component !== TicketScreen
+            this.pos.config.module_pos_restaurant &&
+            this.pos.router.state.current !== "TicketScreen"
         );
     },
     get hasChangesToPrint() {

@@ -2,7 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="web.PropertyTags">
         <!-- Copy many2many tags style without duplicating all the CSS -->
-        <div t-attf-class="o_field_property_tag o_field_widget o_field_many2many_tags d-flex {{props.readonly ? 'readonly' : ''}}">
+        <div t-attf-class="o_field_property_tag o_field_widget o_field_many2many_tags d-flex {{props.readonly ? 'readonly' : ''}}"
+            t-ref="propertyTags">
             <TagsList tags="tagListItems"/>
             <div
                 t-if="!props.readonly"

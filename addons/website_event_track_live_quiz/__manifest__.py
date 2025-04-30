@@ -4,7 +4,7 @@
 
 {
     'name': 'Quiz on Live Event Tracks',
-    'category': 'Hidden',
+    'category': 'Marketing/Events',
     'version': '1.0',
     'summary': 'Bridge module to support quiz features during "live" tracks. ',
     'website': 'https://www.odoo.com/app/events',
@@ -20,7 +20,6 @@
     'assets': {
         'web.assets_frontend': [
             'website_event_track_live_quiz/static/src/interactions/**/*',
-            'website_event_track_live_quiz/static/src/js/**/*',
             'website_event_track_live_quiz/static/src/xml/**/*',
         ],
     },

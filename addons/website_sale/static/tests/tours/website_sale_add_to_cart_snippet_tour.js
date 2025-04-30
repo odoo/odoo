@@ -1,5 +1,5 @@
-import { assertPathName, clickOnEditAndWaitEditMode, clickOnElement, clickOnSave, clickOnSnippet, insertSnippet, registerWebsitePreviewTour, selectElementInWeSelectWidget } from '@website/js/tours/tour_utils';
-import { assertCartContains, goToCart } from '@website_sale/js/tours/tour_utils';
+import { clickOnEditAndWaitEditMode, clickOnElement, clickOnSave, clickOnSnippet, insertSnippet, registerWebsitePreviewTour, selectElementInWeSelectWidget } from '@website/js/tours/tour_utils';
+import { assertCartContains } from '@website_sale/js/tours/tour_utils';
 
 
 function editAddToCartSnippet() {
@@ -35,21 +35,37 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...selectElementInWeSelectWidget('product_variant_picker_opt', 'Product Yes Variant 2 (Pink)'),
         ...clickOnSave(),
         clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
+        // Since 18.2, even if a specific variant is selected, the product configuration modal is displayed
+        // The variant set on the modal used the default variants attributes (so will not correspond to the selected variant)
+        // TODO: fix this misbahvior by setting the variant attributes based on the chosen variant 
+        // https://github.com/odoo/odoo/pull/201217#issuecomment-2721871718
+        {
+            content: "Check if the red variant is selected",
+            trigger: ":iframe .modal li:contains(Red) input:checked",
+        },
+        {
+            content: "Click the pink variant",
+            trigger: ":iframe .modal li:contains(Pink) input",
+            run: "click",
+        },
+        {
+            content: "Check if the pink variant is selected",
+            trigger: ":iframe .modal li:contains(Pink) input:checked",
+        },
+        clickOnElement('continue shopping', ':iframe .modal button:contains(Continue Shopping)',),
 
         // Basic product with no variants and action=buy now
         ...editAddToCartSnippet(),
         ...selectElementInWeSelectWidget('product_template_picker_opt', 'Product No Variant', true),
         ...selectElementInWeSelectWidget('action_picker_opt', 'Buy Now'),
+        // At this point the "Add to cart" button was changed to a "Buy Now" button
         ...clickOnSave(),
-        clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
+        clickOnElement('"Buy Now" button', ':iframe .s_add_to_cart_btn'),
         {
             // wait for the page to load, as the next check was sometimes too fast
-            content: "Wait for the redirection to the payment page",
-            trigger: ":iframe h3:contains(order overview)",
+            content: "Wait for the redirection to the cart page",
+            trigger: ":iframe h4:contains(order summary)",
         },
-        assertPathName('/shop/payment', ':iframe a[href="/shop/cart"]'),
-
-        goToCart({quantity: 4, backend: true}),
         assertCartContains({productName: 'Product No Variant', backend: true}),
         assertCartContains({productName: 'Product Yes Variant 1 (Red)', backend: true}),
         assertCartContains({productName: 'Product Yes Variant 2 (Pink)', backend: true}),

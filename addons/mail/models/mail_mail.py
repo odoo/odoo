@@ -93,7 +93,7 @@ class MailMail(models.Model):
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
     scheduled_date = fields.Datetime('Scheduled Send Date',
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Unless a timezone is specified, it is considered as being in UTC timezone.")
-    fetchmail_server_id = fields.Many2one('fetchmail.server', "Inbound Mail Server", readonly=True)
+    fetchmail_server_id = fields.Many2one('fetchmail.server', "Inbound Mail Server", readonly=True, index='btree_not_null')
 
     def _compute_body_content(self):
         for mail in self:
@@ -125,9 +125,9 @@ class MailMail(models.Model):
         return [('body_html', operator, value)]
 
     @api.model_create_multi
-    def create(self, values_list):
+    def create(self, vals_list):
         # notification field: if not set, set if mail comes from an existing mail.message
-        for values in values_list:
+        for values in vals_list:
             if 'is_notification' not in values and values.get('mail_message_id'):
                 values['is_notification'] = True
             if values.get('scheduled_date'):
@@ -135,10 +135,10 @@ class MailMail(models.Model):
                 values['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
             else:
                 values['scheduled_date'] = False  # void string crashes
-        new_mails = super(MailMail, self).create(values_list)
+        new_mails = super().create(vals_list)
 
         new_mails_w_attach = self.env['mail.mail']
-        for mail, values in zip(new_mails, values_list):
+        for mail, values in zip(new_mails, vals_list):
             if values.get('attachment_ids'):
                 new_mails_w_attach += mail
         if new_mails_w_attach:
@@ -391,7 +391,6 @@ class MailMail(models.Model):
                     'Unknown error when evaluating mail headers (received %r): %s',
                     self.headers, e,
                 )
-        headers['X-Odoo-Message-Id'] = self.message_id
         headers.setdefault('Return-Path', self.record_alias_domain_id.bounce_email or self.env.company.bounce_email)
 
         # prepare recipients: use email_to if defined then check recipient_ids
@@ -470,8 +469,9 @@ class MailMail(models.Model):
         # load attachment binary data with a separate read(), as prefetching all
         # `datas` (binary field) could bloat the browse cache, triggering
         # soft/hard mem limits with temporary data.
+        # attachments sorted by increasing ID to match front-end and upload ordering
         email_attachments = [(a['name'], a['raw'], a['mimetype'])
-                             for a in attachments.sudo().read(['name', 'raw', 'mimetype'])
+                             for a in attachments.sudo().sorted('id').read(['name', 'raw', 'mimetype'])
                              if a['raw'] is not False]
 
         # Build final list of email values with personalized body for recipient
@@ -753,7 +753,13 @@ class MailMail(models.Model):
                 if res:  # mail has been sent at least once, no major exception occurred
                     mail.write({'state': 'sent', 'message_id': res, 'failure_type': False, 'failure_reason': False})
                     if not modules.module.current_test:
-                        _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
+                        _logger.info(
+                            "Mail with ID %r and Message-Id %r from %r to (redacted) %r successfully sent",
+                            mail.id,
+                            mail.message_id,
+                            tools.email_normalize(msg['from']),
+                            tools.mail.email_anonymize(tools.email_normalize(msg['to']))
+                        )
                     # /!\ can't use mail.state here, as mail.refresh() will cause an error
                     # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 else:

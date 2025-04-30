@@ -18,6 +18,7 @@ class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
             cls.stock_output_account,
             cls.stock_valuation_account,
             cls.expense_account,
+            cls.income_account,
             cls.stock_journal,
         ) = _create_accounting_data(cls.env)
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
     <record id="l10n_ca_tr_gsthst" model="account.report">
-        <field name="name">GST/HST report</field>
+        <field name="name">GST/HST Report</field>
         <field name="name@fr">Rapport de TPS/TVH</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ca"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="l10n_ca_tr_gsthst_balance" model="account.report.column">
@@ -221,11 +221,11 @@
     </record>
 
     <record id="l10n_ca_tr_pst_bc" model="account.report">
-        <field name="name">British-Columbia PST report</field>
+        <field name="name">British-Columbia PST Report</field>
         <field name="name@fr">Rapport de TVP Colombie-Britannique</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ca"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="l10n_ca_tr_pst_bc_balance" model="account.report.column">
@@ -378,11 +378,11 @@
     </record>
 
     <record id="l10n_ca_tr_pst_mb" model="account.report">
-        <field name="name">Manitoba PST report</field>
+        <field name="name">Manitoba PST Report</field>
         <field name="name@fr">Rapport de TVP Manitoba</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ca"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="l10n_ca_tr_pst_mb_balance" model="account.report.column">
@@ -479,11 +479,11 @@
     </record>
 
     <record id="l10n_ca_tr_qst" model="account.report">
-        <field name="name">Quebec Tax report</field>
-        <field name="name@fr">Rapport de taxes Québec</field>
+        <field name="name">Quebec Tax Report</field>
+        <field name="name@fr">Rapport de Taxes Québec</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ca"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="l10n_ca_tr_pst_qst_gsthst" model="account.report.column">
@@ -725,11 +725,11 @@
     </record>
 
     <record id="l10n_ca_tr_pst_sk" model="account.report">
-        <field name="name">Saskatchewan PST report</field>
+        <field name="name">Saskatchewan PST Report</field>
         <field name="name@fr">Rapport de TVP Saskatchewan</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ca"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="l10n_ca_tr_pst_sk_balance" model="account.report.column">

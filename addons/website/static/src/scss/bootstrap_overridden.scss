@@ -73,6 +73,9 @@ $spacers: (
 $body-bg: o-color('o-cc1-bg') !default;
 $body-color: o-color('o-cc1-text') or color-contrast($body-bg) !default;
 
+// Bootstrap's default value on hover on some components eg. dropdown-item.
+$body-tertiary-bg: mix(color-contrast($body-bg), $body-bg, 10%) !default;
+
 // Links
 //
 // Style anchor elements.
@@ -270,6 +273,9 @@ $form-check-input-border: ($input-border-width or 1px) solid $input-border-color
 //   a background color on its own is not enough to convey that meaning anyway
 //   (a disabled range should have its *active* part with a different color).
 $form-range-track-bg: $input-disabled-bg !default;
+
+// Dropdowns
+$dropdown-border-color: $border-color !default;
 
 // Breadcrumbs
 $breadcrumb-padding-y: .75rem !default;

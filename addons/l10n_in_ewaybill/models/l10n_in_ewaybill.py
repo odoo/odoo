@@ -249,8 +249,12 @@ class L10nInEwaybill(models.Model):
             ewaybill.is_ship_to_editable = not is_incoming and not is_overseas
 
     def _compute_content(self):
+        dependent_fields = self._get_ewaybill_dependencies()
         for ewaybill in self:
-            ewaybill_json = ewaybill._ewaybill_generate_direct_json()
+            if any(ewaybill[d_field] for d_field in dependent_fields):
+                ewaybill_json = ewaybill._ewaybill_generate_direct_json()
+            else:
+                ewaybill_json = {}
             ewaybill.content = base64.b64encode(json.dumps(ewaybill_json).encode())
 
     @api.depends('name', 'state')
@@ -409,8 +413,8 @@ class L10nInEwaybill(models.Model):
 
     def _l10n_in_ewaybill_handle_zero_distance_alert_if_present(self, response_data):
         if self.distance == 0 and (alert := response_data.get('alert')):
-            pattern = r", Distance between these two pincodes is \d+, "
-            if re.fullmatch(pattern, alert) and (dist := int(re.search(r'\d+', alert).group())) > 0:
+            pattern = r"Distance between these two pincodes is (\d+)"
+            if (match := re.search(pattern, alert)) and (dist := int(match.group(1))) > 0:
                 return {
                     'distance': dist
                 }
@@ -531,11 +535,11 @@ class L10nInEwaybill(models.Model):
         round_value = self.env['account.move']._l10n_in_round_value
         tax_details_by_code = self.env['account.move']._get_l10n_in_tax_details_by_line_code(tax_details.get('tax_details', {}))
         line_details = {
-            'productName': line.product_id.name or line.name,
+            'productName': line.product_id.name,
             'hsnCode': extract_digits(line.l10n_in_hsn_code),
-            'productDesc': line.product_id.display_name,
+            'productDesc': line.name,
             'quantity': line.quantity,
-            'qtyUnit': line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split('-')[0] or 'OTH',
+            'qtyUnit': line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split('-')[0] or 'OTH',
             'taxableAmount': round_value(line.balance * sign),
         }
         gst_types = {'cgst', 'sgst', 'igst'}
@@ -588,7 +592,7 @@ class L10nInEwaybill(models.Model):
                 ),
                 "transDistance": str(self.distance),
                 "docNo": self.document_number,
-                "docDate": self.document_date.strftime("%d/%m/%Y"),
+                "docDate": (self.document_date or fields.Datetime.now()).strftime("%d/%m/%Y"),
                 # bill details
                 **prepare_details(
                     key_paired_function={
@@ -632,6 +636,8 @@ class L10nInEwaybill(models.Model):
         tax_details = self.account_move_id._l10n_in_prepare_tax_details()
         tax_details_by_code = self.env['account.move']._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
+        sign = self.account_move_id.is_inbound() and -1 or 1
+        rounding_amount = sum(line.balance for line in self.account_move_id.line_ids if line.display_type == 'rounding') * sign
         return {
             "itemList": list(starmap(self._get_l10n_in_ewaybill_line_details, invoice_line_tax_details.items())),
             "totalValue": round_value(tax_details.get("base_amount", 0.00)),
@@ -640,8 +646,8 @@ class L10nInEwaybill(models.Model):
                 for tax_type in ['cgst', 'sgst', 'igst', 'cess']
             },
             "cessNonAdvolValue": round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
-            "otherValue": round_value(tax_details_by_code.get("other_amount", 0.00)),
-            "totInvValue": round_value(tax_details.get("base_amount", 0.00) + tax_details.get("tax_amount", 0.00)),
+            "otherValue": round_value(tax_details_by_code.get("other_amount", 0.00) + rounding_amount),
+            "totInvValue": round_value(tax_details.get("base_amount", 0.00) + tax_details.get("tax_amount", 0.00) + rounding_amount),
         }
 
     def _ewaybill_generate_direct_json(self):

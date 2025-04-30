@@ -21,6 +21,10 @@ declare module "models" {
     export interface Message {
         chatbotStep: ChatbotStep;
     }
+    export interface Persona {
+        livechat_languages: String[];
+        livechat_expertise: String[];
+    }
     export interface Store {
         Chatbot: StaticMailRecord<Chatbot, typeof ChatbotClass>;
         "chatbot.script": StaticMailRecord<ChatbotScript, typeof ChatbotScriptClass>;

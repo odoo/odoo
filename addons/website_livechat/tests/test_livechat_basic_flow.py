@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
 
-from odoo import tests, _
+from odoo import fields, tests, _
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 from odoo.tests.common import new_test_user
+from odoo.tools.misc import limited_field_access_token
 
 
 @tests.tagged('post_install', '-at_install')
@@ -40,13 +41,13 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             self.env.ref('website.contactus_page').name,
             self.env.ref('website.homepage_page').name,
         )
-        history = self.env['discuss.channel']._get_visitor_history(self.visitor)
+        history = self.visitor._get_visitor_history()
 
         self.assertEqual(history, handmade_history)
 
     def test_livechat_username(self):
         # Open a new live chat
-        res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
+        res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
         channel_1 = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
 
@@ -64,7 +65,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.operator.name
 
         # Open a new live chat
-        res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
+        res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
         channel_2 = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
 
@@ -114,7 +115,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
     def _common_basic_flow(self):
         # Open a new live chat
-        res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
+        res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
 
         channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
@@ -149,6 +150,192 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
     def test_user_known_after_reload(self):
         self.start_tour('/', 'website_livechat_user_known_after_reload')
+
+    def test_no_new_session_with_hide_button_rule(self):
+        self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create(
+            [
+                {
+                    "channel_id": self.livechat_channel.id,
+                    "regex_url": "/livechat_url",
+                    "sequence": 1,
+                },
+                {
+                    "channel_id": self.livechat_channel.id,
+                    "action": "hide_button",
+                    "regex_url": "/",
+                    "sequence": 2,
+                },
+            ]
+        )
+        self.start_tour("/livechat_url", "website_livechat_no_session_with_hide_rule")
+
+    def test_channel_visitor_data(self):
+        self.maxDiff = None
+        channel = self._common_basic_flow()
+        self._reset_bus()
+        guest = self.env["mail.guest"].search([], order="id desc", limit=1)
+        operator_member = channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
+        guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
+        self.assertEqual(
+            Store(channel).get_result(),
+            {
+                "discuss.channel": self._filter_channels_fields(
+                    {
+                        "anonymous_name": f"Visitor #{self.visitor.id}",
+                        "authorizedGroupFullName": False,
+                        "avatar_cache_key": "no-avatar",
+                        "channel_type": "livechat",
+                        "country_id": False,
+                        "create_uid": self.user_public.id,
+                        "default_display_mode": False,
+                        "description": False,
+                        "fetchChannelInfoState": "fetched",
+                        "from_message_id": False,
+                        "group_based_subscription": False,
+                        "id": channel.id,
+                        "invited_member_ids": [("ADD", [])],
+                        "is_editable": True,
+                        "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
+                        "livechat_active": True,
+                        "livechat_channel_id": self.livechat_channel.id,
+                        "livechat_operator_id": {
+                            "id": self.operator.partner_id.id,
+                            "type": "partner",
+                        },
+                        "member_count": 2,
+                        "message_needaction_counter": 0,
+                        "message_needaction_counter_bus_id": 0,
+                        "name": f"Visitor #{self.visitor.id} El Deboulonnator",
+                        "parent_channel_id": False,
+                        "requested_by_operator": False,
+                        "rtc_session_ids": [("ADD", [])],
+                        "uuid": channel.uuid,
+                        "visitor": {"id": self.visitor.id, "type": "visitor"},
+                        "whatsapp_account_name": False,
+                        "whatsapp_channel_valid_until": False,
+                        "whatsapp_partner_id": False,
+                    }
+                ),
+                "discuss.channel.member": [
+                    {
+                        "create_date": fields.Datetime.to_string(operator_member.create_date),
+                        "fetched_message_id": False,
+                        "id": operator_member.id,
+                        "is_bot": False,
+                        "last_seen_dt": False,
+                        "persona": {"id": self.operator.partner_id.id, "type": "partner"},
+                        "seen_message_id": False,
+                        "thread": {"id": channel.id, "model": "discuss.channel"},
+                    },
+                    {
+                        "create_date": fields.Datetime.to_string(guest_member.create_date),
+                        "fetched_message_id": False,
+                        "id": guest_member.id,
+                        "is_bot": False,
+                        "last_seen_dt": False,
+                        "persona": {"id": guest.id, "type": "guest"},
+                        "seen_message_id": False,
+                        "thread": {"id": channel.id, "model": "discuss.channel"},
+                    },
+                ],
+                "im_livechat.channel": [
+                    {"id": self.livechat_channel.id, "name": "The basic channel"}
+                ],
+                "mail.guest": [
+                    {
+                        "avatar_128_access_token": limited_field_access_token(guest, "avatar_128"),
+                        "country": False,
+                        "id": guest.id,
+                        "im_status": "offline",
+                        "name": f"Visitor #{self.visitor.id}",
+                        "offline_since": False,
+                        "write_date": fields.Datetime.to_string(guest.write_date),
+                    }
+                ],
+                "res.country": [
+                    {"code": "BE", "id": self.env["ir.model.data"]._xmlid_to_res_id("base.be")}
+                ],
+                "res.partner": self._filter_partners_fields(
+                    {
+                        "active": True,
+                        "avatar_128_access_token": limited_field_access_token(
+                            self.operator.partner_id, "avatar_128"
+                        ),
+                        "country": False,
+                        "id": self.operator.partner_id.id,
+                        "im_status": "online",
+                        "is_public": False,
+                        "user_livechat_username": "El Deboulonnator",
+                        "write_date": fields.Datetime.to_string(
+                            self.operator.partner_id.write_date
+                        ),
+                    }
+                ),
+                "website.visitor": [
+                    {
+                        "country": self.env["ir.model.data"]._xmlid_to_res_id("base.be"),
+                        "history": "",
+                        "id": self.visitor.id,
+                        "is_connected": True,
+                        "lang_name": "English (US)",
+                        "name": f"Website Visitor #{self.visitor.id}",
+                        "partner_id": False,
+                        "website_name": "My Website",
+                    }
+                ],
+            },
+        )
+
+    def test_channel_to_store_after_operator_left(self):
+        channel = self._common_basic_flow()
+        guest = self.env["mail.guest"].search([], order="id desc", limit=1)
+        channel.with_user(self.operator).action_unfollow()
+        self._reset_bus()
+        self.assertFalse(
+            channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
+        )
+        self.assertEqual(
+            Store(channel.with_context(guest=guest).with_user(self.user_public)).get_result()["discuss.channel"],
+            self._filter_channels_fields(
+                {
+                    "anonymous_name": f"Visitor #{self.visitor.id}",
+                    "authorizedGroupFullName": False,
+                    "avatar_cache_key": "no-avatar",
+                    "channel_type": "livechat",
+                    "country_id": False,
+                    "create_uid": self.user_public.id,
+                    "custom_channel_name": False,
+                    "custom_notifications": False,
+                    "default_display_mode": False,
+                    "description": False,
+                    "fetchChannelInfoState": "fetched",
+                    "from_message_id": False,
+                    "group_based_subscription": False,
+                    "id": channel.id,
+                    "invited_member_ids": [("ADD", [])],
+                    "is_editable": False,
+                    "is_pinned": True,
+                    "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
+                    "livechat_active": False,
+                    "livechat_operator_id": {
+                        "id": self.operator.partner_id.id,
+                        "type": "partner",
+                    },
+                    "member_count": 1,
+                    "message_needaction_counter": 0,
+                    "message_needaction_counter_bus_id": 0,
+                    "mute_until_dt": False,
+                    "name": f"Visitor #{self.visitor.id} El Deboulonnator",
+                    "parent_channel_id": False,
+                    "requested_by_operator": False,
+                    "rtc_session_ids": [("ADD", [])],
+                    "uuid": channel.uuid,
+                    "whatsapp_account_name": False,
+                    "whatsapp_channel_valid_until": False,
+                    "whatsapp_partner_id": False,
+                }
+            ),
+        )
 
 
 @tests.tagged('post_install', '-at_install')

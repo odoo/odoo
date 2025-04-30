@@ -57,7 +57,7 @@
         </div>
     </div>
     <div t-if="is_public_user" class="alert alert-info d-inline-block">
-        <p class="mb-0">Please <a t-attf-href="/odoo?redirect=#{request.httprequest.url}" class="fw-bold"> login </a> to share this
+        <p class="mb-0">Please <a t-attf-href="/odoo?redirect=#{request.httprequest.url}" class="fw-bold o_translate_inline"> login </a> to share this
         <span t-field="record.slide_category" t-if="record._name == 'slide.slide'"/>
         <span t-field="record.name" t-if="record._name == 'slide.channel'"/> by email.</p>
     </div>

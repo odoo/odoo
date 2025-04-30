@@ -8,11 +8,12 @@ from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.tests.common import JsonRpcException, new_test_user, tagged
 from odoo.tools.misc import limited_field_access_token, mute_logger
 from odoo.addons.bus.models.bus import json_dump
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 
 
 @tagged("post_install", "-at_install")
-class ChatbotCase(chatbot_common.ChatbotCase):
+class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
 
     def test_chatbot_duplicate(self):
         """ In this test we make sure that 'triggering_answer_ids' are correctly duplicated and
@@ -127,7 +128,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             self.env["discuss.channel"].sudo().browse(data["channel_id"])
         )
         self.assertEqual(discuss_channel.livechat_operator_id, self.chatbot_script.operator_partner_id)
-        discuss_channel.add_members(partner_ids=self.env.user.partner_id.ids)
+        discuss_channel._add_members(users=self.env.user)
         self_member = discuss_channel.channel_member_ids.filtered(lambda m: m.is_self)
         bot_member = discuss_channel.channel_member_ids.filtered(
             lambda m: m.partner_id == self.chatbot_script.operator_partner_id
@@ -178,7 +179,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             transfer_message_data["mail.message"][0].update(
                 {
                     "author": {"id": self.chatbot_script.operator_partner_id.id, "type": "partner"},
-                    "body": "<p>I will transfer you to a human.</p>",
+                    "body": ["markup", "<p>I will transfer you to a human.</p>"],
                     # thread not renamed yet at this step
                     "default_subject": "Testing Bot",
                     "record_name": "Testing Bot",
@@ -188,8 +189,14 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             joined_message_data = Store(messages[0]).get_result()
             joined_message_data["mail.message"][0].update(
                 {
-                    "author": {"id": self.partner_employee.id, "type": "partner"},
-                    "body": "<div class=\"o_mail_notification\">joined the channel</div>",
+                    "author": {"id": self.chatbot_script.operator_partner_id.id, "type": "partner"},
+                    "body": [
+                        "markup",
+                        (
+                            '<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="'
+                            f'{self.partner_employee.id}">@Ernest Employee</a> to the channel</div>'
+                        ),
+                    ],
                     # thread not renamed yet at this step
                     "default_subject": "Testing Bot",
                     "record_name": "Testing Bot",
@@ -249,11 +256,11 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                     (self.cr.dbname, "discuss.channel", discuss_channel.id, "members"),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "res.partner", self.partner_employee.id),
-                    (self.cr.dbname, "res.partner", self.partner_employee.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id, "members"),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "res.partner", self.chatbot_script.operator_partner_id.id),
+                    (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "res.partner", self.partner_employee.id),
@@ -275,45 +282,10 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                     },
                     {
                         "type": "discuss.channel/joined",
-                        "payload": {"channel_id": discuss_channel.id, "data": channel_data_join},
-                    },
-                    {
-                        "type": "mail.record/insert",
                         "payload": {
-                            "discuss.channel.member": [
-                                {
-                                    "id": member_emp.id,
-                                    "message_unread_counter": 0,
-                                    "message_unread_counter_bus_id": 0,
-                                    "new_message_separator": messages[0].id + 1,
-                                    "persona": {"id": self.partner_employee.id, "type": "partner"},
-                                    "syncUnread": True,
-                                    "thread": {
-                                        "id": discuss_channel.id,
-                                        "model": "discuss.channel",
-                                    },
-                                }
-                            ],
-                            "res.country": [
-                                {"code": "BE", "id": self.env.ref("base.be").id, "name": "Belgium"}
-                            ],
-                            "res.partner": self._filter_partners_fields(
-                                {
-                                    "active": True,
-                                    "avatar_128_access_token": limited_field_access_token(
-                                        self.partner_employee, "avatar_128"
-                                    ),
-                                    "country": self.env.ref("base.be").id,
-                                    "id": self.partner_employee.id,
-                                    "im_status": "offline",
-                                    "is_public": False,
-                                    "name": "Ernest Employee",
-                                    "user_livechat_username": False,
-                                    "write_date": fields.Datetime.to_string(
-                                        self.partner_employee.write_date
-                                    ),
-                                }
-                            ),
+                            "channel_id": discuss_channel.id,
+                            "data": channel_data_join,
+                            "invited_by_user_id": self.env.user.id,
                         },
                     },
                     {
@@ -338,14 +310,14 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                                     "create_date": fields.Datetime.to_string(
                                         member_emp.create_date
                                     ),
-                                    "fetched_message_id": messages[0].id,
+                                    "fetched_message_id": False,
                                     "id": member_emp.id,
                                     "is_bot": False,
                                     "last_seen_dt": fields.Datetime.to_string(
                                         member_emp.last_seen_dt
                                     ),
                                     "persona": {"id": self.partner_employee.id, "type": "partner"},
-                                    "seen_message_id": messages[0].id,
+                                    "seen_message_id": False,
                                     "thread": {
                                         "id": discuss_channel.id,
                                         "model": "discuss.channel",
@@ -445,6 +417,12 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             )
         self.assertEqual(discuss_channel.name, "OdooBot Ernest Employee")
         self.assertEqual(discuss_channel.livechat_operator_id, self.partner_employee)
+        self.assertTrue(
+            discuss_channel.channel_member_ids.filtered(
+                lambda m: m.partner_id == self.partner_employee
+                and m.livechat_member_type == "agent"
+            )
+        )
 
     def test_chatbot_multiple_rules_on_same_url(self):
         bob_user = new_test_user(

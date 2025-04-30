@@ -2,10 +2,10 @@
 <odoo auto_sequence="1">
     <record id="tax_report" model="account.report">
         <field name="name">Tax Report</field>
-        <field name="name@el_GR">F2 Φορολογική έκθεση (GR)</field>
+        <field name="name@el_GR">Φορολογική έκθεση</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.gr"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="tax_report_balance" model="account.report.column">
@@ -667,7 +667,7 @@
                                 <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
-                                <field name="date_scope">previous_tax_period</field>
+                                <field name="date_scope">previous_return_period</field>
                             </record>
                             <record id="l10n_gr_tr_401_tag" model="account.report.expression">
                                 <field name="label">tag</field>
@@ -719,7 +719,7 @@
                                 <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
-                                <field name="date_scope">previous_tax_period</field>
+                                <field name="date_scope">previous_return_period</field>
                             </record>
                             <record id="l10n_gr_tr_483_tag" model="account.report.expression">
                                 <field name="label">tag</field>

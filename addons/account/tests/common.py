@@ -8,6 +8,7 @@ from odoo.addons.product.tests.common import ProductCommon
 
 import json
 import base64
+import copy
 from contextlib import contextmanager
 from functools import wraps
 from itertools import count
@@ -87,13 +88,6 @@ class AccountTestInvoicingCommon(ProductCommon):
         # ==== Fiscal positions ====
         cls.fiscal_pos_a = cls.env['account.fiscal.position'].create({
             'name': 'fiscal_pos_a',
-            'tax_ids': ([(0, None, {
-                    'tax_src_id': cls.tax_sale_a.id,
-                    'tax_dest_id': cls.tax_sale_b.id,
-            })] if cls.tax_sale_b else []) + ([(0, None, {
-                    'tax_src_id': cls.tax_purchase_a.id,
-                    'tax_dest_id': cls.tax_purchase_b.id,
-            })] if cls.tax_purchase_b else []),
             'account_ids': [
                 (0, None, {
                     'account_src_id': cls.product_a.property_account_income_id.id,
@@ -105,6 +99,12 @@ class AccountTestInvoicingCommon(ProductCommon):
                 }),
             ] if cls.env.registry.loaded else [],
         })
+        if cls.tax_sale_b:
+            cls.tax_sale_b.fiscal_position_ids = cls.fiscal_pos_a.ids
+            cls.tax_sale_b.original_tax_ids = cls.tax_sale_a
+        if cls.tax_purchase_b:
+            cls.tax_purchase_b.fiscal_position_ids = cls.fiscal_pos_a.ids
+            cls.tax_purchase_b.original_tax_ids = cls.tax_purchase_a
 
         # ==== Payment terms ====
         cls.pay_terms_a = cls.env.ref('account.account_payment_term_immediate')
@@ -185,6 +185,18 @@ class AccountTestInvoicingCommon(ProductCommon):
             cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
             cls.outbound_payment_method_line.payment_account_id = out_outstanding_account
 
+        # user with restricted groups
+        cls.simple_accountman = cls.env['res.users'].create({
+            'name': 'simple accountman',
+            'login': 'simple_accountman',
+            'password': 'simple_accountman',
+            'group_ids': [
+                # the `account` specific groups from get_default_groups()
+                Command.link(cls.env.ref('account.group_account_manager').id),
+                Command.link(cls.env.ref('account.group_account_user').id),
+            ],
+        })
+
     @classmethod
     def change_company_country(cls, company, country):
         company.country_id = country
@@ -259,7 +271,28 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()
-        return groups | cls.env.ref('account.group_account_manager') | cls.env.ref('account.group_account_user')
+        groups |= cls.env['res.groups'].browse(
+            cls.env['ir.model.data'].search([
+                ('model', '=', 'res.groups'),
+                ('name', 'in', (
+                    # TODO: Progressively remove groups from this list, hopefully no groups share the same name.
+                    # This is a consequence of moving groups from data to demo data: https://github.com/odoo/odoo/pull/198078
+                    'group_hr_manager', # hr
+                    'group_mrp_manager', # mrp
+                    'group_purchase_manager', # purchase
+                    'group_stock_manager', # stock
+                    # enterprise groups
+                    'group_hr_payroll_manager', # hr_payroll
+                    'group_plm_manager', # mrp_plm
+                ))
+            ]).mapped('res_id')
+        )
+        return (
+            groups
+            | cls.quick_ref('account.group_account_manager')
+            | cls.quick_ref('account.group_account_user')
+            | cls.quick_ref('base.group_system')  # company creation during setups
+        )
 
     @classmethod
     def setup_other_currency(cls, code, **kwargs):
@@ -369,6 +402,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     def setup_armageddon_tax(cls, tax_name, company_data, **kwargs):
         type_tax_use = kwargs.get('type_tax_use', 'sale')
         cash_basis_transition_account = company_data['default_account_tax_sale'] and company_data['default_account_tax_sale'].copy()
+        cash_basis_transition_account.reconcile = True
         return cls.env['account.tax'].create({
             'name': '%s (group)' % tax_name,
             'amount_type': 'group',
@@ -421,7 +455,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'amount': 10.0,
                     'type_tax_use': type_tax_use,
                     'country_id': company_data['company'].account_fiscal_country_id.id,
-                    'tax_exigibility': 'on_payment',
+                    'tax_exigibility': 'on_payment' if cash_basis_transition_account else 'on_invoice',
                     'cash_basis_transition_account_id': cash_basis_transition_account.id,
                     'invoice_repartition_line_ids': [
                         (0, 0, {
@@ -588,7 +622,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     continue
                 expected_value = expected_values[key]
                 currency = monetary_fields.get(key)
-                if currency.is_zero(current_value - expected_value):
+                if current_value is not None and currency.is_zero(current_value - expected_value):
                     current_values[key] = expected_value
 
         currency = self.env['res.currency'].browse(tax_totals['currency_id'])
@@ -791,13 +825,6 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         super().setUp()
         self.js_tests = []
 
-    def new_currency(self, rounding):
-        self.number += 1
-        return self.env.company.currency_id.copy({
-            'name': f"{self.number}",
-            'rounding': rounding,
-        })
-
     def group_of_taxes(self, taxes, **kwargs):
         self.number += 1
         return self.env['account.tax'].create({
@@ -834,6 +861,19 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'amount': amount,
         })
 
+    def _ensure_rate(self, currency, date, rate):
+        currency_rate = currency.rate_ids.filtered(lambda x: x.name == fields.Date.from_string(date))
+        if currency_rate:
+            currency_rate.rate = rate
+        else:
+            currency.rate_ids = [
+                Command.create({
+                    'name': date,
+                    'rate': rate,
+                    'company_id': self.env.company.id,
+                })
+            ]
+
     @contextmanager
     def with_tax_calculation_rounding_method(self, rounding_method):
         self.env.company.tax_calculation_rounding_method = rounding_method
@@ -863,6 +903,12 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         if not product:
             return {}
         return taxes._eval_taxes_computation_turn_to_product_values(product=product)
+
+    def _jsonify_product_uom(self, uom):
+        return {
+            'id': uom.id,
+            'name': uom.name,
+        }
 
     def _jsonify_tax_group(self, tax_group):
         return {
@@ -911,6 +957,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'currency_id': self._jsonify_currency(line.get('currency_id') or document['currency']),
             'rate': line['rate'] if 'rate' in line else document['rate'],
             'product_id': self._jsonify_product(line['product_id'], line['tax_ids']),
+            'product_uom_id': self._jsonify_product_uom(line['product_uom_id']),
             'tax_ids': [self._jsonify_tax(tax) for tax in line['tax_ids']],
             'price_unit': line['price_unit'],
             'quantity': line['quantity'],
@@ -939,22 +986,31 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'currency_id': self._jsonify_currency(company.currency_id),
         }
 
+    def convert_base_line_to_invoice_line(self, document, base_line):
+        values = {
+            'price_unit': base_line['price_unit'],
+            'discount': base_line['discount'],
+            'quantity': base_line['quantity'],
+        }
+        if base_line['product_id']:
+            values['product_id'] = base_line['product_id'].id
+        if base_line['product_uom_id']:
+            values['product_uom_id'] = base_line['product_uom_id'].id
+        if base_line['tax_ids']:
+            values['tax_ids'] = [Command.set(base_line['tax_ids'].ids)]
+        return values
+
     def convert_document_to_invoice(self, document):
         invoice_date = '2020-01-01'
-        currency = self.setup_other_currency(document['currency'].name.upper(), rates=[(invoice_date, document['rate'])])
+        currency = document['currency']
+        self._ensure_rate(currency, invoice_date, document['rate'])
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'invoice_date': invoice_date,
             'currency_id': currency.id,
             'invoice_cash_rounding_id': document['cash_rounding'] and document['cash_rounding'].id,
             'invoice_line_ids': [
-                Command.create({
-                    'product_id': base_line['product_id'].id,
-                    'price_unit': base_line['price_unit'],
-                    'discount': base_line['discount'],
-                    'quantity': base_line['quantity'],
-                    'tax_ids': [Command.set(base_line['tax_ids'].ids)],
-                })
+                Command.create(self.convert_base_line_to_invoice_line(document, base_line))
                 for base_line in document['lines']
             ],
         })
@@ -990,25 +1046,25 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'cash_rounding': cash_rounding,
         }
 
-    def populate_document(self, document):
+    def populate_document(self, document_params):
         AccountTax = self.env['account.tax']
         base_lines = [
             AccountTax._prepare_base_line_for_taxes_computation(
                 None,
                 id=i,
-                rate=line['rate'] if 'rate' in line else document['rate'],
+                rate=line['rate'] if 'rate' in line else document_params['rate'],
                 **{
-                    'currency_id': line.get('currency_id') or document['currency'],
+                    'currency_id': line.get('currency_id') or document_params['currency'],
                     'quantity': 1.0,
                     **line,
                 },
             )
-            for i, line in enumerate(document['lines'])
+            for i, line in enumerate(document_params['lines'])
         ]
         AccountTax._add_tax_details_in_base_lines(base_lines, self.env.company)
         AccountTax._round_base_lines_tax_details(base_lines, self.env.company)
         return {
-            **document,
+            **document_params,
             'lines': base_lines,
         }
 
@@ -1211,18 +1267,133 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             soft_checking,
         )
 
+    def assert_py_tax_totals_summary(self, document, expected_values, excluded_tax_group_ids=None, soft_checking=False):
+        results = self._create_py_sub_test_tax_totals_summary(document, excluded_tax_group_ids, soft_checking)
+        self._assert_sub_test_tax_totals_summary(results, expected_values)
+
+    # -------------------------------------------------------------------------
+    # global_discount
+    # -------------------------------------------------------------------------
+
+    def _assert_sub_test_global_discount(self, results, expected_results):
+        self._assert_tax_totals_summary(
+            results['tax_totals'],
+            expected_results,
+            soft_checking=results['soft_checking'],
+        )
+
+    def _create_py_sub_test_global_discount(self, document, amount_type, amount, soft_checking):
+        AccountTax = self.env['account.tax']
+        base_lines = AccountTax._prepare_global_discount_lines(
+            base_lines=document['lines'],
+            company=self.env.company,
+            amount_type=amount_type,
+            amount=amount,
+        )
+        new_document = copy.deepcopy(document)
+        new_document['lines'] += base_lines
+        AccountTax._add_tax_details_in_base_lines(new_document['lines'], self.env.company)
+        AccountTax._round_base_lines_tax_details(new_document['lines'], self.env.company)
+        tax_totals = AccountTax._get_tax_totals_summary(
+            base_lines=new_document['lines'],
+            currency=new_document['currency'],
+            company=self.env.company,
+            cash_rounding=new_document['cash_rounding'],
+        )
+        return {'tax_totals': tax_totals, 'soft_checking': soft_checking}
+
+    def _create_js_sub_test_global_discount(self, document, amount_type, amount, soft_checking):
+        return {
+            'test': 'global_discount',
+            'document': self._jsonify_document(document),
+            'amount_type': amount_type,
+            'amount': amount,
+            'soft_checking': soft_checking,
+        }
+
+    def assert_global_discount(self, document, amount_type, amount, expected_values, soft_checking=False):
+        self._create_assert_test(
+            expected_values,
+            self._create_py_sub_test_global_discount,
+            self._create_js_sub_test_global_discount,
+            self._assert_sub_test_global_discount,
+            document,
+            amount_type,
+            amount,
+            soft_checking,
+        )
+
+    # -------------------------------------------------------------------------
+    # down_payment
+    # -------------------------------------------------------------------------
+
+    def _assert_sub_test_down_payment(self, results, expected_results):
+        self._assert_tax_totals_summary(
+            results['tax_totals'],
+            expected_results,
+            soft_checking=results['soft_checking'],
+        )
+
+    def _create_py_sub_test_down_payment(self, document, amount_type, amount, soft_checking):
+        AccountTax = self.env['account.tax']
+        base_lines = AccountTax._prepare_down_payment_lines(
+            base_lines=document['lines'],
+            company=self.env.company,
+            amount_type=amount_type,
+            amount=amount,
+            computation_key='down_payment',
+        )
+        new_document = copy.deepcopy(document)
+        new_document['lines'] = base_lines
+        AccountTax._add_tax_details_in_base_lines(new_document['lines'], self.env.company)
+        AccountTax._round_base_lines_tax_details(new_document['lines'], self.env.company)
+        tax_totals = AccountTax._get_tax_totals_summary(
+            base_lines=new_document['lines'],
+            currency=new_document['currency'],
+            company=self.env.company,
+            cash_rounding=new_document['cash_rounding'],
+        )
+        return {'tax_totals': tax_totals, 'soft_checking': soft_checking}
+
+    def _create_js_sub_test_down_payment(self, document, amount_type, amount, soft_checking):
+        return {
+            'test': 'down_payment',
+            'document': self._jsonify_document(document),
+            'amount_type': amount_type,
+            'amount': amount,
+            'soft_checking': soft_checking,
+        }
+
+    def assert_down_payment(self, document, amount_type, amount, expected_values, soft_checking=False):
+        self._create_assert_test(
+            expected_values,
+            self._create_py_sub_test_down_payment,
+            self._create_js_sub_test_down_payment,
+            self._assert_sub_test_down_payment,
+            document,
+            amount_type,
+            amount,
+            soft_checking,
+        )
+
     # -------------------------------------------------------------------------
     # invoice tax_totals_summary
     # -------------------------------------------------------------------------
 
+    def assert_invoice_totals(self, invoice, expected_values):
+        cash_rounding_base_amount_currency = invoice.tax_totals.get('cash_rounding_base_amount_currency', 0.0)
+        expected_amounts = {}
+        if 'base_amount_currency' in expected_values:
+            expected_amounts['amount_untaxed'] = expected_values['base_amount_currency'] + cash_rounding_base_amount_currency
+        if 'tax_amount_currency' in expected_values:
+            expected_amounts['amount_tax'] = expected_values['tax_amount_currency']
+        if 'total_amount_currency' in expected_values:
+            expected_amounts['amount_total'] = expected_values['total_amount_currency']
+        self.assertRecordValues(invoice, [expected_amounts])
+
     def assert_invoice_tax_totals_summary(self, invoice, expected_values, soft_checking=False):
         self._assert_tax_totals_summary(invoice.tax_totals, expected_values, soft_checking=soft_checking)
-        cash_rounding_base_amount_currency = invoice.tax_totals.get('cash_rounding_base_amount_currency', 0.0)
-        self.assertRecordValues(invoice, [{
-            'amount_untaxed': expected_values['base_amount_currency'] + cash_rounding_base_amount_currency,
-            'amount_tax': expected_values['tax_amount_currency'],
-            'amount_total': expected_values['total_amount_currency'],
-        }])
+        self.assert_invoice_totals(invoice, expected_values)
 
 
 class TestAccountMergeCommon(AccountTestInvoicingCommon):

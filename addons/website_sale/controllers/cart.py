@@ -2,10 +2,12 @@
 
 from werkzeug.exceptions import NotFound
 
-from odoo import _, fields
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.http import request, route
 from odoo.tools import consteq
+from odoo.tools.image import image_data_uri
+from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
@@ -58,6 +60,7 @@ class Cart(PaymentPortal):
             values['suggested_products'] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
 
+        values.update(request.website._get_checkout_step_values())
         values.update(self._cart_values(**post))
         return request.render('website_sale.cart', values)
 
@@ -130,12 +133,34 @@ class Cart(PaymentPortal):
         :rtype: dict
         """
         order_sudo = request.cart or request.website._create_cart()
+        quantity = int(quantity)  # Do not allow float values in ecommerce by default
 
         product = request.env['product.product'].browse(product_id).exists()
         if not product or not product._is_add_to_cart_allowed():
             raise UserError(_(
                 "The given product does not exist therefore it cannot be added to cart."
             ))
+
+        combo_item_products = [
+            product for product in linked_products or [] if product.get('combo_item_id')
+        ]
+        if (
+            product.type == 'combo'
+            and combo_item_products
+        ):
+            # A combo product and its items should have the same quantity (by design). If the
+            # requested quantity isn't available for one or more combo items, we should lower
+            # the quantity of the combo product and its items to the maximum available quantity
+            # of the combo item with the least available quantity.
+            combo_quantity, _warning = order_sudo._verify_updated_quantity(
+                request.env['sale.order.line'], product_id, quantity, **kwargs
+            )
+            for item_product in combo_item_products:
+                combo_item_quantity, _warning = order_sudo._verify_updated_quantity(
+                    request.env['sale.order.line'], item_product['product_id'], quantity, **kwargs
+                )
+                combo_quantity = min(combo_quantity, combo_item_quantity)
+            quantity = combo_quantity
 
         values = order_sudo._cart_add(
             product_id=product_id,
@@ -164,6 +189,8 @@ class Cart(PaymentPortal):
                         "The given product does not exist therefore it cannot be added to cart."
                     ))
 
+                if product.type == 'combo' and product_data.get('combo_item_id'):
+                    product_data['quantity'] = quantity
                 product_values = order_sudo._cart_add(
                     product_id=product_data['product_id'],
                     quantity=product_data['quantity'],
@@ -178,6 +205,12 @@ class Cart(PaymentPortal):
                     **kwargs,
                 )
                 line_ids[product_data['product_template_id']] = product_values['line_id']
+
+        # The validity of a combo product line can only be checked after creating all of its combo
+        # item lines.
+        main_product_line = request.env['sale.order.line'].browse(values['line_id'])
+        if main_product_line.product_type == 'combo':
+            main_product_line._check_validity()
 
         values['notification_info'] = self._get_cart_notification_information(
             order_sudo, line_ids.values()
@@ -208,6 +241,7 @@ class Cart(PaymentPortal):
         :params dict kwargs: additional parameters given to _cart_update_line_quantity calls.
         """
         order_sudo = request.cart
+        quantity = int(quantity)  # Do not allow float values in ecommerce by default
 
         # This method must be only called from the cart page BUT in some advanced logic
         # eg. website_sale_loyalty, a cart line could be a temporary record without id.
@@ -337,6 +371,16 @@ class Cart(PaymentPortal):
 
     def _get_additional_cart_notification_information(self, line):
         # Only set the linked line id for combo items, not for optional products.
-        if line.combo_item_id:
-            return {'linked_line_id': line.linked_line_id.id}
+        if combo_item := line.combo_item_id:
+            infos = {'linked_line_id': line.linked_line_id.id}
+            # To sell a product type 'combo', one doesn't need to publish all combo choices. This
+            # causes an issue when public users access the image of each choice via the /web/image
+            # route. To bypass this access check, we send the raw image URL if the product is
+            # inaccessible to the current user.
+            if (
+                not combo_item.product_id.sudo(False).has_access('read')
+                and combo_item.product_id.image_128
+            ):
+                infos['image_url'] = image_data_uri(combo_item.product_id.image_128)
+            return infos
         return {}

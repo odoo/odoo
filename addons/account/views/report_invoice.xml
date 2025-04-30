@@ -103,7 +103,7 @@
                                     <t name="proforma_vendor_bill_title">Proforma Vendor Bill</t>
                                 </span>
                             </t>
-                            <span t-if="o.name != '/'" t-field="o.name">INV/2023/0001</span>
+                            <span t-if="o.name and o.name != '/'" t-field="o.name">INV/2023/0001</span>
                         </t>
                         <div class="oe_structure"></div>
                         <div id="informations" class="row mb-4">
@@ -145,6 +145,7 @@
                         </div>
 
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
+                        <t t-set="display_taxes" t-value="any(l.tax_ids for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
                         <table class="o_has_total_table table o_main_table table-borderless" name="invoice_line_table">
                             <thead>
@@ -155,7 +156,7 @@
                                     <th name="th_discount" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span>Disc.%</span>
                                     </th>
-                                    <th name="th_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>
+                                    <th name="th_taxes" t-if="display_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>
                                     <th name="th_subtotal" class="text-end">
                                         <span>Amount</span>
                                     </th>
@@ -191,23 +192,24 @@
                                                 <span class="text-nowrap" t-field="line.discount">0</span>
                                             </td>
                                             <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_ids])"/>
-                                            <td name="td_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                            <td name="td_taxes" t-if="display_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
                                                 <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
                                             </td>
                                             <td name="td_subtotal" class="text-end o_price_total">
-                                                <span class="text-nowrap" t-field="line.price_subtotal">27.00</span>
+                                                <span t-if="o.company_price_include == 'tax_excluded'" class="text-nowrap" t-field="line.price_subtotal">27.00</span>
+                                                <span t-if="o.company_price_include == 'tax_included'" class="text-nowrap" t-field="line.price_total">31.05</span>
                                             </td>
                                         </t>
                                         <t t-elif="line.display_type == 'line_section'">
                                             <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
+                                                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
                                             </td>
                                             <t t-set="current_section" t-value="line"/>
                                             <t t-set="current_subtotal" t-value="0"/>
                                         </t>
                                         <t t-elif="line.display_type == 'line_note'">
                                             <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}">A note, whose content usually applies to the section or product above.</span>
+                                                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A note, whose content usually applies to the section or product above.</span>
                                             </td>
                                         </t>
                                     </tr>
@@ -281,7 +283,7 @@
                                     <div class="oe_structure"/>
                                 </t>
                             </div>
-                            <div id="payment_term" class="clearfix">
+                            <div id="payment_term" class="clearfix overflow-auto">
                                 <div class="justify-text">
                                     <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note" class="mb-2">
                                         <span t-field="o.fiscal_position_id.note"/>
@@ -328,7 +330,7 @@
                                         </t>
                                     </p>
                                 </div>
-                                <t t-set="show_qr" t-value="o.display_qr_code and o.amount_residual > 0"/>
+                                <t t-set="show_qr" t-value="o.display_qr_code and o.amount_residual"/>
                                 <div t-if="not show_qr" name="qr_code_placeholder" class="oe_structure"></div>
                                 <div id="qrcode" class="d-flex mb-3 avoid-page-break-inside" t-else="">
                                     <div class="qrcode me-3" id="qrcode_image">
@@ -337,12 +339,30 @@
                                             <img t-att-src="qr_code_url"/>
                                             <img src="/account/static/src/img/Odoo_logo_O.svg"
                                                  id="qrcode_odoo_logo"
-                                                 class="top-50 start-50 position-absolute bg-white border border-white border-3 rounded-circle"
+                                                 class="top-50 start-50 position-absolute bg-white border border-3 rounded-circle"
                                             />
                                         </p>
                                     </div>
                                     <div class="d-inline text-muted lh-sm fst-italic" id="qrcode_info" t-if="qr_code_url">
                                         <p>Scan this QR Code with<br/>your banking application</p>
+                                    </div>
+                                </div>
+                                <t t-set="show_link_qr" t-value="o.display_link_qr_code and o.amount_residual"/>
+                                <div t-if="show_link_qr" id="payment_link_qrcode" class="d-flex mb-3 avoid-page-break-inside">
+                                    <t t-set="portal_qr_code" t-value="o._generate_portal_payment_qr()"/>
+                                    <div class="qrcode me-3 position-relative" id="qrcode_image">
+                                        <a t-att-href="o._get_portal_payment_link()" target="_blank" class="top-0 start-0 position-absolute w-100 h-100 z-1" />
+                                        <p class="position-relative mb-0">
+                                            <img t-att-src="portal_qr_code"/>
+                                            <img src="/account/static/src/img/Odoo_logo_O.svg"
+                                                 id="qrcode_odoo_logo"
+                                                 class="top-50 start-50 position-absolute bg-white border border-3 rounded-circle"
+                                            />
+                                        </p>
+                                    </div>
+                                    <div class="d-inline lh-sm" id="qrcode_info" t-if="portal_qr_code">
+                                        <p class="fw-bold mb-0">PAY IN A FLASH!</p>
+                                        <p class="text-muted fst-italic">Scan the QR code<br/>or click to pay online</p>
                                     </div>
                                 </div>
                                 <!--terms and conditions-->
@@ -367,7 +387,7 @@
             -->
             <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
             <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
-                <tr class="o_subtotal">
+                <tr t-if="subtotal['tax_groups']" class="o_subtotal">
                     <td>
                         <span t-out="subtotal['name']">Untaxed Amount</span>
                     </td>

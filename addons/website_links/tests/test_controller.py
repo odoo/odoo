@@ -16,6 +16,7 @@ class TestWebsiteLinksRussian(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.link = cls.env['link.tracker'].create({
+            'title': '/web/health',
             'url': cls.base_url() + '/web/health',  # no-op route
         })
 

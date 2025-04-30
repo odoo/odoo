@@ -3,15 +3,16 @@
 from ast import literal_eval
 from unittest.mock import patch
 
+from odoo import http
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, HttpCase
 from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('post_install', '-at_install')
-class TestAccountJournal(AccountTestInvoicingCommon):
+class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -27,7 +28,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         journal_bank.currency_id = self.other_currency
 
         # Try to set a different currency on the 'debit' account.
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             journal_bank.default_account_id.currency_id = self.company_data['currency']
 
     def test_changing_journal_company(self):
@@ -40,7 +41,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
             'journal_id': self.company_data['default_journal_sale'].id,
         })
 
-        with self.assertRaisesRegex(UserError, "entries linked to it"), self.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "entries linked to it"):
             self.company_data['default_journal_sale'].company_id = self.company_data_2['company']
 
     def test_account_journal_add_new_payment_method_multi(self):
@@ -117,8 +118,8 @@ class TestAccountJournal(AccountTestInvoicingCommon):
             'payment_method_id': check_method.id,
             'journal_id': journal.id
             })
-        with self.assertRaises(ValidationError):
-            journal.action_archive()
+        journal.action_archive()
+        self.assertFalse(journal.active)
 
     def test_archive_multiple_journals(self):
         journals = self.env['account.journal'].create([{
@@ -140,6 +141,20 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         journals.action_unarchive()
         self.assertTrue(journals[0].active)
         self.assertTrue(journals[1].active)
+
+    def test_journal_notifications_unsubscribe(self):
+        journal = self.company_data['default_journal_purchase']
+        journal.incoming_einvoice_notification_email = 'test@example.com'
+
+        self.authenticate(self.env.user.login, self.env.user.login)
+        res = self.url_open(
+            f'/my/journal/{journal.id}/unsubscribe',
+            data={'csrf_token': http.Request.csrf_token(self)},
+            method='POST',
+        )
+        res.raise_for_status()
+
+        self.assertFalse(journal.incoming_einvoice_notification_email)
 
 
 @tagged('post_install', '-at_install', 'mail_alias')

@@ -104,13 +104,29 @@ class TestPeppolParticipant(TransactionCase):
         with patch.object(cls, "env", env):
             yield
 
+    def test_ignore_archived_edi_users(self):
+        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard.button_register_peppol_participant()
+
+        self.env['account_edi_proxy_client.user'].create([{
+            'active': False,
+            'id_client': 'client-demo',
+            'company_id': self.env.company.id,
+            'edi_identification': 'client-demo',
+            'private_key_id': self.env['certificate.key'].sudo()._generate_rsa_private_key(self.env.company).id,
+            'refresh_token': False,
+            'proxy_type': 'peppol',
+            'edi_mode': 'demo',
+        }])
+        self.env.company.with_context(active_test=False).partner_id.button_account_peppol_check_partner_endpoint()
+
     def test_create_participant_missing_data(self):
         # creating a participant without eas/endpoint/document should not be possible
         wizard = self.env['peppol.registration'].create({
             'peppol_eas': False,
             'peppol_endpoint': False,
         })
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             wizard.button_register_peppol_participant()
 
     def test_create_success_sender(self):
@@ -167,7 +183,7 @@ class TestPeppolParticipant(TransactionCase):
         # should not be possible to create a duplicate participant
         wizard = self.env['peppol.registration'].create(self._get_participant_vals())
         wizard.button_register_peppol_participant()
-        with self.assertRaises(IntegrityError), self.cr.savepoint():
+        with self.assertRaises(IntegrityError):
             wizard.account_peppol_proxy_state = 'not_registered'
             wizard.button_register_peppol_participant()
 

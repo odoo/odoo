@@ -44,7 +44,6 @@ class DigestDigest(models.Model):
 
     def _compute_kpis_actions(self, company, user):
         res = super()._compute_kpis_actions(company, user)
-        res['kpi_livechat_rating'] = 'im_livechat.rating_rating_action_livechat_report'
         res['kpi_livechat_conversations'] = 'im_livechat.im_livechat_report_operator_action'
         res['kpi_livechat_response'] = 'im_livechat.im_livechat_report_channel_time_to_answer_action'
         return res

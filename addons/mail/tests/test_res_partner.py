@@ -543,10 +543,10 @@ class TestPartner(MailCommon):
 
         # add some mail related documents
         p1.message_subscribe(partner_ids=p3.ids)
-        p1_act1 = p1.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
+        p1_act1 = p1.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo', user_id=self.user_admin.id)
         p1_msg1 = p1.message_post(
             body=Markup('<p>Log on P1</p>'),
-            subtype_id=self.env.ref('mail.mt_comment').id
+            subtype_id=self.env.ref('mail.mt_comment').id,
         )
         self.assertEqual(p1.activity_ids, p1_act1)
         self.assertEqual(p1.message_follower_ids.partner_id, self.partner_admin + p3)

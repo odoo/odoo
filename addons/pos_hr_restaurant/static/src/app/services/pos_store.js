@@ -4,6 +4,8 @@ import { PosStore } from "@point_of_sale/app/services/pos_store";
 
 patch(PosStore.prototype, {
     shouldResetIdleTimer() {
-        return this.mainScreen?.name !== "LoginScreen" && super.shouldResetIdleTimer(...arguments);
+        return (
+            this.router.state.current !== "LoginScreen" && super.shouldResetIdleTimer(...arguments)
+        );
     },
 });

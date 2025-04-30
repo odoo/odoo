@@ -3,8 +3,8 @@
 import logging
 import requests
 import uuid
-from markupsafe import Markup
 from datetime import timedelta
+from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
@@ -100,33 +100,23 @@ class DiscussChannelMember(models.Model):
                 member.is_self = True
 
     def _search_is_self(self, operator, operand):
-        is_in = (operator == "=" and operand) or (operator == "!=" and not operand)
+        if operator != 'in':
+            return NotImplemented
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        if is_in:
-            return [
-                '|',
-                ("partner_id", "=", current_partner.id) if current_partner else expression.FALSE_LEAF,
-                ("guest_id", "=", current_guest.id) if current_guest else expression.FALSE_LEAF,
-            ]
-        else:
-            return [
-                ("partner_id", "!=", current_partner.id) if current_partner else expression.TRUE_LEAF,
-                ("guest_id", "!=", current_guest.id) if current_guest else expression.TRUE_LEAF,
-            ]
+        return [
+            '|',
+            ("partner_id", "=", current_partner.id) if current_partner else expression.FALSE_LEAF,
+            ("guest_id", "=", current_guest.id) if current_guest else expression.FALSE_LEAF,
+        ]
 
     def _search_is_pinned(self, operator, operand):
-        if (operator == "=" and operand) or (operator == "!=" and not operand):
-            return expression.OR([
-                [("unpin_dt", "=", False)],
-                [("last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
-                [("channel_id.last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
-            ])
-        else:
-            return [
-                ("unpin_dt", "!=", False),
-                ("last_interest_dt", "<", self._field_to_sql(self._table, "unpin_dt")),
-                ("channel_id.last_interest_dt", "<", self._field_to_sql(self._table, "unpin_dt")),
-            ]
+        if operator != 'in':
+            return NotImplemented
+        return expression.OR([
+            [("unpin_dt", "=", False)],
+            [("last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
+            [("channel_id.last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
+        ])
 
     @api.depends("channel_id.message_ids", "new_message_separator")
     def _compute_message_unread(self):
@@ -207,7 +197,7 @@ class DiscussChannelMember(models.Model):
         # kept in sync.
         for member in res:
             if parent := member.channel_id.parent_channel_id:
-                parent.add_members(partner_ids=member.partner_id.ids, guest_ids=member.guest_id.ids)
+                parent._add_members(partners=member.partner_id, guests=member.guest_id)
         return res
 
     def write(self, vals):
@@ -274,8 +264,10 @@ class DiscussChannelMember(models.Model):
                 predicate=lambda m: m.partner_id,
             ),
             # sudo: mail.guest - reading guest related to a member is considered acceptable
-            Store.One(
-                "guest_id", fields, predicate=lambda m: m.guest_id, rename="persona", sudo=True
+            Store.Attr(
+                "persona",
+                lambda m: Store.One(m.guest_id.sudo(), m._get_store_guest_fields(fields)),
+                predicate=lambda m: m.guest_id,
             ),
         ]
 
@@ -290,6 +282,10 @@ class DiscussChannelMember(models.Model):
         ]
 
     def _get_store_partner_fields(self, fields):
+        self.ensure_one()
+        return fields
+
+    def _get_store_guest_fields(self, fields):
         self.ensure_one()
         return fields
 
@@ -314,11 +310,11 @@ class DiscussChannelMember(models.Model):
         self._join_sfu(ice_servers)
         if store:
             store.add(
-                self.channel_id, {"rtcSessions": Store.Many(current_rtc_sessions, mode="ADD")}
+                self.channel_id, {"rtc_session_ids": Store.Many(current_rtc_sessions, mode="ADD")}
             )
             store.add(
                 self.channel_id,
-                {"rtcSessions": Store.Many(outdated_rtc_sessions, [], mode="DELETE")},
+                {"rtc_session_ids": Store.Many(outdated_rtc_sessions, [], mode="DELETE")},
             )
             store.add_singleton_values(
                 "Rtc",
@@ -328,12 +324,11 @@ class DiscussChannelMember(models.Model):
                     "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
                 },
             )
-        if len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type != "channel":
-            self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
+        if self.channel_id._should_invite_members_to_join_call():
             self._rtc_invite_members()
 
-    def _join_sfu(self, ice_servers=None):
-        if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD:
+    def _join_sfu(self, ice_servers=None, force=False):
+        if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD and not force:
             if self.channel_id.sfu_channel_uuid:
                 self.channel_id.sfu_channel_uuid = None
                 self.channel_id.sfu_server_url = None
@@ -445,7 +440,7 @@ class DiscussChannelMember(models.Model):
             self.channel_id._bus_send_store(
                 self.channel_id,
                 {
-                    "invitedMembers": Store.Many(
+                    "invited_member_ids": Store.Many(
                         members,
                         [
                             Store.One("channel_id", [], as_thread=True, rename="thread"),
@@ -573,9 +568,12 @@ class DiscussChannelMember(models.Model):
             ],
         )
 
+    def _get_html_link_title(self):
+        return self.partner_id.name if self.partner_id else self.guest_id.name
+
     def _get_html_link(self, *args, for_persona=False, **kwargs):
         if not for_persona:
             return self._get_html_link(*args, **kwargs)
         if self.partner_id:
-            return self.partner_id._get_html_link(title=f"@{self.partner_id.name}")
+            return self.partner_id._get_html_link(title=f"@{self._get_html_link_title()}")
         return Markup("<strong>%s</strong>") % self.guest_id.name

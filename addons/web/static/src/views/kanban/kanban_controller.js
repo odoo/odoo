@@ -15,7 +15,7 @@ import { useModelWithSampleData } from "@web/model/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
-import { useExportRecords } from "@web/views/view_hook";
+import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { KanbanCogMenu } from "./kanban_cog_menu";
 import { KanbanRenderer } from "./kanban_renderer";
@@ -163,6 +163,9 @@ export class KanbanController extends Component {
         });
         useSetupAction({
             rootRef: this.rootRef,
+            beforeLeave: () =>
+                // wait for potential pending write operations (e.g. records being moved)
+                this.model.mutex.getUnlockedDef(),
             getLocalState: () => ({
                 activeBars: this.progressBarState?.activeBars,
                 modelState: this.model.exportState(),
@@ -171,7 +174,7 @@ export class KanbanController extends Component {
         usePager(() => {
             const root = this.model.root;
             const { count, hasLimitedCount, isGrouped, limit, offset } = root;
-            if (!isGrouped) {
+            if (!isGrouped && !this.model.useSampleModel) {
                 return {
                     offset: offset,
                     limit: limit,
@@ -207,6 +210,7 @@ export class KanbanController extends Component {
         this.exportRecords = useExportRecords(this.env, this.props.context, () =>
             this.getExportableFields()
         );
+        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
     }
 
     get display() {
@@ -302,7 +306,7 @@ export class KanbanController extends Component {
     }
 
     get modelOptions() {
-        return {};
+        return { lazy: !this.env.inDialog && !!this.props.display.controlPanel };
     }
 
     get progressBarAggregateFields() {
@@ -351,9 +355,16 @@ export class KanbanController extends Component {
                 description: _t("Export"),
                 callback: () => this.exportRecords(),
             },
+            duplicate: {
+                isAvailable: () => this.props.archInfo.activeActions.duplicate,
+                sequence: 30,
+                icon: "fa fa-clone",
+                description: _t("Duplicate"),
+                callback: () => this.model.root.duplicateRecords(),
+            },
             archive: {
                 isAvailable: () => this.archiveEnabled,
-                sequence: 20,
+                sequence: 40,
                 icon: "oi oi-archive",
                 description: _t("Archive"),
                 callback: () =>
@@ -361,27 +372,19 @@ export class KanbanController extends Component {
             },
             unarchive: {
                 isAvailable: () => this.archiveEnabled,
-                sequence: 30,
+                sequence: 45,
                 icon: "oi oi-unarchive",
                 description: _t("Unarchive"),
                 callback: () => this.model.root.toggleArchiveWithConfirmation(false),
             },
-            duplicate: {
-                isAvailable: () => this.props.archInfo.activeActions.duplicate,
-                sequence: 35,
-                icon: "fa fa-clone",
-                description: _t("Duplicate"),
-                callback: () => this.model.root.duplicateRecords(),
-            },
             delete: {
                 isAvailable: () => this.props.archInfo.activeActions.delete,
-                sequence: 40,
+                sequence: 50,
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),
+                class: "text-danger",
                 callback: () =>
-                    this.model.root.deleteRecordsWithConfirmation(
-                        this.deleteConfirmationDialogProps
-                    ),
+                    this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps),
             },
         };
     }
@@ -391,7 +394,7 @@ export class KanbanController extends Component {
     }
 
     deleteRecord(record) {
-        this.model.root.deleteRecordsWithConfirmation({}, [record]);
+        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps, [record]);
     }
 
     async openRecord(record, { newWindow } = {}) {
@@ -424,23 +427,27 @@ export class KanbanController extends Component {
     }
 
     get canCreate() {
-        const { create, createGroup } = this.props.archInfo.activeActions;
+        return this.props.archInfo.activeActions.create;
+    }
+
+    get isNewButtonDisabled() {
+        const { createGroup } = this.props.archInfo.activeActions;
         const list = this.model.root;
-        if (!create) {
-            return false;
-        }
-        if (list.isGrouped) {
-            if (list.groupByField.type !== "many2one") {
-                return true;
-            }
-            return list.groups.length || !createGroup;
-        }
-        return true;
+        return (
+            this.model.isReady &&
+            list.isGrouped &&
+            list.groupByField.type === "many2one" &&
+            list.groups.length === 0 &&
+            createGroup
+        );
     }
 
     get canQuickCreate() {
         const { activeActions } = this.props.archInfo;
         if (!activeActions.quickCreate) {
+            return false;
+        }
+        if (!this.model.isReady) {
             return false;
         }
 

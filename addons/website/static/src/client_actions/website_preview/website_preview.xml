@@ -15,7 +15,9 @@
          t-att-class="{ 'editor_enable editor_has_snippets': this.websiteContext.snippetsLoaded,
                         'o_is_blocked': this.blockedState.isBlocked,
                         'o_is_mobile': this.websiteContext.isMobile,
-                        'border-top': !this.websiteContext.snippetsLoaded }">
+                        'border-top': !this.websiteContext.snippetsLoaded,
+                        'o_is_microsoft_edge': isMicrosoftEdge,
+                      }">
         <BlockPreview t-if="this.blockedState.showLoader"/>
         <div class="o_iframe_container">
             <iframe t-if="!testMode"
@@ -30,7 +32,7 @@
                 is-ready="false"
                 t-att-data-load-wysiwyg="this.websiteService.isRestrictedEditor ? 'true': 'false'"/>
             <div t-if="this.websiteContext.isMobile" class="o_mobile_preview_layout">
-                <img alt="phone" src="/website/static/src/img/phone.png"/>
+                <img alt="phone" src="/website/static/src/img/phone.svg"/>
             </div>
         </div>
         <WebsiteEditorComponent t-if="websiteContext.edition"

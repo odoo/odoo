@@ -20,16 +20,22 @@ export class GraphController extends Component {
     };
 
     setup() {
-        this.model = useModelWithSampleData(this.props.Model, this.props.modelParams);
+        this.model = useModelWithSampleData(
+            this.props.Model,
+            this.props.modelParams,
+            this.modelOptions
+        );
 
         useSetupAction({
             rootRef: useRef("root"),
-            getLocalState: () => {
-                return { metaData: this.model.metaData };
-            },
+            getLocalState: () => ({ metaData: this.model.metaData }),
             getContext: () => this.getContext(),
         });
         this.searchBarToggler = useSearchBarToggler();
+    }
+
+    get modelOptions() {
+        return { lazy: !this.env.inDialog && !!this.props.display.controlPanel };
     }
 
     /**

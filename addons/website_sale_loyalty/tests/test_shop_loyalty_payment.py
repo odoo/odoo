@@ -29,7 +29,7 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
         order = self.empty_order
         program = self.program_gift_card
 
-        program.date_to = date.today()  # set program to expire after today
+        program.date_to = date.today() + timedelta(days=1)  # set program to expire after tomorrow
 
         self.env['loyalty.generate.wizard'].with_context(active_id=program.id).create({
             'coupon_qty': 1,
@@ -47,7 +47,7 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
         })
         self._apply_promo_code(order, program.coupon_ids.code)
 
-        with freeze_time(program.date_to + timedelta(days=1)):
+        with freeze_time(program.date_to + timedelta(days=2)):
             self.authenticate(self.portal_user.login, self.portal_user.login)
             with self.assertRaises(
                 JsonRpcException,

@@ -318,7 +318,7 @@ class AccountMove(models.Model):
     # === EDI: Flow === #
 
     def _l10n_hu_edi_check_invoices(self):
-        hu_vat_regex = re.compile(r'\d{8}-[1-5]-\d{2}')
+        hu_vat_regex = re.compile(r'(HU)?\d{8}-[1-5]-\d{2}')
         hu_bank_account_regex = re.compile(r'\d{8}-\d{8}-\d{8}|\d{8}-\d{8}|[A-Z]{2}\d{2}[0-9A-Za-z]{11,30}')
 
         # This contains all the advance invoices that correspond to final invoices in `self`.
@@ -454,7 +454,6 @@ class AccountMove(models.Model):
                 'action_text': _('Open Accounting Settings'),
                 'action': self.env.ref('account.action_account_config').with_company(companies_missing_credentials[0])._get_action_dict(),
             }
-
         return errors
 
     def _l10n_hu_edi_upload(self, connection):
@@ -513,10 +512,19 @@ class AccountMove(models.Model):
         for i, invoice in enumerate(self, start=1):
             invoice.l10n_hu_edi_batch_upload_index = i
 
+        def get_operation_type(invoice):
+            operation_type = 'MODIFY'
+            base_invoice = invoice._l10n_hu_get_chain_base()
+            if invoice == base_invoice:
+                operation_type = 'CREATE'
+            elif base_invoice.amount_residual == 0:
+                operation_type = 'STORNO'
+            return operation_type
+
         invoice_operations = [
             {
                 'index': invoice.l10n_hu_edi_batch_upload_index,
-                'operation': 'CREATE' if invoice._l10n_hu_get_chain_base() == invoice else 'MODIFY',
+                'operation': get_operation_type(invoice),
                 'invoice_data': base64.b64decode(invoice.l10n_hu_edi_attachment),
             }
             for invoice in self

@@ -88,54 +88,65 @@
             t-att-data-partner-id="contact.id"
         >
             <div class="card-body d-flex flex-column justify-content-between">
-                <div class="position-relative">
-                    <t
-                        t-out="contact"
-                        t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"
-                        class="col-9"
-                    />
+                <t
+                    t-out="contact"
+                    t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"
+                />
+                <div class="mt-3 mx-1">
                     <i
                         t-if="is_user_address"
-                        class="fa fa-id-card text-primary fs-5 position-absolute top-0 end-0"
+                        class="fa fa-id-card text-primary fs-5 position-absolute mt-1"
                         title="Your Account Address"
                     />
-                </div>
-                <div class="mt-3" t-if="can_be_edited">
-                    <t
-                        t-set="address_update_url"
-                        t-value="address_update_url or (new_address_url + '&amp;partner_id=' + str(contact.id))"
-                    />
-                    <a
-                        name="card_address_ref"
-                        t-att-href="address_update_url"
-                        class="js_edit_address btn btn-link p-0 mt-auto"
-                        role="button"
-                        title="Edit this address"
-                        aria-label="Edit this address"
-                    >
-                        <i class="fa fa-pencil me-1"/>
-                        Edit
-                    </a>
-                    <span t-if="show_removal">
-                        <span class="mx-2">|</span>
+                    <div t-if="can_be_edited" class="text-end">
+                        <t
+                            t-set="address_update_url"
+                            t-value="address_update_url or (new_address_url + '&amp;partner_id=' + str(contact.id))"
+                        />
                         <a
-                            class="btn btn-link text-danger p-0 o_remove_address"
+                            name="card_address_ref"
+                            t-att-href="address_update_url"
+                            class="js_edit_address btn btn-link fw-bold p-0 mt-auto"
                             role="button"
-                            title="Remove address"
-                            aria-label="Remove address"
-                            t-att-data-partner-id="contact.id"
+                            title="Edit this address"
+                            aria-label="Edit this address"
                         >
-                            Remove
+                            <i class="fa fa-pencil me-1"/>
+                            Edit
                         </a>
-                    </span>
+                        <span t-if="show_removal">
+                            <span class="mx-2">|</span>
+                            <a
+                                class="btn btn-link text-danger fw-bold p-0 o_remove_address"
+                                role="button"
+                                title="Remove address"
+                                aria-label="Remove address"
+                                t-att-data-partner-id="contact.id"
+                            >
+                                Remove
+                            </a>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
     </template>
 
     <template id="portal.address_form_fields" name="Address Details">
+        <t t-if="login_field">
+            <div id="div_login" class="col-lg-12 mb-2">
+                <label class="col-form-label" for="o_login">Login ID</label>
+                <input
+                    id="o_login"
+                    type="text"
+                    name="login"
+                    t-att-value="request.env.user.login"
+                    class="form-control"
+                />
+            </div>
+        </t>
         <div id="div_name" class="col-lg-12 mb-2">
-            <label class="col-form-label" for="o_name">Full name</label>
+            <label class="col-form-label" for="o_name">Your name</label>
             <input
                 id="o_name"
                 type="text"
@@ -253,7 +264,7 @@
         <div class="w-100"/>
         <t t-if="zip_before_city">
             <div id="div_zip" class="col-md-4 mb-2">
-                <label class="col-form-label label-optional" for="o_zip">
+                <label class="col-form-label" for="o_zip">
                     Zip Code
                 </label>
                 <input
@@ -277,7 +288,7 @@
         </div>
         <t t-if="not zip_before_city">
             <div id="div_zip" class="col-md-4 mb-2">
-                <label class="col-form-label label-optional" for="o_zip">
+                <label class="col-form-label" for="o_zip">
                     Zip Code
                 </label>
                 <input
@@ -315,7 +326,7 @@
             class="col-lg-6 mb-2"
             t-att-style="not country_states and 'display: none'"
         >
-            <label class="col-form-label" for="o_state_id">
+            <label class="col-form-label label-optional" for="o_state_id">
                 State / Province
             </label>
             <select
@@ -342,13 +353,14 @@
         <input type="hidden" name="address_type" t-att-value="address_type"/>
         <input type="hidden" name="use_delivery_as_billing" t-att-value="use_delivery_as_billing"/>
         <input type="hidden" name="parent_id" t-att-value="parent_id"/>
+        <input type="hidden" name="login_field" t-att-value="login_field" />
         <t t-if="partner_id">
             <input type="hidden" name="partner_id" t-att-value="partner_id"/>
         </t>
         <t t-if="callback">
             <input type="hidden" name="callback" t-att-value="callback"/>
         </t>
-        <input type="hidden" name="required_fields" t-att-value="'name,country_id'"/>
+        <input type="hidden" name="required_fields" t-att-value="'name,email'"/>
     </template>
 
     <template id="portal.address_footer">
@@ -356,16 +368,16 @@
             <a
                 role="button"
                 t-att-href="discard_url or '/my/'"
-                class="btn btn-outline-secondary w-100 w-md-auto order-md-1 order-3"
+                class="btn btn-outline-secondary w-100 w-md-auto order-md-1 order-4"
             >
                 <i class="fw-light fa fa-angle-left me-2"/>Discard
             </a>
-            <div class="position-relative w-100 d-flex d-md-none justify-content-center align-items-center order-2 my-2 opacity-75">
+            <div class="position-relative w-100 d-flex d-md-none justify-content-center align-items-center order-3 order-md-2 my-2 opacity-75">
                 <hr class="w-100"/>
                 <span class="px-3">or</span>
                 <hr class="w-100"/>
             </div>
-            <button id="save_address" class="btn btn-primary w-100 w-md-auto order-1 order-md-3">
+            <button id="save_address" class="btn btn-primary w-100 w-md-auto order-1 order-md-3 ms-auto gap-2">
                 <t name="save_address_label">Save Address</t>
                 <i class="fw-light fa fa-angle-right ms-2"/>
             </button>

@@ -21,25 +21,29 @@
                         invisible="not context.get('default_talent_pool_ids')"
                         groups="hr_recruitment.group_hr_recruitment_user"
                     />
+                    <button type="object" 
+                        name="archive_applicant" 
+                        string="Refuse" class="btn btn-secondary" 
+                    />
                 </header>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="last_stage_id" column_invisible="True"/>
                 <field name="date_last_stage_update" column_invisible="True"/>
-                <field name="partner_name" readonly="1" optional="show"/>
+                <field name="partner_name" string="Name" readonly="1" optional="show"/>
+                <field name="priority" widget="priority" nolabel="1" optional="show"/>
                 <field name="create_date" readonly="1" optional="show" widget="timeless_datetime"/>
-                <field name="type_id" column_invisible="True"/>
+                <field name="email_from" readonly="1" optional="hide"/>
+                <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="job_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="stage_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
+                <field name="type_id" column_invisible="True"/>
                 <field name="application_status" optional="hide" invisible="application_status == 'ongoing'"/>
                 <field name="refuse_reason_id" optional='hide'/>
                 <field name="activity_ids" widget="list_activity" optional="hide"/>
                 <field name="activity_date_deadline" optional="hide"/>
-                <field name="priority" widget="priority" optional="show"/>
-                <field name="email_from" readonly="1" optional="hide"/>
-                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="interviewer_ids" widget="many2many_avatar_user" optional="hide"/>
-                <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="medium_id" optional="hide"/>
                 <field name="source_id" readonly="1" optional="hide"/>
                 <field name="salary_expected" optional="hide"/>
@@ -121,7 +125,8 @@
                         class="oe_stat_button"
                         icon="fa-users"
                         type="object"
-                        invisible="not id or is_pool_applicant or not is_applicant_in_pool">
+                        invisible="not id or is_pool_applicant or not is_applicant_in_pool"
+                        groups="hr_recruitment.group_hr_recruitment_user">
                         <field name="talent_pool_count" widget="statinfo" string="Talent Pools"/>
                     </button>
                 </div>
@@ -137,7 +142,7 @@
                 <div class="oe_title pe-0">
                     <label for="partner_name" class="oe_edit_only" string="Applicant" invisible="is_pool_applicant"/>
                     <label for="partner_name" class="oe_edit_only" string="Talent" invisible="not is_pool_applicant"/>
-                    <h1 class="d-flex justify-content-between align-items-center">
+                    <h1 class="d-flex justify-content-between align-items-center me-4">
                         <field name="partner_name" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
                     </h1>
                 </div>
@@ -157,13 +162,13 @@
                         <field name="user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
                         <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" invisible="is_pool_applicant" placeholder="Who can access applicants" />
                         <field name="date_closed" invisible="not date_closed" />
-                        <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        <field name="categ_ids" placeholder="e.g. Trainee" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                 </group>
                 <field name="applicant_properties" columns="2"/>
                 <notebook>
                     <page string="Note" name="application_note">
-                        <field name="applicant_notes" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Internal notes..."/>
+                        <field name="applicant_notes" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Add private notes about this applicant..."/>
                     </page>
                     <page string="Details" name="application_details">
                         <group>
@@ -192,8 +197,8 @@
                                 </div>
                             </group>
                             <group string="Sourcing">
-                                <field name="source_id"/>
-                                <field name="medium_id"/>
+                                <field name="source_id" placeholder="Select where the applicant comes from"/>
+                                <field name="medium_id" placeholder="Select the way applicant found the offer"/>
                             </group>
                         </group>
                     </page>
@@ -258,6 +263,8 @@
                 <field name="refuse_reason_id"/>
                 <field name="application_status"/>
                 <field name="date_closed"/>
+                <field name="activity_user_id" string="Activities of"/>
+                <field name="activity_type_id" string="Activity type"/>
                 <field name="attachment_ids" filter_domain="[('attachment_ids', 'any', [('index_content', 'ilike', self), ('res_model', '=', 'hr.applicant')])]" string="Resume's content"/>
                 <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
@@ -278,13 +285,16 @@
                 <filter string="Archived" name="inactive" domain="[('active', '=', False), ('refuse_reason_id', '=', False)]"/>
                 <filter string="Refused" name="refused" domain="[('active', '=', False), ('refuse_reason_id', '!=', False)]"/>
                 <separator/>
+                <filter invisible="1" string="My Activities" name="filter_activities_my"
+                    domain="[('activity_user_id', '=', uid)]"/>
+                <separator invisible="1"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"/>
+                    domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records whose next activity date is past"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter invisible="1" string="Running Applicants" name="running_applicant_activities"
                     domain="[('stage_id.hired_stage', '=', False)]"/>
@@ -377,6 +387,8 @@
                         <a t-if="record.active.raw_value" role="menuitem" type="archive" class="dropdown-item">Archive</a>
                         <a t-if="!record.active.raw_value" role="menuitem" type="unarchive" class="dropdown-item">Unarchive</a>
                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                        <a role="menuitem" name="action_talent_pool_add_applicants" type="object" class="dropdown-item"
+                        invisible="is_pool_applicant or is_applicant_in_pool">Add to Pool</a>
                     </t>
                     <t t-name="card">
                         <widget name="web_ribbon" title="Hired" bg_color="text-bg-success" invisible="not date_closed"/>
@@ -666,44 +678,43 @@
     <record id="action_applicant_send_mail" model="ir.actions.server">
         <field name="name">Send Email</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="sequence">1</field>
         <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
         <field name="code">action = records.action_send_email()</field>
     </record>
 
-    <record id="ir_actions_server_refuse_applicant" model="ir.actions.server">
-        <field name="name">Refuse</field>
-        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="binding_view_types">list,kanban,form</field>
-        <field name="state">code</field>
-        <field name="code">
-if records:
-    action = records.archive_applicant()
-        </field>
-    </record>
-
     <!-- Custom reports (aka filters) -->
     <record id="hr_applicant_filter_recruiter" model="ir.filters">
         <field name="name">By Recruiter</field>
         <field name="model_id">hr.applicant</field>
-        <field name="user_id" eval="False"/>
+        <field name="user_ids" eval="False"/>
         <field name="action_id" ref="hr_applicant_action_analysis"/>
         <field name="context">{'group_by': ['create_date:month', 'user_id']}</field>
     </record>
     <record id="hr_applicant_filter_job" model="ir.filters">
         <field name="name">By Job</field>
         <field name="model_id">hr.applicant</field>
-        <field name="user_id" eval="False"/>
+        <field name="user_ids" eval="False"/>
         <field name="action_id" ref="hr_applicant_action_analysis"/>
         <field name="context">{'group_by': ['create_date:month', 'job_id']}</field>
     </record>
     <record id="hr_applicant_filter_department" model="ir.filters">
         <field name="name">By Department</field>
         <field name="model_id">hr.applicant</field>
-        <field name="user_id" eval="False"/>
+        <field name="user_ids" eval="False"/>
         <field name="action_id" ref="hr_applicant_action_analysis"/>
         <field name="context">{'group_by': ['create_date:month', 'department_id']}</field>
+    </record>
+
+    <record id="mail_followers_edit_action_from_hr_recruitment" model="ir.actions.act_window">
+        <field name="name">Add/Remove Followers</field>
+        <field name="res_model">mail.followers.edit</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_res_model': 'hr.applicant', 'default_res_ids': active_ids}</field>
+        <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="binding_view_types">list,kanban</field>
     </record>
 </odoo>

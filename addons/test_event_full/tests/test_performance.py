@@ -16,6 +16,9 @@ class EventPerformanceCase(TestEventFullCommon):
         super(EventPerformanceCase, self).setUp()
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
+        # we don't use mock_mail_gateway thus want to mock smtp to test the stack
+        self._mock_smtplib_connection()
+
         self._flush_tracking()
 
     def _flush_tracking(self):

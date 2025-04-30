@@ -64,12 +64,12 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_dhl = fields.Boolean("DHL Express Connector")
     module_delivery_easypost = fields.Boolean("Easypost Connector")
     module_delivery_envia = fields.Boolean("Envia.com Connector")
-    module_delivery_fedex = fields.Boolean("FedEx Connector")
+    module_delivery_fedex_rest = fields.Boolean("FedEx Connector")
     module_delivery_sendcloud = fields.Boolean("Sendcloud Connector")
     module_delivery_shiprocket = fields.Boolean("Shiprocket Connector")
     module_delivery_starshipit = fields.Boolean("Starshipit Connector")
-    module_delivery_ups = fields.Boolean("UPS Connector")
-    module_delivery_usps = fields.Boolean("USPS Connector")
+    module_delivery_ups_rest = fields.Boolean("UPS Connector")
+    module_delivery_usps_rest = fields.Boolean("USPS Connector")
 
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_amazon = fields.Boolean("Amazon Sync")
@@ -123,7 +123,3 @@ class ResConfigSettings(models.TransientModel):
         super().set_values()
         if self.default_invoice_policy != 'order':
             self.env['ir.config_parameter'].set_param(key='sale.automatic_invoice', value=False)
-
-        send_invoice_cron = self.env.ref('sale.send_invoice_cron', raise_if_not_found=False)
-        if send_invoice_cron and send_invoice_cron.active != self.automatic_invoice:
-            send_invoice_cron.active = self.automatic_invoice

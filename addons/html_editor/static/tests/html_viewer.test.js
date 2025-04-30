@@ -1,4 +1,4 @@
-import { HtmlViewer } from "@html_editor/fields/html_viewer";
+import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";

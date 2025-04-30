@@ -130,6 +130,7 @@
                                 decoration-success="parts_availability_state == 'available'"
                                 decoration-warning="parts_availability_state == 'expected'"
                                 decoration-danger="parts_availability_state == 'late'"/>
+                            <field name="picking_type_id" options="{'no_create': True}" readonly="state in ('done', 'cancel')" invisible="not picking_type_visible"/>
                         </group>
                         <field name="repair_properties" nolabel="1" columns="2" hideAddButton="1"/>
                     </group>
@@ -165,9 +166,6 @@
                                 <field name="date_deadline" optional="hide"/>
                                 <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
                                 <field name="forecast_expected_date" column_invisible="True"/>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" column_invisible="parent.state != 'draft'" invisible="forecast_availability &lt; 0 and repair_line_type == 'add'"/>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" column_invisible="parent.state != 'draft'" invisible="forecast_availability &gt;= 0 or repair_line_type != 'add'"/>
-                                <field name="forecast_availability" string="Forecasted" column_invisible="parent.state in ('draft', 'done')" widget="forecast_widget"/>
                                 <field name="product_qty" readonly="1" column_invisible="True"/>
                                 <field name="quantity" string="Done" readonly="not product_id"/>
                                 <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
@@ -182,21 +180,14 @@
                                         invisible="not show_details_visible" options='{"warn": true}'
                                         context="{'default_location_dest_id': location_dest_id}"
                                     />
+                                <field name="forecast_availability" string=""
+                                        column_invisible="parent.state == 'done'" widget="forecast_widget"/>
                             </list>
                         </field>
                         <div class="clearfix"/>
                     </page>
                     <page string="Repair Notes" name="repair_notes">
                         <field name="internal_notes" placeholder="Add internal notes."/>
-                    </page>
-                    <page string="Miscellaneous" name="page_miscellaneous">
-                        <group>
-                            <field name="picking_type_id" options="{'no_create': True}" readonly="state in ('done', 'cancel')"/>
-                        </group>
-                        <group string="Locations" groups="stock.group_stock_multi_locations" name="locations">
-                            <field name="product_location_src_id" readonly="state != 'draft'" options="{'no_create': True}"/>
-                            <field name="location_id" readonly="state != 'draft'" options="{'no_create': True}"/>
-                        </group>
                     </page>
                 </notebook>
                 </sheet>
@@ -257,13 +248,16 @@
                 <filter string="Late" name="filter_late" domain="[('state', '=', 'confirmed'), ('schedule_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter name="filter_create_date" date="create_date"/>
                 <separator/>
+                <filter invisible="1" string="My Activities" name="filter_activities_my"
+                    domain="[('activity_user_id', '=', uid)]"/>
+                <separator invisible="1"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"/>
+                    domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records whose next activity date is past"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
                     <filter string="Customer" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
@@ -322,13 +316,14 @@
         </record>
 
         <record id="action_repair_order_graph" model="ir.actions.act_window">
-            <field name="name">Repair Orders</field>
+            <field name="name">Repair Orders Analysis</field>
             <field name="context">{
                 'search_default_product': 1,
                 'search_default_createDate': 1,
             }
             </field>
             <field name="res_model">repair.order</field>
+            <field name="path">repair-orders-analysis</field>
             <field name="view_mode">list,kanban,graph,pivot,form</field>
             <field name="view_id" ref="view_repair_graph"/>
         </record>
@@ -355,26 +350,13 @@
             <field name="context">{'search_default_filter_confirmed': 1}</field>
         </record>
 
-        <record id="view_repair_tag_form" model="ir.ui.view">
-            <field name="name">repair.tag.form</field>
-            <field name="model">repair.tags</field>
-            <field name="arch" type="xml">
-                <form string="Repair Tags">
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
         <record id="view_repair_tag_tree" model="ir.ui.view">
             <field name="name">repair.tag.list</field>
             <field name="model">repair.tags</field>
             <field name="arch" type="xml">
                 <list string="Tags" editable="bottom">
                     <field name="name"/>
+                    <field name="color" widget="color_picker"/>
                 </list>
             </field>
         </record>
@@ -399,36 +381,8 @@
             </field>
         </record>
 
-        <record id="action_repair_picking_type_kanban" model="ir.actions.act_window">
-            <field name="name">Repair Overview</field>
-            <field name="path">repair-types</field>
-            <field name="res_model">stock.picking.type</field>
-            <field name="view_mode">kanban,form</field>
-            <field name="domain">[('code', '=', 'repair_operation')]</field>
-            <field name="view_id" ref="stock.stock_picking_type_kanban"/>
-        </record>
-
-        <record id="action_repair_overview" model="ir.actions.server">
-            <field name="name">stock.repair.type.overview</field>
-            <field name="model_id" ref="model_stock_picking_type"/>
-            <field name="group_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
-            <field name="state">code</field>
-            <field name="code">
-                action = model.action_repair_overview()
-            </field>
-        </record>
-
         <menuitem id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="165"
                   web_icon="repair,static/description/icon.png"/>
-
-        <menuitem
-            id="repair_picking_type_menu"
-            name="Overview"
-            action="action_repair_overview"
-            groups="stock.group_stock_user"
-            parent="menu_repair_order"
-            sequence="0"
-        />
 
         <menuitem id="repair_order_menu" name="Orders" action="action_repair_order_tree" groups="stock.group_stock_user"
                   parent="menu_repair_order" sequence="10"/>
@@ -439,10 +393,11 @@
 
         <menuitem id="repair_menu_config" name="Configuration" parent="menu_repair_order" groups="stock.group_stock_manager" sequence="20"/>
 
-        <menuitem id="repair_menu_tag" name="Repair Orders Tags" parent="repair_menu_config" action="action_repair_order_tag" sequence="1"/>
         <menuitem id="repair_menu_product_template" name="Products" action="stock.product_template_action_product"
             parent="repair_menu_config" sequence="2"/>
         <menuitem id="repair_menu_product_product" name="Product Variants" action="stock.stock_product_normal_action"
             parent="repair_menu_config" sequence="3" groups="product.group_product_variant"/>
+        <menuitem id="repair_menu_tag" name="Repair Orders Tags" parent="repair_menu_config"
+            action="action_repair_order_tag" sequence="1000" groups="base.group_no_one"/>
     </data>
 </odoo>

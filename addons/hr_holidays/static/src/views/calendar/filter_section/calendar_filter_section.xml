@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.CalendarFilterSection.filter" t-inherit="web.CalendarFilterSection.filter" t-inherit-mode="primary">
+        <xpath expr="//span[@t-esc='filter.label']" position="replace">
+            <span class="o_cw_filter_title flex-grow-1 text-truncate lh-base">
+                <t t-esc="filter.label"/>
+
+                <t t-if="env.isSmall">
+                    <t t-set="holiday" t-value="leaveState.holidays[filter.value]"/>
+                    <TimeOffCardMobile t-if="holiday" name="holiday[0]" id="holiday[3]" data="holiday[1]" requires_allocation="holiday[2]"/>
+                </t>
+            </span>
+        </xpath>
+    </t>
+</templates>

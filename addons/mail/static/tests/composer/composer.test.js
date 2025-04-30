@@ -728,6 +728,7 @@ test("Replying on a channel should focus composer initially", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer-input:focus");
 });
@@ -743,50 +744,6 @@ test("remove an uploading attachment", async () => {
     await contains(".o-mail-AttachmentCard.o-isUploading");
     await click(".o-mail-AttachmentCard-unlink");
     await contains(".o-mail-Composer .o-mail-AttachmentCard", { count: 0 });
-});
-
-test("Show recipient list when there is more than 5 followers.", async () => {
-    const pyEnv = await startServer();
-    const partnerIds = pyEnv["res.partner"].create([
-        { name: "test name 1", email: "test1@odoo.com" },
-        { name: "test name 2", email: "test2@odoo.com" },
-        { name: "test name 3", email: "test3@odoo.com" },
-        { name: "test name 4", email: "test4@odoo.com" },
-        { name: "test name 5", email: "test5@odoo.com" },
-        { name: "test name 6", email: "test6@odoo.com" },
-    ]);
-    for (const partner of partnerIds) {
-        pyEnv["mail.followers"].create({
-            is_active: true,
-            partner_id: partner,
-            res_id: partnerIds[0],
-            res_model: "res.partner",
-        });
-    }
-    await start();
-    await openFormView("res.partner", partnerIds[0]);
-    await click("button", { text: "Send message" });
-    await click("button", { text: "Bcc" });
-    await click("button[title='Show all recipients']");
-    await contains("li", { text: "test name 1 <test1@odoo.com>" });
-    await contains("li", { text: "test name 2 <test2@odoo.com>" });
-    await contains("li", { text: "test name 3 <test3@odoo.com>" });
-    await contains("li", { text: "test name 4 <test4@odoo.com>" });
-    await contains("li", { text: "test name 5 <test5@odoo.com>" });
-    await contains("li", { text: "test name 6 <test6@odoo.com>" });
-    await contains(".o-mail-Chatter", {
-        text: "Bcc: test name 1, test name 2, test name 3, test name 4, test name 5, and 1 more",
-    });
-});
-
-test("Show 'No recipient found.' with 0 followers.", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "test name 1", email: "test1@odoo.com" });
-    await start();
-    await openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
-    await click("button", { text: "Bcc" });
-    await contains(".o-mail-Chatter-top", { text: "Bcc: No recipient" });
 });
 
 test("Uploading multiple files in the composer create multiple temporary attachments", async () => {
@@ -1124,4 +1081,35 @@ test('can quickly add emoji with ":" keyword', async () => {
     await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
     await insertText(".o-mail-Composer-input", ":s", { replace: true });
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+});
+
+test("composer reply-to message is restored on thread change", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+        name: "General",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Test",
+        attachment_ids: [],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Reply']");
+    await contains(".o-mail-Composer:contains('Replying to')");
+    await click(".o-mail-DiscussSidebar-item:contains('Inbox')");
+    await contains(".o-mail-Message", { count: 0 });
+    await click(".o-mail-DiscussSidebar-item:contains('General')");
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Composer:contains('Replying to')");
 });

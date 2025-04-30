@@ -20,8 +20,8 @@ import polib
 import re
 import tarfile
 import typing
-import warnings
 from collections import defaultdict, namedtuple
+from collections.abc import Iterable
 from contextlib import suppress
 from datetime import datetime
 from os.path import join
@@ -33,8 +33,10 @@ from lxml import etree, html
 from markupsafe import escape, Markup
 from psycopg2.extras import Json
 
+import odoo
 from odoo.exceptions import UserError
 from .config import config
+from .i18n import format_list
 from .misc import file_open, file_path, get_iso_codes, split_every, OrderedSet, ReadonlyDict, SKIPPED_ELEMENT_TYPES
 
 if typing.TYPE_CHECKING:
@@ -56,92 +58,6 @@ JAVASCRIPT_TRANSLATION_COMMENT = 'odoo-javascript'
 
 SKIPPED_ELEMENTS = ('script', 'style', 'title')
 
-_LOCALE2WIN32 = {
-    'af_ZA': 'Afrikaans_South Africa',
-    'sq_AL': 'Albanian_Albania',
-    'ar_SA': 'Arabic_Saudi Arabia',
-    'eu_ES': 'Basque_Spain',
-    'be_BY': 'Belarusian_Belarus',
-    'bs_BA': 'Bosnian_Bosnia and Herzegovina',
-    'bg_BG': 'Bulgarian_Bulgaria',
-    'ca_ES': 'Catalan_Spain',
-    'hr_HR': 'Croatian_Croatia',
-    'zh_CN': 'Chinese_China',
-    'zh_TW': 'Chinese_Taiwan',
-    'cs_CZ': 'Czech_Czech Republic',
-    'da_DK': 'Danish_Denmark',
-    'nl_NL': 'Dutch_Netherlands',
-    'et_EE': 'Estonian_Estonia',
-    'fa_IR': 'Farsi_Iran',
-    'ph_PH': 'Filipino_Philippines',
-    'fi_FI': 'Finnish_Finland',
-    'fr_FR': 'French_France',
-    'fr_BE': 'French_France',
-    'fr_CH': 'French_France',
-    'fr_CA': 'French_France',
-    'ga': 'Scottish Gaelic',
-    'gl_ES': 'Galician_Spain',
-    'ka_GE': 'Georgian_Georgia',
-    'de_DE': 'German_Germany',
-    'el_GR': 'Greek_Greece',
-    'gu': 'Gujarati_India',
-    'he_IL': 'Hebrew_Israel',
-    'hi_IN': 'Hindi',
-    'hu': 'Hungarian_Hungary',
-    'is_IS': 'Icelandic_Iceland',
-    'id_ID': 'Indonesian_Indonesia',
-    'it_IT': 'Italian_Italy',
-    'ja_JP': 'Japanese_Japan',
-    'kn_IN': 'Kannada',
-    'km_KH': 'Khmer',
-    'ko_KR': 'Korean_Korea',
-    'lo_LA': 'Lao_Laos',
-    'lt_LT': 'Lithuanian_Lithuania',
-    'lat': 'Latvian_Latvia',
-    'ml_IN': 'Malayalam_India',
-    'mi_NZ': 'Maori',
-    'mn': 'Cyrillic_Mongolian',
-    'no_NO': 'Norwegian_Norway',
-    'nn_NO': 'Norwegian-Nynorsk_Norway',
-    'pl': 'Polish_Poland',
-    'pt_PT': 'Portuguese_Portugal',
-    'pt_BR': 'Portuguese_Brazil',
-    'ro_RO': 'Romanian_Romania',
-    'ru_RU': 'Russian_Russia',
-    'sr_CS': 'Serbian (Cyrillic)_Serbia and Montenegro',
-    'sk_SK': 'Slovak_Slovakia',
-    'sl_SI': 'Slovenian_Slovenia',
-    #should find more specific locales for Spanish countries,
-    #but better than nothing
-    'es_AR': 'Spanish_Spain',
-    'es_BO': 'Spanish_Spain',
-    'es_CL': 'Spanish_Spain',
-    'es_CO': 'Spanish_Spain',
-    'es_CR': 'Spanish_Spain',
-    'es_DO': 'Spanish_Spain',
-    'es_EC': 'Spanish_Spain',
-    'es_ES': 'Spanish_Spain',
-    'es_GT': 'Spanish_Spain',
-    'es_HN': 'Spanish_Spain',
-    'es_MX': 'Spanish_Spain',
-    'es_NI': 'Spanish_Spain',
-    'es_PA': 'Spanish_Spain',
-    'es_PE': 'Spanish_Spain',
-    'es_PR': 'Spanish_Spain',
-    'es_PY': 'Spanish_Spain',
-    'es_SV': 'Spanish_Spain',
-    'es_UY': 'Spanish_Spain',
-    'es_VE': 'Spanish_Spain',
-    'sv_SE': 'Swedish_Sweden',
-    'ta_IN': 'English_Australia',
-    'th_TH': 'Thai_Thailand',
-    'tr_TR': 'Turkish_Türkiye',
-    'uk_UA': 'Ukrainian_Ukraine',
-    'vi_VN': 'Vietnamese_Viet Nam',
-    'tlh_TLH': 'Klingon',
-
-}
-
 # these direct uses of CSV are ok.
 import csv # pylint: disable=deprecated-module
 
@@ -155,13 +71,18 @@ TRANSLATED_ELEMENTS = {
 
 # Which attributes must be translated. This is a dict, where the value indicates
 # a condition for a node to have the attribute translatable.
-TRANSLATED_ATTRS = dict.fromkeys({
+TRANSLATED_ATTRS = {
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label', 'data-tooltip', 'label',
-}, lambda e: True)
+    'value_label', 'data-tooltip', 'label', 'confirm-label', 'cancel-label',
+}
 
-def translate_attrib_value(node):
+TRANSLATED_ATTRS.update({f't-attf-{attr}' for attr in TRANSLATED_ATTRS})
+
+def is_translatable_attrib(key):
+    return key in TRANSLATED_ATTRS or key.endswith('.translate')
+
+def is_translatable_attrib_value(node):
     # check if the value attribute of a node must be translated
     classes = node.attrib.get('class', '').split(' ')
     return (
@@ -171,15 +92,25 @@ def translate_attrib_value(node):
         and 'o_translatable_input_hidden' in classes
     )
 
-TRANSLATED_ATTRS.update(
-    value=translate_attrib_value,
-    text=lambda e: (e.tag == 'field' and e.attrib.get('widget', '') == 'url'),
-    **{f't-attf-{attr}': cond for attr, cond in TRANSLATED_ATTRS.items()},
-)
+def is_translatable_attrib_text(node):
+    return node.tag == 'field' and node.attrib.get('widget', '') == 'url'
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 space_pattern = re.compile(r"[\s\uFEFF]*")  # web_editor uses \uFEFF as ZWNBSP
 
+# regexpr for string formatting and extract ( ruby-style )|( jinja-style  ) used in `_compile_format`
+FORMAT_REGEX = re.compile(r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})')
+
+def translate_format_string_expression(term, callback):
+    expressions = {}
+    def add(exp_py):
+        index = len(expressions)
+        expressions[str(index)] = exp_py
+        return '{{%s}}' % index
+    term_without_py = FORMAT_REGEX.sub(lambda g: add(g.group(0)), term)
+    translated_value = callback(term_without_py)
+    if translated_value:
+        return FORMAT_REGEX.sub(lambda g: expressions.get(g.group(0)[2:-2], 'None'), translated_value)
 
 def translate_xml_node(node, callback, parse, serialize):
     """ Return the translation of the given XML/HTML node.
@@ -204,7 +135,7 @@ def translate_xml_node(node, callback, parse, serialize):
             # be translated as a whole using the `o_translate_inline` class.
             "o_translate_inline" in node.attrib.get("class", "").split()
             or node.tag in TRANSLATED_ELEMENTS
-            and not any(key.startswith("t-") for key in node.attrib)
+            and not any(key.startswith("t-") or key.endswith(".translate") for key in node.attrib)
             and all(translatable(child) for child in node)
         )
 
@@ -221,7 +152,11 @@ def translate_xml_node(node, callback, parse, serialize):
                 and translatable(node[pos])
                 and (
                     any(  # attribute to translate
-                        val and key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node[pos])
+                        val and (
+                            is_translatable_attrib(key) or
+                            (key == 'value' and is_translatable_attrib_value(node[pos])) or
+                            (key == 'text' and is_translatable_attrib_text(node[pos]))
+                        )
                         for key, val in node[pos].attrib.items()
                     )
                     # node[pos] contains some text to translate
@@ -238,7 +173,7 @@ def translate_xml_node(node, callback, parse, serialize):
             isinstance(node, SKIPPED_ELEMENT_TYPES)
             or node.tag in SKIPPED_ELEMENTS
             or node.get('t-translation', "").strip() == "off"
-            or node.tag == 'attribute' and node.get('name') not in TRANSLATED_ATTRS
+            or node.tag == 'attribute' and node.get('name') not in ('value', 'text') and not is_translatable_attrib(node.get('name'))
             or node.getparent() is None and avoid_pattern.match(node.text or "")
         ):
             return
@@ -286,8 +221,17 @@ def translate_xml_node(node, callback, parse, serialize):
 
         # translate the attributes of the node
         for key, val in node.attrib.items():
-            if nonspace(val) and key in TRANSLATED_ATTRS and TRANSLATED_ATTRS[key](node):
-                node.set(key, callback(val.strip()) or val)
+            if nonspace(val):
+                if (
+                    is_translatable_attrib(key) or
+                    (key == 'value' and is_translatable_attrib_value(node)) or
+                    (key == 'text' and is_translatable_attrib_text(node))
+                ):
+                    if key.startswith('t-'):
+                        value = translate_format_string_expression(val.strip(), callback)
+                    else:
+                        value = callback(val.strip())
+                    node.set(key, value or val)
 
     process(node)
 
@@ -430,7 +374,6 @@ html_translate.is_text = is_text
 xml_translate.term_adapter = xml_term_adapter
 
 
-
 def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> str:
     """Translate and format using a module, language, source text and args."""
     # get the translation by using the language
@@ -452,6 +395,14 @@ def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> 
             args = {k: v._translate(lang) if isinstance(v, LazyGettext) else v for k, v in args.items()}
         else:
             args = tuple(v._translate(lang) if isinstance(v, LazyGettext) else v for v in args)
+    if any(isinstance(a, Iterable) and not isinstance(a, str) for a in (args.values() if args_is_dict else args)):
+        # automatically format list-like arguments in a localized way
+        def process_translation_arg(v):
+            return format_list(env=None, lst=v, lang_code=lang) if isinstance(v, Iterable) and not isinstance(v, str) else v
+        if args_is_dict:
+            args = {k: process_translation_arg(v) for k, v in args.items()}
+        else:
+            args = tuple(process_translation_arg(v) for v in args)
     # format
     try:
         return translation % args
@@ -512,13 +463,8 @@ def _get_cr(frame):
             return local_env.cr
         if (cr := getattr(local_self, 'cr', None)) is not None:
             return cr
-    try:
-        from odoo.http import request  # noqa: PLC0415
-        request_env = request.env
-        if request_env is not None and (cr := request_env.cr) is not None:
-            return cr
-    except RuntimeError:
-        pass
+    if (req := odoo.http.request) and (env := req.env):
+        return env.cr
     return None
 
 
@@ -552,13 +498,8 @@ def _get_lang(frame, default_lang='') -> str:
         # we found the env, in case we fail, just log in debug
         log_level = logging.DEBUG
     # get from request?
-    try:
-        from odoo.http import request  # noqa: PLC0415
-        request_env = request.env
-        if request_env and (lang := request_env.lang):
-            return lang
-    except RuntimeError:
-        pass
+    if (req := odoo.http.request) and (env := req.env) and (lang := env.lang):
+        return lang
     # Last resort: attempt to guess the language of the user
     # Pitfall: some operations are performed in sudo mode, and we
     #          don't know the original uid, so the language may
@@ -592,7 +533,7 @@ def _get_translation_source(stack_level: int, module: str = '', lang: str = '', 
         return module or 'base', 'en_US'
 
 
-def get_text_alias(source: str, *args, **kwargs):
+def get_text_alias(source: str, /, *args, **kwargs):
     assert not (args and kwargs)
     assert isinstance(source, str)
     module, lang = _get_translation_source(1)
@@ -624,7 +565,7 @@ class LazyGettext:
 
     __slots__ = ('_args', '_default_lang', '_module', '_source')
 
-    def __init__(self, source, *args, _module='', _default_lang='', **kwargs):
+    def __init__(self, source, /, *args, _module='', _default_lang='', **kwargs):
         assert not (args and kwargs)
         assert isinstance(source, str)
         self._source = source
@@ -1094,7 +1035,7 @@ def _extract_translatable_qweb_terms(element, callback):
         if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
         if (el.tag.lower() not in SKIPPED_ELEMENTS
                 and "t-js" not in el.attrib
-                and not (el.tag == 'attribute' and el.get('name') not in TRANSLATED_ATTRS)
+                and not (el.tag == 'attribute' and not is_translatable_attrib(el.get('name')))
                 and el.get("t-translation", '').strip() != "off"):
 
             _push(callback, el.text, el.sourceline)
@@ -1725,9 +1666,6 @@ class TranslationImporter:
 def get_locales(lang=None):
     if lang is None:
         lang = locale.getlocale()[0]
-
-    if os.name == 'nt':
-        lang = _LOCALE2WIN32.get(lang, lang)
 
     def process(enc):
         ln = locale._build_localename((lang, enc))

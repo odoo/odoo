@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.QrCodeCustomerDisplay">
+        <Dialog title.translate="Open Customer Display" footer="false">
+            <div class="text-center">
+                <img id="CustomerDisplayqrCode" t-att-src="getQrCode()" alt="Customer QR Code"
+                    class="img-fluid mb-3" style="max-width: 200px; width: 50%;" />
+
+                <div class="small mb-3">
+                    <t t-set="customerDisplayURL" t-value="props.customerDisplayURL"/>
+                    <a t-att-href="customerDisplayURL" target="_blank" t-esc="customerDisplayURL" />
+                    <CopyButton content="customerDisplayURL" className="'ms-2 btn-primary'" successText.translate="Link copied to clipboard" icon="'fa-clone'"/>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>

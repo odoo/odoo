@@ -97,11 +97,14 @@
                     <field name="name_searchable" string="Name"/>
                     <field name="description"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="fiscal_position_ids"/>
                     <filter string="Sale" name="sale" domain="[('type_tax_use','=','sale')]" />
                     <filter string="Purchase" name="purchase" domain="[('type_tax_use','=','purchase')]" />
                     <separator/>
                     <filter string="Services" name="service" domain="[('tax_scope','=','service')]" />
                     <filter string="Goods" name="goods" domain="[('tax_scope','=','consu')]" />
+                    <separator/>
+                    <filter string="Domestic" name="domestictax" domain="[('is_domestic', '=', True)]"/>
                     <separator/>
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active taxes"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive taxes"/>
@@ -109,6 +112,7 @@
                         <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Tax Type" name="taxapp" domain="[]" context="{'group_by':'type_tax_use'}"/>
                         <filter string="Tax Scope" name="taxapp" domain="[]" context="{'group_by':'tax_scope'}"/>
+                        <filter string="Fiscal Position" name="groupfp" domain="[]" context="{'group_by': 'fiscal_position_ids'}"/>
                     </group>
                 </search>
             </field>
@@ -147,11 +151,17 @@
                                 <field name="amount" class="oe_inline" nolabel="1"/>
                                 <span class="o_form_label oe_inline" invisible="amount_type == 'fixed'">%</span>
                             </div>
+                            <field name="fiscal_position_ids" widget="many2many_tags" placeholder="all"/>
+                            <field name="original_tax_ids"
+                                   widget="many2many_tags"
+                                   invisible="not display_alternative_taxes_field"
+                                   options="{'no_create': True}"
+                            />
                         </group>
                     </group>
                     <notebook>
                         <page string="Definition" name="definition">
-                            <div invisible="amount_type == 'group'">
+                            <group invisible="amount_type == 'group'">
                                 <field name="country_code" invisible="1"/>
                                 <group string="Distribution for Invoices" class="mw-100">
                                     <field name="invoice_repartition_line_ids" nolabel="1" colspan="2"/>
@@ -159,7 +169,7 @@
                                 <group string="Distribution for Refunds" class="mw-100">
                                     <field name="refund_repartition_line_ids" nolabel="1" colspan="2"/>
                                 </group>
-                            </div>
+                            </group>
                             <field name="children_tax_ids" invisible="amount_type != 'group' or type_tax_use == 'none'" domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
                                 <list string="Children Taxes">
                                     <field name="sequence" widget="handle"/>

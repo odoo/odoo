@@ -41,9 +41,6 @@ You need to configure your certificate and the tax agency.
         'demo/demo_certificate.xml',
         'demo/demo_company.xml',
     ],
-    'external_dependencies': {
-        'python': ['pyOpenSSL'],
-    },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

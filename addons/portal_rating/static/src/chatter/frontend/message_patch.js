@@ -10,6 +10,10 @@ patch(Message.prototype, {
         this.state.editRating = false;
     },
 
+    get isEditing() {
+        return !this.state.editRating && super.isEditing;
+    },
+
     get ratingValue() {
         return this.message.rating_id?.rating || this.message.rating_value;
     },
@@ -18,7 +22,7 @@ patch(Message.prototype, {
         this.state.editRating = !this.state.editRating;
         if (this.state.editRating) {
             const messageContent = convertBrToLineBreak(
-                this.props.message.rating.publisher_comment
+                this.props.message.rating_id.publisher_comment
             );
             this.props.message.composer = {
                 message: this.props.message,
@@ -34,15 +38,16 @@ patch(Message.prototype, {
     },
 
     exitEditCommentMode() {
+        this.props.message.composer.clear();
         this.message.composer = null;
         this.state.editRating = false;
     },
 
     async deleteComment() {
         const data = await rpc("/website/rating/comment", {
-            rating_id: this.message.rating.id,
+            rating_id: this.message.rating_id.id,
             publisher_comment: "",
         });
-        this.message.rating = data;
+        this.message.rating_id = data;
     },
 });

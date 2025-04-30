@@ -36,6 +36,38 @@ PaymentForm.include({
         }
     },
 
+    /**
+     * Checks constraints on submit:
+     * 1. The value must be greater than the minimum value.
+     * 2. A radio button must be checked, if the custom amount is selected.
+     * 3. The custom input must have a value.
+     *
+     * @override method from payment.payment_form
+     * @private
+     * @param {Event} ev
+     */
+    async _submitForm(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        const donationAmountInputEl = this.el.querySelector("#other_amount_value");
+        const otherAmountRadioEl = this.el.querySelector("#other_amount");
+        const considerAmountInput = otherAmountRadioEl ? otherAmountRadioEl.checked : true;
+        if (
+            donationAmountInputEl &&
+            considerAmountInput &&
+            (!donationAmountInputEl.value || parseFloat(donationAmountInputEl.value) <= 0)
+        ) {
+            // If the warning message is already displayed, we don't need to display it again.
+            if (this.el.querySelector("#warning_min_message_id").classList.contains("d-none")) {
+                this.el.querySelector("#warning_message_id").classList.remove("d-none");
+            }
+            return donationAmountInputEl.focus();
+        }
+
+        await this._super(...arguments);
+    },
+
     // #=== PAYMENT FLOW ===#
 
     /**
@@ -51,44 +83,33 @@ PaymentForm.include({
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (document.querySelector('.o_donation_payment_form')) {
-            const errorFields = {};
-            if (!this.el.querySelector('input[name="email"]').checkValidity()) {
-                errorFields['email'] = _t("Email is invalid");
-            }
             const mandatoryFields = {
                 'name': _t('Name'),
                 'email': _t('Email'),
                 'country_id': _t('Country'),
             };
+
+            let firstInvalidFieldEl;
             for (const id in mandatoryFields) {
                 const fieldEl = this.el.querySelector(`input[name="${id}"],select[name="${id}"]`);
-                fieldEl.classList.remove('is-invalid');
-                Popover.getOrCreateInstance(fieldEl)?.dispose();
-                if (!fieldEl.value.trim()) {
-                    errorFields[id] = _t("Field '%s' is mandatory", mandatoryFields[id]);
+                const isInvalid =
+                    !fieldEl.value.trim() || (id === "email" && !fieldEl.checkValidity());
+                fieldEl.classList.toggle("is-invalid", isInvalid);
+                if (isInvalid && !firstInvalidFieldEl) {
+                    firstInvalidFieldEl = fieldEl;
                 }
             }
-            if (Object.keys(errorFields).length) {
-                for (const id in errorFields) {
-                    const fieldEl = this.el.querySelector(
-                        `input[name="${id}"],select[name="${id}"]`
-                    );
-                    fieldEl.classList.add('is-invalid');
-                    Popover.getOrCreateInstance(fieldEl, {
-                        content: errorFields[id],
-                        placement: 'top',
-                        trigger: 'hover',
-                    });
-                }
-                this._displayErrorDialog(
-                    _t("Payment processing failed"),
-                    _t("Some information is missing to process your payment.")
-                );
+            if (firstInvalidFieldEl) {
+                firstInvalidFieldEl.focus();
                 this._enableButton();
                 return;
             }
         }
-        await this._super(...arguments);
+        // This prevents unnecessary toaster notifications on payment failure
+        // by catching the Promise.reject as we are already displaying error popup.
+        await this._super(...arguments).catch((error) => {
+            console.log(error.data.message);
+        });
     },
 
     /**

@@ -5,7 +5,8 @@ from odoo import fields, models, api
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _name = 'account.move'
+    _inherit = ['account.move', 'pos.load.mixin']
 
     pos_order_ids = fields.One2many('pos.order', 'account_move')
     pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
@@ -19,6 +20,17 @@ class AccountMove(models.Model):
     def _compute_origin_pos_count(self):
         for move in self:
             move.pos_order_count = len(move.sudo().pos_order_ids)
+
+    @api.depends('tax_cash_basis_created_move_ids', 'pos_session_ids')
+    def _compute_always_tax_exigible(self):
+        super()._compute_always_tax_exigible()
+        # The pos closing move does not create caba entries (anymore); we set the tax values directly on the closing move.
+        # (But there may still be old closing moves that used caba entries from previous versions.)
+        for move in self:
+            if move.always_tax_exigible or move.tax_cash_basis_created_move_ids:
+                continue
+            if move.pos_session_ids:
+                move.always_tax_exigible = True
 
     def _stock_account_get_last_step_stock_moves(self):
         stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
@@ -87,6 +99,11 @@ class AccountMove(models.Model):
         else:
             action['domain'] = [('id', 'in', self.pos_order_ids.ids)]
         return action
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        result = super()._load_pos_data_fields(config_id)
+        return result or ['id']
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

@@ -13,13 +13,13 @@ class WebsiteEventMenu(models.Model):
     _rec_name = "menu_id"
 
     menu_id = fields.Many2one('website.menu', string='Menu', ondelete='cascade')
-    event_id = fields.Many2one('event.event', string='Event', ondelete='cascade')
+    event_id = fields.Many2one('event.event', string='Event', index='btree_not_null', ondelete='cascade')
     view_id = fields.Many2one('ir.ui.view', string='View', ondelete='cascade', help='Used when not being an url based menu')
     menu_type = fields.Selection(
         [('community', 'Community Menu'),
-         ('introduction', 'Introduction'),
-         ('location', 'Location'),
-         ('register', 'Info'),
+         ('introduction', 'Home'),
+         ('register', 'Practical'),
+         ('other', 'Other'),
         ], string="Menu Type", required=True)
 
     def copy(self, default=None):
@@ -42,9 +42,18 @@ class WebsiteEventMenu(models.Model):
                 'website_id': view.website_id.id,
             })
             self._copy_children_views(new_menu.view_id, view.inherit_children_ids, old_menu.event_id.website_id.id)
-            new_menu.menu_id = old_menu.menu_id.copy({
-                'url': f"/event/{self.env['ir.http']._slug(new_menu.event_id)}/page/{new_menu.view_id.key.split('.')[-1]}"
-            })
+            new_url = f"/event/{self.env['ir.http']._slug(new_menu.event_id)}/page/{new_menu.view_id.key.split('.')[-1]}"
+            new_menu_defaults = {
+                'url': new_url
+            }
+
+            if old_menu.menu_id.page_id:
+                new_page = old_menu.menu_id.page_id.copy({
+                    'url': new_url
+                })
+                new_menu_defaults['page_id'] = new_page.id
+
+            new_menu.menu_id = old_menu.menu_id.copy(new_menu_defaults)
         return new_menus
 
     @api.model

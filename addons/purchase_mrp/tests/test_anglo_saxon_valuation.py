@@ -16,7 +16,7 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
         super().setUpClass()
         cls.vendor01 = cls.env['res.partner'].create({'name': "Super Vendor"})
 
-        cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)
+        cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.income_account, cls.stock_journal = _create_accounting_data(cls.env)
         cls.avco_category = cls.env['product.category'].create({
             'name': 'AVCO',
             'property_cost_method': 'average',

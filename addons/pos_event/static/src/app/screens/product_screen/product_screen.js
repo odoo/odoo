@@ -4,6 +4,9 @@ import { patch } from "@web/core/utils/patch";
 import { EventConfiguratorPopup } from "@pos_event/app/components/popup/event_configurator_popup/event_configurator_popup";
 import { _t } from "@web/core/l10n/translation";
 import { EventRegistrationPopup } from "../../components/popup/event_registration_popup/event_registration_popup";
+import { EventSlotSelectionPopup } from "../../components/popup/event_slot_selection_popup/event_slot_selection_popup";
+
+const { DateTime } = luxon;
 
 patch(ProductScreen.prototype, {
     get products() {
@@ -41,10 +44,109 @@ patch(ProductScreen.prototype, {
             (ticket) => ticket.product_id && ticket.product_id.service_tracking === "event"
         );
 
+        // Multi Slot
+        let avaibilityByTicket = {};
+        let slotResult = {};
+        let slotSelected;
+        let slotTicketAvailabilities = {};
+        if (event.is_multi_slots) {
+            // Updating data in case of event change
+            await this.pos.data.read(
+                "event.event",
+                [event.id],
+                ["event_slot_ids", "seats_available", "seats_limited"]
+            );
+            await this.pos.data.read(
+                "event.slot",
+                event.event_slot_ids.map((slot) => slot.id)
+            );
+            const slotTickets = [];
+            const slots = event.event_slot_ids.filter(
+                (slot) => slot.start_datetime > DateTime.now()
+            );
+            for (const ticket of tickets) {
+                for (const slot of slots) {
+                    slotTickets.push([slot.id, ticket.id]);
+                }
+            }
+            slotTicketAvailabilities = await this.pos.data.call(
+                "event.event",
+                "get_slot_tickets_availability_pos",
+                [event.id, slotTickets]
+            );
+            const eventSeats = event.seats_limited ? event.seats_available : "unlimited";
+            avaibilityByTicket = slotTicketAvailabilities.reduce((acc, availability, idx) => {
+                const ticketsData = slotTickets[idx];
+                const slotId = ticketsData[0];
+                const ticketId = ticketsData[1];
+                if (!acc[ticketId]) {
+                    acc[ticketId] = {};
+                }
+                if (!acc[ticketId][slotId]) {
+                    acc[ticketId][slotId] = {};
+                }
+                if (availability === null) {
+                    acc[ticketId][slotId] = "unlimited";
+                } else if (typeof availability === "number") {
+                    acc[ticketId][slotId] = availability;
+                } else {
+                    acc[ticketId][slotId] = 0;
+                }
+                return acc;
+            }, {});
+            const isAvailable = Object.values(avaibilityByTicket).some((av) =>
+                Object.values(av).some((a) => typeof a === "number" && a > 0)
+            );
+            if (!isAvailable || eventSeats === 0) {
+                this.notification.add("All slots are booked out for this event.", {
+                    type: "danger",
+                });
+                return;
+            }
+            const availabilityPerSlot = Object.values(avaibilityByTicket).reduce(
+                (acc, ticketAvailability) => {
+                    Object.entries(ticketAvailability).forEach(([slotId, availability]) => {
+                        if (!acc[slotId]) {
+                            acc[slotId] = 0;
+                        } else if (acc[slotId] === "unlimited") {
+                            return acc;
+                        }
+                        if (availability === "unlimited") {
+                            acc[slotId] = "unlimited";
+                        } else if (typeof availability === "number") {
+                            acc[slotId] = Math.max(acc[slotId], availability);
+                        } else {
+                            acc[slotId] = Math.max(acc[slotId], 0);
+                        }
+                    });
+                    return acc;
+                },
+                {}
+            );
+            slotResult = await makeAwaitable(this.dialog, EventSlotSelectionPopup, {
+                availabilityPerSlot: availabilityPerSlot,
+                event: event,
+            });
+            if (!slotResult?.slotId) {
+                return;
+            }
+            slotSelected = this.pos.models["event.slot"].get(slotResult.slotId);
+        } else {
+            avaibilityByTicket = tickets.reduce((acc, ticket) => {
+                if (ticket.seats_max === 0 && !event.seats_limited) {
+                    acc[ticket.id] = "unlimited";
+                } else {
+                    acc[ticket.id] = ticket.seats_available;
+                }
+                return acc;
+            }, {});
+        }
+
         const ticketResult = await makeAwaitable(this.dialog, EventConfiguratorPopup, {
+            availabilityPerTicket: avaibilityByTicket,
+            slotResult: slotResult,
             tickets: tickets,
         });
-
         if (!ticketResult || !ticketResult.length) {
             return;
         }
@@ -83,6 +185,7 @@ patch(ProductScreen.prototype, {
                 price_unit: ticket.price,
                 qty: data.length,
                 event_ticket_id: ticket,
+                event_slot_id: slotSelected,
             });
 
             for (const registration of data) {
@@ -123,11 +226,12 @@ patch(ProductScreen.prototype, {
                     },
                     { simpleChoice: {}, textAnswer: {} }
                 );
-
+                // This will throw an error on creation if not possible (python constraint)
                 this.pos.models["event.registration"].create({
                     ...userData,
                     event_id: event,
                     event_ticket_id: ticket,
+                    event_slot_id: slotSelected,
                     pos_order_line_id: line,
                     partner_id: this.pos.getOrder().partner_id,
                     registration_answer_ids: Object.entries({
@@ -159,5 +263,22 @@ patch(ProductScreen.prototype, {
                 });
             }
         }
+    },
+    getSlotTicketAvailability(slotId, ticketId, slotTickets, slotTicketAvailabilities) {
+        const idx = slotTickets.findIndex((st) => st[0] === slotId && st[1] === ticketId);
+        const availability = idx === undefined ? undefined : slotTicketAvailabilities[idx]; // Support 0 index
+        return availability === null ? "unlimited" : availability; // null in slotTicketAvailabilities <-> no limit
+    },
+    onMouseDown(event, product) {
+        if (product.event_id) {
+            return;
+        }
+        return super.onMouseDown(event, product);
+    },
+    onTouchStart(product) {
+        if (product.event_id) {
+            return;
+        }
+        return super.onTouchStart(product);
     },
 });

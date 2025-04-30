@@ -13,9 +13,9 @@ class ResUsers(models.Model):
     def _load_pos_data_fields(self, config_id):
         return ['id', 'name', 'partner_id', 'all_group_ids']
 
-    def _load_pos_data(self, data):
-        user = super()._load_pos_data(data)
-        if user:
-            user[0]['role'] = 'manager' if data['pos.config'][0]['group_pos_manager_id'] in user[0]['all_group_ids'] else 'cashier'
-            del user[0]['all_group_ids']
-        return user
+    def _post_read_pos_data(self, data):
+        config_id = self.env['pos.config'].browse(self.env.context.get('config_id'))
+        if data:
+            data[0]['role'] = 'manager' if config_id.group_pos_manager_id.id in data[0]['all_group_ids'] else 'cashier'
+            del data[0]['all_group_ids']
+        return super()._post_read_pos_data(data)

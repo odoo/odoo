@@ -12,7 +12,7 @@ class EventQuestionAnswer(models.Model):
     _description = 'Event Question Answer'
 
     name = fields.Char('Answer', required=True, translate=True)
-    question_id = fields.Many2one('event.question', required=True, ondelete='cascade')
+    question_id = fields.Many2one('event.question', required=True, index=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
 
     @api.ondelete(at_uninstall=False)

@@ -101,7 +101,7 @@ export class SubtaskKanbanList extends Component {
             await this.orm.create("project.task", [{
                 display_name: name,
                 parent_id: this.props.record.resId,
-                project_id: this.props.record.data.project_id[0],
+                project_id: this.props.record.data.project_id.id,
                 user_ids: this.props.record.data.user_ids.resIds,
             }]);
             this.subtaskCreate.open = false;

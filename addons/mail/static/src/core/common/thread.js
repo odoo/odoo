@@ -1,5 +1,6 @@
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
+import { NotificationMessage } from "./notification_message";
 import { Record } from "@mail/core/common/record";
 import { useVisible } from "@mail/utils/common/hooks";
 
@@ -32,8 +33,6 @@ const PRESENT_MESSAGE_THRESHOLD = 10;
  * @property {boolean} [isInChatWindow=false]
  * @property {number} [jumpPresent=0]
  * @property {number} [jumpToNewMessage=0]
- * @property {import("@mail/utils/common/hooks").MessageEdition} [messageEdition]
- * @property {import("@mail/utils/common/hooks").MessageToReplyTo} [messageToReplyTo]
  * @property {"asc"|"desc"} [order="asc"]
  * @property {import("models").Thread} thread
  * @property {string} [searchTerm]
@@ -41,15 +40,13 @@ const PRESENT_MESSAGE_THRESHOLD = 10;
  * @extends {Component<Props, Env>}
  */
 export class Thread extends Component {
-    static components = { Message, Transition, DateSection };
+    static components = { Message, NotificationMessage, Transition, DateSection };
     static props = [
         "showDates?",
         "isInChatWindow?",
         "jumpPresent?",
         "jumpToNewMessage?",
         "thread",
-        "messageEdition?",
-        "messageToReplyTo?",
         "order?",
         "scrollRef?",
         "showEmptyMessage?",
@@ -348,6 +345,7 @@ export class Thread extends Component {
         });
         useEffect(this.applyScroll);
         useChildSubEnv({
+            getCurrentThread: () => this.props.thread,
             onImageLoaded: this.applyScroll,
         });
         const observer = new ResizeObserver(() => {
@@ -528,6 +526,9 @@ export class Thread extends Component {
         if (!msg.thread?.eq(prevMsg.thread)) {
             return false;
         }
+        if (msg.is_note) {
+            return false;
+        }
         return msg.datetime.ts - prevMsg.datetime.ts < 5 * 60 * 1000;
     }
 
@@ -573,5 +574,47 @@ export class Thread extends Component {
         this.scrollableRef.el.scrollTop = value;
         this.lastSetValue = value;
         this.saveScroll();
+    }
+
+    get showStartMessage() {
+        return (
+            ["channel", "group"].includes(this.props.thread.channel_type) ||
+            this.props.thread.channel_type === "chat"
+        );
+    }
+
+    get startMessageTitle() {
+        const channelName = this.props.thread.name;
+        if (this.props.thread.parent_channel_id) {
+            return channelName;
+        }
+        if (this.props.thread.channel_type === "channel") {
+            return _t("Welcome to #%(channelName)s!", { channelName });
+        }
+        return this.props.thread.displayName;
+    }
+
+    get startMessageSubtitle() {
+        if (this.props.thread.parent_channel_id) {
+            const authorName = Object.values(this.store.Persona.records).find(
+                (persona) => persona.userId === this.props.thread.create_uid
+            )?.name;
+            if (authorName) {
+                return _t("Started by %(authorName)s", { authorName });
+            }
+        }
+        if (this.props.thread.channel_type === "channel") {
+            return _t("This is the start of #%(channelName)s channel", {
+                channelName: this.props.thread.name,
+            });
+        }
+        if (this.props.thread.channel_type === "channel") {
+            return _t("This is the start of %(conversationName)s group", {
+                conversationName: this.props.thread.displayName,
+            });
+        }
+        return _t("This is the start of direct chat with %(userName)s", {
+            userName: this.props.thread.displayName,
+        });
     }
 }

@@ -1,8 +1,10 @@
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
-import { TagsList } from "@web/core/tags_list/tags_list";
-import { useService } from "@web/core/utils/hooks";
-import { RecordAutocomplete } from "./record_autocomplete";
 import { _t } from "@web/core/l10n/translation";
+import { TagsList } from "@web/core/tags_list/tags_list";
+import { isId } from "@web/core/tree_editor/utils";
+import { useService } from "@web/core/utils/hooks";
+import { imageUrl } from "@web/core/utils/urls";
+import { RecordAutocomplete } from "./record_autocomplete";
 import { useTagNavigation } from "./tag_navigation_hook";
 
 export class MultiRecordSelector extends Component {
@@ -20,9 +22,18 @@ export class MultiRecordSelector extends Component {
 
     setup() {
         this.nameService = useService("name");
-        this.onTagKeydown = useTagNavigation("multiRecordSelector", this.deleteTag.bind(this));
+        useTagNavigation("multiRecordSelector", {
+            delete: (index) => this.deleteTag(index),
+        });
         onWillStart(() => this.computeDerivedParams());
         onWillUpdateProps((nextProps) => this.computeDerivedParams(nextProps));
+    }
+
+    get isAvatarModel() {
+        // bof
+        return ["res.partner", "res.users", "hr.employee", "hr.employee.public"].includes(
+            this.props.resModel
+        );
     }
 
     async computeDerivedParams(props = this.props) {
@@ -59,7 +70,10 @@ export class MultiRecordSelector extends Component {
                 onDelete: () => {
                     this.deleteTag(index);
                 },
-                onKeydown: this.onTagKeydown,
+                img:
+                    this.isAvatarModel &&
+                    isId(id) &&
+                    imageUrl(this.props.resModel, id, "avatar_128"),
             };
         });
     }

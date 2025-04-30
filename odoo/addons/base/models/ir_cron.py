@@ -11,7 +11,7 @@ from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 
 import odoo
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import LockError, UserError
 from odoo.modules.registry import Registry
 from odoo.tools import SQL
@@ -68,12 +68,14 @@ class IrCron(models.Model):
     # loaded yet or was already unloaded (e.g. 'force_db_wakeup' or something)
     # See also odoo.cron
     _name = 'ir.cron'
-    _order = 'cron_name'
+    _order = 'cron_name, id'
     _description = 'Scheduled Actions'
     _allow_sudo_commands = False
 
+    _inherits = {'ir.actions.server': 'ir_actions_server_id'}
+
     ir_actions_server_id = fields.Many2one(
-        'ir.actions.server', 'Server action',
+        'ir.actions.server', 'Server action', index=True,
         delegate=True, ondelete='restrict', required=True)
     cron_name = fields.Char('Name', compute='_compute_cron_name', store=True)
     user_id = fields.Many2one('res.users', string='Scheduler User', default=lambda self: self.env.user, required=True)
@@ -132,7 +134,7 @@ class IrCron(models.Model):
         cron_cr = self.env.cr
         job = self._acquire_one_job(cron_cr, self.id, include_not_ready=True)
         if not job:
-            raise UserError(_("Job '%s' already executing", self.name))
+            raise UserError(self.env._("Job '%s' already executing", self.name))
         self._process_job(cron_cr, job)
         return True
 
@@ -521,7 +523,7 @@ class IrCron(models.Model):
                 failure_count = 0
                 first_failure_date = None
                 active = False
-                self._notify_admin(_(
+                self._notify_admin(self.env._(
                     "Cron job %(name)s (%(id)s) has been deactivated after failing %(count)s times. "
                     "More information can be found in the server logs around %(time)s.",
                     name=repr(job['cron_name']),
@@ -633,7 +635,8 @@ class IrCron(models.Model):
             self._cr.postcommit.add(self._notifydb)
         return super().write(vals)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_unless_running(self):
         try:
             self.lock_for_update()
         except LockError:
@@ -642,7 +645,6 @@ class IrCron(models.Model):
                 "This cron task is currently being executed and may not be modified "
                 "Please try again in a few minutes"
             )) from None
-        return super().unlink()
 
     @api.model
     def toggle(self, model, domain):
@@ -784,7 +786,7 @@ class IrCron(models.Model):
         is subtracted from the existing remaining count.
 
         If called from outside the cron job, the progress function call will
-        have no effect.
+        just commit.
 
         :param processed: number of processed items in this step
         :param remaining: set the remaining count to the given count
@@ -794,7 +796,8 @@ class IrCron(models.Model):
         ctx = self.env.context
         progress = self.env['ir.cron.progress'].sudo().browse(ctx.get('ir_cron_progress_id'))
         if not progress:
-            # not called during a cron, ignore
+            # not called during a cron, just commit
+            self.env.cr.commit()
             return float('inf')
         assert processed >= 0, 'processed must be positive'
         assert (remaining or 0) >= 0, "remaining must be positive"
@@ -812,6 +815,12 @@ class IrCron(models.Model):
         self.env.cr.commit()
         return max(ctx.get('cron_end_time', float('inf')) - time.monotonic(), 0)
 
+    def action_open_parent_action(self):
+        return self.ir_actions_server_id.action_open_parent_action()
+
+    def action_open_scheduled_action(self):
+        return self.ir_actions_server_id.action_open_scheduled_action()
+
 
 class IrCronTrigger(models.Model):
     _name = 'ir.cron.trigger'
@@ -824,7 +833,11 @@ class IrCronTrigger(models.Model):
 
     @api.autovacuum
     def _gc_cron_triggers(self):
-        domain = [('call_at', '<', datetime.now() + relativedelta(weeks=-1))]
+        # active cron jobs are cleared by `_clear_schedule` when the job starts
+        domain = [
+            ('call_at', '<', datetime.now() + relativedelta(weeks=-1)),
+            ('cron_id.active', '=', False),
+        ]
         records = self.search(domain, limit=GC_UNLINK_LIMIT)
         records.unlink()
         return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining

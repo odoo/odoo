@@ -17,7 +17,7 @@ export function getDomainDisplayedOperators(fieldDef) {
     const hierarchyOperators = fieldDef.allow_hierachy_operators ? ["child_of", "parent_of"] : [];
     switch (type) {
         case "boolean":
-            return ["is", "is_not"];
+            return ["set", "not_set"];
         case "selection":
             return ["=", "!=", "in", "not in", "set", "not_set"];
         case "char":
@@ -37,7 +37,24 @@ export function getDomainDisplayedOperators(fieldDef) {
             ];
         case "date":
         case "datetime":
-            return ["=", "!=", ">", ">=", "<", "<=", "between", "is_not_between", "within", "is_not_within", "set", "not_set"];
+            return [
+                "today",
+                "not_today",
+                "=",
+                "!=",
+                ">",
+                ">=",
+                "<",
+                "<=",
+                "between",
+                "is_not_between",
+                "next",
+                "not_next",
+                "last",
+                "not_last",
+                "set",
+                "not_set",
+            ];
         case "integer":
         case "float":
         case "monetary":
@@ -49,6 +66,7 @@ export function getDomainDisplayedOperators(fieldDef) {
                 "<",
                 "<=",
                 "between",
+                "is_not_between",
                 "ilike",
                 "not ilike",
                 "set",

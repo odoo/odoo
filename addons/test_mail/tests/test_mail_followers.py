@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import copy
+
 import re
 from unittest.mock import patch
 from urllib.parse import urlparse
 
 from markupsafe import Markup
 
+from odoo import Command
 from odoo.addons.mail.models.mail_mail import _UNFOLLOW_REGEX
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
@@ -57,6 +58,8 @@ class BaseFollowersTest(MailCommon):
         followed_after = self.env['mail.test.simple'].search([('message_partner_ids', 'in', partner.ids)])
         self.assertTrue(partner in test_record.message_partner_ids)
         self.assertEqual(followed_before + test_record, followed_after)
+        with self.assertRaisesRegex(AccessError, 'Portal users can only filter threads'):
+            self.env['mail.test.simple'].with_user(self.user_portal).search([('message_partner_ids', 'in', partner.ids)])
 
     def test_field_followers(self):
         test_record = self.test_record.with_user(self.user_employee)
@@ -295,6 +298,10 @@ class AdvancedFollowersTest(MailCommon):
             'name': 'Default track subtype', 'default': True, 'internal': False,
             'res_model': 'mail.test.track'
         })
+        cls.sub_track_parent_def = Subtype.create({
+            'name': 'Parent track subtype', 'default': False, 'res_model': 'mail.test.track',
+            'parent_id': cls.sub_track_def.id, 'relation_field': 'parent_id'
+        })
 
         # mail.test.container subtypes (aka: project records)
         cls.umb_nodef = Subtype.create({
@@ -334,7 +341,18 @@ class AdvancedFollowersTest(MailCommon):
 
     def test_auto_subscribe_create(self):
         """ Creator of records are automatically added as followers """
-        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
+        for user, should_subscribe in [
+            (self.user_root, False),
+            (self.user_employee, True),
+            (self.user_portal, False),
+        ]:
+            with self.subTest(user_name=user.name):
+                # sudo, as done through mailgateway for example
+                if user == self.user_portal:
+                    new_rec = self.env['mail.test.track'].with_user(user).sudo().create({})
+                else:
+                    new_rec = self.env['mail.test.track'].with_user(user).create({})
+                self.assertEqual(new_rec.message_partner_ids, user.partner_id if should_subscribe else self.env['res.partner'])
 
     @mute_logger('odoo.models.unlink')
     def test_auto_subscribe_inactive(self):
@@ -362,19 +380,27 @@ class AdvancedFollowersTest(MailCommon):
                          'Does not subscribe inactive partner')
 
     def test_auto_subscribe_post(self):
-        """ People posting a message are automatically added as followers """
-        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='comment')
-        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id | self.user_admin.partner_id)
-
-    def test_auto_subscribe_post_email(self):
-        """ People posting an email are automatically added as followers """
-        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='email_outgoing')
-        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id | self.user_admin.partner_id)
-
-    def test_auto_subscribe_not_on_notification(self):
-        """ People posting an automatic notification are not subscribed """
-        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='notification')
-        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
+        """ People posting a discussion message are automatically added as
+        followers """
+        record = self.test_track.with_user(self.user_admin)
+        for message_type, subtype, should_subscribe in [
+            ('comment', self.env.ref('mail.mt_note'), False),
+            ('comment', self.env.ref('mail.mt_comment'), True),
+            ('email_outgoing', self.env.ref('mail.mt_note'), False),
+            ('email_outgoing', self.env.ref('mail.mt_comment'), True),
+            ('notification', self.env.ref('mail.mt_comment'), False),
+        ]:
+            with self.subTest(message_type=message_type, subtype_name=subtype.name):
+                record.message_unsubscribe(partner_ids=self.user_admin.partner_id.ids)
+                record.message_post(
+                    body=f'Posting with {message_type} {subtype.name}',
+                    message_type=message_type,
+                    subtype_id=subtype.id,
+                )
+                if should_subscribe:
+                    self.assertIn(self.user_admin.partner_id, record.message_partner_ids)
+                else:
+                    self.assertNotIn(self.user_admin.partner_id, record.message_partner_ids)
 
     def test_auto_subscribe_responsible(self):
         """ Responsibles are tracked and added as followers """
@@ -471,6 +497,19 @@ class AdvancedFollowersTest(MailCommon):
             follower_emp.subtype_ids, defaults + parents,
             'AutoSubscribe: at create auto subscribe as creator + from parent take both subtypes'
         )
+
+        container.message_follower_ids = [Command.clear()]
+        parent_track = self.env['mail.test.track'].with_user(self.user_employee).create({
+            'name': 'Task-Like',
+            'container_id': container.id,
+        })
+
+        child_track = self.env['mail.test.track'].with_user(self.user_admin).create({
+            'name': 'Task-Like Test-sub-task',
+            'parent_id': parent_track.id,
+            'container_id': container.id,
+        })
+        self.assertIn(self.user_employee.partner_id, child_track.message_follower_ids.partner_id, 'The partner from the parent has not been added as follower.')
 
 
 @tagged('mail_followers')

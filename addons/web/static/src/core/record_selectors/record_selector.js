@@ -1,7 +1,8 @@
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { isId } from "@web/core/tree_editor/utils";
 import { useService } from "@web/core/utils/hooks";
 import { RecordAutocomplete } from "./record_autocomplete";
-import { _t } from "@web/core/l10n/translation";
 
 export class RecordSelector extends Component {
     static props = {
@@ -20,6 +21,17 @@ export class RecordSelector extends Component {
         this.nameService = useService("name");
         onWillStart(() => this.computeDerivedParams());
         onWillUpdateProps((nextProps) => this.computeDerivedParams(nextProps));
+    }
+
+    get isAvatarModel() {
+        // bof
+        return ["res.partner", "res.users", "hr.employee", "hr.employee.public"].includes(
+            this.props.resModel
+        );
+    }
+
+    get hasAvatarImg() {
+        return this.isAvatarModel && isId(this.props.resId);
     }
 
     async computeDerivedParams(props = this.props) {

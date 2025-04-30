@@ -5,6 +5,7 @@ import random
 import re
 
 from odoo import api, Command, fields, models, _
+from odoo.exceptions import AccessError
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 from odoo.addons.mail.tools.discuss import Store
 
@@ -83,6 +84,7 @@ class Im_LivechatChannel(models.Model):
         "user_ids.channel_ids.livechat_active",
         "user_ids.channel_ids.livechat_channel_id",
         "user_ids.channel_ids.livechat_operator_id",
+        "user_ids.channel_member_ids",
         "user_ids.im_status",
         "user_ids.is_in_call",
         "user_ids.partner_id",
@@ -169,13 +171,17 @@ class Im_LivechatChannel(models.Model):
     # --------------------------
     def action_join(self):
         self.ensure_one()
-        self.user_ids = [Command.link(self.env.user.id)]
+        if not self.env.user.has_group("im_livechat.im_livechat_group_user"):
+            raise AccessError(_("Only Live Chat operators can join Live Chat channels"))
+        # sudo: im_livechat.channel - operators can join channels
+        self.sudo().user_ids = [Command.link(self.env.user.id)]
         self.env.user._bus_send_store(self, ["are_you_inside", "name"])
 
     def action_quit(self):
         self.ensure_one()
-        self.user_ids = [Command.unlink(self.env.user.id)]
-        self.env.user._bus_send_store(self, ["are_you_inside", "name"])
+        # sudo: im_livechat.channel - users can leave channels
+        self.sudo().user_ids = [Command.unlink(self.env.user.id)]
+        self.env.user._bus_send_store(self.sudo(), ["are_you_inside", "name"])
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
@@ -183,8 +189,13 @@ class Im_LivechatChannel(models.Model):
             :returns : the ir.action 'action_view_rating' with the correct context
         """
         self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id('im_livechat.rating_rating_action_livechat')
-        action['context'] = {'search_default_parent_res_name': self.name}
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "im_livechat.discuss_channel_action_from_livechat_channel"
+        )
+        action["context"] = {
+            "search_default_parent_res_name": self.name,
+            "search_default_fiter_session_rated": "1"
+        }
         return action
 
     def action_view_chatbot_scripts(self):
@@ -217,13 +228,20 @@ class Im_LivechatChannel(models.Model):
         # partner to add to the discuss.channel
         operator_partner_id = user_operator.partner_id.id if user_operator else chatbot_script.operator_partner_id.id
         members_to_add = [
-            Command.create({"partner_id": operator_partner_id, "unpin_dt": fields.Datetime.now()})
+            Command.create(
+                {
+                    "livechat_member_type": "agent" if user_operator else "bot",
+                    "chatbot_script_id": chatbot_script.id if not user_operator else False,
+                    "partner_id": operator_partner_id,
+                    "unpin_dt": fields.Datetime.now(),
+                }
+            )
         ]
         visitor_user = False
         if user_id:
             visitor_user = self.env['res.users'].browse(user_id)
             if visitor_user and visitor_user.active and user_operator and visitor_user != user_operator:  # valid session user (not public)
-                members_to_add.append(Command.create({'partner_id': visitor_user.partner_id.id}))
+                members_to_add.append(Command.create({"livechat_member_type": "visitor", 'partner_id': visitor_user.partner_id.id}))
 
         if chatbot_script:
             name = chatbot_script.title
@@ -238,6 +256,7 @@ class Im_LivechatChannel(models.Model):
             'livechat_active': True,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,
+            "livechat_failure": "no_answer" if user_operator else "no_failure",
             'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id if chatbot_script else False,
             'anonymous_name': False if user_id else anonymous_name,
             'country_id': country_id,
@@ -451,7 +470,7 @@ class Im_LivechatChannelRule(models.Model):
         required=True,
         default="always",
     )
-    channel_id = fields.Many2one('im_livechat.channel', 'Channel',
+    channel_id = fields.Many2one('im_livechat.channel', 'Channel', index='btree_not_null',
         help="The channel of the rule")
     country_ids = fields.Many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Country',
         help="The rule will only be applied for these countries. Example: if you select 'Belgium' and 'United States' and that you set the action to 'Hide', the chat button will be hidden on the specified URL from the visitors located in these 2 countries. This feature requires GeoIP installed on your server.")

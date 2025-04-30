@@ -7,7 +7,6 @@ import { useService } from "@web/core/utils/hooks";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
-import { convertBrToLineBreak } from "@mail/utils/common/format";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 
 const { DateTime } = luxon;
@@ -53,9 +52,17 @@ messageActionsRegistry
         onClick: (component) => {
             const message = toRaw(component.props.message);
             const thread = toRaw(component.props.thread);
-            component.props.messageToReplyTo.toggle(thread, message);
+            if (message.eq(thread.composer.replyToMessage)) {
+                thread.composer.replyToMessage = undefined;
+            } else {
+                thread.composer.replyToMessage = message;
+            }
         },
-        sequence: (component) => (component.props.thread?.eq(component.store.inbox) ? 55 : 20),
+        sequence: (component) =>
+            component.props.thread?.eq(component.store.inbox) ||
+            component.props.message.isSelfAuthored
+                ? 55
+                : 20,
     })
     .add("toggle-star", {
         condition: (component) => component.props.message.canToggleStar,
@@ -93,20 +100,10 @@ messageActionsRegistry
         icon: "fa fa-pencil",
         title: _t("Edit"),
         onClick: (component) => {
-            const message = toRaw(component.props.message);
-            const text = convertBrToLineBreak(message.body);
-            message.composer = {
-                mentionedPartners: message.recipients,
-                text,
-                selection: {
-                    start: text.length,
-                    end: text.length,
-                    direction: "none",
-                },
-            };
-            component.state.isEditing = true;
+            component.props.message.enterEditMode(component.props.thread);
+            component.optionsDropdown?.close();
         },
-        sequence: 80,
+        sequence: (component) => (component.props.message.isSelfAuthored ? 20 : 55),
     })
     .add("delete", {
         condition: (component) => component.props.message.editable,
@@ -134,7 +131,7 @@ messageActionsRegistry
             const component = useComponent();
             component.dialog = useService("dialog");
         },
-        sequence: 90,
+        sequence: 120,
     })
     .add("download_files", {
         condition: (component) =>
@@ -181,7 +178,7 @@ function transformAction(component, id, action) {
         mobileCloseAfterClick: action.mobileCloseAfterClick ?? true,
         /** Condition to display this action. */
         get condition() {
-            return action.condition(component);
+            return messageActionsInternal.condition(component, id, action);
         },
         /** Icon for the button this action. */
         get icon() {
@@ -207,6 +204,12 @@ function transformAction(component, id, action) {
         setup: action.setup,
     };
 }
+
+export const messageActionsInternal = {
+    condition(component, id, action) {
+        return action.condition(component);
+    },
+};
 
 export function useMessageActions() {
     const component = useComponent();

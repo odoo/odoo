@@ -5,12 +5,7 @@ import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
-import {
-    useHover,
-    useMessageEdition,
-    useMessageHighlight,
-    useMessageToReplyTo,
-} from "@mail/utils/common/hooks";
+import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
 import { Component, toRaw, useChildSubEnv, useRef, useState } from "@odoo/owl";
@@ -47,9 +42,7 @@ export class ChatWindow extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
-        this.messageToReplyTo = useMessageToReplyTo();
         this.state = useState({
             actionsMenuOpened: false,
             jumpThreadPresent: 0,
@@ -87,6 +80,10 @@ export class ChatWindow extends Component {
 
     get thread() {
         return this.props.chatWindow.thread;
+    }
+
+    get showImStatus() {
+        return this.thread?.channel_type === "chat" && this.thread.correspondent;
     }
 
     get style() {

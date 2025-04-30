@@ -28,7 +28,7 @@
                 <field name="remaining_hours" widget="timesheet_uom" sum="Time Remaining" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
                 <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" column_invisible="not parent.allow_timesheets" invisible="not allow_timesheets"/>
             </xpath>
-            <xpath expr="//field[@name='partner_id']" position="after">
+            <xpath expr="//div[@name='repeat_intervals']" position="after">
                 <field name="encode_uom_in_days" invisible="1"/>
                 <field name="subtask_count" invisible="1"/>
                 <label for="allocated_hours" invisible="not allow_timesheets"/>
@@ -47,7 +47,7 @@
                 <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets">
                     <field name="timesheet_ids" mode="list,kanban"
                           readonly="1">
-                        <list string="Timesheet Activities" default_order="date" no_open="1" create="false" delete="0">
+                        <list string="Timesheet Activities" no_open="1" create="false" delete="0">
                             <field name="date"/>
                             <field name="employee_id"/>
                             <field name="name"/>
@@ -119,8 +119,8 @@
                     <t t-set="badge" t-value="'border border-success'"/>
                     <t t-set="badge" t-value="'border border-warning'" t-if="record.progress.raw_value &gt;= 0.8 and record.progress.raw_value &lt;= 1"/>
                     <t t-set="badge" t-value="'border border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
-                    <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
-                    <t t-set="title" t-value="'Time Remaining'" t-else=""/>
+                    <t t-set="title" t-if="record.encode_uom_in_days.raw_value">Remaining days</t>
+                    <t t-set="title" t-else="">Time Remaining</t>
                     <div t-attf-class="badge {{ badge }} bg-transparent flex-shrink-0" t-att-title="title">
                         <field name="remaining_hours" widget="timesheet_uom" />
                     </div>

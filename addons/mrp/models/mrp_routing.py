@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round
+from odoo.tools import float_round, float_is_zero
 
 
 class MrpRoutingWorkcenter(models.Model):
@@ -16,7 +16,7 @@ class MrpRoutingWorkcenter(models.Model):
 
     name = fields.Char('Operation', required=True)
     active = fields.Boolean(default=True)
-    workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True, check_company=True, tracking=True)
+    workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True, check_company=True, tracking=True, index=True)
     sequence = fields.Integer(
         'Sequence', default=100,
         help="Gives the sequence order when displaying a list of routing Work Centers.")
@@ -24,13 +24,6 @@ class MrpRoutingWorkcenter(models.Model):
         'mrp.bom', 'Bill of Material',
         index=True, ondelete='cascade', required=True, check_company=True)
     company_id = fields.Many2one('res.company', 'Company', related='bom_id.company_id')
-    worksheet_type = fields.Selection([
-        ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
-        string="Worksheet", default="text", tracking=True
-    )
-    note = fields.Html('Description')
-    worksheet = fields.Binary('PDF')
-    worksheet_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.", tracking=True)
     time_mode = fields.Selection([
         ('auto', 'Compute based on tracked time'),
         ('manual', 'Set duration manually')], string='Duration Computation',
@@ -61,13 +54,21 @@ class MrpRoutingWorkcenter(models.Model):
                                      string="Blocks", help="Operations that cannot start before this operation is completed.",
                                      domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
                                      copy=False)
+    cycle_number = fields.Integer("Repetitions", compute="_compute_time_cycle")
+    time_total = fields.Float('Total Duration', compute="_compute_time_cycle")
+    show_time_total = fields.Boolean('Show Total Duration?', compute="_compute_time_cycle")
+    cost = fields.Float('Cost', compute="_compute_cost")
 
     @api.depends('time_mode', 'time_mode_batch')
     def _compute_time_computed_on(self):
         for operation in self:
             operation.time_computed_on = _('%i work orders', operation.time_mode_batch) if operation.time_mode != 'manual' else False
 
-    @api.depends('time_cycle_manual', 'time_mode', 'workorder_ids')
+    @api.depends('time_cycle_manual', 'time_mode', 'workorder_ids',
+        'bom_id.product_id', 'bom_id.product_qty',
+        'workcenter_id.time_start', 'workcenter_id.time_stop', 'workcenter_id.capacity_ids'
+    )
+    @api.depends_context('product', 'quantity', 'unit', 'workcenter')
     def _compute_time_cycle(self):
         manual_ops = self.filtered(lambda operation: operation.time_mode == 'manual')
         for operation in manual_ops:
@@ -88,13 +89,27 @@ class MrpRoutingWorkcenter(models.Model):
             cycle_number = 0  # Never 0 unless infinite item['workcenter_id'].capacity
             for item in data:
                 total_duration += item['duration']
-                capacity = item['workcenter_id']._get_capacity(item.product_id)
-                qty_produced = item.product_uom_id._compute_quantity(item['qty_produced'], item.product_id.uom_id)
-                cycle_number += float_round((qty_produced / capacity or 1.0), precision_digits=0, rounding_method='UP')
+                (capacity, _setup, _cleanup) = item['workcenter_id']._get_capacity(item.product_id, item.product_uom_id, operation.bom_id.product_qty)
+                cycle_number += float_round((item['qty_produced'] / capacity), precision_digits=0, rounding_method='UP')
             if cycle_number:
                 operation.time_cycle = total_duration / cycle_number
             else:
                 operation.time_cycle = operation.time_cycle_manual
+
+        for operation in self:
+            workcenter = self.env.context.get('workcenter', operation.workcenter_id)
+            product = self.env.context.get('product', operation.bom_id.product_id or operation.bom_id.product_tmpl_id.product_variant_ids)
+            if len(product) > 1:
+                operation.cycle_number = 1
+                operation.time_total = workcenter.time_start + workcenter.time_stop + operation.time_cycle_manual
+                operation.show_time_total = False
+                continue
+            quantity = self.env.context.get('quantity', operation.bom_id.product_qty or 1)
+            unit = self.env.context.get('unit', operation.bom_id.product_uom_id)
+            (capacity, setup, cleanup) = workcenter._get_capacity(product, unit, operation.bom_id.product_qty)
+            operation.cycle_number = float_round(quantity / capacity, precision_digits=0, rounding_method="UP")
+            operation.time_total = setup + cleanup + operation.cycle_number * operation.time_cycle * 100.0 / (workcenter.time_efficiency or 100.0)
+            operation.show_time_total = operation.cycle_number > 1 or not float_is_zero(setup + cleanup, precision_digits=0)
 
     def _compute_workorder_count(self):
         data = self.env['mrp.workorder']._read_group([
@@ -103,6 +118,12 @@ class MrpRoutingWorkcenter(models.Model):
         count_data = {operation.id: count for operation, count in data}
         for operation in self:
             operation.workorder_count = count_data.get(operation.id, 0)
+
+    @api.depends('time_total', 'workcenter_id')
+    @api.depends_context('product', 'quantity', 'unit', 'workcenter')
+    def _compute_cost(self):
+        for operation in self:
+            operation.cost = (operation.time_total / 60.0) * operation.workcenter_id.costs_hour
 
     @api.constrains('blocked_by_operation_ids')
     def _check_no_cyclic_dependencies(self):
@@ -164,7 +185,7 @@ class MrpRoutingWorkcenter(models.Model):
             }
         }
 
-    def _skip_operation_line(self, product):
+    def _skip_operation_line(self, product, never_attribute_values=False):
         """ Control if a operation should be processed, can be inherited to add
         custom control.
         """
@@ -174,19 +195,5 @@ class MrpRoutingWorkcenter(models.Model):
             return True
         if not product or product._name == 'product.template':
             return False
-        return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
 
-    def _get_duration_expected(self, product, quantity, unit=False, workcenter=False):
-        product = product or self.bom_id.product_tmpl_id
-        if self._skip_operation_line(product):
-            return 0
-        unit = unit or product.uom_id
-        quantity = self.bom_id.product_uom_id._compute_quantity(quantity, unit)
-        workcenter = workcenter or self.workcenter_id
-        capacity = workcenter._get_capacity(product)
-        cycle_number = float_round(quantity / capacity, precision_digits=0, rounding_method='UP')
-        return workcenter._get_expected_duration(product) + cycle_number * self.time_cycle * 100.0 / workcenter.time_efficiency
-
-    def _compute_operation_cost(self):
-        duration = self.env.context.get('op_duration', self.time_cycle)
-        return (duration / 60.0) * (self.workcenter_id.costs_hour)
+        return self.env['mrp.bom']._skip_for_no_variant(product, self.bom_product_template_attribute_value_ids, never_attribute_values)

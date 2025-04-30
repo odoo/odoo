@@ -26,15 +26,4 @@
         </field>
     </record>
 
-    <record id="hr_work_entry_contract_type_view_form_inherit" model="ir.ui.view">
-        <field name="name">hr.work.entry.type.contract.view.form.inherit</field>
-        <field name="model">hr.work.entry.type</field>
-        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_form"/>
-        <field name="arch" type="xml">
-            <group name="time_off" position="inside">
-                <field name="is_leave"/>
-            </group>
-        </field>
-    </record>
-
 </odoo>

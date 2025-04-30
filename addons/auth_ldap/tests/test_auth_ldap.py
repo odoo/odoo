@@ -62,7 +62,7 @@ class TestAuthLDAP(BaseCase):
 
         with patch.object(self.registry["res.company.ldap"], "_get_ldap_dicts", _get_ldap_dicts),\
             patch.object(self.registry["res.company.ldap"], "_authenticate", _authenticate):
-            res = self.opener.post(
+            res = self.url_open(
                 f"{self.base_url()}/web/login",
                 data={
                     "login": "test_ldap_user",

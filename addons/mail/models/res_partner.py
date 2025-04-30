@@ -6,6 +6,7 @@ from odoo import _, api, fields, models, tools
 from odoo.osv import expression
 from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
+from odoo.exceptions import AccessError
 
 
 class ResPartner(models.Model):
@@ -28,6 +29,7 @@ class ResPartner(models.Model):
     starred_message_ids = fields.Many2many('mail.message', 'mail_message_res_partner_starred_rel')
     # sudo: res.partner - can access presence of accessible partner
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
+    offline_since = fields.Datetime("Offline since", compute="_compute_im_status", compute_sudo=True)
 
     @api.depends('contact_address')
     def _compute_contact_address_inline(self):
@@ -48,6 +50,11 @@ class ResPartner(models.Model):
                 else "offline"
                 if partner.user_ids
                 else "im_partner"
+            )
+            partner.offline_since = (
+                max(partner.user_ids.presence_ids.mapped("last_poll"), default=None)
+                if partner.im_status == "offline"
+                else None
             )
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
         odoobot = self.env['res.partner'].browse(odoobot_id)
@@ -279,7 +286,13 @@ class ResPartner(models.Model):
         """
         domain = self._get_mention_suggestions_domain(search)
         partners = self._search_mention_suggestions(domain, limit)
-        return Store(partners).get_result()
+        store = Store(partners)
+        try:
+            roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
+            store.add(roles, "name")
+        except AccessError:
+            pass
+        return store.get_result()
 
     @api.model
     def _get_mention_suggestions_domain(self, search):

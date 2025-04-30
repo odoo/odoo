@@ -7,6 +7,7 @@ export default class IndexedDB {
         this.dbVersion = dbVersion;
         this.dbStores = dbStores;
         this.dbInstance = null;
+        this.activeTransactions = 0;
         this.databaseEventListener(whenReady);
     }
 
@@ -64,7 +65,12 @@ export default class IndexedDB {
                 return false;
             }
 
-            return this.db.transaction(dbStore, "readwrite");
+            this.activeTransactions++;
+            const transaction = this.db.transaction(dbStore, "readwrite");
+            transaction.onerror = () => this.activeTransactions--;
+            transaction.onabort = () => this.activeTransactions--;
+            transaction.oncomplete = () => this.activeTransactions--;
+            return transaction;
         } catch (e) {
             console.info("DATABASE is not ready yet", e);
             return false;
@@ -80,6 +86,9 @@ export default class IndexedDB {
     }
 
     create(storeName, arrData) {
+        if (!arrData?.length) {
+            return;
+        }
         return this.promises(storeName, arrData, "put");
     }
 
@@ -123,6 +132,9 @@ export default class IndexedDB {
     }
 
     delete(storeName, uuids) {
+        if (!uuids?.length) {
+            return;
+        }
         return this.promises(storeName, uuids, "delete");
     }
 }

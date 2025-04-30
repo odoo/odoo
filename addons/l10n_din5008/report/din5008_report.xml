@@ -72,13 +72,13 @@
                                         <span>|</span> <span t-field="company.country_id.name"/>
                                     </t>
                                     <hr class="company_invoice_line" />
-                                    <div t-if="address">
+                                    <span t-if="address">
                                         <t t-out="address"/>
-                                    </div>
-                                    <div t-else="fallback_address">
+                                    </span>
+                                    <span t-else="fallback_address">
                                         <t t-out="fallback_address"
                                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-                                    </div>
+                                    </span>
                                 </div>
                             </td>
                             <td t-if="din5008_document_information">
@@ -123,7 +123,8 @@
                                 </td>
                                 <td>
                                     <ul class="list-inline">
-                                        <li t-if="company.vat"><t t-out="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
+                                        <t t-set="default_vat_label">Tax ID</t>
+                                        <li t-if="company.vat"><t t-out="company.account_fiscal_country_id.vat_label or default_vat_label"/>:
                                             <span t-if="forced_vat" t-out="forced_vat"/>
                                             <span t-else="" t-field="company.vat"/>
                                         </li>

@@ -1,20 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import warnings
 from collections import defaultdict, OrderedDict
 from decorator import decorator
-from operator import attrgetter
 from textwrap import dedent
-import io
 import logging
 import os
 import shutil
-import threading
-import zipfile
-
-import requests
-import werkzeug.urls
 
 from docutils import nodes
 from docutils.core import publish_string
@@ -27,7 +19,7 @@ import odoo
 from odoo import api, fields, models, modules, tools, _
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort, get_flag
 from odoo.tools.translate import TranslationImporter, get_po_paths, get_datafile_translation_path
@@ -79,14 +71,14 @@ def assert_log_admin_access(method):
 class IrModuleCategory(models.Model):
     _name = 'ir.module.category'
     _description = "Application"
-    _order = 'name'
+    _order = 'sequence, name, id'
     _allow_sudo_commands = False
 
     name = fields.Char(string='Name', required=True, translate=True, index=True)
     parent_id = fields.Many2one('ir.module.category', string='Parent Application', index=True)
     child_ids = fields.One2many('ir.module.category', 'parent_id', string='Child Applications')
     module_ids = fields.One2many('ir.module.module', 'category_id', string='Modules')
-    group_ids = fields.One2many('res.groups', 'category_id', string='Group set')
+    privilege_ids = fields.One2many('res.groups.privilege', 'category_id', string='Privileges')
     description = fields.Text(string='Description', translate=True)
     sequence = fields.Integer(string='Sequence')
     visible = fields.Boolean(string='Visible', default=True)
@@ -482,7 +474,7 @@ class IrModuleModule(models.Model):
         It is important to remove these copies because using them will crash if
         they rely on data that don't exist anymore if the module is removed.
         """
-        domain = expression.OR([[('key', '=like', m.name + '.%')] for m in self])
+        domain = Domain.OR(Domain('key', '=like', m.name + '.%') for m in self)
         orphans = self.env['ir.ui.view'].with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search(domain)
         orphans.unlink()
 
@@ -564,6 +556,18 @@ class IrModuleModule(models.Model):
                 "is best to write it as a standalone script, and ask the runbot/metastorm team "
                 "for help."
             )
+
+        # raise error if database is updating for module operations
+        if self.search_count([('state', 'in', ('to install', 'to upgrade', 'to remove'))], limit=1):
+            raise UserError(_("Odoo is currently processing another module operation.\n"
+                               "Please try again later or contact your system administrator."))
+        try:
+            # raise error if another transaction is trying to schedule module operations concurrently
+            self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE NOWAIT")
+        except psycopg2.OperationalError:
+            raise UserError(_("Odoo is currently processing another module operation.\n"
+                               "Please try again later or contact your system administrator."))
+
         try:
             # This is done because the installation/uninstallation/upgrade can modify a currently
             # running cron job and prevent it from finishing, and since the ir_cron table is locked
@@ -630,7 +634,7 @@ class IrModuleModule(models.Model):
             'name': _('Uninstall module'),
             'view_mode': 'form',
             'res_model': 'base.module.uninstall',
-            'context': {'default_module_id': self.id},
+            'context': {'default_module_ids': self.ids},
         }
 
     def button_uninstall_cancel(self):
@@ -873,12 +877,12 @@ class IrModuleModule(models.Model):
     def search_panel_select_range(self, field_name, **kwargs):
         if field_name == 'category_id':
             enable_counters = kwargs.get('enable_counters', False)
-            domain = [
+            domain = Domain([
                 ('parent_id', '=', False),
                 '|',
                 ('module_ids.application', '!=', False),
                 ('child_ids.module_ids', '!=', False),
-            ]
+            ])
 
             excluded_xmlids = [
                 'base.module_category_website_theme',
@@ -895,10 +899,7 @@ class IrModuleModule(models.Model):
                 excluded_category_ids.append(categ.id)
 
             if excluded_category_ids:
-                domain = expression.AND([
-                    domain,
-                    [('id', 'not in', excluded_category_ids)],
-                ])
+                domain &= Domain('id', 'not in', excluded_category_ids)
 
             records = self.env['ir.module.category'].search_read(domain, ['display_name'], order="sequence")
 
@@ -906,7 +907,7 @@ class IrModuleModule(models.Model):
             for record in records:
                 record_id = record['id']
                 if enable_counters:
-                    model_domain = expression.AND([
+                    model_domain = Domain.AND([
                         kwargs.get('search_domain', []),
                         kwargs.get('category_domain', []),
                         kwargs.get('filter_domain', []),
@@ -982,11 +983,8 @@ class IrModuleModuleDependency(models.Model):
             dep.depend_id = name_mod.get(dep.name)
 
     def _search_depend(self, operator, value):
-        # support only `=` and `in`
-        if operator == '=':
-            value = [value]
-        else:
-            assert operator == 'in'
+        if operator not in ('in', 'any'):
+            return NotImplemented
         modules = self.env['ir.module.module'].browse(value)
         return [('name', 'in', modules.mapped('name'))]
 
@@ -1045,8 +1043,9 @@ class IrModuleModuleExclusion(models.Model):
             excl.exclusion_id = name_mod.get(excl.name)
 
     def _search_exclusion(self, operator, value):
-        assert operator == 'in'
-        modules = self.env['ir.module.module'].browse(set(value))
+        if operator not in ('in', 'any'):
+            return NotImplemented
+        modules = self.env['ir.module.module'].browse(value)
         return [('name', 'in', modules.mapped('name'))]
 
     @api.depends('exclusion_id.state')

@@ -1,5 +1,5 @@
 import { expect } from "@odoo/hoot";
-import { click, edit, queryAll, queryAllTexts, queryFirst, queryText } from "@odoo/hoot-dom";
+import { click, edit, queryAll, queryAllTexts, queryText } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
 const PICKER_COLS = 7;
@@ -144,10 +144,6 @@ export function getPickerCell(expr, inBounds = false) {
         }:contains("/^${expr}$/")`
     );
     return cells.length === 1 ? cells[0] : cells;
-}
-
-export function getPickerApplyButton() {
-    return queryFirst(".o_datetime_picker .o_datetime_buttons .o_apply");
 }
 
 export async function zoomOut() {

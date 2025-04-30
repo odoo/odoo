@@ -9,20 +9,31 @@ class SaleOrderLine(models.Model):
 
     event_id = fields.Many2one(
         'event.event', string='Event',
-        compute="_compute_event_id", store=True, readonly=False, precompute=True,
+        compute="_compute_event_id", store=True, readonly=False, precompute=True, index='btree_not_null',
         help="Choose an event and it will automatically create a registration for this event.")
+    event_slot_id = fields.Many2one(
+        'event.slot', string='Slot',
+        compute="_compute_event_related", store=True, readonly=False, precompute=True,
+        help="Choose an event slot and it will automatically create a registration for this event slot.")
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Ticket Type',
-        compute="_compute_event_ticket_id", store=True, readonly=False, precompute=True,
+        compute="_compute_event_related", store=True, readonly=False, precompute=True,
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
+    is_multi_slots = fields.Boolean(related="event_id.is_multi_slots")
     registration_ids = fields.One2many('event.registration', 'sale_order_line_id', string="Registrations")
 
-    @api.constrains('event_id', 'event_ticket_id', 'product_id')
+    @api.constrains('event_id', 'event_slot_id', 'event_ticket_id', 'product_id')
     def _check_event_registration_ticket(self):
         for so_line in self:
-            if so_line.product_id.service_tracking == "event" and (not so_line.event_id or not so_line.event_ticket_id):
-                raise ValidationError(
-                    _("The sale order line with the product %(product_name)s needs an event and a ticket.", product_name=so_line.product_id.name))
+            if so_line.product_id.service_tracking == "event" and (
+                not so_line.event_id or
+                not so_line.event_ticket_id or
+                (so_line.is_multi_slots and not so_line.event_slot_id)
+            ):
+                raise ValidationError(_(
+                    "The sale order line with the product %(product_name)s needs an event,"
+                    " a ticket and a slot in case the event has multiple time slots.",
+                    product_name=so_line.product_id.name))
 
     @api.depends('state', 'event_id')
     def _compute_product_uom_readonly(self):
@@ -59,10 +70,13 @@ class SaleOrderLine(models.Model):
                 line.event_id = False
 
     @api.depends('event_id')
-    def _compute_event_ticket_id(self):
+    def _compute_event_related(self):
         event_lines = self.filtered('event_id')
+        (self - event_lines).event_slot_id = False
         (self - event_lines).event_ticket_id = False
         for line in event_lines:
+            if line.event_id != line.event_slot_id.event_id:
+                line.event_slot_id = False
             if line.event_id != line.event_ticket_id.event_id:
                 line.event_ticket_id = False
 
@@ -70,7 +84,7 @@ class SaleOrderLine(models.Model):
     def _compute_price_unit(self):
         super()._compute_price_unit()
 
-    @api.depends('event_ticket_id')
+    @api.depends('event_slot_id', 'event_ticket_id')
     def _compute_name(self):
         """Override to add the compute dependency.
 
@@ -85,7 +99,9 @@ class SaleOrderLine(models.Model):
                 We need this override to be defined here in sales order line (and not in product) because here is the only place where the event_ticket_id is referenced.
         """
         if self.event_ticket_id:
-            return self.event_ticket_id._get_ticket_multiline_description() + self._get_sale_order_line_multiline_description_variants()
+            return self.event_ticket_id._get_ticket_multiline_description() + \
+                ('\n%s' % self.event_slot_id.display_name if self.event_slot_id else '') + \
+                self._get_sale_order_line_multiline_description_variants()
         else:
             return super()._get_sale_order_line_multiline_description_sale()
 

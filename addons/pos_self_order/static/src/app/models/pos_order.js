@@ -4,9 +4,13 @@ import { patch } from "@web/core/utils/patch";
 patch(PosOrder.prototype, {
     setup() {
         super.setup(...arguments);
+    },
+    initState() {
+        super.initState();
         this.uiState = {
             ...this.uiState,
-            lineChanges: {},
+            lineChanges: this.uiState.lineChanges || {},
+            receiptReady: false,
         };
     },
     get unsentLines() {
@@ -36,6 +40,10 @@ patch(PosOrder.prototype, {
     recomputeChanges() {
         const lines = this.lines;
         for (const line of lines) {
+            if (typeof line.id === "string") {
+                continue;
+            }
+
             this.uiState.lineChanges[line.uuid] = {
                 qty: line.qty,
                 customer_note: line.customer_note,

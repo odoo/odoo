@@ -1,5 +1,4 @@
 import base64
-import datetime
 from importlib import metadata
 
 from cryptography import x509
@@ -7,6 +6,7 @@ from cryptography.hazmat.primitives import constant_time, serialization
 from cryptography.hazmat.primitives.serialization import Encoding, pkcs12
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from .key import STR_TO_HASH, _get_formatted_value
 from odoo.exceptions import UserError
 from odoo.osv import expression
@@ -74,13 +74,13 @@ class CertificateCertificate(models.Model):
     )
     date_start = fields.Datetime(
         string='Available date',
-        help='The date on which the certificate starts to be valid (UTC)',
+        help='The date on which the certificate starts to be valid',
         compute='_compute_pem_certificate',
         store=True,
     )
     date_end = fields.Datetime(
         string='Expiration date',
-        help='The date on which the certificate expires (UTC)',
+        help='The date on which the certificate expires',
         compute='_compute_pem_certificate',
         store=True,
     )
@@ -203,37 +203,27 @@ class CertificateCertificate(models.Model):
 
     @api.depends('date_start', 'date_end', 'loading_error')
     def _compute_is_valid(self):
-        # Certificate dates are UTC timezoned
+        # Certificate dates and Odoo datetimes are UTC timezoned
         # https://cryptography.io/en/latest/x509/reference/#cryptography.x509.Certificate.not_valid_after
-        utc_now = datetime.datetime.now(datetime.timezone.utc)
+        now = fields.Datetime.now()
         for certificate in self:
             if not certificate.date_start or not certificate.date_end or certificate.loading_error:
                 certificate.is_valid = False
             else:
-                date_start = certificate.date_start.replace(tzinfo=datetime.timezone.utc)
-                date_end = certificate.date_end.replace(tzinfo=datetime.timezone.utc)
-                certificate.is_valid = date_start <= utc_now <= date_end
+                date_start = certificate.date_start
+                date_end = certificate.date_end
+                certificate.is_valid = date_start <= now <= date_end
 
     def _search_is_valid(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise NotImplementedError("Operation not supported, only '=' and '!=' are allowed.")
-        utc_now = datetime.datetime.now(datetime.timezone.utc)
-        if (operator == '=' and value) or (operator == '!=' and not value):
-            return [
-                ('pem_certificate', '!=', False),
-                ('date_start', '<=', utc_now),
-                ('date_end', '>=', utc_now),
-                ('loading_error', '=', '')
-            ]
-        else:
-            return expression.OR([
-                [('pem_certificate', '=', False)],
-                [('date_start', '=', False)],
-                [('date_end', '=', False)],
-                [('date_start', '>', utc_now)],
-                [('date_end', '<', utc_now)],
-                [('loading_error', '!=', '')],
-            ])
+        if operator != 'in':
+            return NotImplemented
+        now = fields.Datetime.now()
+        return [
+            ('pem_certificate', '!=', False),
+            ('date_start', '<=', now),
+            ('date_end', '>=', now),
+            ('loading_error', '=', '')
+        ]
 
     @api.constrains('pem_certificate', 'private_key_id', 'public_key_id')
     def _constrains_certificate_key_compatibility(self):
@@ -269,11 +259,30 @@ class CertificateCertificate(models.Model):
     # -------------------------------------------------------
 
     def _get_der_certificate_bytes(self, formatting='encodebytes'):
+        ''' Get the DER bytes of the certificate.
+
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: The formatted DER bytes of the certificate
+        :rtype: bytes
+        '''
         self.ensure_one()
         cert = x509.load_pem_x509_certificate(base64.b64decode(self.with_context(bin_size=False).pem_certificate))
         return _get_formatted_value(cert.public_bytes(serialization.Encoding.DER), formatting=formatting)
 
     def _get_fingerprint_bytes(self, hashing_algorithm='sha256', formatting='encodebytes'):
+        ''' Get the fingerprint bytes of the certificate.
+
+        :param optional,default='sha256' hashing_algorithm: The digest algorithm to use. Currently, only 'sha1' and 'sha256' are available.
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: The formatted fingerprint bytes of the certificate
+        :rtype: bytes
+        '''
         self.ensure_one()
         cert = x509.load_pem_x509_certificate(base64.b64decode(self.with_context(bin_size=False).pem_certificate))
         if hashing_algorithm not in STR_TO_HASH:
@@ -281,11 +290,30 @@ class CertificateCertificate(models.Model):
         return _get_formatted_value(cert.fingerprint(STR_TO_HASH[hashing_algorithm]), formatting=formatting)
 
     def _get_signature_bytes(self, formatting='encodebytes'):
+        ''' Get the signature bytes of the certificate.
+
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: The formatted signature bytes of the certificate
+        :rtype: bytes
+        '''
         self.ensure_one()
         cert = x509.load_pem_x509_certificate(base64.b64decode(self.with_context(bin_size=False).pem_certificate))
         return _get_formatted_value(cert.signature, formatting=formatting)
 
     def _get_public_key_numbers_bytes(self, formatting='encodebytes'):
+        ''' Get the certificate public key's public numbers bytes.
+
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: A tuple containing the formatted public number bytes of the certificate's public key
+
+        :rtype: tuple(bytes,bytes)
+        '''
         self.ensure_one()
         if self.public_key_id or self.private_key_id:
             return (self.public_key_id or self.private_key_id)._get_public_key_numbers_bytes(formatting=formatting)
@@ -297,6 +325,18 @@ class CertificateCertificate(models.Model):
         )
 
     def _get_public_key_bytes(self, encoding='der', formatting='encodebytes'):
+        ''' Get the certificate's public key bytes.
+
+        :param optional,default='der' encoding: The formatting of the returned bytes
+            - 'der' returns DER public key bytes
+            - other returns PEM public key bytes
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: The formatted certificate public key bytes in the corresponding format
+        :rtype: bytes
+        '''
         self.ensure_one()
         if self.public_key_id or self.private_key_id:
             return (self.public_key_id or self.private_key_id)._get_public_key_bytes(encoding=encoding, formatting=formatting)
@@ -318,7 +358,17 @@ class CertificateCertificate(models.Model):
         )
 
     def _sign(self, message, hashing_algorithm='sha256', formatting='encodebytes'):
-        """ Return the base64 encoded signature of message. """
+        ''' Compute and return the message's signature.
+
+        :param str|bytes message: The message to sign
+        :param optional,default='sha256' hashing_algorithm: The digest algorithm to use. Currently, only 'sha1' and 'sha256' are available.
+        :param optional,default='encodebytes' formatting: The formatting of the returned bytes
+            - 'encodebytes' returns a base64-encoded block of 76 characters lines
+            - 'base64' returns the raw base64-encoded data
+            - other returns non-encoded data
+        :return: The formatted signature bytes of the message
+        :rtype: bytes
+        '''
         self.ensure_one()
 
         if not self.is_valid:

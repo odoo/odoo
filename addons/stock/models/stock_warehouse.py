@@ -5,7 +5,6 @@ from collections import namedtuple
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, RedirectWarning
-from odoo.tools import format_list
 from odoo.tools.translate import _, LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -43,7 +42,7 @@ class StockWarehouse(models.Model):
     view_location_id = fields.Many2one(
         'stock.location', 'View Location',
         domain="[('usage', '=', 'view'), ('company_id', '=', company_id)]",
-        required=True, check_company=True)
+        required=True, check_company=True, index=True)
     lot_stock_id = fields.Many2one(
         'stock.location', 'Location Stock',
         domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]",
@@ -246,7 +245,7 @@ class StockWarehouse(models.Model):
                 if move_ids:
                     raise UserError(_(
                         'You still have ongoing operations for operation types %(operations)s in warehouse %(warehouse)s',
-                        operations=format_list(self.env, move_ids.mapped('picking_type_id.name')),
+                        operations=move_ids.mapped('picking_type_id.name'),
                         warehouse=warehouse.name,
                     ))
                 else:
@@ -260,7 +259,7 @@ class StockWarehouse(models.Model):
                 if picking_type_using_locations:
                     raise UserError(_(
                         '%(operations)s have default source or destination locations within warehouse %(warehouse)s, therefore you cannot archive it.',
-                        operations=format_list(self.env, picking_type_using_locations.mapped('name')),
+                        operations=picking_type_using_locations.mapped('name'),
                         warehouse=warehouse.name,
                     ))
                 warehouse.view_location_id.write({'active': vals['active']})

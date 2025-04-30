@@ -12,7 +12,7 @@ class ProductWishlist(models.Model):
         'Duplicated wishlisted product for this partner.',
     )
 
-    partner_id = fields.Many2one('res.partner', string='Owner')
+    partner_id = fields.Many2one('res.partner', string='Owner', index='btree_not_null')
     product_id = fields.Many2one('product.product', string='Product', required=True)
     currency_id = fields.Many2one('res.currency', related='website_id.currency_id', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', help='Pricelist when added')

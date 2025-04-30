@@ -18,19 +18,19 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             // order 1
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Minute Maid", "1", "2"),
             ProductScreen.totalAmountIs("2.0"),
             Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("2", "1"),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             ProductScreen.totalAmountIs("2.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             TipScreen.isShown(),
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("104"),
+            FloorScreen.clickTable("4"),
             // order 2
             ProductScreen.addOrderline("Coca-Cola", "2", "2"),
             ProductScreen.totalAmountIs("4.0"),
@@ -43,7 +43,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
 
             // Create without syncing the draft.
             // order 3
-            FloorScreen.clickTable("105"),
+            FloorScreen.clickTable("5"),
             ProductScreen.addOrderline("Minute Maid", "3", "2"),
             ProductScreen.totalAmountIs("6.0"),
             ProductScreen.clickPayButton(),
@@ -142,7 +142,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             // order 5
             // Click directly on "settle" without selecting a Tip
             ReceiptScreen.clickNextOrder(),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Minute Maid", "3", "2"),
             ProductScreen.totalAmountIs("6.0"),
             ProductScreen.clickPayButton(),

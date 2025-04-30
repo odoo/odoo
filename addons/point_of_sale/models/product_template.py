@@ -2,7 +2,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from collections import defaultdict
-from odoo.tools import SQL
+from odoo.tools import SQL, is_html_empty
 from itertools import groupby
 from operator import itemgetter
 from datetime import date
@@ -11,6 +11,14 @@ from datetime import date
 class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = ['product.template', 'pos.load.mixin']
+
+    @api.model
+    def _default_pos_sequence(self):
+        self.env.cr.execute('SELECT MAX(pos_sequence) FROM %s' % self._table)
+        max_sequence = self.env.cr.fetchone()[0]
+        if max_sequence is None:
+            return 1
+        return max_sequence + 1
 
     available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
     to_weight = fields.Boolean(string='To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration.")
@@ -21,6 +29,34 @@ class ProductTemplate(models.Model):
         string="Product Description",
         translate=True
     )
+    pos_optional_product_ids = fields.Many2many(
+        comodel_name='product.template',
+        relation='pos_product_optional_rel',
+        column1='src_id',
+        column2='dest_id',
+        string="POS Optional Products",
+        help="Optional products are suggested when customers add items to their cart (e.g., adding a burger suggests cold drinks or fries).")
+    color = fields.Integer('Color Index', compute="_compute_color", store=True, readonly=False)
+    pos_sequence = fields.Integer(
+        string="POS Sequence",
+        help="Determine the display order in the POS Terminal",
+        default=_default_pos_sequence,
+        copy=False,
+    )
+
+    def write(self, vals):
+        # Clear empty public description content to avoid side-effects on product page
+        # when there is no content to display anyway.
+        if vals.get('public_description') and is_html_empty(vals['public_description']):
+            vals['public_description'] = ''
+        return super().write(vals)
+
+    @api.depends('pos_categ_ids')
+    def _compute_color(self):
+        """Automatically set the color field based on the selected category."""
+        for product in self:
+            if product.pos_categ_ids:
+                product.color = product.pos_categ_ids[0].color
 
     def create_product_variant_from_pos(self, attribute_value_ids, config_id):
         """ Create a product variant from the POS interface. """
@@ -50,7 +86,8 @@ class ProductTemplate(models.Model):
         return [
             'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name', 'list_price', 'is_favorite',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking', 'type', 'service_tracking', 'is_storable',
-            'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids', 'public_description'
+            'write_date', 'color', 'pos_sequence', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids', 'public_description',
+            'pos_optional_product_ids'
         ]
 
     def _load_pos_data(self, data):
@@ -99,14 +136,27 @@ class ProductTemplate(models.Model):
         data['pos.config'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
 
-        products += config._get_special_products().product_tmpl_id
+        special_products = config._get_special_products().filtered(
+                    lambda product: not product.sudo().company_id
+                                    or product.sudo().company_id == self.company_id
+                )
+        products += special_products.product_tmpl_id
         if config.tip_product_id:
-            products += config.tip_product_id.product_tmpl_id
+            tip_company_id = config.tip_product_id.sudo().company_id
+            if not tip_company_id or tip_company_id == self.env.company:
+                products += config.tip_product_id.product_tmpl_id
+
+        # Ensure optional products are loaded when configured.
+        if products.filtered(lambda p: p.pos_optional_product_ids):
+            products |= products.mapped("pos_optional_product_ids")
 
         fields = self._load_pos_data_fields(config.id)
-        available_products = products.read(fields, load=False)
-        self._process_pos_ui_product_product(available_products, config)
-        return available_products
+        return self.with_context(config_id=config.id)._post_read_pos_data(products.read(fields, load=False))
+
+    def _post_read_pos_data(self, data):
+        config = self.env['pos.config'].browse(self.env.context.get('config_id'))
+        self._process_pos_ui_product_product(data, config)
+        return super()._post_read_pos_data(data)
 
     def _load_product_with_domain(self, domain, load_archived=False):
         context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
@@ -162,6 +212,19 @@ class ProductTemplate(models.Model):
                     "To delete a product, make sure all point of sale sessions are closed.\n\n"
                     "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
                 ))
+
+    def _ensure_unused_in_pos(self):
+        open_pos_sessions = self.env['pos.session'].search([('state', '!=', 'closed')])
+        used_products = open_pos_sessions.order_ids.filtered(lambda o: o.state == "draft").lines.product_id.product_tmpl_id
+        if used_products & self:
+            raise UserError(_(
+                "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
+                "Make sure to close all sessions first to avoid any issues.",
+            ))
+
+    def action_archive(self):
+        self._ensure_unused_in_pos()
+        return super().action_archive()
 
     @api.onchange('sale_ok')
     def _onchange_sale_ok(self):
@@ -254,5 +317,6 @@ class ProductTemplate(models.Model):
             'pricelists': pricelist_list,
             'warehouses': warehouse_list,
             'suppliers': supplier_list,
-            'variants': variant_list
+            'variants': variant_list,
+            'optional_products': self.pos_optional_product_ids.read(['id', 'name', 'list_price']),
         }

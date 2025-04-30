@@ -221,7 +221,7 @@ class TestDatabaseOperations(BaseCase):
         self.session.cookies['session_id'] = session.sid
 
         # make it possible to inject the registry back
-        patcher = patch.dict(Registry.registries.d, {test_db_name: registry})
+        patcher = patch.dict(Registry.registries, {test_db_name: registry})
         registries = patcher.start()
         self.addCleanup(patcher.stop)
 

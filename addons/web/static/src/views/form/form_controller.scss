@@ -162,9 +162,18 @@
                     width: auto!important;
                 }
             }
-            .o_field_many2one_selection {
+            .o_many2one {
                 width: 100% !important;
             }
+        }
+    }
+
+    &, & .o_form_editable {
+        // FIXME: those specific rules shouldn't be necessary but require a more 
+        // global cleanup of the fields + .o_row styling to be removed in master.
+        .o_field_reference .o_row > * {
+            flex: 1 1 auto;
+            width: auto !important;
         }
     }
 
@@ -1145,9 +1154,6 @@
 
     .o_form_label.o_light_label, .o_light_label .o_form_label {
         font-weight: $font-weight-normal;
-    }
-    .o_setting_box:visible:nth-child(odd) {
-        clear: left;
     }
 }
 

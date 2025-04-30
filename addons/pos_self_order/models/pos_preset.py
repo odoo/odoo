@@ -11,6 +11,12 @@ class PosPreset(models.Model):
         default="counter",
         required=True,
     )
+    
+    mail_template_id = fields.Many2one(
+        string="Email Confirmation",
+        comodel_name='mail.template',
+        domain="[('model', '=', 'pos.order')]",
+    )
 
     # will be overridden.
     @api.model
@@ -21,5 +27,16 @@ class PosPreset(models.Model):
     @api.model
     def _load_pos_self_data_fields(self, config_id):
         params = super()._load_pos_self_data_fields(config_id)
-        params.append('service_at')
+        params.extend(['service_at', 'mail_template_id'])
         return params
+    
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        params = super()._load_pos_data_fields(config_id)
+        params.extend(['mail_template_id'])
+        return params
+
+    def _can_return_content(self, field_name=None, access_token=None):
+        if field_name in ["image_128", "image_512"]:
+            return True
+        return super()._can_return_content(field_name, access_token)

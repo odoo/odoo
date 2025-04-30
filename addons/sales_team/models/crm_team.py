@@ -1,15 +1,9 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import json
 import random
-from datetime import date
 
-from babel.dates import format_date
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.release import version
 from odoo.tools import SQL
 
 
@@ -19,6 +13,9 @@ class CrmTeam(models.Model):
     _description = "Sales Team"
     _order = "sequence ASC, create_date DESC, id DESC"
     _check_company_auto = True
+
+    def _get_default_color(self):
+        return random.randint(1, 11)
 
     def _get_default_team_id(self, user_id=False, domain=False):
         """ Compute default team id for sales related documents. Note that this
@@ -96,7 +93,7 @@ class CrmTeam(models.Model):
     currency_id = fields.Many2one(
         "res.currency", string="Currency",
         related='company_id.currency_id', readonly=True)
-    user_id = fields.Many2one('res.users', string='Team Leader', check_company=True)
+    user_id = fields.Many2one('res.users', string='Team Leader', check_company=True, domain=[('share', '!=', True)])
     # memberships
     is_membership_multi = fields.Boolean(
         'Multiple Memberships Allowed', compute='_compute_is_membership_multi',
@@ -118,7 +115,7 @@ class CrmTeam(models.Model):
         'crm.team.member', 'crm_team_id', string='Sales Team Members (incl. inactive)',
         context={'active_test': False})
     # UX options
-    color = fields.Integer(string='Color Index', help="The color of the channel")
+    color = fields.Integer(string='Color Index', help="The color of the channel", default=_get_default_color)
     favorite_user_ids = fields.Many2many(
         'res.users', 'team_favorite_user_rel', 'team_id', 'user_id',
         string='Favorite Members', default=_get_default_favorite_user_ids)
@@ -126,7 +123,6 @@ class CrmTeam(models.Model):
         string='Show on dashboard', compute='_compute_is_favorite', inverse='_inverse_is_favorite',
         help="Favorite teams to display them in the dashboard and access them easily.")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
-    dashboard_graph_data = fields.Text(compute='_compute_dashboard_graph')
 
     @api.depends('sequence')  # TDE FIXME: force compute in new mode
     def _compute_is_membership_multi(self):
@@ -203,10 +199,6 @@ class CrmTeam(models.Model):
         """
         for team in self:
             team.dashboard_button_name = _("Big Pretty Button :)") # placeholder
-
-    def _compute_dashboard_graph(self):
-        for team in self:
-            team.dashboard_graph_data = json.dumps(team._get_dashboard_graph_data())
 
     # ------------------------------------------------------------
     # CRUD
@@ -331,50 +323,3 @@ class CrmTeam(models.Model):
 
         self._cr.execute(sql)
         return self.env.cr.dictfetchall()
-
-    def _get_dashboard_graph_data(self):
-        def get_week_name(start_date, locale):
-            """ Generates a week name (string) from a datetime according to the locale:
-                E.g.: locale    start_date (datetime)      return string
-                      "en_US"      November 16th           "16-22 Nov"
-                      "en_US"      December 28th           "28 Dec-3 Jan"
-            """
-            if (start_date + relativedelta(days=6)).month == start_date.month:
-                short_name_from = format_date(start_date, 'd', locale=locale)
-            else:
-                short_name_from = format_date(start_date, 'd MMM', locale=locale)
-            short_name_to = format_date(start_date + relativedelta(days=6), 'd MMM', locale=locale)
-            return short_name_from + '-' + short_name_to
-
-        self.ensure_one()
-        values = []
-        today = fields.Date.from_string(fields.Date.context_today(self))
-        start_date, end_date = self._graph_get_dates(today)
-        graph_data = self._graph_data(start_date, end_date)
-        x_field = 'label'
-        y_field = 'value'
-
-        # generate all required x_fields and update the y_values where we have data for them
-        locale = self._context.get('lang') or 'en_US'
-
-        weeks_in_start_year = int(date(start_date.year, 12, 28).isocalendar()[1]) # This date is always in the last week of ISO years
-        week_count = (end_date.isocalendar()[1] - start_date.isocalendar()[1]) % weeks_in_start_year + 1
-        for week in range(week_count):
-            short_name = get_week_name(start_date + relativedelta(days=7 * week), locale)
-            values.append({x_field: short_name, y_field: 0, 'type': 'future' if week + 1 == week_count else 'past'})
-
-        for data_item in graph_data:
-            index = int((data_item.get('x_value') - start_date.isocalendar()[1]) % weeks_in_start_year)
-            values[index][y_field] = data_item.get('y_value')
-
-        [graph_title, graph_key] = self._graph_title_and_key()
-        color = '#875A7B' if '+e' in version else '#7c7bad'
-
-        # If no actual data available, show some sample data
-        if not graph_data:
-            graph_key = _('Sample data')
-            for value in values:
-                value['type'] = 'o_sample_data'
-                # we use unrealistic values for the sample data
-                value['value'] = random.randint(0, 20)
-        return [{'values': values, 'area': True, 'title': graph_title, 'key': graph_key, 'color': color}]

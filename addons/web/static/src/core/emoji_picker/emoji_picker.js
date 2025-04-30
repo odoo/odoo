@@ -8,6 +8,7 @@ import {
     onWillPatch,
     onWillStart,
     onWillUnmount,
+    reactive,
     useComponent,
     useEffect,
     useExternalListener,
@@ -40,16 +41,11 @@ export function useEmojiPicker(...args) {
     return usePicker(EmojiPicker, ...args);
 }
 
-const loadingListeners = [];
-
-export const loader = {
+export const loader = reactive({
     loadEmoji: () => loadBundle("web.assets_emoji"),
-    /** @type {{ emojiValueToShortcode: Object<string, string> }} */
+    /** @type {{ emojiValueToShortcodes: Object<string, string[]>, emojiRegex: RegExp} }} */
     loaded: undefined,
-    onEmojiLoaded(cb) {
-        loadingListeners.push(cb);
-    },
-};
+});
 
 /** @returns {Promise<{ categories: Object[], emojis: Emoji[] }>")} */
 export async function loadEmoji() {
@@ -67,16 +63,22 @@ export async function loadEmoji() {
         return res;
     } finally {
         if (!loader.loaded) {
-            loader.loaded = { emojiValueToShortcode: {} };
+            const emojiValueToShortcodes = {};
             for (const emoji of res.emojis) {
-                const value = emoji.codepoints;
-                const shortcode = emoji.shortcodes[0];
-                loader.loaded.emojiValueToShortcode[value] = shortcode;
-                for (const listener of loadingListeners) {
-                    listener();
-                }
-                loadingListeners.length = 0;
+                emojiValueToShortcodes[emoji.codepoints] = emoji.shortcodes;
             }
+            loader.loaded = {
+                emojiValueToShortcodes,
+                emojiRegex: new RegExp(
+                    Object.keys(emojiValueToShortcodes).length
+                        ? Object.keys(emojiValueToShortcodes)
+                              .map((c) => c.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"))
+                              .sort((a, b) => b.length - a.length) // Sort to get composed emojis first
+                              .join("|")
+                        : /(?!)/,
+                    "gu"
+                ),
+            };
         }
     }
 }
@@ -170,23 +172,24 @@ export class EmojiPicker extends Component {
         );
         useEffect(
             (el) => {
-                const gridEl = this.gridRef?.el;
+                const gridEl = this.gridRef.el;
                 const activeEl = gridEl?.querySelector(".o-Emoji.o-active");
-                if (
-                    gridEl &&
-                    activeEl &&
-                    this.keyboardNavigated &&
-                    !isElementVisible(activeEl, gridEl)
-                ) {
+                if (!gridEl) {
+                    return;
+                }
+                if (activeEl && this.keyboardNavigated && !isElementVisible(activeEl, gridEl)) {
                     activeEl.scrollIntoView({ block: "center", behavior: "instant" });
                     this.keyboardNavigated = false;
                 }
                 this.state.hoveredEmoji = this.activeEmoji;
             },
-            () => [this.state.activeEmojiIndex, this.gridRef?.el]
+            () => [this.state.activeEmojiIndex, this.gridRef.el]
         );
         useEffect(
             () => {
+                if (!this.gridRef.el) {
+                    return;
+                }
                 if (this.searchTerm) {
                     this.gridRef.el.scrollTop = 0;
                     this.state.categoryId = null;
@@ -212,6 +215,9 @@ export class EmojiPicker extends Component {
     }
 
     adaptNavbar() {
+        if (!this.navbarRef.el) {
+            return;
+        }
         const computedStyle = getComputedStyle(this.navbarRef.el);
         const availableWidth =
             this.navbarRef.el.getBoundingClientRect().width -
@@ -415,7 +421,7 @@ export class EmojiPicker extends Component {
             case "Enter":
                 ev.preventDefault();
                 this.gridRef.el
-                    .querySelector(
+                    ?.querySelector(
                         `.o-EmojiPicker-content .o-Emoji[data-index="${this.state.activeEmojiIndex}"]`
                     )
                     ?.click();
@@ -544,7 +550,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
 
     function open(ref, openProps) {
         state.isOpen = true;
-        if (ui.isSmall) {
+        if (ui.isSmall || isMobileOS()) {
             const def = new Deferred();
             const pickerMobileProps = {
                 PickerComponent,

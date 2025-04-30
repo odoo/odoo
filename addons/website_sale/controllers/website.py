@@ -11,6 +11,7 @@ from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
+    PRICELIST_SELECTED_SESSION_CACHE_KEY
 )
 
 
@@ -49,6 +50,7 @@ class Website(main.Website):
         # the pricelist that corresponds to the user afterwards.
         request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
         request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
+        request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
         return super()._login_redirect(uid, redirect=redirect)
 
     @route()
@@ -71,3 +73,12 @@ class Website(main.Website):
             'symbol': request.website.currency_id.symbol,
             'position': request.website.currency_id.position,
         }
+
+    @route()
+    def change_lang(self, lang, **kwargs):
+        if cart := request.cart:
+            request.env.add_to_compute(
+                cart.order_line._fields['name'],
+                cart.order_line.with_context(lang=lang),
+            )
+        return super().change_lang(lang, **kwargs)

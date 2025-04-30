@@ -34,6 +34,7 @@ class PosPaymentMethod(models.Model):
         string='Journal',
         domain=['|', '&', ('type', '=', 'cash'), ('pos_payment_method_ids', '=', False), ('type', '=', 'bank')],
         ondelete='restrict',
+        index='btree_not_null',
         help='Leave empty to use the receivable account of customer.\n'
              'Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n'
              'For cash journal, we directly write to the default account in the journal via statement lines.\n'
@@ -120,6 +121,9 @@ class PosPaymentMethod(models.Model):
         for pm in self:
             if pm.journal_id and pm.journal_id.type not in ['cash', 'bank']:
                 raise UserError(_("Only journals of type 'Cash' or 'Bank' could be used with payment methods."))
+            if pm.journal_id and pm.journal_id.type == 'bank':
+                chart_template = self.with_context(allowed_company_ids=self.env.company.root_id.ids).env['account.chart.template']
+                pm.outstanding_account_id = chart_template.ref('account_journal_payment_debit_account_id', raise_if_not_found=False) or self.company_id.transfer_account_id
         if self.is_cash_count:
             self.use_payment_terminal = False
 

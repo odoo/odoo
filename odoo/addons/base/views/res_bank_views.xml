@@ -84,19 +84,21 @@
                     <group>
                         <group>
                             <field name="acc_number"/>
-                            <field name="bank_id"/>
                             <field name="clearing_number"/>
                             <field name="partner_id"/>
+                            <field name="bank_id"/>
                         </group>
                         <group>
+                            <field name="allow_out_payment" widget="boolean_toggle"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
-                            <field name="allow_out_payment" widget="boolean_toggle"/>
                         </group>
                     </group>
-                    <group name="note" string="Notes">
-                        <field name="note" colspan="2" nolabel="1" placeholder="Internal notes..."/>
-                    </group>
+                    <notebook>
+                        <page string="Note" name="internal_notes">
+                            <field name="note" nolabel="1" placeholder="Internal notes..."/>
+                        </page>
+                    </notebook>
                 </sheet>
                 <footer replace="0">
                     <button name="action_archive_bank" type="object" string="Archive" class="btn btn-secondary"/>
@@ -112,9 +114,9 @@
                 <list string="Bank Accounts" multi_edit="1" decoration-muted="(not active)">
                     <field name="sequence" widget="handle"/>
                     <field name="acc_number"/>
+                    <field name="partner_id" optional="hide"/>
                     <field name="bank_name" string="Bank" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                    <field name="partner_id" optional="hide"/>
                     <field name="allow_out_payment" widget="boolean_toggle" optional="show"/>
                     <field name="active" widget="boolean_toggle" optional="hide"/>
                 </list>

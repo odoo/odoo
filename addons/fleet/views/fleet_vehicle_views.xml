@@ -91,8 +91,6 @@
                             <field name="vehicle_type" invisible="1"/>
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" widget="many2one_avatar"/>
                             <field name="future_driver_id" widget="many2one_avatar"/>
-                            <field name="plan_to_change_car" groups="fleet.fleet_group_manager" invisible="vehicle_type != 'car'"/>
-                            <field name="plan_to_change_bike" groups="fleet.fleet_group_manager"  invisible="vehicle_type != 'bike'"/>
                             <field name="next_assignation_date"/>
                             <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                         </group>
@@ -103,12 +101,19 @@
                             <field name="write_off_date" invisible="vehicle_type != 'car'"/>
                             <field name="vin_sn"/>
                             <label for="odometer" invisible="vehicle_type != 'car'"/>
-                            <div class="o_row o_hr_narrow_field" invisible="vehicle_type != 'car'">
-                                <field name="odometer"/>
-                                <field name="odometer_unit"/>
+                            <div class="o_row o_fleet_narrow_field" invisible="vehicle_type != 'car'">
+                                <field class="o_fleet_odometer_value" name="odometer"/>
+                                <field class="o_fleet_odometer_unit" name="odometer_unit"/>
+                                <button name="action_open_odometer_report" type="object" class="fa fa-line-chart me-1" title="Odometer Report"/>
                             </div>
                             <field name="manager_id" domain="[('share', '=', False), ('company_id', '=', company_id)]" widget="many2one_avatar_user"/>
                             <field name="location"/>
+                            <label string="Make Vehicle Available" for="plan_to_change_car" class="text-nowrap" invisible="vehicle_type != 'car'"/>
+                            <field name="plan_to_change_car" groups="fleet.fleet_group_manager" invisible="vehicle_type != 'car'" nolabel="1"
+                                help="This will allow this vehicle to be selectable for the Salary Configurator" class="text-nowrap"/>
+                            <label string="Make Vehicle Available" for="plan_to_change_bike" class="text-nowrap" invisible="vehicle_type != 'bike'"/>
+                            <field name="plan_to_change_bike" groups="fleet.fleet_group_manager"  invisible="vehicle_type != 'bike'" nolabel="1"
+                                help="This will allow this vehicle to be selectable for the Salary Configurator"/>
                         </group>
                     </group>
                     <field name="vehicle_properties" columns="2"/>
@@ -145,22 +150,28 @@
                                     <field name="electric_assistance" invisible="vehicle_type != 'bike'"/>
                                 </group>
                                 <group string="Engine" invisible="vehicle_type != 'car'">
-                                    <field name="power_unit"/>
                                     <label for="power" invisible="power_unit != 'power'"/>
                                     <div class="o_row" invisible="power_unit != 'power'">
-                                        <field name="power"/><span>kW</span>
+                                        <field name="power"/>
+                                        <field name="power_unit"/>
                                     </div>
-                                    <field name="horsepower" invisible="power_unit != 'horsepower'"/>
+                                    <label for="horsepower" invisible="power_unit != 'horsepower'"/>
+                                    <div class="o_row" invisible="power_unit != 'horsepower'">
+                                        <field name="horsepower"/>
+                                        <field name="power_unit"/>
+                                    </div>
                                     <label for="vehicle_range"/>
                                     <div class="o_row">
-                                        <field name="vehicle_range"/><span>km</span>
+                                        <field name="vehicle_range"/>
+                                        <field name="range_unit"/>
                                     </div>
                                     <field name="fuel_type"/>
                                     <label for="co2"/>
-                                    <div class="o_row" name="co2">
-                                        <field name="co2"/><span>g/km</span>
+                                    <div class="o_row">
+                                        <field name="co2"/>
+                                        <field name="co2_emission_unit"/>
                                     </div>
-                                    <field name="co2_standard"/>
+                                    <field name="co2_standard" placeholder="eg. WLTP, Euro 6, or EPA, ..."/>
                                 </group>
                             </group>
                         </page>
@@ -192,7 +203,7 @@
                 <field name="future_driver_id"  widget="many2one_avatar" readonly="1" optional="show"/>
                 <field name="log_drivers" column_invisible="True"/>
                 <field name="vin_sn" readonly="1" optional="hide"/>
-                <field name="co2" string="CO2 Emissions g/km" optional="hide"  readonly="1"/>
+                <field name="co2" string="CO2 Emissions" optional="hide" readonly="1"/>
                 <field name="acquisition_date" readonly="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1"/>
                 <field name="state_id" widget="badge" readonly="1" optional="hide"/>
@@ -234,17 +245,20 @@
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <separator/>
+                <filter invisible="1" string="My Activities" name="filter_activities_my"
+                    domain="[('activity_user_id', '=', uid)]"/>
+                <separator invisible="1"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"/>
+                    domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records whose next activity date is past"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="1" string="Group By">
-                    <filter string="Status" name="groupby_status" context="{'group_by': 'state_id'}"/>
                     <filter string="Model" name="groupby_model" context="{'group_by': 'model_id'}"/>
                     <filter string="Brand" name="groupby_make" context="{'group_by': 'brand_id'}"/>
+                    <filter string="Status" name="groupby_status" context="{'group_by': 'state_id'}"/>
                     <filter string="Fuel Type" name="groupby_fueltype" context="{'group_by': 'fuel_type'}"/>
                     <filter string="Properties" name="group_by_vehicle_properties" context="{'group_by': 'vehicle_properties'}"/>
                 </group>
@@ -252,12 +266,24 @@
         </field>
     </record>
 
+    <record id="fleet_vehicle_view_form_quick_create" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.quick.create</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="model_id" placeholder="e.g. Model S"/>
+                </group>
+            </form>
+        </field>
+    </record>
 
     <record id='fleet_vehicle_view_kanban' model='ir.ui.view'>
         <field name="name">fleet.vehicle.kanban</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="state_id" sample="1">
+            <kanban default_group_by="state_id" sample="1" quick_create_view="fleet.fleet_vehicle_view_form_quick_create">
                 <field name="contract_renewal_due_soon" />
                 <field name="contract_renewal_overdue" />
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -390,27 +416,6 @@
         </field>
     </record>
 
-    <record id='fleet_vehicle_odometer_view_kanban' model='ir.ui.view'>
-        <field name="name">fleet.vehicle.odometer.kanban</field>
-        <field name="model">fleet.vehicle.odometer</field>
-        <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
-                <templates>
-                    <t t-name="card">
-                        <div class="d-flex">
-                            <field class="fw-bold" name="vehicle_id"/>
-                            <field class="fw-bold ms-auto" name="date"/>
-                        </div>
-                        <div class="d-flex">
-                            <field name="driver_id"/>
-                            <span class="ms-auto"><field name="value"/> Km</span>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
-
     <record id='fleet_vehicle_odometer_view_search' model='ir.ui.view'>
         <field name="name">fleet.vehicle.odometer.search</field>
         <field name="model">fleet.vehicle.odometer</field>
@@ -422,6 +427,7 @@
                 <field name="date"/>
                 <group expand="0" string="Group By">
                     <filter name="groupby_vehicle" context="{'group_by': 'vehicle_id'}" string="Vehicle"/>
+                    <filter name="groupby_date" context="{'group_by': 'date'}" string="Date"/>
                 </group>
             </search>
         </field>
@@ -441,7 +447,7 @@
     <record id='fleet_vehicle_odometer_action' model='ir.actions.act_window'>
         <field name="name">Odometers</field>
         <field name="res_model">fleet.vehicle.odometer</field>
-        <field name="view_mode">list,kanban,form,graph</field>
+        <field name="view_mode">list,form,graph</field>
         <field name="context"></field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -502,6 +508,7 @@
             <list string="State" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name" />
+                <field name="fold"/>
             </list>
         </field>
     </record>
@@ -515,6 +522,7 @@
                     <group>
                         <field name="name" />
                         <field name="sequence"/>
+                        <field name="fold"/>
                     </group>
                 </sheet>
             </form>

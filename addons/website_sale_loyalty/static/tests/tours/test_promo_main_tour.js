@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
     steps: () => [
         /* 1. Buy 1 Small Cabinet, enable coupon code & insert 10% code */
         {
-            trigger: ".oe_search_found",
+            trigger: ".oe_search_found:not(:visible)",
         },
         {
             content: "select Small Cabinet",
@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check reward product",
-            trigger: 'div>strong:contains("10.0% discount on total amount")',
+            trigger: 'div>h6:contains("10.0% discount on total amount")',
         },
         {
             content: "check loyalty points",
@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         /* 2. Add some cabinet to get a free one, play with quantity */
         {
             content: "go to shop",
-            trigger: 'div>strong:contains("10.0% discount on total amount")',
+            trigger: 'div>h6:contains("10.0% discount on total amount")',
             run: function () {
                 rpc('/web/dataset/call_kw/account.tax/create', {
                     model: 'account.tax',
@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check free product is added",
-            trigger: '#wrap:has(div>strong:contains("Free Product - Small Cabinet"))',
+            trigger: '#wrap:has(div h6:contains("Free Product - Small Cabinet"))',
         },
         {
             content: "remove one cabinet from cart",
@@ -111,7 +111,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check free product is removed",
-            trigger: '#wrap:not(:has(div>strong:contains("Free Product - Small Cabinet")))',
+            trigger: '#wrap:not(:has(div h6:contains("Free Product - Small Cabinet")))',
         },
         /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_ids) */
         {

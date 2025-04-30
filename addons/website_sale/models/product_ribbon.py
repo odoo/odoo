@@ -18,4 +18,6 @@ class ProductRibbon(models.Model):
     )
 
     def _get_position_class(self):
+        if not self:
+            return 'd-none'
         return 'o_ribbon_left' if self.position == 'left' else 'o_ribbon_right'

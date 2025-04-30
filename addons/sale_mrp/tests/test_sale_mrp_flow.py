@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.tests import common, Form
 from odoo.exceptions import UserError
-from odoo.tools import mute_logger, float_compare
-from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
+from odoo.tests import Form, common
+from odoo.tools import float_compare, mute_logger
+
+from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import (
+    ValuationReconciliationTestCommon,
+)
 
 
 # these tests create accounting entries, and therefore need a chart of accounts
-class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
+class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon, TestSaleCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
         # Required for `uom_id` to be visible in the view
-        cls.env.user.group_ids += cls.env.ref('uom.group_uom')
+        cls._enable_uom()
         cls.env.ref('stock.route_warehouse0_mto').active = True
 
         # Useful models
@@ -26,10 +29,8 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
         cls.Quant = cls.env['stock.quant']
         cls.ProductCategory = cls.env['product.category']
 
-        cls.uom_kg = cls.env.ref('uom.product_uom_kgm')
-        cls.uom_gm = cls.env.ref('uom.product_uom_gram')
-        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
+        cls.uom_kg = cls.uom_kgm
+        cls.uom_gm = cls.uom_gram
         cls.uom_ten = cls.UoM.create({
             'name': 'Test-Ten',
             'relative_factor': 10,
@@ -2471,3 +2472,69 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             { 'quantity': 1.0, 'product_id': self.component_a.id, 'bom_line_id': False},
         ] + expected_pick_moves
         self.assertRecordValues(pick.move_ids.sorted(lambda m: m.quantity), expected_pick_moves)
+
+    def test_return_kit_in_quarantine_location(self):
+        """
+        Return a kit to WH/Return Location
+        Push Rule: WH/Return -> WH/Stock
+        Ensure the delivered qty is correctly updated
+        """
+        wh = self.company_data['default_warehouse']
+        stock_location = wh.lot_stock_id
+
+        return_location = self.env['stock.location'].create({
+            'location_id': stock_location.location_id.id,
+            'name': 'Return Location',
+            'usage': 'internal',
+        })
+
+        self.env['stock.route'].create({
+            'name': 'Return Route',
+            'warehouse_selectable': True,
+            'warehouse_ids': [(4, wh.id)],
+            'rule_ids': [(0, 0, {
+                'name': 'Return to Stock',
+                'location_src_id': return_location.id,
+                'location_dest_id': stock_location.id,
+                'company_id': self.company_data['company'].id,
+                'action': 'push',
+                'auto': 'manual',
+                'picking_type_id': wh.int_type_id.id,
+            })],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {'product_id': self.kit_1.id}),
+            ],
+        })
+        order.action_confirm()
+
+        delivery = order.picking_ids
+        for move in delivery.move_ids:
+            move.quantity = move.product_qty
+        delivery.button_validate()
+        self.assertEqual(delivery.state, 'done')
+
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking').create({})
+        for line in return_wizard.product_return_moves:
+            line.quantity = line.move_quantity
+        res = return_wizard.action_create_returns()
+
+        return_picking = self.env['stock.picking'].browse(res["res_id"])
+        return_picking.location_dest_id = return_location
+        for move in return_picking.move_ids:
+            move.quantity = move.product_qty
+        return_picking.button_validate()
+        self.assertEqual(return_picking.state, 'done')
+        self.assertEqual(order.order_line.qty_delivered, 0)
+
+        internal_picking = return_picking.move_ids.move_dest_ids.picking_id
+        self.assertTrue(internal_picking)
+
+        for move in internal_picking.move_ids:
+            move.quantity = move.product_qty
+        internal_picking.button_validate()
+        self.assertEqual(internal_picking.state, 'done')
+        self.assertEqual(order.order_line.qty_delivered, 0)

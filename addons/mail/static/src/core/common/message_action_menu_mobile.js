@@ -10,7 +10,6 @@ export class MessageActionMenuMobile extends Component {
         "close?",
         "thread?",
         "isFirstMessage?",
-        "messageToReplyTo?",
         "openReactionMenu?",
         "state",
     ];

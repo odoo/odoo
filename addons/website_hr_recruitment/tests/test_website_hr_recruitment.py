@@ -33,14 +33,20 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(guru_applicant.partner_name, 'John Smith')
         self.assertEqual(guru_applicant.email_from, 'john@smith.com')
         self.assertEqual(guru_applicant.partner_phone, '118.218')
-        self.assertEqual(html2plaintext(guru_applicant.applicant_notes), '### [GURU] HR RECRUITMENT TEST DATA ###')
+        self.assertTrue(
+            "Other Information:\n___________\n\nShort introduction from applicant : ### [GURU] HR RECRUITMENT TEST DATA ###"
+            in guru_applicant.message_ids.mapped(lambda m: html2plaintext(m.body))
+        )
         self.assertEqual(guru_applicant.job_id, job_guru)
 
         internship_applicant = capt.records[1]
         self.assertEqual(internship_applicant.partner_name, 'Jack Doe')
         self.assertEqual(internship_applicant.email_from, 'jack@doe.com')
         self.assertEqual(internship_applicant.partner_phone, '118.712')
-        self.assertEqual(html2plaintext(internship_applicant.applicant_notes), '### HR [INTERN] RECRUITMENT TEST DATA ###')
+        self.assertTrue(
+            "Other Information:\n___________\n\nShort introduction from applicant : ### HR [INTERN] RECRUITMENT TEST DATA ###"
+            in internship_applicant.message_ids.mapped(lambda m: html2plaintext(m.body))
+        )
         self.assertEqual(internship_applicant.job_id, job_intern)
 
     def test_jobs_listing_city_unspecified(self):

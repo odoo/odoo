@@ -39,14 +39,14 @@ class TestEnv(common.TransactionCase):
                     model="test_convert.usered",
                     id="test_convert.testing"
                 ),
-                uid="base.default_user"
+                uid="base.user_admin"
             )
         )
 
         r = self.env.ref('test_convert.testing')
         self.assertEqual(r.name, 'a')
-        self.assertEqual(r.create_uid, self.env.ref('base.default_user'))
-        self.assertEqual(r.user_id, self.env.ref('base.default_user'))
+        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
+        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
 
     def test_uid_data_function(self):
         self.importer(
@@ -56,14 +56,14 @@ class TestEnv(common.TransactionCase):
                     name="create",
                     eval="[[{'name': 'b'}]]",
                 ),
-                uid="base.default_user"
+                uid="base.user_admin"
             )
         )
 
         r = self.env['test_convert.usered'].search([])
         self.assertEqual(r.name, 'b')
-        self.assertEqual(r.create_uid, self.env.ref('base.default_user'))
-        self.assertEqual(r.user_id, self.env.ref('base.default_user'))
+        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
+        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
 
     def test_uid_record(self):
         self.importer(
@@ -72,7 +72,7 @@ class TestEnv(common.TransactionCase):
                     field('c', name="name"),
                     model="test_convert.usered",
                     id="test_convert.testing",
-                    uid="base.default_user"
+                    uid="base.user_admin"
                 ),
                 uid="base.user_root"
             )
@@ -80,8 +80,8 @@ class TestEnv(common.TransactionCase):
 
         r = self.env.ref('test_convert.testing')
         self.assertEqual(r.name, 'c')
-        self.assertEqual(r.create_uid, self.env.ref('base.default_user'))
-        self.assertEqual(r.user_id, self.env.ref('base.default_user'))
+        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
+        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
 
 
     def test_uid_function(self):
@@ -90,7 +90,7 @@ class TestEnv(common.TransactionCase):
                 function(
                     model="test_convert.usered",
                     name="create",
-                    uid="base.default_user",
+                    uid="base.user_admin",
                     eval="[[{'name': 'd'}]]"
                 ),
                 uid="base.user_root"
@@ -98,8 +98,8 @@ class TestEnv(common.TransactionCase):
         )
         r = self.env['test_convert.usered'].search([])
         self.assertEqual(r.name, 'd')
-        self.assertEqual(r.create_uid, self.env.ref('base.default_user'))
-        self.assertEqual(r.user_id, self.env.ref('base.default_user'))
+        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
+        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
 
     def test_context_data_function(self):
         self.env.user.tz = 'UTC'

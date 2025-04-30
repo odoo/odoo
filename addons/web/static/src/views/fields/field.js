@@ -334,7 +334,7 @@ export class Field extends Component {
                 fieldInfo.views = views;
             }
         }
-        if (fields[name].type === "many2one_reference") {
+        if (["many2one", "many2one_reference"].includes(fields[name].type)) {
             let relatedFields = fieldInfo.field.relatedFields;
             if (relatedFields) {
                 relatedFields = Object.fromEntries(relatedFields.map((f) => [f.name, f]));
@@ -418,6 +418,11 @@ export class Field extends Component {
                         ...fieldInfo,
                         attrs: { ...fieldInfo.attrs, ...this.props.attrs },
                     };
+                }
+                if (fieldInfo.attrs.placeholder || fieldInfo.options.placeholder_field) {
+                    fieldInfo.placeholder =
+                        record.data[fieldInfo.options.placeholder_field] ||
+                        fieldInfo.attrs.placeholder;
                 }
 
                 const dynamicInfo = {

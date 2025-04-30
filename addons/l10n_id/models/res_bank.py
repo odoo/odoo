@@ -85,9 +85,9 @@ class ResPartnerBank(models.Model):
 
             params = {
                 "do": "create-invoice",
-                "apikey": self.l10n_id_qris_api_key,
-                "mID": self.l10n_id_qris_mid,
-                "cliTrxNumber": structured_communication,
+                "apikey": self.sudo().l10n_id_qris_api_key,
+                "mID": self.sudo().l10n_id_qris_mid,
+                "cliTrxNumber": free_communication or structured_communication,
                 "cliTrxAmount": int(amount)
             }
             response = _l10n_id_make_qris_request('show_qris.php', params)

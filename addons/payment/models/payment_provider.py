@@ -133,7 +133,7 @@ class PaymentProvider(models.Model):
         string="Pending Message",
         help="The message displayed if the order pending after the payment process",
         default=lambda self: _(
-            "Your payment has been successfully processed but is waiting for approval."
+            "Your payment has been processed but is waiting for approval."
         ), translate=True)
     auth_msg = fields.Html(
         string="Authorize Message", help="The message displayed if payment is authorized",
@@ -141,7 +141,7 @@ class PaymentProvider(models.Model):
     done_msg = fields.Html(
         string="Done Message",
         help="The message displayed if the order is successfully done after the payment process",
-        default=lambda self: _("Your payment has been successfully processed."),
+        default=lambda self: _("Your payment has been processed."),
         translate=True)
     cancel_msg = fields.Html(
         string="Cancelled Message",
@@ -312,8 +312,8 @@ class PaymentProvider(models.Model):
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
-    def create(self, values_list):
-        providers = super().create(values_list)
+    def create(self, vals_list):
+        providers = super().create(vals_list)
         providers._check_required_if_provider()
         if any(provider.state != 'disabled' for provider in providers):
             self._toggle_post_processing_cron()
@@ -370,6 +370,7 @@ class PaymentProvider(models.Model):
                 _("The following fields must be filled: %s", ", ".join(field_names))
             )
 
+    @api.model
     def _toggle_post_processing_cron(self):
         """ Enable the post-processing cron if some providers are enabled; disable it otherwise.
 

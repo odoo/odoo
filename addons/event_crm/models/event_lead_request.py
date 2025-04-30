@@ -22,6 +22,7 @@ class EventLeadRequest(models.Model):
     _REGISTRATIONS_BATCH_SIZE = 200
 
     event_id = fields.Many2one('event.event', required=True, string="Event", ondelete="cascade")
+    event_lead_rule_ids = fields.Many2many('event.lead.rule', string="Lead Rules")
     processed_registration_id = fields.Integer("Processed Registration",
         help="The ID of the last processed event.registration, used to know where to resume.")
 
@@ -54,7 +55,7 @@ class EventLeadRequest(models.Model):
                 order='id asc'
             )
 
-            registrations_to_process._apply_lead_generation_rules()
+            registrations_to_process._apply_lead_generation_rules(event_lead_rules=generate_request.event_lead_rule_ids)
 
             if len(registrations_to_process) < registrations_batch_size:
                 # done processing

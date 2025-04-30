@@ -1,6 +1,5 @@
 /* global posmodel */
 
-import * as BillScreen from "@pos_restaurant/../tests/tours/utils/bill_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
@@ -12,11 +11,12 @@ import * as ProductScreenPos from "@point_of_sale/../tests/pos/tours/utils/produ
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
+import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
-import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { renderToElement } from "@web/core/utils/render";
+import { delay } from "@odoo/hoot-dom";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -74,8 +74,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.clickPlanButton(),
 
             // Create first order
-            FloorScreen.clickTable("105"),
-            Chrome.isTabActive("T 105"),
+            FloorScreen.clickTable("5"),
+            Chrome.isTabActive("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             inLeftSide(Order.hasLine({ productName: "Coca-Cola", run: "dblclick" })),
             ProductScreen.clickDisplayedProduct("Water", true),
@@ -91,14 +91,14 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
-            FloorScreen.clickTable("105"),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
             checkOrderChanges([]),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.totalAmountIs("4.40"),
@@ -112,8 +112,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ReceiptScreen.clickNextOrder(),
 
             // order on another table with a product variant
-            FloorScreen.orderCountSyncedInTableIs("105", "0"),
-            FloorScreen.clickTable("104"),
+            FloorScreen.orderCountSyncedInTableIs("5", "0"),
+            FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", false),
             {
                 ...Dialog.confirm(),
@@ -127,7 +127,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
-            FloorScreen.clickTable("104"),
+            FloorScreen.clickTable("4"),
             ProductScreen.orderlinesHaveNoChange(),
             checkOrderChanges([]),
             ProductScreen.totalAmountIs("5.87"),
@@ -138,17 +138,17 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
 
             // After clicking next order, floor screen is shown.
             // It should have 1 as number of draft synced order.
-            FloorScreen.orderCountSyncedInTableIs("105", "0"),
-            FloorScreen.clickTable("105"),
+            FloorScreen.orderCountSyncedInTableIs("5", "0"),
+            FloorScreen.clickTable("5"),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create another draft order and go back to floor
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             Chrome.clickPlanButton(),
-            FloorScreen.orderCountSyncedInTableIs("105", "0"),
+            FloorScreen.orderCountSyncedInTableIs("5", "0"),
 
             // Delete the first order then go back to floor
             Chrome.clickOrders(),
@@ -168,7 +168,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.clickPlanButton(),
 
             // There should be 0 synced draft order as we already deleted -00002.
-            FloorScreen.clickTable("105"),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderIsEmpty(),
         ].flat(),
 });
@@ -187,7 +187,13 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
 
             // Test transfering an order
             ProductScreen.clickControlButton("Transfer"),
-            FloorScreen.clickTable("4"),
+            {
+                trigger: ".table:contains(4)",
+                async run(helpers) {
+                    await delay(500);
+                    await helpers.click();
+                },
+            },
 
             // Test if products still get merged after transfering the order
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
@@ -200,11 +206,23 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             ReceiptScreen.clickNextOrder(),
             // At this point, there are no draft orders.
 
-            FloorScreen.clickTable("2"),
+            {
+                trigger: ".table:contains(2)",
+                async run(helpers) {
+                    await delay(500);
+                    await helpers.click();
+                },
+            },
             ProductScreen.isShown(),
             ProductScreen.orderIsEmpty(),
             ProductScreen.clickControlButton("Transfer"),
-            FloorScreen.clickTable("4"),
+            {
+                trigger: ".table:contains(4)",
+                async run(helpers) {
+                    await delay(500);
+                    await helpers.click();
+                },
+            },
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.totalAmountIs("2.20"),
             Chrome.clickPlanButton(),
@@ -219,39 +237,20 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1"),
+            ProductScreen.orderlineIsToOrder("Coca-Cola"),
             ProductScreen.clickOrderButton(),
             FloorScreen.clickTable("5"),
+            Chrome.waitRequest(),
             ProductScreen.orderlinesHaveNoChange(),
+            Order.hasLine({
+                productName: "Coca-Cola",
+                quantity: 1,
+                withClass: ":eq(0)",
+            }),
             Chrome.clickPlanButton(),
-        ].flat(),
-});
-
-const billScreenQRCodeData = [
-    {
-        content: "Unique code is shown",
-        trigger: ".pos-receipt .unique-code",
-    },
-    {
-        content: "Portal url is shown",
-        trigger: ".pos-receipt .portal-url",
-    },
-];
-
-registry.category("web_tour.tours").add("BillScreenTour", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            FloorScreen.clickTable("5"),
-            ProductScreen.clickDisplayedProduct("Coca-Cola"),
-            ProductScreen.clickControlButton("Bill"),
-            // HACK: is_modal should be false so that the trigger can be found.
-            billScreenQRCodeData.map(negateStep),
-            BillScreen.closeBillPopup(),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickValidate(),
-            ...billScreenQRCodeData,
+            FloorScreen.hasTable("2"),
+            FloorScreen.hasTable("4"),
+            FloorScreen.hasTable("5"),
         ].flat(),
 });
 
@@ -393,6 +392,7 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Product Test"),
+            Chrome.freezeDateTime(1739370000000),
             Dialog.confirm("Add"),
             ProductScreen.totalAmountIs("10"),
             {
@@ -424,8 +424,77 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                     if (!rendered.innerHTML.includes("Value 1")) {
                         throw new Error("Value 1 not found in printed receipt");
                     }
+                    if (!rendered.innerHTML.includes("14:20")) {
+                        throw new Error("14:20 not found in printed receipt");
+                    }
                 },
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_preparation_receipt", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 5"),
+            combo.select("Combo Product 8"),
+            Dialog.confirm(),
+            {
+                content: "Check if order preparation has product correctly ordered",
+                trigger: "body",
+                run: async () => {
+                    const order = posmodel.getOrder();
+                    const orderChange = posmodel.changesToOrder(
+                        order,
+                        posmodel.config.preparationCategories,
+                        false
+                    );
+                    const { orderData, changes } = posmodel.generateOrderChange(
+                        order,
+                        orderChange,
+                        Array.from(posmodel.config.preparationCategories),
+                        false
+                    );
+
+                    orderData.changes = {
+                        title: "new",
+                        data: changes.new,
+                    };
+
+                    const rendered = renderToElement("point_of_sale.OrderChangeReceipt", {
+                        data: orderData,
+                    });
+                    const orderLines = [...rendered.querySelectorAll(".orderline")];
+                    const orderLinesInnerText = orderLines.map((orderLine) => orderLine.innerText);
+                    const expectedOrderLines = [
+                        "Office Combo",
+                        "Combo Product 2",
+                        "Combo Product 4",
+                        "Combo Product 6",
+                        "Office Combo",
+                        "Combo Product 1",
+                        "Combo Product 5",
+                        "Combo Product 8",
+                    ];
+                    for (let i = 0; i < orderLinesInnerText.length; i++) {
+                        if (!orderLinesInnerText[i].includes(expectedOrderLines[i])) {
+                            throw new Error("Order line mismatch");
+                        }
+                    }
+                },
+            },
+            ProductScreen.totalAmountIs("95.00"),
+            ProductScreen.clickPayButton(),
         ].flat(),
 });
 
@@ -439,5 +508,63 @@ registry.category("web_tour.tours").add("MultiPreparationPrinter", {
             ProductScreen.clickDisplayedProduct("Product 1"),
             ProductScreen.clickOrderButton(),
             Dialog.bodyIs("Failed in printing Printer 2 changes of the order"),
+            Dialog.confirm(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("LeaveResidualOrder", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.totalAmountIs("2.20"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickPlanButton(),
+            FloorScreen.hasTable("2"),
+            FloorScreen.hasTable("4"),
+            FloorScreen.hasTable("5"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("FinishResidualOrder", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.orderCountSyncedInTableIs("5", "1"),
+            FloorScreen.clickTable("5"),
+            Order.hasLine({
+                productName: "Coca-Cola",
+                quantity: 1,
+                withClass: ":eq(0)",
+            }),
+            ProductScreen.totalAmountIs("2.20"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_multiple_preparation_printer_different_categories", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product 1"),
+            ProductScreen.clickDisplayedProduct("Product 2"),
+            ProductScreen.clickOrderButton(),
+            Dialog.bodyIs("Failed in printing Printer 1, Printer 2 changes of the order"),
+            Dialog.confirm(),
         ].flat(),
 });

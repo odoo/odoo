@@ -37,7 +37,7 @@ class ProductCommon(UomCommon):
     @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()
-        return groups | cls.quick_ref('base.group_system')
+        return groups | cls.quick_ref('product.group_product_manager')
 
     @classmethod
     def _enable_pricelists(cls):

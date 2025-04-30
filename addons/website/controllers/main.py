@@ -14,6 +14,7 @@ from hashlib import md5
 from io import BytesIO
 from itertools import islice
 from lxml import etree, html
+from markupsafe import escape as markup_escape
 from textwrap import shorten
 from werkzeug.exceptions import NotFound
 from xml.etree import ElementTree as ET
@@ -66,7 +67,9 @@ class QueryURL:
                     paths[key] = "%s" % value
             elif value:
                 if isinstance(value, (list, set)):
-                    fragments.append(werkzeug.urls.url_encode([(key, item) for item in value]))
+                    fragments.append(
+                        werkzeug.urls.url_encode([(key, item) for item in value if item])
+                    )
                 else:
                     fragments.append(werkzeug.urls.url_encode([(key, value)]))
         for key in path_args:
@@ -423,7 +426,7 @@ class Website(Home):
                 ['|', ('filter_id.model_id', '=', model_name), ('action_server_id.model_id.model', '=', model_name)]
             ])
         dynamic_filter = request.env['website.snippet.filter'].sudo().search_read(
-            domain, ['id', 'name', 'limit', 'model_name'], order='id asc'
+            domain, ['id', 'name', 'limit', 'model_name', 'help'], order='id asc'
         )
         return dynamic_filter
 
@@ -733,6 +736,10 @@ class Website(Home):
                 result.append(group)
         return result
 
+    @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
+    def save_xml(self, view_id, arch):
+        request.env['ir.ui.view'].browse(view_id).with_context(lang=request.website.default_lang_id.code).arch = arch
+
     @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, readonly=True)
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
@@ -797,10 +804,87 @@ class Website(Home):
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
+    @http.route(['/website/get_alt_images'], type='jsonrpc', auth="user", website=True)
+    def get_alt_images(self, models):
+        result = []
+        for model in models:
+            record = request.env[model['model']].browse(model['id'])
+            model['field'] = 'arch_db' if model['field'] == 'arch' else model['field']
+            tree = html.fromstring(str(record[model['field']]))
+            for index, el in enumerate(tree.xpath('//img')):
+                role = el.get('role')
+                decorative = role == "presentation"
+                alt = el.get('alt')
+                if not decorative or alt is None:
+                    result.append({
+                        "src": el.get("src"),
+                        "alt": alt or "",
+                        "decorative": False,
+                        "updated": False,
+                        "res_model": model['model'],
+                        "res_id": model['id'],
+                        "id": f"{model['model']}-{model['id']}-{index}",
+                        "field": model.get('field'),
+                    })
+        return json.dumps(result)
+
+    @http.route(['/website/update_alt_images'], type='jsonrpc', auth="user", website=True)
+    def update_alt_images(self, imgs):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
+        for img in imgs:
+            record = request.env[img['res_model']].browse(img['res_id'])
+            if not record.has_access('write'):
+                continue
+            img['field'] = 'arch_db' if img['field'] == 'arch' else img['field']
+            tree = html.fromstring(str(record[img['field']]))
+            modified = False
+            for index, element in enumerate(tree.xpath('//img')):
+                imgId = f"{img['res_model']}-{img['res_id']}-{index!s}"
+                if imgId == img['id']:
+                    if (img['decorative']):
+                        element.set('alt', '')
+                        element.set('role', 'presentation')
+                    else:
+                        element.set('alt', markup_escape(img['alt']))
+                        element.attrib.pop('role', None)
+                    modified = True
+            if modified:
+                new_html_content = html.tostring(tree, encoding='unicode', method='html')
+                record.write({img['field']: new_html_content})
+
+    @http.route(['/website/update_broken_links'], type='jsonrpc', auth="user", website=True)
+    def update_broken_links(self, links):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
+        for link in links:
+            record = request.env[link['res_model']].browse(link['res_id'])
+            if not record.has_access('write'):
+                continue
+            link['field'] = 'arch_db' if link['field'] == 'arch' else link['field']
+            tree = html.fromstring(str(record[link['field']]))
+            modified = False
+            for element in tree.xpath('//a'):
+                href = element.get('href')
+                if href and (link['oldLink'] == href or link['oldLink'] == href + '/'):
+                    if link['remove']:
+                        element.drop_tag()
+                    else:
+                        element.set('href', markup_escape(link['newLink']))
+                    modified = True
+            if modified:
+                new_html_content = html.tostring(tree, encoding='unicode', method='html')
+                record.write({link['field']: new_html_content})
+
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, readonly=True)
     def get_seo_data(self, res_id, res_model):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
-            raise werkzeug.exceptions.Forbidden()
+            # Still ok if user can access the record anyway.
+            try:
+                record = request.env[res_model].browse(res_id)
+                record.check_access('write')
+            except AccessError:
+                raise werkzeug.exceptions.Forbidden()
 
         fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
         res = {'can_edit_seo': True}
@@ -813,7 +897,8 @@ class Website(Home):
             request.website._check_user_can_modify(record)
         except AccessError:
             res['can_edit_seo'] = False
-        record = record.sudo()
+        if request.env.user.has_group('website.group_website_restricted_editor'):
+            record = record.sudo()
 
         res.update(record.read(fields)[0])
         res['has_social_default_image'] = request.website.has_social_default_image

@@ -63,5 +63,5 @@ class EventEvent(models.Model):
     def _get_website_menu_entries(self):
         self.ensure_one()
         return super(EventEvent, self)._get_website_menu_entries() + [
-            (_('Exhibitors'), '/event/%s/exhibitors' % self.env['ir.http']._slug(self), False, 60, 'exhibitor')
+            (_('Exhibitors list'), '/event/%s/exhibitors' % self.env['ir.http']._slug(self), False, 60, 'exhibitor', False)
         ]

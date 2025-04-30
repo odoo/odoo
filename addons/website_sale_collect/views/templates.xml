@@ -5,9 +5,9 @@
         id="payment_confirmation_status"
         inherit_id="website_sale.payment_confirmation_status"
     >
-        <xpath expr="(//div[hasclass('card-body')])[1]" position="replace">
+        <div id="order_reference" position="replace">
             <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
-                <div class="card-body">
+                <div class="mt-2">
                     <div class="o_header_carrier_message">
                         <b t-out="order.carrier_id.name"/>
                         <span class="text-muted"> (In-store pickup)</span>
@@ -20,7 +20,7 @@
             <t t-else="">
                 <t>$0</t> <!-- Replaced by old content. -->
             </t>
-        </xpath>
+        </div>
     </template>
 
     <template id="product_page_click_and_collect" inherit_id="website_sale.product">
@@ -31,8 +31,10 @@
                 t-att-props="json.dumps({
                     'productId': product_variant.id,
                     'zipCode': zip_code,
-                    'selectedWhLocation': selected_wh_location or {},
-                    'inStoreStock': combination_info['in_store_stock'],
+                    'showSelectStoreButton': show_select_store_button,
+                    'selectedLocationData': selected_location_data or {},
+                    'inStoreStockData': combination_info.get('in_store_stock_data', {}),
+                    'deliveryStockData': combination_info.get('delivery_stock_data', {}),
                 })"
                 class="d-flex o_not_editable"
             />

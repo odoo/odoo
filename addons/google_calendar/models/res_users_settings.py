@@ -6,7 +6,7 @@ import requests
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT
+
 
 
 class ResUsersSettings(models.Model):
@@ -51,26 +51,11 @@ class ResUsersSettings(models.Model):
 
     def _refresh_google_calendar_token(self):
         self.ensure_one()
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        client_id = get_param('google_calendar_client_id')
-        client_secret = get_param('google_calendar_client_secret')
-
-        if not client_id or not client_secret:
-            raise UserError(_("The account for the Google Calendar service is not configured."))
-
-        headers = {"content-type": "application/x-www-form-urlencoded"}
-        data = {
-            'refresh_token': self.sudo().google_calendar_rtoken,
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'grant_type': 'refresh_token',
-        }
 
         try:
-            _dummy, response, _dummy = self.env['google.service']._do_request(GOOGLE_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri='')
-            ttl = response.get('expires_in')
+            access_token, ttl = self.env['google.service']._refresh_google_token('calendar', self.sudo().google_calendar_rtoken)
             self.sudo().write({
-                'google_calendar_token': response.get('access_token'),
+                'google_calendar_token': access_token,
                 'google_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl),
             })
         except requests.HTTPError as error:

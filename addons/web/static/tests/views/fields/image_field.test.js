@@ -187,6 +187,50 @@ test("ImageField on a many2one", async () => {
     expect(".o_field_widget[name='parent_id'] img").toHaveAttribute("data-alt", "first record");
 });
 
+test("url should not use the record last updated date when the field is related", async () => {
+    Partner._fields.related = fields.Binary({ related: "parent_id.document" });
+    Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
+    Partner._records[1].parent_id = 1;
+    Partner._records[0].write_date = "2017-02-04 10:00:00"; // 1486202400000
+    Partner._records[0].document = "3 kb";
+
+    mockDate("2017-02-06 10:00:00"); // 1486375200000
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: `
+            <form>
+                <field name="related" widget="image"/>
+            </form>`,
+    });
+
+    expect(Number(getUnique(queryFirst('div[name="related"] img')))).toBeCloseTo(1486375200000, {
+        margin: 100,
+    });
+});
+
+test("url should use the record last updated date when the field is related on the same model", async () => {
+    Partner._fields.related = fields.Binary({ related: "document" });
+    Partner._records[0].write_date = "2017-02-04 10:00:00"; // 1486202400000
+    Partner._records[0].document = "3 kb";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="related" widget="image"/>
+            </form>`,
+    });
+    expect('div[name="related"] img').toHaveAttribute(
+        "data-src",
+        `${getOrigin()}/web/image/partner/1/related?unique=1486202400000`
+    );
+});
+
 test("ImageField is correctly replaced when given an incorrect value", async () => {
     Partner._records[0].document = "incorrect_base64_value";
 

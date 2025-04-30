@@ -375,10 +375,12 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
             Dialog.cancel(),
 
             // Check margin on a product.
-            ProductScreen.clickInfoProduct("product_a"),
-            {
-                trigger: ".section-financials :contains('Margin')",
-            },
+            ProductScreen.clickInfoProduct("product_a", [
+                {
+                    trigger: ".section-financials :contains('Margin')",
+                },
+                Dialog.confirm("Close"),
+            ]),
         ].flat(),
 });
 
@@ -425,14 +427,14 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             },
             ProductScreen.productIsDisplayed("Product in AAB and AAX", 0),
             {
-                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                trigger: '.category-button:eq(-1) > span:contains("AAX")',
             },
             {
-                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                trigger: '.category-button:eq(-1) > span:contains("AAX")',
                 run: "click",
             },
             {
-                trigger: '.category-button:eq(3) > span:contains("AAY")',
+                trigger: '.category-button:eq(-1) > span:contains("AAY")',
             },
         ].flat(),
 });
@@ -547,5 +549,155 @@ registry.category("web_tour.tours").add("test_pricelist_multi_items_different_qt
             ProductScreen.clickDisplayedProduct("tpmcapi product"),
             ProductScreen.clickPayButton(),
             PaymentScreen.totalIs("30"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ProductCardUoMPrecision", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false),
+            ProductConfiguratorPopup.pickRadio("Leather"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([
+                Numpad.click("."),
+                Numpad.click("1"),
+                ...Order.hasLine({
+                    productName: "Configurable Chair",
+                    quantity: "0.1",
+                }),
+            ]),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false),
+            ProductConfiguratorPopup.pickRadio("wool"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([
+                Numpad.click("."),
+                Numpad.click("7"),
+                ...Order.hasLine({
+                    productName: "Configurable Chair",
+                    quantity: "0.7",
+                }),
+            ]),
+            ProductScreen.productCardQtyIs("Configurable Chair", "0.8"),
+            {
+                content:
+                    "Check the cart button if it shows the quantity in correct format/precision",
+                isActive: ["mobile"],
+                trigger: ".review-button:contains('0.8')",
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("AddMultipleSerialsAtOnce", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLotNumbers(["SN001", "SN002", "SN003"]),
+            ProductScreen.selectedOrderlineHas("Product A", "3.0"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            [
+                {
+                    trigger: ".fa-trash-o",
+                    run: "click",
+                },
+            ],
+            ProductScreen.enterLotNumbers(["SN005", "SN006"]),
+            ProductScreen.selectedOrderlineHas("Product A", "4.0"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_product_create_update_from_frontend", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuOption("Create Product"),
+
+            // Verify that the "New Product" dialog is displayed.
+            Dialog.is({ title: "New Product" }),
+
+            // Create a new product from frontend.
+            ProductScreen.createProductFromFrontend(
+                "Test Frontend Product",
+                "710535977349",
+                "20.0",
+                "Chair test"
+            ),
+            Dialog.confirm(),
+
+            // Click on the category button for "Chair test" to verify the product's addition.
+            ProductScreen.clickSubcategory("Chair test"),
+            ProductScreen.clickDisplayedProduct("Test Frontend Product"),
+            inLeftSide([
+                ...ProductScreen.selectedOrderlineHasDirect("Test Frontend Product", "1", "20.0"),
+            ]),
+
+            // Open the product's information popup.
+            ProductScreen.clickInfoProduct(
+                "Test Frontend Product",
+                [
+                    Dialog.confirm("Edit", ".btn-secondary"),
+                    // Verify that the "Edit Product" dialog is displayed.
+                    Dialog.is({ title: "Edit Product" }),
+
+                    // Edit the product with new details.
+                    ProductScreen.editProductFromFrontend(
+                        "Test Frontend Product Edited",
+                        "710535977348",
+                        "50.0"
+                    ),
+                    Dialog.confirm(),
+                ].flat()
+            ),
+            ProductScreen.clickSubcategory("Chair test"),
+            ProductScreen.clickDisplayedProduct("Test Frontend Product Edited"),
+            inLeftSide([
+                ...ProductScreen.selectedOrderlineHasDirect(
+                    "Test Frontend Product Edited",
+                    "1",
+                    "50.0"
+                ),
+            ]),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickFiscalPosition("Fiscal Position Test"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            {
+                content: "Make sure orderline tax label is correct",
+                trigger: ".orderline:contains('Tax Group 2')",
+            },
+            {
+                content: "Make sure receipt tax label is correct and correspond to the orderline",
+                trigger: ".pos-receipt-taxes:contains('Tax Group 2')",
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_product_long_press", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.longPressProduct("Test Product"),
+            Dialog.is(),
+            Chrome.endTour(),
         ].flat(),
 });

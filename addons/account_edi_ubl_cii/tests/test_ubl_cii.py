@@ -151,12 +151,14 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
     def test_peppol_eas_endpoint_compute(self):
         partner = self.partner_a
         partner.vat = 'DE123456788'
+        partner.country_id = self.env.ref('base.de')
 
         self.assertRecordValues(partner, [{
             'peppol_eas': '9930',
             'peppol_endpoint': 'DE123456788',
         }])
 
+        partner.country_id = self.env.ref('base.fr')
         partner.vat = 'FR23334175221'
 
         self.assertRecordValues(partner, [{
@@ -168,12 +170,13 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
 
         self.assertRecordValues(partner, [{
             'peppol_eas': '9957',
-            'peppol_endpoint': 'FR23334175221',
+            'peppol_endpoint': '23334175221',
         }])
 
         partner.write({
             'vat': 'BE0477472701',
             'company_registry': '0477472701',
+            'country_id': self.env.ref('base.be'),
         })
 
         self.assertRecordValues(partner, [{
@@ -240,3 +243,53 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
 
         self.assertRecordValues(bill.partner_id, [partner_vals])
         self.assertEqual(bill.partner_id.contact_address, "270 rte d'Arlon\n\n8010 Strassen \nLuxembourg")
+
+    def test_actual_delivery_date_in_cii_xml(self):
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+            'delivery_date': "2024-12-31",
+        })
+        invoice.action_post()
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+        xml_tree = etree.fromstring(xml_attachment.raw)
+        actual_delivery_date = xml_tree.find('.//ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString', {
+            'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+            'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+        })
+        self.assertEqual(actual_delivery_date.text, '20241231')
+
+    def test_get_invoice_legal_documents_fallback(self):
+        company = self.company_data['company']
+        company.phone = '11111111111'
+        company.email = 'test@test.odoo.com'
+        german_partner = self.env['res.partner'].create({
+            'name': 'German partner',
+            'country_id': self.env.ref('base.de').id,
+        })
+        us_partner = self.env['res.partner'].create({
+            'name': 'US partner',
+            'country_id': self.env.ref('base.us').id,
+        })
+        belgian_partner = self.env['res.partner'].create({
+            'name': 'Belgian partner',
+            'country_id': self.env.ref('base.be').id,
+        })
+        invoice_de = self.init_invoice('out_invoice', partner=german_partner, amounts=[100], taxes=[self.tax_sale_a], post=True)
+        invoice_be = self.init_invoice('out_invoice', partner=belgian_partner, amounts=[100], taxes=[self.tax_sale_a], post=True)
+        invoice_us = self.init_invoice('out_invoice', partner=us_partner, amounts=[100], taxes=[self.tax_sale_a], post=True)
+        res = [invoice._get_invoice_legal_documents('ubl', allow_fallback=True) for invoice in (invoice_de + invoice_be + invoice_us)]
+        self.assertEqual(len(res), 3)
+        self.assertEqual(res[0].get('filename'), 'INV_2019_00001_ubl_de.xml')
+        self.assertEqual(res[1].get('filename'), 'INV_2019_00002_ubl_bis3.xml')
+        self.assertFalse(res[2])
+        invoice_be_failing = self.init_invoice('out_invoice', partner=belgian_partner, amounts=[100], post=True)
+        res_errors = invoice_be_failing._get_invoice_legal_documents('ubl', allow_fallback=True)
+        self.assertIn("Each invoice line should have at least one tax.", res_errors.get('errors'))

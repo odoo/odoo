@@ -4,11 +4,7 @@ import json
 import re
 from urllib.parse import unquote, quote
 
-try:
-    from google.oauth2 import service_account
-    from google.auth.transport.requests import Request
-except ImportError:
-    service_account = Request = None
+from google.oauth2 import service_account
 
 from odoo import models
 from odoo.exceptions import ValidationError

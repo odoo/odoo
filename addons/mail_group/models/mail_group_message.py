@@ -37,11 +37,11 @@ class MailGroupMessage(models.Model):
     # Thread
     mail_group_id = fields.Many2one(
         'mail.group', string='Group',
-        required=True, ondelete='cascade')
+        required=True, index=True, ondelete='cascade')
     mail_message_id = fields.Many2one('mail.message', 'Mail Message', required=True, ondelete='cascade', index=True, copy=False)
     # Parent and children
     group_message_parent_id = fields.Many2one(
-        'mail.group.message', string='Parent', store=True)
+        'mail.group.message', string='Parent', store=True, index=True)
     group_message_child_ids = fields.One2many('mail.group.message', 'group_message_parent_id', string='Children')
     # Moderation
     author_moderation = fields.Selection([('ban', 'Banned'), ('allow', 'Whitelisted')], string='Author Moderation Status',
@@ -87,8 +87,8 @@ class MailGroupMessage(models.Model):
                 raise AccessError(_('The record of the message should be the group.'))
 
     @api.model_create_multi
-    def create(self, values_list):
-        for vals in values_list:
+    def create(self, vals_list):
+        for vals in vals_list:
             if not vals.get('mail_message_id'):
                 vals.update({
                     'res_id': vals.get('mail_group_id'),
@@ -100,7 +100,7 @@ class MailGroupMessage(models.Model):
                     if field in vals
                     and field in self.env['mail.thread']._get_message_create_valid_field_names()
                 }).id
-        return super(MailGroupMessage, self).create(values_list)
+        return super().create(vals_list)
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)

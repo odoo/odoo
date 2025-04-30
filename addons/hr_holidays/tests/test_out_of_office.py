@@ -21,7 +21,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
             'time_type': 'leave',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
     @freeze_time('2024-06-06')
@@ -67,11 +67,11 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         partner_info = next(p for p in data["res.partner"] if p["id"] == partner.id)
         partner2_info = next(p for p in data["res.partner"] if p["id"] == partner2.id)
         self.assertFalse(
-            partner2_info["out_of_office_date_end"], "current user should not be out of office"
+            partner2_info["leave_date_to"], "current user should not be out of office"
         )
         # The employee will be back in the office the day after his second leave ends
         self.assertEqual(
-            partner_info["out_of_office_date_end"],
+            partner_info["leave_date_to"],
             fields.Date.to_string(second_leave_date_end + relativedelta(days=1)),
             "correspondent should be out of office",
         )
@@ -86,7 +86,7 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
             'time_type': 'leave',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         cls.leave_date_end = (datetime.today() + relativedelta(days=2))
         cls.leave = cls.env['hr.leave'].create({
@@ -104,7 +104,7 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
     @users('__system__', 'demo')
     @warmup
     def test_leave_im_status_performance_partner_offline(self):
-        with self.assertQueryCount(__system__=3, demo=3):
+        with self.assertQueryCount(__system__=4, demo=4):
             self.assertEqual(self.employer_partner.im_status, 'offline')
 
     @users('__system__', 'demo')
@@ -118,7 +118,7 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
     @warmup
     def test_leave_im_status_performance_partner_leave_offline(self):
         self.leave.write({'state': 'validate'})
-        with self.assertQueryCount(__system__=3, demo=3):
+        with self.assertQueryCount(__system__=4, demo=4):
             self.assertEqual(self.hr_partner.im_status, 'leave_offline')
 
     def test_search_absent_employee(self):

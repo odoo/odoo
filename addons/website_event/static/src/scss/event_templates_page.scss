@@ -21,8 +21,16 @@
                     color: rgba($body-color, .7);
                     cursor: default;
                 }
+                &.active:hover {
+                    color: rgba($body-color, .9);
+                    cursor: pointer;
+                }
             }
         }
+    }
+
+    .o_wevent_bordered_block:not(:last-child) {
+        border-bottom: $border-width solid $border-color;
     }
 
     // Custom utility classes to be applied on day numbers and to

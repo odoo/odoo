@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import {
     MockServer,
     clickSave,
@@ -37,6 +38,7 @@ import {
 
 import { browser } from "@web/core/browser/browser";
 import { router, routerBus } from "@web/core/browser/router";
+import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { useSetupAction } from "@web/search/action_hook";
 import { listView } from "@web/views/list/list_view";
@@ -413,6 +415,7 @@ test("orderedBy in context is not propagated when executing another action", asy
             sort: "[]",
             is_default: true,
             name: "My filter",
+            user_ids: [],
         },
     ];
 
@@ -759,26 +762,29 @@ test("there is no flickering when switching between views", async () => {
     // switch to kanban view
     def = new Deferred();
     await switchView("kanban");
-    expect(".o_list_view").toHaveCount(1, { message: "should still display the list view" });
-    expect(".o_kanban_view").toHaveCount(0, { message: "shouldn't display the kanban view yet" });
+    expect(".o_list_view").toHaveCount(0, { message: "shouldn't display the list anymore" });
+    expect(".o_kanban_view").toHaveCount(1, { message: "should display an empty kanban" });
+    expect(".o_kanban_view .o_kanban_record").toHaveCount(0);
 
     def.resolve();
     await animationFrame();
-    expect(".o_list_view").toHaveCount(0, { message: "shouldn't display the list view anymore" });
-    expect(".o_kanban_view").toHaveCount(1, { message: "should now display the kanban view" });
+    expect(".o_kanban_view").toHaveCount(1, { message: "should display the kanban" });
+    expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
 
     // switch back to list view
     def = new Deferred();
     await switchView("list");
-    expect(".o_kanban_view").toHaveCount(1, { message: "should still display the kanban view" });
-    expect(".o_list_view").toHaveCount(0, { message: "shouldn't display the list view yet" });
+    expect(".o_kanban_view").toHaveCount(0, { message: "shouldn't display the kanban anymore" });
+    expect(".o_list_view").toHaveCount(1, { message: "should display an empty list view" });
+    expect(".o_list_view table").toHaveCount(0);
 
     def.resolve();
     await animationFrame();
     expect(".o_kanban_view").toHaveCount(0, {
         message: "shouldn't display the kanban view anymore",
     });
-    expect(".o_list_view").toHaveCount(1, { message: "should now display the list view" });
+    expect(".o_list_view").toHaveCount(1, { message: "should display the list view" });
+    expect(".o_list_view table .o_data_row").toHaveCount(5);
 
     // open a record in form view
     def = new Deferred();
@@ -799,17 +805,15 @@ test("there is no flickering when switching between views", async () => {
     // go back to list view using the breadcrumbs
     def = new Deferred();
     await contains(".o_control_panel .breadcrumb a").click();
-    expect(".o_form_view").toHaveCount(1, { message: "should still display the form view" });
-    expect(".o_list_view").toHaveCount(0, { message: "shouldn't display the list view yet" });
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
-        "First record",
-    ]);
+    expect(".o_form_view").toHaveCount(0, { message: "shouldn't display the form anymore" });
+    expect(".o_list_view").toHaveCount(1, { message: "should display an empty list" });
+    expect(".o_list_view table").toHaveCount(0);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
 
     def.resolve();
     await animationFrame();
-    expect(".o_form_view").toHaveCount(0, { message: "should no longer display the form view" });
     expect(".o_list_view").toHaveCount(1, { message: "should display the list view" });
+    expect(".o_list_view table .o_data_row").toHaveCount(5);
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
 });
 
@@ -1046,6 +1050,7 @@ test("execute_action of type object raises error: re-enables buttons", async () 
     await click('.o_form_view button[name="object"]');
     expect(".o_form_button_create").not.toBeEnabled();
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_form_button_create").toBeEnabled();
 });
 
@@ -1070,6 +1075,7 @@ test("execute_action of type object raises error in modal: re-enables buttons", 
     expect(".modal .o_form_view").toHaveCount(1);
     expect(".modal footer button").not.toBeEnabled();
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".modal .o_form_view").toHaveCount(1);
     expect(".modal footer button").toBeEnabled();
 });
@@ -1137,7 +1143,9 @@ test("execute smart button and back", async () => {
 test.tags("desktop");
 test("execute smart button and fails on desktop", async () => {
     expect.errors(1);
-    onRpc("web_search_read", () => {
+    const def = new Deferred();
+    onRpc("web_search_read", async () => {
+        await def;
         throw makeServerError({ message: "Oups" });
     });
     stepAllNetworkCalls();
@@ -1148,6 +1156,11 @@ test("execute smart button and fails on desktop", async () => {
     expect(".o_form_button_create:not([disabled]):visible").toHaveCount(1);
 
     await contains("button.oe_stat_button").click();
+    expect(".o_form_view").toHaveCount(0);
+    expect(".o_kanban_view").toHaveCount(1);
+
+    def.resolve();
+    await animationFrame();
     expect(".o_form_view").toHaveCount(1);
     expect(".o_form_button_create:not([disabled]):visible").toHaveCount(1);
     expect.verifySteps([
@@ -1168,7 +1181,9 @@ test("execute smart button and fails on desktop", async () => {
 test.tags("mobile");
 test("execute smart button and fails on mobile", async () => {
     expect.errors(1);
-    onRpc("web_search_read", () => {
+    const def = new Deferred();
+    onRpc("web_search_read", async () => {
+        await def;
         throw makeServerError({ message: "Oups" });
     });
     stepAllNetworkCalls();
@@ -1180,6 +1195,11 @@ test("execute smart button and fails on mobile", async () => {
 
     await contains(".o-form-buttonbox .o_button_more").click();
     await contains("button.oe_stat_button").click();
+    expect(".o_form_view").toHaveCount(0);
+    expect(".o_kanban_view").toHaveCount(1);
+
+    def.resolve();
+    await animationFrame();
     expect(".o_form_view").toHaveCount(1);
     expect(".o_form_button_create:not([disabled]):visible").toHaveCount(1);
     expect.verifySteps([
@@ -1675,7 +1695,7 @@ test("save current search", async () => {
         },
     });
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].domain).toBe(`[("m2o", "=", 1)]`);
         expect(args[0].context).toEqual({
             group_by: [],
@@ -1721,6 +1741,7 @@ test("list with default_order and favorite filter with no orderedBy", async () =
             sort: "[]",
             domain: '[("m2o", "=", 1)]',
             is_default: false,
+            user_ids: [],
         },
     ];
     await mountWithCleanup(WebClient);
@@ -1775,6 +1796,7 @@ test("action with default favorite and context.active_id", async () => {
             sort: "[]",
             domain: '[("bar", "=", 1)]',
             is_default: true,
+            user_ids: [],
         },
     ];
     onRpc("web_search_read", ({ kwargs }) => {
@@ -1858,6 +1880,42 @@ test("stored action is restored correctly with domain", async () => {
 
     expect(".o_list_view").toHaveCount(1);
     expect(".o_data_row").toHaveCount(1);
+});
+
+test("current_action doesn't contains _originalAction", async () => {
+    class myActionComponent extends Component {
+        static template = xml`<div>This is a Client Action</div>`;
+        static props = ["*"];
+    }
+
+    const myAction = (env, action) => {
+        registry.category("actions").add("myAction", myActionComponent, { force: true });
+        return action;
+    };
+    registry.category("actions").add("myAction", myAction);
+    redirect("/odoo/myAction");
+    await mountWithCleanup(WebClient);
+
+    await animationFrame();
+    expect(JSON.parse(sessionStorage.getItem("current_action"))).toEqual(
+        {
+            context: {},
+            domain: [],
+            jsId: "action_1",
+            params: {
+                action: "myAction",
+                actionStack: [
+                    {
+                        action: "myAction",
+                    },
+                ],
+            },
+            tag: "myAction",
+            target: "current",
+            type: "ir.actions.client",
+        },
+        { message: "current_action doesn't contains _originalAction" }
+    );
 });
 
 test.tags("desktop");
@@ -2149,6 +2207,7 @@ test("onClose should be called only once with right parameters", async () => {
         infos: { cantaloupe: "island" },
     });
     expect.verifySteps(["onClose"]);
+    await animationFrame();
     expect(".modal").toHaveCount(0);
 });
 
@@ -2273,8 +2332,7 @@ test("do not pushState when target=new and dialog is opened", async () => {
     });
 });
 
-test.tags("desktop");
-test("do not restore after action button clicked on desktop", async () => {
+test("do not restore after action button clicked", async () => {
     Partner._views["form,false"] = `
         <form>
             <header>
@@ -2294,31 +2352,6 @@ test("do not restore after action button clicked on desktop", async () => {
     expect(".o_statusbar_buttons button[name=do_something]").toBeVisible();
 
     await contains(".o_statusbar_buttons button[name=do_something]").click();
-    expect(".o_form_buttons_view .o_form_button_save").not.toBeVisible();
-});
-
-test.tags("mobile");
-test("do not restore after action button clicked on mobile", async () => {
-    Partner._views["form,false"] = `
-        <form>
-            <header>
-                <button name="do_something" string="Call button" type="object"/>
-            </header>
-            <sheet>
-                <field name="display_name"/>
-            </sheet>
-        </form>`;
-
-    onRpc("/web/dataset/call_button/*", () => true);
-
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction(3, { viewType: "form", props: { resId: 1 } });
-    await contains("div[name='display_name'] input").edit("Edited value");
-    expect(".o_form_button_save").toBeVisible();
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    expect(".o-dropdown-item-unstyled-button button[name=do_something]").toBeVisible();
-
-    await contains(".o-dropdown-item-unstyled-button button[name=do_something]").click();
     expect(".o_form_buttons_view .o_form_button_save").not.toBeVisible();
 });
 
@@ -2395,8 +2428,7 @@ test("doAction supports being passed globalState prop", async () => {
     });
 });
 
-test.tags("desktop");
-test("window action in target new fails (onchange) on desktop", async () => {
+test("window action in target new fails (onchange)", async () => {
     expect.errors(1);
 
     onRpc("partner", "onchange", () => {
@@ -2414,40 +2446,13 @@ test("window action in target new fails (onchange) on desktop", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);
     await contains(".o_form_view button[name='5']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
+    await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
+        "Validation Error"
+    );
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
-test.tags("mobile");
-test("window action in target new fails (onchange) on mobile", async () => {
-    expect.errors(1);
-
-    onRpc("partner", "onchange", () => {
-        throw makeServerError({ type: "ValidationError" });
-    });
-
-    Partner._views["form,74"] = /*xml*/ `
-        <form>
-            <header>
-                <button name="5" string="Test" type="action"/>
-            </header>
-            <field name="display_name"/>
-        </form>`;
-
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction(2);
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    await contains(".o-dropdown-item-unstyled-button button[name='5']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
-});
-
-test.tags("desktop");
-test("Uncaught error in target new is catch only once on desktop", async () => {
+test("Uncaught error in target new is catch only once", async () => {
     expect.errors(1);
 
     defineActions([
@@ -2475,46 +2480,10 @@ test("Uncaught error in target new is catch only once on desktop", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);
     await contains(".o_form_view button[name='26']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
-});
-
-test.tags("mobile");
-test("Uncaught error in target new is catch only once on mobile", async () => {
-    expect.errors(1);
-
-    defineActions([
-        {
-            id: 26,
-            name: "Partner",
-            res_model: "partner",
-            target: "new",
-            views: [[false, "list"]],
-        },
-    ]);
-
-    onRpc("partner", "web_search_read", () => {
-        throw makeServerError({ type: "ValidationError" });
-    });
-
-    Partner._views["form,74"] = /*xml*/ `
-        <form>
-            <header>
-                <button name="26" string="Test" type="action"/>
-            </header>
-            <field name="display_name"/>
-        </form>`;
-
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction(2);
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    await contains(".o-dropdown-item-unstyled-button button[name='26']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
+    await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
+        "Validation Error"
+    );
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test("action and get_views rpcs are cached", async () => {

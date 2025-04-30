@@ -10,15 +10,25 @@ class IrActionsServer(models.Model):
     """ Add mail.thread related options in server actions. """
     _name = 'ir.actions.server'
     _description = 'Server Action'
-    _inherit = ['ir.actions.server']
+    _inherit = ['ir.actions.server', 'mail.thread', 'mail.activity.mixin']
+
+    name = fields.Char(tracking=True)
+    model_id = fields.Many2one(tracking=True)
+    crud_model_id = fields.Many2one(tracking=True)
+    link_field_id = fields.Many2one(tracking=True)
+    update_path = fields.Char(tracking=True)
+    value = fields.Text(tracking=True)
+    evaluation_type = fields.Selection(tracking=True)
+    webhook_url = fields.Char(tracking=True)
 
     state = fields.Selection(
+        tracking=True,
         selection_add=[
             ('next_activity', 'Create Activity'),
             ('mail_post', 'Send Email'),
             ('followers', 'Add Followers'),
             ('remove_followers', 'Remove Followers'),
-            ('object_create',),
+            ('code',),
         ],
         ondelete={'mail_post': 'cascade',
                   'followers': 'cascade',
@@ -119,7 +129,7 @@ class IrActionsServer(models.Model):
             case 'followers':
                 if self.followers_type == 'generic':
                     _field_chain, field_chain_str = self._get_relation_chain("followers_partner_field_name")
-                    self.name = _(
+                    return _(
                         'Add followers based on field: %(field_chain_str)s',
                         field_chain_str=field_chain_str
                     )
@@ -131,7 +141,7 @@ class IrActionsServer(models.Model):
             case 'remove_followers':
                 if self.followers_type == 'generic':
                     _field_chain, field_chain_str = self._get_relation_chain("followers_partner_field_name")
-                    self.name = _(
+                    return _(
                         'Remove followers based on field: %(field_chain_str)s',
                         field_chain_str=field_chain_str
                     )

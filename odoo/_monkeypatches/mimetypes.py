@@ -1,7 +1,7 @@
 import mimetypes
 
 
-def patch_mimetypes():
+def patch_module():
     # if extension is already knows, the new definition will remplace the existing one
     # Add potentially missing (older ubuntu) font mime types
     mimetypes.add_type('application/font-woff', '.woff')

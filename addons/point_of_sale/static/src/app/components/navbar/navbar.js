@@ -1,6 +1,6 @@
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { isDisplayStandalone, isMobileOS } from "@web/core/browser/feature_detection";
+import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
 import { ProxyStatus } from "@point_of_sale/app/components/navbar/proxy_status/proxy_status";
@@ -20,8 +20,9 @@ import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
-
+import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
+import { uuidv4 } from "@point_of_sale/utils";
+import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 const { DateTime } = luxon;
 
 export class Navbar extends Component {
@@ -96,24 +97,33 @@ export class Navbar extends Component {
         this.bufferedInput = "";
     }
 
+    onClickRegister() {
+        let order = this.pos.getOrder();
+
+        if (!order) {
+            order = this.pos.addNewOrder();
+        }
+
+        this.pos.navigateToOrderScreen(order);
+    }
+
     noOpenDialogs() {
         return document.querySelectorAll(".modal-dialog, .debug-widget").length === 0;
     }
     onClickScan() {
         if (!this.pos.scanning) {
-            const screenName = this.pos.mainScreen.component.name;
+            const screenName = this.pos.router.state.current;
             if (["ProductScreen", "TicketScreen"].includes(screenName)) {
-                this.pos.showScreen(screenName);
+                const params =
+                    screenName === "ProductScreen" ? { orderUuid: this.pos.getOrder().uuid } : {};
+                this.pos.navigate(screenName, params);
             }
         }
         this.pos.mobile_pane = "right";
         this.pos.scanning = !this.pos.scanning;
     }
-    get customerFacingDisplayButtonIsShown() {
-        return this.pos.config.customer_display_type !== "none" && !isMobileOS();
-    }
     get showCashMoveButton() {
-        return Boolean(this.pos.config.cash_control && this.pos.session._has_cash_move_perm);
+        return this.pos.showCashMoveButton;
     }
     getOrderTabs() {
         return this.pos.getOpenOrders().filter((order) => !order.table_id);
@@ -122,36 +132,40 @@ export class Navbar extends Component {
     get appUrl() {
         return `/scoped_app?app_id=point_of_sale&app_name=${encodeURIComponent(
             this.pos.config.display_name
-        )}&path=${encodeURIComponent(`pos/ui?config_id=${this.pos.config.id}`)}`;
+        )}&path=${encodeURIComponent(`pos/ui/${this.pos.config.id}`)}`;
     }
 
     async reloadProducts() {
         this.dialog.add(SyncPopup, {
-            title: _t("Reload Products"),
+            title: _t("Reload Data"),
             confirm: (fullReload) => this.pos.reloadData(fullReload),
         });
     }
 
     openCustomerDisplay() {
-        if (this.pos.config.customer_display_type === "local") {
-            window.open(
-                `/pos_customer_display/${this.pos.config.id}/${this.pos.config.access_token}`,
-                "newWindow",
-                "width=800,height=600,left=200,top=200"
-            );
+        const proxyIP = this.pos.getDisplayDeviceIP();
+        if (proxyIP) {
+            openProxyCustomerDisplay(proxyIP, this.pos, this.notification);
+        } else {
+            const getDeviceUuid = () => {
+                if (!localStorage.getItem("device_uuid")) {
+                    localStorage.setItem("device_uuid", uuidv4());
+                }
+                return localStorage.getItem("device_uuid");
+            };
+            const customer_display_url = `/pos_customer_display/${
+                this.pos.config.id
+            }/${getDeviceUuid()}`;
+
+            if (this.ui.isSmall) {
+                this.dialog.add(QrCodeCustomerDisplay, {
+                    customerDisplayURL: `${this.pos.session._base_url}${customer_display_url}`,
+                });
+                return;
+            }
+            window.open(customer_display_url, "newWindow", "width=800,height=600,left=200,top=200");
             this.notification.add(_t("PoS Customer Display opened in a new window"));
         }
-        if (this.pos.config.customer_display_type === "remote") {
-            this.notification.add(
-                _t("Navigate to your PoS Customer Display on the other computer")
-            );
-        }
-        openCustomerDisplay(
-            this.pos.getDisplayDeviceIP(),
-            this.pos.config.access_token,
-            this.pos.config.id,
-            this.notification
-        );
     }
 
     get showCreateProductButton() {
@@ -185,6 +199,6 @@ export class Navbar extends Component {
 
     get mainButton() {
         const screens = ["ProductScreen", "PaymentScreen", "ReceiptScreen", "TipScreen"];
-        return screens.includes(this.pos.mainScreen.component.name) ? "register" : "order";
+        return screens.includes(this.pos.router.state.current) ? "register" : "order";
     }
 }

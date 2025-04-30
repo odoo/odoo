@@ -21,7 +21,7 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Unlimited',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         cls.rd_dept.manager_id = False
         cls.hr_dept.manager_id = False
@@ -41,25 +41,25 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
         cls.lt_no_validation = cls.env['hr.leave.type'].create({
             'name': 'Validation = no_validation',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.lt_validation_hr = cls.env['hr.leave.type'].create({
             'name': 'Validation = HR',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.lt_validation_manager = cls.env['hr.leave.type'].create({
             'name': 'Validation = manager',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.lt_validation_both = cls.env['hr.leave.type'].create({
             'name': 'Validation = both',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.confirm_status = [
@@ -79,285 +79,6 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
             'request_date_to': request_date_from + relativedelta(days=number_of_days - 1),
         })
         return self.env['hr.leave'].with_user(user_id).create(values)
-
-
-@tests.tagged('access_rights', 'access_rights_states')
-class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
-    # ******************************************************
-    # Action reset confirm
-    # ******************************************************
-
-    def test_reset_confirm_status(self):
-        """
-            We should only be able to reset a leave that is
-            in cancel or refuse state
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Ranoi',
-                'employee_id': self.employee_emp.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave.action_refuse()
-            leave.action_reset_confirm()
-            leave._force_cancel("Cancel the leave")
-            leave.action_reset_confirm()
-
-            values = {
-                'name': 'Ranoi',
-                'employee_id': self.employee_emp.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=20 + i), 1, values)
-            with self.assertRaises(UserError):
-                leave.action_reset_confirm()
-
-    def test_base_user_reset_other_employee_leave(self):
-        """
-            Should not be able to reset the leave of someone else
-            whatever the holiday_status_id
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hruser.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            with self.assertRaises(UserError):
-                leave.with_user(self.user_employee.id).action_reset_confirm()
-
-    def test_base_user_reset_other_employee_leave_and_is_leave_manager_id(self):
-        """
-            Should not be able to reset the leave of someone else
-            even when being the leave manager id for this person
-            whatever the holiday_status_id
-        """
-        self.employee_hruser.write({'leave_manager_id': self.user_employee.id})
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hruser.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            with self.assertRaises(UserError):
-                leave.with_user(self.user_employee.id).action_reset_confirm()
-
-    def test_base_user_reset_refused_leave(self):
-        """
-            Should not be able to reset a refused leave
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_emp.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave.action_refuse()
-            with self.assertRaises(UserError):
-                leave.with_user(self.user_employee.id).action_reset_confirm()
-
-    def test_base_user_reset_current_leave(self):
-        """
-            Should not be able to reset a passed leave
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_emp.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=-20 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            with self.assertRaises(UserError):
-                leave.with_user(self.user_employee.id).action_reset_confirm()
-
-    def test_holiday_user_reset_his_leave(self):
-        """
-            Should be able to reset his own leave
-            whatever the holiday_status_id
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hruser.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            leave.with_user(self.user_hruser.id).action_reset_confirm()
-
-    def test_holiday_user_reset_other_employee_leave(self):
-        """
-            Should not be able to reset other employee leave
-            whatever the holiday_status_id
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_emp.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            with self.assertRaises(UserError):
-                leave.with_user(self.user_hruser.id).action_reset_confirm()
-
-    def test_holiday_user_reset_other_employee_leave_and_is_leave_manager_id(self):
-        """
-            Should not be able to reset other employee leave
-            even if he is the leave manager id
-            whatever the holiday_status_id
-        """
-        self.employee_emp.write({'leave_manager_id': self.user_hruser.id})
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_emp.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            with self.assertRaises(UserError):
-                leave.with_user(self.user_hruser.id).action_reset_confirm()
-
-    def test_holiday_user_reset_self_and_is_manager_id(self):
-        """
-            Should be able to reset his own leave
-            even if he is leave manager id
-            whatever the holiday_status_id
-        """
-        self.employee_hruser.write({'leave_manager_id': self.user_hruser.id})
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hruser.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            leave.with_user(self.user_hruser.id).action_reset_confirm()
-
-    def test_holiday_user_reset_refused_leave(self):
-        """
-            Should not be able to reset a refused leave
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hruser.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave.action_refuse()
-            with self.assertRaises(UserError):
-                leave.with_user(self.user_hruser.id).action_reset_confirm()
-
-    def test_holiday_user_reset_current_leave(self):
-        """
-            Should not be able to reset a passed leave
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hruser.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=-20 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            with self.assertRaises(UserError):
-                leave.with_user(self.user_hruser.id).action_reset_confirm()
-
-    def test_holiday_manager_reset_his_leave(self):
-        """
-            The holiday manager should be able to do everything
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hrmanager.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            leave.with_user(self.user_hrmanager.id).action_reset_confirm()
-
-    def test_holiday_manager_reset_other_employee_leave(self):
-        """
-            The holiday manager should be able to do everything
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hruser.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            leave.with_user(self.user_hrmanager.id).action_reset_confirm()
-
-    def test_holiday_manager_reset_other_employee_leave_and_is_leave_manager_id(self):
-        """
-            The holiday manager should be able to do everything
-        """
-        self.employee_hruser.write({'leave_manager_id': self.user_hrmanager.id})
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hruser.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            leave.with_user(self.user_hrmanager.id).action_reset_confirm()
-
-    def test_holiday_manager_reset_self_and_is_manager_id(self):
-        """
-            The holiday manager should be able to do everything
-        """
-        self.employee_hrmanager.write({'leave_manager_id': self.user_hrmanager.id})
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hrmanager.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            leave.with_user(self.user_hrmanager.id).action_reset_confirm()
-
-    def test_holiday_manager_reset_refused_leave(self):
-        """
-            The holiday manager should be able to do everything
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hruser.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=5 + i), 1, values)
-            leave.action_refuse()
-            leave.with_user(self.user_hrmanager.id).action_reset_confirm()
-
-    def test_holiday_manager_reset_current_leave(self):
-        """
-            The holiday manager should be able to do everything
-        """
-        for i, status in enumerate(self.confirm_status):
-            values = {
-                'name': 'Random Time Off',
-                'employee_id': self.employee_hruser.id,
-                'holiday_status_id': status.id,
-            }
-            leave = self.request_leave(1, date.today() + relativedelta(days=-20 + i), 1, values)
-            leave._force_cancel("Cancel the leave")
-            leave.with_user(self.user_hrmanager.id).action_reset_confirm()
 
 @tests.tagged('access_rights', 'access_rights_create')
 class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
@@ -443,7 +164,7 @@ class TestAccessRightsRead(TestHrHolidaysAccessRightsCommon):
             'request_date_from': date.today(),
             'request_date_to': date.today() + relativedelta(days=1),
         })
-        with self.assertRaises(AccessError), self.cr.savepoint():
+        with self.assertRaises(AccessError):
             res = other_leave.with_user(self.user_employee_id).read(['number_of_days', 'state', 'name'])
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -457,7 +178,7 @@ class TestAccessRightsRead(TestHrHolidaysAccessRightsCommon):
             'request_date_from': date.today(),
             'request_date_to': date.today() + relativedelta(days=1),
         })
-        with self.assertRaises(AccessError), self.cr.savepoint():
+        with self.assertRaises(AccessError):
             other_leave.invalidate_model(['name'])
             name = other_leave.with_user(self.user_employee_id).name
 
@@ -579,7 +300,7 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
             'state': 'confirm',
         }
         hr_leave = self.request_leave(self.user_hruser_id, date_utils.start_of(date.today() + relativedelta(days=7), 'week'), 1, values)
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             hr_leave.with_user(self.user_employee_id).action_approve()
         self.employee_hruser.write({'leave_manager_id': self.user_employee_id})
         hr_leave.with_user(self.user_employee_id).action_approve()
@@ -616,15 +337,14 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
         leave_date = date_utils.start_of(date.today() + relativedelta(days=7), 'week')
         hr_leave = self.request_leave(self.user_hruser_id, leave_date, 1, values)
 
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             hr_leave.with_user(self.user_employee_id).action_approve()
+        self.employee_hrmanager.leave_manager_id = self.user_responsible
+        hr_leave.with_user(self.user_responsible_id).action_approve()
 
-        self.employee_hrmanager.leave_manager_id = self.user_hruser
+        with self.assertRaises(UserError):
+            hr_leave.with_user(self.user_employee_id).action_approve()
         hr_leave.with_user(self.user_hruser_id).action_approve()
-
-        with self.assertRaises(AccessError):
-            hr_leave.with_user(self.user_employee_id).action_validate()
-        hr_leave.with_user(self.user_hruser_id).action_validate()
 
     # hr_holidays.group_hr_holidays_manager
 
@@ -640,7 +360,6 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
         leave_start = date_utils.start_of(date.today() + relativedelta(days=15), 'week')
         hr_leave = self.request_leave(self.user_hrmanager_id, leave_start, 1, values).with_user(self.user_hrmanager_id)
         hr_leave.action_approve()
-        hr_leave.action_validate()
 
     # ----------------------------------------
     # State = Refuse
@@ -697,7 +416,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
             'state': 'confirm',
         }
         leave = self.request_leave(self.user_employee_id, date.today() + relativedelta(days=-4), 1, values)
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             leave.with_user(self.user_employee.id).unlink()
 
     def test_leave_unlink_validate_by_user(self):
@@ -709,7 +428,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
         }
         leave = self.request_leave(self.user_employee_id, date.today() + relativedelta(days=6), 1, values)
         leave.with_user(self.user_hrmanager_id).write({'state': 'validate'})
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             leave.with_user(self.user_employee.id).unlink()
 
 class TestMultiCompany(TestHrHolidaysCommon):
@@ -724,7 +443,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
             'name': 'Unlimited - Company New',
             'company_id': cls.new_company.id,
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         cls.employee_emp.company_id = cls.new_company
         cls.rd_dept.manager_id = False
@@ -746,7 +465,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
         with self.assertRaises(AccessError):
             employee_leave.name
 
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             employee_leave.action_approve()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -756,7 +475,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
         with self.assertRaises(AccessError):
             employee_leave_hruser.name
 
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             employee_leave_hruser.action_approve()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -766,7 +485,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
         with self.assertRaises(AccessError):
             employee_leave_hrmanager.name
 
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             employee_leave_hrmanager.action_approve()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')

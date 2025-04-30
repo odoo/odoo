@@ -7,7 +7,6 @@ import re
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_list
 from odoo.tools.translate import _
 
 
@@ -62,8 +61,8 @@ class AccountAnalyticLine(models.Model):
     task_id = fields.Many2one(
         'project.task', 'Task', index='btree_not_null',
         compute='_compute_task_id', store=True, readonly=False,
-        domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id)]")
-    parent_task_id = fields.Many2one('project.task', related='task_id.parent_id', store=True)
+        domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id), ('has_template_ancestor', '=', False)]")
+    parent_task_id = fields.Many2one('project.task', related='task_id.parent_id', store=True, index='btree_not_null')
     project_id = fields.Many2one(
         'project.project', 'Project', domain=_domain_project_id, index=True,
         compute='_compute_project_id', store=True, readonly=False)
@@ -130,6 +129,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.depends('task_id.partner_id', 'project_id.partner_id')
     def _compute_partner_id(self):
+        super()._compute_partner_id()
         for timesheet in self:
             if timesheet.project_id:
                 timesheet.partner_id = timesheet.task_id.partner_id or timesheet.project_id.partner_id
@@ -341,7 +341,7 @@ class AccountAnalyticLine(models.Model):
         if missing_plan_names:
             raise ValidationError(_(
                 "'%(missing_plan_names)s' analytic plan(s) required on the project '%(project_name)s' linked to the timesheet.",
-                missing_plan_names=format_list(self.env, missing_plan_names),
+                missing_plan_names=missing_plan_names,
                 project_name=project.name,
             ))
         return {
@@ -434,3 +434,10 @@ class AccountAnalyticLine(models.Model):
                 'res_id': uom_hours.id,
                 'noupdate': True,
             })
+
+    @api.model
+    def _show_portal_timesheets(self):
+        """
+        Determine if we show timesheet information in the portal. Meant to be overriden in website_timesheet.
+        """
+        return True

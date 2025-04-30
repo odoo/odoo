@@ -2,10 +2,9 @@
 
 from odoo import Command
 from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
-from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common import MailCommon
 
-
-class CrmChatbotCase(ChatbotCase):
+class CrmChatbotCase(MailCommon, ChatbotCase):
 
     @classmethod
     def setUpClass(cls):

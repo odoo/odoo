@@ -2,7 +2,6 @@ import { MailGroup } from "@mail_group/interactions/mail_group";
 import { patch } from "@web/core/utils/patch";
 import { patchDynamicContent } from "@web/public/utils";
 
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
 patch(MailGroup.prototype, {
@@ -12,6 +11,19 @@ patch(MailGroup.prototype, {
             _root: {
                 "t-att-class": () => ({
                     "d-none": false,
+                }),
+                "t-att-data-is-member": () => `${this.isMember}`,
+            },
+            ".o_mg_email_input_group": {
+                "t-att-class": () => ({
+                    "input-group": !this.hasMemberEmail,
+                    "d-flex": !!this.hasMemberEmail,
+                    "justify-content-end": !!this.hasMemberEmail,
+                }),
+            },
+            ".o_mg_email_input_group .o_mg_subscribe_email": {
+                "t-att-class": () => ({
+                    "d-none": !!this.hasMemberEmail,
                 }),
             },
         });
@@ -25,14 +37,14 @@ patch(MailGroup.prototype, {
         // for the first time, we make a RPC call to setup the widget properly
         const email = (new URL(document.location.href)).searchParams.get('email');
         const response = await rpc('/group/is_member', {
-            'group_id': this.mailgroupId,
+            'group_id': this.mailGroupId,
             'email': email,
             'token': this.token,
         });
 
         if (!response) {
             // We do not access to the mail group, just remove the widget
-            this.el.replaceChildren();
+            this.removeChildren(this.el);
             return;
         }
 
@@ -40,18 +52,8 @@ patch(MailGroup.prototype, {
         this.isMember = response.is_member;
 
         if (userEmail && userEmail.length) {
-            const emailInputEl = this.el.querySelector(".o_mg_subscribe_email");
-            emailInputEl.value = userEmail;
-            emailInputEl.setAttribute("readonly", 1);
+            this.hasMemberEmail = true;
+            this.el.querySelector(".o_mg_email_input_group .o_mg_subscribe_email").value = userEmail;
         }
-
-        if (this.isMember) {
-            const buttonEl = this.el.querySelector(".o_mg_subscribe_btn");
-            buttonEl.innerText = _t('Unsubscribe');
-            buttonEl.classList.remove("btn-primary");
-            buttonEl.classList.add("btn-outline-primary");
-        }
-
-        this.el.dataset.isMember = this.isMember;
     },
 });

@@ -10,10 +10,9 @@ export class HoverableDropdown extends Interaction {
             "t-on-mouseenter.withTarget": this.onMouseEnter,
             "t-on-mouseleave.withTarget": this.onMouseLeave,
         },
-        ".dropdown-menu": {
+        ".o_mega_menu": {
             "t-att-style": () => ({
                 "top": this.isSmall() ? "" : "unset",
-                "margin-top": this.isSmall() ? "" : "0",
             }),
         },
         _window: {

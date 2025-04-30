@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hashlib
-import json
 import warnings
 
 import odoo
 from odoo import api, models, fields
 from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
 from odoo.tools import config
-from odoo.tools.misc import str2bool
+from odoo.tools.misc import hmac, str2bool
 
 
 """
@@ -72,6 +70,7 @@ class IrHttp(models.AbstractModel):
             'session_info': self.session_info(),
         }
 
+    @api.model
     def lazy_session_info(self):
         return {}
 
@@ -104,6 +103,7 @@ class IrHttp(models.AbstractModel):
             "is_internal_user": is_internal_user,
             "user_context": user_context,
             "db": self.env.cr.dbname,
+            "registry_hash": hmac(self.env(su=True), "webclient-cache", self.env.registry.registry_sequence),
             "user_settings": self.env['res.users.settings']._find_or_create_for_user(user)._res_users_settings_format(),
             "server_version": version_info.get('server_version'),
             "server_version_info": version_info.get('server_version_info'),
@@ -131,21 +131,13 @@ class IrHttp(models.AbstractModel):
             },
             'test_mode': config['test_enable'],
             'view_info': self.env['ir.ui.view'].get_view_info(),
-            'groups': {},
+            'groups': {
+                'base.group_allow_export': user.has_group('base.group_allow_export') if session_uid else False,
+            },
         }
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug
         if is_internal_user:
-            # the following is only useful in the context of a webclient bootstrapping
-            # but is still included in some other calls (e.g. '/web/session/authenticate')
-            # to avoid access errors and unnecessary information, it is only included for users
-            # with access to the backend ('internal'-type users)
-            menus = self.env['ir.ui.menu'].with_context(lang=request.session.context['lang']).load_menus(request.session.debug)
-            ordered_menus = {str(k): v for k, v in menus.items()}
-            menu_json_utf8 = json.dumps(ordered_menus, sort_keys=True).encode()
-            session_info['cache_hashes'].update({
-                "load_menus": hashlib.sha512(menu_json_utf8).hexdigest()[:64], # sha512/256
-            })
             # We need sudo since a user may not have access to ancestor companies
             # We use `_get_company_ids` because it is cached and we sudo it because env.user return a sudo user.
             user_companies = self.env['res.company'].browse(user._get_company_ids()).sudo()
@@ -186,6 +178,7 @@ class IrHttp(models.AbstractModel):
             'is_admin': user._is_admin() if session_uid else False,
             'is_system': user._is_system() if session_uid else False,
             'is_public': user._is_public(),
+            "is_internal_user": user._is_internal(),
             'is_website_user': user._is_public() if session_uid else False,
             'uid': session_uid,
             'is_frontend': True,

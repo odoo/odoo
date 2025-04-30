@@ -1,11 +1,9 @@
 import collections
 import inspect
 
-from odoo.models import BaseModel
 from odoo.modules.registry import Registry
 from odoo.tests.common import get_db_name, tagged
 from .lint_case import LintCase
-
 
 POSITIONAL_ONLY = inspect.Parameter.POSITIONAL_ONLY
 POSITIONAL_OR_KEYWORD = inspect.Parameter.POSITIONAL_OR_KEYWORD
@@ -16,22 +14,51 @@ EMPTY = inspect.Parameter.empty
 
 
 failure_message = """\
-Invalid override of {model}.{method} in {child_module}, {message}.
+Invalid override in {model} of {method}, {message}.
 
 Original definition in {parent_module}:
     def {method}{original_signature}
 
-Incompatible definition in {child_module}:
+Incompatible override definition in {child_module}:
     def {method}{override_signature}"""
 
 
-methods_to_sanitize = {
-    method_name
-    for method_name in dir(BaseModel)
-    if not method_name.startswith('_')
-} - {
+MODULES_TO_IGNORE = {
+    'pos_blackbox_be',  # TODO cannot update to sanitize without certification
+}
+METHODS_TO_IGNORE = {
     # Not yet sanitized...
-    'write', 'create', 'default_get', 'init'
+    'write', 'default_get',
+    # base
+    'action_timer_stop',
+    '_get_eval_context',
+    # mail
+    'message_mail_with_source',
+    'message_new',
+    'message_post_with_source',
+    'message_update',
+    '_action_done',
+    '_get_html_link',
+    '_get_thread_with_access',
+    '_mail_get_partner_fields',
+    '_notify_by_email_prepare_rendering_context',
+    '_notify_thread_by_email',
+}
+MODEL_METHODS_TO_IGNORE = {
+    ('account.intrastat.services.be.report.handler', '_be_intrastat_get_xml_file_content'),
+    ('hr.payslip', 'action_payslip_payment_report'),
+    ('hr.payslip.run', 'action_payment_report'),
+    ('ir.config_parameter', 'init'),
+    ('mrp.production', 'action_generate_serial'),
+    ('mrp.production', 'set_qty_producing'),
+    ('mrp.workorder', 'button_start'),
+    ('quality.check', 'add_check_in_chain'),
+    ('propose.change', '_do_remove_step'),
+    ('propose.change', '_do_set_picture'),
+    ('propose.change', '_do_update_step'),
+    ('report.pos_hr.single_employee_sales_report', '_get_domain'),
+    ('report.pos_hr.single_employee_sales_report', 'get_sale_details'),
+    ('sign.request', '_generate_completed_document'),
 }
 
 
@@ -39,9 +66,11 @@ class HitMiss:
     def __init__(self):
         self.hit = 0
         self.miss = 0
+
     @property
     def ratio(self):
         return self.hit / (self.hit + self.miss)
+
 counter = collections.defaultdict(HitMiss)
 
 
@@ -54,26 +83,34 @@ def get_odoo_module_name(python_module_name):
     return python_module_name
 
 
-def assert_valid_override(parent_signature, child_signature):
+def check_parameter(pparam: inspect.Parameter, cparam: inspect.Parameter, is_private: bool = False) -> bool:
+    # don't check annotations
+    return (
+        pparam.name == cparam.name
+        or pparam.kind == POSITIONAL_ONLY
+        or is_private  # ignore names of (positional or keyword) attributes
+    ) and (
+        # if parent has a default, child should have the same one
+        pparam.default is EMPTY
+        or pparam.default == cparam.default
+    ) and (
+        # if both are annotated, then they should be similar (for typing)
+        (pann := pparam.annotation) is EMPTY
+        or (cann := cparam.annotation) is EMPTY
+        or pann == cann
+        # accept annotations of different types as valid to keep logic simple
+        # for example, typing can be a str or the class
+        or pann.__class__ != cann.__class__
+    )
+
+
+def assert_valid_override(parent_signature, child_signature, is_private):
     pparams = parent_signature.parameters
     cparams = child_signature.parameters
 
     # parent and child have exact same signature
     if pparams == cparams:
         return
-
-    parent_is_annotated = any(p.annotation is not inspect._empty for p in pparams.values())
-    child_is_annotated = any(p.annotation is not inspect._empty for p in cparams.values())
-
-    # don't check annotations when one of the two methods is not annotated
-    if parent_is_annotated != child_is_annotated:
-        pparams = {name: param.replace(annotation=EMPTY) for name, param in pparams.items()}
-        cparams = {name: param.replace(annotation=EMPTY) for name, param in cparams.items()}
-        parent_is_annotated = child_is_annotated = False
-
-        # parent and child have exact same signature, modulo annotations
-        if pparams == cparams:
-            return
 
     # parent has *args/**kwargs: child can define new custom args/kwargs
     parent_has_varargs = any(pp.kind == VAR_POSITIONAL for pp in pparams.values())
@@ -84,37 +121,47 @@ def assert_valid_override(parent_signature, child_signature):
     child_has_varkwargs = any(cp.kind == VAR_KEYWORD for cp in cparams.values())
 
     # check positionals
-    pposparams = [(pp_name, pp) for pp_name, pp in pparams.items()
-                  if pp.kind in (POSITIONAL_ONLY, POSITIONAL_OR_KEYWORD)]
-    cposparams = [(cp_name, cp) for cp_name, cp in cparams.items()
-                  if cp.kind in (POSITIONAL_ONLY, POSITIONAL_OR_KEYWORD)]
+    pos_kinds = (POSITIONAL_ONLY, POSITIONAL_OR_KEYWORD)
+    pposparams = [pp for pp in pparams.values() if pp.kind in pos_kinds]
+    cposparams = [cp for cp in cparams.values() if cp.kind in pos_kinds]
     if len(cposparams) < len(pposparams):
         assert child_has_varargs, "missing positional parameters"
-        assert cposparams == pposparams[:len(cposparams)], "wrong positional parameters"
+        pposparams = pposparams[:len(cposparams)]
     elif len(cposparams) > len(pposparams):
         assert parent_has_varargs, "too many positional parameters"
-        assert cposparams[:len(pposparams)] == pposparams, "wrong positional parameters"
-    else:
-        assert cposparams == pposparams, "wrong positional parameters"
+        cposparams = cposparams[:len(pposparams)]
+    for pparam, cparam in zip(pposparams, cposparams, strict=True):
+        assert check_parameter(pparam, cparam, is_private=is_private), f"wrong positional paramter {cparam.name!r}"
 
     # check keywords
-    pkwparams = {(pp_name, pp) for pp_name, pp in pparams.items()
-                 if pp.kind in (POSITIONAL_OR_KEYWORD, KEYWORD_ONLY)}
-    ckwparams = {(cp_name, cp) for cp_name, cp in cparams.items()
-                 if cp.kind in (POSITIONAL_OR_KEYWORD, KEYWORD_ONLY)}
-    if ckwparams < pkwparams:
-        assert child_has_varkwargs, "missing keyword parameters"
-    elif ckwparams > pkwparams:
-        assert parent_has_varkwargs, "too many keyword parameters"
-    elif ckwparams != pkwparams:
-        assert child_has_varkwargs and parent_has_varkwargs, "wrong keyword parameters"
+    kw_kinds = (KEYWORD_ONLY,) if is_private else (POSITIONAL_OR_KEYWORD, KEYWORD_ONLY)
+    pkwparams = {pp_name: pp for pp_name, pp in pparams.items() if pp.kind in kw_kinds}
+    ckwparams = {cp_name: cp for cp_name, cp in cparams.items() if cp.kind in kw_kinds}
+    for name, pparam in pkwparams.items():
+        cparam = ckwparams.get(name)
+        if cparam is None:
+            assert child_has_varkwargs, f"missing keyword parameter {name!r}"
+        else:
+            assert check_parameter(pparam, cparam, is_private=is_private), f"wrong keyword parameter {name!r}"
+    if not parent_has_varkwargs:
+        for name in (ckwparams.keys() - pkwparams.keys()):
+            assert ckwparams[name].default is not EMPTY, "too many keyword parameters"
 
 
-def assert_attribute_override(parent_method, child_method):
-    for attribute in ('_autovacuum', '_api_model'):
+def assert_attribute_override(parent_method, child_method, is_private):
+    if is_private:
+        attributes = ('_autovacuum',)
+    else:
+        attributes = ('_autovacuum', '_api_model')
+    for attribute in attributes:
         parent_attr = getattr(parent_method, attribute, None)
         child_attr = getattr(child_method, attribute, None)
         assert parent_attr == child_attr, f"attribute {attribute!r} does not match"
+    # https://docs.python.org/3/library/typing.html#typing.final
+    assert not getattr(parent_method, '__final__', False), "parent method is final"
+    # https://docs.python.org/3/library/warnings.html#warnings.deprecated
+    assert bool(getattr(parent_method, '__deprecated__', False)) == bool(getattr(child_method, '__deprecated__', False)), \
+        "parent and child method should either both be deprecated or none of them"
 
 
 @tagged('-at_install', 'post_install')
@@ -122,9 +169,16 @@ class TestLintOverrideSignatures(LintCase):
     def test_lint_override_signature(self):
         self.failureException = TypeError
         registry = Registry(get_db_name())
+
         for model_name, model_cls in registry.items():
+            if model_cls._module in MODULES_TO_IGNORE:
+                continue
             for method_name, _ in inspect.getmembers(model_cls, inspect.isroutine):
-                if method_name not in methods_to_sanitize:
+                if (
+                    method_name.startswith('__')
+                    or method_name in METHODS_TO_IGNORE
+                    or (model_name, method_name) in MODEL_METHODS_TO_IGNORE
+                ):
                     continue
 
                 # Find the original function definition
@@ -136,6 +190,7 @@ class TestLintOverrideSignatures(LintCase):
 
                 parent_module = get_odoo_module_name(parent_class.__module__)
                 original_signature = inspect.signature(method)
+                is_private = method_name.startswith('_')
 
                 # Assert that all child classes correctly override the method
                 for child_class in reverse_mro:
@@ -148,8 +203,8 @@ class TestLintOverrideSignatures(LintCase):
 
                     with self.subTest(module=child_module, model=model_name, method=method_name):
                         try:
-                            assert_valid_override(original_signature, override_signature)
-                            assert_attribute_override(method, override)
+                            assert_valid_override(original_signature, override_signature, is_private=is_private)
+                            assert_attribute_override(method, override, is_private=is_private)
                             counter[method_name].hit += 1
                         except AssertionError as exc:
                             counter[method_name].miss += 1

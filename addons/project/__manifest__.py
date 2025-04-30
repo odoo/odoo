@@ -63,11 +63,13 @@
     'installable': True,
     'application': True,
     'post_init_hook': '_project_post_init',
+    'uninstall_hook': '_project_uninstall_hook',
     'assets': {
         'web.assets_backend': [
             'project/static/src/css/project.css',
             'project/static/src/core/web/**/*',
             'project/static/src/utils/**/*',
+            'project/static/src/actions/client_actions.js',
             'project/static/src/components/**/*',
             'project/static/src/views/**/*',
             'project/static/src/js/tours/project.js',
@@ -198,7 +200,8 @@
             'web_tour/static/src/tour_service/**/*',
             'web/static/lib/hoot-dom/**/*',
 
-            'html_editor/static/src/**/*',
+            ('include', 'html_editor.assets_editor'),
+            'html_editor/static/src/fields/**/*',
 
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/chatter/web/form_renderer.scss',
@@ -211,7 +214,6 @@
 
             ('include', 'portal.assets_chatter_helpers'),
             'portal/static/src/chatter/core/**/*',
-            'project/static/src/project_sharing/search/favorite_menu/custom_favorite_item.xml',
             'project/static/src/project_sharing/**/*',
             'web/static/src/start.js',
         ],

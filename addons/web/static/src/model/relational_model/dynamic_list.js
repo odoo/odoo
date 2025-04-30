@@ -1,21 +1,24 @@
-import {
-    deleteConfirmationMessage,
-    AlertDialog,
-    ConfirmationDialog,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
-import { Record } from "./record";
+import { Record as RelationalRecord } from "./record";
 import { resequence } from "./utils";
+
+/**
+ * @typedef {import("./record").Record} RelationalRecord
+ */
 
 const DEFAULT_HANDLE_FIELD = "sequence";
 
+/**
+ * @abstract
+ */
 export class DynamicList extends DataPoint {
     /**
-     * @param {import("./relational_model").Config} config
+     * @type {DataPoint["setup"]}
      */
-    setup(config) {
+    setup() {
         super.setup(...arguments);
         this.handleField = Object.keys(this.activeFields).find(
             (fieldName) => this.activeFields[fieldName].isHandle
@@ -184,7 +187,11 @@ export class DynamicList extends DataPoint {
         return this.model.mutex.exec(() => {
             let orderBy = [...this.orderBy];
             if (orderBy.length && orderBy[0].name === fieldName) {
-                orderBy[0] = { name: orderBy[0].name, asc: !orderBy[0].asc };
+                if (orderBy[0].asc) {
+                    orderBy[0] = { name: orderBy[0].name, asc: false };
+                } else {
+                    orderBy = [];
+                }
             } else {
                 orderBy = orderBy.filter((o) => o.name !== fieldName);
                 orderBy.unshift({
@@ -219,22 +226,6 @@ export class DynamicList extends DataPoint {
         }
     }
 
-    deleteRecordsWithConfirmation(dialogProps = {}, records) {
-        let body = deleteConfirmationMessage;
-        if (this.isDomainSelected || this.selection.length > 1) {
-            body = _t("Are you sure you want to delete these records?");
-        }
-        const defaultProps = {
-            body,
-            cancel: () => {},
-            cancelLabel: _t("No, keep it"),
-            confirm: () => this.deleteRecords(records),
-            confirmLabel: _t("Delete"),
-            title: _t("Bye-bye, record!"),
-        };
-        this.model.dialog.add(ConfirmationDialog, { ...defaultProps, ...dialogProps });
-    }
-
     // -------------------------------------------------------------------------
     // Protected
     // -------------------------------------------------------------------------
@@ -247,15 +238,29 @@ export class DynamicList extends DataPoint {
             resIds = await this.getResIds(true);
         }
 
-        const duplicated = await this.model.orm.call(this.resModel, "copy", [resIds], {
-            context: this.context,
-        });
-        if (resIds.length > duplicated.length) {
-            this.model.notification.add(_t("Some records could not be duplicated"), {
-                title: _t("Warning"),
+        const copy = async (resIds) => {
+            const copiedRecords = await this.model.orm.call(this.resModel, "copy", [resIds], {
+                context: this.context,
             });
+
+            if (resIds.length > copiedRecords.length) {
+                this.model.notification.add(_t("Some records could not be duplicated"), {
+                    title: _t("Warning"),
+                });
+            }
+            return this.model.load();
+        };
+
+        if (resIds.length > 1) {
+            this.model.dialog.add(ConfirmationDialog, {
+                body: _t("Are you sure that you want to duplicate all the selected records?"),
+                confirm: () => copy(resIds),
+                cancel: () => {},
+                confirmLabel: _t("Confirm"),
+            });
+        } else {
+            await copy(resIds);
         }
-        return this.model.load();
     }
 
     async _deleteRecords(records) {
@@ -365,7 +370,7 @@ export class DynamicList extends DataPoint {
         });
         for (const dpData of resequencedRecords) {
             const dp = originalList.find((d) => getResId(d) === dpData.id);
-            if (dp instanceof Record) {
+            if (dp instanceof RelationalRecord) {
                 dp._applyValues(dpData);
             } else {
                 dp[handleField] = dpData[handleField];

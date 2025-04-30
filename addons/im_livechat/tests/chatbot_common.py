@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
-from odoo.addons.mail.tests.common import MailCommon
 
 
-class ChatbotCase(MailCommon, common.HttpCase):
+class ChatbotCase(common.HttpCase):
 
     @classmethod
     def setUpClass(cls):

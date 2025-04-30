@@ -16,7 +16,6 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         ]).unlink()  # delete other channels to avoid them messing with the URL rules
 
         self.livechat_channel.write({
-            'is_published': True,
             'rule_ids': [(5, 0), (0, 0, {
                 'action': 'auto_popup',
                 'regex_url': '/',
@@ -33,11 +32,13 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
             ('chatbot_current_step_id.chatbot_script_id', '=', self.chatbot_script.id),
             ('message_ids', '!=', False),
         ])
-
         self.assertTrue(bool(livechat_discuss_channel))
         self.assertEqual(len(livechat_discuss_channel), 1)
 
         conversation_messages = livechat_discuss_channel.message_ids.sorted('id')
+        operator_member = livechat_discuss_channel.channel_member_ids.filtered(
+            lambda m: m.partner_id == self.operator.partner_id
+        )
 
         expected_messages = [
             ("Hello! I'm a bot!", operator, False),
@@ -76,10 +77,17 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
             ("How can I help you?", operator, self.step_dispatch_operator),
             ("I want to speak with an operator", False, False),
             ("I will transfer you to a human", operator, False),
-            ("joined the channel", self.operator.partner_id, False), # human_operator has joined the channel
+            (
+                'invited <a href="#" data-oe-model="res.partner" data-oe-id="'
+                f'{operator_member.partner_id.id}">@El Deboulonnator</a> to the channel',
+                self.chatbot_script.operator_partner_id,
+                False,
+            ),
         ]
 
         self.assertEqual(len(conversation_messages), len(expected_messages))
+        # "invited" notification is not taken into account in unread counter contribution.
+        self.assertEqual(len(conversation_messages) - 1, operator_member.message_unread_counter)
 
         # check that the whole conversation is correctly saved
         # including welcome steps: see chatbot.script#_post_welcome_steps
@@ -116,8 +124,8 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         self.start_tour("/", "website_livechat_chatbot_after_reload_tour")
 
     def test_chatbot_test_page_tour(self):
-        bob_operator = tests.new_test_user(self.env, login="bob_user", groups="im_livechat.im_livechat_group_user,base.group_user")
-        self.livechat_channel.user_ids += bob_operator
+        bob_manager = tests.new_test_user(self.env, login="bob_user", groups="im_livechat.im_livechat_group_manager,base.group_user")
+        self.livechat_channel.user_ids += bob_manager
         test_page_url = f"/chatbot/{'-'.join(self.chatbot_script.title.split(' '))}-{self.chatbot_script.id}/test"
         self.start_tour(test_page_url, "website_livechat_chatbot_test_page_tour", login="bob_user")
 

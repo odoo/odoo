@@ -26,6 +26,7 @@ class AuthPasskeyKey(models.Model):
     credential_identifier = fields.Char(required=True, groups='base.group_system')
     public_key = fields.Char(required=True, groups='base.group_system', compute='_compute_public_key', inverse='_inverse_public_key')
     sign_count = fields.Integer(default=0, groups='base.group_system')
+    create_uid = fields.Many2one('res.users', index=True)
 
     _unique_identifier = models.Constraint(
         'UNIQUE(credential_identifier)',

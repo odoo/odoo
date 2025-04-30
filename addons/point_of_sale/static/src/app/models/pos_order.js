@@ -1,9 +1,11 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
-import { random5Chars, uuidv4 } from "@point_of_sale/utils";
+import { random5Chars } from "@point_of_sale/utils";
+import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { localization } from "@web/core/l10n/localization";
 
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 const { DateTime } = luxon;
@@ -16,49 +18,61 @@ export class PosOrder extends Base {
 
         if (!this.session_id && (!this.finalized || typeof this.id !== "number")) {
             this.session_id = this.session;
+
+            if (this.state === "draft" && this.lines.length == 0 && this.payment_ids.length == 0) {
+                this._isResidual = true;
+            }
         }
 
         // Data present in python model
+        this.name = vals.name || "/";
         this.nb_print = vals.nb_print || 0;
         this.to_invoice = vals.to_invoice || false;
         this.state = vals.state || "draft";
-        this.uuid = vals.uuid ? vals.uuid : uuidv4();
-        this.last_order_preparation_change = vals.last_order_preparation_change
-            ? JSON.parse(vals.last_order_preparation_change)
-            : {
-                  lines: {},
-                  general_customer_note: "",
-                  internal_note: "",
-                  sittingMode: 0,
-              };
+
+        if (!vals.last_order_preparation_change) {
+            this.last_order_preparation_change = {
+                lines: {},
+                general_customer_note: "",
+                internal_note: "",
+                sittingMode: 0,
+            };
+        } else {
+            this.last_order_preparation_change =
+                typeof vals.last_order_preparation_change === "object"
+                    ? vals.last_order_preparation_change
+                    : JSON.parse(vals.last_order_preparation_change);
+        }
+
         this.general_customer_note = vals.general_customer_note || "";
         this.internal_note = vals.internal_note || "";
-        if (!vals.lines) {
-            this.lines = [];
-        }
 
         if (!this.date_order) {
             this.date_order = DateTime.now();
         }
-
-        // !!Keep all uiState in one object!!
-        if (!this.uiState) {
-            this.uiState = {
-                unmerge: {},
-                lastPrint: false,
-                lineToRefund: {},
-                displayed: true,
-                booked: false,
-                screen_data: {},
-                selected_orderline_uuid: undefined,
-                selected_paymentline_uuid: undefined,
-                locked: this.state !== "draft",
-                // Pos restaurant specific to most proper way is to override this
-                TipScreen: {
-                    inputTipAmount: "",
-                },
-            };
+        if (!this.user_id && this.models["res.users"]) {
+            this.user_id = this.user;
         }
+    }
+
+    initState() {
+        super.initState();
+        // !!Keep all uiState in one object!!
+        this.uiState = {
+            unmerge: {},
+            lastPrint: false,
+            lineToRefund: {},
+            displayed: true,
+            booked: false,
+            screen_data: {},
+            selected_orderline_uuid: undefined,
+            selected_paymentline_uuid: undefined,
+            locked: this.state !== "draft",
+            // Pos restaurant specific to most proper way is to override this
+            TipScreen: {
+                inputTipAmount: "",
+            },
+        };
     }
 
     get user() {
@@ -97,19 +111,36 @@ export class PosOrder extends Base {
         return this.finalized && typeof this.id === "string";
     }
 
+    get originalSplittedOrder() {
+        return this.models["pos.order"].getBy("uuid", this.uiState.splittedOrderUuid);
+    }
+
     get presetTime() {
         return this.preset_time && this.preset_time.isValid
             ? this.preset_time.toFormat("HH:mm")
+            : false;
+    }
+    get presetDateTime() {
+        return this.preset_time?.isValid
+            ? this.preset_time.hasSame(this.date_order, "day")
+                ? this.preset_time.toFormat(localization.shortTimeFormat)
+                : this.preset_time.toFormat(
+                      `${localization.dateFormat} ${localization.shortTimeFormat}`
+                  )
             : false;
     }
 
     get presetRequirementsFilled() {
         return (
             (!this.preset_id?.needsPartner ||
-                (this.partner_id?.name && this.partner_id?.pos_contact_address)) &&
+                (this.partner_id?.name && (this.partner_id?.street || this.partner_id?.street2))) &&
             (!this.preset_id?.needsName || this.partner_id?.name || this.floating_order_name) &&
             (!this.preset_id?.needsSlot || this.preset_time)
         );
+    }
+
+    get isRefund() {
+        return this.is_refund === true;
     }
 
     getEmailItems() {
@@ -120,6 +151,9 @@ export class PosOrder extends Base {
         this.setPricelist(preset.pricelist_id);
         this.fiscal_position_id = preset.fiscal_position_id;
         this.preset_id = preset;
+        if (preset.is_return) {
+            this.lines.forEach((l) => l.setQuantity(-Math.abs(l.getQuantity())));
+        }
     }
 
     /**
@@ -127,20 +161,18 @@ export class PosOrder extends Base {
      * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
      */
     get taxTotals() {
+        return this.getTaxTotalsOfLines(this.lines);
+    }
+
+    getTaxTotalsOfLines(lines) {
         const currency = this.currency;
         const company = this.company;
-        const orderLines = this.lines;
 
         // If each line is negative, we assume it's a refund order.
         // It's a normal order if it doesn't contain a line (useful for pos_settle_due).
         // TODO: Properly differentiate refund orders from normal ones.
-        const documentSign =
-            this.lines.length === 0 ||
-            !this.lines.every((l) => l.product_id.uom_id.isNegative(l.qty))
-                ? 1
-                : -1;
-
-        const baseLines = orderLines.map((line) =>
+        const documentSign = this.isRefund ? -1 : 1;
+        const baseLines = lines.map((line) =>
             accountTaxHelpers.prepare_base_line_for_taxes_computation(
                 line,
                 line.prepareBaseLineForTaxesComputationExtraValues({
@@ -220,6 +252,7 @@ export class PosOrder extends Base {
     }
 
     getRoundedRemaining(roundingMethod, remaining) {
+        remaining = roundCurrency(remaining, this.currency);
         if (this.currency.isZero(remaining)) {
             return 0;
         } else if (this.currency.isNegative(remaining)) {
@@ -282,6 +315,7 @@ export class PosOrder extends Base {
                 };
             }
             line.setHasChange(false);
+            line.uiState.savedQuantity = line.getQuantity();
         });
         // Checks whether an orderline has been deleted from the order since it
         // was last sent to the preparation tools or updated. If so we delete older changes.
@@ -321,49 +355,6 @@ export class PosOrder extends Base {
             }
         }
         return null;
-    }
-
-    getOrderlinesGroupedByTaxIds() {
-        const orderlines_by_tax_group = {};
-        const lines = this.getOrderlines();
-        for (const line of lines) {
-            const tax_group = this._getTaxGroupKey(line);
-            if (!(tax_group in orderlines_by_tax_group)) {
-                orderlines_by_tax_group[tax_group] = [];
-            }
-            orderlines_by_tax_group[tax_group].push(line);
-        }
-        return orderlines_by_tax_group;
-    }
-
-    _getTaxGroupKey(line) {
-        return line
-            ._getProductTaxesAfterFiscalPosition()
-            .map((tax) => tax.id)
-            .join(",");
-    }
-
-    /**
-     * Calculate the amount that will be used as a base in order to apply a downpayment or discount product in PoS.
-     * In our calculation we take into account taxes that are included in the price.
-     *
-     * @param  {String} tax_ids a string of the tax ids that are applied on the orderlines, in csv format
-     * e.g. if taxes with ids 2, 5 and 6 are applied tax_ids will be "2,5,6"
-     * @param  {Orderline[]} lines an srray of Orderlines
-     * @return {Number} the base amount on which we will apply a percentile reduction
-     */
-    calculateBaseAmount(lines) {
-        const base_amount = lines.reduce(
-            (sum, line) =>
-                sum +
-                line.getAllPrices().priceWithTax -
-                line
-                    .getAllPrices()
-                    .taxesData.filter((taxData) => !taxData.tax.price_include)
-                    .reduce((sum, taxData) => (sum += taxData.tax_amount_currency), 0),
-            0
-        );
-        return base_amount;
     }
 
     getLastOrderline() {
@@ -467,23 +458,8 @@ export class PosOrder extends Base {
         return true;
     }
 
-    _isRefundOrder() {
-        if (this.lines.length > 0 && this.lines[0].refunded_orderline_id) {
-            return true;
-        }
-        return false;
-    }
-
-    doNotAllowRefundAndSales() {
-        return true;
-    }
-
-    _isRefundAndSalesNotAllowed(values, options) {
-        return (
-            this._isRefundOrder() &&
-            this.doNotAllowRefundAndSales() &&
-            (!values.qty || values.qty > 0)
-        );
+    isSaleDisallowed(values, options) {
+        return this.isRefund && (!values.qty || values.qty > 0);
     }
 
     getSelectedOrderline() {
@@ -525,7 +501,7 @@ export class PosOrder extends Base {
             newPaymentLine.setAmount(totalAmountDue);
 
             if (
-                (payment_method.payment_terminal && !this._isRefundOrder()) ||
+                (payment_method.payment_terminal && !this.isRefund) ||
                 payment_method.payment_method_type === "qr_code"
             ) {
                 newPaymentLine.setPaymentStatus("pending");
@@ -603,11 +579,21 @@ export class PosOrder extends Base {
         return this.taxTotals.order_sign * this.taxTotals.order_total;
     }
 
+    getTotalWithTaxOfLines(lines) {
+        const taxTotals = this.getTaxTotalsOfLines(lines);
+        return taxTotals.order_sign * taxTotals.total_amount_currency;
+    }
+
     getTotalWithoutTax() {
         const base_amount =
             this.taxTotals.base_amount_currency +
             (this.taxTotals.cash_rounding_base_amount_currency || 0.0);
         return this.taxTotals.order_sign * base_amount;
+    }
+
+    getTotalWithoutTaxOfLines(lines) {
+        const taxTotals = this.getTaxTotalsOfLines(lines);
+        return taxTotals.order_sign * taxTotals.base_amount_currency;
     }
 
     _getIgnoredProductIdsTotalDiscount() {
@@ -630,9 +616,8 @@ export class PosOrder extends Base {
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
                     sum +=
-                        orderLine.getUnitDisplayPriceBeforeDiscount() *
-                        (orderLine.getDiscount() / 100) *
-                        orderLine.getQuantity();
+                        orderLine.getAllPrices().priceWithTaxBeforeDiscount -
+                        orderLine.getAllPrices().priceWithTax;
                     if (
                         orderLine.displayDiscountPolicy() === "without_discount" &&
                         !(orderLine.price_type === "manual")
@@ -652,6 +637,11 @@ export class PosOrder extends Base {
         return this.taxTotals.order_sign * this.taxTotals.tax_amount_currency;
     }
 
+    getTotalTaxOfLines(lines) {
+        const taxTotals = this.getTaxTotalsOfLines(lines);
+        return taxTotals.order_sign * taxTotals.tax_amount_currency;
+    }
+
     getTotalPaid() {
         return this.currency.round(
             this.payment_ids.reduce(function (sum, paymentLine) {
@@ -668,10 +658,14 @@ export class PosOrder extends Base {
     }
 
     getTaxDetails() {
+        return this.getTaxDetailsOfLines(this.lines);
+    }
+
+    getTaxDetailsOfLines(lines) {
         const taxDetails = {};
-        for (const line of this.lines) {
+        for (const line of lines) {
             for (const taxData of line.allPrices.taxesData) {
-                const taxId = taxData.id;
+                const taxId = taxData.tax.id;
                 if (!taxDetails[taxId]) {
                     taxDetails[taxId] = Object.assign({}, taxData, {
                         amount: 0.0,
@@ -745,7 +739,7 @@ export class PosOrder extends Base {
 
     isRefundInProcess() {
         return (
-            this._isRefundOrder() &&
+            this.isRefund &&
             this.payment_ids.some(
                 (pl) => pl.payment_method_id.use_payment_terminal && pl.payment_status !== "done"
             )
@@ -902,21 +896,20 @@ export class PosOrder extends Base {
         return this.lines;
     }
 
-    serialize() {
-        const data = super.serialize(...arguments);
-
+    serializeForORM() {
+        const data = super.serializeForORM();
         if (
             data.last_order_preparation_change &&
             typeof data.last_order_preparation_change === "object"
         ) {
             data.last_order_preparation_change = JSON.stringify(data.last_order_preparation_change);
         }
-
         return data;
     }
+
     getCustomerDisplayData() {
         return {
-            lines: this.getSortedOrderlines().map((l) => ({
+            lines: this.lines.map((l) => ({
                 ...l.getDisplayData(),
                 isSelected: l.isSelected(),
                 imageSrc: `/web/image/product.product/${l.product_id.id}/image_128`,
@@ -946,39 +939,14 @@ export class PosOrder extends Base {
         }
         return pos_categ_id_A - pos_categ_id_B;
     }
-
-    // orderlines will be sorted on the basis of pos product category and sequence for group the orderlines in order cart
-    getSortedOrderlines() {
-        if (this.config.orderlines_sequence_in_cart_by_category && this.lines.length) {
-            const linesToSort = [...this.lines];
-            linesToSort.sort(this.sortBySequenceAndCategory);
-            const resultLines = [];
-            linesToSort.forEach((line) => {
-                if (line.combo_line_ids?.length > 0) {
-                    resultLines.push(line);
-                    const sortedChildLines = line.combo_line_ids.sort(
-                        this.sortBySequenceAndCategory
-                    );
-                    resultLines.push(...sortedChildLines);
-                } else if (!line.combo_parent_id) {
-                    resultLines.push(line);
-                }
-            });
-            return resultLines;
-        } else {
-            return this.lines;
-        }
-    }
     getName() {
         return this.floatingOrderName || "";
     }
     setGeneralCustomerNote(note) {
         this.general_customer_note = note || "";
-        this.setDirty();
     }
     setInternalNote(note) {
         this.internal_note = note || "";
-        this.setDirty();
     }
 
     get orderChange() {

@@ -10,11 +10,11 @@ class ForumPostVote(models.Model):
     _description = 'Post Vote'
     _order = 'create_date desc, id desc'
 
-    post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
+    post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True, index=True)
     user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid, ondelete='cascade')
     vote = fields.Selection([('1', '1'), ('-1', '-1'), ('0', '0')], string='Vote', required=True, default='1')
     create_date = fields.Datetime('Create Date', index=True, readonly=True)
-    forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True, readonly=False)
+    forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True, readonly=False, index='btree_not_null')
     recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True, readonly=False)
 
     _vote_uniq = models.Constraint(

@@ -30,6 +30,21 @@ class AccountMoveSend(models.AbstractModel):
         if it_moves := moves.filtered(lambda m: 'it_edi_send' in moves_data[m]['extra_edis'] or moves_data[m]['invoice_edi_format'] == 'it_edi_xml'):
             if it_alerts := it_moves._l10n_it_edi_export_data_check():
                 alerts.update(**it_alerts)
+
+            # Invite the user to authorize Odoo and start using IT EDI in production mode
+            if 'prod' not in it_moves.mapped('l10n_it_edi_proxy_mode'):
+                alerts['l10n_it_edi_invite_authorize'] = {
+                    'level': 'info',
+                    'message': _("You must authorize Odoo in the Settings to use the IT EDI in production mode."),
+                    'action_text': _("View Settings"),
+                    'action': {
+                        'name': _("Settings"),
+                        'type': 'ir.actions.act_url',
+                        'target': 'self',
+                        'url': '/odoo/settings#l10n_it_edi_setting',
+                    },
+                }
+
         return alerts
 
     # -------------------------------------------------------------------------

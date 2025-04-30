@@ -27,7 +27,7 @@ class TestMessageReactionController(MailControllerReactionCommon):
         channel = self.env["discuss.channel"]._create_group(
             partners_to=(self.user_portal + self.user_employee).partner_id.ids
         )
-        channel.add_members(guest_ids=self.guest.ids)
+        channel._add_members(guests=self.guest)
         message = channel.message_post(body="invite message")
         self._execute_subtests(
             message,

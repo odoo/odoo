@@ -81,7 +81,7 @@
                             </t>
                         </td>
                         <td t-else=""/>
-                        <td><span t-out="line.create_date"/></td>
+                        <td><t t-out="line.create_date" t-options='{"widget": "datetime", "format": "short"}'/></td>
                         <td><span t-out="line.card_id._format_points(line.issued)"/></td>
                         <td><span t-out="line.card_id._format_points(line.used)"/></td>
                     </tr>

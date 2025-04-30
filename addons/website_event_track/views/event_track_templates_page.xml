@@ -117,7 +117,7 @@
                     </div>
                     <div class="o_we_track_action_buttons d-flex justify-content-md-end align-items-center flex-wrap">
                         <div class="o_we_track_reminder_button my-1">
-                            <div t-if="option_track_wishlist and not track.is_track_done"
+                            <div t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))"
                                 t-call="website_event_track.track_widget_reminder">
                                 <t t-set="reminder_small" t-value="False"/>
                                 <t t-set="reminder_light" t-value="False"/>
@@ -208,7 +208,7 @@
                 <div class="tab-pane fade show active" id="track_list" role="tabpanel">
                     <ul class="list-group list-group-flush">
                         <li t-foreach="tracks_other" t-as="track_other" class="list-group-item list-group-item-action">
-                            <a t-if="is_event_user or track_other.is_published"
+                            <a t-if="not (is_html_empty(track_other.description) and is_html_empty(track_other.partner_biography)) and (is_event_user or track_other.is_published)"
                                 t-att-data-publish="track_other.website_published and 'on' or 'off'"
                                 class="d-flex flex-column flex-wrap flex-md-nowrap text-decoration-none text-reset"
                                 t-att-href="track_other.website_url">

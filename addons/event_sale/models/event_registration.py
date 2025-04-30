@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.tools import float_is_zero
 
 
@@ -10,7 +10,7 @@ class EventRegistration(models.Model):
 
     # TDE FIXME: maybe add an onchange on sale_order_id
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', copy=False)
-    sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade', copy=False)
+    sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade', copy=False, index='btree_not_null')
     state = fields.Selection(default=None, compute="_compute_registration_status", store=True, readonly=False, precompute=True)
     utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False,
         store=True, ondelete="set null")
@@ -101,10 +101,15 @@ class EventRegistration(models.Model):
             )
             vals.update(so_line_vals)
 
+        updated_fields_to_notify = []
+        if vals.get('event_slot_id'):
+            updated_fields_to_notify.append(('event.slot', 'event_slot_id'))
         if vals.get('event_ticket_id'):
+            updated_fields_to_notify.append(('event.event.ticket', 'event_ticket_id'))
+        for model, field in updated_fields_to_notify:
             self.filtered(
-                lambda registration: registration.event_ticket_id and registration.event_ticket_id.id != vals['event_ticket_id']
-            )._sale_order_ticket_type_change_notify(self.env['event.event.ticket'].browse(vals['event_ticket_id']))
+                lambda registration: registration[field] and registration[field].id != vals[field]
+            )._sale_order_registration_data_change_notify(field, self.env[model].browse(vals[field]))
 
         return super(EventRegistration, self).write(vals)
 
@@ -114,26 +119,39 @@ class EventRegistration(models.Model):
                 # Avoid registering public users but respect the portal workflows
                 'partner_id': False if self.env.user._is_public() and self.env.user.partner_id == so_line.order_id.partner_id else so_line.order_id.partner_id.id,
                 'event_id': so_line.event_id.id,
+                'event_slot_id': so_line.event_slot_id.id,
                 'event_ticket_id': so_line.event_ticket_id.id,
                 'sale_order_id': so_line.order_id.id,
                 'sale_order_line_id': so_line.id,
             }
         return {}
 
-    def _sale_order_ticket_type_change_notify(self, new_event_ticket):
+    def _sale_order_registration_data_change_notify(self, new_record_field, new_record):
         fallback_user_id = self.env.user.id if not self.env.user._is_public() else self.env.ref("base.user_admin").id
         for registration in self:
             render_context = {
                 'registration': registration,
-                'old_ticket_name': registration.event_ticket_id.name,
-                'new_ticket_name': new_event_ticket.name
+                'record_type': _('Ticket') if new_record_field == 'event_ticket_id' else _('Slot'),
+                'old_name': registration[new_record_field].display_name,
+                'new_name': new_record.display_name,
             }
             user_id = registration.event_id.user_id.id or registration.sale_order_id.user_id.id or fallback_user_id
             registration.sale_order_id._activity_schedule_with_view(
                 'mail.mail_activity_data_warning',
                 user_id=user_id,
-                views_or_xmlid='event_sale.event_ticket_id_change_exception',
+                views_or_xmlid='event_sale.event_registration_change_exception',
                 render_context=render_context)
+
+    def _compute_field_value(self, field):
+        if field.name != 'state':
+            return super()._compute_field_value(field)
+
+        unconfirmed = self.filtered(lambda reg: reg.ids and reg.state in {'draft', 'cancel'})
+        res = super()._compute_field_value(field)
+        confirmed = unconfirmed.filtered(lambda reg: reg.state == 'open')
+        if confirmed:
+            confirmed._update_mail_schedulers()
+        return res
 
     def _get_registration_summary(self):
         res = super(EventRegistration, self)._get_registration_summary()

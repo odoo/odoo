@@ -1,4 +1,4 @@
-import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
+import { SaleOrderLineProductField } from "@sale/js/sale_product_field";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -9,36 +9,37 @@ patch(SaleOrderLineProductField.prototype, {
         super.setup();
         this.action = useService("action");
     },
-
-    async _onProductUpdate() {
-        super._onProductUpdate(...arguments);
-        if (this.props.record.data.service_tracking === 'event_booth') {
-            this._openEventBoothConfigurator(false);
-        }
+    get isEventBooth() {
+        return this.props.record.data.service_tracking === "event_booth";
     },
-
-    _editLineConfiguration() {
-        super._editLineConfiguration(...arguments);
-        if (this.props.record.data.service_tracking === 'event_booth') {
+    get hasConfigurationButton() {
+        return super.hasConfigurationButton || this.isEventBooth;
+    },
+    onEditConfiguration() {
+        if (this.isEventBooth) {
             this._openEventBoothConfigurator(true);
+        } else {
+            super.onEditConfiguration();
         }
     },
-
-    get isConfigurableLine() {
-        return super.isConfigurableLine || this.props.record.data.service_tracking === 'event_booth';
+    _onProductUpdate() {
+        if (this.isEventBooth) {
+            this._openEventBoothConfigurator(false);
+        } else {
+            super._onProductUpdate();
+        }
     },
-
     async _openEventBoothConfigurator(edit) {
-        let actionContext = {
-            default_product_id: this.props.record.data.product_id[0],
+        const actionContext = {
+            default_product_id: this.props.record.data.product_id.id,
         };
         if (edit) {
             const recordData = this.props.record.data;
             if (recordData.event_id) {
-                actionContext.default_event_id = recordData.event_id[0];
+                actionContext.default_event_id = recordData.event_id.id;
             }
             if (recordData.event_booth_category_id) {
-                actionContext.default_event_booth_category_id = recordData.event_booth_category_id[0];
+                actionContext.default_event_booth_category_id = recordData.event_booth_category_id.id;
             }
             if (recordData.event_booth_pending_ids) {
                 actionContext.default_event_booth_ids = recordData.event_booth_pending_ids.records.map(

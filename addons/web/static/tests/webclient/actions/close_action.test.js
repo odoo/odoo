@@ -4,7 +4,6 @@ import {
     contains,
     defineActions,
     defineModels,
-    findComponent,
     getService,
     models,
     mountWithCleanup,
@@ -13,7 +12,6 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { formView } from "@web/views/form/form_view";
 import { listView } from "@web/views/list/list_view";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -86,6 +84,7 @@ test("close the currently opened dialog", async () => {
     await getService("action").doAction({
         type: "ir.actions.act_window_close",
     });
+    await animationFrame();
     expect(".o_technical_modal .o_form_view").toHaveCount(0);
 });
 
@@ -145,21 +144,6 @@ test("close action with provided infos", async () => {
     );
 });
 
-test("history back calls on_close handler of dialog action", async () => {
-    const webClient = await mountWithCleanup(WebClient);
-    function onClose() {
-        expect.step("on_close");
-    }
-    // open a new dialog form
-    await getService("action").doAction(5, { onClose });
-    expect(".modal").toHaveCount(1);
-    const form = findComponent(webClient, (c) => c instanceof formView.Controller);
-    form.env.config.historyBack();
-    expect.verifySteps(["on_close"]);
-    await animationFrame();
-    expect(".modal").toHaveCount(0);
-});
-
 test.tags("desktop");
 test("history back called within on_close", async () => {
     let list;
@@ -189,33 +173,6 @@ test("history back called within on_close", async () => {
     expect(".o_list_view").toHaveCount(0);
     expect(".o_kanban_view").toHaveCount(1);
     expect.verifySteps(["on_close"]);
-});
-
-test.tags("desktop");
-test("history back calls onclose handler of dialog action with 2 breadcrumbs", async () => {
-    let list;
-    patchWithCleanup(listView.Controller.prototype, {
-        setup() {
-            super.setup(...arguments);
-            list = this;
-        },
-    });
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction(1); // kanban
-    await getService("action").doAction(3); // list
-    expect(".o_list_view").toHaveCount(1);
-    function onClose() {
-        expect.step("on_close");
-    }
-    // open a new dialog form
-    await getService("action").doAction(5, { onClose });
-    expect(".modal").toHaveCount(1);
-    expect(".o_list_view").toHaveCount(1);
-    list.env.config.historyBack();
-    expect.verifySteps(["on_close"]);
-    await animationFrame();
-    expect(".o_list_view").toHaveCount(1);
-    expect(".modal").toHaveCount(0);
 });
 
 test.tags("desktop");

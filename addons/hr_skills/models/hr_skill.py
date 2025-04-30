@@ -11,7 +11,7 @@ class HrSkill(models.Model):
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
-    skill_type_id = fields.Many2one('hr.skill.type', required=True, ondelete='cascade')
+    skill_type_id = fields.Many2one('hr.skill.type', required=True, index=True, ondelete='cascade')
     color = fields.Integer(related='skill_type_id.color')
 
     @api.depends('skill_type_id')

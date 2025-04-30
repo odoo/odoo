@@ -34,15 +34,13 @@ patch(TicketScreen.prototype, {
         }
         return res;
     },
-    async _setOrder(order) {
+    async setOrder(order) {
         const shouldBeOverridden = this.pos.config.module_pos_restaurant && order.table_id;
-        if (!shouldBeOverridden) {
-            return super._setOrder(...arguments);
+        if (shouldBeOverridden) {
+            const orderTable = order.getTable();
+            await this.pos.setTable(orderTable, order.uuid);
         }
-        // we came from the FloorScreen
-        const orderTable = order.getTable();
-        await this.pos.setTable(orderTable, order.uuid);
-        this.closeTicketScreen();
+        return await super.setOrder(order);
     },
     async settleTips() {
         const promises = [];
@@ -62,7 +60,7 @@ patch(TicketScreen.prototype, {
             order.state = "paid";
             order.uiState.screen_data.value = { name: "", props: {} };
 
-            const serializedTipLine = order.getSelectedOrderline().serialize({ orm: true });
+            const serializedTipLine = order.getSelectedOrderline().serializeForORM();
             order.getSelectedOrderline().delete();
 
             promises.push(
@@ -78,8 +76,8 @@ patch(TicketScreen.prototype, {
 
                         if (state) {
                             order.update({
-                                isTipped: true,
-                                tipAmount: tipLine[0].price_unit,
+                                is_tipped: true,
+                                tip_amount: tipLine[0].price_unit,
                             });
                         }
                         resolve();

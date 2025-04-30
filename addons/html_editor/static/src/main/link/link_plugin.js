@@ -11,7 +11,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
-import { closestBlock, isBlock } from "@html_editor/utils/blocks";
+import { isBlock } from "@html_editor/utils/blocks";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -47,6 +47,9 @@ function isSelectionHasLink(selection) {
  */
 function isPositionAtEdgeofLink(link, offset) {
     const childNodes = [...link.childNodes];
+    if (!childNodes.length) {
+        return "end";
+    }
     let firstVisibleIndex = childNodes.findIndex(isVisible);
     firstVisibleIndex = firstVisibleIndex === -1 ? 0 : firstVisibleIndex;
     if (offset <= firstVisibleIndex) {
@@ -76,6 +79,10 @@ async function fetchInternalMetaData(url) {
     // Get the internal metadata
     const keepLastPromise = new KeepLast();
     const urlParsed = new URL(url);
+    // Enforce the current page's protocol to prevent mixed content issues.
+    if (urlParsed.protocol !== window.location.protocol) {
+        urlParsed.protocol = window.location.protocol;
+    }
 
     const result = await keepLastPromise
         .add(fetch(urlParsed))
@@ -146,11 +153,12 @@ export class LinkPlugin extends Plugin {
                 title: _t("Link"),
                 description: _t("Add a link"),
                 icon: "fa-link",
-                run: ({ link, type} = {}) => this.openLinkTools(link, type),
+                run: ({ link, type } = {}) => this.openLinkTools(link, type),
             },
             {
                 id: "removeLinkFromSelection",
                 title: _t("Remove Link"),
+                description: _t("Remove Link"),
                 icon: "fa-unlink",
                 isAvailable: isSelectionHasLink,
                 run: this.removeLinkFromSelection.bind(this),
@@ -158,8 +166,8 @@ export class LinkPlugin extends Plugin {
         ],
 
         toolbar_groups: [
-            withSequence(40, { id: "link" }),
-            withSequence(30, { id: "image_link", namespace: "image" }),
+            withSequence(40, { id: "link", namespaces: ["compact", "expanded"] }),
+            withSequence(30, { id: "image_link", namespaces: ["image"] }),
         ],
         toolbar_items: [
             {
@@ -203,10 +211,20 @@ export class LinkPlugin extends Plugin {
             },
         ],
 
-        power_buttons: { commandId: "openLinkTools" },
+        power_buttons: withSequence(10, {
+            commandId: "openLinkTools",
+            commandParams: { type: "primary" },
+            description: _t("Add a button"),
+            icon: "fa-square",
+        }),
 
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
+        input_handlers: this.onInputDeleteNormalizeLink.bind(this),
+        before_delete_handlers: this.updateCurrentLinkSyncState.bind(this),
+        delete_handlers: this.onInputDeleteNormalizeLink.bind(this),
+        before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
+        after_paste_handlers: this.onPasteNormalizeLink.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
         normalize_handlers: this.normalizeLink.bind(this),
@@ -224,9 +242,10 @@ export class LinkPlugin extends Plugin {
             { sequence: 50 }
         );
         this.addDomListener(this.editable, "click", (ev) => {
-            if (ev.target.tagName === "A" && ev.target.isContentEditable) {
+            const linkEl = ev.target.closest("a");
+            if (linkEl) {
                 if (ev.ctrlKey || ev.metaKey) {
-                    window.open(ev.target.href, "_blank");
+                    window.open(linkEl.href, "_blank");
                 }
                 ev.preventDefault();
             }
@@ -236,6 +255,15 @@ export class LinkPlugin extends Plugin {
         });
         this.addDomListener(this.editable, "keydown", () => {
             delete this._isNavigatingByMouse;
+        });
+        this.addDomListener(this.editable, "auxclick", (ev) => {
+            if (ev.button === 1) {
+                const link = closestElement(ev.target, "a");
+                if (link?.href) {
+                    window.open(link.href, "_blank");
+                    ev.preventDefault();
+                }
+            }
         });
         // link creation is added to the command service because of a shortcut conflict,
         // as ctrl+k is used for invoking the command palette
@@ -345,7 +373,7 @@ export class LinkPlugin extends Plugin {
      * @param {HTMLElement} [linkElement]
      */
     openLinkTools(linkElement, type) {
-        this.closeLinkTools();
+        this.overlay.close();
         if (!this.isLinkAllowedOnSelection()) {
             return this.services.notification.add(
                 _t("Unable to create a link on the current selection."),
@@ -437,15 +465,25 @@ export class LinkPlugin extends Plugin {
                     this.dependencies.dom.insert(link);
                 }
             }
-            this.closeLinkTools(cursorsToRestore);
-            this.dependencies.selection.focusEditable();
-            this.dependencies.history.addStep();
         };
 
+        const restoreSavePoint = this.dependencies.history.makeSavePoint();
         const props = {
             linkElement,
             isImage: isImage,
-            onApply: applyCallback,
+            onApply: (...args) => {
+                delete this._isNavigatingByMouse;
+                applyCallback(...args);
+                this.closeLinkTools(cursorsToRestore);
+                this.dependencies.selection.focusEditable();
+                this.dependencies.history.addStep();
+            },
+            onChange: applyCallback,
+            onDiscard: () => {
+                restoreSavePoint();
+                this.openLinkTools(linkElement);
+                this.dependencies.selection.focusEditable();
+            },
             onRemove: () => {
                 this.removeLinkInDocument();
                 this.linkInDocument = null;
@@ -465,7 +503,7 @@ export class LinkPlugin extends Plugin {
             recordInfo: this.config.getRecordInfo?.() || {},
             canEdit:
                 !this.linkInDocument || !this.linkInDocument.classList.contains("o_link_readonly"),
-            canUpload: !this.config.disableFile,
+            canUpload: this.config.allowFile,
             onUpload: this.config.onAttachmentChange,
             type: this.type || "",
         };
@@ -511,15 +549,6 @@ export class LinkPlugin extends Plugin {
     }
 
     normalizeLink(root) {
-        const { anchorNode } = this.dependencies.selection.getEditableSelection();
-        const linkEl = closestElement(anchorNode, "a");
-        if (linkEl && linkEl.isContentEditable) {
-            const label = linkEl.innerText;
-            const url = deduceURLfromText(label, linkEl);
-            if (url) {
-                linkEl.setAttribute("href", url);
-            }
-        }
         for (const anchorEl of selectElements(root, "a")) {
             const { color } = anchorEl.style;
             const childNodes = [...anchorEl.childNodes];
@@ -575,20 +604,20 @@ export class LinkPlugin extends Plugin {
 
                 // Handle selection movement.
                 if (isCursorAtStartOfLink || isCursorAtEndOfLink) {
-                    const block = closestBlock(linkElement);
-                    const linkIndex = [...block.childNodes].indexOf(linkElement);
+                    const [targetNode, targetOffset] = isCursorAtStartOfLink
+                        ? leftPos(linkElement)
+                        : rightPos(linkElement);
                     this.dependencies.selection.setSelection({
-                        anchorNode: block,
-                        anchorOffset: isCursorAtStartOfLink ? linkIndex - 1 : linkIndex + 2,
+                        anchorNode: targetNode,
+                        anchorOffset: isCursorAtStartOfLink ? targetOffset - 1 : targetOffset + 1,
                     });
+                    return;
                 }
             }
         }
         if (!selectionData.documentSelectionIsInEditable) {
-            // note that data-prevent-closing-overlay also used in color picker but link popover
-            // and color picker don't open at the same time so it's ok to query like this
-            const popoverEl = document.querySelector("[data-prevent-closing-overlay=true]");
-            if (popoverEl?.contains(selectionData.documentSelection.anchorNode)) {
+            const popoverEl = document.querySelector(".o-we-linkpopover");
+            if (popoverEl?.contains(selectionData.documentSelection?.anchorNode)) {
                 return;
             }
             this.linkInDocument = null;
@@ -745,6 +774,22 @@ export class LinkPlugin extends Plugin {
         }
     }
 
+    updateCurrentLinkSyncState() {
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
+        const linkEl = closestElement(anchorNode, "a");
+        if (linkEl && linkEl.isContentEditable) {
+            const label = linkEl.innerText;
+            const url = deduceURLfromText(label, linkEl);
+            const href = linkEl.getAttribute("href");
+            if (
+                url &&
+                (url === href || url + "/" === href || url === deduceURLfromText(href, linkEl))
+            ) {
+                this.isCurrentLinkInSync = true;
+            }
+        }
+    }
+
     onBeforeInput(ev) {
         if (ev.inputType === "insertParagraph" || ev.inputType === "insertLineBreak") {
             const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
@@ -775,7 +820,29 @@ export class LinkPlugin extends Plugin {
                 ev.preventDefault();
             }
         }
+        this.updateCurrentLinkSyncState();
     }
+
+    onInputDeleteNormalizeLink() {
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
+        const linkEl = closestElement(anchorNode, "a");
+        if (linkEl && linkEl.isContentEditable) {
+            const label = linkEl.innerText;
+            const url = deduceURLfromText(label, linkEl);
+            if (url && this?.isCurrentLinkInSync) {
+                linkEl.setAttribute("href", url);
+                this.isCurrentLinkInSync = false;
+                if (this.overlay.isOpen) {
+                    this.overlay.close();
+                }
+            }
+        }
+    }
+    onPasteNormalizeLink() {
+        this.updateCurrentLinkSyncState();
+        this.onInputDeleteNormalizeLink();
+    }
+
     /**
      * Inserts a link in the editor. Called after pressing space or (shif +) enter.
      * Performs a regex check to determine if the url has correct syntax.

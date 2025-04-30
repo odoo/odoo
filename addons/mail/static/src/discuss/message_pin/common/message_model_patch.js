@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import { Message } from "@mail/core/common/message_model";
-import { Record } from "@mail/core/common/record";
+import { fields } from "@mail/core/common/record";
 import { _t } from "@web/core/l10n/translation";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -8,8 +8,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 patch(Message.prototype, {
     setup() {
         super.setup();
-        /** @type {luxon.DateTime} */
-        this.pinned_at = Record.attr(undefined, { type: "datetime" });
+        this.pinned_at = fields.Datetime();
     },
     /** @returns {Deferred<boolean>} */
     pin() {

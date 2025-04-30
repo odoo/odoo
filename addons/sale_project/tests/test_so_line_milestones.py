@@ -13,6 +13,7 @@ class TestSoLineMilestones(TestSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.user.group_ids += cls.quick_ref('project.group_project_manager')
 
         cls.env['res.config.settings'].create({'group_project_milestone': True}).execute()
         uom_hour = cls.env.ref('uom.product_uom_hour')

@@ -6,19 +6,18 @@ import copy
 import json
 import typing
 import uuid
-from collections import defaultdict
+from collections import abc, defaultdict
 from operator import attrgetter
 
-from odoo.exceptions import AccessError, MissingError, ValidationError
+from odoo.exceptions import AccessError, MissingError
 from odoo.tools import SQL, OrderedSet, is_list_of
-from odoo.tools.misc import has_list_types
+from odoo.tools.misc import frozendict, has_list_types
 from odoo.tools.translate import _
 
 from .domains import Domain
 from .fields import Field, _logger
 from .models import BaseModel
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, parse_field_expr, regex_alphanumeric
-
 if typing.TYPE_CHECKING:
     from odoo.tools import Query
 
@@ -70,7 +69,7 @@ class Properties(Field):
 
     ALLOWED_TYPES = (
         # standard types
-        'boolean', 'integer', 'float', 'char', 'date', 'datetime',
+        'boolean', 'integer', 'float', 'text', 'char', 'date', 'datetime',
         # relational like types
         'many2one', 'many2many', 'selection', 'tags',
         # UI types
@@ -79,9 +78,9 @@ class Properties(Field):
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
-        self._setup_definition_attrs()
+        self._setup_definition_attrs(model_class)
 
-    def _setup_definition_attrs(self):
+    def _setup_definition_attrs(self, model_class):
         if self.definition:
             # determine definition_record and definition_record_field
             assert self.definition.count(".") == 1
@@ -91,11 +90,17 @@ class Properties(Field):
             self._depends = (self.definition_record, )
             self.compute = self._compute
 
+    def setup(self, model):
+        if not self._setup_done and self.definition_record and self.definition_record_field:
+            definition_record_field = model.env[model._fields[self.definition_record].comodel_name]._fields[self.definition_record_field]
+            definition_record_field.properties_fields += (self,)
+        return super().setup(model)
+
     def setup_related(self, model):
         super().setup_related(model)
         if self.inherited_field and not self.definition:
             self.definition = self.inherited_field.definition
-            self._setup_definition_attrs()
+            self._setup_definition_attrs(model)
 
     # Database/cache format: a value is either None, or a dict mapping property
     # names to their corresponding value, like
@@ -116,6 +121,9 @@ class Properties(Field):
         # any format -> cache format {name: value} or None
         if not value:
             return None
+
+        if isinstance(value, Property):
+            value = value._values
 
         if isinstance(value, dict):
             # avoid accidental side effects from shared mutable data
@@ -144,7 +152,7 @@ class Properties(Field):
     #       }
     #
     def convert_to_record(self, value, record):
-        return False if value is None else copy.deepcopy(value)
+        return Property(value or {}, self, record)
 
     # Read format: the value is a list, where each element is a dict containing
     # the definition of a property, together with the property's corresponding
@@ -165,9 +173,9 @@ class Properties(Field):
     #       }]
     #
     def convert_to_read(self, value, record, use_display_name=True):
-        return self.convert_to_read_multi([value], record)[0]
+        return self.convert_to_read_multi([value], record, use_display_name)[0]
 
-    def convert_to_read_multi(self, values, records):
+    def convert_to_read_multi(self, values, records, use_display_name=True):
         if not records:
             return values
         assert len(values) == len(records)
@@ -175,6 +183,7 @@ class Properties(Field):
         # each value is either False or a dict
         result = []
         for record, value in zip(records, values):
+            value = value._values if isinstance(value, Property) else value  # Property -> dict
             if definition := self._get_properties_definition(record):
                 value = value or {}
                 assert isinstance(value, dict), f"Wrong type {value!r}"
@@ -188,8 +197,9 @@ class Properties(Field):
         for value in result:
             self._parse_json_types(value, records.env, res_ids_per_model)
 
-        for value in result:
-            self._add_display_name(value, records.env)
+        if use_display_name:
+            for value in result:
+                self._add_display_name(value, records.env)
 
         return result
 
@@ -257,6 +267,9 @@ class Properties(Field):
         if isinstance(value, str):
             value = json.loads(value)
 
+        if isinstance(value, Property):
+            value = value._values
+
         if isinstance(value, dict):
             # don't need to write on the container definition
             return super().write(records, value)
@@ -306,6 +319,9 @@ class Properties(Field):
         """
         properties_values = values.get(self.name) or {}
 
+        if isinstance(properties_values, Property):
+            properties_values = properties_values._values
+
         if not values.get(self.definition_record):
             # container is not given in the value, can not find properties definition
             return {}
@@ -345,8 +361,9 @@ class Properties(Field):
                 if property_name and context_key in env.context:
                     default = env.context[context_key]
                 else:
-                    default = properties_value.get('default') or False
-                properties_value['value'] = default
+                    default = properties_value.get('default')
+                if default:
+                    properties_value['value'] = default
 
         return properties_list_values
 
@@ -459,11 +476,14 @@ class Properties(Field):
             if property_type not in cls.ALLOWED_TYPES:
                 raise ValueError(f'Wrong property type {property_type!r}')
 
+            if property_value is None:
+                continue
+
             if property_type == 'boolean':
                 # E.G. convert zero to False
                 property_value = bool(property_value)
 
-            elif property_type == 'char' and not isinstance(property_value, str):
+            elif property_type in ('char', 'text') and not isinstance(property_value, str):
                 property_value = False
 
             elif property_value and property_type == 'selection':
@@ -497,9 +517,6 @@ class Properties(Field):
                     id_ for id_ in property_value
                     if id_ in res_ids_per_model[res_model]
                 ] if res_model in env else []
-
-            elif property_value is None:
-                property_value = False
 
             property_definition['value'] = property_value
 
@@ -545,6 +562,9 @@ class Properties(Field):
             property_value = property_definition.get('value')
             property_type = property_definition.get('type')
             property_model = property_definition.get('comodel')
+            if property_value is None:
+                # Do not store None key
+                continue
 
             if property_type == 'separator':
                 # "separator" is used as a visual separator in the form view UI
@@ -578,7 +598,10 @@ class Properties(Field):
 
         values_list = copy.deepcopy(properties_definition)
         for property_definition in values_list:
-            property_definition['value'] = values_dict.get(property_definition['name'])
+            if property_definition['name'] in values_dict:
+                property_definition['value'] = values_dict[property_definition['name']]
+            else:
+                property_definition.pop('value', None)
         return values_list
 
     def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
@@ -592,9 +615,6 @@ class Properties(Field):
         raw_sql_field = model._field_to_sql(alias, fname, query)
         sql_left = model._field_to_sql(alias, field_expr, query)
 
-        if operator in ('=', '!='):
-            operator = 'in' if operator == '=' else 'not in'
-            value = [value]
         if operator in ('in', 'not in'):
             assert isinstance(value, COLLECTION_TYPES)
             if len(value) == 1 and True in value:
@@ -675,6 +695,73 @@ class Properties(Field):
         )
 
 
+class Property(abc.Mapping):
+    """Represent a collection of properties of a record.
+
+    An object that implements the value of a :class:`Properties` field in the "record"
+    format, i.e., the result of evaluating an expression like ``record.property_field``.
+    The value behaves as a ``dict``, and individual properties are returned in their
+    expected type, according to ORM conventions.  For instance, the value of a many2one
+    property is returned as a recordset::
+
+        # attributes is a properties field, and 'partner_id' is a many2one property;
+        # partner is thus a recordset
+        partner = record.attributes['partner_id']
+        partner.name
+
+    When the accessed key does not exist, i.e., there is no corresponding property
+    definition for that record, the access raises a :class:`KeyError`.
+    """
+
+    def __init__(self, values, field, record):
+        self._values = values
+        self.record = record
+        self.field = field
+
+    def __iter__(self):
+        for key in self._values:
+            with contextlib.suppress(KeyError):
+                self[key]
+                yield key
+
+    def __len__(self):
+        return len(self._values)
+
+    def __eq__(self, other):
+        return self._values == (other._values if isinstance(other, Property) else other)
+
+    def __getitem__(self, property_name):
+        """Will make the verification."""
+        if not self.record:
+            return False
+
+        values = self.field.convert_to_read(
+            self._values,
+            self.record,
+            use_display_name=False,
+        )
+        prop = next((p for p in values if p['name'] == property_name), False)
+        if not prop:
+            raise KeyError(property_name)
+
+        if prop.get('type') == 'many2one' and prop.get('comodel'):
+            return self.record.env[prop.get('comodel')].browse(prop.get('value'))
+
+        if prop.get('type') == 'many2many' and prop.get('comodel'):
+            return self.record.env[prop.get('comodel')].browse(prop.get('value'))
+
+        if prop.get('type') == 'selection' and prop.get('value'):
+            return next((sel[1] for sel in prop.get('selection') if sel[0] == prop['value']), False)
+
+        if prop.get('type') == 'tags' and prop.get('value'):
+            return ', '.join(tag[1] for tag in prop.get('tags') if tag[0] in prop['value'])
+
+        return prop.get('value') or False
+
+    def __hash__(self):
+        return hash(frozendict(self._values))
+
+
 class PropertiesDefinition(Field):
     """ Field used to define the properties definition (see :class:`~odoo.fields.Properties`
     field). This field is used on the container record to define the structure
@@ -685,11 +772,12 @@ class PropertiesDefinition(Field):
     copy = True                         # containers may act like templates, keep definitions to ease usage
     readonly = False
     prefetch = True
+    properties_fields = ()  # List of Properties fields using that definition
 
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
         'name', 'string', 'type', 'comodel', 'default',
-        'selection', 'tags', 'domain', 'view_in_cards',
+        'selection', 'tags', 'domain', 'view_in_cards', 'fold_by_default'
     )
     # those keys will be removed if the types does not match
     PROPERTY_PARAMETERS_MAP = {
@@ -735,7 +823,7 @@ class PropertiesDefinition(Field):
 
             self._validate_properties_definition(value, record.env)
 
-        return json.dumps(value)
+        return json.dumps(record._convert_to_cache_properties_definition(value))
 
     def convert_to_cache(self, value, record, validate=True):
         # any format -> cache format (list of dicts or None)
@@ -758,7 +846,7 @@ class PropertiesDefinition(Field):
 
             self._validate_properties_definition(value, record.env)
 
-        return value
+        return record._convert_to_column_properties_definition(value)
 
     def convert_to_record(self, value, record):
         # cache format -> record format (list of dicts)
@@ -818,19 +906,22 @@ class PropertiesDefinition(Field):
     def convert_to_write(self, value, record):
         return value
 
-    @classmethod
-    def _validate_properties_definition(cls, properties_definition, env):
+    def _validate_properties_definition(self, properties_definition, env):
         """Raise an error if the property definition is not valid."""
+        allowed_keys = self.ALLOWED_KEYS + env["base"]._additional_allowed_keys_properties_definition()
+
+        env["base"]._validate_properties_definition(properties_definition, self)
+
         properties_names = set()
 
         for property_definition in properties_definition:
-            for property_parameter, allowed_types in cls.PROPERTY_PARAMETERS_MAP.items():
+            for property_parameter, allowed_types in self.PROPERTY_PARAMETERS_MAP.items():
                 if property_definition.get('type') not in allowed_types and property_parameter in property_definition:
                     raise ValueError(f'Invalid property parameter {property_parameter!r}')
 
             property_definition_keys = set(property_definition.keys())
 
-            invalid_keys = property_definition_keys - set(cls.ALLOWED_KEYS)
+            invalid_keys = property_definition_keys - set(allowed_keys)
             if invalid_keys:
                 raise ValueError(
                     'Some key are not allowed for a properties definition [%s].' %
@@ -839,7 +930,7 @@ class PropertiesDefinition(Field):
 
             check_property_field_value_name(property_definition['name'])
 
-            required_keys = set(cls.REQUIRED_KEYS) - property_definition_keys
+            required_keys = set(self.REQUIRED_KEYS) - property_definition_keys
             if required_keys:
                 raise ValueError(
                     'Some key are missing for a properties definition [%s].' %

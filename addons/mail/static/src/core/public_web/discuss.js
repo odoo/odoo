@@ -6,22 +6,9 @@ import { Thread } from "@mail/core/common/thread";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
-import {
-    useMessageEdition,
-    useMessageHighlight,
-    useMessageToReplyTo,
-} from "@mail/utils/common/hooks";
+import { useMessageHighlight } from "@mail/utils/common/hooks";
 
-import {
-    Component,
-    onMounted,
-    onWillUnmount,
-    useRef,
-    useState,
-    useExternalListener,
-    useEffect,
-    useSubEnv,
-} from "@odoo/owl";
+import { Component, useRef, useState, useExternalListener, useEffect, useSubEnv } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 import { _t } from "@web/core/l10n/translation";
@@ -43,6 +30,7 @@ export class Discuss extends Component {
     };
     static props = {
         hasSidebar: { type: Boolean, optional: true },
+        thread: { optional: true },
     };
     static defaultProps = { hasSidebar: true };
     static template = "mail.Discuss";
@@ -51,8 +39,6 @@ export class Discuss extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.messageHighlight = useMessageHighlight();
-        this.messageEdition = useMessageEdition();
-        this.messageToReplyTo = useMessageToReplyTo();
         this.contentRef = useRef("content");
         this.root = useRef("root");
         this.state = useState({ jumpThreadPresent: 0 });
@@ -99,8 +85,6 @@ export class Discuss extends Component {
                 () => [this.thread, this.ui.isSmall]
             );
         }
-        onMounted(() => (this.store.discuss.isActive = true));
-        onWillUnmount(() => (this.store.discuss.isActive = false));
         useEffect(
             (memberListAction) => {
                 if (!memberListAction) {
@@ -121,7 +105,7 @@ export class Discuss extends Component {
     }
 
     get thread() {
-        return this.store.discuss.thread;
+        return this.props.thread || this.store.discuss.thread;
     }
 
     async onFileUploaded(file) {

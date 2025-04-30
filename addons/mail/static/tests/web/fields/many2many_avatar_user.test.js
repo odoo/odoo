@@ -60,6 +60,7 @@ test('many2one_avatar_user widget edited by the smart action "Assign to..."', as
     await openFormView("m2x.avatar.user", avatarUserId_1, {
         arch: "<form><field name='user_id' widget='many2one_avatar_user'/></form>",
     });
+    await contains(".o_field_many2one_avatar_user .o_external_button");
     await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
     triggerHotkey("control+k");
     await click(".o_command", { text: "Assign to ...ALT + I" });
@@ -361,6 +362,8 @@ test("many2one_avatar_user widget in list view", async () => {
     await openListView("m2x.avatar.user", {
         arch: "<list><field name='user_id' widget='many2one_avatar_user'/></list>",
     });
+    await contains(".o_data_cell .o_many2one span");
+    await contains(".o_data_cell .o_many2one a", { count: 0 });
     await click(".o_data_cell .o_m2o_avatar > img");
     await contains(".o_avatar_card");
     await contains(".o_card_user_infos > span", { text: "Mario" });

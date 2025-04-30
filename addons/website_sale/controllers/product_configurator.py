@@ -3,9 +3,7 @@
 from odoo.http import request, route
 from odoo.tools import float_is_zero
 
-from odoo.addons.sale.controllers.product_configurator import (
-    SaleProductConfiguratorController,
-)
+from odoo.addons.sale.controllers.product_configurator import SaleProductConfiguratorController
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
@@ -44,6 +42,18 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             or has_optional_products
             or not (single_product_variant.get('product_id') or is_product_configured)
         )
+
+    def _get_product_template(self, product_template_id):
+        if request.is_frontend:
+            combo_item = request.env['product.combo.item'].sudo().search([
+                ('product_id.product_tmpl_id.id', '=', product_template_id),
+            ])
+            if combo_item and request.env['product.template'].sudo().search_count([
+                ('combo_ids', 'in', combo_item.mapped('combo_id.id')),
+                ('website_published', '=', True),
+            ]):
+                return request.env['product.template'].sudo().browse(product_template_id)
+        return super()._get_product_template(product_template_id)
 
     @route(
         route='/website_sale/product_configurator/get_values',
@@ -195,7 +205,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         # Second, try to use `compare_list_price` as the strikethrough price.
         # Don't apply taxes since this price should always be displayed as is.
         if (
-            request.env.user.has_group('website_sale.group_product_price_comparison')
+            request.env['res.groups']._is_feature_enabled('website_sale.group_product_price_comparison')
             and product_or_template.compare_list_price
         ):
             compare_list_price = product_or_template.currency_id._convert(

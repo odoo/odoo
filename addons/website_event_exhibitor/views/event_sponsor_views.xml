@@ -98,7 +98,7 @@
                                 placeholder="e.g. : https://www.odoo.com"/>
                         </group>
                         <group>
-                            <field name="event_id"/>
+                            <field name="event_id" placeholder="All Events"/>
                             <field name="sponsor_type_id"/>
                             <field name="exhibitor_type" required="1"/>
                             <!-- Use website_published because is_published already used and widget conflicts -->
@@ -120,7 +120,7 @@
                         <page string="Description"
                             name="page_description"
                             invisible="exhibitor_type == 'sponsor'">
-                            <field name="website_description" nolabel="1" options="{'disableVideo': False}"
+                            <field name="website_description" nolabel="1" options="{'allowMediaDialogVideo': True}"
                                 placeholder='e.g. "Openwood specializes in home decoration..."'/>
                         </page>
                     </notebook>

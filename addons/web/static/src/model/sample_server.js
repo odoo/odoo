@@ -165,7 +165,7 @@ export class SampleServer {
     _aggregateFields(measures, records) {
         const group = {};
         for (const { fieldName, func, name } of measures) {
-            if (["sum", "avg"].includes(func)) {
+            if (["sum", "avg", "max", "min"].includes(func)) {
                 if (!records.length) {
                     group[name] = false;
                 } else {
@@ -173,7 +173,6 @@ export class SampleServer {
                     for (const record of records) {
                         group[name] += record[fieldName];
                     }
-                    // TODO: avg ? lot of test to change for it
                 }
                 group[name] = this._sanitizeNumber(group[name]);
             } else if (func === "array_agg") {
@@ -650,9 +649,10 @@ export class SampleServer {
         const groupedByM2O = groupByField.type === "many2one";
         if (groupedByM2O) {
             // re-populate co model with relevant records
-            this.data[groupByField.relation].records = groups.map((g) => {
-                return { id: g[groupBy][0], display_name: g[groupBy][1] };
-            });
+            this.data[groupByField.relation].records = groups.map((g) => ({
+                id: g[groupBy][0],
+                display_name: g[groupBy][1],
+            }));
         }
         for (const r of this.data[params.model].records) {
             const group = getSampleFromId(r.id, groups);

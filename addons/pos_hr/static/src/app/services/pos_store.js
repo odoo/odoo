@@ -8,7 +8,7 @@ patch(PosStore.prototype, {
         if (this.config.module_pos_hr) {
             this.login = Boolean(odoo.from_backend) && !this.config.module_pos_hr;
             if (!this.hasLoggedIn) {
-                this.showScreen("LoginScreen");
+                this.navigate("LoginScreen");
             }
         }
         this.employeeBuffer = [];
@@ -23,7 +23,7 @@ patch(PosStore.prototype, {
     },
     get employeeIsAdmin() {
         const cashier = this.getCashier();
-        return cashier._role === "manager" || cashier.user_id?.id === this.user.id;
+        return cashier._role === "manager";
     },
     checkPreviousLoggedCashier() {
         if (this.config.module_pos_hr) {

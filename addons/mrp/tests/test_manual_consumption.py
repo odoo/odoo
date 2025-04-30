@@ -28,7 +28,7 @@ class TestTourManualConsumption(HttpCase):
             'product_qty': 1,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_nt.id, 'product_qty': 1, 'manual_consumption': True}),
+                (0, 0, {'product_id': product_nt.id, 'product_qty': 1}),
             ],
         })
 
@@ -41,7 +41,7 @@ class TestTourManualConsumption(HttpCase):
 
         self.assertEqual(mo.state, 'confirmed')
         move_nt = mo.move_raw_ids
-        self.assertEqual(move_nt.manual_consumption, True)
+        self.assertEqual(move_nt.manual_consumption, False)
         self.assertEqual(move_nt.quantity, 0)
         self.assertFalse(move_nt.picked)
 
@@ -58,62 +58,6 @@ class TestManualConsumption(TestMrpCommon):
         super().setUpClass()
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
-
-    def test_manual_consumption_backorder(self):
-        """Test when use_auto_consume_components_lots is set, manual consumption
-        of the backorder is correctly set.
-        """
-        picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
-
-        mo, _, _final, c1, c2 = self.generate_mo('none', 'lot', 'none', qty_final=2)
-
-        self.assertTrue(mo.move_raw_ids.filtered(lambda m: m.product_id == c1).manual_consumption)
-        self.assertFalse(mo.move_raw_ids.filtered(lambda m: m.product_id == c2).manual_consumption)
-
-        lot = self.env['stock.lot'].create({
-            'name': 'lot',
-            'product_id': c1.id,
-        })
-        self.env['stock.quant']._update_available_quantity(c1, self.stock_location, 8, lot_id=lot)
-        self.env['stock.quant']._update_available_quantity(c2, self.stock_location, 2)
-
-        mo.action_assign()
-        mo_form = Form(mo)
-        mo_form.qty_producing = 1
-        mo_form.save()
-        self.assertEqual(sum(mo.move_raw_ids.filtered(lambda m: m.product_id.id == c1.id).mapped("quantity")), 4)
-        self.assertEqual(sum(mo.move_raw_ids.filtered(lambda m: m.product_id.id == c2.id).mapped("quantity")), 1)
-
-        action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
-        backorder_mo = mo.procurement_group_id.mrp_production_ids[-1]
-
-        self.assertTrue(backorder_mo.move_raw_ids.filtered(lambda m: m.product_id == c1).manual_consumption)
-        self.assertFalse(backorder_mo.move_raw_ids.filtered(lambda m: m.product_id == c2).manual_consumption)
-
-    def test_manual_consumption_split_merge_00(self):
-        """Test manual consumption is correctly set after split or merge.
-        """
-        # Create a mo for 10 products
-        mo, _, _, p1, p2 = self.generate_mo('none', 'lot', 'none', qty_final=10)
-        self.assertTrue(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).manual_consumption)
-        self.assertFalse(mo.move_raw_ids.filtered(lambda m: m.product_id == p2).manual_consumption)
-
-        # Split in 3 parts
-        action = mo.action_split()
-        wizard = Form.from_action(self.env, action)
-        wizard.counter = 3
-        action = wizard.save().action_split()
-        for production in mo.procurement_group_id.mrp_production_ids:
-            self.assertTrue(production.move_raw_ids.filtered(lambda m: m.product_id == p1).manual_consumption)
-            self.assertFalse(production.move_raw_ids.filtered(lambda m: m.product_id == p2).manual_consumption)
-
-        # Merge them back
-        action = mo.procurement_group_id.mrp_production_ids.action_merge()
-        mo = self.env[action['res_model']].browse(action['res_id'])
-        self.assertTrue(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).manual_consumption)
-        self.assertFalse(mo.move_raw_ids.filtered(lambda m: m.product_id == p2).manual_consumption)
 
     def test_manual_consumption_with_different_component_price(self):
         """
@@ -174,7 +118,7 @@ class TestManualConsumption(TestMrpCommon):
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': product_auto_consumption.id, 'product_qty': 1}),
-                (0, 0, {'product_id': product_manual_consumption.id, 'product_qty': 1, 'manual_consumption': True}),
+                (0, 0, {'product_id': product_manual_consumption.id, 'product_qty': 1}),
             ],
         })
 
@@ -199,12 +143,12 @@ class TestManualConsumption(TestMrpCommon):
         self.assertEqual(move_auto.manual_consumption, False)
         self.assertEqual(move_auto.quantity, 5)
         self.assertTrue(move_auto.picked)
-        self.assertEqual(move_manual.manual_consumption, True)
+        self.assertEqual(move_manual.manual_consumption, False)
         self.assertEqual(move_manual.quantity, 5)
-        self.assertFalse(move_manual.picked)
+        self.assertTrue(move_manual.picked)
 
-        # Pick manual move
-        move_manual.picked = True
+        move_manual.quantity = 6
+        move_manual._onchange_quantity()
 
         # Now we change quantity to 7. Automatic move will change quantity, but manual move will still be 5 because it has been already picked.
         mo_form = Form(mo)
@@ -212,7 +156,7 @@ class TestManualConsumption(TestMrpCommon):
         mo = mo_form.save()
 
         self.assertEqual(move_auto.quantity, 7)
-        self.assertEqual(move_manual.quantity, 5)
+        self.assertEqual(move_manual.quantity, 6)
 
         # Bypass consumption issues wizard and create backorders
         action = mo.button_mark_done()
@@ -226,7 +170,7 @@ class TestManualConsumption(TestMrpCommon):
         # Check that backorders move have the same manual consumption values as BoM
         move_auto, move_manual = get_moves(backorder)
         self.assertEqual(move_auto.manual_consumption, False)
-        self.assertEqual(move_manual.manual_consumption, True)
+        self.assertEqual(move_manual.manual_consumption, False)
 
     def test_update_manual_consumption_00(self):
         """

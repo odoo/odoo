@@ -70,10 +70,13 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-o-mail-quote', 'data-o-mail-quote-node',  # quote detection
      'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-source-sha', 'data-oe-nodeid',
      'data-last-history-steps', 'data-oe-protected', 'data-embedded', 'data-embedded-editable', 'data-embedded-props', 'data-oe-version',
-     'data-oe-transient-content', 'data-behavior-props', 'data-prop-name',  # legacy editor
+     'data-oe-transient-content', 'data-behavior-props', 'data-prop-name', 'data-width', 'data-height', 'data-scale-x', 'data-scale-y', 'data-x', 'data-y',  # legacy editor
+     'data-oe-role', 'data-oe-aria-label',
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
      'data-class', 'data-mimetype', 'data-original-src', 'data-original-id', 'data-gl-filter', 'data-quality', 'data-resize-width',
      'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
+     'data-ai-field',
+     'data-heading-link-id',
      'data-mimetype-before-conversion',
      ])
 SANITIZE_TAGS = {
@@ -92,10 +95,12 @@ class _Cleaner(clean.Cleaner):
     _style_whitelist = [
         'font-size', 'font-family', 'font-weight', 'font-style', 'background-color', 'color', 'text-align',
         'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'text-decoration', 'opacity',
-        'float', 'vertical-align', 'display',
+        'float', 'vertical-align', 'display', 'object-fit',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
         'white-space',
+        # appearance
+        'background-image', 'background-position', 'background-size', 'background-repeat', 'background-origin',
         # box model
         'border', 'border-color', 'border-radius', 'border-style', 'border-width', 'border-top', 'border-bottom',
         'height', 'width', 'max-width', 'min-width', 'min-height',
@@ -513,9 +518,9 @@ def html_to_inner_content(html):
     processed = re.sub(HTML_NEWLINES_REGEX, ' ', html)
     processed = re.sub(HTML_TAGS_REGEX, '', processed)
     processed = re.sub(r' {2,}|\t', ' ', processed)
+    processed = processed.replace("\xa0", " ")
     processed = htmllib.unescape(processed)
-    processed = processed.strip()
-    return processed
+    return processed.strip()
 
 
 def create_link(url, label):
@@ -561,7 +566,10 @@ def html2plaintext(html, body_id=None, encoding='utf-8', include_references=True
         for img in tree.findall('.//img'):
             if src := img.get('src'):
                 img.tag = 'span'
-                img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
+                if src.startswith('data:'):
+                    img_name = None  # base64 image
+                else:
+                    img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
                 img.text = '%s [%s]' % (img_name[0] if img_name else 'Image', next(linkrefs))
                 url_index.append(src)
 
@@ -855,6 +863,38 @@ def _normalize_email(email):
         local_part = local_part.lower()
 
     return local_part + at + domain.lower()
+
+def email_anonymize(normalized_email, *, redact_domain=False):
+    """
+    Replace most charaters in the local part of the email address with
+    '*' to hide the recipient, but keep enough characters for debugging
+    purpose.
+
+    The email address must be normalized already.
+
+    >>> email_anonymize('admin@example.com')
+    'a****@example.com'
+    >>> email_anonymize('portal@example.com')
+    'p***al@example.com'
+    >>> email_anonymize('portal@example.com', redact_domain=True)
+    'p***al@e******.com'
+    """
+    if not normalized_email:
+        return normalized_email
+
+    local, at, domain = normalized_email.partition('@')
+    if len(local) <= 5:
+        anon_local = local[:1] + '*' * (len(local) - 1)
+    else:
+        anon_local = local[:1] + '*' * (len(local) - 3) + local[-2:]
+
+    host, dot, tld = domain.rpartition('.')
+    if redact_domain and not domain.startswith('[') and all((host, dot, tld)):
+        anon_host = host[0] + '*' * (len(host) - 1)
+    else:
+        anon_host = host
+
+    return f'{anon_local}{at}{anon_host}{dot}{tld}'
 
 def email_domain_extract(email):
     """ Extract the company domain to be used by IAP services notably. Domain

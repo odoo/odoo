@@ -1,9 +1,10 @@
 import { browser } from "@web/core/browser/browser";
-import { Record } from "./record";
+import { fields, Record } from "./record";
 
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
 
 export const CHAT_HUB_KEY = "mail.ChatHub";
+const CHAT_HUB_COMPACT_LS = "mail.user_setting.chathub_compact";
 
 export class ChatHub extends Record {
     BUBBLE = 56; // same value as $o-mail-ChatHub-bubblesWidth
@@ -24,6 +25,9 @@ export class ChatHub extends Record {
             } else if (ev.key === null) {
                 chatHub.load();
             }
+            if (ev.key === CHAT_HUB_COMPACT_LS) {
+                chatHub.compact = ev.newValue === "true";
+            }
         });
         chatHub
             .load(browser.localStorage.getItem(CHAT_HUB_KEY) ?? undefined)
@@ -31,9 +35,21 @@ export class ChatHub extends Record {
         return chatHub;
     }
 
-    compact = false;
+    compact = fields.Attr(false, {
+        compute() {
+            return browser.localStorage.getItem(CHAT_HUB_COMPACT_LS) === "true";
+        },
+        /** @this {import("models").Chathub} */
+        onUpdate() {
+            if (this.compact) {
+                browser.localStorage.setItem(CHAT_HUB_COMPACT_LS, this.compact.toString());
+            } else {
+                browser.localStorage.removeItem(CHAT_HUB_COMPACT_LS);
+            }
+        },
+    });
     /** From left to right. Right-most will actually be folded */
-    opened = Record.many("ChatWindow", {
+    opened = fields.Many("ChatWindow", {
         inverse: "hubAsOpened",
         /** @this {import("models").ChatHub} */
         onAdd(r) {
@@ -41,7 +57,7 @@ export class ChatHub extends Record {
         },
     });
     /** From top to bottom. Bottom-most will actually be hidden */
-    folded = Record.many("ChatWindow", { inverse: "hubAsFolded" });
+    folded = fields.Many("ChatWindow", { inverse: "hubAsFolded" });
     initPromise = new Deferred();
     preFirstFetchPromise = new Deferred();
     loadMutex = new Mutex();
@@ -54,6 +70,13 @@ export class ChatHub extends Record {
         }
         await Promise.all(promises);
         this.save(); // sync only once at the end
+    }
+
+    hideAll() {
+        for (const cw of this.opened) {
+            cw.bypassCompact = false;
+        }
+        this.compact = true;
     }
 
     onRecompute() {

@@ -448,7 +448,6 @@ class TestRegexRendering(common.MailCommon):
             ('''<div><p t-out="object.name"/></div>''', '<div><p>Alice</p></div>'),
             ('''<div/aa t-out="object.name"></div/aa>''', '<div>Alice</div>'),
             ('''<div/aa='x' t-out="object.name"></div/aa='x'>''', '<div>Alice</div>'),
-            ('''<55 t-out="object.name"></55>''', '&lt;55 t-out="object.name"&gt;55&gt;'),
         )
         o_qweb_render = self.env['ir.qweb']._render
         for template, expected in static_templates:
@@ -457,6 +456,12 @@ class TestRegexRendering(common.MailCommon):
                 self.assertEqual(render(template), expected)
                 self.assertFalse(qweb_render.called)
                 self.assertFalse(unsafe_eval.called)
+
+        with (patch('odoo.addons.base.models.ir_qweb.IrQweb._render', side_effect=o_qweb_render) as qweb_render,
+                patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
+            self.assertNotIn("<55", render('''<55 t-out="object.name"></55>'''))
+            self.assertFalse(qweb_render.called)
+            self.assertFalse(unsafe_eval.called)
 
         # double check that we are able to catch the eval
         non_static_templates = (
@@ -592,11 +597,9 @@ class TestMailRenderSecurity(TestMailRenderCommon):
 
         # sanity check, make sure the expressions are not allowed before the test (not in default allow list, etc...)
         with self.assertRaises(AccessError, msg="Complex inline expression should fail if it is not the default."):
-            with self.cr.savepoint():
-                template.lang = template_defaults['lang']
+            template.lang = template_defaults['lang']
         with self.assertRaises(AccessError, msg="Complex qweb expression should fail if it is not the default."):
-            with self.cr.savepoint():
-                template.body_html = template_defaults['body_html']
+            template.body_html = template_defaults['body_html']
 
         with patch(
             'odoo.addons.base.models.res_partner.ResPartner._mail_template_default_values',
@@ -612,8 +615,7 @@ class TestMailRenderSecurity(TestMailRenderCommon):
             self.assertEqual(template.body_html, template_defaults['body_html'])
 
             with self.assertRaises(AccessError, msg="Complex expressions should only be allowed if they are the default for that field."):
-                with self.cr.savepoint():
-                    template.email_cc = template_defaults['lang']
+                template.email_cc = template_defaults['lang']
 
     @users('user_rendering_restricted')
     def test_render_template_qweb_restricted(self):

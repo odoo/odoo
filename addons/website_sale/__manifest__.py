@@ -29,16 +29,17 @@
 
         # QWeb templates
         'views/delivery_form_templates.xml',
+        'views/gmc_templates.xml',
         'views/templates.xml',
 
         # Model views.
         'views/account_move_views.xml',
-        'views/crm_team_views.xml',
         'views/delivery_carrier_views.xml',
         'views/digest_views.xml',
         'views/product_attribute_views.xml',
         'views/product_document_views.xml',
         'views/product_image_views.xml',
+        'views/product_pricelist_item_views.xml',
         'views/product_pricelist_views.xml',
         'views/product_product_add.xml',
         'views/product_public_category_views.xml',
@@ -91,7 +92,6 @@
 
             'website_sale/static/src/scss/product_configurator.scss',
 
-            'website_sale/static/src/js/address.js',
             'website_sale/static/src/js/cart.js',
             'website_sale/static/src/js/cart_service.js',
             'website_sale/static/src/js/checkout.js',
@@ -146,6 +146,7 @@
             'website_sale/static/src/scss/primary_variables.scss',
         ],
         'web.assets_backend': [
+            'website_sale/static/src/js/client_actions/**/*',
             'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/js/website_sale_video_field_preview.js',
             'website_sale/static/src/scss/website_sale_backend.scss',
@@ -164,6 +165,7 @@
         'website.assets_editor': [
             'website_sale/static/src/js/systray_items/*.js',
             'website_sale/static/src/xml/website_sale_utils.xml',
+            'website_sale/static/src/xml/website_sale_editor_previews.xml',
         ],
         'website.backend_assets_all_wysiwyg': [
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',

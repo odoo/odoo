@@ -1,10 +1,10 @@
 import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
-import { callWithUnloadCheck } from "./tour_utils";
+import { callWithUnloadCheck, serializeChanges, serializeMutation } from "./tour_utils";
 import { TourHelpers } from "./tour_helpers";
 import { TourStep } from "./tour_step";
 import { getTag } from "@web/core/utils/xml";
-import { browser } from "@web/core/browser/browser";
+import { waitForStable } from "@web/core/macro";
 
 export class TourStepAutomatic extends TourStep {
     skipped = false;
@@ -15,26 +15,33 @@ export class TourStepAutomatic extends TourStep {
         this.tourConfig = tourState.getCurrentConfig();
     }
 
-    async checkForUndeterminisms() {
-        const delay = this.tourConfig.delayToCheckUndeterminisms;
-        if (delay > 0 && this.element) {
-            const snapshot = this.element.cloneNode(true);
-            return new Promise((resolve, reject) => {
-                browser.setTimeout(() => {
-                    if (this.element.isEqualNode(snapshot)) {
-                        resolve();
-                    } else {
-                        reject(
-                            new Error(
-                                [
-                                    ...this.describeWhyIFailed,
-                                    `UNDETERMINISM: two differents elements have been found in ${delay}ms for trigger ${this.trigger}`,
-                                ].join("\n")
-                            )
-                        );
-                    }
-                }, delay);
-            });
+    async checkForUndeterminisms(initialElement, delay) {
+        if (delay <= 0 || !initialElement) {
+            return;
+        }
+        const tagName = initialElement.tagName?.toLowerCase();
+        if (["body", "html"].includes(tagName) || !tagName) {
+            return;
+        }
+        const snapshot = initialElement.cloneNode(true);
+        const mutations = await waitForStable(initialElement, delay);
+        let reason;
+        if (!hoot.isVisible(initialElement)) {
+            reason = `Initial element is no longer visible`;
+        } else if (!initialElement.isEqualNode(snapshot)) {
+            reason =
+                `Initial element has changed:\n` +
+                JSON.stringify(serializeChanges(snapshot, initialElement), null, 2);
+        } else if (mutations.length) {
+            const changes = [...new Set(mutations.map(serializeMutation))];
+            reason =
+                `Initial element has mutated ${mutations.length} times:\n` +
+                JSON.stringify(changes, null, 2);
+        }
+        if (reason) {
+            throw new Error(
+                `Potential non deterministic behavior found in ${delay}ms for trigger ${this.trigger}.\n${reason}`
+            );
         }
     }
 
@@ -55,6 +62,9 @@ export class TourStepAutomatic extends TourStep {
                     `BUT: Element is not enabled. TIP: You can use :enable to wait the element is enabled before doing action on it.`
                 );
             }
+            if (!this.parentFrameIsReady) {
+                errors.push(`BUT: parent frame is not ready ([is-ready='false']).`);
+            }
         } else {
             const checkElement = hoot.queryFirst(this.trigger);
             if (checkElement) {
@@ -70,20 +80,16 @@ export class TourStepAutomatic extends TourStep {
     }
 
     /**
-     * When return true, macro stops.
-     * @returns {Boolean}
+     * When return null or false, macro continues.
      */
     async doAction() {
-        let result = false;
-        if (!this.skipped) {
-            // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
+        if (this.skipped) {
+            return false;
+        }
+        return await callWithUnloadCheck(async () => {
             const actionHelper = new TourHelpers(this.element);
-
             if (typeof this.run === "function") {
-                const willUnload = await callWithUnloadCheck(async () => {
-                    await this.run.call({ anchor: this.element }, actionHelper);
-                });
-                result = willUnload && "will unload";
+                await this.run.call({ anchor: this.element }, actionHelper);
             } else if (typeof this.run === "string") {
                 for (const todo of this.run.split("&&")) {
                     const m = String(todo)
@@ -92,8 +98,7 @@ export class TourStepAutomatic extends TourStep {
                     await actionHelper[m.groups?.action](m.groups?.arguments);
                 }
             }
-        }
-        return result;
+        });
     }
 
     /**
@@ -108,21 +113,36 @@ export class TourStepAutomatic extends TourStep {
         }
         const visible = !/:(hidden|visible)\b/.test(this.trigger);
         this.element = hoot.queryFirst(this.trigger, { visible });
-        return !this.isUIBlocked && this.elementIsEnabled && this.elementIsInModal
-            ? this.element
-            : false;
+        if (this.element) {
+            return !this.isUIBlocked &&
+                this.elementIsEnabled &&
+                this.elementIsInModal &&
+                this.parentFrameIsReady
+                ? this.element
+                : false;
+        }
+        return false;
     }
 
     get isUIBlocked() {
         return (
-            document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI")
+            document.body.classList.contains("o_ui_blocked") ||
+            document.querySelector(".o_blockUI") ||
+            document.querySelector(".o_is_blocked")
         );
     }
 
-    get elementIsInModal() {
-        if (!this.element) {
-            return false;
+    get parentFrameIsReady() {
+        if (this.trigger.match(/\[is-ready=(true|false)\]/)) {
+            return true;
         }
+        const parentFrame = hoot.getParentFrame(this.element);
+        return parentFrame && parentFrame.hasAttribute("is-ready")
+            ? parentFrame.getAttribute("is-ready") === "true"
+            : true;
+    }
+
+    get elementIsInModal() {
         if (this.hasAction) {
             const overlays = hoot.queryFirst(".popover, .o-we-command, .o_notification");
             const modal = hoot.queryFirst(".modal:visible:not(.o_inactive_modal):last");
@@ -138,9 +158,6 @@ export class TourStepAutomatic extends TourStep {
 
     get elementIsEnabled() {
         const isTag = (array) => array.includes(getTag(this.element, true));
-        if (!this.element) {
-            return false;
-        }
         if (this.hasAction) {
             if (isTag(["input", "textarea"])) {
                 return hoot.isEditable(this.element);

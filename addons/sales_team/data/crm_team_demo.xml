@@ -8,6 +8,10 @@
                 (4, ref('sales_team.group_sale_salesman'))]"/>
         </record>
 
+        <record id="base.default_user_group" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        </record>
+
         <record model="crm.team" id="team_sales_department">
             <field name="name">Sales</field>
         </record>

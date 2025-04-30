@@ -126,10 +126,19 @@ class ResCompany(models.Model):
             if not record.l10n_it_tax_representative_partner_id.country_id:
                 raise ValidationError(_("Your tax representative partner must have a country."))
 
-    @api.depends("account_edi_proxy_client_ids")
+    @api.depends("account_edi_proxy_client_ids", "l10n_it_codice_fiscale")
     def _compute_l10n_it_edi_proxy_user_id(self):
         for company in self:
             company.l10n_it_edi_proxy_user_id = company.account_edi_proxy_client_ids.filtered(lambda x: x.proxy_type == 'l10n_it_edi')
+
+            # If we can't find any proxy user, create a new demo proxy user for this italian company.
+            # They must have the Codice Fiscale field filled for the registration process to work.
+            if not company.l10n_it_edi_proxy_user_id and company.l10n_it_codice_fiscale:
+                company.l10n_it_edi_proxy_user_id = self.env['account_edi_proxy_client.user']._register_proxy_user(
+                    company=company,
+                    proxy_type='l10n_it_edi',
+                    edi_mode='demo',
+                )
 
     @api.depends('country_code')
     def _compute_l10n_it_edi_purchase_journal_id(self):
@@ -169,14 +178,9 @@ class ResCompany(models.Model):
                     }
         if self.filtered(lambda x: not x.l10n_it_edi_proxy_user_id):
             errors['l10n_it_edi_settings_l10n_it_edi_proxy_user_id'] = {
-                'message': _("You must accept the terms and conditions in the Settings to use the IT EDI."),
-                'action_text': _("View Settings"),
-                'action': {
-                    'name': _("Settings"),
-                    'type': 'ir.actions.act_url',
-                    'target': 'self',
-                    'url': '/odoo/settings#italian_edi',
-                },
+                'message': _("You need to set the Codice Fiscale on your company."),
+                'action_text': _("View Company/ies"),
+                'action': self._get_records_action(name=_("Check Company Data")),
             }
         return errors
 

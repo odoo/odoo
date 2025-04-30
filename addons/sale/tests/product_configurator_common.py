@@ -79,7 +79,7 @@ class TestProductConfiguratorCommon(TransactionCase):
         cls.product_product_custo_desk.product_variant_ids[3].active = False
 
         # Setup a first optional product
-        img_path = 'product/static/img/product_product_11-image.png'
+        img_path = 'product/static/img/product_product_11-image.jpg'
         img_content = base64.b64encode(file_open(img_path, "rb").read())
         cls.product_product_conf_chair = cls.env['product.template'].create({
             'name': 'Conference Chair (TEST)',

@@ -52,15 +52,12 @@ export class SplitPlugin extends Plugin {
             // unmergeable.
             (node) => node.classList?.contains("oe_unbreakable"),
             (node) => {
-                const isExplicitlyNotContentEditable = (node) => {
+                const isExplicitlyNotContentEditable = (node) =>
                     // In the `contenteditable` attribute consideration,
                     // disconnected nodes can be unsplittable only if they are
                     // explicitly set under a contenteditable="false" element.
-                    return (
-                        !isContentEditable(node) &&
-                        (node.isConnected || closestElement(node, "[contenteditable]"))
-                    );
-                };
+                    !isContentEditable(node) &&
+                    (node.isConnected || closestElement(node, "[contenteditable]"));
                 return (
                     isExplicitlyNotContentEditable(node) ||
                     // If node sets contenteditable='true' and is inside a non-editable
@@ -80,7 +77,7 @@ export class SplitPlugin extends Plugin {
     // --------------------------------------------------------------------------
     splitBlock() {
         this.dispatchTo("before_split_block_handlers");
-        let selection = this.dependencies.selection.getEditableSelection();
+        let selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
         if (!selection.isCollapsed) {
             // @todo @phoenix collapseIfZWS is not tested
             // this.shared.collapseIfZWS();
@@ -139,20 +136,23 @@ export class SplitPlugin extends Plugin {
             blockToSplit.parentElement
         );
         restore();
-        const removeEmptyAndFill = (node) => {
+        const fillEmptyElement = (node) => {
             if (isProtecting(node) || isProtected(node)) {
                 // TODO ABD: add test
                 return;
-            } else if (!isBlock(node) && !isVisible(node)) {
+            } else if (node.nodeType === Node.TEXT_NODE && !isVisible(node)) {
                 const parent = node.parentElement;
                 node.remove();
-                removeEmptyAndFill(parent);
-            } else {
+                fillEmptyElement(parent);
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                if (node.hasAttribute("data-oe-zws-empty-inline")) {
+                    delete node.dataset.oeZwsEmptyInline;
+                }
                 fillEmpty(node);
             }
         };
-        removeEmptyAndFill(lastLeaf(beforeElement));
-        removeEmptyAndFill(firstLeaf(afterElement));
+        fillEmptyElement(lastLeaf(beforeElement));
+        fillEmptyElement(firstLeaf(afterElement));
 
         this.dependencies.selection.setCursorStart(afterElement);
 
@@ -177,20 +177,18 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement, HTMLElement]}
      */
     splitElement(element, offset) {
-        this.dispatchTo("clean_handlers", element);
-        // const before = /** @type {HTMLElement} **/ (element.cloneNode());
         /** @type {HTMLElement} **/
-        const before = element.cloneNode();
-        const after = /** @type {HTMLElement} **/ (element.cloneNode());
-        element.before(before);
-        element.after(after);
-        let index = 0;
-        for (const child of childNodes(element)) {
-            index < offset ? before.appendChild(child) : after.appendChild(child);
-            index++;
-        }
+        const firstPart = element.cloneNode();
+        /** @type {HTMLElement} **/
+        const secondPart = element.cloneNode();
+        element.before(firstPart);
+        element.after(secondPart);
+        const children = childNodes(element);
+        firstPart.append(...children.slice(0, offset));
+        secondPart.append(...children.slice(offset));
         element.remove();
-        return [before, after];
+        this.dispatchTo("after_split_element_handlers", { firstPart, secondPart });
+        return [firstPart, secondPart];
     }
 
     /**

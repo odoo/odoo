@@ -221,6 +221,9 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
 
         self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_product_pricelist').id)]})
 
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'fiscal_pos_a',
+        })
         tax_price_include, tax_price_exclude = self.env['account.tax'].create([{
             'name': '10% inc',
             'type_tax_use': 'sale',
@@ -233,17 +236,9 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
             'type_tax_use': 'sale',
             'amount_type': 'percent',
             'amount': 15,
+            'fiscal_position_ids': [Command.link(fiscal_position.id)],
         }])
-
-        fiscal_position = self.env['account.fiscal.position'].create({
-            'name': 'fiscal_pos_a',
-            'tax_ids': [
-                (0, None, {
-                    'tax_src_id': tax_price_include.id,
-                    'tax_dest_id': tax_price_exclude.id,
-                }),
-            ],
-        })
+        tax_price_exclude.original_tax_ids = tax_price_include
 
         # Setting tax on delivery product
         self.normal_delivery.product_id.taxes_id = tax_price_include

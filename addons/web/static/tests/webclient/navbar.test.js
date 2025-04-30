@@ -27,14 +27,7 @@ class MySystrayItem extends Component {
 
 beforeEach(async () => {
     systrayRegistry.add("addon.myitem", { Component: MySystrayItem });
-    defineMenus([
-        {
-            id: "root",
-            children: [{ id: 1, children: [], name: "App0", appID: 1 }],
-            name: "root",
-            appID: "root",
-        },
-    ]);
+    defineMenus([{ id: 1 }]);
     return () => {
         clearRegistry(systrayRegistry);
     };
@@ -59,14 +52,7 @@ test("dropdown menu can be toggled", async () => {
 
 test.tags("desktop");
 test("href attribute on apps menu items", async () => {
-    defineMenus([
-        {
-            id: "root",
-            children: [{ id: 1, children: [], name: "My app", appID: 1, actionID: 339 }],
-            name: "root",
-            appID: "root",
-        },
-    ]);
+    defineMenus([{ id: 1, actionID: 339 }]);
     await mountWithCleanup(NavBar);
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
     expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/action-339");
@@ -74,23 +60,7 @@ test("href attribute on apps menu items", async () => {
 
 test.tags("desktop");
 test("href attribute with path on apps menu items", async () => {
-    defineMenus([
-        {
-            id: "root",
-            children: [
-                {
-                    id: 1,
-                    children: [],
-                    name: "My app",
-                    appID: 1,
-                    actionID: 339,
-                    actionPath: "my-path",
-                },
-            ],
-            name: "root",
-            appID: "root",
-        },
-    ]);
+    defineMenus([{ id: 1, actionID: 339, actionPath: "my-path" }]);
     await mountWithCleanup(NavBar);
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
     expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/my-path");
@@ -99,75 +69,15 @@ test("href attribute with path on apps menu items", async () => {
 test.tags("desktop");
 test("many sublevels in app menu items", async () => {
     defineMenus([
-        {
-            id: "root",
-            children: [
-                {
-                    id: 1,
-                    children: [
-                        {
-                            id: 2,
-                            children: [
-                                {
-                                    id: 3,
-                                    children: [
-                                        {
-                                            id: 4,
-                                            children: [
-                                                {
-                                                    id: 5,
-                                                    children: [
-                                                        {
-                                                            id: 6,
-                                                            children: [
-                                                                {
-                                                                    id: 7,
-                                                                    children: [
-                                                                        {
-                                                                            id: 8,
-                                                                            children: [
-                                                                                {
-                                                                                    id: 9,
-                                                                                    children: [],
-                                                                                    name: "My submenu 7",
-                                                                                    appID: 1,
-                                                                                },
-                                                                            ],
-                                                                            name: "My submenu 6",
-                                                                            appID: 1,
-                                                                        },
-                                                                    ],
-                                                                    name: "My submenu 5",
-                                                                    appID: 1,
-                                                                },
-                                                            ],
-                                                            name: "My submenu 4",
-                                                            appID: 1,
-                                                        },
-                                                    ],
-                                                    name: "My submenu 3",
-                                                    appID: 1,
-                                                },
-                                            ],
-                                            name: "My submenu 2",
-                                            appID: 1,
-                                        },
-                                    ],
-                                    name: "My submenu 1",
-                                    appID: 1,
-                                },
-                            ],
-                            name: "My menu",
-                            appID: 1,
-                        },
-                    ],
-                    name: "My app",
-                    appID: 1,
-                },
-            ],
-            name: "root",
-            appID: "root",
-        },
+        { id: 1, children: [2], name: "My app" },
+        { id: 2, children: [3], name: "My menu" },
+        { id: 3, children: [4], name: "My submenu 1" },
+        { id: 4, children: [5], name: "My submenu 2" },
+        { id: 5, children: [6], name: "My submenu 3" },
+        { id: 6, children: [7], name: "My submenu 4" },
+        { id: 7, children: [8], name: "My submenu 5" },
+        { id: 8, children: [9], name: "My submenu 6" },
+        { id: 9, name: "My submenu 7" },
     ]);
     await makeMockEnv();
     getService("menu").setCurrentMenu(1);
@@ -193,42 +103,17 @@ test("many sublevels in app menu items", async () => {
 test.tags("desktop");
 test("data-menu-xmlid attribute on AppsMenu items", async () => {
     // Replace all default menus and setting new one
-    defineMenus(
-        [
-            {
-                id: 1,
-                children: [
-                    {
-                        id: 3,
-                        children: [],
-                        name: "Menu without children",
-                        appID: 1,
-                        xmlid: "menu_3",
-                    },
-                    {
-                        id: 4,
-                        children: [
-                            {
-                                id: 5,
-                                children: [],
-                                name: "Sub menu",
-                                appID: 1,
-                                xmlid: "menu_5",
-                            },
-                        ],
-                        name: "Menu with children",
-                        appID: 1,
-                        xmlid: "menu_4",
-                    },
-                ],
-                name: "App0 with xmlid",
-                appID: 1,
-                xmlid: "wowl",
-            },
-            { id: 2, children: [], name: "App1 without xmlid", appID: 2 },
-        ],
-        { mode: "replace" }
-    );
+    defineMenus([
+        {
+            id: 1,
+            children: [
+                { id: 3, xmlid: "menu_3" },
+                { id: 4, xmlid: "menu_4", children: [{ id: 5, xmlid: "menu_5" }] },
+            ],
+            xmlid: "wowl",
+        },
+        { id: 2 },
+    ]);
     await mountWithCleanup(NavBar);
 
     // check apps
@@ -358,30 +243,15 @@ test("can adapt with 'more' menu sections behavior", async () => {
     }
     defineMenus([
         {
-            id: "root",
+            id: 1,
             children: [
+                { id: 10 },
+                { id: 11 },
                 {
-                    id: 1,
-                    children: [
-                        { id: 10, children: [], name: "Section 10", appID: 1 },
-                        { id: 11, children: [], name: "Section 11", appID: 1 },
-                        {
-                            id: 12,
-                            children: [
-                                { id: 120, children: [], name: "Section 120", appID: 1 },
-                                { id: 121, children: [], name: "Section 121", appID: 1 },
-                                { id: 122, children: [], name: "Section 122", appID: 1 },
-                            ],
-                            name: "Section 12",
-                            appID: 1,
-                        },
-                    ],
-                    name: "App0",
-                    appID: 1,
+                    id: 12,
+                    children: [{ id: 120 }, { id: 121 }, { id: 122 }],
                 },
             ],
-            name: "root",
-            appID: "root",
         },
     ]);
 
@@ -447,36 +317,12 @@ test("'more' menu sections adaptations do not trigger render in some cases", asy
 
     defineMenus([
         {
-            id: "root",
+            id: 1,
             children: [
-                {
-                    id: 1,
-                    children: [
-                        {
-                            id: 11,
-                            children: [],
-                            name: "Section with a very long name 1",
-                            appID: 1,
-                        },
-                        {
-                            id: 12,
-                            children: [],
-                            name: "Section with a very long name 2",
-                            appID: 1,
-                        },
-                        {
-                            id: 13,
-                            children: [],
-                            name: "Section with a very long name 3",
-                            appID: 1,
-                        },
-                    ],
-                    name: "App1",
-                    appID: 1,
-                },
+                { id: 11, name: "Section with a very long name 1" },
+                { id: 12, name: "Section with a very long name 2" },
+                { id: 13, name: "Section with a very long name 3" },
             ],
-            name: "root",
-            appID: "root",
         },
     ]);
 
@@ -549,52 +395,39 @@ test("'more' menu sections adaptations do not trigger render in some cases", asy
 test.tags("desktop");
 test("'more' menu sections properly updated on app change", async () => {
     defineMenus([
+        // First App
         {
-            id: "root",
+            id: 1,
             children: [
-                // First App
+                { id: 10, name: "Section 10" },
+                { id: 11, name: "Section 11" },
                 {
-                    id: 1,
+                    id: 12,
+                    name: "Section 12",
                     children: [
-                        { id: 10, children: [], name: "Section 10", appID: 1 },
-                        { id: 11, children: [], name: "Section 11", appID: 1 },
-                        {
-                            id: 12,
-                            children: [
-                                { id: 120, children: [], name: "Section 120", appID: 1 },
-                                { id: 121, children: [], name: "Section 121", appID: 1 },
-                                { id: 122, children: [], name: "Section 122", appID: 1 },
-                            ],
-                            name: "Section 12",
-                            appID: 1,
-                        },
+                        { id: 120, name: "Section 120" },
+                        { id: 121, name: "Section 121" },
+                        { id: 122, name: "Section 122" },
                     ],
-                    name: "App1",
-                    appID: 1,
-                },
-                // Second App
-                {
-                    id: 2,
-                    children: [
-                        { id: 20, children: [], name: "Section 20", appID: 2 },
-                        { id: 21, children: [], name: "Section 21", appID: 2 },
-                        {
-                            id: 22,
-                            children: [
-                                { id: 220, children: [], name: "Section 220", appID: 2 },
-                                { id: 221, children: [], name: "Section 221", appID: 2 },
-                                { id: 222, children: [], name: "Section 222", appID: 2 },
-                            ],
-                            name: "Section 22",
-                            appID: 2,
-                        },
-                    ],
-                    name: "App2",
-                    appID: 2,
                 },
             ],
-            name: "root",
-            appID: "root",
+        },
+        // Second App
+        {
+            id: 2,
+            children: [
+                { id: 20, name: "Section 20" },
+                { id: 21, name: "Section 21" },
+                {
+                    id: 22,
+                    name: "Section 22",
+                    children: [
+                        { id: 220, name: "Section 220" },
+                        { id: 221, name: "Section 221" },
+                        { id: 222, name: "Section 222" },
+                    ],
+                },
+            ],
         },
     ]);
 
@@ -624,7 +457,7 @@ test("'more' menu sections properly updated on app change", async () => {
     await contains(".o_menu_sections_more .dropdown-toggle").click();
     expect(queryAllTexts(".dropdown-menu > *")).toEqual(
         ["Section 10", "Section 11", "Section 12", "Section 120", "Section 121", "Section 122"],
-        { message: "'more' menu should contain App1 sections" }
+        { message: "'more' menu should contain first app sections" }
     );
     // Close the more menu
     await contains(".o_menu_sections_more .dropdown-toggle").click();
@@ -637,7 +470,7 @@ test("'more' menu sections properly updated on app change", async () => {
     await contains(".o_menu_sections_more .dropdown-toggle").click();
     expect(queryAllTexts(".dropdown-menu > *")).toEqual(
         ["Section 20", "Section 21", "Section 22", "Section 220", "Section 221", "Section 222"],
-        { message: "'more' menu should contain App2 sections" }
+        { message: "'more' menu should contain second app sections" }
     );
 });
 

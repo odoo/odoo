@@ -46,13 +46,10 @@ export class MentionList extends Component {
                     } finally {
                         this.state.isFetching = false;
                     }
-                    const { suggestions } = this.suggestionService.searchSuggestions(
-                        {
-                            delimiter: this.props.type === "partner" ? "@" : "#",
-                            term: this.state.searchTerm,
-                        },
-                        { sort: true }
-                    );
+                    const { suggestions } = this.suggestionService.searchSuggestions({
+                        delimiter: this.props.type === "partner" ? "@" : "#",
+                        term: this.state.searchTerm,
+                    });
                     this.state.options = suggestions;
                 });
             },

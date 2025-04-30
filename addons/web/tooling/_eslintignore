@@ -117,6 +117,10 @@ web_map/static/tests/legacy/**/*
 !addons/purchase
 !addons/purchase/**/*
 
+# Whitelist documents_document
+!documents
+!documents/**/*
+
 # Whitelist documents_spreadsheet
 !documents_spreadsheet
 !documents_spreadsheet/**/*
@@ -321,6 +325,8 @@ addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js
 !l10n_mx_edi_pos/**/*
 !l10n_pl_reports_pos_jpk
 !l10n_pl_reports_pos_jpk/**/*
+!l10n_br_edi_pos
+!l10n_br_edi_pos/**/*
 !pos_account_reports
 !pos_account_reports/**/*
 !pos_blackbox_be
@@ -339,8 +345,6 @@ addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js
 !pos_online_payment_self_order_preparation_display/**/*
 !pos_order_tracking_display
 !pos_order_tracking_display/**/*
-!pos_preparation_display
-!pos_preparation_display/**/*
 !pos_restaurant_appointment
 !pos_restaurant_appointment/**/*
 !pos_restaurant_preparation_display
@@ -364,3 +368,6 @@ addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js
 # Whitelist the shop floor module
 !mrp_workorder
 !mrp_workorder/**
+
+!ai
+!ai/**

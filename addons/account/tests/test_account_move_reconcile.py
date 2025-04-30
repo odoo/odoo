@@ -4,7 +4,7 @@ from contextlib import closing
 from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, users
 from odoo.exceptions import UserError
 from odoo import fields, Command
 
@@ -71,11 +71,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'code': 'YY',
         })
 
-        cls.tax_tags = cls.env['account.account.tag'].create({
+        cls.tax_tags = cls.env['account.account.tag'].create([{
             'name': 'tax_tag_%s' % str(i),
             'applicability': 'taxes',
             'country_id': cls.company_data['company'].account_fiscal_country_id.id,
-        } for i in range(8))
+        } for i in range(10)])
 
         cls.cash_basis_tax_a_third_amount = cls.env['account.tax'].create({
             'name': 'tax_1',
@@ -141,16 +141,31 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ],
         })
 
+        cls.cash_basis_tax_tiny_amount_2 = cls.env['account.tax'].create({
+            'name': 'cash_basis_tax_tiny_amount_2',
+            'amount': 0.005,
+            'company_id': cls.company_data['company'].id,
+            'cash_basis_transition_account_id': cls.cash_basis_transfer_account.id,
+            'tax_exigibility': 'on_payment',
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                    'tag_ids': [Command.set(cls.tax_tags[8].ids)],
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'account_id': cls.tax_account_1.id,
+                    'tag_ids': [Command.set(cls.tax_tags[9].ids)],
+                }),
+            ],
+        })
+
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
 
     def assertFullReconcile(self, full_reconcile, lines):
-        exchange_difference_move = full_reconcile.exchange_move_id
         partials = lines.mapped('matched_debit_ids') + lines.mapped('matched_credit_ids')
-
-        if full_reconcile.exchange_move_id:
-            lines += exchange_difference_move.line_ids.filtered(lambda line: line.account_id == lines[0].account_id)
 
         # Use sets to not depend of the order.
         self.assertEqual(set(full_reconcile.partial_reconcile_ids), set(partials))
@@ -205,6 +220,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def _get_caba_moves(self, moves):
         return moves.search([('tax_cash_basis_origin_move_id', 'in', moves.ids)])
 
+    @users('simple_accountman')
     def test_full_reconcile_bunch_lines(self):
         """ Test the reconciliation with multiple lines at the same time and ensure the result is always a full
         reconcile whatever the number of involved currencies.
@@ -390,34 +406,10 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'debit_move_id': line_2.id,
                 'credit_move_id': line_1.id,
             },
-            {
-                'amount': 0.01,
-                'debit_amount_currency': 0.0,
-                'credit_amount_currency': 0.0,
-                'debit_move_id': line_2.id,
-                'credit_move_id': full_reconcile.exchange_move_id.line_ids[0].id,
-            },
-        ])
-        self.assertRecordValues(full_reconcile.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
-        self.assertRecordValues(full_reconcile.exchange_move_id.line_ids, [
-            {
-                'debit': 0.0,
-                'credit': 0.01,
-                'amount_currency': 0.0,
-                'currency_id': currency.id,
-                'account_id': line_1.account_id.id,
-            },
-            {
-                'debit': 0.01,
-                'credit': 0.0,
-                'amount_currency': 0.0,
-                'currency_id': currency.id,
-                'account_id': self.exch_expense_account.id,
-            },
         ])
         self.assertRecordValues(amls, [
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
-            {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
+            {'amount_residual': 0.01,       'amount_residual_currency': 0.0,    'reconciled': False},
         ])
 
     def test_reconcile_lines_corner_case_3_zero_balance_one_foreign_currency(self):
@@ -452,13 +444,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'debit_move_id': partials.exchange_move_id.line_ids[0].id,
                 'credit_move_id': line_1.id,
             },
-            {
-                'amount': 0.0,
-                'debit_amount_currency': 0.01,
-                'credit_amount_currency': 0.01,
-                'debit_move_id': line_2.id,
-                'credit_move_id': full_reconcile.exchange_move_id.line_ids[0].id,
-            },
         ])
         self.assertRecordValues(partials.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
         self.assertRecordValues(partials.exchange_move_id.line_ids, [
@@ -477,26 +462,9 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'account_id': self.exch_income_account.id,
             },
         ])
-        self.assertRecordValues(full_reconcile.exchange_move_id, [{'date': fields.Date.from_string('2017-01-31')}])
-        self.assertRecordValues(full_reconcile.exchange_move_id.line_ids, [
-            {
-                'debit': 0.0,
-                'credit': 0.0,
-                'amount_currency': -0.01,
-                'currency_id': foreign_curr.id,
-                'account_id': line_2.account_id.id,
-            },
-            {
-                'debit': 0.0,
-                'credit': 0.0,
-                'amount_currency': 0.01,
-                'currency_id': foreign_curr.id,
-                'account_id': self.exch_expense_account.id,
-            },
-        ])
         self.assertRecordValues(amls, [
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
-            {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
+            {'amount_residual': 0.0,        'amount_residual_currency': 0.01,   'reconciled': False},
         ])
 
     def test_reconcile_lines_corner_case_4_zero_amount_currency_multiple_currencies(self):
@@ -1174,7 +1142,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -1225,7 +1192,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -1276,7 +1242,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -1327,7 +1292,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -1379,7 +1343,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -1431,7 +1394,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -1483,7 +1445,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -1535,7 +1496,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -1587,7 +1547,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -1639,7 +1598,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -1691,7 +1649,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -1743,7 +1700,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         full_reconcile = amls.full_reconcile_id
 
         self.assertTrue(full_reconcile)
-        self.assertRecordValues(full_reconcile, [{'exchange_move_id': False}])
         self.assertRecordValues(partials, [
             {
                 'amount': 40.0,
@@ -2177,8 +2133,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
         self.assert_invoice_outstanding_to_reconcile_widget(inv2, {})
 
-        self.assertRecordValues(inv2_rec_line.full_reconcile_id, [{'exchange_move_id': None}])
-
     def test_reconcile_special_mexican_workflow_2(self):
         comp_curr = self.company_data['currency']
         foreign_curr = self.env['res.currency'].create({
@@ -2478,8 +2432,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             payment_exchange_id[1].exchange_move_id.id: 6.34,
         })
         self.assert_invoice_outstanding_to_reconcile_widget(inv2, {})
-
-        self.assertRecordValues(inv2_rec_line.full_reconcile_id, [{'exchange_move_id': None}])
 
     def test_migration_to_new_reconciliation_same_foreign_currency(self):
         foreign_curr = self.other_currency
@@ -2862,13 +2814,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'debit': 0.0,      'credit': 0.0,      'account_id': self.cash_basis_transfer_account.id},
             {'debit': 0.0,      'credit': 0.0,      'account_id': self.tax_account_1.id},
             # tax_2:
-            {'debit': 0.0,      'credit': 0.0,      'account_id': self.cash_basis_transfer_account.id},
-            {'debit': 0.0,      'credit': 0.0,      'account_id': self.tax_account_2.id},
-        ])
-
-        self.assertRecordValues(payable_lines_1.full_reconcile_id.exchange_move_id.line_ids, [
-            {'account_id': self.tax_account_2.id,               'debit': 0.0,   'credit': 0.01, 'tax_ids': [],          'tax_line_id': self.cash_basis_tax_tiny_amount.id},
-            {'account_id': self.cash_basis_transfer_account.id, 'debit': 0.01,  'credit': 0.0,  'tax_ids': [],          'tax_line_id': False},
+            {'debit': 0.01,     'credit': 0.0,      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.0,      'credit': 0.01,     'account_id': self.tax_account_2.id},
         ])
 
         self.assertAmountsGroupByAccount([
@@ -2880,7 +2827,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
     def test_reconcile_draft_cash_basis_surprise_use_case(self):
         ''' Use case: a reconciliation is made on a draft invoice, with no caba move created, but a cash basis tax is added
-            later on the invoice. When it gets posted, the reconciliation should be removed so that redoing the reconcilation 
+            later on the invoice. When it gets posted, the reconciliation should be removed so that redoing the reconcilation
             will create the caba move.
         '''
         self.env.company.tax_exigibility = True
@@ -3008,7 +2955,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertEqual(tax_cash_basis_moves.state, 'posted')
 
     def test_reconcile_draft_cash_basis_use_case(self):
-        ''' Test that no user error is raised when trying to generate cash basis entries from reconciling draft moves, 
+        ''' Test that no user error is raised when trying to generate cash basis entries from reconciling draft moves,
             instead the cash basis entry is created normally but stays in draft until all the moves are posted.
         '''
         cash_basis_move = self._prepare_cash_basis_move()
@@ -3403,11 +3350,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.tax_account_2.id},
         ])
 
-        self.assertRecordValues(payable_lines_1.full_reconcile_id.exchange_move_id.line_ids, [
-            {'account_id': self.cash_basis_base_account.id,     'debit': 0.0,   'credit': 0.0,      'amount_currency': -0.001,   'tax_ids': taxes.ids,   'tax_line_id': False},
-            {'account_id': self.cash_basis_base_account.id,     'debit': 0.0,   'credit': 0.0,      'amount_currency': 0.001,    'tax_ids': [],          'tax_line_id': False},
-        ])
-
         # No exchange move should have been created when reconciling the transition account
         caba_transition_lines_3 = tax_cash_basis_moves.line_ids.filtered(lambda x: x.account_id == self.cash_basis_transfer_account)
         self.assertFalse(caba_transition_lines_3.matched_credit_ids.exchange_move_id)
@@ -3530,12 +3472,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         receivable_lines2.reconcile()
 
         self.assertTrue(receivable_lines2.full_reconcile_id)
-        exchange_diff = receivable_lines2.full_reconcile_id.exchange_move_id
-        caba_rounding_correction = exchange_diff.line_ids\
-            .filtered(lambda line: line.account_id == self.cash_basis_transfer_account)\
-            .sorted(lambda line: (line.account_id, line.debit, line.credit))
-
-        self.assertFalse(caba_rounding_correction, "No cash basis rounding correction should have been created, as the difference between amounts is only due to exchange difference.")
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
@@ -3612,9 +3548,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'account_id': caba_move.company_id.expense_currency_exchange_account_id.id,    'debit': 55.0,  'credit': 0.0,  'amount_currency': 0.0, 'tax_ids': [],                                      'tax_line_id': False},
         ])
 
-        exchange_move = receivable_line.full_reconcile_id.exchange_move_id
-        self.assertFalse(exchange_move, "No exchange move difference should be created for the full reconcile object ,as there is no cash basis rounding.")
-
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
             (self.cash_basis_transfer_account,      0.0,        0.0),
@@ -3690,9 +3623,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'account_id': self.extra_receivable_account_1.id,                              'debit': 0.0,   'credit': 55.0, 'amount_currency': 0.0,     'tax_ids': [],                                      'tax_line_id': False},
             {'account_id': caba_move.company_id.expense_currency_exchange_account_id.id,    'debit': 55.0,  'credit': 0.0,  'amount_currency': 0.0,     'tax_ids': [],                                      'tax_line_id': False},
         ])
-
-        exchange_move = receivable_line.full_reconcile_id.exchange_move_id
-        self.assertFalse(exchange_move, "No exchange move difference should be created for the full reconcile object ,as there is no cash basis rounding.")
 
         self.assertAmountsGroupByAccount([
             # Account                               Balance     Amount Currency
@@ -3807,9 +3737,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'debit': 66.67,    'credit': 0.0,      'currency_id': currency_id,     'account_id': self.extra_receivable_account_1.id},
             {'debit': 0.0,      'credit': 66.67,    'currency_id': currency_id,     'account_id': self.company_data['company'].income_currency_exchange_account_id.id},
         ])
-
-        # Exchange difference
-        self.assertFalse(receivable_lines.full_reconcile_id.exchange_move_id, "No exchange move difference should be created for the full reconcile object ,as there is no cash basis rounding.")
 
     def test_reconcile_cash_basis_refund_multicurrency(self):
         self.env.company.tax_exigibility = True
@@ -3958,12 +3885,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         )
 
-        self.assertFalse(invoice.line_ids.full_reconcile_id.exchange_move_id)
-
     def test_reconcile_cash_basis_revert(self):
         ''' Ensure the cash basis journal entry can be reverted. '''
         self.env.company.tax_exigibility = True
         self.cash_basis_transfer_account.reconcile = True
+        self.tax_account_1.reconcile = True
         self.cash_basis_tax_a_third_amount.cash_basis_transition_account_id = self.tax_account_1
 
         invoice_move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
@@ -4691,171 +4617,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'balance':     1.0, 'tax_line_id':    False, 'tax_tag_ids':                  [], 'tax_ids':                  []},
             {'balance':    -1.0, 'tax_line_id': tax_b.id, 'tax_tag_ids':       tax_b_tax_tag, 'tax_ids':                  []},
         ])
-        # No exchange journal entry created for CABA.
-        exchange_difference_move = invoice.line_ids.filtered(lambda line: line.account_id.account_type == 'receivable').full_reconcile_id.exchange_move_id
-        self.assertFalse(exchange_difference_move)
-
-    def test_caba_rounding_adjustment_monocurrency(self):
-        self.env.company.tax_exigibility = True
-
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_date': fields.Date.from_string('2016-01-01'),
-            'invoice_line_ids': [Command.create({
-                'name': 'caba test',
-                'quantity': 1,
-                'price_unit': 99.99,
-                'tax_ids': [Command.set(self.cash_basis_tax_a_third_amount.ids)],
-            })],
-        })
-        invoice.action_post()
-
-        payment_date_1 = fields.Date.from_string('2017-01-01')
-        payment_date_2 = fields.Date.from_string('2018-01-01')
-
-        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
-            'amount': 66.66,
-            'payment_date': payment_date_1,
-        })
-        pmt_wizard._create_payments()
-
-        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
-            'amount': 66.66,
-            'payment_date': payment_date_2,
-        })
-        pmt_wizard._create_payments()
-
-        self.assertRecordValues(invoice.tax_cash_basis_created_move_ids.filtered(lambda x: x.date == payment_date_1).line_ids, [
-            # pylint: disable=bad-whitespace
-            {'account_id': self.cash_basis_base_account.id,     'debit': 50.0,  'credit':  0.0},
-            {'account_id': self.cash_basis_base_account.id,     'debit':  0.0,  'credit': 50.0},
-            {'account_id': self.cash_basis_transfer_account.id, 'debit': 16.67, 'credit':  0.0},
-            {'account_id': self.tax_account_1.id,               'debit':  0.0,  'credit': 16.67},
-        ])
-
-        self.assertRecordValues(invoice.tax_cash_basis_created_move_ids.filtered(lambda x: x.date == payment_date_2).line_ids, [
-            # pylint: disable=bad-whitespace
-            {'account_id': self.cash_basis_base_account.id,     'debit': 50.0,  'credit':  0.0},
-            {'account_id': self.cash_basis_base_account.id,     'debit':  0.0,  'credit': 50.0},
-            {'account_id': self.cash_basis_transfer_account.id, 'debit': 16.67, 'credit':  0.0},
-            {'account_id': self.tax_account_1.id,               'debit':  0.0,  'credit': 16.67},
-        ])
-
-        # Check the CABA adjustment made in the receivable account's full reconcile's exchange move
-        self.assertRecordValues(
-            # pylint: disable=bad-whitespace
-            invoice.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable').full_reconcile_id.exchange_move_id.line_ids,
-            [
-                {'account_id': self.cash_basis_base_account.id,     'debit': 0.01,  'credit': 0.0},
-                {'account_id': self.cash_basis_base_account.id,     'debit': 0.0,   'credit': 0.01},
-                {'account_id': self.tax_account_1.id,               'debit': 0.01,  'credit': 0.0},
-                {'account_id': self.cash_basis_transfer_account.id, 'debit': 0.0,   'credit': 0.01},
-            ]
-        )
-
-        self.assertEqual(
-            invoice.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable').full_reconcile_id.exchange_move_id.journal_id.id,
-            self.env.company.tax_cash_basis_journal_id.id,
-        )
-
-        self.assertTrue(
-            invoice.line_ids.filtered(lambda x: x.account_id == self.cash_basis_transfer_account).full_reconcile_id,
-            "The cash basis transition account line of the invoice should be fully reconciled with the CABA moves and the adjustment."
-        )
-
-        self.assertAmountsGroupByAccount([
-            # pylint: disable=bad-whitespace
-            # Account                               Balance  Amount Currency
-            (self.cash_basis_transfer_account,        0.0,     0.0),
-            (self.tax_account_1,                    -33.33,  -33.33),
-            (self.cash_basis_base_account,            0.0,     0.0)
-        ])
-
-    def test_caba_rounding_adjustment_multicurrency(self):
-        self.env.company.tax_exigibility = True
-
-        # Rates are 1/3 for 2016, 1/2 for 2017 and 5/1 in 2018
-        currency_id = self.setup_other_currency('CHF').id
-
-        self.env['res.currency.rate'].create({
-            'name': '2018-01-01',
-            'rate': 0.2,
-            'currency_id': currency_id,
-            'company_id': self.env.company.id,
-        })
-
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_date': fields.Date.from_string('2016-01-01'),
-            'currency_id': currency_id,
-            'invoice_line_ids': [Command.create({
-                'name': 'caba test',
-                'quantity': 1,
-                'price_unit': 99.99,
-                'tax_ids': [Command.set(self.cash_basis_tax_a_third_amount.ids)],
-            })],
-        })
-        invoice.action_post()
-
-        payment_date_1 = fields.Date.from_string('2017-01-01')
-        payment_date_2 = fields.Date.from_string('2018-01-01')
-
-        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
-            'amount': 66.66,
-            'currency_id': currency_id,
-            'payment_date': payment_date_1,
-        })
-        pmt_wizard._create_payments()
-
-        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
-            'amount': 66.66,
-            'currency_id': currency_id,
-            'payment_date': payment_date_2,
-        })
-        pmt_wizard._create_payments()
-
-        self.assertRecordValues(invoice.tax_cash_basis_created_move_ids.filtered(lambda x: x.date == payment_date_1).line_ids, [
-            # pylint: disable=bad-whitespace
-            {'account_id': self.cash_basis_base_account.id,     'debit': 25.0,  'credit':  0.0,  'amount_currency':  50.0,  'currency_id': currency_id},
-            {'account_id': self.cash_basis_base_account.id,     'debit':  0.0,  'credit': 25.0,  'amount_currency': -50.0,  'currency_id': currency_id},
-            {'account_id': self.cash_basis_transfer_account.id, 'debit':  8.34, 'credit':  0.0,  'amount_currency':  16.67, 'currency_id': currency_id},
-            {'account_id': self.tax_account_1.id,               'debit':  0.0,  'credit':  8.34, 'amount_currency': -16.67, 'currency_id': currency_id},
-        ])
-
-        self.assertRecordValues(invoice.tax_cash_basis_created_move_ids.filtered(lambda x: x.date == payment_date_2).line_ids, [
-            # pylint: disable=bad-whitespace
-            {'account_id': self.cash_basis_base_account.id,     'debit': 250.0,  'credit':   0.0,  'amount_currency':  50.0,  'currency_id': currency_id},
-            {'account_id': self.cash_basis_base_account.id,     'debit':   0.0,  'credit': 250.0,  'amount_currency': -50.0,  'currency_id': currency_id},
-            {'account_id': self.cash_basis_transfer_account.id, 'debit':  83.35, 'credit':   0.0,  'amount_currency':  16.67, 'currency_id': currency_id},
-            {'account_id': self.tax_account_1.id,               'debit':   0.0,  'credit':  83.35, 'amount_currency': -16.67, 'currency_id': currency_id},
-        ])
-
-        # Check the CABA adjustment made in the receivable account's full reconcile's exchange move
-        self.assertRecordValues(
-            # pylint: disable=bad-whitespace
-            invoice.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable').full_reconcile_id.exchange_move_id.line_ids,
-            [
-                {'account_id': self.cash_basis_base_account.id,     'debit': 0.05,  'credit': 0.0,  'amount_currency':  0.01, 'currency_id': currency_id},
-                {'account_id': self.cash_basis_base_account.id,     'debit': 0.0,   'credit': 0.05, 'amount_currency': -0.01, 'currency_id': currency_id},
-                {'account_id': self.tax_account_1.id,               'debit': 0.05,  'credit': 0.0,  'amount_currency':  0.01, 'currency_id': currency_id},
-                {'account_id': self.cash_basis_transfer_account.id, 'debit': 0.0,   'credit': 0.05, 'amount_currency': -0.01, 'currency_id': currency_id},
-            ]
-        )
-
-        self.assertTrue(
-            invoice.line_ids.filtered(lambda x: x.account_id == self.cash_basis_transfer_account).full_reconcile_id,
-            "The cash basis transition account line of the invoice should be fully reconciled with the CABA moves and the adjustment."
-        )
-
-        self.assertAmountsGroupByAccount([
-            # pylint: disable=bad-whitespace
-            # Account                               Balance  Amount Currency
-            (self.cash_basis_transfer_account,        0.0,     0.0),
-            (self.tax_account_1,                    -91.64,  -33.33),
-            (self.cash_basis_base_account,            0.0,     0.0),
-        ])
 
     def test_cash_basis_taxline_without_account(self):
         """
@@ -5552,3 +5313,100 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             self.assertEqual(payment2.state, 'paid')
             reconcile_move(payment1.move_id, 12, lines_filter=lambda l: l.account_id.account_type not in ('asset_receivable', 'liability_payable'))
             self.assertEqual(payment1.state, 'paid')
+
+            customer_invoice_outstanding.line_ids.remove_move_reconcile()
+            self.assertEqual(payment1.state, 'paid')
+            self.assertEqual(payment2.state, 'in_process')
+            payment1.move_id.line_ids.filtered(lambda l: l.account_id.account_type not in ('asset_receivable', 'liability_payable')).remove_move_reconcile()
+            self.assertEqual(payment1.state, 'in_process')
+
+    def test_reconcile_partial_reconciliations(self):
+        """
+        Check that it is only possible to reconcile entries belonging to a partial matching group if at least one of the
+        selected entries from that group is not fully reconciled. (.reconciled == False)
+        """
+        aml1 = self.create_line_for_reconciliation(1000.0, 1000.0, self.company_data['currency'], '2016-01-01')
+        aml2 = self.create_line_for_reconciliation(-999.0, -999.0, self.company_data['currency'], '2016-01-01')
+        aml3 = self.create_line_for_reconciliation(-1.0, -1.0, self.company_data['currency'], '2016-01-01')
+
+        # The following reconciliationn should cause both to share a partial matching number but only aml2 will have .reconciled == True.
+        (aml1 + aml2).reconcile()
+        self.assertRecordValues(aml1 + aml2, [
+            {'reconciled': False},
+            {'reconciled': True},
+        ])
+        self.assertTrue(aml1.matching_number.startswith("P"))
+        self.assertEqual(aml1.matching_number, aml2.matching_number)
+
+        # Since aml2 is already fully reconciled, it should not be possible to reconcile it with aml3.
+        with self.assertRaises(UserError):
+            (aml2 + aml3).reconcile()
+
+        # However, when including aml1 which is not fully reconciled, aml2 should be filtered out and let the reconcilitation happen.
+        (aml1 + aml2 + aml3).reconcile()
+        self.assertRecordValues(aml1 + aml2 + aml3, [
+            {'reconciled': True},
+            {'reconciled': True},
+            {'reconciled': True},
+        ])
+        self.assertFalse(aml1.matching_number.startswith("P"))
+        self.assertEqual(aml1.matching_number, aml3.matching_number)
+
+    def test_caba_rounding_adjustment(self):
+        '''Tests the adjustment of the amount of cash basis taxes when payments made for an invoice lead to an exceeding
+        amount due to the calculation with the partial payment percentage.'''
+        self.env.company.tax_exigibility = True
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2016-01-01'),
+            'invoice_line_ids': [Command.create({
+                'name': 'caba test',
+                'quantity': 1,
+                'price_unit': 1000,
+                'tax_ids': [Command.set(self.cash_basis_tax_tiny_amount_2.ids)],
+            })],
+        })
+        invoice.action_post()
+
+        for amount in [100.1, 100.1, 100.1, 100.1, 400.2]:
+            pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+                'amount': amount,
+            })
+            pmt_wizard._create_payments()
+
+        caba_moves = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
+
+        self.assertRecordValues(caba_moves.line_ids.sorted('id'), [
+            # Base amount:
+            {'debit': 0.0,      'credit': 100.09,   'tax_tag_ids': [],                      'account_id': self.cash_basis_base_account.id},
+            {'debit': 100.09,   'credit': 0.0,      'tax_tag_ids': self.tax_tags[8].ids,    'account_id': self.cash_basis_base_account.id},
+            # tax:
+            {'debit': 0.0,      'credit': 0.01,     'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.01,     'credit': 0.0,      'tax_tag_ids': self.tax_tags[9].ids,    'account_id': self.tax_account_1.id},
+            # Base amount:
+            {'debit': 0.0,      'credit': 100.09,   'tax_tag_ids': [],                      'account_id': self.cash_basis_base_account.id},
+            {'debit': 100.09,   'credit': 0.0,      'tax_tag_ids': self.tax_tags[8].ids,    'account_id': self.cash_basis_base_account.id},
+            # tax:
+            {'debit': 0.0,      'credit': 0.01,     'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.01,     'credit': 0.0,      'tax_tag_ids': self.tax_tags[9].ids,    'account_id': self.tax_account_1.id},
+            # Base amount:
+            {'debit': 0.0,      'credit': 100.09,   'tax_tag_ids': [],                      'account_id': self.cash_basis_base_account.id},
+            {'debit': 100.09,   'credit': 0.0,      'tax_tag_ids': self.tax_tags[8].ids,    'account_id': self.cash_basis_base_account.id},
+            # tax:
+            {'debit': 0.0,      'credit': 0.01,     'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.01,     'credit': 0.0,      'tax_tag_ids': self.tax_tags[9].ids,    'account_id': self.tax_account_1.id},
+            # Base amount:
+            {'debit': 0.0,      'credit': 100.09,   'tax_tag_ids': [],                      'account_id': self.cash_basis_base_account.id},
+            {'debit': 100.09,   'credit': 0.0,      'tax_tag_ids': self.tax_tags[8].ids,    'account_id': self.cash_basis_base_account.id},
+            # tax:
+            {'debit': 0.0,      'credit': 0.01,     'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.01,     'credit': 0.0,      'tax_tag_ids': self.tax_tags[9].ids,    'account_id': self.tax_account_1.id},
+            # Base amount
+            {'debit': 0.0,      'credit': 400.18,   'tax_tag_ids': [],                      'account_id': self.cash_basis_base_account.id},
+            {'debit': 400.18,   'credit': 0.0,      'tax_tag_ids': self.tax_tags[8].ids,    'account_id': self.cash_basis_base_account.id},
+            # tax:
+            {'debit': 0.0,      'credit': 0.01,     'tax_tag_ids': [],                      'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 0.01,     'credit': 0.0,      'tax_tag_ids': self.tax_tags[9].ids,    'account_id': self.tax_account_1.id},
+        ])

@@ -31,7 +31,7 @@ class TestPoSSaleLoyalty(TestPointOfSaleHttpCommon):
                 }),
             ],
         })
-        self.env['sale.order'].create({
+        self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
             'order_line': [(0, 0, {
                 'product_id': self.desk_organizer.product_variant_id.id,

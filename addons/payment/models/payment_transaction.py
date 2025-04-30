@@ -12,7 +12,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import format_amount
+from odoo.tools import email_normalize_all, format_amount
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -54,7 +54,7 @@ class PaymentTransaction(models.Model):
     currency_id = fields.Many2one(
         string="Currency", comodel_name='res.currency', readonly=True, required=True)
     token_id = fields.Many2one(
-        string="Payment Token", comodel_name='payment.token', readonly=True,
+        string="Payment Token", comodel_name='payment.token', readonly=True, index='btree_not_null',
         domain='[("provider_id", "=", "provider_id")]', ondelete='restrict')
     state = fields.Selection(
         string="Status",
@@ -84,6 +84,7 @@ class PaymentTransaction(models.Model):
     source_transaction_id = fields.Many2one(
         string="Source Transaction",
         comodel_name='payment.transaction',
+        index='btree_not_null',
         help="The source transaction of the related child transactions",
         readonly=True,
     )
@@ -160,8 +161,8 @@ class PaymentTransaction(models.Model):
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
-    def create(self, values_list):
-        for values in values_list:
+    def create(self, vals_list):
+        for values in vals_list:
             provider = self.env['payment.provider'].browse(values['provider_id'])
 
             if not values.get('reference'):
@@ -169,11 +170,12 @@ class PaymentTransaction(models.Model):
 
             # Duplicate partner values.
             partner = self.env['res.partner'].browse(values['partner_id'])
+            partner_emails = email_normalize_all(partner.email)
             values.update({
                 # Use the parent partner as fallback if the invoicing address has no name.
                 'partner_name': partner.name or partner.parent_id.name,
                 'partner_lang': partner.lang,
-                'partner_email': partner.email,
+                'partner_email': partner_emails[0] if partner_emails else None,
                 'partner_address': payment_utils.format_partner_address(
                     partner.street, partner.street2
                 ),
@@ -187,7 +189,7 @@ class PaymentTransaction(models.Model):
             # Include provider-specific create values
             values.update(self._get_specific_create_values(provider.code, values))
 
-        txs = super().create(values_list)
+        txs = super().create(vals_list)
 
         # Monetary fields are rounded with the currency at creation time by the ORM. Sometimes, this
         # can lead to inconsistent string representation of the amounts sent to the providers.
@@ -410,6 +412,7 @@ class PaymentTransaction(models.Model):
         - `amount`: The rounded amount of the transaction.
         - `currency_id`: The currency of the transaction, as a `res.currency` id.
         - `partner_id`: The partner making the transaction, as a `res.partner` id.
+        - `should_tokenize`: Whether this transaction should be tokenized.
         - Additional provider-specific entries.
 
         Note: `self.ensure_one()`
@@ -426,6 +429,7 @@ class PaymentTransaction(models.Model):
             'amount': self.amount,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
+            'should_tokenize': self.tokenize,
         }
 
         # Complete generic processing values with provider-specific values.
@@ -663,7 +667,7 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-    def _set_pending(self, state_message=None, extra_allowed_states=()):
+    def _set_pending(self, *, state_message=None, extra_allowed_states=()):
         """ Update the transactions' state to `pending`.
 
         :param str state_message: The reason for setting the transactions in the state `pending`.
@@ -680,7 +684,7 @@ class PaymentTransaction(models.Model):
         txs_to_process._log_received_message()
         return txs_to_process
 
-    def _set_authorized(self, state_message=None, extra_allowed_states=()):
+    def _set_authorized(self, *, state_message=None, extra_allowed_states=()):
         """ Update the transactions' state to `authorized`.
 
         :param str state_message: The reason for setting the transactions in the state `authorized`.
@@ -697,7 +701,7 @@ class PaymentTransaction(models.Model):
         txs_to_process._log_received_message()
         return txs_to_process
 
-    def _set_done(self, state_message=None, extra_allowed_states=()):
+    def _set_done(self, *, state_message=None, extra_allowed_states=()):
         """ Update the transactions' state to `done`.
 
         :param str state_message: The reason for setting the transactions in the state `done`.

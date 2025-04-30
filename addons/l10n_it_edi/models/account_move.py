@@ -10,7 +10,7 @@ from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_it_edi.models.account_payment_method_line import L10N_IT_PAYMENT_METHOD_SELECTION
-from odoo.exceptions import UserError
+from odoo.exceptions import LockError, UserError
 from odoo.tools import cleanup_xml_node, float_compare, float_is_zero, float_repr, html2plaintext
 from odoo.tools.sql import column_exists, create_column
 
@@ -84,6 +84,8 @@ class AccountMove(models.Model):
         compute=lambda self: self._compute_linked_attachment_id('l10n_it_edi_attachment_id', 'l10n_it_edi_attachment_file'),
         depends=['l10n_it_edi_attachment_file'],
     )
+    l10n_it_edi_proxy_mode = fields.Selection(related="company_id.l10n_it_edi_proxy_user_id.edi_mode", depends=['company_id'])
+    l10n_it_edi_button_label = fields.Char(compute="_compute_l10n_it_edi_button_label")
     l10n_it_edi_is_self_invoice = fields.Boolean(compute="_compute_l10n_it_edi_is_self_invoice")
     l10n_it_stamp_duty = fields.Float(string="Dati Bollo")
     l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', copy=False)
@@ -178,6 +180,16 @@ class AccountMove(models.Model):
         for move in self:
             partner = move.commercial_partner_id
             move.l10n_it_partner_pa = partner and (partner._l10n_it_edi_is_public_administration() or len(partner.l10n_it_pa_index or '') == 7)
+
+    @api.depends('country_code', 'l10n_it_edi_proxy_mode')
+    def _compute_l10n_it_edi_button_label(self):
+        for move in self:
+            if move.country_code == 'IT' and move.l10n_it_edi_proxy_mode in (False, 'demo'):
+                move.l10n_it_edi_button_label = _("Send (Demo)")
+            elif move.country_code == 'IT' and move.l10n_it_edi_proxy_mode == 'test':
+                move.l10n_it_edi_button_label = _("Send (Test)")
+            else:
+                move.l10n_it_edi_button_label = _("Send")
 
     @api.depends('move_type', 'line_ids.tax_tag_ids')
     def _compute_l10n_it_edi_is_self_invoice(self):
@@ -328,6 +340,7 @@ class AccountMove(models.Model):
 
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
         # EXTENDS 'account'
+        self.ensure_one()
         if filetype == 'fatturapa':
             if fatturapa_attachment := self.l10n_it_edi_attachment_id:
                 return {
@@ -399,22 +412,17 @@ class AccountMove(models.Model):
                 it_values['prezzo_unitario'] = base_line['gross_price_subtotal'] / quantity
             else:
                 it_values['prezzo_unitario'] = 0.0
+            if base_line['currency_id'] != self.company_currency_id:
+                it_values['prezzo_unitario'] = base_line['currency_id']._convert(it_values['prezzo_unitario'], self.company_currency_id, date=self.date)
 
             # Discount.
-            discount_list = it_values['sconto_maggiorazione_list'] = []
-            delta_discount = base_line.get('discount_amount', 0.0) - base_line.get('discount_amount_before_dispatching', 0.0)
+            it_values['sconto_maggiorazione_list'] = []
             if discount:
-                discount_list.append({
+                it_values['sconto_maggiorazione_list'] = [{
                     'tipo': 'SC' if discount > 0 else 'MG',
                     'percentuale': abs(discount),
                     'importo': None,
-                })
-            if not base_line['currency_id'].is_zero(delta_discount):
-                discount_list.append({
-                    'tipo': 'SC',
-                    'percentuale': None,
-                    'importo': abs(delta_discount / (quantity or 1.0)),
-                })
+                }]
 
             # Tax rates.
             rates = it_values['aliquota_iva_list'] = []
@@ -593,11 +601,7 @@ class AccountMove(models.Model):
                     'quantity': -quantity,
                     'price_unit': -price_unit,
                 })
-        for downpayment_line in downpayment_lines:
-            base_lines.remove(downpayment_line)
 
-        dispatched_results = self.env['account.tax']._dispatch_negative_lines(base_lines)
-        base_lines = dispatched_results['result_lines'] + dispatched_results['orphan_negative_lines'] + downpayment_lines
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, self._l10n_it_edi_grouping_function_base_lines)
         self._l10n_it_edi_add_base_lines_xml_values(base_lines_aggregated_values, is_downpayment)
@@ -1033,12 +1037,14 @@ class AccountMove(models.Model):
 
         return move
 
-    def _l10n_it_edi_search_partner(self, company, vat, codice_fiscale, email):
-        for domain in [vat and [('vat', 'ilike', vat)],
+    def _l10n_it_edi_search_partner(self, company, vat, codice_fiscale, email, destination_code=None):
+        base_domain = self.env['res.partner']._check_company_domain(company)
+        for domain in [vat and destination_code
+                           and [('vat', 'ilike', vat), ('l10n_it_pa_index', 'ilike', destination_code)],
+                       vat and [('vat', 'ilike', vat)],
                        codice_fiscale and [('l10n_it_codice_fiscale', 'in', ('IT' + codice_fiscale, codice_fiscale))],
                        email and ['|', ('email', '=', email), ('l10n_it_pec_email', '=', email)]]:
-            if domain and (partner := self.env['res.partner'].search(
-                    domain + self.env['res.partner']._check_company_domain(company), limit=1)):
+            if domain and (partner := self.env['res.partner'].search(domain + base_domain, limit=1)):
                 return partner
         return self.env['res.partner']
 
@@ -1154,7 +1160,8 @@ class AccountMove(models.Model):
             vat = get_text(tree, partner_info['vat_xpath'])
             codice_fiscale = get_text(tree, partner_info['codice_fiscale_xpath'])
             email = get_text(tree, '//DatiTrasmissione//Email') if partner_info['role'] == 'seller' else ''
-            if partner := self._l10n_it_edi_search_partner(company, vat, codice_fiscale, email):
+            destination_code = get_text(tree, "//CodiceDestinatario") if partner_info['role'] == 'buyer' else ''
+            if partner := self._l10n_it_edi_search_partner(company, vat, codice_fiscale, email, destination_code):
                 self.partner_id = partner
             else:
                 message = Markup("<br/>").join((
@@ -1220,6 +1227,11 @@ class AccountMove(models.Model):
             # Total amount. <2.4.2.6>
             if amount_total := sum(float(x) for x in get_text(tree, './/ImportoPagamento', many=True) if x):
                 message_to_log.append(_("Total amount from the XML File: %s", amount_total))
+
+            # l10n_it_payment_method
+            if payment_method := get_text(data['xml_tree'], '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
+                if payment_method in self.env['account.payment.method.line']._get_l10n_it_payment_method_selection_code():
+                    self.l10n_it_payment_method = payment_method
 
             # Bank account. <2.4.2.13>
             if self.move_type not in ('out_invoice', 'in_refund'):
@@ -1480,7 +1492,7 @@ class AccountMove(models.Model):
                 message = _("The Origin Document Date cannot be in the future.")
                 errors['l10n_it_edi_move_future_origin_document_date'] = build_error(message=message, records=moves)
         if pa_moves := self.filtered(lambda move: len(move.commercial_partner_id.l10n_it_pa_index or '') == 7):
-            if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type and move.l10n_it_cig and move.l10n_it_cup):
+            if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type and (move.l10n_it_cig or move.l10n_it_cup)):
                 message = _("CIG/CUP fields of partner(s) are present, please fill out Origin Document Type field in the Electronic Invoicing tab.")
                 errors['move_missing_origin_document_field'] = build_error(message=message, records=moves)
         return errors
@@ -1626,6 +1638,10 @@ class AccountMove(models.Model):
         }
 
     def _l10n_it_edi_send(self, attachments_vals):
+        try:
+            self.lock_for_update()
+        except LockError:
+            raise UserError(_('This document is being sent by another process already.')) from None
         files_to_upload = []
         filename_move = {}
 

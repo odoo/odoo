@@ -2,10 +2,10 @@
 <odoo>
     <record id="account_tax_report_ml" model="account.report">
         <field name="name">VAT Report</field>
-        <field name="name@fr">Déclaration T.V.A</field>
+        <field name="name@fr">Déclaration TVA</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ml"/>
-        <field name="filter_fiscal_position" eval="True"/>
+        <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="account_tax_report_ml_balance" model="account.report.column">
@@ -251,7 +251,7 @@
                         <field name="label">_applied_carryover_tax</field>
                         <field name="engine">external</field>
                         <field name="formula">most_recent</field>
-                        <field name="date_scope">previous_tax_period</field>
+                        <field name="date_scope">previous_return_period</field>
                     </record>
                 </field>
             </record>

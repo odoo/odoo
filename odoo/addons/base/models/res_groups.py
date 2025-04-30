@@ -1,10 +1,9 @@
-from odoo import api, fields, models, tools, _, Command
-from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Domain
-from odoo.osv import expression
-from odoo.tools import SetDefinitions
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections.abc import Collection
+from odoo import api, fields, models, tools
+from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Command, Domain
+from odoo.tools import SetDefinitions
 
 
 class ResGroups(models.Model):
@@ -12,10 +11,15 @@ class ResGroups(models.Model):
     _description = "Access Groups"
     _rec_name = 'full_name'
     _allow_sudo_commands = False
+    _order = 'privilege_id, sequence, name, id'
 
     name = fields.Char(required=True, translate=True)
     user_ids = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', help='Users explicitly in this group')
-    all_user_ids = fields.Many2many('res.users', compute='_compute_all_user_ids', search='_search_all_user_ids', string='Users and implied users')
+    all_user_ids = fields.Many2many('res.users', string='Users and implied users',
+        compute='_compute_all_user_ids', search='_search_all_user_ids', inverse='_inverse_all_user_ids')
+
+    all_users_count = fields.Integer('# Users', help='Number of users having this group (implicitly or explicitly)',
+        compute='_compute_all_users_count', compute_sudo=True)
 
     model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
     rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
@@ -23,14 +27,17 @@ class ResGroups(models.Model):
     menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
     view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
     comment = fields.Text(translate=True)
-    category_id = fields.Many2one('ir.module.category', string='Application', index=True)
     full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
     share = fields.Boolean(string='Share Group', help="Group created to set access rights for sharing data with some users.")
     api_key_duration = fields.Float(string='API Keys maximum duration days',
         help="Determines the maximum duration of an api key created by a user belonging to this group.")
 
-    _name_uniq = models.Constraint("UNIQUE (category_id, name)",
-        'The name of the group must be unique within an application!')
+    sequence = fields.Integer(string='Sequence')
+    privilege_id = fields.Many2one('res.groups.privilege', string='Privilege', index=True)
+    view_group_hierarchy = fields.Json(string='Technical field for default group setting', compute='_compute_view_group_hierarchy')
+
+    _name_uniq = models.Constraint("UNIQUE (privilege_id, name)",
+        'The name of the group must be unique within a group privilege!')
     _check_api_key_duration = models.Constraint(
         'CHECK(api_key_duration >= 0)',
         'The api key duration cannot be a negative value.',
@@ -62,7 +69,8 @@ class ResGroups(models.Model):
     implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
         string='Implied Groups', help='Users of this group are also implicitly part of those groups')
     all_implied_ids = fields.Many2many('res.groups', string='Transitively Implied Groups', recursive=True,
-        compute='_compute_all_implied_ids', compute_sudo=True, search='_search_all_implied_ids')
+        compute='_compute_all_implied_ids', compute_sudo=True, search='_search_all_implied_ids',
+        help="The group itself with all its implied groups.")
     implied_by_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'hid', 'gid',
         string='Implying Groups', help="Users in those groups are implicitly part of this group.")
     all_implied_by_ids = fields.Many2many('res.groups', string='Transitively Implying Groups', recursive=True,
@@ -104,44 +112,41 @@ class ResGroups(models.Model):
         classified = self.env['res.config.settings']._get_classified_fields()
         for _name, _groups, implied_group in classified['group']:
             if implied_group.id in self.ids:
-                raise ValidationError(_('You cannot delete a group linked with a settings field.'))
+                raise ValidationError(self.env._('You cannot delete a group linked with a settings field.'))
 
-    @api.depends('category_id.name', 'name')
+    @api.depends('privilege_id.name', 'name')
+    @api.depends_context('short_display_name')
     def _compute_full_name(self):
         # Important: value must be stored in environment of group, not group1!
         for group, group1 in zip(self, self.sudo()):
-            if group1.category_id:
-                group.full_name = '%s / %s' % (group1.category_id.name, group1.name)
+            if group1.privilege_id and not self.env.context.get('short_display_name'):
+                group.full_name = '%s / %s' % (group1.privilege_id.name, group1.name)
             else:
                 group.full_name = group1.name
 
     def _search_full_name(self, operator, operand):
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+
         lst = True
-        if isinstance(operand, bool):
-            return [('name', operator, operand)]
         if isinstance(operand, str):
             lst = False
             operand = [operand]
-        where_domains = []
+
+        where_domains = [Domain('name', operator, operand)]
         for group in operand:
+            if not group:
+                continue
             values = [v for v in group.split('/') if v]
             group_name = values.pop().strip()
-            category_name = values and '/'.join(values).strip() or group_name
-            group_domain = [('name', operator, lst and [group_name] or group_name)]
-            category_ids = self.env['ir.module.category'].sudo()._search(
-                [('name', operator, [category_name] if lst else category_name)])
-            category_domain = [('category_id', 'in', category_ids)]
-            if operator in expression.NEGATIVE_TERM_OPERATORS and not values:
-                category_domain = expression.OR([category_domain, [('category_id', '=', False)]])
-            if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
-                where = expression.AND([group_domain, category_domain])
-            else:
-                where = expression.OR([group_domain, category_domain])
-            where_domains.append(where)
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            return expression.AND(where_domains)
-        else:
-            return expression.OR(where_domains)
+            privilege_name = '/'.join(values).strip() if values else group_name
+            group_domain = Domain('name', operator, [group_name] if lst else group_name)
+            privilege_ids = self.env['res.groups.privilege'].sudo()._search(
+                Domain('name', operator, [privilege_name] if lst else privilege_name))
+            privilege_domain = Domain('privilege_id', 'in', privilege_ids)
+            where_domains.append(group_domain | privilege_domain)
+
+        return Domain.OR(where_domains)
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None):
@@ -157,13 +162,13 @@ class ResGroups(models.Model):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
         for group, vals in zip(self, vals_list):
-            vals['name'] = default.get('name') or _('%s (copy)', group.name)
+            vals['name'] = default.get('name') or self.env._('%s (copy)', group.name)
         return vals_list
 
     def write(self, vals):
         if 'name' in vals:
             if vals['name'].startswith('-'):
-                raise UserError(_('The name of the group can not start with "-"'))
+                raise UserError(self.env._('The name of the group can not start with "-"'))
 
         # invalidate caches before updating groups, since the recomputation of
         # field 'share' depends on method has_group()
@@ -204,6 +209,20 @@ class ResGroups(models.Model):
         for group in self.with_context(active_test=False):
             group.all_user_ids = group.all_implied_by_ids.user_ids
 
+    def _inverse_all_user_ids(self):
+        for group in self:
+            user_to_add = group.all_user_ids - group.all_implied_by_ids.user_ids
+            user_to_remove = group.all_implied_by_ids.user_ids - group.all_user_ids
+            group.user_ids = group.user_ids - user_to_remove + user_to_add
+
+            cannot_remove = group.all_implied_by_ids.user_ids & user_to_remove
+            if cannot_remove:
+                raise UserError(self.env._(
+                    "It is not possible to remove implied group %(group)s from users %(users)s",
+                    group=repr(group.name),
+                    users=', '.join(cannot_remove.mapped('name')),
+                ))
+
     def _search_all_user_ids(self, operator, value):
         return [('all_implied_by_ids.user_ids', operator, value)]
 
@@ -216,12 +235,8 @@ class ResGroups(models.Model):
 
     def _search_all_implied_ids(self, operator, value):
         """ Compute the search on the reflexive transitive closure of implied_ids. """
-        if isinstance(value, int):
-            value = [value]
-        elif isinstance(value, str):
-            raise NotImplementedError
-        if operator not in ('in', 'not in') or not isinstance(value, Collection):
-            raise NotImplementedError(f"_search_all_implied_ids with {operator!r} {value!r}")
+        if operator not in ('in', 'not in'):
+            return NotImplemented
         group_definitions = self._get_group_definitions()
         ids = [*value, *group_definitions.get_subset_ids(value)]
         return [('id', operator, ids)]
@@ -235,10 +250,12 @@ class ResGroups(models.Model):
 
     def _search_all_implied_by_ids(self, operator, value):
         """ Compute the search on the reflexive transitive closure of implied_by_ids. """
-        assert isinstance(value, (int, list, tuple))
+        if operator in ("any", "not any") and isinstance(value, Domain):
+            value = self.search(value).ids
+            operator = "in" if operator == "any" else "not in"
+        elif operator not in ('in', 'not in'):
+            return NotImplemented
 
-        if isinstance(value, int):
-            value = [value]
         group_definitions = self._get_group_definitions()
         ids = [*value, *group_definitions.get_superset_ids(value)]
 
@@ -286,6 +303,46 @@ class ResGroups(models.Model):
         groups = self.all_implied_ids.filtered(lambda g: implied_group in g.implied_ids)
         groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
 
+    def _compute_view_group_hierarchy(self):
+        self.view_group_hierarchy = self._get_view_group_hierarchy()
+
+    @api.model
+    @tools.ormcache(cache='groups')
+    def _get_view_group_hierarchy(self):
+        return {
+            'groups': {
+                group.id: {
+                    'id': group.id,
+                    'name': group.name,
+                    'comment': group.comment,
+                    'privilege_id': group.privilege_id.id,
+                    'disjoint_ids': group.disjoint_ids.ids,
+                    'implied_ids': group.implied_ids.ids,
+                    'all_implied_ids': group.all_implied_ids.ids,
+                    'all_implied_by_ids': group.all_implied_by_ids.ids,
+                }
+                for group in self.search([])
+            },
+            'privileges': {
+                privilege.id: {
+                    'id': privilege.id,
+                    'name': privilege.name,
+                    'category_id': privilege.category_id.id,
+                    'description': privilege.description,
+                    'placeholder': privilege.placeholder,
+                    'group_ids': [group.id for group in privilege.group_ids.sorted(lambda g: (len(g.all_implied_ids & privilege.group_ids) if g.privilege_id else 0, g.sequence, g.id))]
+                }
+                for privilege in self.env['res.groups.privilege'].search([])
+            },
+            'categories': [
+                {
+                    'id': category.id,
+                    'name': category.name,
+                    'privilege_ids': category.privilege_ids.sorted(lambda p: p.sequence).filtered(lambda p: p.group_ids).ids,
+                } for category in self.env['ir.module.category'].search([('privilege_ids.group_ids', '!=', False)])
+            ]
+        }
+
     @api.model
     @tools.ormcache(cache='groups')
     def _get_group_definitions(self):
@@ -301,3 +358,24 @@ class ResGroups(models.Model):
             for group in groups
         }
         return SetDefinitions(data)
+
+    @api.model
+    def _is_feature_enabled(self, group_reference):
+        return self.env['res.users'].sudo().browse(api.SUPERUSER_ID)._has_group(group_reference)
+
+    @api.depends('all_user_ids')
+    def _compute_all_users_count(self):
+        for group in self:
+            group.all_users_count = len(group.all_user_ids)
+
+    def action_show_all_users(self):
+        self.ensure_one()
+        return {
+            'name': self.env._('Users and implied users of %(group)s', group=self.display_name),
+            'view_mode': 'list,form',
+            'res_model': 'res.users',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False, 'delete': False, 'form_view_ref': 'base.view_users_form'},
+            'domain': [('all_group_ids', 'in', self.ids)],
+            'target': 'current',
+        }

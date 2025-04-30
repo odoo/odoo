@@ -85,6 +85,45 @@
                 <we-button data-customize-website-views="website_event.opt_event_description_cover_hidden">Hidden (visitor only)</we-button>
             </we-select>
         </div>
+        <div data-selector="main:has(#o_wevent_event_main)" groups="website.group_website_designer" data-no-check="true" string="Event Sidebar Position">
+            <we-checkbox string="Fixed Sidebar"
+                data-customize-website-views="website_event.opt_event_fixed_sidebar"
+                data-no-preview="true"
+                data-reload="/"/>
+        </div>
+        <div data-selector="main:has(#o_wevent_event_main)" groups="website.group_website_designer" data-no-check="true" string="Event Page">
+            <we-title class="mt-3 mb-1">Sidebar Blocks</we-title>
+            <we-checkbox string="Registration"
+                class="o_we_sublevel_1"
+                data-customize-website-views="website_event.opt_event_registration_block"
+                data-no-preview="true"
+                data-reload="/"/>
+            <we-checkbox string="Dates"
+                class="o_we_sublevel_1"
+                data-customize-website-views="website_event.opt_event_dates_block"
+                data-no-preview="true"
+                data-reload="/"/>
+            <we-checkbox string="Calendar links"
+                class="o_we_sublevel_1"
+                data-customize-website-views="website_event.opt_event_calendar_block"
+                data-no-preview="true"
+                data-reload="/"/>
+            <we-checkbox string="Location"
+                class="o_we_sublevel_1"
+                data-customize-website-views="website_event.opt_event_location_block"
+                data-no-preview="true"
+                data-reload="/"/>
+            <we-checkbox string="Organizer"
+                class="o_we_sublevel_1"
+                data-customize-website-views="website_event.opt_event_organizer_block"
+                data-no-preview="true"
+                data-reload="/"/>
+            <we-checkbox string="Share"
+                class="o_we_sublevel_1"
+                data-customize-website-views="website_event.opt_event_share_block"
+                data-no-preview="true"
+                data-reload="/"/>
+        </div>
     </xpath>
 </template>
 

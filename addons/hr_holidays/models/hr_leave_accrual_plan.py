@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from calendar import monthrange
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 from odoo.addons.hr_holidays.models.hr_leave_accrual_plan_level import _get_selection_days
-
-DAY_SELECT_VALUES = [str(i) for i in range(1, 29)] + ['last']
-DAY_SELECT_SELECTION_NO_LAST = tuple(zip(DAY_SELECT_VALUES, (str(i) for i in range(1, 29))))
 
 
 class HrLeaveAccrualPlan(models.Model):
@@ -17,7 +14,7 @@ class HrLeaveAccrualPlan(models.Model):
     active = fields.Boolean(default=True)
     name = fields.Char('Name', required=True)
     time_off_type_id = fields.Many2one('hr.leave.type', string="Time Off Type",
-        check_company=True,
+        check_company=True, index='btree_not_null',
         help="""Specify if this accrual plan can only be used with this Time Off Type.
                 Leave empty if this accrual plan can be used with any Time Off Type.""")
     employees_count = fields.Integer("Employees", compute='_compute_employee_count')
@@ -45,23 +42,22 @@ class HrLeaveAccrualPlan(models.Model):
         ("allocation", "At the allocation date"),
         ("other", "Other")],
         default="year_start", required=True, string="Carry-Over Time")
-    carryover_day = fields.Integer(default=1)
-    carryover_day_display = fields.Selection(
-        _get_selection_days, compute='_compute_carryover_day_display', inverse='_inverse_carryover_day_display')
+    carryover_day = fields.Selection(
+        _get_selection_days, compute='_compute_carryover_day', store=True, readonly=False, default='1')
     carryover_month = fields.Selection([
-        ("jan", "January"),
-        ("feb", "February"),
-        ("mar", "March"),
-        ("apr", "April"),
-        ("may", "May"),
-        ("jun", "June"),
-        ("jul", "July"),
-        ("aug", "August"),
-        ("sep", "September"),
-        ("oct", "October"),
-        ("nov", "November"),
-        ("dec", "December")
-    ], default="jan")
+        ("1", "January"),
+        ("2", "February"),
+        ("3", "March"),
+        ("4", "April"),
+        ("5", "May"),
+        ("6", "June"),
+        ("7", "July"),
+        ("8", "August"),
+        ("9", "September"),
+        ("10", "October"),
+        ("11", "November"),
+        ("12", "December")
+    ], default=lambda self: str((fields.Date.today()).month))
     added_value_type = fields.Selection([('day', 'Days'), ('hour', 'Hours')], compute='_compute_added_value_type', store=True)
 
     @api.depends('level_ids')
@@ -113,18 +109,11 @@ class HrLeaveAccrualPlan(models.Model):
             if plan.level_ids:
                 plan.added_value_type = plan.level_ids[0].added_value_type
 
-    @api.depends("carryover_day")
-    def _compute_carryover_day_display(self):
-        days_select = _get_selection_days(self)
+    @api.depends("carryover_month")
+    def _compute_carryover_day(self):
         for plan in self:
-            plan.carryover_day_display = days_select[min(plan.carryover_day - 1, 28)][0]
-
-    def _inverse_carryover_day_display(self):
-        for plan in self:
-            if plan.carryover_day_display == 'last':
-                plan.carryover_day = 31
-            else:
-                plan.carryover_day = DAY_SELECT_VALUES.index(plan.carryover_day_display) + 1
+            # 2020 is a leap year, so monthrange(2020, february) will return [2, 29]
+            plan.carryover_day = str(min(monthrange(2020, int(plan.carryover_month))[1], int(plan.carryover_day)))
 
     def action_open_accrual_plan_employees(self):
         self.ensure_one()

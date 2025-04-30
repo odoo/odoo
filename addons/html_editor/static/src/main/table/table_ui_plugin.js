@@ -28,7 +28,6 @@ export class TableUIPlugin extends Plugin {
                 commandId: "openTablePicker",
             },
         ],
-        power_buttons: { commandId: "openTablePicker" },
     };
 
     setup() {
@@ -100,7 +99,7 @@ export class TableUIPlugin extends Plugin {
             return;
         }
         if (
-            ev.target.tagName === "TD" &&
+            ["TD", "TH"].includes(target.tagName) &&
             target !== this.activeTd &&
             this.editable.contains(target)
         ) {
@@ -112,7 +111,7 @@ export class TableUIPlugin extends Plugin {
             if (isOverlay) {
                 return;
             }
-            const parentTd = closestElement(target, "td");
+            const parentTd = closestElement(target, "td, th");
             if (!parentTd) {
                 this.setActiveTd(null);
             }
@@ -155,6 +154,8 @@ export class TableUIPlugin extends Plugin {
             moveRow: withAddStep(this.dependencies.table.moveRow),
             addRow: withAddStep(this.dependencies.table.addRow),
             removeRow: withAddStep(this.dependencies.table.removeRow),
+            resetRowHeight: withAddStep(this.dependencies.table.resetRowHeight),
+            resetColumnWidth: withAddStep(this.dependencies.table.resetColumnWidth),
             resetTableSize: withAddStep(this.dependencies.table.resetTableSize),
             clearColumnContent: withAddStep(this.dependencies.table.clearColumnContent),
             clearRowContent: withAddStep(this.dependencies.table.clearRowContent),

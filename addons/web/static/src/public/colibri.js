@@ -6,6 +6,7 @@
 let owl = null;
 let Markup = null;
 
+export const INITIAL_VALUE = Symbol("initial value");
 // Return this from event handlers to skip updateContent.
 export const SKIP_IMPLICIT_UPDATE = Symbol();
 
@@ -24,6 +25,7 @@ export class Colibri {
         this.interaction = new I(el, core.env, this);
         this.interaction.setup();
     }
+
     async start() {
         await this.interaction.willStart();
         if (this.isDestroyed) {
@@ -149,28 +151,45 @@ export class Colibri {
         }
     }
 
-    applyTOut(el, value) {
+    applyTOut(el, value, initialValue) {
+        if (value === INITIAL_VALUE) {
+            value = initialValue;
+        }
         if (!Markup) {
-            owl = odoo.loader.modules.get("@odoo/owl");
             if (owl) {
                 Markup = owl.markup("").constructor;
             }
         }
         if (Markup && value instanceof Markup) {
+            let nodes = el === this.interaction.el ? el.children : [el];
+            for (const node of nodes) {
+                this.core.env.services["public.interactions"].stopInteractions(node);
+            }
             el.innerHTML = value;
+            if (el === this.interaction.el) {
+                nodes = el.children;
+            }
+            for (const node of nodes) {
+                this.core.env.services["public.interactions"].startInteractions(node);
+            }
+            this.refreshListeners();
         } else {
             el.textContent = value;
         }
     }
 
-    applyAttr(el, attr, value) {
+    applyAttr(el, attr, value, initialValue) {
         if (attr === "class") {
             if (typeof value !== "object") {
                 throw new Error("t-att-class directive expects an object");
             }
             for (const cl in value) {
-                for (const c of cl.trim().split(" ")) {
-                    el.classList.toggle(c, value[cl] || false);
+                let toApply = value[cl];
+                for (let c of cl.trim().split(" ")) {
+                    if (toApply === INITIAL_VALUE) {
+                        toApply = initialValue[cl];
+                    }
+                    el.classList.toggle(c, toApply || false);
                 }
             }
         } else if (attr === "style") {
@@ -179,6 +198,9 @@ export class Colibri {
             }
             for (const prop in value) {
                 let style = value[prop];
+                if (style === INITIAL_VALUE) {
+                    style = initialValue[prop];
+                }
                 if (style === undefined) {
                     el.style.removeProperty(prop);
                 } else {
@@ -195,6 +217,9 @@ export class Colibri {
                 }
             }
         } else {
+            if (value === INITIAL_VALUE) {
+                value = initialValue;
+            }
             if ([false, undefined, null].includes(value)) {
                 el.removeAttribute(attr);
             } else {
@@ -209,8 +234,15 @@ export class Colibri {
     getNodes(sel) {
         const selectors = this.interaction.dynamicSelectors;
         if (sel in selectors) {
-            const elem = selectors[sel]();
-            return elem ? [elem] : [];
+            const elems = selectors[sel]();
+            if (elems) {
+                if (elems.nodeName && ["FORM", "SELECT"].includes(elems.nodeName)) {
+                    return [elems];
+                }
+                return elems[Symbol.iterator] ? elems : [elems];
+            } else {
+                return [];
+            }
         }
         return this.interaction.el.querySelectorAll(sel);
     }
@@ -238,7 +270,7 @@ export class Colibri {
                     const attr = directive.slice(6);
                     this.dynamicAttrs.push({ nodes, attr, definition: value, initialValues: null });
                 } else if (directive === "t-out") {
-                    this.tOuts.push([nodes, value]);
+                    this.tOuts.push([nodes, value, null]);
                 } else if (directive === "t-component") {
                     const { Component } = odoo.loader.modules.get("@odoo/owl");
                     if (Object.prototype.isPrototypeOf.call(Component, value)) {
@@ -292,7 +324,7 @@ export class Colibri {
                                     const priority = node.style.getPropertyPriority(property);
                                     attrValue[property] = propertyValue
                                         ? propertyValue + (priority ? ` !${priority}` : "")
-                                        : "";
+                                        : undefined;
                                 }
                                 break;
                             default:
@@ -300,15 +332,28 @@ export class Colibri {
                         }
                         valuePerNode.set(node, attrValue);
                     }
-                    this.applyAttr(node, attr, value);
+                    this.applyAttr(node, attr, value, dynamicAttr.initialValues.get(node));
                 } catch (e) {
                     errors.push({ error: e, attribute: attr });
                 }
             }
         }
-        for (const [nodes, definition] of this.tOuts) {
+        for (const tOut of this.tOuts) {
+            const [nodes, definition, initialValue] = tOut;
+            let valuePerNode;
+            if (!initialValue) {
+                valuePerNode = new Map();
+                tOut[2] = valuePerNode;
+            }
             for (const node of nodes) {
-                this.applyTOut(node, definition.call(interaction, node));
+                if (!initialValue) {
+                    if (!owl) {
+                        owl = odoo.loader.modules.get("@odoo/owl");
+                    }
+                    const value = node.children.length ? owl.markup(node.innerHTML) : node.textContent;
+                    valuePerNode.set(node, value);
+                }
+                this.applyTOut(node, definition.call(interaction, node), tOut[2].get(node));
             }
         }
         this.isUpdating = false;
@@ -344,5 +389,15 @@ export class Colibri {
         this.core = null;
         this.isDestroyed = true;
         this.isReady = false;
+    }
+
+    /**
+     * Patchable mechanism to handle context-specific protection of a specific
+     * chunk of synchronous code after returning from an asynchronous one.
+     * This should typically be used around code that follows an
+     * await waitFor(...).
+     */
+    protectSyncAfterAsync(interaction, name, fn) {
+        return fn.bind(interaction);
     }
 }

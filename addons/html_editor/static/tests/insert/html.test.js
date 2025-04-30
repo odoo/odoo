@@ -4,7 +4,7 @@ import { tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
-import { dispatchClean } from "../_helpers/dispatch";
+import { cleanHints } from "../_helpers/dispatch";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { addStep } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
@@ -27,7 +27,7 @@ describe("collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfterEdit:
-                '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]</p>',
+                '<p>\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]</p>',
             contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]</p>',
         });
     });
@@ -43,7 +43,7 @@ describe("collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfterEdit:
-                '<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]',
+                '<p><br></p>\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]',
             contentAfter: '<p><br></p><i class="fa fa-pastafarianism"></i>[]',
             config: { allowInlineAtRoot: true },
         });
@@ -59,7 +59,7 @@ describe("collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfterEdit:
-                '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]b</p>',
+                '<p>a\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]b</p>',
             contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]b</p>',
         });
     });
@@ -74,7 +74,7 @@ describe("collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfterEdit:
-                '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]b</p>',
+                '<p>a\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]b</p>',
             contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]b</p>',
         });
     });
@@ -290,6 +290,7 @@ describe("collapsed selection", () => {
         editor.shared.dom.insert(
             parseHTML(editor.document, `<p data-oe-protected="true">in</p>`).firstElementChild
         );
+        cleanHints(editor);
         expect(getContent(editor.editable, { sortAttrs: true })).toBe(
             `<p contenteditable="false" data-oe-protected="true">in</p><p>[]<br></p>`
         );
@@ -327,7 +328,7 @@ describe("collapsed selection", () => {
         const { el, editor } = await setupEditor(`<p>[]<br></p>`);
         editor.shared.dom.insert(parseHTML(editor.document, `<div class="oe_unbreakable">a</div>`));
         editor.shared.history.addStep();
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(`<div class="oe_unbreakable">a</div><p>[]<br></p>`);
     });
 
@@ -335,7 +336,7 @@ describe("collapsed selection", () => {
         const { el, editor } = await setupEditor(`<p>b[]</p>`);
         editor.shared.dom.insert(parseHTML(editor.document, `<div class="oe_unbreakable">a</div>`));
         editor.shared.history.addStep();
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(`<p>b</p><div class="oe_unbreakable">a</div><p>[]<br></p>`);
     });
 
@@ -390,7 +391,7 @@ describe("not collapsed selection", () => {
                 );
             },
             contentAfterEdit:
-                '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]</p>',
+                '<p>\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]</p>',
             contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]</p>',
         });
     });
@@ -405,7 +406,7 @@ describe("not collapsed selection", () => {
                 editor.shared.history.addStep();
             },
             contentAfterEdit:
-                '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]c</p>',
+                '<p>a\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]c</p>',
             contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]c</p>',
         });
     });

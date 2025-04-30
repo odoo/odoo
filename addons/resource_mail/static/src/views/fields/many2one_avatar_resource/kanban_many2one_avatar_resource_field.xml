@@ -8,13 +8,13 @@
             <t t-set-slot="avatar">
                 <t t-if="props.record.data.resource_type === 'material'">
                     <span class="o_avatar o_m2o_avatar">
-                        <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="value[1]">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="value.display_name">
                             <i class="fa fa-wrench"/>
                         </span>
                     </span>
                 </t>
                 <t t-elif="props.record.data.resource_type === 'user'">
-                    <AvatarResource cssClass="'o_m2o_avatar'" resModel="relation" resId="value[0]"/>
+                    <AvatarResource cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id"/>
                 </t>
             </t>
             <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">

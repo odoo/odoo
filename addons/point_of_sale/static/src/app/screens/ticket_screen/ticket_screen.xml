@@ -38,10 +38,10 @@
                                 <tbody>
                                     <t t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                         <tr class="order-row" t-attf-class="{{ isHighlighted(order) ? 'highlight active': '' }}"
-                                            t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.uiState.locked ? ()=>{} : this._setOrder(order)" >
+                                            t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.uiState.locked ? ()=>{} : this.setOrder(order)" >
                                             <td>
-                                                <div class="fs-6 fw-bolder"><t t-esc="getDate(order)"></t></div>
-                                                <div class="small text-muted"><t t-esc="getTime(order)"></t></div>
+                                                <div class="fs-6 fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
+                                                <div class="small text-muted"><t t-esc="this.pos.getTime(order.date_order)"></t></div>
                                             </td>
                                             <td>
                                                 <div class="fw-bolder"><t t-esc="order.getName()"></t></div>
@@ -52,6 +52,9 @@
                                                 <div t-if="usePreset" t-attf-class="badge rounded o_colorlist_item_color_{{order.preset_id?.color}}" style="font-size: 0.75rem !important;">
                                                     <t t-esc="order.preset_id?.name"></t>
                                                 </div>
+                                            </td>
+                                            <td class="align-middle">
+                                                <div t-if="order.presetTime" t-attf-class="fs-6 badge rounded {{this.getPresetTimeColor(order)}}"><t t-esc="order.presetTime"/></div>
                                             </td>
                                             <td t-if="showCardholderName()">
                                                 <div><t t-esc="getCardholderName(order)"></t></div>
@@ -86,10 +89,10 @@
                             </table>
                             <t t-if="ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                 <div class="mobileOrderList order-row d-flex flex-row ps-1" t-attf-class="{{ isHighlighted(order) ? 'highlight': '' }}"
-                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.uiState.locked ? ()=>{} : this._setOrder(order)" >
+                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.uiState.locked ? ()=>{} : this.setOrder(order)" >
                                     <div class="p-2">
-                                            <div class="fw-bolder"><t t-esc="getDate(order)"></t></div>
-                                            <div class="small text-muted"><t t-esc="getTime(order)"></t></div>
+                                            <div class="fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
+                                            <div class="small text-muted"><t t-esc="this.pos.getTime(order.date_order)"></t></div>
                                     </div>
                                     <div class="p-2 d-flex flex-column flex-grow-1 justify-content-center align-items-start">
                                         <div class="fw-bolder"><t t-esc="order.getName()"></t></div>
@@ -129,7 +132,7 @@
                         <button class="btn-switchpane load-order-button primary btn btn-primary btn-lg lh-lg w-50 py-3"
                             t-att-disabled="!_selectedSyncedOrder"
                             t-if="!isOrderSynced"
-                            t-on-click="() => this._setOrder(_selectedSyncedOrder)">
+                            t-on-click="() => this.setOrder(_selectedSyncedOrder)">
                             <span class="d-block">Load Order</span>
                         </button>
                         <button class="btn-switchpane btn btn-lg lh-lg w-50 py-3 secondary review-button" t-att-class="{'btn-primary': isOrderSynced, 'btn-light': !isOrderSynced}" t-on-click="switchPane">
@@ -196,7 +199,7 @@
                                 <BackButton onClick="() => pos.onClickBackButton()"/>
                                 <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"
                                     t-att-disabled="!_selectedSyncedOrder"
-                                    t-on-click="() => this._setOrder(_selectedSyncedOrder)">
+                                    t-on-click="() => this.setOrder(_selectedSyncedOrder)">
                                     <span class="d-block">Load Order</span>
                                 </button>
                             </div>

@@ -17,9 +17,9 @@ class EventTypeBooth(models.Model):
     name = fields.Char(string='Name', required=True, translate=True)
     event_type_id = fields.Many2one(
         'event.type', string='Event Category',
-        ondelete='cascade', required=True)
+        ondelete='cascade', required=True, index=True)
     booth_category_id = fields.Many2one(
-        'event.booth.category', string='Booth Category',
+        'event.booth.category', string='Booth Category', index=True,
         default=_get_default_booth_category, ondelete='restrict', required=True)
 
     @api.model

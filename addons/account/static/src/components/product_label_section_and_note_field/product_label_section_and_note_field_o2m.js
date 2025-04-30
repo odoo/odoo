@@ -38,16 +38,20 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         return super.processAllColumn(allColumns, list);
     }
 
-    getActiveColumns(list) {
-        let activeColumns = super.getActiveColumns(list);
+    getActiveColumns() {
+        let activeColumns = super.getActiveColumns();
         const productCol = activeColumns.find((col) => this.productColumns.includes(col.name));
         const labelCol = activeColumns.find((col) => col.name === "name");
 
         if (productCol) {
             if (labelCol) {
-                list.records.forEach((record) => (record.columnIsProductAndLabel = true));
+                this.props.list.records.forEach(
+                    (record) => (record.columnIsProductAndLabel = true)
+                );
             } else {
-                list.records.forEach((record) => (record.columnIsProductAndLabel = false));
+                this.props.list.records.forEach(
+                    (record) => (record.columnIsProductAndLabel = false)
+                );
             }
             activeColumns = activeColumns.filter((col) => col.name !== "name");
             this.titleField = productCol.name;

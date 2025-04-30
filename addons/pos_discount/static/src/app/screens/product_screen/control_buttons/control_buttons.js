@@ -3,6 +3,7 @@ import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/n
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { patch } from "@web/core/utils/patch";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 patch(ControlButtons.prototype, {
     async clickDiscount() {
@@ -10,16 +11,16 @@ patch(ControlButtons.prototype, {
             title: _t("Discount Percentage"),
             startingValue: this.pos.config.discount_pc,
             getPayload: (num) => {
-                const val = Math.max(
+                const percent = Math.max(
                     0,
                     Math.min(100, this.env.utils.parseValidFloat(num.toString()))
                 );
-                this.applyDiscount(val);
+                this.applyDiscount(percent);
             },
         });
     },
     // FIXME business method in a compoenent, maybe to move in pos_store
-    async applyDiscount(pc) {
+    async applyDiscount(percent) {
         const order = this.pos.getOrder();
         const lines = order.getOrderlines();
         const product = this.pos.config.discount_product_id;
@@ -36,37 +37,40 @@ patch(ControlButtons.prototype, {
         // Remove existing discounts
         lines.filter((line) => line.getProduct() === product).forEach((line) => line.delete());
 
-        // Add one discount line per tax group
-        const linesByTax = order.getOrderlinesGroupedByTaxIds();
-        for (const [tax_ids, lines] of Object.entries(linesByTax)) {
-            // Note that tax_ids_array is an Array of tax_ids that apply to these lines
-            // That is, the use case of products with more than one tax is supported.
-            const tax_ids_array = tax_ids
-                .split(",")
-                .filter((id) => id !== "")
-                .map((id) => Number(id));
+        const discountableLines = lines.filter((line) => line.isGlobalDiscountApplicable());
+        const baseLines = discountableLines.map((line) =>
+            line.prepareBaseLineForTaxesComputationExtraValues()
+        );
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, order.company_id);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, order.company_id);
 
-            const baseToDiscount = order.calculateBaseAmount(
-                lines.filter((ll) => ll.isGlobalDiscountApplicable())
-            );
+        const groupingFunction = (base_line) => ({
+            grouping_key: { product_id: product },
+            raw_grouping_key: { product_id: product.id },
+        });
 
-            const taxes = tax_ids_array
-                .map((taxId) => this.pos.models["account.tax"].get(taxId))
-                .filter(Boolean);
-
-            // We add the price as manually set to avoid recomputation when changing customer.
-            const discount = (-pc / 100.0) * baseToDiscount;
-            if (discount < 0) {
-                await this.pos.addLineToCurrentOrder(
-                    {
-                        product_id: product,
-                        price_unit: discount,
-                        tax_ids: [["link", ...taxes]],
-                        product_tmpl_id: product.product_tmpl_id,
-                    },
-                    { merge: false }
-                );
+        const globalDiscountBaseLines = accountTaxHelpers.prepare_global_discount_lines(
+            baseLines,
+            order.company_id,
+            "percent",
+            percent,
+            {
+                computation_key: "global_discount",
+                grouping_function: groupingFunction,
             }
+        );
+        for (const baseLine of globalDiscountBaseLines) {
+            await this.pos.addLineToCurrentOrder(
+                {
+                    product_id: baseLine.product_id,
+                    price_unit: baseLine.price_unit,
+                    qty: baseLine.quantity,
+                    tax_ids: [["link", ...baseLine.tax_ids]],
+                    product_tmpl_id: baseLine.product_id.product_tmpl_id,
+                    extra_tax_data: accountTaxHelpers.export_base_line_extra_tax_data(baseLine),
+                },
+                { merge: false }
+            );
         }
     },
 });

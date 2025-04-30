@@ -138,8 +138,8 @@ class AccountMove(models.Model):
 
     def _l10n_es_edi_facturae_get_tax_period(self):
         self.ensure_one()
-        if self.env['res.company'].fields_get(['account_tax_periodicity']):
-            period_start, period_end = self.company_id._get_tax_closing_period_boundaries(self.date, self.env.ref('l10n_es.mod_303'))
+        if self.env['res.company'].fields_get(['account_return_periodicity']):
+            period_start, period_end = self.env.ref('l10n_es_reports.es_mod303_tax_return_type')._get_period_boundaries(self.company_id, self.date)
         else:
             period_start = date_utils.start_of(self.date, 'month')
             period_end = date_utils.end_of(self.date, 'month')
@@ -276,12 +276,13 @@ class AccountMove(models.Model):
         receiver_transaction_reference = (
             line.sale_line_ids.order_id.client_order_ref[:20]
             if 'sale_line_ids' in line._fields and line.sale_line_ids.order_id.client_order_ref
-            else False
+            else invoice_ref
         )
 
         xml_values = {
             'ReceiverTransactionReference': receiver_transaction_reference,
             'FileReference': invoice_ref,
+            'ReceiverContractReference': invoice_ref,
             'FileDate': fields.Date.context_today(self),
             'ItemDescription': line.name,
             'Quantity': line.quantity,
@@ -571,9 +572,7 @@ class AccountMove(models.Model):
             if country:
                 partner_vals['country_id'] = country.id
             partner = self.env['res.partner'].create(partner_vals)
-            if vat and self.env['res.partner']._run_vat_test(vat, country):
-                partner.vat = vat
-
+            partner.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
         return partner
 
     def _import_invoice_facturae_invoices(self, invoice, partner, tree):

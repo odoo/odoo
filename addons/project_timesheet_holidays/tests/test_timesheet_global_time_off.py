@@ -409,6 +409,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         test_user = self.env['res.users'].with_company(self.test_company).create({
             'name': 'Jonathan Doe',
             'login': 'jdoe@example.com',
+            'group_ids': self.env.ref('hr_timesheet.group_hr_timesheet_user'),
         })
         test_user.with_company(self.test_company).action_create_employee()
         test_user.employee_id.write({
@@ -432,7 +433,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         hr_leave_type_with_ts = self.env['hr.leave.type'].create({
             'name': 'Leave Type with timesheet generation',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         # create and validate a leave for full time employee
@@ -444,7 +445,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             'request_date_from': hr_leave_start_datetime,
             'request_date_to': hr_leave_end_datetime,
         })
-        holiday.sudo().action_validate()
+        holiday.sudo().action_approve()
         self.assertEqual(len(holiday.timesheet_ids), 5)
 
         # create overlapping global time off
@@ -487,7 +488,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             'request_date_from': hr_leave_start_datetime,
             'request_date_to': hr_leave_end_datetime,
         })
-        holiday2.sudo().action_validate()
+        holiday2.sudo().action_approve()
 
         # recreate the global time off
         global_time_off = self.env['resource.calendar.leaves'].create({

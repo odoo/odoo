@@ -101,23 +101,22 @@ export class ProductConfiguratorPopup extends Component {
     }
 
     get product() {
+        let product = null;
         const alwaysVariants = this.attributes.every(
             (line) => line.attribute_id.create_variant === "always"
         );
 
         if (alwaysVariants) {
             const selectedAttributeValuesIds = this.selectedValues.map(({ id }) => id);
-            const product = this.pos.models["product.product"].find(
+            product = this.pos.models["product.product"].find(
                 (product) =>
                     product.product_template_variant_value_ids?.length > 0 &&
                     product.product_template_variant_value_ids.every(({ id }) =>
                         selectedAttributeValuesIds.includes(id)
                     )
             );
-            return product ? product : this.pos.models["product.product"];
         }
-
-        return this.pos.models["product.product"];
+        return product;
     }
 
     initAttributes() {
@@ -200,6 +199,19 @@ export class ProductConfiguratorPopup extends Component {
         );
     }
 
+    get title() {
+        const info = this.props.productTemplate.getProductPriceInfo(this.product, this.pos.company);
+        const name = this.props.productTemplate.display_name;
+        const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
+        const taxName = info?.taxes_data[0]?.name || "";
+        const taxAmount = this.env.utils.formatCurrency(
+            info?.taxes_data[0]?.raw_tax_amount_currency || 0.0
+        );
+        return `${name} | ${total} | VAT: ${taxName} (= ${taxAmount})`;
+    }
+    get showInfoBanner() {
+        return this.props.productTemplate.is_storable;
+    }
     close() {
         this.props.close();
     }

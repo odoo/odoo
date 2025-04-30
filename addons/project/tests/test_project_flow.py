@@ -406,3 +406,33 @@ class TestProjectFlow(TestProjectCommon, MailCase):
         self.project_pigs.stage_id = stage.id
         project_copy = self.project_pigs.with_context(default_stage_id=stage.id).copy()
         self.assertNotEqual(project_copy.stage_id, self.project_pigs.stage_id, 'Copied project should have lowest sequence stage')
+
+    def test_project_task_copy_without_archive_user(self):
+        self.user_projectuser.action_archive()
+        task = self.task_1.copy()
+        self.assertFalse(task.user_ids)
+        task_b = self.task_2.copy({
+            'name': 'Task B',
+            'user_ids': [Command.set([self.user_projectuser.id, self.user_projectmanager.id])],
+        })
+        self.assertEqual(self.user_projectuser + self.user_projectmanager, task_b.user_ids)
+
+    def test_project_sub_task_copy_without_archive_user(self):
+        self.task_1.write({
+            'child_ids': [self.task_2.id]
+        })
+        self.user_projectmanager.action_archive()
+        task_1_copy = self.task_1.copy()
+        self.assertFalse(task_1_copy.child_ids.user_ids)
+
+    def test_task_email_context_with_subtitles(self):
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'user_ids': [Command.set([self.user_projectuser.id])],
+            'project_id': self.project_goats.id,
+        })
+        self.assertFalse(self.project_goats.message_follower_ids)
+        self.assertEqual(self.project_goats.privacy_visibility, 'followers')
+        self.project_goats.invalidate_recordset()
+        render_context = task.with_user(self.user_projectuser)._notify_by_email_prepare_rendering_context(task.message_ids, {})
+        self.assertListEqual(render_context['subtitles'], ['Task', 'Project: Goats, Stage: New'])

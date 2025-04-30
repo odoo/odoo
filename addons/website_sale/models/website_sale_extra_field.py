@@ -8,7 +8,7 @@ class WebsiteSaleExtraField(models.Model):
     _description = "E-Commerce Extra Info Shown on product page"
     _order = 'sequence'
 
-    website_id = fields.Many2one(comodel_name='website')
+    website_id = fields.Many2one(comodel_name='website', index='btree_not_null')
     sequence = fields.Integer(default=10)
     field_id = fields.Many2one(
         comodel_name='ir.model.fields',

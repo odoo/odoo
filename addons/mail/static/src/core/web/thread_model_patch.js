@@ -1,8 +1,9 @@
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
-import { Record } from "../common/record";
+import { fields } from "../common/record";
 import { compareDatetime } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 /** @type {import("models").Thread} */
 const threadPatch = {
@@ -10,8 +11,8 @@ const threadPatch = {
         super.setup();
         /** @type {number|undefined} */
         this.recipientsCount = undefined;
-        this.recipients = Record.many("mail.followers");
-        this.activities = Record.many("mail.activity", {
+        this.recipients = fields.Many("mail.followers");
+        this.activities = fields.Many("mail.activity", {
             sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
             onDelete(r) {
                 r.remove();
@@ -48,7 +49,7 @@ const threadPatch = {
         this.store.insert(data);
     },
     open(options) {
-        if (this.model === "discuss.channel") {
+        if (this.model === "discuss.channel" && !this.selfMember) {
             this.store.env.services["bus_service"].addChannel(this.busChannel);
         }
         if (!this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
@@ -76,5 +77,13 @@ const threadPatch = {
         await chatWindow?.close();
         await super.unpin(...arguments);
     },
+    async follow() {
+        const data = await rpc("/mail/thread/subscribe", {
+            res_model: this.model,
+            res_id: this.id,
+            partner_ids: [this.store.self.id],
+        });
+        this.store.insert(data);
+    }
 };
 patch(Thread.prototype, threadPatch);

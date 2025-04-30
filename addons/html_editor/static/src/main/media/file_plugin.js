@@ -9,6 +9,9 @@ import { _t } from "@web/core/l10n/translation";
 export class FilePlugin extends Plugin {
     static id = "file";
     static dependencies = ["dom", "history"];
+    static defaultConfig = {
+        allowFile: true,
+    };
     resources = {
         user_commands: {
             id: "uploadFile",
@@ -23,9 +26,12 @@ export class FilePlugin extends Plugin {
             commandId: "uploadFile",
             keywords: [_t("file"), _t("document")],
         },
-        power_buttons: withSequence(5, { commandId: "uploadFile" }),
+        power_buttons: withSequence(5, {
+            commandId: "uploadFile",
+            description: _t("Upload a file"),
+        }),
         unsplittable_node_predicates: (node) => node.classList?.contains("o_file_box"),
-        ...(!this.config.disableFile && {
+        ...(this.config.allowFile && {
             media_dialog_extra_tabs: {
                 id: "DOCUMENTS",
                 title: _t("Documents"),
@@ -41,7 +47,7 @@ export class FilePlugin extends Plugin {
     }
 
     isUploadCommandAvailable() {
-        return !this.config.disableFile;
+        return this.config.allowFile;
     }
 
     get componentForMediaDialog() {

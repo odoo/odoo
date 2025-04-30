@@ -164,6 +164,13 @@
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_open_split_expense"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            invisible="not split_expense_origin_id"
+                            string="Split"
+                        />
                         <button name="action_open_account_move"
                             class="oe_stat_button"
                             icon="fa-bars"
@@ -276,7 +283,7 @@
                                    context="{'default_company_id': company_id}"/>
                             <field name="vendor_id" invisible="payment_mode != 'company_account'"/>
                             <field name="account_id" options="{'no_create': True}"
-                                   domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('deprecated', '=', False), ('company_ids', 'parent_of', company_id)]"
+                                   domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_ids', 'parent_of', company_id)]"
                                    groups="account.group_account_readonly" readonly="not is_editable"
                                    context="{'default_company_id': company_id}"/>
                             <field name="payment_method_line_id"
@@ -423,10 +430,10 @@
             <field name="arch" type="xml">
                 <search string="Expense">
                     <!-- Search -->
-                    <field name="name" filter_domain="[('name', '=like', self)]" string="Expense"/>
-                    <field name="department_id" filter_domain="[('department_id.name', '=like', self)]"/>
-                    <field name="company_id" filter_domain="[('company_id.name', '=like', self)]" groups="base.group_multi_company"/>
-                    <field name="employee_id" filter_domain="[('employee_id.name', '=like', self)]"/>
+                    <field name="name" filter_domain="[('name', 'ilike', self)]" string="Expense"/>
+                    <field name="department_id" filter_domain="[('department_id.name', 'ilike', self)]"/>
+                    <field name="company_id" filter_domain="[('company_id.name', 'ilike', self)]" groups="base.group_multi_company"/>
+                    <field name="employee_id" filter_domain="[('employee_id.name', 'ilike', self)]"/>
 
                     <!-- Filters -->
                     <filter string="My Expenses" name="my_open_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
@@ -448,13 +455,16 @@
                     <filter string="All to Pay" name="all_to_pay" domain="[('state', '=', 'posted'), ('payment_mode', '=', 'own_account')]" invisible="True"/>
                     <filter string="All Paid" name="all_paid" domain="[('state', 'in', ['in_payment', 'paid']), ('payment_mode', '=', 'own_account')]" invisible="True"/>
 
+                    <filter invisible="1" string="My Activities" name="filter_activities_my"
+                        domain="[('activity_user_id', '=', uid)]"/>
+                    <separator invisible="1"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                        help="Show all records which has next action date is before today"/>
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records whose next activity date is past"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
 
                     <!-- Group bys -->
                     <group expand="0" string="Group By" name="group_filters">

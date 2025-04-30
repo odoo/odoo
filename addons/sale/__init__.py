@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
+from odoo.tools.misc import str2bool
+
+from . import const
 from . import controllers
+from . import models
 from . import report
 from . import wizard
 
 
 def _post_init_hook(env):
-    _synchronize_cron(env)
+    _synchronize_crons(env)
     _setup_property_downpayment_account(env)
 
 
-def _synchronize_cron(env):
-    send_invoice_cron = env.ref('sale.send_invoice_cron', raise_if_not_found=False)
-    if send_invoice_cron:
-        config = env['ir.config_parameter'].get_param('sale.automatic_invoice', False)
-        send_invoice_cron.active = bool(config)
+def _synchronize_crons(env):
+    for param, cron_xmlid in const.PARAM_CRON_MAPPING.items():
+        if cron := env.ref(cron_xmlid, raise_if_not_found=False):
+            cron.active = str2bool(env['ir.config_parameter'].get_param(param, 'False'))
 
 
 def _setup_property_downpayment_account(env):

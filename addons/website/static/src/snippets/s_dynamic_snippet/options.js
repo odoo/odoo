@@ -241,6 +241,9 @@ const dynamicSnippetOptions = options.Class.extend({
             } else {
                 button.innerText = data[id].name;
             }
+            if (data[id].help) {
+                button.title = data[id].help;
+            }
             selectUserValueWidgetElement.appendChild(button);
         }
     },

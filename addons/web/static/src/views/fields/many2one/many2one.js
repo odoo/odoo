@@ -14,16 +14,14 @@ import { Many2XAutocomplete, useOpenMany2XRecord } from "../relational_utils";
 // UTILS
 ///////////////////////////////////////////////////////////////////////////////
 
-export function m2oTupleFromData(data) {
-    const id = data.id;
+function extractData(record) {
     let name;
-    if ("display_name" in data) {
-        name = data.display_name;
-    } else {
-        const _name = data.name;
-        name = Array.isArray(_name) ? _name[1] : _name;
+    if ("display_name" in record) {
+        name = record.display_name;
+    } else if ("name" in record) {
+        name = record.name.id ? record.name.display_name : record.name;
     }
-    return [id, name];
+    return { id: record.id, display_name: name };
 }
 
 export function computeM2OProps(fieldProps) {
@@ -59,8 +57,10 @@ export function computeM2OProps(fieldProps) {
         placeholder: fieldProps.placeholder,
         readonly: fieldProps.readonly,
         relation: fieldProps.record.fields[fieldProps.name].relation,
+        searchThreshold: fieldProps.searchThreshold,
         string: fieldProps.string || fieldProps.record.fields[fieldProps.name].string || "",
-        update: (value) => fieldProps.record.update({ [fieldProps.name]: value }),
+        update: (value, options = {}) =>
+            fieldProps.record.update({ [fieldProps.name]: value }, options),
         value: toRaw(fieldProps.record.data[fieldProps.name]),
     };
 }
@@ -84,7 +84,6 @@ export class Many2One extends Component {
         createAction: { type: Function, optional: true },
         cssClass: { type: String, optional: true },
         domain: { type: Function, optional: true },
-        getOptionClassnames: { type: Function, optional: true },
         id: { type: String, optional: true },
         linkCssClass: { type: String, optional: true },
         nameCreateField: { type: String, optional: true },
@@ -95,11 +94,12 @@ export class Many2One extends Component {
         readonly: { type: Boolean, optional: true },
         relation: { type: String },
         searchMoreLabel: { type: String, optional: true },
+        searchThreshold: { type: Number, optional: true },
         slots: { type: Object, optional: true },
         specification: { type: Object, optional: true },
         string: { type: String, optional: true },
         update: { type: Function },
-        value: { type: [Array, { value: false }] },
+        value: { type: [Array, Object, { value: false }], optional: true },
     };
     static defaultProps = {
         canCreate: true,
@@ -137,13 +137,13 @@ export class Many2One extends Component {
                     this.input.focus();
                 },
                 onRecordSaved: async () => {
-                    const resId = this.value?.id;
+                    const resId = this.props.value?.id;
                     const fieldNames = ["display_name"];
                     // use unity read + relatedFields from Field Component
                     const records = await this.orm.read(this.props.relation, [resId], fieldNames, {
                         context: this.props.context,
                     });
-                    await this.update(records[0] ? m2oTupleFromData(records[0]) : false);
+                    await this.update(records[0] ? extractData(records[0]) : false);
                 },
                 onRecordDiscarded: () => {},
                 resModel: this.props.relation,
@@ -167,7 +167,6 @@ export class Many2One extends Component {
             createAction: this.props.createAction,
             fieldString: this.props.string,
             getDomain: this.props.domain,
-            getOptionClassnames: this.props.getOptionClassnames,
             id: this.props.id,
             nameCreateField: this.props.nameCreateField,
             noSearchMore: !this.props.canSearchMore,
@@ -176,13 +175,14 @@ export class Many2One extends Component {
             quickCreate: this.props.canQuickCreate ? (name) => this.quickCreate(name) : null,
             resModel: this.props.relation,
             searchMoreLabel: this.props.searchMoreLabel,
+            searchThreshold: this.props.searchThreshold,
             setInputFloats: (isFloating) => {
                 this.state.isFloating = isFloating;
             },
             slots: this.props.slots,
             specification: this.props.specification,
             update: (records) => {
-                const idNamePair = records && records[0] ? m2oTupleFromData(records[0]) : false;
+                const idNamePair = records && records[0] ? extractData(records[0]) : false;
                 return this.update(idNamePair);
             },
             value: this.displayName,
@@ -190,10 +190,9 @@ export class Many2One extends Component {
     }
 
     get displayName() {
-        const value = this.value;
-        if (value) {
-            if (value.display_name) {
-                return value.display_name.split("\n")[0];
+        if (this.props.value) {
+            if (this.props.value.display_name) {
+                return this.props.value.display_name.split("\n")[0];
             } else {
                 return _t("Unnamed");
             }
@@ -203,7 +202,7 @@ export class Many2One extends Component {
     }
 
     get extraLines() {
-        const name = this.value?.display_name;
+        const name = this.props.value?.display_name;
         return name
             ? name
                   .split("\n")
@@ -218,7 +217,7 @@ export class Many2One extends Component {
     }
 
     get hasLinkButton() {
-        return this.props.canOpen && !!this.value && !this.state.isFloating;
+        return this.props.canOpen && !!this.props.value && !this.state.isFloating;
     }
 
     get input() {
@@ -226,18 +225,13 @@ export class Many2One extends Component {
     }
 
     get linkHref() {
-        if (!this.value) {
+        if (!this.props.value) {
             return "/";
         }
         const relation = this.props.relation.includes(".")
             ? this.props.relation
             : `m-${this.props.relation}`;
-        return `/odoo/${relation}/${this.value.id}`;
-    }
-
-    get value() {
-        const value = this.props.value;
-        return value ? { id: value[0], display_name: value[1] } : null;
+        return `/odoo/${relation}/${this.props.value.id}`;
     }
 
     async openBarcodeScanner() {
@@ -276,7 +270,7 @@ export class Many2One extends Component {
         const action = await this.orm.call(
             this.props.relation,
             "get_formview_action",
-            [[this.value?.id]],
+            [[this.props.value?.id]],
             { context: this.props.openActionContext() }
         );
         await this.action.doAction(action, { newWindow });
@@ -284,7 +278,7 @@ export class Many2One extends Component {
 
     async openRecordInDialog() {
         return this.recordDialog.open({
-            resId: this.value?.id,
+            resId: this.props.value?.id,
             context: this.props.context,
         });
     }
@@ -299,7 +293,8 @@ export class Many2One extends Component {
         });
         const validPairs = pairs.filter(([id]) => !!id);
         if (validPairs.length === 1) {
-            return this.update(validPairs[0]);
+            const pair = validPairs[0];
+            return this.update({ id: pair[0], display_name: pair[1] });
         } else {
             const input = this.input;
             input.value = barcode;
@@ -311,7 +306,7 @@ export class Many2One extends Component {
     }
 
     quickCreate(name) {
-        return this.update([false, name]);
+        return this.update({ id: false, display_name: name });
     }
 
     update(idNamePair) {
@@ -352,6 +347,10 @@ export class KanbanMany2One extends Component {
             canQuickCreate: false,
             placeholder: this.props.placeholder || _t("Search user..."),
             readonly: false,
+            update: async (value) => {
+                await this.props.update(value, { save: true });
+                this.assignPopover.close();
+            },
         });
     }
 }

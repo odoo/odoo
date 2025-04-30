@@ -2,6 +2,7 @@ import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import {
     isAllowedContent,
+    isButton,
     isContentEditable,
     isEditorTab,
     isEmpty,
@@ -14,6 +15,7 @@ import {
     isTextNode,
     isVisibleTextNode,
     isWhitespace,
+    isZwnbsp,
     isZWS,
     nextLeaf,
     previousLeaf,
@@ -42,6 +44,7 @@ import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
 import { compareListTypes } from "@html_editor/main/list/utils";
 import { hasTouch, isBrowserChrome } from "@web/core/browser/feature_detection";
+import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils/selection";
 
 /**
  * @typedef {Object} RangeLike
@@ -110,6 +113,24 @@ export class DeletePlugin extends Plugin {
         this.findNextPosition = this.makeFindPositionFn("forward");
     }
 
+    /**
+     * @param {EditorSelection} selection
+     * @returns {Range}
+     */
+    getNormalizedRange(selection) {
+        let { startContainer, startOffset, endContainer, endOffset, isCollapsed } = selection;
+        for (const normalizer of [normalizeDeepCursorPosition, normalizeFakeBR]) {
+            [startContainer, startOffset] = normalizer(startContainer, startOffset);
+            [endContainer, endOffset] = isCollapsed
+                ? [startContainer, startOffset]
+                : normalizer(endContainer, endOffset);
+        }
+        const range = this.document.createRange();
+        range.setStart(startContainer, startOffset);
+        range.setEnd(endContainer, endOffset);
+        return range;
+    }
+
     // --------------------------------------------------------------------------
     // commands
     // --------------------------------------------------------------------------
@@ -121,14 +142,11 @@ export class DeletePlugin extends Plugin {
         // @todo @phoenix: handle non-collapsed selection around a ZWS
         // see collapseIfZWS
 
-        // Normalize selection
-        selection = this.dependencies.selection.setSelection(selection);
-
-        if (selection.isCollapsed) {
+        let range = this.getNormalizedRange(selection);
+        if (range.collapsed || !closestElement(range.commonAncestorContainer).isContentEditable) {
             return;
         }
-
-        let range = this.adjustRange(selection, [
+        range = this.adjustRange(range, [
             this.expandRangeToIncludeNonEditables,
             this.includeEndOrStartBlock,
             this.fullyIncludeLinks,
@@ -148,6 +166,7 @@ export class DeletePlugin extends Plugin {
      */
     delete(direction, granularity) {
         const selection = this.dependencies.selection.getEditableSelection();
+        this.dispatchTo("before_delete_handlers");
 
         if (!selection.isCollapsed) {
             this.deleteSelection(selection);
@@ -171,8 +190,10 @@ export class DeletePlugin extends Plugin {
      * @param {"character"|"word"|"line"} granularity
      */
     deleteBackward(selection, granularity) {
-        // Normalize selection
-        const { endContainer, endOffset } = this.dependencies.selection.setSelection(selection);
+        const { endContainer, endOffset } = this.getNormalizedRange(selection);
+        if (!closestElement(endContainer).isContentEditable) {
+            return;
+        }
 
         let range = this.getRangeForDelete(endContainer, endOffset, "backward", granularity);
 
@@ -200,8 +221,10 @@ export class DeletePlugin extends Plugin {
      * @param {"character"|"word"|"line"} granularity
      */
     deleteForward(selection, granularity) {
-        // Normalize selection
-        const { startContainer, startOffset } = this.dependencies.selection.setSelection(selection);
+        const { startContainer, startOffset } = this.getNormalizedRange(selection);
+        if (!closestElement(startContainer).isContentEditable) {
+            return;
+        }
 
         let range = this.getRangeForDelete(startContainer, startOffset, "forward", granularity);
 
@@ -878,8 +901,11 @@ export class DeletePlugin extends Plugin {
         return range;
     }
 
-    // Expand the range to fully include all contentEditable=False elements.
     /**
+     * Expand the range to fully include all contentEditable=False elements.
+     * This scenario happens when the range has one end inside a non-editable
+     * element and the other end outside of it.
+     *
      * @param {Range} range
      * @returns {Range}
      */
@@ -888,15 +914,7 @@ export class DeletePlugin extends Plugin {
         const isNonEditable = (node) => !isContentEditable(node);
         const startUneditable = findFurthest(startContainer, commonAncestor, isNonEditable);
         if (startUneditable) {
-            // @todo @phoenix: Review this spec. I suggest this instead (no block merge after removing):
-            // startContainer = startUneditable.parentElement;
-            // startOffset = childNodeIndex(startUneditable);
-            const leaf = previousLeaf(startUneditable);
-            if (leaf) {
-                range.setStart(leaf, nodeSize(leaf));
-            } else {
-                range.setStart(commonAncestor, 0);
-            }
+            range.setStartBefore(startUneditable);
         }
         const endUneditable = findFurthest(endContainer, commonAncestor, isNonEditable);
         if (endUneditable) {
@@ -1027,6 +1045,11 @@ export class DeletePlugin extends Plugin {
         // Protected nodes are always "visible" for the editor
         if (isProtected(textNode)) {
             // TODO ABD: add test
+            return true;
+        }
+        const isZwnbspLinkPad = (node) =>
+            isButton(node.previousSibling) || isButton(node.nextSibling);
+        if (isZwnbsp(textNode) && isZwnbspLinkPad(textNode)) {
             return true;
         }
         // ZWS and ZWNBSP are invisible.
@@ -1173,7 +1196,9 @@ export class DeletePlugin extends Plugin {
         if (ev.inputType === "insertText") {
             const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
             if (!selection.isCollapsed) {
+                this.dispatchTo("before_delete_handlers");
                 this.deleteSelection(selection);
+                this.dispatchTo("delete_handlers");
             }
             // Default behavior: insert text and trigger input event
         }

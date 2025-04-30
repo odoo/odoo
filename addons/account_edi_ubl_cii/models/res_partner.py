@@ -46,7 +46,7 @@ class ResPartner(models.Model):
             ('9914', "Austria UID"),
             ('9915', "Austria VOKZ"),
             ('0208', "Belgian Company Registry"),
-            ('9925', "Belgian VAT number"),
+            ('9925', "Belgian VAT"),
             ('9924', "Bosnia and Herzegovina VAT"),
             ('9926', "Bulgaria VAT"),
             ('9934', "Croatia VAT"),
@@ -189,11 +189,6 @@ class ResPartner(models.Model):
         # because we need to extend depends in l10n modules
         return ['country_code', 'vat', 'company_registry']
 
-    @api.depends(lambda self: self._peppol_eas_endpoint_depends())
-    def _compute_invoice_edi_format(self):
-        # EXTENDS 'account' - add depends
-        super()._compute_invoice_edi_format()
-
     @api.depends_context('company')
     @api.depends('invoice_edi_format')
     def _compute_is_ubl_format(self):
@@ -251,6 +246,8 @@ class ResPartner(models.Model):
             return _("The Peppol endpoint is not valid. "
                      "It should contain exactly 10 digits (Company Registry number)."
                      "The expected format is: 1234567890")
+        if not re.match(r"^[a-zA-Z\d\-._~]{1,50}$", endpoint):
+            return _("The Peppol endpoint (%s) is not valid. It should contain only letters and digit.", endpoint)
 
     @api.model
     def _get_edi_builder(self, invoice_edi_format):

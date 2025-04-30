@@ -25,6 +25,11 @@
                     </group>
                 </group>
             </xpath>
+            <xpath expr="//field[@name='document_date']" position="attributes">
+                <attribute name="invisible">
+                    picking_id and supply_type == 'I'
+                </attribute>
+            </xpath>
             <xpath expr="//field[@name='type_id']" position="attributes">
                 <attribute name="domain">
                     [
@@ -44,7 +49,7 @@
                                    force_save="1"
                                    readonly="state != 'pending'">
                                 <list editable="bottom" create="0" delete="0">
-                                    <field name="company_currency_id" column_invisible="1"/>
+                                    <field name="company_currency_id" column_invisible="1"/> <!-- To display the currency symbol  -->
                                     <field name="product_id" readonly="1"/>
                                     <field name="quantity" string="Quantity" readonly="1"/>
                                     <field name="ewaybill_price_unit" string="Unit Price"/>

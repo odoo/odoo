@@ -5,7 +5,7 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import create_index, make_identifier
 
 PHONE_REGEX_PATTERN = r'[\s\\./\(\)\-]'
@@ -71,6 +71,10 @@ class MailThreadPhone(models.AbstractModel):
                              where=f'{fname} IS NOT NULL')
 
     def _search_phone_mobile_search(self, operator, value):
+        if operator == 'not in':
+            return Domain.AND(self._search_phone_mobile_search('!=', v) for v in value)
+        if operator == 'in':
+            return Domain.OR(self._search_phone_mobile_search('=', v) for v in value)
         value = value.strip() if isinstance(value, str) else value
         phone_fields = [
             fname for fname in self._phone_get_number_fields()
@@ -84,18 +88,18 @@ class MailThreadPhone(models.AbstractModel):
             if value:
                 # inverse the operator
                 operator = '=' if operator == '!=' else '!='
-            op = expression.AND if operator == '=' else expression.OR
-            return op([[(phone_field, operator, False)] for phone_field in phone_fields])
+            op = Domain.AND if operator == '=' else Domain.OR
+            return op(Domain(phone_field, operator, False) for phone_field in phone_fields)
 
         if not value:
-            return [(1, '=', 1)]
+            return Domain.TRUE
         if self._phone_search_min_length and len(value) < self._phone_search_min_length:
             raise UserError(_('Please enter at least 3 characters when searching a Phone number.'))
 
         sql_operator = {'=like': 'LIKE', '=ilike': 'ILIKE'}.get(operator, operator)
 
         if value.startswith('+') or value.startswith('00'):
-            if operator in expression.NEGATIVE_TERM_OPERATORS:
+            if Domain.is_negative_operator(operator):
                 # searching on +32485112233 should also finds 0032485112233 (and vice versa)
                 # we therefore remove it from input value and search for both of them in db
                 where_str = ' AND '.join(
@@ -124,7 +128,7 @@ class MailThreadPhone(models.AbstractModel):
                 query, (PHONE_REGEX_PATTERN, '00' + term, PHONE_REGEX_PATTERN, '+' + term) * len(phone_fields)
             )
         else:
-            if operator in expression.NEGATIVE_TERM_OPERATORS:
+            if Domain.is_negative_operator(operator):
                 where_str = ' AND '.join(
                     f"(model.{phone_field} IS NULL OR REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s)"
                     for phone_field in phone_fields
@@ -140,9 +144,7 @@ class MailThreadPhone(models.AbstractModel):
                 term = f'%{term}%'
             self._cr.execute(query, (PHONE_REGEX_PATTERN, term) * len(phone_fields))
         res = self._cr.fetchall()
-        if not res:
-            return [(0, '=', 1)]
-        return [('id', 'in', [r[0] for r in res])]
+        return Domain('id', 'in', [r[0] for r in res])
 
     @api.depends(lambda self: self._phone_get_sanitize_triggers())
     def _compute_phone_sanitized(self):
@@ -175,15 +177,11 @@ class MailThreadPhone(models.AbstractModel):
 
     @api.model
     def _search_phone_sanitized_blacklisted(self, operator, value):
-        # Assumes operator is '=' or '!=' and value is True or False
         self._assert_phone_field()
-        if operator != '=':
-            if operator == '!=' and isinstance(value, bool):
-                value = not value
-            else:
-                raise NotImplementedError()
+        if operator not in ('in', 'not in'):
+            return NotImplemented
 
-        if value:
+        if operator == 'in':
             query = """
                 SELECT m.id
                     FROM phone_blacklist bl
@@ -200,8 +198,6 @@ class MailThreadPhone(models.AbstractModel):
             """
         self._cr.execute(query % self._table)
         res = self._cr.fetchall()
-        if not res:
-            return [(0, '=', 1)]
         return [('id', 'in', [r[0] for r in res])]
 
     def _assert_phone_field(self):
@@ -212,8 +208,13 @@ class MailThreadPhone(models.AbstractModel):
 
     def _phone_get_sanitize_triggers(self):
         """ Tool method to get all triggers for sanitize """
-        res = [self._phone_get_country_field()] if self._phone_get_country_field() else []
-        return res + self._phone_get_number_fields()
+        res = self._phone_get_number_fields()
+        # no phone field -> no number to format
+        if res:
+            res += [self._phone_get_country_field()] if self._phone_get_country_field() else []
+            # if partner changes, fallback country may change
+            res += [fname for fname in self._mail_get_partner_fields() if self._fields[fname].store]
+        return res
 
     def _phone_set_blacklisted(self):
         return self.env['phone.blacklist'].sudo()._add([r.phone_sanitized for r in self])

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.fields import Domain
 
 
 class CalendarAlarm(models.Model):
@@ -48,6 +49,14 @@ class CalendarAlarm(models.Model):
                 alarm.mail_template_id = False
 
     def _search_duration_minutes(self, operator, value):
+        if operator == 'in':
+            # recursive call with operator '='
+            return Domain.OR(self._search_duration_minutes('=', v) for v in value)
+        elif operator == '=':
+            if not value:
+                return Domain('duration', '=', False)
+        elif operator not in ('>=', '<=', '<', '>'):
+            return NotImplemented
         return [
             '|', '|',
             '&', ('interval', '=', 'minutes'), ('duration', operator, value),

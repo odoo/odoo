@@ -18,7 +18,6 @@ export class MonetaryField extends Component {
         inputType: { type: String, optional: true },
         useFieldDigits: { type: Boolean, optional: true },
         hideSymbol: { type: Boolean, optional: true },
-        placeholder: { type: String, optional: true },
     };
     static defaultProps = {
         hideSymbol: false,
@@ -51,7 +50,7 @@ export class MonetaryField extends Component {
             this.props.record.fields[this.props.name].currency_field ||
             "currency_id";
         const currency = this.props.record.data[currencyField];
-        return currency && currency[0];
+        return currency && currency.id;
     }
     get currency() {
         if (!isNaN(this.currencyId)) {
@@ -116,7 +115,6 @@ export const monetaryField = {
         inputType: attrs.type,
         useFieldDigits: options.field_digits,
         hideSymbol: options.no_symbol,
-        placeholder: attrs.placeholder,
     }),
 };
 

@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { FontFamilySelector } from "@html_editor/main/font/font_family_selector";
 import { reactive } from "@odoo/owl";
 import { closestElement } from "../../utils/dom_traversal";
+import { withSequence } from "@html_editor/utils/resource";
 
 export const defaultFontFamily = {
     name: "Default system font",
@@ -28,14 +29,14 @@ export const fontFamilyItems = [
 
 export class FontFamilyPlugin extends Plugin {
     static id = "fontFamily";
-    static dependencies = ["split", "selection", "dom", "format"];
+    static dependencies = ["split", "selection", "dom", "format", "font"];
     fontFamily = reactive({ displayName: defaultFontFamily.nameShort });
     resources = {
         toolbar_items: [
-            {
+            withSequence(15, {
                 id: "font-family",
                 groupId: "font",
-                title: _t("Font family"),
+                description: _t("Select font family"),
                 Component: FontFamilySelector,
                 props: {
                     fontFamilyItems: fontFamilyItems,
@@ -48,7 +49,7 @@ export class FontFamilyPlugin extends Plugin {
                         this.fontFamily.displayName = item.nameShort;
                     },
                 },
-            },
+            }),
         ],
         /** Handlers */
         selectionchange_handlers: this.updateCurrentFontFamily.bind(this),

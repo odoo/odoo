@@ -7,17 +7,25 @@ import { ChatGPTTranslateDialog } from "./chatgpt_translate_dialog";
 import { LanguageSelector } from "./language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
+import { isContentEditable } from "@html_editor/utils/dom_info";
 
 export class ChatGPTPlugin extends Plugin {
     static id = "chatgpt";
-    static dependencies = ["baseContainer", "selection", "history", "dom", "sanitize", "dialog"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "history",
+        "dom",
+        "sanitize",
+        "dialog",
+        "split",
+    ];
     resources = {
         user_commands: [
             {
                 id: "openChatGPTDialog",
                 title: _t("ChatGPT"),
-                description: _t("Generate or transform content with AI."),
-                icon: "fa-magic",
+                description: _t("Generate or transform content with AI"),
                 run: this.openDialog.bind(this),
             },
         ],
@@ -28,16 +36,16 @@ export class ChatGPTPlugin extends Plugin {
             {
                 id: "translate",
                 groupId: "ai",
-                title: _t("Translate with AI"),
+                description: _t("Translate with AI"),
                 isAvailable: (selection) => {
                     return !selection.isCollapsed && user.userId;
                 },
+                isDisabled: this.isNotReplaceableByAI.bind(this),
                 Component: LanguageSelector,
                 props: {
                     onSelected: (language) => this.openDialog({ language }),
-                    isDisabled: () => {
-                        const sel = this.document.getSelection();
-                        return !sel.toString().replace(/\s+/g, "");
+                    isDisabled: (selection) => {
+                        return this.isNotReplaceableByAI(selection);
                     },
                 },
             },
@@ -46,7 +54,8 @@ export class ChatGPTPlugin extends Plugin {
                 groupId: "ai",
                 commandId: "openChatGPTDialog",
                 text: "AI",
-                isDisabled: (sel) => !sel.textContent().replace(/\s+/g, ""),
+                namespaces: ["compact", "expanded"],
+                isDisabled: this.isNotReplaceableByAI.bind(this),
             },
         ],
 
@@ -55,9 +64,23 @@ export class ChatGPTPlugin extends Plugin {
             keywords: [_t("AI")],
             categoryId: "ai",
             commandId: "openChatGPTDialog",
+            icon: "fa-magic",
             // isAvailable: () => !this.odooEditor.isSelectionInBlockRoot(), // TODO!
         },
+
+        power_buttons: withSequence(20, {
+            commandId: "openChatGPTDialog",
+            text: "AI",
+        }),
     };
+
+    isNotReplaceableByAI(selection = this.dependencies.selection.getEditableSelection()) {
+        const isEmpty = !selection.textContent().replace(/\s+/g, "");
+        const cannotReplace = this.dependencies.selection
+            .getTraversedNodes()
+            .find((el) => this.dependencies.split.isUnsplittable(el) || !isContentEditable(el));
+        return cannotReplace || isEmpty;
+    }
 
     openDialog(params = {}) {
         const selection = this.dependencies.selection.getEditableSelection();

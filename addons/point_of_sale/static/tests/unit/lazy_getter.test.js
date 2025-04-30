@@ -7,7 +7,11 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { WithLazyGetterTrap, clearGettersCache } from "@point_of_sale/lazy_getter";
+import {
+    WithLazyGetterTrap,
+    clearGettersCache,
+    createLazyGetter,
+} from "@point_of_sale/lazy_getter";
 import { zip } from "@web/core/utils/arrays";
 
 /**
@@ -295,4 +299,40 @@ test("only dependent getters are called and in correct order", () => {
     expect(store.y).toBe(25);
 
     verifyUnorderedSteps(["cd", "y"], [["cd", "y"]]);
+});
+
+test("dynamically creates a lazy getter", () => {
+    class DemoClass extends WithLazyGetterTrap {
+        constructor(params = {}) {
+            super(params);
+        }
+    }
+
+    const reactiveObj = reactive(new DemoClass());
+    reactiveObj.name = "demo";
+
+    let computeCallCount = 0;
+    function computeValue() {
+        computeCallCount++;
+        return "Hello " + this.name;
+    }
+
+    createLazyGetter(reactiveObj, "hello", computeValue);
+
+    expect(reactiveObj.hello).toBe("Hello demo");
+    expect(computeCallCount).toBe(1);
+
+    // On the second call, the computed method is not executed again.
+    expect(reactiveObj.hello).toBe("Hello demo");
+    expect(computeCallCount).toBe(1);
+
+    // Modifying the value will invalidate the computed value
+    expect(computeCallCount).toBe(1);
+    reactiveObj.name = "World";
+    expect(reactiveObj.hello).toBe("Hello World");
+    expect(computeCallCount).toBe(2);
+
+    reactiveObj.notRelatedValue = 1;
+    expect(reactiveObj.hello).toBe("Hello World");
+    expect(computeCallCount).toBe(2);
 });

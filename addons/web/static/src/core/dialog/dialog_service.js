@@ -39,7 +39,7 @@ export const dialogService = {
 
         const add = (dialogClass, props, options = {}) => {
             const id = nextId++;
-            const close = () => remove();
+            const close = (params) => remove(params);
             const subEnv = reactive({
                 id,
                 close,
@@ -65,15 +65,18 @@ export const dialogService = {
                     subEnv,
                 },
                 {
-                    onRemove: () => {
-                        stack.pop();
+                    onRemove: (closeParams) => {
+                        stack.splice(
+                            stack.findIndex((d) => d.id === id),
+                            1
+                        );
                         deactivate();
                         if (stack.length) {
                             stack.at(-1).isActive = true;
                         } else {
                             document.body.classList.remove("modal-open");
                         }
-                        options.onClose?.();
+                        options.onClose?.(closeParams);
                     },
                     rootId: options.context?.root?.el.getRootNode()?.host?.id,
                 }
@@ -82,9 +85,9 @@ export const dialogService = {
             return remove;
         };
 
-        function closeAll() {
+        function closeAll(params) {
             for (const dialog of [...stack].reverse()) {
-                dialog.close();
+                dialog.close(params);
             }
         }
 

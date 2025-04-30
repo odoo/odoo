@@ -27,8 +27,14 @@ export class LoginScreen extends Component {
         const selectedScreen =
             this.pos.previousScreen && this.pos.previousScreen !== "LoginScreen"
                 ? this.pos.previousScreen
-                : this.pos.firstScreen;
-        this.pos.showScreen(selectedScreen);
+                : this.pos.defaultPage;
+        const order = this.pos.getOrder();
+        if (!order) {
+            this.pos.addNewOrder();
+        }
+        const params =
+            selectedScreen.page === "ProductScreen" ? { orderUuid: this.pos.getOrder().uuid } : {};
+        this.pos.navigate(selectedScreen.page, params);
         this.pos.hasLoggedIn = true;
     }
     selectOneCashier(cashier) {
@@ -43,4 +49,9 @@ export class LoginScreen extends Component {
     }
 }
 
-registry.category("pos_screens").add("LoginScreen", LoginScreen);
+registry.category("pos_pages").add("LoginScreen", {
+    name: "LoginScreen",
+    component: LoginScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/login`,
+    params: {},
+});

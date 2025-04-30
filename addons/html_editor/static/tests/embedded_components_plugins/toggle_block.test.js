@@ -1,7 +1,7 @@
 import { test, describe, beforeEach, expect } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { getContent } from "../_helpers/selection";
+import { getContent, setContent } from "../_helpers/selection";
 import {
     addStep,
     deleteBackward,
@@ -16,7 +16,7 @@ import {
     toggleBlockEmbedding,
 } from "@html_editor/others/embedded_components/core/toggle_block/toggle_block";
 import { onMounted } from "@odoo/owl";
-import { animationFrame, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, queryOne, tick } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
@@ -76,7 +76,7 @@ describe("deleteBackward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                            <i class="fa align-self-center fa-caret-down"></i>
+                            \ufeff<i class="fa align-self-center fa-caret-down"></i>\ufeff
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -119,7 +119,7 @@ describe("deleteBackward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            \ufeff<i class="fa align-self-center fa-caret-right"></i>\ufeff
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -237,7 +237,7 @@ describe("deleteForward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            \ufeff<i class="fa align-self-center fa-caret-right"></i>\ufeff
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -311,7 +311,7 @@ describe("deleteForward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                            <i class="fa align-self-center fa-caret-down"></i>
+                            \ufeff<i class="fa align-self-center fa-caret-down"></i>\ufeff
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -358,7 +358,7 @@ describe("deleteForward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                            <i class="fa align-self-center fa-caret-right"></i>
+                            \ufeff<i class="fa align-self-center fa-caret-right"></i>\ufeff
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -408,7 +408,7 @@ describe("deleteForward applied to toggle", () => {
                 <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                            <i class="fa align-self-center fa-caret-down"></i>
+                            \ufeff<i class="fa align-self-center fa-caret-down"></i>\ufeff
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -470,14 +470,14 @@ describe("Enter applied to toggle title", () => {
                     </div>
                     <div class="ps-4 ms-1 d-none">
                         <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                            <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                            <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                         </div>
                     </div>
                 </div>
                 <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                     <div class="d-flex flex-row align-items-center">
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                            <i class="fa align-self-center fa-caret-down"></i>
+                            \ufeff<i class="fa align-self-center fa-caret-down"></i>\ufeff
                         </button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -525,7 +525,7 @@ describe("Enter applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                        <i class="fa align-self-center fa-caret-right"></i>
+                        \ufeff<i class="fa align-self-center fa-caret-right"></i>\ufeff
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -552,7 +552,7 @@ describe("Enter applied to toggle title", () => {
                 </div>
                 <div class="ps-4 ms-1 d-none">
                     <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                        <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                        <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                     </div>
                 </div>
             </div>
@@ -584,7 +584,7 @@ describe("Enter applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                        <i class="fa align-self-center fa-caret-down"></i>
+                        \ufeff<i class="fa align-self-center fa-caret-down"></i>\ufeff
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -623,7 +623,7 @@ describe("Enter applied to toggle title", () => {
         splitBlock(editor);
         expect(getContent(el)).toBe(
             unformat(`
-                <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+                <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
                 <p>asdf</p>
             `)
         );
@@ -664,7 +664,7 @@ describe("Tab applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                        <i class="fa align-self-center fa-caret-down"></i>
+                        \ufeff<i class="fa align-self-center fa-caret-down"></i>\ufeff
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -677,7 +677,7 @@ describe("Tab applied to toggle title", () => {
                         <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "2" }'>
                             <div class="d-flex flex-row align-items-center">
                                 <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                                    <i class="fa align-self-center fa-caret-right"></i>
+                                    \ufeff<i class="fa align-self-center fa-caret-right"></i>\ufeff
                                 </button>
                                 <div class="flex-fill ms-1">
                                     <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -731,7 +731,7 @@ describe("Tab applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                        <i class="fa align-self-center fa-caret-down"></i>
+                        \ufeff<i class="fa align-self-center fa-caret-down"></i>\ufeff
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -744,7 +744,7 @@ describe("Tab applied to toggle title", () => {
                         <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "2" }'>
                             <div class="d-flex flex-row align-items-center">
                                 <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                                    <i class="fa align-self-center fa-caret-down"></i>
+                                    \ufeff<i class="fa align-self-center fa-caret-down"></i>\ufeff
                                 </button>
                                 <div class="flex-fill ms-1">
                                     <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -754,7 +754,7 @@ describe("Tab applied to toggle title", () => {
                             </div>
                             <div class="ps-4 ms-1">
                                 <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                                    <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                                    <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                                 </div>
                             </div>
                         </div>
@@ -800,7 +800,7 @@ describe("Shift+Tab applied to toggle title", () => {
             <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                        <i class="fa align-self-center fa-caret-down"></i>
+                        \ufeff<i class="fa align-self-center fa-caret-down"></i>\ufeff
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -810,14 +810,14 @@ describe("Shift+Tab applied to toggle title", () => {
                 </div>
                 <div class="ps-4 ms-1">
                     <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                        <p placeholder="Add something inside this toggle" class="o-we-hint"><br></p>
+                        <p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>
                     </div>
                 </div>
             </div>
             <div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "2" }'>
                 <div class="d-flex flex-row align-items-center">
                     <button class="btn p-0 border-0 align-items-center justify-content-center btn-light">
-                        <i class="fa align-self-center fa-caret-down"></i>
+                        \ufeff<i class="fa align-self-center fa-caret-down"></i>\ufeff
                     </button>
                     <div class="flex-fill ms-1">
                         <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
@@ -870,7 +870,7 @@ describe("Insert (paste, drop) inside toggle title", () => {
             unformat(
                 `<div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                     <div data-embedded-editable="title">
-                        <p>Hello[]World</p>
+                        <div class="o-paragraph">Hello[]World</div>
                     </div>
                     <div data-embedded-editable="content">
                         <p>asdf</p>
@@ -883,10 +883,13 @@ describe("Insert (paste, drop) inside toggle title", () => {
             }
         );
         await embeddedToggleMountedPromise;
+        expect("[data-embedded-editable='title']").toHaveInnerHTML(`
+            <div class="o-paragraph">HelloWorld</div>
+        `);
         editor.shared.dom.insert(parseHTML(editor.document, `<p>New</p>`));
         addStep(editor);
         expect("[data-embedded-editable='title']").toHaveInnerHTML(`
-            <p>HelloNewWorld</p>
+            <div class="o-paragraph">HelloNewWorld</div>
         `);
         editor.shared.dom.insert(
             parseHTML(editor.document, `<div class="oe_unbreakable">brol</div>`)
@@ -899,7 +902,7 @@ describe("Insert (paste, drop) inside toggle title", () => {
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light"><i class="fa align-self-center fa-caret-right"></i></button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
-                                <p>HelloNew</p>
+                                <div class="o-paragraph">HelloNew</div>
                             </div>
                         </div>
                     </div>
@@ -910,8 +913,41 @@ describe("Insert (paste, drop) inside toggle title", () => {
                     </div>
                 </div>
                 <div class="oe_unbreakable">brol</div>
-                <p>[]World</p>
+                <div class="o-paragraph">[]World</div>
             `)
+        );
+    });
+});
+
+describe("hint", () => {
+    test("should show normal hint when focusing embedded content element", async () => {
+        const { el } = await setupEditor(
+            unformat(`<div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
+                    <div data-embedded-editable="title">
+                        <p>[]<br></p>
+                    </div>
+                    <div data-embedded-editable="content">
+                        <p><br></p>
+                    </div>
+                </div>`),
+            {
+                config: getConfig([toggleBlockEmbedding]),
+            }
+        );
+        await embeddedToggleMountedPromise;
+        expect("[data-embedded-editable='title']").toHaveInnerHTML(
+            '<p o-we-hint-text="Toggle title" class="o-we-hint"><br></p>'
+        );
+        await contains("[data-embedded='toggleBlock'] button").click();
+        await animationFrame();
+        const content = el.querySelector("[data-embedded-editable='content'");
+        expect(content).toHaveInnerHTML(
+            '<p o-we-hint-text="Add something inside this toggle" class="o-we-hint"><br></p>'
+        );
+        setContent(content, "<p>[]<br></p>");
+        await tick(); // selectionChange
+        expect(content).toHaveInnerHTML(
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><br></p>`
         );
     });
 });

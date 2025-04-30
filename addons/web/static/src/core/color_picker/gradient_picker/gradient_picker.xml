@@ -75,23 +75,35 @@
                 </div>
             </div>
 
-            <div>
-                First color %
-                <span class="d-flex justify-content-between">
-                    <input name="firstColorPercentage" t-att-value="this.colors[0].percentage" t-on-click="() => this.state.currentColorIndex = 0" t-on-change="(ev) => this.onColorPercentageChange(0, ev)" class="w-100 form-range" type="range" min="0" max="100"/>
-                </span>
-                Second color %
-                <span class="d-flex justify-content-between">
-                    <input name="secondColorPercentage" t-att-value="this.colors[1].percentage" t-on-click="() => this.state.currentColorIndex = 1 " t-on-change="(ev) => this.onColorPercentageChange(1, ev)" class="w-100 form-range" type="range" min="0" max="100"/>
-                </span>
+            <div class="custom-gradient-configurator">
+                 <div class="gradient-checkers"></div>
+                <div class="gradient-preview" t-attf-style="background-image: #{this.cssGradients.preview};"
+                     t-on-click="this.onGradientPreviewClick" >
+                </div>
+                <style><t t-out="this.cssGradients.sliderThumbStyle" /></style>
+                <div class="gradient-colors">
+                    <div t-foreach="this.colors" t-as="color" t-key="color_index">
+                        <input type="range" min="0" max="100" t-att-value="color.percentage"
+                               t-attf-name="custom gradient percentage color #{color_index+1}"
+                               t-on-click="() => this.state.currentColorIndex = color_index"
+                               t-on-change="(ev) => this.onColorPercentageChange(color_index, ev)" />
+                    </div>
+                </div>
+                <div class="gradient-color-bin">
+                    <t t-if="this.colors.length > 2">
+                        <a t-on-click="() => this.removeColor(this.state.currentColorIndex)"
+                           t-attf-style="left: #{this.colors[this.state.currentColorIndex].percentage}%"
+                           type="button" class="btn btn-sm btn-light"><i class="fa fa-fw fa-trash" role="img"/></a>
+                    </t>
+                </div>
             </div>
 
             <ColorPicker
                 onColorSelect.bind="onColorChange"
                 onColorPreview.bind="onColorChange"
-                defaultColor="this.colors[this.state.currentColorIndex].hex"
-                selectedColor="this.colors[this.state.currentColorIndex].hex"
-                />
+                defaultColor="this.currentColorHex"
+                selectedColor="this.currentColorHex"
+                showRgbaField="false"/>
         </div>
     </t>
 </templates>

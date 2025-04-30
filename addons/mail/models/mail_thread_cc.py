@@ -45,7 +45,6 @@ class MailThreadCc(models.AbstractModel):
 
     def _message_add_suggested_recipients(self, force_primary_email=False):
         suggested = super()._message_add_suggested_recipients(force_primary_email=force_primary_email)
-        for record in self:
-            if record.email_cc:
-                suggested[record.id]['email_to_lst'].append(record.email_cc)
+        for record in self.filtered('email_cc'):
+            suggested[record.id]['email_to_lst'] += tools.mail.email_split_and_format_normalize(record.email_cc)
         return suggested

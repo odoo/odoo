@@ -160,14 +160,14 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(localized_date_planned, po.get_localized_date_planned(po.date_planned.strftime('%Y-%m-%d %H:%M:%S')))
 
         # check vendor is a message recipient
-        self.assertTrue(po.partner_id in po.message_partner_ids)
+        self.assertFalse(po.partner_id in po.message_partner_ids, 'Customer should not automatically be added in followers')
 
         # check reminder send
         old_messages = po.message_ids
         po._send_reminder_mail()
         messages_send = po.message_ids - old_messages
         self.assertTrue(messages_send)
-        self.assertTrue(po.partner_id in messages_send.mapped('partner_ids'))
+        self.assertFalse(po.partner_id in po.message_partner_ids, 'Customer should not automatically be added in followers')
 
         po.action_acknowledge()
         self.assertTrue(po.acknowledged)
@@ -193,7 +193,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.button_confirm()
 
         # check vendor is a message recipient
-        self.assertTrue(po.partner_id in po.message_partner_ids)
+        self.assertFalse(po.partner_id in po.message_partner_ids, 'Customer should not automatically be added in followers')
 
         old_messages = po.message_ids
         po._send_reminder_mail()
@@ -343,7 +343,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         purchase_order_coco = po_form.save()
         self.assertEqual(purchase_order_coco.order_line.price_unit, currency_rate.rate * product.standard_price, "Value shouldn't be rounded 🍫")
         self.assertEqual(purchase_order_coco.amount_total_cc, round(purchase_order_coco.amount_total / currency_rate.rate, 2), "Company Total should be 0.14$, since 1$ = 0.5🍫")
-
+        self.assertEqual(purchase_order_coco.tax_totals['amount_total_cc'], "($\xa00.14)")
         #check if the correct currency is set on the purchase order by comparing the expected price and actual price
 
         company_a = self.company_data['company']
@@ -387,6 +387,10 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         self.assertEqual(order_b.order_line.price_unit, 10.0, 'The price unit should be 10.0')
         self.assertEqual(order_b.amount_total_cc, order_b.amount_total, 'Company Total should be 10.0$')
+
+        # since the order currency matches the company currency we don't want to redisplay the total amount
+        with self.assertRaises(KeyError):
+            order_b.tax_totals['amount_total_cc']
 
     def test_discount_and_price_update_on_quantity_change(self):
         """ Purchase order line price and discount should update accordingly based on quantity
@@ -837,3 +841,54 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.amount_untaxed, 15.0)
         po.company_id = company_a.id
         self.assertEqual(po.amount_untaxed, 10.0)
+
+    def test_print_purchase_order_without_state_change(self):
+        """
+        Check that printing a confirmed purchase order does not
+        reset its state.
+        """
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product
+            po_line.product_qty = 1.0
+        po = po_form.save()
+        po.button_confirm()
+        self.assertEqual(po.state, 'purchase')
+        po.print_quotation()
+        self.assertEqual(po.state, 'purchase')
+        po.button_cancel()
+        self.assertEqual(po.state, 'cancel')
+        po.print_quotation()
+        self.assertEqual(po.state, 'cancel')
+
+    def test_purchase_warnings(self):
+        """Test warnings when partner/products with purchase warnings are used."""
+        partner_with_warning = self.env['res.partner'].create({
+            'name': 'Test Partner', 'purchase_warn_msg': 'Highly infectious disease'})
+        purchase_order = self.env['purchase.order'].create({'partner_id': partner_with_warning.id})
+
+        product_with_warning1 = self.env['product.product'].create({
+            'name': 'Test Product 1', 'purchase_line_warn_msg': 'Highly corrosive'})
+        product_with_warning2 = self.env['product.product'].create({
+            'name': 'Test Product 2', 'purchase_line_warn_msg': 'Toxic pollutant'})
+        self.env['purchase.order.line'].create([
+            {
+                'order_id': purchase_order.id,
+                'product_id': product_with_warning1.id,
+            },
+            {
+                'order_id': purchase_order.id,
+                'product_id': product_with_warning2.id,
+            },
+            # Warnings for duplicate products should not appear.
+            {
+                'order_id': purchase_order.id,
+                'product_id': product_with_warning1.id,
+            },
+        ])
+
+        expected_warnings = ('Test Partner - Highly infectious disease',
+                             'Test Product 1 - Highly corrosive',
+                             'Test Product 2 - Toxic pollutant')
+        self.assertEqual(purchase_order.purchase_warning_text, '\n'.join(expected_warnings))

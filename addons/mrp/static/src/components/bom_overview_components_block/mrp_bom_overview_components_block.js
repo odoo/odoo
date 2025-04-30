@@ -86,10 +86,6 @@ export class BomOverviewComponentsBlock extends Component {
         return this.getIdentifier(this.data);
     }
 
-    get showOperations() {
-        return this.props.showOptions.operations;
-    }
-
     //---- Utils ----
 
     getHasComponents(data) {

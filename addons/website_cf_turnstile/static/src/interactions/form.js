@@ -18,14 +18,12 @@ patch(Form.prototype, {
         ) {
             this.uniq = uniqueId("turnstile_");
             this.el.classList.add(this.uniq);
-            const { turnstileEl, script1El, script2El } = new TurnStile(
-                "website_form",
-                `.${this.uniq} .s_website_form_send,.${this.uniq} .o_website_form_send`,
-            );
+            const turnstile = new TurnStile("website_form");
             const formSendEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
-            formSendEl.parentNode.insertBefore(turnstileEl, formSendEl);
-            formSendEl.parentNode.insertBefore(script1El, formSendEl.nextSibling);
-            formSendEl.parentNode.insertBefore(script2El, formSendEl.nextSibling);
+            TurnStile.disableSubmit(formSendEl);
+            formSendEl.parentNode.insertBefore(turnstile.turnstileEl, formSendEl);
+            turnstile.insertScripts(this.el);
+            turnstile.render();
         }
     },
 

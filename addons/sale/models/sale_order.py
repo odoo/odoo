@@ -2,6 +2,7 @@
 
 import json
 import logging
+
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
@@ -11,17 +12,11 @@ from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationE
 from odoo.fields import Command
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import (
-    SQL,
-    float_is_zero,
-    format_amount,
-    format_date,
-    is_html_empty,
-)
+from odoo.tools import OrderedSet, SQL, float_is_zero, format_amount, is_html_empty
 from odoo.tools.mail import html_keep_url
+from odoo.tools.misc import str2bool
 
 from odoo.addons.payment import utils as payment_utils
-
 
 _logger = logging.getLogger(__name__)
 
@@ -44,7 +39,6 @@ class SaleOrder(models.Model):
     _name = 'sale.order'
     _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = "Sales Order"
-    _mail_thread_customer = True
     _order = 'date_order desc, id desc'
     _check_company_auto = True
 
@@ -110,6 +104,12 @@ class SaleOrder(models.Model):
         string="Payment Ref.",
         help="The payment communication of this sale order.",
         copy=False)
+    pending_email_template_id = fields.Many2one(
+        string="Pending Email Template",
+        comodel_name='mail.template',
+        ondelete='set null',
+        readonly=True,
+    )  # The template of the pending email that must be sent asynchronously.
 
     require_signature = fields.Boolean(
         string="Online signature",
@@ -208,8 +208,8 @@ class SaleOrder(models.Model):
         compute='_compute_user_id',
         store=True, readonly=False, precompute=True, index=True,
         tracking=2,
-        domain=lambda self: "[('group_ids', '=', {}), ('share', '=', False), ('company_ids', '=', company_id)]".format(
-            self.env.ref("sales_team.group_sale_salesman").id
+        domain=lambda self: "[('all_group_ids', 'in', {}), ('share', '=', False), ('company_ids', '=', company_id)]".format(
+            self.env.ref("sales_team.group_sale_salesman").ids
         ))
     team_id = fields.Many2one(
         comodel_name='crm.team',
@@ -245,6 +245,11 @@ class SaleOrder(models.Model):
         string="Invoice Status",
         compute='_compute_invoice_status',
         store=True)
+
+    sale_warning_text = fields.Text(
+        "Sale Warning",
+        help="Internal warning for the partner or the products as set by the user.",
+        compute='_compute_sale_warning_text')
 
     # Payment fields
     transaction_ids = fields.Many2many(
@@ -486,12 +491,13 @@ class SaleOrder(models.Model):
     def _default_team_id(self):
         return self.env.context.get('default_team_id', False) or self.team_id.id
 
-    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id')
+    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id', 'payment_term_id')
     def _compute_amounts(self):
         AccountTax = self.env['account.tax']
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
+            base_lines += order._add_base_lines_for_early_payment_discount()
             AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
             AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
             tax_totals = AccountTax._get_tax_totals_summary(
@@ -502,6 +508,43 @@ class SaleOrder(models.Model):
             order.amount_untaxed = tax_totals['base_amount_currency']
             order.amount_tax = tax_totals['tax_amount_currency']
             order.amount_total = tax_totals['total_amount_currency']
+
+    def _add_base_lines_for_early_payment_discount(self):
+        """
+        When applying a payment term with an early payment discount, and when said payment term computes the tax on the
+        'mixed' setting, the tax computation is always based on the discounted amount untaxed.
+        Creates the necessary line for this behavior to be displayed.
+        :returns: array containing the necessary lines or empty array if the payment term isn't epd mixed
+        """
+        self.ensure_one()
+        epd_lines = []
+        if (
+            self.payment_term_id.early_discount
+            and self.payment_term_id.early_pay_discount_computation == 'mixed'
+            and self.payment_term_id.discount_percentage
+        ):
+            percentage = self.payment_term_id.discount_percentage
+            currency = self.currency_id or self.company_id.currency_id
+            for line in self.order_line.filtered(lambda x: not x.display_type):
+                line_amount_after_discount = (line.price_subtotal / 100) * percentage
+                epd_lines.append(self.env['account.tax']._prepare_base_line_for_taxes_computation(
+                    record=self,
+                    price_unit=-line_amount_after_discount,
+                    quantity=1.0,
+                    currency_id=currency,
+                    sign=1,
+                    special_type='early_payment',
+                    tax_ids=line.tax_ids,
+                ))
+                epd_lines.append(self.env['account.tax']._prepare_base_line_for_taxes_computation(
+                    record=self,
+                    price_unit=line_amount_after_discount,
+                    quantity=1.0,
+                    currency_id=currency,
+                    sign=1,
+                    special_type='early_payment',
+                ))
+        return epd_lines
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
@@ -515,7 +558,25 @@ class SaleOrder(models.Model):
             order.invoice_count = len(invoices)
 
     def _search_invoice_ids(self, operator, value):
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return NotImplemented
         if operator == 'in' and value:
+            falsy_domain = []
+            if False in value:
+                # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
+                #
+                # We cannot just search [('order_line.invoice_lines', '=', False)]
+                # because it returns orders with uninvoiced lines, which is not
+                # same "Invoices is not set" (some lines may have invoices and some
+                # don't)
+                #
+                # A solution is using the 'not any' operators with inverted search first
+                # ("orders with invoiced lines").
+                falsy_domain = [('order_line', 'not any', [
+                    ('invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
+                ])]
+                if len(value) == 1:
+                    return falsy_domain
             self.env.cr.execute("""
                 SELECT array_agg(so.id)
                     FROM sale_order so
@@ -528,27 +589,11 @@ class SaleOrder(models.Model):
                     am.id = ANY(%s)
             """, (list(value),))
             so_ids = self.env.cr.fetchone()[0] or []
-            return [('id', 'in', so_ids)]
-        elif operator == '=' and not value:
-            # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
-            #
-            # We cannot just search [('order_line.invoice_lines', '=', False)]
-            # because it returns orders with uninvoiced lines, which is not
-            # same "Invoices is not set" (some lines may have invoices and some
-            # doesn't)
-            #
-            # A solution is making inverted search first ("orders with invoiced
-            # lines") and then invert results ("get all other orders")
-            #
-            # Domain below returns subset of ('order_line.invoice_lines', '!=', False)
-            order_ids = self._search([
-                ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
-            ])
-            return [('id', 'not in', order_ids)]
-        return [
-            ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund')),
-            ('order_line.invoice_lines.move_id', operator, value),
-        ]
+            return [('id', 'in', so_ids)] + falsy_domain
+        return [('order_line.invoice_lines', 'any', [
+            ('move_id.move_type', 'in', ('out_invoice', 'out_refund')),
+            ('move_id', operator, value),
+        ])]
 
     @api.depends('state', 'order_line.invoice_status')
     def _compute_invoice_status(self):
@@ -733,12 +778,13 @@ class SaleOrder(models.Model):
                 )
 
     @api.depends_context('lang')
-    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id')
+    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id', 'payment_term_id')
     def _compute_tax_totals(self):
         AccountTax = self.env['account.tax']
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
+            base_lines += order._add_base_lines_for_early_payment_discount()
             AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
             AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
             order.tax_totals = AccountTax._get_tax_totals_summary(
@@ -760,6 +806,17 @@ class SaleOrder(models.Model):
         super()._compute_access_url()
         for order in self:
             order.access_url = f'/my/orders/{order.id}'
+
+    @api.depends('partner_id.name', 'partner_id.sale_warn_msg', 'order_line.sale_line_warn_msg')
+    def _compute_sale_warning_text(self):
+        for order in self:
+            warnings = OrderedSet()
+            if partner_msg := order.partner_id.sale_warn_msg:
+                warnings.add(order.partner_id.name + ' - ' + partner_msg)
+            for line in order.order_line:
+                if product_msg := line.sale_line_warn_msg:
+                    warnings.add(line.product_id.display_name + ' - ' + product_msg)
+            order.sale_warning_text = '\n'.join(warnings)
 
     #=== CONSTRAINT METHODS ===#
 
@@ -836,32 +893,6 @@ class SaleOrder(models.Model):
             or (self.fiscal_position_id and self._origin.fiscal_position_id != self.fiscal_position_id)
         ):
             self.show_update_fpos = True
-
-    @api.onchange('partner_id')
-    def _onchange_partner_id_warning(self):
-        if not self.partner_id:
-            return
-
-        partner = self.partner_id
-
-        # If partner has no warning, check its company
-        if partner.sale_warn == 'no-message' and partner.parent_id:
-            partner = partner.parent_id
-
-        if partner.sale_warn and partner.sale_warn != 'no-message':
-            # Block if partner only has warning but parent company is blocked
-            if partner.sale_warn != 'block' and partner.parent_id and partner.parent_id.sale_warn == 'block':
-                partner = partner.parent_id
-
-            if partner.sale_warn == 'block':
-                self.partner_id = False
-
-            return {
-                'warning': {
-                    'title': _("Warning for %s", partner.name),
-                    'message': partner.sale_warn_msg,
-                }
-            }
 
     @api.onchange('pricelist_id')
     def _onchange_pricelist_id_show_update_prices(self):
@@ -961,12 +992,7 @@ class SaleOrder(models.Model):
     def write(self, vals):
         if 'pricelist_id' in vals and any(so.state == 'sale' for so in self):
             raise UserError(_("You cannot change the pricelist of a confirmed order !"))
-        res = super().write(vals)
-        if vals.get('partner_id'):
-            self.filtered(lambda so: so.state in ('sent', 'sale')).message_subscribe(
-                partner_ids=[vals['partner_id']],
-            )
-        return res
+        return super().write(vals)
 
     #=== ACTION METHODS ===#
 
@@ -993,7 +1019,6 @@ class SaleOrder(models.Model):
     def action_quotation_send(self):
         """ Opens a wizard to compose an email, with relevant mail template loaded by default """
         self.filtered(lambda so: so.state in ('draft', 'sent')).order_line._validate_analytic_distribution()
-        lang = self.env.context.get('lang')
 
         ctx = {
             'default_model': 'sale.order',
@@ -1010,7 +1035,6 @@ class SaleOrder(models.Model):
         else:
             ctx.update({
                 'force_email': True,
-                'model_description': self.with_context(lang=lang).type_name,
             })
             if not self.env.context.get('hide_default_template'):
                 mail_template = self._find_mail_template()
@@ -1019,14 +1043,12 @@ class SaleOrder(models.Model):
                         'default_template_id': mail_template.id,
                         'mark_so_as_sent': True,
                     })
-                if mail_template and mail_template.lang:
-                    lang = mail_template._render_lang(self.ids)[self.id]
             else:
                 for order in self:
                     order._portal_ensure_token()
 
         action = {
-            'name': _('Send by Email'),
+            'name': _('Send'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
@@ -1091,9 +1113,6 @@ class SaleOrder(models.Model):
         if any(order.state != 'draft' for order in self):
             raise UserError(_("Only draft orders can be marked as sent directly."))
 
-        for order in self:
-            order.message_subscribe(partner_ids=order.partner_id.ids)
-
         self.write({'state': 'sent'})
 
     def action_confirm(self):
@@ -1112,11 +1131,6 @@ class SaleOrder(models.Model):
 
         self.order_line._validate_analytic_distribution()
 
-        for order in self:
-            if order.partner_id in order.message_partner_ids:
-                continue
-            order.message_subscribe([order.partner_id.id])
-
         self.write(self._prepare_confirmation_values())
 
         # Context key 'default_name' is sometimes propagated up to here.
@@ -1125,10 +1139,7 @@ class SaleOrder(models.Model):
         context.pop('default_name', None)
 
         self.with_context(context)._action_confirm()
-        user = self[:1].create_uid
-        if user and user.sudo().has_group('sale.group_auto_done_setting'):
-            # Public user can confirm SO, so we check the group on any record creator.
-            self.action_lock()
+        self.filtered(lambda so: so._should_be_locked()).action_lock()
 
         if self.env.context.get('send_email'):
             self._send_order_confirmation_mail()
@@ -1138,8 +1149,7 @@ class SaleOrder(models.Model):
     def _should_be_locked(self):
         self.ensure_one()
         # Public user can confirm SO, so we check the group on any record creator.
-        user = self[:1].create_uid
-        return user and user.sudo().has_group('sale.group_auto_done_setting')
+        return self.env['res.groups']._is_feature_enabled('sale.group_auto_done_setting')
 
     def _confirmation_error_message(self):
         """ Return whether order can be confirmed or not if not then returm error message. """
@@ -1174,7 +1184,6 @@ class SaleOrder(models.Model):
             This method should be extended when the confirmation should generated
             other documents. In this method, the SO are in 'sale' state (not yet 'done').
         """
-        pass
 
     def _send_order_confirmation_mail(self):
         """ Send a mail to the SO customer to inform them that their order has been confirmed.
@@ -1196,12 +1205,16 @@ class SaleOrder(models.Model):
         for order in self:
             order._send_order_notification_mail(mail_template)
 
-    def _send_order_notification_mail(self, mail_template):
-        """ Send a mail to the customer
+    def _send_order_notification_mail(self, mail_template, allow_deferred_sending=True):
+        """ Send a mail to the customer.
+
+        If the `sale.async_emails` ICP is set and `allow_deferred_sending` is true, order status
+        emails are sent asynchronously through a cron.
 
         Note: self.ensure_one()
 
         :param mail.template mail_template: the template used to generate the mail
+        :param bool allow_deferred_sending: Whether the email can be sent asynchronously.
         :return: None
         """
         self.ensure_one()
@@ -1213,11 +1226,38 @@ class SaleOrder(models.Model):
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
 
-        self.with_context(force_send=True).message_post_with_source(
-            mail_template,
-            email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
-            subtype_xmlid='mail.mt_comment',
-        )
+        async_send = str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
+        cron = self.env.ref('sale.send_pending_emails_cron', raise_if_not_found=False)
+        cron_enabled = cron and cron.active
+        if async_send and cron_enabled and allow_deferred_sending:
+            # Schedule the email to be sent asynchronously.
+            self.pending_email_template_id = mail_template
+            cron._trigger()
+        else:  # Async emails are disabled, either by the user or we are in the cron job.
+            # Send the email synchronously.
+            self.with_context(force_send=True).message_post_with_source(
+                mail_template,
+                email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+                subtype_xmlid='mail.mt_comment',
+            )
+
+    @api.model
+    def _cron_send_pending_emails(self):
+        """ Find and send pending order status emails asynchronously.
+
+        :return: None
+        """
+        pending_email_orders = self.search([('pending_email_template_id', '!=', False)])
+        self.env['ir.cron']._commit_progress(remaining=len(pending_email_orders))
+        for order in pending_email_orders:
+            order = order[0]  # Avoid pre-fetching after each cache invalidation due to committing.
+            order._send_order_notification_mail(
+                order.pending_email_template_id, allow_deferred_sending=False
+            )  # Resume the email sending.
+            order.pending_email_template_id = None
+            remaining_time = self.env['ir.cron']._commit_progress(processed=1)
+            if not remaining_time:
+                break
 
     def action_lock(self):
         self.locked = True
@@ -1460,7 +1500,7 @@ class SaleOrder(models.Model):
             invoice_vals = order._prepare_invoice()
             invoiceable_lines = order._get_invoiceable_lines(final)
 
-            if not any(not line.display_type for line in invoiceable_lines):
+            if all(line.display_type for line in invoiceable_lines):
                 continue
 
             invoice_line_vals = []
@@ -1476,10 +1516,20 @@ class SaleOrder(models.Model):
                     )
                     down_payment_section_added = True
                     invoice_item_sequence += 1
+
+                optional_values = {'sequence': invoice_item_sequence}
+
+                # When creating the final invoice, we want to express the lines representing
+                # the full order but negate the already created down payment lines.
+                # At this point, on the sale order, the down payment lines have a non-empty
+                # 'extra_tax_data' containing a price unit greater than zero and a quantity of 0.0.
+                if line.is_downpayment:
+                    optional_values['quantity'] = -1.0
+                    optional_values['extra_tax_data'] = self.env['account.tax']\
+                        ._reverse_quantity_base_line_extra_tax_data(line.extra_tax_data)
+
                 invoice_line_vals.append(
-                    Command.create(
-                        line._prepare_invoice_line(sequence=invoice_item_sequence)
-                    ),
+                    Command.create(line._prepare_invoice_line(**optional_values))
                 )
                 invoice_item_sequence += 1
 
@@ -1559,59 +1609,6 @@ class SaleOrder(models.Model):
                 self.invoice_ids._set_reversed_entry(moves_to_switch)
 
         for move in moves:
-            if final:
-                # Downpayment might have been determined by a fixed amount set by the user.
-                # This amount is tax included. This can lead to rounding issues.
-                # E.g. a user wants a 100€ DP on a product with 21% tax.
-                # 100 / 1.21 = 82.64, 82.64 * 1,21 = 99.99
-                # This is already corrected by adding/removing the missing cents on the DP invoice,
-                # but must also be accounted for on the final invoice.
-
-                delta_amount = 0
-                for order_line in self.order_line:
-                    if not order_line.is_downpayment:
-                        continue
-                    inv_amt = order_amt = 0
-                    for invoice_line in order_line.invoice_lines:
-                        sign = 1 if invoice_line.move_id.is_inbound() else -1
-                        if invoice_line.move_id == move:
-                            inv_amt += invoice_line.price_total * sign
-                        elif invoice_line.move_id.state != 'cancel':  # filter out canceled dp lines
-                            order_amt += invoice_line.price_total * sign
-                    if inv_amt and order_amt:
-                        # if not inv_amt, this order line is not related to current move
-                        # if no order_amt, dp order line was not invoiced
-                        delta_amount += inv_amt + order_amt
-
-                if not move.currency_id.is_zero(delta_amount):
-                    receivable_line = move.line_ids.filtered(
-                        lambda aml: aml.account_id.account_type == 'asset_receivable')[:1]
-                    product_lines = move.line_ids.filtered(
-                        lambda aml: aml.display_type == 'product' and aml.is_downpayment)
-                    tax_lines = move.line_ids.filtered(
-                        lambda aml: aml.tax_line_id.amount_type not in (False, 'fixed'))
-                    if tax_lines and product_lines and receivable_line:
-                        line_commands = [Command.update(receivable_line.id, {
-                            'amount_currency': receivable_line.amount_currency + delta_amount,
-                        })]
-                        delta_sign = 1 if delta_amount > 0 else -1
-                        for lines, attr, sign in (
-                            (product_lines, 'price_total', -1 if move.is_inbound() else 1),
-                            (tax_lines, 'amount_currency', 1),
-                        ):
-                            remaining = delta_amount
-                            lines_len = len(lines)
-                            for line in lines:
-                                if move.currency_id.compare_amounts(remaining, 0) != delta_sign:
-                                    break
-                                amt = delta_sign * max(
-                                    move.currency_id.rounding,
-                                    abs(move.currency_id.round(remaining / lines_len)),
-                                )
-                                remaining -= amt
-                                line_commands.append(Command.update(line.id, {attr: line[attr] + amt * sign}))
-                        move.line_ids = line_commands
-
             move.message_post_with_source(
                 'mail.message_origin_link',
                 render_values={'self': move, 'origin': move.line_ids.sale_line_ids.order_id},
@@ -1946,11 +1943,11 @@ class SaleOrder(models.Model):
     #=== CORE METHODS OVERRIDES ===#
 
     @api.model
-    def get_empty_list_help(self, help_msg):
+    def get_empty_list_help(self, help_message):
         self = self.with_context(
             empty_list_help_document_name=_("sale order"),
         )
-        return super().get_empty_list_help(help_msg)
+        return super().get_empty_list_help(help_message)
 
     def _compute_field_value(self, field):
         if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
@@ -1971,12 +1968,12 @@ class SaleOrder(models.Model):
         if not self:
             return
 
-        self.activity_unlink(['sale.mail_act_sale_upsell'])
+        self.activity_unlink(['mail.mail_activity_data_todo'])
         for order in self:
             order_ref = order._get_html_link()
             customer_ref = order.partner_id._get_html_link()
             order.activity_schedule(
-                'sale.mail_act_sale_upsell',
+                'mail.mail_activity_data_todo',
                 user_id=order.user_id.id or order.partner_id.user_id.id,
                 note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
 
@@ -2021,6 +2018,75 @@ class SaleOrder(models.Model):
         }
         del context
         return down_payments_section_line
+
+    def _create_down_payment_lines_from_base_lines(self, down_payment_base_lines):
+        """ Add the base lines passed as parameter as sale order lines into the current sale order.
+
+        :param down_payment_base_lines: A list of base lines
+                                        (see '_prepare_base_line_for_taxes_computation').
+        :return The newly created SO lines.
+        """
+        self.ensure_one()
+        sequence = max(self.order_line.mapped('sequence') or 10) + 1
+        return self.env['sale.order.line'] \
+            .with_context(sale_no_log_for_new_lines=True) \
+            .create([
+                {
+                    **self._prepare_down_payment_line_values_from_base_line(base_line),
+                    'sequence': sequence + index,
+                }
+                for index, base_line in enumerate(down_payment_base_lines)
+            ])
+
+    def _create_down_payment_section_line_if_needed(self):
+        """ Add the down section line if not already there on the current SO.
+
+        :return The newly created SO line or None if the section was already there.
+        """
+        self.ensure_one()
+        # If a down payment is already there, then the section is not needed and
+        # has already been created.
+        if any(line.display_type and line.is_downpayment for line in self.order_line):
+            return
+
+        sequence = max(self.order_line.mapped('sequence') or 10) + 1
+        return self.env['sale.order.line'] \
+            .with_context(sale_no_log_for_new_lines=True) \
+            .create({
+                **self._prepare_down_payment_line_section_values(),
+                'sequence': sequence,
+            })
+
+    def _prepare_down_payment_line_section_values(self):
+        """ Prepare the values to create a section line for the down payment on the current SO.
+
+        :return: A dictionary to create a new SO section line.
+        """
+        self.ensure_one()
+        return {
+            'order_id': self.id,
+            'display_type': 'line_section',
+            'is_downpayment': True,
+        }
+
+    def _prepare_down_payment_line_values_from_base_line(self, base_line):
+        """ Convert the base line passed as parameter representing a down payment into a
+        dictionary to be converted into a sale order line in the current sale order.
+
+        :param base_line: A base line (see '_prepare_base_line_for_taxes_computation').
+        :return: A dictionary to create a new SO line.
+        """
+        self.ensure_one()
+        extra_tax_data = self.env['account.tax']._export_base_line_extra_tax_data(base_line)
+        return {
+            'order_id': self.id,
+            'is_downpayment': True,
+            'product_uom_qty': 0.0,
+            'price_unit': base_line['price_unit'],
+            'tax_ids': [Command.set(base_line['tax_ids'].ids)],
+            'analytic_distribution': base_line['analytic_distribution'],
+            'extra_tax_data': extra_tax_data,
+        }
 
     def _get_prepayment_required_amount(self):
         """ Return the minimum amount needed to confirm automatically the quotation.
@@ -2079,10 +2145,8 @@ class SaleOrder(models.Model):
         res = super()._get_product_catalog_order_data(products, **kwargs)
         for product in products:
             res[product.id]['price'] = pricelist.get(product.id)
-            if product.sale_line_warn != 'no-message' and product.sale_line_warn_msg:
+            if product.sale_line_warn_msg:
                 res[product.id]['warning'] = product.sale_line_warn_msg
-            if product.sale_line_warn == "block":
-                res[product.id]['readOnly'] = True
         return res
 
     def _get_product_catalog_record_lines(self, product_ids, **kwargs):

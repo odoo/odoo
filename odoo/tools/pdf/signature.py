@@ -42,7 +42,8 @@ class PdfSigner:
     for the structure of the signature in a PDF.
     """
 
-    def __init__(self, stream: io.BytesIO, company: Optional[ResCompany] = None) -> None:
+    def __init__(self, stream: io.BytesIO, company: Optional[ResCompany] = None, signing_time=None) -> None:
+        self.signing_time = signing_time
         self.company = company
         if not 'clone_document_from_reader' in dir(PdfWriter):
             _logger.info("PDF signature is supported by Python 3.12 and above")
@@ -295,7 +296,7 @@ class PdfSigner:
             }),
             cms.CMSAttribute({
                 'type': 'signing_time',
-                'values': [cms.Time({'utc_time': core.UTCTime(datetime.datetime.now(datetime.timezone.utc))})]
+                'values': [cms.Time({'utc_time': core.UTCTime(self.signing_time or datetime.datetime.now(datetime.timezone.utc))})]
             }),
             cms.CMSAttribute({
                 'type': 'cms_algorithm_protection',

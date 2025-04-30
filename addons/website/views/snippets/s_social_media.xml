@@ -29,14 +29,17 @@ title stay editable after a save (see SOCIAL_MEDIA_TITLE_CONTENTEDITABLE).
         <a href="/website/social/tiktok" class="s_social_media_tiktok" target="_blank" aria-label="TikTok">
             <i class="fa fa-tiktok rounded shadow-sm o_editable_media"/>
         </a>
+        <a href="/website/social/discord" class="s_social_media_discord" target="_blank" aria-label="Discord">
+            <i class="fa fa-discord rounded shadow-sm o_editable_media"/>
+        </a>
     </div>
 </template>
 
 <template id="s_social_media_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <div data-js="SocialMedia" data-selector=".s_social_media">
-            <t t-set="add_item_title">Add New Social Network</t>
-            <we-list string="Social Networks" t-att-data-add-item-title="add_item_title"
+            <we-list string="Social Networks"
+                data-add-item-title.translate="Add New Social Network"
                 data-render-list-items="" data-has-default="multiple" data-name="social_media_list"
                 data-default-value="https://www.example.com" data-id-mode="name"
                 data-new-elements-not-toggleable="true" data-no-preview="true"

@@ -64,6 +64,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('standard_price')
     def _onchange_standard_price(self):
+        super()._onchange_standard_price()
         if self.lot_valuated and any(p.quantity_svl for p in self.product_variant_ids):
             return {
                 'warning': {
@@ -226,6 +227,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('standard_price')
     def _onchange_standard_price(self):
+        super()._onchange_standard_price()
         if self.lot_valuated:
             return {
                 'warning': {
@@ -271,7 +273,7 @@ will update the cost of every lot/serial number in stock."),
         self.ensure_one()
         ctx = dict(self._context, default_product_id=self.id, default_company_id=self.env.company.id)
         return {
-            'name': _("Product Revaluation"),
+            'name': _('Product Revaluation - %s', self.display_name),
             'view_mode': 'form',
             'res_model': 'stock.valuation.layer.revaluation',
             'view_id': self.env.ref('stock_account.stock_valuation_layer_revaluation_form_view').id,
@@ -405,7 +407,7 @@ will update the cost of every lot/serial number in stock."),
 
     def _get_fifo_candidates(self, company, lot=False):
         candidates_domain = self._get_fifo_candidates_domain(company, lot=lot)
-        return self.env["stock.valuation.layer"].sudo().search(candidates_domain)
+        return self.env["stock.valuation.layer"].sudo().search(candidates_domain).sorted(lambda svl: svl._candidate_sort_key())
 
     def _get_qty_taken_on_candidate(self, qty_to_take_on_candidates, candidate):
         return min(qty_to_take_on_candidates, candidate.remaining_qty)
@@ -782,8 +784,26 @@ will update the cost of every lot/serial number in stock."),
                 lot_by_product[product][lot] += qty
         for _product, location, lot, _qty in neg_lots:
             if location._should_be_valued():
-                raise UserError(_("Lot %(lot)s has a negative quantity in stock. Correct this \
-                        quantity before enabling lot valuation", lot=lot))
+                raise UserError(_(
+                    "Lot %(lot)s has a negative quantity in stock.\n"
+                    "Correct this quantity before enabling/disabling lot valuation.",
+                    lot=lot.display_name
+                ))
+        lot_valuated_products = self.filtered("lot_valuated")
+        if lot_valuated_products:
+            no_lot_quants = self.env['stock.quant']._read_group([
+                ('product_id', 'in', lot_valuated_products.ids),
+                ('lot_id', '=', False),
+                ('quantity', '!=', 0),
+            ], ['product_id', 'location_id'])
+            for product, location in no_lot_quants:
+                if location._should_be_valued():
+                    raise UserError(_(
+                        "Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+                        "Please assign lots to all your quantities before enabling lot valuation.",
+                        product=product.display_name,
+                        location=location.display_name
+                    ))
 
         for product in self:
             quantity_svl = products_orig_quantity_svl[product.id]
@@ -938,7 +958,8 @@ will update the cost of every lot/serial number in stock."),
             candidates = candidates.with_prefetch(self.env.context.get('candidates_prefetch_ids'))
 
         if len(candidates) > 1:
-            candidates = candidates.sorted(lambda svl: (svl.create_date, svl.id))
+            # sort candidates by create_date > existing records by id > new records without origin
+            candidates = candidates.sorted(lambda svl: (svl.create_date, not bool(svl.ids), svl.ids[0] if svl.ids else 0))
 
         value_invoiced = self.env.context.get('value_invoiced', 0)
         if 'value_invoiced' in self.env.context:
@@ -992,18 +1013,18 @@ class ProductCategory(models.Model):
         help="When doing automated inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
     property_stock_account_input_categ_id = fields.Many2one(
         'account.account', 'Stock Input Account', company_dependent=True, ondelete='restrict',
-        domain="[('deprecated', '=', False)]", check_company=True,
+        check_company=True,
         help="""Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account
                 set on the source location. This is the default value for all products in this category. It can also directly be set on each product.""")
     property_stock_account_output_categ_id = fields.Many2one(
         'account.account', 'Stock Output Account', company_dependent=True, ondelete='restrict',
-        domain="[('deprecated', '=', False)]", check_company=True,
+        check_company=True,
         help="""When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,
                 unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.
                 It can also directly be set on each product.""")
     property_stock_valuation_account_id = fields.Many2one(
         'account.account', 'Stock Valuation Account', company_dependent=True, ondelete='restrict',
-        domain="[('deprecated', '=', False)]", check_company=True,
+        check_company=True,
         help="""When automated inventory valuation is enabled on a product, this account will hold the current value of the products.""",)
 
     @api.model

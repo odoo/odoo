@@ -5,7 +5,7 @@
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCase
-from odoo.tests import Form
+from odoo.tests import Form, users
 from odoo.tests.common import tagged
 
 
@@ -45,3 +45,54 @@ class TestTracking(AccountTestInvoicingCommon, MailCase):
         self.assertTrue(tracking_value.field_id)
         field = self.env[tracking_value.field_id.model]._fields[tracking_value.field_id.name]
         self.assertFalse(field.groups, "There is no group on account.move.line.account_id")
+
+    @users('admin')
+    def test_invite_follower_account_moves(self):
+        """ Test that the mail_followers_edit wizard works on both single and multiple account.move records """
+        user_admin = self.env.ref('base.user_admin')
+        user_admin.write({
+                'country_id': self.env.ref('base.be').id,
+                'email': 'test.admin@test.example.com',
+                "name": "Mitchell Admin",
+                'notification_type': 'inbox',
+                'phone': '0455135790',
+            })
+        partner_admin = self.env.ref('base.partner_admin')
+        multiple_account_moves = [
+            {
+                'description': 'Single account.move',
+                'account_moves': [{'name': 'Test Single', 'partner_id': self.partner_a.id}],
+                'expected_partners': self.partner_a | user_admin.partner_id,
+            },
+            {
+                'description': 'Multiple account.moves',
+                'account_moves': [
+                    {'name': 'Move 1', 'partner_id': self.partner_a.id},
+                    {'name': 'Move 2', 'partner_id': self.partner_b.id},
+                ],
+                'expected_partners': self.partner_a | user_admin.partner_id,
+            },
+        ]
+        for move in multiple_account_moves:
+            with self.subTest(move['description']):
+                account_moves = self.env['account.move'].with_context(self._test_context).create(move['account_moves'])
+                mail_invite = self.env['mail.followers.edit'].with_context({
+                    'default_res_model': 'account.move',
+                    'default_res_ids': account_moves.ids,
+                }).with_user(user_admin).create({
+                    'partner_ids': [(4, self.partner_a.id), (4, user_admin.partner_id.id)],
+                    'notify': True,
+                })
+                with self.mock_mail_app(), self.mock_mail_gateway():
+                    mail_invite.edit_followers()
+
+                for account_move in account_moves:
+                    self.assertEqual(account_move.message_partner_ids, move['expected_partners'])
+
+                self.assertEqual(len(self._new_msgs), 1)
+                self.assertEqual(len(self._mails), 1)
+                self.assertNotSentEmail([partner_admin])
+                self.assertNotified(
+                    self._new_msgs[0],
+                    [{'partner': partner_admin, 'type': 'inbox', 'is_read': False}]
+                )

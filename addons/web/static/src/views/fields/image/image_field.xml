@@ -3,7 +3,7 @@
 
     <t t-name="web.ImageField">
         <div class="d-inline-block position-relative opacity-trigger-hover">
-            <div t-if="!props.readonly and fieldType !== 'many2one'" t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="sizeStyle">
+            <div t-if="!props.readonly and fieldType !== 'many2one'" class="o_image_uploader_container" t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="sizeStyle">
                 <FileUploader
                     acceptedFileExtensions="props.acceptedFileExtensions"
                     t-key="props.record.resId"

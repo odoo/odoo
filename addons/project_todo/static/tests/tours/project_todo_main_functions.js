@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: '.o_app[data-menu-xmlid="project_todo.menu_todo_todos"]',
     run: "click",
 }, {
-    trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_add_column",
+    trigger: ".o_project_task_kanban_view .o_column_quick_create.o_quick_create_folded div",
     content: "Create a personal stage from the To-do kanban view",
     run: "click",
 },
@@ -164,7 +164,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     content: 'Convert the todo to a task',
     run: "click",
 }, {
-    trigger: ".o_project_task_form_view .breadcrumb-item:last-child",
+    trigger: ".o_form_view .breadcrumb-item:last-child",
     content: markup("Let's go back to the <b>kanban view</b> to have an overview of tasks linked to project chosen."),
     run: "click",
 }, {

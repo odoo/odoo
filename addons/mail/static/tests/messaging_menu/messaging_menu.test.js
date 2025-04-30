@@ -3,6 +3,7 @@ import {
     contains,
     defineMailModels,
     insertText,
+    listenStoreFetch,
     onRpcBefore,
     openDiscuss,
     patchBrowserNotification,
@@ -12,6 +13,7 @@ import {
     startServer,
     triggerEvents,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
@@ -579,7 +581,7 @@ test("mobile: active icon is highlighted", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu-tab", { text: "Chat" });
-    await contains(".o-mail-MessagingMenu-tab.fw-bolder", { text: "Chat" });
+    await contains(".o-mail-MessagingMenu-tab.fw-bold", { text: "Chat" });
 });
 
 test("open chat window from preview", async () => {
@@ -889,7 +891,9 @@ test("click on expand from chat window should close the chat window and open the
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Open Form View" });
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["do_action"], "should have done an action to open the form view");
+    await waitForSteps(["do_action"], {
+        message: "should have done an action to open the form view",
+    });
 });
 
 test("preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread", async () => {
@@ -1220,14 +1224,18 @@ test("can open messaging menu even if messaging is not initialized", async () =>
     patchBrowserNotification("default");
     await startServer();
     const def = new Deferred();
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+    listenStoreFetch("init_messaging", {
+        async onRpc() {
+            asyncStep("before init_messaging");
             await def;
-        }
+        },
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { text: "Turn on notifications" });
+    await waitForSteps(["before init_messaging"]);
+    def.resolve();
+    await waitStoreFetch("init_messaging");
 });
 
 test("can open messaging menu even if channels are not fetched", async () => {
@@ -1235,20 +1243,18 @@ test("can open messaging menu even if channels are not fetched", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     const def = new Deferred();
-    onRpcBefore("/mail/action", async (args) => {
-        if (args.fetch_params.includes("channels_as_member")) {
+    listenStoreFetch("channels_as_member", {
+        async onRpc() {
+            asyncStep("before channels_as_member");
             await def;
-        }
-    });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("channels_as_member")) {
-            await def;
-        }
+        },
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-DiscussSystray", { text: "Loading…" });
+    await waitForSteps(["before channels_as_member"]);
     def.resolve();
+    await waitStoreFetch("channels_as_member");
     await contains(".o-mail-NotificationItem", { text: "General" });
 });
 

@@ -52,7 +52,8 @@ test("store.insert deletes record after relation created it", async () => {
     store.insert({
         "mail.message": [{ id: 1, _DELETE: true }],
         // they key coverage of the test is to have the relation listed after the delete
-        "mail.link.preview": [{ id: 1, message_id: { id: 1 } }],
+        "mail.link.preview": [{ id: 1 }],
+        "mail.message.link.preview": [{ id: 1, link_preview_id: 1, message_id: 1 }],
     });
     await waitForSteps(["new-1"]);
     expect(store["mail.message"].get({ id: 1 })?.id).toBe(undefined);
@@ -72,12 +73,9 @@ test("store.insert different PY model having same JS model", async () => {
         ],
     };
 
-    const { Thread: threads } = store.insert(data);
-    expect(threads).toHaveLength(3);
-    const general = store.Thread.get({ id: 1, model: "discuss.channel" });
-    const sales = store.Thread.get({ id: 2, model: "discuss.channel" });
-    const rd = store.Thread.get({ id: 3, model: "discuss.channel" });
-    expect(general.in(threads)).toBe(true);
-    expect(sales.in(threads)).toBe(true);
-    expect(rd.in(threads)).toBe(true);
+    store.insert(data);
+    expect(store.Thread.records).toHaveLength(6); // 3 mailboxes + 3 channels
+    expect(Boolean(store.Thread.get({ id: 1, model: "discuss.channel" }))).toBe(true);
+    expect(Boolean(store.Thread.get({ id: 2, model: "discuss.channel" }))).toBe(true);
+    expect(Boolean(store.Thread.get({ id: 3, model: "discuss.channel" }))).toBe(true);
 });

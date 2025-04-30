@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { Record, fields } from "@mail/core/common/record";
 
 export class ChatbotScript extends Record {
     static _name = "chatbot.script";
@@ -9,6 +9,6 @@ export class ChatbotScript extends Record {
     /** @type {string} */
     title;
     isLivechatTourRunning = false;
-    operator_partner_id = Record.one("Persona");
+    operator_partner_id = fields.One("Persona");
 }
 ChatbotScript.register();

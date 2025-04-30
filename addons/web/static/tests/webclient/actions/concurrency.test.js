@@ -27,12 +27,15 @@ import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSetupAction } from "@web/search/action_hook";
 import { WebClient } from "@web/webclient/webclient";
+import { browser } from "@web/core/browser/browser";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 const actionRegistry = registry.category("actions");
 
 class Partner extends models.Model {
     _rec_name = "display_name";
+
+    start = fields.Date();
 
     _records = [
         { id: 1, display_name: "First record" },
@@ -57,6 +60,7 @@ class Partner extends models.Model {
                 </templates>
             </kanban>`,
         "list,false": `<list><field name="display_name"/></list>`,
+        "calendar,false": `<calendar date_start="start"/>`,
         "search,false": `<search/>`,
     };
 }
@@ -87,6 +91,7 @@ defineActions([
         views: [
             [false, "list"],
             [1, "kanban"],
+            [false, "calendar"],
             [false, "form"],
         ],
     },
@@ -204,10 +209,21 @@ test("clicking quickly on breadcrumbs...", async () => {
 
 test.tags("desktop");
 test("execute a new action while loading a lazy-loaded controller", async () => {
-    redirect("/odoo/action-4/2?cids=1");
+    defineActions([
+        {
+            id: 77,
+            type: "ir.actions.act_window",
+            res_model: "partner",
+            views: [
+                [false, "calendar"],
+                [false, "form"],
+            ],
+        },
+    ]);
+    redirect("/odoo/action-77/2?cids=1");
 
     let def;
-    onRpc("partner", "web_search_read", () => def);
+    onRpc("partner", "search_read", () => def);
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -231,11 +247,11 @@ test("execute a new action while loading a lazy-loaded controller", async () => 
         "/web/action/load",
         "get_views",
         "web_read",
-        "web_search_read",
-        "has_group",
+        "search_read",
         "/web/action/load",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 
     // unblock the switch to Kanban in action 4
@@ -398,14 +414,20 @@ test.tags("desktop");
 test("execute a new action while loading data of default view", async () => {
     const def = new Deferred();
     stepAllNetworkCalls();
-    onRpc("web_search_read", () => def);
+    onRpc("web_read", () => def);
 
     await mountWithCleanup(WebClient);
-    // execute a first action (its 'search_read' RPC is blocked)
-    getService("action").doAction(3);
+    // execute a first action (its 'web_read' RPC is blocked)
+    getService("action").doAction({
+        name: "A Partner",
+        res_model: "partner",
+        res_id: 1,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
     await animationFrame();
-    expect(".o_list_view").toHaveCount(0, {
-        message: "should not display the list view of action 3",
+    expect(".o_form_view").toHaveCount(0, {
+        message: "should not display the form view",
     });
 
     // execute another action meanwhile (and unlock the RPC)
@@ -415,37 +437,37 @@ test("execute a new action while loading data of default view", async () => {
     expect(".o_kanban_view").toHaveCount(1, {
         message: "should display the kanban view of action 4",
     });
-    expect(".o_list_view").toHaveCount(0, {
-        message: "should not display the list view of action 3",
+    expect(".o_form_view").toHaveCount(0, {
+        message: "should not display the form view",
     });
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
+        "get_views",
+        "web_read",
         "/web/action/load",
         "get_views",
         "web_search_read",
         "has_group",
-        "/web/action/load",
-        "get_views",
-        "web_search_read",
     ]);
 });
 
 test.tags("desktop");
 test("open a record while reloading the list view", async () => {
     let def;
-    onRpc("web_search_read", () => def);
+    onRpc("search_read", () => def);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
+    expect(".o_calendar_view").toHaveCount(0);
     expect(".o_list_view").toHaveCount(1);
     expect(".o_list_view .o_data_row").toHaveCount(2);
     expect(".o_control_panel .o_list_buttons").toHaveCount(1);
 
     // reload (the search_read RPC will be blocked)
     def = new Deferred();
-    await switchView("list");
+    await switchView("calendar");
     expect(".o_list_view .o_data_row").toHaveCount(2);
     expect(".o_control_panel .o_list_buttons").toHaveCount(1);
 
@@ -459,6 +481,7 @@ test("open a record while reloading the list view", async () => {
     await animationFrame();
     expect(".o_form_view").toHaveCount(1);
     expect(".o_list_view").toHaveCount(0);
+    expect(".o_calendar_view").toHaveCount(0);
     expect(".o_control_panel .o_list_buttons").toHaveCount(0);
 });
 
@@ -594,15 +617,18 @@ test("switching when doing an action -- get_views slow", async () => {
 test.tags("desktop");
 test("switching when doing an action -- search_read slow", async () => {
     const def = new Deferred();
-    const defs = [null, def, null];
-    onRpc("web_search_read", () => defs.shift());
+    onRpc("search_read", () => def);
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
     expect(".o_list_view").toHaveCount(1);
 
-    getService("action").doAction(4);
+    getService("action").doAction({
+        type: "ir.actions.act_window",
+        res_model: "partner",
+        views: [[false, "calendar"]],
+    });
     await animationFrame();
     await switchView("kanban");
     def.resolve();
@@ -617,9 +643,8 @@ test("switching when doing an action -- search_read slow", async () => {
         "get_views",
         "web_search_read",
         "has_group",
-        "/web/action/load",
         "get_views",
-        "web_search_read",
+        "search_read",
         "web_search_read",
     ]);
 });
@@ -748,4 +773,25 @@ test("local state, global state, and race conditions", async () => {
         { fromId: 1 }, // setup second view instantiated
         { fromId: 1 }, // setup third view instantiated
     ]);
+});
+
+test.tags("desktop");
+test("doing browser back temporarily disables the UI", async () => {
+    let def;
+    onRpc("partner", "web_search_read", () => def);
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction(4);
+    await contains(".o_kanban_record").click();
+    await getService("action").doAction(8);
+
+    def = new Deferred();
+    browser.history.back();
+    expect(document.body.style.pointerEvents).toBe("none");
+    // await contains(".o_control_panel .breadcrumb-item").click(); todo JUM: click on breadcrumb
+    def.resolve();
+
+    await animationFrame();
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
+    expect(document.body.style.pointerEvents).toBe("auto");
 });

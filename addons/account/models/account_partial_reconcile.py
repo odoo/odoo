@@ -110,6 +110,8 @@ class AccountPartialReconcile(models.Model):
         if not self:
             return True
 
+        # Get the payments without journal entry to reset once the amount residual is reset
+        to_update_payments = self._get_to_update_payments(from_state='paid')
         # Retrieve the CABA entries to reverse.
         moves_to_reverse = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self.ids)])
         # Same for the exchange difference entries.
@@ -140,28 +142,30 @@ class AccountPartialReconcile(models.Model):
 
         all_reconciled = all_reconciled.exists()
         self._update_matching_number(all_reconciled)
+        to_update_payments.state = 'in_process'
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
         partials = super().create(vals_list)
-        self._pay_matched_payment(partials)
+        partials._get_to_update_payments(from_state='in_process').state = 'paid'
         self._update_matching_number(partials.debit_move_id + partials.credit_move_id)
         return partials
 
-    @api.model
-    def _pay_matched_payment(self, partials):
-        for partial in partials:
+    def _get_to_update_payments(self, from_state):
+        to_update = []
+        for partial in self:
             matched_payments = (partial.credit_move_id | partial.debit_move_id).move_id.matched_payment_ids
-            to_check_payments = matched_payments.filtered(lambda payment: not payment.outstanding_account_id and payment.state == 'in_process')
+            to_check_payments = matched_payments.filtered(lambda payment: not payment.outstanding_account_id and payment.state == from_state)
             for payment in to_check_payments:
                 if payment.payment_type == 'inbound':
                     amount = partial.debit_amount_currency
                 else:
                     amount = -partial.credit_amount_currency
                 if not payment.currency_id.compare_amounts(payment.amount_signed, amount):
-                    payment.state = 'paid'
+                    to_update.append(payment)
                     break
+        return self.env['account.payment'].union(*to_update)
 
     @api.model
     def _update_matching_number(self, amls):
@@ -356,6 +360,7 @@ class AccountPartialReconcile(models.Model):
             'tax_ids': [Command.set(tax_ids.ids)],
             'tax_tag_ids': [Command.set(all_tags.ids)],
             'analytic_distribution': base_line.analytic_distribution,
+            'display_type': base_line.display_type,
         }
 
     @api.model
@@ -376,6 +381,7 @@ class AccountPartialReconcile(models.Model):
             'currency_id': cb_base_line_vals['currency_id'],
             'partner_id': cb_base_line_vals['partner_id'],
             'analytic_distribution': cb_base_line_vals['analytic_distribution'],
+            'display_type': cb_base_line_vals['display_type'],
         }
 
     @api.model
@@ -406,6 +412,7 @@ class AccountPartialReconcile(models.Model):
             'currency_id': tax_line.currency_id.id,
             'partner_id': tax_line.partner_id.id,
             'analytic_distribution': tax_line.analytic_distribution,
+            'display_type': tax_line.display_type,
             # No need to set tax_tag_invert as on the base line; it will be computed from the repartition line
         }
 
@@ -428,6 +435,7 @@ class AccountPartialReconcile(models.Model):
             'currency_id': cb_tax_line_vals['currency_id'],
             'partner_id': cb_tax_line_vals['partner_id'],
             'analytic_distribution': cb_tax_line_vals['analytic_distribution'],
+            'display_type': cb_tax_line_vals['display_type'],
         }
 
     @api.model
@@ -540,6 +548,14 @@ class AccountPartialReconcile(models.Model):
 
                     # Percentage expressed in the foreign currency.
                     amount_currency = line.currency_id.round(line.amount_currency * partial_values['percentage'])
+                    if (
+                        caba_treatment == 'tax'
+                        and (
+                            move_values['is_fully_paid']
+                            or line.currency_id.compare_amounts(abs(line.amount_residual_currency), abs(amount_currency)) < 0
+                        )
+                    ):
+                        amount_currency = line.amount_residual_currency
                     balance = partial_values['payment_rate'] and amount_currency / partial_values['payment_rate'] or 0.0
 
                     # ==========================================================================

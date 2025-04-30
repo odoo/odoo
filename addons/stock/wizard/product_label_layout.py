@@ -39,23 +39,6 @@ class ProductLabelLayout(models.TransientModel):
     ], string="ZPL Template", default='normal', required=True)
     zpl_preview = fields.Image('ZPL Preview', readonly=True, default=_get_zpl_label_placeholder)
 
-    @api.onchange('print_format', 'zpl_template')
-    def _compute_zpl_preview(self):
-        if 'zpl' not in self.print_format:
-            return
-
-        xml_id, data = self._prepare_report_data()
-        zpl = self.env.ref(xml_id)._render_qweb_text(xml_id, None, data=data)[0].decode('utf-8')
-        width, height = ZPL_FORMAT_SIZE[self.zpl_template]
-        url = f"https://api.labelary.com/v1/printers/8dpmm/labels/{width}x{height}/0/"
-        try:
-            response = requests.post(url, files={'file': zpl}, stream=True, timeout=5)
-            if response.status_code == 200:
-                response.raw.decode_content = True
-                self.zpl_preview = base64.b64encode(response.content).decode('utf-8')
-        except Exception:
-            self.zpl_preview = self._get_zpl_label_placeholder()
-
     def _prepare_report_data(self):
         xml_id, data = super()._prepare_report_data()
 

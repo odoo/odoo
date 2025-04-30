@@ -51,8 +51,8 @@ class TestWebsiteResUsers(TransactionCase):
 
     def test_same_website_message(self):
         # Use a test cursor because retrying() does commit.
-        with self.enter_registry_test_mode():
-            env = self.env(context={'lang': 'en_US'}, cr=self.env.registry.cursor())
+        with self.enter_registry_test_mode(), self.env.registry.cursor() as cr:
+            env = self.env(context={'lang': 'en_US'}, cr=cr)
 
             def create_user_pou():
                 return new_test_user(env, login='Pou', website_id=self.website_1.id, groups='base.group_portal')

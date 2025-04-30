@@ -514,7 +514,7 @@ const isValidFieldValue = (record, fieldDef) => {
             return Number.isInteger(value);
         }
         case "json":
-            return typeof value === "string" || isObject(value);
+            return typeof value === "string" || Array.isArray(value) || isObject(value);
         case "many2many":
         case "one2many": {
             return (
@@ -1177,6 +1177,7 @@ const DATE_TIME_REGEX = /\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?/;
 /** @type {GroupOperator[]} */
 const VALID_AGGREGATE_FUNCTIONS = [
     "array_agg",
+    "array_agg_distinct",
     "avg",
     "bool_and",
     "bool_or",
@@ -1666,6 +1667,8 @@ export class Model extends Array {
                 (!name ||
                     (operator === "="
                         ? record.display_name === name
+                        : operator === "=ilike"
+                        ? new RegExp(name.replaceAll("%", ".*")).test(record.display_name)
                         : record.display_name?.includes(name)))
             ) {
                 result.push(toIdDisplayName(record));
@@ -2445,7 +2448,11 @@ export class Model extends Array {
 
         const idNamePairs = this.name_search(name, domain, operator, limit, kwargs);
         if (Object.keys(specification).length === 1 && "display_name" in specification) {
-            return idNamePairs.map(([id, name]) => ({ id, display_name: name }));
+            return idNamePairs.map(([id, name]) => ({
+                id,
+                display_name: name,
+                __formatted_display_name: name,
+            }));
         }
 
         return this.web_read(
@@ -2925,7 +2932,7 @@ export class Model extends Array {
                         result[field.name] = container[field.definition_record_field].map(
                             (def) => ({
                                 ...def,
-                                value: record[field.name][def.name] ?? false,
+                                value: record[field.name][def.name],
                             })
                         );
                     } else {
@@ -3177,7 +3184,7 @@ export class Model extends Array {
                     if (property.definition_deleted) {
                         delete record[fieldName][property.name];
                     } else {
-                        let value = property.value ?? property.default ?? false;
+                        let value = property.value ?? property.default;
                         if (value && property.comodel) {
                             // For relational fields: transform to [id, display_name] tuples
                             const coModel = this.env[property.comodel];

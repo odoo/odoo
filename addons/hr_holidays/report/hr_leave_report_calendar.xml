@@ -41,7 +41,6 @@
                     </group>
                     <footer class="d-flex justify-content-end gap-1">
                         <button name="action_approve" string="Approve" type="object" close="1" invisible="state not in ['confirm', 'refuse'] or not is_manager"/>
-                        <button name="action_validate" string="Validate" type="object" close="1" invisible="state != 'validate1' or not is_manager"/>
                         <button name="action_refuse" string="Refuse" type="object" close="1" invisible="state == 'refuse' or not is_manager"/>
                     </footer>
                 </sheet>
@@ -54,7 +53,6 @@
         <field name="model">hr.leave.report.calendar</field>
         <field name="arch" type="xml">
             <search string="Department search">
-                <field name="name"/>
                 <field name="employee_id"/>
                 <field name="department_id"/>
                 <field name="job_id"/>
@@ -84,5 +82,10 @@
         <field name="search_view_id" ref="hr_leave_report_calendar_view_search"/>
         <field name="domain">[('employee_id.active','=',True)]</field>
         <field name="context">{'hide_employee_name': 1, 'search_default_my_team': 1, 'search_default_current_year': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Nobody here ? All of the people you're looking for will be working at that time.
+            </p>
+        </field>
     </record>
 </odoo>

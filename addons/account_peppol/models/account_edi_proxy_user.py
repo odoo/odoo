@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from datetime import timedelta
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -48,7 +49,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             error_message = get_exception_message(error_vals)
 
         return _(
-            source="Peppol Error [code=%(error_code)s]: %(error_subject)s\n%(error_message)s",
+            "Peppol Error [code=%(error_code)s]: %(error_subject)s\n%(error_message)s",
             error_code=error_vals['code'],
             error_subject=error_vals['subject'],
             error_message=error_message,
@@ -97,16 +98,24 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     # -------------------------------------------------------------------------
 
     def _cron_peppol_get_new_documents(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver')])
-        edi_users._peppol_get_new_documents()
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', '=', 'peppol')])
+        edi_users._peppol_get_new_documents(skip_no_journal=True)
 
     def _cron_peppol_get_message_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', self._get_can_send_domain())])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', self._get_can_send_domain()), ('proxy_type', '=', 'peppol')])
         edi_users._peppol_get_message_status()
 
     def _cron_peppol_get_participant_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['in_verification', 'sender', 'smp_registration'])])
+        edi_users = self.search([('proxy_type', '=', 'peppol')])
         edi_users._peppol_get_participant_status()
+
+        # throughout the registration process, we need to check the status more frequently
+        if self.search_count([('company_id.account_peppol_proxy_state', '=', 'smp_registration')], limit=1):
+            self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(at=fields.Datetime.now() + timedelta(hours=1))
+
+    def _cron_peppol_webhook_keepalive(self):
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['sender', 'receiver'])])
+        edi_users._peppol_reset_webhook()
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -120,19 +129,20 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             return f'{company.peppol_eas}:{company.peppol_endpoint}'
         return super()._get_proxy_identification(company, proxy_type)
 
-    def _peppol_import_invoice(self, attachment, partner_endpoint, peppol_state, uuid):
+    def _peppol_import_invoice(self, attachment, partner_endpoint, peppol_state, uuid, journal=None):
         """Save new documents in an accounting journal, when one is specified on the company.
 
         :param attachment: the new document
         :param partner_endpoint: DEPRECATED - to be removed in master
         :param peppol_state: the state of the received Peppol document
         :param uuid: the UUID of the Peppol document
-        :return: `True` if the document was saved, `False` if it was not
+        :param journal: journal to use for the new move (otherwise the company's peppol journal will be used)
+        :return: the created move (if any)
         """
-        self.ensure_one()
-        journal = self.company_id.peppol_purchase_journal_id
+
+        journal = journal or self.company_id.peppol_purchase_journal_id
         if not journal:
-            return False
+            return self.env['account.move']
 
         move = self.env['account.move'].create({
             'journal_id': journal.id,
@@ -152,9 +162,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             attachment_ids=attachment.ids,
         )
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
-        return True
+        return move
 
-    def _peppol_get_new_documents(self):
+    def _peppol_get_new_documents(self, skip_no_journal=False):
         params = {
             'domain': {
                 'direction': 'incoming',
@@ -162,6 +172,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             }
         }
         for edi_user in self:
+            journal = edi_user.company_id.peppol_purchase_journal_id
+            if not journal:
+                msg = _('Please set a journal for Peppol invoices on %s before receiving documents.', edi_user.company_id.display_name)
+                if skip_no_journal:
+                    _logger.warning(msg)
+                else:
+                    raise UserError(msg)
+
             params['domain']['receiver_identifier'] = edi_user.edi_identification
             try:
                 # request all messages that haven't been acknowledged
@@ -182,7 +200,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 continue
 
             for uuids in split_every(BATCH_SIZE, message_uuids):
-                proxy_acks = []
+                created_moves = self.env['account.move']
                 # retrieve attachments for filtered messages
                 all_messages = edi_user._call_peppol_proxy(
                     "/api/peppol/1/get_document",
@@ -202,17 +220,16 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                             "mimetype": "application/xml",
                         }
                     )
-                    if edi_user._peppol_import_invoice(attachment, None, content["state"], uuid):
-                        # Only acknowledge when we saved the document somewhere
-                        proxy_acks.append(uuid)
+                    created_moves |= edi_user._peppol_import_invoice(attachment, None, content["state"], uuid, journal)
 
-                if not modules.module.current_test:
+                if not (modules.module.current_test or tools.config['test_enable']):
                     self.env.cr.commit()
-                if proxy_acks:
+                if created_moves:
                     edi_user._call_peppol_proxy(
                         "/api/peppol/1/ack",
-                        params={'message_uuids': proxy_acks},
+                        params={'message_uuids': created_moves.mapped('peppol_message_uuid')},
                     )
+                    journal._notify_einvoices_received(created_moves)
 
     def _peppol_get_message_status(self):
         for edi_user in self:
@@ -268,7 +285,12 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 continue
 
             if proxy_user['peppol_state'] in ('sender', 'smp_registration', 'receiver', 'rejected'):
-                edi_user.company_id.account_peppol_proxy_state = proxy_user['peppol_state']
+                if edi_user.company_id.account_peppol_proxy_state != proxy_user['peppol_state']:
+                    edi_user.company_id.account_peppol_proxy_state = proxy_user['peppol_state']
+                    if proxy_user['peppol_state'] == 'receiver':
+                        # First-time receivers get their initial email here.
+                        # If already a sender, they'll receive a second (send+receive) welcome email.
+                        edi_user.company_id._account_peppol_send_welcome_email()
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -291,6 +313,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             'peppol_phone_number': self.company_id.account_peppol_phone_number,
             'peppol_contact_email': self.company_id.account_peppol_contact_email,
             'peppol_migration_key': self.company_id.account_peppol_migration_key,
+            'peppol_webhook_endpoint': self.company_id._get_peppol_webhook_endpoint(),
+            'peppol_webhook_token': self._generate_webhook_token(),
         }
 
     def _peppol_register_sender(self, peppol_external_provider=None):
@@ -307,6 +331,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             self.company_id.peppol_external_provider = peppol_external_provider
 
     def _peppol_register_receiver(self):
+        # remove in master
         self.ensure_one()
         params = {
             'company_details': self._get_company_details(),
@@ -347,6 +372,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         company.account_peppol_migration_key = False
         company.account_peppol_proxy_state = 'smp_registration'
         company.peppol_external_provider = None
+
+        self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(at=fields.Datetime.now() + timedelta(hours=1))
 
     def _peppol_deregister_participant(self):
         self.ensure_one()
@@ -426,3 +453,27 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         """Get information from the IAP regarding the Peppol services."""
         self.ensure_one()
         return self._call_peppol_proxy("/api/peppol/2/get_services")
+
+    def _generate_webhook_token(self):
+        self.ensure_one()
+        expiration = 30 * 24  # in 30 days
+        msg = [self.id, self.company_id._get_peppol_webhook_endpoint()]
+        payload = tools.hash_sign(self.sudo().env, 'account_peppol_webhook', msg, expiration_hours=expiration)
+        return payload
+
+    @api.model
+    def _get_user_from_token(self, token: str, url: str):
+        try:
+            if not (payload := tools.verify_hash_signed(self.sudo().env, 'account_peppol_webhook', token)):
+                return None
+        except ValueError:
+            return None
+        else:
+            id, endpoint = payload
+            if not url.startswith(endpoint):
+                return None
+            return self.browse(id).exists()
+
+    def _peppol_reset_webhook(self):
+        for edi_user in self:
+            edi_user._call_peppol_proxy('/api/peppol/2/set_webhook', params={'webhook_url': edi_user.company_id._get_peppol_webhook_endpoint(), 'token': edi_user._generate_webhook_token()})

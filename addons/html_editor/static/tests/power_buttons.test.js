@@ -8,6 +8,7 @@ import { onRpc } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { PowerboxPlugin } from "../src/main/powerbox/powerbox_plugin";
 
 describe.tags("desktop");
 describe("visibility", () => {
@@ -58,6 +59,30 @@ describe("visibility", () => {
         await setupEditor("<p>[]<br><br></p>");
         expect(".o_we_power_buttons").not.toBeVisible();
     });
+
+    test("should not overlap with long placeholders", async () => {
+        const placeholder = "This is a very very very very long placeholder";
+        class TestPowerboxPlugin extends PowerboxPlugin {
+            setup() {
+                super.setup();
+                this.resources.hints.object.text = placeholder;
+            }
+        }
+        const tempP = document.createElement("p");
+        tempP.innerText = placeholder;
+        tempP.style.width = "fit-content";
+        const Plugins = [...MAIN_PLUGINS.filter((p) => p.id !== "powerbox"), TestPowerboxPlugin];
+        const { el } = await setupEditor("<p>[]<br></p>", {
+            config: { Plugins },
+        });
+        el.appendChild(tempP);
+        const placeholderWidth = tempP.getBoundingClientRect().width;
+        el.removeChild(tempP);
+        const powerButtons = document.querySelector(
+            'div[data-oe-local-overlay-id="oe-power-buttons-overlay"]'
+        );
+        expect(powerButtons.getBoundingClientRect().left).toEqual(placeholderWidth + 20);
+    });
 });
 
 describe.tags("desktop");
@@ -66,7 +91,7 @@ describe("buttons", () => {
         const { el } = await setupEditor("<p>[]<br></p>");
         await click(".o_we_power_buttons .power_button.fa-list-ol");
         expect(getContent(el)).toBe(
-            `<ol><li placeholder="List" class="o-we-hint">[]<br></li></ol>`
+            `<ol><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ol>`
         );
     });
 
@@ -74,7 +99,7 @@ describe("buttons", () => {
         const { el } = await setupEditor("<p>[]<br></p>");
         await click(".o_we_power_buttons .power_button.fa-list-ul");
         expect(getContent(el)).toBe(
-            `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`
+            `<ul><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`
         );
     });
 
@@ -82,48 +107,46 @@ describe("buttons", () => {
         const { el } = await setupEditor("<p>[]<br></p>");
         await click(".o_we_power_buttons .power_button.fa-check-square-o");
         expect(getContent(el)).toBe(
-            `<ul class="o_checklist"><li placeholder="List" class="o-we-hint">[]<br></li></ul>`
+            `<ul class="o_checklist"><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`
         );
     });
 
-    test("should open table selector using power buttons", async () => {
-        await setupEditor("<p>[]<br></p>");
-        click(".o_we_power_buttons .power_button.fa-table");
-        await animationFrame();
-        expect(".o-we-tablepicker").toBeVisible();
-    });
-
     test("should open image selector using power buttons", async () => {
-        onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-            return [
-                {
-                    id: 1,
-                    name: "logo",
-                    mimetype: "image/png",
-                    image_src: "/web/static/img/logo2.png",
-                    access_token: false,
-                    public: true,
-                },
-            ];
-        });
+        onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+            {
+                id: 1,
+                name: "logo",
+                mimetype: "image/png",
+                image_src: "/web/static/img/logo2.png",
+                access_token: false,
+                public: true,
+            },
+        ]);
         await setupEditor("<p>[]<br></p>");
         click(".o_we_power_buttons .power_button.fa-file-image-o");
         await animationFrame();
         expect(".o_select_media_dialog").toBeVisible();
     });
 
-    test("should open link popover using power buttons", async () => {
+    test("should open link popover in 'button primary' mode using power buttons", async () => {
         await setupEditor("<p>[]<br></p>");
-        click(".o_we_power_buttons .power_button.fa-link");
+        click(".o_we_power_buttons .power_button.fa-square");
         await animationFrame();
         expect(".o-we-linkpopover").toHaveCount(1);
     });
 
     test("should open powerbox using power buttons", async () => {
         await setupEditor("<p>[]<br></p>");
-        click(".o_we_power_buttons .power_button.fa-ellipsis-v");
+        click(".o_we_power_buttons .power_button.oi-ellipsis-v");
         await animationFrame();
         expect(".o-we-powerbox").toHaveCount(1);
+    });
+
+    test("should open chatgpt dialog using power buttons", async () => {
+        await setupEditor("<p>[]<br></p>");
+        click(".o_we_power_buttons .power_button:contains('AI')");
+        await animationFrame();
+        expect(".modal .modal-header:contains('Generate Text with AI')").toHaveCount(1);
     });
 });
 

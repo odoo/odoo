@@ -1,4 +1,4 @@
-import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
+import { Store as BaseStore, fields, makeStore, storeInsertFns } from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 
@@ -12,6 +12,8 @@ import { Deferred, Mutex } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { browser } from "@web/core/browser/browser";
+import { loader } from "@web/core/emoji_picker/emoji_picker";
+import { patch } from "@web/core/utils/patch";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -25,13 +27,32 @@ export const pyToJsModels = {
     "mail.guest": "Persona",
     "mail.thread": "Thread",
     "res.partner": "Persona",
+    "website.visitor": "Persona",
 };
 
 export const addFieldsByPyModel = {
     "discuss.channel": { model: "discuss.channel" },
     "mail.guest": { type: "guest" },
     "res.partner": { type: "partner" },
+    "website.visitor": { type: "visitor" },
 };
+
+patch(storeInsertFns, {
+    makeContext() {
+        return { pyModels: Object.values(pyToJsModels) };
+    },
+    getActualModelName(ctx, pyOrJsModelName) {
+        if (ctx.pyModels.includes(pyOrJsModelName)) {
+            console.warn(
+                `store.insert() should receive the python model name instead of “${pyOrJsModelName}”.`
+            );
+        }
+        return pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
+    },
+    getExtraFieldsFromModel(pyOrJsModelName) {
+        return addFieldsByPyModel[pyOrJsModelName];
+    },
+});
 
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
@@ -41,13 +62,22 @@ export class Store extends BaseStore {
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
     isReady = new Deferred();
     /** This is the current logged partner / guest */
-    self = Record.one("Persona");
+    self = fields.One("Persona");
+    allChannels = fields.Many("Thread", {
+        inverse: "storeAsAllChannels",
+        onUpdate() {
+            const busService = this.store.env.services.bus_service;
+            if (!busService.isActive && this.allChannels.some((t) => !t.isTransient)) {
+                busService.start();
+            }
+        },
+    });
     /**
      * Indicates whether the current user is using the application through the
      * public page.
      */
     inPublicPage = false;
-    odoobot = Record.one("Persona");
+    odoobot = fields.One("Persona");
     users = {};
     /** @type {number} */
     internalUserGroupId;
@@ -55,25 +85,25 @@ export class Store extends BaseStore {
     mt_comment_id;
     /** @type {boolean} */
     hasMessageTranslationFeature;
-    imStatusTrackedPersonas = Record.many("Persona", {
+    imStatusTrackedPersonas = fields.Many("Persona", {
         inverse: "storeAsTrackedImStatus",
     });
     hasLinkPreviewFeature = true;
     // messaging menu
     menu = { counter: 0 };
-    chatHub = Record.one("ChatHub", { compute: () => ({}) });
-    failures = Record.many("Failure", {
+    chatHub = fields.One("ChatHub", { compute: () => ({}) });
+    failures = fields.Many("Failure", {
         /**
          * @param {import("models").Failure} f1
          * @param {import("models").Failure} f2
          */
         sort: (f1, f2) => f2.lastMessage?.id - f1.lastMessage?.id,
     });
-    settings = Record.one("Settings");
-    openInviteThread = Record.one("Thread");
+    settings = fields.One("Settings");
+    openInviteThread = fields.One("Thread");
+    emojiLoader = loader;
 
-    fetchDeferred = new Deferred();
-    /** @type {[string | [string, any]]} */
+    /** @type {[[string, any, import("models").DataResponse]]} */
     fetchParams = [];
     fetchReadonly = true;
     fetchSilent = true;
@@ -90,7 +120,7 @@ export class Store extends BaseStore {
         },
     ];
 
-    isNotificationPermissionDismissed = Record.attr(false, {
+    isNotificationPermissionDismissed = fields.Attr(false, {
         compute() {
             return (
                 browser.localStorage.getItem("mail.user_setting.push_notification_dismissed") ===
@@ -112,7 +142,7 @@ export class Store extends BaseStore {
 
     messagePostMutex = new Mutex();
 
-    menuThreads = Record.many("Thread", {
+    menuThreads = fields.Many("Thread", {
         /** @this {import("models").Store} */
         compute() {
             /** @type {import("models").Thread[]} */
@@ -179,15 +209,29 @@ export class Store extends BaseStore {
     /**
      * @param {string} name
      * @param {any} params
+     * @param {Object} [options={}]
+     * @param {boolean} [options.requestData=false] when set to true, the return promise will
+     *  resolve only when the requested data are returned (the data might come later, from another
+     *  RPC or a bus notification for example). When set to false (the default), the return promise
+     *  will resolve as soon as the RPC is done. This is intended to be true only for requests that
+     *  will be resolved server side with `resolve_data_request`.
+     * @param {boolean} [options.readonly=true] when set to false, the server will open a read-write
+     *  cursor to process this request which is necessary if the request is expected to change data.
+     * @param {boolean} [options.silent=true]
      * @returns {Deferred}
      */
-    async fetchStoreData(name, params, { readonly = true, silent = true } = {}) {
-        this.fetchParams.push(params ? [name, params] : name);
+    async fetchStoreData(
+        name,
+        params,
+        { requestData = false, readonly = true, silent = true } = {}
+    ) {
+        const dataRequest = this.DataResponse.createRequest();
+        dataRequest._autoResolve = !requestData;
+        this.fetchParams.push([name, params, dataRequest]);
         this.fetchReadonly = this.fetchReadonly && readonly;
         this.fetchSilent = this.fetchSilent && silent;
-        const fetchDeferred = this.fetchDeferred;
         this._fetchStoreDataDebounced();
-        return fetchDeferred;
+        return dataRequest._resultDef;
     }
 
     /** Import data received from init_messaging */
@@ -236,77 +280,51 @@ export class Store extends BaseStore {
     }
 
     _fetchStoreDataDebounced() {
-        const fetchDeferred = this.fetchDeferred;
-        rpc(
-            this.fetchReadonly ? "/mail/data" : "/mail/action",
-            { fetch_params: this.fetchParams, context: user.context },
-            {
-                silent: this.fetchSilent,
-            }
+        const fetchParams = this.fetchParams;
+        this._fetchStoreDataRpc(
+            fetchParams.map(([name, params, dataRequest]) => {
+                if (dataRequest._autoResolve) {
+                    /**
+                     * Auto-resolve requests don't need to pass any data request id as the server is
+                     * expected to not return anything specific for them. It would work if id are
+                     * given but it's more bytes on the network and more noise in the logs/tests.
+                     */
+                    if (params !== undefined) {
+                        return [name, params];
+                    } else {
+                        // In a similar reasoning, also remove empty params.
+                        return name;
+                    }
+                } else {
+                    return [name, params, dataRequest.id];
+                }
+            })
         ).then(
             (data) => {
-                const recordsByModel = this.insert(data, { html: true });
-                fetchDeferred.resolve(recordsByModel);
+                this.insert(data);
+                for (const [, , dataRequest] of fetchParams) {
+                    if (dataRequest._autoResolve) {
+                        dataRequest._resolve = true;
+                    }
+                }
             },
-            (error) => fetchDeferred.reject(error)
+            (error) => {
+                for (const [, , dataRequest] of fetchParams) {
+                    dataRequest._resultDef.reject(error);
+                }
+            }
         );
-        this.fetchDeferred = new Deferred();
         this.fetchParams = [];
         this.fetchReadonly = true;
         this.fetchSilent = true;
     }
 
-    /**
-     * @template T
-     * @param {T} [dataByModelName={}]
-     * @param {Object} [options={}]
-     * @returns {{ [K in keyof T]: import("models").Models[K][] }}
-     */
-    insert(dataByModelName = {}, options = {}) {
-        const store = this;
-        const pyModels = Object.values(pyToJsModels);
-        return Record.MAKE_UPDATE(function storeInsert() {
-            const res = {};
-            const recordsDataToDelete = [];
-            for (const [pyOrJsModelName, data] of Object.entries(dataByModelName)) {
-                if (pyModels.includes(pyOrJsModelName)) {
-                    console.warn(
-                        `store.insert() should receive the python model name instead of “${pyOrJsModelName}”.`
-                    );
-                }
-                const modelName = pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
-                if (!store[modelName]) {
-                    console.warn(`store.insert() received data for unknown model “${modelName}”.`);
-                    continue;
-                }
-                const insertData = [];
-                for (const vals of Array.isArray(data) ? data : [data]) {
-                    const extraFields = addFieldsByPyModel[pyOrJsModelName];
-                    if (extraFields) {
-                        Object.assign(vals, extraFields);
-                    }
-                    if (vals._DELETE) {
-                        delete vals._DELETE;
-                        recordsDataToDelete.push([modelName, vals]);
-                    } else {
-                        insertData.push(vals);
-                    }
-                }
-                const records = store[modelName].insert(insertData, options);
-                if (!res[modelName]) {
-                    res[modelName] = records;
-                } else {
-                    const knownRecordIds = new Set(res[modelName].map((r) => r.localId));
-                    res[modelName].push(...records.filter((r) => !knownRecordIds.has(r.localId)));
-                }
-            }
-            // Delete after all inserts to make sure a relation potentially registered before the
-            // delete doesn't re-add the deleted record by mistake.
-            for (const [modelName, vals] of recordsDataToDelete) {
-                store[modelName].get(vals)?.delete();
-            }
-            return res;
-        });
+    _fetchStoreDataRpc(fetchParams) {
+        return rpc(
+            this.fetchReadonly ? "/mail/data" : "/mail/action",
+            { fetch_params: fetchParams, context: user.context },
+            { silent: this.fetchSilent }
+        );
     }
 
     async startMeeting() {
@@ -394,7 +412,12 @@ export class Store extends BaseStore {
 
     getMentionsFromText(
         body,
-        { mentionedChannels = [], mentionedPartners = [], specialMentions = [] } = {}
+        {
+            mentionedChannels = [],
+            mentionedPartners = [],
+            mentionedRoles = [],
+            specialMentions = [],
+        } = {}
     ) {
         const validMentions = {};
         validMentions.threads = mentionedChannels.filter((thread) => {
@@ -408,6 +431,7 @@ export class Store extends BaseStore {
         validMentions.partners = mentionedPartners.filter((partner) =>
             body.includes(`@${partner.name}`)
         );
+        validMentions.roles = mentionedRoles.filter((role) => body.includes(`@${role.name}`));
         validMentions.specialMentions = this.specialMentions
             .filter((special) => body.includes(`@${special.label}`))
             .map((special) => special.label);
@@ -425,13 +449,16 @@ export class Store extends BaseStore {
             isNote,
             mentionedChannels,
             mentionedPartners,
+            mentionedRoles,
         } = postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.getMentionsFromText(body, {
             mentionedChannels,
             mentionedPartners,
+            mentionedRoles,
         });
         const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
+        const role_ids = validMentions?.roles.map((role) => role.id) ?? [];
         const recipientEmails = [];
         if (!isNote) {
             const allRecipients = [...thread.suggestedRecipients, ...thread.additionalRecipients];
@@ -456,6 +483,9 @@ export class Store extends BaseStore {
         }
         if (partner_ids.length) {
             Object.assign(postData, { partner_ids });
+        }
+        if (role_ids.length) {
+            Object.assign(postData, { role_ids });
         }
         if (thread.model === "discuss.channel" && validMentions?.specialMentions.length) {
             postData.special_mentions = validMentions.specialMentions;
@@ -546,15 +576,15 @@ export class Store extends BaseStore {
     }
 
     async joinChat(id, forceOpen = false) {
-        const { channel_id, data } = await rpc("/discuss/channel/get_or_create_chat", {
-            partners_to: [id],
-        });
-        this.store.insert(data);
-        const thread = this.store.Thread.get({ id: channel_id, model: "discuss.channel" });
+        const { channel } = await this.fetchStoreData(
+            "/discuss/get_or_create_chat",
+            { partners_to: [id] },
+            { readonly: false, requestData: true }
+        );
         if (forceOpen) {
-            await thread.openChatWindow({ focus: true });
+            await channel.open({ focus: true });
         }
-        return thread;
+        return channel;
     }
 
     async openChat(person) {
@@ -584,7 +614,7 @@ export class Store extends BaseStore {
                 before,
             },
         });
-        this.insert(data, { html: true });
+        this.insert(data);
         return {
             count,
             loadMore: messages.length === this.FETCH_LIMIT,
@@ -603,7 +633,7 @@ export const storeService = {
      */
     start(env, services) {
         const store = makeStore(env);
-        store.insert(session.storeData, { html: true });
+        store.insert(session.storeData);
         /**
          * Add defaults for `self` and `settings` because in livechat there could be no user and no
          * guest yet (both undefined at init), but some parts of the code that loosely depend on

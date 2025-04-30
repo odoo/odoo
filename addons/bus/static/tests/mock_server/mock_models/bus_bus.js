@@ -1,54 +1,12 @@
-import { before } from "@odoo/hoot";
-import { MockServer, models } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
-import { patchWebsocketWorkerWithCleanup } from "../../mock_websocket";
+import { getWebSocketWorker } from "@bus/../tests/mock_websocket";
+import { models } from "@web/../tests/web_test_helpers";
 
 export class BusBus extends models.Model {
     _name = "bus.bus";
 
-    wsWorker = null;
+    /** @type {Record<number, string[]>} */
     channelsByUser = {};
     lastBusNotificationId = 0;
-
-    constructor() {
-        super(...arguments);
-
-        const createWebSocket = () => {
-            const performWebsocketRequest = this._performWebsocketRequest.bind(this);
-            this.wsWorker = patchWebsocketWorkerWithCleanup({
-                _sendToServer(message) {
-                    performWebsocketRequest(message);
-                    return super._sendToServer(message);
-                },
-            });
-        };
-
-        if (MockServer.current) {
-            createWebSocket();
-        } else {
-            before(createWebSocket);
-        }
-    }
-
-    /**
-     * @param {Object} message Message sent through the websocket to the
-     * server.
-     * @param {string} [message.event_name]
-     * @param {any} [message.data]
-     */
-    _performWebsocketRequest({ event_name, data }) {
-        const IrWebSocket = this.env["ir.websocket"];
-
-        if (event_name === "update_presence") {
-            IrWebSocket._update_presence(data.inactivity_period);
-        } else if (event_name === "subscribe") {
-            const { channels } = data;
-            this.channelsByUser[this.env?.uid] = channels;
-        }
-        for (const fn of registry.category("mock_server_websocket_callbacks").get(event_name, [])) {
-            fn(data);
-        }
-    }
 
     /**
      * @param {models.Model | string} channel
@@ -93,7 +51,7 @@ export class BusBus extends models.Model {
                 message: { payload: JSON.parse(JSON.stringify(payload)), type },
             });
         }
-        this.wsWorker.broadcast("notification", values);
+        getWebSocketWorker().broadcast("notification", values);
     }
 
     /**
@@ -103,6 +61,6 @@ export class BusBus extends models.Model {
      * @param {string} [reason] the reason to close the connection with.
      */
     _simulateDisconnection(closeCode, reason) {
-        this.wsWorker.websocket.close(closeCode, reason);
+        getWebSocketWorker().websocket.close(closeCode, reason);
     }
 }

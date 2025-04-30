@@ -133,3 +133,8 @@ test(`display correct column header for days, independent of the timezone`, asyn
         "S",
     ]);
 });
+
+test("remove row when no day of current month", async () => {
+    await start();
+    expect(".fc-day-other, .fc-day-disabled").toHaveCount(76);
+});

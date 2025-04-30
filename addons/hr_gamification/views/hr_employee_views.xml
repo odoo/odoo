@@ -7,19 +7,23 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//page[@name='public']" position="after">
-                <page string="Received Badges" name="received_badges" invisible="not user_id">
+            <xpath expr="//page[@name='hr_settings']" position="before">
+                <page string="Badges" name="received_badges" invisible="not user_id">
                     <field name="has_badges" invisible="1"/>
-                    <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/> to reward this employee for a good action
-                    <div class="o_field_nocontent mt-2" invisible="has_badges">
-                        <p>
-                            Grant this employee his first badge
-                        </p><p class="opacity-50">
-                            Badges are rewards of good work. Give them to people you believe deserve it.
-                        </p>
+                    <div class="o_field_nocontent" invisible="has_badges">
+                        <div class="o_nocontent_help">
+                            <p class="o_view_nocontent_neutral_face"></p>
+                            <p>
+                                There are no badges for this employee.<br/>
+                                It's time to allow the first one.
+                            </p>
+                        </div>
                     </div>
                     <div class="mt-2">
                         <field name="badge_ids" mode="kanban" />
+                    </div>
+                    <div class="d-flex justify-content-center mt-3">
+                        <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/>
                     </div>
                 </page>
             </xpath>
@@ -34,17 +38,23 @@
         <field name="arch" type="xml">
 
             <xpath expr="//page[@name='public']" position="after">
-                <page string="Received Badges" name="received_badges" invisible="not user_id">
+                <page string="Badges" name="received_badges" invisible="not user_id">
                     <field name="has_badges" invisible="1"/>
-                    <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/> to reward this employee for a good action
                     <div class="o_field_nocontent" invisible="has_badges">
-                        <p>
-                            Grant this employee his first badge
-                        </p><p class="opacity-50">
-                            Badges are rewards of good work. Give them to people you believe deserve it.
-                        </p>
+                        <div class="o_nocontent_help">
+                            <p class="o_view_nocontent_neutral_face"></p>
+                            <p>
+                                There are no badges for this employee.<br/>
+                                It's time to allow the first one.
+                            </p>
+                        </div>
                     </div>
-                    <field name="badge_ids" mode="kanban" widget="many2many"/>
+                    <div>
+                        <field name="badge_ids" mode="kanban" widget="many2many"/>
+                    </div>
+                    <div class="d-flex justify-content-center mt-3">
+                        <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/>
+                    </div>
                 </page>
             </xpath>
 

@@ -95,7 +95,7 @@ async function makeExpressionEditor(params = {}) {
 defineModels([Partner, Product, Team, Player, Country, Stage]);
 
 beforeEach(() => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
 });
 
 test("rendering of truthy values", async () => {
@@ -120,7 +120,7 @@ test("rendering of falsy values", async () => {
 });
 
 test("rendering of 'expr'", async () => {
-    patchWithCleanup(odoo, { debug: false });
+    patchWithCleanup(odoo, { debug: "" });
     await makeExpressionEditor({ expression: "expr" });
     expect(getTreeEditorContent()).toEqual([
         { value: "all", level: 0 },
@@ -178,11 +178,11 @@ test("copy a complex condition", async () => {
 });
 
 test("change path, operator and value", async () => {
-    patchWithCleanup(odoo, { debug: false });
+    patchWithCleanup(odoo, { debug: "" });
     await makeExpressionEditor({ expression: `bar != "blabla"` });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "is not", "blabla"] },
+        { level: 1, value: ["Bar", "is not equal", "blabla"] },
     ]);
     const tree = getTreeEditorContent({ node: true });
     await openModelFieldSelectorPopover();
@@ -215,12 +215,12 @@ test("rendering of a valid fieldName in fields", async () => {
     const parent = await makeExpressionEditor({ fieldFilters: ["foo"] });
 
     const toTests = [
-        { expr: `foo`, condition: ["Foo", "is set"] },
+        { expr: `foo`, condition: ["Foo", "set"] },
         { expr: `foo == "a"`, condition: ["Foo", "is equal", "a"] },
         { expr: `foo != "a"`, condition: ["Foo", "is not equal", "a"] },
         // { expr: `foo is "a"`, complexCondition: `foo is "a"` },
         // { expr: `foo is not "a"`, complexCondition: `foo is not "a"` },
-        { expr: `not foo`, condition: ["Foo", "is not set"] },
+        { expr: `not foo`, condition: ["Foo", "not set"] },
         { expr: `foo + "a"`, complexCondition: `foo + "a"` },
     ];
 
@@ -298,7 +298,7 @@ test("rendering of connectors", async () => {
         { level: 1, value: "all" },
         { level: 2, value: "expr" },
         { level: 2, value: ["Foo", "is equal", "abc"] },
-        { level: 1, value: ["Bar", "is", "not set"] },
+        { level: 1, value: ["Bar", "not set"] },
     ]);
 });
 
@@ -343,7 +343,7 @@ test("rendering of if else", async () => {
 });
 
 test("check condition by default when creating a new rule", async () => {
-    patchWithCleanup(odoo, { debug: false });
+    patchWithCleanup(odoo, { debug: "" });
     Partner._fields.country_id = fields.Char({ string: "Country ID" });
     await makeExpressionEditor({ expression: "expr" });
     await contains("a[role='button']").click();
@@ -358,13 +358,13 @@ test("allow selection of boolean field", async () => {
     await makeExpressionEditor({ expression: "id" });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Id", "is set"] },
+        { level: 1, value: ["Id", "set"] },
     ]);
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_item_name").click();
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "is", "set"] },
+        { level: 1, value: ["Bar", "set"] },
     ]);
 });
 
@@ -377,7 +377,7 @@ test("render false and true leaves", async () => {
 });
 
 test("no field of type properties in model field selector", async () => {
-    patchWithCleanup(odoo, { debug: false });
+    patchWithCleanup(odoo, { debug: "" });
     Partner._fields.properties = fields.Properties({
         string: "Properties",
         definition_record: "product_id",
@@ -393,7 +393,7 @@ test("no field of type properties in model field selector", async () => {
     });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Properties", "is set"] },
+        { level: 1, value: ["Properties", "set"] },
     ]);
     expect(isNotSupportedPath()).toBe(true);
     await clearNotSupported();
@@ -404,7 +404,7 @@ test("no field of type properties in model field selector", async () => {
 });
 
 test("no special fields in fields", async () => {
-    patchWithCleanup(odoo, { debug: false });
+    patchWithCleanup(odoo, { debug: "" });
     await makeExpressionEditor({
         expression: `bar`,
         fieldFilters: ["foo", "bar", "properties"],
@@ -414,12 +414,12 @@ test("no special fields in fields", async () => {
     });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "is not", "not set"] },
+        { level: 1, value: ["Bar", "set"] },
     ]);
     await addNewRule();
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "is not", "not set"] },
+        { level: 1, value: ["Bar", "set"] },
         { level: 1, value: ["Foo", "is equal", ""] },
     ]);
     expect.verifySteps([`bar and foo == ""`]);
@@ -440,10 +440,139 @@ test("between operator", async () => {
         "is lower",
         "is lower or equal",
         "is between",
-        "is set",
-        "is not set",
+        "is not between",
+        "set",
+        "not set",
     ]);
     expect.verifySteps([]);
     await selectOperator("between");
     expect.verifySteps([`id >= 1 and id <= 1`]);
+});
+
+test("next operator", async () => {
+    await makeExpressionEditor({
+        expression: `date`,
+        update(expression) {
+            expect.step(expression);
+        },
+    });
+    expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "is not between",
+        "next",
+        "not next",
+        "last",
+        "not last",
+        "set",
+        "not set",
+    ]);
+    expect.verifySteps([]);
+    await selectOperator("next");
+    expect.verifySteps([
+        `date >= context_today().strftime("%Y-%m-%d") and date <= (context_today() + relativedelta(months = 1)).strftime("%Y-%m-%d")`,
+    ]);
+});
+
+test("not_next operator", async () => {
+    await makeExpressionEditor({
+        expression: `datetime`,
+        update(expression) {
+            expect.step(expression);
+        },
+    });
+    expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "is not between",
+        "next",
+        "not next",
+        "last",
+        "not last",
+        "set",
+        "not set",
+    ]);
+    expect.verifySteps([]);
+    await selectOperator("not_next");
+    expect.verifySteps([
+        `datetime < datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") or datetime > datetime.datetime.combine(context_today() + relativedelta(months = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
+    ]);
+});
+
+test("last operator", async () => {
+    await makeExpressionEditor({
+        expression: `datetime`,
+        update(expression) {
+            expect.step(expression);
+        },
+    });
+    expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "is not between",
+        "next",
+        "not next",
+        "last",
+        "not last",
+        "set",
+        "not set",
+    ]);
+    expect.verifySteps([]);
+    await selectOperator("last");
+    expect.verifySteps([
+        `datetime >= datetime.datetime.combine(context_today() + relativedelta(months = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and datetime <= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
+    ]);
+});
+
+test("not_last operator", async () => {
+    await makeExpressionEditor({
+        expression: `date`,
+        update(expression) {
+            expect.step(expression);
+        },
+    });
+    expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "is not between",
+        "next",
+        "not next",
+        "last",
+        "not last",
+        "set",
+        "not set",
+    ]);
+    expect.verifySteps([]);
+    await selectOperator("not_last");
+    expect.verifySteps([
+        `date < (context_today() + relativedelta(months = -1)).strftime("%Y-%m-%d") or date > context_today().strftime("%Y-%m-%d")`,
+    ]);
 });

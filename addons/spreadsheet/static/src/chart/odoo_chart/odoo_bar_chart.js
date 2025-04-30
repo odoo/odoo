@@ -15,7 +15,6 @@ const {
     getBarChartLegend,
     getChartShowValues,
     getTrendDatasetForBarChart,
-    truncateLabel,
 } = chartHelpers;
 
 export class OdooBarChart extends OdooChart {
@@ -72,7 +71,7 @@ function createOdooChartRuntime(chart, getters) {
     const config = {
         type: "bar",
         data: {
-            labels: chartData.labels.map(truncateLabel),
+            labels: chartData.labels,
             datasets: getBarChartDatasets(definition, chartData),
         },
         options: {

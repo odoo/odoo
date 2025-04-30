@@ -23,12 +23,15 @@
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
+                    <filter invisible="1" string="My Activities" name="filter_activities_my"
+                        domain="[('activity_user_id', '=', uid)]"/>
+                    <separator invisible="1"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
                     <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
@@ -74,24 +77,26 @@
                     <sheet>
                         <div name="button_box" class="oe_button_box">
                         </div>
-                        <field name="avatar_128" invisible="1"/>
-                        <div class="row justify-content-between position-relative w-100 m-0 mb-2">
-                            <div class="oe_title mw-75 ps-0 pe-2">
-                                <h1 class="d-flex flex-row align-items-center">
-                                    <div invisible="not user_id" class="me-2">
-                                        <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
-                                    </div>
-                                    <field name="name" placeholder="Employee's Name"
-                                        required="True" style="font-size: min(4vw, 2.6rem);"/>
-                                </h1>
-                                <h2>
-                                    <field name="job_title" placeholder="Job Title"/>
-                                </h2>
-                            </div>
+                        <div class="d-flex align-items-center">
                             <div class="o_employee_avatar m-0 p-0">
+                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                                 <field name="image_1920" widget='image' class="oe_avatar m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
-                                <field name="hr_icon_display" class="d-flex align-items-end fs-6 o_employee_availability" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                            </div>
+                            <div class="d-flex flex-column ms-2">
+                                <div class="oe_title mw-75 ps-0 pe-2">
+                                    <h1 class="d-flex flex-row align-items-center">
+                                        <field name="name" placeholder="Employee's Name"
+                                            required="True" style="font-size: min(4vw, 2.6rem);"/>
+                                        <div invisible="not user_id" class="me-2">
+                                            <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
+                                        </div>
+                                    </h1>
+                                    <h2 class="d-flex align-items-baseline">
+                                        <i class="fa fa-suitcase fa-fw me-1 text-primary" title="Position"/>
+                                        <field name="job_title" placeholder="Job Title"/>
+                                    </h2>
+                                </div>
                             </div>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -102,7 +107,7 @@
                                 <field name="mobile_phone" widget="phone"/>
                                 <field name="category_ids" widget="many2many_tags"
                                     options="{'color_field': 'color', 'no_create_edit': True}"
-                                    placeholder="Tags" groups="hr.group_hr_user"/>
+                                    placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="company_country_id" invisible="1"/>
                                 <field name="company_country_code" invisible="1"/>
@@ -212,13 +217,14 @@
                                             <field name="user_id"
                                                 string="Related User"
                                                 help=""
-                                                domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
+                                                domain="[('company_ids', 'in', company_id)]"
                                                 context="{'default_create_employee_id': id}"
                                                 widget="many2one_avatar_user"/>
                                             <button string="Create User"
                                                 class="btn btn-link"
                                                 type="object"
                                                 name="action_create_user"
+                                                context="{'default_create_employee': True}"
                                                 invisible="user_id"/>
                                         </div>
                                     </group>
@@ -280,6 +286,7 @@
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>
+                    <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
                     <field name="work_email" optional="hide"/>
@@ -296,6 +303,7 @@
                     <field name="birthday" optional="hide"/>
                     <field name="work_location_id" optional="hide"/>
                     <field name="coach_id" widget="many2one_avatar_employee" optional="hide"/>
+                    <field name="user_id" string="Related User" widget="many2one_avatar_user" optional="hide"/>
                     <field name="active" column_invisible="True"/>
                     <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="country_id" optional="hide"/>
@@ -349,7 +357,7 @@
                                 <div>
                                     <field class="fw-bold fs-5" name="name" placeholder="Employee's Name"/>
                                     <div t-if="record.show_hr_icon_display.raw_value" class="float-end">
-                                        <field name="hr_icon_display" class="o_employee_availability" widget="hr_presence_status" />
+                                        <field name="hr_icon_display" widget="hr_presence_status" />
                                     </div>
                                 </div>
                                 <field t-if="record.job_title.raw_value" name="job_title"/>
@@ -432,9 +440,9 @@
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Add a new employee
+                    Create an employee.
                 </p><p>
-                    Quickly find all the information you need for your employees such as contact data, job position, availability, etc.
+                    Find all the information on employees.
                 </p>
             </field>
         </record>
@@ -481,6 +489,28 @@
             <field name="view_mode">form,list</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
+        </record>
+
+        <record id="action_hr_employee_create_users_confirmation" model="ir.actions.server">
+            <field name="name">Create User</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="binding_model_id" ref="model_hr_employee" />
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_create_users_confirmation()
+            </field>
+        </record>
+
+        <record id="action_hr_employee_create_users" model="ir.actions.server">
+            <field name="name">Create User</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">
+employees = env['hr.employee'].browse(env.context.get('selected_ids', []))
+if employees:
+    action = employees.action_create_users()
+            </field>
         </record>
     </data>
 </odoo>

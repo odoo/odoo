@@ -17,7 +17,6 @@ class AccountAnalyticLine(models.Model):
         'account.account',
         string='Financial Account',
         ondelete='restrict',
-        domain="[('deprecated', '=', False)]",
         check_company=True,
         compute='_compute_general_account_id', store=True, readonly=False
     )
@@ -56,7 +55,7 @@ class AccountAnalyticLine(models.Model):
             if line.move_line_id and line.general_account_id != line.move_line_id.account_id:
                 raise ValidationError(_('The journal item is not linked to the correct financial account'))
 
-    @api.depends('move_line_id')
+    @api.depends('move_line_id.partner_id')
     def _compute_partner_id(self):
         for line in self:
             line.partner_id = line.move_line_id.partner_id or line.partner_id

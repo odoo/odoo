@@ -2,7 +2,7 @@
 
 import logging
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_is_zero, is_html_empty
@@ -10,7 +10,7 @@ from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import text_from_html
-
+from odoo.addons.website_sale.const import SHOP_PATH
 
 _logger = logging.getLogger(__name__)
 
@@ -284,7 +284,9 @@ class ProductTemplate(models.Model):
         date = fields.Date.context_today(self)
 
         pricelist_prices = pricelist._compute_price_rule(self, 1.0)
-        comparison_prices_enabled = self.env.user.has_group('website_sale.group_product_price_comparison')
+        comparison_prices_enabled = self.env['res.groups']._is_feature_enabled(
+            'website_sale.group_product_price_comparison'
+        )
 
         res = {}
         for template in self:
@@ -449,6 +451,19 @@ class ProductTemplate(models.Model):
                 combination_info,
             )
 
+        if (
+            product_or_template.type == 'combo'
+            and website.show_line_subtotals_tax_selection == 'tax_included'
+            and not all(
+                tax.price_include
+                for tax
+                in product_or_template.combo_ids.sudo().combo_item_ids.product_id.taxes_id
+            )
+        ):
+            combination_info['tax_disclaimer'] = _(
+                "Final price may vary based on selection. Tax will be calculated at checkout."
+            )
+
         return combination_info
 
     def _get_additionnal_combination_info(self, product_or_template, quantity, date, website):
@@ -490,12 +505,16 @@ class ProductTemplate(models.Model):
             'list_price': max(pricelist_price, price_before_discount),
             'price': pricelist_price,
             'has_discounted_price': has_discounted_price,
+            'discount_start_date': pricelist_item.date_start,
+            'discount_end_date': pricelist_item.date_end,
         }
 
         if (
             not has_discounted_price
             and product_or_template.compare_list_price
-            and self.env.user.has_group('website_sale.group_product_price_comparison')
+            and self.env['res.groups']._is_feature_enabled(
+                'website_sale.group_product_price_comparison'
+            )
         ):
             # TODO VCR comparison price only depends on the product template, but is shown/hidden
             # depending on product price, should be removed from combination info in the future
@@ -537,13 +556,18 @@ class ProductTemplate(models.Model):
             'taxes': taxes,  # taxes after fpos mapping
         })
 
-        if self.env.user.has_group('website_sale.group_show_uom_price'):
+        if self.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price'):
             combination_info.update({
                 'base_unit_name': product_or_template.base_unit_name,
                 'base_unit_price': product_or_template._get_base_unit_price(
                     combination_info['price']
                 ),
             })
+
+        if combination_info['prevent_zero_price_sale']:
+            # If price is zero and prevent_zero_price_sale is enabled we don't want to send any
+            # price information regarding the product
+            combination_info['compare_list_price'] = 0
 
         return combination_info
 
@@ -711,23 +735,11 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return [self] + list(self.product_template_image_ids)
 
-    def _get_attrib_values_domain(self, attribute_values):
-        attribute_id = None
-        attribute_value_ids = []
-        domains = []
-        for value in attribute_values:
-            if not attribute_id:
-                attribute_id = value[0]
-                attribute_value_ids.append(value[1])
-            elif value[0] == attribute_id:
-                attribute_value_ids.append(value[1])
-            else:
-                domains.append([('attribute_line_ids.value_ids', 'in', attribute_value_ids)])
-                attribute_id = value[0]
-                attribute_value_ids = [value[1]]
-        if attribute_id:
-            domains.append([('attribute_line_ids.value_ids', 'in', attribute_value_ids)])
-        return domains
+    def _get_attribute_value_domain(self, attribute_value_dict):
+        return [
+            [('attribute_line_ids.value_ids', 'in', attribute_value_ids)]
+            for attribute_value_ids in attribute_value_dict.values()
+        ]
 
     @api.model
     def _search_get_detail(self, website, order, options):
@@ -740,19 +752,20 @@ class ProductTemplate(models.Model):
         tags = options.get('tags')
         min_price = options.get('min_price')
         max_price = options.get('max_price')
-        attrib_values = options.get('attrib_values')
+        attribute_value_dict = options.get('attribute_value_dict')
         if category:
             domains.append([('public_categ_ids', 'child_of', self.env['ir.http']._unslug(category)[1])])
         if tags:
             if isinstance(tags, str):
                 tags = tags.split(',')
+            tags = list(map(int, tags)) # Convert list of strings to list of integers
             domains.append([('product_variant_ids.all_product_tag_ids', 'in', tags)])
         if min_price:
             domains.append([('list_price', '>=', min_price)])
         if max_price:
             domains.append([('list_price', '<=', max_price)])
-        if attrib_values:
-            domains.extend(self._get_attrib_values_domain(attrib_values))
+        if attribute_value_dict:
+            domains.extend(self._get_attribute_value_domain(attribute_value_dict))
         search_fields = ['name', 'default_code', 'product_variant_ids.default_code']
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
@@ -805,14 +818,17 @@ class ProductTemplate(models.Model):
             if with_category and categ_ids:
                 data['category'] = self.env['ir.ui.view'].sudo()._render_template(
                     "website_sale.product_category_extra_link",
-                    {'categories': categ_ids, 'slug': self.env['ir.http']._slug}
+                    {
+                        'categories': categ_ids,
+                        'slug': self.env['ir.http']._slug,
+                        'shop_path': SHOP_PATH,
+                    }
                 )
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):
         if combination_info.get('prevent_zero_price_sale'):
-            website = self.env['website'].get_current_website()
-            return website.prevent_zero_price_sale_text, None
+            return None, None
 
         monetary_options = {'display_currency': mapping['detail']['display_currency']}
         price = self.env['ir.qweb.field.monetary'].value_to_html(

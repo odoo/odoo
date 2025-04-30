@@ -1,8 +1,9 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
 import { Component, useSubEnv } from "@odoo/owl";
-const { registries } = spreadsheet;
+const { registries, stores } = spreadsheet;
 const { figureRegistry } = registries;
+const { ModelStore, useStoreProvider } = stores;
 
 const EMPTY_FIGURE = { tag: "empty" };
 
@@ -13,6 +14,8 @@ export class MobileFigureContainer extends Component {
     };
 
     setup() {
+        const stores = useStoreProvider();
+        stores.inject(ModelStore, this.props.spreadsheetModel);
         useSubEnv({
             model: this.props.spreadsheetModel,
             isDashboard: () => this.props.spreadsheetModel.getters.isDashboard(),

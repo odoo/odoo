@@ -5,7 +5,7 @@
 {
     'name': 'POS - Sales',
     'version': '1.1',
-    'category': 'Hidden',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Link module between Point of Sale and Sales',
     'description': """
@@ -22,7 +22,6 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
         'views/pos_order_views.xml',
         'views/sales_team_views.xml',
         'views/res_config_settings_views.xml',
-        'views/res_partner_views.xml',
         'views/stock_template.xml',
     ],
     'installable': True,

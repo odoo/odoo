@@ -3,7 +3,7 @@
 {
     'name': 'Payment Provider: Demo',
     'version': '2.0',
-    'category': 'Hidden',
+    'category': 'Accounting/Accounting',
     'sequence': 350,
     'summary': "A payment provider for running fake payment flows for demo purposes.",
     'description': " ",  # Non-empty string to avoid loading the README file.

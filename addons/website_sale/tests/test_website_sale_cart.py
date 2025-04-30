@@ -236,7 +236,12 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
     def test_cart_update_with_fpos(self):
         # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken
         # into account when updating the cart
+        self._enable_pricelists()
         pricelist = self.pricelist
+        # Create fiscal position mapping taxes 10% -> 6%
+        fpos = self.env['account.fiscal.position'].create({
+            'name': 'test',
+        })
         # Add 10% tax on product
         tax10, tax6 = self.env['account.tax'].create([
             {
@@ -246,11 +251,13 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
                 'amount_type': 'percent'
             }, {
                 'name': "Test tax 6",
+                'fiscal_position_ids': fpos,
                 'amount': 6,
                 'price_include_override': 'tax_included',
                 'amount_type': 'percent'
             },
         ])
+        tax6.original_tax_ids = tax10
 
         test_product = self.env['product.product'].create({
             'name': 'Test Product',
@@ -269,16 +276,6 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
             ],
         })
 
-        # Create fiscal position mapping taxes 10% -> 6%
-        fpos = self.env['account.fiscal.position'].create({
-            'name': 'test',
-            'tax_ids': [
-                Command.create({
-                    'tax_src_id': tax10.id,
-                    'tax_dest_id': tax6.id,
-                })
-            ]
-        })
         so = self.env['sale.order'].create({
             'partner_id': self.env.user.partner_id.id,
             'order_line': [
@@ -304,6 +301,9 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
         # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken
         # into account when updating the cart for no_variant product
         # Add 10% tax on product
+        fpos = self.env['account.fiscal.position'].create({
+            'name': 'test',
+        })
         tax10, tax0 = self.env['account.tax'].create([
             {
                 'name': "Test tax 10",
@@ -312,22 +312,13 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
                 'amount_type': 'percent'
             }, {
                 'name': "Test tax 0",
+                'fiscal_position_ids': fpos,
                 'amount': 0,
                 'price_include_override': 'tax_included',
                 'amount_type': 'percent'
             },
         ])
-
-        # Create fiscal position mapping taxes 10% -> 0%
-        fpos = self.env['account.fiscal.position'].create({
-            'name': 'test',
-            'tax_ids': [
-                Command.create({
-                    'tax_src_id': tax10.id,
-                    'tax_dest_id': tax0.id,
-                }),
-            ],
-        })
+        tax0.original_tax_ids = tax10
 
         # create an attribute with one variant
         product_attribute = self.env['product.attribute'].create({

@@ -73,7 +73,8 @@ class TestHrContractCalendarCommon(common.TransactionCase):
                 ],
             },
         ])
-        cls.partnerA, cls.partnerB, cls.partnerC, cls.partnerD, cls.partnerE = cls.env['res.partner'].create([
+        cls.partnerA, cls.partnerB, cls.partnerC, cls.partnerD, cls.partnerE,\
+        cls.partnerF, cls.partnerG = cls.env['res.partner'].create([
             {
                 'name': "Partner A",
             },
@@ -89,10 +90,17 @@ class TestHrContractCalendarCommon(common.TransactionCase):
             {
                 'name': "Partner E",
             },
+            {
+                'name': 'Partner F',
+            },
+            {
+                'name': 'Partner G',
+            },
         ])
 
         cls.employeeA, cls.employeeB, cls.employeeB_company_B,\
-        cls.employeeC, cls.employeeD, cls.employeeE = cls.env['hr.employee'].create([
+        cls.employeeC, cls.employeeD, cls.employeeE,\
+        cls.employeeF, cls.employeeG = cls.env['hr.employee'].create([
             {
                 'name': "Partner A - Calendar 35h",
                 'tz': "Europe/Brussels",
@@ -129,9 +137,23 @@ class TestHrContractCalendarCommon(common.TransactionCase):
                 'work_contact_id': cls.partnerE.id,
                 'company_id': cls.company_A.id,
             },
+            {
+                'name': 'Partner F - Fully Flexible',
+                'tz': "Europe/Brussels",
+                'resource_calendar_id': False,
+                'work_contact_id': cls.partnerF.id,
+                'company_id': cls.company_A.id,
+            },
+            {
+                'name': 'Partner G - Default Calendar',
+                'tz': "Europe/Brussels",
+                'resource_calendar_id': cls.company_A.resource_calendar_id.id,
+                'work_contact_id': cls.partnerG.id,
+                'company_id': cls.company_A.id,
+            },
         ])
         cls.contractA, cls.contractB, cls.contractB_company_B,\
-        cls.contractC, cls.contractD = cls.env['hr.contract'].create([
+        cls.contractC, cls.contractD, cls.contractF, cls.contractG = cls.env['hr.contract'].create([
             {
                 'date_start': datetime(2023, 12, 1),
                 'name': 'Contract Employee A start december',
@@ -176,6 +198,24 @@ class TestHrContractCalendarCommon(common.TransactionCase):
                 'wage': 5000.0,
                 'employee_id': cls.employeeD.id,
                 'state': 'close',
+                'company_id': cls.company_A.id,
+            },
+            {
+                'date_start': datetime(2023, 12, 1),
+                'name': 'Test contract F',
+                'resource_calendar_id': False,
+                'wage': 5000.0,
+                'employee_id': cls.employeeF.id,
+                'state': 'open',
+                'company_id': cls.company_A.id,
+            },
+            {
+                'date_start': datetime(2023, 12, 1),
+                'name': 'Test contract G',
+                'resource_calendar_id': cls.company_A.resource_calendar_id.id,
+                'wage': 5000.0,
+                'employee_id': cls.employeeG.id,
+                'state': 'open',
                 'company_id': cls.company_A.id,
             },
         ])

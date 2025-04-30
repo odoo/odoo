@@ -36,7 +36,7 @@ class TestMailingListSms(HttpCase, MassSMSCommon):
         self.assertEqual(trace.sms_number, '+911234657890')
 
         unsubscribe_url = werkzeug.urls.url_join(mailing.get_base_url(), f'/sms/{mailing.id}/unsubscribe/{trace.sms_code}')
-        response = self.opener.get(url=unsubscribe_url, data={'sms_number': trace.sms_number})
+        response = self.url_open(url=unsubscribe_url, data={'sms_number': trace.sms_number}, method='GET')
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(partner.phone_blacklisted, 'Partner not unsubscribed')

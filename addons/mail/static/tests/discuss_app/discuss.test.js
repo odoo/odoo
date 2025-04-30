@@ -1,4 +1,4 @@
-import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { waitNotifications, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import {
     click,
@@ -6,6 +6,7 @@ import {
     defineMailModels,
     editInput,
     insertText,
+    listenStoreFetch,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -14,11 +15,14 @@ import {
     SIZES,
     start,
     startServer,
+    STORE_FETCH_ROUTES,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, mockDate, tick } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, press, tick, waitFor } from "@odoo/hoot-dom";
+import { mockDate } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -33,8 +37,9 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
+import { EventBus } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
-import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -42,25 +47,20 @@ defineMailModels();
 test("sanity check", async () => {
     await startServer();
     onRpcBefore((route, args) => {
-        if (route.startsWith("/mail") || route.startsWith("/discuss")) {
+        if (
+            (route.startsWith("/mail") || route.startsWith("/discuss")) &&
+            !STORE_FETCH_ROUTES.includes(route)
+        ) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
     });
+    listenStoreFetch();
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitStoreFetch(["failures", "systray_get_activities", "init_messaging"]);
     await openDiscuss();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["channels_as_member"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-        '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
-    ]);
+    await waitStoreFetch(["channels_as_member"], {
+        stepsAfter: ['/mail/inbox/messages - {"fetch_params":{"limit":30}}'],
+    });
     await contains(".o-mail-DiscussSidebar");
     await contains("h4:contains(Your inbox is empty)");
 });
@@ -282,7 +282,7 @@ test("sidebar: chat im_status rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel-threadIcon", { count: 3 });
     await contains(".o-mail-DiscussSidebarChannel", {
         text: "Partner1",
-        contains: [".o-mail-ThreadIcon div[title='Offline']"],
+        contains: [".o-mail-ThreadIcon [title='Offline']"],
     });
     await contains(".o-mail-DiscussSidebarChannel", {
         text: "Partner2",
@@ -290,7 +290,7 @@ test("sidebar: chat im_status rendering", async () => {
     });
     await contains(".o-mail-DiscussSidebarChannel", {
         text: "Partner3",
-        contains: [".o-mail-ThreadIcon div[title='Away']"],
+        contains: [".o-mail-ThreadIcon [title='Idle']"],
     });
 });
 
@@ -917,7 +917,7 @@ test("post a simple message", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-Thread", { text: "Welcome to #general!" });
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "Test");
     await press("Enter");
@@ -946,7 +946,7 @@ test("post several messages with failures", async () => {
     await start();
     await openDiscuss(channelId);
     // post 3 messages
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-Thread", { text: "Welcome to #general!" });
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "0");
     await press("Enter");
@@ -1047,7 +1047,6 @@ test("auto-focus composer on opening thread", async () => {
 test("no out-of-focus notification on receiving self messages in chat", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
@@ -1086,7 +1085,6 @@ test("out-of-focus notif on needaction message in channel", async () => {
         ],
         channel_type: "channel",
     });
-    mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
@@ -1094,15 +1092,11 @@ test("out-of-focus notif on needaction message in channel", async () => {
             }
         },
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1131,7 +1125,6 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
         ],
         channel_type: "chat",
     });
-    mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
@@ -1139,15 +1132,11 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
             }
         },
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new message with odoo out-of-focused
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1174,7 +1163,6 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
         ],
         channel_type: "channel",
     });
-    mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setCounters(counters) {
             if (counters.discuss) {
@@ -1182,15 +1170,11 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
             }
         },
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["init_messaging"]);
     // simulate receving new message
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1226,7 +1210,6 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
             ],
         },
     ]);
-    mockService("presence", { isOdooFocused: () => false });
     mockService("title", {
         setCounters(counters) {
             if (!counters.discuss) {
@@ -1288,7 +1271,6 @@ test("new message in tab title has precedence over action name", async () => {
             Command.create({ partner_id: bobPartnerId }),
         ],
     });
-    mockService("presence", { isOdooFocused: () => false });
     await start();
     await openDiscuss();
     await contains(".o_breadcrumb:contains(Inbox)"); // wait for action name being Inbox
@@ -1302,7 +1284,7 @@ test("new message in tab title has precedence over action name", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await animationFrame();
+    await waitNotifications(["discuss.channel.member/fetched"]);
     expect(titleService.current).toBe("(1) Inbox");
 });
 
@@ -1311,16 +1293,11 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-    mockService("presence", { isOdooFocused: () => false });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await openDiscuss();
     const titleService = getService("title");
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1350,16 +1327,11 @@ test("out-of-focus notif on needaction message in group chat contributes only on
         ],
         channel_type: "group",
     });
-    mockService("presence", { isOdooFocused: () => false });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await openDiscuss();
     const titleService = getService("title");
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1386,19 +1358,14 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
-    mockService("presence", { isOdooFocused: () => false });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
     patchWithCleanup(OutOfFocusService.prototype, {
         _playSound() {
             asyncStep("play_sound");
         },
     });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps(["init_messaging"]);
+    await waitStoreFetch("init_messaging");
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1440,15 +1407,11 @@ test("receive new message plays sound", async () => {
             return super.play(soundEffectName, ...args);
         },
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await contains(".o_menu_systray i[aria-label='Messages']");
-    await waitForSteps(["init_messaging"]);
-    // simulate receiving a new message with odoo out-of-focused
+    // simulate receiving a new message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -1459,6 +1422,84 @@ test("receive new message plays sound", async () => {
             thread_model: "discuss.channel",
         })
     );
+    await waitForSteps(["sound:new-message"]);
+});
+
+test("message sound on receiving new message (push notif enabled)", async () => {
+    // Simulate push notification allowed
+    patchWithCleanup(window.navigator, {
+        serviceWorker: Object.assign(new EventBus(), {
+            register: () => Promise.resolve(),
+            ready: Promise.resolve(),
+            getRegistration: async () => ({
+                get pushManager() {
+                    return Promise.resolve({ getSubscription: async () => ({}) });
+                },
+            }),
+        }),
+    });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    mockService("mail.sound_effects", {
+        play(soundEffectName, ...args) {
+            asyncStep(`sound:${soundEffectName}`);
+            return super.play(soundEffectName, ...args);
+        },
+    });
+    listenStoreFetch("init_messaging");
+    await start();
+    await waitStoreFetch("init_messaging");
+    await contains(".o_menu_systray i[aria-label='Messages']");
+    // simulate receiving a new message
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "New message",
+                message_type: "comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await waitFor(".o-mail-ChatBubble .badge:contains(1)");
+    await waitForSteps(["sound:new-message"]);
+    // simulate message sound settings turned off
+    browser.localStorage.setItem("mail.user_setting.message_sound", false);
+    await animationFrame();
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "New message2",
+                message_type: "comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await waitFor(".o-mail-ChatBubble .badge:contains(2)");
+    expect.verifySteps([]);
+    // simulate message sound settings turned on
+    browser.localStorage.setItem("mail.user_setting.message_sound", null);
+    browser.localStorage.removeItem("mail.user_setting.message_sound");
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "New message",
+                message_type: "comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await waitFor(".o-mail-ChatBubble .badge:contains(3)");
     await waitForSteps(["sound:new-message"]);
 });
 
@@ -1478,16 +1519,12 @@ test("should auto-pin chat when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
+    listenStoreFetch("init_messaging");
     await start();
     await openDiscuss();
+    await waitStoreFetch("init_messaging");
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
-    await waitForSteps(["init_messaging"]);
     // simulate receiving the first message on channel 11
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1736,7 +1773,7 @@ test('auto-select "Inbox nav bar" when discuss had inbox as active thread', asyn
     await start();
     await openDiscuss();
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await contains(".o-mail-MessagingMenu-navbar button.fw-bolder", { text: "Mailboxes" });
+    await contains(".o-mail-MessagingMenu-navbar button.fw-bold", { text: "Mailboxes" });
     await contains("button.active.o-active", { text: "Inbox" });
     await contains("h4", { text: "Your inbox is empty" });
 });

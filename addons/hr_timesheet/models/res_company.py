@@ -33,8 +33,8 @@ class ResCompany(models.Model):
             raise ValidationError(_('The Internal Project of a company should be in that company.'))
 
     @api.model_create_multi
-    def create(self, values):
-        company = super().create(values)
+    def create(self, vals_list):
+        company = super().create(vals_list)
         # use sudo as the user could have the right to create a company
         # but not to create a project. On the other hand, when the company
         # is created, it is not in the allowed_company_ids on the env

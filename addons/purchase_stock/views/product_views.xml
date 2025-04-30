@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <field name="property_account_income_categ_id" position="before">
                 <field name="property_account_creditor_price_difference_categ"
-                    domain="[('deprecated','=',False)]" groups="account.group_account_readonly"
+                    groups="account.group_account_readonly"
                     invisible="property_valuation == 'manual_periodic'"/>
             </field>
         </field>
@@ -19,7 +19,7 @@
         <field name="inherit_id" ref="account.product_template_form_view"/>
         <field name="arch" type="xml">
             <field name="property_account_expense_id" position="after">
-                <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" groups="account.group_account_readonly"/>
+                <field name="property_account_creditor_price_difference" groups="account.group_account_readonly"/>
             </field>
         </field>
     </record>
@@ -32,14 +32,29 @@
         <field name="arch" type="xml">
             <xpath expr="//kanban" position="attributes">
                     <attribute name="js_class">purchase_product_kanban_catalog</attribute>
-                    <attribute name="sample">1</attribute> 
+                    <attribute name="sample">1</attribute>
             </xpath>
-            <div name="o_kanban_qty_available" position="after">
-                <div t-if="record.is_storable.raw_value"
-                     name="o_kanban_qty_forecasted">
-                    <span>Forecasted: </span>
-                    <field name="virtual_available"/>
-                    <field name="uom_id" widget="many2one_uom" class="ms-1" groups="uom.group_uom"/>
+            <field name="id" position="after">
+                <field name="type"/>
+                <field name="qty_available"/>
+                <field name="virtual_available"/>
+                <field name="monthly_demand"/>
+            </field>
+            <t name="qty_free" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </t>
+            <t name="qty_available" position="after">
+                <t name="qty_forecasted" t-if="record.qty_available.raw_value != record.virtual_available.raw_value">
+                    <span> / </span>
+                    <span class="fw-bold" t-att-class="record.virtual_available.raw_value &lt; 0 ? 'text-danger' : ''" t-out="record.virtual_available.raw_value"/>
+                    <span class="text-muted small"> Forecasted</span>
+                </t>
+            </t>
+            <div name="o_kanban_qty_available_and_on_hand" position="after">
+                <div t-if="record.type.raw_value === 'consu' and record.monthly_demand.raw_value != 0" name="o_kanban_monthly_demand">
+                    <span class="text-muted small">Monthly Demand: </span>
+                    <span class="fw-bold ms-1" t-out="record.monthly_demand.raw_value"/>
+                    <field name="uom_id" class="text-muted small ms-1" groups="uom.group_uom"/>
                 </div>
             </div>
         </field>

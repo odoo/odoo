@@ -1,5 +1,7 @@
 
 .o_time_picker_input {
+    width: 8rem;
+
     transition: all .1s ease-in-out;
     transition-property: color, background-color, border-bottom-color;
     color: $btn-color;
@@ -12,8 +14,8 @@
 }
 
 .o_time_picker_dropdown.o-dropdown--menu {
+    --dropdown-min-width: unset;
     max-height: 15rem;
-    max-width: 6rem;
 }
 
 .o_datetime_picker .o_time_picker {

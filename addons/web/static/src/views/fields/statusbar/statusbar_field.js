@@ -102,7 +102,7 @@ export class StatusBarField extends Component {
                 const value = record.data[fieldName];
                 let domain = getFieldDomain(record, fieldName, props.domain);
                 if (domain.length && value) {
-                    domain = Domain.or([[["id", "=", value[0]]], domain]).toList(
+                    domain = Domain.or([[["id", "=", value.id]], domain]).toList(
                         record.evalContext
                     );
                 }
@@ -200,6 +200,13 @@ export class StatusBarField extends Component {
         this.items.after = [...this.items.folded];
         const itemsToAssign = this.getAllItems().filter((item) => !item.isFolded);
 
+        if (this.env.isSmall && this.items.inline.length) {
+            // Small screen case: only a single dropdown
+            show(this.dropdownRef.el);
+            hide(this.beforeRef.el, this.afterRef.el, ...itemEls);
+            return;
+        }
+
         while (this.areItemsWrapping()) {
             if (itemsBefore.length) {
                 // Case 1: elements before can be hidden
@@ -243,7 +250,7 @@ export class StatusBarField extends Component {
                 value: option.id,
                 label: option.display_name,
                 isFolded: option[foldField],
-                isSelected: Boolean(currentValue && option.id === currentValue[0]),
+                isSelected: Boolean(currentValue && option.id === currentValue.id),
             }));
         } else {
             // Selection
@@ -298,7 +305,7 @@ export class StatusBarField extends Component {
      */
     async selectItem(item) {
         const { name, record } = this.props;
-        const value = this.field.type === "many2one" ? [item.value, item.label] : item.value;
+        const value = this.field.type === "many2one" ? { id: item.value, display_name: item.label } : item.value;
         await record.update({ [name]: value });
         await record.save();
     }

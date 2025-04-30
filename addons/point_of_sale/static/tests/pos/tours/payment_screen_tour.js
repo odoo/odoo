@@ -4,6 +4,10 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
+import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import { inLeftSide } from "./utils/common";
 
 registry.category("web_tour.tours").add("PaymentScreenTour", {
     steps: () =>
@@ -90,14 +94,19 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
 
             PaymentScreen.totalIs("1.96"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "2.00" }),
+            PaymentScreen.clickValidate(),
 
             Chrome.clickOrders(),
-            Chrome.createFloatingOrder(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("001"),
+            inLeftSide([
+                ...Order.hasLine({ productName: "Product Test", withClass: ".selected" }),
+                Numpad.click("1"),
+            ]),
+            TicketScreen.confirmRefund(),
 
             // To get negative of existing quantity just send -
-            ProductScreen.addOrderline("Product Test", "-"),
             ProductScreen.clickPayButton(),
-
             PaymentScreen.totalIs("-1.96"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "-2.00" }),
         ].flat(),
@@ -113,14 +122,19 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
 
             PaymentScreen.totalIs("1.98"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.95" }),
+            PaymentScreen.clickValidate(),
 
             Chrome.clickOrders(),
-            Chrome.createFloatingOrder(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("001"),
+            inLeftSide([
+                ...Order.hasLine({ productName: "Product Test", withClass: ".selected" }),
+                Numpad.click("1"),
+            ]),
+            TicketScreen.confirmRefund(),
 
             // To get negative of existing quantity just send -
-            ProductScreen.addOrderline("Product Test", "-"),
             ProductScreen.clickPayButton(),
-
             PaymentScreen.totalIs("-1.98"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "-1.95" }),
         ].flat(),
@@ -131,7 +145,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Product Test 1.2", "1"),
+            ProductScreen.addOrderline("Product Test 1.20", "1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("1.20"),
@@ -158,7 +172,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             Chrome.clickOrders(),
             Chrome.createFloatingOrder(),
 
-            ProductScreen.addOrderline("Product Test 1.2", "1"),
+            ProductScreen.addOrderline("Product Test 1.20", "1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("1.20"),
@@ -216,5 +230,21 @@ registry.category("web_tour.tours").add("CashRoundingPayment", {
             PaymentScreen.enterPaymentLineAmount("Cash", "1.98"),
             PaymentScreen.clickValidate(),
             Dialog.is(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
         ].flat(),
 });

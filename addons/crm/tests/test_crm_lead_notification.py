@@ -39,6 +39,9 @@ class NewLeadNotification(TestCrmCommon):
         """ Test '_message_get_suggested_recipients' and its override in lead
         when dealing with various emails. """
         self.maxDiff = None  # to ease assertDictEqual usage
+        company_partner = self.env['res.partner'].create(
+            {'name': 'test_lead_message_get_suggested_recipients_company_partner', 'is_company': True}
+        )
         partner_no_email = self.env['res.partner'].create({'name': 'Test Partner', 'email': False})
         leads = self.env['crm.lead'].create([
             {
@@ -50,6 +53,11 @@ class NewLeadNotification(TestCrmCommon):
                 'email_from': 'new.customer.multi.1@test.example.com, new.customer.2@test.example.com',
                 'name': 'Test Suggestion (email_from multi)',
                 'partner_name': 'Multi Name',
+                'user_id': self.user_sales_leads.id,
+            }, {
+                'email_from': 'new.customer.with.parent@test.example.com',
+                'name': 'Test Suggestion (email_from with matching partner_name)',
+                'partner_name': 'test_lead_message_get_suggested_recipients_company_partner',
                 'user_id': self.user_sales_leads.id,
             }, {
                 'email_from': 'new.customer.simple@test.example.com',
@@ -91,13 +99,14 @@ class NewLeadNotification(TestCrmCommon):
                     },
                 },
             ], [
-                # here no contact name, just a partner name -> company (+multi)
+                # here no contact name, just a partner name -> use email and set company_name
                 {
-                    'name': 'Multi Name',
+                    'name': 'new.customer.multi.1@test.example.com, new.customer.2@test.example.com',
                     'email': 'new.customer.multi.1@test.example.com',  # only first found normalized email is kept
                     'partner_id': False,
                     'create_values': {
-                        'is_company': True,
+                        'company_name': 'Multi Name',
+                        'is_company': False,
                         'type': 'contact',
                         'user_id': self.user_sales_leads.id,
                     },
@@ -106,6 +115,19 @@ class NewLeadNotification(TestCrmCommon):
                     'email': 'new.customer.2@test.example.com',  # second found creates another contact
                     'partner_id': False,
                     'create_values': {},  # not targeted as primary lead customer hence no values
+                },
+            ], [
+                # here no contact name, a partner name, but there exists a company with that name -> company
+                {
+                    'name': 'new.customer.with.parent@test.example.com',
+                    'email': 'new.customer.with.parent@test.example.com',
+                    'partner_id': False,
+                    'create_values': {
+                        'is_company': False,
+                        'parent_id': company_partner.id,
+                        'type': 'contact',
+                        'user_id': self.user_sales_leads.id,
+                    },
                 },
             ], [
                 # here contact name -> individual
@@ -192,14 +214,10 @@ class NewLeadNotification(TestCrmCommon):
             if email == '"Contact Name" <default_create_with_name_in_email@example.com>':
                 suggested_email = 'default_create_with_name_in_email@example.com'
                 suggested_name = "Contact Name"
-                expected_is_company = False  # contact_name (in email) != partner_name
             else:
                 suggested_email = email
-                # if no contact_name: fallback on partner_name the email to at least have something
-                suggested_name = contact_name or partner_name or email
-                # a company is expected only if there is only a partner_name, otherwise it is a contact
-                # with a company_name
-                expected_is_company = bool(partner_name) and not contact_name
+                # if no contact_name: fallback on the email to at least have something
+                suggested_name = contact_name or email
             with self.subTest(partner_name=partner_name, contact_name=contact_name, email=email):
                 description = '<p>Top</p>'
                 lead1 = self.env['crm.lead'].create({
@@ -226,11 +244,12 @@ class NewLeadNotification(TestCrmCommon):
                 # parent company not created even if partner_name is set
                 self.assertFalse(create_values.get('parent_id'))  # not supported, even if partner_name set
                 # company_name set only for contacts with partner_name (and no contact_name nor name in email)
-                if partner_name and (contact_name or email == '"Contact Name" <default_create_with_name_in_email@example.com>'):
+                if partner_name:
                     self.assertEqual(create_values['company_name'], partner_name)  # partner_name -> company_name
                 else:
                     self.assertFalse('company_name' in create_values)
-                self.assertEqual(create_values['is_company'], expected_is_company)
+                # it will normally never be a company, unless called despite a contact being already present (shouldn't happen)
+                self.assertEqual(create_values['is_company'], False)
 
     def test_new_lead_notification(self):
         """ Test newly create leads like from the website. People and channels

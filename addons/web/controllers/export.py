@@ -7,15 +7,18 @@ import itertools
 import json
 import logging
 import operator
-from collections import OrderedDict
+from collections import defaultdict, OrderedDict
 
 from werkzeug.exceptions import InternalServerError
+try:
+    import xlsxwriter
+except ImportError:
+    xlsxwriter = None
 
 from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
-from odoo.tools import lazy_property, osutil
-from odoo.tools.misc import xlsxwriter
+from odoo.tools import osutil
 
 
 _logger = logging.getLogger(__name__)
@@ -56,7 +59,7 @@ OPERATOR_MAPPING = {
 
 class GroupsTreeNode:
     """
-    This class builds an ordered tree of groups from the result of a `web_read_group`.
+    This class builds an ordered tree of groups from the result of a `formatted_read_group`.
     The `formatted_read_group` returns a list of dictionnaries and each dictionnary is used to
     build a leaf. The entire tree is built by inserting all leaves.
     """
@@ -112,7 +115,7 @@ class GroupsTreeNode:
         return aggregated_field_names
 
     # Lazy property to memoize aggregated values of children nodes to avoid useless recomputations
-    @lazy_property
+    @functools.cached_property
     def aggregated_values(self):
 
         aggregated_values = {}
@@ -140,16 +143,13 @@ class GroupsTreeNode:
             self.children[key] = GroupsTreeNode(self._model, self._export_field_names, self._groupby, self._groupby_type)
         return self.children[key]
 
-    def insert_leaf(self, group):
+    def insert_leaf(self, group, data):
         """
         Build a leaf from `group` and insert it in the tree.
         :param group: dict as returned by `formatted_read_group`
         """
         leaf_path = [group.get(groupby_field) for groupby_field in self._groupby]
         count = group.pop('__count')
-
-        # reorder the record with the default order (it doesn't respect order from the view/user)
-        records = self._model.with_context(active_test=False).search([('id', 'in', group.pop('id:array_agg'))])
 
         # Follow the path from the top level group to the deepest
         # group which actually contains the records' data.
@@ -161,7 +161,7 @@ class GroupsTreeNode:
             # Update count value and aggregated value.
             node.count += count
 
-        node.data = records.with_env(self._model.env).export_data(self._export_field_names).get('datas', [])
+        node.data = data
 
 
 class ExportXlsxWriter:
@@ -376,9 +376,12 @@ class Export(http.Controller):
 
         fields['id']['string'] = request.env._('External ID')
 
-        if parent_field:
+        if not Model._is_an_ordinary_table():
+            fields.pop("id", None)
+        elif parent_field:
             parent_field['string'] = request.env._('External ID')
             fields['id'] = parent_field
+            fields['id']['type'] = parent_field['field_type']
 
         exportable_fields = {}
         for field_name, field in fields.items():
@@ -556,9 +559,13 @@ class ExportFormat(object):
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
+        records = Model.browse(ids) if ids else Model.search(domain)
+
         groupby = params.get('groupby')
         if not import_compat and groupby:
+            export_data = records.export_data(['.id'] + field_names).get('datas', [])
             groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
+            tree = GroupsTreeNode(Model, field_names, groupby, groupby_type)
             if ids:
                 domain = [('id', 'in', ids)]
                 SearchModel = Model.with_context(active_test=False)
@@ -566,18 +573,47 @@ class ExportFormat(object):
                 SearchModel = Model
             groups_data = SearchModel.formatted_read_group(domain, groupby, ['__count', 'id:array_agg'])
 
-            # formatted_read_group returns a dict only for final groups (with actual data),
-            # not for intermediary groups. The full group tree must be re-constructed.
-            tree = GroupsTreeNode(Model, field_names, groupby, groupby_type)
-            for leaf in groups_data:
-                tree.insert_leaf(leaf)
+            # Build a map from record ID to its export rows
+            record_rows = {}
+            current_id = None
+            for row in export_data:
+                if row[0]:  # First column is the record ID
+                    current_id = int(row[0])
+                    record_rows[current_id] = []
+                record_rows[current_id].append(row[1:])
+
+            # To preserve the natural model order, base the data order on the result of `export_data`,
+            # which comes from a `Model.search`
+
+            # 1. Map each record ID to its group index
+            groups = [group['id:array_agg'] for group in groups_data]
+            record_to_group = defaultdict(list)
+            for group_index, ids in enumerate(groups):
+                for record_id in ids:
+                    record_to_group[record_id].append(group_index)
+
+            # 2. Iterate on the result of `export_data` and assign each data to its right group
+            grouped_rows = [[] for _ in groups]
+            for record_id, rows in record_rows.items():
+                for group_index in record_to_group[record_id]:
+                    grouped_rows[group_index].extend(rows)
+
+            # 3. Insert one leaf per group, providing the group information and its data
+            for group_info, group_rows in zip(groups_data, grouped_rows):
+                tree.insert_leaf(group_info, group_rows)
 
             response_data = self.from_group_data(fields, columns_headers, tree)
         else:
-            records = Model.browse(ids) if ids else Model.search(domain)
-
             export_data = records.export_data(field_names).get('datas', [])
             response_data = self.from_data(fields, columns_headers, export_data)
+
+        _logger.info(
+            "User %d exported %d %r records from %s. Fields: %s. %s: %s",
+            request.env.user.id, len(records.ids), records._name, request.httprequest.environ['REMOTE_ADDR'],
+            ','.join(field_names),
+            'IDs sample' if ids else 'Domain',
+            records.ids[:10] if ids else domain,
+        )
 
         # TODO: call `clean_filename` directly in `content_disposition`?
         return request.make_response(response_data,

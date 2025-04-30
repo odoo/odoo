@@ -63,7 +63,7 @@
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
-                <t t-if="model.data">
+                <t t-if="model.isReady and model.data">
                     <t t-if="!model.hasData() or model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
                         <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
                     </t>
@@ -77,7 +77,7 @@
                     </t>
                     <t t-component="props.Renderer" model="model" buttonTemplate="props.buttonTemplate" />
                 </t>
-                <t t-else="" t-call="web.NoContentHelper">
+                <t t-elif="model.isReady" t-call="web.NoContentHelper">
                     <t t-set="title">Invalid data</t>
                     <t t-set="description">Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results</t>
                 </t>

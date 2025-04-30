@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
 
 export class ReceiptHeader extends Component {
@@ -12,16 +11,9 @@ export class ReceiptHeader extends Component {
     }
 
     get partnerAddress() {
-        return this.order.partner_id.pos_contact_address.split("\n");
-    }
-
-    get vatText() {
-        if (this.order.company.country_id?.vat_label) {
-            return _t("%(vatLabel)s: %(vatId)s", {
-                vatLabel: this.order.company.country_id.vat_label,
-                vatId: this.order.company.vat,
-            });
-        }
-        return _t("Tax ID: %(vatId)s", { vatId: this.order.company.vat });
+        return this.order.partner_id.pos_contact_address
+            .split("\n")
+            .filter((line) => line.trim() !== "")
+            .join(", ");
     }
 }

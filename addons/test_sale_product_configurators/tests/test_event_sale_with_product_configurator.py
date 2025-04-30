@@ -16,6 +16,8 @@ class TestEventProductConfiguratorUi(AccountTestInvoicingCommon, HttpCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.user.group_ids += cls.quick_ref('event.group_event_manager')
+
         # Adding sale users to test the access rights
         cls.salesman = mail_new_test_user(
             cls.env,

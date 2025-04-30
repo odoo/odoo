@@ -89,9 +89,18 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/thread/recipients/get_suggested_recipients", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_recipients_get_suggested_recipients(self, thread_model, thread_id, partner_ids=None, main_email=False):
+        """This method returns the suggested recipients with updates coming from the frontend.
+        :param thread_model: Model on which we are currently working on.
+        :param thread_id: ID of the document we need to compute
+        :param partner_ids: IDs of new customers that were edited on the frontend, usually only the customer but could be more.
+        :param main_email: New email edited on the frontend linked to the @see _mail_get_primary_email_field
+        """
         thread = self._get_thread_with_access(thread_model, thread_id)
         partner_ids = request.env['res.partner'].search([('id', 'in', partner_ids)])
         recipients = thread._message_get_suggested_recipients(reply_discussion=True, additional_partners=partner_ids, primary_email=main_email)
+        if partner_ids:
+            old_customer_ids = set(thread._mail_get_partners()[thread.id].ids) - set(partner_ids.ids)
+            recipients = list(filter(lambda rec: rec.get('partner_id') not in old_customer_ids, recipients))
         return [{key: recipient[key] for key in recipient if key in ['name', 'email', 'partner_id']} for recipient in recipients]
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="jsonrpc", auth="user")
@@ -144,12 +153,15 @@ class ThreadController(http.Controller):
                 partner_emails,
                 no_create=not request.env.user.has_group("base.group_partner_manager"),
             )
-        if not request.env.user._is_internal():
-            partners = partners & self._filter_message_post_partners(thread, partners)
-        post_data["partner_ids"] = partners.ids
+        if role_ids := post_data.pop("role_ids", []):
+            # sudo - res.users: getting partners linked to the role is allowed.
+            partners |= request.env["res.users"].sudo().search([("role_ids", "in", role_ids)]).partner_id
+        post_data["partner_ids"] = self._filter_message_post_partners(thread, partners).ids
         return post_data
 
     def _filter_message_post_partners(self, thread, partners):
+        if self.env.user._is_internal():
+            return partners
         domain = [
             ("res_model", "=", thread._name),
             ("res_id", "=", thread.id),

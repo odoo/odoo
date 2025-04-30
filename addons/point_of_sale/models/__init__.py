@@ -2,6 +2,7 @@
 
 from . import account_bank_statement
 from . import pos_load_mixin
+from . import account_cash_rounding
 from . import account_payment
 from . import account_journal
 from . import account_tax
@@ -26,6 +27,7 @@ from . import product_combo_item
 from . import res_partner
 from . import res_company
 from . import res_config_settings
+from . import ir_http
 from . import ir_module_module
 from . import stock_picking
 from . import stock_rule
@@ -42,7 +44,6 @@ from . import res_country
 from . import res_country_state
 from . import res_lang
 from . import account_fiscal_position
-from . import account_fiscal_position_tax
 from . import res_currency
 from . import pos_preset
 from . import product_tag

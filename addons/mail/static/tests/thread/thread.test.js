@@ -7,6 +7,7 @@ import {
     focus,
     insertText,
     isInViewportOf,
+    listenStoreFetch,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -15,6 +16,7 @@ import {
     start,
     startServer,
     triggerEvents,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
@@ -206,13 +208,14 @@ test("scroll position is kept when navigating from one channel to another [CAN F
     await openDiscuss(channelId_1);
     await contains(".o-mail-Message", { count: 20 });
     const scrollValue1 = queryFirst(".o-mail-Thread").scrollHeight / 2;
-    await contains(".o-mail-Thread", { scroll: 0 });
+    const scrollTopValue = queryFirst(".o-mail-Thread").scrollTop;
+    await contains(".o-mail-Thread", { scroll: scrollTopValue });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", scrollValue1);
     await click(".o-mail-DiscussSidebarChannel", { text: "channel-2" });
     await contains(".o-mail-Message", { count: 30 });
     const scrollValue2 = queryFirst(".o-mail-Thread").scrollHeight / 3;
-    await contains(".o-mail-Thread", { scroll: 0 });
+    await contains(".o-mail-Thread", { scroll: scrollTopValue });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", scrollValue2);
     await click(".o-mail-DiscussSidebarChannel", { text: "channel-1" });
@@ -239,7 +242,7 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 20 });
-    await contains(".o-mail-Thread", { scroll: 0 });
+    await contains(".o-mail-Thread");
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", queryFirst(".o-mail-Thread").scrollHeight / 2);
     await scroll(".o-mail-Thread", "bottom");
@@ -288,11 +291,6 @@ test("mark channel as fetched when a new message is loaded", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
-        }
-    });
     onRpcBefore("/discuss/channel/mark_as_read", (args) => {
         expect(args.channel_id).toBe(channelId);
         asyncStep("rpc:mark_as_read");
@@ -302,19 +300,10 @@ test("mark channel as fetched when a new message is loaded", async () => {
         asyncStep("rpc:channel_fetch");
     });
     setupChatHub({ opened: [channelId] });
+    listenStoreFetch(["init_messaging", "discuss.channel"]);
     await start();
+    await waitStoreFetch(["init_messaging", "discuss.channel"]);
     await contains(".o_menu_systray i[aria-label='Messages']");
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: [
-                "failures",
-                "systray_get_activities",
-                "init_messaging",
-                ["discuss.channel", [channelId]],
-            ],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
     // send after init_messaging because bus subscription is done after init_messaging
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -325,7 +314,7 @@ test("mark channel as fetched when a new message is loaded", async () => {
     );
     await contains(".o-mail-Message");
     await waitForSteps(["rpc:channel_fetch"]);
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
     await focus(".o-mail-Composer-input");
     await waitForSteps(["rpc:mark_as_read"]);
 });
@@ -445,7 +434,7 @@ test("show empty placeholder when thread contains no message", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-Thread", { text: "Welcome to #general!" });
     await contains(".o-mail-Message", { count: 0 });
 });
 
@@ -664,7 +653,7 @@ test("first unseen message should be directly preceded by the new message separa
         })
     );
     await contains(".o-mail-Message", { count: 3 });
-    await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
+    await contains(".o-mail-Thread-newMessage:contains('New')");
     await contains(".o-mail-Message[aria-label='Note'] + .o-mail-Thread-newMessage");
 });
 
@@ -893,4 +882,40 @@ test("Transient messages are added at the end of the thread", async () => {
     await contains(".o-mail-Message", { count: 2 });
     await contains(":nth-child(1 of .o-mail-Message)", { text: "Mitchell Admin" });
     await contains(":nth-child(2 of .o-mail-Message)", { text: "OdooBot" });
+});
+
+test("Can scroll to notification", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "notification 0",
+        message_type: "notification",
+        model: "discuss.channel",
+        pinned_at: "2024-03-24 15:00:00",
+        res_id: channelId,
+    });
+    let lastMessageId;
+    for (let i = 0; i < 60; ++i) {
+        lastMessageId = pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    const [selfMemberId] = pyEnv["discuss.channel.member"].search([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMemberId], {
+        new_message_separator: lastMessageId + 1,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await tick(); // wait for the scroll to first unread to complete
+    await isInViewportOf(".o-mail-Message:contains(message 59)", ".o-mail-Thread");
+    await click("[title='Pinned Messages']");
+    await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
+    await isInViewportOf(".o-mail-NotificationMessage:contains(notification 0)", ".o-mail-Thread");
 });

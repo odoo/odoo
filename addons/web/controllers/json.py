@@ -2,6 +2,7 @@
 
 import ast
 import logging
+import re
 from collections import defaultdict
 from datetime import date
 from http import HTTPStatus
@@ -14,9 +15,9 @@ from werkzeug.exceptions import BadRequest, NotFound
 
 from odoo import http
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.models import check_object_name
-from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
 
 from .utils import get_action_triples
@@ -112,8 +113,8 @@ class WebJsonController(http.Controller):
             domains.append(user_domain)
         else:
             default_domain = get_default_domain(model, action, context, eval_context)
-            if default_domain and default_domain != expression.TRUE_DOMAIN:
-                kwargs['domain'] = repr(default_domain)
+            if default_domain and not Domain(default_domain).is_true():
+                kwargs['domain'] = repr(list(default_domain))
             domains.append(default_domain)
         try:
             limit = int(kwargs.get('limit', 0)) or action.limit
@@ -176,7 +177,7 @@ class WebJsonController(http.Controller):
         # Last checks before the query
         if redirect := check_redirect():
             return redirect
-        domain = expression.AND(domains)
+        domain = Domain.AND(domains)
         # Reading a group or a list
         if groupby:
             res = model.web_read_group(
@@ -239,6 +240,7 @@ class WebJsonController(http.Controller):
             action._get_eval_context(action),
             active_id=active_id,
             context=context,
+            allowed_company_ids=request.env.user.company_ids.ids,
         )
         # update the context and return
         context.update(safe_eval(action.context, eval_context))
@@ -269,7 +271,9 @@ def get_default_domain(model, action, context, eval_context):
     for ir_filter in model.env['ir.filters'].get_filters(model._name, action._origin.id):
         if ir_filter['is_default']:
             # user filters, static parsing only
-            default_domain = ast.literal_eval(ir_filter['domain'])
+            domain_str = ir_filter['domain']
+            domain_str = re.sub(r'\buid\b', str(model.env.uid), domain_str)
+            default_domain = ast.literal_eval(domain_str)
             break
     else:
         def filters_from_context():
@@ -288,7 +292,7 @@ def get_default_domain(model, action, context, eval_context):
                             yield domain
                         # not parsing context['group_by']
 
-        default_domain = expression.AND(
+        default_domain = Domain.AND(
             safe_eval(domain, eval_context)
             for domain in filters_from_context()
         )

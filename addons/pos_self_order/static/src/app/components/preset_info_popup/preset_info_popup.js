@@ -1,6 +1,8 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { rpc } from "@web/core/network/rpc";
+import { localization } from "@web/core/l10n/localization";
+import { isValidEmail } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
 export class PresetInfoPopup extends Component {
@@ -13,6 +15,7 @@ export class PresetInfoPopup extends Component {
             selectedSlot: null,
             selectedPartnerId: null,
             name: "",
+            email: "",
             phone: "",
             street: "",
             countryId: this.selfOrder.config.company_id.country_id.id,
@@ -39,18 +42,20 @@ export class PresetInfoPopup extends Component {
                 state_id: this.state.stateId,
                 zip: this.state.zip,
             });
-            const partner = this.selfOrder.models.loadData(result);
+            const partner = this.selfOrder.models.connectNewData(result);
             this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${partner["res.partner"][0].name}`;
             this.selfOrder.currentOrder.partner_id = partner["res.partner"][0];
         } else {
-            this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${this.state.name}`;
+            this.selfOrder.currentOrder.floating_order_name = this.state.name;
         }
 
         if (this.preset.needsSlot && this.state.selectedSlot) {
-            this.selfOrder.currentOrder.preset_time = this.state.selectedSlot;
+            this.selfOrder.currentOrder.preset_time = DateTime.fromSQL(this.state.selectedSlot)
+                .toUTC()
+                .toFormat("yyyy-MM-dd HH:mm:ss");
         }
 
-        this.props.callback(true);
+        this.props.callback(this.state);
     }
 
     selectExistingPartner(event) {
@@ -107,7 +112,13 @@ export class PresetInfoPopup extends Component {
         return (
             (!this.preset.needsSlot || DateTime.fromSQL(this.state.selectedSlot).isValid) &&
             (!this.preset.needsName || this.state.name) &&
+            (!this.preset.needsEmail || isValidEmail(this.state.email)) &&
             (!this.preset.needsPartner || partnerInfo)
         );
+    }
+
+    formatDate(date) {
+        const dateObj = DateTime.fromFormat(date, "yyyy-MM-dd");
+        return dateObj.toFormat(localization.dateFormat);
     }
 }

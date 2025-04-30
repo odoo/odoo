@@ -4,10 +4,7 @@
         <!-- All buttons always displayed -->
         <SelectPartnerButton partner="partner" t-if="!props.showRemainingButtons"/>
         <t t-if="!props.showRemainingButtons || (ui.isSmall and props.showRemainingButtons)">
-            <NoteButton
-                label="internalNoteLabel()"
-                type="'internal'"
-                class="buttonClass"/>
+            <InternalNoteButton label.translate="Note" class="buttonClass"/>
         </t>
         <button t-if="pos.config.use_presets and !props.showRemainingButtons"
             class="btn btn-light btn-lg flex-shrink-0 border-0"
@@ -16,14 +13,13 @@
             <span t-esc="currentOrder.preset_id?.name" />
         </button>
         <button class="btn btn-secondary btn-lg flex-shrink-0 ms-auto more-btn" t-if="!props.showRemainingButtons and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
-            <i class="fa fa-fw fa-ellipsis-v" aria-hidden="true" />
+            <i class="oi oi-fw oi-ellipsis-v" aria-hidden="true" />
         </button>
         <!-- All these buttons will only be displayed in a dialog -->
         <t t-if="props.showRemainingButtons">
             <div class="control-buttons control-buttons-modal d-grid gap-2 mt-2">
                 <NoteButton
                     label.translate="Customer Note"
-                    type="'customer'"
                     class="buttonClass"
                     icon="'fa fa-sticky-note'"/>
                 <button t-if="this.pos.cashier._role != 'minimal'" class="o_pricelist_button btn btn-secondary btn-lg py-5" t-on-click="() => this.clickPricelist()">
@@ -43,6 +39,9 @@
                     title="Set fiscal position" />
                     <t t-if="currentOrder?.fiscal_position_id" t-esc="currentOrder.fiscal_position_id.display_name" />
                     <t t-else="">Tax</t>
+                </button>
+                <button t-if="this.displayProductInfoBtn()" class="btn btn-secondary btn-lg py-5" t-on-click="() => this.pos.onProductInfoClick(currentOrder.getSelectedOrderline().product_id.product_tmpl_id)">
+                    <i class="fa fa-info-circle me-1" role="img" aria-label="Product Info" title="Product Info" /> Info
                 </button>
                 <button t-if="this.pos.cashier._role != 'minimal'" class="btn btn-secondary btn-lg py-5" t-on-click="() => this.pos.onDeleteOrder(this.pos.getOrder())">
                     <i class="fa fa-trash me-1" role="img" /> Cancel Order 

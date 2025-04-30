@@ -24,9 +24,9 @@ export class HtmlComposerMessageField extends HtmlMailField {
                 this.editor.editable.after(elContent);
                 // TODO: the following legacy regex may not have the desired effect as it
                 // agglomerates multiple newLines together.
-                const textValue = elContent.innerText.replace(/(\t|\n)+/g, "\n");
+                const text = elContent.innerText.replace(/(\t|\n)+/g, "\n");
                 elContent.remove();
-                ev.detail.onSaveContent(textValue, emailAddSignature);
+                ev.detail.onSaveContent({ text, emailAddSignature });
             });
         }
     }

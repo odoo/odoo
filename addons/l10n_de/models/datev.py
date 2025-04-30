@@ -22,7 +22,6 @@ class ProductTemplate(models.Model):
                     result_income = self.env['account.account'].with_company(company).search([
                         *self.env['account.account']._check_company_domain(company),
                         ('internal_group', '=', 'income'),
-                        ('deprecated', '=', False),
                         ('tax_ids', 'in', taxes.ids)
                     ], limit=1)
                     result['income'] = result_income or result['income']
@@ -32,7 +31,6 @@ class ProductTemplate(models.Model):
                     result_expense = self.env['account.account'].with_company(company).search([
                         *self.env['account.account']._check_company_domain(company),
                         ('internal_group', '=', 'expense'),
-                        ('deprecated', '=', False),
                         ('tax_ids', 'in', supplier_taxes.ids),
                     ], limit=1)
                     result['expense'] = result_expense or result['expense']

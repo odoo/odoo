@@ -67,7 +67,7 @@ class GamificationChallenge(models.Model):
         res = super().default_get(fields_list)
         if 'user_domain' in fields_list and 'user_domain' not in res:
             user_group_id = self.env.ref('base.group_user')
-            res['user_domain'] = f'["&", ("all_group_ids", "=", {user_group_id.id}), ("active", "=", True)]'
+            res['user_domain'] = f'["&", ("all_group_ids", "in", [{user_group_id.id}]), ("active", "=", True)]'
         return res
 
     # description
@@ -107,7 +107,7 @@ class GamificationChallenge(models.Model):
                                   help="List of goals that will be set",
                                   required=True, copy=True)
 
-    reward_id = fields.Many2one('gamification.badge', string="For Every Succeeding User")
+    reward_id = fields.Many2one('gamification.badge', string="For Every Succeeding User", index='btree_not_null')
     reward_first_id = fields.Many2one('gamification.badge', string="For 1st user")
     reward_second_id = fields.Many2one('gamification.badge', string="For 2nd user")
     reward_third_id = fields.Many2one('gamification.badge', string="For 3rd user")
@@ -208,11 +208,6 @@ class GamificationChallenge(models.Model):
             vals['user_ids'].extend((4, user.id) for user in users)
 
         write_res = super().write(vals)
-
-        if vals.get('report_message_frequency', 'never') != 'never':
-            # _recompute_challenge_users do not set users for challenges with no reports, subscribing them now
-            for challenge in self:
-                challenge.message_subscribe([user.partner_id.id for user in challenge.user_ids])
 
         if vals.get('state') == 'inprogress':
             self._recompute_challenge_users()

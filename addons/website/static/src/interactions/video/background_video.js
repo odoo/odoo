@@ -46,8 +46,14 @@ export class BackgroundVideo extends Interaction {
         const promise = setupAutoplay(this.videoSrc, !!this.el.dataset.needCookiesApproval);
         if (promise) {
             this.videoSrc += "&enablejsapi=1";
-            this.waitFor(promise).then(() => this.appendBgVideo());
+            this.waitFor(promise).then(this.protectSyncAfterAsync(this.appendBgVideo));
         }
+        this.__adjustIframe = this.throttled(this.adjustIframe);
+        const resizeObserver = new ResizeObserver(this.__adjustIframe.bind(this));
+        // A change in an element padding does not trigger the resizeObserver so
+        // both inner and outer element are observed for any resizing.
+        resizeObserver.observe(this.el.parentElement);
+        resizeObserver.observe(this.el);
     }
 
     adjustIframe() {
