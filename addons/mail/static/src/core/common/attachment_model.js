@@ -80,13 +80,11 @@ export class Attachment extends FileModelMixin(Record) {
 
     async generatePdfThumbnail() {
         await loadPDFJSAssets();
-        // Force usage of worker to avoid hanging the tab.
         const initialWorkerSrc = globalThis.pdfjsLib.GlobalWorkerOptions.workerSrc;
         globalThis.pdfjsLib.GlobalWorkerOptions.workerSrc =
             "/web/static/lib/pdfjs/build/pdf.worker.js";
         const pdf = await globalThis.pdfjsLib.getDocument(this.urlRoute).promise;
         const page = await pdf.getPage(1);
-        // Render first page onto a canvas
         const viewPort = page.getViewport({ scale: 1 });
         const canvas = document.createElement("canvas");
         canvas.width = 38;
@@ -96,12 +94,16 @@ export class Attachment extends FileModelMixin(Record) {
             canvasContext: canvas.getContext("2d"),
             viewport: page.getViewport({ scale }),
         }).promise;
-        // Restore pdfjs's state
         globalThis.pdfjsLib.GlobalWorkerOptions.workerSrc = initialWorkerSrc;
-        return canvas.toDataURL("image/jpeg");
+        const thumbnail = canvas.toDataURL("image/jpeg");
+        await rpc(`/mail/message/thumbnail`, {
+            attachment_id: this.id,
+            thumbnail: thumbnail.replace("data:image/jpeg;base64,", ""),
+        });
+        return thumbnail;
     }
 
-    get thumbnail() {
+    get gthumbnail() {
         if (this.isPdf && !this._thumbnail) {
             this.generatePdfThumbnail().then(thumb => this._thumbnail = thumb);
         }
