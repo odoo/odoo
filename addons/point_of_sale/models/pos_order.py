@@ -1355,10 +1355,11 @@ class PosOrderLine(models.Model):
     def _is_field_accepted(self, field):
         return field in self._fields and not field in ['combo_parent_id', 'combo_line_ids']
 
-    @api.depends('refund_orderline_ids')
+    @api.depends('refund_orderline_ids', 'refund_orderline_ids.order_id.state')
     def _compute_refund_qty(self):
         for orderline in self:
-            orderline.refunded_qty = -sum(orderline.mapped('refund_orderline_ids.qty'))
+            refund_order_line = orderline.refund_orderline_ids.filtered(lambda l: l.order_id.state != 'cancel')
+            orderline.refunded_qty = -sum(refund_order_line.mapped('qty'))
 
     def _prepare_refund_data(self, refund_order, PosOrderLineLot):
         """
