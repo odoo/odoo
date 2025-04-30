@@ -29,7 +29,10 @@ class IrProfile(models.Model):
 
     session = fields.Char('Session', index=True)
     name = fields.Char('Description')
-    duration = fields.Float('Duration')
+    duration = fields.Float('Duration', digits=(9, 3),
+        help="Real elapsed time")
+    cpu_duration = fields.Float('CPU Duration', digits=(9, 3),
+        help="CPU clock (not including other processes or SQL)")
 
     init_stack_trace = fields.Text('Initial stack trace', prefetch=False)
 
