@@ -13,6 +13,7 @@ export class BasicMany2Many extends Component {
         selection: { type: Array, element: Object },
         setSelection: Function,
         create: { type: Function, optional: true },
+        displayedField: { type: String, optional: true },
     };
     static components = { SelectMany2X };
 

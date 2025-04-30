@@ -5,7 +5,7 @@
 
 <t t-name="html_builder.SelectMany2X">
     <SelectMenu
-        choices="this.filteredSearchResult().map(e => ({ value: e, label: e.display_name  }))"
+        choices="this.filteredSearchResult().map(e => ({ value: e, label: e[this.props.displayedField]  }))"
         onSelect="props.select"
         searchPlaceholder.translate="Search for records..."
         onInput.bind="onInput"
