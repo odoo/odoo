@@ -5,7 +5,7 @@ import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
 import { enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
-import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { exposeHelpers, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     CASE_EVENT_TYPES,
     Callbacks,
@@ -266,19 +266,6 @@ const warnUserEvent = (ev) => {
     removeEventListener(ev.type, warnUserEvent);
 };
 
-class HootDebugHelpers {
-    /**
-     * @param {Runner} runner
-     */
-    constructor(runner) {
-        $assign(this, hootDom, hootMock, {
-            destroy,
-            getFixture: runner.fixture.get,
-        });
-    }
-}
-
-const DEBUG_NAMESPACE = "hoot";
 const WARNINGS = {
     viewport: "Viewport size does not match the expected size for the current preset",
     tagNames:
@@ -1099,13 +1086,6 @@ export class Runner {
             test.runCount++;
 
             if (this.debug) {
-                const helpers = new HootDebugHelpers(this);
-                if (DEBUG_NAMESPACE in globalThis) {
-                    logger.debug(`Hoot helpers available:`, helpers);
-                } else {
-                    globalThis[DEBUG_NAMESPACE] = helpers;
-                    logger.debug(`Hoot helpers available from \`window.${DEBUG_NAMESPACE}\``);
-                }
                 return new Promise(() => {});
             }
             if (this.config.bail && this._failed >= this.config.bail) {
@@ -1801,7 +1781,13 @@ export class Runner {
                 this.config.debugTest = false;
                 this.debug = false;
             } else {
-                logger.logGlobalWarning("Debug mode is active");
+                const nameSpace = exposeHelpers(hootDom, hootMock, {
+                    destroy,
+                    getFixture: this.fixture.get,
+                });
+                logger.debug(
+                    `Debug mode is active: Hoot helpers available from \`window.${nameSpace}\``
+                );
             }
         }
 
@@ -1830,7 +1816,7 @@ export class Runner {
         if (this.debug) {
             logger.level = LOG_LEVELS.debug;
         }
-        enableEventLogs(this.debug);
+        enableEventLogs(logger.level === LOG_LEVELS.debug);
         setFrameRate(this.config.fps);
 
         await this._callbacks.call("before-all", logger.error);
