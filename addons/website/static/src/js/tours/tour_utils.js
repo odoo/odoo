@@ -5,6 +5,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { markup } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
 import { waitForStable } from "@web/core/macro";
+import { delay } from "@odoo/hoot-dom";
 
 export function addMedia(position = "right") {
     return {
@@ -330,10 +331,13 @@ export function insertSnippet(snippet, position = "bottom") {
             content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
             // FIXME `:not(.d-none)` should obviously not be needed but it seems
             // currently needed when using a tour in user/interactive mode.
-            trigger: `:iframe .o_snippet_preview_wrap${snippetIDSelector}:not(.d-none)`,
+            trigger: `.modal .show:iframe .o_snippet_preview_wrap${snippetIDSelector}:not(.d-none)`,
             noPrepend: true,
             tooltipPosition: "top",
-            run: "click",
+            async run(helpers) {
+                await delay(300);
+                await helpers.click();
+            },
         },
         {
             trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,

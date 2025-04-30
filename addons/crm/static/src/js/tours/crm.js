@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 import { markup } from "@odoo/owl";
+import { delay } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('crm_tour', {
     url: "/odoo",
@@ -20,7 +21,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "click",
 },
 {
-    trigger: ".o_opportunity_kanban",
+    trigger: ".o_opportunity_kanban .o_kanban_renderer",
 },
 {
     trigger: '.o_opportunity_kanban .o-kanban-button-new',
@@ -43,7 +44,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "click",
 },
 {
-    trigger: ".o_opportunity_kanban",
+    trigger: ".o_opportunity_kanban .o_kanban_renderer",
 },
 {
     trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-of-type",
@@ -52,7 +53,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(2))",
 },
 {
-    trigger: ".o_opportunity_kanban",
+    trigger: ".o_opportunity_kanban .o_kanban_renderer",
 },
 {
     // Choose the element that is not going to be moved by the previous step.
@@ -62,7 +63,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "click",
 },
 {
-    trigger: ".o_opportunity_kanban",
+    trigger: ".o_opportunity_kanban .o_kanban_renderer",
 },
 {
     trigger: ".o-mail-ActivityListPopover button:contains(Schedule an activity)",
@@ -82,7 +83,10 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(3))",
 },
 {
-    trigger: ".o_opportunity_kanban",
+    trigger: "body:not(:has(.o_reward_rainbow_man))",
+    async run() {
+        await delay(3000);
+    }
 },
 {
     trigger: ".o_kanban_record",

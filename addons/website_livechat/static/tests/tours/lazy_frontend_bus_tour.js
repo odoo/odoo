@@ -1,3 +1,4 @@
+import { delay } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
@@ -22,11 +23,12 @@ registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
         },
         {
             trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run(helpers) {
+            async run(helpers) {
                 if (odoo.__WOWL_DEBUG__.root.env.services.bus_service.isActive) {
                     throw new Error("Bus service should not start for temporary live chat");
                 }
-                helpers.press("Enter");
+                await helpers.press("Enter");
+                await delay(1000);
             },
         },
         {

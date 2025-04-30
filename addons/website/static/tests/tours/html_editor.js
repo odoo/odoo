@@ -1,5 +1,6 @@
 /* global ace */
 
+import { delay } from "@odoo/hoot-dom";
 import {clickOnSave, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 const adminCssModif = '#wrap {display: none;}';
@@ -213,7 +214,14 @@ registerWebsitePreviewTour('test_html_editor_scss', {
         },
         {
             content: "check that the scss modification got applied",
-            trigger: ':iframe body:has(#wrap:hidden)',
+            trigger: ":iframe body:has(#wrap:hidden)",
+        },
+        {
+            trigger: "nav img[src]:not([src=''])",
+            async run() {
+                //Avoid Error received after termination
+                await delay(5000);
+            },
         },
     ]
 );
