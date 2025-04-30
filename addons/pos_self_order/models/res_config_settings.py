@@ -88,7 +88,7 @@ class ResConfigSettings(models.TransientModel):
             "domain": ['|', ['pos_config_ids', 'in', self.pos_config_id.id], ["pos_config_ids", "=", False]],
         }
 
-    def _generate_single_qr_code(self, url):
+    def __generate_single_qr_code(self, url):
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -132,7 +132,7 @@ class ResConfigSettings(models.TransientModel):
                 floor_name = table.floor_id.name
                 url = url_unquote(self.pos_config_id._get_self_order_url(table.id))
                 qr_images.append({
-                    'images': self._generate_single_qr_code(url),
+                    'images': self.__generate_single_qr_code(url),
                     'name': f"{floor_name} - {table_number}",
                 })
                 excel_rows.append([self.pos_config_id.name, floor_name, table_number, url])
@@ -140,7 +140,7 @@ class ResConfigSettings(models.TransientModel):
         else:
             url = url_unquote(self.pos_config_id._get_self_order_url())
             qr_images.append({
-                'images': self._generate_single_qr_code(url),
+                'images': self.__generate_single_qr_code(url),
                 'name': "generic",
             })
             excel_rows.append([self.pos_config_id.name, url])
