@@ -206,7 +206,7 @@ class configmanager:
                          help="install demo data in new databases")
         group.add_option("--without-demo", dest="with_demo", type='without_demo', metavar='BOOL', nargs='?', const=True,
                          help="don't install demo data in new databases (default)")
-        group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='',
+        group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='', file_loadable=False,
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", type='path', my_default='',
                          help="file where the server pid will be stored")
@@ -251,11 +251,11 @@ class configmanager:
 
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
-        group.add_option("--test-file", dest="test_file", type='path', my_default='',
+        group.add_option("--test-file", dest="test_file", type='path', my_default='', file_loadable=False,
                          help="Launch a python test file.")
-        group.add_option("--test-enable", dest='test_enable', action="store_true",
+        group.add_option("--test-enable", dest='test_enable', action="store_true", file_loadable=False,
                          help="Enable unit tests. Implies --stop-after-init")
-        group.add_option("--test-tags", dest="test_tags",
+        group.add_option("--test-tags", dest="test_tags", file_loadable=False,
                          help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
                          "A filter spec has the format: [-][tag][/module][:class][.method][[params]] "
                          "The '-' specifies if we want to include or exclude tests matching this spec. "
@@ -378,7 +378,7 @@ class configmanager:
                          help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit")
         group.add_option("--i18n-import", dest="translate_in", type='path', my_default='', file_exportable=False,
                          help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
-        group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", my_default=False, file_exportable=False,
+        group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", my_default=False, file_exportable=False, file_loadable=False,
                          help="overwrites existing translation terms on updating a module or importing a CSV or a PO file.")
         group.add_option("--modules", dest="translate_modules", type='comma', metavar="MODULE,...", my_default=['all'], file_loadable=False,
                          help="specify modules to export. Use in combination with --i18n-export")
@@ -404,7 +404,7 @@ class configmanager:
                               "- replica: simulate a deployment with readonly replica "
                               "- werkzeug: open a html debugger on http request error "
                               "- xml: read views from the source code, and not the db ")
-        group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False, file_exportable=False,
+        group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False, file_exportable=False, file_loadable=False,
                          help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=0,
                          help="Force a limit on the maximum number of records kept in the virtual "
