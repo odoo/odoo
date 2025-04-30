@@ -415,8 +415,12 @@ export class PropertiesField extends Component {
      *
      * @returns {string}
      */
-    generatePropertyName() {
-        return uuid();
+    generatePropertyName(propertyType) {
+        let name = uuid();
+        if (propertyType === "html") {
+            name = `${name}_html`;
+        }
+        return name;
     }
 
     /* --------------------------------------------------------
@@ -492,7 +496,7 @@ export class PropertiesField extends Component {
                 const newSeparator = {
                     type: "separator",
                     string: _t("Group %s", col + 1),
-                    name: this.generatePropertyName(),
+                    name: this.generatePropertyName("separator"),
                 };
                 newSeparators.push(newSeparator.name);
                 propertiesValues.splice(separatorIndex, 0, newSeparator);
@@ -705,13 +709,14 @@ export class PropertiesField extends Component {
 
         this.propertiesRef.el.closest(".o_field_properties").classList.remove("o_field_invalid");
 
-        const newName = this.generatePropertyName();
+        const newName = this.generatePropertyName("char");
         propertiesDefinitions.push({
             name: newName,
             string: _t("Property %s", propertiesDefinitions.length + 1),
             type: "char",
             definition_changed: true,
         });
+        this.initialValues[newName] = { name: newName, type: "char" };
         this.openPropertyDefinition = newName;
         this.props.record.update({ [this.props.name]: propertiesDefinitions });
     }
@@ -857,7 +862,7 @@ export class PropertiesField extends Component {
             // and the python field will just ignore the old value.
             // Store the new generated name to be able to restore it
             // if needed.
-            const newName = this.generatePropertyName();
+            const newName = this.generatePropertyName(propertyDefinition.type);
             this.initialValues[newName] = initialValues;
             propertyDefinition.name = newName;
         }
@@ -954,6 +959,7 @@ export class PropertiesField extends Component {
             isNewlyCreated: isNewlyCreated,
             propertyIndex: propertyIndex,
             propertiesSize: propertiesList.length,
+            record: this.props.record,
             ...this.additionalPropertyDefinitionProps,
         });
     }

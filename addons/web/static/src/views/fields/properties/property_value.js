@@ -71,6 +71,7 @@ export class PropertyValue extends Component {
         tags: { type: Array, optional: true },
         onChange: { type: Function, optional: true },
         onTagsChange: { type: Function, optional: true },
+        record: { type: Object, optional: true },
     };
 
     setup() {
