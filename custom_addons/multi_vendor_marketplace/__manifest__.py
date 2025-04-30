@@ -90,6 +90,7 @@
             'multi_vendor_marketplace/static/src/js/odoobot_chat.js',
             'multi_vendor_marketplace/static/src/scss/partner_rating.css',
             'https://unpkg.com/sweetalert/dist/sweetalert.min.js',
+            'multi_vendor_marketplace/static/src/css/mobile_nav.css',
         ],
     },
     'license': 'LGPL-3',

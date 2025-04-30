@@ -2,7 +2,7 @@
     <!-- Custom User Profile Template -->
     <template id="custom_user_profile" name="Custom User Profile">
         <t t-call="website.layout">
-            <div class="container mt-5">
+            <div class="container mt-5 o_custom_profile_page">
                 <!-- User Info -->
                 <div class="row text-center">
                     <div class="col-md-12">
@@ -161,5 +161,26 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <!-- Inherit website.layout to add mobile bottom navigation -->
+    <template id="website_layout_bottom_mobile_nav" inherit_id="website.layout" name="Mobile Bottom Navigation">
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <nav class="o_mobile_bottom_nav d-lg-none">
+                <a href="/shop" class="nav-item">
+                    <i class="fa fa-home"/>
+                    <span>Главная</span>
+                </a>
+                <a href="/shop/cart" class="nav-item">
+                    <i class="fa fa-shopping-cart"/>
+                    <span>Корзина</span>
+                    <span class="badge bg-primary rounded-pill o_mobile_cart_count d-none">0</span> <!-- Placeholder for cart count -->
+                </a>
+                <a href="/profile" class="nav-item"> <!-- Using your custom profile URL -->
+                    <i class="fa fa-user"/>
+                    <span>Профиль</span>
+                </a>
+            </nav>
+        </xpath>
     </template>
 </odoo>

@@ -1,0 +1,119 @@
+/* Mobile Bottom Navigation Bar Styles */
+.o_mobile_bottom_nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* Adjust height as needed */
+    background-color: #ffffff; /* White background */
+    border-top: 1px solid #dee2e6; /* Light border */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 5px 0;
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+.o_mobile_bottom_nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    text-decoration: none;
+    color: #495057; /* Default text color */
+    font-size: 0.75rem; /* Smaller font size */
+    position: relative; /* Needed for cart count positioning */
+}
+
+.o_mobile_bottom_nav .nav-item i.fa {
+    font-size: 1.4rem; /* Icon size */
+    margin-bottom: 3px;
+}
+
+.o_mobile_bottom_nav .nav-item span {
+    line-height: 1.2;
+}
+
+/* Style for the active link (optional) */
+.o_mobile_bottom_nav .nav-item.active {
+    color: var(--o-color-primary); /* Use Odoo primary color for active item */
+}
+
+/* Cart count badge positioning */
+.o_mobile_bottom_nav .nav-item .o_mobile_cart_count {
+    position: absolute;
+    top: 0px;
+    right: 15px; /* Adjust as needed */
+    font-size: 0.65rem;
+    padding: 2px 5px;
+}
+
+/* Hide on large screens - d-lg-none is added in the template */
+/* @media (min-width: 992px) {
+    .o_mobile_bottom_nav {
+        display: none;
+    }
+} */
+
+/* Add padding to the bottom of the wrapwrap to prevent content overlap */
+#wrapwrap.oe_website_layout {
+    padding-bottom: 60px; /* Match the height of the nav bar */
+}
+
+/* But remove the padding on large screens */
+@media (min-width: 992px) {
+    #wrapwrap.oe_website_layout {
+        padding-bottom: 0;
+    }
+}
+
+/* Custom Profile Page Mobile Adjustments */
+@media (max-width: 767.98px) {
+    .o_custom_profile_page .mt-5 {
+        margin-top: 2rem !important; /* Reduce top margin */
+    }
+
+    .o_custom_profile_page h2 {
+        font-size: 1.5rem; /* Smaller heading */
+        margin-top: 1rem !important;
+    }
+
+    .o_custom_profile_page p {
+        font-size: 0.9rem; /* Smaller text */
+        margin-bottom: 0.5rem;
+    }
+
+    .o_custom_profile_page .btn {
+        font-size: 0.9rem; /* Slightly smaller button text */
+        padding: 0.5rem 1rem; /* Adjust button padding */
+    }
+
+    .o_custom_profile_page .button-group-container {
+        margin-top: 1.5rem !important; /* Reduce space between button groups */
+    }
+
+    .o_custom_profile_page .button-group-container .row > div {
+        margin-bottom: 0.75rem; /* Add some space below each button column */
+    }
+
+    /* Make buttons full width if they aren't already */
+    .o_custom_profile_page .button-group-container .btn {
+         width: 100% !important; /* Ensure buttons are full width */
+    }
+}
+
+/* Hide default top navbar elements on mobile, keep logo */
+@media (max-width: 991.98px) {
+    header#top #top_menu_collapse,
+    header#top .o_header_buttons { /* Target common class for user/login buttons */
+        display: none !important;
+    }
+
+    /* Optional: Adjust header padding/height if needed */
+    header#top .navbar {
+        padding-top: 0.5rem; 
+        padding-bottom: 0.5rem;
+    }
+} 
