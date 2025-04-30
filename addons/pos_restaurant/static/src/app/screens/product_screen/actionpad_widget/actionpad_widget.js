@@ -1,6 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { _t } from "@web/core/l10n/translation";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 
 /**
  * @props partner
@@ -16,6 +17,7 @@ patch(ActionpadWidget, {
 patch(ActionpadWidget.prototype, {
     setup() {
         super.setup();
+        this.doSubmitOrder = useTrackedAsync(() => this.pos.submitOrder());
     },
     get swapButton() {
         return (
@@ -30,10 +32,6 @@ patch(ActionpadWidget.prototype, {
                 ? true // for the case when removed all general note
                 : hasChange.count || hasChange.generalCustomerNote || hasChange.modeUpdate;
         return hasChange;
-    },
-    async submitOrder() {
-        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
-        this.pos.showDefault();
     },
     hasQuantity(order) {
         if (!order) {
