@@ -131,6 +131,9 @@ class ResUsers(models.Model):
         if self._mfa_type() == 'totp_mail':
             return '/web/login/totp'
 
+    def _rpc_api_keys_only(self):
+        return self._mfa_type() == 'totp_mail' or super()._rpc_api_keys_only()
+
     def _check_credentials(self, credentials, env):
         if credentials['type'] == 'totp_mail':
             self._totp_rate_limit('code_check')

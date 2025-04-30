@@ -392,6 +392,12 @@ class ResUsers(models.Model):
                     'mfa': 'default',
                 }
 
+            if self.env.user._rpc_api_keys_only():
+                _logger.info(
+                    "Invalid API key or password-based authentication attempted for a non-interactive (API) "
+                    "context that requires API key authentication only."
+                )
+
         raise AccessDenied()
 
     def _compute_password(self):
