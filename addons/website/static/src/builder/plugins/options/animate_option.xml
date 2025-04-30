@@ -7,7 +7,8 @@
             <BuilderSelect t-if="!this.isActiveItem('transformImage')" preview="false">
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="''"
                             classAction="''"
-                            id="'no_animation_opt'">None</BuilderSelectItem>
+                            id="'no_animation_opt'"
+                            t-if="!props.requireAnimation">None</BuilderSelectItem>
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="'onAppearance'"
                             actionParam="{forceAnimation: true}"
                             classAction="'o_animate'"
