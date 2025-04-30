@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="meta_xml"><t t-translation="off">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</t>
+        <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+            <channel> 
+                <title t-out="title"/>
+                <t t-translation="off">&lt;link&gt;<t t-out="link"/>&lt;/link&gt;</t>
+                <description t-out="description"/>
+                <t t-foreach="items.values()" t-as="item">
+                    <item>
+                         <!-- Required Fields -->
+                        <g:id t-out="item['id']"/>
+                        <g:title t-out="item['title']"/>
+                        <g:description t-out="item['description']"/>
+                        <g:availability t-out="item['availability']"/>
+                        <g:price t-out="item['price']"/>
+                        <g:link t-out="item['link']"/>
+                        <g:image_link t-out="item['image_link']"/>
+                        <g:identifier_exists t-out="item['identifier_exists']"/>
+                        
+                        <!-- Optional Fields -->
+                        <g:sale_price t-if="'sale_price' in item" t-out="item['sale_price']"/>
+                        <g:sale_price_effective_date
+                            t-if="'sale_price_effective_date' in item"
+                            t-out="item['sale_price_effective_date']"
+                        />
+                        <g:item_group_id
+                            t-if="'item_group_id' in item"
+                            t-out="item['item_group_id']"
+                        />
+                        <t t-foreach="item['additional_image_link']" t-as="link">
+                            <additional_image_link t-out="link"/>
+                        </t>
+                        <t t-if="item['internal_label']" t-foreach="item['internal_label']" t-as="label">
+                            <internal_label t-translation="off" t-out="label"/>
+                        </t>
+                        <t t-foreach="item['product_type']" t-as="type">
+                            <product_type t-out="type"/>
+                        </t>
+                        <t t-foreach="item['product_detail']" t-as="name_value">
+                            <additional_variant_attribute>
+                                <label t-out="name_value[0]"/>
+                                <value t-out="name_value[1]"/>
+                            </additional_variant_attribute>
+                        </t>
+                        <g:gtin t-if="'gtin' in item" t-out="item['gtin']"/>
+                        <t t-foreach="item['shipping']" t-as="ship">
+                            <g:shipping>
+                                <g:country t-out="ship['country']"/>
+                                <g:region t-out="ship['region']"/>
+                                <g:service t-out="ship['service']"/>
+                                <g:price t-out="ship['price']"/>
+                            </g:shipping>
+                        </t>
+                        <unit_price t-if="'unit_price' in item">
+                            <value t-out="item['unit_price']['value']" />
+                            <currency t-out="item['unit_price']['currency']" />
+                            <unit t-out="item['unit_price']['unit']" />
+                        </unit_price>
+                    </item>
+                </t>
+            </channel>
+        </rss>
+    </template>
+</odoo>

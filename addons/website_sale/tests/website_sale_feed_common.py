@@ -7,18 +7,20 @@ import time
 
 from odoo.fields import Command
 
-from odoo.addons.website_sale.controllers.gmc import GoogleMerchantCenter
+from odoo.addons.website_sale.controllers.product_xml_feed import ProductXmlFeed
 from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
-class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
+class WebsiteSaleFeedCommon(ProductVariantsCommon, WebsiteSaleCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.WebsiteSaleGMCController = GoogleMerchantCenter()
-        cls.website.enabled_gmc_src = True
+        cls.WebsiteSaleFeedController = ProductXmlFeed()
+        cls.feed_url = None
+        cls.enabled_flag_name = None
+        cls.feed_type = None
 
         # Prepare products
         cls.product_template_sofa.list_price = 1000.0
@@ -58,7 +60,7 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
             'active': True,
             'rate_ids': [
                 Command.clear(),
-                Command.create({'name': time.strftime('%Y-%m-%d'),'rate': 1.1})
+                Command.create({'name': time.strftime('%Y-%m-%d'), 'rate': 1.1})
             ],
         })
 
@@ -72,16 +74,24 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
         })
         cls.carrier.product_id.list_price = 5.0
 
-    def update_items(self, website=None, pricelist=None, **ctx):
+    def update_items(self, website=None, pricelist=None, feed_type=None, **ctx):
         website = website or self.website
         pricelist = pricelist or self.pricelist
+        feed_type = feed_type or self.feed_type
+
         with MockRequest(
             self.env,
             context=ctx,
             website=website,
             website_sale_current_pl=pricelist.id,
         ):
-            self.items = self.products._prepare_gmc_items()
+            if feed_type == 'gmc':
+                self.items = self.products._prepare_gmc_items()
+            elif feed_type == 'meta':
+                self.items = self.products._prepare_meta_items()
+            else:
+                raise ValueError(f"Unsupported feed_type: {feed_type}")
+
         self.red_sofa_item = self.items[self.red_sofa]
         self.blue_sofa_item = self.items[self.blue_sofa]
 
@@ -100,3 +110,16 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
         for i in range(0, len(categs) - 1):
             categs[i].parent_id = categs[i + 1]
         return categs[-1]
+
+    def _create_variant_product(self, name, attribute_values, description=''):
+        """Helper to create product with variant attributes"""
+        return self.env['product.template'].create({
+            'name': name,
+            'description': description,
+            'attribute_line_ids': [
+                (0, 0, {
+                    'attribute_id': attr.id,
+                    'value_ids': [(6, 0, [val.id])],
+                }) for attr, val in attribute_values
+            ],
+        }).product_variant_id

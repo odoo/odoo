@@ -244,6 +244,8 @@ class Website(models.Model):
 
     enabled_gmc_src = fields.Boolean(string="Google Merchant Center Data Source")
 
+    enabled_meta_src = fields.Boolean(string="Enable Meta Catalog Feed Source")
+
     currency_id = fields.Many2one(
         string="Default Currency",
         comodel_name='res.currency',
@@ -258,6 +260,11 @@ class Website(models.Model):
     _check_gmc_ecommerce_access = models.Constraint(
         'CHECK (NOT enabled_gmc_src OR ecommerce_access = \'everyone\')',
         "eCommerce must be accessible to all users for Google Merchant Center to operate properly.",
+    )
+
+    _check_meta_ecommerce_access = models.Constraint(
+        'CHECK (NOT enabled_meta_src OR ecommerce_access = \'everyone\')',
+        "eCommerce must be accessible to all users for Meta Catalog to operate properly.",
     )
 
     #=== COMPUTE METHODS ===#
