@@ -13,6 +13,7 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
+import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("mobile");
 defineMailModels();
@@ -101,4 +102,19 @@ test.skip("can add message reaction (mobile)", async () => {
     await click(".modal .o-EmojiPicker .o-Emoji:contains('🤣')");
     await contains(".o-mail-MessageReaction:contains('🤣')");
     await contains(".o-mail-MessageReaction:contains('😀')");
+});
+
+test("click on an odoo link should fold the chat window (mobile)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({});
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", `http://${browser.location.host}/odoo.com`);
+    await click(".o-mail-Composer button[title='Send']");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatBubble", { count: 0 });
+    await click(`a[href="http://${browser.location.host}/odoo.com"]`);
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await contains(".o-mail-ChatBubble");
 });
