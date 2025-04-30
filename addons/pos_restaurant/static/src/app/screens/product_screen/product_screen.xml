@@ -8,7 +8,8 @@
                     <button
                         t-if="!this.currentOrder.isDirectSale and nbrOfChanges"
                         class="btn-switchpane pay-button btn btn-lg flex-grow-1 position-relative lh-sm overflow-hidden"
-                        t-on-click="submitOrder"
+                        t-on-click="() => doSubmitOrder.call()"
+                        t-att-disabled="doSubmitOrder.status === 'loading'"
                         t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-light' }}">
                         <!-- Replace the payment button by the order button -->
                         <span class="d-block">Order</span>
@@ -23,8 +24,9 @@
                     </button>
                     <button
                             class="h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
-                            t-on-click="() => this.submitOrder()"
-                            t-elif="this.pos.unwatched.printers.length and this.currentOrder.uiState.lastPrint">
+                            t-on-click="() => doSubmitOrder.call()"
+                            t-elif="this.pos.unwatched.printers.length and this.currentOrder.uiState.lastPrint"
+                            t-att-disabled="doSubmitOrder.status === 'loading'">
                         <i class="fa fa-cutlery" aria-hidden="true"></i>
                     </button>
                     <button
