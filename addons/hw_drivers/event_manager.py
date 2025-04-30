@@ -61,7 +61,7 @@ class EventManager(object):
                 **data,
             })
         else:
-            data = json.loads(request.params['data']) if request and 'data' in request.params else {}
+            data = request.params.get('data', {}) if request else {}
 
         # Make notification available to longpolling event route
         event = {
