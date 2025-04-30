@@ -727,17 +727,19 @@ test("folded chat window should hide member-list and settings buttons", async ()
     await contains(".o-dropdown-item:text('Call Settings')");
 });
 
-test("Chat window in mobile are not foldable", async () => {
+test("chat window: fold (mobile)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     patchUiSize({ size: SIZES.SM });
-    setupChatHub({ opened: [channelId] });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-ChatWindow-header.cursor-pointer", { count: 0 });
-    await click(".o-mail-ChatWindow-header");
-    await contains(".o-mail-Thread"); // content => non-folded
+    await click(".o-mail-ChatWindow-header [title='Fold']");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await contains(".o-mail-ChatBubble", { count: 0 });
+    await openListView("discuss.channel", { res_id: channelId });
+    await contains(".o-mail-ChatBubble");
+    assertChatHub({ folded: [channelId] });
 });
 
 test("Synced chat windows should open at page load on mobile", async () => {

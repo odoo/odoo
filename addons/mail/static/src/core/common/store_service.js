@@ -15,6 +15,7 @@ import { session } from "@web/session";
 import { loader } from "@web/core/emoji_picker/emoji_picker";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getOrigin } from "@web/core/utils/urls";
+import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 
 /**
@@ -342,6 +343,25 @@ export class Store extends BaseStore {
                 showAccessError();
                 ev.preventDefault();
                 return true;
+            }
+        } else if (
+            this.env.services.ui.isSmall &&
+            ev.target.closest(".o-mail-ChatWindow") &&
+            link.href &&
+            !link.href.startsWith("#")
+        ) {
+            let url;
+            try {
+                url = new URL(link.href);
+            } catch {
+                // Ignore invalid URLs
+                return false;
+            }
+            if (
+                browser.location.host === url.host &&
+                browser.location.pathname.startsWith("/odoo")
+            ) {
+                this.ChatWindow.get({ channel: thread.channel })?.fold();
             }
         }
         return false;

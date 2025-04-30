@@ -4,6 +4,7 @@ import {
 } from "@mail/../tests/mail_shared_tests";
 import {
     SIZES,
+    assertChatHub,
     click,
     contains,
     defineMailModels,
@@ -11,6 +12,7 @@ import {
     listenStoreFetch,
     openDiscuss,
     openFormView,
+    openListView,
     patchUiSize,
     setupChatHub,
     start,
@@ -22,6 +24,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
 import { Deferred, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
+import { browser } from "@web/core/browser/browser";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
@@ -132,4 +135,21 @@ test("Don't show chat hub in discuss app on mobile", async () => {
     await contains(".o-mail-ChatBubble");
     await openDiscuss();
     await contains(".o-mail-ChatBubble", { count: 0 });
+});
+
+test("click on an odoo link should fold the chat window (mobile)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({});
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", `http://${browser.location.host}/odoo.com`);
+    await click(".o-mail-Composer button[title='Send']");
+    await contains(".o-mail-ChatWindow");
+    await click(`a[href="http://${browser.location.host}/odoo.com"]`);
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await contains(".o-mail-ChatBubble", { count: 0 });
+    await openListView("discuss.channel", { res_id: channelId });
+    await contains(".o-mail-ChatBubble");
+    assertChatHub({ folded: [channelId] });
 });
