@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * crm_livechat
-#
+# 	* crm_livechat
+# 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2024
+# Alexandros Kapetanios <alexandros@gnugr.org>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2018\n"
-"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
-"Language: el\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Alexandros Kapetanios <alexandros@gnugr.org>, 2024\n"
+"Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm_livechat
@@ -40,12 +42,18 @@ msgid "Create Lead"
 msgstr ""
 
 #. module: crm_livechat
-#. odoo-python
 #. odoo-javascript
-#: code:addons/crm_livechat/models/discuss_channel.py:0
 #: code:addons/crm_livechat/static/src/core/channel_commands.js:0
 msgid "Create a new lead (/lead lead title)"
 msgstr "Δημιουργία νέας σύστασης (/lead Τίτλος Σύστασης)"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid ""
+"Create a new lead: %(pre_start)s%(lead_command)s %(i_start)slead "
+"title%(i_end)s%(pre_end)s"
+msgstr ""
 
 #. module: crm_livechat
 #. odoo-python
@@ -57,6 +65,8 @@ msgstr ""
 #: model:ir.model,name:crm_livechat.model_discuss_channel
 msgid "Discussion Channel"
 msgstr ""
+"Κανάλι συζήτησης\n"
+" "
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
@@ -81,12 +91,12 @@ msgstr ""
 #. module: crm_livechat
 #: model_terms:ir.ui.view,arch_db:crm_livechat.chatbot_script_view_form
 msgid "Leads"
-msgstr ""
+msgstr "Συστάσεις"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
 msgid "Sales Team"
-msgstr ""
+msgstr "Ομάδα Πώλησης"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__step_type

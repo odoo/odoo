@@ -1,30 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* partner_autocomplete
-#
+# 
 # Translators:
-# Nikola Iliev, 2023
-# aleksandar ivanov, 2023
-# Maria Boyadjieva <marabo2000@gmail.com>, 2023
-#
+# Petko Karamotchev, 2024
+# KeyVillage, 2024
+# aleksandar ivanov, 2024
+# Veselina Slavkova, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2023\n"
+"POT-Creation-Date: 2025-04-07 20:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Veselina Slavkova, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
-"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
 msgid "Additional info"
+msgstr ""
+
+#. module: partner_autocomplete
+#: model:iap.service,description:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Automatically enrich your contact base with corporate data."
 msgstr ""
 
 #. module: partner_autocomplete
@@ -39,12 +45,6 @@ msgid "Companies"
 msgstr "Фирми"
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr ""
-
-#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
@@ -54,7 +54,7 @@ msgstr ""
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
 msgid "Config Settings"
-msgstr "Настройки"
+msgstr "Конфигурационни настройки"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_partner
@@ -64,7 +64,7 @@ msgstr "Контакт"
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_uid
 msgid "Created by"
-msgstr "Създадено от"
+msgstr "Създаден от"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_date
@@ -82,9 +82,14 @@ msgid "Enrich Done"
 msgstr ""
 
 #. module: partner_autocomplete
+#: model:iap.service,unit_name:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Enrichments"
+msgstr ""
+
+#. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Маршрутизиране"
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -150,16 +155,10 @@ msgid "Partner Autocomplete: Sync with remote DB"
 msgstr ""
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr ""
-
-#. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
-msgid "Placeholder"
-msgstr "Заместител"
+msgid "Search Worldwide 🌎"
+msgstr ""
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -178,4 +177,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 msgid "Test mode"
+msgstr ""
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+msgid "Unable to enrich company (no credit was consumed)."
 msgstr ""
