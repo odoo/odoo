@@ -276,7 +276,14 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             self.assertXmlTreeEqual(xml_doc, xml_expected)
 
     def test_xml_tree_cancel(self):
+<<<<<<< 98ef54a1bb7a2c3085b7802efdb88a55a83622b6
         post_xml = b"""<TicketBAI>
+||||||| 51027e84e269f9c5d96b56d64488e1deb2f66c02
+        self.out_invoice.l10n_es_tbai_post_xml = b64encode(b"""<TicketBAI>
+<CabeceraFactura><FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura></CabeceraFactura>
+=======
+        self.out_invoice.l10n_es_tbai_post_xml = b64encode(b"""<TicketBAI>
+>>>>>>> 01fe708471c96711f161cf220d98a71ee0802602
 <CabeceraFactura><FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura></CabeceraFactura>
 <ds:SignatureValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">TEXT</ds:SignatureValue>
 </TicketBAI>"""  # hack to set out_invoice's registration date
