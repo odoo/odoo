@@ -23,10 +23,10 @@ function getCacheMap(targetDoc) {
 export function computeBundleCacheMap(targetDoc) {
     const cacheMap = getCacheMap(targetDoc);
     for (const script of targetDoc.head.querySelectorAll("script[src]")) {
-        cacheMap.set(script.src, Promise.resolve());
+        cacheMap.set(script.getAttribute("src"), Promise.resolve());
     }
     for (const link of targetDoc.head.querySelectorAll("link[rel=stylesheet][href]")) {
-        cacheMap.set(link.href, Promise.resolve());
+        cacheMap.set(link.getAttribute("href"), Promise.resolve());
     }
 }
 
@@ -201,9 +201,9 @@ export const assets = {
             return cacheMap.get(url);
         }
         const linkEl = targetDoc.createElement("link");
+        linkEl.setAttribute("href", url);
         linkEl.type = "text/css";
         linkEl.rel = "stylesheet";
-        linkEl.href = url;
         const promise = new Promise((resolve, reject) =>
             onLoadAndError(linkEl, resolve, async (error) => {
                 cacheMap.delete(url);
@@ -242,8 +242,8 @@ export const assets = {
             return cacheMap.get(url);
         }
         const scriptEl = targetDoc.createElement("script");
+        scriptEl.setAttribute("src", url);
         scriptEl.type = url.includes("web/static/lib/pdfjs/") ? "module" : "text/javascript";
-        scriptEl.src = url;
         const promise = new Promise((resolve, reject) =>
             onLoadAndError(scriptEl, resolve, (error) => {
                 cacheMap.delete(url);
