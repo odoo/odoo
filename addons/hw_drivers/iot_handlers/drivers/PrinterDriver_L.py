@@ -3,6 +3,8 @@
 
 from base64 import b64decode
 from cups import IPPError, IPP_JOB_COMPLETED, IPP_JOB_PROCESSING, IPP_JOB_PENDING, CUPS_FORMAT_AUTO
+from escpos import printer
+import escpos.exceptions
 import logging
 import netifaces as ni
 import re
@@ -36,7 +38,31 @@ class PrinterDriver(PrinterDriverBase):
         else:
             self.device_subtype = "office_printer"
 
+        if self.device_subtype == "receipt_printer" and self.receipt_protocol == 'escpos':
+            self._init_escpos(device)
+
         self.print_status()
+
+    def _init_escpos(self, device):
+        if device.get('usb_product'):
+            def usb_matcher(usb_device):
+                return (
+                    usb_device.manufacturer.lower() == device['usb_manufacturer'] and
+                    usb_device.product == device['usb_product'] and
+                    usb_device.serial_number == device['usb_serial_number']
+                )
+
+            self.escpos_device = printer.Usb(usb_args={"custom_match": usb_matcher})
+        elif device.get('ip'):
+            self.escpos_device = printer.Network(device['ip'], timeout=5)
+        else:
+            return
+        try:
+            self.escpos_device.open()
+            self.escpos_device.close()
+        except escpos.exceptions.Error:
+            _logger.exception("Could not initialize escpos class")
+            self.escpos_device = None
 
     @classmethod
     def supported(cls, device):
@@ -90,6 +116,9 @@ class PrinterDriver(PrinterDriverBase):
         Print raw data to the printer
         :param data: The data to print
         """
+        if not self.check_printer_status():
+            return
+
         try:
             with cups_lock:
                 job_id = conn.createJob(self.device_identifier, 'Odoo print job', {'document-format': CUPS_FORMAT_AUTO})
@@ -97,8 +126,9 @@ class PrinterDriver(PrinterDriverBase):
                 conn.writeRequestData(data, len(data))
                 conn.finishDocument(self.device_identifier)
             self.job_ids.append(job_id)
-        except IPPError as error:
-            self.send_status(status='error', message=error.message)
+        except IPPError:
+            _logger.exception("Printing failed")
+            self.send_status(status='error', message='ERROR_FAILED')
 
     @classmethod
     def format_star(cls, im):
@@ -242,13 +272,13 @@ class PrinterDriver(PrinterDriverBase):
                     self.send_status(status='success')
                 # Generic timeout, e.g. USB printer has been unplugged
                 elif job['time-at-creation'] + self.job_timeout_seconds < time.time():
-                    self._cancel_job_with_error(job_id, 'Printing timed out')
+                    self._cancel_job_with_error(job_id, 'ERROR_TIMEOUT')
                 # Cannot reach network printer
                 elif job_state == IPP_JOB_PROCESSING and 'printer is unreachable' in job.get('job-printer-state-message', ''):
-                    self._cancel_job_with_error(job_id, 'Printer is unreachable')
+                    self._cancel_job_with_error(job_id, 'ERROR_UNREACHABLE')
                 # Any other failure state
                 elif job_state not in [IPP_JOB_PROCESSING, IPP_JOB_PENDING]:
-                    self._cancel_job_with_error(job_id, job['job-state-reasons'])
+                    self._cancel_job_with_error(job_id, 'ERROR_UNKNOWN')
         except IPPError:
             _logger.exception('IPP error occurred while fetching CUPS jobs')
             self.job_ids.remove(job_id)

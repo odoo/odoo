@@ -4,6 +4,7 @@
 from cups import Connection as CupsConnection
 from re import sub
 from threading import Lock
+from urllib.parse import urlsplit, parse_qs
 
 from odoo.addons.hw_drivers.interface import Interface
 
@@ -41,6 +42,10 @@ class PrinterInterface(Interface):
                 'url': path,
                 'disconnect_counter': 0,
             })
+            if device['device-class'] == 'direct':
+                device.update(self.get_usb_info(path))
+            elif device['device-class'] == 'network':
+                device['ip'] = self.get_ip(path)
             discovered_devices.update({identifier: device})
         self.printer_devices.update(discovered_devices)
         # Deal with devices which are on the list but were not found during this call of "get_devices"
@@ -71,3 +76,24 @@ class PrinterInterface(Interface):
             Output: "1234-5678-90ab-cdef
         """
         return sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)
+
+    @staticmethod
+    def get_ip(device_path):
+        return urlsplit(device_path).hostname
+
+    @staticmethod
+    def get_usb_info(device_path):
+        parsed_url = urlsplit(device_path)
+        parsed_query = parse_qs(parsed_url.query)
+        manufacturer = parsed_url.hostname
+        product = parsed_url.path.removeprefix("/")
+        serial = parsed_query["serial"][0] if "serial" in parsed_query else None
+
+        if manufacturer and product and serial:
+            return {
+                "usb_manufacturer": manufacturer,
+                "usb_product": product,
+                "usb_serial_number": serial,
+            }
+        else:
+            return {}

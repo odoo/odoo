@@ -4,6 +4,8 @@
 import logging
 from base64 import b64decode
 from datetime import datetime, timezone
+from escpos import printer
+import escpos.exceptions
 import io
 import win32print
 import pywintypes
@@ -33,6 +35,21 @@ class PrinterDriver(PrinterDriverBase):
         else:
             self.device_subtype = "office_printer"
 
+        if self.device_subtype == "receipt_printer" and self.receipt_protocol == 'escpos':
+            self._init_escpos(device)
+
+    def _init_escpos(self, device):
+        if self.device_connection != 'network':
+            return
+
+        self.escpos_device = printer.Network(device['port'], timeout=5)
+        try:
+            self.escpos_device.open()
+            self.escpos_device.close()
+        except escpos.exceptions.Error:
+            _logger.exception("Could not initialize escpos class")
+            self.escpos_device = None
+
     @classmethod
     def supported(cls, device):
         # discard virtual printers (like "Microsoft Print to PDF") as they will trigger dialog boxes prompt
@@ -40,13 +57,16 @@ class PrinterDriver(PrinterDriverBase):
 
     @staticmethod
     def _compute_device_connection(device):
-        return 'direct' if device['port'].startswith(('USB', 'COM', 'LPT')) else 'network'
+        return 'direct' if device['port'].startswith(('USB', 'TMUSB', 'COM', 'LPT')) else 'network'
 
     def disconnect(self):
         self.send_status('disconnected', 'Printer was disconnected')
         super(PrinterDriver, self).disconnect()
 
     def print_raw(self, data):
+        if not self.check_printer_status():
+            return
+
         job_id = win32print.StartDocPrinter(self.printer_handle, 1, ('', None, "RAW"))
         win32print.StartPagePrinter(self.printer_handle)
         win32print.WritePrinter(self.printer_handle, data)
@@ -77,7 +97,7 @@ class PrinterDriver(PrinterDriverBase):
         except Exception:
             _logger.exception("Error while printing report, ghostscript args: %s, error buffer: %s", args, stderr_buf.getvalue())
             stdout_log_level = logging.ERROR # some stdout value might contains relevant error information
-            self.send_status(status='error', message='Printing report failed')
+            self.send_status(status='error', message='ERROR_FAILED')
             raise
         finally:
             _logger.log(stdout_log_level, "Ghostscript stdout: %s", stdout_buf.getvalue())
@@ -122,10 +142,10 @@ class PrinterDriver(PrinterDriverBase):
                 self.send_status(status='success')
             # Print timeout, e.g. network printer is disconnected
             if elapsed_time.seconds > self.job_timeout_seconds:
-                self._cancel_job_with_error(job_id, 'Printing timed out')
+                self._cancel_job_with_error(job_id, 'ERROR_TIMEOUT')
             # Generic error, e.g. USB printer is not connected
             elif job['Status'] & win32print.JOB_STATUS_ERROR:
-                self._cancel_job_with_error(job_id, 'Unknown error')
+                self._cancel_job_with_error(job_id, 'ERROR_UNKNOWN')
         except pywintypes.error as error:
             # GetJob returns error 87 (incorrect parameter) if the print job doesn't exist.
             # Windows deletes print jobs on completion, so this actually means the print
