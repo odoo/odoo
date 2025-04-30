@@ -7,12 +7,12 @@
             <field name="livechat_operator_id" ref="support_bot_operator_partner_demo"/>
             <field name="name">Visitor #301, Support</field>
             <field name="anonymous_name">Visitor #301</field>
-            <field name="create_date" eval="DateTime.today() + relativedelta(months=-1)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(minutes=5)"/>
         </record>
         <record id="support_bot_session_1_member_bot_demo" model="discuss.channel.member">
             <field name="partner_id" ref="support_bot_operator_partner_demo"/>
             <field name="channel_id" ref="support_bot_session_1_demo"/>
-            <field name="last_interest_dt" eval="DateTime.today() + relativedelta(months=-1)"/>
+            <field name="last_interest_dt" eval="datetime.now() - timedelta(minutes=4)"/>
             <field name="livechat_member_type">bot</field>
             <field name="chatbot_script_id" ref="chatbot_script_support_bot_demo"/>
         </record>
@@ -31,7 +31,8 @@
             <field name="body">Welcome to the Support! How can I assist you today?</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="date" eval="DateTime.today() + relativedelta(months=-1, minutes=1)"/>
+            <field name="date" eval="datetime.now() - timedelta(seconds=30)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(seconds=30)"/>
         </record>
         <record id="support_bot_session_1_chatbot_message_1" model="chatbot.message">
             <field name="mail_message_id" ref="support_bot_session_1_message_1"/>
@@ -46,7 +47,8 @@
             <field name="body">Troubleshooting</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="date" eval="DateTime.today() + relativedelta(months=-1, minutes=2)"/>
+            <field name="date" eval="datetime.now() - timedelta(seconds=15)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(seconds=15)"/>
         </record>
         <record id="support_bot_session_1_chatbot_message_2" model="chatbot.message">
             <field name="mail_message_id" ref="support_bot_session_1_message_2"/>
@@ -62,7 +64,8 @@
             <field name="body">What browser are you using?</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="date" eval="DateTime.today() + relativedelta(months=-1, minutes=3)"/>
+            <field name="date" eval="datetime.now() - timedelta(seconds=15)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(seconds=15)"/>
         </record>
         <record id="support_bot_session_1_chatbot_message_3" model="chatbot.message">
             <field name="mail_message_id" ref="support_bot_session_1_message_3"/>
@@ -77,7 +80,8 @@
             <field name="body">Chrome</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="date" eval="DateTime.today() + relativedelta(months=-1, minutes=4)"/>
+            <field name="date" eval="datetime.now() - timedelta(seconds=15)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(seconds=15)"/>
         </record>
         <record id="support_bot_session_1_chatbot_message_4" model="chatbot.message">
             <field name="mail_message_id" ref="support_bot_session_1_message_4"/>
@@ -86,5 +90,100 @@
             <field name="user_script_answer_id" ref="chatbot_script_troubleshooting_answer_chrome_demo"/>
             <field name="user_raw_script_answer_id" ref="chatbot_script_troubleshooting_answer_chrome_demo"/>
         </record>
+        <record id="support_bot_session_1_message_5" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="support_bot_session_1_demo"/>
+            <field name="author_id" ref="support_bot_operator_partner_demo"/>
+            <field name="body">What module are you interested in?</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="date" eval="datetime.now() - timedelta(seconds=15)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(seconds=15)"/>
+        </record>
+        <record id="support_bot_session_1_message_6" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="support_bot_session_1_demo"/>
+            <field name="author_id"/>
+            <field name="author_guest_id" ref="support_bot_session_1_guest_demo"/>
+            <field name="body">Discuss and Livechat</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="date" eval="datetime.now() - timedelta(seconds=15)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(seconds=15)"/>
+        </record>
+        <record id="support_bot_session_1_chatbot_message_5" model="chatbot.message">
+            <field name="mail_message_id" ref="support_bot_session_1_message_6"/>
+            <field name="discuss_channel_id" ref="support_bot_session_1_demo"/>
+            <field name="script_step_id" ref="chatbot_script_initial_step_demo"/>
+            <field name="user_script_answer_id" ref="chatbot_script_answer_discuss_livechat_demo"/>
+            <field name="user_raw_script_answer_id" ref="chatbot_script_answer_discuss_livechat_demo"/>
+        </record>
+        <record id="support_bot_session_1_message_7" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="support_bot_session_1_demo"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="support_bot_operator_partner_demo"/>
+            <field name="body">Let me check if I can connect you with the right expert...</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="date" eval="datetime.now() - timedelta(seconds=15)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(seconds=15)"/>
+        </record>
+        <function model="discuss.channel" name="_add_members">
+            <value eval="[ref('im_livechat.support_bot_session_1_demo')]"/>
+            <value name="partners" model="res.partner" eval="obj().env['res.partner'].browse(ref('base.partner_admin'))"/>
+            <value name="create_member_params" eval="{
+                'livechat_member_type': 'agent',
+                'agent_expertise_ids': [ref('im_livechat.chatbot_script_expertise_discuss_demo'), ref('im_livechat.chatbot_script_expertise_livechat_demo')]
+            }"/>
+            <value name="inviting_partner" model="res.partner" eval="obj().env['res.partner'].browse(ref('support_bot_operator_partner_demo'))"/>
+        </function>
+        <record id="support_bot_session_1_message_8" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="support_bot_session_1_demo"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="body">Hii 👋, how can I help you?</field>
+            <field name="date" eval="datetime.now() + timedelta(seconds=10)"/>
+            <field name="create_date" eval="datetime.now() + timedelta(seconds=10)"/>
+        </record>
+        <record id="support_bot_session_1_rating_message" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="support_bot_session_1_demo"/>
+            <field name="author_guest_id" ref="support_bot_session_1_guest_demo"/>
+            <field name="author_id"/>
+            <field name="subtype_id" ref="mail.mt_note"/>
+            <field name="message_type">notification</field>
+            <field name="date" eval="datetime.now() - timedelta(seconds=15)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(seconds=15)"/>
+        </record>
+        <record id="support_bot_session_1_message_call_notification" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="im_livechat.support_bot_session_1_demo"/>
+            <field name="author_guest_id" ref="im_livechat.support_bot_session_1_guest_demo"/>
+            <field name="author_id"/>
+            <field name="body">&lt;div data-oe-type=&#34;call&#34; class=&#34;o_mail_notification&#34;&gt;&lt;/div&gt;</field>
+            <field name="message_type">notification</field>
+            <field name="date" eval="datetime.now() - timedelta(seconds=15)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(seconds=15)"/>
+        </record>
+        <record id="support_bot_session_1_call_1" model="discuss.call.history">
+            <field name="channel_id" ref="im_livechat.support_bot_session_1_demo"/>
+            <field name="start_dt"
+                eval="datetime.now() - timedelta(seconds=200)"/>
+            <field name="end_dt"
+                eval="datetime.now() - timedelta(seconds=10)"/>
+            <field name="start_call_message_id" ref="support_bot_session_1_message_call_notification"/>
+        </record>
+        <record id="support_bot_session_1_rating" model="rating.rating">
+            <field name="access_token">BOT_SESSION_1</field>
+            <field name="res_id" ref="support_bot_session_1_demo"/>
+            <field name="res_model_id" ref="mail.model_discuss_channel"/>
+            <field name="message_id" ref="support_bot_session_1_rating_message"/>
+            <field name="rated_partner_id" ref="base.partner_admin"/>
+            <field eval="False" name="partner_id"/>
+            <field eval="True" name="consumed"/>
+        </record>
+        <function model="discuss.channel" name="rating_apply"
+            eval="[ref('im_livechat.support_bot_session_1_demo')], 5, 'BOT_SESSION_1', None, 'Good Job'"/>
     </data>
 </odoo>
