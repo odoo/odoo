@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarFilterSection">
-        <div t-if="section.filters.length gt 0 or section.canAddFilter"
+        <div t-if="!section.context?.hide_filter and (section.filters.length gt 0 or section.canAddFilter)"
              class="o_calendar_filter d-flex flex-column gap-1 mt-3 mb-2"
              t-att-data-name="section.fieldName"
         >
