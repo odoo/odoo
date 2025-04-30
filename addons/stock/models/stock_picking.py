@@ -764,7 +764,10 @@ class StockPicking(models.Model):
 
     @api.depends('state', 'picking_type_code', 'scheduled_date', 'move_ids', 'move_ids.forecast_availability', 'move_ids.forecast_expected_date')
     def _compute_products_availability(self):
-        pickings = self.filtered(lambda picking: picking.state in ('waiting', 'confirmed', 'assigned') and picking.picking_type_code == 'outgoing')
+        pickings = self.filtered(lambda picking:
+            picking.state in ('waiting', 'confirmed', 'assigned') and
+            picking.picking_type_code in ('outgoing', 'internal')
+        )
         pickings.products_availability_state = 'available'
         pickings.products_availability = _('Available')
         other_pickings = self - pickings
