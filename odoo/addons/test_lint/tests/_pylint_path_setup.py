@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import inspect
 import os
 import sys
@@ -56,6 +58,8 @@ class AddonsPackageFinder(spec.Finder):
                 type=spec.ModuleType.PY_NAMESPACE,
                 submodule_search_locations=sys.modules[modname].__path__,
             )
+        else:
+            return None
 
     def contribute_to_path(self, spec: spec.ModuleSpec, processed: list[str]) -> Sequence[str] | None:
         return spec.submodule_search_locations

@@ -11,7 +11,7 @@ import { prettifyMessageContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isMobileOS, hasTouch } from "@web/core/browser/feature_detection";
 
 import {
     Component,
@@ -122,6 +122,7 @@ export class Composer extends Component {
         this.suggestion = this.store.user ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
         this.isMobileOS = isMobileOS;
+        this.hasTouch = hasTouch;
         this.onDropFile = this.onDropFile.bind(this);
         if (this.props.dropzoneRef) {
             useDropzone(
