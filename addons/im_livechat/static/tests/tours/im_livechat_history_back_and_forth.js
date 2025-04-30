@@ -1,3 +1,4 @@
+import { delay } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour", {
@@ -36,7 +37,8 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
         },
         {
             trigger: ".o-mail-Discuss-threadName[title='Visitor']",
-            run() {
+            async run() {
+                await delay(1000);
                 history.back();
             },
         },
@@ -48,7 +50,8 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
         },
         {
             trigger: ".o-mail-Discuss-threadName[title='Visitor']",
-            run() {
+            async run() {
+                await delay(1000);
                 history.back();
             },
         },
