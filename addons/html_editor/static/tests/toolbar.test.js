@@ -453,7 +453,7 @@ test("toolbar works: ArrowUp/Down moves focus to font size dropdown", async () =
     expect(".o_font_size_selector_menu").toHaveCount(1);
     expect(getActiveElement()).toBe(inputEl);
 
-    const fontSizeSelectorMenu = queryOne(".o_font_size_selector_menu");
+    const fontSizeSelectorMenu = queryOne(".o_font_size_selector_menu div");
     await press("ArrowDown");
     await animationFrame();
     expect(".o_font_size_selector_menu").toHaveCount(1);

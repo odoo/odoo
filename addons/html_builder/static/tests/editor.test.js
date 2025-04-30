@@ -1,11 +1,15 @@
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
-import { expect, test } from "@odoo/hoot";
+import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
+import { click, manuallyDispatchProgrammaticEvent, waitFor } from "@odoo/hoot-dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { parseHTML } from "@html_editor/utils/html";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
+import { FontPlugin } from "@html_editor/main/font/font_plugin";
+import { LanguageSelector } from "@html_editor/main/chatgpt/language_selector";
 
 defineWebsiteModels();
 
@@ -76,4 +80,102 @@ test("should set contenteditable to false on .o_not_editable elements", async ()
     editor.shared.history.addStep();
     // Normalization should set contenteditable to false
     expect(snippet).toHaveAttribute("contenteditable", "false");
+});
+
+describe("toolbar dropdowns", () => {
+    const setup = async () => {
+        const { getEditor } = await setupWebsiteBuilder(`<p>abc</p>`);
+        const editor = getEditor();
+        const p = editor.editable.querySelector("p");
+        setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+        return { editor, p };
+    };
+
+    const focusAndClick = async (selector) => {
+        const target = await waitFor(selector);
+        manuallyDispatchProgrammaticEvent(target, "mousedown");
+        manuallyDispatchProgrammaticEvent(target, "focus");
+        await animationFrame();
+        // Dropdown menu needs another animation frame to be closed after the
+        // toolbar is closed.
+        await animationFrame();
+        expect(target).toBeVisible();
+        manuallyDispatchProgrammaticEvent(target, "mouseup");
+        manuallyDispatchProgrammaticEvent(target, "click");
+    };
+
+    test("list dropdown should not close on click", async () => {
+        const { editor } = await setup();
+        click(".o-we-toolbar .btn[name='list_selector']");
+        const bulletedListButtonSelector = ".dropdown-menu button[name='bulleted_list']";
+        await focusAndClick(bulletedListButtonSelector);
+        await animationFrame();
+        expect(bulletedListButtonSelector).toBeVisible();
+        expect(bulletedListButtonSelector).toHaveClass("active");
+        expect(!!editor.editable.querySelector("ul li")).toBe(true);
+    });
+
+    test("text alignment dropdown should not close on click", async () => {
+        const { p } = await setup();
+        click(".o-we-toolbar .btn[name='text_align']");
+        const alignCenterButtonSelector = ".dropdown-menu button.fa-align-center";
+        await focusAndClick(alignCenterButtonSelector);
+        await animationFrame();
+        expect(alignCenterButtonSelector).toBeVisible();
+        expect(alignCenterButtonSelector).toHaveClass("active");
+        expect(p).toHaveStyle("text-align: center");
+    });
+
+    test("font family dropdown should close only after click", async () => {
+        const { p } = await setup();
+        click(".o-we-toolbar .btn[name='font_family']");
+        await focusAndClick(".dropdown-menu .dropdown-item[name='Arial']");
+        await animationFrame();
+        expect(p.firstChild).toHaveStyle("font-family: Arial, sans-serif");
+    });
+
+    test("font style dropdown should close only after click", async () => {
+        const { editor } = await setup();
+        click(".o-we-toolbar .btn[name='font']");
+        await focusAndClick(".dropdown-menu .dropdown-item[name='h2']");
+        await animationFrame();
+        expect(!!editor.editable.querySelector("h2")).toBe(true);
+    });
+
+    test("font size dropdown should close only after click", async () => {
+        patchWithCleanup(FontPlugin.prototype, {
+            get fontSizeItems() {
+                return [{ name: "test", className: "test-font-size" }];
+            },
+        });
+        const { p } = await setup();
+        click(".o-we-toolbar .btn[name='font_size_selector']");
+        await focusAndClick(".dropdown-menu .dropdown-item");
+        await animationFrame();
+        expect(p.firstChild).toHaveClass("test-font-size");
+    });
+
+    test("translate dropdown should close only after click", async () => {
+        patchWithCleanup(LanguageSelector.prototype, {
+            // Override setup to avoid rpc call and to mock installed languages
+            setup() {
+                this.state = {
+                    languages: [
+                        ["en_US", "English"],
+                        ["fr_FR", "French"],
+                    ],
+                };
+            },
+            // Override to avoid opening the dialog
+            onSelected() {
+                expect.step("language-selected");
+            },
+        });
+        await setup();
+        click(".o-we-toolbar .btn[name='translate']");
+        await focusAndClick(".dropdown-menu .dropdown-item");
+        expect.verifySteps(["language-selected"]);
+    });
 });
