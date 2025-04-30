@@ -9,6 +9,13 @@ from odoo.exceptions import ValidationError
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
+    @api.model
+    def default_get(self, fields_list):
+        vals = super().default_get(fields_list)
+        if 'currency_id' in fields_list and not vals.get('currency_id'):
+            vals['currency_id'] = self.env.company.currency_id.id
+        return vals
+
     def _is_delivered_timesheet(self):
         """ Check if the product is a delivered timesheet """
         self.ensure_one()
