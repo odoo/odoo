@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-27 08:23+0000\n"
-"PO-Revision-Date: 2025-05-27 08:23+0000\n"
+"POT-Creation-Date: 2025-06-20 12:20+0000\n"
+"PO-Revision-Date: 2025-06-20 12:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -232,6 +232,11 @@ msgid "E-Factura: Refresh Access Token"
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.actions.server,name:l10n_ro_edi.ir_cron_l10n_ro_edi_synchronize_invoices_ir_actions_server
+msgid "E-Factura: Synchronize with ANAF"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_refused
 msgid "Error"
 msgstr ""
@@ -339,6 +344,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_partner__id
 msgid "ID"
+msgstr ""
+
+#. module: l10n_ro_edi
+#: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
+msgid "Import Vendor Bills in :"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -479,6 +489,12 @@ msgid "SPV has not finished processing the invoice, try again later."
 msgstr ""
 
 #. module: l10n_ro_edi
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_anaf_imported_inv_journal_id
+#: model:ir.model.fields,field_description:l10n_ro_edi.field_res_config_settings__l10n_ro_edi_anaf_imported_inv_journal_id
+msgid "Select journal for SPV imported bills"
+msgstr ""
+
+#. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move_send.py:0
 #: code:addons/l10n_ro_edi/wizard/account_move_send_wizard.py:0
@@ -513,6 +529,18 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Submit the form by clicking on \"Generare Client ID\""
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-javascript
+#: code:addons/l10n_ro_edi/static/src/components/fetch_invoices.xml:0
+msgid "Synchronize with ANAF"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid "Synchronized with SPV from message %s"
 msgstr ""
 
 #. module: l10n_ro_edi
@@ -574,6 +602,15 @@ msgstr ""
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move.py:0
+msgid ""
+"The invoice has probably been refused by the SPV. We were unable to recover "
+"the reason of the refusal because the invoice had not received its index. "
+"Duplicate the invoice and attempt to send it again."
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/account_move.py:0
 msgid "The invoice is not ready to be sent: %s"
 msgstr ""
 
@@ -615,6 +652,12 @@ msgstr ""
 msgid ""
 "Token not found.\n"
 "Response: %s"
+msgstr ""
+
+#. module: l10n_ro_edi
+#. odoo-python
+#: code:addons/l10n_ro_edi/models/utils.py:0
+msgid "Unknown endpoint."
 msgstr ""
 
 #. module: l10n_ro_edi
