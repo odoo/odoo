@@ -85,7 +85,7 @@
                     <field name="products_availability_state" column_invisible="True" options='{"lazy": true}'/>
                     <field name="products_availability" options='{"lazy": true}'
                         optional="hide"
-                        invisible="picking_type_code != 'outgoing' or state not in ['confirmed', 'waiting', 'assigned']"
+                        invisible="picking_type_code not in ('outgoing', 'internal') or state not in ['confirmed', 'waiting', 'assigned']"
                         decoration-success="state == 'assigned' or products_availability_state == 'available'"
                         decoration-warning="state != 'assigned' and products_availability_state in ('expected', 'available')"
                         decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
@@ -237,7 +237,7 @@
                                 decoration-bf="date_deadline and date_deadline &lt; current_date"/>
                             <field name="products_availability_state" invisible="1"/>
                             <field name="products_availability"
-                                invisible="picking_type_code != 'outgoing' or state not in ['confirmed', 'waiting', 'assigned']"
+                                invisible="picking_type_code not in ('outgoing', 'internal') or state not in ['confirmed', 'waiting', 'assigned']"
                                 decoration-success="state == 'assigned' or products_availability_state == 'available'"
                                 decoration-warning="state != 'assigned' and products_availability_state in ('expected', 'available')"
                                 decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
@@ -304,7 +304,7 @@
                                     <button name="action_show_details" type="object" string="Details" title="Details"
                                             invisible="not show_details_visible"/>
                                     <field name="forecast_availability" string=""
-                                        column_invisible="parent.state in ('draft', 'done')" widget="forecast_widget"/>
+                                        column_invisible="parent.state in ('cancel', 'done') or parent.picking_type_code not in ['internal', 'outgoing']" widget="forecast_widget"/>
                                 </list>
                             </field>
                             <field name="id" invisible="1"/>
