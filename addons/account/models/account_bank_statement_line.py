@@ -1,6 +1,6 @@
-from odoo import api, Command, fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 
 from xmlrpc.client import MAXINT
 
@@ -507,7 +507,7 @@ class AccountBankStatementLine(models.Model):
             # Set if bank recon will display draft invoices/bills that have a partner.
             # Usually not applied when used by bank recon models (no suggestions & auto matching for draft entries)
             partnered_drafts_domain = [('parent_state', '=', 'draft'), ('partner_id', '!=', False)]
-            state_domain = expression.OR([state_domain, partnered_drafts_domain])
+            state_domain = Domain.OR([state_domain, partnered_drafts_domain])
         return state_domain + [
             # Base domain.
             ('display_type', 'not in', ('line_section', 'line_note')),

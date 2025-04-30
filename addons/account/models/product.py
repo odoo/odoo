@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-
-from odoo import api, Command, fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools import format_amount
 
 ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
@@ -286,25 +284,22 @@ class ProductProduct(models.Model):
         if name and '\n' in name:
             # cut Sales Description from the name
             name = name.split('\n')[0]
-        domains = []
+        domain = Domain.FALSE
         if default_code:
-            domains.append([('default_code', '=', default_code)])
+            domain |= Domain('default_code', '=', default_code)
         if barcode:
-            domains.append([('barcode', '=', barcode)])
+            domain |= Domain('barcode', '=', barcode)
 
         # Search for the product with the exact name, then ilike the name
-        name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
+        name_domains = (Domain('name', '=', name), Domain('name', 'ilike', name)) if name else ()
         company = company or self.env.company
         for name_domain in name_domains:
             for extra_domain in (
-                [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
-                [('company_id', '=', False)],
+                Domain([*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)]),
+                Domain('company_id', '=', False),
             ):
                 product = self.env['product.product'].search(
-                    expression.AND([
-                        expression.OR(domains + [name_domain]),
-                        extra_domain,
-                    ]),
+                    (domain | name_domain) & extra_domain,
                     limit=1,
                 )
                 if product:

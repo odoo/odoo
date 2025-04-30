@@ -1,5 +1,5 @@
 from odoo import api, SUPERUSER_ID
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.release import version
 from odoo.tools import parse_version
 
@@ -16,9 +16,9 @@ def _fix_accounts_type(env):
                 company_domain = [('company_ids', 'in', company.ids), ('account_type', '!=', correct_account_type)]
             else:
                 company_domain = [('company_id', '=', company.id), ('account_type', '!=', correct_account_type)]
-            doamin = expression.AND([company_domain, expression.OR([[('code', 'like', f'{code}%')] for code in accounts_code])])
+            doamin = Domain.AND([company_domain, Domain.OR([[('code', 'like', f'{code}%')] for code in accounts_code])])
             domains_per_company.append(doamin)
-        accounts = env['account.account'].search(expression.OR(domains_per_company))
+        accounts = env['account.account'].search(Domain.OR(domains_per_company))
         accounts.account_type = correct_account_type
 
 

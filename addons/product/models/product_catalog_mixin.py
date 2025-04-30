@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models
+from odoo.fields import Domain
 
 
 class ProductCatalogMixin(models.AbstractModel):
@@ -23,7 +24,7 @@ class ProductCatalogMixin(models.AbstractModel):
             'res_model': 'product.product',
             'views': [(kanban_view_id, 'kanban'), (False, 'form')],
             'search_view_id': [search_view_id, 'search'],
-            'domain': self._get_product_catalog_domain(),
+            'domain': list(self._get_product_catalog_domain()),
             'context': {**self.env.context, **additional_context},
         }
 
@@ -41,7 +42,9 @@ class ProductCatalogMixin(models.AbstractModel):
         :returns: A list of tuples that represents a domain.
         :rtype: list
         """
-        return ['|', ('company_id', '=', False), ('company_id', 'parent_of', self.company_id.id), ('type', '!=', 'combo')]
+        return (
+            Domain('company_id', '=', False) | Domain('company_id', 'parent_of', self.company_id.id)
+         ) & Domain('type', '!=', 'combo')
 
     def _get_product_catalog_record_lines(self, product_ids, **kwargs):
         """ Returns the record's lines grouped by product.
