@@ -8,7 +8,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
+import { asyncStep, Command, waitForSteps } from "@web/../tests/web_test_helpers";
 
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -428,4 +428,59 @@ test("download url of non-viewable binary file", async () => {
     await contains(
         `button[data-download-url="${getOrigin()}/web/content/${attachmentId}?filename=test.o&download=true"]`
     );
+});
+
+test("'Show in conversation' action highlights message related to image attachment", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [
+            Command.create({
+                name: "elijah.png",
+                mimetype: "image/png",
+                res_id: channelId,
+                res_model: "discuss.channel",
+            }),
+        ],
+        body: "<p>Look at my dog!</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Attachments']");
+    await click(".o-mail-AttachmentImage button[title='Actions']");
+    await click(".o-dropdown-item", { text: "Show in conversation" });
+    await contains(".o-mail-Message.o-highlighted", { text: "Look at my dog!" });
+});
+
+test("'Show in conversation' action highlights message related to text attachment", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [
+            Command.create({
+                name: "bill.txt",
+                mimetype: "text/plain",
+                res_id: channelId,
+                res_model: "discuss.channel",
+            }),
+        ],
+        body: "<p>Here is the bill.</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Attachments']");
+    await click(".o-mail-AttachmentCard button[title='Show in conversation']");
+    await contains(".o-mail-Message.o-highlighted", { text: "Here is the bill." });
 });
