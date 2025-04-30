@@ -1761,6 +1761,39 @@ class TestQueries(TransactionCase):
         ''']):
             Model.search([])
 
+    def test_access_rules_active_test(self):
+        Model = self.env['res.partner'].with_user(self.env.ref('base.user_admin'))
+        self.env['ir.rule'].search([]).unlink()
+        self.env['ir.rule'].create([{
+            'name': 'partner users rule',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+            'domain_force': str([('user_ids.login', 'like', '%@%')]),
+        }, {
+            'name': 'partners rule',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+            'domain_force': str([('commercial_partner_id.name', '=', 'John')]),
+        }])
+        Model.search([])
+
+        with self.assertQueries(['''
+            SELECT "res_partner"."id"
+            FROM "res_partner"
+            WHERE "res_partner"."active" IS TRUE AND (
+            "res_partner"."commercial_partner_id" IN (
+                SELECT "res_partner"."id"
+                FROM "res_partner"
+                WHERE "res_partner"."name" IN %s
+            )
+            AND EXISTS(SELECT FROM (
+                SELECT "res_users"."partner_id" AS __inverse
+                FROM "res_users"
+                WHERE "res_users"."login" LIKE %s
+            ) AS __sub WHERE __inverse = "res_partner"."id")
+            )
+            ORDER BY "res_partner"."complete_name" ASC, "res_partner"."id" DESC
+        ''']):
+            Model.search([])
+
     def test_rec_names_search(self):
         Model = self.env['ir.model']
 
