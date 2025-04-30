@@ -49,8 +49,12 @@ class RatingRating(models.Model):
         to be modified manually, behaving like a tracking. """
         if values.get('publisher_comment'):
             self._check_synchronize_publisher_values()
-            if not values.get('publisher_datetime'):
+            if not values.get('publisher_datetime') and (
+                not self or all(not rating.publisher_datetime for rating in self)
+            ):
                 values['publisher_datetime'] = fields.Datetime.now()
-            if not values.get('publisher_id'):
+            if not values.get('publisher_id') and (
+                not self or all(not rating.publisher_id for rating in self)
+            ):
                 values['publisher_id'] = self.env.user.partner_id.id
         return values
