@@ -309,6 +309,12 @@ class PropertiesCase(TestPropertiesMixin):
                 properties['value'] = self.partner_2.id
             properties['definition_changed'] = True
 
+        with self.assertRaises(UserError):
+            # Can not write properties on records having different definition
+            (self.message_1 | self.message_3).write({'attributes': properties_values})
+
+        self.message_3.discussion = self.message_1.discussion
+
         (self.message_1 | self.message_3).write({'attributes': properties_values})
 
         sql_values_1 = self._get_sql_properties(self.message_1)
@@ -784,6 +790,78 @@ class PropertiesCase(TestPropertiesMixin):
             many2one_property['comodel'], 'test_orm.partner',
             msg='Definition must be present when reading child')
         self.assertEqual(many2one_property['value'], (self.partner.id, self.partner.display_name))
+
+    def test_properties_field_html(self):
+        """Test that the HTML values are sanitized."""
+        xss_payload = "<img src='x' onerror='alert(1)'/>"
+        expected = '<img src="x">'
+        self.message_2.attributes = [
+            {
+                "name": "test_html",
+                "type": "html",
+                "string": "HTML",
+                "default": xss_payload,
+                "value": xss_payload,
+                "definition_changed": True,
+            },
+        ]
+
+        sql_values = self._get_sql_properties(self.message_2)
+        self.assertEqual(sql_values.get("test_html"), expected)
+
+        self.assertEqual(dict(self.message_2.attributes)['test_html'], expected)
+        self.assertEqual(self.message_2.attributes['test_html'], expected)
+
+        self.env.flush_all()
+        with self.assertRaises(UserError):
+            self.env['test_orm.message']._read_group([], ['attributes.test_html'])
+
+        with self.assertRaises(UserError):
+            self.env['test_orm.message'].web_read_group([], ['attributes.test_html'])
+
+        properties = self.message_2.read(['attributes'])[0]['attributes']
+        self.assertEqual(properties[0]['value'], expected)
+        self.assertEqual(properties[0]['default'], expected)
+
+        definition = self.message_2.discussion.attributes_definition
+        self.assertEqual(definition[0]['default'], expected)
+
+        definition = self.message_2.discussion.read(['attributes_definition'])[0]['attributes_definition']
+        self.assertEqual(definition[0]['default'], expected)
+
+        # write a dict on the record
+        self.message_2.attributes = {'test_html': xss_payload}
+        self.assertEqual(self.message_2.attributes['test_html'], expected)
+        properties = self.message_2.read(['attributes'])[0]['attributes']
+        self.assertEqual(properties[0]['value'], expected)
+
+        with self.assertRaises(ValueError):
+            self.message_2.attributes = [
+                {
+                    "name": "text_html",
+                    "type": "text",
+                    "string": "HTML",
+                    "default": xss_payload,
+                    "value": xss_payload,
+                    "definition_changed": True,
+                },
+            ]
+
+        with self.assertRaises(ValueError):
+            self.message_2.discussion.attributes_definition = [
+                {
+                    "name": "text_html",
+                    "type": "text",
+                    "string": "HTML",
+                    "default": xss_payload,
+                    "definition_changed": True,
+                },
+            ]
+
+        message = self.env['test_orm.message'].with_context(default_attributes_test_html=xss_payload).create({'discussion': self.discussion_1.id})
+        self.assertEqual(message.attributes['test_html'], expected)
+        sql_values = self._get_sql_properties(message)
+        self.assertEqual(sql_values.get("test_html"), expected)
 
     def test_properties_field_many2one_basic(self):
         """Test the basic (read, write...) of the many2one property."""

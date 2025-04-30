@@ -44,6 +44,7 @@ export class PropertyDefinition extends Component {
         onPropertyMove: { type: Function, optional: true },
         // prop needed by the popover service
         close: { type: Function, optional: true },
+        record: { type: Object, optional: true },
     };
     static _propertyParametersMap = new Map([
         ["comodel", ["many2one", "many2many"]],
@@ -116,6 +117,7 @@ export class PropertyDefinition extends Component {
         return [
             ["char", _t("Text")],
             ["text", _t("Multiline Text")],
+            ["html", _t("HTML")],
             ["boolean", _t("Checkbox")],
             ["integer", _t("Integer")],
             ["float", _t("Decimal")],
