@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.PropertyValue">
-        <t t-if="props.readonly and !['boolean', 'many2one', 'many2many', 'tags'].includes(props.type)">
+        <t t-if="props.readonly and !['boolean', 'many2one', 'many2many', 'tags', 'html'].includes(props.type)">
             <span t-if="displayValue" t-out="displayValue"/>
         </t>
         <t t-else="">
