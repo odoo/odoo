@@ -177,6 +177,19 @@ class HrContract(models.Model):
                     contract=contract.name, start=contract.date_start, end=contract.date_end,
                 ))
 
+    def _get_normalized_wage(self):
+        """ This method is overridden in hr_payroll, as without that module, nothing allows to know
+        there's no way to determine the employee's pay frequency.
+        """
+        wage = self._get_contract_wage()
+        # without payroll installed, we suppose that the employee with a specific schedule has a monthly salary
+        if self.resource_calendar_id:
+            if not self.resource_calendar_id.hours_per_week:
+                return 0
+            return wage * 12 / 52 / self.resource_calendar_id.hours_per_week
+        # without any calendar, the employee has a fully flexible schedule and is supposedly working on an hourly wage
+        return wage
+
     @api.model
     def update_state(self):
         from_cron = 'from_cron' in self.env.context
