@@ -38,7 +38,14 @@ class TestInit(BaseCase):
         for path in (*odoo.__path__, *odoo.cli.__path__):
             parent = Path(path)
             for module in parent.iterdir():
-                if (module.is_dir() or module.suffix == '.py') and '__' not in module.name:
+                if (
+                    (module.is_dir() or module.suffix == '.py')
+                    and not (
+                        '__' in module.name
+                        or module.name.startswith('.')
+                        or module.stem == 'setup'
+                    )
+                ):
                     if parent.name == 'odoo':
                         yield f"odoo.{module.stem}"
                     else:
