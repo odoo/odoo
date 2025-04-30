@@ -547,6 +547,12 @@ patch(PosStore.prototype, {
 
         return result;
     },
+    async submitOrder() {
+        const order = this.getOrder();
+        await this.sendOrderInPreparationUpdateLastChange(order);
+        this.addPendingOrder([order.id]);
+        this.showDefault();
+    },
     async getServerOrders() {
         if (this.config.module_pos_restaurant) {
             const tableIds = [].concat(
