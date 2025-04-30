@@ -7,31 +7,54 @@ from odoo.http import Controller, request, route
 from odoo.osv import expression
 
 
-class GoogleMerchantCenter(Controller):
+class ProductXmlFeed(Controller):
 
     @route(
-        ['/gmc.xml', '/gmc-<pricelist_name_ilike>.xml'],
+        [
+            '/gmc.xml', '/gmc-<pricelist_name_ilike>.xml',
+            '/meta.xml', '/meta-<pricelist_name_ilike>.xml',
+        ],
         type='http',
         auth='public',
         website=True,
         sitemap=False,
     )
-    def gmc_data_source(self, pricelist_name_ilike=None):
-        """Generate a Google Merchant Center (GMC) data source/feed.
+    def product_xml_feed_data_source(self, pricelist_name_ilike=None):
+        """Generate data source/feed for either Google Merchant Center or Meta Catalog.
 
+        - Use `/gmc.xml` or `/meta.xml` depending on which feed is needed.
         - The feed adapts to the context lang; product titles, descriptions, etc.
         - By default, it uses the connected user's pricelist. A specific pricelist can be selected
-          by including its name or part in the URL. E.g., /gmc-christmas.xml or /gmc-christ.xml will
+          by including its name or part in the URL. E.g., /gmc-christmas.xml or /meta-christ.xml will
           force the "christmas" pricelist as well as the pricelist's currency.
           Note: All the product link will also force the pricelist to ensure the feed's
           prices corresponds to the website's prices.
 
         :param str pricelist_name_ilike: The name of the pricelist to use for the feed.
-        :return: The rendered GMC data source in XML.
+        :return: The rendered GMC/Meta data source in XML.
         :rtype: str
         """
         website = request.website
-        if not website.enabled_gmc_src or not website.has_ecommerce_access():
+        path = request.httprequest.path
+
+        # Configuration map for feed-specific behavior
+        feed_config = {
+            'gmc': {
+                'enabled_feed': website.enabled_gmc_src,
+                'template': 'website_sale.gmc_xml',
+                'item_fn': lambda products: products._prepare_gmc_items(),
+            },
+            'meta': {
+                'enabled_feed': website.enabled_meta_src,
+                'template': 'website_sale.meta_xml',
+                'item_fn': lambda products: products._prepare_meta_items(),
+            },
+        }
+
+        # Determine feed type
+        feed_type = 'gmc' if path.startswith('/gmc') else 'meta' if path.startswith('/meta') else None
+        feed_cfg = feed_config.get(feed_type)
+        if not feed_cfg or not feed_cfg['enabled_feed'] or not website.has_ecommerce_access():
             raise NotFound()
 
         # Find the pricelist by name if specified.
@@ -47,7 +70,7 @@ class GoogleMerchantCenter(Controller):
                 raise NotFound()
             request.pricelist = pricelist_sudo
 
-        # Generate the GMC data source.
+        # Generate data source for GMC/META.
         homepage_url = website.homepage_url or '/'
         website_homepage = website._get_website_pages(
             [('url', '=', homepage_url), ('website_id', '!=', False)], limit=1,
@@ -56,13 +79,13 @@ class GoogleMerchantCenter(Controller):
             [('is_published', '=', True), ('type', 'in', ('consu', 'combo'))],
             website.website_domain(),
         ]))
-        gmc_data = {
+        feed_data = {
             'title': website_homepage.website_meta_title or website.name,
             'link': urljoin(website.get_base_url(), request.env['ir.http']._url_lang(homepage_url)),
             'description': website_homepage.website_meta_description,
-            'items': products._prepare_gmc_items(),
+            'items': feed_cfg['item_fn'](products),
         }
         content = request.env['ir.ui.view'].sudo()._render_template(
-            'website_sale.gmc_xml', gmc_data,
+            feed_cfg['template'], feed_data,
         )
         return request.make_response(content, [('Content-Type', 'application/xml;charset=utf-8')])
