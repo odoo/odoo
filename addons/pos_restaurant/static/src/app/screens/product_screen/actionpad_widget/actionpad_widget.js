@@ -1,6 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 
 /**
  * @props partner
@@ -16,6 +17,7 @@ patch(ActionpadWidget, {
 patch(ActionpadWidget.prototype, {
     setup() {
         super.setup();
+        this.doSubmitOrder = useTrackedAsync(() => this.submitOrder());
     },
     get swapButton() {
         return (
@@ -31,8 +33,7 @@ patch(ActionpadWidget.prototype, {
         return hasChange;
     },
     async submitOrder() {
-        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
-        this.pos.showDefault();
+        await this.pos.submitOrder();
     },
     hasQuantity(order) {
         if (!order) {
