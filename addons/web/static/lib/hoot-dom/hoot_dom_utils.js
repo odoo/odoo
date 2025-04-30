@@ -48,6 +48,35 @@ const {
 // Internal
 //-----------------------------------------------------------------------------
 
+/**
+ * @template {(...args: any[]) => any} T
+ * @param {InteractionType} type
+ * @param {T} fn
+ * @param {string} name
+ * @returns {T}
+ */
+const makeInteractorFn = (type, fn, name) =>
+    ({
+        [name](...args) {
+            const result = fn(...args);
+            if (result instanceof Promise) {
+                for (let i = 0; i < args.length; i++) {
+                    if (args[i] instanceof Promise) {
+                        // Get promise result for async arguments if possible
+                        args[i].then((result) => (args[i] = result));
+                    }
+                }
+                return result.then((promiseResult) =>
+                    dispatchInteraction(type, name, args, promiseResult)
+                );
+            } else {
+                return dispatchInteraction(type, name, args, result);
+            }
+        },
+    }[name]);
+
+const DEBUG_NAMESPACE = "hoot";
+
 const interactionBus = new EventTarget();
 
 //-----------------------------------------------------------------------------
@@ -85,25 +114,18 @@ export function dispatchInteraction(type, name, args, returnValue) {
     return returnValue;
 }
 
-const makeInteractorFn = (type, fn, name) =>
-    ({
-        [name](...args) {
-            const result = fn(...args);
-            if (result instanceof Promise) {
-                for (let i = 0; i < args.length; i++) {
-                    if (args[i] instanceof Promise) {
-                        // Get promise result for async arguments if possible
-                        args[i].then((result) => (args[i] = result));
-                    }
-                }
-                return result.then((promiseResult) =>
-                    dispatchInteraction(type, name, args, promiseResult)
-                );
-            } else {
-                return dispatchInteraction(type, name, args, result);
-            }
-        },
-    }[name]);
+/**
+ * @param  {...any} helpers
+ */
+export function exposeHelpers(...helpers) {
+    let nameSpaceIndex = 1;
+    let nameSpace = DEBUG_NAMESPACE;
+    while (nameSpace in globalThis) {
+        nameSpace = `${DEBUG_NAMESPACE}${nameSpaceIndex++}`;
+    }
+    globalThis[nameSpace] = new HootDebugHelpers(...helpers);
+    return nameSpace;
+}
 
 /**
  * @template {(...args: any[]) => any} T
@@ -188,6 +210,23 @@ export function toSelector(node, options) {
         return { tagName, id, classNames };
     } else {
         return [tagName, id, ...classNames].join("");
+    }
+}
+
+export class HootDebugHelpers {
+    get $() {
+        return this.queryFirst;
+    }
+
+    get $$() {
+        return this.queryAll;
+    }
+
+    /**
+     * @param  {...any} helpers
+     */
+    constructor(...helpers) {
+        $assign(this, ...helpers);
     }
 }
 
