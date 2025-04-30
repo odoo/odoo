@@ -152,7 +152,7 @@ export class WebsiteBuilder extends Component {
     }
 
     async onEditPage() {
-        document.querySelector(".o_main_navbar").setAttribute("style", "margin-top: -100%;");
+        document.querySelector("body").classList.add("o_builder_open");
         await this.iframeLoaded;
         await this.publicRootReady;
         await this.loadAssetsEditBundle();
@@ -296,7 +296,7 @@ export class WebsiteBuilder extends Component {
     async reloadIframeAndCloseEditor() {
         const isEditing = false;
         await this.reloadIframe(isEditing);
-        document.querySelector(".o_main_navbar").removeAttribute("style");
+        document.querySelector("body").classList.remove("o_builder_open");
         this.state.isEditing = isEditing;
         this.addSystrayItems();
     }

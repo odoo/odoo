@@ -9,9 +9,11 @@
 }
 
 .o_main_navbar {
-    transition: margin ease 400ms !important;
+    transition: margin-top ease 400ms !important;
 }
-
+.o_builder_open .o_main_navbar {
+    margin-top: -$o-navbar-height;
+}
 
 .o_website_preview {
     position: relative;

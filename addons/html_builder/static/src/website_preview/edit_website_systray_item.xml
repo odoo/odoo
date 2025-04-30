@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.EditWebsiteSystrayItem">
-    <a t-if="!translatable and !this.websiteService.is404" href="#" class="o-website-btn-custo-primary btn d-flex align-items-center rounded-0 border-0 px-3" t-on-click="props.onEditPage">Edit</a>
+    <a t-if="!translatable and !this.websiteService.is404" href="#" class="o-website-btn-custo-primary btn d-flex align-items-center rounded-0 border-0 px-3" t-on-click="props.onEditPage" accesskey="a">Edit</a>
     <Dropdown t-else="">
-        <button class="o-website-btn-custo-primary btn rounded-0 border-0 px-3" data-hotkey="a">Edit</button>
+        <button class="o-website-btn-custo-primary btn rounded-0 border-0 px-3" accesskey="a">Edit</button>
         <t t-set-slot="content">
             <t t-if="this.websiteService.is404">
                 <t t-if="translatable">
