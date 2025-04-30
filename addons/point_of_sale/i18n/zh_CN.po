@@ -6,6 +6,7 @@
 # 何彬 <vnsoft.he@gmail.com>, 2025
 # Chloe Wang, 2025
 # Wil Odoo, 2025
+# Raymond Yu <cl_yu@hotmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,6 +122,12 @@ msgid "%(refunded_order)s REFUND"
 msgstr "%(refunded_order)s 退款"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "%(title)s %(product_name)s with %(taxes)s"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
 msgid "%(vatLabel)s: %(vatId)s"
@@ -144,6 +151,12 @@ msgstr "%s 的总金额为 %s，您确定要删除此订单吗？"
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "已汇入%s份订单"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "%s untaxed"
+msgstr "%s未缴税"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1427,7 +1440,6 @@ msgstr "无法称量产品 - 秤未连接至物联网盒子"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__slots_per_interval
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Capacity"
 msgstr "产能"
 
@@ -2027,6 +2039,11 @@ msgid "Configurations &gt; Settings"
 msgstr "配置 &gt; 配置"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Configure Presets"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_tree
 msgid "Configure at least one Point of Sale."
@@ -2476,7 +2493,7 @@ msgstr "客户需求"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Customer address is required"
-msgstr ""
+msgstr "必须提供客户地址"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3067,6 +3084,11 @@ msgstr "员工可以扫描徽标或输入PIN以登录PoS会话。 这些凭据�
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Empty Order"
 msgstr "空订单"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
+msgid "Enable Time Slots"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -5095,6 +5117,11 @@ msgid "Order IDs Sequence"
 msgstr "订单号序列"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
+msgid "Order Limit"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_line_id
 msgid "Order Line IDs Sequence"
 msgstr "订单明细 ID 序列"
@@ -6676,6 +6703,8 @@ msgstr "刷新显示"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
@@ -7005,6 +7034,8 @@ msgid "Sale line"
 msgstr "销售明细"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Sales"
 msgstr "销售"
@@ -7092,6 +7123,11 @@ msgstr "通过代理浏览"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Scanner"
 msgstr "扫描仪"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
+msgid "Schedule"
+msgstr "安排"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8938,13 +8974,13 @@ msgstr "未知条码"
 msgid ""
 "This barcode is not compatible with the GS1 standard. Consider configuring a"
 " fallback barcode parser from the PoS settings."
-msgstr ""
+msgstr "此条形码与 GS1 标准不兼容。请考虑从 PoS 设置中配置后备条形码分析器。"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
 msgid "Unsupported Barcode Format"
-msgstr ""
+msgstr "不支持的条形码格式"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9360,6 +9396,12 @@ msgstr "您无法在以下时间之前创建会话：%(lock_date_info)s"
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
 msgstr "您无法在营业点仍处于打开状态时删除营业点类别."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_preset.py:0
+msgid "You cannot delete a preset that is linked to a POS configuration."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

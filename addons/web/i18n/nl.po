@@ -490,6 +490,11 @@ msgid ""
 "                            </select>\n"
 "                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead to partially invalid result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id=\"profile_aggregation_mode\">\n"
+"                                <option value=\"tabs\">Gescheiden (één per tabblad)</option>\n"
+"                                <option value=\"temporal\">TTijdelijk (experimenteel)</option>\n"
+"                            </select>\n"
+"                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>Waarschuwing:</b> De tijdelijke modus zal alle monsters samenvoegen.<br/>Dit kan leiden tot gedeeltelijk ongeldige resultaten in geval van gelijktijdige profielen.<br/>Gebruik voorzichtig.</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -1015,12 +1020,12 @@ msgstr "Afrika"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Aggregate SQL"
-msgstr ""
+msgstr "Geaggregeerde SQL"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Aggregation mode"
-msgstr ""
+msgstr "Aggregatiemodus"
 
 #. module: web
 #. odoo-javascript
@@ -1923,7 +1928,7 @@ msgstr "Verbinding hersteld. Je bent weer online."
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Constant Time"
-msgstr ""
+msgstr "Constante tijd"
 
 #. module: web
 #: model:ir.model,name:web.model_res_partner
@@ -2073,7 +2078,7 @@ msgstr "Aantal"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 msgid "Count Limit"
-msgstr ""
+msgstr "Limiet aantal"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__country_id
@@ -2511,7 +2516,7 @@ msgstr "Weergeven in kaarten"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Display presets"
-msgstr ""
+msgstr "Instellingen voor weergave"
 
 #. module: web
 #. odoo-javascript
@@ -2922,7 +2927,7 @@ msgstr "Factor"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_model.js:0
 msgid "Failed to evaluate the context: %(context)s."
-msgstr ""
+msgstr "Fout bij het evalueren van de context: %(context)s."
 
 #. module: web
 #. odoo-javascript
@@ -3131,12 +3136,12 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames"
-msgstr ""
+msgstr "Frames"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames + sql (Combined)"
-msgstr ""
+msgstr "Frames + SQL (Gecombineerd)"
 
 #. module: web
 #. odoo-javascript
@@ -4474,7 +4479,7 @@ msgstr "Meerdere regels tekst"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Multiple profile"
-msgstr ""
+msgstr "Meerdere profielen"
 
 #. module: web
 #. odoo-javascript
@@ -5823,12 +5828,12 @@ msgstr "SOS-knop"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "SQL density"
-msgstr ""
+msgstr "SQL-dichtheid"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "SQL no gap"
-msgstr ""
+msgstr "SQL zonder gaten"
 
 #. module: web
 #. odoo-javascript
@@ -6744,7 +6749,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "This date is in the future"
-msgstr ""
+msgstr "Deze datum is in de toekomst"
 
 #. module: web
 #. odoo-javascript
@@ -7245,7 +7250,7 @@ msgstr "Gebruik een andere gebruiker"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Use execution context"
-msgstr ""
+msgstr "Gebruik uitvoeringscontext"
 
 #. module: web
 #. odoo-javascript
@@ -15738,7 +15743,7 @@ msgstr "is niet"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not between"
-msgstr ""
+msgstr "ligt niet tussen"
 
 #. module: web
 #. odoo-javascript
@@ -15762,7 +15767,7 @@ msgstr "is niet ingesteld"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not within"
-msgstr ""
+msgstr "ligt niet binnen"
 
 #. module: web
 #. odoo-javascript
