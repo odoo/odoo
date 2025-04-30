@@ -215,19 +215,18 @@ def check_git_branch(server_url=None):
             db_branch,
         )
 
-        if db_branch != local_branch:
-            try:
-                with writable():
-                    subprocess.run(git + ['branch', '-m', db_branch], check=True)
-                    subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
-                    _logger.info("Updating odoo folder to the branch %s", db_branch)
-                    subprocess.run(
-                        ['/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh'], check=True
-                    )
-            except subprocess.CalledProcessError:
-                _logger.exception("Failed to update the code with git.")
-            finally:
-                odoo_restart()
+        try:
+            with writable():
+                subprocess.run(git + ['branch', '-m', db_branch], check=True)
+                subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
+                _logger.info("Updating odoo folder to the branch %s", db_branch)
+                subprocess.run(
+                    ['/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh'], check=True
+                )
+        except subprocess.CalledProcessError:
+            _logger.exception("Failed to update the code with git.")
+        finally:
+            odoo_restart()
     except Exception:
         _logger.exception('An error occurred while trying to update the code with git')
 
