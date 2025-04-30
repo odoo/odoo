@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Daye Jeong, 2024
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -351,8 +352,20 @@ msgstr "인증서의 유효 기간이 시작되는 날짜 (UTC)"
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
+msgid "The key size should be at least 512 bytes."
+msgstr "키 크기는 최소 512 바이트 이상이어야 합니다."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
 msgid "The private key could not be loaded."
 msgstr "개인 키를 불러올 수 없습니다."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public exponent should be 65537 (or 3 for legacy purposes)."
+msgstr "공개 지수는 65537(또는 레거시 목적으로는 3)이어야 합니다."
 
 #. module: certificate
 #. odoo-python
