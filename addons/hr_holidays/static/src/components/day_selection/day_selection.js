@@ -1,11 +1,10 @@
 import { registry } from "@web/core/registry";
 import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
 
-
 export class DaySelectionField extends SelectionField {
     static props = {
         ...SelectionField.props,
-        monthField : String
+        monthField: String,
     };
     /**
      * @override
@@ -20,23 +19,23 @@ export class DaySelectionField extends SelectionField {
         options = options.filter((option) => option[0] <= lastDay);
         return options;
     }
-};
+}
 
 export const daySelectionField = {
     ...selectionField,
     component: DaySelectionField,
     extractProps({ attrs }) {
         return {
-            ...selectionField,
-            monthField: attrs.month_field
+            ...selectionField.extractProps(...arguments),
+            monthField: attrs.month_field,
         };
     },
-    fieldDependencies: ({ attrs }) => {
-        return [{
+    fieldDependencies: ({ attrs }) => [
+        {
             name: attrs.month_field,
             type: "selection",
-        }];
-    }
+        },
+    ],
 };
 
 registry.category("fields").add("day_selection", daySelectionField);
