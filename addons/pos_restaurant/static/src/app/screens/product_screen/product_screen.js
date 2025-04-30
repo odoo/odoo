@@ -47,11 +47,6 @@ patch(ProductScreen.prototype, {
     get displayCategoryCount() {
         return this.pos.categoryCount.slice(0, 3);
     },
-    async submitOrder() {
-        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
-        this.pos.addPendingOrder([this.currentOrder.id]);
-        this.pos.showScreen(this.pos.defaultScreen, {}, this.pos.defaultScreen == "ProductScreen");
-    },
     get primaryReviewButton() {
         return (
             this.pos.config.module_pos_restaurant &&

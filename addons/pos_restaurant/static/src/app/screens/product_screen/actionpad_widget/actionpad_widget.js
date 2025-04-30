@@ -30,10 +30,6 @@ patch(ActionpadWidget.prototype, {
                 : hasChange.count || hasChange.generalCustomerNote || hasChange.modeUpdate;
         return hasChange;
     },
-    async submitOrder() {
-        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
-        this.pos.showDefault();
-    },
     hasQuantity(order) {
         if (!order) {
             return false;

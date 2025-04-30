@@ -541,4 +541,10 @@ patch(PosStore.prototype, {
             this.tableSelectorState = false;
         }
     },
+    async submitOrder() {
+        const order = this.getOrder();
+        await this.sendOrderInPreparationUpdateLastChange(order);
+        this.addPendingOrder([order.id]);
+        this.showDefault();
+    },
 });
