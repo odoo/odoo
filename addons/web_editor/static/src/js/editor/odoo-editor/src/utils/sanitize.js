@@ -244,10 +244,21 @@ function sanitizeNode(node, root) {
         node = parent; // The node has been removed, update the reference.
     } else if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
         // Transform <li> into <p> if they are not in a <ul> / <ol>.
-        const paragraph = document.createElement('p');
-        paragraph.replaceChildren(...node.childNodes);
-        node.replaceWith(paragraph);
-        node = paragraph; // The node has been removed, update the reference.
+        if (node.children.length && [...node.children].every(isBlock)) {
+            // Unwrap <li> if each of its children is a block element.
+            const restoreCursor =
+                shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
+            const nodeToReplace = node.firstElementChild;
+            unwrapContents(node);
+            restoreCursor && restoreCursor(new Map([[node, nodeToReplace]]));
+            node = nodeToReplace;
+        } else {
+            // Otherwise, wrap its content in a new <p> element.
+            const paragraph = document.createElement("p");
+            paragraph.replaceChildren(...node.childNodes);
+            node.replaceWith(paragraph);
+            node = paragraph; // The node has been removed, update the reference.
+        }
     } else if (
         ['UL', 'OL'].includes(node.nodeName) &&
         ['UL', 'OL'].includes(node.parentNode.nodeName)
