@@ -33,7 +33,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
-import { animationFrame, press, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, press, runAllTimers, waitFor } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { EventBus } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
@@ -2119,6 +2119,7 @@ test("Message shows up even if channel data is incomplete", async () => {
         channel_type: "chat",
     });
     getService("bus_service").forceUpdateChannels();
+    await runAllTimers();
     await waitUntilSubscribe();
     await withUser(correspondentUserId, () =>
         rpc("/discuss/channel/notify_typing", {
