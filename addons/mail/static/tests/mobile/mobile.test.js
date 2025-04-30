@@ -17,6 +17,7 @@ import { describe, test } from "@odoo/hoot";
 import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
 import { Deferred, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
+import { browser } from "@web/core/browser/browser";
 import { asyncStep, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
@@ -133,4 +134,19 @@ test("Can edit message comment in chatter (mobile)", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click("button[title='Save editing']");
     await contains(".o-mail-Message", { text: "edited message (edited)" });
+});
+
+test("click on an odoo link should fold the chat window (mobile)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({});
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", `http://${browser.location.host}/odoo.com`);
+    await click(".o-mail-Composer button[title='Send']");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatBubble", { count: 0 });
+    await click(`a[href="http://${browser.location.host}/odoo.com"]`);
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await contains(".o-mail-ChatBubble");
 });
