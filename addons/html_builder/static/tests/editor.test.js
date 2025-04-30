@@ -5,6 +5,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
+import { parseHTML } from "@html_editor/utils/html";
 
 defineWebsiteModels();
 
@@ -52,4 +53,27 @@ test("unsplittable node predicates should not crash when called with text node a
     expect(() =>
         editor.resources.unsplittable_node_predicates.forEach((p) => p(textNode))
     ).not.toThrow();
+});
+
+test("should set contenteditable to false on .o_not_editable elements", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div class="o_not_editable">
+            <p>abc</p>
+        </div>
+    `);
+    const editor = getEditor();
+    const div = editor.editable.querySelector("div.o_not_editable");
+    expect(div).toHaveAttribute("contenteditable", "false");
+
+    // Add a snippet-like element
+    const snippetHtml = `
+        <section class="o_not_editable">
+            <p>abc</p>
+        </section>
+    `;
+    const snippet = parseHTML(editor.document, snippetHtml).firstChild;
+    div.after(snippet);
+    editor.shared.history.addStep();
+    // Normalization should set contenteditable to false
+    expect(snippet).toHaveAttribute("contenteditable", "false");
 });
