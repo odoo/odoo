@@ -73,7 +73,7 @@ $o-color-palettes: map-merge($o-color-palettes,
     (
         'theme-hbs-1': (
             'o-color-5':                        #0071BD,
-            'o-color-4':                        #ffffff,
+            'o-color-4':                        #6496B8,
             'o-color-3':                        #FFFFFF,
             'o-color-2':                        #3AA101,
             'o-color-1':                        #0071BD,
@@ -121,5 +121,18 @@ a#add_to_cart, .js_subscribe_btn  {
         background-color: #6CB61B;
         // border-color: $o-color-2;
         // color: $o-color-4;
+    }
+}
+
+
+// Position the fa-heart
+
+.o_carousel_product_img_link > i {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+    &:hover {
+        color: #3AA101;
     }
 }

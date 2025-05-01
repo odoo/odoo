@@ -4,11 +4,13 @@
     'version': '1.0',
     'author': 'Sanjay Sharma',
     'category': 'Theme/Creative',
-    'depends': ['website', 'website_sale'],
+    'depends': ['website', 'website_sale', 'website_mass_mailing'],
     'data': [
         # 'views/snippets/s_sidegrid.xml',
-        # 'views/snippets/s_dynamic_snippet_products_preview_data.xml',
-        # 'views/footer.xml',
+        'views/snippets/hbs_dynamic_snippet_products_preview_data.xml',
+        'views/snippets/hbs_newsletter_subscribe_form.xml',
+        'views/snippets/hbs_call_to_action.xml',
+        'views/footer.xml',
         'views/header.xml',
     ],
 
@@ -19,7 +21,7 @@
     # 'images_preview_theme': {
     #     # List of images changed in the theme: urls of the images
     # },
-    # 'configurator_snippets': {
+    # 'configurator_snippets': {    
     #     'homepage': ['s_sidegrid'],
     # },
     'assets': {

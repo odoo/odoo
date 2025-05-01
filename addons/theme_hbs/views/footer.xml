@@ -1,84 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
-        <template id="custom_footer" inherit_id="website.layout">
-            <xpath expr="//div[@id='footer']" position="replace">
-                <div id="footer" class="oe_structure oe_structure_solo bg-primary text-white py-5">
+    <template id="hbs_template_footer_custom" inherit_id="website.layout" name="Custom">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+                <section class="s_text_block pt20 pb0" data-snippet="s_text_block" data-name="Text">
                     <div class="container">
-                        <!-- Logo and Social Media -->
-                        <div class="row text-center mb-4">
-                            <div class="col-12">
-                                <img src="/path/to/logo.png" alt="Logo" class="img-fluid mb-3" />
-                                <div class="social-icons">
-                                    <a href="#" class="text-white mx-2"><i class="fa fa-facebook fa-2x"></i></a>
-                                    <a href="#" class="text-white mx-2"><i class="fa fa-instagram fa-2x"></i></a>
+                        <div class="row">
+                            <div id="connect" class="pt24 pb24 col-lg-3 o_colored_level">
+                                <h5 class="mb-3">
+                                    <img src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/footer_logo.png" alt="" class="img img-fluid o_we_custom_image" data-mimetype="image/webp" data-resize-width="394" loading="lazy"/>
+                                </h5>
+                                <div class="s_social_media o_not_editable text-start no_icon_color" data-snippet="s_social_media" data-name="Social Media">
+                                    <h5 class="s_social_media_title d-none">Follow us</h5>
+                                    <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
+                                        <i class="fa fa-facebook o_editable_media fa-stack fa-2x text-o-color-4"/>
+                                    </a>
+                                    <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank" aria-label="Instagram">
+                                        <i class="fa o_editable_media fa-instagram fa-stack fa-2x text-o-color-4"/>
+                                    </a>
                                 </div>
                             </div>
-                        </div>
+                            <div class="pt24 pb24 col-lg-3 o_colored_level">
+                                <h5 class="mb-3">Useful Links</h5>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="/">
+                                            <font class="text-o-color-4">Home</font>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <font class="text-o-color-4">About us</font>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <font class="text-o-color-4">Products</font>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <font class="text-o-color-4">Services</font>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <font class="text-o-color-4">Legal</font>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/contactus">
+                                            <font class="text-o-color-4">Contact us</font>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="pt24 pb24 col-lg-3 o_colored_level">
+                                <h5 class="mb-3">Useful Links</h5>
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="/">
+                                            <font class="text-o-color-4">Home</font>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <font class="text-o-color-4">About us</font>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <font class="text-o-color-4">Products</font>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <font class="text-o-color-4">Services</font>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <font class="text-o-color-4">Legal</font>
+                                        </a>
+                                    </li>
 
-                        <!-- Links Section -->
-                        <div class="row text-center text-md-left">
-                            <div class="col-md-3">
-                                <h5 class="font-weight-bold">Service</h5>
-                                <ul class="list-unstyled">
-                                    <li><a href="#" class="text-white">Service Point</a></li>
-                                    <li><a href="#" class="text-white">About Us</a></li>
-                                    <li><a href="#" class="text-white">Press Releases</a></li>
-                                    <li><a href="#" class="text-white">Customer Stories</a></li>
-                                    <li><a href="#" class="text-white">Newsletter</a></li>
+                                    <li>
+                                        <a href="/contactus">
+                                            <font class="text-o-color-4">Contact us</font>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
-                            <div class="col-md-3">
-                                <h5 class="font-weight-bold">Information</h5>
-                                <ul class="list-unstyled">
-                                    <li><a href="#" class="text-white">Imprint</a></li>
-                                    <li><a href="#" class="text-white">General Terms</a></li>
-                                    <li><a href="#" class="text-white">Right of Withdrawal</a></li>
-                                    <li><a href="#" class="text-white">Privacy and Data Protection</a></li>
-                                    <li><a href="#" class="text-white">Shipping and Handling Costs</a></li>
-                                    <li><a href="#" class="text-white">Terms of Payment</a></li>
-                                    <li><a href="#" class="text-white">Battery Notice</a></li>
-                                    <li><a href="#" class="text-white">Sitemap</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-md-3">
-                                <h5 class="font-weight-bold">Newsletter</h5>
-                                <form>
-                                    <div class="form-group">.
-                                        <input type="email" class="form-control" placeholder="Enter your e-mail address" />
+                            <div class="pt24 pb24 col-lg-3 o_colored_level">
+                                <h5 class="mb-3">Newsletter</h5>
+                                <!-- <div data-vxml="001" data-list-id="1" data-name="Newsletter" data-snippet="s_newsletter_subscribe_form" class="s_newsletter_subscribe_form s_newsletter_list js_subscribe">
+                                    <div class="js_subscribed_wrap d-none">
+                                        <p class="h4-fs text-center text-success">
+                                            <i class="fa fa-check-circle-o" role="img"/>
+ Thanks for registering!</p>
                                     </div>
-                                    <button type="submit" class="btn btn-success btn-block">Subscribe</button>
-                                </form>
-                                <p class="mt-2 small">
-                                    Subscribe to the free newsletter and ensure that you will no longer miss any news or promotions.
-                                </p>
-                            </div>
-                            <div class="col-md-3 text-center">
-                                <img src="/path/to/badge1.png" alt="Badge 1" class="img-fluid mb-3" />
-                                <img src="/path/to/badge2.png" alt="Badge 2" class="img-fluid mb-3" />
-                            </div>
-                        </div>
-
-                        <!-- Footer Bottom -->
-                        <div class="row mt-4">
-                            <div class="col-12 text-center">
-                                <p class="small">
-                                    * All prices incl. VAT. Additional shipping costs may apply. Delivery times may vary for international shipping.
-                                </p>
-                                <div class="payment-icons my-3">
-                                    <img src="/path/to/visa.png" alt="Visa" class="mx-2" />
-                                    <img src="/path/to/mastercard.png" alt="MasterCard" class="mx-2" />
-                                    <img src="/path/to/paypal.png" alt="PayPal" class="mx-2" />
-                                    <img src="/path/to/sofort.png" alt="Sofort" class="mx-2" />
-                                    <img src="/path/to/giropay.png" alt="Giropay" class="mx-2" />
-                                </div>
-                                <p class="small">
-                                    © 2025 - mediparts GmbH. Alle Rechte vorbehalten.
-                                </p>
+                                    <div class="js_subscribe_wrap">
+                                        <div class="input-group">
+                                            <input type="email" name="email" placeholder="Email Address" class="s_newsletter_subscribe_form_input js_subscribe_value form-control "/>
+                                            <a role="button" href="#" class="js_subscribe_btn o_submit btn btn-primary fa fa-envelope"></a>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <t t-call="theme_hbs.hbs_newsletter_subscribe_form"/>
+                                <br/>
+                                <p>Subscribe to the free meddax24.de newsletter and ensure that you will no longer miss any news or promotions from meddax24.de.</p>
                             </div>
                         </div>
                     </div>
-                </div>
-            </xpath>
-        </template>
-    </data>
+                </section>
+                <section class="s_text_block pt0 pb0" data-snippet="s_text_block" data-name="Text">
+                    <div class="container">
+                        <div class="row">
+                            <div id="connect" class="pt24 pb24 col-lg-3 o_colored_level">
+                                <h5 class="mb-3">
+                                    <a href="https://versandhandel.dimdi.de/websearch/servlet/Gate?accessid=dimdi_var&amp;term=4d937febaebc98d0a7664e4c33d66115" target="_blank">
+                                        <img src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/dimdi-logo.png" alt="" class="img img-fluid o_we_custom_image me-auto float-start" data-mimetype="image/webp" data-original-id="436" data-original-src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/dimdi-logo.png" data-mimetype-before-conversion="image/png" data-resize-width="150" loading="lazy"/>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="connect" class="pt24 pb24 col-lg-3 o_colored_level">
+                                <h5 class="mb-3">
+                                    <a href="https://www.haendlerbund.de/mitglied/show.php?uuid=bc44d7f0-c253-11e4-bc3a-14dae9b38da3-6915656167" target="_blank">
+                                        <img src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/haendlerbund-logo.png" alt="" class="img img-fluid o_we_custom_image mx-auto d-block" data-mimetype="image/webp" data-original-id="437" data-original-src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/haendlerbund-logo.png" data-mimetype-before-conversion="image/png" data-resize-width="120" loading="lazy"/>
+                                    </a>
+                                </h5>
+                                <ul class="list-unstyled">
+                                    <br/>
+                                </ul>
+                            </div>
+                            <div id="connect" class="pt24 pb24 col-lg-3 o_colored_level">
+                                <h5 class="mb-3">
+                                    <a href="https://www.idealo.de/preisvergleich/Shop/291031.html" target="_blank">
+                                        <img src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/idealo-partner-logo-sterne.png" alt="" class="img img-fluid o_we_custom_image mx-auto d-block" data-mimetype="image/webp" data-original-id="438" data-original-src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/idealo-partner-logo-sterne.png" data-mimetype-before-conversion="image/png" data-resize-width="70" style="width: 25% !important;" loading="lazy"/>
+                                    </a>
+                                </h5>
+                                <ul class="list-unstyled">
+                                    <br/>
+                                </ul>
+                            </div>
+                            <div id="connect" class="pt24 pb24 col-lg-3 o_colored_level">
+                                <h5 class="mb-3">
+                                    <img src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/dimdi-logo.png" alt="" class="img img-fluid o_we_custom_image d-block ms-auto float-end" data-mimetype="image/webp" data-original-id="436" data-original-src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/dimdi-logo.png" data-mimetype-before-conversion="image/png" data-resize-width="150" loading="lazy"/>
+                                </h5>
+                                <ul class="list-unstyled">
+                                    <br/>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_text_block pt0 pb0" data-snippet="s_text_block" data-name="Text">
+                    <div class="container">
+                        <div class="row">
+                            <div id="connect" class="o_colored_level col-lg-12 pt0 pb0">
+                                <div class="s_hr pb32 pt0" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto" style="border-top-color: rgb(255, 255, 255);"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_text_block pt0 pb0" data-snippet="s_text_block" data-name="Text">
+                    <div class="o_container_small">
+                        <div class="row">
+                            <div id="connect" class="o_colored_level col-lg-12 pt0 pb0">
+                                <ul class="list-unstyled">
+                                    <p style="text-align: center;" class="o_small">* Alle Preise inkl. gesetzl. Mehrwertsteuer zzgl.&amp;nbsp;<a href="https://meddax24.de/veterinaer/liefer-und-versandkosten">Versandkosten</a>&amp;nbsp;, wenn nicht anders beschrieben. ** Angegebene Lieferzeiten gelten für den Versand innerhalb Deutschlands. Bitte beachten Sie die längeren Sendungslaufzeiten ins Ausland, weitere Informationen dazu finden Sie&amp;nbsp;<a href="https://dell1.meddax24.com/liefer-und-versandkosten#lieferfristen" target="_blank">hier</a>&amp;nbsp;.&amp;nbsp;</p>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_text_block pt0 pb0" data-snippet="s_text_block" data-name="Text">
+                    <div class="container">
+                        <div class="row">
+                            <div id="connect" class="o_colored_level col-lg-12 pt0 pb0">
+                                <ul class="list-unstyled mb-1">
+                                    <p style="text-align: center;" class="mb-1">
+                                        <img class="me-1" src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/icons/visa.svg"/>
+                                        <img class="me-1" src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/icons/mastercard.svg"/>
+                                        <img class="me-1" src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/icons/paypal.svg"/>
+                                        <img class="me-1" src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/icons/sofort.svg"/>
+                                        <img src="https://dell1.meddax24.com/static/version1728928711/frontend/Mediparts/custom/en_GB/images/icons/giro-pay.svg"/>
+                                    </p>
+                                    <div class="s_hr pt16 pb0" data-snippet="s_hr" data-name="Separator">
+                                        <hr class="w-100 mx-auto" style="border-top-color: rgb(255, 255, 255);"/>
+                                    </div>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+    <template id="theme_hbs_footer_copyright_company_name" inherit_id="website.footer_copyright_company_name">
+        <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <span class="o_footer_copyright_name me-2 text-center d-block">© 2025 - mediparts GmbH. Alle Rechte vorbehalten.</span>
+        </xpath>
+    </template>
 </odoo>

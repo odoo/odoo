@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+        <template id="hbs_dynamic_snippet_products" inherit_id="website_sale.dynamic_filter_template_product_product_add_to_cart">
+            <xpath expr="//a[contains(@class, 'o_carousel_product_img_link')]" position="inside">
+                <div class="wishlist-icon" style="z-index: 10; top: 10px; right: 10px; position: absolute; margin: 2px;">
+                    <a href="#" class="text-danger add-to-wishlist" data-product-id="data['id']" title="Add to Wishlist">
+                        <i class="fa fa-thin fa-heart fa-lg"></i>
+                    </a>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>
