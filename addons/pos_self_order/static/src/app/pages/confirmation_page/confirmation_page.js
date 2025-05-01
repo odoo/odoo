@@ -4,7 +4,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { rpc } from "@web/core/network/rpc";
-import { OutOfPaperPopup } from "@pos_self_order/app/components/out_of_paper_popup/out_of_paper_popup";
+import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
 
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";
@@ -109,9 +109,10 @@ export class ConfirmationPage extends Component {
                 }
                 order.nb_print = 1;
             } catch (e) {
-                if (e.errorCode === "EPTR_REC_EMPTY") {
-                    this.dialog.add(OutOfPaperPopup, {
-                        trackingNumber: this.confirmedOrder.trackingNumber,
+                if (["EPTR_REC_EMPTY", "EPTR_COVER_OPEN"].includes(e.errorCode)) {
+                    this.dialog.add(PrintingFailurePopup, {
+                        trackingNumber: this.confirmedOrder.tracking_number,
+                        message: e.body,
                         close: () => {
                             this.router.navigate("default");
                         },

@@ -36,6 +36,7 @@ import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { deserializeDateTime, formatDate } from "@web/core/l10n/dates";
 import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
+import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { DebugWidget } from "../utils/debug/debug_widget";
 
@@ -1649,6 +1650,9 @@ export class PosStore extends WithLazyGetterTrap {
         } else if (!order.nb_print) {
             order.nb_print = 0;
         }
+        if (result?.warningCode) {
+            this.displayPrinterWarning(result, _t("Receipt Printer"));
+        }
         return result;
     }
     get printOptions() {
@@ -1715,7 +1719,7 @@ export class PosStore extends WithLazyGetterTrap {
         return {
             reprint: reprint,
             pos_reference: order.getName(),
-            config_name: order.config_id.name,
+            config_name: order.config_id?.name || order.config.name,
             time: DateTime.now().toFormat("HH:mm"),
             tracking_number: order.tracking_number,
             preset_name: order.preset_id?.name || "",
@@ -1793,10 +1797,11 @@ export class PosStore extends WithLazyGetterTrap {
         return receiptsData;
     }
 
-    async printChanges(order, orderChange, reprint = false) {
-        const unsuccedPrints = [];
+    async printChanges(order, orderChange, reprint = false, printers = this.unwatched.printers) {
+        const unsuccessfulPrints = [];
+        const retryPrinters = new Set();
 
-        for (const printer of this.unwatched.printers) {
+        for (const printer of printers) {
             const { orderData, changes } = this.generateOrderChange(
                 order,
                 orderChange,
@@ -1808,20 +1813,27 @@ export class PosStore extends WithLazyGetterTrap {
                 changes,
                 orderChange
             );
+            let result = {};
             for (const data of receiptsData) {
-                const result = await this.printOrderChanges(data, printer);
+                result = await this.printOrderChanges(data, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
+                    retryPrinters.add(printer);
+                    unsuccessfulPrints.push(printer.config.name + ": " + result.message.body);
+                } else if (result.warningCode) {
+                    this.displayPrinterWarning(result, printer.config.name);
                 }
             }
         }
 
         // printing errors
-        if (unsuccedPrints.length) {
-            const failedReceipts = unsuccedPrints.join(", ");
-            this.dialog.add(AlertDialog, {
-                title: _t("Printing failed"),
-                body: _t("Failed in printing %s changes of the order", failedReceipts),
+        if (unsuccessfulPrints.length) {
+            const failedReceipts = unsuccessfulPrints.join("\n");
+            this.dialog.add(RetryPrintPopup, {
+                message: failedReceipts,
+                canRetry: true,
+                retry: () => {
+                    this.printChanges(order, orderChange, reprint, retryPrinters);
+                },
             });
         }
     }
@@ -2502,6 +2514,18 @@ export class PosStore extends WithLazyGetterTrap {
         order.uiState.locked = true;
         if (this.getOrder() === order) {
             this.searchProductWord = "";
+        }
+    }
+
+    displayPrinterWarning(printResult, printerName) {
+        let notification;
+        if (printResult.warningCode === "ROLL_PAPER_HAS_ALMOST_RUN_OUT") {
+            notification = _t("%s almost runs out of paper.", printerName);
+        }
+        if (notification) {
+            this.notification.add(notification, {
+                type: "warning",
+            });
         }
     }
 }

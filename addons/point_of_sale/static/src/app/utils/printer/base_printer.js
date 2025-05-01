@@ -46,7 +46,10 @@ export class BasePrinter {
                 return this.getResultsError(printResult);
             }
         }
-        return { successful: true };
+        return {
+            successful: true,
+            warningCode: this.getResultWarningCode(printResult),
+        };
     }
 
     async sendPrintingJob() {
@@ -128,5 +131,9 @@ export class BasePrinter {
                 ),
             },
         };
+    }
+
+    getResultWarningCode(_printResult, options = {}) {
+        return undefined;
     }
 }

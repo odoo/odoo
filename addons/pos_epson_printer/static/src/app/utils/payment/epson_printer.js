@@ -3,6 +3,10 @@ import { _t } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";
 
+const STATUS_ROLL_PAPER_HAS_RUN_OUT = 0x00080000;
+const STATUS_ROLL_PAPER_HAS_ALMOST_RUN_OUT = 0x00020000;
+const ERROR_CODE_PRINTER_NOT_REACHABLE = "PRINTER_NOT_REACHABLE";
+
 function ePOSPrint(children) {
     let ePOSLayout = getTemplate("pos_epson_printer.ePOSLayout");
     if (!ePOSLayout) {
@@ -70,12 +74,15 @@ export class EpsonPrinter extends BasePrinter {
             const response = parsedBody.querySelector("response");
             return {
                 result: response.getAttribute("success") === "true",
-                printerErrorCode: response.getAttribute("code"),
+                errorCode: response.getAttribute("code"),
+                status: parseInt(response.getAttribute("status")) || 0,
+                canRetry: true,
             };
         } catch {
             return {
                 result: false,
-                printerErrorCode: "Not found, the printer is not reachable",
+                canRetry: true,
+                errorCode: ERROR_CODE_PRINTER_NOT_REACHABLE,
             };
         }
     }
@@ -169,44 +176,59 @@ export class EpsonPrinter extends BasePrinter {
         return printRes;
     }
 
+    hasStatus(status, attribute) {
+        //The status is a bit field
+        return (status & attribute) === attribute;
+    }
+
     /**
      * @override
      */
     getResultsError(printResult) {
-        const errorCode = printResult.printerErrorCode;
-        let message =
-            _t("The printer was successfully reached, but it wasn't able to print.") + "\n";
-        if (errorCode) {
-            message +=
-                "\n" + _t("The following error code was given by the printer:") + "\n" + errorCode;
-
-            const extra_messages = {
-                DeviceNotFound:
-                    _t(
-                        "Check on the printer configuration for the 'Device ID' setting. " +
-                            "It should be set to: "
-                    ) + "\nlocal_printer",
-                EPTR_REC_EMPTY: _t("No paper was detected by the printer"),
-            };
-            if (errorCode in extra_messages) {
-                message += "\n" + extra_messages[errorCode];
-            }
-            message +=
-                "\n" +
-                _t("To find more details on the error reason, please search online for:") +
-                "\n" +
-                " Epson Server Direct Print " +
-                errorCode;
+        const errorCode = printResult.errorCode;
+        const status = printResult.status;
+        let message;
+        // https://download4.epson.biz/sec_pubs/pos/reference_en/epos_print/ref_epos_print_xml_en_xmlforcontrollingprinter_response.html
+        if (errorCode === "DeviceNotFound") {
+            message = _t(
+                "Check the printer configuration for the 'Device ID' setting.\nIt should be set to: local_printer"
+            );
+        } else if (errorCode === ERROR_CODE_PRINTER_NOT_REACHABLE) {
+            message = _t("The printer is not reachable.");
+        } else if (errorCode === "EPTR_COVER_OPEN") {
+            message = _t("Printer cover is open. Please close it and try again!");
+        } else if (
+            errorCode === "EPTR_REC_EMPTY" ||
+            this.hasStatus(status, STATUS_ROLL_PAPER_HAS_RUN_OUT)
+        ) {
+            message = _t("It seems that the printer runs out of paper.");
         } else {
-            message += _t("Please check if the printer has enough paper and is ready to print.");
+            message = _t(
+                "The following error code was given by the printer: %s \nTo find more details on the error reason, please search online for: Epson Server Direct Print %s ",
+                errorCode,
+                errorCode
+            );
         }
         return {
             successful: false,
             errorCode: errorCode,
+            status: status,
             message: {
                 title: _t("Printing failed"),
                 body: message,
             },
+            canRetry: printResult.canRetry || false,
         };
+    }
+
+    getResultWarningCode(printResult) {
+        const status = printResult?.status;
+        if (!status) {
+            return undefined;
+        }
+        if (this.hasStatus(status, STATUS_ROLL_PAPER_HAS_ALMOST_RUN_OUT)) {
+            return "ROLL_PAPER_HAS_ALMOST_RUN_OUT";
+        }
+        return undefined;
     }
 }
