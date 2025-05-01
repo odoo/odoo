@@ -90,6 +90,7 @@ export class KioskComboPage extends Component {
         const combo = this.props.productTemplate.combo_ids;
         return combo.filter(
             (c) =>
+                c.qty_max > 1 ||
                 c.combo_item_ids.length > 1 ||
                 (c.combo_item_ids.some((c) => c.product_id.attribute_line_ids.length !== 0) &&
                     !c.combo_item_ids.every((c) => c.product_id.isCombo()))

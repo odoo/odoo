@@ -3,6 +3,7 @@
 
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
+from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo import Command
 
 
@@ -156,3 +157,16 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_self_order_kiosk_combo_sides")
+
+    def test_self_order_kiosk_combo_qty_max_free(self):
+        setup_product_combo_items(self)
+        self.desks_combo.write({'combo_item_ids': [Command.unlink(item.id) for item in self.desks_combo.combo_item_ids[1:]], 'qty_max': 3})
+        self.office_combo.write({'combo_ids': [Command.unlink(item.id) for item in self.office_combo.combo_ids if item.id != self.desks_combo.id]})
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self.start_tour(self.pos_config._get_self_order_route(), "test_self_order_kiosk_combo_qty_max_free")

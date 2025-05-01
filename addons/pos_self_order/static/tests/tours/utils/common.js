@@ -79,3 +79,28 @@ export function checkQRCodeGenerated() {
         trigger: "h1:contains('Scan the QR code to pay')",
     };
 }
+
+export function increaseComboItemQty(productName, qty) {
+    const steps = [
+        {
+            content: `Check product name`,
+            trigger: `.o_kiosk_product_box span:contains("${productName}")`,
+        },
+    ];
+
+    for (let i = 1; i < qty; i++) {
+        steps.push(
+            {
+                content: `Verify the quantity of "${productName}" is updated to ${i}.`,
+                trigger: `.item_qty_container h2:contains("${i}")`,
+            },
+            {
+                content: `Increase the quantity of "${productName}" by clicking the "+" button.`,
+                trigger: `.item_qty_container button:eq(1)`,
+                run: "click",
+            }
+        );
+    }
+
+    return steps;
+}
