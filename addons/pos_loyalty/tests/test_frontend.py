@@ -1080,6 +1080,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("PosLoyalty2DiscountsSpecificGlobal")
 
     def test_specific_product_discount_with_global_discount(self):
+        if self.env['ir.module.module']._get('pos_discount').state != 'installed':
+            self.skipTest("pos_discount module is required for this test")
+
         self.env['loyalty.program'].search([]).write({'active': False})
 
         self.discount_product = self.env["product.product"].create({

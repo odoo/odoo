@@ -2129,7 +2129,7 @@ export class PosStore extends Reactive {
             {},
             QRPopup
         ).then((result) => {
-            payment.qrPaymentData = undefined;
+            payment.qrPaymentData = null;
             return result;
         });
     }

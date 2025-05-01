@@ -15,10 +15,11 @@
                 <field name="body" nolabel="1" class="oe-bordered-editor"
                         widget="html_mail"
                         placeholder="Write your message here..."
-                        force_save="1"/>
+                        options="{'codeview': true, 'dynamic_placeholder': true}" force_save="1"/>
                 <group>
-                            <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
-                            <field name="template_id" string="Load template" options="{'no_create': True}"/>
+                    <field name="attachment_ids"
+                        widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
+                    <field name="template_id" string="Load template" options="{'no_create': True}"/>
                 </group>
                 <footer>
                     <button name="action_send" string="Send" type="object" class="btn-primary" data-hotkey="q"/>

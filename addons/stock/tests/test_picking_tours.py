@@ -141,6 +141,12 @@ class TestStockPickingTour(HttpCase):
         Check that the unsaved quantity/location changes of the detailed operations impact dynamically
         the creation of new move lines (considering the real avaible quantity rather than DB data's).
         """
+
+        admin_user = self.env.ref("base.user_admin")
+        admin_user.write({
+            'groups_id': [Command.link(self.env.ref("stock.group_production_lot").id)],
+        })
+
         warehouse = self.env.ref("stock.warehouse0")
         product_lot = self.env['product.product'].create({
             'name': 'Product Lot',

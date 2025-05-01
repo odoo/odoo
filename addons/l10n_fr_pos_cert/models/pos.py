@@ -22,6 +22,9 @@ class pos_config(models.Model):
                     config.current_session_id._check_session_timing()
         return super(pos_config, self).open_ui()
 
+    def _config_sequence_implementation(self):
+        return 'no_gap' if self.env.company._is_accounting_unalterable() else super()._config_sequence_implementation()
+
 
 class pos_session(models.Model):
     _inherit = 'pos.session'

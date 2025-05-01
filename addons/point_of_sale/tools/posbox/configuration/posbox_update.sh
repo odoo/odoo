@@ -11,6 +11,7 @@ if [[ "$(git remote get-url "$localremote")" != *odoo/odoo* ]]; then
 fi
 
 echo "addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo" >> .git/info/sparse-checkout
+echo "addons/iot_base" >> .git/info/sparse-checkout
 
 git fetch "${localremote}" "${localbranch}" --depth=1
 git reset "${localremote}"/"${localbranch}" --hard

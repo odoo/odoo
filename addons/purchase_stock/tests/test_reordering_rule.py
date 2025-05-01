@@ -1517,3 +1517,40 @@ class TestReorderingRule(TransactionCase):
         self.assertRecordValues(self.env['purchase.order'].search([('company_id', '=', company_b.id), ('partner_id', '=', self.partner.id)], limit=1).order_line, [{
             'product_id': product.id, 'product_uom_qty': 10,
         }])
+
+    def test_backorder_mto_buy(self):
+        """
+        Check that purchase order created to fullfill an mto buy demand are
+        well behaved with respect to backorder deliveries.
+        """
+        buy_product = self.product_01
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        buy_product.route_ids |= mto_route
+        pg = self.env["procurement.group"].create({'name': 'Test mto buy procurement'})
+        self.env["procurement.group"].run(
+            [pg.Procurement(
+                buy_product, 100, buy_product.uom_id,
+                self.env.ref('stock.stock_location_customers'), "Test mto buy", "/",
+                self.env.company,
+                {
+                    "warehouse_id": self.env.ref('stock.warehouse0'),
+                    "group_id": pg,
+                },
+            )])
+        po_line = self.env["purchase.order.line"].search([("product_id", "=", buy_product.id)], limit=1)
+        self.assertEqual(po_line.product_uom_qty, 100)
+        delivery = po_line.move_dest_ids.picking_id
+        # Deliver only 30 units and backorder the rest
+        delivery.move_ids.quantity = 30
+        backorder_wizard_dict = delivery.button_validate()
+        backorder_wizard_form = Form.from_action(self.env, backorder_wizard_dict)
+        backorder_wizard_form.save().process()
+        # Check that the bakorder is still mto
+        self.assertRecordValues(delivery.backorder_ids.move_ids, [{
+            'product_uom_qty': 70, 'procure_method': 'make_to_order',
+        }])
+        # Check that the backorder belongs to the same procurement group
+        self.assertEqual(delivery.backorder_ids.group_id, delivery.group_id)
+        # Check that the PO was not updated not a new PO created
+        self.assertEqual(self.env["purchase.order.line"].search([("product_id", "=", buy_product.id)]).product_qty, 100)
