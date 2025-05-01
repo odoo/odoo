@@ -1,4 +1,4 @@
-Belgium, 2015-02-06
+Cuba, 2025-05-01
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Olivier Dony  ejtrianac@gmail.com https://github.com/odony
+Emilio Triana  ejtrianac@gmail.com https://github.com/emiliojtc
