@@ -580,7 +580,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         })
         self.start_tour("/", 'website_media_dialog_icons', login='admin')
 
-    @unittest.skip
     def test_27_website_clicks(self):
         self.start_tour('/odoo', 'website_click_tour', login='admin')
 
