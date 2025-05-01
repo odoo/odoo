@@ -526,7 +526,8 @@
                     </button>
 
                     <xpath expr="//label[@for='weight']" position="before">
-                        <field name="responsible_id" domain="[('share', '=', False)]" widget="many2one_avatar_user" groups="stock.group_stock_user"/>
+                        <field name="responsible_id" domain="[('share', '=', False)]" widget="many2one_avatar_user" groups="stock.group_stock_user"
+                            options="{'no_quick_create': True}"/>
                     </xpath>
                 </data>
             </field>

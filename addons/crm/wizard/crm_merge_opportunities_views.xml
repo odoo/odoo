@@ -7,7 +7,8 @@
             <field name="arch" type="xml">
                 <form string="Merge Leads/Opportunities">
                     <group string="Assign opportunities to">
-                        <field name="user_id" class="oe_inline" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                        <field name="user_id" class="oe_inline" widget="many2one_avatar_user" domain="[('share', '=', False)]"
+                            options="{'no_quick_create': True}"/>
                         <field name="team_id" class="oe_inline" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                     </group>
                     <field name="opportunity_ids" nolabel="1">
@@ -19,7 +20,7 @@
                             <field name="email_from" optional="show"/>
                             <field name="phone" class="o_force_ltr" optional="hide"/>
                             <field name="stage_id"/>
-                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                             <field name="team_id" optional="hide"/>
                         </list>
                     </field>

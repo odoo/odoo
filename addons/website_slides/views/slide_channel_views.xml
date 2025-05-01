@@ -96,7 +96,7 @@
                             <page name="options" string="Options">
                                 <group>
                                     <group name="course" string="Course">
-                                        <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
+                                        <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                     </group>
                                     <group name="access_rights" string="Access Rights">
@@ -161,7 +161,7 @@
                 <list string="Courses" sample="1" multi_edit="1">
                     <field name="sequence" widget="handle"/>
                     <field name="name" readonly="1"/>
-                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="channel_type" string="Course Type"/>
                     <field name="visibility"/>
@@ -179,7 +179,7 @@
             <field name="arch" type="xml">
                 <list string="Courses" create="false" default_order="total_views desc" sample="1">
                     <field name="name"/>
-                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                     <field name="total_views" string="# Views"/>
                     <field name="rating_avg_stars" string="Average Review"/>
                     <field name="total_time" string="Total Duration" widget="float_time" sum="Total Duration"/>

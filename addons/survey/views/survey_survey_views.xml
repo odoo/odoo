@@ -60,12 +60,13 @@
                     </div>
                     <group>
                         <group class="ps-md-0">
-                            <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
+                            <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"
+                                options="{'no_quick_create': True}"/>
                             <field name="active" invisible="1"/>
                             <field name="has_conditional_questions" invisible="1"/>
                         </group>
                         <group class="ps-3 ps-md-0 ps-lg-3">
-                            <field name="restrict_user_ids" widget="many2many_tags_avatar"/>
+                            <field name="restrict_user_ids" widget="many2many_tags_avatar" options="{'no_quick_create': True}"/>
                         </group>
                     </group>
                     <group>
@@ -215,7 +216,7 @@
                 <button name="certification" type="button" disabled="disabled"
                     icon="fa-trophy" title="Certification" aria-label="Certification"
                     invisible="not certification"/>
-                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                 <field name="answer_duration_avg" widget="float_time"/>
                 <field name="answer_count"/>
                 <field name="answer_done_count" optional="hide"/>

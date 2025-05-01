@@ -227,7 +227,7 @@
                             </group>
                             <field name="type" invisible="1"/>
                             <group invisible="type == 'lead'">
-                                <field name="user_id"
+                                <field name="user_id" options="{'no_quick_create': True}"
                                     context="{'default_sales_team_id': team_id}" widget="many2one_avatar_user"/>
                                 <label for="date_deadline">Expected Closing</label>
                                 <div class="d-flex gap-3 align-items-center">
@@ -237,7 +237,7 @@
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
                             <group invisible="type == 'opportunity'">
-                                <field name="user_id"
+                                <field name="user_id" options="{'no_quick_create': True}"
                                     context="{'default_sales_team_id': team_id}" widget="many2one_avatar_user"/>
                                 <field name="team_id" options="{'no_open': True, 'no_create': True}" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                             </group>
@@ -357,7 +357,7 @@
                     <field name="partner_id" column_invisible="True"/>
                     <!-- Explicit domain due to multi edit -> real company domain would be complicated -->
                     <field name="user_id" optional="show"  widget="many2one_avatar_user"
-                        domain="[('share', '=', False)]"/>
+                        domain="[('share', '=', False)]" options="{'no_quick_create': True}"/>
                     <field name="team_id" optional="show"/>
                     <field name="active" column_invisible="True"/>
                     <field name="campaign_id" optional="hide"/>
@@ -757,7 +757,7 @@
                     <field name="country_id" optional="hide" options="{'no_open': True, 'no_create': True}"/>
                     <!-- Explicit domain due to multi edit -> real company domain would be complicated -->
                     <field name="user_id" widget="many2one_avatar_user" optional="show"
-                        domain="[('share', '=', False)]"/>
+                        domain="[('share', '=', False)]" options="{'no_quick_create': True}"/>
                     <field name="team_id" optional="hide"/>
                     <field name="priority" optional="hide" widget="priority"/>
                     <field name="activity_ids" optional="hide" widget="list_activity"/>

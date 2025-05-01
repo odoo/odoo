@@ -72,7 +72,7 @@
                         </group>
                         <group name="right_event_details">
                             <field name="organizer_id"/>
-                            <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                            <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" options="{'no_quick_create': True}"/>
                             <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                             <field name="address_id" context="{'show_address': 1}" placeholder="Online if not set"/>
                             <field name="event_url" invisible="address_id" widget="url" placeholder='e.g. "https://www.odoo.com"'/>

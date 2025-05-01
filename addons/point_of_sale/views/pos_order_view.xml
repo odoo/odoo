@@ -298,7 +298,7 @@
                 <field name="pos_reference"/>
                 <field name="tracking_number" optional="hide"/>
                 <field name="partner_id"/>
-                <field name="user_id" widget="many2one_avatar_user" readonly="account_move or state == 'done'"/>
+                <field name="user_id" widget="many2one_avatar_user" readonly="account_move or state == 'done'" options="{'no_quick_create': True}"/>
                 <field name="amount_total" sum="Amount total" widget="monetary" decoration-bf="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state not in ('draft','cancel')"/>
                 <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to_invoice'"/>

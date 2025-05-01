@@ -83,6 +83,7 @@
                                         <field name="user_id" widget="many2one_avatar_user"
                                             readonly="not is_template_editor"
                                             invisible="not is_template_editor"
+                                            options="{'no_quick_create': True}"
                                             placeholder="Shared with all users."
                                             help="If set, will restrict the template to this specific user.
                                                   If not set, shared with all users."/>
@@ -104,7 +105,8 @@
                     <field name="mail_server_id" column_invisible="True"/>
                     <field name="name"/>
                     <field name="model_id" groups="base.group_no_one"/>
-                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user"
+                        options="{'no_quick_create': True}"/>
                     <field name="description"/>
                     <field name="subject" optional="hidden"/>
                     <field name="email_from" optional="hidden"/>

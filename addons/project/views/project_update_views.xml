@@ -105,7 +105,8 @@
         <field name="arch" type="xml">
             <list sample="1" js_class="project_update_list">
                 <field name="name"/>
-                <field name="user_id" widget="many2one_avatar_user" class="fw-bolder" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user" class="fw-bolder" optional="show"
+                    options="{'no_quick_create': True}"/>
                 <field name="date" optional="show"/>
                 <field name="progress" string="Progress" widget="progressbar" optional="show"/>
                 <field name="color" column_invisible="True"/>

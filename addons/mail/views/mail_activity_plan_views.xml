@@ -76,7 +76,7 @@
                                         <field name="summary" placeholder="e.g. Discuss Proposal"/>
                                         <field name="responsible_type"/>
                                         <field name="responsible_id" readonly="responsible_type != 'other'"
-                                               widget="many2one_avatar_user"/>
+                                            widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                                         <field name="delay_count"/>
                                         <field name="delay_unit" string="Unit"/>
                                         <field name="delay_from"/>

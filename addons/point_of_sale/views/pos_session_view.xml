@@ -85,7 +85,7 @@
             <list string="Point of Sale Session" create="0" sample="1">
                 <field name="name" decoration-bf="1"/>
                 <field name="config_id" />
-                <field name="user_id" widget="many2one_avatar_user" readonly="state != 'opening_control'"/>
+                <field name="user_id" widget="many2one_avatar_user" readonly="state != 'opening_control'" options="{'no_quick_create': True}"/>
                 <field name="start_at" />
                 <field name="stop_at" />
                 <field name="cash_register_balance_start"/>

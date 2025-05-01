@@ -41,7 +41,8 @@
                         <field name="active" invisible="1"/>
                         <field class="text-break" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
                         <field name="name" invisible="1"/>
-                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"
+                            options="{'no_quick_create': True}"/>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                     <notebook>
@@ -58,7 +59,7 @@
             <list string="UTM Campaigns" multi_edit="1" sample="1">
                 <field name="title" string="Name" readonly="1"/>
                 <field name="name" column_invisible="True"/>
-                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                 <field name="stage_id" decoration-bf="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </list>
@@ -74,7 +75,7 @@
                 <group>
                     <field name="name" invisible="1"/>
                     <field class="o_text_overflow" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
-                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" options="{'no_quick_create': True}"/>
                     <field name="tag_ids" widget="many2many_tags" class="o_field_highlight" options="{'color_field': 'color', 'no_create_edit': True}"/>
                 </group>
             </form>

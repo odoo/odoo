@@ -130,7 +130,8 @@
                                 <label for="moderator_ids" string="Moderators" invisible="not moderation"/>
                                 <label for="moderator_ids" string="Responsibles" invisible="moderation"/>
                             </td>
-                            <field name="moderator_ids" widget="many2many_avatar_user" class="oe_inline" nolabel="1" placeholder="Select users"/>
+                            <field name="moderator_ids" widget="many2many_avatar_user" class="oe_inline" nolabel="1" placeholder="Select users"
+                                options="{'no_quick_create': True}"/>
                             <field name="is_moderator" invisible="1"/>
                             <field name="can_manage_group" invisible="1"/>
                             <field name="is_member" invisible="1"/>

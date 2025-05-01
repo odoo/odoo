@@ -212,7 +212,7 @@
                                         <field name="show_as" readonly="not user_can_edit" nolabel="1"/>
                                         <field name="privacy" readonly="not user_can_edit" nolabel="1" placeholder="Default"/>
                                     </div>
-                                    <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
+                                    <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit" options="{'no_quick_create': True}"/>
                                     <field name="description" options="{'height': 100}" placeholder="Add description" readonly="not user_can_edit"/>
                         </group>
                         <group>

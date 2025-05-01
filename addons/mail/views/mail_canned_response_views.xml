@@ -23,7 +23,7 @@
                     <field name="source" readonly="not is_editable"/>
                     <field name="substitution" readonly="not is_editable"/>
                     <field name="description" readonly="not is_editable"/>
-                    <field name="create_uid" widget="many2one_avatar_user"/>
+                    <field name="create_uid" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                     <field name="group_ids" widget="many2many_tags" readonly="not is_editable"/>
                     <field name="last_used" readonly="1"/>
                     <field name="is_editable" column_invisible="True"/>
@@ -42,7 +42,7 @@
                             <field name="source" readonly="not is_editable"/>
                             <field name="substitution" readonly="not is_editable"/>
                             <field name="description" readonly="not is_editable"/>
-                            <field name="create_uid" widget="many2one_avatar_user"/>
+                            <field name="create_uid" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                             <field name="group_ids" widget="many2many_tags" readonly="not is_editable"/>
                             <field name="is_editable" invisible="True"/>
                         </group>

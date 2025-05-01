@@ -39,7 +39,7 @@
                 <field name='product_id'/>
                 <field name="display_toppings" class="o_text_overflow"/>
                 <field name='note' class="o_text_overflow"/>
-                <field name='user_id' widget='many2one_avatar_user' readonly="state != 'new'"/>
+                <field name='user_id' widget='many2one_avatar_user' readonly="state != 'new'" options="{'no_quick_create': True}"/>
                 <field name="lunch_location_id"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name='price' sum="Total" string="Price" widget="monetary"/>

@@ -8,7 +8,7 @@
                 <group>
                     <field name="summary" placeholder="Reminder to..." required="1"/>
                     <field name="date_deadline"/>
-                    <field name="user_id" widget="many2one_avatar_user" options="{'no_open': 1}"/>
+                    <field name="user_id" widget="many2one_avatar_user" options="{'no_open': 1, 'no_quick_create': True}"/>
                 </group>
                 <field name="note" class="oe-bordered-editor" placeholder="Add details about your to-do..."/>
                 <footer>

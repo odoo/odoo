@@ -26,7 +26,7 @@
         <field name="arch" type="xml">
             <list string="Mailing filters" sample="1">
                 <field name="name"/>
-                <field name="create_uid" string="Saved by" widget="many2one_avatar_user"/>
+                <field name="create_uid" string="Saved by" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                 <field name="mailing_model_id" string="Recipients"/>
                 <field name="mailing_domain" string="Domain" optional="hide"/>
             </list>
@@ -45,7 +45,7 @@
                             <field name="mailing_model_id" placeholder="Select a Target Model..." options="{'no_create': True, 'no_open': True}"/>
                         </group>
                         <group>
-                            <field name="create_uid" widget="many2one_avatar_user"/>
+                            <field name="create_uid" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                         </group>
                     </group>
                     <group>

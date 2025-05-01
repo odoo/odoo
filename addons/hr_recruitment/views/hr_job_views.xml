@@ -263,7 +263,7 @@
                 <attribute name="invisible">0</attribute>
             </page>
              <div name="recruitment_target" position="after">
-                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                 <field name="interviewer_ids" widget="many2many_tags_avatar" options="{'no_create': True, 'no_create_edit': True}" />
             </div>
             <xpath expr="//field[@name='department_id']" position="before">

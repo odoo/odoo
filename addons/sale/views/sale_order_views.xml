@@ -132,7 +132,7 @@
                 <field name="commitment_date" optional="hide"/>
                 <field name="expected_date" optional="hide"/>
                 <field name="partner_id" readonly="1"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show" options="{'no_quick_create': True}"/>
                 <field name="activity_ids" widget="list_activity" optional="show"/>
                 <field name="team_id" optional="hide"/>
                 <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
@@ -809,7 +809,7 @@
                     <page string="Other Info" name="other_information">
                         <group>
                             <group name="sales_person" string="Sales">
-                                <field name="user_id" widget="many2one_avatar_user"/>
+                                <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                                 <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}" options="{'no_create': True}"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="require_signature"

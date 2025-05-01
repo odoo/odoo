@@ -278,7 +278,8 @@
                         <group>
                             <field name="date" readonly="not is_editable" class="w-50"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
-                            <field name="manager_id" widget="many2one_avatar_user" readonly="state != 'draft'" placeholder="Auto-validation"/>
+                            <field name="manager_id" widget="many2one_avatar_user" readonly="state != 'draft'" placeholder="Auto-validation"
+                                options="{'no_quick_create': True}"/>
                             <field name="department_id" invisible="1" readonly="not is_editable"
                                    context="{'default_company_id': company_id}"/>
                             <field name="vendor_id" invisible="payment_mode != 'company_account'"/>

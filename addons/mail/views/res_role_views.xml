@@ -21,7 +21,7 @@
             <field name="arch" type="xml">
                 <list string="Role" editable="bottom" sample="1">
                     <field name="name" string="Role"/>
-                    <field name="user_ids" widget="many2many_avatar_user"/>
+                    <field name="user_ids" widget="many2many_avatar_user" options="{'no_quick_create': True}"/>
                 </list>
             </field>
         </record>

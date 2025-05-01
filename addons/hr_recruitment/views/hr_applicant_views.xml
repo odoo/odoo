@@ -35,7 +35,7 @@
                 <field name="email_from" readonly="1" optional="hide"/>
                 <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="job_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show" options="{'no_quick_create': True}"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="stage_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
                 <field name="type_id" column_invisible="True"/>
@@ -159,7 +159,7 @@
                         <field name="priority" widget="priority"/>
                         <field name="job_id" invisible="is_pool_applicant"/>
                         <field name="talent_pool_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="not is_pool_applicant"/>
-                        <field name="user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
+                        <field name="user_id" widget="many2one_avatar_user" placeholder="Unassigned" options="{'no_quick_create': True}"/>
                         <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" invisible="is_pool_applicant" placeholder="Who can access applicants" />
                         <field name="date_closed" invisible="not date_closed" />
                         <field name="categ_ids" placeholder="e.g. Trainee" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>

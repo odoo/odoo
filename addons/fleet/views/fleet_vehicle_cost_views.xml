@@ -27,7 +27,7 @@
                         <group col="2">
                             <field name="start_date"/>
                             <field name="expiration_date" required="cost_frequency != 'no'"/>
-                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                             <field name="purchaser_id" invisible="1"/>
                         </group>
                     </group>

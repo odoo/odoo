@@ -160,7 +160,7 @@
                         <group>
                             <field name="date_deadline"/>
                         </group>
-                        <field name="user_id" widget="many2one_avatar_user"/>
+                        <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                     </group>
                     <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..."/>
                     <footer>
@@ -284,7 +284,7 @@
                 </header>
                 <field name="res_name" string="Name"/>
                 <field name="activity_type_id"/>
-                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                 <field name="summary"/>
                 <field name="date_deadline" widget="remaining_days"/>
                 <field name="date_done" string="Done Date" optional="hide"/>

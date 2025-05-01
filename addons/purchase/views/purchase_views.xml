@@ -374,7 +374,7 @@
                         <page string="Other Information" name="purchase_delivery_invoice">
                             <group>
                                 <group name="other_info">
-                                    <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
+                                    <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state in ['cancel', 'purchase']"/>
                                     <field name="origin"/>
                                 </group>
@@ -579,7 +579,7 @@
                         groups="base.group_multi_company" optional="show"/>
                     <field name="company_id" groups="!base.group_multi_company" column_invisible="True" readonly="state in ['cancel', 'purchase']"/>
                     <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show"/>
-                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                     <field name="date_order"
                         invisible="state == 'purchase' or state == 'cancel'"
                         column_invisible="not context.get('quotation_only', False)"
@@ -620,7 +620,7 @@
                     <field name="partner_id" readonly="state in ['cancel', 'purchase']"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show" readonly="state in ['cancel', 'purchase']"/>
                     <field name="company_id" groups="!base.group_multi_company" column_invisible="True" readonly="state in ['cancel', 'purchase']"/>
-                    <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                    <field name="user_id" widget="many2one_avatar_user" optional="show" options="{'no_quick_create': True}"/>
                     <field name="date_order" column_invisible="not context.get('quotation_only', False)" readonly="state in ['cancel', 'purchase']" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show"/>

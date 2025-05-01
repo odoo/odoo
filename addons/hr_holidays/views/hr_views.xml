@@ -119,7 +119,8 @@
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='managers']" position="inside">
-                <field name="leave_manager_id" string="Time Off" widget="many2one_avatar_user"/>
+                <field name="leave_manager_id" string="Time Off" widget="many2one_avatar_user"
+                    options="{'no_quick_create': True}"/>
             </xpath>
             <xpath expr="//group[@name='managers']" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -169,7 +170,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='coach_id']" position="after">
                 <field name="company_id" invisible="1"/>
-                <field name="leave_manager_id" string="Time Off" widget="many2one_avatar_user"/>
+                <field name="leave_manager_id" string="Time Off" widget="many2one_avatar_user"
+                    options="{'no_quick_create': True}"/>
             </xpath>
         </field>
     </record>

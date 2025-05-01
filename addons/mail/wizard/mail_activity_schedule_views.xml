@@ -20,14 +20,15 @@
                         <group invisible="not plan_id">
                             <group>
                                 <field name="plan_date" placeholder="Default deadline for the activities..." string="Due Date"/>
-                                <field name="plan_on_demand_user_id" widget="many2one_avatar_user"
+                                <field name="plan_on_demand_user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"
                                        invisible="not plan_has_user_on_demand" string="Responsible"/>
                             </group>
                             <group>
                                 <label for="plan_schedule_line_ids" string="Plan Summary" class="o_form_label mb-n2" colspan="2"/>
                                 <field name="plan_schedule_line_ids" nolabel="1" class="text-muted mt-n2 small" colspan="2">
                                     <list edit="0" no_open="1" class="o_mail_activity_schedule_summary">
-                                        <field name="responsible_user_id" nolabel="1" widget="many2one_avatar_user" width="22px"/>
+                                        <field name="responsible_user_id" nolabel="1" widget="many2one_avatar_user" width="22px"
+                                            options="{'no_quick_create': True}"/>
                                         <field name="line_description" nolabel="1"/>
                                         <field name="line_date_deadline" nolabel="1"/>
                                     </list>
@@ -46,7 +47,8 @@
                                 <field name="res_model" widget="activity_model_selector" string="Link to"
                                     invisible="id or context.get('active_model')"/>
                                 <field name="date_deadline" string="Due Date"/>
-                                <field name="activity_user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
+                                <field name="activity_user_id" widget="many2one_avatar_user" placeholder="Unassigned"
+                                    options="{'no_quick_create': True}"/>
                             </group>
                             <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..."/>
                         </group>

@@ -263,7 +263,7 @@
                     <field name="name" readonly="1"/>
                     <field name="channel_id" readonly="1"/>
                     <field name="category_id" readonly="1" optional="hide"/>
-                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                     <field name="is_published"/>
                     <field name="date_published" readonly="1"/>
                     <field name="completion_time" sum="Total" readonly="1" widget="float_time"/>
@@ -278,7 +278,7 @@
             <field name="arch" type="xml">
                 <list string="Contents" sample="1">
                     <field name="name"/>
-                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="user_id" widget="many2one_avatar_user" options="{'no_quick_create': True}"/>
                     <field name="channel_id"/>
                     <field name="category_id" optional="hide"/>
                     <field name="date_published"/>
