@@ -18,7 +18,7 @@ registerWebsitePreviewTour('website_sale_restricted_editor_ui', {
     },
     {
         // Wait for the possibility to edit to appear
-        trigger: ".o_menu_systray .o_edit_website_container a",
+        trigger: ".o_menu_systray a:contains('Edit')",
     },
     {
         content: "Ensure the publish and 'edit-in-backend' buttons are not shown",
