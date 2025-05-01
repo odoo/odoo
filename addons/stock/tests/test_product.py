@@ -366,3 +366,22 @@ class TestVirtualAvailable(TestStockCommon):
         self.product_3.write({'is_storable': False})
 
         self.picking_out.button_validate()
+
+    def test_qty_available_values_on_product(self):
+        """
+        Test that qty_available can be set to 0.0 on a product
+        """
+        product = self.env['product.product'].create({
+            'name': 'Test Qty Available Product',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        self.assertEqual(product.qty_available, 0.0)
+
+        with Form(product) as product_form:
+            product_form.qty_available = 10.0
+        self.assertEqual(product.qty_available, 10.0)
+
+        with Form(product) as product_form:
+            product_form.qty_available = 0.0
+        self.assertEqual(product.qty_available, 0.0)
