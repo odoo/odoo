@@ -510,6 +510,18 @@ describe("Link creation", () => {
                 '<p><a href="https://test.com">Hello[]</a></p>'
             );
         });
+        test("when you open image link popover, url input should be focus by default", async () => {
+            const { el } = await setupEditor(`<p>[<img src="${base64Img}">]</p>`);
+            await waitFor(".o-we-toolbar");
+            await click(".o-we-toolbar .fa-link");
+            await waitFor(".o-we-linkpopover", { timeout: 1500 });
+            expect(".o-we-linkpopover input.o_we_href_input_link").toBeFocused();
+
+            await press("escape");
+            await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+            expect(".o-we-linkpopover").toHaveCount(0);
+            expect(getContent(el)).toBe(`<p>[<img src="${base64Img}">]</p>`);
+        });
         test("should be correctly unlink/link", async () => {
             const { el } = await setupEditor('<p>aaaa[b<a href="http://test.com/">cd</a>e]f</p>');
             await waitFor(".o-we-toolbar");
