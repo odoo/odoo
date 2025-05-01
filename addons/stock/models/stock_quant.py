@@ -1000,6 +1000,12 @@ class StockQuant(models.Model):
         self.inventory_quantity_set = True
         move_vals = []
         for quant in self:
+            # if inventory applied from product's inverse_qty and the inventory_diff_quantity is 0,
+            # we skip creating a move with 0 quantity.
+            if quant._context.get('from_inverse_qty') and float_compare(
+                quant.inventory_diff_quantity, 0.0, precision_rounding=quant.product_uom_id.rounding
+            ) == 0:
+                continue
             # Create and validate a move so that the quant matches its `inventory_quantity`.
             if quant.product_uom_id.compare(quant.inventory_diff_quantity, 0) > 0:
                 move_vals.append(
