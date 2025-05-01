@@ -482,6 +482,17 @@ class PosConfig(models.Model):
 
         result = super(PosConfig, self).write(vals)
 
+<<<<<<< ce181d902b0620b6389ad1c5f76e63c241f3c434
+||||||| 00adf003a7e1aa684e2e34aebede9d5ddc92293d
+        if self.use_presets and self.default_preset_id.id not in self.available_preset_ids.ids:
+            self.available_preset_ids |= self.default_preset_id
+
+=======
+        for config in self:
+            if config.use_presets and config.default_preset_id.id not in config.available_preset_ids.ids:
+                config.available_preset_ids |= config.default_preset_id
+
+>>>>>>> 58ce98db9fe059c297f0816f61c4890ec0427f90
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()
