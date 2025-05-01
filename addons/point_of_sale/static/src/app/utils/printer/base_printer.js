@@ -46,7 +46,13 @@ export class BasePrinter {
                 return this.getResultsError(printResult);
             }
         }
-        return { successful: true };
+        return {
+            successful: true,
+            error:
+                printResult.printerErrorStatus === 251854870
+                    ? this.getResultsError(printResult)
+                    : "",
+        };
     }
 
     async sendPrintingJob() {

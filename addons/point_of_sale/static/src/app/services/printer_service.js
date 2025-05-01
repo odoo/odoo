@@ -31,7 +31,7 @@ export class PrinterService extends Reactive {
         }
         const printResult = await this.device.printReceipt(el);
         if (printResult.successful) {
-            return true;
+            return printResult;
         }
         throw {
             title: printResult.message.title || "Error",
