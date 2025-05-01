@@ -135,3 +135,24 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
             'uom_id': uom.id,
         })
         self.assertTrue(product, "The default purchase UOM should be in the same category as the sale UOM.")
+
+    def test_unlock_purchase_order(self):
+        """Check that purchase managers can unlock purchase orders."""
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.vendor
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product
+            po_line.product_qty = 1.0
+        po = po_form.save()
+        po.button_confirm()
+        self.env.company.po_lock = 'lock'
+        po.button_lock()
+
+        manager_1 = self.env['res.users'].create({
+            'login': 'manager_1',
+            'name': 'manager_1',
+            'group_ids': self.env.ref('purchase.group_purchase_manager'),
+        })
+
+        po.with_user(manager_1).button_unlock()
+        self.assertFalse(po.locked)

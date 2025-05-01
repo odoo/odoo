@@ -539,6 +539,10 @@ class PurchaseOrder(models.Model):
         return True
 
     def button_cancel(self):
+        locked_purchase_orders = self.filtered(lambda po: po.locked)
+        if locked_purchase_orders:
+            raise UserError(_("Unable to cancel purchase order(s): %s. You must first unlock them.", locked_purchase_orders.mapped('display_name')))
+
         purchase_orders_with_invoices = self.filtered(lambda po: any(i.state not in ('cancel', 'draft') for i in po.invoice_ids))
         if purchase_orders_with_invoices:
             raise UserError(_("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", purchase_orders_with_invoices.mapped('display_name')))
@@ -548,8 +552,6 @@ class PurchaseOrder(models.Model):
         self.locked = True
 
     def button_unlock(self):
-        if self.lock_confirmed_po == 'lock':
-            raise UserError(_("Unlocking the order is not allowed as 'Lock Confirmed Orders' is enabled."))
         self.locked = False
 
     def _prepare_supplier_info(self, partner, line, price, currency):
