@@ -68,7 +68,7 @@ export class LinkPopover extends Component {
         });
 
         this.editingWrapper = useRef("editing-wrapper");
-        this.inputRef = useRef(this.state.isImage || "label");
+        this.inputRef = useRef(this.state.isImage ? "url" : "label");
         useEffect(
             (el) => {
                 if (el) {
