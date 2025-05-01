@@ -103,8 +103,6 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
             ]
         })
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_compare_list_price_price_list_display(self):
         self.env['res.config.settings'].create({'group_product_price_comparison': True}).execute()
         self.start_tour("/", 'compare_list_price_price_list_display', login=self.env.user.login)
