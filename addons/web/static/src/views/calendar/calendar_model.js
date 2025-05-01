@@ -351,9 +351,10 @@ export class CalendarModel extends Model {
     }
     async updateRecord(record, options = {}) {
         const rawRecord = this.buildRawRecord(record, options);
+        const context = { ...this.meta.context, ...options.context };
         delete rawRecord.name; // name is immutable.
         await this.orm.write(this.meta.resModel, [record.id], rawRecord, {
-            context: this.meta.context,
+            context: context,
         });
         await this.load();
     }
