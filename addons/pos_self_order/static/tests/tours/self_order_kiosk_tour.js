@@ -178,3 +178,16 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_sides", {
         Utils.clickBtn("Add to cart"),
     ],
 });
+
+registry.category("web_tour.tours").add("test_self_order_kiosk_combo_qty_max_free", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectKioskLocation("Test-In"),
+        CategoryPage.clickKioskCategory("Category 2"),
+        ProductPage.clickKioskProduct("Office Combo"),
+        ProductPage.clickKioskProduct("Combo Product 4"),
+        ...Utils.increaseComboItemQty("Combo Product 4", 3),
+        Utils.clickBtn("Next"),
+        Utils.clickBtn("Add to cart"),
+    ],
+});
