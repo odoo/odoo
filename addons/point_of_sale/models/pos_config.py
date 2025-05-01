@@ -23,10 +23,7 @@ class PosConfig(models.Model):
     _check_company_auto = True
 
     def _default_warehouse_id(self):
-        warehouse = self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
-        if not warehouse:
-            self.env['stock.warehouse']._warehouse_redirect_warning()
-        return warehouse
+        return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
 
     def _default_picking_type_id(self):
         return self.env['stock.warehouse'].with_context(active_test=False).search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
@@ -429,6 +426,11 @@ class PosConfig(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if not self._default_warehouse_id():
+            self.env['stock.warehouse'].create({
+                'code': vals_list[0].get('name')[:3],  # first 3 characters of pos.config name
+                'company_id': self.env.company.id,
+            })
         for vals in vals_list:
             self._check_header_footer(vals)
             IrSequence = self.env['ir.sequence'].sudo()
