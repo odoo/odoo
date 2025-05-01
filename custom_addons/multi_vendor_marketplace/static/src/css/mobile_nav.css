@@ -116,4 +116,22 @@
         padding-top: 0.5rem; 
         padding-bottom: 0.5rem;
     }
+
+    .navbar-toggler {
+        display: none !important;
+    }
+
+    header:not(.d-block) {
+        display: none !important;
+    }
+    
+    /* Ensure proper spacing for the visible header */
+    header.d-block {
+        padding: 10px 15px;
+    }
+
+    /* Keep only one logo visible */
+    header.d-block .navbar-brand {
+        margin: 0 auto;
+    }
 } 

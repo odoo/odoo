@@ -183,4 +183,22 @@
             </nav>
         </xpath>
     </template>
+
+    <template id="mobile_header_logo" inherit_id="website.layout" name="Mobile Only Logo Header">
+        <xpath expr="//header" position="attributes">
+            <attribute name="class" add="d-none d-lg-block" separator=" "/>
+        </xpath>
+        <xpath expr="//header" position="after">
+            <header class="d-block d-lg-none text-center" data-anchor="true">
+                <t t-set="_link_class" t-value=""/>
+                <t t-call="website.placeholder_header_brand"/>
+            </header>
+        </xpath>
+    </template>
+
+    <template id="hide_mobile_navbar_toggler" inherit_id="website.navbar_toggler" name="Hide Navbar Toggler On Mobile">
+        <xpath expr="//button" position="attributes">
+            <attribute name="class" add="d-none d-lg-block" separator=" "/>
+        </xpath>
+    </template>
 </odoo>
