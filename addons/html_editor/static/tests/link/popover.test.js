@@ -685,6 +685,42 @@ describe("Link formatting in the popover", () => {
             '<p><a href="http://test.com/">link1[]</a></p>'
         );
     });
+    test("should close link popover on discard without input", async () => {
+        const { el, editor } = await setupEditor("<p>[]</p>");
+        await insertText(editor, "/link");
+        await animationFrame();
+        await click(".o-we-command-name:first");
+        await animationFrame();
+        await waitFor(".o-we-linkpopover");
+
+        await contains(".o_we_discard_link").click();
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+        expect(".o-we-linkpopover").toHaveCount(0);
+        expect(getContent(el)).toBe(
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+        );
+    });
+    test("clicking the discard button should revert the link creation", async () => {
+        const { el } = await setupEditor("<p>[link1]</p>");
+        await waitFor(".o-we-toolbar");
+        await click(".o-we-toolbar .fa-link");
+
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#", {
+            confirm: false,
+        });
+
+        await click('select[name="link_type"]');
+        await select("secondary");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><a href="#" class="btn btn-fill-secondary">link1</a></p>'
+        );
+        await click(".o_we_discard_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[link1]</p>");
+        await animationFrame();
+        await waitForNone(".o-we-linkpopover"); // Popover should be closed.
+        await animationFrame();
+        await waitFor(".o-we-toolbar"); // Toolbar should re open.
+    });
     test("when no label input, the link should have the content of the url", async () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/link");
