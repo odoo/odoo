@@ -246,7 +246,7 @@ msgid ""
 msgstr ""
 "*新規: 在庫移動が作成されましたがまだ確認されていません。\n"
 "*他の移動まち: この前にリンクされた在庫移動が完了する必要があります。\n"
-"* 利用可能在庫待ち: 在庫移動は確認されましたがプロダクトが引当できません。\n"
+"* 在庫待ち: 在庫移動は確認されましたがプロダクトが引当できません。\n"
 "* 在庫利用可能: 在庫移動のプロダクトは引当済です。\n"
 "* 完了: プロダクトが転送され、転送が検証されました。"
 
@@ -497,8 +497,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>すべてのプロダクトを予約できませんでした。 "
-"'在庫確認'ボタンをクリックして、プロダクトの予約を試みてください。</i>"
+"<i class=\"fa fa-exclamation-triangle\"/>1すべての商品を引当できませんでした。 '在庫を確認' "
+"ボタンをクリックして、プロダクトの引当を試みてください</i>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1317,7 +1317,7 @@ msgstr "自動 (ステップ追加なし)"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_simple
 #, python-format
 msgid "Available"
-msgstr "処理可能"
+msgstr "利用可能"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -1463,7 +1463,7 @@ msgid ""
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
-"デフォルトでは、システムは移動元ロケーションの在庫から引き当て、受け入れ可能になるまで受動的に待機します。もう一つの方法として、供給元ロケーションに対して直接調達を作成し(現在の在庫状況を無視して)、プロダクトを集めることも可能です。もし移動を連鎖させ、この移動を前の移動が完了するまで待機させたい場合は、後者のオプションを選択する必要があります。"
+"デフォルトでは、システムは移動元ロケーションの在庫から取得し、在庫が利用可能になるのを受動的に待機します。一方、もう一つの方法では、出庫元ロケーションに対して直接調達を作成し、現在の在庫を無視してプロダクトを手配することができます。在庫移動を連鎖させ、この移動を前の移動が完了するまで待機させたい場合は、後者の方法を選択する必要があります。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -1631,7 +1631,7 @@ msgstr "製品の変更は、'ドラフト'状態でのみ許可されます。"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Check Availability"
-msgstr "利用可能確認"
+msgstr "在庫を確認"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_packages
@@ -3237,7 +3237,7 @@ msgstr "予測"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecast_availability
 msgid "Forecast Availability"
-msgstr "可用性の予測"
+msgstr "予測在庫"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -6641,7 +6641,7 @@ msgstr "プロダクト"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__products_availability_state
 msgid "Products Availability State"
-msgstr "製品の入手可能性の状態"
+msgstr "プロダクトの在庫可用性ステータス"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__priority
@@ -8091,7 +8091,7 @@ msgstr "割り当てを表示"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_check_availability
 msgid "Show Check Availability"
-msgstr "チェックの可用性を表示"
+msgstr "在庫確認ボタンを表示"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_clear_qty_button
@@ -8643,7 +8643,7 @@ msgstr "技術情報"
 msgid ""
 "Technical field used to compute whether the button \"Check Availability\" "
 "should be displayed."
-msgstr "可用性の確認'ボタンを表示するかどうかを計算するために使用される技術フィールド。"
+msgstr " \"在庫を確認\" ボタンを表示するかどうかを計算するために使用される技術フィールド。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_tmpl_id
@@ -9801,7 +9801,7 @@ msgstr "ビュー"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "View Availability"
-msgstr "利用可能表示"
+msgstr "在庫を表示"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
