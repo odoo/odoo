@@ -14,6 +14,20 @@ const clickOnImgStep = {
     run: "click",
 };
 
+const clickOnLink = (selector) => ({
+    content: "Click on the link",
+    trigger: selector,
+    async run(actions) {
+        await actions.click();
+        const el = actions.anchor;
+        if (el) {
+            const sel = el.ownerDocument.getSelection();
+            sel.collapse(el.childNodes[1], 1);
+            el.focus();
+        }
+    },
+});
+
 registerWebsitePreviewTour('link_tools', {
     url: '/',
     edition: true,
@@ -63,11 +77,7 @@ registerWebsitePreviewTour('link_tools', {
     },
     // Remove the link.
     // TODO: VISP This step is not working. Correct this.
-    {
-        content: "Click on the newly created link",
-        trigger: ":iframe #wrap .s_text_image a[href='https://odoo.com']",
-        run: "click",
-    },
+    clickOnLink(":iframe #wrap .s_text_image a[href='https://odoo.com']:contains('odoo.com')"),
     {
         content: "Remove the link.",
         trigger: ".o-we-linkpopover a.o_we_remove_link .fa-chain-broken",
@@ -102,12 +112,7 @@ registerWebsitePreviewTour('link_tools', {
     }, 
     clickOnImgStep,
     // 2. Edit the link with the link tools.
-    // TODO: VISP This step is not working. Correct this.
-    {
-        content: "Click on the newly created link",
-        trigger: ":iframe .s_text_image a[href='https://odoo.com']:contains('odoo.com')",
-        run: "click",
-    },
+    clickOnLink(":iframe .s_text_image a[href='https://odoo.com']:contains('odoo.com')"),
     {
         content: "Click on edit button in link popover",
         trigger: ".o-we-linkpopover .o_we_edit_link",
@@ -129,12 +134,7 @@ registerWebsitePreviewTour('link_tools', {
         run: 'editor odoo website',
     },
     clickOnImgStep,
-    // TODO: VISP 
-    {
-        content: "Click again on the link",
-        trigger: ':iframe .s_text_image a[href="https://odoo.com/"]:contains("odoo website")',
-        run: "click",
-    },
+    clickOnLink(":iframe .s_text_image a[href='https://odoo.com/']:contains('odoo website')"),
     {
         content: "Click on edit button in link popover",
         trigger: ".o-we-linkpopover .o_we_edit_link",
@@ -157,12 +157,7 @@ registerWebsitePreviewTour('link_tools', {
     ...clickOnSave(),
     // 3. Edit a link after saving the page.
     ...clickOnEditAndWaitEditMode(),
-    // TODO: VISP This step is not working. Correct this.
-    {
-        content: "The new link content should be odoo website and url odoo.be",
-        trigger: ':iframe .s_text_image a[href="https://odoo.be"]:contains("odoo website")',
-        run: "click",
-    },
+    clickOnLink(":iframe .s_text_image a[href='http://odoo.be']:contains('odoo website')"),
     {
         content: "Click on edit button in link popover",
         trigger: ".o-we-linkpopover .o_we_edit_link",
@@ -181,7 +176,7 @@ registerWebsitePreviewTour('link_tools', {
     ...clickOnSave(),
     {
         content: "The link should have the secondary button style.",
-        trigger: ':iframe .s_text_image a.btn.btn-fill-secondary[href="https://odoo.be/"]:contains("odoo website")',
+        trigger: ':iframe .s_text_image a.btn.btn-fill-secondary[href="http://odoo.be/"]:contains("odoo website")',
     },
     // 4. Add link on image.
     ...clickOnEditAndWaitEditMode(),
@@ -197,14 +192,14 @@ registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Activate link.",
-        trigger: '.o_we_customize_panel we-row:contains("Media") we-button.fa-link',
+        trigger: ".o_customize_tab button[data-action-id='setLink'].fa-link",
         run: "click",
     },
     {
         content: "Set URL.",
-        trigger: '.o_we_customize_panel we-input:contains("Your URL") input',
+        trigger: ".o_customize_tab div[data-action-id='setUrl'] input",
         // TODO: remove && click
-        run: "edit odoo.com && click(we-title:contains(Your URL))",
+        run: "edit odoo.com",
     },
     {
         content: "Deselect image.",
@@ -222,7 +217,7 @@ registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that link tools appear.",
-        trigger: ':iframe .popover div a:contains("https://odoo.com")',
+        trigger: '.o-we-linkpopover div a:contains("http://odoo.com/")',
     },
     ...clickOnSave(),
     {
@@ -242,11 +237,11 @@ registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that link tools appear.",
-        trigger: ':iframe .popover div a:contains("https://odoo.com")',
+        trigger: '.o-we-linkpopover div a:contains("http://odoo.com/")',
     },
     {
         content: "Remove link.",
-        trigger: ':iframe .popover:contains("https://odoo.com") a .fa-chain-broken',
+        trigger: '.o-we-linkpopover a.o_we_remove_link .fa-chain-broken',
         run: "click",
     },
     {
@@ -254,7 +249,7 @@ registerWebsitePreviewTour('link_tools', {
         trigger: ':iframe .s_three_columns .row > :nth-child(1) figure > img',
     },
     // 6. Add mega menu with Cards template and edit URL on text-selected card.
-    clickOnElement("menu link", ":iframe header .nav-item a"),
+    clickOnElement("menu link", ":iframe header .nav-item a.nav-link"),
     clickOnElement("'Edit menu' icon", ":iframe .o_edit_menu_popover .fa-sitemap"),
     {
         trigger: ".o_website_dialog:visible",
