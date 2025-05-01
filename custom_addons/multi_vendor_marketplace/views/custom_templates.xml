@@ -284,6 +284,65 @@
                     #wrapwrap > main {
                         margin-top: 0 !important;
                     }
+
+                    /* Product Options Modal Styles */
+                    #productOptionsModal .modal-content {
+                        border-radius: 16px 16px 0 0;
+                        margin-top: auto;
+                    }
+
+                    #productOptionsModal .modal-dialog {
+                        position: fixed;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        margin: 0;
+                        max-width: none;
+                    }
+
+                    #productOptionsModal .quantity-selector {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    #productOptionsModal .quantity-selector button {
+                        width: 36px;
+                        height: 36px;
+                        border-radius: 50%;
+                        border: 1px solid #ddd;
+                        background: white;
+                        font-size: 18px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    #productOptionsModal .quantity-selector input {
+                        width: 60px;
+                        text-align: center;
+                        border: none;
+                        font-size: 16px;
+                    }
+
+                    #productOptionsModal .variant-select {
+                        border: 1px solid #ddd;
+                        padding: 10px;
+                        border-radius: 8px;
+                        width: 100%;
+                        margin-top: 5px;
+                    }
+
+                    #productOptionsModal .modal-footer {
+                        padding: 16px;
+                        gap: 10px;
+                    }
+
+                    #productOptionsModal .modal-footer button {
+                        flex: 1;
+                        border-radius: 8px;
+                        padding: 12px;
+                    }
                 </style>
 
                 <div class="container pb-5">
@@ -414,8 +473,72 @@
                         </div>
                     </div>
 
+                    <!-- Product Options Modal -->
+                    <div class="modal fade" id="productOptionsModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header border-0 pb-0">
+                                    <h5 class="modal-title" id="productOptionsModalLabel">
+                                        <span t-field="product.name"/>
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Product Basic Info -->
+                                    <div class="d-flex gap-3 mb-4">
+                                        <img t-if="product.image_128" t-att-src="image_data_uri(product.image_128)" 
+                                             class="rounded" style="width: 80px; height: 80px; object-fit: cover;"/>
+                                        <div>
+                                            <div class="product_price" t-cache="price">
+                                                <h4 class="text-success mb-0">
+                                                    <t t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                </h4>
+                                            </div>
+                                            <small class="text-muted" t-if="product.default_code">
+                                                SKU: <span t-field="product.default_code"/>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Quantity Selector -->
+                                    <div class="mb-4">
+                                        <label class="form-label">Quantity</label>
+                                        <div class="quantity-selector">
+                                            <button type="button" class="btn-quantity-decrease">-</button>
+                                            <input type="number" value="1" min="1" class="quantity-input"/>
+                                            <button type="button" class="btn-quantity-increase">+</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Variants Selection -->
+                                    <div t-if="product.attribute_line_ids" class="mb-4">
+                                        <t t-foreach="product.attribute_line_ids" t-as="attribute_line">
+                                            <div class="mb-3">
+                                                <label class="form-label">
+                                                    <t t-esc="attribute_line.attribute_id.name"/>
+                                                </label>
+                                                <select class="variant-select" 
+                                                        t-att-name="'attribute-%s-%s' % (product.id, attribute_line.attribute_id.id)">
+                                                    <t t-foreach="attribute_line.value_ids" t-as="value">
+                                                        <option t-att-value="value.id">
+                                                            <t t-esc="value.name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-0">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-success modal-action-button">Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Fixed Bottom Action Buttons -->
-                    <div class="product-actions-container fixed-bottom bg-white border-top py-2 px-3" style="z-index: 1050; bottom: 0;">
+                    <div class="product-actions-container fixed-bottom bg-white border-top py-2 px-3" style="z-index: 1050;">
                         <div class="d-flex gap-2 align-items-stretch">
                             <!-- Secondary Actions -->
                             <div class="product-secondary-actions">
@@ -427,40 +550,89 @@
                             <!-- Main Actions -->
                             <div class="product-main-actions flex-grow-1">
                                 <div class="d-flex gap-2 h-100">
-                                    <button type="button" class="btn btn-success opacity-75 flex-grow-1" id="add_to_cart_button">
+                                    <button type="button" class="btn btn-success opacity-75 flex-grow-1" 
+                                            data-action="add_to_cart" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#productOptionsModal">
                                         <i class="fa fa-shopping-cart me-1"></i>Add
                                     </button>
-                                    <form t-att-action="keep('/shop/cart/update')" method="POST" class="flex-grow-1">
-                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                        <input type="hidden" name="product_id" t-att-value="product_variant.id"/>
-                                        <input type="hidden" name="add_qty" value="1"/>
-                                        <button type="submit" class="btn btn-success w-100 h-100" name="express" value="1" style="background-color: #089454;">
-                                            <i class="fa fa-bolt me-1"></i>Buy Now
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-success flex-grow-1" 
+                                            data-action="buy_now"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#productOptionsModal" 
+                                            style="background-color: #089454;">
+                                        <i class="fa fa-bolt me-1"></i>Buy Now
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Add to Cart Form (Hidden) -->
+                    <!-- Hidden Forms -->
                     <form id="add_to_cart_form" t-att-action="keep('/shop/cart/update')" method="POST" class="d-none">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <input type="hidden" name="product_id" t-att-value="product_variant.id"/>
                         <input type="hidden" name="add_qty" value="1"/>
                     </form>
 
-                    <!-- Inline Script -->
+                    <form id="buy_now_form" t-att-action="keep('/shop/cart/update')" method="POST" class="d-none">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="product_id" t-att-value="product_variant.id"/>
+                        <input type="hidden" name="add_qty" value="1"/>
+                        <input type="hidden" name="express" value="1"/>
+                    </form>
+
+                    <!-- Add JavaScript for modal handling -->
                     <script type="text/javascript">
                         document.addEventListener('DOMContentLoaded', function() {
-                            var addToCartButton = document.getElementById('add_to_cart_button');
+                            var modal = document.getElementById('productOptionsModal');
+                            var quantityInput = modal.querySelector('.quantity-input');
+                            var decreaseBtn = modal.querySelector('.btn-quantity-decrease');
+                            var increaseBtn = modal.querySelector('.btn-quantity-increase');
+                            var actionButton = modal.querySelector('.modal-action-button');
                             var addToCartForm = document.getElementById('add_to_cart_form');
+                            var buyNowForm = document.getElementById('buy_now_form');
+                            var currentAction = '';
 
-                            if (addToCartButton &amp;&amp; addToCartForm) {
-                                addToCartButton.addEventListener('click', function(e) {
-                                    e.preventDefault();
-                                    var formData = new FormData(addToCartForm);
-                                    
+                            // Handle quantity changes
+                            decreaseBtn.addEventListener('click', function() {
+                                var value = parseInt(quantityInput.value);
+                                if (value > 1) {
+                                    quantityInput.value = value - 1;
+                                }
+                            });
+
+                            increaseBtn.addEventListener('click', function() {
+                                var value = parseInt(quantityInput.value);
+                                quantityInput.value = value + 1;
+                            });
+
+                            // Update modal based on which button was clicked
+                            modal.addEventListener('show.bs.modal', function(event) {
+                                var button = event.relatedTarget;
+                                currentAction = button.dataset.action;
+                                actionButton.textContent = currentAction === 'buy_now' ? 'Buy Now' : 'Add to Cart';
+                            });
+
+                            // Handle form submission
+                            actionButton.addEventListener('click', function() {
+                                var form = currentAction === 'buy_now' ? buyNowForm : addToCartForm;
+                                var formData = new FormData(form);
+                                
+                                // Update quantity
+                                formData.set('add_qty', quantityInput.value);
+                                
+                                // Add variant selections if any
+                                modal.querySelectorAll('.variant-select').forEach(function(select) {
+                                    formData.append(select.name, select.value);
+                                });
+
+                                if (currentAction === 'buy_now') {
+                                    // Submit form directly for buy now
+                                    form.querySelector('[name="add_qty"]').value = quantityInput.value;
+                                    form.submit();
+                                } else {
+                                    // Use AJAX for add to cart
                                     fetch('/shop/cart/update_json', {
                                         method: 'POST',
                                         body: formData,
@@ -468,8 +640,8 @@
                                             'X-Requested-With': 'XMLHttpRequest'
                                         }
                                     })
-                                    .then(response =&gt; response.json())
-                                    .then(data =&gt; {
+                                    .then(response => response.json())
+                                    .then(data => {
                                         if (data.cart_quantity !== undefined) {
                                             var quantityElements = document.querySelectorAll('.my_cart_quantity');
                                             quantityElements.forEach(function(el) {
@@ -477,9 +649,12 @@
                                                 el.parentElement.classList.remove('d-none');
                                             });
                                         }
+                                        // Close modal
+                                        var modalInstance = bootstrap.Modal.getInstance(modal);
+                                        modalInstance.hide();
                                     });
-                                });
-                            }
+                                }
+                            });
                         });
                     </script>
                 </div>
