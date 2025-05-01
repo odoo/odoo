@@ -249,3 +249,35 @@ class TestMrpMulticompany(common.TransactionCase):
         new_company = self.env['res.company'].create({'name': 'Super Company'})
         new_warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)], limit=1)
         self.assertEqual(new_warehouse.manufacture_pull_id.route_id.company_id, new_company)
+
+    def test_company_specific_routes_and_warehouse_creation(self):
+        """ Check that we are able to create a new warehouse when the generic manufacture route
+        is in a different company. """
+        group_stock_manager = self.env.ref('stock.group_stock_manager')
+        self.user_a.write({'groups_id': [(4, group_stock_manager.id)]})
+
+        manufacture_route = self.env.ref('mrp.route_warehouse0_manufacture')
+        for rule in manufacture_route.rule_ids.sudo():
+            rule_company = rule.company_id
+            if not rule_company or rule_company == self.company_a:
+                continue
+            manufacture_route.copy({
+                'company_id': rule_company.id,
+                'rule_ids': [(4, rule.id)],
+            })
+        manufacture_route.company_id = self.company_a
+
+        # Enable multi warehouse
+        group_user = self.env.ref('base.group_user')
+        group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
+        group_stock_multi_locations = self.env.ref('stock.group_stock_multi_locations')
+        self.env['res.config.settings'].create({
+            'group_stock_multi_locations': True,
+        }).execute()
+        group_user.write({'implied_ids': [(4, group_stock_multi_warehouses.id), (4, group_stock_multi_locations.id)]})
+
+        new_warehouse = self.env['stock.warehouse'].with_user(self.user_a).with_context(allowed_company_ids=[self.company_b.id]).create({
+            'name': 'Warehouse #2',
+            'code': 'WH2',
+        })
+        self.assertEqual(new_warehouse.manufacture_pull_id.route_id.company_id, self.company_b)
