@@ -882,7 +882,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_duplicate_moves(self):
         for wizard in self:
             if wizard.can_edit_wizard:
-                wizard.duplicate_payment_ids = self._fetch_duplicate_reference().get(0, self.env['account.payment'])
+                wizard.duplicate_payment_ids = wizard._fetch_duplicate_reference().get(0, self.env['account.payment'])
             else:
                 wizard.duplicate_payment_ids = self.env['account.payment']
 

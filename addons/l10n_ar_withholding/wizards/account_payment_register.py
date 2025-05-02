@@ -29,10 +29,10 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard_register -= wizard
         wizard_register.l10n_ar_adjustment_warning = False
 
-    @api.depends('amount', 'l10n_ar_withholding_ids.amount')
+    @api.depends('is_main_payment','amount', 'payment_total', 'l10n_ar_withholding_ids.amount')
     def _compute_l10n_ar_net_amount(self):
         for rec in self:
-            rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
+            rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount')) if not rec.is_main_payment else 0
 
     def _create_payment_vals_from_wizard(self, batch_result):
         payment_vals = super()._create_payment_vals_from_wizard(batch_result)
@@ -99,9 +99,9 @@ class AccountPaymentRegister(models.TransientModel):
             )
         return 1.0
 
-    @api.depends('partner_id', 'payment_date')
+    @api.depends('partner_id', 'payment_date', 'main_payment_id')
     def _compute_l10n_ar_withholding_ids(self):
-        for wizard in self:
+        for wizard in self.filtered(lambda x: not x.main_payment_id):
             date = wizard.payment_date or fields.Date.context_today(self)
             partner_taxes = self.env['l10n_ar.partner.tax'].search([
                 *self.env['l10n_ar.partner.tax']._check_company_domain(wizard.company_id),
@@ -116,3 +116,10 @@ class AccountPaymentRegister(models.TransientModel):
         if self.l10n_ar_withholding_ids and not self.payment_method_line_id.payment_account_id:
             raise ValidationError(_("A payment cannot have withholding if the payment method has no outstanding accounts"))
         return super().action_create_payments()
+
+    @api.depends('l10n_ar_withholding_ids.amount')
+    def _compute_payment_difference(self):
+        super()._compute_payment_difference()
+        for wizard in self.filtered('l10n_ar_withholding_ids'):
+            if wizard.payment_date and wizard.payment_difference:
+                wizard.payment_difference -= abs(sum(wizard.l10n_ar_withholding_ids.mapped('amount')))

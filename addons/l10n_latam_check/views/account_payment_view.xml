@@ -5,7 +5,6 @@
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
-            <group>
                 <notebook>
                     <page name="latam_checks_page" string="Checks" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks', 'return_third_party_checks', 'new_third_party_checks', 'own_checks']">
                         <group name="latam_checks" colspan="2">
@@ -41,7 +40,6 @@
                         </group>
                     </page>
                 </notebook>
-            </group>
             <sheet position="before">
                 <div class="alert alert-danger mb-0" role="alert" invisible="not l10n_latam_check_warning_msg">
                     <field name="l10n_latam_check_warning_msg" nolabel="1"/>
