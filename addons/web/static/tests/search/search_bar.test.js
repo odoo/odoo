@@ -26,10 +26,13 @@ import {
     contains,
     defineActions,
     defineModels,
+    defineWebModels,
     editSearch,
     fields,
     getFacetTexts,
+    getService,
     models,
+    mountWebClient,
     mountWithCleanup,
     mountWithSearch,
     onRpc,
@@ -120,6 +123,12 @@ class Partner extends models.Model {
                 <filter string="Birthday" name="date_group_by" context="{'group_by': 'birthday:day'}"/>
             </search>
         `,
+        form: `
+            <form>
+                <field name="foo" />
+                <field name="bool" />
+            </form>
+        `,
     };
 }
 
@@ -131,7 +140,10 @@ defineActions([
         name: "Partners Action",
         res_model: "partner",
         search_view_id: [false, "search"],
-        views: [[false, "list"]],
+        views: [
+            [false, "list"],
+            [false, "form"],
+        ],
     },
 ]);
 
@@ -1914,4 +1926,21 @@ test("single name_search call and no flicker when holding ArrowRight", async fun
     }
     await press("arrowright");
     expect.verifySteps(["name_search"]);
+});
+
+test.tags("desktop");
+test("no crash when search component is destroyed with input", async () => {
+    const def = new Deferred();
+    onRpc("web_read", () => def);
+    defineWebModels();
+    await mountWebClient();
+    await getService("action").doAction(1);
+    expect(".o_list_view").toHaveCount(1);
+    await contains(".o_data_cell:eq(0)").click();
+    expect(".o_list_view").toHaveCount(1);
+    await editSearch("Jethalal");
+    def.resolve();
+    await animationFrame();
+    await runAllTimers();
+    expect(".o_form_view").toHaveCount(1);
 });
