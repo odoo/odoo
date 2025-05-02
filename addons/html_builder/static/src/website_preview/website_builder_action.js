@@ -186,6 +186,10 @@ export class WebsiteBuilder extends Component {
         this.preparePublicRootReady();
         this.setupClickListener();
         this.resolveIframeLoaded();
+        if (this.props.action.context.params?.with_loader) {
+            this.websiteService.hideLoader();
+            this.props.action.context.params.with_loader = false;
+        }
     }
 
     setupClickListener() {
