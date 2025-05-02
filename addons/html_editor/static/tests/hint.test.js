@@ -170,3 +170,10 @@ test("hint for blockquote should have the same padding as its text content", asy
     const paddingText = getComputedStyle(blockquote).padding;
     expect(paddingHint).toBe(paddingText);
 });
+
+test("hint for list containing a nested list", async () => {
+    const { el } = await setupEditor("<ul><li><p>[]<br></p><ul><li>abc</li></ul></li></ul>");
+    expect(getContent(el)).toBe(
+        `<ul><li><p o-we-hint-text="List" class="o-we-hint">[]<br></p><ul><li>abc</li></ul></li></ul>`
+    );
+});
