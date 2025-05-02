@@ -116,8 +116,6 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
                 response.url,
             )
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_gmc_items_prices_match_website_prices_default(self):
         self.update_items()
 
@@ -132,8 +130,6 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             'website_sale_gmc_check_advertised_prices_blue_sofa_default',
         )
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_gmc_items_prices_match_website_prices_christmas(self):
         self.christmas_pricelist = self._create_pricelist(
             name="EUR Christmas Sales",
