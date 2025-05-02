@@ -9,8 +9,6 @@ from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleCartRecovery(HttpCaseWithUserPortal):
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_01_shop_cart_recovery_tour(self):
         """The goal of this test is to make sure cart recovery works."""
         self.env.ref('base.user_admin').write({
