@@ -15,7 +15,8 @@ class EventRegistration(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'event_id', 'event_ticket_id', 'pos_order_line_id', 'pos_order_id', 'phone', 'email', 'name', 'registration_answer_ids', 'registration_answer_choice_ids']
+        return ['id', 'event_id', 'event_ticket_id', 'pos_order_line_id', 'pos_order_id', 'phone', 'email', 'name',
+                'registration_answer_ids', 'registration_answer_choice_ids', 'write_date']
 
     @api.model_create_multi
     def create(self, vals_list):
