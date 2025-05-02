@@ -59,8 +59,6 @@
         'html_builder.assets_edit_frontend': [
             ('include', 'website.assets_edit_frontend'),
             'html_builder/static/src/interactions/**/*.edit.*',
-            # the google map edit interaction was reimplemented locally to replace this
-            ('remove', 'website/static/src/snippets/s_google_map/google_map.edit.js'),
         ],
         'html_builder.iframe_add_dialog': [
             ('include', 'web.assets_frontend'),
