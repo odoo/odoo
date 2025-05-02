@@ -2378,6 +2378,25 @@
         return (getUnquotedSheetName(name1.trim().toUpperCase()) ===
             getUnquotedSheetName(name2.trim().toUpperCase()));
     }
+    function getNextSheetName(existingNames, baseName = "Sheet") {
+        let i = 1;
+        let name = `${baseName}${i}`;
+        while (existingNames.includes(name)) {
+            name = `${baseName}${i}`;
+            i++;
+        }
+        return name;
+    }
+    function getDuplicateSheetName(nameToDuplicate, existingNames) {
+        let i = 1;
+        const baseName = _lt("Copy of %s", nameToDuplicate);
+        let name = baseName.toString();
+        while (existingNames.includes(name)) {
+            name = `${baseName} (${i})`;
+            i++;
+        }
+        return name;
+    }
 
     /*
      * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -6085,10 +6104,13 @@
         sequence: 20,
         action: (env) => {
             const sheetIdFrom = env.model.getters.getActiveSheetId();
+            const sheetNameFrom = env.model.getters.getSheetName(sheetIdFrom);
             const sheetIdTo = env.model.uuidGenerator.smallUuid();
+            const sheetNameTo = env.model.getters.getDuplicateSheetName(sheetNameFrom);
             env.model.dispatch("DUPLICATE_SHEET", {
                 sheetId: sheetIdFrom,
                 sheetIdTo,
+                sheetNameTo,
             });
             env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom, sheetIdTo });
         },
@@ -22148,7 +22170,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     position: absolute;
     top: 0;
     left: ${HEADER_WIDTH}px;
-    right: 0;
+    right: ${SCROLLBAR_WIDTH}px;
     height: ${HEADER_HEIGHT}px;
     &.o-dragging {
       cursor: grabbing;
@@ -22319,9 +22341,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     position: absolute;
     top: ${HEADER_HEIGHT}px;
     left: 0;
-    right: 0;
+    bottom: ${SCROLLBAR_WIDTH}px;
     width: ${HEADER_WIDTH}px;
-    height: calc(100% - ${HEADER_HEIGHT + SCROLLBAR_WIDTH}px);
     &.o-dragging {
       cursor: grabbing;
     }
@@ -27437,6 +27458,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         initialMessages = dropCommands(initialMessages, "SORT_CELLS");
         initialMessages = dropCommands(initialMessages, "SET_DECIMAL");
         initialMessages = fixChartDefinitions(data, initialMessages);
+        initialMessages = fixTranslatedDuplicateSheetName(data, initialMessages);
         return initialMessages;
     }
     /**
@@ -27536,6 +27558,40 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         return messages;
+    }
+    function fixTranslatedDuplicateSheetName(data, initialMessages) {
+        var _a;
+        const sheetNames = {};
+        for (const sheet of data.sheets || []) {
+            sheetNames[sheet.id] = sheet.name;
+        }
+        const messages = [];
+        for (const message of initialMessages) {
+            if (message.type === "REMOTE_REVISION") {
+                const commands = [];
+                for (const cmd of message.commands) {
+                    switch (cmd.type) {
+                        case "DUPLICATE_SHEET":
+                            cmd.sheetNameTo =
+                                (_a = cmd.sheetNameTo) !== null && _a !== void 0 ? _a : getDuplicateSheetName(sheetNames[cmd.sheetId], Object.values(sheetNames));
+                            break;
+                        case "CREATE_SHEET":
+                        case "RENAME_SHEET":
+                            sheetNames[cmd.sheetId] = cmd.name || getNextSheetName(Object.values(sheetNames));
+                            break;
+                    }
+                    commands.push(cmd);
+                }
+                messages.push({
+                    ...message,
+                    commands,
+                });
+            }
+            else {
+                messages.push(message);
+            }
+        }
+        return initialMessages;
     }
     // -----------------------------------------------------------------------------
     // Helpers
@@ -30529,7 +30585,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return this.checkValidations(cmd, this.checkSheetName, this.checkSheetPosition);
                 }
                 case "DUPLICATE_SHEET": {
-                    return this.sheets[cmd.sheetIdTo] ? 12 /* CommandResult.DuplicatedSheetId */ : 0 /* CommandResult.Success */;
+                    if (this.sheets[cmd.sheetIdTo])
+                        return 12 /* CommandResult.DuplicatedSheetId */;
+                    if (this.orderedSheetIds.map(this.getSheetName.bind(this)).includes(cmd.sheetNameTo))
+                        return 11 /* CommandResult.DuplicatedSheetName */;
+                    return 0 /* CommandResult.Success */;
                 }
                 case "MOVE_SHEET":
                     const currentIndex = this.orderedSheetIds.indexOf(cmd.sheetId);
@@ -30615,7 +30675,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.showSheet(cmd.sheetId);
                     break;
                 case "DUPLICATE_SHEET":
-                    this.duplicateSheet(cmd.sheetId, cmd.sheetIdTo);
+                    this.duplicateSheet(cmd.sheetId, cmd.sheetIdTo, cmd.sheetNameTo);
                     break;
                 case "DELETE_SHEET":
                     this.deleteSheet(this.sheets[cmd.sheetId]);
@@ -30839,14 +30899,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return dimension === "COL" ? this.getNumberCols(sheetId) : this.getNumberRows(sheetId);
         }
         getNextSheetName(baseName = "Sheet") {
-            let i = 1;
             const names = this.orderedSheetIds.map(this.getSheetName.bind(this));
-            let name = `${baseName}${i}`;
-            while (names.includes(name)) {
-                name = `${baseName}${i}`;
-                i++;
-            }
-            return name;
+            return getNextSheetName(names, baseName);
         }
         getSheetSize(sheetId) {
             return {
@@ -31074,9 +31128,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         showSheet(sheetId) {
             this.history.update("sheets", sheetId, "isVisible", true);
         }
-        duplicateSheet(fromId, toId) {
+        duplicateSheet(fromId, toId, toName) {
             const sheet = this.getSheet(fromId);
-            const toName = this.getDuplicateSheetName(sheet.name);
             const newSheet = deepCopy(sheet);
             newSheet.id = toId;
             newSheet.name = toName;
@@ -31108,15 +31161,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.history.update("sheetIdsMapName", sheetIdsMapName);
         }
         getDuplicateSheetName(sheetName) {
-            let i = 1;
             const names = this.orderedSheetIds.map(this.getSheetName.bind(this));
-            const baseName = _lt("Copy of %s", sheetName);
-            let name = baseName.toString();
-            while (names.includes(name)) {
-                name = `${baseName} (${i})`;
-                i++;
-            }
-            return name;
+            return getDuplicateSheetName(sheetName, names);
         }
         deleteSheet(sheet) {
             const name = sheet.name;
@@ -31403,6 +31449,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getSheetZone",
         "getPaneDivisions",
         "checkElementsIncludeAllNonFrozenHeaders",
+        "getDuplicateSheetName",
     ];
 
     /**
@@ -43800,9 +43847,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.68';
-    __info__.date = '2025-04-25T08:10:32.128Z';
-    __info__.hash = '682d48e';
+    __info__.version = '16.0.69';
+    __info__.date = '2025-05-02T12:50:10.021Z';
+    __info__.hash = '51188e8';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
