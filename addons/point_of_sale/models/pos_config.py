@@ -219,16 +219,29 @@ class PosConfig(models.Model):
             'records': records
         })
 
-    def read_config_open_orders(self, domain, record_ids):
-        all_domain = expression.OR([domain, [('id', 'in', record_ids.get('pos.order')), ('config_id', '=', self.id)]])
-        all_orders = self.env['pos.order'].search(all_domain)
+    def read_config_open_orders(self, domain, record_ids=[]):
         delete_record_ids = {}
+        dynamic_records = {}
 
-        for model, ids in record_ids.items():
+        for model, domain in domain.items():
+            ids = record_ids[model]
             delete_record_ids[model] = [id for id in ids if not self.env[model].browse(id).exists()]
+            dynamic_records[model] = self.env[model].search(domain)
+
+        pos_order_data = dynamic_records.get('pos.order') or self.env['pos.order']
+        data = pos_order_data.read_pos_data([], self.id)
+
+        for key, records in dynamic_records.items():
+            fields = self.env[key]._load_pos_data_fields(self.id)
+            ids = list(set(records.ids + [record['id'] for record in data.get(key, [])]))
+            dynamic_records[key] = self.env[key].browse(ids).read(fields, load=False)
+
+        for key, value in data.items():
+            if key not in dynamic_records:
+                dynamic_records[key] = value
 
         return {
-            'dynamic_records': all_orders.filtered_domain(domain).read_pos_data([], self.id),
+            'dynamic_records': dynamic_records,
             'deleted_record_ids': delete_record_ids,
         }
 
