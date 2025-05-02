@@ -664,6 +664,22 @@ registry.category("web_tour.tours").add("test_draft_orders_not_syncing", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_one_attribute_value_scan_barcode", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            scan_barcode("1234567"),
+            ProductScreen.selectedOrderlineHas("Product Test", "1.0", "10", "Large, Red"),
+
+            scan_barcode("1234568"),
+            ProductScreen.selectedOrderlineHas("Product Test", "1.0", "10", "Large, Blue"),
+
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels", {
     steps: () =>
         [

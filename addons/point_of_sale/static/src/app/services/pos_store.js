@@ -598,12 +598,22 @@ export class PosStore extends WithLazyGetterTrap {
             return formattedUnitPrice;
         }
     }
-    async openConfigurator(pTemplate) {
+    async openConfigurator(pTemplate, opts = {}) {
         const attrById = this.models["product.attribute"].getAllBy("id");
         const attributeLines = pTemplate.attribute_line_ids.filter(
             (attr) => attr.attribute_id?.id in attrById
         );
-        const attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
+        let attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
+        if (opts.code) {
+            const product = this.models["product.product"].getBy("barcode", opts.code.base_code);
+            attributeLinesValues = attributeLinesValues.map((values) =>
+                values[0].attribute_id.create_variant === "no_variant"
+                    ? values
+                    : values.filter((value) =>
+                          product.product_template_attribute_value_ids.includes(value)
+                      )
+            );
+        }
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
                 productTemplate: pTemplate,
@@ -708,7 +718,7 @@ export class PosStore extends WithLazyGetterTrap {
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
         if (productTemplate.isConfigurable() && configure) {
-            const payload = await this.openConfigurator(productTemplate);
+            const payload = await this.openConfigurator(productTemplate, opts);
 
             if (payload) {
                 // Find candidate based on instantly created variants.
