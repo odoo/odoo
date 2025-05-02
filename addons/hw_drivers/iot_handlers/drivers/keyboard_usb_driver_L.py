@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ctypes
@@ -62,7 +61,7 @@ class KeyboardUSBDriver(Driver):
             54: 'right_shift',
             58: 'caps_lock',
             69: 'num_lock',
-            100: 'alt_gr', # right alt
+            100: 'alt_gr',  # right alt
         }
         self._tracked_modifiers = {modifier: False for modifier in self._scancode_to_modifier.values()}
 
@@ -152,7 +151,7 @@ class KeyboardUSBDriver(Driver):
                         elif data.keystate == 1:
                             self.key_input(data.scancode)
 
-        except Exception as err:
+        except Exception as err:  # noqa: BLE001
             _logger.warning(err)
 
     def _change_keyboard_layout(self, new_layout):
@@ -368,6 +367,7 @@ class KeyboardUSBDriver(Driver):
                     return barcode
             except Empty:
                 return ''
+
 
 proxy_drivers['scanner'] = KeyboardUSBDriver
 

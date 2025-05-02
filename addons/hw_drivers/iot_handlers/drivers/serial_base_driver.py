@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import namedtuple
+from typing import NamedTuple
 from contextlib import contextmanager
 import logging
 import serial
@@ -14,11 +13,23 @@ from odoo.addons.hw_drivers.driver import Driver
 
 _logger = logging.getLogger(__name__)
 
-SerialProtocol = namedtuple(
-    'SerialProtocol',
-    "name baudrate bytesize stopbits parity timeout writeTimeout measureRegexp statusRegexp "
-    "commandTerminator commandDelay measureDelay newMeasureDelay "
-    "measureCommand emptyAnswerValid")
+
+class SerialProtocol(NamedTuple):
+    name: any
+    baudrate: any
+    bytesize: any
+    stopbits: any
+    parity: any
+    timeout: any
+    writeTimeout: any
+    measureRegexp: any
+    statusRegexp: any
+    commandTerminator: any
+    commandDelay: any
+    measureDelay: any
+    newMeasureDelay: any
+    measureCommand: any
+    emptyAnswerValid: any
 
 
 @contextmanager
@@ -87,7 +98,7 @@ class SerialDriver(Driver):
 
         try:
             name = ('%s serial %s' % (self._protocol.name, self.device_type)).title()
-        except Exception:
+        except Exception:  # noqa: BLE001
             name = 'Unknown Serial Device'
         self.device_name = name
 

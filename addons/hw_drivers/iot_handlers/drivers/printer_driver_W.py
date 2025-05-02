@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -62,7 +61,7 @@ class PrinterDriver(PrinterDriverBase):
 
     def disconnect(self):
         self.send_status('disconnected', 'Printer was disconnected')
-        super(PrinterDriver, self).disconnect()
+        super().disconnect()
 
     def print_raw(self, data):
         if not self.check_printer_status():
@@ -97,7 +96,7 @@ class PrinterDriver(PrinterDriverBase):
             self.send_status(status='success')
         except Exception:
             _logger.exception("Error while printing report, ghostscript args: %s, error buffer: %s", args, stderr_buf.getvalue())
-            stdout_log_level = logging.ERROR # some stdout value might contains relevant error information
+            stdout_log_level = logging.ERROR  # some stdout value might contains relevant error information
             self.send_status(status='error', message='ERROR_FAILED')
             raise
         finally:
@@ -124,9 +123,9 @@ class PrinterDriver(PrinterDriverBase):
             commands = self.RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
             self.print_raw(commands['center'] + (commands['title'] % b'IoT Box Test Receipt') + commands['cut'])
         elif self.device_type == "label_printer":
-            self.print_raw("^XA^CI28 ^FT35,40 ^A0N,30 ^FDIoT Box Test Label^FS^XZ".encode())
+            self.print_raw("^XA^CI28 ^FT35,40 ^A0N,30 ^FDIoT Box Test Label^FS^XZ".encode())  # noqa: UP012
         else:
-            self.print_raw("IoT Box Test Page".encode())
+            self.print_raw("IoT Box Test Page".encode())  # noqa: UP012
 
     def _cancel_job_with_error(self, job_id, error_message):
         self.job_ids.remove(job_id)

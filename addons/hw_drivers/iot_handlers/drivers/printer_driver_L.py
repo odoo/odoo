@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64decode
@@ -14,7 +13,7 @@ from odoo import http
 from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.hw_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
-from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface_L import PPDs, conn, cups_lock
+from odoo.addons.hw_drivers.iot_handlers.interfaces.printer_interface_L import PPDs, conn, cups_lock
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers, wifi, route
 
@@ -99,7 +98,7 @@ class PrinterDriver(PrinterDriverBase):
     def get_device_model(cls, device):
         device_model = ""
         if device.get('device-id'):
-            for device_id in [device_lo for device_lo in device['device-id'].split(';')]:
+            for device_id in device['device-id'].split(';'):
                 if any(x in device_id for x in ['MDL', 'MODEL']):
                     device_model = device_id.split(':')[1]
                     break
@@ -109,11 +108,11 @@ class PrinterDriver(PrinterDriverBase):
 
     def disconnect(self):
         self.send_status('disconnected', 'Printer was disconnected')
-        super(PrinterDriver, self).disconnect()
+        super().disconnect()
 
     def print_raw(self, data):
-        """
-        Print raw data to the printer
+        """Print raw data to the printer
+
         :param data: The data to print
         """
         if not self.check_printer_status():

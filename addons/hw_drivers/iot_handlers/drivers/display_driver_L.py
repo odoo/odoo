@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -150,9 +149,12 @@ class DisplayDriver(Driver):
             subprocess.run(['wlr-randr', '--output', self.device_identifier, '--transform', orientation.value], check=True)
             # Update touchscreen mapping to this display
             with helpers.writable():
-                subprocess.run(['sed', '-i', f's/HDMI-A-[12]/{self.device_identifier}/', '/home/odoo/.config/labwc/rc.xml'])
+                subprocess.run(
+                    ['sed', '-i', f's/HDMI-A-[12]/{self.device_identifier}/', '/home/odoo/.config/labwc/rc.xml'],
+                    check=False,
+                )
             # Tell labwc to reload its configuration
-            subprocess.run(['pkill', '-HUP', 'labwc'])
+            subprocess.run(['pkill', '-HUP', 'labwc'], check=False)
         else:
             subprocess.run(['xrandr', '-o', orientation.name.lower()], check=True)
             subprocess.run([file_path('hw_drivers/tools/sync_touchscreen.sh'), str(int(self._x_screen) + 1)], check=False)
