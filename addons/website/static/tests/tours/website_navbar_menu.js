@@ -15,6 +15,7 @@ registry.category("web_tour.tours").add("website_navbar_menu", {
         {
             trigger: `.o_main_nav a[role="menuitem"]:contains(test tour menu)`,
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: `main:contains(We couldn't find the page you're looking for!)`,
