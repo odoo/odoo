@@ -33,10 +33,13 @@ export class InlineCodePlugin extends Plugin {
             sibling.remove();
             sibling = textNode.nextSibling;
         }
-        this.dependencies.selection.setSelection({ anchorNode: textNode, anchorOffset: offset });
         const textHasTwoTicks = /`.*`/.test(textNode.textContent);
         // We don't apply the code tag if there is no content between the two `
         if (textHasTwoTicks && textNode.textContent.replace(/`/g, "").length) {
+            this.dependencies.selection.setSelection({
+                anchorNode: textNode,
+                anchorOffset: offset,
+            });
             this.dependencies.history.addStep();
             const insertedBacktickIndex = offset - 1;
             const textBeforeInsertedBacktick = textNode.textContent.substring(
