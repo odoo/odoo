@@ -24,7 +24,6 @@ $o-website-values-palettes: (
 
         // Footer
         'footer-template':                  'centered',
-        'footer-effect':                    'slideout_slide_hover',
         'footer-scrolltop':                 true,
     ),
 );
@@ -46,24 +45,24 @@ $o-theme-font-configs: (
 
 // Headings
 
-// $o-theme-h4-font-size-multiplier:           1.75;
-// $o-theme-h5-font-size-multiplier:           1.5;
-// $o-theme-h6-font-size-multiplier:           1.25;
+$o-theme-h4-font-size-multiplier:           1.75;
+$o-theme-h5-font-size-multiplier:           1.5;
+$o-theme-h6-font-size-multiplier:           1.25;
 
-// $o-theme-headings-font-weight:              400;
+$o-theme-headings-font-weight:              400;
 
-// // Texts
+// Texts
 
-// $o-theme-font-size-lg-multiplier:           1.25;
-// $o-theme-font-size-sm-multiplier:           .875;
+$o-theme-font-size-lg-multiplier:           1.25;
+$o-theme-font-size-sm-multiplier:           .875;
 
-// $o-theme-font-weight-light:                 300;
-// $o-theme-font-weight-normal:                400;
-// $o-theme-font-weight-bold:                  700;
+$o-theme-font-weight-light:                 300;
+$o-theme-font-weight-normal:                400;
+$o-theme-font-weight-bold:                  700;
 
-// // Buttons
+// Buttons
 
-// $o-theme-btn-font-weight:                   400;
+$o-theme-btn-font-weight:                   400;
 
 //------------------------------------------------------------------------------//
 // Colors
@@ -73,7 +72,7 @@ $o-color-palettes: map-merge($o-color-palettes,
     (
         'theme-hbs-1': (
             'o-color-5':                        #0071BD,
-            'o-color-4':                        #6496B8,
+            'o-color-4':                        #FFFFFF,
             'o-color-3':                        #FFFFFF,
             'o-color-2':                        #3AA101,
             'o-color-1':                        #0071BD,
@@ -93,17 +92,11 @@ $o-selected-color-palettes-names: append($o-selected-color-palettes-names, 'them
 
 // Add to cart to be in green color at all times
 a#add_to_cart, .js_subscribe_btn  {
-    // .btn-primary {   
-        background-color: #3AA101;
-        // border-color: $o-color-1;
-        // color: $o-color-4;
+    background-color: #3AA101;
 
-        &:hover {
-            background-color: #6CB61B;
-            // border-color: $o-color-2;
-            // color: $o-color-4;
-        }
-    // }
+    &:hover {
+        background-color: #6CB61B;
+    }
 }
 
 
@@ -119,14 +112,11 @@ a#add_to_cart, .js_subscribe_btn  {
 .js_add_cart.btn-primary{
     &:hover {
         background-color: #6CB61B;
-        // border-color: $o-color-2;
-        // color: $o-color-4;
     }
 }
 
 
 // Position the fa-heart
-
 .o_carousel_product_img_link > i {
     position: absolute;
     top: 10px;

@@ -95,6 +95,11 @@
                                         </t>
                                         <!-- Call To Action -->
                                         <t t-call="website.placeholder_header_call_to_action"/>
+                                        <li>
+                                            <t t-if="request.env['ir.module.module'].sudo().search([('name', '=', 'website_sale'), ('state', '=', 'installed')])">
+                                                <t t-call="hbs_website_sale.hbs_add_to_cart"/>
+                                            </t>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <template id="hbs_template_footer_custom" inherit_id="website.layout" name="Custom">
+    <template id="template_footer_custom" inherit_id="website.layout" name="Custom">
         <xpath expr="//div[@id='footer']" position="replace">
             <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
-                <section class="s_text_block pt20 pb0" data-snippet="s_text_block" data-name="Text">
+                <section class="s_text_block pt40 pb0" data-snippet="s_text_block" data-name="Text">
                     <div class="container">
                         <div class="row">
                             <div id="connect" class="pt24 pb24 col-lg-3 o_colored_level">
@@ -92,23 +92,12 @@
                                 </ul>
                             </div>
                             <div class="pt24 pb24 col-lg-3 o_colored_level">
-                                <h5 class="mb-3">Newsletter</h5>
-                                <!-- <div data-vxml="001" data-list-id="1" data-name="Newsletter" data-snippet="s_newsletter_subscribe_form" class="s_newsletter_subscribe_form s_newsletter_list js_subscribe">
-                                    <div class="js_subscribed_wrap d-none">
-                                        <p class="h4-fs text-center text-success">
-                                            <i class="fa fa-check-circle-o" role="img"/>
- Thanks for registering!</p>
-                                    </div>
-                                    <div class="js_subscribe_wrap">
-                                        <div class="input-group">
-                                            <input type="email" name="email" placeholder="Email Address" class="s_newsletter_subscribe_form_input js_subscribe_value form-control "/>
-                                            <a role="button" href="#" class="js_subscribe_btn o_submit btn btn-primary fa fa-envelope"></a>
-                                        </div>
-                                    </div>
-                                </div> -->
-                                <t t-call="theme_hbs.hbs_newsletter_subscribe_form"/>
-                                <br/>
-                                <p>Subscribe to the free meddax24.de newsletter and ensure that you will no longer miss any news or promotions from meddax24.de.</p>
+                                <t t-if="request.env['ir.module.module'].sudo().search([('name', '=', 'website_mass_mailing'), ('state', '=', 'installed')])">
+                                    <h5 class="mb-3">Newsletter</h5>
+                                    <t t-call="hbs_website_mass_mailing.hbs_newsletter_subscribe_form"/>
+                                    <br/>
+                                    <p>Subscribe to the free meddax24.de newsletter and ensure that you will no longer miss any news or promotions from meddax24.de.</p>
+                                </t>
                             </div>
                         </div>
                     </div>

@@ -4,26 +4,17 @@
     'version': '1.0',
     'author': 'Sanjay Sharma',
     'category': 'Theme/Creative',
-    'depends': ['website', 'website_sale', 'website_mass_mailing'],
+    'depends': ['website'],
     'data': [
-        # 'views/snippets/s_sidegrid.xml',
-        'views/snippets/hbs_dynamic_snippet_products_preview_data.xml',
-        'views/snippets/hbs_newsletter_subscribe_form.xml',
         'views/snippets/hbs_call_to_action.xml',
         'views/footer.xml',
         'views/header.xml',
     ],
 
     'images': [
-        'static/description/hbs_description.jpg', # any screenshot of website so created can act as a preview
+        'static/description/hbs_description.jpg',
         'static/description/hbs_screenshot.jpg',
     ],
-    # 'images_preview_theme': {
-    #     # List of images changed in the theme: urls of the images
-    # },
-    # 'configurator_snippets': {    
-    #     'homepage': ['s_sidegrid'],
-    # },
     'assets': {
         'web._assets_primary_variables': [
             'theme_hbs/static/src/scss/primary_variables.scss',
