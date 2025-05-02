@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -10,7 +9,7 @@ import time
 from odoo import http
 from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.hw_drivers.event_manager import event_manager
-from odoo.addons.hw_drivers.iot_handlers.drivers.SerialBaseDriver import SerialDriver, SerialProtocol, serial_connection
+from odoo.addons.hw_drivers.iot_handlers.drivers.serial_base_driver import SerialDriver, SerialProtocol, serial_connection
 
 
 _logger = logging.getLogger(__name__)
@@ -90,7 +89,7 @@ class ScaleDriver(SerialDriver):
 
         # The HW Proxy can only expose one scale,
         # only the last scale connected is kept
-        global ACTIVE_SCALE
+        global ACTIVE_SCALE  # noqa: PLW0603
         ACTIVE_SCALE = self
         proxy_drivers['scale'] = ACTIVE_SCALE
 
@@ -99,7 +98,7 @@ class ScaleDriver(SerialDriver):
         """Allows `hw_proxy.Proxy` to retrieve the status of the scales"""
 
         status = self._status
-        return {'status': status['status'], 'messages': [status['message_title'], ]}
+        return {'status': status['status'], 'messages': [status['message_title']]}
 
     def _set_actions(self):
         """Initializes `self._actions`, a map of action keys sent by the frontend to backend action methods."""
@@ -178,7 +177,7 @@ class Toledo8217Driver(ScaleDriver):
     _protocol = Toledo8217Protocol
 
     def __init__(self, identifier, device):
-        super(Toledo8217Driver, self).__init__(identifier, device)
+        super().__init__(identifier, device)
         self.device_manufacturer = 'Toledo'
 
     @classmethod
@@ -204,7 +203,7 @@ class Toledo8217Driver(ScaleDriver):
         except serial.serialutil.SerialTimeoutException:
             pass
         except Exception:
-            _logger.exception('Error while probing %s with protocol %s' % (device, protocol.name))
+            _logger.exception('Error while probing %s with protocol %s', device, protocol.name)
         return False
 
 

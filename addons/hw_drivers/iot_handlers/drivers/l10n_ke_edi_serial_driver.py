@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -9,7 +8,7 @@ import json
 from functools import reduce
 
 from odoo import http
-from odoo.addons.hw_drivers.iot_handlers.drivers.SerialBaseDriver import SerialDriver, SerialProtocol, serial_connection
+from odoo.addons.hw_drivers.iot_handlers.drivers.serial_base_driver import SerialDriver, SerialProtocol, serial_connection
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import route
 

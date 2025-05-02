@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import json
@@ -113,7 +112,7 @@ class EtaUsbController(http.Controller):
         try:
             session = pkcs11.openSession(slots[0], PyKCS11.CKF_SERIAL_SESSION | PyKCS11.CKF_RW_SESSION)
             session.login(pin)
-        except Exception as ex:
+        except Exception as ex:  # noqa: BLE001
             error = self._get_error_template(str(ex))
         return session, error
 
