@@ -196,8 +196,7 @@ export class WebsiteBuilder extends Component {
         // The clicks on the iframe are listened, so that links with external
         // redirections can be opened in the top window.
         this.websiteContent.el.contentDocument.addEventListener("click", (ev) => {
-            const isEditing = this.websiteContext.edition || this.websiteContext.translation;
-            if (!isEditing) {
+            if (!this.state.isEditing) {
                 // Forward clicks to close backend client action's navbar
                 // dropdowns.
                 this.websiteContent.el.dispatchEvent(new MouseEvent("click", ev));
@@ -247,7 +246,7 @@ export class WebsiteBuilder extends Component {
                 });
             } else
             */
-            if (href && target !== "_blank" && !isEditing) {
+            if (href && target !== "_blank" && !this.state.isEditing) {
                 if (isTopWindowURL(linkEl)) {
                     ev.preventDefault();
                     browser.location.assign(href);
