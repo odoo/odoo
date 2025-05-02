@@ -64,6 +64,9 @@ export class BuilderRange extends Component {
 
     onInput(e) {
         this.preview(e.target.value);
+        if (this.props.displayRangeValue) {
+            this.state.value = this.parseDisplayValue(e.target.value);
+        }
     }
 
     get rangeInputValue() {
