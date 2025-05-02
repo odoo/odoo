@@ -279,39 +279,27 @@ class TestUiMemberInvited(TestUICommon):
         })
         self.portal_invite_url = self.channel_partner_portal.invitation_link
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_invite_check_channel_preview_as_logged_connected_on_invite(self):
         self.channel.enroll = 'invite'
         self.channel.visibility = 'connected'
         self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_logged', login='portal')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_invite_check_channel_preview_as_public_connected_on_invite(self):
         self.channel.enroll = 'invite'
         self.channel.visibility = 'connected'
         self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_public', login=None)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_invite_check_channel_preview_as_logged_members(self):
         self.channel.visibility = 'members'
         self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_logged', login='portal')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_invite_check_channel_preview_as_public_members(self):
         self.channel.visibility = 'members'
         self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_public', login=None)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_invite_check_channel_preview_as_logged_public(self):
         self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_logged', login='portal')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_invite_check_channel_preview_as_public_public(self):
         self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_public', login=None)
 
