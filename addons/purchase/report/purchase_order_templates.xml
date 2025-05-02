@@ -123,9 +123,10 @@
                 </tbody>
             </table>
 
-            <div id="total" class="row justify-content-end mt-n3">
-                <div class="col-4">
+            <div id="total" class="row mt-n3" name="total">
+                <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
                     <table class="o_total_table table table-borderless">
+                        <!--Tax totals -->
                         <t t-call="purchase.document_tax_totals">
                             <t t-set="tax_totals" t-value="o.tax_totals"/>
                             <t t-set="currency" t-value="o.currency_id"/>
