@@ -6,8 +6,6 @@ import unittest
 
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
-# TODO master-mysterious-egg fix error
-@unittest.skip("prepare mysterious-egg for merging")
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
     def test_website_sale_combo_configurator(self):
