@@ -74,6 +74,9 @@ class AccountChartTemplate(models.AbstractModel):
             + self.ref('demo_invoice_3')
             + self.ref('demo_invoice_followup')
             + self.ref('demo_invoice_5')
+            + self.ref('demo_invoice_6')
+            + self.ref('demo_invoice_7')
+            + self.ref('demo_invoice_8')
             + self.ref('demo_invoice_equipment_purchase')
             + self.ref('demo_move_auto_reconcile_1')
             + self.ref('demo_move_auto_reconcile_2')
@@ -82,8 +85,6 @@ class AccountChartTemplate(models.AbstractModel):
             + self.ref('demo_move_auto_reconcile_5')
             + self.ref('demo_move_auto_reconcile_6')
             + self.ref('demo_move_auto_reconcile_7')
-            + self.ref('demo_move_auto_reconcile_8')
-            + self.ref('demo_move_auto_reconcile_9')
         )
 
         # the invoice_extract acts like a placeholder for the OCR to be ran and doesn't contain
@@ -112,6 +113,9 @@ class AccountChartTemplate(models.AbstractModel):
             return {}
         return {
             'base.res_partner_2': {'name': 'Demo Partner 2'},
+            'base.res_partner_3': {'name': 'Demo Partner 3'},
+            'base.res_partner_4': {'name': 'Demo Partner 4'},
+            'base.res_partner_5': {'name': 'Demo Partner 5'},
             'base.res_partner_12': {'name': 'Demo Partner 12'},
             'base.partner_demo': {'name': 'Marc Demo'},
         }
@@ -220,24 +224,54 @@ class AccountChartTemplate(models.AbstractModel):
                 ],
             },
             'demo_invoice_5': {
+                'move_type': 'out_invoice',
+                'partner_id': 'base.res_partner_5',
+                'invoice_user_id': 'base.user_demo',
+                'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
+                'invoice_date': (fields.Date.today() + timedelta(days=-17)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-17)).strftime('%Y-%m-%d'),
+                'invoice_line_ids': [
+                    Command.create({'product_id': 'product.product_order_01', 'price_unit': 200, 'quantity': 10}),
+                ],
+            },
+            'demo_invoice_6': {
+                'move_type': 'out_invoice',
+                'partner_id': 'base.res_partner_5',
+                'invoice_user_id': 'base.user_demo',
+                'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
+                'invoice_date': (fields.Date.today() + timedelta(days=-15)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-15)).strftime('%Y-%m-%d'),
+                'invoice_line_ids': [
+                    Command.create({'product_id': 'product.product_order_01', 'price_unit': 275, 'quantity': 1}),
+                ],
+            },
+            'demo_invoice_7': {
+                'move_type': 'out_invoice',
+                'partner_id': 'base.res_partner_5',
+                'invoice_user_id': 'base.user_demo',
+                'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
+                'invoice_date': (fields.Date.today() + timedelta(days=-12)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-12)).strftime('%Y-%m-%d'),
+                'invoice_line_ids': [
+                    Command.create({'product_id': 'product.product_order_01', 'price_unit': 100.0, 'quantity': 10}),
+                ],
+            },
+            'demo_invoice_8': {
                 'move_type': 'in_invoice',
-                'partner_id': 'base.res_partner_12',
+                'partner_id': 'base.res_partner_4',
                 'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'delivery_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
-                    Command.create({'product_id': 'product.product_delivery_01', 'price_unit': 10.0, 'quantity': 1}),
-                    Command.create({'product_id': 'product.product_order_01', 'price_unit': 4.0, 'quantity': 5}),
+                    Command.create({'product_id': 'product.product_order_01', 'price_unit': 10.0, 'quantity': 1}),
+                    Command.create({'product_id': 'product.product_delivery_01', 'price_unit': 4, 'quantity': 5}),
                 ],
-            },
-            'demo_invoice_extract': {
-                'move_type': 'in_invoice',
                 'message_main_attachment_id': 'ir_attachment_in_invoice_1',
             },
             'demo_invoice_equipment_purchase': {
                 'move_type': 'in_invoice',
                 'ref': f'INV/{fifteen_months_ago.year}/0057',
-                'partner_id': 'base.res_partner_12',
+                'partner_id': 'base.res_partner_3',
                 'invoice_user_id': False,
                 'invoice_date': fifteen_months_ago.strftime("%Y-%m-17"),
                 'delivery_date': fifteen_months_ago.strftime("%Y-%m-17"),
@@ -267,25 +301,16 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'demo_move_auto_reconcile_3': {
                 'move_type': 'in_refund',
-                'partner_id': 'base.res_partner_12',
+                'partner_id': 'base.res_partner_4',
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'delivery_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.product_delivery_01', 'price_unit': 10.0, 'quantity': 1}),
                     Command.create({'product_id': 'product.product_order_01', 'price_unit': 4.0, 'quantity': 5}),
                 ],
+                'message_main_attachment_id': 'ir_attachment_in_invoice_1',
             },
             'demo_move_auto_reconcile_4': {
-                'move_type': 'in_refund',
-                'partner_id': 'base.res_partner_12',
-                'invoice_date': fifteen_months_ago.strftime("%Y-%m-19"),
-                'delivery_date': fifteen_months_ago.strftime("%Y-%m-19"),
-                'invoice_line_ids': [
-                    Command.create({'name': 'Redeem Reference Number: PO02529', 'quantity': 1, 'price_unit': 541.10,
-                                    'tax_ids': self.env.company.account_purchase_tax_id.ids}),
-                ],
-            },
-            'demo_move_auto_reconcile_5': {
                 'move_type': 'out_refund',
                 'partner_id': 'base.res_partner_2',
                 'invoice_date': (fields.Date.today() + timedelta(days=-10)).strftime('%Y-%m-%d'),
@@ -295,18 +320,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                 ],
             },
-            'demo_move_auto_reconcile_6': {
-                'move_type': 'out_refund',
-                'partner_id': 'base.res_partner_2',
-                'invoice_user_id': False,
-                'invoice_date': (fields.Date.today() + timedelta(days=-1)).strftime('%Y-%m-%d'),
-                'delivery_date': (fields.Date.today() + timedelta(days=-1)).strftime('%Y-%m-%d'),
-                'invoice_line_ids': [
-                    Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
-                    Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 20}),
-                ],
-            },
-            'demo_move_auto_reconcile_7': {
+            'demo_move_auto_reconcile_5': {
                 'move_type': 'out_refund',
                 'partner_id': 'base.res_partner_2',
                 'invoice_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
@@ -316,7 +330,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                 ],
             },
-            'demo_move_auto_reconcile_8': {
+            'demo_move_auto_reconcile_6': {
                 'move_type': 'entry',
                 'partner_id': 'base.res_partner_2',
                 'date': (fields.Date.today() + timedelta(days=-20)).strftime('%Y-%m-%d'),
@@ -326,7 +340,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'debit': 2500.0, 'credit': 0.0, 'account_id': bank_journal.default_account_id.id}),
                 ],
             },
-            'demo_move_auto_reconcile_9': {
+            'demo_move_auto_reconcile_7': {
                 'move_type': 'entry',
                 'partner_id': 'base.res_partner_2',
                 'date': (fields.Date.today() + timedelta(days=-20)).strftime('%Y-%m-%d'),
@@ -362,10 +376,10 @@ class AccountChartTemplate(models.AbstractModel):
                     }),
                     Command.create({
                         'journal_id': bnk_journal.id,
-                        'payment_ref': time.strftime('INV/%Y/00002 and INV/%Y/00003'),
+                        'payment_ref': time.strftime('INV/%Y/00006 and INV/%Y/00007'),
                         'amount': 1275.0,
                         'date': time.strftime('%Y-01-01'),
-                        'partner_id': 'base.res_partner_12',
+                        'partner_name': 'Open Wood Inc.',
                     }),
                 ]
             },
@@ -384,33 +398,39 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'demo_bank_statement_line_0': {
                 'journal_id': bnk_journal.id,
-                'payment_ref': 'Bank Fees',
-                'amount': -32.58,
+                'payment_ref': 'BILL/2024/01/0001',
+                'amount': -622.27,
+                'partner_id': 'base.res_partner_3',
             },
             'demo_bank_statement_line_1': {
                 'journal_id': bnk_journal.id,
-                'payment_ref': 'Prepayment',
-                'amount': 650,
-                'partner_id': 'base.res_partner_12',
+                'payment_ref': 'Bank Fees',
+                'amount': -32.58,
             },
             'demo_bank_statement_line_2': {
                 'journal_id': bnk_journal.id,
-                'payment_ref': time.strftime(f'First {formatLang(self.env, 2000, currency_obj=self.env.company.currency_id)} of invoice %Y/00001'),
-                'amount': 2000,
-                'partner_id': 'base.res_partner_12',
+                'payment_ref': 'Prepayment',
+                'amount': 650,
+                'partner_name': 'Open Wood Inc.',
             },
             'demo_bank_statement_line_3': {
+                'journal_id': bnk_journal.id,
+                'payment_ref': time.strftime('INV/%Y/00005'),
+                'amount': 1980,
+                'partner_name': 'Open Wood Inc.',
+            },
+            'demo_bank_statement_line_4': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': 'Last Year Interests',
                 'amount': 102.78,
             },
-            'demo_bank_statement_line_4': {
+            'demo_bank_statement_line_5': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': time.strftime('INV/%Y/00002'),
                 'amount': 750,
                 'partner_id': 'base.res_partner_2',
             },
-            'demo_bank_statement_line_5': {
+            'demo_bank_statement_line_6': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': f'R:9772938  10/07 AX 9415116318 T:5 BRT: {formatLang(self.env, 100.0, digits=2)} C/ croip',
                 'amount': 96.67,
@@ -438,8 +458,40 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({
                         'label': 'Bank Fees',
                         'account_id': self._get_demo_account(
-                            'cost_of_goods_sold',
-                            'expense_direct_cost',
+                            'expense_finance',
+                            'expense',
+                            self.env.company,
+                        ).id,
+                        'amount_type': 'percentage',
+                        'amount_string': '100',
+                    }),
+                ]
+            },
+            'bank_fees_label_bank_fees': {
+                'name': 'Bank Fees (label bank fees)',
+                'match_label': 'contains',
+                'match_label_param': 'Bank Fees',
+                'line_ids': [
+                    Command.create({
+                        'label': 'Bank Fees',
+                        'account_id': self._get_demo_account(
+                            'expense_finance',
+                            'expense',
+                            self.env.company,
+                        ).id,
+                        'amount_type': 'percentage',
+                        'amount_string': '100',
+                    }),
+                ]
+            },
+            'owner_current_account_model': {
+                'name': "Owner's Current Account",
+                'line_ids': [
+                    Command.create({
+                        'label': "Owner's Current Account",
+                        'account_id': self._get_demo_account(
+                            'owner_current_account',
+                            'asset_receivable',
                             self.env.company,
                         ).id,
                         'amount_type': 'percentage',
@@ -456,7 +508,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'type': 'binary',
                 'name': 'in_invoice_yourcompany_demo.pdf',
                 'res_model': 'account.move',
-                'res_id': 'demo_invoice_extract',
+                'res_id': 'demo_invoice_8',
+                'res_field': 'invoice_pdf_report_file',
                 'raw': file_open(
                     'account/static/demo/in_invoice_yourcompany_demo_1.pdf', 'rb'
                 ).read()
@@ -466,6 +519,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': 'in_invoice_yourcompany_demo.pdf',
                 'res_model': 'account.move',
                 'res_id': 'demo_invoice_equipment_purchase',
+                'res_field': 'invoice_pdf_report_file',
                 'raw': file_open(
                     'account/static/demo/in_invoice_yourcompany_demo_2.pdf', 'rb'
                 ).read()
@@ -477,7 +531,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'mail_message_in_invoice_1': {
                 'model': 'account.move',
-                'res_id': 'demo_invoice_extract',
+                'res_id': 'demo_invoice_8',
                 'body': 'Vendor Bill attachment',
                 'message_type': 'comment',
                 'author_id': 'base.partner_demo',
@@ -527,7 +581,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'user_id': 'base.user_admin',
             },
             'invoice_activity_4': {
-                'res_id': 'demo_invoice_extract',
+                'res_id': 'demo_invoice_8',
                 'res_model_id': 'account.model_account_move',
                 'activity_type_id': 'mail.mail_activity_data_todo',
                 'date_deadline': (fields.Datetime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M'),
@@ -550,7 +604,6 @@ class AccountChartTemplate(models.AbstractModel):
             self.env['account.account'].browse(self.env['ir.model.data'].sudo().search([
                 ('name', '=', '%d_%s' % (company.id, xml_id)),
                 ('model', '=', 'account.account'),
-                ('module', '=like', 'l10n%')
             ], limit=1).res_id)
             or self.env['account.account'].with_company(company).search([
                 *self.env['account.account']._check_company_domain(company),
