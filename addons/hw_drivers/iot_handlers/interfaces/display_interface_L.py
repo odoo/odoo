@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -14,6 +13,7 @@ _logger = logging.getLogger(__name__)
 
 MIN_IMAGE_VERSION_WAYLAND = 25.03
 
+
 class DisplayInterface(Interface):
     _loop_delay = 3
     connection_type = 'display'
@@ -27,7 +27,7 @@ class DisplayInterface(Interface):
         }
 
         if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION_WAYLAND:
-            randr_result = subprocess.run(['wlr-randr'], capture_output=True, text=True)
+            randr_result = subprocess.run(['wlr-randr'], capture_output=True, text=True, check=False)
             if randr_result.returncode != 0:
                 return {}
             displays = re.findall(r"\((HDMI-A-\d)\)", randr_result.stdout)
