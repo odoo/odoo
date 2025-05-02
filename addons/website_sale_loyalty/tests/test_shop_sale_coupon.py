@@ -36,8 +36,6 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
         cls.env.ref('website.default_website').company_id = cls.env.company
         cls.public_category = cls.env['product.public.category'].create({'name': 'Public Category'})
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_01_admin_shop_sale_loyalty_tour(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
@@ -142,8 +140,6 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
         self.env.ref("website_sale.reduction_code").write({"active": True})
         self.start_tour("/", 'shop_sale_loyalty', login="admin")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_02_admin_shop_gift_card_tour(self):
         gift_card = self.env['product.product'].create({
             'name': 'TEST - Gift Card',
@@ -216,8 +212,6 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
         self.assertEqual(len(gift_card_program.coupon_ids), 2, 'There should be two coupons, one with points, one without')
         self.assertEqual(len(gift_card_program.coupon_ids.filtered('points')), 1, 'There should be two coupons, one with points, one without')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_03_admin_shop_ewallet_tour(self):
         self.env['product.product'].create({
             'name': "TEST - Gift Card",
@@ -332,8 +326,6 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
 
         self.assertEqual(len(order.applied_coupon_ids), 0, "The coupon should've been removed from the order as more than 4 days")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_02_apply_discount_code_program_multi_rewards(self):
         """
             Check the triggering of a promotion program based on a promo code with multiple rewards
