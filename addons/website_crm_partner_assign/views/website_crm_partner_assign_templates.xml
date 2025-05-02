@@ -48,8 +48,8 @@
                 </button>
                 <div class="dropdown-menu">
                     <t t-foreach="countries" t-as="country" t-if="country['country_id']">
-                        <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }?#{ keep_query('search', (country['country_id'][0] == 0 and 'country_all' or ''), 'industry')}"
-                        class="dropdown-item d-flex justify-content-between">
+                        <t t-set="all_countries" t-value="dict(country_all=1) if country['country_id'][0] == 0 else {} "/>
+                        <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }?#{ keep_query('search', 'industry', **all_countries)}" class="dropdown-item d-flex justify-content-between">
                             <t t-out="country['country_id'][1]"/>&amp;nbsp;&amp;nbsp;
                             <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="country['country_id_count']"/>
                         </a>
