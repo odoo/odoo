@@ -33,7 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_demo_data_move(self, company=False):
         data = super()._get_demo_data_move(company)
         if company.account_fiscal_country_id.code == "AR":
-            data['demo_invoice_5']['l10n_latam_document_number'] = '1-1'
+            data['demo_invoice_8']['l10n_latam_document_number'] = '1-1'
             data['demo_invoice_equipment_purchase']['l10n_latam_document_number'] = '1-2'
             data['demo_move_auto_reconcile_3']['l10n_latam_document_number'] = '1-3'
             data['demo_move_auto_reconcile_4']['l10n_latam_document_number'] = '1-4'
