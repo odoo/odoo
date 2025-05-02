@@ -274,7 +274,9 @@ class SocialMediaOptionPlugin extends Plugin {
                 while (element.nextSibling.nextSibling?.nodeType === Node.TEXT_NODE) {
                     element.parentNode.removeChild(element.nextSibling);
                 }
-                element.nextSibling.textContent = "\n";
+                if (element.nextSibling.textContent !== "\n") {
+                    element.nextSibling.textContent = "\n";
+                }
             } else {
                 element.after("\n");
             }
