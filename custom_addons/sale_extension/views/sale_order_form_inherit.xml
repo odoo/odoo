@@ -1,0 +1,28 @@
+<odoo>
+    <data>
+        
+        <record id="view_order_form_inherit_item" model="ir.ui.view">
+            <field name="name">sale.view_order_form.inherit.item_delivery_time</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']//form//field[@name='tax_id']" position="before">
+                    <field name="item_delivery_date"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_form_inherit_real" model="ir.ui.view">
+            <field name="name">sale.view_order_form.inherit.delivery_time</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="delivery_date"/>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
