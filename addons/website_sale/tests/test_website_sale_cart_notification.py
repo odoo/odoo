@@ -35,7 +35,5 @@ class TestWebsiteSaleCartNotification(HttpCase, ProductAttributesCommon):
             })],
         })
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_website_sale_cart_notification(self):
         self.start_tour("/", 'website_sale_cart_notification')
