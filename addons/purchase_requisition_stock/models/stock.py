@@ -19,9 +19,9 @@ class StockRule(models.Model):
     def _make_po_get_domain(self, company_id, values, partner):
         domain = super(StockRule, self)._make_po_get_domain(company_id, values, partner)
         if 'supplier' in values and values['supplier'].purchase_requisition_id:
-            domain += (
+            domain += [
                 ('requisition_id', '=', values['supplier'].purchase_requisition_id.id),
-            )
+            ]
         return domain
 
 
