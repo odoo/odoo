@@ -154,8 +154,6 @@ class TestUi(TestUICommon):
 
         self.start_tour('/slides', 'course_member', login=user_demo.login)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_course_member_elearning_officer(self):
         user_demo = self.user_demo
         user_demo.write({
@@ -165,8 +163,6 @@ class TestUi(TestUICommon):
 
         self.start_tour('/slides', 'course_member', login=user_demo.login)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_course_member_portal(self):
         user_portal = self.user_portal
         user_portal.karma = 1
