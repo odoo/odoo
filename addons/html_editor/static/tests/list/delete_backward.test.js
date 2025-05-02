@@ -2572,11 +2572,21 @@ describe("Selection not collapsed", () => {
                     stepFunction: deleteBackward,
                     contentAfter: "<ol><li><p>ab[]gh</p></li></ol>",
                 });
+                await testEditor({
+                    contentBefore: "<ol><li><p>[abcd</p><ul><li>efgh]</li></ul></li></ol>",
+                    stepFunction: deleteBackward,
+                    contentAfter: "<ol><li><p>[]<br></p></li></ol>",
+                });
                 // Backward selection
                 await testEditor({
                     contentBefore: "<ol><li><p>ab]cd</p><ul><li>ef[gh</li></ul></li></ol>",
                     stepFunction: deleteBackward,
                     contentAfter: "<ol><li><p>ab[]gh</p></li></ol>",
+                });
+                await testEditor({
+                    contentBefore: "<ol><li><p>]abcd</p><ul><li>efgh[</li></ul></li></ol>",
+                    stepFunction: deleteBackward,
+                    contentAfter: "<ol><li><p>[]<br></p></li></ol>",
                 });
             });
 
