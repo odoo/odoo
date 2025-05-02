@@ -43,7 +43,10 @@ export class ListDataSource extends OdooViewsDataSource {
         this.maxPosition = 0;
         this.maxPositionFetched = 0;
         this.data = [];
-        this.fieldsToFetch = new Set();
+        this.fieldPathsToFetch = new Set(["id"]);
+        this.alreadyFetchedFieldPaths = new Set();
+        this.fieldService = services.env.services.field;
+        this.fieldPathsToFieldMap = {};
     }
 
     /**
@@ -59,13 +62,12 @@ export class ListDataSource extends OdooViewsDataSource {
     }
 
     /**
-     * @param {string} fieldName
+     * @param {string} fieldPath
      */
-    addFieldToFetch(fieldName) {
-        if (this.data.length && fieldName in this.data[0]) {
-            return;
+    addFieldPathToFetch(fieldPath) {
+        if (fieldPath && !this.alreadyFetchedFieldPaths.has(fieldPath)) {
+            this.fieldPathsToFetch.add(fieldPath);
         }
-        this.fieldsToFetch.add(fieldName);
     }
 
     async load(params) {
@@ -86,53 +88,76 @@ export class ListDataSource extends OdooViewsDataSource {
             this.data = [];
             return;
         }
+        this.fieldPathsToFieldMap = {};
         const { domain, orderBy, context } = this._searchParams;
+        const specification = await this._getReadSpec();
         const { records } = await this._orm.webSearchRead(this._metaData.resModel, domain, {
-            specification: this._getReadSpec(),
+            specification,
             order: orderByToString(orderBy),
             limit: this.maxPosition,
             context,
         });
+        this.alreadyFetchedFieldPaths = new Set([...this.fieldPathsToFetch]);
         this.data = records;
         this.maxPositionFetched = this.maxPosition;
     }
 
     /**
-     * Get the fields to fetch from the server.
      * Automatically add the currency field if the field is a monetary field.
      */
-    _getReadSpec() {
+    _addSpecForFieldPath(spec, pathInfo) {
+        const [first, ...rest] = pathInfo.names;
+        const [modelInfo, ...othersModelsInfo] = pathInfo.modelsInfo;
+        const field = modelInfo.fieldDefs[first];
+        switch (field.type) {
+            case "monetary":
+                spec[field.name] = {};
+                spec[field.currency_field] = {
+                    fields: {
+                        ...spec[field.currency_field]?.fields,
+                        name: {}, // currency code
+                        symbol: {},
+                        decimal_places: {},
+                        position: {},
+                    },
+                };
+                break;
+            case "many2one":
+            case "many2many":
+            case "one2many":
+                spec[field.name] = {
+                    fields: {
+                        display_name: {},
+                        ...spec[field.name]?.fields,
+                    },
+                };
+                if (rest.length) {
+                    const newPathInfo = { names: rest, modelsInfo: othersModelsInfo };
+                    this._addSpecForFieldPath(spec[field.name].fields, newPathInfo);
+                }
+                break;
+            default:
+                spec[field.name] = {};
+                break;
+        }
+        return spec;
+    }
+
+    /**
+     * Get the fields to fetch from the server.
+     */
+    async _getReadSpec() {
+        const allFieldPaths = await Promise.all(
+            [...this.fieldPathsToFetch].map((fieldPath) =>
+                this.fieldService.loadPath(this._metaData.resModel, fieldPath)
+            )
+        );
+        const validFieldPaths = allFieldPaths.filter((result) => !result.isInvalid);
         const spec = {};
-        const fields = [...this.fieldsToFetch].map((f) => this.getField(f)).filter(Boolean);
-        for (const field of fields) {
-            switch (field.type) {
-                case "monetary":
-                    spec[field.name] = {};
-                    spec[field.currency_field] = {
-                        fields: {
-                            ...spec[field.currency_field]?.fields,
-                            display_name: {},
-                            name: {}, // currency code
-                            symbol: {},
-                            decimal_places: {},
-                            position: {},
-                        },
-                    };
-                    break;
-                case "many2one":
-                case "many2many":
-                case "one2many":
-                    spec[field.name] = {
-                        fields: {
-                            display_name: {},
-                            ...spec[field.name]?.fields,
-                        },
-                    };
-                    break;
-                default:
-                    spec[field.name] = {};
-                    break;
-            }
+        for (const pathInfo of validFieldPaths) {
+            this.fieldPathsToFieldMap[pathInfo.names.join(".")] =
+                pathInfo.modelsInfo.at(-1).fieldDefs[pathInfo.names.at(-1)];
+            this._addSpecForFieldPath(spec, pathInfo);
         }
         return spec;
     }
@@ -148,10 +173,10 @@ export class ListDataSource extends OdooViewsDataSource {
     }
 
     /**
-     * @param {string} fieldName
+     * @param {string} fieldPath
      * @returns {string | EvaluationError}
      */
-    getListHeaderValue(fieldName) {
+    getListHeaderValue(fieldPath) {
         if (this.isLoading()) {
             return LOADING_ERROR;
         }
@@ -163,16 +188,35 @@ export class ListDataSource extends OdooViewsDataSource {
             return LOADING_ERROR;
         }
         this.assertIsValid();
-        const field = this.getField(fieldName);
-        return field ? field.string : fieldName;
+        const field = this.fieldPathsToFieldMap[fieldPath];
+        return field ? field.string : fieldPath;
+    }
+
+    /**
+     * @returns {object | object[]}
+     */
+    _getRecordFromRelation(mainRecord, fieldPath) {
+        const fields = fieldPath.split(".");
+        let record = mainRecord;
+        // The last item of fields is the name of the field. As we want to
+        // get the record on which the field is defined, we need to iterate until
+        // the penultimate item of fields.
+        for (let i = 0; i < fields.length - 1; i++) {
+            if (Array.isArray(record)) {
+                record = record.map((r) => r[fields[i]]).flat();
+            } else {
+                record = record && record[fields[i]];
+            }
+        }
+        return record;
     }
 
     /**
      * @param {number} position
-     * @param {string} fieldName
+     * @param {string} fieldPath
      * @returns {string|number|undefined|EvaluationError}
      */
-    getListCellValue(position, fieldName) {
+    getListCellValue(position, fieldPath) {
         if (this.isLoading()) {
             return LOADING_ERROR;
         }
@@ -185,66 +229,79 @@ export class ListDataSource extends OdooViewsDataSource {
             this._triggerFetching();
             return LOADING_ERROR;
         }
-        const record = this.data[position];
-        if (!record) {
-            return "";
-        }
-        const field = this.getField(fieldName);
-        if (!field) {
-            return new EvaluationError(
-                _t("The field %s does not exist or you do not have access to that field", fieldName)
-            );
-        }
-        if (!(fieldName in record)) {
-            this.addFieldToFetch(fieldName);
+        if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
+            this.addFieldPathToFetch(fieldPath);
             this._triggerFetching();
             return LOADING_ERROR;
         }
+        const field = this.getFieldFromFieldPath(fieldPath);
+        if (!field) {
+            return new EvaluationError(
+                _t("The field %s does not exist or you do not have access to that field", fieldPath)
+            );
+        }
+        const mainRecord = this.data[position];
+        if (!mainRecord) {
+            return "";
+        }
         this.assertIsValid();
+        const record = this._getRecordFromRelation(mainRecord, fieldPath);
+        if (!record) {
+            return "";
+        }
+        const lastField = fieldPath.split(".").at(-1);
+        if (Array.isArray(record)) {
+            // remove duplicates?
+            // needs to be formatted...
+            return record.map((r) => this._parseServerValue(field, r[lastField])).join(", ");
+        }
+        return this._parseServerValue(field, record[lastField]);
+    }
+
+    _parseServerValue(field, value) {
         switch (field.type) {
             case "many2one":
-                return record[fieldName].display_name ?? "";
+                return value.display_name ?? "";
             case "one2many":
             case "many2many": {
-                const labels = record[fieldName]
+                const labels = value
                     .map(({ display_name }) => display_name)
                     .filter((displayName) => displayName !== undefined);
                 return labels.join(", ");
             }
             case "selection": {
-                const key = record[fieldName];
-                const value = field.selection.find((array) => array[0] === key);
-                return value ? value[1] : "";
+                const key = value;
+                const selectedOption = field.selection.find((array) => array[0] === key);
+                return selectedOption ? selectedOption[1] : "";
             }
             case "boolean":
-                return record[fieldName] ? true : false;
+                return value ? true : false;
             case "date":
-                return record[fieldName]
-                    ? toNumber(this._formatDate(record[fieldName]), DEFAULT_LOCALE)
-                    : "";
+                return value ? toNumber(this._formatDate(value), DEFAULT_LOCALE) : "";
             case "datetime":
-                return record[fieldName]
-                    ? toNumber(this._formatDateTime(record[fieldName]), DEFAULT_LOCALE)
-                    : "";
+                return value ? toNumber(this._formatDateTime(value), DEFAULT_LOCALE) : "";
             case "properties": {
-                const properties = record[fieldName] || [];
+                const properties = value || [];
                 return properties.map((property) => property.string).join(", ");
             }
             case "json":
                 return new EvaluationError(_t('Fields of type "%s" are not supported', "json"));
             default:
-                return record[fieldName] || "";
+                return value || "";
         }
     }
 
     /**
      * @param {number} position
+     * @param {string} fieldPath
      * @param {string} currencyFieldName
      * @returns {import("@spreadsheet/currency/currency_data_source").Currency | undefined}
      */
-    getListCurrency(position, currencyFieldName) {
+    getListCurrency(position, fieldPath, currencyFieldName) {
         this.assertIsValid();
-        const currency = this.data[position]?.[currencyFieldName];
+        const currency = this._getRecordFromRelation(this.data[position], fieldPath)?.[
+            currencyFieldName
+        ];
         if (!currency) {
             return undefined;
         }
@@ -254,6 +311,10 @@ export class ListDataSource extends OdooViewsDataSource {
             decimalPlaces: currency.decimal_places,
             position: currency.position,
         };
+    }
+
+    getFieldFromFieldPath(fieldPath) {
+        return this.fieldPathsToFieldMap[fieldPath];
     }
 
     //--------------------------------------------------------------------------
@@ -283,12 +344,13 @@ export class ListDataSource extends OdooViewsDataSource {
         if (this._fetchingPromise) {
             return;
         }
-        this._fetchingPromise = Promise.resolve().then(() => {
-            return new Promise((resolve) => {
-                this._fetchingPromise = undefined;
-                this.load({ reload: true });
-                resolve();
-            });
-        });
+        this._fetchingPromise = Promise.resolve().then(
+            () =>
+                new Promise((resolve) => {
+                    this._fetchingPromise = undefined;
+                    this.load({ reload: true });
+                    resolve();
+                })
+        );
     }
 }
