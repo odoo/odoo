@@ -54,12 +54,13 @@ export class RatingPopupComposer extends Interaction {
 
         // Append the modal
         const modalEl = this.el.querySelector(".o_rating_popup_composer_modal");
+        modalEl.replaceChildren();
         this.renderAt(
             "portal_rating.PopupComposer", {
             inline_mode: true,
             widget: this,
             val: this.rating_avg,
-        }, modalEl) || "";
+        }, modalEl);
 
         if (this.composerEl) {
             this.services["public.interactions"].stopInteractions(this.composerEl);
@@ -69,7 +70,7 @@ export class RatingPopupComposer extends Interaction {
         // TODO Exchange options through another mean ?
         const options = PortalComposer.prepareOptions(this.options);
         this.env.portalComposerOptions = options;
-        const locationEl = this.composerEl || this.el.querySelector(".o_rating_popup_composer_modal .o_portal_chatter_composer");
+        const locationEl = this.el.querySelector(".o_rating_popup_composer_modal .o_portal_chatter_composer");
         // TODO maybe always put in this.options - and prepare in setup ???
         if (!locationEl) {
             return;
