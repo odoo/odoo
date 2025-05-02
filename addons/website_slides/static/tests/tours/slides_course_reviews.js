@@ -69,7 +69,7 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-QuickReactionMenu-emoji span:contains('👍'):not(:visible)",
+            trigger: "#chatterRoot:shadow .o-mail-QuickReactionMenu-emoji span:contains('👍')",
             run: "click",
         },
         {
