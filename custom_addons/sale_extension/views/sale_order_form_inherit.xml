@@ -23,6 +23,31 @@
             </field>
         </record>
 
+        <record id="view_order_form_inherit_print_button" model="ir.ui.view">
+            <field name="name">sale.order.form.print.button</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_quotation_send']" position="after">
+                <button name="print_quotation_report"
+                        string="Imprimir PDF"
+                        type="object"
+                        class="btn btn-secondary"
+                        icon="fa-print"/>
+            </xpath>
+            </field>
+        </record>
+
+        <!--templates-->
+
+        <template id="report_saleorder_document_inherit_delivery_date" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//div[@name='expiration_date']" position="after">
+                <div>
+                    <strong>Fecha de Entrega:</strong>
+                    <div t-field="doc.delivery_date"/>
+                </div>
+            </xpath>
+        </template>
 
     </data>
 </odoo>

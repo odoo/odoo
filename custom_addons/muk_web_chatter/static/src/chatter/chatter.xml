@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<templates xml:space="preserve">
+    <t
+        t-name="muk_web_theme.Chatter"
+        t-inherit="mail.Chatter"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//button[hasclass('o-mail-Chatter-sendMessage')]" position="replace"> 
+            <button 
+                class="o-mail-Chatter-sendMessage btn text-nowrap me-1" 
+                t-att-class="{
+                    'btn-primary': state.composerType !== 'note',
+                    'btn-secondary': state.composerType === 'note',
+                    'active': state.composerType === 'message',
+                    'my-2': !props.compactHeight
+                }" 
+                t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" 
+                data-hotkey="m" 
+                t-on-click="() => this.toggleComposer('message')"
+            >
+                <i class="fa fa-envelope me-sm-1" />
+                <span class="d-none d-sm-inline">Send message</span>
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('o-mail-Chatter-logNote')]" position="replace">
+        	<button 
+                class="o-mail-Chatter-logNote btn text-nowrap me-1" 
+                t-att-class="{
+                    'btn-primary active': state.composerType === 'note',
+                    'btn-secondary': state.composerType !== 'note',
+                    'my-2': !props.compactHeight
+                }" 
+                data-hotkey="shift+m" 
+                t-on-click="() => this.toggleComposer('note')"
+            >
+                <i class="fa fa-sticky-note me-sm-1" />
+                <span class="d-none d-sm-inline">Log note</span>
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('o-mail-Chatter-activity')]/span" position="before">
+        	<i class="fa fa-clock-o me-sm-1"/>
+        </xpath>
+        <xpath expr="//button[hasclass('o-mail-Chatter-activity')]/span" position="attributes">
+            <attribute name="class" add="d-none d-sm-inline" separator=" " />
+        </xpath>
+
+        <xpath expr="//button[@t-if='props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length']" position="attributes">
+            <attribute name="t-if">props.isChatterAside and props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length</attribute>
+        </xpath>
+        <xpath expr="//button[@t-on-click='onClickSearch']" position="after">
+        	<button
+                class="btn btn-link text-action px-1"
+                aria-label="Show/Hide Notifications"
+                title="Show/Hide Notifications"
+                t-on-click="onClickNotificationsToggle"
+                t-att-disabled="state.isSearchOpen"
+            >
+                <i
+                    class="fa fa-lg"
+                    t-att-class="{
+                        'fa-eye': state.showNotificationMessages,
+                        'fa-eye-slash': !state.showNotificationMessages,
+                    }"
+                />
+            </button>
+        </xpath>
+        <xpath expr="//Thread" position="attributes">
+            <attribute name="showNotificationMessages">state.showNotificationMessages</attribute>
+        </xpath>
+    </t>
+</templates>
