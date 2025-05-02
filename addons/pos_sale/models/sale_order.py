@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['name', 'state', 'user_id', 'order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed', 'amount_unpaid',
-            'picking_ids', 'partner_shipping_id', 'partner_invoice_id', 'date_order']
+            'picking_ids', 'partner_shipping_id', 'partner_invoice_id', 'date_order', 'write_date']
 
     def _count_pos_order(self):
         for order in self:
@@ -102,7 +102,9 @@ class SaleOrderLine(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['discount', 'display_name', 'price_total', 'price_unit', 'product_id', 'product_uom_qty', 'qty_delivered',
-            'qty_invoiced', 'qty_to_invoice', 'display_type', 'name', 'tax_ids', 'is_downpayment', 'extra_tax_data']
+            'qty_invoiced', 'qty_to_invoice', 'display_type', 'name', 'tax_ids', 'is_downpayment', 'extra_tax_data',
+            'write_date',
+        ]
 
     @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state')
     def _compute_qty_delivered(self):
