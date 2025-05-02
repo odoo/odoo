@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
-import { fillEmpty } from "@html_editor/utils/dom";
+import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import {
     isParagraphRelatedElement,
@@ -14,6 +14,7 @@ import {
     closestElement,
     createDOMPathGenerator,
     descendants,
+    selectElements,
 } from "@html_editor/utils/dom_traversal";
 import {
     convertNumericToUnit,
@@ -267,6 +268,7 @@ export class FontPlugin extends Plugin {
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
         ],
+        normalize_handlers: this.normalize.bind(this),
 
         /** Overrides */
         split_element_block_overrides: [
@@ -295,9 +297,9 @@ export class FontPlugin extends Plugin {
         const block = closestBlock(anchorNode);
         const tagName = block.tagName.toLowerCase();
 
-        const matchingItems = fontItems.filter((item) => {
-            return item.selector ? block.matches(item.selector) : item.tagName === tagName;
-        });
+        const matchingItems = fontItems.filter((item) =>
+            item.selector ? block.matches(item.selector) : item.tagName === tagName
+        );
 
         const matchingItemsWitoutExtraClass = matchingItems.filter((item) => !item.extraClass);
 
@@ -337,6 +339,13 @@ export class FontPlugin extends Plugin {
 
             return [{ ...item, tagName: "span", name: roundedValue }];
         });
+    }
+
+    normalize(root) {
+        // Remove all link element from pre and blockquote
+        for (const link of selectElements(root, "pre a, blockquote a")) {
+            unwrapContents(link);
+        }
     }
 
     // @todo @phoenix: Move this to a specific Pre/CodeBlock plugin?
