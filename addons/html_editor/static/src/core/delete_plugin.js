@@ -832,7 +832,10 @@ export class DeletePlugin extends Plugin {
         if (
             block === commonAncestorContainer ||
             !this.isCursorAtEndOfElement(block, endContainer, endOffset) ||
-            (startList && endList && !compareListTypes(startList, endList))
+            (startList &&
+                endList &&
+                !compareListTypes(startList, endList) &&
+                !startList.contains(endList))
         ) {
             return range;
         }
