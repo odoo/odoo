@@ -58,6 +58,7 @@ class WebsiteRewrite(models.Model):
     url_from = fields.Char('URL from', index=True)
     route_id = fields.Many2one('website.route')
     url_to = fields.Char("URL to")
+    url_from_is_controller = fields.Boolean(compute='_compute_url_from_is_controller', store=False)
     redirect_type = fields.Selection([
         ('404', '404 Not Found'),
         ('301', '301 Moved permanently'),
@@ -153,3 +154,14 @@ class WebsiteRewrite(models.Model):
 
     def refresh_routes(self):
         self.env['website.route']._refresh()
+
+    def _compute_url_from_is_controller(self):
+        """
+        Compute if the URL from is a controller/page or not.
+        Summary of how urls are served:
+            1. Controllers
+            2. Pages
+            3. Redirection
+        """
+        for rewrite in self:
+            rewrite.url_from_is_controller = bool(self.env['ir.http'].routing_map().bind('').test(rewrite.url_from))
