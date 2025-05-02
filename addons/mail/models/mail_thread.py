@@ -339,7 +339,7 @@ class MailThread(models.AbstractModel):
                     continue
                 # if we have a subtype, post message to notify users from _message_auto_subscribe
                 thread.sudo().message_post(
-                    subtype_id=subtype.id, author_id=self.env.user.partner_id.id,
+                    subtype_id=subtype.id, author_id=self.env.user.partner_id.id, subject="Creation message",
                     # summary="o_mail_notification" is used to hide the message body in the front-end
                     body=Markup('<div summary="o_mail_notification"><p>%s</p></div>') % thread._creation_message()
                 )
@@ -347,7 +347,7 @@ class MailThread(models.AbstractModel):
                 bodies = dict(
                     (thread.id, thread._creation_message())
                     for thread in threads_no_subtype)
-                threads_no_subtype._message_log_batch(bodies=bodies)
+                threads_no_subtype._message_log_batch(bodies=bodies, subject="Creation message")
 
         # post track template if a tracked field changed
         threads._track_discard()
@@ -4620,7 +4620,7 @@ class MailThread(models.AbstractModel):
     # THREAD MESSAGE UPDATE
     # ------------------------------------------------------
 
-    def message_change_thread(self, new_thread, new_parent_message=False):
+    def message_change_thread(self, new_thread, new_parent_message=False, skip_creation_message=False):
         """
         Transfer the list of the mail thread messages from an model to another
 
@@ -4638,17 +4638,19 @@ class MailThread(models.AbstractModel):
         # get the ids of the comment and not-comment of the thread
         # TDE check: sudo on mail.message, to be sure all messages are moved ?
         MailMessage = self.env['mail.message']
-        msg_comment = MailMessage.search([
-            ('model', '=', self._name),
-            ('res_id', '=', self.id),
-            ('message_type', '!=', 'user_notification'),
-            ('subtype_id', '=', subtype_comment)])
-        msg_not_comment = MailMessage.search([
-            ('model', '=', self._name),
-            ('res_id', '=', self.id),
-            ('message_type', '!=', 'user_notification'),
-            ('subtype_id', '!=', subtype_comment)])
 
+        def _get_domain(operator):
+            domain = [
+                ('model', '=', self._name),
+                ('res_id', '=', self.id),
+                ('message_type', '!=', 'user_notification'),
+                ('subtype_id', operator, subtype_comment)]
+            if skip_creation_message:
+                domain += [('subject', '!=', "Creation message")]
+            return domain
+
+        msg_comment = MailMessage.search(_get_domain("="))
+        msg_not_comment = MailMessage.search(_get_domain("!="))
         # update the messages
         msg_vals = {"res_id": new_thread.id, "model": new_thread._name}
         if new_parent_message:
