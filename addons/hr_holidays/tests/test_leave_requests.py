@@ -1388,24 +1388,68 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(modified_leave.request_date_to, two_days_after)
 
     def test_public_holiday_in_the_middle_of_flexible_request(self):
+        """
+            Test the cases:
+             - Leave with having public holidays in the middle
+             - Leave with no public holidays in between
+             - Leave with public holiday with different company than the user is in
+        """
+        new_company = self.env['res.company'].create({
+            'name': 'New Company',
+        })
         calendar = self.env['resource.calendar'].create({
             'name': 'Test calendar',
             'hours_per_day': 8,
             'flexible_hours': True
         })
         self.employee_emp.resource_calendar_id = calendar
-        # Create a public holiday for the flexible calendar
-        self.env['resource.calendar.leaves'].create({
-            'date_from': datetime(2022, 3, 11),
-            'date_to': datetime(2022, 3, 11, 23, 59, 59),
-            'calendar_id': calendar.id,
+        # Create public holidays for the flexible calendar with and without calendar_id
+        self.env['resource.calendar.leaves'].create([
+            {
+                'date_from': datetime(2022, 3, 11),
+                'date_to': datetime(2022, 3, 11, 23, 59, 59),
+                'calendar_id': calendar.id,
+            },
+            {
+                'date_from': datetime(2022, 3, 12),
+                'date_to': datetime(2022, 3, 12, 23, 59, 59),
+                # No calendar_id, public holiday with no calendar
+            },
+        ])
+        # Create a public holiday with different company than the user is in
+        self.env['resource.calendar.leaves'].with_company(new_company).create({
+            'name': 'Stress leave',
+            'date_from': datetime(2022, 3, 24),
+            'date_to': datetime(2022, 3, 24, 23, 59, 59),
         })
 
-        leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
-            'name': 'Holiday Request',
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.holidays_type_1.id,
-            'request_date_from': date(2022, 3, 10),
-            'request_date_to': date(2022, 3, 12),
-        })
-        self.assertEqual(leave.number_of_days, 2)
+        leave_data = [
+            {
+                'name': 'Holiday Request',
+                'request_date_from': date(2022, 3, 10),
+                'request_date_to': date(2022, 3, 13),
+            },
+            {
+                'name': 'New Holiday Request',
+                'request_date_from': date(2022, 3, 17),
+                'request_date_to': date(2022, 3, 19),
+            },
+            {
+                'name': 'Festival Holiday Request',
+                'request_date_from': date(2022, 3, 24),
+                'request_date_to': date(2022, 3, 26),
+            },
+        ]
+
+        leaves = self.env['hr.leave'].with_user(self.user_employee_id).create([
+            {
+                **data,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.holidays_type_1.id,
+            }
+            for data in leave_data
+        ])
+        self.assertEqual(leaves[0].number_of_days, 2, "There should be 2 days of leaves, since 2 public holidays are in between")
+        self.assertEqual(leaves[1].number_of_days, 3, "There should be 3 days of leaves, since there are no public holidays in between")
+        self.assertEqual(leaves[2].number_of_days, 3,
+            "There should be 3 days of leaves, since the public holiday is not in the same company as the user")
