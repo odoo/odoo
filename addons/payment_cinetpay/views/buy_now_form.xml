@@ -1,12 +1,21 @@
 <odoo>
   <template id="buy_now_form" name="Formulaire CinetPay">
     <t t-call="website.layout">
+
+      <!-- Chargement des clés site_id et apikey -->
       <t t-set="cinetpay_site_id" t-value="env['ir.config_parameter'].sudo().get_param('cinetpay.site_id')"/>
       <t t-set="cinetpay_apikey" t-value="env['ir.config_parameter'].sudo().get_param('cinetpay.apikey')"/>
       <t t-set="user" t-value="request.env.user"/>
       <t t-set="is_public" t-value="user.id == request.website.user_id.id"/>
 
-      <!-- Ajouter le SDK CinetPay -->
+      <!-- Injection des données cachées pour JS -->
+      <div id="cinetpay_data"
+           t-att-data-site_id="cinetpay_site_id"
+           t-att-data-apikey="cinetpay_apikey"
+           style="display:none;">
+      </div>
+
+      <!-- Ajout du SDK -->
       <t t-jquery="head" t-operation="prepend">
         <script src="https://cdn.cinetpay.com/seamless/main.js"></script>
       </t>
@@ -15,19 +24,19 @@
       <div class="container mt-5">
         <h2>Formulaire de Paiement</h2>
 
-        <!-- Petit message incitatif -->
+        <!-- Message pour utilisateur public -->
         <t t-if="is_public">
           <div class="alert alert-info">
             Connectez-vous pour que vos informations soient enregistrées pour vos prochains achats. (Facultatif)
           </div>
         </t>
 
-        <form id="paymentForm" t-att-data-site_id="cinetpay_site_id" t-att-data-apikey="cinetpay_apikey">
-          
+        <form id="paymentForm">
+
           <!-- Champs cachés -->
           <input type="hidden" id="amount" t-att-value="amount_total"/>
-          <input type="hidden" id="order_id" t-att-value="order.id"/>
           <input type="hidden" id="order_reference" t-att-value="order.name"/>
+          <input type="hidden" id="order_id" t-att-value="order.id"/>
 
           <!-- Champs client visibles -->
           <div class="form-group">
@@ -66,7 +75,7 @@
           <input type="hidden" id="customer_state" t-att-value="user.partner_id.state_id.code if not is_public else 'KAD'"/>
           <input type="hidden" id="customer_zip" t-att-value="user.partner_id.zip if not is_public else '0001'"/>
 
-          <!-- Résumé commande -->
+          <!-- Résumé -->
           <div class="form-group">
             <label>Commande :</label>
             <input class="form-control" readonly="readonly" t-att-value="order.name"/>
