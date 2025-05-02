@@ -107,20 +107,27 @@ export class SplitBillScreen extends Component {
     _splitQuantity(line) {
         const split = this.splitlines[line.id];
         // total quantity of the product in this line
-        // we add up the quantities of all the lines that have this product
+        // we add up the quantities of all the lines that have this product,
+        // except for lines belonging to different combos (allowing us to be
+        // more granular when selecting combos)
         let totalQuantity = 0;
 
         this.pos
             .get_order()
             .get_orderlines()
             .forEach(function (orderLine) {
-                if (orderLine.get_product().id === split.product) {
+                const isComboParent = !!orderLine.comboLines?.length;
+                if (
+                    orderLine.get_product().id === split.product &&
+                    (!isComboParent || orderLine.id === line.id) &&
+                    orderLine.comboParent?.id === line.comboParent?.id
+                ) {
                     totalQuantity += orderLine.get_quantity();
                 }
             });
 
         if (line.get_quantity() > 0) {
-            if (!line.is_pos_groupable()) {
+            if (!line.is_pos_groupable() && !line.isPartOfCombo()) {
                 if (split.quantity !== line.get_quantity()) {
                     split.quantity = line.get_quantity();
                 } else {
