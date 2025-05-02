@@ -29,6 +29,10 @@
                     <field name="released_manual" optional="hide" column_invisible="parent.state=='draft'"/>
                     <field name="remaining_packed_qty" optional="hide" column_invisible="parent.state=='draft'"/>
                 </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="reference_1" readonly="True"/>
+                    <field name="container_number" readonly="True"/>
+                </xpath>
             </field>
         </record>
     </data>
