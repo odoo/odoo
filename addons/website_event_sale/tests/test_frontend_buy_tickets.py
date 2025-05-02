@@ -7,7 +7,6 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Datetime
 from odoo.tests import JsonRpcException, tagged
 from odoo.tools import mute_logger
-import unittest
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
@@ -71,8 +70,6 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
 
         cls.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_admin(self):
         self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
         # Seen that:
