@@ -1239,16 +1239,18 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getPendingOrder() {
-        const orderToCreate = this.models["pos.order"].filter(
-            (order) =>
-                this.pendingOrder.create.has(order.id) && this.shouldCreatePendingOrder(order)
-        );
-        const orderToUpdate = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.write)
-        );
-        const orderToDelele = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.delete)
-        );
+        const orderToCreate = this.models["pos.order"]
+            .filter(
+                (order) =>
+                    this.pendingOrder.create.has(order.id) && this.shouldCreatePendingOrder(order)
+            )
+            .filter(Boolean);
+        const orderToUpdate = this.models["pos.order"]
+            .readMany(Array.from(this.pendingOrder.write))
+            .filter(Boolean);
+        const orderToDelele = this.models["pos.order"]
+            .readMany(Array.from(this.pendingOrder.delete))
+            .filter(Boolean);
 
         return {
             orderToDelele,
