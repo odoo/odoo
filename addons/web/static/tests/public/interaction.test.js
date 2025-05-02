@@ -1583,7 +1583,7 @@ describe("t-att-style", () => {
                 span: {
                     "t-att-style": () => ({
                         "background-color": this.bgColor,
-                        "color": this.color,
+                        color: this.color,
                     }),
                 },
             };
@@ -1598,10 +1598,16 @@ describe("t-att-style", () => {
                 }, 1000);
             }
         }
-        await startInteraction(Test, `<div class="test" style="color: black;"><span style="background-color: rgb(0, 0, 255);">Hi</span></div>`);
-        expect("span").toHaveStyle({ "background-color": "rgb(0, 255, 0)", "color": "rgb(255, 0, 0)" });
+        await startInteraction(
+            Test,
+            `<div class="test" style="color: black;"><span style="background-color: rgb(0, 0, 255);">Hi</span></div>`
+        );
+        expect("span").toHaveStyle({
+            "background-color": "rgb(0, 255, 0)",
+            color: "rgb(255, 0, 0)",
+        });
         await advanceTime(1000);
-        expect("span").toHaveStyle({ "background-color": "rgb(0, 0, 255)", "color": "rgb(0, 0, 0)" });
+        expect("span").toHaveStyle({ "background-color": "rgb(0, 0, 255)", color: "rgb(0, 0, 0)" });
     });
 });
 
@@ -1804,8 +1810,10 @@ describe("t-att and t-out", () => {
                             return markup(this.tOut);
                         },
                     },
-                    "span": {
-                        "t-on-click.noUpdate": () => { expect.step("clicked") },
+                    span: {
+                        "t-on-click.noUpdate": () => {
+                            expect.step("clicked");
+                        },
                     },
                 };
                 setup() {
@@ -1888,7 +1896,6 @@ describe("t-att and t-out", () => {
         expect("span").not.toHaveAttribute("animal");
         expect("span").toHaveAttribute("egg", "mysterious");
     });
-
 });
 
 describe("components", () => {
@@ -2488,13 +2495,12 @@ describe("debounced (2)", () => {
     });
 
     test("debounced is not called if the interaction is destroyed in the meantime", async () => {
-        let t0, t1, t2;
+        let debounceTimer;
 
         class Test extends Interaction {
             static selector = ".test";
             setup() {
-                t0 = Date.now();
-                t1 = t0 + 50;
+                debounceTimer = Date.now() + 50;
                 const fn = this.debounced(() => expect.step("debounced"), 50);
                 fn();
             }
@@ -2504,7 +2510,6 @@ describe("debounced (2)", () => {
             }
             async willStart() {
                 expect.step("willstart");
-                t2 = Date.now() + 100;
                 await new Promise((resolve) => {
                     setTimeout(resolve, 100);
                 });
@@ -2518,9 +2523,13 @@ describe("debounced (2)", () => {
         }
         const { core } = await startInteraction(Test, TemplateTest, { waitForStart: false });
         expect.verifySteps(["willstart"]);
-        const t3 = Date.now();
-        console.log(t2 - t0);
-        await advanceTime(25);
+        const now = Date.now();
+        if (now > debounceTimer) {
+            console.log("code took too long...");
+        }
+        // compute the step to get between now and debouncetimer
+        const step = (debounceTimer - now) / 2;
+        await advanceTime(step);
         expect.verifySteps([]);
         core.stopInteractions();
         expect.verifySteps(["destroy"]);
