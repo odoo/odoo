@@ -47,7 +47,7 @@ patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 patch(HrPresenceStatusPrivate.prototype, {
     get label() {
         return this.props.record.data.current_leave_id
-            ? this.props.record.data.current_leave_id.id + _t(", back on ") + this.props.record.data['leave_date_to'].toLocaleString(
+            ? this.props.record.data.current_leave_id.display_name + _t(", back on ") + this.props.record.data['leave_date_to'].toLocaleString(
                 {
                     day: 'numeric',
                     month: 'short',
