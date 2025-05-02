@@ -306,8 +306,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_02_restricted_editor(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'restricted_editor', login="website_user")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_04_website_navbar_menu(self):
         website = self.env['website'].search([], limit=1)
         self.env['website.menu'].create({
