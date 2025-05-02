@@ -231,10 +231,10 @@ export function areCssValuesEqual(value1, value2, cssProp) {
 
     // It could be a CSS variable, in that case the actual value has to be
     // retrieved before comparing.
-    if (value1.startsWith("var(--")) {
+    if (isCSSVariable(value1)) {
         value1 = getCSSVariableValue(value1.substring(6, value1.length - 1));
     }
-    if (value2.startsWith("var(--")) {
+    if (isCSSVariable(value2)) {
         value2 = getCSSVariableValue(value2.substring(6, value2.length - 1));
     }
     if (value1 === value2) {
@@ -310,6 +310,14 @@ export function areCssValuesEqual(value1, value2, cssProp) {
 export function isColorCombinationName(name) {
     const number = parseInt(name);
     return !isNaN(number) && number % 100 !== 0;
+}
+/**
+ * @param {string} value
+ * @returns {boolean}
+ */
+export function isCSSVariable(value) {
+    value = value.replace(/^'|'$/g, "");
+    return /^var\(--.+?\)$/.test(value);
 }
 /**
  * @param {string[]} colorNames

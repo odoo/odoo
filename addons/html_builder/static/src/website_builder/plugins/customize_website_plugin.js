@@ -1,4 +1,8 @@
-import { getCSSVariableValue, isColorCombinationName } from "@html_builder/utils/utils_css";
+import {
+    getCSSVariableValue,
+    isColorCombinationName,
+    isCSSVariable,
+} from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { parseHTML } from "@html_editor/utils/html";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -366,6 +370,9 @@ export class CustomizeWebsitePlugin extends Plugin {
             if (color) {
                 if (isColorCombinationName(color)) {
                     finalColors[colorName] = parseInt(color);
+                } else if (isCSSVariable(color)) {
+                    const customProperty = color.match(/var\(--(.+?)\)/)[1];
+                    finalColors[colorName] = this.getWebsiteVariableValue(customProperty);
                 } else if (!isCSSColor(color)) {
                     finalColors[colorName] = `'${color}'`;
                 }
