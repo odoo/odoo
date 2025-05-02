@@ -85,8 +85,7 @@ export default class DevicesSynchronisation {
      */
     async readDataFromServer() {
         const serverOpenOrders = this.pos.getOpenOrders().filter((o) => typeof o.id === "number");
-        const recordIds = this.getDynamicRecordServerIds();
-        const domain = this.constructOrdersDomain(serverOpenOrders);
+        const { domain, recordIds } = this.constructOrdersDomain(serverOpenOrders);
         let response = {};
         try {
             response = await this.pos.data.call("pos.config", "read_config_open_orders", [
@@ -157,38 +156,57 @@ export default class DevicesSynchronisation {
      * This method will get local open orders with a server id.
      * @returns {Array} - Array of domain conditions.
      */
-    constructOrdersDomain(serverOpenOrders) {
-        const localDomain = serverOpenOrders.map((o) => {
-            const newDateTime = o.write_date.plus({ seconds: 1 }).toUTC();
-            return new Domain([
-                "&",
-                ["id", "=", o.id],
-                "|",
-                ["write_date", ">", newDateTime.toFormat("yyyy-MM-dd HH:mm:ss")],
-                ["state", "!=", o.state],
-            ]);
-        });
-        const localIds = serverOpenOrders.map((o) => o.id);
-        let domain = new Domain(["&", ["state", "=", "draft"], ["id", "not in", localIds]]);
-        domain = Domain.or([domain, ...localDomain]);
-        domain = Domain.and([domain, new Domain([["config_id", "=", odoo.pos_config_id]])]);
-        return domain.toList();
-    }
+    constructOrdersDomain() {
+        const dynamicModels = this.dynamicModels;
+        const recordsToCheck = Array.from(dynamicModels).reduce((acc, model) => {
+            acc[model] = this.models[model].filter(
+                (r) => !this.pos.data.opts.databaseTable[model]?.condition(r)
+            );
+            return acc;
+        }, {});
 
-    /**
-     * Return all server ids of dynamicRecords when condition matches
-     * @returns {Object} - Object of models -> ids
-     */
-    getDynamicRecordServerIds() {
-        const recordIds = {};
-        const databaseTable = this.pos.data.opts.databaseTable;
+        const recordIdsByModel = {};
+        const domainByModel = Object.entries(recordsToCheck).reduce((acc, [model, records]) => {
+            const serverRecs = records.filter((r) => typeof r.id === "number");
+            const ids = serverRecs.map((r) => r.id);
+            const config = this.pos.config;
+            const domains = [];
 
-        this.dynamicModels.forEach((model) => {
-            recordIds[model] = this.models[model]
-                .filter((r) => typeof r.id === "number" && !databaseTable[model]?.condition(r))
-                .map((r) => r.id);
-        });
+            if (ids.length === 0 && model !== "pos.order") {
+                return acc;
+            }
 
-        return recordIds;
+            recordIdsByModel[model] = ids;
+            for (const record of serverRecs) {
+                const recordDateTime = record.write_date.plus({ seconds: 1 }).toUTC();
+                const recordDateTimeString = recordDateTime.toFormat("yyyy-MM-dd HH:mm:ss", {
+                    numberingSystem: "latn",
+                });
+                domains.push(
+                    new Domain([
+                        ["id", "=", record.id],
+                        ["write_date", ">", recordDateTimeString],
+                    ])
+                );
+            }
+
+            let domain = Domain.or(domains);
+            if (model === "pos.order") {
+                domain = Domain.or([
+                    domain,
+                    new Domain([
+                        ["id", "not in", ids],
+                        ["state", "=", "draft"],
+                        ["config_id", "in", [config.id, ...config.trusted_config_ids]],
+                    ]),
+                ]);
+
+                acc[model] = domain.toList();
+            }
+
+            return acc;
+        }, {});
+
+        return { domain: domainByModel, recordIds: recordIdsByModel };
     }
 }
