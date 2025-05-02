@@ -117,8 +117,6 @@ class TestWebsiteSaleComparisonUi(HttpCase):
         for variant, price in zip(cls.variants_margaux, [487.32, 394.05, 532.44, 1047.84]):
             variant.product_template_attribute_value_ids.filtered(lambda ptav: ptav.attribute_id == cls.attribute_vintage).price_extra = price
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_01_admin_tour_product_comparison(self):
         attribute = self.env['product.attribute'].create({
             'name': 'Color',
