@@ -35,6 +35,11 @@ class TestSaleOrder(ClickAndCollectCommon):
         so.partner_id = self.partner.id
         self.assertEqual(so.warehouse_id, warehouse_2)
 
+    def test_warehouse_is_computed_based_on_pickup_location(self):
+        warehouse_2 = self._create_warehouse()
+        so = self._create_in_store_delivery_order(pickup_location_data={'id': warehouse_2.id})
+        self.assertEqual(so.warehouse_id, warehouse_2)
+
     def test_setting_pickup_location_assigns_correct_fiscal_position(self):
         fp_us = self.env['account.fiscal.position'].create({
             'name': "Test US fiscal position",

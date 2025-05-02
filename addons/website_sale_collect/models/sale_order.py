@@ -19,6 +19,8 @@ class SaleOrder(models.Model):
             )
         )
         super(SaleOrder, self - in_store_orders_with_pickup_data)._compute_warehouse_id()
+        for order in in_store_orders_with_pickup_data:
+            order.warehouse_id = order.pickup_location_data['id']
 
     def set_delivery_line(self, carrier, amount):
         """ Override of `website_sale` to recompute warehouse and fiscal position when a new
