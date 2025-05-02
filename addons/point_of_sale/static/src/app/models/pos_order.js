@@ -19,7 +19,7 @@ export class PosOrder extends Base {
     setup(vals) {
         super.setup(vals);
 
-        if (!this.session_id && (!this.finalized || typeof this.id !== "number")) {
+        if (!this.session_id?.id && (!this.finalized || typeof this.id !== "number")) {
             this.update({ session_id: this.session });
 
             if (this.state === "draft" && this.lines.length == 0 && this.payment_ids.length == 0) {
