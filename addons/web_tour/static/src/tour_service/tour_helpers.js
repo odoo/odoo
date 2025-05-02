@@ -118,7 +118,7 @@ export class TourHelpers {
         });
         await moveTo(target, options);
         await dragEffectDelay();
-        await drop();
+        await drop(target, options);
         await dragEffectDelay();
     }
 
