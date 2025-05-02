@@ -126,7 +126,10 @@ export class ListPlugin extends Plugin {
             { commandId: "toggleListCL" },
         ].map((item) => withSequence(15, item)),
 
-        hints: [{ selector: "LI", text: _t("List") }],
+        hints: [
+            { selector: "LI", text: _t("List") },
+            { selector: `LI > ${baseContainerGlobalSelector}`, text: _t("List") },
+        ],
 
         /** Handlers */
         input_handlers: this.onInput.bind(this),
