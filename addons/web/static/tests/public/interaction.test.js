@@ -2488,9 +2488,13 @@ describe("debounced (2)", () => {
     });
 
     test("debounced is not called if the interaction is destroyed in the meantime", async () => {
+        let t0, t1, t2;
+
         class Test extends Interaction {
             static selector = ".test";
             setup() {
+                t0 = Date.now();
+                t1 = t0 + 50;
                 const fn = this.debounced(() => expect.step("debounced"), 50);
                 fn();
             }
@@ -2500,6 +2504,7 @@ describe("debounced (2)", () => {
             }
             async willStart() {
                 expect.step("willstart");
+                t2 = Date.now() + 100;
                 await new Promise((resolve) => {
                     setTimeout(resolve, 100);
                 });
@@ -2513,6 +2518,8 @@ describe("debounced (2)", () => {
         }
         const { core } = await startInteraction(Test, TemplateTest, { waitForStart: false });
         expect.verifySteps(["willstart"]);
+        const t3 = Date.now();
+        console.log(t2 - t0);
         await advanceTime(25);
         expect.verifySteps([]);
         core.stopInteractions();
