@@ -3672,6 +3672,17 @@ class TestViewTranslations(common.TransactionCase):
         self.assertIn("<i>", view_fr.arch_db)
         self.assertIn("<i>", view_fr.arch)
 
+    def test_t_translation_not_included_in_get_view(self):
+        view = self.env["ir.ui.view"].create({
+            "name": "testform",
+            "arch": """<form><div t-translation="off">some text</div></form>""",
+            "type": "form",
+            "model": "res.partner",
+        })
+        arch = self.env["res.partner"].get_view(view_id=view.id)["arch"]
+        self.assertXMLEqual(arch, """<form><div>some text</div></form>""")
+        translations = view.get_field_translations("arch_db")
+        self.assertEqual(len(translations[0]), 0)
 
 class ViewModeField(ViewCase):
     """
