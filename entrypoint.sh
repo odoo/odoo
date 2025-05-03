@@ -22,4 +22,4 @@ END
 EOSQL
 
 # Finally, launch Odoo
-exec "$@"
+exec odoo -c /app/odoo.conf
