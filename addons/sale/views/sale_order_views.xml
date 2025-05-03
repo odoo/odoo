@@ -701,6 +701,11 @@
                                     width="50px"
                                     optional="show"/>
                                 <field
+                                    name="print_details"
+                                    widget="print_details_boolean_toggle"
+                                    invisible="display_type != 'line_section'"
+                                />
+                                <field
                                     name="price_subtotal"
                                     string="Amount"
                                     column_invisible="parent.company_price_include == 'tax_included'"
