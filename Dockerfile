@@ -21,9 +21,11 @@ RUN pip uninstall -y XlsxWriter || true
 RUN pip install --no-cache-dir --ignore-installed -r requirements.txt
 RUN mkdir -p /var/lib/odoo/filestore
 
-
 # Now copy the rest of the application
 COPY . /app
+
+# Copy the entrypoint.sh script into the container
+COPY entrypoint.sh /entrypoint.sh
 
 # Make entrypoint script executable
 RUN chmod +x /entrypoint.sh
