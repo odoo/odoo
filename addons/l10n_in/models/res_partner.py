@@ -34,7 +34,7 @@ class ResPartner(models.Model):
     def _compute_l10n_in_gst_state_warning(self):
         for partner in self:
             if (
-                "IN" in partner.fiscal_country_codes
+                partner.fiscal_country_codes and "IN" in partner.fiscal_country_codes
                 and partner.check_vat_in(partner.vat)
             ):
                 if partner.vat[:2] == "99":
