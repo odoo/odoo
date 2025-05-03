@@ -396,7 +396,7 @@ from odoo.tools.json import scriptsafe
 from odoo.tools.lru import LRU
 from odoo.tools.misc import str2bool, file_open, file_path
 from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
-from odoo.tools.translate import FORMAT_REGEX
+from odoo.tools.translate import FORMAT_REGEX, VARNAME_REGEXP
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
 from odoo.exceptions import UserError, AccessDenied, AccessError, MissingError, ValidationError
@@ -465,7 +465,6 @@ ALLOWED_KEYWORD = frozenset(['False', 'None', 'True', 'and', 'as', 'elif', 'else
 RSTRIP_REGEXP = re.compile(r'\n[ \t]*$')
 LSTRIP_REGEXP = re.compile(r'^[ \t]*\n')
 FIRST_RSTRIP_REGEXP = re.compile(r'^(\n[ \t]*)+(\n[ \t])')
-VARNAME_REGEXP = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 TO_VARNAME_REGEXP = re.compile(r'[^A-Za-z0-9_]+')
 # Attribute name used outside the context of the QWeb.
 SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title'}
