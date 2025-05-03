@@ -8640,14 +8640,61 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Triggers background-related option updates for the given target element
+     *
+     * @private
+     */
+    _updateBackgroundOptions(targetEl) {
+        this.trigger_up("option_update", {
+            optionNames: ["BackgroundImage", "BackgroundPosition", "BackgroundOptimize"],
+            name: "target",
+            data: $(targetEl),
+        });
+    },
+    /**
      * Sets the background type (cover/repeat pattern).
      *
      * @see this.selectClass for params
      */
-    backgroundType: function (previewMode, widgetValue, params) {
-        this.$target.toggleClass('o_bg_img_opt_repeat', widgetValue === 'repeat-pattern');
-        this.$target.css('background-position', '');
-        this.$target.css('background-size', widgetValue !== 'repeat-pattern' ? '' : '100px');
+    backgroundType(previewMode, widgetValue, params) {
+        const targetEl = this.$target[0];
+        const isSpan = targetEl.tagName === "SPAN";
+        const hasRepeatSpan = targetEl.classList.contains("bg_repeat_span");
+        if (!hasRepeatSpan && isSpan) {
+            // Span already exists (e.g., parallax case)
+            targetEl.classList.toggle("o_bg_img_opt_repeat", widgetValue === "repeat-pattern");
+            targetEl.style.backgroundPosition = "";
+            targetEl.style.backgroundSize = widgetValue === "repeat-pattern" ? "100px" : "";
+        } else if (widgetValue === "repeat-pattern" && !isSpan) {
+            const bgImage = targetEl.style.backgroundImage;
+            const imageMatch = bgImage.match(/url\([^)]+\)/);
+            const gradientMatch = bgImage.match(/(linear-gradient\([^)]*\))/);
+            const imageUrl = imageMatch?.[0];
+            const gradient = gradientMatch ? `linear-gradient(${gradientMatch[1]})` : null;
+            // Apply only gradient to section
+            if (gradient) {
+                targetEl.style.backgroundImage = gradient;
+            }
+            if (imageUrl) {
+                const existingSpan = targetEl.querySelector(".bg_repeat_span");
+                if (existingSpan) {
+                    existingSpan.remove();
+                }
+                // Create a span element to hold the image we want to repeat
+                const span = document.createElement("span");
+                span.classList.add("bg_repeat_span", "o_bg_img_opt_repeat");
+                span.style.backgroundImage = imageUrl;
+                if (getComputedStyle(targetEl).position === "static") {
+                    targetEl.style.position = "relative";
+                }
+                targetEl.prepend(span);
+                this._updateBackgroundOptions(span);
+            }
+        } else if (widgetValue === "cover" && isSpan) {
+            const parent = targetEl.parentElement;
+            targetEl.remove();
+            this._updateBackgroundOptions(parent);
+        }
     },
     /**
      * Saves current background position and enables overlay.

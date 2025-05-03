@@ -2158,6 +2158,13 @@ options.registry.Parallax = options.Class.extend({
         if (params.attributeName !== 'scrollBackgroundRatio') {
             return;
         }
+        // Span with class 'bg_repeat_span' is used to hold background image
+        // when we have multiple background images(gradient + image)
+        // so we need to remove that
+        const bgImageSpan = this.$target[0].querySelector(":scope > span.bg_repeat_span");
+        if (bgImageSpan) {
+            bgImageSpan.remove();
+        }
 
         const isParallax = (widgetValue !== '0');
         this.$target.toggleClass('parallax', isParallax);
