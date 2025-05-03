@@ -45,7 +45,5 @@ class TestWebsiteSaleStockReorderFromPortal(HttpCase, WebsiteSaleStockCommon):
         cls._add_product_qty_to_wh(cls.available_product.id, 10, 8)
         cls._add_product_qty_to_wh(cls.partially_available_product.id, 1.0, 8)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_website_sale_stock_reorder_from_portal_stock(self):
         self.start_tour("/", 'website_sale_stock_reorder_from_portal', login='admin')

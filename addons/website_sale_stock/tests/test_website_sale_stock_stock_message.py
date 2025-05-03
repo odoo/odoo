@@ -10,8 +10,6 @@ import unittest
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleStockProductConfigurator(TestProductConfiguratorCommon, HttpCaseWithUserPortal, HttpCaseWithWebsiteUser):
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_01_stock_message_update_after_close_with_optional_products(self):
         product_product_with_options = self.env['product.product'].create({
             'name': 'Product With Optional (TEST)',
@@ -32,8 +30,6 @@ class TestWebsiteSaleStockProductConfigurator(TestProductConfiguratorCommon, Htt
         })
         self.start_tour("/", 'website_sale_stock_message_after_close_onfigurator_modal_with_optional_products', login="website_user")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_02_stock_message_update_after_close_without_optional_products(self):
         product_product_without_options = self.env['product.product'].create({
             'name': 'Product Without Optional (TEST)',

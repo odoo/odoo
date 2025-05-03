@@ -32,8 +32,6 @@ class TestStockNotificationProduct(HttpCase):
         })
         cls.currency = cls.env.ref("base.USD")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_back_in_stock_notification_product(self):
         self.start_tour("/", 'back_in_stock_notification_product')
 

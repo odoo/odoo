@@ -9,8 +9,6 @@ import unittest
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleStockMultilang(HttpCase):
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_website_sale_stock_multilang(self):
         # Install French
         website = self.env.ref('website.default_website')

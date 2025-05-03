@@ -10,8 +10,6 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleStockConfigurators(HttpCase, WebsiteSaleStockCommon):
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_website_sale_stock_product_configurator(self):
         stock_attribute = self.env['product.attribute'].create({
             'name': "Stock",
@@ -52,8 +50,6 @@ class TestWebsiteSaleStockConfigurators(HttpCase, WebsiteSaleStockCommon):
         ])
         self.start_tour('/', 'website_sale_stock_product_configurator')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_website_sale_stock_combo_configurator(self):
         product = self._create_product(name="Test product")
         self.env['stock.quant'].create({
