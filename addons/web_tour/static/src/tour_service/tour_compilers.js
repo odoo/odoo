@@ -162,7 +162,7 @@ function getAnchorEl(el, consumeEvent) {
         // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
         // but the tip is attached to the .ui-draggable-handle element which may
         // be one of its children (or the element itself)
-        return el.closest(".ui-draggable, .o_draggable, .o_we_draggable");
+        return el.closest(".ui-draggable, .o_draggable, .o_we_draggable, .o-draggable, [draggable='true']");
     }
 
     if (consumeEvent === "input" && !["textarea", "input"].includes(el.tagName.toLowerCase())) {
