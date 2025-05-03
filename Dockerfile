@@ -16,8 +16,11 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt requirements.txt
 
 # Remove pre-installed XlsxWriter and install Python dependencies
+RUN apt-get update && apt-get install -y libldap2-dev libsasl2-dev
 RUN pip uninstall -y XlsxWriter || true
 RUN pip install --no-cache-dir --ignore-installed -r requirements.txt
+RUN mkdir -p /var/lib/odoo/filestore
+
 
 # Now copy the rest of the application
 COPY . /app
