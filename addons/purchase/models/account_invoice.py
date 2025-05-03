@@ -141,7 +141,7 @@ class AccountMove(models.Model):
             'name': _("Purchase Matching"),
             'res_model': 'purchase.bill.line.match',
             'domain': [
-                ('partner_id', '=', self.partner_id.id),
+                ('partner_id', 'in', (self.partner_id | self.partner_id.commercial_partner_id).ids),
                 ('company_id', 'in', self.env.company.ids),
                 ('account_move_id', 'in', [self.id, False]),
             ],

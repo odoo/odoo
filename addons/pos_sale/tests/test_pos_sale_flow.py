@@ -1223,3 +1223,78 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_down_payment_displayed', login="accountman")
+
+    def test_amount_to_invoice(self):
+        """
+        Checks that the amount to invoice is updated correctly when paying an order in the PoS
+        """
+
+        product_a = self.env["product.product"].create(
+            {
+                "name": "Test service product",
+                "available_in_pos": True,
+                "type": "service",
+                "invoice_policy": "order",
+                "lst_price": 100.0,
+                "taxes_id": [],
+            }
+        )
+
+        partner_test = self.env["res.partner"].create({"name": "Test Partner"})
+
+        sale_order = self.env["sale.order"].create(
+            {
+                "partner_id": partner_test.id,
+                "order_line": [Command.create(
+                        {
+                            "product_id": product_a.id,
+                            "name": product_a.name,
+                            "product_uom_qty": 1,
+                            "product_uom": product_a.uom_id.id,
+                            "price_unit": product_a.lst_price,
+                        },
+                    )
+                ],
+            }
+        )
+        self.main_pos_config.open_ui()
+        order_data = {
+            "amount_paid": 100,
+            "amount_tax": 0,
+            "amount_return": 0,
+            "amount_total": 100,
+            "session_id": self.main_pos_config.current_session_id.id,
+            "date_order": fields.Datetime.to_string(fields.Datetime.now()),
+            "fiscal_position_id": False,
+            "lines": [
+                Command.create({
+                    "discount": 0,
+                    "pack_lot_ids": [],
+                    "price_unit": 100.0,
+                    "product_id": self.product_a.id,
+                    "price_subtotal": 100.0,
+                    "price_subtotal_incl": 100.0,
+                    "tax_ids": [],
+                    "sale_order_line_id": sale_order.order_line[0].id,
+                    "sale_order_origin_id": sale_order.id,
+                    "qty": 1,
+                }),
+            ],
+            "name": "Order 12345-123-1234",
+            "partner_id": self.partner_a.id,
+            "sequence_number": 2,
+            "payment_ids": [
+                    Command.create({
+                        "amount": 100,
+                        "name": fields.Datetime.now(),
+                        "payment_method_id": self.main_pos_config.payment_method_ids[0].id,
+                    }),
+            ],
+            "uuid": "12345-123-1234",
+            "last_order_preparation_change": "{}",
+            "user_id": self.env.uid,
+            "to_invoice": True,
+        }
+        self.assertEqual(sale_order.amount_to_invoice, 100.0, "Amount to invoice should be 100.0")
+        self.env['pos.order'].sync_from_ui([order_data])
+        self.assertEqual(sale_order.amount_to_invoice, 0.0, "Amount to invoice should be 0.0")

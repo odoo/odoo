@@ -111,17 +111,17 @@
                     <div class="company_details">
                         <table class="table-borderless">
                             <tr>
-                                <td>
-                                    <ul class="list-inline text-nowrap">
+                                <td colspan="4">
+                                    <ul class="list-inline">
                                         <li t-if="company.company_details"><span t-field="company.company_details"/></li>
                                     </ul>
                                 </td>
-                                <td>
+                                <td colspan="4">
                                     <ul class="list-inline">
                                         <li t-if="company.report_footer"><span t-field="company.report_footer"/></li>
                                     </ul>
                                 </td>
-                                <td>
+                                <td colspan="2">
                                     <ul class="list-inline">
                                         <li t-if="company.vat"><t t-out="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
                                             <span t-if="forced_vat" t-out="forced_vat"/>
@@ -130,7 +130,7 @@
                                         <li>HRB Nr: <span t-field="company.company_registry"/></li>
                                     </ul>
                                 </td>
-                                <td t-if="company.partner_id.bank_ids">
+                                <td colspan="2" t-if="company.partner_id.bank_ids">
                                     <ul class="list-inline">
                                         <t t-foreach="company.partner_id.bank_ids[:2]" t-as="bank">
                                             <li><span t-field="bank.bank_id.name"/></li>
