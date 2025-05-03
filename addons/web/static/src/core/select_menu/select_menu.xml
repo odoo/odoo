@@ -8,6 +8,7 @@
                 menuRef="this.menuRef"
                 position="'bottom-fit'"
                 beforeOpen.bind="onBeforeOpen"
+                onOpened.bind="onOpened"
                 onStateChanged.bind="onStateChanged"
                 navigationOptions="{ virtualFocus: this.props.searchable }"
             >
