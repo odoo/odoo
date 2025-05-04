@@ -289,11 +289,15 @@ class SendSMS(models.TransientModel):
         recipients_info = records._sms_get_recipients_info(force_field=self.number_field_name)
         return recipients_info
 
+    def _get_body_additional_context(self):
+        return dict()
+
     def _prepare_body_values(self, records):
+        additional_context = self._get_body_additional_context()
         if self.template_id and self.body == self.template_id.body:
-            all_bodies = self.template_id._render_field('body', records.ids, compute_lang=True)
+            all_bodies = self.template_id._render_field('body', records.ids, compute_lang=True, add_context=additional_context)
         else:
-            all_bodies = self.env['mail.render.mixin']._render_template(self.body, records._name, records.ids)
+            all_bodies = self.env['mail.render.mixin']._render_template(self.body, records._name, records.ids, add_context=additional_context)
         return all_bodies
 
     def _prepare_mass_sms_values(self, records):
