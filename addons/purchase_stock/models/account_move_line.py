@@ -131,7 +131,7 @@ class AccountMoveLine(models.Model):
                     sign = 1
                     layers_to_consume = []
                     for layer in qty_to_invoice_per_layer:
-                        if layer.stock_move_id._is_in():
+                        if layer.stock_move_id._is_in() or layer.stock_move_id._is_dropshipped():
                             layers_to_consume.append((layer, qty_to_invoice_per_layer[layer][1]))
                 while float_compare(aml_qty, 0, precision_rounding=product_uom.rounding) > 0 and layers_to_consume:
                     layer, total_layer_qty_to_invoice = layers_to_consume[0]
