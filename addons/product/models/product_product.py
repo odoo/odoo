@@ -225,7 +225,7 @@ class ProductProduct(models.Model):
 
         for product in self:
             if to_uom:
-                list_price = product.uom_id._compute_price(product.list_price, to_uom)
+                list_price = (product.uom_id or to_uom)._compute_price(product.list_price, to_uom)
             else:
                 list_price = product.list_price
             product.lst_price = list_price + product.price_extra
