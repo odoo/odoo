@@ -100,6 +100,7 @@
             Components
         </span>
     </h3>
+    <t t-set="format_number" t-value="lambda x: int(x) if x.is_integer() else x"/>
     <table class="table table-sm">
         <div class="oe_structure"></div>
         <t t-set="has_product_barcode" t-value="any(m.product_id.barcode for m in o.move_raw_ids)"/>
@@ -122,7 +123,7 @@
                     </div>
                 </td>
                 <td t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}">
-                    <span t-field="raw_line.product_uom_qty">25</span>
+                    <span t-out="format_number(raw_line.product_uom_qty)">25</span>
                     <span t-field="raw_line.product_uom" groups="uom.group_uom">Pieces</span>
                 </td>
                 <td t-if="has_product_barcode" width="15%" class="text-center">
