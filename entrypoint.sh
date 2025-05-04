@@ -4,7 +4,7 @@ set -e
 # Wait until Postgres is accepting connections
 until pg_isready -h "${PGHOST}" -p "${PGPORT}" -U postgres; do
   echo "Waiting for PostgreSQL at ${PGHOST}:${PGPORT}…"
-  sleep 2
+  sleep 2 
 done
 
 # Create odoo_user if it doesn't already exist
