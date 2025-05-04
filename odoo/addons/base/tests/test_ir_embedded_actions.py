@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
@@ -72,11 +71,9 @@ class TestEmbeddedActionsBase(TransactionCaseWithUserDemo):
             'parent_res_model': 'res.partner',
             'parent_action_id': self.parent_action.id,
             'action_id': self.action_2.id,
+            'is_deletable': True,
         })
-        try:
-            embedded_action_custo.unlink()
-        except UserError:
-            self.assertTrue(False)
+        embedded_action_custo.unlink()
 
     def test_domain_on_embedded_action(self):
         test_partner_custo = self.env['res.partner'].create({
