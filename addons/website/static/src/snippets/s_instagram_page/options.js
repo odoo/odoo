@@ -60,9 +60,13 @@ options.registry.InstagramPage = options.Class.extend({
         this.$target[0].dataset.instagramPage = widgetValue || "";
         // As the public widget restart is disabled for instagram, we have to
         // manually restart the widget.
-        await this.trigger_up("widgets_start_request", {
-            $target: this.$target,
-            editableMode: true,
+        await new Promise((resolve, reject) => {
+            this.trigger_up("widgets_start_request", {
+                $target: this.$target,
+                editableMode: true,
+                onSuccess: () => resolve(),
+                onFailure: () => reject(),
+            });
         });
     },
 
