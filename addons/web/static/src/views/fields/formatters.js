@@ -138,7 +138,8 @@ formatFloat.extractOptions = ({ attrs, options }) => {
     }
     const humanReadable = !!options.human_readable;
     const decimals = options.decimals || 0;
-    return { decimals, digits, humanReadable };
+    const trailingZeros = !options.hide_trailing_zeros;
+    return { decimals, digits, humanReadable, trailingZeros };
 };
 
 /**
@@ -334,6 +335,7 @@ export function formatMonetary(value, options = {}) {
 formatMonetary.extractOptions = ({ options }) => ({
     noSymbol: options.no_symbol,
     currencyField: options.currency_field,
+    trailingZeros: !options.hide_trailing_zeros,
 });
 
 /**
@@ -379,7 +381,10 @@ function formatProperties(value, field) {
  * @returns {string}
  */
 export function formatReference(value, options) {
-    return formatMany2one(value ? { id: value.resId, display_name: value.displayName } : false, options);
+    return formatMany2one(
+        value ? { id: value.resId, display_name: value.displayName } : false,
+        options
+    );
 }
 
 /**

@@ -779,3 +779,18 @@ test("monetary field with pending onchange", async () => {
     await animationFrame();
     expect(".o_field_monetary .o_monetary_ghost_value").toHaveText("1");
 });
+
+test("with 'hide_trailing_zeros' option", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 5,
+        arch: `
+            <form>
+                <field name="float_field" widget="monetary" options="{'hide_trailing_zeros': true}"/>
+                <field name="currency_id" invisible="1"/>
+            </form>`,
+    });
+    expect(".o_field_widget input").toHaveValue("9.1");
+    expect(".o_field_widget .o_input span:eq(0)").toHaveText("$");
+});
