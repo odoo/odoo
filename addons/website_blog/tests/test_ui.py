@@ -3,10 +3,7 @@
 
 import odoo.tests
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
-import unittest
 
-# TODO master-mysterious-egg fix error
-@unittest.skip("prepare mysterious-egg for merging")
 @odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
     @classmethod

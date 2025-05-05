@@ -9,12 +9,12 @@ import { markup } from "@odoo/owl";
 registerWebsitePreviewTour("blog", {
     url: "/",
 }, () => [{
-    trigger: "body:not(:has(#o_new_content_menu_choices)) .o_new_content_container > a",
+    trigger: "body:not(:has(#o_new_content_menu_choices)) .o_new_content_container > button",
     content: _t("Click here to add new content to your website."),
     tooltipPosition: 'bottom',
     run: "click",
 }, {
-    trigger: 'a[data-module-xml-id="base.module_website_blog"]',
+    trigger: 'button[data-module-xml-id="base.module_website_blog"]',
     content: _t("Select this menu item to create a new blog post."),
     tooltipPosition: "bottom",
     run: "click",
@@ -40,20 +40,20 @@ registerWebsitePreviewTour("blog", {
     run: "click",
 },
 {
-    trigger: "#oe_snippets.o_loaded",
+    trigger: ".o_builder_sidebar_open .o-snippets-menu",
     timeout: 15000,
 },
 {
     trigger: ":iframe h1[data-oe-expression=\"blog_post.name\"]",
     content: _t("Edit your title, the subtitle is optional."),
     tooltipPosition: "top",
-    run: "editor Test",
+    run: "click",
 },
 {
     trigger: `:iframe #wrap h1[data-oe-expression="blog_post.name"]:not(:contains(''))`,
 },
 {
-    trigger: "we-button[data-background]:eq(0)",
+    trigger: "button[data-action-id='setCoverBackground'][title='Image']",
     content: markup(_t("Set a blog post <b>cover</b>.")),
     tooltipPosition: "top",
     run: "click",

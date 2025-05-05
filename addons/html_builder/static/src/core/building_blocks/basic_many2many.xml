@@ -6,10 +6,10 @@
         <table>
             <tr t-foreach="props.selection" t-as="entry" t-key="entry.id">
                 <td>
-                    <input type="text" disabled="" t-att-value="entry.display_name"/>
+                    <input type="text" disabled="" t-att-data-name="entry.display_name" t-att-value="entry.display_name"/>
                 </td>
                 <td>
-                    <button class="o_we_link o_we_text_danger fa fa-fw fa-minus" t-on-click="() => this.unselect(entry.id)"/>
+                    <button class="mt-0 border-0 p-0 bg-transparent text-danger fa fa-fw fa-minus" t-on-click="() => this.unselect(entry.id)"/>
                 </td>
             </tr>
         </table>

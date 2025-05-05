@@ -57,9 +57,9 @@ export class WebsiteBuilder extends Component {
             effect(
                 (websiteContext) => {
                     if (websiteContext.isMobile) {
-                        this.websitePreviewRef.el.classList.add("o_is_mobile");
+                        this.websitePreviewRef.el?.classList.add("o_is_mobile");
                     } else {
-                        this.websitePreviewRef.el.classList.remove("o_is_mobile");
+                        this.websitePreviewRef.el?.classList.remove("o_is_mobile");
                     }
                 },
                 [this.websiteContext]
