@@ -22,8 +22,7 @@ msgstr ""
 #: code:addons/l10n_sa_edi/models/res_config_settings.py:0
 msgid ""
 "\n"
-"Building Number: %(building_number)s, Plot Identification: "
-"%(plot_identification)s\n"
+"Building Number: %(building_number)s, Plot Identification: %(plot_identification)s\n"
 "Neighborhood: %(neighborhood)s"
 msgstr ""
 "\n"
@@ -50,8 +49,8 @@ msgstr "- يجب تطبيق ضريبة واحدة على الأقل في بنو�
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid ""
-"- No Private Key was generated for company %s. A Private Key is mandatory in "
-"order to generate Certificate Signing Requests (CSR)."
+"- No Private Key was generated for company %s. A Private Key is mandatory in"
+" order to generate Certificate Signing Requests (CSR)."
 msgstr ""
 "- لم يتم إنشاء مفتاح خاص للشركة %s. يعد المفتاح الخاص إلزاميًا لإنشاء طلبات "
 "توقيع الشهادة (CSR)."
@@ -60,8 +59,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid ""
-"- No Serial Number was assigned for journal %s. A Serial Number is mandatory "
-"in order to generate Certificate Signing Requests (CSR)."
+"- No Serial Number was assigned for journal %s. A Serial Number is mandatory"
+" in order to generate Certificate Signing Requests (CSR)."
 msgstr ""
 "- لم يتم تعيين رقم تسلسلي للمجلة %s. الرقم التسلسلي إلزامي لإنشاء طلبات "
 "توقيع الشهادة (CSR)."
@@ -113,8 +112,8 @@ msgid ""
 "business rule."
 msgstr ""
 "- يجب أن يحتوي معرف ضريبة القيمة المضافة للشركة على 15 رقمًا، على أن يكون "
-"الرقمان الأول والأخير \"3\" وفقًا لقواعد الأعمال BR-KSA-39 و BR-KSA-40 لهيئة "
-"الزكاة والضريبة والجمارك (زاتكا) في المملكة العربية السعودية."
+"الرقمان الأول والأخير \"3\" وفقًا لقواعد الأعمال BR-KSA-39 و BR-KSA-40 لهيئة"
+" الزكاة والضريبة والجمارك (زاتكا) في المملكة العربية السعودية."
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -131,13 +130,11 @@ msgstr "700 رقم"
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid ""
 "<b>\n"
-"                                In order to be able to submit Invoices to "
-"ZATCA, the following steps need to be completed:\n"
+"                                In order to be able to submit Invoices to ZATCA, the following steps need to be completed:\n"
 "                            </b>"
 msgstr ""
 "<b>\n"
-"                                حتى تتمكن من إرسال الفواتير إلى هيئة الزكاة "
-"والضريبة والجمارك (زاتكا)، يجب إتمام الخطوات التالية:\n"
+"                                حتى تتمكن من إرسال الفواتير إلى هيئة الزكاة والضريبة والجمارك (زاتكا)، يجب إتمام الخطوات التالية:\n"
 "                            </b>"
 
 #. module: l10n_sa_edi
@@ -222,8 +219,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid ""
-"Additional Identification Scheme is required for the Seller, and must be one "
-"of CRN, MOM, MLS, SAG or OTH"
+"Additional Identification Scheme is required for the Seller, and must be one"
+" of CRN, MOM, MLS, SAG or OTH"
 msgstr ""
 "خطة التعريف الإضافي مطلوب للبائع، ويج أن يكون إما CRN، MOM، MLS، SAG، أو OTH"
 
@@ -333,12 +330,10 @@ msgstr "الشركات "
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid ""
 "Complete the Compliance Checks\n"
-"                                    <i class=\"fa fa-check text-success "
-"ms-1\" invisible=\"not l10n_sa_compliance_checks_passed\"/>"
+"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_compliance_checks_passed\"/>"
 msgstr ""
 "إكمال عملية التحقق من الامتثال\n"
-"                                    <i class=\"fa fa-check text-success "
-"ms-1\" invisible=\"not l10n_sa_compliance_checks_passed\"/>"
+"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_compliance_checks_passed\"/>"
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_compliance_csid_json
@@ -493,8 +488,8 @@ msgstr "معرّف مجلس التعاون الخليجي"
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_latest_submission_hash
 msgid ""
-"Hash of the latest submitted invoice to be used as the Previous Invoice Hash "
-"(KSA-13)"
+"Hash of the latest submitted invoice to be used as the Previous Invoice Hash"
+" (KSA-13)"
 msgstr "تشفير آخر فاتورة مرسلة ليتم إرساله كتشفير الفاتورة السابقة (KSA-13)"
 
 #. module: l10n_sa_edi
@@ -558,8 +553,8 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_chain_index
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_move__l10n_sa_chain_index
 msgid ""
-"Invoice index in chain, set if and only if an in-chain XML was submitted and "
-"did not error"
+"Invoice index in chain, set if and only if an in-chain XML was submitted and"
+" did not error"
 msgstr ""
 "مؤشر الفاتورة في السلسلة. يتم إعداده فقط إذا تم إرسال ملف XML في سلسلة ولم "
 "يحدث أي خطأ"
@@ -623,8 +618,8 @@ msgstr "تعذر تجهيز دفتر اليومية"
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid ""
-"Journal could not be onboarded. Please make sure the Company VAT/"
-"Identification Number are correct."
+"Journal could not be onboarded. Please make sure the Company "
+"VAT/Identification Number are correct."
 msgstr ""
 "تعذر تجهيز دفتر اليومية. يرجى التأكد من أن رقمي ضريبة القيمة المضافة/رقم "
 "التعريف صحيحين."
@@ -717,10 +712,11 @@ msgstr "كلمة المرور لمرة واحدة"
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__l10n_sa_otp
 msgid ""
-"OTP required to get a CCSID. Can only be acquired through the Fatoora portal."
+"OTP required to get a CCSID. Can only be acquired through the Fatoora "
+"portal."
 msgstr ""
-"يتطلب كلمة المرور لمرة واحدة للحصول على CCSID. يمكن الحصول عليها فقط من خلال "
-"بوابة فاتورة."
+"يتطلب كلمة المرور لمرة واحدة للحصول على CCSID. يمكن الحصول عليها فقط من خلال"
+" بوابة فاتورة."
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
@@ -740,19 +736,13 @@ msgstr "أخطاء التجهيز"
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
 msgid ""
-"Once you change the submission mode to <strong>Production</strong>, you "
-"cannot change it anymore.\n"
-"                            Be very careful, as any invoice submitted to "
-"ZATCA in Production mode will be accounted for\n"
-"                            and might lead to <strong>Fines &amp; Penalties</"
-"strong>."
+"Once you change the submission mode to <strong>Production</strong>, you cannot change it anymore.\n"
+"                            Be very careful, as any invoice submitted to ZATCA in Production mode will be accounted for\n"
+"                            and might lead to <strong>Fines &amp; Penalties</strong>."
 msgstr ""
-"بمجرد أن قيامك بتغيير وضع التسليم إلى <strong>الإنتاج</strong>، لن تتمكن من "
-"تغييره بعد ذلك.\n"
-"                            انتبه، فإن كل فاتورة تقوم بتسليمها إلى هيئة "
-"الضريبة والزكاة والجمارك (زاتكا) في وضع الإنتاج سيتم وضعها \n"
-"                            بعين الاعتبار وقد تتسبب في <strong>غرامات "
-"وعقوبات</strong>. "
+"بمجرد أن قيامك بتغيير وضع التسليم إلى <strong>الإنتاج</strong>، لن تتمكن من تغييره بعد ذلك.\n"
+"                            انتبه، فإن كل فاتورة تقوم بتسليمها إلى هيئة الضريبة والزكاة والجمارك (زاتكا) في وضع الإنتاج سيتم وضعها \n"
+"                            بعين الاعتبار وقد تتسبب في <strong>غرامات وعقوبات</strong>. "
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -816,8 +806,8 @@ msgid ""
 "Please, make sure all the following fields have been correctly set on the "
 "Company:%(fields)s"
 msgstr ""
-"يُرجى التأكد من أن الحقول التالية قد تم إعدادها بشكل صحيح في الشركة:"
-"%(fields)s "
+"يُرجى التأكد من أن الحقول التالية قد تم إعدادها بشكل صحيح في "
+"الشركة:%(fields)s "
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -828,10 +818,11 @@ msgstr "يرجى إعداد كلمة سر لمرة واحدة صالحة ليت�
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.l10n_sa_edi_otp_wizard_view_form
 msgid ""
-"Please, set the OTP you received from ZATCA in the input below then validate."
+"Please, set the OTP you received from ZATCA in the input below then "
+"validate."
 msgstr ""
-"يرجى إعداد كلمة السر لمرة واحدة التي قمت باستلامها من زاتكا في المدخل أدناه، "
-"ثم قم بالتصديق."
+"يرجى إعداد كلمة السر لمرة واحدة التي قمت باستلامها من زاتكا في المدخل أدناه،"
+" ثم قم بالتصديق."
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_edi_plot_identification
@@ -891,27 +882,19 @@ msgstr "طلب CSID"
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid ""
 "Request a Compliance Certificate (CCSID)\n"
-"                                    <i class=\"fa fa-check text-success "
-"ms-1\" invisible=\"not l10n_sa_compliance_csid_json\" groups=\"base."
-"group_system\"/>"
+"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_compliance_csid_json\" groups=\"base.group_system\"/>"
 msgstr ""
 "طلب شهادة امتثال (CCSID)\n"
-"                                    <i class=\"fa fa-check text-success "
-"ms-1\" invisible=\"not l10n_sa_compliance_csid_json\" groups=\"base."
-"group_system\"/> "
+"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_compliance_csid_json\" groups=\"base.group_system\"/> "
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid ""
 "Request a Production Certificate (PCSID)\n"
-"                                    <i class=\"fa fa-check text-success "
-"ms-1\" invisible=\"not l10n_sa_production_csid_json\" groups=\"base."
-"group_system\"/>"
+"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_production_csid_json\" groups=\"base.group_system\"/>"
 msgstr ""
 "طلب شهادة إنتاج (PCSID)\n"
-"                                    <i class=\"fa fa-check text-success "
-"ms-1\" invisible=\"not l10n_sa_production_csid_json\" groups=\"base."
-"group_system\"/>"
+"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_production_csid_json\" groups=\"base.group_system\"/>"
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__sag
@@ -943,7 +926,8 @@ msgstr "حدث خطأ غير متوقع في الخادم: %(error)s "
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
 msgid "Set whether the system should use the Production API"
-msgstr "قم بإعداد ما إذا كان على النظام استخدام الواجهة البرمجية للإنتاج أم لا"
+msgstr ""
+"قم بإعداد ما إذا كان على النظام استخدام الواجهة البرمجية للإنتاج أم لا"
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
@@ -1016,7 +1000,8 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_csr
-msgid "The Certificate Signing Request that is submitted to the Compliance API"
+msgid ""
+"The Certificate Signing Request that is submitted to the Compliance API"
 msgstr "طلب توقيع الشهادة المرسل إلى الواجهة البرمجية للامتثال"
 
 #. module: l10n_sa_edi
@@ -1046,8 +1031,8 @@ msgid ""
 "The invoice was accepted by ZATCA, but returned warnings. Please, check the "
 "response below:"
 msgstr ""
-"تم قبول الفاتورة من قِبَل زاتكا، ولكن ظهرت تحذيرات. يرجى إلقاء نظرة على الرد "
-"أدناه:"
+"تم قبول الفاتورة من قِبَل زاتكا، ولكن ظهرت تحذيرات. يرجى إلقاء نظرة على الرد"
+" أدناه:"
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -1067,7 +1052,8 @@ msgstr "UBL 2.1 (زاتكا)"
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_serial_number
-msgid "Unique Serial Number automatically filled when the journal is onboarded"
+msgid ""
+"Unique Serial Number automatically filled when the journal is onboarded"
 msgstr "الرقم التسلسلي الفريد يتم تعبئته تلقائيًا عند إعداد دفتر اليومية"
 
 #. module: l10n_sa_edi
@@ -1166,8 +1152,8 @@ msgstr "VATEX-SA-34-4 التزويد بوسائل نقل مؤهلة."
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-34-5
 msgid ""
-"VATEX-SA-34-5 Any services relating to Goods or passenger transportation, as "
-"defined in article twenty five of these Regulations."
+"VATEX-SA-34-5 Any services relating to Goods or passenger transportation, as"
+" defined in article twenty five of these Regulations."
 msgstr ""
 "VATEX-SA-34-5 أي خدمة متعلقة بنقل الركاب أو البضائع، كما هو محدد في القانون "
 "خمسة وعشرين في تلك اللوائح."
@@ -1206,17 +1192,11 @@ msgstr "التحذيرات:"
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
 msgid ""
-"You can select the API used for submissions down below. There are three "
-"modes available: Sandbox, Pre-Production and Production.\n"
-"                            Once you have selected the correct API, you can "
-"start the Onboarding process by going to the Journals and checking the "
-"options under the ZATCA tab."
+"You can select the API used for submissions down below. There are three modes available: Sandbox, Pre-Production and Production.\n"
+"                            Once you have selected the correct API, you can start the Onboarding process by going to the Journals and checking the options under the ZATCA tab."
 msgstr ""
-"يمكنك تحديد الواجهة البرمجية المُستَخدَمة للتسليمات أدناه. توجد ثلاثة أوضاع "
-"متاحة: Sandbox و ما قبل الإنتاج والإنتاج.\n"
-"                            بمجرد قيامك بتحديد الواجهة البرمجية المناسبة، "
-"يمكنك بدء عملية التهيئة للعمل عن طريق الذهاب إلى دفاتر اليومية وتحديد "
-"الخيارات أسفل علامة تبويب زاتكا. "
+"يمكنك تحديد الواجهة البرمجية المُستَخدَمة للتسليمات أدناه. توجد ثلاثة أوضاع متاحة: Sandbox و ما قبل الإنتاج والإنتاج.\n"
+"                            بمجرد قيامك بتحديد الواجهة البرمجية المناسبة، يمكنك بدء عملية التهيئة للعمل عن طريق الذهاب إلى دفاتر اليومية وتحديد الخيارات أسفل علامة تبويب زاتكا. "
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -1341,27 +1321,3 @@ msgstr "فاتورة ضريبية"
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
 msgid "فاتورة ضريبية مبسطة"
 msgstr "فاتورة ضريبية مبسطة"
-
-#~ msgid "ICV"
-#~ msgstr "ICV"
-
-#~ msgid "N/A"
-#~ msgstr "غير منطبق"
-
-#~ msgid "PIH"
-#~ msgstr "PIH"
-
-#~ msgid "QR"
-#~ msgstr "QR"
-
-#~ msgid ""
-#~ "Set a Serial Number for your device\n"
-#~ "                                    <i class=\"fa fa-check text-success "
-#~ "ms-1\" invisible=\"not l10n_sa_serial_number\"/>"
-#~ msgstr ""
-#~ "قم بتعيين رقم تسلسلي لجهازك\n"
-#~ "                                    <i class=\"fa fa-check text-success "
-#~ "ms-1\" invisible=\"not l10n_sa_serial_number\"/>"
-
-#~ msgid "The serial number of the Taxpayer solution unit. Provided by ZATCA"
-#~ msgstr "الرقم التسلسلي لوحدة حل دافع الضريبة. مقدم من قِبَل زاتكا"
