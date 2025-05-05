@@ -273,7 +273,7 @@ export function setActiveProperties(fieldEl, field) {
     }
     // property value is needed for date/datetime (formated date).
     field.propertyValue = input && input.value;
-    field.description = description && description.outerHTML;
+    field.description = description;
     field.rows = textarea && textarea.rows;
     field.required = classList.contains("s_website_form_required");
     field.modelRequired = classList.contains("s_website_form_model_required");
