@@ -54,7 +54,14 @@
                 >
                     <!-- o_image from mimetype.scss -->
                     <t t-ref="nonImageMain">
-                        <div class="o-mail-AttachmentCard-image o_image flex-shrink-0 m-1" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
+                        <div class="o-mail-AttachmentCard-image o_image flex-shrink-0 m-1" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype">
+                            <img
+                                class="img img-fluid my-0 mx-auto rounded"
+                                t-att-class="{ 'opacity-25': attachment.uploading }"
+                                t-att-src="attachment.thumbnail"
+                                t-on-load="onImageLoaded"
+                            />
+                        </div>
                         <div class="overflow-auto d-flex justify-content-center flex-column px-1">
                             <div t-if="attachment.name" class="text-truncate" t-out="props.messageSearch?.highlight(attachment.name) ?? attachment.name"/>
                             <small t-if="attachment.extension" class="text-uppercase" t-esc="attachment.extension"/>

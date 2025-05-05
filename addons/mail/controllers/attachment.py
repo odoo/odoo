@@ -119,3 +119,16 @@ class AttachmentController(http.Controller):
         ids_list = list(map(int, file_ids.split(',')))
         attachments = request.env['ir.attachment'].browse(ids_list)
         return self._make_zip(zip_name, attachments)
+
+    @http.route(["/mail/message/thumbnail"], methods=["POST"], type="jsonrpc", auth="user")
+    def mail_attachment_thumbnail(self, attachment_id, thumbnail):
+        print("=================")
+        print(attachment_id)
+        print("=================")
+        message_attachment = request.env['mail.message.attachment'].search([("attachment_id", "=", attachment_id)])
+        # document.check_access('read')
+        # if document.thumbnail_status != 'client_generated':
+        #     return
+        message_attachment.sudo().write({
+            'thumbnail': thumbnail,
+        })
