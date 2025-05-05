@@ -1618,6 +1618,35 @@ class TestCompute(common.TransactionCase):
         self.assertEqual(aks_partner.child_ids.ids, [])
         self.assertEqual(bs_partner.parent_id.id, False)
 
+    def test_02_form_object_write_with_sequence(self):
+        test_partner = self.env["res.partner"].create({"name": "Test Partner"})
+        test_sequence = self.env["ir.sequence"].create({
+            "name": "Test Sequence",
+            "padding": 4,
+            "prefix": "PARTNER/",
+            "suffix": "/TEST",
+        })
+
+        f = Form(self.env['ir.actions.server'], view="base.view_server_action_form")
+        f.model_id = self.env["ir.model"]._get("res.partner")
+        f.state = "object_write"
+        f.evaluation_type = "sequence"
+        self.assertEqual(f.warning, False)
+        f.update_path = "active"
+        self.assertEqual(f.warning, "A sequence must only be used with character fields.")
+        f.update_path = "ref"
+        self.assertEqual(f.warning, False)
+        f.sequence_id = test_sequence
+
+        action = f.save()
+        self.assertEqual(test_partner.ref, False)
+        action.with_context(
+            active_model="res.partner",
+            active_id=test_partner.id,
+        ).run()
+        self.assertEqual(test_partner.ref, "PARTNER/0001/TEST")
+
+
 @common.tagged("post_install", "-at_install")
 class TestHttp(common.HttpCase):
     def test_webhook_trigger(self):

@@ -613,9 +613,11 @@ class IrActionsServer(models.Model):
                              "`42` or `My custom name` or the selected record.")
     evaluation_type = fields.Selection([
         ('value', 'Update'),
+        ('sequence', 'Sequence'),
         ('equation', 'Compute')
     ], 'Value Type', default='value', change_default=True)
     html_value = fields.Html()
+    sequence_id = fields.Many2one('ir.sequence', string='Sequence to use')
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model', inverse='_set_resource_ref')
     selection_value = fields.Many2one('ir.model.fields.selection', string="Custom Value", ondelete='cascade',
@@ -624,6 +626,7 @@ class IrActionsServer(models.Model):
     value_field_to_show = fields.Selection([
         ('value', 'value'),
         ('html_value', 'html_value'),
+        ('sequence_id', 'sequence_id'),
         ('resource_ref', 'reference'),
         ('update_boolean_value', 'update_boolean_value'),
         ('selection_value', 'selection_value'),
@@ -657,6 +660,8 @@ class IrActionsServer(models.Model):
             'child_ids.model_id',
             'child_ids.group_ids',
             'update_path',
+            'update_field_type',
+            'evaluation_type',
             'webhook_field_ids'
         ]
 
@@ -679,6 +684,9 @@ class IrActionsServer(models.Model):
 
         if (relation_chain := self._get_relation_chain("update_path")) and relation_chain[0] and isinstance(relation_chain[0][-1], fields.Json):
             warnings.append(_("I'm sorry to say that JSON fields (such as '%s') are currently not supported.", relation_chain[0][-1].string))
+
+        if self.state == 'object_write' and self.evaluation_type == 'sequence' and self.update_field_type and self.update_field_type not in ('char', 'text'):
+            warnings.append(_("A sequence must only be used with character fields."))
 
         if self.state == 'webhook' and self.model_id:
             restricted_fields = []
@@ -1121,7 +1129,9 @@ class IrActionsServer(models.Model):
     @api.depends('evaluation_type', 'update_field_id')
     def _compute_value_field_to_show(self):  # check if value_field_to_show can be removed and use ttype in xml view instead
         for action in self:
-            if action.update_field_id.ttype in ('one2many', 'many2one', 'many2many'):
+            if action.evaluation_type == 'sequence':
+                action.value_field_to_show = 'sequence_id'
+            elif action.update_field_id.ttype in ('one2many', 'many2one', 'many2many'):
                 action.value_field_to_show = 'resource_ref'
             elif action.update_field_id.ttype == 'selection':
                 action.value_field_to_show = 'selection_value'
@@ -1163,6 +1173,8 @@ class IrActionsServer(models.Model):
             expr = action.value
             if action.evaluation_type == 'equation':
                 expr = safe_eval(action.value, eval_context)
+            elif action.evaluation_type == 'sequence':
+                expr = action.sequence_id.next_by_id()
             elif action.update_field_id.ttype in ['one2many', 'many2many']:
                 operation = action.update_m2m_operation
                 if operation == 'add':
