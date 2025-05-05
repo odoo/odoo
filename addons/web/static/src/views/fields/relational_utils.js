@@ -1,10 +1,10 @@
-import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { _t } from "@web/core/l10n/translation";
 import { RPCError } from "@web/core/network/rpc";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Cache } from "@web/core/utils/cache";
 import {
     useBus,
@@ -14,10 +14,10 @@ import {
     useService,
 } from "@web/core/utils/hooks";
 import { createElement, parseXML } from "@web/core/utils/xml";
+import { extractFieldsFromArchInfo, useRecordObserver } from "@web/model/relational_model/utils";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { loadSubViews, useFormViewInDialog } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { extractFieldsFromArchInfo, useRecordObserver } from "@web/model/relational_model/utils";
 import { computeViewClassName, isNull } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
@@ -47,7 +47,7 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
-import { odoomark } from "@web/core/utils/strings";
+import { highlightText } from "@web/core/utils/strings";
 
 //
 // Commons
@@ -347,11 +347,11 @@ export class Many2XAutocomplete extends Component {
             specification: this.searchSpecification,
         });
     }
-    mapRecordToOption(record) {
+    mapRecordToOption(record, request) {
         const label = record.__formatted_display_name || record.display_name;
         return {
             data: { record },
-            label: label ? odoomark(label) : _t("Unnamed"),
+            label: label ? highlightText(request, label, "text-primary fw-bold") : _t("Unnamed"),
             onSelect: () => this.props.update([record]),
         };
     }
@@ -374,7 +374,6 @@ export class Many2XAutocomplete extends Component {
             this.lastProm.abort(false);
             this.lastProm = null;
         }
-
         const canCreateEdit =
             "createEdit" in this.activeActions
                 ? this.activeActions.createEdit
@@ -398,7 +397,7 @@ export class Many2XAutocomplete extends Component {
             addSearchMore = records.length > 0;
             if (records.length) {
                 for (const record of records) {
-                    options.push(this.mapRecordToOption(record));
+                    options.push(this.mapRecordToOption(record, request));
                 }
             } else if (!this.activeActions.createEdit && !this.props.quickCreate) {
                 options.push({
