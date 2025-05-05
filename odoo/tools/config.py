@@ -174,7 +174,9 @@ class configmanager:
 
         # map old name -> new name
         self.aliases = {
-            # there are no aliases at the moment
+            "import_image_maxbytes": "import_file_maxbytes",
+            "import_image_regex": "import_url_regex",
+            "import_image_timeout": "import_file_timeout",
         }
 
         self.parser = self._build_cli()
@@ -203,6 +205,9 @@ class configmanager:
         parser.add_option(FileOnlyOption(dest='bin_path', type='path', my_default='', file_exportable=False))
         parser.add_option(FileOnlyOption(dest='csv_internal_sep', my_default=','))
         parser.add_option(FileOnlyOption(dest='default_productivity_apps', type='bool', my_default=False, file_exportable=False))
+        parser.add_option(FileOnlyOption(dest='import_file_maxbytes', type='int', my_default=10 * 1024 * 1024, file_exportable=False))
+        parser.add_option(FileOnlyOption(dest='import_file_timeout', type='int', my_default=3, file_exportable=False))
+        parser.add_option(FileOnlyOption(dest='import_url_regex', my_default=r"^(?:http|https)://", file_exportable=False))
         parser.add_option(FileOnlyOption(dest='proxy_access_token', my_default='', file_exportable=False))
         parser.add_option(FileOnlyOption(dest='publisher_warranty_url', my_default='http://services.odoo.com/publisher-warranty/', file_exportable=False))
         parser.add_option(FileOnlyOption(dest='reportgz', action='store_true', my_default=False))
