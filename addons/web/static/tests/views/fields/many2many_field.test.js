@@ -1938,3 +1938,28 @@ test("empty many2many tags field with no result", async () => {
     expect(".dropdown-menu li.o_m2o_start_typing").toHaveCount(0);
     expect(".dropdown-menu li.o_m2o_no_result").toHaveCount(0);
 });
+
+test("highlight search in many2many", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="p" widget="many2many_tags"/></form>`,
+    });
+    await contains(".o_field_widget[name=p] input").edit("rec", { confirm: false });
+    await runAllTimers();
+    expect(`.o-autocomplete.dropdown li a > span`).toHaveCount(2);
+    expect(`.o-autocomplete.dropdown li:eq(0) a > span`).toHaveInnerHTML(`
+        first
+        <span class="text-primary fw-bold">
+            rec
+        </span>
+        ord
+    `);
+    expect(`.o-autocomplete.dropdown li:eq(1) a > span`).toHaveInnerHTML(`
+        second
+        <span class="text-primary fw-bold">
+            rec
+        </span>
+        ord
+    `);
+});

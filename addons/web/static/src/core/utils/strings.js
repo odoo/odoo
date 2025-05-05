@@ -142,10 +142,30 @@ export function odoomark(text) {
             .replaceAll(textMutedEx, `<span class='text-muted'>$1</span>`)
             .replaceAll(
                 tagEx,
-                `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 text-white bg-primary">$1</span>`
+                `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">$1</span>`
             )
             .replaceAll(brEx, `<br/>`)
-            .replaceAll(tabEx, `&nbsp;&nbsp;&nbsp;&nbsp;`)
+            .replaceAll(tabEx, `<span style="margin-left: 2em"></span>`)
+    );
+}
+
+/**
+ * Returns a markuped version of the input text where
+ * the query is highlighted using the input classes and
+ * a b tag if it is part of the text
+ *
+ * @param {string} query
+ * @param {string} text
+ * @param {string} classes
+ * @returns {string}
+ */
+export function highlightText(query, text, classes) {
+    if (!query) {
+        return odoomark(text);
+    }
+    const regex = new RegExp(`(${escapeRegExp(escape(query))})+(?=(?:[^>]*<[^<]*>)*[^<>]*$)`, "ig");
+    return markup(
+        odoomark(text).toString().replaceAll(regex, `<span class="${classes}">$1</span>`)
     );
 }
 
