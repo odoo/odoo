@@ -1,296 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Custom Product Detail Template -->
-    <template id="custom_product_detail" name="Custom Product Detail" inherit_id="website_sale.product">
-        <!-- Override main product detail section -->
+    <!-- First template to add necessary placeholders for compatibility -->
+    <template id="placeholder_for_terms" name="Placeholder for Terms and Share" inherit_id="website_sale.product" active="True" priority="5">
+        <xpath expr="//section[@id='product_detail']" position="inside">
+            <!-- Add placeholder div for other templates to target -->
+            <div id="o_product_terms_and_share" class="d-none"/>
+        </xpath>
+    </template>
+    
+    <!-- Complete redesign of product page to match the provided design -->
+    <template id="cistech_product_detail" name="Cistech Product Detail" inherit_id="website_sale.product" priority="10">
         <xpath expr="//section[@id='product_detail']" position="replace">
-            <section t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail"
-                    t-att-data-view-track="view_track and '1' or '0'"
-                    t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
-                
-                <!-- Store Header with rating -->
-                <t t-if="product.seller_id">
-                    <div class="store-header d-flex align-items-center py-2 mb-3 border-bottom">
-                        <div class="store-logo me-2">
-                            <t t-if="product.seller_id.image_1920">
-                                <img t-att-src="image_data_uri(product.seller_id.image_1920)" width="40" height="40" alt="Store" class="rounded-circle"/>
-                            </t>
-                            <t t-else="">
-                                <img src="/multi_vendor_marketplace/static/src/img/shop_icon.png" width="40" height="40" alt="Store" class="rounded-circle"/>
-                            </t>
+            <section class="container cistech-product-detail py-4" id="product_detail">
+                <!-- Store Header with navigation -->
+                <div class="text-center mb-4">
+                    <a t-att-href="'/'" class="text-decoration-none">
+                        <div class="mb-2">
+                            <span class="small text-muted">https://cistech.store</span>
                         </div>
-                        <div class="store-info flex-grow-1">
-                            <div class="store-name fw-bold" t-esc="product.seller_id.name">Store Name</div>
-                            <div class="store-rating">
-                                <span class="rating-stars text-warning">
-                                    <t t-foreach="range(5)" t-as="star">
-                                        <t t-if="product.seller_id.avg_rating >= star+1">
-                                            <i class="fa fa-star"></i>
-                                        </t>
-                                        <t t-elif="product.seller_id.avg_rating > star and product.seller_id.avg_rating &lt; star+1">
-                                            <i class="fa fa-star-half-o"></i>
-                                        </t>
-                                        <t t-else="">
-                                            <i class="fa fa-star-o"></i>
-                                        </t>
-                                    </t>
-                                </span>
-                                <span class="rating-score" t-esc="round(product.seller_id.avg_rating, 1)">4.0</span>
-                            </div>
-                        </div>
-                        <div class="store-actions">
-                            <button class="btn btn-outline-primary me-2" style="border-radius: 30px; background-color: white; color: #0d6efd;" data-bs-toggle="modal" data-bs-target="#contact_seller_modal">
-                                <i class="fa fa-comments me-1"></i> Contact
-                            </button>
-                            <a t-att-href="'/shop/seller/%s' % (product.seller_id.id)" class="btn btn-primary" style="border-radius: 30px; background-color: #2c88a2; border-color: #2c88a2;">
-                                <i class="fa fa-shopping-bag me-1"></i> Visit Store
-                            </a>
-                        </div>
-                    </div>
-                </t>
-                
-                <!-- Breadcrumb section -->
-                <div class="row align-items-center mb-4">
-                    <div class="col-12">
-                        <ol class="breadcrumb p-0 m-0">
-                            <li class="breadcrumb-item o_not_editable">
-                                <a t-att-href="keep(category=0)">All Products</a>
-                            </li>
-                            <li t-if="category" class="breadcrumb-item">
-                                <a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name" />
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span t-field="product.name" />
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-                
-                <!-- Main product section -->
-                <div class="row" id="product_detail_main">
-                    <!-- Product Images -->
-                    <t t-set="image_cols" t-value="website._get_product_page_proportions()"/>
-                    <div t-attf-class="col-lg-#{image_cols[0]} mt-lg-4 o_wsale_product_images position-relative" t-if="website.product_page_image_width != 'none'">
-                        <t t-call="website_sale.shop_product_images"/>
+                        <h2 class="mb-3" style="color: #333; font-weight: bold;">CISTECH</h2>
+                    </a>
+                    <div class="mb-4">
+                        <span class="mx-2">О нас</span>
+                        <span class="mx-2">Избранное</span>
+                        <span class="mx-2">Настройки</span>
                     </div>
                     
-                    <!-- Product Info -->
-                    <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
-                        <!-- Product Title -->
-                        <h1 class="mb-2" t-field="product.name">Product Name</h1>
-                        
-                        <!-- Product Description -->
-                        <p t-field="product.description_sale" class="text-muted mb-3" placeholder="A short description that will also appear on documents." />
-                        
-                        <!-- Product form for cart actions -->
-                        <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <div class="js_product js_main_product">
-                                <div>
-                                    <!-- Price display in larger font and with currency symbol -->
-                                    <div class="product_price mt-2 mb-3">
-                                        <h3 class="oe_price_h4 css_editable_mode_display">
-                                            <span t-if="combination_info['has_discounted_price']" style="text-decoration: line-through; white-space: nowrap;" t-out="combination_info['list_price']" class="text-danger me-2"/>
-                                            <span t-att-class="'text-success'" style="white-space: nowrap; font-size: 1.5em; font-weight: bold;" t-out="combination_info['price']"/>
-                                            <span t-if="combination_info['base_unit_price']" class="ms-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
-                                                <t t-call='website_sale.base_unit_price'/>
-                                            </span>
-                                        </h3>
+                    <div class="d-flex justify-content-center align-items-center mb-3">
+                        <button class="btn btn-light rounded-pill px-4 me-2" style="background-color: #e0e0e0;">Каталог</button>
+                        <div class="position-relative d-flex align-items-center flex-grow-1 mx-2" style="max-width: 400px;">
+                            <input type="text" class="form-control rounded-pill" style="height: 40px; border: 1px solid #ccc;"/>
+                            <button class="btn position-absolute end-0 me-1" style="width: 30px; height: 30px; border-radius: 50%; background: #ccc; top: 5px;">
+                                <i class="fa fa-search" style="color: #fff;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Main Content -->
+                <div>
+                    <h3 class="mb-4">Наименование товара</h3>
+                    
+                    <div class="row">
+                        <!-- Product Images - Left Side -->
+                        <div class="col-md-5">
+                            <div class="cistech-product-image mb-3">
+                                <div class="main-image border rounded" style="height: 320px; display: flex; align-items: center; justify-content: center;">
+                                    <div t-if="product.image_1920" class="text-center">
+                                        <img t-att-src="image_data_uri(product.image_1920)" class="img-fluid" style="max-height: 300px;" t-att-alt="product.name"/>
                                     </div>
-                                    
-                                    <!-- Variants section - important for fixing the error -->
-                                    <t t-placeholder="select">
-                                        <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
-                                        <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
-                                        <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
-                                        <t t-if="combination" t-call="sale.variants">
-                                            <t t-set="ul_class" t-valuef="flex-column" />
-                                            <t t-set="parent_combination" t-value="None" />
-                                        </t>
-                                        <t t-else="">
-                                            <ul class="d-none js_add_cart_variants mb-0" t-att-data-attribute_exclusions="{'exclusions: []'}"/>
-                                        </t>
-                                    </t>
-                                    
-                                    <!-- Required elements for JS variant handling -->
-                                    <div class="css_not_available_msg alert alert-warning" style="display: none;">This combination does not exist.</div>
-                                    <div id="add_to_cart_wrap" class="d-inline-flex align-items-center mb-2 me-auto"></div>
-                                    <div id="product_option_block" class="d-flex flex-wrap w-100"></div>
-                                    
-                                    <!-- Shipping info -->
-                                    <div class="delivery-info mb-3">
-                                        <div class="d-flex align-items-center text-muted">
-                                            <i class="fa fa-truck me-2"></i>
-                                            <span>Free Shipping within 24 hours</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Скрытое поле с количеством = 1 вместо регулировки количества -->
-                                    <input type="hidden" class="quantity" name="add_qty" value="1"/>
-                                    
-                                    <!-- Action buttons row (Buy Now and Add to Cart) -->
-                                    <div class="action-buttons d-flex mb-3" style="gap: 10px;">
-                                        <!-- Buy Now Button with data-toggle для модального окна -->
-                                        <button type="button" class="btn btn-lg flex-fill o_show_variants_modal buy-now-btn" 
-                                                style="background-color: #089454; border-color: #089454; color: white;"
-                                                data-bs-toggle="modal" data-bs-target="#product_variants_modal"
-                                                data-action="buy_now">
-                                            <i class="fa fa-bolt me-2"></i>
-                                            <span style="font-weight: bold">BUY NOW</span>
-                                        </button>
-                                        
-                                        <!-- Add to Cart Button with data-toggle для модального окна -->
-                                        <button type="button" class="btn btn-lg flex-fill o_show_variants_modal add-cart-btn" 
-                                                style="background-color: #089454; border-color: #089454; color: white;"
-                                                data-bs-toggle="modal" data-bs-target="#product_variants_modal"
-                                                data-action="add_to_cart">
-                                            <i class="fa fa-shopping-cart me-2"></i>
-                                            <span style="font-weight: bold">ADD TO CART</span>
-                                        </button>
+                                    <div t-else="" class="text-center text-muted">
+                                        <div>Фото и / или видео</div>
                                     </div>
                                 </div>
+                                
+                                <!-- Thumbnail Gallery -->
+                                <div class="d-flex mt-2 justify-content-between">
+                                    <div class="border" style="width: 60px; height: 60px;"></div>
+                                    <div class="border" style="width: 60px; height: 60px;"></div>
+                                    <div class="border" style="width: 60px; height: 60px;"></div>
+                                    <div class="border" style="width: 60px; height: 60px;"></div>
+                                </div>
                             </div>
-                        </form>
-                        <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
-                        <p t-else="" class="alert alert-warning">This product has no valid combination.</p>
-                        
-                        <!-- Product attributes -->
-                        <div id="product_attributes_simple">
-                            <t t-set="single_value_attributes" t-value="product.valid_product_template_attribute_line_ids._prepare_single_value_for_display()"/>
-                            <table t-attf-class="table table-sm text-muted {{'' if single_value_attributes else 'd-none'}}">
-                                <t t-foreach="single_value_attributes" t-as="attribute">
+                            
+                            <!-- Technical Specifications -->
+                            <div class="mt-4">
+                                <h5 class="mb-3">Технические характеристики</h5>
+                                <table class="table table-striped">
                                     <tr>
-                                        <td>
-                                            <span t-field="attribute.name"/>:
-                                            <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
-                                                <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
-                                            </t>
-                                        </td>
+                                        <td style="width: 30%;">Модель</td>
+                                        <td>xxx</td>
                                     </tr>
-                                </t>
-                            </table>
+                                    <tr>
+                                        <td>Размер</td>
+                                        <td>xxx</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Вес и так далее</td>
+                                        <td>xxx</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <!-- Lower Image Placeholder -->
+                            <div class="text-center mt-4 py-4 bg-light" style="border-radius: 5px;">
+                                <div class="mb-2">
+                                    <i class="fa fa-camera" style="font-size: 24px; color: #777;"></i>
+                                </div>
+                                <p class="text-muted">Здесь будут картинки / видео</p>
+                            </div>
+                            
+                            <!-- Store Link -->
+                            <div class="text-center mt-3">
+                                <a href="#" class="btn btn-secondary rounded-pill px-4 py-2">Перейти в магазин</a>
+                            </div>
                         </div>
                         
-                        <!-- Terms and conditions, no OdooBot chat -->
-                        <div id="o_product_terms_and_share" class="d-flex justify-content-between flex-column flex-md-row align-items-md-end mb-3">
-                            <p class="text-muted mb-0">
-                                <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
-                                30-day money-back guarantee<br/>
-                                Shipping: 2-3 Business Days
-                            </p>
-                            <div class="h4 mt-3 mb-0 d-flex justify-content-md-end flex-shrink-0">
-                                <button class="btn btn-primary rounded-circle" aria-label="Chat with OdooBot" title="Chat with OdooBot" id="o_livechat_button">
-                                    <i class="fa fa-comments"></i>
-                                </button>
+                        <!-- Product Info - Right Side -->
+                        <div class="col-md-7">
+                            <!-- Seller Information -->
+                            <div class="mb-4">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td style="width: 40%;">Название организации:</td>
+                                        <td t-esc="product.seller_id.name or 'Название компании'"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Место отправки:</td>
+                                        <td>Москва</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Оплата:</td>
+                                        <td>mbank | перевод | наличный расчет</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Следующее:</td>
+                                        <td>сегодня до 19:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>С доставкой:</td>
+                                        <td>завтра до обеда + 200 сом</td>
+                                    </tr>
+                                    <tr>
+                                        <td>На складе осталось:</td>
+                                        <td>xxx штук</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <!-- Price and Action Buttons -->
+                            <div>
+                                <h2 class="text-end mb-4">Цена</h2>
+                                
+                                <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST" class="mb-4">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="product_id" t-att-value="product_variant.id"/>
+                                    <input type="hidden" name="add_qty" value="1"/>
+                                    
+                                    <div class="d-grid gap-3 cistech-action-buttons">
+                                        <button type="submit" name="express" value="1" class="btn btn-success btn-lg">
+                                            Купить сейчас
+                                        </button>
+                                        <button type="submit" class="btn btn-success btn-lg">
+                                            В корзину
+                                        </button>
+                                        <a href="#" class="btn btn-success btn-lg">
+                                            <div>Связаться с магазином</div>
+                                            <small>(viber ww whatsapp / calls)</small>
+                                        </a>
+                                    </div>
+                                </form>
+                                <p t-else="" class="alert alert-warning">Товар недоступен для покупки.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Related Products -->
+                    <div class="mt-5">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="border rounded p-3 text-center">
+                                    <div>Другие товары продавца</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-3 text-center">
+                                    <div>Другие товары продавца</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-3 text-center">
+                                    <div>Другие товары продавца</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-3 text-center">
+                                    <div>Другие товары продавца</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Модальное окно для выбора вариантов товара -->
-                <div class="modal fade" id="product_variants_modal" tabindex="-1" role="dialog" aria-labelledby="variantsModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header bg-light">
-                                <h5 class="modal-title" id="variantsModalLabel">Product Options</h5>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&amp;times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="container">
-                                    <!-- Здесь будут отображаться варианты товара: размер, цвет и т.д. -->
-                                    <div class="variant-selection">
-                                        <div class="row mb-3" t-if="product.attribute_line_ids">
-                                            <t t-foreach="product.attribute_line_ids" t-as="attribute">
-                                                <div class="col-12 mb-3">
-                                                    <h6 class="fw-bold" t-esc="attribute.attribute_id.name">Attribute</h6>
-                                                    <div class="d-flex flex-wrap">
-                                                        <t t-foreach="attribute.value_ids" t-as="value">
-                                                            <div class="form-check me-3">
-                                                                <input class="form-check-input" type="radio" 
-                                                                    t-att-name="'attribute_' + str(attribute.attribute_id.id)" 
-                                                                    t-att-id="'value_' + str(value.id)" 
-                                                                    t-att-value="value.id"/>
-                                                                <label class="form-check-label" t-att-for="'value_' + str(value.id)" t-esc="value.name">Value</label>
-                                                            </div>
-                                                        </t>
-                                                    </div>
-                                                </div>
-                                            </t>
-                                        </div>
-                                        
-                                        <!-- Выбор количества -->
-                                        <div class="row mb-3">
-                                            <div class="col-12">
-                                                <h6 class="fw-bold">Quantity</h6>
-                                                <div class="input-group" style="max-width: 150px;">
-                                                    <button type="button" class="btn btn-outline-secondary js_qty_modal_minus">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                    <input type="text" class="form-control quantity_modal text-center" value="1"/>
-                                                    <button type="button" class="btn btn-outline-secondary js_qty_modal_plus">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary modal-add-to-cart" style="background-color: #089454; border-color: #089454;">
-                                    <i class="fa fa-shopping-cart me-2"></i>Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Seller Contact Modal -->
-                <div class="modal fade" id="contact_seller_modal" tabindex="-1" aria-labelledby="contactSellerModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="contactSellerModalLabel">Contact Seller</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="seller-contact-info">
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold"><i class="fa fa-phone me-2"></i>Phone</h6>
-                                        <p t-esc="product.seller_id.phone or '+1 (555) 123-4567'">+1 (555) 123-4567</p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold"><i class="fa fa-envelope me-2"></i>Email</h6>
-                                        <p t-esc="product.seller_id.email or 'seller@example.com'">seller@example.com</p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold"><i class="fa fa-globe me-2"></i>Social Media</h6>
-                                        <div class="social-links">
-                                            <a href="#" class="btn btn-outline-primary me-2 mb-2">
-                                                <i class="fa fa-facebook"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-outline-info me-2 mb-2">
-                                                <i class="fa fa-twitter"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-outline-danger me-2 mb-2">
-                                                <i class="fa fa-instagram"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-outline-success me-2 mb-2">
-                                                <i class="fa fa-whatsapp"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <style>
+                    /* Custom styles for Cistech layout */
+                    .cistech-product-detail .btn-success {
+                        background-color: #00A86B !important;
+                        border-color: #00A86B !important;
+                    }
+                    
+                    .cistech-product-detail .table-striped > tbody > tr:nth-of-type(odd) > * {
+                        background-color: rgba(0, 0, 0, 0.02);
+                    }
+                    
+                    .cistech-product-detail .btn-secondary {
+                        background-color: #888;
+                        border-color: #888;
+                    }
+                </style>
             </section>
         </xpath>
     </template>
