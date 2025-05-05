@@ -80,3 +80,7 @@ class TestUi(AccountTestInvoicingCommon, odoo.tests.HttpCase):
         product.supplier_taxes_id = new_tax
 
         self.start_tour("/web", 'account_tax_group', login="admin")
+
+    def test_02_account_invoice(self):
+        """ Test the tour for the invoice creation """
+        self.start_tour("/web", "account_invoice_create", login="admin")
