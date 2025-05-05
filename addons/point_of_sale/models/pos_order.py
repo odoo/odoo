@@ -518,6 +518,9 @@ class PosOrder(models.Model):
                         country=order.partner_id.country_id or self.env.company.country_id)
             if vals.get('has_deleted_line') is not None and self.has_deleted_line:
                 del vals['has_deleted_line']
+            allowed_vals = ['paid', 'done', 'invoiced']
+            if vals.get('state') and vals['state'] not in allowed_vals and order.state in allowed_vals:
+                raise UserError(_('This order has already been paid. You cannot set it back to draft or edit it.'))
 
         list_line = self._create_pm_change_log(vals)
         res = super().write(vals)
@@ -1108,17 +1111,8 @@ class PosOrder(models.Model):
                 order_ids.append(refunded_orders[0].id)
 
             existing_order = self._get_open_order(order)
-            if existing_order and existing_order.state == 'draft':
-                order_ids.append(self._process_order(order, existing_order))
-                _logger.info("PoS synchronisation #%d order %s updated pos.order #%d", sync_token, order_log_name, order_ids[-1])
-            elif not existing_order:
-                order_ids.append(self._process_order(order, False))
-                _logger.info("PoS synchronisation #%d order %s created pos.order #%d", sync_token, order_log_name, order_ids[-1])
-            else:
-                # In theory, this situation is unintended
-                # In practice it can happen when "Tip later" option is used
-                order_ids.append(existing_order.id)
-                _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
+            order_ids.append(self._process_order(order, existing_order or False))
+            _logger.info("PoS synchronisation #%d order %s pos.order #%d", sync_token, order_log_name, order_ids[-1])
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)
