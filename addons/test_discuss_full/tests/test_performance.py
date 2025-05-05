@@ -31,7 +31,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search im_livechat_expertise_res_users_settings_rel (_format_settings)
     #       - search mail_canned_response
     #       - fetch res_groups_users_rel (for search mail_canned_response that user can use)
-    _query_count_init_store = 14
+    _query_count_init_store = 15
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   1: fetch res_users (for current user, first occurence _get_channels_as_member of _init_messaging)
@@ -142,7 +142,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (_author_to_store)
     #       - fetch user (_author_to_store)
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 58
+    #   1: filtering res_partner (_compute_im_status)
+    _query_count_discuss_channels = 59
 
     def setUp(self):
         super().setUp()
