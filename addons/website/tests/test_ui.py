@@ -718,7 +718,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_mobile_order_with_drag_and_drop(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_mobile_order_with_drag_and_drop', login='admin')
 
-    @unittest.skip
     def test_powerbox_snippet(self):
         self.start_tour('/', 'website_powerbox_snippet', login='admin')
         self.start_tour('/', 'website_powerbox_keyword', login='admin')
