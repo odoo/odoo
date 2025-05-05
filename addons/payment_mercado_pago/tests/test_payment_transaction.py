@@ -42,7 +42,6 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
                 'name': tx.partner_name,
                 'phone': {'number': tx.partner_phone},
             },
-            'payment_methods': {'installments': 1},
         })
 
     @mute_logger('odoo.addons.payment.models.payment_transaction')

@@ -96,9 +96,6 @@ class PaymentTransaction(models.Model):
                     'street_name': self.partner_address,
                 },
             },
-            'payment_methods': {
-                'installments': 1,  # Prevent MP from proposing several installments for a payment.
-            },
         }
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
