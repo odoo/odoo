@@ -105,7 +105,7 @@ export class Message extends Record {
         sort: (r1, r2) => r1.sequence - r2.sequence,
     });
     notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
-    recipients = fields.Many("Persona");
+    partner_ids = fields.Many("Persona");
     thread = fields.One("Thread");
     threadAsNeedaction = fields.One("Thread", {
         compute() {
@@ -231,7 +231,7 @@ export class Message extends Record {
     }
 
     get isSelfMentioned() {
-        return this.store.self.in(this.recipients);
+        return this.store.self.in(this.partner_ids);
     }
 
     get isHighlightedFromMention() {
@@ -524,7 +524,7 @@ export class Message extends Record {
             thread.messageInEdition.composer = undefined;
         }
         this.composer = {
-            mentionedPartners: this.recipients,
+            mentionedPartners: this.partner_ids,
             text,
             selection: {
                 start: text.length,
