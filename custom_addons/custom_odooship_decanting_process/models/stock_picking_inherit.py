@@ -27,6 +27,8 @@ class StockPicking(models.Model):
     is_automation = fields.Boolean(string='Is Automation', default=False)
     is_error_found = fields.Boolean(string='Is Error Found', default=False)
     is_error_found_message = fields.Char(string='Error Found Message')
+    reference_1 = fields.Char(string='Reference', store=True)
+    container_number = fields.Char(string='Container Number', store=True)
 
     @api.onchange('is_error_found')
     def _onchange_is_error_found(self):
@@ -169,6 +171,8 @@ class StockPicking(models.Model):
                 "product_lines": product_lines,
                 "schedule_date":schedule_date,
                 "current_date":current_date,
+                "reference_1":picking.reference_1,
+                "container_number":picking.container_number,
             }
             # Define the URLs for Shiperoo Connect
             is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
@@ -180,7 +184,7 @@ class StockPicking(models.Model):
             json_data = json.dumps(payload, indent=4)
             _logger.info(f"Sending payload to {api_url}: {json_data}")
 
-            # Send the payload to the API
+             # Send the payload to the API
             headers = {'Content-Type': 'application/json'}
             try:
                 response = requests.post(api_url, headers=headers, data=json_data)
