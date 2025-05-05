@@ -170,12 +170,12 @@ export class MailMessage extends models.ServerModel {
                     MailMessage.browse(message.parent_id),
                     makeKwArgs({ format_reply: false })
                 ),
-                reactions: mailDataHelpers.Store.many(
-                    MailMessageReaction.browse(message.reaction_ids)
-                ),
-                recipients: mailDataHelpers.Store.many(
+                partner_ids: mailDataHelpers.Store.many(
                     ResPartner.browse(message.partner_ids),
                     makeKwArgs({ fields: ["name"] })
+                ),
+                reactions: mailDataHelpers.Store.many(
+                    MailMessageReaction.browse(message.reaction_ids)
                 ),
                 record_name: thread?.name ?? thread?.display_name,
                 scheduledDatetime: false,
