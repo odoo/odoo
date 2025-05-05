@@ -501,7 +501,7 @@ class HrLeave(models.Model):
                     for holiday in public_holidays
                 )
                 days = days - excluded_days
-                hours = min(leave.request_hour_to - leave.request_hour_from, calendar.hours_per_day) if leave.request_unit_hours \
+                hours = leave.request_hour_to - leave.request_hour_from if leave.request_unit_hours \
                     else (days * calendar.hours_per_day)
                 result[leave.id] = (days, hours)
                 continue
