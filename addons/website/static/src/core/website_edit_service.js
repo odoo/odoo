@@ -162,6 +162,9 @@ registry.category("services").add("website_edit", {
                         const style = {};
                         for (const property of this.el.style) {
                             if (property.startsWith("animation")) {
+                                if (property === "animation-play-state") {
+                                    continue;
+                                }
                                 style[property] = this.el.style[property];
                             }
                         }
