@@ -530,7 +530,6 @@ class HolidaysRequest(models.Model):
             mandatory_days = self.employee_id._get_mandatory_days(
                 date_from.date(),
                 date_to.date())
-
             for leave in self:
                 domain = [
                     ('start_date', '<=', leave.date_to.date()),
@@ -539,6 +538,10 @@ class HolidaysRequest(models.Model):
                         ('resource_calendar_id', '=', False),
                         ('resource_calendar_id', '=', leave.resource_calendar_id.id),
                 ]
+                department_domain = [('department_ids', '=', False)]
+                if leave.employee_id.department_id:
+                    department_domain = expression.OR([department_domain, [('department_ids', 'parent_of', leave.employee_id.department_id.id)]])
+                domain = expression.AND([domain, department_domain])
 
                 if leave.holiday_status_id.company_id:
                     domain += [('company_id', '=', leave.holiday_status_id.company_id.id)]
