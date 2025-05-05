@@ -74,7 +74,13 @@
         <div class="carousel-inner">
             <t t-foreach="images" t-as="image" t-key="image_index">
                 <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
-                    <img t-if="!hideImage" class="img img-fluid d-block" t-att-src="image.getAttribute('src')" t-att-alt="image.alt" data-name="Image"/>
+                    <t t-if="!copyAttributes">
+                        <img class="img img-fluid d-block" t-att-src="image.getAttribute('src')" t-att-alt="image.alt" data-name="Image"/>
+                    </t>
+                    <t t-else="">
+                        <t t-set="imageAttributes" t-value="Object.fromEntries([...image.attributes].map(attr => [attr.name, attr.value]))"/>
+                        <img t-att="imageAttributes"/>
+                    </t>
                 </div>
             </t>
         </div>

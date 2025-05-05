@@ -312,6 +312,7 @@ class ImageGalleryOption extends Plugin {
             ride: !currentInterval ? "false" : "carousel",
             id: "slideshow_" + new Date().getTime(),
             colorContrast,
+            copyAttributes: true,
         });
         if (carouselEl) {
             carouselEl.removeEventListener("slid.bs.carousel", this.onCarouselSlid);
