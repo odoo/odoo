@@ -3,7 +3,7 @@
 
     <t t-name="web.KanbanColumnQuickCreate">
         <div class="o_column_quick_create d-print-none flex-shrink-0 flex-grow-1 flex-md-grow-0" t-attf-class="{{ props.folded ? 'o_quick_create_folded' : 'o_quick_create_unfolded' }}" t-ref="root">
-            <div t-if="props.folded" class="z-1 px-3 pt-2 text-nowrap position-relative d-flex lh-lg cursor-pointer" t-on-click="unfold">
+            <div t-if="props.folded" class="z-1 px-3 pt-2 text-nowrap position-sticky top-0 d-flex lh-lg cursor-pointer" t-on-click="unfold">
                 <div class="o_quick_create_title d-md-none align-items-center fs-4 lh-1 text-nowrap flex-grow-1 gap-1">
                     Add <t t-out="relatedFieldName"/>
                 </div>
