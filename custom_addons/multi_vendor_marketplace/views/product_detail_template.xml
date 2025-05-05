@@ -134,7 +134,7 @@
                                     </div>
                                     
                                     <!-- Delivery info -->
-                                    <div class="delivery-info mb-3">
+                                    <div class="delivery-info mb-3" style="display: none;">
                                         <div class="d-flex align-items-center text-muted">
                                             <i class="fa fa-truck me-2"></i>
                                             <span>Free Shipping within 24 hours</span>
@@ -157,18 +157,17 @@
                                     </div>
                                     
                                     <!-- Action buttons row (Buy Now and Add to Cart) -->
-                                    <div class="action-buttons d-flex mb-3" style="gap: 10px; left: 0; right: 0; background-color: white; padding: 10px 15px; z-index: 1001; width: 100%;">
-                                        <!-- Standard Add to Cart Button -->
-                                        <div id="o_wsale_cta_wrapper" class="d-flex w-100 justify-content-between">
-                                            <button type="submit" id="add_to_cart" class="btn btn-lg flex-fill me-2 js_check_product a-submit" 
-                                                    style="background-color: #089454; border-color: #089454; color: white;">
+                                    <div class="action-buttons d-flex mb-3" style="padding: 0; background: none; border-radius: 12px; overflow: hidden; width: 100%;">
+                                        <div id="o_wsale_cta_wrapper" class="d-flex w-100" style="width: 100%;">
+                                            <!-- Add to Cart Button (левая) -->
+                                            <button type="submit" id="add_to_cart" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center js_check_product a-submit" 
+                                                style="background: #089454; color: #fff; border: none; border-radius: 12px 0 0 12px; font-weight: 600; font-size: 1.1em; height: 48px;">
                                                 <i class="fa fa-shopping-cart me-2"></i>
                                                 <span>Add to Cart</span>
                                             </button>
-                                            
-                                            <!-- Buy Now Button -->
-                                            <button type="button" id="buy_now" class="btn btn-lg flex-fill" 
-                                                    style="background-color: #089454; border-color: #089454; color: white;">
+                                            <!-- Buy Now Button (правая) -->
+                                            <button type="button" id="buy_now" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center o_we_buy_now" 
+                                                style="background: #089454; color: #fff; border: none; border-radius: 0 12px 12px 0; font-weight: 600; font-size: 1.1em; height: 48px;">
                                                 <i class="fa fa-bolt me-2"></i>
                                                 <span>Buy Now</span>
                                             </button>
@@ -204,8 +203,8 @@
                                 30-day money-back guarantee<br/>
                                 Shipping: 2-3 Business Days
                             </p>
-                            <div class="h4 mt-3 mb-0 d-flex justify-content-md-end flex-shrink-0">
-                                <button class="btn btn-primary rounded-circle" aria-label="Chat with OdooBot" title="Chat with OdooBot" id="o_livechat_button">
+                            <div class="h4 mt-3 mb-0 d-flex justify-content-md-end flex-shrink-0" style="display: none;">
+                                <button class="btn btn-primary rounded-circle" aria-label="Chat with OdooBot" title="Chat with OdooBot" id="o_livechat_button" style="display: none;">
                                     <i class="fa fa-comments"></i>
                                 </button>
                             </div>
@@ -258,5 +257,6 @@
                 </div>
             </section>
         </xpath>
+        <!-- Product Images Gallery (large, after all content) -->
     </template>
 </odoo> 

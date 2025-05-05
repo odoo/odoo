@@ -120,4 +120,28 @@ odoo.define('multi_vendor_marketplace.product_modal', function (require) {
     });
 
     return publicWidget.registry.ProductModal;
+});
+
+odoo.define('multi_vendor_marketplace.buy_now_button', function (require) {
+    'use strict';
+    
+    var publicWidget = require('web.public.widget');
+    
+    publicWidget.registry.BuyNowButton = publicWidget.Widget.extend({
+        selector: '.oe_website_sale',
+        events: {
+            'click .o_we_buy_now': '_onBuyNowClick',
+        },
+        _onBuyNowClick: function (ev) {
+            var $btn = $(ev.currentTarget);
+            var $form = $btn.closest('form');
+            if ($form.length) {
+                // Add express=1 if not present
+                if ($form.find('input[name="express"]').length === 0) {
+                    $('<input>').attr({type: 'hidden', name: 'express', value: '1'}).appendTo($form);
+                }
+                $form.submit();
+            }
+        }
+    });
 }); 

@@ -292,20 +292,42 @@ li.o_wsale_my_cart {
 
 /* Кнопка добавить в корзину */
 #product_detail .action-buttons #add_to_cart {
-    background-color: #ffc300 !important;
-    border-color: #ffc300 !important;
-    color: #333;
+    background-color: #0fa86e !important;
+    border-color: #0fa86e !important;
+    color: #fff !important;
     font-weight: bold;
     padding: 12px 20px;
     border-radius: 4px;
     flex: 1;
-    transition: all 0.2s ease;
+    transition: background-color 0.15s linear, border-color 0.15s linear;
+    box-shadow: none !important;
 }
 
 #product_detail .action-buttons #add_to_cart:hover {
-    background-color: #e6b000 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #0b7c54 !important;
+    border-color: #0b7c54 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+/* Кнопка купить сейчас */
+#product_detail .action-buttons #buy_now {
+    background-color: #0fa86e !important;
+    border-color: #0fa86e !important;
+    color: #fff !important;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 4px;
+    flex: 1;
+    transition: background-color 0.15s linear, border-color 0.15s linear;
+    box-shadow: none !important;
+}
+
+#product_detail .action-buttons #buy_now:hover {
+    background-color: #0b7c54 !important;
+    border-color: #0b7c54 !important;
+    color: #fff !important;
+    box-shadow: none !important;
 }
 
 /* Селектор количества */
