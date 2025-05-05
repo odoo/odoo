@@ -296,7 +296,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_01_admin_tour_homepage(self):
         self.start_tour("/odoo", 'homepage', login='admin')
 
-    @unittest.skip
     def test_02_restricted_editor(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'restricted_editor', login="website_user")
 
