@@ -237,9 +237,13 @@ async function openBuilderSidebar(editAssetsLoaded) {
 
     await click(".o-website-btn-custo-primary");
     await editAssetsLoaded;
-    // advanceTime linked to the setTimeout in the WebsiteBuilder component
-    // tick needed to wait for the timeout to be called before advancing time.
+    // animationFrame linked to state.isEditing rendering the WebsiteBuilder.
+    await animationFrame();
+    // tick needed to wait for the timeout in the WebsiteBuilder useEffect to be
+    // called before advancing time.
     await tick();
+    // advanceTime linked to the setTimeout in the WebsiteBuilder component that
+    // removes the systray items.
     await advanceTime(200);
     await animationFrame();
 }

@@ -96,6 +96,7 @@ test("404 page in translate mode", async () => {
         setup() {
             websiteServiceInTranslateMode.is404 = () => true;
             this.websiteService = websiteServiceInTranslateMode;
+            this.websiteContext = this.websiteService.context;
         },
     });
     await setupWebsiteBuilder(`<h1> Homepage </h1>`, { openEditor: false });
@@ -200,6 +201,7 @@ async function setupSidebarBuilderForTranslation(options) {
             super.setup();
             this.env.services.website = websiteServiceInTranslateMode;
             this.websiteService = websiteServiceInTranslateMode;
+            this.websiteContext = this.websiteService.context;
         },
     });
     patchWithCleanup(WebsiteBuilder.prototype, {

@@ -5,14 +5,25 @@
 
     &.o_builder_sidebar_open {
         width: $o-we-sidebar-width;
+        transition-delay: 200ms;
+
+        .o_website_fullscreen & {
+            width: 0;
+        }
+    }
+
+    .o_builder_open & {
+        transition-delay: 0ms;
     }
 }
 
 .o_main_navbar {
-    transition: margin-top ease 400ms !important;
-}
-.o_builder_open .o_main_navbar {
-    margin-top: -$o-navbar-height;
+    transition: margin-top ease 400ms;
+
+    .o_website_fullscreen &,
+    .o_builder_open & {
+        margin-top: -$o-navbar-height;
+    }
 }
 
 .o_website_preview {

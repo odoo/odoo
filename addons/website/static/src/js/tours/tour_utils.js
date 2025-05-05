@@ -231,7 +231,7 @@ export function clickOnElement(elementName, selector) {
 export function clickOnEditAndWaitEditMode(position = "bottom") {
     return [{
         content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
-        trigger: "body .o_menu_systray a:contains('Edit')",
+        trigger: "body .o_menu_systray button:contains('Edit')",
         tooltipPosition: position,
         run: "click",
     }, {

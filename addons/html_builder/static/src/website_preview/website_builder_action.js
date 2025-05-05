@@ -4,12 +4,14 @@ import {
     onMounted,
     onWillDestroy,
     onWillStart,
+    useEffect,
     useRef,
     useState,
     useSubEnv,
 } from "@odoo/owl";
 import { LazyComponent, loadBundle } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
@@ -17,6 +19,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
+import { redirect } from "@web/core/utils/urls";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { ResourceEditor } from "@website/components/resource_editor/resource_editor";
@@ -36,6 +39,7 @@ export class WebsiteBuilder extends Component {
         this.websiteService = useService("website");
         this.ui = useService("ui");
         this.title = useService("title");
+        this.hotkeyService = useService("hotkey");
         this.websiteService.websiteRootInstance = undefined;
 
         this.websiteContent = useRef("iframe");
@@ -44,6 +48,9 @@ export class WebsiteBuilder extends Component {
         });
         this.state = useState({ isEditing: false, key: 1 });
         this.websiteContext = useState(this.websiteService.context);
+
+        this.onKeydownRefresh = this._onKeydownRefresh.bind(this);
+
         onMounted(() => {
             // You can't wait for rendering because the Builder depends on the page style synchronously.
             effect(
@@ -94,6 +101,7 @@ export class WebsiteBuilder extends Component {
             }
         });
         onMounted(() => {
+            this.addListeners(document);
             this.addSystrayItems();
             this.websiteService.useMysterious = true;
             const { enable_editor, edit_translations } = this.props.action.context.params || {};
@@ -109,6 +117,27 @@ export class WebsiteBuilder extends Component {
             this.websiteService.useMysterious = false;
             this.websiteService.currentWebsiteId = null;
         });
+
+        effect(
+            (state) => {
+                this.websiteContext.edition = state.isEditing;
+                if (!state.isEditing) {
+                    this.addSystrayItems();
+                }
+            },
+            [this.state]
+        );
+        useEffect(
+            (isEditing) => {
+                document.querySelector("body").classList.toggle("o_builder_open", isEditing);
+                if (isEditing) {
+                    setTimeout(() => {
+                        registry.category("systray").remove("website.WebsiteSystrayItem");
+                    }, 200);
+                }
+            },
+            () => [this.state.isEditing]
+        );
     }
 
     get menuProps() {
@@ -157,15 +186,10 @@ export class WebsiteBuilder extends Component {
     }
 
     async onEditPage() {
-        document.querySelector("body").classList.add("o_builder_open");
         await this.iframeLoaded;
         await this.publicRootReady;
         await this.loadAssetsEditBundle();
-
-        setTimeout(() => {
-            this.state.isEditing = true;
-            registry.category("systray").remove("website.WebsiteSystrayItem");
-        }, 200);
+        this.state.isEditing = true;
     }
 
     async loadAssetsEditBundle() {
@@ -191,7 +215,12 @@ export class WebsiteBuilder extends Component {
             return;
         }
 
-        if (!isHTTPSorNakedDomainRedirection(iframe.contentWindow.location.origin, window.location.origin)) {
+        if (
+            !isHTTPSorNakedDomainRedirection(
+                iframe.contentWindow.location.origin,
+                window.location.origin
+            )
+        ) {
             // If another domain ends up loading in the iframe (for example,
             // if the iframe is being redirected and has no initial URL, so it
             // loads "about:blank"), do not push that into the history
@@ -331,9 +360,7 @@ export class WebsiteBuilder extends Component {
     async reloadIframeAndCloseEditor() {
         const isEditing = false;
         await this.reloadIframe(isEditing);
-        document.querySelector("body").classList.remove("o_builder_open");
         this.state.isEditing = isEditing;
-        this.addSystrayItems();
     }
 
     async reloadIframe(isEditing = true, url) {
@@ -371,6 +398,8 @@ export class WebsiteBuilder extends Component {
     setIframeLoaded() {
         this.iframeLoaded = new Promise((resolve) => {
             this.resolveIframeLoaded = () => {
+                this.hotkeyService.registerIframe(this.websiteContent.el);
+                this.addListeners(this.websiteContent.el.contentDocument);
                 resolve(this.websiteContent.el);
             };
         });
@@ -389,6 +418,42 @@ export class WebsiteBuilder extends Component {
 
     onResourceEditorResize(width) {
         browser.localStorage.setItem("ace_editor_width", width);
+    }
+
+    /**
+     * Handles refreshing while the website preview is active.
+     * Makes it possible to stay in the backend after an F5 or CTRL-R keypress.
+     * Cannot be done through the hotkey service due to F5.
+     *
+     * @param {KeyboardEvent} ev
+     */
+    _onKeydownRefresh(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey !== "control+r" && hotkey !== "f5") {
+            return;
+        }
+        // The iframe isn't loaded yet: fallback to default refresh.
+        if (this.websiteService.contentWindow === undefined) {
+            return;
+        }
+        ev.preventDefault();
+        const path = this.websiteService.contentWindow.location;
+        const debugMode = this.env.debug ? `&debug=${this.env.debug}` : "";
+        redirect(
+            `/odoo/action-website.website_preview?path=${encodeURIComponent(path)}${debugMode}`
+        );
+    }
+
+    /**
+     * Registers listeners on both the main document and the iframe document.
+     * It can mostly be done through the hotkey service, but not all keys are
+     * whitelisted, specifically F5 which we want to override.
+     *
+     * @param {HTMLElement} target - document or iframe document
+     */
+    addListeners(target) {
+        target.removeEventListener("keydown", this.onKeydownRefresh);
+        target.addEventListener("keydown", this.onKeydownRefresh);
     }
 }
 

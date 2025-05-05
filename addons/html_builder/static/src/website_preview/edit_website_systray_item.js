@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -18,6 +18,7 @@ export class EditWebsiteSystrayItem extends Component {
 
     setup() {
         this.websiteService = useService("website");
+        this.websiteContext = useState(this.websiteService.context);
     }
 
     onClickEditPage() {

@@ -2,9 +2,18 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.EditWebsiteSystrayItem">
-    <a t-if="!translatable and !this.websiteService.is404" href="#" class="o-website-btn-custo-primary btn d-flex align-items-center rounded-0 border-0 px-3" t-on-click="this.onClickEditPage" accesskey="a">Edit</a>
+    <button t-if="!translatable and !this.websiteService.is404"
+            class="o-website-btn-custo-primary btn d-flex align-items-center rounded-0 border-0 px-3"
+            t-on-click="this.onClickEditPage"
+            accesskey="a">
+        <span t-if="websiteContext.edition" role="img" aria-label="Loading" class="fa fa-circle-o-notch fa-spin"/>
+        <t t-else="">Edit</t>
+    </button>
     <Dropdown t-else="">
-        <button class="o-website-btn-custo-primary btn rounded-0 border-0 px-3" accesskey="a">Edit</button>
+        <button class="o-website-btn-custo-primary o-dropdown-toggle-custo btn rounded-0 border-0 px-3" accesskey="a">
+            <span t-if="websiteContext.edition" role="img" aria-label="Loading" class="fa fa-circle-o-notch fa-spin"/>
+            <t t-else="">Edit</t>
+        </button>
         <t t-set-slot="content">
             <t t-if="this.websiteService.is404">
                 <t t-if="translatable">
