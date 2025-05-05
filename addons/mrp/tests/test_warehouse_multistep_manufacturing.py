@@ -14,6 +14,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         super().setUpClass()
         # Required for `uom_id` to be visible in the view
         cls.env.user.group_ids += cls.env.ref('uom.group_uom')
+        cls.env.user.group_ids += cls.env.ref('product.group_product_variant')
         # Required for `manufacture_steps` to be visible in the view
         cls.env.user.group_ids += cls.env.ref('stock.group_adv_location')
         # Create warehouse
