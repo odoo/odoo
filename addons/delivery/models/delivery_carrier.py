@@ -164,6 +164,15 @@ class DeliveryCarrier(models.Model):
     def onchange_countries(self):
         self.state_ids = [(6, 0, self.state_ids.filtered(lambda state: state.id in self.country_ids.mapped('state_ids').ids).ids)]
 
+    def _get_carrier_name(self):
+        """Return the delivery type.
+
+        This method needs to be overridden by a delivery carrier module if the carrier name is not
+        stored on the field `name`.
+        """
+        self.ensure_one()
+        return self.name
+
     def _get_delivery_type(self):
         """Return the delivery type.
 
