@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.fields import Command
 from odoo.tests.common import JsonRpcException, tagged
 from odoo.tools import mute_logger
@@ -61,3 +63,18 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         }
         with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
             self.make_jsonrpc_request(url, route_kwargs)
+
+    def test_payment_confirmation_mail(self):
+        """Check that a salesperson gets assigned when sending payment confirmation mails."""
+        salesperson = self.env.ref('base.user_admin')
+        self.website.salesperson_id = salesperson
+        self.cart.user_id = False
+        self.tx._set_pending()
+        with patch.object(self.env.registry['sale.order'], '_send_order_notification_mail') as mock:
+            self.tx._post_process()
+            self.assertEqual(mock.call_count, 1, "One payment confirmation mail should be sent")
+            self.assertEqual(
+                self.cart.user_id,
+                salesperson,
+                "Salesperson should get assigned when sending payment confirmation mail",
+            )
