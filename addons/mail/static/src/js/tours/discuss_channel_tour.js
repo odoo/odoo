@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 import { markup } from "@odoo/owl";
+import { delay } from "@web/core/utils/concurrency";
 
 registry.category("web_tour.tours").add("discuss_channel_tour", {
     url: "/odoo",
@@ -52,10 +53,14 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "press Enter",
         },
         {
-            trigger: ".o-mail-Message",
+            trigger:
+                ".o-mail-Message:has(.o-mail-Message-date):contains(sometext_) [title='Mark as Todo']:not(:visible)",
             content: _t("Hover on your message and mark as todo"),
             tooltipPosition: "top",
-            run: "hover && click .o-mail-Message [title='Mark as Todo']",
+            async run(helpers) {
+                await delay(1000);
+                await helpers.click();
+            },
         },
         {
             trigger: "button[data-mailbox-id='starred']",

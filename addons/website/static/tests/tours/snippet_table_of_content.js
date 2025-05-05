@@ -30,7 +30,7 @@ registerWebsitePreviewTour('snippet_table_of_content', {
     ...insertSnippet({id: "s_table_of_content", name: "Table of Content", groupName: "Text"}),
     {
         content: "Drag the Text snippet group and drop it.",
-        trigger: '#oe_snippets .oe_snippet[name="Text"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
+        trigger: '#oe_snippets #snippet_groups .oe_snippet[name="Text"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
         run: "drag_and_drop :iframe #wrap",
     },
     {

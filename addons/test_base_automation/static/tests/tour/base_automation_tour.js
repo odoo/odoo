@@ -8,11 +8,6 @@ function assertEqual(actual, expected) {
     }
 }
 
-async function nextTick() {
-    await new Promise(setTimeout);
-    await new Promise(requestAnimationFrame);
-}
-
 registry.category("web_tour.tours").add("test_base_automation", {
     steps: () => [
         stepUtils.showAppsMenuItem(),
@@ -299,16 +294,12 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_stage_trigg
     steps: () => [
         {
             trigger: ".o_base_automation_kanban_view",
-            async run() {
-                assertEqual(
-                    document.querySelector(".o_kanban_record .fs-2").innerText,
-                    "Test Stage"
-                );
-                assertEqual(
-                    document.querySelector(".o_kanban_record .o_tag").innerText,
-                    "Stage value"
-                );
-            },
+        },
+        {
+            trigger: ".o_kanban_record .fs-2:contains(Test Stage)",
+        },
+        {
+            trigger: ".o_kanban_record .o_tag:contains(Stage value)",
         },
     ],
 });
@@ -317,22 +308,15 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_time_trigge
     steps: () => [
         {
             trigger: ".o_base_automation_kanban_view",
-            async run() {
-                assertEqual(
-                    document.querySelector(
-                        ".o_automation_base_info > div > div > span:nth-child(1)"
-                    ).innerText,
-                    "1"
-                );
-                assertEqual(
-                    document.querySelector(".o_automation_base_info .text-lowercase").innerText,
-                    "hours"
-                );
-                assertEqual(
-                    document.querySelector(".o_kanban_record .o_tag").innerText,
-                    "Last Automation (Automated Rule Test)"
-                );
-            },
+        },
+        {
+            trigger: ".o_automation_base_info > div > div > span:nth-child(1):contains(1)",
+        },
+        {
+            trigger: ".o_automation_base_info .text-lowercase:contains(hours)",
+        },
+        {
+            trigger: `.o_kanban_record .o_tag:contains("Last Automation (Automated Rule Test)")`,
         },
     ],
 });
@@ -341,14 +325,13 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_time_update
     steps: () => [
         {
             trigger: ".o_base_automation_kanban_view",
+        },
+        {
+            trigger: ".o_automation_base_info > div > div > span:nth-child(1):contains(1)",
             async run() {
                 const lowercaseTexts = document.querySelectorAll(
                     ".o_automation_base_info .text-lowercase"
                 );
-                const number = document.querySelector(
-                    ".o_automation_base_info > div > div > span:nth-child(1)"
-                ).innerText;
-                assertEqual(number, "1");
                 assertEqual(lowercaseTexts.length, 2);
                 assertEqual(lowercaseTexts[0].innerText, "hours");
                 assertEqual(lowercaseTexts[1].innerText, "after last update");
@@ -361,11 +344,10 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_create_acti
     steps: () => [
         {
             trigger: ".o_base_automation_kanban_view",
+        },
+        {
+            trigger: "div[name='action_server_ids']:contains(Create Contact with name NameX)",
             async run() {
-                assertEqual(
-                    document.querySelector("div[name='action_server_ids']").innerText,
-                    "Create Contact with name NameX"
-                );
                 assertEqual(document.querySelectorAll(".fa.fa-plus-square").length, 1);
             },
         },
@@ -376,20 +358,17 @@ registry.category("web_tour.tours").add("test_resize_kanban", {
     steps: () => [
         {
             trigger: ".o_base_automation_kanban_view",
+        },
+        {
+            trigger:
+                ".o_automation_actions:contains(Set Active To False\nSet Active To False\nSet Active To False)",
             async run() {
-                assertEqual(
-                    this.anchor.querySelector(".o_automation_actions").innerText,
-                    "Set Active To False\nSet Active To False\nSet Active To False"
-                );
                 document.body.style.setProperty("width", "500px");
                 window.dispatchEvent(new Event("resize"));
-                await nextTick();
-                await nextTick();
-                assertEqual(
-                    this.anchor.querySelector(".o_automation_actions").innerText,
-                    "Set Active To False\n2 actions"
-                );
             },
+        },
+        {
+            trigger: ".o_automation_actions:contains(Set Active To False\n2 actions)",
         },
     ],
 });

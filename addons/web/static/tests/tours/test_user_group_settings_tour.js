@@ -18,39 +18,42 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             trigger: 'th.o_group_name:contains("Master Data")',
         },
         {
-            trigger: 'button.o_list_button_add',
+            trigger: "button.o_list_button_add",
             content: "click on new button",
             run: "click",
         },
         {
             trigger: '.o_field_char[name="name"] input',
             content: "insert a privilege name",
-            run: "fill Privi Foo",
+            run: "edit Privi Foo",
         },
         {
-            trigger: '.o_field_x2many_list_row_add a',
+            trigger: ".o_field_x2many_list_row_add a",
             content: "add groups (open modal)",
             run: "click",
         },
         {
-            trigger: '.o_create_button',
+            trigger: ".o_create_button",
             content: "create the first group",
             run: "click",
         },
         {
             trigger: '.o_field_char[name="name"] input[placeholder="Group Name"]',
             content: "insert the first group name",
-            run: "fill Bar User",
+            run: "edit Bar User",
         },
         {
-            trigger: 'footer .o_form_button_save_new',
+            trigger: "footer .o_form_button_save_new",
             content: "create the second group",
             run: "click",
         },
         {
+            trigger: "body .o_notebook_content:contains(bar user)",
+        },
+        {
             trigger: '.o_field_char[name="name"] input[placeholder="Group Name"]',
             content: "insert the second group name",
-            run: "fill Bar Manager",
+            run: "edit Bar Manager",
         },
         {
             trigger: 'a[name="inherit_groups"]',
@@ -63,14 +66,9 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "click",
         },
         {
-            trigger: '.o_searchview_input',
-            content: "click on search bar",
-            run: "click",
-        },
-        {
-            trigger: '.o_searchview_input',
+            trigger: ".o_searchview_input",
             content: "search 'Bar' groups",
-            run: "fill Bar",
+            run: "edit Bar",
         },
         {
             trigger: ".o_searchview_autocomplete .o-dropdown-item.focus",
@@ -83,9 +81,13 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "click",
         },
         {
-            trigger: 'footer .o_form_button_save',
+            trigger: "footer .o_form_button_save",
             content: "save group and close modal",
             run: "click",
+        },
+        {
+            trigger:
+                "body:not(:has(.modal:visible)) .o_notebook_content:contains(bar user):contains(bar manager)",
         },
         // and the new manager group to the demo user
         {
@@ -99,6 +101,9 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "click",
         },
         {
+            trigger: ".o_list_renderer:contains(marc demo):contains(mitchell admin)",
+        },
+        {
             trigger: '.o_data_row:first-child .o_field_cell[name="name"]',
             content: "open users menu",
             run: "click",
@@ -108,13 +113,15 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             content: "check if is demo user",
         },
         {
-            trigger: '.o_field_widget[name="group_ids"] .o_cell:has(label:contains("Privi Foo")) + .o_cell select',
+            trigger:
+                '.o_field_widget[name="group_ids"] .o_cell:has(label:contains("Privi Foo")) + .o_cell select',
             content: "Add 'Bar Manager' access to demo user",
             run: `selectByLabel Bar Manager`,
         },
         // open group information button (popover)
         {
-            trigger: '.o_field_widget[name="group_ids"] .o_cell:has(label:contains("Privi Foo")) + .o_cell .o_group_info_button',
+            trigger:
+                '.o_field_widget[name="group_ids"] .o_cell:has(label:contains("Privi Foo")) + .o_cell .o_group_info_button',
             content: "open group information for the new group",
             run: "click",
         },

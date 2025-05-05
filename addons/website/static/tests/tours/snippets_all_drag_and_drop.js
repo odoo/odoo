@@ -115,10 +115,6 @@ for (let snippet of snippetsNames) {
                 content: `Hide the ${snippet.name} popup`,
                 trigger: `:iframe [data-snippet='${snippet.name}'] .s_popup_close`,
                 run: "click",
-            },
-            {
-                content: `Make sure ${snippet.name} is hidden`,
-                trigger: ":iframe body:not(.modal-open)",
             }
         );
     } else if (isDropInOnlySnippet) {

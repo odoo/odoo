@@ -44,14 +44,14 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Select "Project Sharing" project to go to project sharing feature for this project.',
     run: "click",
 }, {
-    trigger: '.o_project_sharing',
+    trigger: '.o_project_sharing .o_kanban_renderer',
     content: 'Wait the project sharing feature be loaded',
 }, {
     trigger: 'button.o-kanban-button-new',
     content: 'Click "Create" button',
     run: 'click',
 }, {
-    trigger: '.o_kanban_quick_create .o_field_widget[name="name"] input',
+    trigger: '.o_kanban_quick_create .o_field_widget[name=name] input',
     content: 'Create Task',
     run: "edit Test Create Task",
 }, {

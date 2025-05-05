@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add("crm_rainbowman", {
             run: "click",
         },
         {
-            trigger: ".o-kanban-button-new",
+            trigger: "body:has(.o_kanban_renderer) .o-kanban-button-new",
             content: "click create",
             run: "click",
         },

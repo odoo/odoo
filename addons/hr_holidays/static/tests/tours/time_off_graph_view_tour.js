@@ -11,6 +11,9 @@ registry.category("web_tour.tours").add("time_off_graph_view_tour", {
             run: "click",
         },
         {
+            trigger: ".fc-daygrid-day-top",
+        },
+        {
             content: "Open reporting menu",
             trigger: ".o-dropdown[data-menu-xmlid='hr_holidays.menu_hr_holidays_report']",
             run: "click",
@@ -21,9 +24,12 @@ registry.category("web_tour.tours").add("time_off_graph_view_tour", {
             run: "click",
         },
         {
+            trigger: ".o_graph_canvas_container",
+        },
+        {
             content: "Open bar chart view",
             trigger: "button[data-mode='bar']",
             run: "click",
-        }
-    ]
+        },
+    ],
 });
