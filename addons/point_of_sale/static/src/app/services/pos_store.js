@@ -149,6 +149,10 @@ export class PosStore extends WithLazyGetterTrap {
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
+        window.addEventListener("online", () => {
+            // Sync should be done before websocket connection when going online
+            this.syncAllOrdersDebounced();
+        });
     }
 
     get firstScreen() {
@@ -1131,15 +1135,15 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getPendingOrder() {
-        const orderToCreate = this.models["pos.order"].filter(
-            (order) => this.pendingOrder.create.has(order.id) && order.hasItemsOrPayLater
-        );
-        const orderToUpdate = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.write)
-        );
-        const orderToDelele = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.delete)
-        );
+        const orderToCreate = this.models["pos.order"]
+            .filter((order) => this.pendingOrder.create.has(order.id) && order.hasItemsOrPayLater)
+            .filter(Boolean);
+        const orderToUpdate = this.models["pos.order"]
+            .readMany(Array.from(this.pendingOrder.write))
+            .filter(Boolean);
+        const orderToDelele = this.models["pos.order"]
+            .readMany(Array.from(this.pendingOrder.delete))
+            .filter(Boolean);
 
         return {
             orderToDelele,
@@ -1255,7 +1259,13 @@ export class PosStore extends WithLazyGetterTrap {
                 throw error;
             }
 
-            console.warn("Offline mode active, order will be synced later");
+            // After an error on the sync, verify order state by asking the server
+            if (error instanceof ConnectionLostError) {
+                console.warn("Offline mode active, order will be synced later");
+            } else {
+                this.deviceSync.readDataFromServer();
+            }
+
             return error;
         } finally {
             orders.forEach((order) => this.syncingOrders.delete(order.id));
