@@ -134,6 +134,7 @@ describe("popover should switch UI depending on editing state", () => {
         await click(".o_we_href_input_link");
         await tick();
         await fill("test-href.com");
+        await waitFor(".o_we_apply_link:not([disabled])");
         await click(".o_we_apply_link");
         await waitFor(".o_we_edit_link");
         expect(".o-we-linkpopover").toHaveCount(1);
@@ -151,29 +152,6 @@ describe("popover should edit,copy,remove the link", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.com/">li[]nk</a></p>'
         );
-    });
-    test("after apply empty url on a link, the link element should not have href (1)", async () => {
-        const { el } = await setupEditor("<p>this is a <a>li[]nk</a></p>");
-        await waitFor(".o-we-linkpopover");
-        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("");
-        await click(".o_we_apply_link");
-        expect(cleanLinkArtifacts(getContent(el))).toBe("<p>this is a <a>li[]nk</a></p>");
-    });
-    test("after apply empty url on a link, the link element should not have href (2)", async () => {
-        const { el } = await setupEditor('<p>this is a <a href="">li[]nk</a></p>');
-        await waitFor(".o-we-linkpopover");
-        await click(".o_we_edit_link");
-        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("");
-        await click(".o_we_apply_link");
-        expect(cleanLinkArtifacts(getContent(el))).toBe("<p>this is a <a>li[]nk</a></p>");
-    });
-    test("after apply empty url on a link, the link element should not have href (3)", async () => {
-        const { el } = await setupEditor('<p>this is a <a href="exiting">li[]nk</a></p>');
-        await waitFor(".o-we-linkpopover");
-        await click(".o_we_edit_link");
-        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("");
-        await click(".o_we_apply_link");
-        expect(cleanLinkArtifacts(getContent(el))).toBe("<p>this is a <a>li[]nk</a></p>");
     });
     test("after clicking on remove button, the link element should be unwrapped", async () => {
         const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
@@ -215,15 +193,6 @@ describe("popover should edit,copy,remove the link", () => {
         await animationFrame();
         expect(".o-we-linkpopover").toHaveCount(0);
         await expect(navigator.clipboard.readText()).resolves.toBe("http://test.com/");
-    });
-    test("when edit a link's label and URL to '', the link should be removed", async () => {
-        const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
-        await waitFor(".o-we-linkpopover");
-        await click(".o_we_edit_link");
-
-        await contains(".o-we-linkpopover input.o_we_label_link").clear();
-        await contains(".o-we-linkpopover input.o_we_href_input_link").clear();
-        expect(getContent(el)).toBe("<p>this is a&nbsp;[]</p>");
     });
 });
 
@@ -324,7 +293,7 @@ describe("Link creation", () => {
             await animationFrame();
             expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[]ab</p>");
         });
-        test("when create a new link by powerbox and not input anything, then validate, the link should be removed", async () => {
+        test("when create a new link by powerbox and not input anything, the apply link button should be disable", async () => {
             const { editor, el } = await setupEditor("<p>ab[]</p>");
             await insertText(editor, "/link");
             await animationFrame();
@@ -332,10 +301,7 @@ describe("Link creation", () => {
             await waitFor(".o-we-linkpopover");
             expect(".o-we-linkpopover").toHaveCount(1);
             expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab</p>");
-            // simulate click validate
-            await click(".o-we-linkpopover .o_we_apply_link");
-            await animationFrame();
-            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>ab[]</p>");
+            expect(".o_we_apply_link").toHaveAttribute("disabled");
         });
         test("when create a new link by powerbox and only input the URL, the link should be created with corrected https URL", async () => {
             const { editor, el } = await setupEditor("<p>ab[]</p>");
@@ -538,6 +504,7 @@ describe("Link creation", () => {
 
             queryOne(".o-we-linkpopover input.o_we_href_input_link").focus();
             await fill("test.com");
+            await waitFor(".o_we_apply_link:not([disabled])");
             await click(".o_we_apply_link");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 '<p><a href="https://test.com">Hello[]</a></p>'
@@ -1181,5 +1148,40 @@ describe("upload file via link popover", () => {
         );
         const favIcon = await waitFor(".o_we_preview_favicon span.o_image");
         expect(favIcon).toHaveAttribute("data-mimetype", "text/plain");
+    });
+});
+
+describe("apply button should be disabled when the URL is empty", () => {
+    test("when URL on link is empty, the apply link button should be disabled (1)", async () => {
+        await setupEditor("<p>this is a <a>li[]nk</a></p>");
+        await waitFor(".o-we-linkpopover");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("");
+        await tick();
+        expect(".o_we_apply_link").toHaveAttribute("disabled");
+    });
+    test("when URL on link is empty, the apply link button should be disabled (2)", async () => {
+        await setupEditor('<p>this is a <a href="">li[]nk</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("");
+        await tick();
+        expect(".o_we_apply_link").toHaveAttribute("disabled");
+    });
+    test("when URL on link is empty, the apply link button should be disabled (3)", async () => {
+        await setupEditor('<p>this is a <a href="exiting">li[]nk</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("");
+        await tick();
+        expect(".o_we_apply_link").toHaveAttribute("disabled");
+    });
+    test("when edit a link's label and URL to '', the apply link button should be disabled", async () => {
+        await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await contains(".o-we-linkpopover input.o_we_label_link").clear();
+        await contains(".o-we-linkpopover input.o_we_href_input_link").clear();
+        await tick();
+        expect(".o_we_apply_link").toHaveAttribute("disabled");
     });
 });

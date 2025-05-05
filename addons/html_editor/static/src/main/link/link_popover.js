@@ -84,7 +84,9 @@ export class LinkPopover extends Component {
             }
         });
         useExternalListener(document, "pointerdown", (ev) => {
-            if (
+            if (!this.state.url) {
+                this.onClickRemove();
+            } else if (
                 this.editingWrapper?.el &&
                 !this.state.isImage &&
                 !this.editingWrapper.el.contains(ev.target)
@@ -134,7 +136,7 @@ export class LinkPopover extends Component {
 
     onKeydownEnter(ev) {
         const isAutoCompleteDropdownOpen = document.querySelector(".o-autocomplete--dropdown-menu");
-        if (ev.key === "Enter" && !isAutoCompleteDropdownOpen) {
+        if (ev.key === "Enter" && !isAutoCompleteDropdownOpen && this.state.url) {
             ev.preventDefault();
             this.onClickApply();
         }
