@@ -1695,7 +1695,7 @@ class Product extends PosModel {
         const taxes = this.pos.get_taxes_after_fp(this.taxes_id, order && order.fiscal_position);
         const currentTaxes = this.pos.getTaxesByIds(this.taxes_id);
         const priceAfterFp = this.pos.computePriceAfterFp(unitPrice, currentTaxes);
-        const allPrices = this.pos.compute_all(taxes, priceAfterFp, 1, this.pos.currency.rounding);
+        const allPrices = this.pos.compute_all(taxes, priceAfterFp, quantity, this.pos.currency.rounding);
         return this.pos.config.iface_tax_included === 'total' ? allPrices.total_included : allPrices.total_excluded;
     }
 
@@ -1773,7 +1773,7 @@ class Orderline extends PosModel {
         this.refunded_orderline_id = json.refunded_orderline_id;
         this.price_manually_set = json.price_manually_set ||
             this.get_display_price() !==
-            this.product.get_display_price_discount(this.order.pricelist, this.get_quantity(), this.get_discount()) * this.get_quantity();
+            this.product.get_display_price_discount(this.order.pricelist, this.get_quantity(), this.get_discount());
     }
     clone(){
         var orderline = Orderline.create({},{
