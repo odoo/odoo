@@ -86,6 +86,8 @@
                     <filter name="filter_start_date" string="Date" date="start_date"/>
                     <filter name="filter_date_last_month" invisible="1" string="Date: Last month"
                         domain="[('start_date', '&gt;=', (context_today() + relativedelta(months=-1)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="filter_date_last_week" invisible="1" string="Date: Last week"
+                        domain="[('start_date', '&gt;=', (context_today() + relativedelta(weeks=-1)).strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
                         <filter name="group_by_operator" string="Agent" domain="[]" context="{'group_by': 'partner_id'}"/>
@@ -145,7 +147,7 @@
             <field name="name">Sessions</field>
             <field name="res_model">im_livechat.report.channel</field>
             <field name="view_mode">graph,pivot</field>
-            <field name="context">{"graph_measure": "time_to_answer", "search_default_last_week":1}</field>
+            <field name="context">{"graph_measure": "time_to_answer", "search_default_filter_date_last_week":1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">No data yet!</p>
                 <p>Track and improve live chat performance with insights on session activity, response times, customer ratings, and call interactions.</p>
