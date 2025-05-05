@@ -353,7 +353,11 @@ export class ToolbarPlugin extends Plugin {
         if (isCollapsed) {
             return !!closestElement(selectionData.editableSelection.anchorNode, "td.o_selected_td");
         }
-        return this.getFilteredTargetedNodes().length;
+        const targetedNodes = this.getFilteredTargetedNodes();
+        return (
+            !!targetedNodes.length &&
+            targetedNodes.every((node) => node.parentElement.isContentEditable)
+        );
     }
 
     shouldPreventClosing() {

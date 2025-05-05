@@ -13,6 +13,10 @@ export const Direction = {
     FORWARD: "FORWARD",
 };
 
+// A generic base64 image for testing
+export const base64Img =
+    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
 class TestEditor extends Component {
     static template = xml`
         <t t-if="props.styleContent">
