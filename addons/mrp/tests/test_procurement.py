@@ -102,9 +102,13 @@ class TestProcurement(TestMrpCommon):
     def test_procurement_2(self):
         """Check that a manufacturing order create the right procurements when the route are set on
         a parent category of a product"""
-        # find a child category id
-        child_categ_id = self.env['product.category'].search([('parent_id', '!=', False)], limit=1)
-        all_categ_id = child_categ_id.parent_id
+        all_categ_id = self.env['product.category'].create({
+            'name': 'All',
+        })
+        child_categ_id = self.env['product.category'].create({
+            'name': 'Child',
+            'parent_id': all_categ_id.id,
+        })
 
         # set the product of `self.bom_1` to this child category
         for bom_line_id in self.bom_1.bom_line_ids:
