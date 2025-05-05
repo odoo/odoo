@@ -140,8 +140,6 @@ class HOOTCommon(odoo.tests.HttpCase):
         self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
         self.assertEqual(self.get_hoot_filters(), '&test=69a6561d&suite=69a6561d&test=cb246db5&suite=cb246db5')
 
-# TODO master-mysterious-egg fix error
-@unittest.skip("prepare mysterious-egg for merging")
 @odoo.tests.tagged('post_install', '-at_install')
 class WebSuite(QunitCommon, HOOTCommon):
 
