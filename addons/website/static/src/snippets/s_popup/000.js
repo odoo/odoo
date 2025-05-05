@@ -6,7 +6,7 @@ const { _t } = require("@web/core/l10n/translation");
 const { getTabableElements } = require('@web/core/utils/ui');
 const dom = require('web.dom');
 const publicWidget = require('web.public.widget');
-const { getCookie, setCookie, deleteCookie } = require("web.utils.cookies");
+const { getCookie, setCookie } = require("web.utils.cookies");
 const {setUtmsHtmlDataset} = require('@website/js/content/inject_dom');
 const { cloneContentEls, onceAllImagesLoaded } = require("website.utils");
 
@@ -107,8 +107,9 @@ const PopupWidget = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
+        this.is_cookie_policy_page = window.location.pathname === "/cookie-policy";
         this._popupAlreadyShown = !!getCookie(this.$el.attr('id'));
-        if (!this._popupAlreadyShown) {
+        if (!this._popupAlreadyShown || this.is_cookie_policy_page) {
             this._bindPopup();
         }
         return this._super(...arguments);
@@ -166,7 +167,7 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _showPopup: function () {
-        if (this._popupAlreadyShown || !this._canShowPopup()) {
+        if (this._popupAlreadyShown || this.is_cookie_policy_page || !this._canShowPopup()) {
             return;
         }
         this.$target.find('.modal').modal('show');
@@ -367,6 +368,59 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         'click #cookies-consent-essential, #cookies-consent-all': '_onAcceptClick',
     }),
 
+    start() {
+        this._super(...arguments);
+
+        // TODO: Remove this in master and add the cookie policy link in
+        // copyright footer with XML
+        const copyrightFooterContainerEl = document.querySelector(".o_footer_copyright .container");
+        if (copyrightFooterContainerEl) {
+            this.cookiePolicyLinkEl = cloneContentEls(`
+                <a href="/cookie-policy">Cookie Policy</a>
+                `).firstElementChild;
+            copyrightFooterContainerEl.insertAdjacentElement("beforeend", this.cookiePolicyLinkEl);
+        }
+
+        // TODO: Remove this in master and update the #tracking_code_config
+        // script in XML.
+        // Since cookie preferences can now be changed, we need to update gtag
+        // script to toggle gtag consent when the user modifies their cookie
+        // preferences.
+        const trackingCodeConfigScriptEl = document.querySelector("#tracking_code_config");
+        if (trackingCodeConfigScriptEl) {
+            let scriptContent = trackingCodeConfigScriptEl.innerHTML;
+
+            // Remove current event listener
+            scriptContent = scriptContent.replace(
+                /document\.addEventListener\(\s*"optionalCookiesAccepted",\s*allConsentsGranted,\s*\{once:\s*true\}\s*\);/g,
+                ""
+            );
+
+            // Append requiredConsentsGranted function & updated event listeners
+            const requiredConsentsScript = `
+                function requiredConsentsGranted() {
+                    gtag('consent', 'update', {
+                        'ad_storage': 'denied',
+                        'ad_user_data': 'denied',
+                        'ad_personalization': 'denied',
+                        'analytics_storage': 'denied',
+                    });
+                }
+
+                document.addEventListener("optionalCookiesAccepted", allConsentsGranted);
+                document.addEventListener("requiredCookiesAccepted", requiredConsentsGranted);
+            `;
+
+            // Create a new script element
+            const newScriptEl = document.createElement("script");
+            newScriptEl.id = "tracking_code_config";
+            newScriptEl.textContent = `${scriptContent.trim()}\n${requiredConsentsScript}`;
+
+            // Replace the old script with the new one
+            trackingCodeConfigScriptEl.parentNode.replaceChild(newScriptEl, trackingCodeConfigScriptEl);
+        }
+    },
+
     /**
      * @override
      */
@@ -374,6 +428,9 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         if (this.toggleEl) {
             this.toggleEl.removeEventListener("click", this._onToggleCookiesBar);
             this.toggleEl.remove();
+        }
+        if (this.cookiePolicyLinkEl) {
+            this.cookiePolicyLinkEl.remove();
         }
         this._super(...arguments);
     },
@@ -387,15 +444,13 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      */
     _showPopup() {
         this._super(...arguments);
-        const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
-        if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
+        if (this.is_cookie_policy_page) {
             this.toggleEl = cloneContentEls(`
             <button class="o_cookies_bar_toggle btn btn-info btn-sm rounded-circle d-flex align-items-center position-fixed pe-auto">
-                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label"></span>
+                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label">${_t("Show the cookies bar")}</span>
             </button>
             `).firstElementChild;
             this.el.insertAdjacentElement("beforebegin", this.toggleEl);
-            this._toggleCookiesBar();
             this._onToggleCookiesBar = this._toggleCookiesBar.bind(this);
             this.toggleEl.addEventListener("click", this._onToggleCookiesBar);
         }
@@ -408,16 +463,26 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
     _toggleCookiesBar() {
         const popupEl = this.el.querySelector(".modal");
         $(popupEl).modal("toggle");
-        // As we're using Bootstrap's events, the PopupWidget prevents the modal
-        // from being shown after hiding it: override that behavior.
-        this._popupAlreadyShown = false;
-        deleteCookie(this.el.id);
 
+        this._setToggleButtonState();
+    },
+    /**
+     * Updates the toggle button state and postion based on the visibility of
+     * the cookie bar.
+     *
+     * @private
+     */
+    _setToggleButtonState() {
+        const popupEl = this.el.querySelector(".modal");
         const hidden = !popupEl.classList.contains("show");
+
+        // Update button's icon and text
         this.toggleEl.querySelector(".fa").className = `fa ${hidden ? "fa-eye" : "fa-eye-slash"}`;
         this.toggleEl.querySelector(".o_cookies_bar_toggle_label").innerText = hidden
             ? _t("Show the cookies bar")
             : _t("Hide the cookies bar");
+
+        // Update button's position
         if (hidden || !popupEl.classList.contains("s_popup_bottom")) {
             this.toggleEl.style.removeProperty("--cookies-bar-toggle-inset-block-end");
         } else {
@@ -451,9 +516,13 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         this.cookieValue = `{"required": true, "optional": ${isFullConsent}}`;
         if (isFullConsent) {
             document.dispatchEvent(new Event("optionalCookiesAccepted"));
+        } else {
+            document.dispatchEvent(new Event("requiredCookiesAccepted"));
         }
         this._onHideModal();
-        this.toggleEl && this.toggleEl.remove();
+        if (this.toggleEl) {
+            this._setToggleButtonState();
+        }
     },
     /**
      * @override
