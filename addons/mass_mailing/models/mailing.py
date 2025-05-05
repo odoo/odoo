@@ -30,8 +30,6 @@ _logger = logging.getLogger(__name__)
 # Syntax of the data URL Scheme: https://tools.ietf.org/html/rfc2397#section-3
 # Used to find inline images
 image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
-DEFAULT_IMAGE_TIMEOUT = 3
-DEFAULT_IMAGE_MAXBYTES = 10 * 1024 * 1024  # 10MB
 DEFAULT_IMAGE_CHUNK_SIZE = 32768
 
 mso_re = re.compile(r"\[if mso\]>[\s\S]*<!\[endif\]")
@@ -1464,10 +1462,10 @@ class MailingMailing(models.Model):
         return mailing_domain
 
     def _get_image_by_url(self, url, session):
-        maxsize = int(tools.config.get("import_image_maxbytes", DEFAULT_IMAGE_MAXBYTES))
+        maxsize = tools.config.get("import_file_maxbytes")
         _logger.debug("Trying to import image from URL: %s", url)
         try:
-            response = session.get(url, timeout=int(tools.config.get("import_image_timeout", DEFAULT_IMAGE_TIMEOUT)))
+            response = session.get(url, timeout=tools.config.get("import_file_timeout"))
             response.raise_for_status()
 
             if response.headers.get('Content-Length') and int(response.headers['Content-Length']) > maxsize:
