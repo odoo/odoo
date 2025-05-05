@@ -226,6 +226,12 @@ class SaleOrder(models.Model):
         carts.with_context(force_user_recomputation=True)._compute_user_id()
         return super().action_confirm()
 
+    def _send_payment_succeeded_for_order_mail(self):
+        carts = self.filtered('website_id')
+        # Assign a salesman before sending payment confirmation mail.
+        carts.with_context(force_user_recomputation=True)._compute_user_id()
+        return super()._send_payment_succeeded_for_order_mail()
+
     @api.model
     def _get_note_url(self):
         website_id = self._context.get('website_id')
