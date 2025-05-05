@@ -40,6 +40,7 @@
             </record>
             <record id="tax_report_ir_exempt_turnover_eu" model="account.report.line">
                 <field name="name">EXEMPTED TURNOVER - EU</field>
+                <field name="name@sl">OBROČENI PROMET - EU</field>
                 <field name="expression_ids">
                     <record id="tax_report_ir_exempt_turnover_eu_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -159,6 +160,7 @@
             </record>
             <record id="tax_report_ir_taxed_turnover" model="account.report.line">
                 <field name="name">TAXED TURNOVER</field>
+                <field name="name@sl">OBREČENI PROMET</field>
                 <field name="expression_ids">
                     <record id="tax_report_ir_taxed_turnover_formula" model="account.report.expression">
                         <field name="label">balance</field>
@@ -185,6 +187,7 @@
                 <field name="children_ids">
                     <record id="tax_report_ir_transport_slovenia" model="account.report.line">
                         <field name="name">Transport in Slovenia</field>
+                        <field name="name@sl">Prevoz v Sloveniji</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_transport_slovenia_formula" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -237,6 +240,7 @@
                     </record>
                     <record id="tax_report_ir_self_taxation_eu" model="account.report.line">
                         <field name="name">Self-taxation - EU</field>
+                        <field name="name@sl">Samopreobremenitev - EU</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_self_taxation_eu_formula" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -328,6 +332,7 @@
                     </record>
                     <record id="tax_report_ir_self_taxation_slo_under_article_761" model="account.report.line">
                         <field name="name">Self-taxation - SLO under Article 76a</field>
+                        <field name="name@sl">Samopreobremenitev - SLO pod členom 76a</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_self_taxation_slo_under_article_761_formula" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -377,6 +382,7 @@
                     </record>
                     <record id="tax_report_ir_self_taxation_3rd_world_imports" model="account.report.line">
                         <field name="name">Self-taxation - 3rd world imports</field>
+                        <field name="name@sl">Samopreobremenitev - uvozi iz tretjega sveta</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_self_taxation_3rd_world_imports_formula" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -430,6 +436,7 @@
             </record>
             <record id="tax_report_ir_3rd_world_deliveries_with_right_withdrawal" model="account.report.line">
                 <field name="name">3rd world deliveries with right of withdrawal VAT</field>
+                <field name="name@sl">Dobave v tretji svet z DDV pravico do umika</field>
                 <field name="expression_ids">
                     <record id="tax_report_ir_23_tag" model="account.report.expression">
                         <field name="label">balance</field>
@@ -440,6 +447,7 @@
             </record>
             <record id="tax_report_ir_reverse_charge_base" model="account.report.line">
                 <field name="name">REVERSE CHARGE - BASE</field>
+                <field name="name@sl">REVERZNI OBREMENITEV - OSNOVA</field>
                 <field name="expression_ids">
                     <record id="tax_report_ir_reverse_charge_base_base" model="account.report.expression">
                         <field name="label">balance</field>
@@ -450,6 +458,7 @@
                 <field name="children_ids">
                     <record id="tax_report_ir_25a" model="account.report.line">
                         <field name="name">25a. Acquisition of EU goods</field>
+                        <field name="name@sl">25a. Pridobitev blaga iz EU</field>
                         <field name="code">ir_25a</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_25a_tag" model="account.report.expression">
