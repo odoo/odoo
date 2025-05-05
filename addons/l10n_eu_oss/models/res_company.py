@@ -58,7 +58,7 @@ class Company(models.Model):
 
                 for domestic_tax in taxes:
                     tax_amount = EU_TAX_MAP.get((company.account_fiscal_country_id.code, domestic_tax.amount, destination_country.code), False)
-                    if tax_amount and domestic_tax not in fpos.tax_ids.tax_src_id:
+                    if tax_amount and (domestic_tax not in fpos.tax_ids.tax_src_id or tax_amount not in fpos.tax_ids.tax_dest_id.mapped('amount')):
                         if not foreign_taxes.get(tax_amount, False):
                             oss_tax_group_local_xml_id = f"oss_tax_group_{str(tax_amount).replace('.', '_')}"
                             if not self.env.ref(f"l10n_eu_oss.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
@@ -69,7 +69,8 @@ class Company(models.Model):
                                     'res_id': self.env['account.tax.group'].create({'name': f'OSS {tax_amount}%'}).id,
                                     'noupdate': True,
                                 })
-                            foreign_taxes[tax_amount] = self.env['account.tax'].create({
+                            foreign_tax = self.env['account.tax'].search([('name', '=', f'{tax_amount}% {destination_country.code} {destination_country.vat_label}')])
+                            foreign_taxes[tax_amount] = foreign_tax or self.env['account.tax'].create({
                                 'name': f'{tax_amount}% {destination_country.code} {destination_country.vat_label}',
                                 'amount': tax_amount,
                                 'invoice_repartition_line_ids': invoice_repartition_lines,
@@ -83,6 +84,7 @@ class Company(models.Model):
                             })
                         mapping.append((0, 0, {'tax_src_id': domestic_tax.id, 'tax_dest_id': foreign_taxes[tax_amount].id}))
                 if mapping:
+                    fpos.tax_ids.filtered(lambda tax_id: tax_id.tax_src_id.id in [mapping_line[2].get('tax_src_id') for mapping_line in mapping]).unlink()
                     fpos.write({
                         'tax_ids': mapping
                     })
