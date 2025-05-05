@@ -256,7 +256,21 @@
                     </div>
                 </div>
             </section>
+            <!-- Product images gallery at the bottom -->
+            <div class="container my-5">
+                <div class="row g-4">
+                    <t t-if="product.product_template_image_ids">
+                        <t t-foreach="product.product_template_image_ids" t-as="img">
+                            <div class="col-12 col-md-6 d-flex justify-content-center">
+                                <img t-att-src="image_data_uri(img.image_1920)" class="img-fluid mb-3 product-gallery-img" style="max-width: 600px; height: auto; border-radius: 12px; object-fit: contain; background: #f8f8f8; display: block;" alt="Product image"/>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <div class="col-12 text-center text-muted">No additional product images</div>
+                    </t>
+                </div>
+            </div>
         </xpath>
-        <!-- Product Images Gallery (large, after all content) -->
     </template>
 </odoo> 

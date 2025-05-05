@@ -292,8 +292,8 @@ li.o_wsale_my_cart {
 
 /* Кнопка добавить в корзину */
 #product_detail .action-buttons #add_to_cart {
-    background-color: #0fa86e !important;
-    border-color: #0fa86e !important;
+    background-color: #0b7c54 !important;
+    border-color: #0b7c54 !important;
     color: #fff !important;
     font-weight: bold;
     padding: 12px 20px;
@@ -304,28 +304,8 @@ li.o_wsale_my_cart {
 }
 
 #product_detail .action-buttons #add_to_cart:hover {
-    background-color: #0b7c54 !important;
-    border-color: #0b7c54 !important;
-    color: #fff !important;
-    box-shadow: none !important;
-}
-
-/* Кнопка купить сейчас */
-#product_detail .action-buttons #buy_now {
-    background-color: #0fa86e !important;
-    border-color: #0fa86e !important;
-    color: #fff !important;
-    font-weight: bold;
-    padding: 12px 20px;
-    border-radius: 4px;
-    flex: 1;
-    transition: background-color 0.15s linear, border-color 0.15s linear;
-    box-shadow: none !important;
-}
-
-#product_detail .action-buttons #buy_now:hover {
-    background-color: #0b7c54 !important;
-    border-color: #0b7c54 !important;
+    background-color: #095c3c !important;
+    border-color: #095c3c !important;
     color: #fff !important;
     box-shadow: none !important;
 }
@@ -631,6 +611,41 @@ li.o_wsale_my_cart {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+
+#product_detail .action-buttons #buy_now {
+    background-color: #0fa86e !important;
+    border-color: #0fa86e !important;
+    color: #fff !important;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 4px;
+    flex: 1;
+    transition: background-color 0.15s linear, border-color 0.15s linear;
+    box-shadow: none !important;
+}
+
+#product_detail .action-buttons #buy_now:hover {
+    background-color: #0b7c54 !important;
+    border-color: #0b7c54 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+.product-gallery-img {
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: contain;
+    background: #f8f8f8;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .product-gallery-img {
+        max-width: 100%;
+    }
 }
 
 
