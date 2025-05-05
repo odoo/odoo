@@ -39,8 +39,6 @@ class TestStockNotificationWishlist(HttpCaseWithWebsiteUser):
             'pricelist_id': cls.pricelist.id
         })
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_stock_notification_wishlist(self):
         self.start_tour("/", 'stock_notification_wishlist', login="website_user")
 
