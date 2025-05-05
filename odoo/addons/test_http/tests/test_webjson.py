@@ -4,6 +4,8 @@ from base64 import b64encode
 
 from datetime import date
 
+from urllib.parse import parse_qsl, urlsplit
+
 from odoo.api import Environment
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -265,9 +267,9 @@ class TestHttpWebJson_1(TestHttpBase):
         # we should find one redirect with the domain in the URL
         [hist] = res.history
         self.assertEqual(hist.status_code, 307)
-        str_domain = str(domain).replace(' ', '+')
-        self.assertIn("limit=80", res.url)
-        self.assertIn(f"domain={str_domain}", res.url)
+        qs = dict(parse_qsl(urlsplit(res.url).query))
+        self.assertEqual(qs['limit'], '80')
+        self.assertEqual(qs['domain'], "[('name', 'ilike', 'earth')]")
 
     def test_webjson_pivot(self):
         env = self.authenticate_demo()
