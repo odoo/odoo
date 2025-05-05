@@ -20,6 +20,7 @@ import { effect } from "@web/core/utils/reactive";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { ResourceEditor } from "@website/components/resource_editor/resource_editor";
+import { isHTTPSorNakedDomainRedirection } from "./utils";
 import { WebsiteSystrayItem } from "./website_systray_item";
 
 export class WebsiteBuilder extends Component {
@@ -34,6 +35,7 @@ export class WebsiteBuilder extends Component {
         this.dialog = useService("dialog");
         this.websiteService = useService("website");
         this.ui = useService("ui");
+        this.title = useService("title");
         this.websiteService.websiteRootInstance = undefined;
 
         this.websiteContent = useRef("iframe");
@@ -133,13 +135,15 @@ export class WebsiteBuilder extends Component {
     }
 
     addSystrayItems() {
-        registry
-            .category("systray")
-            .add(
-                "website.WebsiteSystrayItem",
-                { Component: WebsiteSystrayItem, props: this.systrayProps },
-                { sequence: -100 }
-            );
+        if (!registry.category("systray").contains("website.WebsiteSystrayItem")) {
+            registry
+                .category("systray")
+                .add(
+                    "website.WebsiteSystrayItem",
+                    { Component: WebsiteSystrayItem, props: this.systrayProps },
+                    { sequence: -100 }
+                );
+        }
     }
 
     onNewPage() {
@@ -176,16 +180,42 @@ export class WebsiteBuilder extends Component {
         ]);
     }
 
+    /**
+     * This replaces the browser url (/odoo/website...) with
+     * the iframe's url (it is clearer for the user).
+     */
+    replaceBrowserUrl() {
+        const iframe = this.websiteContent.el;
+        if (!iframe || !iframe.contentWindow) {
+            return;
+        }
+
+        if (!isHTTPSorNakedDomainRedirection(iframe.contentWindow.location.origin, window.location.origin)) {
+            // If another domain ends up loading in the iframe (for example,
+            // if the iframe is being redirected and has no initial URL, so it
+            // loads "about:blank"), do not push that into the history
+            // state as that could prevent the user from going back and could
+            // trigger a traceback.
+            history.replaceState(history.state, document.title, "/odoo");
+            return;
+        }
+        const currentTitle = iframe.contentDocument.title;
+        history.replaceState(history.state, currentTitle, iframe.contentDocument.location.href);
+        this.title.setParts({ action: currentTitle });
+    }
+
     onIframeLoad(ev) {
-        history.pushState(null, "", ev.target.contentWindow.location.pathname);
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
         this.websiteContent.el.setAttribute("is-ready", "true");
         if (this.translation) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
         }
+
         this.preparePublicRootReady();
         this.setupClickListener();
+        this.replaceBrowserUrl();
         this.resolveIframeLoaded();
+
         if (this.props.action.context.params?.with_loader) {
             this.websiteService.hideLoader();
             this.props.action.context.params.with_loader = false;
