@@ -5331,7 +5331,10 @@ class TestTourMrpOrder(HttpCase):
             'product_id': product.id,
             'product_uom_qty': 1.0,
         })
-
+        self.env['product.product'].create({
+            'name': 'Component',
+            'is_storable': True,
+        })
         self.assertEqual(len(mo.move_raw_ids), 0)
         url = f'/odoo/action-mrp.mrp_production_action/{mo.id}'
 
