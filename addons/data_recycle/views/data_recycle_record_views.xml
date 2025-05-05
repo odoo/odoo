@@ -6,6 +6,9 @@
             <field name="model">data_recycle.record</field>
             <field name="arch" type="xml">
                 <list js_class="data_recycle_list" sample="1" create="0" export_xlsx="0">
+                    <header>
+                        <button string="Validate" type="object" name="action_validate" class="btn-primary" />
+                    </header>
                     <field name="active" column_invisible="True" />
                     <field name="res_model_name" column_invisible="True" />
                     <field name="res_id" />

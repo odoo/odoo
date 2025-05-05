@@ -21,7 +21,6 @@
     'assets': {
         'web.assets_backend': [
             'data_recycle/static/src/views/*.js',
-            'data_recycle/static/src/views/*.xml',
         ],
     },
     'author': 'Odoo S.A.',
