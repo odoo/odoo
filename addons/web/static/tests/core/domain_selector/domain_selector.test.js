@@ -3197,6 +3197,14 @@ test("date options (readonly)", async () => {
             domain: `[("date.day_of_week", "=", 3)]`,
             text: `Date ➔ Weekday is equal Wednesday`,
         },
+        {
+            domain: `[("date.month_number", "=", context_today().month)]`,
+            text: `Date ➔ Month is equal This month`,
+        },
+        {
+            domain: `[("date.day_of_month", "=", context_today().day)]`,
+            text: `Date ➔ Day of month is equal This day`,
+        },
     ];
     for (const { domain, text } of toTest) {
         await parent.set(domain);
@@ -3240,4 +3248,25 @@ test("date options (edit)", async () => {
     await selectValue(5);
     expect(getCurrentValue()).toBe("May");
     expect.verifySteps([`[("date.month_number", "=", 5)]`]);
+});
+
+test("date options (edit): This day/This month", async () => {
+    mockDate("2025-03-24 17:00:00");
+    await makeDomainSelector({
+        domain: `[("date.month_number", "=", 5)]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentValue()).toBe("May");
+    await selectValue("context_today().month");
+    expect(getCurrentValue()).toBe("This month");
+    expect.verifySteps([`[("date.month_number", "=", context_today().month)]`]);
+    await openModelFieldSelectorPopover();
+    await contains(`.o_model_field_selector_popover_item[data-name='day_of_month'] button`).click();
+    expect.verifySteps([`[("date.day_of_month", "=", 24)]`]);
+    expect(getCurrentValue()).toBe("24");
+    await selectValue("context_today().day");
+    expect(getCurrentValue()).toBe("This day");
+    expect.verifySteps([`[("date.day_of_month", "=", context_today().day)]`]);
 });
