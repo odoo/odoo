@@ -3903,7 +3903,7 @@ test("many2one search with formatted name", async () => {
     expect(
         ".o_field_many2one[name='trululu'] .dropdown-menu a.dropdown-item:eq(0)"
     ).toHaveInnerHTML(
-        `Test: <b>Paul</b> <span class="text-muted">Eric</span> <span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 text-white bg-primary">good guy</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;More text`
+        `Test: <b>Paul</b> <span class="text-muted">Eric</span> <span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">good guy</span><br/><span style="margin-left: 2em"></span>More text`
     );
     await contains(
         ".o_field_many2one[name='trululu'] .dropdown-menu a.dropdown-item:eq(0)"
@@ -3958,4 +3958,29 @@ test("search typeahead", async () => {
         "Create and edit...",
         "Search more...",
     ]);
+});
+
+test("highlight search in many2one", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="trululu"/></form>`,
+    });
+    await contains(".o_field_widget[name=trululu] input").edit("rec", { confirm: false });
+    await runAllTimers();
+    expect(`.o-autocomplete.dropdown li:not(.o_m2o_dropdown_option) a`).toHaveCount(2);
+    expect(`.o-autocomplete.dropdown li:eq(0) a`).toHaveInnerHTML(`
+        first
+        <span class="text-primary fw-bold">
+            rec
+        </span>
+        ord
+    `);
+    expect(`.o-autocomplete.dropdown li:eq(1) a`).toHaveInnerHTML(`
+        second
+        <span class="text-primary fw-bold">
+            rec
+        </span>
+        ord
+    `);
 });
