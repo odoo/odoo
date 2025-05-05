@@ -2,6 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { rpc } from '@web/core/network/rpc';
 import { renderToElement } from '@web/core/utils/render';
+import { redirect } from "@web/core/utils/urls";
 
 export class CustomerAddress extends Interaction {
     // /my/address & /my/account
@@ -16,6 +17,7 @@ export class CustomerAddress extends Interaction {
         this.http = this.services['http'];
         this.addressForm = this.el.querySelector('form.address_autoformat');
         this.errorsDiv = this.el.querySelector('#errors');
+        this.successDiv = this.el.querySelector('#success');
         this.addressType = this.addressForm['address_type'].value;
         this.countryCode = this.addressForm.dataset.companyCountryCode;
         this.requiredFields = this.addressForm.required_fields.value.split(',');
@@ -135,12 +137,27 @@ export class CustomerAddress extends Interaction {
     async saveAddress(ev) {
         if (!this.addressForm.reportValidity()) return;
 
+        const submitButton = ev.currentTarget;
         const result = await this.waitFor(this.http.post(
             this.addressForm.dataset.submitUrl,
             new FormData(this.addressForm),
         ))
         if (result.redirectUrl) {
-            window.location = result.redirectUrl;
+            let successMessage =  result.successMessage;
+            if (result.redirectUrl == "/my" && successMessage) {
+                // If a success message is shown, do not show errors again — just clean up
+                this.errorsDiv.replaceChildren();
+                document.querySelector(".o_portal_error")?.remove();
+                document.querySelectorAll(".is-invalid").forEach(el => el.classList.remove("is-invalid"));
+
+                const successDiv = document.createElement('div');
+                successDiv.classList.add("alert", "alert-success");
+                successDiv.textContent = successMessage;
+                this.successDiv.replaceChildren(successDiv);
+                this.successDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+            } else {
+                redirect(result.redirectUrl);
+            }
         } else {
             // Highlight missing/invalid form values
             this.el.querySelectorAll('.is-invalid').forEach(element => {
@@ -165,12 +182,13 @@ export class CustomerAddress extends Interaction {
                 errorHeader.appendChild(document.createTextNode(message));
                 return errorHeader;
             });
-            ev.currentTarget.before(
+            submitButton.before(
                 renderToElement('portal.error', {
                     message: "Please fill in the form correctly.",
                 })
             );
 
+            this.successDiv.replaceChildren();
             this.errorsDiv.replaceChildren(...newErrors);
         }
     }

@@ -6,6 +6,10 @@
         <t t-set="additional_title">My addresses</t>
         <t t-call="portal.portal_layout">
             <div class="o_portal_addresses">
+                <!-- === Success banner === -->
+                <div t-if="success" class="alert alert-success">
+                    <t t-esc="success"/>
+                </div>
                 <h5 class="mt-4">Delivery address</h5>
                 <t t-call="portal.address_row">
                     <t t-set="addresses" t-value="delivery_addresses"/>
@@ -393,6 +397,7 @@
                     <div name="address_div" class="oe_clear_stucture col-12 col-lg-8">
                         <div>
                             <div id="errors"/> <!-- for js -->
+                            <div id="success"/>
                             <form
                                 action="/my/address/submit"
                                 method="post"
@@ -428,6 +433,7 @@
                                 <h3 class="mb-3">Delivery address</h3>
                             </t>
                             <div id="errors"/> <!-- for js -->
+                            <div id="success"/>
                             <form
                                 action="/my/address/submit"
                                 method="post"

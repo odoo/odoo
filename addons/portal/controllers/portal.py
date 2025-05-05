@@ -226,6 +226,7 @@ class CustomerPortal(Controller):
             # One unique address
             'use_delivery_as_billing': len(address_data['billing_addresses']) == 1,
             'address_url': '/my/address',
+            'success': _("Details saved successfully.") if query_params.get("success") else "",
         }
         return request.render('portal.my_addresses', values)
 
@@ -516,6 +517,7 @@ class CustomerPortal(Controller):
         # Parse form data into address values, and extract incompatible data as extra form data.
         address_values, extra_form_data = self._parse_form_data(form_data)
 
+        has_changes = False
         if verify_address_values:
             # Validate the address values and highlights the problems in the form, if any.
             invalid_fields, missing_fields, error_messages = self._validate_address_values(
@@ -527,9 +529,12 @@ class CustomerPortal(Controller):
                 **extra_form_data,
             )
             if form_data.get("login_field"):
+                old_login = request.env.user.login
                 # Validate login and highlights the problems in the form, if any.
                 login = extra_form_data.get("login", "").strip()
                 self._validate_login_and_update(login, invalid_fields, missing_fields, error_messages)
+                if not error_messages and old_login != request.env.user.login:
+                    has_changes = True
             if error_messages:
                 return partner_sudo, {
                     'invalid_fields': list(invalid_fields | missing_fields),
@@ -551,15 +556,23 @@ class CustomerPortal(Controller):
             if hasattr(partner_sudo, '_onchange_phone_validation'):
                 # The `phone_validation` module is installed.
                 partner_sudo._onchange_phone_validation()
+            has_changes = True
         elif not self._are_same_addresses(address_values, partner_sudo):
             partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
             if 'phone' in address_values and hasattr(partner_sudo, '_onchange_phone_validation'):
                 # The `phone_validation` module is installed.
                 partner_sudo._onchange_phone_validation()
+            has_changes = True
+
+        if has_changes:
+            success_message = _("Details saved successfully.")
+            if callback == "/my/addresses":
+                callback += "?success=true"
+        else:
+            success_message = ""
 
         self._handle_extra_form_data(extra_form_data, address_values)
-
-        return partner_sudo, {'redirectUrl': callback}
+        return partner_sudo, {'redirectUrl': callback, 'successMessage': success_message}
 
     def _parse_form_data(self, form_data):
         """ Parse the form data and return them converted into address values and extra form data.

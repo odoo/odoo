@@ -24,8 +24,13 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
             run: "click",
         },
         {
-            content: "Check that we are back on the portal",
-            trigger: 'a[href*="/my/account"]:contains("Edit"):first',
-        }
+            content: "Check if the success message is displayed",
+            trigger: 'div.alert.alert-success:contains("Details saved successfully.")',
+        },
+        {
+            content: "Discard the form",
+            trigger: 'a[role=button][href*="/my"], a[role=button][href*="/my/home"]',
+            run: "click",
+        },
     ]
 });
