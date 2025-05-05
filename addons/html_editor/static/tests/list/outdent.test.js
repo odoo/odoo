@@ -5,6 +5,7 @@ import { bold, deleteBackward, keydownShiftTab } from "../_helpers/user_actions"
 import { getContent } from "../_helpers/selection";
 
 describe("Regular list", () => {
+    test.tags("font-dependent");
     test("should remove the list-style when outdent the list", async () => {
         await testEditor({
             contentBefore: unformat(`

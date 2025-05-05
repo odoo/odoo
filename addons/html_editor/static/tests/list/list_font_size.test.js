@@ -8,6 +8,7 @@ import {
 } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 
+test.tags("font-dependent");
 test("should apply font-size to completely selected list item", async () => {
     await testEditor({
         contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
@@ -123,6 +124,7 @@ test("should carry font-size of list item to paragraph (4)", async () => {
     });
 });
 
+test.tags("font-dependent");
 test("should keep list item font-size on toggling list twice", async () => {
     await testEditor({
         contentBefore:
@@ -144,6 +146,7 @@ test("should change font-size of a list item", async () => {
     });
 });
 
+test.tags("font-dependent");
 test("should change font-size of a list item (2)", async () => {
     await testEditor({
         contentBefore:
@@ -182,6 +185,7 @@ test("should pad list based on font-size", async () => {
     });
 });
 
+test.tags("font-dependent");
 test("should pad list based on font-size (2)", async () => {
     await testEditor({
         contentBefore: `<span style="font-size: 56px;">[a]</span>`,

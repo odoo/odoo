@@ -133,6 +133,7 @@ describe("Html Paste cleaning - whitelist", () => {
         });
     });
 
+    test.tags("font-dependent");
     test("should remove b, keep p, and remove unwanted styles when pasting list from gdocs", async () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
@@ -147,6 +148,7 @@ describe("Html Paste cleaning - whitelist", () => {
         });
     });
 
+    test.tags("font-dependent");
     test("should remove unwanted styles and keep tags when pasting list from gdoc", async () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
@@ -2320,6 +2322,7 @@ describe("Special cases", () => {
             });
         });
 
+        test.tags("font-dependent");
         test("should paste checklist from gdoc", async () => {
             await testEditor({
                 contentBefore: "<p>[]<br></p>",
