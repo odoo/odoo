@@ -1,3 +1,24 @@
+@mixin o-field-color-picker {
+    width: auto !important;
+    display: inline-block !important;
+
+    .o_colorlist {
+
+        @include media-breakpoint-up(md) {
+            --ColorListField-columns: #{length($o-colors)};
+        }
+
+        &:where(:has(.o_colorlist_toggler)) {
+            display: flex;
+        }
+
+        [data-color="0"] {
+            --btn-border-color: #{$body-color};
+            --btn-hover-border-color: #{$body-color};
+            --btn-active-border-color: #{$body-color};
+        }
+    }
+}
 .o_field_widget.o_field_color_picker > div {
     // to compensate on the 2px margin used to space the elements relative to each other
     // we keep the top one cause the widget is a bit to high anyway
