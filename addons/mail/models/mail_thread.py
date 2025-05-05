@@ -2137,9 +2137,9 @@ class MailThread(models.AbstractModel):
                 for attachment_tuple in attachment_ids
                 if attachment_tuple[0] == 4
             ])
-            prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
-                                     or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
-                                     or all_attachments.filtered(lambda x: not x.mimetype.endswith('xml'))
+
+            prioritary_attachments = all_attachments.filtered(lambda x: x.is_viewable())
+
             if prioritary_attachments:
                 self.with_context(tracking_disable=True).write({'message_main_attachment_id': prioritary_attachments[0].id})
 
