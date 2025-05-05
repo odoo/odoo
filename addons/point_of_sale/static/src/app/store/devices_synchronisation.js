@@ -174,7 +174,9 @@ export default class DevicesSynchronisation {
             for (const record of serverRecs) {
                 const recordDate = DateTime.fromSQL(record.write_date);
                 const recordDateTime = recordDate.plus({ seconds: 1 });
-                const recordDateTimeString = recordDateTime.toFormat("yyyy-MM-dd HH:mm:ss");
+                const recordDateTimeString = recordDateTime.toFormat("yyyy-MM-dd HH:mm:ss", {
+                    numberingSystem: "latn",
+                });
                 domains.push(
                     new Domain([
                         ["id", "=", record.id],
