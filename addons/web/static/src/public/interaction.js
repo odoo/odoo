@@ -7,8 +7,8 @@ import { makeAsyncHandler, makeButtonHandler } from "./utils";
  * This is the base class to describe interactions. The Interaction class
  * provides a good integration with the web framework (env/services), a well
  * specified lifecycle, some dynamic content, and a few helper functions
- * designed to accomplish common tasks, such as adding dom listener or waiting for
- * some task to complete.
+ * designed to accomplish common tasks, such as adding dom listeners or waiting
+ * for some tasks to complete.
  *
  * Note that even though interactions are not destroyed in the standard workflow
  * (a user visiting the website), there are still some cases where it happens:
@@ -100,7 +100,7 @@ export class Interaction {
 
     /**
      * The constructor is not supposed to be defined in a subclass. Use setup
-     * instead
+     * instead.
      *
      * @param {HTMLElement} el
      * @param {import("@web/env").OdooEnv} env
@@ -139,12 +139,12 @@ export class Interaction {
     /**
      * If the interaction needs some asynchronous work to be ready, it should
      * be done here. The website framework will wait for this method to complete
-     * before applying the dynamic content (event handlers, ...)
+     * before applying the dynamic content (event handlers, ...).
      */
     async willStart() {}
 
     /**
-     * The start function when we need to execute some code after the interaction
+     * The start function when we need to execute some code once the interaction
      * is ready. It is the equivalent to the "mounted" owl lifecycle hook. At
      * this point, event handlers have been attached.
      */
@@ -153,7 +153,7 @@ export class Interaction {
     /**
      * All side effects done should be cleaned up here. Note that like all
      * other lifecycle methods, it is not necessary to call the super.destroy
-     * method (unless you inherit from a concrete subclass)
+     * method (unless you inherit from a concrete subclass).
      */
     destroy() {}
 
@@ -165,17 +165,17 @@ export class Interaction {
      * This method applies the dynamic content description to the dom. So, if
      * a dynamic attribute has been defined with a t-att-, it will be done
      * synchronously by this method. Note that updateContent is already being
-     * called after each event handler, and by most other helpers, so in practice,
-     * it is not common to need to call it.
+     * called after each event handler, and by most other helpers, so this is
+     * not common to need to call it in practice.
      */
     updateContent() {
         this.__colibri__.updateContent();
     }
 
     /**
-     * Wrap a promise into a promise that will only be resolved if the interaction
-     * has not been destroyed, and will also call updateContent after the calling
-     * code has acted.
+     * Wraps a promise into a promise that will only be resolved if the instance
+     * has not been destroyed, and will also call `updateContent` after the
+     * calling code has acted.
      */
     waitFor(promise) {
         const prom = new Promise((resolve, reject) => {
@@ -298,7 +298,8 @@ export class Interaction {
     }
 
     /**
-     * Throttles a function for animation and makes sure it is cancelled upon destroy.
+     * Throttles a function for animation and makes sure it is cancelled upon
+     * destroy.
      */
     throttled(fn) {
         fn = this.__colibri__.protectSyncAfterAsync(this, "throttled", fn);
@@ -325,7 +326,7 @@ export class Interaction {
     }
 
     /**
-     * Make sure the function is not started again before it is completed.
+     * Makes sure the function is not started again before it is completed.
      * If required, add a loading animation on button if the execution takes
      * more than 400ms.
      */
@@ -333,13 +334,12 @@ export class Interaction {
         fn = this.__colibri__.protectSyncAfterAsync(this, "locked", fn);
         if (useLoadingAnimation) {
             return makeButtonHandler(fn);
-        } else {
-            return makeAsyncHandler(fn);
         }
+        return makeAsyncHandler(fn);
     }
 
     /**
-     * Add a listener to the target. Whenever the listener is executed, the
+     * Adds a listener to the target. Whenever the listener is executed, the
      * dynamic content will be applied. Also, the listener will automatically be
      * cleaned up when the interaction is destroyed.
      * Returns a function to remove the listener(s).
@@ -362,7 +362,7 @@ export class Interaction {
     }
 
     /**
-     * Recomputes eventListeners registered through `dynamicContent`.
+     * Recomputes event listeners registered through `dynamicContent`.
      * Interaction listeners are static. If the DOM is updated at some point,
      * you should call `refreshListeners` so that events are:
      * - removed on nodes that don't match the selector anymore
@@ -373,7 +373,7 @@ export class Interaction {
     }
 
     /**
-     * Insert and activate an element at a specific location (default position:
+     * Inserts and activate an element at a specific location (default position:
      * "beforeend").
      * The inserted element will be removed when the interaction is destroyed.
      *
@@ -392,7 +392,7 @@ export class Interaction {
     }
 
     /**
-     * Remove the children of an element.
+     * Removes the children of an element.
      * The children will be inserted back when the interaction is destroyed.
      *
      * @param { HTMLElement } el
@@ -410,7 +410,7 @@ export class Interaction {
     }
 
     /**
-     * Renders, insert and activate an element at a specific location.
+     * Renders, inserts and activates an element at a specific location.
      * The inserted element will be removed when the interaction is destroyed.
      *
      * @param { string } template
@@ -443,8 +443,8 @@ export class Interaction {
     }
 
     /**
-     * Register a function that will be executed when the interaction is
-     * destroyed. It is sometimes useful, so we can explicitely add the cleanup
+     * Registers a function that will be executed when the interaction is
+     * destroyed. It is sometimes useful, so we can explicitly add the cleanup
      * at the location where the side effect is created.
      *
      * @param {Function} fn
