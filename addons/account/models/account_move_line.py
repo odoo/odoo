@@ -2354,6 +2354,7 @@ class AccountMoveLine(models.Model):
                                     This is usefull if you want to preview the reconciliation before doing some changes
                                     on amls like changing a date or an account.
         """
+        self = self.filtered(lambda x: x.balance or x.amount_currency)  # noqa: PLW0642
         if not self:
             return
 
