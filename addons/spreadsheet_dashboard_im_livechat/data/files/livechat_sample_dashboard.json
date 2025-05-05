@@ -76,47 +76,47 @@
         },
         {
           "id": "ced6ca85-c9d2-4804-9100-e1ca5fd290d1",
-          "x": 470,
+          "x": 520,
           "y": 12,
-          "width": 200,
+          "width": 250,
           "height": 102,
           "tag": "chart",
           "data": {
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
+            "baselineMode": "text",
             "title": { "text": "Time to Respond", "bold": true, "color": "#434343" },
             "type": "scorecard",
             "background": "#FEF2F2",
-            "baseline": "Data!E3",
-            "baselineDescr": "sec",
-            "keyValue": "Data!D3",
-            "humanize": false
+            "baseline": "Data!C3",
+            "baselineDescr": "last period",
+            "keyValue": "Data!B3",
+            "humanize": true
           }
         },
         {
           "id": "e0b92164-4451-4c0b-bd28-3bab46fd88de",
           "x": 260,
           "y": 12,
-          "width": 200,
+          "width": 250,
           "height": 102,
           "tag": "chart",
           "data": {
             "baselineColorDown": "#DC6965",
             "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
+            "baselineMode": "text",
             "title": { "text": "Session Duration", "color": "#434343", "bold": true },
             "type": "scorecard",
             "background": "#FEF2F2",
-            "baseline": "Data!E4",
-            "baselineDescr": "min",
-            "keyValue": "Data!D4",
-            "humanize": false
+            "baseline": "Data!C4",
+            "baselineDescr": "last period",
+            "keyValue": "Data!B4",
+            "humanize": true
           }
         },
         {
           "id": "5b8972f1-db5f-48dd-aeca-c0bc87c7155d",
-          "x": 680,
+          "x": 780,
           "y": 12,
           "width": 200,
           "height": 102,
@@ -237,16 +237,12 @@
         "C13": "=RANDBETWEEN(10,100)",
         "D1": "=_t(\"Current\")",
         "D2": "=FORMAT.LARGE.NUMBER(B2)",
-        "D3": "=CONCATENATE(ROUND(B3),\" sec\")",
-        "D4": "=CONCATENATE(ROUND(B4),\" min\")",
         "D5": "=B5",
         "E1": "=_t(\"Previous\")",
-        "E2": "=FORMAT.LARGE.NUMBER(C2)",
-        "E3": "13",
-        "E4": "56"
+        "E2": "=FORMAT.LARGE.NUMBER(C2)"
       },
       "styles": { "A1:E1": 4, "D2:D5": 5, "E2:E4": 5 },
-      "formats": { "B5": 1, "B2:C2": 1, "B3:B4": 2, "C3": 2, "E3:E4": 3 },
+      "formats": { "B3:C3": 2, "B4:C4": 3 },
       "borders": {},
       "conditionalFormats": [],
       "dataValidationRules": [],
@@ -273,7 +269,7 @@
     "4": { "bold": true },
     "5": { "fillColor": "#f2f2f2" }
   },
-  "formats": { "1": "0", "2": "#,##0.00", "3": "#,##0" },
+  "formats": { "1": "0[$]", "2": "0 \"sec\"", "3": "0 \"min\"" },
   "borders": {
     "1": {
       "bottom": { "style": "thin", "color": "#CCCCCC" }
