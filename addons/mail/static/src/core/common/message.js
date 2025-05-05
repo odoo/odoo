@@ -335,7 +335,12 @@ export class Message extends Component {
     }
 
     get isPersistentMessageFromAnotherThread() {
-        return !this.isOriginThread && !this.message.is_transient && this.message.thread;
+        return (
+            !this.isOriginThread &&
+            !this.message.is_transient &&
+            !this.message.isPending &&
+            this.message.thread
+        );
     }
 
     get isOriginThread() {
