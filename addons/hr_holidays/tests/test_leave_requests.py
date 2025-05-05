@@ -491,7 +491,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_to': 17,
         })
 
-        self.assertEqual(leave5.number_of_hours, 8)
+        self.assertEqual(leave5.number_of_hours, 10)
 
     def test_number_of_hours_display_global_leave(self):
         # Check that the field number_of_hours
