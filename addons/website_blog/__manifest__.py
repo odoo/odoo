@@ -40,9 +40,6 @@
             'website_blog/static/src/js/tours/website_blog.js',
             'website_blog/static/src/js/systray_items/*.js',
         ],
-        'html_builder.assets': [
-            'website_blog/static/src/plugins/**/*',
-        ],
         'website.backend_assets_all_wysiwyg': [
             'website_blog/static/src/js/wysiwyg_adapter.js',
         ],
