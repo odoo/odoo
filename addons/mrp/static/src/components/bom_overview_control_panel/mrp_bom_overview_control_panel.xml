@@ -39,7 +39,7 @@
                                 <label class="visually-hidden" for="bom_quantity"/>
                                 <div t-attf-class="input-group align-items-center">
                                     <div class="col-4 col-md-auto px-2 fw-bold">Quantity</div>
-                                    <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="props.bomQuantity" min="1" size="7" class="o_input form-control rounded-0"/>
+                                    <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="props.bomQuantity" min="1" size="7" class="o_input form-control rounded-0" t-ref="quantity"/>
                                     <div t-if="props.showOptions.uom" t-out="props.uomName" class="d-flex align-items-center text-muted small lh-sm"/>
                                 </div>
                             </form>
@@ -52,7 +52,7 @@
                     <t t-if="props.warehouses.length > 1" class="btn-group flex-grow-1 flex-md-grow-0">
                         <Dropdown items="warehousesItems">
                             <button class="btn btn-secondary o-dropdown-caret">
-                                <span class="fa fa-home"/> Warehouse
+                                <span class="fa fa-home"/> Warehouse: <t t-out="props.currentWarehouse.name"/>
                             </button>
                         </Dropdown>
                     </t>

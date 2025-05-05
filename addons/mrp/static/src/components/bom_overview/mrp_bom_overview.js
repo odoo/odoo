@@ -25,7 +25,7 @@ export class BomOverviewComponent extends Component {
 
         this.state = useState({
             showOptions: {
-                mode: 'overview',
+                mode: this.props.action.context.mode || 'overview',
                 uom: false,
                 attachments: false,
             },

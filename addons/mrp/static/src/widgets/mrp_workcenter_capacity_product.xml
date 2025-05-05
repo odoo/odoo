@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+ <!-- t-inherit-mode="primary" -->
+
+     <t t-name="mrp.WorkcenterCapacityProductField">
+        <WorkcenterCapacityProduct t-props="m2oProps"/>
+    </t>
+
+    <t t-name="mrp.WorkcenterCapacityProduct" t-inherit="web.Many2One">
+        <xpath expr="//t[@t-if='props.value']" position="after">
+            <t t-else="">
+                <span t-esc="props.placeholder"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
