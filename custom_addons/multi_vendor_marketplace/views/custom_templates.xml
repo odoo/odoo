@@ -169,7 +169,7 @@
             <nav class="o_mobile_bottom_nav d-lg-none" style="z-index: 1000;">
                 <a href="/shop" class="nav-item">
                     <i class="fa fa-home"/>
-                    <span>Hpme</span>
+                    <span>Home</span>
                 </a>
                 <a href="/shop/cart" class="nav-item">
                     <i class="fa fa-shopping-cart"/>
@@ -348,46 +348,37 @@
                 <div class="container pb-5">
                     <!-- Product Images Carousel -->
                     <div class="product-images-container position-relative mb-3">
-                        <div id="productImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div id="productImageCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="0">
                             <div class="carousel-inner">
-                                <t t-set="first_image" t-value="true"/>
-                                <!-- Main Product Image -->
-                                <div t-attf-class="carousel-item#{' active' if first_image else ''}" t-if="product.image_1920">
+                                <!-- Главная картинка -->
+                                <div class="carousel-item active" t-if="product.image_1920">
                                     <img t-att-src="image_data_uri(product.image_1920)" class="d-block w-100" t-att-alt="product.name"/>
                                 </div>
-                                <t t-set="first_image" t-value="false" t-if="product.image_1920"/>
-                                
-                                <!-- Additional Product Images -->
+                                <!-- Остальные картинки, кроме главной -->
+                                <t t-set="slide_index" t-value="1"/>
                                 <t t-foreach="product.product_template_image_ids" t-as="image">
-                                    <div t-attf-class="carousel-item#{' active' if first_image and image_index == 0 else ''}">
-                                        <img t-att-src="image_data_uri(image.image_1920)" class="d-block w-100" t-att-alt="product.name"/>
-                                    </div>
-                                    <t t-set="first_image" t-value="false" t-if="image_index == 0"/>
+                                    <t t-if="not image.image_1920 == product.image_1920">
+                                        <div class="carousel-item">
+                                            <img t-att-src="image_data_uri(image.image_1920)" class="d-block w-100" t-att-alt="product.name"/>
+                                        </div>
+                                        <t t-set="slide_index" t-value="slide_index + 1"/>
+                                    </t>
                                 </t>
                             </div>
 
                             <!-- Image Indicators -->
                             <div class="carousel-indicators position-relative mt-2">
-                                <t t-set="indicator_index" t-value="0"/>
-                                <!-- Main Image Indicator -->
-                                <button t-if="product.image_1920" 
-                                        type="button" 
-                                        data-bs-target="#productImageCarousel" 
-                                        t-att-data-bs-slide-to="indicator_index" 
-                                        t-attf-class="active">
+                                <button type="button" data-bs-target="#productImageCarousel" data-bs-slide-to="0" class="active">
                                     <img t-att-src="image_data_uri(product.image_1920)" class="d-block w-100" style="height: 60px; object-fit: cover;"/>
                                 </button>
-                                <t t-set="indicator_index" t-value="indicator_index + 1" t-if="product.image_1920"/>
-                                
-                                <!-- Additional Images Indicators -->
+                                <t t-set="indicator_index" t-value="1"/>
                                 <t t-foreach="product.product_template_image_ids" t-as="image">
-                                    <button type="button" 
-                                            data-bs-target="#productImageCarousel" 
-                                            t-att-data-bs-slide-to="indicator_index" 
-                                            t-attf-class="#{'active' if not product.image_1920 and image_index == 0 else ''}">
-                                        <img t-att-src="image_data_uri(image.image_1920)" class="d-block w-100" style="height: 60px; object-fit: cover;"/>
-                                    </button>
-                                    <t t-set="indicator_index" t-value="indicator_index + 1"/>
+                                    <t t-if="not image.image_1920 == product.image_1920">
+                                        <button type="button" data-bs-target="#productImageCarousel" t-att-data-bs-slide-to="indicator_index">
+                                            <img t-att-src="image_data_uri(image.image_1920)" class="d-block w-100" style="height: 60px; object-fit: cover;"/>
+                                        </button>
+                                        <t t-set="indicator_index" t-value="indicator_index + 1"/>
+                                    </t>
                                 </t>
                             </div>
                         </div>
@@ -404,17 +395,6 @@
                             </h2>
                         </div>
 
-                        <!-- Free Shipping Badge -->
-                        <div class="shipping-info">
-                            <i class="fa fa-truck"></i>
-                            <span>Free Shipping within 24 hours</span>
-                        </div>
-
-                        <!-- Variants Selection -->
-                        <div class="variants-container mt-3" t-if="product.attribute_line_ids">
-                            <t t-call="website_sale.variants"/>
-                        </div>
-
                         <!-- Product Description -->
                         <div class="product-description mt-3">
                             <p t-field="product.description_sale" class="text-muted"/>
@@ -423,7 +403,9 @@
                         <!-- Seller Info -->
                         <div class="seller-info mt-4" t-if="product.seller_id">
                             <div class="d-flex align-items-center mb-3">
-                                <img t-if="product.seller_id.image_1920" t-att-src="image_data_uri(product.seller_id.image_1920)" class="rounded-circle" style="width: 40px; height: 40px;" alt="Seller"/>
+                                <a t-if="product.seller_id.image_1920" t-att-href="'/shop/seller/%s' % (product.seller_id.id)" style="display:inline-block;">
+                                    <img t-att-src="image_data_uri(product.seller_id.image_1920)" class="rounded-circle" style="width: 40px; height: 40px;" alt="Seller"/>
+                                </a>
                                 <div class="ms-2">
                                     <h5 class="mb-0" t-field="product.seller_id.name"/>
                                     <p class="text-muted mb-0" t-field="product.seller_id.company_name"/>

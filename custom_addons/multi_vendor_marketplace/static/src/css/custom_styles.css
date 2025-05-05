@@ -643,8 +643,20 @@ li.o_wsale_my_cart {
 }
 
 @media (max-width: 768px) {
+    .product-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 16px;
+    }
     .product-gallery-img {
+        width: 100%;
         max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        object-fit: contain;
+        background: #f8f8f8;
+        display: block;
     }
 }
 

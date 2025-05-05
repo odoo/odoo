@@ -47,6 +47,17 @@
                             </a>
                         </div>
                     </div>
+                    <!-- MOBILE PRODUCT GALLERY: only visible on mobile -->
+                    <div class="product-gallery d-block d-md-none mt-3">
+                        <t t-if="product.product_template_image_ids">
+                            <t t-foreach="product.product_template_image_ids" t-as="img">
+                                <img t-att-src="image_data_uri(img.image_1920)" class="product-gallery-img mb-3" alt="Product image"/>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <div class="text-center text-muted">No additional product images</div>
+                        </t>
+                    </div>
                 </t>
                 
                 <!-- Breadcrumb section -->
@@ -160,14 +171,16 @@
                                     <div class="action-buttons d-flex mb-3" style="padding: 0; background: none; border-radius: 12px; overflow: hidden; width: 100%;">
                                         <div id="o_wsale_cta_wrapper" class="d-flex w-100" style="width: 100%;">
                                             <!-- Add to Cart Button (левая) -->
-                                            <button type="submit" id="add_to_cart" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center js_check_product a-submit" 
-                                                style="background: #089454; color: #fff; border: none; border-radius: 12px 0 0 12px; font-weight: 600; font-size: 1.1em; height: 48px;">
+                                            <button type="button" id="add_to_cart" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center js_check_product a-submit" 
+                                                style="background: #089454; color: #fff; border: none; border-radius: 12px 0 0 12px; font-weight: 600; font-size: 1.1em; height: 48px;"
+                                                data-bs-toggle="modal" data-bs-target="#productOptionsModal" data-action="add_to_cart">
                                                 <i class="fa fa-shopping-cart me-2"></i>
                                                 <span>Add to Cart</span>
                                             </button>
                                             <!-- Buy Now Button (правая) -->
                                             <button type="button" id="buy_now" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center o_we_buy_now" 
-                                                style="background: #089454; color: #fff; border: none; border-radius: 0 12px 12px 0; font-weight: 600; font-size: 1.1em; height: 48px;">
+                                                style="background: #089454; color: #fff; border: none; border-radius: 0 12px 12px 0; font-weight: 600; font-size: 1.1em; height: 48px;"
+                                                data-bs-toggle="modal" data-bs-target="#productOptionsModal" data-action="buy_now">
                                                 <i class="fa fa-bolt me-2"></i>
                                                 <span>Buy Now</span>
                                             </button>
