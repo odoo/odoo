@@ -8,15 +8,15 @@ import { parseTime } from "@web/core/l10n/time";
 import { _t } from "@web/core/l10n/translation";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
 import {
-    Couple,
-    Expression,
     condition,
+    Couple,
     createVirtualOperators,
+    Expression,
     isTree,
     normalizeValue,
     splitPath,
 } from "@web/core/tree_editor/condition_tree";
-import { get_OPTIONS_WITH_SELECT } from "@web/core/tree_editor/tree_editor_datetime_options";
+import { OPTIONS } from "@web/core/tree_editor/tree_editor_datetime_options";
 import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { unique, zip } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
@@ -30,6 +30,14 @@ import { Within } from "./tree_editor_components";
  * @returns
  */
 function formatValue(val, disambiguate, fieldDef, displayNames) {
+    if (fieldDef?.type === "date_option" && fieldDef.name in OPTIONS && typeof val !== "string") {
+        const options = OPTIONS[fieldDef.name];
+        const valToCompare = val instanceof Expression ? val._expr : val;
+        const [, label] = (options || []).find(([v]) => v === valToCompare) || [];
+        if (label !== undefined) {
+            val = label;
+        }
+    }
     if (val instanceof Expression) {
         return val.toString();
     }
@@ -46,25 +54,18 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
             val = label;
         }
     }
-    if (["datetime_option", "date_option", "time_option"].includes(fieldDef?.type)) {
-        if (fieldDef.name in get_OPTIONS_WITH_SELECT()) {
-            const { options } = get_OPTIONS_WITH_SELECT()[fieldDef.name];
-            const [, label] = (options || []).find(([v]) => v === val) || [];
-            if (label !== undefined) {
-                val = label;
-            }
-        } else if (fieldDef.name === "__time" && typeof val === "string") {
-            return parseTime(val, true).toString(true);
-        } else if (fieldDef.name === "__date" && typeof val === "string") {
-            return formatDate(deserializeDate(val));
-        }
-    }
     if (typeof val === "string") {
         if (fieldDef?.type === "datetime") {
             return formatDateTime(deserializeDateTime(val));
         }
-        if (fieldDef?.type === "date") {
+        if (
+            fieldDef?.type === "date" ||
+            (fieldDef?.type === "datetime_option" && fieldDef.name === "__date")
+        ) {
             return formatDate(deserializeDate(val));
+        }
+        if (fieldDef?.type === "datetime_option" && fieldDef.name === "__time") {
+            return parseTime(val, true).toString(true);
         }
     }
     if (disambiguate && typeof val === "string") {

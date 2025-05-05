@@ -27,8 +27,8 @@ import {
 } from "@web/core/tree_editor/tree_editor_autocomplete";
 import { Input, List, Range, Select, Within } from "@web/core/tree_editor/tree_editor_components";
 import {
-    get_OPTIONS_WITH_INPUT,
-    get_OPTIONS_WITH_SELECT,
+    OPTIONS_WITH_INPUT,
+    OPTIONS_WITH_SELECT,
 } from "@web/core/tree_editor/tree_editor_datetime_options";
 import { disambiguate, getResModel, isId } from "@web/core/tree_editor/utils";
 import { unique } from "@web/core/utils/arrays";
@@ -363,10 +363,8 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "date_option":
         case "datetime_option":
         case "time_option": {
-            if (fieldDef.name in get_OPTIONS_WITH_SELECT()) {
-                const { options, defaultValue, isSupported } =
-                    get_OPTIONS_WITH_SELECT()[fieldDef.name];
-                return { ...makeSelectEditor(options, params), defaultValue, isSupported };
+            if (fieldDef.name in OPTIONS_WITH_SELECT) {
+                return OPTIONS_WITH_SELECT[fieldDef.name];
             } else if (fieldDef.name === "__time") {
                 return {
                     component: TimePicker,
@@ -393,7 +391,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             } else if (fieldDef.name === "__date") {
                 return getValueEditorInfo({ type: "date" }, operator, params);
             }
-            const { defaultValue, isSupported } = get_OPTIONS_WITH_INPUT()[fieldDef.name];
+            const { defaultValue, isSupported } = OPTIONS_WITH_INPUT[fieldDef.name];
             return {
                 ...getValueEditorInfo({ type: "integer" }, operator, params),
                 defaultValue,
