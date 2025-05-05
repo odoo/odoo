@@ -62,7 +62,8 @@
         ],
         'html_builder.iframe_add_dialog': [
             ('include', 'web.assets_frontend'),
-            'html_builder/static/src/snippets/snippet_viewer.scss'
+            'html_builder/static/src/snippets/snippet_viewer.scss',
+            'website/static/src/snippets/**/*.edit.scss',
         ],
         'web.assets_unit_tests': [
             'html_builder/static/tests/**/*',
