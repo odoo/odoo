@@ -78,5 +78,7 @@ export class AddSnippetDialog extends Component {
 
     selectGroup(snippetGroup) {
         this.state.groupSelected = snippetGroup.groupName;
+        const iframeDocument = this.iframeRef.el.contentDocument;
+        iframeDocument.body.scrollTop = 0;
     }
 }
