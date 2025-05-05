@@ -50,8 +50,9 @@ export class WebsiteSystrayItem extends Component {
 
     get canEdit() {
         return (
-            this.website.currentWebsite.metadata.editable ||
-            this.website.currentWebsite.metadata.translatable
+            this.website.currentWebsite &&
+            (this.website.currentWebsite.metadata.editable ||
+                this.website.currentWebsite.metadata.translatable)
         );
     }
 
