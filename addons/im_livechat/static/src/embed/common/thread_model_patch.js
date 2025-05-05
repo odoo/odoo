@@ -158,7 +158,7 @@ patch(Thread.prototype, {
             this.chatbot?.isProcessingAnswer ||
             (step &&
                 !step.operatorFound &&
-                (step.completed || !step.expectAnswer || step.answers.length > 0))
+                (step.completed || !step.expectAnswer || step.answer_ids.length > 0))
         );
     },
 
