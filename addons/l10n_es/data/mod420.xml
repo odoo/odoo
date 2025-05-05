@@ -3,6 +3,7 @@
     <data auto_sequence="1">
         <record id="mod_420" model="account.report">
             <field name="name">Tax Report (Mod 420) Canary Islands</field>
+            <field name="name@es">Informe de impuestos Canarias (Mod 420)</field>
             <field name="sequence">420</field>
             <field name="filter_analytic" eval="False"/>
             <field name="filter_date_range" eval="True"/>
@@ -15,21 +16,25 @@
             <field name="column_ids">
                 <record id="mod_420_column_base" model="account.report.column">
                     <field name="name">Base</field>
+                    <field name="name@es">Base</field>
                     <field name="expression_label">base</field>
                 </record>
                 <record id="mod_420_column_tax_amount" model="account.report.column">
                     <field name="name">Tax Amount</field>
+                    <field name="name@es">Cuota</field>
                     <field name="expression_label">tax</field>
                 </record>
             </field>
             <field name="line_ids">
                 <record id="mod_420_igic_due" model="account.report.line">
                     <field name="name">IGIC Due</field>
+                    <field name="name@es">IGIC devengado</field>
                     <field name="code">atc_mod_420_igic_due</field>
                     <field name="hierarchy_level">0</field>
                     <field name="children_ids">
                         <record id="mod_420_casilla_1_3" model="account.report.line">
                             <field name="name">[1] 0%</field>
+                            <field name="name@es">[1] 0 %</field>
                             <field name="code">atc_mod_420_1_3</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -43,6 +48,7 @@
                         </record>
                         <record id="mod_420_casilla_4_6" model="account.report.line">
                             <field name="name">[4]-[6] 3%/5%</field>
+                            <field name="name@es">[4]-[6] 3 % / 5 %</field>
                             <field name="code">atc_mod_420_4_6</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -61,6 +67,7 @@
                         </record>
                         <record id="mod_420_casilla_7_9" model="account.report.line">
                             <field name="name">[7]-[9] 7%</field>
+                            <field name="name@es">[7]-[9] 7 %</field>
                             <field name="code">atc_mod_420_7_9</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -79,6 +86,7 @@
                         </record>
                         <record id="mod_420_casilla_10_12" model="account.report.line">
                             <field name="name">[10]-[12] 9.5%</field>
+                            <field name="name@es">[10]-[12] 9,5 %</field>
                             <field name="code">atc_mod_420_10_12</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -97,6 +105,7 @@
                         </record>
                         <record id="mod_420_casilla_13_15" model="account.report.line">
                             <field name="name">[13]-[15] 15%</field>
+                            <field name="name@es">[13]-[15] 15 %</field>
                             <field name="code">atc_mod_420_13_15</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -115,6 +124,7 @@
                         </record>
                         <record id="mod_420_casilla_16_18" model="account.report.line">
                             <field name="name">[16]-[18] 20%</field>
+                            <field name="name@es">[16]-[18] 20 %</field>
                             <field name="code">atc_mod_420_16_18</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -133,6 +143,7 @@
                         </record>
                         <record id="mod_420_casilla_isp" model="account.report.line">
                             <field name="name">[19]-[20] ISP</field>
+                            <field name="name@es">[19]-[20] ISP</field>
                             <field name="code">atc_mod_420_isp</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -151,6 +162,7 @@
                         </record>
                         <record id="mod_420_casilla_mod_21_22" model="account.report.line">
                             <field name="name">[21]-[22] Corrections</field>
+                            <field name="name@es">[21]-[22] Modificación de bases y cuotas</field>
                             <field name="code">atc_mod_420_modif</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -169,6 +181,7 @@
                         </record>
                         <record id="mod_420_casilla_mod_23_24" model="account.report.line">
                             <field name="name">[23]-[24] REAV Returned amounts</field>
+                            <field name="name@es">[23]-[24] Cuotas devueltas en régimen de viajeros</field>
                             <field name="code">atc_mod_420_reav</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -187,6 +200,7 @@
                         </record>
                         <record id="mod_420_casilla_total_25" model="account.report.line">
                             <field name="name">[25] Total Due</field>
+                            <field name="name@es">[25] Total cuotas devengadas</field>
                             <field name="code">atc_mod_420_total_25</field>
                             <field name="expression_ids">
                                 <record id="mod_420_casilla_25" model="account.report.expression">
@@ -202,11 +216,13 @@
                 </record>
                 <record id="mod_420_title_igic_deductible" model="account.report.line">
                     <field name="name">IGIC Deductible</field>
+                    <field name="name@es">IGIC deducible</field>
                     <field name="code">atc_mod_420_igic_deductible</field>
                     <field name="hierarchy_level">0</field>
                     <field name="children_ids">
                         <record id="mod_420_casilla_igic_deductible" model="account.report.line">
                             <field name="name">[26]-[27] Internal Operations</field>
+                            <field name="name@es">[26]-[27] Operaciones interiores bienes y servicios corrientes</field>
                             <field name="code">atc_mod_420_deduc</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -225,6 +241,7 @@
                         </record>
                         <record id="mod_420_casilla_igic_deductible_inv" model="account.report.line">
                             <field name="name">[28]-[29] Internal Operations Investment Goods</field>
+                            <field name="name@es">[28]-[29] Operaciones interiores bienes de inversión</field>
                             <field name="code">atc_mod_420_deduc_inv</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -243,6 +260,7 @@
                         </record>
                         <record id="mod_420_casilla_igic_deductible_imp" model="account.report.line">
                             <field name="name">[30]-[31] Imports</field>
+                            <field name="name@es">[30]-[31] Importaciones de bienes corrientes</field>
                             <field name="code">atc_mod_420_deduc_imp</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -261,6 +279,7 @@
                         </record>
                         <record id="mod_420_casilla_igic_deductible_imp_inv" model="account.report.line">
                             <field name="name">[32]-[33] Imports of Investment Goods</field>
+                            <field name="name@es">[32]-[33] Importaciones de bienes de inversión</field>
                             <field name="code">atc_mod_420_deduc_imp_inv</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -279,6 +298,7 @@
                         </record>
                         <record id="mod_420_casilla_deduc_modif" model="account.report.line">
                             <field name="name">[34]-[35] Rectification of Deductions</field>
+                            <field name="name@es">[34]-[35] Rectificación de deducciones</field>
                             <field name="code">atc_mod_420_deduc_modif</field>
                             <field name="groupby">account_id</field>
                             <field name="foldable" eval="True"/>
@@ -297,6 +317,7 @@
                         </record>
                         <record id="mod_420_casilla_comp_agri" model="account.report.line">
                             <field name="name">[36] Agricultural Compensation Regime</field>
+                            <field name="name@es">[36] Compensación régimen especial de agricultura, ganadería y pesca</field>
                             <field name="code">atc_mod_420_agri_comp</field>
                             <field name="expression_ids">
                                 <record id="mod_420_casilla_36" model="account.report.expression">
@@ -309,6 +330,7 @@
                         </record>
                         <record id="mod_420_casilla_comp_reg_inv" model="account.report.line">
                             <field name="name">[37] Regularization for Investment Goods</field>
+                            <field name="name@es">[37] Regularización de cuotas soportadas por bienes de inversión</field>
                             <field name="code">atc_mod_420_reg_inv</field>
                             <field name="expression_ids">
                                 <record id="mod_420_casilla_37" model="account.report.expression">
@@ -321,6 +343,7 @@
                         </record>
                         <record id="mod_420_casilla_comp_reg_start" model="account.report.line">
                             <field name="name">[38] Regularization before the Start of the Activity</field>
+                            <field name="name@es">[38] Regularización de cuotas soportadas antes del inicio de la actividad</field>
                             <field name="code">atc_mod_420_reg_start</field>
                             <field name="expression_ids">
                                 <record id="mod_420_casilla_38" model="account.report.expression">
@@ -333,6 +356,7 @@
                         </record>
                         <record id="mod_420_casilla_comp_reg_def" model="account.report.line">
                             <field name="name">[39] Regularization for applying the definitive prorata percentage</field>
+                            <field name="name@es">[39] Regularización por aplicación del porcentaje definitivo de prorrata</field>
                             <field name="code">atc_mod_420_reg_def</field>
                             <field name="expression_ids">
                                 <record id="mod_420_casilla_39" model="account.report.expression">
@@ -345,6 +369,7 @@
                         </record>
                         <record id="mod_420_casilla_total" model="account.report.line">
                             <field name="name">[40] Total Deductible</field>
+                            <field name="name@es">[40] Total cuotas deducibles</field>
                             <field name="code">atc_mod_420_deduc_total</field>
                             <field name="expression_ids">
                                 <record id="mod_420_casilla_40" model="account.report.expression">
@@ -358,6 +383,7 @@
                         </record>
                         <record id="mod_420_casilla_diff" model="account.report.line">
                             <field name="name">[41] Difference</field>
+                            <field name="name@es">[41] Diferencia</field>
                             <field name="code">atc_mod_420_diff</field>
                             <field name="expression_ids">
                                 <record id="mod_420_casilla_41" model="account.report.expression">
@@ -369,6 +395,7 @@
                         </record>
                         <record id="mod_420_casilla_reg_art" model="account.report.line">
                             <field name="name">[42] Regularization art. 22.8.5</field>
+                            <field name="name@es">[42] Regularización cuotas artículo 22.8.5ª Ley 20/1991</field>
                             <field name="code">atc_mod_420_reg_art</field>
                             <field name="expression_ids">
                                 <record id="mod_420_casilla_42" model="account.report.expression">
@@ -381,6 +408,7 @@
                         </record>
                         <record id="mod_420_casilla_igic_comp" model="account.report.line">
                             <field name="name">[43] IGIC to compensate from previous periods</field>
+                            <field name="name@es">[43] Cuotas de I.G.I.C. a compensar de períodos anteriores</field>
                             <field name="code">atc_mod_420_igic_comp</field>
                             <field name="expression_ids">
                                 <record id="mod_420_casilla_43" model="account.report.expression">
@@ -393,6 +421,7 @@
                         </record>
                         <record id="mod_420_casilla_to_deduct" model="account.report.line">
                             <field name="name">[44] To Deduct (only in complementary self-liquidation case)</field>
+                            <field name="name@es">[44] A deducir (exclusivamente en caso de autoliquidación complementaria)</field>
                             <field name="code">atc_mod_420_to_deduct_compl</field>
                             <field name="expression_ids">
                                 <record id="mod_420_casilla_44" model="account.report.expression">
@@ -405,6 +434,7 @@
                         </record>
                         <record id="mod_420_casilla_result" model="account.report.line">
                             <field name="name">[45] Result of the Self-liquidation</field>
+                            <field name="name@es">[45] Resultado de la autoliquidación</field>
                             <field name="code">atc_mod_420_result</field>
                             <field name="expression_ids">
                                 <record id="mod_420_casilla_45" model="account.report.expression">
