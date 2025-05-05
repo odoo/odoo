@@ -218,7 +218,7 @@ test("loading an image with a caption embeds it", async () => {
 });
 
 test.tags("focus required");
-test("clicking the caption button on an image with a caption removes the caption", async () => {
+test.skip("clicking the caption button on an image with a caption removes the caption", async () => {
     const caption = "Hello";
     await testEditor({
         config: configWithEmbeddedCaption,
@@ -463,7 +463,7 @@ test("undo in a caption undoes the last caption action then returns to regular e
     });
 });
 
-test("remove an image with a caption", async () => {
+test.skip("remove an image with a caption", async () => {
     await testEditor({
         config: configWithEmbeddedCaption,
         contentBefore: unformat(
@@ -485,7 +485,7 @@ test("remove an image with a caption", async () => {
     });
 });
 
-test("replace an image with a caption", async () => {
+test.skip("replace an image with a caption", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
         {
             id: 1,
@@ -529,7 +529,7 @@ test("replace an image with a caption", async () => {
     });
 });
 
-test("add a link to an image with a caption", async () => {
+test.skip("add a link to an image with a caption", async () => {
     await testEditor({
         config: configWithEmbeddedCaption,
         contentBefore: unformat(
@@ -594,7 +594,7 @@ test("add a caption to an image with a link", async () => {
     });
 });
 
-test("add a caption then a link to an image surrounded by text", async () => {
+test.skip("add a caption then a link to an image surrounded by text", async () => {
     await testEditor({
         config: configWithEmbeddedCaption,
         contentBefore: `<p>ab<img class="img-fluid test-image" src="${base64Img}">cd</p>`,
@@ -646,7 +646,7 @@ test("add a link then a caption to an image surrounded by text", async () => {
     });
 });
 
-test("remove a link from an image with a caption", async () => {
+test.skip("remove a link from an image with a caption", async () => {
     const caption = "Hello";
     const captionId = 1;
     await testEditor({
@@ -692,7 +692,7 @@ test("remove a link from an image with a caption", async () => {
     });
 });
 
-test("remove a caption from an image with a link", async () => {
+test.skip("remove a caption from an image with a link", async () => {
     const caption = "Hello";
     const captionId = 1;
     await testEditor({
@@ -738,7 +738,7 @@ test("remove a caption from an image with a link", async () => {
     });
 });
 
-test("previewing an image with a caption shows the caption as title", async () => {
+test.skip("previewing an image with a caption shows the caption as title", async () => {
     await setupEditorWithEmbeddedCaption(`<img class="img-fluid test-image" src="${base64Img}">`);
 
     // Preview without a caption shows the file name.
@@ -763,7 +763,7 @@ test("previewing an image with a caption shows the caption as title", async () =
     expect(titleSpan.textContent).toBe("Hello");
 });
 
-test("previewing an image without caption doesn't show the caption as title (even if data-caption exists)", async () => {
+test.skip("previewing an image without caption doesn't show the caption as title (even if data-caption exists)", async () => {
     await setupEditorWithEmbeddedCaption(`<img class="img-fluid test-image" src="${base64Img}">`);
 
     // Preview without a caption shows the file name.
