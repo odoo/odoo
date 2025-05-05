@@ -120,7 +120,7 @@ export class WebsiteBuilder extends Component {
             iframeLoaded: this.iframeLoaded,
             isMobile: this.websiteContext.isMobile,
             Plugins: WebsitePlugins,
-            config: { initialTarget: this.target },
+            config: { initialTarget: this.target, initialTab: this.initialTab },
         };
     }
 
@@ -285,6 +285,9 @@ export class WebsiteBuilder extends Component {
     }
 
     async reloadEditor(param) {
+        if (param.selectedTab) {
+            this.initialTab = param.selectedTab;
+        }
         this.target = param.target || null;
         await this.reloadIframe(this.state.isEditing, param.url);
         // trigger an new instance of the builder menu

@@ -60,7 +60,7 @@ export class BuilderFontFamilyPicker extends Component {
         return result;
     }
     async onAddFontClick() {
-        await this.env.editor.shared.websiteFont.addFont();
+        await this.env.editor.shared.websiteFont.addFont(this.props.actionParam);
     }
     async onDeleteFontClick(font) {
         const save = await new Promise((resolve) => {

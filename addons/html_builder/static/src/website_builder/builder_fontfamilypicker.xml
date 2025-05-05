@@ -11,7 +11,7 @@
                         <i t-if="font.type === 'cloud'" role="button" class="text-info me-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"></i>
                         <t t-out="font.string"/>
                     </span>
-                    <div class="text-end">
+                    <div class="text-end o_select_item_only">
                         <t t-if="font.indexForType >= 0">
                             <t t-set="delete_font_title">Delete this font</t>
                             <i role="button"

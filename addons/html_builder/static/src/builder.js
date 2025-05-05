@@ -48,7 +48,8 @@ export class Builder extends Component {
         this.state = useState({
             canUndo: false,
             canRedo: false,
-            activeTab: this.props.isTranslation ? "customize" : "blocks",
+            activeTab:
+                this.props.config.initialTab || (this.props.isTranslation ? "customize" : "blocks"),
             currentOptionsContainers: undefined,
             invisibleEls: [],
         });
@@ -64,7 +65,13 @@ export class Builder extends Component {
 
         const mainPlugins = removePlugins(
             [...MAIN_PLUGINS],
-            ["PowerButtonsPlugin", "DoubleClickImagePreviewPlugin", "SeparatorPlugin", "StarPlugin", "BannerPlugin"]
+            [
+                "PowerButtonsPlugin",
+                "DoubleClickImagePreviewPlugin",
+                "SeparatorPlugin",
+                "StarPlugin",
+                "BannerPlugin",
+            ]
         );
         const Plugins = [...mainPlugins, ...CORE_PLUGINS, ...(this.props.Plugins || [])];
         // TODO: maybe do a different config for the translate mode and the

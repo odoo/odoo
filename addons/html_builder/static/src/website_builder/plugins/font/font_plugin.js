@@ -36,9 +36,15 @@ class FontPlugin extends Plugin {
         super.destroy();
         this.fontsCache.invalidate();
     }
-    async addFont() {
+    async addFont(variable) {
         const fontsData = await this.getFontsData();
-        showAddFontDialog(this.services.dialog, fontsData, this.customizeFonts.bind(this));
+        showAddFontDialog(
+            this.services.dialog,
+            fontsData,
+            variable,
+            this.customizeFonts.bind(this),
+            this.config.reloadEditor
+        );
     }
     async customizeFonts({ values = {}, googleFonts, googleLocalFonts, uploadedLocalFonts }) {
         if (googleFonts.length) {
@@ -104,6 +110,9 @@ class FontPlugin extends Plugin {
             googleFonts: googleFonts,
             googleLocalFonts: googleLocalFonts,
             uploadedLocalFonts: uploadedLocalFonts,
+        });
+        this.config.reloadEditor({
+            selectedTab: "theme",
         });
     }
     async getFontsData() {

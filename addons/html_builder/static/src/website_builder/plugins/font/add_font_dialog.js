@@ -43,7 +43,9 @@ export class AddFontDialog extends Component {
         googleFonts: Array,
         googleLocalFonts: Array,
         uploadedLocalFonts: Array,
+        variable: String,
         customize: Function,
+        reloadEditor: Function,
     };
     state = useState({
         valid: true,
@@ -312,7 +314,7 @@ export class AddFontDialog extends Component {
                 this.props.googleLocalFonts.push(`'${font}': ''`);
             }
         }
-        this.props.customize({
+        await this.props.customize({
             values: { [this.props.variable]: `'${font}'` },
             googleFonts: this.props.googleFonts,
             googleLocalFonts: this.props.googleLocalFonts,
@@ -322,11 +324,14 @@ export class AddFontDialog extends Component {
         if (styleEl) {
             delete styleEl.dataset.fontPreview;
         }
+        this.props.reloadEditor({
+            selectedTab: "theme",
+        });
         return true;
     }
 }
 
-export function showAddFontDialog(dialog, fontsData, customize) {
+export function showAddFontDialog(dialog, fontsData, variable, customize, reloadEditor) {
     dialog.add(
         AddFontDialog,
         {
@@ -334,7 +339,9 @@ export function showAddFontDialog(dialog, fontsData, customize) {
             googleFonts: fontsData.googleFonts,
             googleLocalFonts: fontsData.googleLocalFonts,
             uploadedLocalFonts: fontsData.uploadedLocalFonts,
+            variable,
             customize,
+            reloadEditor,
         },
         {
             onClose: () => {
