@@ -142,12 +142,21 @@ export function changeOption(optionName, weName = '', optionTooltipLabel = '', p
  * @param {string} optionName - The name of the option (e.g., "Visibility").
  * @param {string} elementName - The name of the element to be clicked inside
  *                               the popover (e.g., "Conditionally").
+ * @param {Boolean} searchNeeded - If the widget is a m2o widget and a search is needed.
  *
  * Example:
  *      ...changeOptionInPopover("Text - Image", "Visibility", "Conditionally")
  */
-export function changeOptionInPopover(blockName, optionName, elementName) {
+export function changeOptionInPopover(blockName, optionName, elementName, searchNeeded = false) {
     const steps = [changeOption(blockName, `[data-label='${optionName}'] .dropdown-toggle`)];
+
+    if (searchNeeded) {
+        steps.push({
+            content: `Inputing ${elementName} in toogle option search`,
+            trigger: `.o_popover input`,
+            run: `edit ${elementName}`,
+        });
+    }
 
     steps.push(
         clickOnElement(
@@ -544,29 +553,6 @@ export function registerBackendAndFrontendTour(name, options, steps) {
             return steps();
         },
     });
-}
-
-/**
- * Selects an element inside a we-select, if the we-select is from a m2o widget, searches for it.
- *
- * @param widgetName {string} The widget's data-name
- * @param elementName {string} the element to search
- * @param searchNeeded {Boolean} if the widget is a m2o widget and a search is needed
- */
-export function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = false) {
-    const steps = [clickOnElement(`${widgetName} toggler`, `we-select[data-name=${widgetName}] we-toggler`)];
-
-    if (searchNeeded) {
-        steps.push({
-            content: `Inputing ${elementName} in m2o widget search`,
-            trigger: `we-select[data-name=${widgetName}] div.o_we_m2o_search input`,
-            run: `edit ${elementName}`,
-        });
-    }
-    steps.push(clickOnElement(`${elementName} in the ${widgetName} widget`,
-        `we-select[data-name="${widgetName}"] we-button:contains("${elementName}"), ` +
-        `we-select[data-name="${widgetName}"] we-button[data-select-label="${elementName}"]`));
-    return steps;
 }
 
 /**
