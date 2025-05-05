@@ -4,7 +4,6 @@ import logging
 
 from odoo import Command
 from odoo.tests import HttpCase, tagged
-import unittest
 
 _logger = logging.getLogger(__name__)
 
@@ -36,8 +35,6 @@ class TestAddToCartSnippet(HttpCase):
             'redirect_form_view_id': redirect_form.id,
         })
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_configure_product(self):
         # Reset the company country id, which ensure that no country dependant fields are blocking the address form.
         self.env.company.country_id = self.env.ref('base.us')
