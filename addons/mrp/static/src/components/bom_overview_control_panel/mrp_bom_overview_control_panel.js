@@ -4,7 +4,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { Component } from "@odoo/owl";
+import { Component, onMounted, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class BomOverviewControlPanel extends Component {
@@ -42,6 +42,12 @@ export class BomOverviewControlPanel extends Component {
     setup() {
         this.action = useService("action");
         this.controlPanelDisplay = {};
+        if(this.props.showOptions.mode == "forecast") {
+            this.quantity = useRef("quantity");
+            onMounted(() => {
+                this.quantity.el.focus();
+            });
+        }
     }
 
     //---- Handlers ----

@@ -344,7 +344,7 @@
                             <page string="Product Capacities" name="capacity">
                                 <field name="capacity_ids" context="{'default_workcenter_id': id}">
                                     <list editable="bottom">
-                                        <field name="product_id" widget="mrp_workcenter_capacity_product" placeholder="All Products"/>
+                                        <field name="product_id" widget="mrp_workcenter_capacity_product" placeholder="All Products" decoration-it="not product_id"/>
                                         <field name="capacity"/>
                                         <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="product_id != False"/>
                                         <field name="time_start" widget="float_time"/>
