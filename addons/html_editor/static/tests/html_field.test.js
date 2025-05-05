@@ -9,7 +9,16 @@ import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_component
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { click, press, queryAll, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
+import {
+    click,
+    press,
+    queryAll,
+    queryAllTexts,
+    queryOne,
+    waitFor,
+    hover,
+    manuallyDispatchProgrammaticEvent,
+} from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
 import {
@@ -1045,6 +1054,102 @@ test("'Video Link' command is available", async () => {
     await insertText(htmlEditor, "/video");
     await waitFor(".o-we-powerbox");
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
+});
+
+test.tags("desktop");
+test("should display overlay on video hover and handle video replacement and removal correctly", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+
+    await onRpc("/web_editor/video_url/data", async (request) => {
+        const videoUrl = (await request.json()).params.video_url;
+
+        if (videoUrl === "https://www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0") {
+            return {
+                video_id: "qxb74CMR748",
+                platform: "youtube",
+                embed_url: "https://www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0",
+                params: {
+                    rel: 0,
+                    autoplay: 0,
+                },
+            };
+        } else {
+            return {
+                video_id: "gbE3azm_Io0",
+                platform: "youtube",
+                embed_url: "https://www.youtube.com/embed/gbE3azm_Io0?rel=0&autoplay=0",
+                params: {
+                    rel: 0,
+                    autoplay: 0,
+                },
+            };
+        }
+    });
+
+    // Insert video
+    await insertText(htmlEditor, "/video");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Video Link");
+
+    await press("Enter");
+    await waitFor("textarea[id='o_video_text']");
+
+    const input = queryOne("textarea[id='o_video_text']");
+    input.value = "https://www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0";
+    manuallyDispatchProgrammaticEvent(input, "input", {
+        inputType: "insertText",
+    });
+    await waitFor(".o_video_dialog_options", { timeout: 1500 });
+    await click(queryOne(".modal-footer").firstChild);
+    const embeddedVideoEl = await waitFor("div[data-embedded='video'] iframe");
+    const iframeSrcBefore = embeddedVideoEl.dataset.src;
+
+    // Hover on VideoBlock shows overlay
+    await hover(queryOne("div[data-embedded='video']"));
+    await expectElementCount(".video-overlay", 1);
+
+    // Click on overlay and choose Replace
+    await click(".video-overlay button");
+    await waitFor(".o-dropdown-item");
+    expect(queryAllTexts(".o-dropdown-item")[0]).toBe("Replace");
+    await click(".o-dropdown-item .fa-exchange");
+    await waitFor("textarea[id='o_video_text']");
+
+    // Replace video
+    const replaceInput = queryOne("textarea[id='o_video_text']");
+    replaceInput.value = "https://www.youtube.com/embed/gbE3azm_Io0?rel=0&autoplay=0";
+    manuallyDispatchProgrammaticEvent(replaceInput, "input", {
+        inputType: "insertText",
+    });
+    await waitFor(
+        '.o_video_dialog_iframe[data-src="https://www.youtube.com/embed/gbE3azm_Io0?rel=0&autoplay=0"]',
+        { timeout: 1500 }
+    );
+    await click(queryOne(".modal-footer").firstChild);
+
+    await waitFor(
+        `div[data-embedded='video'] iframe[data-src="https://www.youtube.com/embed/gbE3azm_Io0?rel=0&autoplay=0"]`
+    );
+    const iframeSrcAfter = embeddedVideoEl.dataset.src;
+    expect(iframeSrcBefore).not.toBe(iframeSrcAfter);
+
+    // Hover VideoBlock again, and choose Remove
+    await hover(queryOne("div[data-embedded='video']"));
+    await expectElementCount(".video-overlay", 1);
+    await click(".video-overlay button");
+    await waitFor(".o-dropdown-item");
+    expect(queryAllTexts(".o-dropdown-item")[1]).toBe("Remove");
+    await click(".o-dropdown-item .fa-trash");
+    await expectElementCount('div[data-embedded="video"]', 0);
 });
 
 test("MediaDialog contains 'Videos' tab by default in html field", async () => {

@@ -9,6 +9,7 @@ export class VideoSelectorDialog extends Component {
     static props = {
         save: { type: Function },
         close: { type: Function },
+        videoIframe: { type: HTMLElement, optional: true },
     };
 
     setup() {
