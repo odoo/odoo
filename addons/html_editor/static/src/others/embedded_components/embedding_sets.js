@@ -6,7 +6,8 @@ import {
     tableOfContentEmbedding,
 } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content";
 import { toggleBlockEmbedding } from "@html_editor/others/embedded_components/core/toggle_block/toggle_block";
-import { videoEmbedding } from "@html_editor/others/embedded_components/core/video/video";
+import { videoEmbedding } from "@html_editor/others/embedded_components/backend/video/video";
+import { readonlyVideoEmbedding } from "@html_editor/others/embedded_components/core/video/readonly_video";
 
 export const MAIN_EMBEDDINGS = [
     fileEmbedding,
@@ -20,6 +21,6 @@ export const READONLY_MAIN_EMBEDDINGS = [
     readonlyFileEmbedding,
     readonlyTableOfContentEmbedding,
     toggleBlockEmbedding,
-    videoEmbedding,
+    readonlyVideoEmbedding,
     captionEmbedding,
 ];
