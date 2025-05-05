@@ -1,10 +1,8 @@
-import { escapeRegExp } from "@web/core/utils/strings";
-
 import { Component, useState, onWillRender } from "@odoo/owl";
+import { highlightText } from "@web/core/utils/strings";
 
 export class HighlightText extends Component {
     static template = "web.HighlightText";
-    static highlightClass = "highlighter";
     static props = {
         originalText: String,
     };
@@ -12,13 +10,11 @@ export class HighlightText extends Component {
         this.searchState = useState(this.env.searchState);
 
         onWillRender(() => {
-            const splitText = this.props.originalText.split(
-                new RegExp(`(${escapeRegExp(this.searchState.value)})`, "ig")
+            this.text = highlightText(
+                this.searchState.value,
+                this.props.originalText,
+                "highlighter"
             );
-            this.splitText =
-                this.searchState.value.length && splitText.length > 1
-                    ? splitText
-                    : [this.props.originalText];
         });
     }
 }

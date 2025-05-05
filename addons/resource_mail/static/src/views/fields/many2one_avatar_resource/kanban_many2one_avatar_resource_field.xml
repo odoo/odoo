@@ -27,7 +27,7 @@
                     <t t-elif="autoCompleteItemScope.record.resource_type === 'user'">
                         <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
                     </t>
-                    <t t-esc="autoCompleteItemScope.record.display_name"/>
+                    <t t-out="autoCompleteItemScope.label"/>
                 </span>
             </t>
         </KanbanMany2One>
