@@ -73,7 +73,7 @@
                     <field name="chatbot_answers_path_str" string="Chatbot Answers"/>
                     <field name="session_expertises" string="Expertise"/>
                     <field name="visitor_partner_id"/>
-                    <filter name="my_session" domain="[('partner_id.user_id', '=', uid)]" string="My Sessions"/>
+                    <filter name="my_session" domain="[('partner_id.user_ids', '=', uid)]" string="My Sessions"/>
                     <separator/>
                     <filter name="escalated" string="Escalated" domain="[('session_outcome', '=', 'escalated')]"/>
                     <filter name="no_answer" string="Not Answered" domain="[('session_outcome', '=', 'no_answer')]"/>
