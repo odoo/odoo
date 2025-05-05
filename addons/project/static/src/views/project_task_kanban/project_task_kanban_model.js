@@ -16,7 +16,7 @@ export class ProjectTaskRecord extends Record {
     }
 
     async toggleSubtasksList() {
-        const { display_name, project_id, state, user_ids } = this.config.fields;
+        const { display_name, project_id, state, user_ids, sequence } = this.config.fields;
         const activeField = makeActiveField({ onChange: true });
         activeField.related = {
             activeFields: {
@@ -24,12 +24,14 @@ export class ProjectTaskRecord extends Record {
                 state: makeActiveField(),
                 user_ids: makeActiveField(),
                 project_id: makeActiveField(),
+                sequence: makeActiveField(),
             },
             fields: {
                 display_name,
                 project_id,
                 state,
                 user_ids,
+                sequence,
             },
         };
         await this._load({
