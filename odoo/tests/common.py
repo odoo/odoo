@@ -1613,7 +1613,7 @@ class ChromeBrowser:
         _logger.log(
             self._TO_LEVEL.get(log_type, logging.INFO),
             "%s%s",
-            "Error received after termination: " if self._result.done() else "",
+            f"Error received after termination: in {self.test_case}\n" if self._result.done() else "",
             message # might still have %<x> characters
         )
 
@@ -1630,8 +1630,8 @@ class ChromeBrowser:
                     ...
                 except InvalidStateError:
                     self._logger.warning(
-                        "Trying to set result to failed (%s) but found the future settled (%s)",
-                        message, self._result
+                        "Trying to set result to failed (%s) but found the future settled (%s) in %s",
+                        message, self._result, self.test_case
                     )
         elif message == self.success_signal:
             @run
@@ -1683,7 +1683,7 @@ which leads to stray network requests and inconsistencies."""
 
         if self._result.done():
             self._logger.getChild('browser').error(
-                "Exception received after termination: %s", message)
+                "Exception received after termination: %s in %s", message, self.test_case)
             return
 
         self.take_screenshot()
@@ -1694,8 +1694,8 @@ which leads to stray network requests and inconsistencies."""
             ...
         except InvalidStateError:
             self._logger.warning(
-                "Trying to set result to failed (%s) but found the future settled (%s)",
-                message, self._result
+                "Trying to set result to failed (%s) but found the future settled (%s) in %s",
+                message, self._result, self.test_case,
             )
 
     def _handle_frame_stopped_loading(self, frameId):
