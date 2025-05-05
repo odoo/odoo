@@ -2392,7 +2392,7 @@ class TestBoM(TestMrpCommon):
             'rounding': 1.0,
         })
         prod, comp = self.env["product.product"].create(
-            [{"name": name, "type": "product",  'uom_id': integer_unit.id} for name in ['prod','comp']]
+            [{"name": name, "type": "product", 'uom_id': integer_unit.id} for name in ['prod', 'comp']]
         )
         self.env['mrp.bom'].create({
             'product_tmpl_id': prod.product_tmpl_id.id,
