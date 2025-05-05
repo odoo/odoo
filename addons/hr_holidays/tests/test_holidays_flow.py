@@ -286,3 +286,73 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                         'date_from': datetime.today().strftime('%Y-%m-11 19:00:00'),
                         'date_to': datetime.today().strftime('%Y-%m-10 10:00:00'),
                     })
+
+    def test_leave_calendar_date_from_to(self):
+        calendar = self.env["resource.calendar"].create({
+            "name": "Test calendar",
+            "attendance_ids": [
+                (
+                    0,
+                    0,
+                    {
+                        "name": "Friday Morning",
+                        "dayofweek": "4",
+                        "day_period": "morning",
+                        "hour_from": 9,
+                        "hour_to": 14,
+                        "date_from": "2025-01-02",
+                    },
+                ),
+                (
+                    0,
+                    0,
+                    {
+                        "name": "Friday Afternoon",
+                        "dayofweek": "4",
+                        "day_period": "afternoon",
+                        "hour_from": 17,
+                        "hour_to": 20,
+                        "date_from": "2025-01-02",
+                    },
+                ),
+                (
+                    0,
+                    0,
+                    {
+                        "name": "Friday Morning (old)",
+                        "dayofweek": "4",
+                        "day_period": "morning",
+                        "hour_from": 8,
+                        "hour_to": 13,
+                        "date_to": "2025-01-01",
+                    },
+                ),
+                (
+                    0,
+                    0,
+                    {
+                        "name": "Friday Afternoon (old)",
+                        "dayofweek": "4",
+                        "day_period": "afternoon",
+                        "hour_from": 19,
+                        "hour_to": 21,
+                        "date_to": "2025-01-01",
+                    },
+                )
+            ]
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        self.holidays_status_hr = self.env["hr.leave.type"].with_user(self.user_hrmanager_id).create({
+            "name": "NotLimitedHR",
+            "requires_allocation": "no",
+            "leave_validation_type": "hr",
+        })
+        holidays = self.env["hr.leave"].with_user(self.user_employee_id).create({
+            "name": "Hol11",
+            "employee_id": self.employee_emp.id,
+            "holiday_status_id": self.holidays_status_hr.id,
+            "request_date_from": "2025-05-02",
+            "request_date_to": "2025-05-02",
+        })
+        self.assertEqual(holidays.date_from.hour, 7)
+        self.assertEqual(holidays.date_to.hour, 18)
