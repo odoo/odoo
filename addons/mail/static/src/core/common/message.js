@@ -318,6 +318,7 @@ export class Message extends Component {
     get isPersistentMessageFromAnotherThread() {
         return (
             !this.message.is_transient &&
+            !this.message.isPending &&
             this.message.thread &&
             this.message.thread.notEq(this.props.thread)
         );
