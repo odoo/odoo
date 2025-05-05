@@ -36,8 +36,8 @@
     <template id="document_tax_totals_company_currency_template" inherit_id="account.document_tax_totals_company_currency_template">
         <xpath expr="//p[hasclass('tax_computation_company_currency')]" position="after">
             <tr t-if="o.company_id.country_id.code == 'AE'">
-                <t t-set="exchange_rate"
-                   t-value="abs(o.amount_total_signed) / o.amount_total"/>
+                <t t-set="exchange_rate" t-if="o.amount_total" t-value="abs(o.amount_total_signed) / o.amount_total"/>
+                <t t-set="exchange_rate" t-else="" t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, o.invoice_date or datetime.date.today())"/>
                 <td>Exchange Rate</td>
                 <td class="text-end" t-out="exchange_rate" t-options='{"widget": "float", "precision": 5}'/>
             </tr>
