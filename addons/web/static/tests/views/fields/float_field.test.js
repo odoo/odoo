@@ -151,6 +151,19 @@ test("with 'step' option", async () => {
     });
 });
 
+test("with 'hide_trailing_zeros' option", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 5,
+        arch: `<form><field name="float_field" options="{'hide_trailing_zeros': true}"/></form>`,
+    });
+
+    expect(".o_field_widget input").toHaveValue("9.1", {
+        message: "Input would show 9.10 without the option",
+    });
+});
+
 test("basic flow in form view", async () => {
     await mountView({
         type: "form",
