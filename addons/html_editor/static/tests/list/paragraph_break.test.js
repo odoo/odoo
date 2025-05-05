@@ -382,6 +382,7 @@ describe("Selection collapsed", () => {
                 });
             });
 
+            test.tags("font-dependent");
             test("should keep the list-style when add li", async () => {
                 await testEditor({
                     contentBefore: unformat(`
