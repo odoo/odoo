@@ -269,6 +269,15 @@
             </head>
             <body t-attf-class="o_body_pdf {{env['ir.actions.report'].get_paperformat_by_xmlid(report_xml_id).css_margins and 'o_css_margins'}} container overflow-hidden" t-att-data-report-id="report_xml_id" t-att-onload="subst and 'subst()'" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
                 <t t-out="body"/>
+                <script>
+                    var elements = document.getElementsByTagName('*');
+                    for (var i = 0; i &lt; elements.length; i++) {
+                        var element = elements[i];
+                        if (!element.innerText.trim()) {
+                            element.classList.add('o_blank');
+                        }
+                    }
+                </script>
             </body>
         </html>
     </template>
