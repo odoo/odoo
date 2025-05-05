@@ -1,5 +1,6 @@
 import { patch } from "@web/core/utils/patch";
-import { MODULE_STATUS, NewContentModal } from '@website/systray_items/new_content';
+import { NewContentModal } from '@html_builder/website_preview/new_content_modal';
+import { MODULE_STATUS } from "@html_builder/website_preview/new_content_element";
 
 patch(NewContentModal.prototype, {
     setup() {

@@ -1,4 +1,5 @@
-import { NewContentModal, MODULE_STATUS } from '@website/systray_items/new_content';
+import { NewContentModal } from '@html_builder/website_preview/new_content_modal';
+import { MODULE_STATUS } from "@html_builder/website_preview/new_content_element";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
