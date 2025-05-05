@@ -93,6 +93,7 @@ beforeEach(() => {
                 <field name="project_id"/>
                 <field name="closed_subtask_count"/>
                 <field name="child_ids"/>
+                <field name="sequence"/>
                 <field name="user_ids"/>
                 <field name="state"/>
                 <templates>
@@ -216,13 +217,15 @@ test("project.task (kanban): check subtask creation", async () => {
             expect.step(`${model}/${method}`);
         }
         if (model === "project.task" && method === "create") {
-            const [{ display_name, parent_id }] = args[0];
+            const [{ display_name, parent_id, sequence }] = args[0];
             expect(display_name).toBe("New Subtask");
             expect(parent_id).toBe(1);
+            expect(sequence).toBe(11, { message: "Sequence should be 11" });
             const newSubtaskId = MockServer.env["project.task"].create({
                 name: display_name,
                 parent_id,
                 state: "01_in_progress",
+                sequence: sequence,
             });
             MockServer.env["project.task"].write(parent_id, {
                 child_ids: [Command.link(newSubtaskId)],
