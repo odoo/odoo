@@ -700,11 +700,11 @@ async function mail_message_update_content(request) {
         new mailDataHelpers.Store(MailMessage.browse(message.id), {
             attachment_ids: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
             body: ["markup", message.body],
-            pinned_at: message.pinned_at,
-            recipients: mailDataHelpers.Store.many(
+            partner_ids: mailDataHelpers.Store.many(
                 this.env["res.partner"].browse(message.partner_ids),
                 makeKwArgs({ fields: ["avatar_128", "name"] })
             ),
+            pinned_at: message.pinned_at,
         }).get_result()
     );
     return new mailDataHelpers.Store(
