@@ -6,9 +6,10 @@ export class ChatbotStep extends Record {
     operatorFound = false;
     scriptStep = fields.One("chatbot.script.step");
     message = fields.One("mail.message", { inverse: "chatbotStep" });
-    answers = fields.Many("chatbot.script.answer", {
+    answer_ids = fields.Many("chatbot.script.answer", {
         compute() {
-            return this.scriptStep?.answers;
+            return this.scriptStep?.answer_ids;
+
         },
     });
     selectedAnswer = fields.One("chatbot.script.answer");
