@@ -10,7 +10,7 @@
                     <field name="livechat_agent_partner_ids" string="Agent"/>
                     <field name="country_id" string="Country"/>
                     <field name="livechat_customer_partner_ids" string="Customer"/>
-                    <filter name="filter_my_sessions" domain="[('livechat_operator_id.user_id', '=', uid)]" string="My Sessions"/>
+                    <filter name="filter_my_sessions" domain="[('livechat_operator_id.user_ids', '=', uid)]" string="My Sessions"/>
                     <separator/>
                     <filter name="filter_session_rating_happy" domain="[('rating_ids', '!=', False), ('rating_avg', '&gt;=', 3.66)]" string="Happy"/>
                     <filter name="filter_session_rating_neutral" domain="[('rating_ids', '!=', False), ('rating_avg', '&gt;=', 2.33), ('rating_avg', '&lt;', 3.66)]" string="Neutral"/>
