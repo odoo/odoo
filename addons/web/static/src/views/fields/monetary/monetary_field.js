@@ -18,10 +18,12 @@ export class MonetaryField extends Component {
         inputType: { type: String, optional: true },
         useFieldDigits: { type: Boolean, optional: true },
         hideSymbol: { type: Boolean, optional: true },
+        trailingZeros: { type: Boolean, optional: true },
     };
     static defaultProps = {
         hideSymbol: false,
         inputType: "text",
+        trailingZeros: true,
     };
 
     setup() {
@@ -85,6 +87,7 @@ export class MonetaryField extends Component {
             digits: this.currencyDigits,
             currencyId: this.currencyId,
             noSymbol: !this.props.readonly || this.props.hideSymbol,
+            trailingZeros: this.props.trailingZeros,
         });
     }
 
@@ -107,6 +110,12 @@ export const monetaryField = {
             type: "field",
             availableTypes: ["many2one"],
         },
+        {
+            label: _t("Hide trailing zeros"),
+            name: "hide_trailing_zeros",
+            type: "boolean",
+            help: _t("Hide zeros to the right of the last non-zero digit, e.g. 1.20 becomes 1.2"),
+        },
     ],
     supportedTypes: ["monetary", "float", "integer"],
     displayName: _t("Monetary"),
@@ -115,6 +124,7 @@ export const monetaryField = {
         inputType: attrs.type,
         useFieldDigits: options.field_digits,
         hideSymbol: options.no_symbol,
+        trailingZeros: !options.hide_trailing_zeros,
     }),
 };
 

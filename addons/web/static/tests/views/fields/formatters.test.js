@@ -32,6 +32,8 @@ beforeEach(() => {
 
 test("formatFloat", () => {
     expect(formatFloat(false)).toBe("");
+    expect(formatFloat(200)).toBe("200.00");
+    expect(formatFloat(200, { trailingZeros: false })).toBe("200");
 });
 
 test("formatFloatFactor", () => {
@@ -99,7 +101,9 @@ test("formatMany2one", () => {
     expect(formatMany2one({ id: false, display_name: "M2O value" })).toBe("M2O value");
     expect(formatMany2one({ id: 1, display_name: false })).toBe("Unnamed");
     expect(formatMany2one({ id: 1, display_name: "M2O value" })).toBe("M2O value");
-    expect(formatMany2one({ id: 1, display_name: "M2O value" }, { escape: true })).toBe("M2O%20value");
+    expect(formatMany2one({ id: 1, display_name: "M2O value" }, { escape: true })).toBe(
+        "M2O%20value"
+    );
 });
 
 test("formatText", () => {
@@ -149,6 +153,9 @@ test("formatMonetary", () => {
         c_y: 12,
     };
     expect(formatMonetary(200, { field, currencyId: 10, data })).toBe("200.00\u00a0€");
+    expect(formatMonetary(200, { field, currencyId: 10, data, trailingZeros: false })).toBe(
+        "200\u00a0€"
+    );
     expect(formatMonetary(200, { field, data })).toBe("$\u00a0200.00");
     expect(formatMonetary(200, { field, currencyField: "c_y", data })).toBe("200.00\u00a0&");
 
