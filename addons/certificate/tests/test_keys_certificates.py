@@ -2,7 +2,7 @@ import base64
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import ec, rsa
+from cryptography.hazmat.primitives.asymmetric import ec, ed25519, rsa
 from datetime import datetime, timedelta, timezone
 
 from odoo.exceptions import UserError
@@ -78,6 +78,11 @@ class TestKeysCertificates(TransactionCase):
         private_key = self.env['certificate.key']._generate_rsa_private_key(self.env.company)
         private_key_obj = serialization.load_pem_private_key(base64.b64decode(private_key.pem_key), None)
         self.assertTrue(isinstance(private_key_obj, rsa.RSAPrivateKey))
+
+    def test_ed25519_key_generated(self):
+        private_key = self.env['certificate.key']._generate_ed25519_private_key(self.env.company)
+        private_key_obj = serialization.load_pem_private_key(base64.b64decode(private_key.pem_key), None)
+        self.assertTrue(isinstance(private_key_obj, ed25519.Ed25519PrivateKey))
 
     def test_key_loading_wrong_password(self):
         correct_password = 'foobar'
