@@ -1571,8 +1571,6 @@ test("many2one field operators (edit)", async () => {
         "not set",
         "starts with",
         "ends with",
-        "matches",
-        "matches none of",
     ]);
 });
 
@@ -1795,8 +1793,6 @@ test("x2many field operators (edit)", async () => {
         "not set",
         "starts with",
         "ends with",
-        "match",
-        "match none of",
     ]);
 });
 
@@ -2563,15 +2559,32 @@ test("many2many: domain in autocompletion", async () => {
     expect(".dropdown-menu").toHaveCount(0);
 });
 
-test("Hierarchical operators", async () => {
-    Partner._fields.team_id = fields.Many2one({ relation: "team" });
-    onRpc("fields_get", ({ parent }) => {
-        const result = parent();
-        result.id.allow_hierachy_operators = true;
-        result.product_id.allow_hierachy_operators = true;
-        result.team_id.allow_hierachy_operators = false;
-        return result;
+test("Any operator supported even if not proposed", async () => {
+    await makeDomainSelector({
+        isDebugMode: true,
+        update(domain) {
+            expect.step(domain);
+        },
+        domain: `[("product_id", "any", [])]`,
     });
+    expect(getOperatorOptions()).toEqual([
+        "is in",
+        "is not in",
+        "is equal",
+        "is not equal",
+        "contains",
+        "does not contain",
+        "set",
+        "not set",
+        "starts with",
+        "ends with",
+        "matches",
+    ]);
+    await addNewRule();
+    expect.verifySteps([`[("product_id", "any", [("id", "=", 1)])]`]);
+});
+
+test("Hierarchical operators", async () => {
     await makeDomainSelector({
         isDebugMode: true,
         update(domain) {
@@ -2592,17 +2605,26 @@ test("Hierarchical operators", async () => {
         "is not equal",
         "contains",
         "does not contain",
-        "child of",
-        "parent of",
         "set",
         "not set",
         "starts with",
         "ends with",
-        "matches",
-        "matches none of",
     ]);
-    await selectOperator("parent_of");
+    await contains(SELECTORS.debugArea).edit(`[("product_id", "parent_of", [])]`);
     expect.verifySteps(['[("product_id", "parent_of", [])]']);
+    expect(getOperatorOptions()).toEqual([
+        "is in",
+        "is not in",
+        "is equal",
+        "is not equal",
+        "contains",
+        "does not contain",
+        "set",
+        "not set",
+        "starts with",
+        "ends with",
+        "parent of",
+    ]);
     await editValue("x", { confirm: false });
     await runAllTimers();
 
@@ -2617,28 +2639,6 @@ test("Hierarchical operators", async () => {
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
     await contains(".dropdown-menu li").click();
     expect.verifySteps(['[("product_id", "parent_of", [37, 41])]']);
-    await openModelFieldSelectorPopover();
-    await contains(
-        ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:contains(Team)"
-    ).click();
-    expect.verifySteps(['[("team_id", "in", [])]']);
-    expect(getOperatorOptions()).toEqual(
-        [
-            "is in",
-            "is not in",
-            "is equal",
-            "is not equal",
-            "contains",
-            "does not contain",
-            "set",
-            "not set",
-            "starts with",
-            "ends with",
-            "matches",
-            "matches none of",
-        ],
-        { message: "no hierarchical operator if allow_hierachy_operators set to false" }
-    );
 });
 
 test("preserve virtual operators in sub domains", async () => {
