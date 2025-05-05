@@ -1503,6 +1503,8 @@ is approved, validated or refused.')
             ('calendar_id', '=', self.resource_calendar_id.id),
             ('display_type', '=', False),
             ('day_period', '!=', 'lunch'),
+            '|', ('date_from', '=', False), ('date_from', '<=', request_date_to),
+            '|', ('date_to', '=', False), ('date_to', '>=', request_date_from),
         ]
         # In the case of flexible hours, we resort to centering the holiday hours around 12pm
         if self.resource_calendar_id.flexible_hours:
