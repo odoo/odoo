@@ -62,6 +62,11 @@ def parse_xmlid(xmlid: str, default_module: str) -> tuple[str, str]:
         return default_module, split_id[0]
     return split_id[0], split_id[1]
 
+
+def data_file_module_name(f):
+    return f.path.parts[f.path.parts.index('data') - 1]
+
+
 def upgrade(file_manager: FileManager):
     translation_files = [
         f for f in file_manager
@@ -73,12 +78,12 @@ def upgrade(file_manager: FileManager):
     data_files = [
         f for f in file_manager
         if f.path.suffix in ('.xml', '.csv')
-        and f.path.parts[-3].startswith('l10n_')
-        and f.path.parts[-2] == 'data'
+        and 'data' in f.path.parts
+        and data_file_module_name(f).startswith('l10n_')
     ]
     nb_data_files = len(data_files)
 
-    translations = defaultdict(lambda: defaultdict(lambda: defaultdict(dict)))  # {module: {model: {xmlid: {lang: msgstr}}}}
+    translations = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(dict))))  # {module: {model: {xmlid: {fname: {lang: msgstr}}}}}
     for i, file in enumerate(translation_files):
         file_manager.print_progress(i, nb_translation_files + nb_data_files, file.path)
         module_name = file.path.parts[-3]
@@ -88,16 +93,19 @@ def upgrade(file_manager: FileManager):
         for entry in pofile:
             if file.path.suffix == '.po':
                 for occurence in entry.occurrences:
-                    if occurence[0].startswith('model:'):
+                    if occurence[0].startswith('model:') or occurence[0].startswith('model_terms:'):
                         xmlid = occurence[0].split(':')[2]
-                        model = occurence[0].split(':')[1].split(',')[0]
-                        translations[module_name][model][xmlid][lang] = entry.msgstr
+                        model, fname = occurence[0].split(':')[1].split(',')
+                        if model in MODELS and fname in MODELS[model]:
+                            translations[module_name][model][xmlid][fname][lang] = entry.msgstr
             entry.occurrences = [
                 occurence
                 for occurence in entry.occurrences
                 if not any(
-                    occurence[0].startswith(f'model:{model}')
+                    occurence[0].startswith(f'model:{model},{fname}')
+                    or occurence[0].startswith(f'model_terms:{model},{fname}')
                     for model in MODELS
+                    for fname in MODELS[model]
                 )
             ]
             if not entry.occurrences:
@@ -110,7 +118,7 @@ def upgrade(file_manager: FileManager):
 
     for i, file in enumerate(data_files):
         file_manager.print_progress(nb_translation_files + i, nb_translation_files + nb_data_files, file.path)
-        module_name = file.path.parts[-3]
+        module_name = data_file_module_name(file)
         if file.path.suffix == '.xml':
             tree = etree.parse(str(file.path))
             for record_node in tree.xpath(f"""//record[{' or '.join(f"@model='{m}'" for m in MODELS)}]"""):
@@ -119,14 +127,15 @@ def upgrade(file_manager: FileManager):
                 for fname in MODELS[model]:
                     base_node = record_node.find(f"field[@name='{fname}']")
                     if base_node is not None:
-                        name_tail = base_node.tail
-                        base_node.tail = None
-                        for lang, translated in translations[module_name][model][xmlid].items():
-                            if translated:
-                                translated_node = E('field', translated, **{fname: f'{fname}@{lang}'})
-                                translated_node.tail = name_tail
+                        default_tail = base_node.getparent().getchildren()[0].tail
+                        translated_node = None
+                        for lang, translated in translations[module_name][model][xmlid][fname].items():
+                            if translated and record_node.find(f"field[@name='{fname}@{lang}']") is None:
+                                translated_node = E('field', translated, name=f'{fname}@{lang}')
+                                translated_node.tail = default_tail
                                 base_node.addnext(translated_node)
-                        base_node.tail = name_tail
+                        if translated_node is not None:
+                            base_node.tail = default_tail
 
             file.content = ''.join(
                 diff[2:]
@@ -143,12 +152,13 @@ def upgrade(file_manager: FileManager):
             csv_file = csv.DictReader(file.content.splitlines())
             csv_data = list(csv_file)
             first_row = csv_data[0]
+            first_xmlid = '.'.join(parse_xmlid(first_row['id'], module_name))
             fnames = model in MODELS and sorted(set(first_row.keys()) & set(MODELS[model]))
             if fnames:
                 langs = sorted({
                     lang
                     for fname in fnames
-                    for lang, val in translations[module_name][model][first_row[fname]].items()
+                    for lang, val in translations[module_name][model][first_xmlid][fname].items()
                     if val
                 })
                 if langs:
@@ -159,6 +169,7 @@ def upgrade(file_manager: FileManager):
                             f'{fname}@{lang}'
                             for lang in langs
                             for fname in fnames
+                            if f'{fname}@{lang}' not in csv_file.fieldnames
                         ],
                         delimiter=',',
                         quotechar='"',
@@ -169,6 +180,6 @@ def upgrade(file_manager: FileManager):
                         xmlid = '.'.join(parse_xmlid(row['id'], module_name))
                         for lang in langs:
                             for fname in fnames:
-                                row[f'{fname}@{lang}'] = translations[module_name][model][xmlid].get(lang, "")
+                                row[f'{fname}@{lang}'] = translations[module_name][model][xmlid][fname].get(lang, "")
                         writer.writerow(row)
                     file.content = buffer.getvalue()

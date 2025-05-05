@@ -29,14 +29,15 @@
                 <field name="name">Paid 8 % Southern</field>
                 <field name="expression_label">paid_8_s_wnc</field>
                 <field name="sequence">12</field>
-            </record>                
+            </record>
             <record id="diot_report_paid_8_s_r" model="account.report.column">
                 <field name="name">Refunds 8 % Southern</field>
                 <field name="expression_label">refunds_8_s</field>
                 <field name="sequence">13</field>
-            </record>                
+            </record>
             <record id="diot_report_paid_16_wnc" model="account.report.column">
                 <field name="name">Paid 16%</field>
+                <field name="name@es_419">Pagado al 16%</field>
                 <field name="expression_label">paid_16_wnc</field>
                 <field name="sequence">14</field>
             </record>
@@ -47,6 +48,7 @@
             </record>
             <record id="diot_report_paid_16_imp_wnc" model="account.report.column">
                 <field name="name">Importation 16%</field>
+                <field name="name@es_419">Importación al 16%</field>
                 <field name="expression_label">paid_16_imp_wnc</field>
                 <field name="sequence">16</field>
             </record>
@@ -101,9 +103,10 @@
                 <field name="name">Paid 8 % S. - Non-Creditable</field>
                 <field name="expression_label">paid_8_s_nc</field>
                 <field name="sequence">26</field>
-            </record>                
+            </record>
             <record id="diot_report_paid_16_nc" model="account.report.column">
                 <field name="name">Paid 16% - Non-Creditable</field>
+                <field name="name@es_419">Pagado al 16% - No acreditable</field>
                 <field name="expression_label">paid_16_non_cred</field>
                 <field name="sequence">27</field>
             </record>
@@ -120,11 +123,13 @@
 
             <record id="diot_report_withheld" model="account.report.column">
                 <field name="name">Withheld</field>
+                <field name="name@es_419">Retenido</field>
                 <field name="expression_label">withheld</field>
                 <field name="sequence">30</field>
             </record>
             <record id="diot_report_exempt" model="account.report.column">
                 <field name="name">Exempt</field>
+                <field name="name@es_419">Exento</field>
                 <field name="expression_label">exempt</field>
                 <field name="sequence">31</field>
             </record>
@@ -135,6 +140,7 @@
             </record>
             <record id="diot_report_paid_0" model="account.report.column">
                 <field name="name">Paid 0%</field>
+                <field name="name@es_419">Pagado al 0%</field>
                 <field name="expression_label">paid_0</field>
                 <field name="sequence">33</field>
             </record>
@@ -258,7 +264,7 @@
                         <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+DIOT: 16% IMP INT'), ('tax_tag_ids', '=', '-DIOT: 16% IMP INT'), ('tax_tag_ids', '=', '+DIOT: 16% IMP INT NO ACREDITABLE'), ('tax_tag_ids', '=', '-DIOT: 16% IMP INT NO ACREDITABLE')]"/>
                         <field name="subformula">sum</field>
                     </record>
-                    
+
                     <record id="tax_report_mx_diot_paid_0_tag" model="account.report.expression">
                         <field name="label">paid_0</field>
                         <field name="engine">tax_tags</field>
