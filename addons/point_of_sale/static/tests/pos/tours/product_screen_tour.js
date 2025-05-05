@@ -640,6 +640,9 @@ registry.category("web_tour.tours").add("test_product_create_update_from_fronten
                 "Chair test"
             ),
             Dialog.confirm(),
+            {
+                trigger: ".product-list article:contains(Test Frontend Product)",
+            },
 
             // Click on the category button for "Chair test" to verify the product's addition.
             ProductScreen.clickSubcategory("Chair test"),
