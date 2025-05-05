@@ -17,6 +17,8 @@ import {
     queryOne,
     waitFor,
     waitForNone,
+    hover,
+    manuallyDispatchProgrammaticEvent,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
@@ -1053,6 +1055,101 @@ test("'Video Link' command is available", async () => {
     await insertText(htmlEditor, "/video");
     await waitFor(".o-we-powerbox");
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
+});
+
+test.tags("desktop");
+test("should display overlay on video hover and handle video replacement and removal correctly", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+
+    let callCount = 0;
+    await onRpc("/web_editor/video_url/data", async () => {
+        callCount++;
+        if (callCount === 1) {
+            return {
+                video_id: "qxb74CMR748",
+                platform: "youtube",
+                embed_url: "https://www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0",
+                params: {
+                    rel: 0,
+                    autoplay: 0,
+                },
+            };
+        } else {
+            return {
+                video_id: "gbE3azm_Io0",
+                platform: "youtube",
+                embed_url: "https://www.youtube.com/embed/gbE3azm_Io0?rel=0&autoplay=0",
+                params: {
+                    rel: 0,
+                    autoplay: 0,
+                },
+            };
+        }
+    });
+
+    // Insert video
+    await insertText(htmlEditor, "/video");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Video Link");
+
+    await press("Enter");
+    await animationFrame();
+
+    const input = queryOne("textarea[id='o_video_text']");
+    input.value = "https://www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0";
+    manuallyDispatchProgrammaticEvent(input, "input", {
+        inputType: "insertText",
+    });
+    await animationFrame();
+    await waitFor(".o_video_dialog_options", { timeout: 1500 });
+    await click(".modal-footer button");
+    await animationFrame();
+    const iframeBefore = queryOne("div[data-embedded='video'] iframe");
+
+    // Hover on VideoBlock shows overlay
+    await hover(queryOne("div[data-embedded='video']"));
+    await animationFrame();
+    expect(queryOne(".video-overlay")).toHaveCount(1);
+
+    // Click on overlay and choose Replace
+    await click(".video-overlay button");
+    await animationFrame();
+    expect(queryAllTexts(".dropdown-item")[0]).toBe("Replace");
+    await click(".o-dropdown-item .fa-exchange");
+    await animationFrame();
+
+    // Replace video
+    const replaceInput = queryOne("textarea[id='o_video_text']");
+    replaceInput.value = "https://www.youtube.com/embed/gbE3azm_Io0?rel=0&autoplay=0";
+    manuallyDispatchProgrammaticEvent(replaceInput, "input", {
+        inputType: "insertText",
+    });
+    await animationFrame();
+    await waitFor(".o_video_dialog_options", { timeout: 1500 });
+
+    await click(".modal-footer button");
+    await animationFrame();
+
+    const iframeAfter = queryOne("div[data-embedded='video'] iframe");
+    expect(iframeBefore.dataset.src).not.toBe(iframeAfter.dataset.src);
+
+    // Hover VideoBlock again, and choose Remove
+    await hover(queryOne("div[data-embedded='video']"));
+    await animationFrame();
+    await click(".video-overlay button");
+    await animationFrame();
+    expect(queryAllTexts(".dropdown-item")[1]).toBe("Remove");
+    await click(".o-dropdown-item .fa-trash");
+    expect('div[data-embedded="video"]').toHaveCount(0);
 });
 
 test("MediaDialog contains 'Videos' tab by default in html field", async () => {
