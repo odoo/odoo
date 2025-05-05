@@ -6,6 +6,7 @@ from markupsafe import Markup
 from itertools import groupby
 from collections import defaultdict
 from uuid import uuid4
+import json
 
 import pytz
 
@@ -405,9 +406,17 @@ class PosOrder(models.Model):
         if any(pos_order.state not in ['draft', 'cancel'] for pos_order in self):
             raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
 
+    def process_last_order_preparation_change(self, lopc_val):
+        # To ensure last_order_preparation_change stord in stringiy json only
+        if isinstance(lopc_val, str):
+            return lopc_val
+        return json.dumps(lopc_val)
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in [vals for vals in vals_list if vals.get('session_id')]:
+            if vals.get('last_order_preparation_change'):
+                vals['last_order_preparation_change'] = self.process_last_order_preparation_change(vals['last_order_preparation_change'])
             session = self.env['pos.session'].browse(vals['session_id'])
             if session.state in ['closing_control', 'closed']:
                 vals['session_id'] = self._get_valid_session(vals).id
@@ -434,6 +443,8 @@ class PosOrder(models.Model):
 
     def write(self, vals):
         for order in self:
+            if vals.get('last_order_preparation_change'):
+                vals['last_order_preparation_change'] = self.process_last_order_preparation_change(vals['last_order_preparation_change'])
             pos_session = order.session_id
             if vals.get('state') != 'done' and (pos_session.state == 'closing_control' or pos_session.state == 'closed'):
                 order['session_id'] = self._get_valid_session(order).id
@@ -1226,10 +1237,6 @@ class PosOrder(models.Model):
                 orders_info[key_order] = orderline.write_date
         totalCount = self.search_count(real_domain)
         return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
-
-    def _send_order(self):
-        # This function is made to be overriden by pos_self_order_preparation_display
-        pass
 
     def _prepare_pos_log(self, body):
         return body

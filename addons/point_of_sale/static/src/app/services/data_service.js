@@ -253,7 +253,8 @@ export class PosData extends Reactive {
                     return;
                 }
                 const vals = models[modelName].getBy("uuid", ids[0]).raw;
-                this.indexedDB.create(modelName, [vals]);
+                // Skip IndexedDB calls if it hasn't been initialized (e.g., in prepDisplay, kiosk)
+                this.indexedDB?.create(modelName, [vals]);
                 this.queue.push(["CREATE", modelName, omit(vals, "id")]);
                 this.debouncedFlush();
             });
@@ -261,7 +262,7 @@ export class PosData extends Reactive {
                 if (!this.shouldSync || !vals) {
                     return;
                 }
-                this.indexedDB.update(modelName, id, prepareVals(vals));
+                this.indexedDB?.update(modelName, id, prepareVals(vals));
                 this.queue.push(["UPDATE", modelName, id, prepareVals(vals)]);
                 this.debouncedFlush();
             });
@@ -269,7 +270,7 @@ export class PosData extends Reactive {
                 if (!this.shouldSync) {
                     return;
                 }
-                this.indexedDB.delete(modelName, [id]);
+                this.indexedDB?.delete(modelName, [id]);
                 this.queue.push(["DELETE", modelName, id]);
                 this.debouncedFlush();
             });

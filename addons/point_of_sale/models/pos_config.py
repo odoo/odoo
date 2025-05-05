@@ -226,6 +226,13 @@ class PosConfig(models.Model):
         self.ensure_one()
         return self.trusted_config_ids
 
+    def notify_data_chnage(self, queue, login_number):
+        if not self:
+            # No config is available to notify in certain scenarios (e.g., pre-display)
+            return
+        for config in self._configs_that_share_data() + self:
+            config._notify('DATA_CHANGED', {'queue': queue, 'login_number': login_number, 'config_id': self.id})
+
     def flush(self, queue, login_number):
 
         def get_record(model, id):
@@ -261,8 +268,8 @@ class PosConfig(models.Model):
                         record.unlink()
                 case _:
                     pass
-        for config in self._configs_that_share_data() + self:
-            config._notify('DATA_CHANGED', {'queue': queue, 'login_number': login_number, 'config_id': self.id})
+
+        self.notify_data_chnage(queue, login_number)
         return id_updates
 
     @api.depends('payment_method_ids')

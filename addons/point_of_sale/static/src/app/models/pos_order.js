@@ -270,7 +270,7 @@ export class PosOrder extends Base {
         return this.lines.length;
     }
     recomputeOrderData() {
-        this.amount_paid = this.getTotalPaid() - this.getChange();
+        this.amount_paid = this.getTotalPaid();
         this.amount_tax = this.getTotalTax();
         this.amount_total = this.getTotalWithTax();
         this.amount_return = this.getChange();
