@@ -158,10 +158,9 @@ export class ImageCrop extends Component {
             offset = { top: 0, left: 0 };
         } else {
             const rect = this.media.getBoundingClientRect();
-            const win = this.media.ownerDocument.defaultView;
             offset = {
-                top: rect.top + win.pageYOffset,
-                left: rect.left + win.pageXOffset,
+                top: rect.top,
+                left: rect.left,
             };
         }
 

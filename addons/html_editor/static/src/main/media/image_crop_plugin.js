@@ -30,7 +30,7 @@ export class ImageCropPlugin extends Plugin {
         return selectedNodes.find((node) => node.tagName === "IMG");
     }
 
-    async openCropImage(selectedImg, imageCropProps) {
+    async openCropImage(selectedImg, imageCropProps = {}) {
         selectedImg = selectedImg || this.getSelectedImage();
         if (!selectedImg) {
             return;
