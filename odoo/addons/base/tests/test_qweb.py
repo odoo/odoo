@@ -13,6 +13,7 @@ from copy import deepcopy
 from textwrap import dedent
 
 from odoo.tests.common import TransactionCase
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.models.ir_qweb import QWebException, render
 from odoo.tools import file_open, misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
@@ -1889,6 +1890,148 @@ class TestQWebBasic(TransactionCase):
 
         rendered = self.env['ir.qweb']._render(view.id)
         self.assertEqual(str(rendered), result)
+
+
+class TestQwebPerformance(TransactionCaseWithUserDemo):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_demo.group_ids = cls.env.ref('base.group_user')
+
+    def test_render_queries(self):
+        IrUiView = self.env['ir.ui.view']
+        header_0 = IrUiView.create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_header_0',
+            'arch_db': '''<span>0</span>'''
+        })
+        IrUiView.create([{
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_header_1',
+            'arch_db': '''<span>1</span>'''
+        }, {
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_header',
+            'arch_db': f'''<t t-name="base.testing_header">
+                <t t-call="{header_0.id}"/>
+                <header>header</header>
+                <t t-call="base.testing_header_1"/>
+            </t>'''
+        }, {
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_footer_0',
+            'arch_db': '''<span>0</span>'''
+        }, {
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_footer_1',
+            'arch_db': '''<span>1</span>'''
+        }, {
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_footer',
+            'arch_db': '''<t t-name="base.testing_footer">
+                <t t-call="base.testing_footer_0"/>
+                <header>header</header>
+                <t t-call="base.testing_footer_1"/>
+            </t>'''
+        }, {
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_layout',
+            'arch_db': '''<t t-name="base.testing_layout">
+                <section>
+                    <header><t t-call="base.testing_header"/></header>
+                    <article><t t-out="0"/></article>
+                    <header><t t-call="base.testing_footer"/></header>
+                </section>
+            </t>'''
+        }])
+        view = IrUiView.create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_content',
+            'arch_db': '''<t t-call="base.testing_layout"><div><t t-call="base.testing_header_0"/><t t-out="doc.name"/></div></t>'''
+        })
+        doc = self.env['ir.attachment'].create({
+            'name': 'test',
+            'type': 'url',
+        })
+
+        expected = """
+                <section>
+                    <header><span>0</span>
+                <header>header</header><span>1</span></header>
+                    <article><div><span>0</span>%s</div></article>
+                    <header><span>0</span>
+                <header>header</header><span>1</span></header>
+                </section>"""
+
+        env = self.env(user=self.user_demo)
+
+        # warmup
+        env['ir.qweb']._render('base.testing_content', {'doc': doc})
+
+        # do not count those fetching queries
+        doc.with_env(env).fetch(['name'])
+        env.user.fetch(['name'])
+
+        def check(template, name, queries):
+            doc.name = name
+            init = env.cr.sql_log_count
+            value = env['ir.qweb']._render(template, {'doc': doc})
+            self.assertEqual(str(value), expected % name)
+            self.assertEqual(env.cr.sql_log_count - init, queries, f'Maximum queries: {queries}')
+
+        # 'base.testing_content'
+        #     SELECT id + fields from xmlid
+        #     SELECT RECURSIVE arch combine
+        # 'base.testing_layout', 'base.testing_header_0'
+        #     SELECT id + fields from xmlid
+        #     SELECT RECURSIVE arch combine => TODO: batch me
+        # 'base.testing_header', 'base.testing_footer'
+        #     SELECT id + fields from xmlid
+        #     SELECT RECURSIVE arch combine => TODO: batch me
+        # 'base.testing_header_1', 'base.testing_footer_0', 'base.testing_footer_1'
+        #     SELECT id + fields from xmlid
+        #     SELECT RECURSIVE arch combine => TODO: batch me
+
+        FIRST_SEARCH_FETCH = 3  # the first "SELECT id + fields from xmlid"
+        OTHER_SEARCH_FETCH = 21  # "SELECT id + fields from xmlid"
+        ARCH_COMBINE = 8  # SELECT RECURSIVE arch combine
+
+        self.env.registry.clear_cache('templates')
+        view.invalidate_model()
+
+        check('base.testing_content', 'test-cold-0', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 32
+        check('base.testing_content', 'test-hot-0', 0)
+        check('base.testing_content', 'test-hot-1', 0)
+
+        view.invalidate_model()
+        check('base.testing_content', 'test-hot-2', 0)
+        check(view.id, 'test-hot-id', 0)
+
+        # like 'test-cold-0'
+        self.env.registry.clear_cache('templates')
+        check(view.id, 'test-cold-id-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 1)  # 31
+
+        # like 'test-cold-0' the first search query is replaced by a fetching
+        self.env.registry.clear_cache('templates')
+        view.invalidate_model()
+        check(view.id, 'test-cold-id-2', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 1)  # 31
+
+        # like 'test-cold-0'
+        self.env.registry.clear_cache('templates')
+        check('base.testing_content', 'test-cold-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 8)  # 24
+
+        # like 'test-cold-0'
+        self.env.registry.clear_cache('templates')
+        check(view.id, 'test-cold-id-3', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 9)  # 23
+
 
 class TestQwebCache(TransactionCase):
     def test_render_xml_cache_base(self):
