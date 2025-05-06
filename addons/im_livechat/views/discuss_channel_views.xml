@@ -47,13 +47,13 @@
                     <field name="livechat_bot_history_ids" string="Bot" widget="many2many_tags_avatar" optional="show"/>
                     <field name="livechat_customer_history_ids" string="Customer" widget="many2many_tags_avatar" optional="show"/>
                     <field name="country_id" optional="show"/>
-                    <field name="livechat_channel_id" optional="show"/>
+                    <field name="livechat_channel_id" optional="hide"/>
                     <field name="duration" widget="float_time" options="{'displaySeconds': True}" optional="show"/>
                     <field name="message_count" string="Messages" optional="show"/>
                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                         widget="badge" optional="show"/>
-                    <field name="rating_last_feedback" string="Comment" optional="show"/>
+                    <field name="rating_last_feedback" string="Comment" optional="hide"/>
                 </list>
             </field>
         </record>
