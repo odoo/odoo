@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import ast
-import json
 import logging
 import re
 import time
@@ -536,7 +534,9 @@ class TestViewInheritance(ViewCase):
         with contextmanager(lambda: self._patchExecute(actual_queries))():
             self.assertEqual(child_applied.invalid_locators, False)
         self.assertTrue(len(actual_queries) > 0)
-        self.assertFalse(any("update" in q.lower() for q in actual_queries))
+
+        re_sql_update = re.compile(r'\bupdate\b', re.IGNORECASE)
+        self.assertFalse(any(re_sql_update.search(q) for q in actual_queries))
 
         self.assertEqual(child_view.invalid_locators, [{'tag': 'xpath', 'attrib': {'expr': "//div[hasclass('parasite')]", 'position': 'inside'}, 'sourceline': 8}])
         self.assertEqual(child_view2.invalid_locators, [{'tag': 'field', 'attrib': {'name': 'user_id', 'position': 'after'}, 'sourceline': 5}])
@@ -4287,6 +4287,45 @@ class TestViewCombined(ViewCase):
             inherit_id=main_view.id,
             model=main_view.model,
         )
+
+    def test_multi_combine(self):
+        n1 = self.View.create({
+            'model': 'a',
+            'arch': '<qweb><n1/></qweb>'
+        })
+        self.View.create({
+            'model': 'a',
+            'inherit_id': n1.id,
+            'priority': 5,
+            'arch': '<xpath expr="//n1" position="after"><n2/></xpath>'
+        })
+        n3 = self.View.create({
+            'model': 'a',
+            'inherit_id': n1.id,
+            'priority': 1,
+            'arch': '<xpath expr="//n1" position="after"><n3/></xpath>'
+        })
+        n4 = self.View.create({
+            'model': 'a',
+            'inherit_id': n3.id,
+            'mode': 'primary',
+            'arch': '<xpath expr="//n1" position="after"><n4/></xpath>'
+        })
+
+        arch_a4 = self.a4.get_combined_arch()
+        arch_n4 = n4.get_combined_arch()
+        trees = (self.a4 + n4)._get_combined_archs()
+        self.assertEqual(
+            {k: etree.tostring(tree, encoding='unicode') for k, tree in zip(['a4', 'n4'], trees)},
+            {'a4': arch_a4, 'n4': arch_n4})
+
+    def test_multi_combine_with_same_ancestor(self):
+        arch_a4 = self.a4.get_combined_arch()
+        arch_c2 = self.c2.get_combined_arch()
+        trees = (self.a4 + self.c2)._get_combined_archs()
+        self.assertEqual(
+            {k: etree.tostring(tree, encoding='unicode') for k, tree in zip(['a4', 'c2'], trees)},
+            {'a4': arch_a4, 'c2': arch_c2})
 
 
 class TestOptionalViews(ViewCase):

@@ -21,7 +21,7 @@ from odoo.exceptions import ValidationError, AccessError, UserError, MissingErro
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path
-from odoo.tools import _, config, frozendict, partition, SQL
+from odoo.tools import _, config, frozendict, partition, unique, SQL
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path, get_diff, ConstantMapping
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
@@ -661,15 +661,19 @@ actual arch.
         where_clause = query.where_clause
         assert query.from_clause == SQL.identifier('ir_ui_view'), f"Unexpected from clause: {query.from_clause}"
 
-        self.flush_model(['inherit_id', 'priority', 'model', 'mode'])
+        field_names = [f.name for f in self._fields.values() if f.prefetch is True]
+        aliased_names = SQL(', ').join(
+            SQL("%s AS %s", self._field_to_sql('ir_ui_view', name), SQL.identifier(name))
+            for name in field_names
+        )
+
         query = SQL("""
             WITH RECURSIVE ir_ui_view_inherits AS (
-                SELECT id, inherit_id, priority, mode, model
+                SELECT ir_ui_view.id, %(aliased_names)s
                 FROM ir_ui_view
                 WHERE id IN %(ids)s AND (%(where_clause)s)
             UNION
-                SELECT ir_ui_view.id, ir_ui_view.inherit_id, ir_ui_view.priority,
-                       ir_ui_view.mode, ir_ui_view.model
+                SELECT ir_ui_view.id, %(aliased_names)s
                 FROM ir_ui_view
                 INNER JOIN ir_ui_view_inherits parent ON parent.id = ir_ui_view.inherit_id
                 WHERE coalesce(ir_ui_view.model, '') = coalesce(parent.model, '')
@@ -677,10 +681,13 @@ actual arch.
                       AND (%(where_clause)s)
             )
             SELECT
-                v.id, v.inherit_id, v.mode
-            FROM ir_ui_view_inherits v
+                v.id, %(field_names)s
+            FROM ir_ui_view_inherits as v
             ORDER BY v.priority, v.id
-        """, ids=tuple(self.ids), where_clause=where_clause)
+        """,
+            aliased_names=aliased_names,
+            field_names=SQL(', ').join(SQL.identifier('v', f) for f in field_names),
+            ids=tuple(self.ids), where_clause=where_clause)
         # ORDER BY v.priority, v.id:
         # 1/ sort by priority: abritrary value set by developers on some
         #    views to solve "dependency hell" problems and force a view
@@ -690,20 +697,19 @@ actual arch.
         #    database. e.g. base views are placed before stock ones.
 
         rows = self.env.execute_query(query)
-        views = self.browse(row[0] for row in rows)
+        if not rows:
+            return self.browse()
 
-        # optimization: fill in cache of inherit_id and mode
-        self._fields['inherit_id']._insert_cache(views, [row[1] for row in rows])
-        self._fields['mode']._insert_cache(views, [row[2] for row in rows])
+        ids, *columns = zip(*rows)
+        views = self.browse(ids)
 
-        # During an upgrade, we can only use the views that have been
-        # fully upgraded already.
-        if self.pool._init and not self._context.get('load_all_views'):
-            views = views._filter_loaded_views()
+        # optimization: fill in cache of retrieved fields
+        for fname, column in zip(field_names, columns, strict=True):
+            self._fields[fname]._insert_cache(views, column)
 
         return views
 
-    def _filter_loaded_views(self):
+    def _filter_loaded_views(self, check_view_ids):
         """
         During the module upgrade phase it may happen that a view is
         present in the database but the fields it relies on are not
@@ -713,7 +719,6 @@ actual arch.
         initialization phase is completely finished.
         """
         # check that all found ids have a corresponding xml_id in a loaded module
-        check_view_ids = set(self.env.context['check_view_ids'])
         ids_to_check = [vid for vid in self.ids if vid not in check_view_ids]
         if not ids_to_check:
             return self
@@ -968,35 +973,58 @@ actual arch.
         return etree.tostring(self._get_combined_arch(), encoding='unicode')
 
     def _get_combined_arch(self):
+        self.ensure_one()
+        return self._get_combined_archs()[0]
+
+    def _get_combined_archs(self):
         """ Return the arch of ``self`` (as an etree) combined with its inherited views. """
-        root = self
-        view_ids = []
-        while True:
-            view_ids.append(root.id)
-            if not root.inherit_id:
-                break
-            root = root.inherit_id
-
-        views = self.browse(view_ids)
-
-        # Add inherited views to the list of loading forced views
-        # Otherwise, inherited views could not find elements created in
-        # their direct parents if that parent is defined in the same module
-        # introduce check_view_ids in context
-        if 'check_view_ids' not in views.env.context:
-            views = views.with_context(check_view_ids=[])
-        views.env.context['check_view_ids'].extend(view_ids)
+        parented = []
+        roots = self.env['ir.ui.view']
+        for root in self:
+            parented.append(view_ids := [])
+            while True:
+                view_ids.append(root.id)
+                if not root.inherit_id:
+                    roots += root
+                    break
+                root = root.inherit_id
+        views = self.env['ir.ui.view'].browse(unique(view_id for view_ids in parented for view_id in view_ids))
 
         # Map each node to its children nodes. Note that all children nodes are
         # part of a single prefetch set, which is all views to combine.
-        tree_views = views._get_inheriting_views()
-        hierarchy = collections.defaultdict(list)
-        for view in tree_views:
-            hierarchy[view.inherit_id].append(view)
+        all_tree_views = views._get_inheriting_views()
 
-        # optimization: make root part of the prefetch set, too
-        arch = root.with_prefetch(tree_views._prefetch_ids)._combine(hierarchy)
-        return arch
+        # During an upgrade, we can only use the views that have been
+        # fully upgraded already.
+        if self.pool._init and not self.env.context.get('load_all_views'):
+            check_view_ids = self.env.context.get('check_view_ids', [])
+            # Add inherited views to the list of loading forced views
+            # Otherwise, inherited views could not find elements created in
+            # their direct parents if that parent is defined in the same module
+            # introduce check_view_ids in context
+            check_view_ids += views.ids
+            all_tree_views = all_tree_views._filter_loaded_views(set(check_view_ids))
+
+        # get the global children views then get hierarchy for each views
+        children_views = collections.defaultdict(list)
+        for view in all_tree_views:
+            children_views[view.inherit_id].append(view)
+
+        def get_hierarchy(root, parented_ids, _hierarchy=None):
+            if _hierarchy is None:
+                _hierarchy = collections.defaultdict(list)
+            _hierarchy[root.inherit_id].append(root)
+            for child in children_views[root]:
+                if child.id in parented_ids or child.mode != 'primary':
+                    get_hierarchy(child, parented_ids, _hierarchy)
+            return _hierarchy
+
+        roots = roots.with_prefetch(all_tree_views._prefetch_ids)
+
+        return [
+            root._combine(get_hierarchy(root, parented_ids))
+            for root, parented_ids in zip(roots, parented)
+        ]
 
     def _get_view_refs(self, node):
         """ Extract the `[view_type]_view_ref` keys and values from the node context attribute,
@@ -2309,7 +2337,7 @@ actual arch.
     def _get_view_etrees(self):
         if not self:
             return []
-        arch_trees = self.mapped(lambda view: view._get_combined_arch())
+        arch_trees = self._get_combined_archs()
         for arch_tree in arch_trees:
             self.distribute_branding(arch_tree)
         return arch_trees
