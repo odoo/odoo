@@ -15,12 +15,12 @@ registerWebsitePreviewTour("test_01_admin_shop_tour", {
     trigger: ":iframe .js_sale",
 },
 {
-    trigger: ".o_menu_systray .o_new_content_container > a",
+    trigger: ".o_menu_systray .o_new_content_container > button",
     content: _t("Let's create your first product."),
     tooltipPosition: "bottom",
     run: "click",
 }, {
-    trigger: "a[data-module-xml-id='base.module_website_sale']",
+    trigger: "button[data-module-xml-id='base.module_website_sale']",
     content: markup(_t("Select <b>New Product</b> to create it and manage its properties to boost your sales.")),
     tooltipPosition: "bottom",
     run: "click",
@@ -36,7 +36,7 @@ registerWebsitePreviewTour("test_01_admin_shop_tour", {
     run: "click",
 },
 {
-    trigger: "#oe_snippets.o_loaded",
+    trigger: ".o_builder_sidebar_open",
 },
 {
     trigger: ":iframe .product_price .oe_currency_value:visible",
@@ -71,7 +71,7 @@ goBackToBlocks(),
 }), {
     // Wait until the drag and drop is resolved (causing a history step)
     // before clicking save.
-    trigger: ".o_we_external_history_buttons button.fa-undo:not([disabled])",
+    trigger: ".o-snippets-top-actions button.fa-undo:not([disabled])",
 }, {
     trigger: "button[data-action=save]",
     content: markup(_t("Once you click on <b>Save</b>, your product is updated.")),
