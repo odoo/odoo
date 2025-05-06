@@ -27,6 +27,7 @@ import {
     OdooChartCorePlugin,
     OdooChartUIPlugin,
 } from "@spreadsheet/chart/index"; // Odoochart depends on filter for its getters
+import { LoggingUIPlugin } from "@spreadsheet/logging/logging_ui_plugin";
 
 corePluginRegistry.add("OdooGlobalFiltersCorePlugin", GlobalFiltersCorePlugin);
 corePluginRegistry.add("OdooPivotCorePlugin", PivotCorePlugin);

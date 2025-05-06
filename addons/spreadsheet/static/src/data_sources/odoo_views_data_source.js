@@ -85,6 +85,13 @@ export class OdooViewsDataSource extends LoadableDataSource {
         return this._metaData.fields !== undefined;
     }
 
+    _assertMetadataIsLoaded() {
+        if (this._metaData.fields === undefined) {
+            this.loadMetadata();
+            throw new LoadingDataError();
+        }
+    }
+
     /**
      * Get the computed domain of this source
      * @returns {Array}
@@ -128,5 +135,9 @@ export class OdooViewsDataSource extends LoadableDataSource {
      */
     getModelLabel() {
         return this._metadataRepository.modelDisplayName(this._metaData.resModel);
+    }
+
+    get source() {
+        return {};
     }
 }
