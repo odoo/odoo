@@ -2001,12 +2001,12 @@ class TestQweb(TransactionCaseWithUserDemo):
 
         first_search_fetch_xmlid_queries = 2  # the first "SELECT id + fields from xmlid"
         other_search_fetch_xmlid_queries = 2  # "SELECT id + fields from xmlid"
-        arch_combine_queries = 8  # SELECT RECURSIVE arch combine
+        arch_combine_queries = 4  # SELECT RECURSIVE arch combine
 
         self.env.registry.clear_cache('templates')
         view.invalidate_recordset()
 
-        test_render_queries('base.testing_content', 'test-cold-0', arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)  # 12
+        test_render_queries('base.testing_content', 'test-cold-0', arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)  # 8
 
         test_render_queries('base.testing_content', 'test-hot-0', 0)
         test_render_queries('base.testing_content', 'test-hot-1', 0)
@@ -2016,20 +2016,20 @@ class TestQweb(TransactionCaseWithUserDemo):
 
         # like 'test-cold-0'
         self.env.registry.clear_cache('templates')
-        test_render_queries(view.id, 'test-cold-id-1', arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)  # 12
+        test_render_queries(view.id, 'test-cold-id-1', arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)  # 8
 
         # like 'test-cold-0' the first search query is replaced by a fetching
         self.env.registry.clear_cache('templates')
         view.invalidate_recordset()
-        test_render_queries(view.id, 'test-cold-id-2', arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)  # 12
+        test_render_queries(view.id, 'test-cold-id-2', arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)  # 8
 
         # like 'test-cold-0'
         self.env.registry.clear_cache('templates')
-        test_render_queries('base.testing_content', 'test-cold-1', arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)  # 12
+        test_render_queries('base.testing_content', 'test-cold-1', arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)  # 8
 
         # like 'test-cold-0'
         self.env.registry.clear_cache('templates')
-        test_render_queries(view.id, 'test-cold-id-3', arch_combine_queries + first_search_fetch_xmlid_queries - 1 + other_search_fetch_xmlid_queries)  # 11
+        test_render_queries(view.id, 'test-cold-id-3', arch_combine_queries + first_search_fetch_xmlid_queries - 1 + other_search_fetch_xmlid_queries)  # 7
 
 class TestQwebCache(TransactionCase):
     def test_render_xml_cache_base(self):

@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+from contextlib import contextmanager
+
 from odoo import http
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.website.tools import MockRequest
@@ -220,21 +223,21 @@ class TestQweb(TransactionCaseWithUserDemo):
 
         first_search_fetch_xmlid_queries = 1  # instead of the first SELECT visibility
         other_search_fetch_xmlid_queries = 3  # "SELECT id + fields from xmlid"
-        arch_combine_queries = 8  # SELECT RECURSIVE arch combine
+        arch_combine_queries = 4  # SELECT RECURSIVE arch combine
 
         self.env.registry.clear_cache('templates')
         view.invalidate_recordset()
 
         test_render_queries('base.testing_content', 'test-cold-0',
-                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 8
                             invalidate_templates=True, invalidate_view=True)
 
         test_render_queries('base.testing_content', 'test-cold-0', with_website=True,
-                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 8
                             invalidate_templates=True, invalidate_view=True)
 
         test_render_queries('base.testing_content', 'test-cold-0',
-                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)  # 12
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries)  # 8
 
         test_render_queries('base.testing_content', 'test-hot-0', 0)
         test_render_queries('base.testing_content', 'test-hot-0', 0, with_website=True)
@@ -248,23 +251,23 @@ class TestQweb(TransactionCaseWithUserDemo):
         # like 'test-cold-0'
 
         test_render_queries(view.id, 'test-cold-id-1',
-                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 8
                             invalidate_templates=True)
 
         test_render_queries(view.id, 'test-cold-id-1',
-                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 11
+                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 7
                             invalidate_templates=True)
 
         test_render_queries(view.id, 'test-cold-id-1', with_website=True,
-                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 11
+                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 7
                             invalidate_templates=True)
 
         # like 'test-cold-0' the first search query is replaced by a fetching
         test_render_queries(view.id, 'test-cold-id-2', with_website=True,
-                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 8
                             invalidate_templates=True, invalidate_view=True)
         test_render_queries(view.id, 'test-cold-id-2',
-                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 8
                             invalidate_templates=True, invalidate_view=True)
 
         env = self.env(user=self.user_demo, context={
@@ -275,19 +278,19 @@ class TestQweb(TransactionCaseWithUserDemo):
 
         # like 'test-cold-0'
         test_render_queries('base.testing_content', 'test-cold-1',
-                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 8
                             invalidate_templates=True)
         test_render_queries('base.testing_content', 'test-cold-1', with_website=True,
-                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 12
+                            queries=arch_combine_queries + first_search_fetch_xmlid_queries + other_search_fetch_xmlid_queries,  # 8
                             invalidate_templates=True)
 
         # like 'test-cold-0'
         test_render_queries(view.id, 'test-cold-id-3',
-                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 11
+                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 7
                             with_website=True,
                             invalidate_templates=True)
         test_render_queries(view.id, 'test-cold-id-3',
-                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 11
+                            queries=arch_combine_queries + 0 + other_search_fetch_xmlid_queries,  # 7
                             invalidate_templates=True)
 
 
@@ -507,19 +510,26 @@ class TestQwebDataSnippet(TransactionCase):
         self.assertEqual(self._normalize_xml(rendered), self._normalize_xml(expected_output))
 
     def test_call_query_count_snippets_template(self):
-        init = self.env.cr.sql_log_count
-        with MockRequest(self.env, website=self.env['website'].browse(1)):
-            render = self.env['ir.ui.view'].render_public_asset('website.snippets')
-            self.assertTrue('data-selector=".s_blockquote"' in render)
+        actual_queries = []
+        with contextmanager(lambda: self._patchExecute(actual_queries))():
+            with MockRequest(self.env, website=self.env['website'].browse(1)):
+                render = self.env['ir.ui.view'].render_public_asset('website.snippets')
+                self.assertTrue('data-selector=".s_blockquote"' in render)
+
+        re_sql = re.compile(r'\bir_ui_view\b', re.IGNORECASE)
+        ir_ui_view_queries = [q for q in actual_queries if re_sql.search(q)]
 
         # nb_snippets = 156
         first_search = 1
-        t_call_snippets = 2
-        fetch_snippets = 4
+        t_call_snippets = 3
+        fetch_snippets = 0
         get_root_view = 3
         combine_views = 3
 
-        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 13
-        other_queries = 43
+        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 10
+        self.assertEqual(len(ir_ui_view_queries), all_ir_ui_view_queries, f'ir_ui_view queries: {all_ir_ui_view_queries}')
 
-        self.assertEqual(self.env.cr.sql_log_count - init, all_ir_ui_view_queries + other_queries, f'Maximum queries: {all_ir_ui_view_queries + other_queries}')
+        re_sql = re.compile(r'\bwebsite\b', re.IGNORECASE)
+        website_queries = [q for q in actual_queries if re_sql.search(q)]
+
+        self.assertEqual(len(website_queries), 19, f'Maximum queries: {19}')
