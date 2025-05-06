@@ -7,7 +7,7 @@
  * @returns The transformed 2D point
  */
 export function transform([[a, b, c], [d, e, f], [g, h, i]], [x, y]) {
-    let z = g * x + h * y + i;
+    const z = g * x + h * y + i;
     return [(a * x + b * y + c) / z, (d * x + e * y + f) / z];
 }
 
@@ -20,9 +20,21 @@ export function transform([[a, b, c], [d, e, f], [g, h, i]], [x, y]) {
 function invert([[a, b, c], [d, e, f], [g, h, i]]) {
     const determinant = a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
     return [
-        [(e * i - h * f) / determinant, (h * c - b * i) / determinant, (b * f - e * c) / determinant],
-        [(g * f - d * i) / determinant, (a * i - g * c) / determinant, (d * c - a * f) / determinant],
-        [(d * h - g * e) / determinant, (g * b - a * h) / determinant, (a * e - d * b) / determinant],
+        [
+            (e * i - h * f) / determinant,
+            (h * c - b * i) / determinant,
+            (b * f - e * c) / determinant,
+        ],
+        [
+            (g * f - d * i) / determinant,
+            (a * i - g * c) / determinant,
+            (d * c - a * f) / determinant,
+        ],
+        [
+            (d * h - g * e) / determinant,
+            (g * b - a * h) / determinant,
+            (a * e - d * b) / determinant,
+        ],
     ];
 }
 
@@ -68,8 +80,16 @@ export function getProjective(width, height, [[x0, y0], [x1, y1], [x2, y2], [x3,
     // onto homogeneous coordinates of the corresponding corners of the
     // projective image. Combining these together yields the projective
     // transformation we are looking for.
-    const reverse = invert([[width, -width, 0], [0, -height, height], [1, -1, 1]]);
-    const forward = [[a * x1, b * x2, c * x3], [a * y1, b * y2, c * y3], [a, b, c]];
+    const reverse = invert([
+        [width, -width, 0],
+        [0, -height, height],
+        [1, -1, 1],
+    ]);
+    const forward = [
+        [a * x1, b * x2, c * x3],
+        [a * y1, b * y2, c * y3],
+        [a, b, c],
+    ];
 
     return multiply(forward, reverse);
 }
@@ -90,7 +110,15 @@ export function getAffineApproximation(projective, [[x0, y0], [x1, y1], [x2, y2]
     const c = transform(projective, [x2, y2]);
 
     return multiply(
-        [[a[0], b[0], c[0]], [a[1], b[1], c[1]], [1, 1, 1]],
-        invert([[x0, x1, x2], [y0, y1, y2], [1, 1, 1]]),
+        [
+            [a[0], b[0], c[0]],
+            [a[1], b[1], c[1]],
+            [1, 1, 1],
+        ],
+        invert([
+            [x0, x1, x2],
+            [y0, y1, y2],
+            [1, 1, 1],
+        ])
     );
 }

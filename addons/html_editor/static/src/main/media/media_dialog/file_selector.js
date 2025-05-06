@@ -472,9 +472,9 @@ export class FileSelector extends Component {
         if (firstHiddenAttachmentEl) {
             const attachmentBottom = firstHiddenAttachmentEl.getBoundingClientRect().bottom;
             const attachmentIndex = attachmentEls.indexOf(firstHiddenAttachmentEl);
-            const firstNextRowAttachmentEl = attachmentEls.slice(attachmentIndex).find((el) => {
-                return el.getBoundingClientRect().bottom > attachmentBottom;
-            });
+            const firstNextRowAttachmentEl = attachmentEls
+                .slice(attachmentIndex)
+                .find((el) => el.getBoundingClientRect().bottom > attachmentBottom);
             scrollToEl = firstNextRowAttachmentEl || scrollToEl;
         }
         scrollToEl.scrollIntoView({ block: "end", inline: "nearest", behavior: "smooth" });

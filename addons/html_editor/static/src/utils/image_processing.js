@@ -307,7 +307,7 @@ export async function applyModifications(img, cropper, dataOptions = {}) {
                     overlap: 0.1,
                 };
 
-                for (let { origin, sides, flange, overlap } of [upper, lower]) {
+                for (const { origin, sides, flange, overlap } of [upper, lower]) {
                     const [[a, c, e], [b, d, f]] = getAffineApproximation(project, [
                         origin,
                         [origin[0] + sides[0], origin[1]],

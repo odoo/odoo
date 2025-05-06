@@ -35,9 +35,7 @@ export const tableOfContentEmbedding = {
 export const readonlyTableOfContentEmbedding = {
     name: "tableOfContent",
     Component: EmbeddedTableOfContentComponent,
-    getProps: (host) => {
-        return {
-            readonly: true,
-        };
-    },
+    getProps: (host) => ({
+        readonly: true,
+    }),
 };

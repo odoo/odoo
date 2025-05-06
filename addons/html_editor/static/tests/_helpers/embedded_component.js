@@ -78,8 +78,8 @@ export const offsetCounter = {
     name: "counter",
     Component: OffsetCounter,
     getProps: (host) => ({ host }),
-    getStateChangeManager: (config) => {
-        return new StateChangeManager(
+    getStateChangeManager: (config) =>
+        new StateChangeManager(
             Object.assign(config, {
                 propertyUpdater: {
                     baseValue: (state, previous, next) => {
@@ -88,8 +88,7 @@ export const offsetCounter = {
                     },
                 },
             })
-        );
-    },
+        ),
 };
 
 export class SavedCounter extends Component {
@@ -117,9 +116,7 @@ export const savedCounter = {
     name: "counter",
     Component: SavedCounter,
     getProps: (host) => ({ host }),
-    getStateChangeManager: (config) => {
-        return new StateChangeManager(config);
-    },
+    getStateChangeManager: (config) => new StateChangeManager(config),
 };
 
 export class CollaborativeObject extends Component {
@@ -142,8 +139,8 @@ export const collaborativeObject = {
     name: "obj",
     Component: CollaborativeObject,
     getProps: (host) => ({ host }),
-    getStateChangeManager: (config) => {
-        return new StateChangeManager(
+    getStateChangeManager: (config) =>
+        new StateChangeManager(
             Object.assign(config, {
                 propertyUpdater: {
                     obj: (state, previous, next) => {
@@ -151,8 +148,7 @@ export const collaborativeObject = {
                     },
                 },
             })
-        );
-    },
+        ),
 };
 
 export class NamedCounter extends Component {
@@ -180,8 +176,8 @@ export const namedCounter = {
         host,
         ...getEmbeddedProps(host),
     }),
-    getStateChangeManager: (config) => {
-        return new StateChangeManager(
+    getStateChangeManager: (config) =>
+        new StateChangeManager(
             Object.assign(config, {
                 propertyUpdater: {
                     baseValue: (state, previous, next) => {
@@ -196,15 +192,12 @@ export const namedCounter = {
                         baseValue: 3,
                     };
                 },
-                stateToEmbeddedProps: (host, state) => {
-                    return {
-                        ...getEmbeddedProps(host),
-                        value: state.value,
-                    };
-                },
+                stateToEmbeddedProps: (host, state) => ({
+                    ...getEmbeddedProps(host),
+                    value: state.value,
+                }),
             })
-        );
-    },
+        ),
 };
 
 export function embedding(

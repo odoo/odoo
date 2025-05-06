@@ -63,7 +63,8 @@ export class LinkPopover extends Component {
                 this.props.type ||
                 this.props.linkElement.className
                     .match(/btn(-[a-z0-9_-]*)(primary|secondary)/)
-                    ?.pop() || "",
+                    ?.pop() ||
+                "",
             isImage: this.props.isImage,
         });
 

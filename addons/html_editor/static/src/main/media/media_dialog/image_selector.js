@@ -132,8 +132,13 @@ export class ImageSelector extends FileSelector {
         const domain = super.attachmentsDomain;
         domain.push(["mimetype", "in", IMAGE_MIMETYPES]);
         if (!this.props.useMediaLibrary) {
-            domain.push("|", ["url", "=", false],
-                "!", "|", ["url", "=ilike", "/html_editor/shape/%"], ["url", "=ilike", "/web_editor/shape/%"],
+            domain.push(
+                "|",
+                ["url", "=", false],
+                "!",
+                "|",
+                ["url", "=ilike", "/html_editor/shape/%"],
+                ["url", "=ilike", "/web_editor/shape/%"]
             );
         }
         domain.push("!", ["name", "=like", "%.crop"]);
@@ -334,10 +339,11 @@ export class ImageSelector extends FileSelector {
             .concat(savedMedia)
             .map((attachment) => {
                 // Color-customize dynamic SVGs with the theme colors
-                if (attachment.image_src && (
-                    attachment.image_src.startsWith("/html_editor/shape/") ||
-                    attachment.image_src.startsWith("/web_editor/shape/")
-                )) {
+                if (
+                    attachment.image_src &&
+                    (attachment.image_src.startsWith("/html_editor/shape/") ||
+                        attachment.image_src.startsWith("/web_editor/shape/"))
+                ) {
                     const colorCustomizedURL = new URL(
                         attachment.image_src,
                         window.location.origin

@@ -43,9 +43,12 @@ export class X2ManyImageField extends ImageField {
         if (!attachmentRecord[0].datas) {
             // URL type attachments are mostly demo records which don't have any ir.attachment datas
             // TODO: make it work with URL type attachments
-            return this.notification.add(`Cannot add URL type attachment "${attachmentRecord[0].name}". Please try to reupload this image.`, {
-                type: "warning",
-            });
+            return this.notification.add(
+                `Cannot add URL type attachment "${attachmentRecord[0].name}". Please try to reupload this image.`,
+                {
+                    type: "warning",
+                }
+            );
         }
         await this.props.record.update({
             [this.props.name]: attachmentRecord[0].datas,

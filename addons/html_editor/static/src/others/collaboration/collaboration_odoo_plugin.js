@@ -239,16 +239,15 @@ export class CollaborationOdooPlugin extends Plugin {
         return new PeerToPeer({
             peerConnectionConfig: { iceServers: this.iceServers },
             currentPeerId: this.config.collaboration.peerId,
-            broadcastAll: (rpcData) => {
-                return rpcMutex.exec(async () => {
-                    return rpc("/html_editor/bus_broadcast", {
+            broadcastAll: (rpcData) =>
+                rpcMutex.exec(async () =>
+                    rpc("/html_editor/bus_broadcast", {
                         model_name: modelName,
                         field_name: fieldName,
                         res_id: resId,
                         bus_data: rpcData,
-                    });
-                });
-            },
+                    })
+                ),
             onRequest: {
                 get_peer_metadata: this.getMetadata.bind(this),
                 get_missing_steps: (params) =>
@@ -617,12 +616,12 @@ export class CollaborationOdooPlugin extends Plugin {
         collaborationResetId = this.lastCollaborationResetId;
         this.startCollaborationTime = new Date().getTime();
         await Promise.all(
-            this.getPtpPeers().map((peer) => {
+            this.getPtpPeers().map((peer) =>
                 // Reset from the fastest peer. The first peer to reset will set
                 // this.historySyncAtLeastOnce to true canceling the other peers
                 // resets.
-                return this.resetFromPeer(peer.id, collaborationResetId);
-            })
+                this.resetFromPeer(peer.id, collaborationResetId)
+            )
         );
         return true;
     }
