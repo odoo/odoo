@@ -37,14 +37,22 @@ export class DragAndDropPlugin extends Plugin {
     }
 
     isDraggable(el) {
-        // TODO mobile view
         const isDraggable =
             isEditable(el.parentNode) &&
             !el.matches(".oe_unmovable") &&
             !!this.dropzoneSelectors.find(
                 ({ selector, exclude = false }) => el.matches(selector) && !el.matches(exclude)
             );
-        return isDraggable;
+        if (!isDraggable) {
+            return false;
+        }
+
+        for (const isDraggable of this.getResource("is_draggable_handlers")) {
+            if (!isDraggable(el)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     getActiveOverlayButtons(target) {
@@ -160,6 +168,11 @@ export class DragAndDropPlugin extends Plugin {
                 }
                 this.dragState.restoreCallbacks = restoreCallbacks;
 
+                this.dispatchTo("on_element_dragged_handlers", {
+                    draggedEl: this.overlayTarget,
+                    dragState: this.dragState,
+                });
+
                 // Storing the element starting top and middle position.
                 targetRect = this.overlayTarget.getBoundingClientRect();
                 this.dragState.startTop = targetRect.top;
@@ -230,12 +243,34 @@ export class DragAndDropPlugin extends Plugin {
                 dropzoneEl.classList.add("invisible");
                 dropzoneEl.after(this.overlayTarget);
                 this.dragState.currentDropzoneEl = dropzoneEl;
+
+                this.dispatchTo("on_element_over_dropzone_handlers", {
+                    draggedEl: this.overlayTarget,
+                    dragState: this.dragState,
+                });
+            },
+            onDrag: ({ x, y }) => {
+                if (!this.dragState.currentDropzoneEl) {
+                    return;
+                }
+
+                this.dispatchTo("on_element_move_handlers", {
+                    draggedEl: this.overlayTarget,
+                    dragState: this.dragState,
+                    x,
+                    y,
+                });
             },
             dropzoneOut: () => {
                 const dropzoneEl = this.dragState.currentDropzoneEl;
                 if (!dropzoneEl) {
                     return;
                 }
+
+                this.dispatchTo("on_element_out_dropzone_handlers", {
+                    draggedEl: this.overlayTarget,
+                    dragState: this.dragState,
+                });
 
                 this.overlayTarget.remove();
                 dropzoneEl.classList.remove("invisible");
@@ -244,6 +279,13 @@ export class DragAndDropPlugin extends Plugin {
             onDragEnd: async ({ x, y }) => {
                 this.dragStarted = false;
                 let currentDropzoneEl = this.dragState.currentDropzoneEl;
+
+                if (currentDropzoneEl) {
+                    this.dispatchTo("on_element_dropped_over_handlers", {
+                        droppedEl: this.overlayTarget,
+                        dragState: this.dragState,
+                    });
+                }
 
                 // If the snippet was dropped outside of a dropzone, find the
                 // dropzone that is the nearest to the dropping point.
@@ -255,6 +297,12 @@ export class DragAndDropPlugin extends Plugin {
                     }
                     currentDropzoneEl = closestDropzoneEl;
                     currentDropzoneEl.after(this.overlayTarget);
+
+                    this.dispatchTo("on_element_dropped_near_handlers", {
+                        droppedEl: this.overlayTarget,
+                        dropzoneEl: currentDropzoneEl,
+                        dragState: this.dragState,
+                    });
                 }
 
                 this.dependencies.dropzone.removeDropzones();
@@ -276,14 +324,19 @@ export class DragAndDropPlugin extends Plugin {
                 // Undo the changes needed to ease the drag and drop.
                 this.dragState.restoreCallbacks.forEach((restore) => restore());
 
-                // Add a step only if the element was not dropped where it was
-                // before, otherwise cancel everything.
-                const previousEl = this.overlayTarget.previousElementSibling;
-                const nextEl = this.overlayTarget.nextElementSibling;
-                const isSamePositionAsStart =
-                    this.dragState.startPreviousEl === previousEl &&
-                    this.dragState.startNextEl === nextEl;
-                if (!isSamePositionAsStart) {
+                // Add a history step only if the element was not dropped where
+                // it was before, otherwise cancel everything.
+                let hasSamePositionAsStart;
+                if ("hasSamePositionAsStart" in this.dragState) {
+                    hasSamePositionAsStart = this.dragState.hasSamePositionAsStart();
+                } else {
+                    const previousEl = this.overlayTarget.previousElementSibling;
+                    const nextEl = this.overlayTarget.nextElementSibling;
+                    const { startPreviousEl, startNextEl } = this.dragState;
+                    hasSamePositionAsStart =
+                        startPreviousEl === previousEl && startNextEl === nextEl;
+                }
+                if (!hasSamePositionAsStart) {
                     this.dependencies.history.addStep();
                 } else {
                     this.cancelDragAndDrop();

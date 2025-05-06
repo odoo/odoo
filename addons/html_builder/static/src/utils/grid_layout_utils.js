@@ -9,7 +9,7 @@ const defaultGridPadding = 10; // 10px (see `--grid-item-padding-(x|y)` CSS vari
  * Returns the grid properties: rowGap, rowSize, columnGap and columnSize.
  *
  * @private
- * @param {Element} rowEl the grid element
+ * @param {HTMLElement} rowEl the grid element
  * @returns {Object}
  */
 export function getGridProperties(rowEl) {
@@ -17,10 +17,11 @@ export function getGridProperties(rowEl) {
     const rowGap = parseFloat(style.rowGap);
     const columnGap = parseFloat(style.columnGap);
     const columnSize = (rowEl.clientWidth - 11 * columnGap) / 12;
-    return { rowGap: rowGap, rowSize: rowSize, columnGap: columnGap, columnSize: columnSize };
+    return { rowGap, rowSize, columnGap, columnSize };
 }
 /**
- * Returns the grid item properties.
+ * Returns the grid item properties: row|column-start|end, grid-area and z-index
+ * style properties.
  *
  * @private
  * @param {HTMLElement} gridItemEl the grid item
@@ -32,7 +33,10 @@ export function getGridItemProperties(gridItemEl) {
     const rowEnd = parseInt(style.gridRowEnd);
     const columnStart = parseInt(style.gridColumnStart);
     const columnEnd = parseInt(style.gridColumnEnd);
-    return { rowStart, rowEnd, columnStart, columnEnd };
+
+    const gridArea = style.gridArea;
+    const zIndex = style.zIndex;
+    return { rowStart, rowEnd, columnStart, columnEnd, gridArea, zIndex };
 }
 /**
  * Sets the z-index property of the element to the maximum z-index present in
@@ -81,19 +85,20 @@ export function resizeGrid(rowEl) {
     rowEl.dataset.rowCount = Math.max(...columnEls.map((el) => el.style.gridRowEnd)) - 1;
 }
 /**
- * Removes the properties and elements added to make the drag work.
+ * Removes the properties and elements added to make the drag over a grid work.
  *
  * @private
  * @param {HTMLElement} rowEl
  * @param {HTMLElement} columnEl
+ * @param {HTMLElement} dragHelperEl
+ * @param {HTMLElement} backgroundGridEl
  */
-export function gridCleanUp(rowEl, columnEl) {
-    columnEl.style.removeProperty("position");
-    columnEl.style.removeProperty("top");
-    columnEl.style.removeProperty("left");
-    columnEl.style.removeProperty("height");
-    columnEl.style.removeProperty("width");
+export function cleanUpGrid(rowEl, columnEl, dragHelperEl, backgroundGridEl) {
+    const columnStyleProps = ["position", "top", "left", "height", "width"];
+    columnStyleProps.forEach((prop) => columnEl.style.removeProperty(prop));
     rowEl.style.removeProperty("position");
+    dragHelperEl.remove();
+    backgroundGridEl.remove();
 }
 /**
  * Toggles the row (= child element of containerEl) in grid mode.
@@ -281,10 +286,10 @@ export function reloadLazyImages(columnEl) {
  * height and returns them. Also adds the grid classes to the column.
  *
  * @private
- * @param {Element} rowEl
- * @param {Element} columnEl
- * @param {Number} columnWidth the width in pixels of the column.
- * @param {Number} columnHeight the height in pixels of the column.
+ * @param {HTMLElement} rowEl
+ * @param {HTMLElement} columnEl
+ * @param {Number} columnWidth the width in pixels of the column
+ * @param {Number} columnHeight the height in pixels of the column
  * @returns {Object}
  */
 export function convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight) {
@@ -303,13 +308,9 @@ export function convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight) 
     columnHeight += 2 * paddingY;
 
     // Computing the column and row spans.
-    const gridProp = getGridProperties(rowEl);
-    const columnColCount = Math.round(
-        (columnWidth + gridProp.columnGap) / (gridProp.columnSize + gridProp.columnGap)
-    );
-    const columnRowCount = Math.ceil(
-        (columnHeight + gridProp.rowGap) / (gridProp.rowSize + gridProp.rowGap)
-    );
+    const { rowGap, rowSize, columnGap, columnSize } = getGridProperties(rowEl);
+    const columnSpan = Math.round((columnWidth + columnGap) / (columnSize + columnGap));
+    const rowSpan = Math.ceil((columnHeight + rowGap) / (rowSize + rowGap));
 
     // Removing the padding and offset classes.
     const regex = /^(pt|pb|col-|offset-)/;
@@ -317,14 +318,10 @@ export function convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight) 
     columnEl.classList.remove(...toRemove);
 
     // Adding the grid classes.
-    columnEl.classList.add(
-        `g-col-lg-${columnColCount}`,
-        `g-height-${columnRowCount}`,
-        `col-lg-${columnColCount}`
-    );
+    columnEl.classList.add(`g-col-lg-${columnSpan}`, `g-height-${rowSpan}`, `col-lg-${columnSpan}`);
     columnEl.classList.add("o_grid_item");
 
-    return { columnColCount: columnColCount, columnRowCount: columnRowCount };
+    return { columnSpan, rowSpan };
 }
 /**
  * Removes the grid properties from the grid column when it becomes a normal

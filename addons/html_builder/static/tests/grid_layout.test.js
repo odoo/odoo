@@ -77,6 +77,6 @@ test("Drag & drop an inner snippet inside a grid item should adjust its height o
     await drop(getDragHelper());
     await waitForEndOfOperation();
     expect(":iframe .btn").toHaveCount(1);
-    expect(":iframe .o_grid_item").toHaveClass("g-height-2");
-    expect(":iframe .o_grid_mode").toHaveAttribute("data-row-count", "2");
+    expect(":iframe .o_grid_item").toHaveClass("g-height-3");
+    expect(":iframe .o_grid_mode").toHaveAttribute("data-row-count", "3");
 });
