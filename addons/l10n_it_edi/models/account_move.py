@@ -538,7 +538,7 @@ class AccountMove(models.Model):
             importo_totale_documento += values['base_amount_currency']
             importo_totale_documento += values['tax_amount_currency']
 
-        company = self.company_id
+        company = self.company_id.root_id
         partner = self.commercial_partner_id
         sender = company
         buyer = partner if not is_self_invoice else company
@@ -1576,7 +1576,7 @@ class AccountMove(models.Model):
                 filename = attachment_vals['name']
                 content = b64encode(attachment_vals['raw']).decode()
                 move.l10n_it_edi_state = 'being_sent'
-                proxy_user = move.company_id.l10n_it_edi_proxy_user_id
+                proxy_user = move.company_id.root_id.l10n_it_edi_proxy_user_id
                 moves, files = files_to_upload[proxy_user]
                 files_to_upload[proxy_user] = (moves | move, files + [{'filename': filename, 'xml': content}])
                 filename_move[filename] = move
@@ -1626,7 +1626,7 @@ class AccountMove(models.Model):
         '''
         if not files:
             return {}
-        proxy_user = self.company_id.l10n_it_edi_proxy_user_id
+        proxy_user = self.company_id.root_id.l10n_it_edi_proxy_user_id
         proxy_user.ensure_one()
         if proxy_user.edi_mode == 'demo':
             return {file_data['filename']: {'id_transaction': 'demo'} for file_data in files}

@@ -16,6 +16,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_it_edi_show_purchase_journal_id = fields.Boolean(compute='_compute_l10n_it_edi_show_purchase_journal_id')
+    company_parent_id = fields.Many2one(related='company_id.parent_id', readonly=True)
 
     def _create_proxy_user(self, company_id, edi_mode):
         return self.env['account_edi_proxy_client.user']._register_proxy_user(company_id, 'l10n_it_edi', edi_mode)
@@ -25,7 +26,7 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             # Only show the setting when there exists more than 1 purchase journal.
             purchase_journal_count = self.env['account.journal'].search_count([
-                *self.env['account.journal']._check_company_domain(config.company_id),
+                *self.env['account.journal']._check_company_domain(config.company_id.root_id),
                 ('type', '=', 'purchase'),
             ])
             config.l10n_it_edi_show_purchase_journal_id = purchase_journal_count >= 2
@@ -33,7 +34,7 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('company_id')
     def _compute_l10n_it_edi_register(self):
         for config in self:
-            config.l10n_it_edi_register = config.company_id.l10n_it_edi_register
+            config.l10n_it_edi_register = config.company_id.root_id.l10n_it_edi_register
 
     def _set_l10n_it_edi_register(self):
         for config in self:
