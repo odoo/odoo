@@ -60,7 +60,7 @@ _UNSAFE_ATTRIBUTES = [
     # Tracebacks
     'tb_frame',
     # Generators
-    'gi_code', 'gi_frame', 'g_yieldfrom'
+    'gi_code', 'gi_frame', 'gi_yieldfrom',
     # Coroutines
     'cr_await', 'cr_code', 'cr_frame',
     # Coroutine generators

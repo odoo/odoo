@@ -328,7 +328,7 @@ class AccountMove(models.Model):
             else:
                 it_values['prezzo_unitario'] = 0.0
             if base_line['currency_id'] != self.company_currency_id:
-                it_values['prezzo_unitario'] = base_line['currency_id']._convert(it_values['prezzo_unitario'], self.company_currency_id, date=self.date)
+                it_values['prezzo_unitario'] = it_values['prezzo_unitario'] / base_line['rate']
 
             # Discount.
             it_values['sconto_maggiorazione_list'] = []

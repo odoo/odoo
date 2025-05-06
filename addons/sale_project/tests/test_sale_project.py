@@ -133,12 +133,14 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         })
 
         so_line_order_task_in_global = SaleOrderLine.create({
+            'name': f"{self.product_order_service2.name}\n[TEST1]\nGlobal project",
             'product_id': self.product_order_service2.id,
             'product_uom_qty': 10,
             'order_id': sale_order.id,
         })
 
         so_line_order_new_task_new_project = SaleOrderLine.create({
+            'name': f"{self.product_order_service3.display_name}\n[TEST2]\nNew project",
             'product_id': self.product_order_service3.id,
             'product_uom_qty': 10,
             'order_id': sale_order.id,
@@ -157,9 +159,27 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         # service_tracking 'task_global_project'
         self.assertFalse(so_line_order_task_in_global.project_id, "Only task should be created, project should not be linked")
         self.assertEqual(self.project_global.tasks.sale_line_id, so_line_order_task_in_global, "Global project's task should be linked to so line")
+        self.assertEqual(
+            so_line_order_task_in_global.task_id.name,
+            f"{sale_order.name} - [TEST1]",
+            "Task name in global project should include SO name & partial line description",
+        )
+        self.assertEqual(
+            str(so_line_order_task_in_global.task_id.description),
+            '<p>Global project</p>',
+        )
         #  service_tracking 'task_in_project'
         self.assertTrue(so_line_order_new_task_new_project.project_id, "Sales order line should be linked to newly created project")
         self.assertTrue(so_line_order_new_task_new_project.task_id, "Sales order line should be linked to newly created task")
+        self.assertEqual(
+            so_line_order_new_task_new_project.task_id.name,
+            "[TEST2]",
+            "Task name in new project should only include partial line description",
+        )
+        self.assertEqual(
+            str(so_line_order_new_task_new_project.task_id.description),
+            '<p>New project</p>',
+        )
         # service_tracking 'project_only'
         self.assertFalse(so_line_order_only_project.task_id, "Task should not be created")
         self.assertTrue(so_line_order_only_project.project_id, "Sales order line should be linked to newly created project")

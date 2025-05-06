@@ -753,7 +753,7 @@ class AccountAccount(models.Model):
         return defaults
 
     @api.model
-    def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None):
+    def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None, journal_id=None):
         """
         Returns the accounts ordered from most frequent to least frequent for a given partner
         and filtered according to the move type
@@ -762,6 +762,7 @@ class AccountAccount(models.Model):
         :param move_type: the type of the move to know which type of accounts to retrieve
         :param filter_never_user_accounts: True if we should filter out accounts never used for the partner
         :param limit: the maximum number of accounts to retrieve
+        :param journal_id: only return accounts allowed on this journal id
         :returns: List of account ids, ordered by frequency (from most to least frequent)
         """
         domain = [
@@ -770,6 +771,8 @@ class AccountAccount(models.Model):
             ('account_id.deprecated', '=', False),
             ('date', '>=', fields.Date.add(fields.Date.today(), days=-365 * 2)),
         ]
+        if journal_id:
+            domain += ['|', ('account_id.allowed_journal_ids', '=', journal_id), ('account_id.allowed_journal_ids', '=', False)]
         if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
             domain.append(('account_id.internal_group', '=', 'income'))
         elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
@@ -799,8 +802,8 @@ class AccountAccount(models.Model):
         ))]
 
     @api.model
-    def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None):
-        most_frequent_account = self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type, filter_never_user_accounts=True, limit=1)
+    def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None, journal_id=None):
+        most_frequent_account = self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type, filter_never_user_accounts=True, limit=1, journal_id=journal_id)
         return most_frequent_account[0] if most_frequent_account else False
 
     @api.model
