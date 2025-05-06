@@ -14,7 +14,7 @@ import {
     normalizeValue,
     splitPath,
 } from "@web/core/tree_editor/condition_tree";
-import { OPTIONS } from "@web/core/tree_editor/tree_editor_datetime_options";
+import { OPTIONS_WITH_SELECT } from "@web/core/tree_editor/tree_editor_datetime_options";
 import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { unique, zip } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
@@ -28,8 +28,12 @@ import { Within } from "./tree_editor_components";
  * @returns
  */
 function formatValue(val, disambiguate, fieldDef, displayNames) {
-    if (fieldDef?.type === "date_option" && fieldDef.name in OPTIONS && typeof val !== "string") {
-        const options = OPTIONS[fieldDef.name];
+    if (
+        fieldDef?.type === "date_option" &&
+        fieldDef.name in OPTIONS_WITH_SELECT &&
+        typeof val !== "string"
+    ) {
+        const options = OPTIONS_WITH_SELECT[fieldDef.name];
         const valToCompare = val instanceof Expression ? val._expr : val;
         const [, label] = (options || []).find(([v]) => v === valToCompare) || [];
         if (label !== undefined) {

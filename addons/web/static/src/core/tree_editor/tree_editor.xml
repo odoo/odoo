@@ -176,7 +176,7 @@
         </t>
         <t t-elif="info.component">
             <div t-attf-class="o_tree_editor_editor #{_classes}">
-                <t t-component="info.component" t-props="info.extractProps({ update, value })" />
+                <t t-component="info.component" t-props="info.extractProps({ update, value, displayPlaceholder })" />
             </div>
         </t>
     </t>

@@ -3279,3 +3279,50 @@ test("hide today, next, last operators when allowExpressions = False", async () 
         "not set",
     ]);
 });
+
+test("many2one: placeholders for in operator", async () => {
+    await makeDomainSelector({
+        domain: `[("product_id", "in", [])]`,
+    });
+    expect(`${SELECTORS.valueEditor} input`).toHaveAttribute(
+        "placeholder",
+        `Select one or several criteria`
+    );
+});
+
+test("datetime: placeholders for in operator", async () => {
+    await makeDomainSelector({
+        domain: `[("datetime", "in", [])]`,
+    });
+    expect(`${SELECTORS.valueEditor} input`).toHaveAttribute(
+        "placeholder",
+        `Select one or several criteria`
+    );
+});
+
+test("date: placeholders for in operator", async () => {
+    await makeDomainSelector({
+        domain: `[("date", "in", [])]`,
+    });
+    expect(`${SELECTORS.valueEditor} input`).toHaveAttribute(
+        "placeholder",
+        `Select one or several criteria`
+    );
+});
+
+test("char: placeholders for in operator", async () => {
+    await makeDomainSelector({
+        domain: `[("display_name", "in", [])]`,
+    });
+    expect(`${SELECTORS.valueEditor} input`).toHaveAttribute(
+        "placeholder",
+        `Press "Enter" to add criterion`
+    );
+});
+
+test("selection: placeholders for in operator", async () => {
+    await makeDomainSelector({
+        domain: `[("state", "in", [])]`,
+    });
+    expect(`${SELECTORS.valueEditor} select`).toHaveValue(`Select one or several criteria`);
+});
