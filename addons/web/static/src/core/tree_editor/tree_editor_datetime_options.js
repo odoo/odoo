@@ -25,7 +25,7 @@ const CURRENT_MONTH = `context_today().month`;
 const CURRENT_DAY = `context_today().day`;
 
 let day_of_week_options;
-export const OPTIONS = {
+export const OPTIONS_WITH_SELECT = {
     month_number: [
         [CURRENT_MONTH, _t("This month")],
         ...range(1, 12).map((month) => [
@@ -67,34 +67,23 @@ function fromSelectValue(v) {
     return typeof v === "string" ? new Expression(v) : v;
 }
 
-function makePartialValueEditorInfo(name) {
-    const options = OPTIONS[name];
+export function getEditorInfoForOptionsWithSelect(name, params) {
+    const options = OPTIONS_WITH_SELECT[name];
+    const getOption = (value) => options.find(([v]) => v === toSelectValue(value)) || null;
     return {
         component: Select,
-        extractProps: ({ value, update }) => ({
+        extractProps: ({ value, update, displayPlaceholder }) => ({
             value: toSelectValue(value),
             update: (value) => update(fromSelectValue(value)),
             options,
+            addBlankOption: params.addBlankOption,
+            placeholder: displayPlaceholder && _t(`Select one or several criteria`),
         }),
         defaultValue: getCurrent(UNITS[name]),
-        isSupported: (value) =>
-            typeof value !== "string" && options.find(([v]) => v === toSelectValue(value)),
+        isSupported: (value) => typeof value !== "string" && getOption(value),
         message: _t("Value not in selection"),
     };
 }
-
-let day_of_week_editor_info;
-export const OPTIONS_WITH_SELECT = {
-    month_number: makePartialValueEditorInfo("month_number"),
-    day_of_month: makePartialValueEditorInfo("day_of_month"),
-    quarter_number: makePartialValueEditorInfo("quarter_number"),
-    get day_of_week() {
-        if (!day_of_week_editor_info) {
-            day_of_week_editor_info = makePartialValueEditorInfo("day_of_week");
-        }
-        return day_of_week_editor_info;
-    },
-};
 
 export const OPTIONS_WITH_INPUT = {
     year_number: {
