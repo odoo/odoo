@@ -425,7 +425,7 @@ class L10nEsEdiTbaiDocument(models.Model):
         return sale_values
 
     def _get_regime_code_value(self, taxes, is_simplified):
-        return {'regime_key': taxes._l10n_es_get_regime_code()}
+        return {'regime_key': [taxes._l10n_es_get_regime_code()]}
 
     @api.model
     def _add_base_lines_tax_amounts(self, base_lines, company, tax_lines=None):
