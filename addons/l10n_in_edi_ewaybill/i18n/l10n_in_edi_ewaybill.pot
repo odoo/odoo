@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0+e\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-06 21:57+0000\n"
-"PO-Revision-Date: 2023-01-06 21:57+0000\n"
+"POT-Creation-Date: 2025-05-02 06:59+0000\n"
+"PO-Revision-Date: 2025-05-02 06:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,30 +16,42 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/ewaybill_type.py:0
 #, python-format
 msgid " (Sub-Type: %s)"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid " invalid ship to from gstin "
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid "%s number should be set and not more than 16 characters"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid "- Document Type"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid "- Selected Transporter is missing GSTIN"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid ""
@@ -48,18 +60,21 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid "- Transportation Mode"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid "- Transporter is required when E-waybill is managed by transporter"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid ""
@@ -69,9 +84,8 @@ msgstr ""
 #. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
 msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
+"<span class=\"o_form_label\">Setup E-Waybill</span>\n"
+"                            <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -81,25 +95,52 @@ msgstr ""
 
 #. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.l10n_in_einvoice_report_invoice_document_inherit
-msgid "<strong>E-waybill Number:</strong>"
+msgid "<strong>E-waybill:</strong>"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.l10n_in_einvoice_report_invoice_document_inherit
-msgid "<strong>E-waybill Valid Till:</strong>"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
-#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/res_config_settings.py:0
 #, python-format
-msgid ""
-"A username and password still needs to be set or it's wrong for the "
-"E-waybill(IN). It needs to be added and verify in the Settings."
+msgid "API credentials validated successfully"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model:ir.model,name:l10n_in_edi_ewaybill.model_account_chart_template
+msgid "Account Chart Template"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_l10n_in_ewaybill_type__active
 msgid "Active"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Actual Value cannot be less than or equal to zero"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Address Line1 is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Address Line2 is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Address Line3 is mandatory"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -113,13 +154,90 @@ msgid "Allowed for supply type"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
-#: model:ir.model.fields.selection,name:l10n_in_edi_ewaybill.selection__account_move__l10n_in_mode__1
-msgid "By Road"
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Authentication failed. Pls. inform the helpdesk"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Bill-from and dispatch-from gstin should not be same for this transaction "
+"type"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Bill-to and ship-to gstin should not be same for this transaction type"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Blank Supplier Address"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Both Transaction and Vehicle Number Blank"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
+msgid "Buy credits"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "CGST nad SGST TaxRate should be same"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "CGST value should not be negative"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "CGST/SGST value is not applicable for Inter State Transaction"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.invoice_form_inherit_l10n_in_edi_ewaybill
 msgid "Cancel Reason"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Cess non advol should not be negative"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Cess value should not be negative"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
+msgid "Check the"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -130,6 +248,179 @@ msgstr ""
 #. module: l10n_in_edi_ewaybill
 #: model:ir.model,name:l10n_in_edi_ewaybill.model_res_config_settings
 msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Consignee GSTIN is cancelled and document date is later than the  De-"
+"Registration date"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Consignee name is required"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Consignee place is required"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Consolidate Ewaybill cannot be generated as this Ewaybill Part A is "
+"generated in NIC2"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "ConsolidatedEWB cannot be generated for EwayBill For Gold "
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
+msgid ""
+"Costs 1 credit per transaction. Free 200 credits will be available for the "
+"first time."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not cancel eway bill, please contact helpdesk"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not generate consolidated eway bill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not generate eway bill, pls contact helpdesk"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not insert RFID data, pl. contact helpdisk"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve Error code"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve GSTIN details for the given GSTIN number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve HSN details for the given HSN number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve States List"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve UQC list"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve data"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve data for officer login"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve data from hsn"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve eway bill details, pl. contact helpdesk"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve transporter data by gstin "
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve transporter details from gstin"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not retrieve user details by userid "
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not update transporter"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Could not update vehicle details, pl contact helpdesk"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -147,6 +438,29 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_in_edi_ewaybill.field_account_move__l10n_in_transportation_doc_date
 #: model:ir.model.fields,help:l10n_in_edi_ewaybill.field_account_payment__l10n_in_transportation_doc_date
 msgid "Date on the transporter document"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Date range is exceeding allowed date range "
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Decryption of data failed"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Dispatch From GSTIN cannot be sent as the transaction type selected is "
+"Regular"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -169,17 +483,40 @@ msgid "Document Date"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
-#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_bank_statement_line__l10n_in_transportation_doc_no
-#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_move__l10n_in_transportation_doc_no
-#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_payment__l10n_in_transportation_doc_no
-msgid "Document Number"
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Document type - Tax Invoice is not allowed for composite tax payer"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
-#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_bank_statement_line__l10n_in_type_id
-#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_move__l10n_in_type_id
-#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_payment__l10n_in_type_id
-msgid "Document Type"
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Document type does not match with transaction & Sub trans type"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Duplicate request at the same time"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "E Way Bill cannot be extended as allowed limit is 360 days"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"E Way Bill should be generated as part of IRN generation or with reference "
+"to IRN in E Invoice System, Since Supplier is enabled for E Invoice."
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -203,6 +540,45 @@ msgid "E-Waybill Document Type"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "E-way bill is not enabled for intra state movement for you state"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"E-way bill(s) are already generated for the same document number, you cannot"
+" generate again on same document number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
+#, python-format
+msgid "E-wayBill Sent"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_bank_statement_line__l10n_in_transportation_doc_no
+#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_move__l10n_in_transportation_doc_no
+#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_payment__l10n_in_transportation_doc_no
+msgid "E-waybill Document Number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_bank_statement_line__l10n_in_type_id
+#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_move__l10n_in_type_id
+#: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_account_payment__l10n_in_type_id
+msgid "E-waybill Document Type"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_move.py:0
 #, python-format
 msgid "E-waybill is already created"
@@ -221,15 +597,401 @@ msgid "EDI format"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Either Eway Bill Number Or Consolidated Eway Bill Number is required for "
+"Verification"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid "Error"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error While Extending..Please Contact Helpdesk. "
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in Closing EWB  Verification Data"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in Multi Vehicle Movement Initiation"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in fetching Part A data by IR Number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in fetching WatchList Data"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in fetching ewaybill list by vehicle number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in fetching in verification data for officer"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in fetching search result for taxpayer/transporter"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in getting EWB Not Available List by closed date range"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in getting EWB Not Available List by entered date range"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in getting EWB03 details by acknowledgement date range"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in getting officer dashboard"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in inserting in verification data"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in inserting multi vehicle details"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in inserting verification details"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in multi vehicle details"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in saving Part-A verification Report"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in saving Part-B verification Report"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in validating ewaybill for vehicle updation"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in verifying consolidated eway bill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Error in verifying eway bill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Eway Bill Can not be Extended. Not in Active State"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Eway Bill Category wise details will be available after 4 days only"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Eway Bill Item List is Empty"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Eway Bill Number should be numeric only"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Eway Bill can not be extended.. Already Cancelled"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Eway Bill is already expired hence update transporter is not allowed."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Eway bill does not contains any items"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Eway bill is already verified, you cannot cancel it"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Ewaybill cannot be generated for the document date which is prior to "
+"01/07/2017"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Exception in fetching dashboard data"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Exception in getting Officer Role"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Exception in regenration of consolidated eWayBill!!Please Contact helpdesk"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "For Category EWB03 procdt is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "For Category Part-A or Part-B ewbdt is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "For Goods Detained,Vehicle Released feild is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "For Rail/Ship/Air transDocDate is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "For Vehicle Released vehicle release date and time is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "For file details file number is required"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"For inward CKD/SKD/Lots supply type, Bill From state should be as Other "
+"Country, since the  Bill From GSTIN given is of SEZ unit"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "For other than Road Transport, TransDoc number is required"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"For outward CKD/SKD/Lots supply type, Bill To state should be as Other "
+"Country, since the  Bill To GSTIN given is of SEZ unit"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"For regular transaction, Bill from state code and Dispatch from state code "
+"should be same"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"For regular transaction, Bill to state code and Ship to state code should be"
+" same"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "GSTIN is not registerd to this GSP"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"GSTIN passed in request header is not matching with the user gstin mentioned"
+" in payload JSON"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"GSTIN/Transin passed in request header should match with the transported Id "
+"mentioned in payload JSON"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"GSTIN/Transin passed in request header should not be the same as "
+"supplier(fromGSTIN) or recepient(toGSTIN)"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Goods Detained Field required."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Group number cannot be empty or zero"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid "HSN code is not set in product %s"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"HSN code of at least one item should be of goods to generate e-Way Bill"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -238,6 +1000,28 @@ msgid "ID"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "IGST value is not applicable for Intra State Transaction"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "IGST value should not be negative"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "IMEI does not belong to the user"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid "Impossible to send the Ewaybill."
@@ -254,6 +1038,7 @@ msgid "Incoming and Outgoing"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -276,18 +1061,634 @@ msgid "Indian Electronic WayBill"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Inter-State ewaybill is not allowed for gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invaild Invoice Number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Approximate Distance"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid CESS Rate"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid CGST Tax Rate"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Cess Non Advol value"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Client -Id"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Client-ID/Client-Secret"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Close Reason"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Consignee Address"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Consignee GSTIN"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Consignee PIN Code"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Consignee State Code"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Consignee ship to State Code for the given pincode"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Document type"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid EWB03 Ack No"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid File Number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid GSTIN"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid HSN Code"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid "Invalid HSN Code (%s) in product %s"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid IGST Tax Rate"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Invoice Date"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Latitude"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Longitude"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Month Parameter"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid PAN number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Password"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid SGST Tax Rate"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Sub-supply Type"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Supplier GSTIN"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Supplier ship from State Code for the given pincode"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Supply Type"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Tax Rate for Inter State Transaction"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Tax Rate for Intra State Transaction"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Token"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Trans mode"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Transaction Date"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Transaction Document Number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Transporter Id"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid UQC Code"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Uniq No"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Username"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Vehicle Direction"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Vehicle Number Format"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Vehicle Release Date Format"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Vehicle Type"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Verification Date Format"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Verification Time Format"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid Year Parameter"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid action"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid auth token"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid category"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid client -Id/client-secret"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid consignment status for the given transmode"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid date format"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid eway bill number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid from state"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_move.py:0
 #, python-format
 msgid ""
 "Invalid invoice configuration:\n"
 "\n"
 "%s"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid json"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid location code"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid login credentials."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid mobile number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid new transDoc number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid new vehicle number format"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid old transDoc number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid old vehicle number format"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid operating-system-type parameter value"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid or Blank Actual Vehicle Number Format"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid or Blank Consignee Ship-to State Code"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid or Blank IR Number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid or Blank Officer StateCode"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid or Blank Supplier PIN Code"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid or Blank Supplier Ship-to State Code"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid or Blank Supplier state Code"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid pincode"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid place to"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid reason"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid remarks"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid rfid date"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid rfid number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid state code"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid state code for the given pincode"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid state to"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid transaction type"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid transit type"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid transporter mode"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid vehicle format"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid verification type"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Invalid wt on bridge"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -316,13 +1717,125 @@ msgid "Managed by Transporter"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
-#: model:ir.model.fields.selection,name:l10n_in_edi_ewaybill.selection__account_move__l10n_in_vehicle_type__o
-msgid "ODC"
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Minimum six character required for Tradename/legalname search"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
-msgid "Only check if you are in production."
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Multi Vehicle Initiation data is not there for specified ewayBill and group "
+"No"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Multi Vehicle movement is already Initiated,hence PART B updation not "
+"allowed"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Multi Vehicle movement is already Initiated,hence generation of consolidated"
+" eway bill is not allowed"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "MultiVehicleMovement cannot be initiated for EWay Bill For Gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"MultiVehicleMovement cannot be initiated.Eway Bill is not in Active State"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "No Record Found for Entered consolidated eWay bill."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "No Record available to Close"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "No eway bill of specified tripsheet, neither  ACTIVE nor not Valid."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "No record found"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"No record found for multi vehicle update with specified ewbNo groupNo and "
+"old vehicleNo/transDocNo with status as ACT"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "No verification data found for officer "
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
+#, python-format
+msgid "Number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Only trans mode road is allowed for Eway Bill For Gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Only transmode road is allowed for extending ewaybill for gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Other items are not allowed with eway bill for gold"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -331,8 +1844,63 @@ msgid "Outgoing"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#: model:ir.model.fields.selection,name:l10n_in_edi_ewaybill.selection__account_move__l10n_in_vehicle_type__o
+msgid "Over Dimensional Cargo"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Part B cannot be updated as this Ewaybill Part A is generated in NIC1"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Part B cannot be updated as this Ewaybill Part A is generated in NIC2"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Part B is already updated,hence updation is not allowed"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Part-A for this ewaybill is already generated by you."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Part-B is not generated for this e-way bill, hence rejection is not allowed."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
 msgid "Password"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Pin to pin distance is not available for the given pin codes"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Place from is required"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -346,8 +1914,48 @@ msgid "Rail"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Reason Code, Remarks is mandatory."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
 #: model:ir.model.fields.selection,name:l10n_in_edi_ewaybill.selection__account_move__l10n_in_vehicle_type__r
 msgid "Regular"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Remaining Distance Can not be greater than Actual Distance."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Remaining Distance Required"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Remarks is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model:ir.model.fields.selection,name:l10n_in_edi_ewaybill.selection__account_move__l10n_in_mode__1
+msgid "Road"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "SGST value should not be negative"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -356,18 +1964,16 @@ msgid "Send E-waybill"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
-msgid "Setup E-Waybill"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
-#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
-msgid "Setup E-Waybill Service for this company"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
 #: model:ir.model.fields.selection,name:l10n_in_edi_ewaybill.selection__account_move__l10n_in_mode__4
 msgid "Ship"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Ship to GSTIN cannot be sent as the transaction type selected is Regular"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -378,22 +1984,63 @@ msgid "Show Send E-waybill Button"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Since the consignor is Composite Taxpayer, Tax rates should be zero"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Since the consignor is Composite Taxpayer, inter state transactions are not "
+"allowed"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid ""
 "Somehow this E-waybill has been canceled in the government portal before. "
 "You can verify by checking the details into the government "
-"(https://ewaybillgst.gov.in/Others/EBPrintnew.asp)"
+"(https://ewaybillgst.gov.in/Others/EBPrintnew.aspx)"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid ""
 "Somehow this E-waybill has been generated in the government portal before. "
 "You can verify by checking the invoice details into the government "
-"(https://ewaybillgst.gov.in/Others/EBPrintnew.asp)"
+"(https://ewaybillgst.gov.in/Others/EBPrintnew.aspx)"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Status is not ACTIVE"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Sub Supply Type is mentioned as Others, the description for that is "
+"mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Sub-transaction type does not belongs to transaction type"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -407,6 +2054,128 @@ msgid "Sub-type Code"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Supplier name is required"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Supplier place is required"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Tax rates for Inter state transaction is blank"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Tax rates for Intra state transaction is blank"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"The Consignee GSTIN is blocked from e-waybill generation as Return is not "
+"filed for past 2 months"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "The Consignee pin code should be 999999 for Sub Supply Type- Export"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"The Consignor GSTIN is blocked from e-waybill generation as Return is not "
+"filed for past 2 months"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "The Supplier pin code should be 999999 for Sub Supply Type- Import"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"The Supplier ship-from state code should be Other Country for Sub Supply "
+"Type- Import"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"The Supplier ship-to state code should be Other Country for Sub Supply Type-"
+" Export"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"The Transporter GSTIN is blocked from Transporter Updation as Return is not "
+"filed for past 2 months"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"The Transporter GSTIN is blocked from e-waybill generation as Return is not "
+"filed for past 2 months"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"The User GSTIN is blocked from Transporter Updation as Return is not filed "
+"for past 2 months"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"The distance between the given pincodes are not available in the system. "
+"Please provide distance."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "The distance between the pincodes given is too high"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid ""
@@ -414,6 +2183,98 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"The supplier or conginee belong to SEZ, Inter state tax rates are applicable"
+" here"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"There is No PART-B/Vehicle Entry.. So Please Update Vehicle Information.."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "This Eway Bill does not belongs to your state"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "This Ewaybill cannot be cancelled as it is generated from NIC1"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "This Ewaybill cannot be cancelled as it is generated from NIC2"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"This GSTIN has generated a common Enrolment Number. Hence you are not "
+"allowed to generate Eway bill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"This GSTIN has generated a common Enrolment Number. Hence you cannot mention"
+" it as a tranporter"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "This e-Way Bill does not have Oxygen items"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "This e-way bill is cancelled"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "This e-way bill is generated by you and hence you cannot reject it"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "This eway bill is either not generated by you or cancelled"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "This option is not enabled in Eway Bill2"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_move.py:0
 #, python-format
 msgid ""
@@ -422,8 +2283,115 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Token Expired"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Tolal Invoice value is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Total amount/Taxable amout is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Total invoice value cannot be less than the sum of total assessible value "
+"and tax values"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Total invoice value should not be negative"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Total value should not be negative"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "TransDocDate is not required for ewaybill for gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "TransDocNo is not required for ewaybill for gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.invoice_form_inherit_l10n_in_edi_ewaybill
 msgid "Transaction Details"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transaction type is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transit Address is not required as the goods are in movement"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transit Type is not required as the goods are in movement"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transmode is mandatory for ewaybill for gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transport can not be updated for EwayBill For Gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transport details cannot be updated here as it is generated from NIC1"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transport details cannot be updated here as it is generated from NIC2"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -433,6 +2401,29 @@ msgstr ""
 msgid ""
 "Transport document number. If it is more than 15 chars, last 15 chars may be"
 " entered"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Transport mode is mandatory as Vehicle Number/Transport Document Number is "
+"given"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transport mode is mandatory since transport document number is present"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transport mode is mandatory since vehicle number is present"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -455,6 +2446,53 @@ msgid "Transporter"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.invoice_form_inherit_l10n_in_edi_ewaybill
+msgid "Transporter Document Number"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transporter Id is mandatory for generation of Part A slip"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transporter document date cannot be earlier than the invoice date"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transporter id is not required for ewaybill for gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Transporter name is not required for ewaybill for gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Tripsheet is already cancelled, Hence Regeration is not possible"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Try after 5 minutes"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_l10n_in_ewaybill_type__name
 msgid "Type"
 msgstr ""
@@ -465,6 +2503,7 @@ msgid "Type Code"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid ""
@@ -473,8 +2512,129 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"Unable to send E-waybill.Create an API user in NIC portal, and set it using "
+"the top menu: Configuration > Settings."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"Unit Code is not matching with any of the Unit Code from eway bill ItemList"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Unit Code is not matching with unit code of first initiaton"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.l10n_in_einvoice_report_invoice_document_inherit
+msgid "Until:"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "User GSTIN should match to GSTIN(from) for outward transactions"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "User GSTIN should match to GSTIN(to) for inward transactions"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "User Gstin cannot be blank"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "User Gstin does not match with Transporter Id"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "User Id is mandatory"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "User id cannot be blank"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
 msgid "Username"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Validation of eway bill number failed, while rejecting ewaybill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
+#, python-format
+msgid "Validity"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Validity period lapsed, you cannot cancel this eway bill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Validity period lapsed, you cannot reject the e-way bill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Validity period lapsed, you cannot update vehicle details"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Validity period lapsed.Cannot generate consolidated Eway Bill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Vehicle No is not required for ewaybill for gold"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -492,17 +2652,201 @@ msgid "Vehicle Type"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Vehicle Type is not required for ewaybill for gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Vehicle can not be updated for EwayBill For Gold"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Vehicle number is required"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Vehicle type can not be regular when transportation mode is ship"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "Vehicle type should not be ODC when transmode is other than road"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
 msgid "Verify Username and Password"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"We don't know the error message for this error code. Please contact support."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You Cannot Extend as EWB can be Extended only 8 hour before or after w.r.t "
+"Validity of EWB..!!"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You are blocked for accesing this API as the allowed number of requests has "
+"been exceeded for this duration"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "You are not assigned to do MultiVehicle Movement"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "You are not assigned to extend e-waybill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "You are not assigned to generate consolidated ewaybill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "You are not assigned to update part B"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You are not assigned to update the tranporter details of this eway bill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You are not current transporter or Generator of the ewayBill, with no "
+"transporter details."
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "You can cancel the ewaybill within 24 hours from Part B entry"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_move.py:0
 #, python-format
 msgid "You can only create E-waybill from posted invoice"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "You can reject the e-way bill only within 72 hours from generated time"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You cannot do multivehicle movement, as the current tranporter is already "
+"entered Part B details of the ewaybill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You cannot extend ewaybill, as the current tranporter is already entered "
+"Part B details of the ewaybill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You cannot generate E Way Bill with document date earlier than 180 days"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You cannot generate consolidated eway bill , as the current tranporter is "
+"already entered Part B details of the eway bill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You cannot reject this e-way bill as you are not the other party to do so"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You cannot update part B, as the current tranporter is already entered Part "
+"B details of the eway bill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You cannot update transporter details, as the current tranporter is already "
+"entered Part B details of the eway bill"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid ""
@@ -511,17 +2855,116 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"You will not get the ewaybills generated today, howerver you cann access the"
+" ewaybills of yester days"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "dispatch from gstin is mandatary "
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
+msgid "documentation"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.invoice_form_inherit_l10n_in_edi_ewaybill
 msgid "eWayBill"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "invalid dispatch from gstin "
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "invalid document type for the given supply type "
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "invalid ewbNoAvailable parameter value"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "invalid goods detained parameter value"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "invalid invoice available value"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "invalid vehicle released value"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "operating-system-type is mandatory in header"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid "product is required to get HSN code"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "ship to from gstin is mandatary"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
+msgid "to get credentials"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid "total quantity can not be less than or equal to zero"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+#, python-format
+msgid ""
+"total quantity is exceeding from multi vehicle movement initiation quantity"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
 #, python-format
 msgid "waiting For IRN generation To create E-waybill"
