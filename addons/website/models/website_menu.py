@@ -54,6 +54,7 @@ class WebsiteMenu(models.Model):
     is_mega_menu = fields.Boolean(compute=_compute_field_is_mega_menu, inverse=_set_field_is_mega_menu)
     mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)
     mega_menu_classes = fields.Char()
+    child_url = fields.Char("Child_Url", default="#", required=True, store=True, copy=True)
 
     @api.depends('website_id')
     @api.depends_context('display_website')
@@ -67,13 +68,27 @@ class WebsiteMenu(models.Model):
                 menu_name += f' [{menu.website_id.name}]'
             menu.display_name = menu_name
 
-    @api.depends("page_id", "is_mega_menu", "child_id")
+    @api.depends("page_id", "is_mega_menu", "child_id", "child_url")
     def _compute_url(self):
-        for menu in self:
-            if menu.is_mega_menu or menu.child_id:
-                menu.url = "#"
-            else:
-                menu.url = (menu.page_id.url if menu.page_id else menu.url) or "#"
+        for record in self:
+            if record.is_mega_menu:
+                record.url = "#"
+            elif record.child_id:
+                record.url = "#"
+                record.child_url = record.child_id[-1].url
+
+    @api.model
+    def check_mega_menu_children(self, vals_list):
+        """
+        Prevent creating child menus under Mega Menus.
+        Raises UserError if a child menu is attempted under a Mega Menu.
+        """
+        for vals in vals_list:
+            if vals.get('parent_id'):
+                parent_menu = self.browse(vals['parent_id'])
+                if parent_menu.is_mega_menu:
+                    raise UserError(_("Mega Menus cannot have child menus. Please select a non-Mega Menu as the parent."))
+        return True
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -84,6 +99,8 @@ class WebsiteMenu(models.Model):
                   Be careful to return correct record for ir.model.data xml_id in case
                   of default main menus creation.
         '''
+        ''' Prevent child menus under Mega Menus '''
+        self.check_mega_menu_children(vals_list)
         self.env.registry.clear_cache('templates')
         # Only used when creating website_data.xml default menu
         menus = self.env['website.menu']
@@ -114,7 +131,13 @@ class WebsiteMenu(models.Model):
         return menus
 
     def write(self, values):
+        # Clear cache for menu changes
         self.env.registry.clear_cache('templates')
+        # Prevent converting to Mega Menu if has children
+        if values.get('is_mega_menu'):
+            for menu in self:
+                if menu.child_id:
+                    raise UserError(_("You cannot convert this menu to a Mega Menu because it already has child menus. Please remove the children first."))
         res = super().write(values)
         if 'group_ids' in values and not self.env.context.get("adding_designer_group_to_menu"):
             self.filtered("group_ids").with_context(
