@@ -16,14 +16,20 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
     async loadOptionsSource(request) {
         // Always include Search More
         let options = await super.loadOptionsSource(...arguments);
-        if (!options?.slice(-1)[0].classList?.includes("o_m2o_dropdown_option_search_more")) {
+        if (!options.slice(-1)[0]?.cssClass?.includes("o_m2o_dropdown_option_search_more")) {
             options.push({
                 label: this.SearchMoreButtonLabel,
-                action: this.onSearchMore.bind(this, request),
-                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
+                onSelect: this.onSearchMore.bind(this, request),
+                cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
             });
         }
         return options;
+    }
+
+    mapRecordToOption(record) {
+        let option = super.mapRecordToOption(...arguments);
+        option.label = record.name;
+        return option;
     }
 
     search(name) {
@@ -53,23 +59,15 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
     }
 
     async onSearchMore(request) {
-        const { resModel, getDomain, context, fieldString } = this.props;
+        const { getDomain, context, fieldString } = this.props;
 
         const domain = getDomain();
         let dynamicFilters = [];
         if (request.length) {
-            const nameGets = await this.orm.call(resModel, "name_search", [], {
-                name: request,
-                domain: domain,
-                operator: "ilike",
-                limit: this.props.searchMoreLimit,
-                context,
-            });
-
             dynamicFilters = [
                 {
                     description: _t("Quick search: %s", request),
-                    domain: [["id", "in", nameGets.map((nameGet) => nameGet[0])]],
+                    domain: [["name", "ilike", request]],
                 },
             ];
         }
@@ -78,8 +76,8 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
         if (filterFP) {
             dynamicFilters.push({
                 description: _t("Document Fiscal Position"),
-                domain: [["fiscal_position_ids", "in", [parseInt(filterFP)]]]
-            })
+                domain: [["fiscal_position_ids", "in", [parseInt(filterFP)]]],
+            });
         }
 
         const title = _t("Search: %s", fieldString);
