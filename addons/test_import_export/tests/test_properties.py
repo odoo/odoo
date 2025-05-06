@@ -436,3 +436,30 @@ class TestPropertiesExportImport(HttpCase):
             {'bool_prop': True, 'tags_prop': ['bb'], 'm2m_prop': self.partners[1:].ids},
             {'bool_prop': False, 'tags_prop': ['bb', 'cc'], 'm2m_prop': False},
         ])
+
+    def test_import_field_with_missing_converter(self):
+        values_list = [
+            ["properties_definition"],
+            ["test property"],
+        ]
+        csv_data = '\n'.join([';'.join(row) for row in values_list])
+
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.properties.definition',
+            'file': csv_data,
+            'file_type': 'text/csv',
+        })
+
+        opts = {'quoting': '"', 'separator': ';', 'has_headers': True}
+
+        preview = import_wizard.parse_preview(opts)
+        self.assertIn('headers', preview)
+        self.assertIn('preview', preview)
+
+        result = import_wizard.execute_import(
+            preview.get("matches", {}).get(0, ['properties_definition']),
+            [], opts,
+        )
+
+        self.assertIn('messages', result)
+        self.assertTrue(len(result['messages']) > 0)
