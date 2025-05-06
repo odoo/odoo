@@ -41,7 +41,7 @@
             <field name="name">discuss.channel.list</field>
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
-                <list js_class="im_livechat.discuss_channel_list" string="History" create="false" default_order="create_date desc">
+                <list js_class="im_livechat.discuss_channel_list" sample="1" string="History" create="false" default_order="create_date desc">
                     <field name="create_date" string="Date"/>
                     <field name="livechat_agent_history_ids" string="Agents" widget="many2many_tags_avatar" optional="show"/>
                     <field name="livechat_bot_history_ids" string="Bot" widget="many2many_tags_avatar" optional="show"/>
@@ -200,6 +200,10 @@
                 'default_livechat_channel_id': active_id,
             }</field>
             <field name="search_view_id" ref="discuss_channel_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">No data yet!</p>
+                <p>Start a conversation to populate your chat history.</p>
+            </field>
         </record>
         <record id="discuss_channel_action_livechat_kanban" model="ir.actions.act_window.view">
             <field name="sequence">1</field>
