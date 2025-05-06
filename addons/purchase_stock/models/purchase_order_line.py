@@ -414,3 +414,11 @@ class PurchaseOrderLine(models.Model):
     def _merge_po_line(self, rfq_line):
         super()._merge_po_line(rfq_line)
         self.move_dest_ids += rfq_line.move_dest_ids
+
+    # def _is_net_zero(self):
+    #     """All moves of this purchase order line were either cancelled or returned."""
+    #     self.ensure_one()
+    #     if self.qty_received:
+    #         return False
+    #     move = self.move_ids.filtered(lambda move: move.state != 'cancel')
+    #     return not move - move.returned_move_ids - move.origin_returned_move_id
