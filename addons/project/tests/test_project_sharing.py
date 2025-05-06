@@ -633,3 +633,24 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertEqual(partners - partner_d, task_with_parent_partner.message_partner_ids,
                          "The first, second, and the company partner should be set as new followers for the task 3 because the partner of this task is the parent of the other 2")
         self.assertFalse(task_without_partner.message_partner_ids, "Since this task has no partner, no follower should be added")
+
+    def test_project_manager_remains_follower_after_sharing(self):
+        """
+        Test that the project manager remains a follower when collaborators are added
+        """
+        project = self.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'project',
+            'privacy_visibility': 'followers',
+            'user_id': self.user_projectmanager.id,
+        })
+        self.assertIn(self.user_projectmanager.partner_id, project.message_partner_ids, "Project manager should be a follower of the project")
+        project_share_wizard = self.env['project.share.wizard'].create({
+            'res_model': 'project.project',
+            'res_id': project.id,
+            'collaborator_ids': [
+                Command.create({'partner_id': self.user_portal.partner_id.id, 'access_mode': 'read'}),
+            ],
+        })
+        project_share_wizard.action_send_mail()
+        self.assertIn(self.user_projectmanager.partner_id, project.message_partner_ids, "Project manager should still be a follower after sharing the project")
+        self.assertEqual(len(project.message_follower_ids), 2, "number of followers should be 2")
