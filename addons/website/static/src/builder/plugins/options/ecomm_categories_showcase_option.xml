@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.EcommCategoriesShowcaseOption">
+    <BuilderRow label.translate="# of Blocks">
+        <BuilderSelect action="'blockCount'">
+            <BuilderSelectItem actionValue="2">2</BuilderSelectItem>
+            <BuilderSelectItem actionValue="3">3</BuilderSelectItem>
+            <BuilderSelectItem actionValue="4">4</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Layout">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'first-large-layout'">First block larger</BuilderSelectItem>
+            <BuilderSelectItem classAction="'equal-layout'">Equal size</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+<t t-name="website.EcommCategoriesShowcaseBlocksDesign">
+    <hr class="mx-2"/>
+    <div class="px-2 fs-6">Blocks Design</div>
+    <div class="px-2 opacity-75 small mb-2">Global options for all inner blocks.</div>
+
+    <BuilderRow label.translate="Min. Height">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Default</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_min_height_short'">Short</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_min_height_tall'">Tall</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Shadows">
+        <BuilderCheckbox
+            classAction="'shadow'"
+            applyTo="'.s_ecomm_categories_showcase_block'"/>
+    </BuilderRow>
+
+    <!-- TODO maybe use CompositeAction -->
+    <BuilderRow label.translate="Space Out">
+        <BuilderCheckbox
+            id="'spacing_opt'"
+            action="'spacingToggle'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Roundness" t-if="isActiveItem('spacing_opt')">
+        <BuilderRange
+            action="'setClassRange'"
+            actionParam="['rounded-0','rounded-1','rounded-2','rounded-3','rounded-4','rounded-5']"
+            applyTo="'.s_ecomm_categories_showcase_block'"
+            max="5"
+            step="1"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website.EcommCategoriesShowcaseBlockDesign" t-inherit="html_builder.VerticalJustifyOption" t-inherit-mode="primary">
+    <xpath expr="//BuilderButtonGroup" position="attributes">
+        <attribute name="applyTo">'.s_ecomm_categories_showcase_content'</attribute>
+    </xpath>
+    <xpath expr="//BuilderButton[@classAction=&quot;'justify-content-end'&quot;]" position="after">
+        <BuilderButton classAction="'justify-content-between'" title.translate="Align Between" iconImg="'/html_builder/static/img/snippets_options/align_solo_between.svg'"/>
+    </xpath>
+</t>
+
+</templates>
