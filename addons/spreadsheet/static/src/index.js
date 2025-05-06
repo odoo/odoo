@@ -39,3 +39,4 @@ coreViewsPluginRegistry.add("OdooGlobalFiltersUIPlugin", GlobalFiltersUIPlugin);
 coreViewsPluginRegistry.add("OdooPivotUIPlugin", PivotUIPlugin);
 coreViewsPluginRegistry.add("OdooListUIPlugin", ListUIPlugin);
 coreViewsPluginRegistry.add("odooChartUIPlugin", OdooChartUIPlugin);
+coreViewsPluginRegistry.add("OdooLoggingUIPlugin", LoggingUIPlugin);

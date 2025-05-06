@@ -53,7 +53,6 @@ export class ChartDataSource extends OdooViewsDataSource {
             type: "graph",
             fields: [data.measure],
             groupby: data.groupBy,
-            domain: this._customDomain,
         };
     }
 }

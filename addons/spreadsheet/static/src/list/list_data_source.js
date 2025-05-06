@@ -263,7 +263,7 @@ export class ListDataSource extends OdooViewsDataSource {
             type: "list",
             fields: data.columns,
             groupby: undefined,
-            domain: this._customDomain,
+            domain: this._searchParams.domain,
         };
     }
 }

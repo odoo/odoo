@@ -15,7 +15,9 @@ class SpreadsheetController(Controller):
             self._log(type, request.env.uid, datasources)
 
     def _log(self, type, user_id, datasources):
-        data = [src for src in (self._stringify_source(datasource) for datasource in datasources) if src]
+        if type not in ["download", "copy", "freeze", "print"]:
+            return
+        data = [src for datasource in datasources if (src := self._stringify_source(datasource))]
         if not data:
             return
         logger.info(
@@ -29,22 +31,15 @@ class SpreadsheetController(Controller):
         if not res_model or res_model not in request.env:
             return
 
-        model = request.env[res_model]
-        fields = [field for field in source.get("fields", []) if field in model._fields]
-        if not fields:
+        if not (fields := source.get("fields", [])):
             return
 
-        string = f"{res_model} [{','.join(fields)}]"
+        string = f"model: {res_model} fields: [{','.join(fields)}]"
 
-        groupby = source.get("groupby")
-        if groupby:
-            groupby = [field for field in source.get("fields", []) if field.split(":")[0] in model._fields]
+        if groupby := source.get("groupby"):
             string += f" grouped by [{','.join(groupby)}]"
-
-        domain = source.get("domain")
-        if domain:
-            domain = domain[:100]
-            # TODO sanitize domain ?
+        
+        if domain := source.get("domain"):
             string += f" with domain {domain}"
 
         return string

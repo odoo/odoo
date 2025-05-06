@@ -267,12 +267,16 @@ export class PivotDataSource extends OdooViewsDataSource {
         const groupby = [];
         groupby.push(...data.colGroupBys);
         groupby.push(...data.rowGroupBys);
+        const userContext = this._orm.user.context;
         return {
             resModel: data.resModel,
             type: "pivot",
             fields: data.activeMeasures,
             groupby,
-            domain: this._customDomain,
+            domain: new Domain(this._initialSearchParams.domain).toList({
+                ...this._initialSearchParams.context,
+                ...userContext,
+            }),
         };
     }
 }
