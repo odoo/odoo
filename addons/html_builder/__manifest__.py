@@ -20,11 +20,6 @@
     # any module necessary for this one to work correctly
     'depends': ['base', 'html_editor', 'website'],
 
-    # always loaded
-    'data': [
-        # 'security/ir.model.access.csv',
-    ],
-
     'assets': {
         'web.assets_backend': [
             'html_builder/static/src/website_preview/**/*',
