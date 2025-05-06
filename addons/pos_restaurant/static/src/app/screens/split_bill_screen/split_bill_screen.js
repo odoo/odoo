@@ -44,7 +44,7 @@ export class SplitBillScreen extends Component {
         const lines = line.getAllLinesInCombo();
 
         for (const line of lines) {
-            if (!line.isPosGroupable() && !line.isPartOfCombo()) {
+            if (!line.product_id.uom_id?.is_pos_groupable) {
                 if (this.qtyTracker[line.uuid] === line.getQuantity()) {
                     this.qtyTracker[line.uuid] = 0;
                 } else {
