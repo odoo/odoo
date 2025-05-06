@@ -226,7 +226,7 @@ export class Message extends Component {
     get attClass() {
         return {
             [this.props.className]: true,
-            "o-card p-2 ps-1 mx-1 mt-2 mb-2 border border-secondary rounded-3": this.props.asCard,
+            "o-card p-2 ps-1 mx-1 mt-1 mb-1 border border-secondary rounded-3": this.props.asCard,
             "pt-1": !this.props.asCard && !this.props.squashed,
             "o-pt-0_5": !this.props.asCard && this.props.squashed,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
