@@ -52,7 +52,7 @@ export async function mountPublicSpreadsheet(data, dataUrl, mode) {
     serviceRegistry.add("http", fakeHTTPService);
     const env = await makeTestEnv();
     const app = new App(PublicReadonlySpreadsheet, {
-        props: { dataUrl, downloadExcelUrl: "downloadUrl", mode },
+        props: { dataUrl, downloadExcelUrl: "", mode },
         templates,
         env,
         test: true,

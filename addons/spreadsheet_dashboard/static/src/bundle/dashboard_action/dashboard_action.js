@@ -12,8 +12,7 @@ import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
 import { useSpreadsheetPrint } from "@spreadsheet/hooks";
-
-import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
+import { Component, onWillStart, useState, useEffect, useExternalListener } from "@odoo/owl";
 
 export class SpreadsheetDashboardAction extends Component {
     setup() {
@@ -57,6 +56,8 @@ export class SpreadsheetDashboardAction extends Component {
                 return [dashboard?.model, dashboard?.status];
             }
         );
+        useExternalListener(window, "afterprint", this.logExport.bind(this));
+
         useSetupAction({
             getLocalState: () => {
                 return {
@@ -126,6 +127,14 @@ export class SpreadsheetDashboardAction extends Component {
             },
         ]);
         return url;
+    }
+
+    logExport() {
+        const dashboard = this.state.activeDashboard;
+        if (!dashboard || dashboard.status !== Status.Loaded) {
+            return;
+        }
+        this.model.dispatch("LOG_DATASOURCE_EXPORT", { action: "print" });
     }
 }
 SpreadsheetDashboardAction.template = "spreadsheet_dashboard.DashboardAction";
