@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-11 15:19+0000\n"
-"PO-Revision-Date: 2025-02-11 15:19+0000\n"
+"POT-Creation-Date: 2025-05-06 09:04+0000\n"
+"PO-Revision-Date: 2025-05-06 09:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_latam_base
+#: model_terms:ir.ui.view,arch_db:l10n_latam_base.address_form_fields
+msgid "<option value=\"\">Identification Type...</option>"
+msgstr ""
 
 #. module: l10n_latam_base
 #: model_terms:ir.ui.view,arch_db:l10n_latam_base.view_partner_latam_form
@@ -29,6 +34,14 @@ msgstr ""
 #. module: l10n_latam_base
 #: model_terms:ir.ui.view,arch_db:l10n_latam_base.view_l10n_latam_identification_type_search
 msgid "Archived"
+msgstr ""
+
+#. module: l10n_latam_base
+#: model_terms:ir.ui.view,arch_db:l10n_latam_base.address_form_fields
+msgid ""
+"Changing Identification type is not allowed once document(s) have been"
+"                         issued for your account. Please contact us directly"
+" for this operation."
 msgstr ""
 
 #. module: l10n_latam_base
@@ -63,15 +76,26 @@ msgstr ""
 
 #. module: l10n_latam_base
 #: model:ir.model.fields,field_description:l10n_latam_base.field_l10n_latam_identification_type__display_name
+#: model:ir.model.fields,field_description:l10n_latam_base.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_latam_base.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: l10n_latam_base
+#: model:l10n_latam.identification.type,name:l10n_latam_base.it_fid
+msgid "Foreign ID"
+msgstr ""
+
+#. module: l10n_latam_base
 #: model:ir.model.fields,field_description:l10n_latam_base.field_l10n_latam_identification_type__id
+#: model:ir.model.fields,field_description:l10n_latam_base.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_latam_base.field_res_partner__id
 msgid "ID"
 msgstr ""
 
 #. module: l10n_latam_base
+#. odoo-python
+#: code:addons/l10n_latam_base/controllers/portal.py:0
 #: model:ir.model.fields,field_description:l10n_latam_base.field_res_partner__vat
 #: model:ir.model.fields,field_description:l10n_latam_base.field_res_users__vat
 #: model_terms:ir.ui.view,arch_db:l10n_latam_base.view_partner_latam_form
@@ -89,6 +113,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_latam_base.field_res_partner__l10n_latam_identification_type_id
 #: model:ir.model.fields,field_description:l10n_latam_base.field_res_users__l10n_latam_identification_type_id
 #: model:ir.ui.menu,name:l10n_latam_base.menu_l10n_latam_identification_type
+#: model_terms:ir.ui.view,arch_db:l10n_latam_base.address_form_fields
 msgid "Identification Type"
 msgstr ""
 
@@ -123,6 +148,11 @@ msgid "Number"
 msgstr ""
 
 #. module: l10n_latam_base
+#: model:l10n_latam.identification.type,name:l10n_latam_base.it_pass
+msgid "Passport"
+msgstr ""
+
+#. module: l10n_latam_base
 #: model:ir.model.fields,field_description:l10n_latam_base.field_l10n_latam_identification_type__sequence
 msgid "Sequence"
 msgstr ""
@@ -146,4 +176,9 @@ msgstr ""
 #. module: l10n_latam_base
 #: model_terms:ir.ui.view,arch_db:l10n_latam_base.view_partner_latam_form
 msgid "Type"
+msgstr ""
+
+#. module: l10n_latam_base
+#: model:l10n_latam.identification.type,name:l10n_latam_base.it_vat
+msgid "VAT"
 msgstr ""
