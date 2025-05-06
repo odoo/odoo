@@ -1,5 +1,6 @@
 // @ts-check
 
+import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { LOADING_ERROR, LoadableDataSource, getFields } from "./data_source";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
@@ -105,6 +106,13 @@ export class OdooViewsDataSource extends LoadableDataSource {
         return this._metaData.fields !== undefined;
     }
 
+    _assertMetadataIsLoaded() {
+        if (this._metaData.fields === undefined) {
+            this.loadMetadata();
+            throw new LoadingDataError();
+        }
+    }
+
     /**
      * Get the computed domain of this source
      * @returns {Array}
@@ -151,5 +159,9 @@ export class OdooViewsDataSource extends LoadableDataSource {
             this._metaData.resModel
         );
         return displayName || "";
+    }
+
+    get source() {
+        return {};
     }
 }
