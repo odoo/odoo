@@ -538,7 +538,7 @@ class AccountMove(models.Model):
             importo_totale_documento += values['base_amount_currency']
             importo_totale_documento += values['tax_amount_currency']
 
-        company = self.company_id
+        company = self.company_id.root_id
         partner = self.commercial_partner_id
         sender = company
         buyer = partner if not is_self_invoice else company
