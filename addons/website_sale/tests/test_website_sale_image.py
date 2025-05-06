@@ -16,8 +16,6 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
 
     # registry_test_mode = False  # uncomment to save the product to test in browser
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_01_admin_shop_zoom_tour(self):
         color_red = '#CD5C5C'
         name_red = 'Indian Red'

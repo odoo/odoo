@@ -36,8 +36,6 @@ class TestWebsiteSaleReorderFromPortal(HttpCaseWithUserPortal):
             },
         ])
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_website_sale_reorder_from_portal(self):
         no_variant_attribute = self.env['product.attribute'].create({
             'name': 'Size',

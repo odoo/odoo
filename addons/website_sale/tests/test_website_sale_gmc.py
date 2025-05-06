@@ -168,8 +168,6 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             'website_sale_gmc_check_advertised_prices_blue_sofa_christmas',
         )
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_gmc_items_prices_match_website_prices_tax_included(self):
         # 15% taxes
         self.website.show_line_subtotals_tax_selection = 'tax_included'

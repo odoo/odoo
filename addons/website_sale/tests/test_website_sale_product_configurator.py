@@ -31,8 +31,6 @@ class TestWebsiteSaleProductConfigurator(
         ptav_ids.filtered(lambda ptav: ptav.name == 'Aluminium').price_extra = 50.4
         cls.pc_controller = WebsiteSaleProductConfiguratorController()
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_01_product_configurator_variant_price(self):
         product = self.product_product_conf_chair.with_user(self.user_portal)
         ptav_ids = self.product_product_custo_desk.attribute_line_ids.product_template_value_ids
@@ -49,8 +47,6 @@ class TestWebsiteSaleProductConfigurator(
         self.env['product.pricelist'].search([]).action_archive()
         self.start_tour(url, 'website_sale_product_configurator_optional_products_tour', login='portal')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_02_variants_modal_window(self):
         """
         The objective is to verify that the data concerning the variants are well transmitted
@@ -398,8 +394,6 @@ class TestWebsiteSaleProductConfigurator(
 
         self.assertEqual(ptav_price_extra, 1.1)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_product_configurator_zero_priced(self):
         """ Test that the product configurator prevents the sale of zero-priced products. """
         self.website.prevent_zero_price_sale = True
