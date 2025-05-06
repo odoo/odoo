@@ -6,15 +6,15 @@ registerWebsitePreviewTour('website_sale_tour_backend', {
 }, () => [
         {
             content: "open customize tab",
-            trigger: '.o_we_customize_snippet_btn',
+            trigger: "[data-name='customize']",
             run: "click",
         },
         {
-            trigger: "#oe_snippets .o_we_customize_panel",
+            trigger: ".o_builder_sidebar_open .o_customize_tab",
         },
         {
             content: "Enable Extra step",
-            trigger: '[data-customize-website-views="website_sale.extra_info"] we-checkbox',
+            trigger: "[data-action-param='{\"views\":[\"website_sale.extra_info\"]}'] input[type='checkbox']",
             run: "click",
         },
         ...clickOnSave(),
