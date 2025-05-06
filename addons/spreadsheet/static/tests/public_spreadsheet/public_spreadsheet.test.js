@@ -74,3 +74,13 @@ test("Hides the download button when the downloadExcelUrl is not provided", asyn
     await contains(".o-topbar-menu[data-id='file']").click();
     expect(fixture.querySelector(".o-menu-item[data-name='download_public_excel']")).toBe(null);
 });
+
+test.tags("desktop");
+test("Disable copy button in public spreadsheets", async function () {
+    const { model } = await createModelWithDataSource();
+    await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
+    data = await freezeOdooData(model);
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "spreadsheet");
+    await contains(".o-topbar-menu[data-id='edit']").click();
+    expect(fixture.querySelector(".o-menu-item[data-name='copy']")).toHaveClass("disabled");
+});
