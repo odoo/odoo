@@ -170,6 +170,9 @@ export class Message extends Record {
     }
 
     get bubbleColor() {
+        if (this.message_type === "notification") {
+            return undefined;
+        }
         if (!this.isSelfAuthored && !this.is_note && !this.isHighlightedFromMention) {
             return "blue";
         }
