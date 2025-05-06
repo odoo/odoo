@@ -46,11 +46,15 @@ export class WebsiteSwitcherSystrayItem extends Component {
                         location: { pathname, search, hash },
                     } = this.websiteService.contentWindow;
                     const path = pathname + search + hash;
-                    window.location.href = `${encodeURI(
-                        website.domain
-                    )}/odoo/action-website.website_preview?path=${encodeURIComponent(
-                        path
-                    )}&website_id=${encodeURIComponent(website.id)}`;
+                    // Automatically converts Unicode domains (e.g. düsseldorf.com) to
+                    // punycode (ASCII-safe) using the native URL API
+                    const url = new URL("/web", website.domain);
+                    url.hash = new URLSearchParams({
+                        action: "website.website_preview",
+                        path: path,
+                        website_id: website.id,
+                    });
+                    window.location.href = url;
                 } else {
                     this.websiteService.goToWebsite({
                         websiteId: website.id,

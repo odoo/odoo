@@ -28,7 +28,8 @@ test("open BuilderSidebar and discard", async () => {
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(0);
     await click(".o-snippets-top-actions button:contains(Discard)");
     await websiteBuilder.iframeLoaded;
-    await animationFrame();
+    await animationFrame(); // WebsiteBuilder out of edit mode
+    await animationFrame(); // Navbar systray items updated
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
 });
 

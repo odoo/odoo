@@ -21,6 +21,10 @@ const websiteServiceInTranslateMode = {
     },
     // Minimal context to avoid crashes.
     context: { showNewContentModal: false },
+    websites: [{
+        id: 1,
+        metadata: {},
+    }],
 };
 
 test("systray in translate mode", async () => {
