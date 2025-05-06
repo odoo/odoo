@@ -354,10 +354,12 @@ patch(Chatter.prototype, {
         this.state.isSearchOpen = !this.state.isSearchOpen;
     },
 
-    onCloseFullComposerCallback() {
+    onCloseFullComposerCallback(isDiscard) {
         this.toggleComposer();
         super.onCloseFullComposerCallback();
-        this.props.record?.load();
+        if (!isDiscard) {
+            this.reloadParentView();
+        }
     },
 
     onFollowerChanged() {
