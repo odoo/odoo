@@ -4,6 +4,7 @@ import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_table";
 import { _t } from "@web/core/l10n/translation";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
+import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
@@ -13,10 +14,18 @@ export class CartPage extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
+        this.dialog = useService("dialog");
         this.state = useState({
             selectTable: false,
-            cancelConfirmation: false,
         });
+    }
+
+    get showCancelButton() {
+        return (
+            this.selfOrder.config.self_ordering_mode === "mobile" &&
+            this.selfOrder.config.self_ordering_pay_after === "each" &&
+            typeof this.selfOrder.currentOrder.id === "number"
+        );
     }
 
     get lines() {
@@ -36,6 +45,19 @@ export class CartPage extends Component {
         } else {
             return this.lines;
         }
+    }
+
+    async cancelOrder() {
+        this.dialog.add(CancelPopup, {
+            title: _t("Cancel order"),
+            confirm: async () => {
+                await this.selfOrder.data.call("pos.order", "remove_from_ui", [
+                    [this.selfOrder.currentOrder.id],
+                ]);
+                this.selfOrder.currentOrder.state = "cancel";
+                this.router.navigate("default");
+            },
+        });
     }
 
     getLineChangeQty(line) {

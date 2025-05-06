@@ -53,7 +53,9 @@ class PosSelfOrderController(http.Controller):
             'amount_total': amount_total,
         })
 
-        order_ids.send_table_count_notification(order_ids.mapped('table_id'))
+        for config in order_ids.config_id:
+            config.notify_synchronisation(config.current_session_id.id, 0)
+
         return self._generate_return_values(order_ids, pos_config)
 
     def _generate_return_values(self, order, config_id):
