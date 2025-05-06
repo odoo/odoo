@@ -21,7 +21,7 @@
                     'o-chatWindow mx-2': env.inChatWindow,
                     'mb-3': env.inChatWindow and !props.composer.message,
                     'o-discussApp pt-1': env.inDiscussApp,
-                    'm-1': !env.inDiscussApp,
+                    'm-1': env.inChatWindow,
                 }" t-attf-class="{{ props.className }}">
             <FileUploader t-if="allowUpload" multiUpload="isMultiUpload" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
                 <t t-set-slot="toggler">
