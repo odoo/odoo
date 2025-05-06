@@ -72,6 +72,10 @@ function websiteEditEventTourSteps() {
             trigger: "iframe span:contains('Back to events')",
             run: "click",
         },
+        {
+            content: "Wait for events list to load",
+            trigger: ":iframe .opt_events_list_columns small",
+        },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: "edit the short description of the event",
