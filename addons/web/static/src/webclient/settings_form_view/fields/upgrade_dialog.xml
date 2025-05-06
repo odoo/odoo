@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="web.UpgradeDialog">
-        <Dialog size="'md'" title.translate="Odoo Enterprise">
-            <div class="row" role="status">
-                <div class="col-6">
+        <Dialog title.translate="Odoo Enterprise">
+            <div role="status"
+                class="d-flex flex-row align-items-center flex-wrap  flex-md-nowrap gap-1">
+                <div class="w-100 w-md-50">
                     Get this feature and much more with Odoo Enterprise!
                     <ul class="list-unstyled">
                         <li><i class="fa fa-check"></i> Access to all Enterprise Apps</li>
@@ -14,8 +15,10 @@
                         <li><a href="http://www.odoo.com/editions?utm_source=db&amp;utm_medium=enterprise" target="_blank"><i class="fa fa-plus"></i> And more</a></li>
                     </ul>
                 </div>
-                <div class="col-6">
-                    <img class="img-fluid" t-att-src="'/web/static/img/enterprise_upgrade.jpg'" draggable="false" alt="Upgrade to enterprise"/>
+                <div class="o_video_embed w-100 w-md-50 ratio ratio-16x9">
+                    <iframe class="embed-responsive-item"
+                        t-attf-src="https://www.youtube.com/embed/nbso3NVz3p8?autoplay=1"
+                        frameborder="0" allowfullscreen="true" />
                 </div>
             </div>
             <t t-set-slot="footer">
