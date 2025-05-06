@@ -250,8 +250,7 @@ export class SelectionPlugin extends Plugin {
                     if (ev.target.tagName === "IFRAME") {
                         return;
                     }
-                    const preventClosing = ev.target?.closest?.("[data-prevent-closing-overlay]");
-                    if (preventClosing?.dataset?.preventClosingOverlay === "true") {
+                    if (this.getResource("prevent_closing_overlay_predicates").some((c) => c(ev))) {
                         return;
                     }
                     this.focusEditableDocument = false;

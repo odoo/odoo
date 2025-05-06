@@ -146,6 +146,7 @@ export class ToolbarPlugin extends Plugin {
     resources = {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         selection_leave_handlers: () => this.closeToolbar(),
+        prevent_closing_overlay_predicates: (ev) => this.overlay.overlayContainsElement(ev.target),
         step_added_handlers: () => this.updateToolbar(),
         user_commands: {
             id: "expandToolbar",
@@ -398,11 +399,8 @@ export class ToolbarPlugin extends Plugin {
     }
 
     shouldPreventClosing() {
-        // Should check in the document with overlays.
-        const preventClosing = document
-            .getSelection()
-            ?.anchorNode?.closest?.("[data-prevent-closing-overlay]");
-        return preventClosing?.dataset?.preventClosingOverlay === "true";
+        const anchorNode = document.getSelection()?.anchorNode;
+        return anchorNode && this.overlay.overlayContainsElement(anchorNode);
     }
 
     updateNamespace(targetedNodes) {
