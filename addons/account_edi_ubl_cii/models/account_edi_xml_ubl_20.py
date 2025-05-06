@@ -377,6 +377,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             if not line.discount:
                 return fixed_tax_charge_vals_list
 
+        return [self._get_invoice_line_discount_allowance_vals(line)] + fixed_tax_charge_vals_list
+
+    def _get_invoice_line_discount_allowance_vals(self, line):
         # Price subtotal with discount subtracted:
         net_price_subtotal = line.price_subtotal
         # Price subtotal without discount subtracted:
@@ -385,7 +388,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         else:
             gross_price_subtotal = line.currency_id.round(net_price_subtotal / (1.0 - (line.discount or 0.0) / 100.0))
 
-        allowance_vals = {
+        return {
             'currency_name': line.currency_id.name,
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
 
@@ -400,8 +403,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             # The discount should be provided as an amount.
             'amount': gross_price_subtotal - net_price_subtotal,
         }
-
-        return [allowance_vals] + fixed_tax_charge_vals_list
 
     def _get_invoice_line_price_vals(self, line):
         """ Method used to fill the cac:InvoiceLine/cac:Price node.
