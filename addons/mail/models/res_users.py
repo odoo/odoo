@@ -393,7 +393,7 @@ class ResUsers(models.Model):
         res.one(
             "partner_id",
             lambda res: (
-                res.extend(["active", "main_user_id", "name"]),
+                res.extend(["active", "main_user_id", "name", "tz"]),
                 res.from_method("_store_avatar_fields"),
                 res.from_method("_store_im_status_fields"),
             ),
