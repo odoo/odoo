@@ -837,6 +837,8 @@ class ResUsers(models.Model):
         return tuple((column.name, data_fields[index]) for index, column in enumerate(cr_description))
 
     def _session_token_hash_compute(self, sid, field_values):
+        if not field_values:
+            return False
         # Generate hmac key using the column name and its value, only if the value is not None
         # To avoid invalidating sessions when installing a new feature modifying the session token computation
         # while not still being used.
@@ -851,6 +853,8 @@ class ResUsers(models.Model):
 
     def _legacy_session_token_hash_compute(self, sid):
         field_values = self._session_token_get_values()
+        if not field_values:
+            return False
         # generate hmac key
         key = ('%s' % (tuple(f[1] for f in field_values),)).encode()
         # hmac the session id

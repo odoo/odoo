@@ -278,6 +278,15 @@ class TestUsers(UsersCommonCase):
             "The phone of the partner_id shall be updated."
         )
 
+    def test_session_non_existing_user(self):
+        """
+        Test to check the invalidation of session bound to non existing (or deleted) users.
+        """
+        User = self.env['res.users']
+        last_user_id = User.with_context(active_test=False).search([], limit=1, order="id desc")
+        non_existing_user = User.browse(last_user_id.id + 1)
+        self.assertFalse(non_existing_user._compute_session_token('session_id'))
+
 @tagged('post_install', '-at_install', 'groups')
 class TestUsers2(UsersCommonCase):
 
