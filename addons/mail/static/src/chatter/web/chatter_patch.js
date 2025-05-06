@@ -376,10 +376,12 @@ patch(Chatter.prototype, {
         this.onFollowerChanged(thread);
     },
 
-    onCloseFullComposerCallback() {
+    onCloseFullComposerCallback(isDiscard) {
         this.toggleComposer();
         super.onCloseFullComposerCallback();
-        this.props.record?.load();
+        if (!isDiscard) {
+            this.reloadParentView();
+        }
     },
 
     onFollowerChanged(thread) {
