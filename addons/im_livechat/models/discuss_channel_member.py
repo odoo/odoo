@@ -135,7 +135,7 @@ class DiscussChannelMember(models.Model):
             new_fields = [
                 "active",
                 "avatar_128",
-                Store.One("country_id", ["code", "name"], rename="country"),
+                Store.One("country_id", ["code", "name"]),
                 "im_status",
                 "is_public",
                 "user_livechat_username",
@@ -150,7 +150,7 @@ class DiscussChannelMember(models.Model):
         if self.channel_id.channel_type == 'livechat':
             return [
                 "avatar_128",
-                Store.One("country_id", ["code", "name"], rename="country"),
+                Store.One("country_id", ["code", "name"]),
                 "im_status",
                 "name",
                 "offline_since",

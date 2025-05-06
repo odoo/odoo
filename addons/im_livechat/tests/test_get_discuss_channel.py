@@ -54,7 +54,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             [
                 {
                     "avatar_128_access_token": limited_field_access_token(guest, "avatar_128"),
-                    "country": belgium.id,
+                    "country_id": belgium.id,
                     "id": guest.id,
                     "im_status": "offline",
                     "name": "Visitor",
@@ -85,7 +85,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "avatar_128_access_token": limited_field_access_token(
                         operator.partner_id, "avatar_128"
                     ),
-                    "country": False,
+                    "country_id": False,
                     "id": operator.partner_id.id,
                     "im_status": "offline",
                     "is_public": False,
@@ -139,7 +139,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "avatar_128_access_token": limited_field_access_token(
                         test_user.partner_id, "avatar_128"
                     ),
-                    "country": belgium.id,
+                    "country_id": belgium.id,
                     "id": test_user.partner_id.id,
                     "im_status": "offline",
                     "isAdmin": False,
@@ -158,7 +158,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "avatar_128_access_token": limited_field_access_token(
                         operator.partner_id, "avatar_128"
                     ),
-                    "country": False,
+                    "country_id": False,
                     "id": operator.partner_id.id,
                     "im_status": "offline",
                     "is_public": False,
@@ -240,7 +240,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "avatar_128_access_token": limited_field_access_token(
                         operator.partner_id, "avatar_128"
                     ),
-                    "country": False,
+                    "country_id": False,
                     "id": operator.partner_id.id,
                     "im_status": "offline",
                     "isAdmin": False,
