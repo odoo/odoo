@@ -6,6 +6,5 @@ patch(Thread.prototype, {
     setup() {
         super.setup(...arguments);
         this.visitor = fields.One("Persona");
-        this.visitorPartner = fields.One("Persona");
     },
 });
