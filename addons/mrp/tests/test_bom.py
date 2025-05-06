@@ -2474,6 +2474,51 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(len(mo_order.move_byproduct_ids), 3)
         self.assertEqual(mo_order.move_byproduct_ids.product_id, bp1 + bp3 + bp4)
 
+    def test_bom_never_attribute_mix(self):
+        """ For a product that has two 'no_variant' attributes but only one used in its bom,
+            check that it computes properly which line to get when using the other attribute.
+        """
+        color, size = self.env['product.attribute'].create([{
+            'name': name,
+            'display_type': 'multi',
+            'create_variant': 'no_variant',
+        } for name in ['color', 'size']])
+
+        self.env['product.attribute.value'].create([{
+            'name': 'Meh',
+            'attribute_id': attribute.id,
+        } for attribute in [color, size]])
+
+        tmpl_attr_line_color, tmpl_attr_line_size = self.env['product.template.attribute.line'].create([{
+            'attribute_id': attribute.id,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'value_ids': [Command.set(attribute.value_ids.ids)],
+        } for attribute in [color, size]])
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'product_uom_id': self.product_1.product_tmpl_id.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_qty': 1,
+                    'bom_product_template_attribute_value_ids': [
+                        Command.link(tmpl_attr_line_color.product_template_value_ids[0].id),
+                    ],
+                }),
+            ],
+        })
+        order = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'bom_id': bom.id,
+            'never_product_template_attribute_value_ids': [
+                Command.link(tmpl_attr_line_size.product_template_value_ids[0].id),
+            ],
+        })
+        self.assertEqual(len(order.move_raw_ids), 0, "No component should be selected")
+
     def test_workorders_on_bom_changes(self):
         """
         Check that the workorders of the MO are changed according to the bom
