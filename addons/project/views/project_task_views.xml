@@ -527,7 +527,7 @@
                                         context="{'default_project_id': project_id}"
                                         column_invisible="not parent.allow_milestones"
                                         invisible="not allow_milestones"/>
-                                    <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id" column_invisible="has_template_ancestor"/>
+                                    <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id" column_invisible="parent.has_template_ancestor"/>
                                     <field name="parent_id" optional="hide" groups="base.group_no_one"/>
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
                                     <field name="company_id" optional="hide" groups="base.group_multi_company" />
