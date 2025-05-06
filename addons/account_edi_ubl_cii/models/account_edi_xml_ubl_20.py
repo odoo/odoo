@@ -377,22 +377,30 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         :param line:    An invoice line.
         :return:        A list of python dictionaries.
         """
-        fixed_tax_charge_vals_list = []
-        if self._context.get('convert_fixed_taxes'):
-            for grouping_key, tax_details in tax_values_list['tax_details'].items():
-                if grouping_key['tax_amount_type'] == 'fixed':
-                    fixed_tax_charge_vals_list.append({
-                        'currency_name': line.currency_id.name,
-                        'currency_dp': self._get_currency_decimal_places(line.currency_id),
-                        'charge_indicator': 'true',
-                        'allowance_charge_reason_code': 'AEO',
-                        'allowance_charge_reason': grouping_key['tax_name'],
-                        'amount': tax_details['tax_amount_currency'],
-                    })
+        tax_allowance_vals_list = []
+        for grouping_key, tax_details in tax_values_list['tax_details'].items():
+            if vals := self._get_invoice_line_tax_allowance_vals_list(grouping_key, tax_details, line.currency_id):
+                tax_allowance_vals_list.append(vals)
 
-            if not line.discount:
-                return fixed_tax_charge_vals_list
+        if not line.discount:
+            return tax_allowance_vals_list
 
+        return [self._get_invoice_line_discount_allowance_vals(line)] + tax_allowance_vals_list
+
+    def _get_invoice_line_tax_allowance_vals_list(self, grouping_key, tax_details, currency):
+        if not self._context.get('convert_fixed_taxes') or grouping_key['tax_amount_type'] != 'fixed':
+            return dict()
+
+        return {
+            'currency_name': currency.name,
+            'currency_dp': self._get_currency_decimal_places(currency),
+            'charge_indicator': 'true',
+            'allowance_charge_reason_code': 'AEO',
+            'allowance_charge_reason': grouping_key['tax_name'],
+            'amount': tax_details['tax_amount_currency'],
+        }
+
+    def _get_invoice_line_discount_allowance_vals(self, line):
         # Price subtotal with discount subtracted:
         net_price_subtotal = line.price_subtotal
         # Price subtotal without discount subtracted:
@@ -401,7 +409,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         else:
             gross_price_subtotal = line.currency_id.round(net_price_subtotal / (1.0 - (line.discount or 0.0) / 100.0))
 
-        allowance_vals = {
+        return {
             'currency_name': line.currency_id.name,
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
 
@@ -416,8 +424,6 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             # The discount should be provided as an amount.
             'amount': gross_price_subtotal - net_price_subtotal,
         }
-
-        return [allowance_vals] + fixed_tax_charge_vals_list
 
     def _get_invoice_line_price_vals(self, line):
         """ Method used to fill the cac:InvoiceLine/cac:Price node.
