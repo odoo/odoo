@@ -77,6 +77,8 @@ def test_all_l10n(env):
         try:
             env['account.chart.template'].with_context(l10n_check_fields_complete=True).try_loading(template_code, company, install_demo=True)
             env.cr.commit()
+            if company.fiscal_position_ids and not company.domestic_fiscal_position_id:
+                _logger.warning("No domestic fiscal position found in fiscal data for %s %s.", company.country_id.name, template_code)
         except Exception:
             _logger.error("Error when creating COA %s", template_code, exc_info=True)
             env.cr.rollback()
