@@ -58,10 +58,25 @@ class CalendarEvent(models.Model):
         if self.env.user.microsoft_last_sync_date:
             time_offset = timedelta(minutes=5)
             domain = expression.AND([domain, [('write_date', '>=', self.env.user.microsoft_last_sync_date - time_offset)]])
+        # Step 1: Find the events that need to be synchronized
+        sync_needed_events = self.env['calendar.event'].with_context(dont_notify=True).search(domain)
 
-        self.env['calendar.event'].with_context(dont_notify=True).search(domain).write({
-            'need_sync_m': True,
-        })
+        # Step 2: Find the remaining events (i.e., those that do not need synchronization)
+        remaining_events = self.env['calendar.event'].with_context(dont_notify=True).search([
+            ('id', 'not in', sync_needed_events.ids)
+        ])
+
+        # Step 3: Mark the remaining events as "not synchronized"
+        if remaining_events:
+            remaining_events.write({
+                'is_synched': _("This event was created before you started synchronizing your calendar and therefore is not synchronized to avoid spamming attendees"),
+            })
+
+        # Step 4: Mark the sync-needed events
+        if sync_needed_events:
+            sync_needed_events.write({
+                'need_sync_m': True,
+            })
 
     def _check_microsoft_sync_status(self):
         """
@@ -285,7 +300,7 @@ class CalendarEvent(models.Model):
         upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
 
         # Define 'custom_lower_bound_range' param for limiting old events updates in Odoo and avoid spam on Microsoft.
-        custom_lower_bound_range = ICP.get_param('microsoft_calendar.sync.lower_bound_range')
+        custom_lower_bound_range = ICP.get_param('microsoft_calendar_sync_lower_bound_range')
         if custom_lower_bound_range:
             lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=int(custom_lower_bound_range))
         domain = [

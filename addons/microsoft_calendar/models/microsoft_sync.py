@@ -63,6 +63,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
     # This field helps to know when a microsoft event need to be resynced
     need_sync_m = fields.Boolean(default=True, copy=False)
     active = fields.Boolean(default=True)
+    is_synched = fields.Char('Not Synchronized')
 
     def write(self, vals):
         fields_to_sync = [x for x in vals if x in self._get_microsoft_synced_fields()]
@@ -310,7 +311,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
 
         # Get sync lower bound days range for checking if old events must be updated in Odoo.
         ICP = self.env['ir.config_parameter'].sudo()
-        lower_bound_day_range = ICP.get_param('microsoft_calendar.sync.lower_bound_range')
+        lower_bound_day_range = ICP.get_param('microsoft_calendar_sync_lower_bound_range')
 
         # update other events
         for mevent in (existing - cancelled).filter(lambda e: e.lastModifiedDateTime):
