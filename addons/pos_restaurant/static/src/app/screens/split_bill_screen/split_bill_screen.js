@@ -44,7 +44,13 @@ export class SplitBillScreen extends Component {
         const lines = line.getAllLinesInCombo();
 
         for (const line of lines) {
+<<<<<<< bc96d344260873574a33147fedc520209ad0971a
             if (!line.isPosGroupable()) {
+||||||| dfdf1c43fd3f2a39c205ccf97f139c2e1fcd213e
+            if (!line.isPosGroupable() && !line.isPartOfCombo()) {
+=======
+            if (!line.product_id.uom_id?.is_pos_groupable) {
+>>>>>>> 4f691f98026888c1f7b36a6b3012b7b6bc6a9d8f
                 if (this.qtyTracker[line.uuid] === line.getQuantity()) {
                     this.qtyTracker[line.uuid] = 0;
                 } else {
