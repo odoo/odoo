@@ -244,7 +244,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 "mail.guest": [
                     {
                         "avatar_128_access_token": limited_field_access_token(guest, "avatar_128"),
-                        "country": False,
+                        "country_id": False,
                         "id": guest.id,
                         "im_status": "offline",
                         "name": f"Visitor #{self.visitor.id}",
@@ -261,7 +261,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "avatar_128_access_token": limited_field_access_token(
                             self.operator.partner_id, "avatar_128"
                         ),
-                        "country": False,
+                        "country_id": False,
                         "id": self.operator.partner_id.id,
                         "im_status": "online",
                         "is_public": False,
