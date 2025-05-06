@@ -121,7 +121,7 @@
             <field name="name">discuss.channel.pivot</field>
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
-                <pivot string="Sessions" display_quantity="1" sample="1">
+                <pivot js_class="im_livechat.discuss_channel_pivot" string="Sessions" display_quantity="1" sample="1">
                     <field name="livechat_operator_id" type="row"/>
                     <field name="create_date" interval="day" type="col"/>
                     <field name="rating_last_value" type="measure" string="Rating (%)" widget="im_livechat.rating_percentage"/>
