@@ -29,8 +29,12 @@ export class DiscussChannel extends livechatModels.DiscussChannel {
                 const [partner] = ResPartner.browse(visitor.partner_id);
                 const [country] = ResCountry.browse(visitor.country_id);
                 channelInfo.visitor = {
-                    country: country ? { id: country.id, code: country.code } : false,
-                    name: partner?.name || partner?.display_name || visitor.display_name || `Visitor #${visitor.id}`,
+                    country_id: country ? { id: country.id, code: country.code } : false,
+                    name:
+                        partner?.name ||
+                        partner?.display_name ||
+                        visitor.display_name ||
+                        `Visitor #${visitor.id}`,
                     history: visitor.history, // TODO should be computed
                     id: visitor.id,
                     is_connected: visitor.is_connected,

@@ -1638,7 +1638,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             if also_livechat:
                 res.update(
                     {
-                        "country": False,
+                        "country_id": False,
                         "is_public": False,
                         "user_livechat_username": False,
                     }
@@ -1652,7 +1652,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "avatar_128_access_token": limited_field_access_token(
                     user.partner_id, "avatar_128"
                 ),
-                "country": self.env.ref("base.in").id,
+                "country_id": self.env.ref("base.in").id,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "isInternalUser": True,
@@ -1771,7 +1771,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if guest:
             return {
                 "avatar_128_access_token": limited_field_access_token(self.guest, "avatar_128"),
-                "country": self.guest.country_id.id,
+                "country_id": self.guest.country_id.id,
                 "id": self.guest.id,
                 "im_status": "offline",
                 "name": "Visitor",

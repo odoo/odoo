@@ -235,7 +235,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     "avatar_128_access_token": limited_field_access_token(
                         self.chatbot_script.operator_partner_id, "avatar_128"
                     ),
-                    "country": False,
+                    "country_id": False,
                     "id": self.chatbot_script.operator_partner_id.id,
                     "im_status": "im_partner",
                     "is_public": False,
@@ -333,7 +333,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     "avatar_128_access_token": limited_field_access_token(
                                         self.partner_employee, "avatar_128"
                                     ),
-                                    "country": self.env.ref("base.be").id,
+                                    "country_id": self.env.ref("base.be").id,
                                     "id": self.partner_employee.id,
                                     "im_status": "offline",
                                     "is_public": False,

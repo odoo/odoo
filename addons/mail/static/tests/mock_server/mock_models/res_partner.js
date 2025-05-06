@@ -248,7 +248,7 @@ export class ResPartner extends webModels.ResPartner {
                     (field) =>
                         ![
                             "avatar_128",
-                            "country",
+                            "country_id",
                             "display_name",
                             "isAdmin",
                             "notification_type",
@@ -261,15 +261,9 @@ export class ResPartner extends webModels.ResPartner {
                 data.avatar_128_access_token = partner.id;
                 data.write_date = partner.write_date;
             }
-            if (fields.includes("country")) {
-                const [country] = ResCountry.browse(partner.country_id);
-                data.country = country
-                    ? {
-                          code: country.code,
-                          id: country.id,
-                          name: country.name,
-                      }
-                    : false;
+            if (fields.includes("country_id")) {
+                const [country_id] = ResCountry.browse(partner.country_id);
+                data.country_id = country_id || false;
             }
             if (fields.includes("display_name")) {
                 data.displayName = partner.display_name || partner.name;

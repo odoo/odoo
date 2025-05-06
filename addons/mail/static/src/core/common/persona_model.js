@@ -84,7 +84,7 @@ export class Persona extends Record {
     type;
     /** @type {string} */
     name;
-    country = fields.One("res.country");
+    country_id = fields.One("res.country");
     /** @type {string} */
     email;
     /** @type {number} */
