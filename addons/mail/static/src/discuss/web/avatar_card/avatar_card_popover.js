@@ -1,6 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, useState, useEffect } from "@odoo/owl";
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
+import { showRealtimeTzDiff } from "@mail/utils/common/dates";
 
 export class AvatarCardPopover extends Component {
     static template = "mail.AvatarCardPopover";
@@ -15,6 +16,31 @@ export class AvatarCardPopover extends Component {
         this.store = useService("mail.store");
         this.openChat = useOpenChat("res.users");
         this.store.fetchStoreData("avatar_card", { user_id: this.props.id });
+        this.state = useState({});
+        useEffect(
+            () => {
+                const targetUserTz = this.record?.tz || this.user?.tz;
+                const currentUserTz = this.store.self_partner?.tz;
+                if (targetUserTz && currentUserTz && targetUserTz !== currentUserTz) {
+                    const stopRealtimeTzDiff = showRealtimeTzDiff(
+                        currentUserTz,
+                        targetUserTz,
+                        ({ otherUserTime, otherUserDate }) => {
+                            Object.assign(this.state, {
+                                showUserTime: true,
+                                userTime: otherUserTime,
+                                userDate: otherUserDate,
+                                otherUserTz: targetUserTz,
+                            });
+                        }
+                    );
+                    return () => {
+                        stopRealtimeTzDiff();
+                    };
+                }
+            },
+            () => [this.record?.tz, this.user?.tz]
+        );
     }
 
     get user() {

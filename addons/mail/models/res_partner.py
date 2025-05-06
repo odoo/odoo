@@ -265,6 +265,7 @@ class ResPartner(models.Model):
             "is_company",
             Store.One("main_user_id", ["share"]),
             "name",
+            "tz",
         ]
         if target.is_internal(self.env):
             res.append("email")

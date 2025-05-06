@@ -7,6 +7,7 @@ import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
+import { showRealtimeTzDiff } from "@mail/utils/common/dates";
 
 import { Component, useRef, useState, useExternalListener, useEffect, useSubEnv } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -86,7 +87,37 @@ export class Discuss extends Component {
             );
         }
         useEffect(
-            () => this.actionPanelAutoOpenFn(),
+            () => {
+                this.actionPanelAutoOpenFn();
+                if (!this.thread || this.thread.channel_type !== "chat") {
+                    return;
+                }
+                const otherUserTz = this.thread.correspondent.persona.tz;
+                const currentUserTz = this.store.self_partner?.tz;
+                if (otherUserTz && currentUserTz && otherUserTz !== currentUserTz) {
+                    const stopRealtimeTzDiff = showRealtimeTzDiff(
+                        currentUserTz,
+                        otherUserTz,
+                        ({ otherUserTime, otherUserDate }) => {
+                            Object.assign(this.state, {
+                                showUserTime: true,
+                                otherUserTime,
+                                otherUserDate,
+                                otherUserTz,
+                            });
+                        }
+                    );
+                    return () => {
+                        stopRealtimeTzDiff();
+                        Object.assign(this.state, {
+                            showUserTime: false,
+                            otherUserTime: null,
+                            otherUserDate: null,
+                            otherUserTz: null,
+                        });
+                    };
+                }
+            },
             () => [this.thread]
         );
     }
