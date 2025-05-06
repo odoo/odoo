@@ -12,6 +12,7 @@ function compileChatter(node, params) {
         hasAttachmentPreview: Boolean(
             this.templates.FormRenderer.querySelector(".o_attachment_preview")
         ),
+        hasParentReloadOnActivityChanged: Boolean(node.getAttribute("reload_on_activity")),
         hasParentReloadOnAttachmentsChanged: Boolean(node.getAttribute("reload_on_attachment")),
         hasParentReloadOnFollowersUpdate: Boolean(node.getAttribute("reload_on_follower")),
         hasParentReloadOnMessagePosted: Boolean(node.getAttribute("reload_on_post")),
