@@ -4,9 +4,11 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { rpc } from "@web/core/network/rpc";
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
 import { ImStatus } from "@mail/core/common/im_status";
+import { useDynamicInterval } from "@mail/utils/common/misc";
+import { formatLocalDateTime } from "@mail/utils/common/dates";
 
 export class AvatarCardPopover extends Component {
     static template = "mail.AvatarCardPopover";
@@ -30,10 +32,24 @@ export class AvatarCardPopover extends Component {
         this.store = useService("mail.store");
         this.dialog = useService("dialog");
         this.openChat = useOpenChat(this.openChatModel);
+        this.state = useState({ partnerLocalDateTimeFormatted: "" });
         this.store.fetchStoreData("avatar_card", {
             id: this.props.id,
             model: this.props.model,
         });
+        useDynamicInterval(
+            (partnerTz, currentUserTz) => {
+                this.state.partnerLocalDateTimeFormatted = formatLocalDateTime(
+                    partnerTz,
+                    currentUserTz
+                );
+                if (!this.state.partnerLocalDateTimeFormatted) {
+                    return;
+                }
+                return 60000 - (Date.now() % 60000);
+            },
+            () => [this.partner?.tz, this.store.self?.tz]
+        );
     }
 
     get openChatModel() {

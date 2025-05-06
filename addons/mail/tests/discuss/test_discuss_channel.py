@@ -220,6 +220,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "main_user_id": self.test_user.id,
                                     "mention_token": self.test_partner._get_mention_token(),
                                     "name": "Test Partner",
+                                    "tz": False,
                                     "write_date": test_partner_write_date,
                                 },
                             ),
