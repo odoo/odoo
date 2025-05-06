@@ -12,7 +12,7 @@ import { useSpreadsheetPrint } from "@spreadsheet/hooks";
 import { Registry } from "@odoo/o-spreadsheet";
 import { router } from "@web/core/browser/router";
 
-import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
+import { Component, onWillStart, useState, useEffect, useExternalListener } from "@odoo/owl";
 import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar";
 
 export const dashboardActionRegistry = new Registry();
@@ -74,6 +74,8 @@ export class SpreadsheetDashboardAction extends Component {
                 return [dashboard?.model, dashboard?.status];
             }
         );
+        useExternalListener(window, "afterprint", this.logExport.bind(this));
+
         useSetupAction({
             getLocalState: () => ({
                 activeDashboardId: this.activeDashboardId,
@@ -188,6 +190,14 @@ export class SpreadsheetDashboardAction extends Component {
                 group.id !== "favorites" && // Skip the FAVORITES group
                 group.dashboards.some((d) => d.id === this.activeDashboardId)
         )?.name;
+    }
+
+    logExport() {
+        const dashboard = this.state.activeDashboard;
+        if (!dashboard || dashboard.status !== Status.Loaded) {
+            return;
+        }
+        this.model.dispatch("LOG_DATASOURCE_EXPORT", { action: "print" });
     }
 }
 
