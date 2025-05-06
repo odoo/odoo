@@ -451,6 +451,10 @@ class configmanager:
                          "--workers", dest="workers", my_default=0,
                          help="Specify the number of workers, 0 disable prefork mode.",
                          type="int"))
+        group.add_option(PosixOnlyOption(
+                         "--gevent-workers", dest="gevent_workers", my_default=1,
+                         help="Specify the number of gevent workers in prefork mode. (requires SO_REUSEPORT)",
+                         type="int"))
         group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=2048 * 1024 * 1024,
                          help="Maximum allowed virtual memory per worker (in bytes), when reached the worker be "
                          "reset after the current request (default 2048MiB).",
