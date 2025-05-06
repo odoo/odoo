@@ -40,6 +40,8 @@ import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { deserializeDateTime, formatDate } from "@web/core/l10n/dates";
 import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
+import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
+import { EditOrderNamePopup } from "@pos_restaurant/app/popup/edit_order_name_popup/edit_order_name_popup";
 
 const { DateTime } = luxon;
 
@@ -1930,6 +1932,34 @@ export class PosStore extends WithLazyGetterTrap {
     async selectPricelist(pricelist) {
         await this.getOrder().setPricelist(pricelist);
     }
+    async editFloatingOrderName(order) {
+        const newName = await makeAwaitable(this.dialog, EditOrderNamePopup, {
+            title: _t("Edit Order Name"),
+            placeholder: _t("18:45 John 4P"),
+            startingValue: order.floating_order_name || "",
+        });
+        if (typeof order.id == "number") {
+            this.data.write("pos.order", [order.id], {
+                floating_order_name: newName,
+            });
+        } else {
+            order.floating_order_name = newName;
+        }
+    }
+    async openPresetTiming(order = this.getOrder()) {
+        const data = await makeAwaitable(this.dialog, PresetSlotsPopup);
+        if (data) {
+            if (order.preset_id.id != data.presetId) {
+                await this.selectPreset(this.models["pos.preset"].get(data.presetId));
+            }
+
+            order.preset_time = data.slot.datetime;
+            if (data.slot.datetime > DateTime.now()) {
+                this.addPendingOrder([order.id]);
+                await this.syncAllOrders({ orders: [order] });
+            }
+        }
+    }
     async selectPreset(preset = false, order = this.getOrder()) {
         if (!preset) {
             const selectionList = this.models["pos.preset"].map((preset) => ({
@@ -1947,8 +1977,6 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (preset) {
-            order.setPreset(preset);
-
             if (preset.needsPartner) {
                 const partner = order.partner_id || (await this.selectPartner(order));
                 if (!partner) {
@@ -1963,13 +1991,22 @@ export class PosStore extends WithLazyGetterTrap {
             if (preset.identification === "name" && !order.floating_order_name && !order.table_id) {
                 order.floating_order_name = order.getPartner()?.name;
                 if (!order.floating_order_name) {
-                    this.editFloatingOrderName(order);
+                    await this.editFloatingOrderName(order);
+                    //re-set the order in case an order was selected from the current orders list in the EditOrderNamePopup
+                    order = this.getOrder();
+                    if (!order.floating_order_name) {
+                        return;
+                    }
                 }
             }
+            order.setPreset(preset);
 
             if (preset.use_timing && !order.preset_time) {
-                await this.syncPresetSlotAvaibility(preset);
-                order.preset_time = preset.nextSlot?.datetime || false;
+                await this.openPresetTiming(order);
+                if (!order.preset_time) {
+                    await this.syncPresetSlotAvaibility(preset);
+                    order.preset_time = preset.nextSlot?.datetime || false;
+                }
             } else if (!preset.use_timing) {
                 order.preset_time = false;
             }
