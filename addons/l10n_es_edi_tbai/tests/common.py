@@ -60,8 +60,8 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
             cert_name = 'Bizkaia-IZDesa2021.p12'
             cert_password = 'IZDesa2021'
         elif agency == 'gipuzkoa':
-            cert_name = 'gipuzkoa_IZDesa2021.p12'
-            cert_password = 'IZDesa2021'
+            cert_name = 'gipuzkoa_IZDesa2025.p12'
+            cert_password = 'IZDesa2025'
         else:
             raise ValueError("Unknown tax agency: " + agency)
 
@@ -161,7 +161,6 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <BaseImponible>4000.00</BaseImponible>
                     <TipoImpositivo>21.00</TipoImpositivo>
                     <CuotaImpuesto>840.00</CuotaImpuesto>
-                    <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
                   </DetalleIVA>
                 </DesgloseIVA>
               </DetalleNoExenta>
