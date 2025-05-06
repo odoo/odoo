@@ -49,14 +49,17 @@ export class X2ManyMediaViewer extends X2ManyField {
             ["id", "datas", "name", "mimetype"],
             {}
         );
-        for (let attachment of attachmentRecords) {
+        for (const attachment of attachmentRecords) {
             const imageList = this.props.record.data[this.props.name];
             if (!attachment.datas) {
                 // URL type attachments are mostly demo records which don't have any ir.attachment datas
                 // TODO: make it work with URL type attachments
-                return this.notification.add(`Cannot add URL type attachment "${attachment.name}". Please try to reupload this image.`, {
-                    type: "warning",
-                });
+                return this.notification.add(
+                    `Cannot add URL type attachment "${attachment.name}". Please try to reupload this image.`,
+                    {
+                        type: "warning",
+                    }
+                );
             }
             if (
                 this.props.convertToWebp &&
@@ -81,7 +84,15 @@ export class X2ManyMediaViewer extends X2ManyField {
                     canvas.height = image.height * ratio;
                     const ctx = canvas.getContext("2d");
                     ctx.drawImage(
-                        image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height
+                        image,
+                        0,
+                        0,
+                        image.width,
+                        image.height,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
                     );
 
                     // WebP format
@@ -90,8 +101,7 @@ export class X2ManyMediaViewer extends X2ManyField {
                         [
                             {
                                 name: attachment.name.replace(/\.[^/.]+$/, ".webp"),
-                                description:
-                                size === originalSize ? "" : `resize: ${size}`,
+                                description: size === originalSize ? "" : `resize: ${size}`,
                                 datas: webpData,
                                 res_id: referenceId,
                                 res_model: "ir.attachment",
@@ -113,7 +123,7 @@ export class X2ManyMediaViewer extends X2ManyField {
                                 res_id: resizedId,
                                 res_model: "ir.attachment",
                                 mimetype: "image/jpeg",
-                            }
+                            },
                         ],
                     ]);
                 }

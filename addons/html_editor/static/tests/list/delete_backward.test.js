@@ -2726,7 +2726,8 @@ describe("Selection not collapsed", () => {
                         contentBefore:
                             '<ul class="o_checklist"><li class="o_checked">ab[cd</li></ul><ul><li>ef]gh</li></ul>',
                         stepFunction: deleteBackward,
-                        contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                        contentAfter:
+                            '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                     });
                 });
                 test("should delete across an checklist list and an unordered list (2)", async () => {
@@ -2735,7 +2736,8 @@ describe("Selection not collapsed", () => {
                         contentBefore:
                             '<ul class="o_checklist"><li class="o_checked">ab]cd</li></ul><ul><li>ef[gh</li></ul>',
                         stepFunction: deleteBackward,
-                        contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                        contentAfter:
+                            '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                     });
                 });
                 test("should delete across an checklist list and an unordered list (3)", async () => {

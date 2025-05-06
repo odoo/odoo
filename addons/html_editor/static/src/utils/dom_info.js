@@ -296,13 +296,7 @@ const iconTags = ["I", "SPAN"];
 const iconClasses = ["fa", "fab", "fad", "far", "oi"];
 
 export const ICON_SELECTOR = iconTags
-    .map((tag) => {
-        return iconClasses
-            .map((cls) => {
-                return `${tag}.${cls}`;
-            })
-            .join(", ");
-    })
+    .map((tag) => iconClasses.map((cls) => `${tag}.${cls}`).join(", "))
     .join(", ");
 
 /**

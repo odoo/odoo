@@ -66,7 +66,7 @@ export class TableOfContentManager {
                     depth = previousDepth;
                 }
             } else if (depth < previousDepth) {
-                if (currentDepthByTag.hasOwnProperty(heading.tagName)) {
+                if (Object.prototype.hasOwnProperty.call(currentDepthByTag, heading.tagName)) {
                     depth = currentDepthByTag[heading.tagName];
                 }
             }

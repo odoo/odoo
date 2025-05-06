@@ -470,7 +470,9 @@ test.todo("should close the powerbox if keyup event is called on other block", a
 test.tags("desktop");
 test("should insert a 3x3 table on type `/table`", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
-    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+    );
 
     await insertText(editor, "/table");
     await waitFor(".o-we-powerbox ");

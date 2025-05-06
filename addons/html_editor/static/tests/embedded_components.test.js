@@ -447,9 +447,9 @@ describe("Mount and Destroy embedded components", () => {
         // the editable element, before being removed again.
         const fixture = getFixture();
         expect(
-            [...fixture.querySelectorAll("[data-embedded]")].filter((elem) => {
-                return !elem.closest(".odoo-editor-editable");
-            })
+            [...fixture.querySelectorAll("[data-embedded]")].filter(
+                (elem) => !elem.closest(".odoo-editor-editable")
+            )
         ).toEqual([]);
     });
 
@@ -476,9 +476,9 @@ describe("Mount and Destroy embedded components", () => {
         // the editable element, before being removed again.
         const fixture = getFixture();
         expect(
-            [...fixture.querySelectorAll("[data-embedded]")].filter((elem) => {
-                return !elem.closest(".odoo-editor-editable");
-            })
+            [...fixture.querySelectorAll("[data-embedded]")].filter(
+                (elem) => !elem.closest(".odoo-editor-editable")
+            )
         ).toEqual([]);
     });
 
@@ -507,9 +507,9 @@ describe("Mount and Destroy embedded components", () => {
         // the editable element, before being removed again.
         const fixture = getFixture();
         expect(
-            [...fixture.querySelectorAll("[data-embedded]")].filter((elem) => {
-                return !elem.closest(".odoo-editor-editable");
-            })
+            [...fixture.querySelectorAll("[data-embedded]")].filter(
+                (elem) => !elem.closest(".odoo-editor-editable")
+            )
         ).toEqual([]);
         expect(editor.editable.contains(parent)).toBe(false);
         expect(parent.contains(hostElement)).toBe(true);

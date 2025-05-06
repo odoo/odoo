@@ -263,7 +263,7 @@ describe("select a full table on cross over", () => {
                             </tr>
                         </tbody>
                     </table>`),
-                stepFunction: async editor => {
+                stepFunction: async (editor) => {
                     // Table selection happens on selectionchange
                     // event which is fired in the next tick.
                     await tick();

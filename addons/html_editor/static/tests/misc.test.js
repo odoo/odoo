@@ -18,13 +18,17 @@ test("can instantiate a Editor", async () => {
 
 test("cannot reattach an editor", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+    );
     expect(() => editor.attachTo(el)).toThrow("Cannot re-attach an editor");
 });
 
 test("cannot reattach a destroyed editor", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+    );
     editor.destroy();
     expect(getContent(el)).toBe(`<p>[]</p>`);
     expect(() => editor.attachTo(el)).toThrow("Cannot re-attach an editor");

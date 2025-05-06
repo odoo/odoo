@@ -133,8 +133,7 @@ test("should make a few characters underline inside table (underline)", async ()
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`
-        ),
+            </table>`),
         stepFunction: underline,
         contentAfterEdit: unformat(`
             <table class="table table-bordered o_table o_selected_table">
@@ -155,8 +154,7 @@ test("should make a few characters underline inside table (underline)", async ()
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`
-        ),
+            </table>`),
     });
 });
 
