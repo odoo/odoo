@@ -2,7 +2,6 @@ import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
-import { EditOrderNamePopup } from "@pos_restaurant/app/popup/edit_order_name_popup/edit_order_name_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
@@ -547,22 +546,6 @@ patch(PosStore.prototype, {
                 this.addNewOrder({ table_id: table });
             }
         }
-    },
-    editFloatingOrderName(order) {
-        this.dialog.add(EditOrderNamePopup, {
-            title: _t("Edit Order Name"),
-            placeholder: _t("18:45 John 4P"),
-            startingValue: order.floating_order_name || "",
-            getPayload: async (newName) => {
-                if (typeof order.id == "number") {
-                    this.data.write("pos.order", [order.id], {
-                        floating_order_name: newName,
-                    });
-                } else {
-                    order.floating_order_name = newName;
-                }
-            },
-        });
     },
     setFloatingOrder(floatingOrder) {
         if (this.getOrder()?.isFilledDirectSale) {
