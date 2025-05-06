@@ -397,6 +397,8 @@ class DiscussChannel(models.Model):
                     diff.append(field_name)
             if diff:
                 channel._bus_send_store(channel, diff)
+            if 'active' in vals and vals.get('active') is not True and channel.parent_channel_id:
+                channel._bus_send("discuss.channel/delete", {"id": channel.id})
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         return result
