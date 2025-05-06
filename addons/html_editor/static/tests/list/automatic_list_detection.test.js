@@ -152,7 +152,7 @@ test("typing '[] ' should create checklist and restore the original text when un
     );
 
     execCommand(editor, "historyUndo");
-    expect(getContent(el)).toBe(`<p>\[\] []</p>`);
+    expect(getContent(el)).toBe(`<p>[] []</p>`);
 });
 
 test("Typing '[] ' at the start of existing text should create a checklist and restore the original text when undo", async () => {
@@ -161,7 +161,7 @@ test("Typing '[] ' at the start of existing text should create a checklist and r
     expect(getContent(el)).toBe(`<ul class="o_checklist"><li>[]abc</li></ul>`);
 
     execCommand(editor, "historyUndo");
-    expect(getContent(el)).toBe(`<p>\[\] []abc</p>`);
+    expect(getContent(el)).toBe(`<p>[] []abc</p>`);
 });
 
 test("should convert a checklist into a numbered list", async () => {

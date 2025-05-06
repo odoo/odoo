@@ -64,7 +64,5 @@ export class ReadonlyEmbeddedFileComponent extends Component {
 export const readonlyFileEmbedding = {
     name: "file",
     Component: ReadonlyEmbeddedFileComponent,
-    getProps: (host) => {
-        return { host, ...getEmbeddedProps(host) };
-    },
+    getProps: (host) => ({ host, ...getEmbeddedProps(host) }),
 };

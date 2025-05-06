@@ -214,8 +214,7 @@ test("should make a few characters strikeThrough inside table (strikeThrough)", 
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`
-        ),
+            </table>`),
         stepFunction: strikeThrough,
         contentAfterEdit: unformat(`
             <table class="table table-bordered o_table o_selected_table">
@@ -236,7 +235,6 @@ test("should make a few characters strikeThrough inside table (strikeThrough)", 
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`
-        ),
+            </table>`),
     });
 });

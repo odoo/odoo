@@ -28,7 +28,5 @@ export class EmbeddedVideoComponent extends Component {
 export const videoEmbedding = {
     name: "video",
     Component: EmbeddedVideoComponent,
-    getProps: (host) => {
-        return { ...getEmbeddedProps(host) };
-    },
+    getProps: (host) => ({ ...getEmbeddedProps(host) }),
 };

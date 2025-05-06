@@ -19,9 +19,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
                 title: _t("Dynamic Placeholder"),
                 description: _t("Insert a field"),
                 icon: "fa-hashtag",
-                run: (params = {}) => {
-                    return this.open(params.resModel || this.defaultResModel);
-                },
+                run: (params = {}) => this.open(params.resModel || this.defaultResModel),
             },
         ],
         powerbox_categories: withSequence(60, {
@@ -80,9 +78,10 @@ export class DynamicPlaceholderPlugin extends Plugin {
             return;
         }
 
-        let dynamicPlaceholder = fieldType === 'datetime'
-            ? await this._onValidateDatetime(chain, defaultValue)
-            : `object.${chain}`;
+        const dynamicPlaceholder =
+            fieldType === "datetime"
+                ? await this._onValidateDatetime(chain, defaultValue)
+                : `object.${chain}`;
 
         const t = document.createElement("T");
         t.setAttribute("t-out", dynamicPlaceholder);
@@ -95,7 +94,11 @@ export class DynamicPlaceholderPlugin extends Plugin {
     }
 
     async _onValidateDatetime(chain, defaultValue) {
-        const partnerFields = await this.services.orm.call(`${this.defaultResModel}`, "mail_get_partner_fields", [[]]);
+        const partnerFields = await this.services.orm.call(
+            `${this.defaultResModel}`,
+            "mail_get_partner_fields",
+            [[]]
+        );
 
         let dynamicPlaceholder = partnerFields.length
             ? `format_datetime(object.${chain}, tz=object.${partnerFields[0]}.tz)`
