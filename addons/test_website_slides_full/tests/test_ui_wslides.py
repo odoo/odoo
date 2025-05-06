@@ -6,7 +6,6 @@ from odoo.fields import Datetime
 from odoo import tests
 from odoo.tests.common import users
 from odoo.addons.website_slides.tests.test_ui_wslides import TestUICommon
-import unittest
 
 
 @tests.common.tagged('post_install', '-at_install')
@@ -137,8 +136,6 @@ class TestUi(TestUICommon):
             ]
         })
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     @users("portal")
     def test_course_certification_employee(self):
         # use proper environment to test user dependent computes
