@@ -273,7 +273,7 @@ class DiscussChannelMember(models.Model):
 
     def _to_store_defaults(self):
         return [
-            Store.One("channel_id", [], as_thread=True, rename="thread"),
+            Store.One("channel_id", [], as_thread=True),
             "create_date",
             "fetched_message_id",
             "last_seen_dt",
@@ -445,7 +445,7 @@ class DiscussChannelMember(models.Model):
                     "invited_member_ids": Store.Many(
                         members,
                         [
-                            Store.One("channel_id", [], as_thread=True, rename="thread"),
+                            Store.One("channel_id", [], as_thread=True),
                             *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
                         ],
                         mode="ADD",
@@ -536,7 +536,7 @@ class DiscussChannelMember(models.Model):
         target._bus_send_store(
             self,
             [
-                Store.One("channel_id", [], as_thread=True, rename="thread"),
+                Store.One("channel_id", [], as_thread=True),
                 *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
                 "seen_message_id",
             ],
@@ -556,7 +556,7 @@ class DiscussChannelMember(models.Model):
         self._bus_send_store(
             self,
             [
-                Store.One("channel_id", [], as_thread=True, rename="thread"),
+                Store.One("channel_id", [], as_thread=True),
                 "message_unread_counter",
                 {"message_unread_counter_bus_id": bus_last_id},
                 "new_message_separator",

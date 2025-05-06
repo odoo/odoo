@@ -187,7 +187,7 @@ test("should display invitations", async () => {
         })
             .add(pyEnv["discuss.channel.member"].browse(memberId), {
                 persona: { id: partnerId, type: "partner" },
-                thread: { id: channelId, model: "discuss.channel" },
+                channel_id: { id: channelId, model: "discuss.channel" },
             })
             .add(pyEnv["discuss.channel"].browse(channelId), {
                 rtcInvitingSession: { id: sessionId },

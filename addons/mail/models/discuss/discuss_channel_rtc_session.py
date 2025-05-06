@@ -161,7 +161,7 @@ class DiscussChannelRtcSession(models.Model):
         return Store.One(
             "channel_member_id",
             [
-                Store.One("channel_id", [], as_thread=True, rename="thread"),
+                Store.One("channel_id", [], as_thread=True),
                 *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
             ],
         )
