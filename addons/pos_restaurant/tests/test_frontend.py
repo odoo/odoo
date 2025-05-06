@@ -292,11 +292,14 @@ class TestFrontend(TestFrontendCommon):
         self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change, "The last order preparation change should contain 'Coca'")
 
     def test_12_order_tracking(self):
-        self.pos_config.write({'order_edit_tracking': True})
+        self.pos_config.write({'order_edit_tracking': True, 'printer_ids': False})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('OrderTrackingTour')
-        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-00001')], limit=1, order='id desc')
-        self.assertTrue(order1.is_edited)
+        orders = self.env['pos.order'].search([], limit=2)
+        self.assertEqual(orders.mapped('state'), ['paid', 'cancel'])
+        self.assertTrue(orders[0].is_edited)
+        released_order = self.env['pos.order'].search([('pos_reference', 'ilike', '%-00003')], limit=1)
+        self.assertFalse(released_order)
 
     def test_13_category_check(self):
         self.pos_config.with_user(self.pos_user).open_ui()
