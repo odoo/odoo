@@ -51,6 +51,17 @@ export class CarouselOptionPlugin extends Plugin {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         normalize_handlers: this.normalize.bind(this),
         on_reorder_items_handlers: this.reorderCarouselItems.bind(this),
+        before_save_handlers: () => {
+            const proms = [];
+            for (const carouselEl of this.editable.querySelectorAll(".carousel")) {
+                const firstItem = carouselEl.querySelector(".carousel-item");
+                if (firstItem.classList.contains("active")) {
+                    continue;
+                }
+                proms.push(this.slide(carouselEl, 0));
+            }
+            return Promise.all(proms);
+        },
     };
 
     getActions() {
