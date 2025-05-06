@@ -25,8 +25,8 @@ class LoyaltyCard(models.Model):
         return super()._mail_get_partner_fields(introspect_fields=introspect_fields) + ['order_id_partner_id']
 
     def _get_mail_author(self):
-        """Default author is the order's salesperson if set, otherwise the order's company."""
-        if not self.order_id:
+        # Default author is the order's salesperson if available, else the order's company.
+        if not self.order_id or self.order_id.sudo().company_id not in self.env.companies:
             return super()._get_mail_author()
         self.ensure_one()
         return (self.order_id.user_id or self.order_id.company_id).partner_id
