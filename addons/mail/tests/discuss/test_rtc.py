@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
@@ -15,6 +16,7 @@ class TestChannelRTC(MailCommon):
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
+    @freeze_time("2023-03-15 12:34:56")
     def test_01_join_call(self):
         """Join call should remove existing sessions, remove invitation, create a new session, and return data."""
         self.maxDiff = None
