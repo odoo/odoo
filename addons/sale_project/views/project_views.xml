@@ -98,4 +98,13 @@
     <record id="project.open_view_project_all_group_stage" model="ir.actions.act_window">
         <field name="context">{'default_allow_billable': True, 'sale_show_partner_name': True}</field>
     </record>
+
+    <record id="project_templates_view_list" model="ir.ui.view">
+        <field name="name">project.project.template.list</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_templates_view_list"/>
+        <field name="arch" type="xml">
+            <field name="sale_line_id" position="replace"/>
+        </field>
+    </record>
 </odoo>

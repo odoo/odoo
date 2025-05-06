@@ -59,7 +59,7 @@ class ProjectCustomerPortal(CustomerPortal):
         return self._get_page_view_values(project, access_token, values, 'my_projects_history', False, **kwargs)
 
     def _prepare_project_domain(self):
-        return []
+        return [('is_template', '=', False)]
 
     def _prepare_searchbar_sortings(self):
         return {
@@ -112,6 +112,8 @@ class ProjectCustomerPortal(CustomerPortal):
     def portal_my_project(self, project_id=None, access_token=None, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, task_id=None, **kw):
         try:
             project_sudo = self._document_check_access('project.project', project_id, access_token)
+            if project_sudo.is_template:
+                return request.redirect('/my')
         except (AccessError, MissingError):
             return request.redirect('/my')
         if project_sudo.collaborator_count and project_sudo.with_user(request.env.user)._check_project_sharing_access():
@@ -478,7 +480,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _get_my_tasks_searchbar_filters(self, project_domain=None, task_domain=None):
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': [('project_id', '!=', False)]},
+            'all': {'label': _('All'), 'domain': [('project_id', '!=', False), ('is_template', '=', False)]},
         }
 
         # extends filterby criteria with project the customer has access to
@@ -491,7 +493,7 @@ class ProjectCustomerPortal(CustomerPortal):
         # extends filterby criteria with project (criteria name is the project id)
         # Note: portal users can't view projects they don't follow
         project_groups = request.env['project.task']._read_group(
-            AND([[('project_id', 'not in', projects.ids), ('project_id', '!=', False)], task_domain or []]),
+            AND([[('project_id', 'not in', projects.ids), ('is_template', '=', False), ('project_id', '!=', False)], task_domain or []]),
             ['project_id'])
         for [project] in project_groups:
             searchbar_filters.update({
@@ -501,7 +503,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='name', groupby=None, **kw):
-        searchbar_filters = self._get_my_tasks_searchbar_filters()
+        searchbar_filters = self._get_my_tasks_searchbar_filters([('is_template', '=', False)])
 
         if not filterby:
             filterby = 'all'

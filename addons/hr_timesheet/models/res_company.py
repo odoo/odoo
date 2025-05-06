@@ -24,8 +24,10 @@ class ResCompany(models.Model):
     timesheet_encode_uom_id = fields.Many2one('uom.uom', string="Timesheet Encoding Unit",
         default=_default_timesheet_encode_uom_id)
     internal_project_id = fields.Many2one(
-        'project.project', string="Internal Project",
-        help="Default project value for timesheet generated from time off type.")
+        "project.project", string="Internal Project",
+        domain=[("is_template", "=", False)],
+        help="Default project value for timesheet generated from time off type.",
+    )
 
     @api.constrains('internal_project_id')
     def _check_internal_project_id_company(self):

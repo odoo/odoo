@@ -11,7 +11,7 @@
                     <field name="tag_ids"/>
                     <field name="stage_id"/>
                     <field name="milestone_id" groups="project.group_project_milestone"/>
-                    <field name="partner_id" operator="child_of"/>
+                    <field name="partner_id" operator="child_of" invisible="context.get('default_is_template')"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <separator invisible="context.get('default_project_id')"/>
                     <filter string="Favorite Projects" name="favorite_projects" domain="[('project_id.is_favorite', '=', True)]" invisible="context.get('default_project_id')"/>
@@ -23,7 +23,8 @@
                     <separator/>
                     <filter string="Open" name="open_tasks" domain="[('is_closed', '=', False)]"/>
                     <filter string="Closed" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
-                    <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update">
+                    <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update"
+                        invisible="context.get('default_is_template')">
                         <filter name="create_date_last_30_days" string="Last 30 Days" domain="[('date_last_stage_update', '&gt;', datetime.datetime.combine(context_today() - relativedelta(days=30), datetime.time(23, 59, 59)).to_utc())]"/>
                         <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;', datetime.datetime.combine(context_today() - relativedelta(days=365), datetime.time(23, 59, 59)).to_utc())]"/>
                     </filter>
@@ -34,7 +35,8 @@
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone"/>
                         <filter string="Priority" name="groupby_priority" context="{'group_by': 'priority'}"/>
                         <filter string="Tags" name="tags" context="{'group_by': 'tag_ids'}"/>
-                        <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"
+                            invisible="context.get('default_is_template')"/>
                         <filter string="Company" name="company_id" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Creation Date" name="create_date" context="{'group_by': 'create_date'}"/>
                     </group>
@@ -373,6 +375,7 @@
                                 'default_user_ids': user_ids,
                                 'default_milestone_id': milestone_id,
                                 'subtask_action': True,
+                                'default_is_template': is_template,
                             }"
                         >
                             <div class="o_field_widget o_stat_info">
@@ -405,7 +408,7 @@
                     <group>
                         <group>
                             <field name="project_id"
-                                domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=?', company_id)]"
+                                domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=?', company_id), ('is_template', 'in', [is_template, False])]"
                                 required="parent_id or child_ids or is_template"
                                 widget="project"/>
                             <field name="milestone_id"
@@ -462,6 +465,7 @@
                                         'default_is_template': False,
                                         'kanban_view_ref': 'project.project_sub_task_view_kanban_mobile',
                                         'closed_X2M_count': closed_subtask_count,
+                                        'default_is_template': is_template,
                                    }"
                                    widget="subtasks_one2many">
                                 <list editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
@@ -510,6 +514,7 @@
                                         'search_default_open_tasks': 1,
                                         'kanban_view_ref': 'project.project_sub_task_view_kanban_mobile',
                                         'closed_X2M_count': closed_depend_on_count,
+                                        'default_is_template': is_template,
                                    }"
                                    widget="notebook_task_one2many">
                                 <list editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
@@ -549,10 +554,10 @@
                                     <field name="parent_id" groups="base.group_no_one" context="{'search_view_ref' : 'project.view_task_search_form','search_default_project_id': project_id, 'search_default_open_tasks': 1}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                                     <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="email_cc" groups="base.group_no_one"/>
+                                    <field name="email_cc" groups="base.group_no_one" invisible="is_template"/>
                                     <field name="displayed_image_id" groups="base.group_no_one" options="{'no_create': True}"/>
                                 </group>
-                                <group>
+                                <group invisible="is_template">
                                     <field name="date_assign" groups="base.group_no_one"/>
                                     <field name="date_last_stage_update" groups="base.group_no_one"/>
                                 </group>
@@ -596,7 +601,7 @@
                                invisible="context.get('default_project_id', False)"
                                placeholder="Private"
                                class="o_project_task_project_field"
-                               domain="[('type_ids', 'in', context['default_stage_id'])] if context.get('default_stage_id') else []"
+                               domain="[('type_ids', 'in', context.get('default_stage_id')), ('is_template', 'in', [is_template, False])] if context.get('default_stage_id') else [('is_template', 'in', [is_template, False])]"
                                required="is_template"
                         />
                         <field name="user_ids" options="{'no_open': True, 'no_quick_create': True}"
@@ -620,7 +625,7 @@
                     <group>
                         <field name="project_id" invisible="1" />
                         <field name="company_id" invisible="1" />
-                        <field name="parent_id" domain="[('id', '!=', id), '!', ('id', 'child_of', id)]" context="{'search_default_project_id': project_id, 'search_default_open_tasks': 1}" />
+                        <field name="parent_id" domain="[('id', '!=', id), '!', ('id', 'child_of', id)]" context="{'search_default_project_id': project_id, 'search_default_open_tasks': 1, 'default_is_template': is_template}"/>
                     </group>
                     <footer>
                         <button string="Convert Task" class="btn-primary" special="save" data-hotkey="q"/>
@@ -652,6 +657,7 @@
                     <field name="allow_milestones" />
                     <field name="state" />
                     <field name="subtask_count"/>
+                    <field name="is_template"/>
                     <progressbar field="state" colors='{"1_done": "success-done", "1_canceled": "danger", "03_approved": "success", "02_changes_requested": "warning", "04_waiting_normal": "info", "01_in_progress": "200" }'/>
                     <templates>
                         <t t-name="menu" t-if="!selection_mode" groups="base.group_user">
@@ -667,7 +673,7 @@
                                 <div class="text-muted d-flex flex-column">
                                     <field t-if="record.parent_id.raw_value" invisible="context.get('default_parent_id', False)" name="parent_id"/>
                                     <field invisible="context.get('default_project_id', False)" name="project_id" options="{'no_open': True}"/>
-                                    <field name="partner_id"/>
+                                    <field name="partner_id" invisible="context.get('default_is_template', False)"/>
                                     <field t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''" name="milestone_id" options="{'no_open': True}"/>
                                 </div>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
@@ -731,14 +737,14 @@
                     <field name="name" string="Title" widget="name_with_subtask_count"/>
                     <field name="project_id" widget="project" optional="show" options="{'no_open': 1}" readonly="1" column_invisible="context.get('default_project_id')"/>
                     <field name="milestone_id" invisible="not allow_milestones" context="{'default_project_id': project_id}" groups="project.group_project_milestone" optional="hide"/>
-                    <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id" options="{'no_open': True}"/>
+                    <field name="partner_id" optional="hide" widget="res_partner_many2one" invisible="not project_id" options="{'no_open': True}" column_invisible="context.get('default_is_template', False)"/>
                     <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" column_invisible="context.get('default_project_id')" options="{'no_create': True}"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" invisible="state in ['1_done', '1_canceled']"/>
                     <field name="priority" widget="priority" optional="show" width="70px"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
-                    <field name="date_last_stage_update" optional="hide"/>
+                    <field name="date_last_stage_update" optional="hide" column_invisible="context.get('default_is_template', False)"/>
                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px" options="{'is_toggle_mode': false}"/>
                     <field name="stage_id" column_invisible="context.get('set_visible', False)" optional="show"/>
                 </list>
@@ -763,7 +769,8 @@
                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                         invisible="not rating_active or rating_last_text == 'none'"
-                        class="fw-bold" widget="badge" optional="hide" groups="project.group_project_rating"/>
+                        class="fw-bold" widget="badge" optional="hide" groups="project.group_project_rating"
+                        column_invisible="context.get('default_is_template', False)"/>
                 </field>
                 <list position="inside">
                     <field name="task_properties"/>
@@ -773,7 +780,8 @@
                     <field name="parent_id" optional="hide" context="{'search_view_ref': 'project.view_task_search_form', 'search_default_project_id': project_id}"/>
                 </xpath>
                 <xpath expr="//field[@name='stage_id']" position="after">
-                    <field name="personal_stage_type_id" string="Personal Stage" optional="hide"/>
+                    <field name="personal_stage_type_id" string="Personal Stage" optional="hide"
+                        column_invisible="context.get('default_is_template', False)"/>
                 </xpath>
             </field>
         </record>
@@ -1337,6 +1345,9 @@
                 <filter name="private_tasks" position="replace"/>
                 <filter name="closed_on" position="replace"/>
                 <filter name="customer" position="replace"/>
+                <filter name="unassigned" position="after">
+                    <filter name="task_templates" string="Task Templates" domain="[('has_project_template', '=', False)]" invisible="1"/>
+                </filter>
             </field>
         </record>
 
@@ -1345,7 +1356,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">list,kanban,form</field>
             <field name="domain">[('is_template', '=', True)]</field>
-            <field name="context">{'default_is_template': True, 'hide_kanban_stages_nocontent': True}</field>
+            <field name="context">{'default_is_template': True, 'hide_kanban_stages_nocontent': True, 'search_default_task_templates': True}</field>
             <field name="search_view_id" ref="view_task_template_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

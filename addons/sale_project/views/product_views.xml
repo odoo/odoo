@@ -20,7 +20,7 @@
                 <div class="o_td_label d-inline-flex" invisible="service_tracking not in ['task_in_project', 'project_only']">
                     <label for='project_template_id'/>
                 </div>
-                <field name="project_template_id" context="{'active_test': False, 'default_allow_billable': True}" invisible="service_tracking not in ['task_in_project', 'project_only']" nolabel="1" placeholder="Empty project"/>
+                <field name="project_template_id" context="{'active_test': False, 'default_allow_billable': True, 'default_is_template': True}" invisible="service_tracking not in ['task_in_project', 'project_only']" nolabel="1" placeholder="Empty project"/>
                 <field name="service_policy"
                     string="Invoicing Policy"
                     invisible="type != 'service' or sale_ok == False"

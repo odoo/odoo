@@ -45,7 +45,7 @@ class AccountAnalyticLine(models.Model):
         return result
 
     def _domain_project_id(self):
-        domain = [('allow_timesheets', '=', True)]
+        domain = [('allow_timesheets', '=', True), ('is_template', '=', False)]
         if not self.env.user.has_group('hr_timesheet.group_timesheet_manager'):
             return expression.AND([domain,
                 ['|', ('privacy_visibility', '!=', 'followers'), ('message_partner_ids', 'in', [self.env.user.partner_id.id])]

@@ -519,3 +519,16 @@ class ProjectProject(models.Model):
             super()._get_profitability_items(with_action),
             with_action
         )
+
+    def _get_project_to_template_warnings(self):
+        res = super()._get_project_to_template_warnings()
+        timesheet_linked_count = self.env['account.analytic.line'].search_count([('project_id', '=', self.id)], limit=1)
+        if timesheet_linked_count:
+            res.append(self.env._("This project is current linked to timesheet."))
+        return res
+
+    def _get_template_default_context_whitelist(self):
+        return [
+            *super()._get_template_default_context_whitelist(),
+            "allow_timesheets",
+        ]

@@ -6,6 +6,7 @@ export class ProjectProject extends models.Model {
 
     name = fields.Char();
     is_favorite = fields.Boolean();
+    is_template = fields.Boolean();
     active = fields.Boolean({ default: true });
     stage_id = fields.Many2one({ relation: "project.project.stage" });
     date = fields.Date({ string: "Expiration Date" });

@@ -179,7 +179,7 @@ class ProjectTask(models.Model):
         help="Date on which the state of your task has last been modified.\n"
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
 
-    project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
+    project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id), ('is_template', 'in', [is_template, False])]",
                                  compute="_compute_project_id", store=True, precompute=True, recursive=True, readonly=False, index=True, tracking=True, change_default=True, falsy_value_label=_lt("🔒 Private"))
     display_in_project = fields.Boolean(compute='_compute_display_in_project', store=True, export_string_translation=False)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
@@ -306,6 +306,7 @@ class ProjectTask(models.Model):
     )
     link_preview_name = fields.Char(compute='_compute_link_preview_name', export_string_translation=False)
     is_template = fields.Boolean(copy=False, export_string_translation=False)
+    has_project_template = fields.Boolean(related='project_id.is_template', string="Has Project Template", export_string_translation=False)
     has_template_ancestor = fields.Boolean(compute='_compute_has_template_ancestor', search='_search_has_template_ancestor',
                                            recursive=True, export_string_translation=False)
 
@@ -1532,7 +1533,7 @@ class ProjectTask(models.Model):
     def _track_template(self, changes):
         res = super()._track_template(changes)
         test_task = self[0]
-        if 'stage_id' in changes and test_task.stage_id.mail_template_id:
+        if 'stage_id' in changes and test_task.stage_id.mail_template_id and not test_task.is_template:
             res['stage_id'] = (test_task.stage_id.mail_template_id, {
                 'auto_delete_keep_log': False,
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
@@ -1910,6 +1911,9 @@ class ProjectTask(models.Model):
                 },
             }
         if self.is_template:
+            if self.project_id.is_template:
+                raise UserError(self.env._("Tasks in a project template cannot be converted into regular tasks."))
+
             return {
                 'type': 'ir.actions.client',
                 'tag': 'project_show_template_undo_confirmation_dialog',
@@ -1993,7 +1997,7 @@ class ProjectTask(models.Model):
         for task in self:
             rating_template = task.stage_id.rating_template_id
             partner = task.partner_id
-            if rating_template and partner and partner != self.env.user.partner_id:
+            if rating_template and partner and partner != self.env.user.partner_id and not task.is_template:
                 task.rating_send_request(rating_template, lang=task.partner_id.lang, force_send=force_send)
 
     def _rating_get_partner(self):

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="project_project_view_form_simplified_template" model="ir.ui.view">
+        <field name="name">project.project.create.wizard.form</field>
+        <field name="model">project.template.create.wizard</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified_template"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <field name="allow_billable" invisible="1"/>
+                <div name="partner_def" class="mb-2" invisible="not allow_billable">
+                    <label for="partner_id" string="Customer" class="pe-2"/>
+                    <span>
+                        <field name="partner_id" placeholder="Select who to bill..." class="ms-1" widget="res_partner_many2one"
+                            options="{'no_create_edit': True, 'no_open': True}"/>
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
