@@ -830,6 +830,8 @@ export class PosStore extends Reactive {
                 const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen);
                 if (weight) {
                     values.qty = weight;
+                } else {
+                    return;
                 }
             } else {
                 await values.product_id._onScaleNotAvailable();
