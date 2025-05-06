@@ -517,7 +517,7 @@ export class PosStore extends WithLazyGetterTrap {
                 if (
                     !ignoreChange &&
                     typeof order.id === "number" &&
-                    Object.keys(order.last_order_preparation_change).length > 0
+                    Object.keys(order.last_order_preparation_change?.lines || {}).length > 0
                 ) {
                     const orderPresetDate = DateTime.fromISO(order.preset_time);
                     const isSame = DateTime.now().hasSame(orderPresetDate, "day");
