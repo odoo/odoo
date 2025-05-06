@@ -1233,6 +1233,18 @@ describe('Format', () => {
 
             });
         });
+        it("should remove font size classes and gradient color styles", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><span class="display-1-fs"><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+                stepFunction: (editor) => editor.execCommand("removeFormat"),
+                contentAfter: `<p>[abcdefg]</p>`,
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><span class="display-2-fs"><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+                stepFunction: (editor) => editor.execCommand("removeFormat"),
+                contentAfter: `<p>[abcdefg]</p>`,
+            });
+        });
         it('should remove font-size classes when clearing the format' , async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>123<span class="h1-fs">[abc]</span>456</p>`,
