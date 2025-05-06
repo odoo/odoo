@@ -3,7 +3,6 @@ import { registry } from "@web/core/registry";
 import { clickOnElement } from '@website/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('shop_wishlist', {
-    checkDelay: 250,
     url: '/shop?search=Customizable Desk',
     steps: () => [
         {
