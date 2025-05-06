@@ -92,8 +92,6 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
 
         self.start_tour("/", 'event_buy_tickets', login="admin")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_demo(self):
         self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
         transfer_provider = self.env.ref('payment.payment_provider_transfer')
