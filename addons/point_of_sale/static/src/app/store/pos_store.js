@@ -272,7 +272,9 @@ export class PosStore extends Reactive {
                 ),
             });
         } finally {
-            const orders = this.models["pos.order"].filter((o) => typeof o.id !== "number");
+            // All orders saved on the server should be cancelled by the device that closes
+            // the session. If some orders are not cancelled, we need to cancel them here.
+            const orders = this.models["pos.order"].filter((o) => typeof o.id === "number");
             for (const order of orders) {
                 if (!order.finalized) {
                     order.state = "cancel";
@@ -761,6 +763,7 @@ export class PosStore extends Reactive {
                     ]),
                     combo_item_id: comboItem.combo_item_id,
                     price_unit: comboItem.price_unit,
+                    price_type: "automatic",
                     order_id: order,
                     qty: 1,
                     attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
@@ -1173,9 +1176,7 @@ export class PosStore extends Reactive {
                 order.recomputeOrderData();
             }
 
-            const serializedOrder = orders.map((order) =>
-                order.serialize({ orm: true, clear: true })
-            );
+            const serializedOrder = orders.map((order) => order.serialize({ orm: true }));
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
                 context,
             });
@@ -1212,6 +1213,7 @@ export class PosStore extends Reactive {
 
             // Remove only synced orders from the pending orders
             orders.forEach((o) => this.removePendingOrder(o));
+            orders.map((order) => order.clearCommands());
             return newData["pos.order"];
         } catch (error) {
             if (options.throw) {
