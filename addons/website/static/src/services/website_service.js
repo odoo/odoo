@@ -30,6 +30,7 @@ export const websiteService = {
     start(env, { orm, action, hotkey }) {
         let websites = [];
         let currentWebsiteId;
+        let currentWebsiteIdList = [];
         let currentMetadata = {};
         let fullscreen;
         let pageDocument;
@@ -80,13 +81,34 @@ export const websiteService = {
             Component: WebsiteLoader,
             props: { bus },
         });
+
+        function addWebsiteId(id) {
+            if (!currentWebsiteIdList.length) {
+                currentWebsiteId = id;
+            }
+            currentWebsiteIdList.push(id);
+        }
+
+        function removeWebsiteId() {
+            currentWebsiteIdList.shift();
+            if (currentWebsiteIdList.length) {
+                currentWebsiteId = currentWebsiteIdList[0];
+            } else {
+                currentWebsiteId = null;
+            }
+        }
+
         return {
             set currentWebsiteId(id) {
+                if (id === null) {
+                    removeWebsiteId();
+                    return;
+                }
                 if (id && id !== lastWebsiteId) {
                     invalidateSnippetCache = true;
                     lastWebsiteId = id;
                 }
-                currentWebsiteId = id;
+                addWebsiteId(id);
                 websiteSystrayRegistry.trigger('EDIT-WEBSITE');
             },
             /**

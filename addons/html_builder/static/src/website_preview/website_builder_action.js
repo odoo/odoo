@@ -94,6 +94,8 @@ export class WebsiteBuilder extends Component {
             }
         });
         onMounted(() => {
+            this.addSystrayItems();
+            this.websiteService.useMysterious = true;
             const { enable_editor, edit_translations } = this.props.action.context.params || {};
             const edition = !!(enable_editor || edit_translations);
             if (edition) {
@@ -102,7 +104,6 @@ export class WebsiteBuilder extends Component {
         });
         this.publicRootReady = new Deferred();
         this.setIframeLoaded();
-        this.addSystrayItems();
         onWillDestroy(() => {
             registry.category("systray").remove("website.WebsiteSystrayItem");
             this.websiteService.useMysterious = false;
