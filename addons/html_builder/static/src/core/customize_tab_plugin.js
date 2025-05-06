@@ -5,6 +5,11 @@ import { registry } from "@web/core/registry";
 export class CustomizeTabPlugin extends Plugin {
     static id = "customizeTab";
     static shared = ["getCustomizeComponent", "openCustomizeComponent", "closeCustomizeComponent"];
+    resources = {
+        post_redo_handlers: () => this.closeCustomizeComponent(),
+        post_undo_handlers: () => this.closeCustomizeComponent(),
+        change_current_options_containers_listeners: () => this.closeCustomizeComponent(),
+    };
 
     setup() {
         this.customizeComponent = reactive({
@@ -26,9 +31,11 @@ export class CustomizeTabPlugin extends Plugin {
         };
     }
     closeCustomizeComponent() {
-        this.customizeComponent.component = null;
-        this.customizeComponent.editingEls = null;
-        this.customizeComponent.props = {};
+        if (this.customizeComponent) {
+            this.customizeComponent.component = null;
+            this.customizeComponent.editingEls = null;
+            this.customizeComponent.props = {};
+        }
     }
 }
 

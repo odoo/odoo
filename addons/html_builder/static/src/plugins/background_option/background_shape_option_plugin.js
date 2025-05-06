@@ -81,9 +81,9 @@ export class BackgroundShapeOptionPlugin extends Plugin {
                     // If there is no previous sibling, if the previous sibling
                     // had the last shape selected or if the previous shape
                     // could not be found in the possible shapes, default to the
-                    // first shape. ([0] being no shapes selected.)
+                    // first shape.
                     if (!shapeToSelect) {
-                        shapeToSelect = allPossiblesShapesUrl[1];
+                        shapeToSelect = allPossiblesShapesUrl[0];
                     }
                     // Only show on mobile by default if toggled from mobile
                     // view.
