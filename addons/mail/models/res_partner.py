@@ -267,6 +267,7 @@ class ResPartner(models.Model):
             "is_company",
             Store.One("main_user_id", ["share"]),
             "name",
+            "tz"
         ]
 
     def _to_store(self, store: Store, fields):
