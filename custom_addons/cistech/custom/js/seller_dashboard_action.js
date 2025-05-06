@@ -1,0 +1,1 @@
+/* Dashboard functionality has been moved to cistech/static/src/js/seller_dashboard_action.js */ 

@@ -1,0 +1,1 @@
+/* Dashboard translations have been moved to seller_dashboard_action.js */ 

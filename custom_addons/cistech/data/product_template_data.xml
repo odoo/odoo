@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+    <!--Creating products  for seller-->
+    <record id="seller_payment_product_creation"
+            model="product.template">
+        <field name="name">seller payment</field>
+        <field name="categ_id" ref="product.product_category_all"/>
+        <field name="detailed_type">consu</field>
+    </record>
+</odoo>
