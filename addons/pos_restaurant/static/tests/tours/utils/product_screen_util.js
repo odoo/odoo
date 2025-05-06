@@ -12,6 +12,15 @@ export function clickOrderButton() {
         },
     ];
 }
+export function clickReleaseButton() {
+    return [
+        {
+            content: "click release button",
+            trigger: ".product-screen .leftpane .unbook-table",
+            run: "click",
+        },
+    ];
+}
 export function orderlinesHaveNoChange() {
     return Order.doesNotHaveLine({ withClass: ".has-change" });
 }
