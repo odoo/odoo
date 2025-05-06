@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, onWillUnmount } from "@odoo/owl";
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
 import { ImStatus } from "@mail/core/common/im_status";
 
@@ -26,6 +26,12 @@ export class AvatarCardPopover extends Component {
         this.store.fetchStoreData("avatar_card", {
             id: this.props.id,
             model: this.props.model,
+        });
+        onWillUnmount(() => {
+            if (this.partner?.stopRealtimeTzDiff) {
+                this.partner.stopRealtimeTzDiff();
+                this.partner.stopRealtimeTzDiff = null;
+            }
         });
     }
 

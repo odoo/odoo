@@ -422,6 +422,7 @@ class ResUsers(models.Model):
                         ),
                         "name",
                         *self.env["res.partner"]._get_store_im_status_fields(),
+                        "tz",
                     ],
                 ),
                 settings=settings._res_users_settings_format(),

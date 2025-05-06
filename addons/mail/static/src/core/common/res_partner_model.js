@@ -2,6 +2,7 @@ import { Store } from "@mail/core/common/store_service";
 import { fields, Record } from "@mail/core/common/record";
 import { imageUrl } from "@web/core/utils/urls";
 import { debounce } from "@web/core/utils/timing";
+import { showRealtimeTzDiff } from "@mail/utils/common/dates";
 
 const { DateTime } = luxon;
 
@@ -115,6 +116,25 @@ export class ResPartner extends Record {
         return Object.values(this.store.Thread.records).find(
             (thread) => thread.channel_type === "chat" && thread.correspondent?.persona.eq(this)
         );
+    }
+
+    displayDatetime() {
+        const currentUserTz = this.store.self_partner?.tz;
+        if (
+            !(this.realtimeDatetime && this.stopRealtimeTzDiff) &&
+            this.tz &&
+            currentUserTz &&
+            this.tz !== currentUserTz
+        ) {
+            this.stopRealtimeTzDiff = showRealtimeTzDiff(
+                currentUserTz,
+                this.tz,
+                ({ otherUserTime, otherUserDate }) => {
+                    this.realtimeDatetime = `${otherUserDate ?? ""} ${otherUserTime} local time`;
+                }
+            );
+        }
+        return this.realtimeDatetime;
     }
 
     updateImStatus(newStatus) {

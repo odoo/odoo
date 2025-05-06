@@ -1,4 +1,4 @@
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
@@ -23,12 +23,24 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
+        this.store = useService("mail.store");
         this.openChat = useOpenChat("res.users");
         onWillStart(this.onWillStart);
+        onWillUnmount(() => {
+            if (this.partner?.stopRealtimeTzDiff) {
+                this.partner.stopRealtimeTzDiff();
+                this.partner.stopRealtimeTzDiff = null;
+            }
+        });
     }
 
     async onWillStart() {
         [this.record] = await this.orm.call(this.props.recordModel, 'get_avatar_card_data', [[this.props.id], this.fieldNames], {});
+        const userId = this.record.user_id[0];
+        this.store.fetchStoreData("avatar_card", {
+            id: userId,
+            model: "res.users",
+        });
         await Promise.all(this.loadAdditionalData());
     }
 
@@ -39,6 +51,12 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
 
     get fieldNames() {
         return ["email", "im_status", "name", "phone", "resource_type", "share", "user_id"];
+    }
+
+    get partner() {
+        const userId = this.record.user_id[0];
+        const user = this.store["res.users"].get(userId);
+        return user?.partner_id;
     }
 
     get name() {

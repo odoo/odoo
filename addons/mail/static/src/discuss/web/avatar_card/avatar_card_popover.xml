@@ -22,6 +22,7 @@
                         <a t-if="phone" class="o-mail-avatar-card-tel text-truncate" t-att-title="phone" t-att-href="'tel:'+phone">
                             <i class="fa fa-fw fa-phone me-1"/><t t-esc="phone"/>
                         </a>
+                        <div t-if="partner?.tz" class="o_avatar_displayDatetime text-muted" t-out="partner.displayDatetime()"/>
                         <div class="o_avatar_card_buttons d-flex gap-2 mt-2">
                             <button t-if="(user?.share ?? partner?.partner_share) === false" class="btn btn-secondary btn-sm" t-on-click.stop="onSendClick">Send message</button>
                             <button t-if="showViewProfileBtn" class="btn btn-secondary btn-sm" t-custom-click.stop="(ev, isMiddleClick) => this.onClickViewProfile(isMiddleClick)" t-ref="viewProfileBtn">View Profile</button>
