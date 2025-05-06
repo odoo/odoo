@@ -235,8 +235,6 @@ class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
         cls.user_website_user.group_ids += cls.env.ref('sales_team.group_sale_manager')
         cls.user_website_user.group_ids += cls.env.ref('product.group_product_manager')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_category_page_and_products_snippet(self):
         category = self.env['product.public.category'].create({
             'name': 'Test Category',
@@ -256,7 +254,7 @@ class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
             'name': 'Test Product Outside Category',
             'website_published': True,
         })
-        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'category_page_and_products_snippet_edition', login="website_user")
+        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'category_page_and_products_snippet_edition', login="admin")
         self.start_tour('/shop', 'category_page_and_products_snippet_use', login=None)
 
     def test_website_sale_restricted_editor_ui(self):

@@ -10,13 +10,17 @@ registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
         trigger: ':iframe .o_wsale_filmstip > li:contains("Test Category") > a',
         run: "click",
     },
+    {
+        content: "Wait for page to load",
+        trigger: ":iframe",
+    },
     ...clickOnEditAndWaitEditMode(),
     {
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        trigger: ".o-website-builder_sidebar .o_snippets_container .o_snippet",
     },
     {
         content: "Drag and drop the Products snippet group inside the category area.",
-        trigger: '#oe_snippets .oe_snippet[name="Products"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
+        trigger: ".o-website-builder_sidebar .o_snippet[name='Products'] .o_snippet_thumbnail:not(.o_we_ongoing_insertion)",
         run: "drag_and_drop :iframe #category_header",
     },
     {
@@ -32,12 +36,12 @@ registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
     },
     {
         content: "Open category option dropdown",
-        trigger: 'we-select[data-attribute-name="productCategoryId"] we-toggler',
+        trigger: "button[id='product_category_opt']'",
         run: "click",
     },
     {
         content: "Choose the option to use the current page's category",
-        trigger: 'we-button[data-select-data-attribute="current"]',
+        trigger: "div.o-dropdown-item:contains('Current Category or All')",
         run: "click",
     },
     ...clickOnSave(),
