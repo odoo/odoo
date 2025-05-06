@@ -1135,9 +1135,17 @@ class WebsocketConnectionHandler:
 
 def _kick_all(code=CloseCode.GOING_AWAY):
     """ Disconnect all the websocket instances. """
+    _logger.info('disconnecting %s websockets', len(_websocket_instances))
+    count = 0
+    wait_threshold = max(odoo.sql_db._Pool._maxconn // 8, 8) if odoo.sql_db._Pool else 32
     for websocket in _websocket_instances:
         if websocket.state is ConnectionState.OPEN:
             websocket.close(code)
+            count += 1
+            if count % wait_threshold == 0:
+                time.sleep(0.5)
+                _logger.debug('kicking websockets %s/%s ...', count, len(_websocket_instances))
+    _logger.debug('kicking websockets %s/%s done', count, len(_websocket_instances))
 
 
 CommonServer.on_stop(_kick_all)
