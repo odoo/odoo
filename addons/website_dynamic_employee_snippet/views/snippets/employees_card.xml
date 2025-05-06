@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- adding snippet to options block  -->
+    <template id="external_snippets" inherit_id="website.snippets" priority="15">
+        <!-- Adding the snippet to the snippets block -->
+        <xpath expr="//snippets[@id='snippet_groups']//t[@t-snippet][last()]" position="after">
+            <t snippet-group="people"
+                t-snippet="website_dynamic_employee_snippet.dynamic_employee_card"
+                string="Employee Card"
+                t-thumbnail="/website/static/src/img/snippets_thumbs/s_blog_posts.svg"/>
+        </xpath>
+        <!-- Adding the snippet to the content block  -->
+        <xpath expr="//snippets[@id='snippet_structure']//t[@t-snippet][last()]" position="after">
+            <t t-snippet="website_dynamic_employee_snippet.dynamic_employee_card"
+                string="Employee card" group="people">
+                <keywords>employee, team, people, members, card</keywords>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="dynamic_employee_card" name="dynamic employee card">
+        <section class="s_website_dynamic_employee_card">
+            <div class="container">
+                <div class="row">
+                    <h4>Your Employee Card snippet will be displayed here soon...</h4>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="s_website_dynamic_employee_card_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <div data-js="websiteDynamicEmployeeCard"
+                data-selector=".s_website_dynamic_employee_card">
+                <we-row>
+                    <we-many2one string="Department"
+                        data-model="hr.department"
+                        data-name="department_id"
+                        data-no-preview="true"
+                        data-set-department=""
+                        data-default-message="All Departments"
+                    />
+                    <we-button data-icon="fa-times" data-set-department="" data-no-preview="true"/>
+                </we-row>
+            </div>
+        </xpath>
+    </template>
+</odoo>

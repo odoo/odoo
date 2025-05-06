@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_dynamic_employee_snippet.dynamic_employee_card">
+        <div class="container">
+            <h1 class="section_heading">Our Employees...</h1>
+            <div class="row">
+                    <t t-foreach="employees" t-as="employee" t-key="employee.id">
+                        <div class="col-lg-4 pt32 pb32" data-name="Team Member">
+                            <div class="o_not_editable" contenteditable="false">
+                                <img class="o_editable_media img img-fluid rounded-circle" t-att-src="'data:image/png;base64,' + employee.image_1920" alt="" style="width: 25% !important;"/>
+                            </div>
+                            <h4 class="h5-fs"><br/><t t-esc="employee.name"/></h4>
+                            <p class="text-muted"><t t-esc="employee.job_title"/></p>
+                            <p class="text-muted">
+                                <t t-esc="employee.work_email"/>
+                            </p>
+                            <p class="text-muted">
+                                <t t-esc="employee.work_phone"/>
+                            </p>
+                        </div>
+                    </t>
+            </div>
+        </div>
+    </t>
+</templates>
