@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.2\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
-"PO-Revision-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"PO-Revision-Date: 2025-05-06 09:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -73,11 +73,6 @@ msgid "Cancel"
 msgstr ""
 
 #. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
-msgid "Compensatory Time Off"
-msgstr ""
-
-#. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__contract_id
 msgid "Contract"
 msgstr ""
@@ -130,17 +125,6 @@ msgid "Employees"
 msgstr ""
 
 #. module: hr_work_entry_contract
-#. odoo-javascript
-#: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar_model.js:0
-msgid "Everybody's work entries"
-msgstr ""
-
-#. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_extra_hours
-msgid "Extra Hours"
-msgstr ""
-
-#. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_from
 msgid "From"
 msgstr ""
@@ -166,11 +150,6 @@ msgid "Generated To"
 msgstr ""
 
 #. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_leave
-msgid "Generic Time Off"
-msgstr ""
-
-#. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry
 msgid "HR Work Entry"
 msgstr ""
@@ -178,11 +157,6 @@ msgstr ""
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr ""
-
-#. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
-msgid "Home Working"
 msgstr ""
 
 #. module: hr_work_entry_contract
@@ -194,6 +168,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_resource_calendar__id
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_resource_calendar_attendance__id
 msgid "ID"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_work
+msgid ""
+"If checked, the work entry is counted as work time in the working schedule"
 msgstr ""
 
 #. module: hr_work_entry_contract
@@ -240,16 +220,6 @@ msgid "Latest date"
 msgstr ""
 
 #. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
-msgid "Long Term Time Off"
-msgstr ""
-
-#. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
-msgid "Paid Time Off"
-msgstr ""
-
-#. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid "Regenerate Employee Work Entries"
@@ -270,11 +240,6 @@ msgstr ""
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__search_criteria_completed
 msgid "Search Criteria Completed"
-msgstr ""
-
-#. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
-msgid "Sick Time Off"
 msgstr ""
 
 #. module: hr_work_entry_contract
@@ -306,11 +271,6 @@ msgstr ""
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_to
 msgid "To"
-msgstr ""
-
-#. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_unpaid_leave
-msgid "Unpaid"
 msgstr ""
 
 #. module: hr_work_entry_contract
@@ -352,4 +312,9 @@ msgstr ""
 #. module: hr_work_entry_contract
 #: model:ir.model.fields.selection,name:hr_work_entry_contract.selection__hr_contract__work_entry_source__calendar
 msgid "Working Schedule"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_type__is_work
+msgid "Working Time"
 msgstr ""
