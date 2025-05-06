@@ -199,8 +199,12 @@ class StockPicking(models.Model):
              # Send the payload to the API
             headers = {'Content-Type': 'application/json'}
             try:
-                response = requests.post(api_url, headers=headers, data=json_data)
-                _logger.info(f"Response Status Code: {response.status_code}, Response Body: {response.text}")
+                if auth:
+                    response = requests.post(api_url, headers=headers, data=json_data, auth=auth)
+                else:
+                    response = requests.post(api_url, headers=headers, data=json_data)
+                # response = requests.post(api_url, headers=headers, data=json_data)
+                    _logger.info(f"Response Status Code: {response.status_code}, Response Body: {response.text}")
 
                 if response.status_code != 200:
                     raise UserError(f"Failed to send data: {response.status_code} - {response.text}")
