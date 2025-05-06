@@ -15,7 +15,7 @@
                         }" role="menu" >
                 <div t-foreach="images" t-as="attachment" t-key="attachment.id"
                      t-att-aria-label="attachment.name"
-                     class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1 rounded o-viewable"
+                     class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1 rounded-3 o-viewable"
                      t-att-title="attachment.name"
                      t-att-class="{ 'o-isUploading': attachment.uploading }"
                      tabindex="0"
@@ -24,7 +24,7 @@
                      role="menuitem"
                 >
                     <img
-                        class="img img-fluid my-0 mx-auto rounded"
+                        class="img img-fluid my-0 mx-auto rounded-3 shadow-sm border border-light"
                         t-att-class="{ 'opacity-25': attachment.uploading }"
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"
