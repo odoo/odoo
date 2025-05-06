@@ -20,6 +20,7 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
     };
 
     setup() {
+        super.setup();
         this.orm = useService("orm");
         this.actionService = useService("action");
         this.openChat = useOpenChat("res.users");

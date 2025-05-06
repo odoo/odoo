@@ -338,6 +338,7 @@ class ResUsers(models.Model):
                         "notification_type",
                         "signature",
                         "user",
+                        "tz"
                     ],
                     main_user_by_partner={self.env.user.partner_id: self.env.user},
                 ),

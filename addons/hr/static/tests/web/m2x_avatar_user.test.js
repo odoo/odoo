@@ -40,6 +40,7 @@ test("avatar card preview with hr", async () => {
             "im_status",
             "share",
             "partner_id",
+            "tz",
             "work_phone",
             "work_email",
             "work_location_name",

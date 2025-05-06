@@ -333,6 +333,8 @@ test("many2one with hr group widget in form view", async () => {
     expect.verifySteps([
         `web_read m2x.avatar.employee ${avatarId_1}`,
         `read hr.employee ${employeeId_1}`,
+        `read hr.employee ${employeeId_1}`,
+        `read hr.employee ${employeeId_2}`,
         `read hr.employee ${employeeId_2}`,
     ]);
 });
