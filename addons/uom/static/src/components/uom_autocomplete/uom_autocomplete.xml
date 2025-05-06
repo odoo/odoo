@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="uom.UomAutoComplete" t-inherit="web.AutoComplete">
         <xpath expr="//t[@t-out='option.label']" position="replace">
-            <t t-if="option.data.record.relative_info">
+            <t t-if="option.data.record?.relative_info">
                 <div class="uom_autocomplete_grid">
                     <div t-out="option.label"/>
                     <div t-esc="option.data.record.relative_info" class="text-muted"/>
