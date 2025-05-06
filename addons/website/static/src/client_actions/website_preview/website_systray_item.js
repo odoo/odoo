@@ -31,7 +31,7 @@ export class WebsiteSystrayItem extends Component {
     }
 
     get hasMultiWebsites() {
-        return this.website.hasMultiWebsites;
+        return this.website.websites.length > 1;
     }
 
     get canPublish() {

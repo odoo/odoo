@@ -45,7 +45,7 @@ patch(NavBar.prototype, {
     },
 
     get shouldDisplayWebsiteSystray() {
-        return this.websiteService.currentWebsite && this.websiteService.isRestrictedEditor && !this.websiteService.useMysterious;
+        return this.websiteService.currentWebsite && this.websiteService.isRestrictedEditor;
     },
 
     // Somehow a setter is needed in `patch()` to avoid an owl error.
@@ -55,7 +55,7 @@ patch(NavBar.prototype, {
      * @override
      */
     get systrayItems() {
-        if (this.shouldDisplayWebsiteSystray) {
+        if (this.websiteService.currentWebsite) {
             const websiteItems = websiteSystrayRegistry
                 .getEntries()
                 .map(([key, value], index) => ({ key, ...value, index }))
