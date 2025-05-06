@@ -41,6 +41,9 @@ export class Builder extends Component {
         Plugins: { type: Array, optional: true },
         config: { type: Object, optional: true },
     };
+    static defaultProps = {
+        config: {},
+    };
 
     setup() {
         // const actionService = useService("action");
