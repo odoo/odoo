@@ -76,7 +76,7 @@ class ResourceCalendarLeaves(models.Model):
                     and (not sick_time_status or leave.holiday_status_id not in sick_time_status):
                 message = _("Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.", -1 * duration_difference)
             try:
-                leave.write({'state': state})
+                leave.sudo().write({'state': state})  # sudo in order to skip _check_approval_update
                 leave._check_validity()
                 if leave.state == 'validate':
                     # recreate the resource leave that were removed by writing state to draft
