@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Dialog } from "@web/core/dialog/dialog";
+import { RPCError } from "@web/core/network/rpc";
 
 class CustomDialog extends Dialog {
     onEscape() {}
@@ -32,6 +33,7 @@ export class OpeningControlPopup extends Component {
         this.hardwareProxy = useService("hardware_proxy");
         this.ui = useService("ui");
     }
+<<<<<<< e1f491af00e034a474352caecab1e2d0b41dd1a9:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.js
     get orderCount() {
         return this.pos.models["pos.order"].filter((o) => o.lines.length > 0 && o.state === "draft")
             .length;
@@ -45,6 +47,38 @@ export class OpeningControlPopup extends Component {
             {},
             true
         );
+||||||| a00976a48e063c32b7a3831f357fac6e556d3720:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js
+    async confirm() {
+        await this.pos.data.call(
+            "pos.session",
+            "set_opening_control",
+            [this.pos.session.id, parseFloat(this.state.openingCash), this.state.notes],
+            {},
+            true
+        );
+        this.pos.session.state = "opened";
+=======
+    async confirm() {
+        try {
+            await this.pos.data.call(
+                "pos.session",
+                "set_opening_control",
+                [this.pos.session.id, parseFloat(this.state.openingCash), this.state.notes],
+                {},
+                true
+            );
+        } catch (error) {
+            if (
+                error instanceof RPCError &&
+                error.data.name === "odoo.exceptions.MissingError" &&
+                (await this.pos.isSessionDeleted())
+            ) {
+                return window.location.reload();
+            }
+            throw error;
+        }
+        this.pos.session.state = "opened";
+>>>>>>> 235ac8a144d0b0fe37b9c96a138852d2aca21381:addons/point_of_sale/static/src/app/store/opening_control_popup/opening_control_popup.js
         this.props.close();
     }
     async openDetailsPopup() {

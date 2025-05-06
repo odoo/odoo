@@ -2298,6 +2298,59 @@ export class PosStore extends WithLazyGetterTrap {
             return `${pm.name} (${fmtAmount})`;
         }
     }
+<<<<<<< e1f491af00e034a474352caecab1e2d0b41dd1a9:addons/point_of_sale/static/src/app/services/pos_store.js
+||||||| a00976a48e063c32b7a3831f357fac6e556d3720:addons/point_of_sale/static/src/app/store/pos_store.js
+
+    clickSaveOrder() {
+        this.syncAllOrders({ orders: [this.get_order()] });
+        this.notification.add(_t("Order saved for later"), { type: "success" });
+        this.selectEmptyOrder();
+        this.mobile_pane = "right";
+    }
+
+    selectEmptyOrder() {
+        const emptyOrders = this.models["pos.order"].filter(
+            (order) => order.is_empty() && !order.finalized
+        );
+        if (emptyOrders.length > 0) {
+            this.set_order(emptyOrders[0]);
+            return;
+        }
+        this.add_new_order();
+    }
+
+    get showSaveOrderButton() {
+        return this.isOpenOrderShareable();
+    }
+=======
+
+    clickSaveOrder() {
+        this.syncAllOrders({ orders: [this.get_order()] });
+        this.notification.add(_t("Order saved for later"), { type: "success" });
+        this.selectEmptyOrder();
+        this.mobile_pane = "right";
+    }
+
+    selectEmptyOrder() {
+        const emptyOrders = this.models["pos.order"].filter(
+            (order) => order.is_empty() && !order.finalized
+        );
+        if (emptyOrders.length > 0) {
+            this.set_order(emptyOrders[0]);
+            return;
+        }
+        this.add_new_order();
+    }
+
+    get showSaveOrderButton() {
+        return this.isOpenOrderShareable();
+    }
+
+    async isSessionDeleted() {
+        const session = await this.data.read("pos.session", [this.session.id]);
+        return session[0] === undefined;
+    }
+>>>>>>> 235ac8a144d0b0fe37b9c96a138852d2aca21381:addons/point_of_sale/static/src/app/store/pos_store.js
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
