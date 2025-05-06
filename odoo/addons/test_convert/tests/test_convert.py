@@ -220,6 +220,34 @@ class TestEvalXML(common.TransactionCase):
             self.assertNotIn('usered_ids', data['values'],
                              "Unexpected value in O2M When loading XML with sub records")
 
+    def test_o2m_sub_records_noupdate(self):
+        xml = ET.fromstring("""
+            <data noupdate="1">
+              <record id="test_convert.test_o2m_record_noup" model="test_convert.test_model">
+                <field name="usered_ids">
+                    <record id="test_convert.test_o2m_subrecord_noup" model="test_convert.usered">
+                        <field name="name">subrecord</field>
+                    </record>
+                </field>
+              </record>
+            </data>
+        """.strip())
+
+        xmlids = {"test_convert.test_o2m_record_noup", "test_convert.test_o2m_subrecord_noup"}
+
+        # create records
+        xml_import(self.env, 'test_convert', None, 'init').parse(xml)
+
+        # clear loaded xmlids
+        self.registry.loaded_xmlids.difference_update(xmlids)
+
+        # reload the xml in update mode
+        idref = {}
+        xml_import(self.env, 'test_convert', idref, 'update').parse(xml)
+
+        self.assertEqual(set(idref.keys()), xmlids)
+        self.assertTrue(self.registry.loaded_xmlids.issuperset(xmlids))
+
     def test_translated_field(self):
         """Tests importing a data file with a lang set in the environment sets the source (en_US)
         rather than setting the translation (fr_FR)
