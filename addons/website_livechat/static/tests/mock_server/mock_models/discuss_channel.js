@@ -35,9 +35,6 @@ export class DiscussChannel extends livechatModels.DiscussChannel {
                     id: visitor.id,
                     is_connected: visitor.is_connected,
                     lang_name: visitor.lang_id ? ResLang.read(visitor.lang_id)[0].name : false,
-                    visitorPartner: visitor.partner_id
-                        ? { id: visitor.partner_id, type: "partner" }
-                        : false,
                     type: "visitor",
                     website_name: visitor.website_id
                         ? Website.read(visitor.website_id)[0].name
