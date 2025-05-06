@@ -31,10 +31,11 @@ class ProductTemplate(models.Model):
         },
     )
     project_id = fields.Many2one(
-        'project.project', 'Project', company_dependent=True, copy=True,
+        'project.project', 'Project', company_dependent=True, copy=True, domain='[("is_template", "=", False)]'
     )
     project_template_id = fields.Many2one(
         'project.project', 'Project Template', company_dependent=True, copy=True,
+        domain='[("is_template", "=", True)]',
     )
     service_policy = fields.Selection('_selection_service_policy', string="Service Invoicing Policy", compute_sudo=True, compute='_compute_service_policy', inverse='_inverse_service_policy', tracking=True)
     service_type = fields.Selection(selection_add=[

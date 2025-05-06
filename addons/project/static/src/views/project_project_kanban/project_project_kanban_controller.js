@@ -2,7 +2,15 @@ import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { onWillStart } from "@odoo/owl";
 import { user } from "@web/core/user";
 
+import { ProjectTemplateDropdown } from "../components/project_template_dropdown";
+
 export class ProjectKanbanController extends KanbanController {
+    static template = "project.ProjectKanbanView";
+    static components = {
+        ...KanbanController.components,
+        ProjectTemplateDropdown,
+    };
+
     setup() {
         super.setup();
         onWillStart(async () => {

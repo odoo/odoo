@@ -46,6 +46,7 @@ registry.category("website.form_editor_actions").add('create_task', {
         required: true,
         relation: 'project.project',
         string: _t('Project'),
+        domain: [["is_template", "=", false]],
         createAction: 'project.open_view_project_all',
     }],
     successPage: '/your-task-has-been-submitted',

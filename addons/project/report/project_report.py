@@ -139,12 +139,14 @@ class ReportProjectTaskUser(models.Model):
                           AND pm.is_reached = False
                           AND pm.deadline <= CAST(now() AS DATE)
                     LEFT JOIN task_dependencies_rel td ON td.depends_on_id = t.id
+                    LEFT JOIN project_project p ON p.id = t.project_id
         """
 
     def _where(self):
         return """
                 t.project_id IS NOT NULL
                 AND t.is_template IS NOT TRUE
+                AND p.is_template IS NOT TRUE
         """
 
     def init(self):

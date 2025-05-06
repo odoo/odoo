@@ -100,7 +100,7 @@ class ProjectProject(models.Model):
     @api.constrains('allow_timesheets', 'account_id')
     def _check_allow_timesheet(self):
         for project in self:
-            if project.allow_timesheets and not project.account_id:
+            if project.allow_timesheets and not project.account_id and not project.is_template:
                 project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
                 raise ValidationError(_(
                     "To use the timesheets feature, you need an analytic account for your project. Please set one up in the plan '%(plan_name)s' or turn off the timesheets feature.",
@@ -135,12 +135,12 @@ class ProjectProject(models.Model):
         """ Create an analytic account if project allow timesheet and don't provide one
             Note: create it before calling super() to avoid raising the ValidationError from _check_allow_timesheet
         """
-        defaults = self.default_get(['allow_timesheets', 'account_id'])
+        defaults = self.default_get(['allow_timesheets', 'account_id', 'is_template'])
         analytic_accounts_vals = [
             vals for vals in vals_list
             if (
                 vals.get('allow_timesheets', defaults.get('allow_timesheets')) and
-                not vals.get('account_id', defaults.get('account_id'))
+                not vals.get('account_id', defaults.get('account_id')) and not vals.get('is_template', defaults.get('is_template'))
             )
         ]
 
@@ -153,7 +153,7 @@ class ProjectProject(models.Model):
     def write(self, values):
         # create the AA for project still allowing timesheet
         if values.get('allow_timesheets') and not values.get('account_id'):
-            project_wo_account = self.filtered(lambda project: not project.account_id)
+            project_wo_account = self.filtered(lambda project: not project.account_id and not project.is_template)
             if project_wo_account:
                 project_wo_account._create_analytic_account()
         return super().write(values)
@@ -171,7 +171,7 @@ class ProjectProject(models.Model):
 
     @api.model
     def _init_data_analytic_account(self):
-        self.search([('account_id', '=', False), ('allow_timesheets', '=', True)])._create_analytic_account()
+        self.search([('account_id', '=', False), ('allow_timesheets', '=', True), ('is_template', '=', False)])._create_analytic_account()
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_entries(self):
@@ -283,3 +283,8 @@ class ProjectProject(models.Model):
         action = super().action_view_tasks()
         action['context']['allow_timesheets'] = self.allow_timesheets
         return action
+
+    def action_create_from_template(self, values=None):
+        project = super().action_create_from_template(values)
+        project._create_analytic_account()
+        return project

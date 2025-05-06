@@ -35,7 +35,7 @@ export class ProjectTaskTemplateDropdown extends Component {
     }
 
     async onWillStart() {
-        if (this.props.projectId) {
+        if (this.props.projectId && !this.props.context.default_is_template) {
             this.taskTemplates = await this.orm.call("project.project", "get_template_tasks", [
                 this.props.projectId,
             ]);
