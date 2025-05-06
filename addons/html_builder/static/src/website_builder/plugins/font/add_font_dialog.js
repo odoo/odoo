@@ -324,9 +324,7 @@ export class AddFontDialog extends Component {
         if (styleEl) {
             delete styleEl.dataset.fontPreview;
         }
-        this.props.reloadEditor({
-            selectedTab: "theme",
-        });
+        this.props.reloadEditor();
         return true;
     }
 }

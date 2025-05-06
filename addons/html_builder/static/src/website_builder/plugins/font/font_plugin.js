@@ -111,9 +111,7 @@ class FontPlugin extends Plugin {
             googleLocalFonts: googleLocalFonts,
             uploadedLocalFonts: uploadedLocalFonts,
         });
-        this.config.reloadEditor({
-            selectedTab: "theme",
-        });
+        this.config.reloadEditor();
     }
     async getFontsData() {
         return this.fontsCache.read({});

@@ -284,10 +284,8 @@ export class WebsiteBuilder extends Component {
         return path;
     }
 
-    async reloadEditor(param) {
-        if (param.selectedTab) {
-            this.initialTab = param.selectedTab;
-        }
+    async reloadEditor(param = {}) {
+        this.initialTab = param.initialTab;
         this.target = param.target || null;
         await this.reloadIframe(this.state.isEditing, param.url);
         // trigger an new instance of the builder menu

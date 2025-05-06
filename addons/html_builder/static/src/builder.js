@@ -90,7 +90,12 @@ export class Builder extends Component {
                         editorBus.trigger("DOM_UPDATED");
                     }
                 },
-                reloadEditor: this.props.reloadEditor,
+                reloadEditor: (param = {}) => {
+                    this.props.reloadEditor({
+                        initialTab: this.state.activeTab,
+                        ...param,
+                    });
+                },
                 resources: {
                     trigger_dom_updated: () => {
                         editorBus.trigger("DOM_UPDATED");
