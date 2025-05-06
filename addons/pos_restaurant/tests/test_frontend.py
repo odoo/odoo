@@ -295,8 +295,19 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.write({'order_edit_tracking': True})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('OrderTrackingTour')
+<<<<<<< ddfb4d1ce3961b38a0b69f892c549d2901c089e7
         order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-000001')], limit=1, order='id desc')
         self.assertTrue(order1.is_edited)
+||||||| 6247dc36f703ee2ec45913802ad175cb79873845
+        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-00001')], limit=1, order='id desc')
+        self.assertTrue(order1.is_edited)
+=======
+        orders = self.env['pos.order'].search([], order='id ASC', limit=2)
+        self.assertEqual(orders.mapped('state'), ['paid', 'cancel'])
+        self.assertTrue(orders[0].is_edited)
+        released_order = self.env['pos.order'].search([('pos_reference', 'ilike', '%-00003')], limit=1)
+        self.assertFalse(released_order)
+>>>>>>> 8935e83f6f468e7df8ed612763241e1a6ea20406
 
     def test_13_category_check(self):
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -745,7 +756,14 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_delete_line_release_table')
         order = self.pos_config.current_session_id.order_ids[0]
+<<<<<<< ddfb4d1ce3961b38a0b69f892c549d2901c089e7
         self.assertEqual(order.state, "cancel")
+||||||| 6247dc36f703ee2ec45913802ad175cb79873845
+        self.assertEqual(len(order.lines), 0)
+=======
+        self.assertEqual(len(order.lines), 1)
+        self.assertEqual(order.state, 'cancel')
+>>>>>>> 8935e83f6f468e7df8ed612763241e1a6ea20406
 
     def test_combo_synchronisation(self):
         """This test checks that when a combo line is set as dirty, the parent combo line is also set as dirty.

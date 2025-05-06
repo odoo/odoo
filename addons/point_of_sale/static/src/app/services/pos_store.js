@@ -545,8 +545,16 @@ export class PosStore extends WithLazyGetterTrap {
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 if (
                     !ignoreChange &&
+<<<<<<< ddfb4d1ce3961b38a0b69f892c549d2901c089e7
                     order.isSynced &&
                     Object.keys(order.last_order_preparation_change).length > 0
+||||||| 6247dc36f703ee2ec45913802ad175cb79873845
+                    typeof order.id === "number" &&
+                    Object.keys(order.last_order_preparation_change).length > 0
+=======
+                    typeof order.id === "number" &&
+                    Object.keys(order.last_order_preparation_change?.lines || {}).length > 0
+>>>>>>> 8935e83f6f468e7df8ed612763241e1a6ea20406
                 ) {
                     const orderPresetDate = DateTime.fromISO(order.preset_time);
                     const isSame = DateTime.now().hasSame(orderPresetDate, "day");

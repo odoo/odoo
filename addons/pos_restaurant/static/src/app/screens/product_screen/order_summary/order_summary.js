@@ -34,7 +34,14 @@ patch(OrderSummary.prototype, {
     },
     async unbookTable() {
         const order = this.pos.getOrder();
+<<<<<<< ddfb4d1ce3961b38a0b69f892c549d2901c089e7
         await this.pos.deleteOrders([order]);
+||||||| 6247dc36f703ee2ec45913802ad175cb79873845
+        await this.pos._onBeforeDeleteOrder(order);
+        order.state = "cancel";
+=======
+        await this.pos.onDeleteOrder(order);
+>>>>>>> 8935e83f6f468e7df8ed612763241e1a6ea20406
         this.pos.navigate("FloorScreen");
     },
     showUnbookButton() {
