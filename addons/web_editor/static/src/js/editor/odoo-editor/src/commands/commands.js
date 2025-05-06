@@ -572,7 +572,7 @@ export const editorCommands = {
             element.style.removeProperty('color');
             element.style.removeProperty('background');
             element.style.removeProperty('-webkit-text-fill-color');
-            if (hasAnyFontSizeClass(element)) {
+            if (!hasFontSizeClass && closestElement(node, hasAnyFontSizeClass)) {
                 hasFontSizeClass = true;
             }
         }
