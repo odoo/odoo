@@ -272,7 +272,6 @@ export class PivotDataSource extends OdooViewsDataSource {
             type: "pivot",
             fields: data.activeMeasures,
             groupby,
-            domain: this._customDomain,
         };
     }
 }

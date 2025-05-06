@@ -1,13 +1,14 @@
 /** @odoo-module */
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import * as spreadsheet from "@odoo/o-spreadsheet";
+import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
-export class LoggingUIPlugin extends spreadsheet.UIPlugin {
-    constructor(getters, history, dispatch, config) {
-        super(getters, history, dispatch, config);
-        if ("env" in config.evalContext) {
-            this.rpc = config.evalContext.env.services.rpc;
-        }
+const { UIPlugin } = spreadsheet;
+
+export class LoggingUIPlugin extends UIPlugin {
+    constructor(config) {
+        super(config);
+        this.rpc = config.custom.env?.services.rpc;
     }
 
     log(type, datasources) {
@@ -17,6 +18,17 @@ export class LoggingUIPlugin extends spreadsheet.UIPlugin {
                 datasources,
             });
         }
+    }
+
+    allowDispatch(cmd) {
+        if (
+            cmd.type === "COPY" &&
+            this.getters.isReadonly() &&
+            this.getLoadedDataSources().length
+        ) {
+            return CommandResult.Readonly;
+        }
+        return CommandResult.Success;
     }
 
     /**
