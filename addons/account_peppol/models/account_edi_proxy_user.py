@@ -129,20 +129,19 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             return f'{company.peppol_eas}:{company.peppol_endpoint}'
         return super()._get_proxy_identification(company, proxy_type)
 
-    def _peppol_import_invoice(self, attachment, partner_endpoint, peppol_state, uuid, journal=None):
+    def _peppol_import_invoice(self, attachment, peppol_state, uuid, journal=None):
         """Save new documents in an accounting journal, when one is specified on the company.
 
         :param attachment: the new document
-        :param partner_endpoint: DEPRECATED - to be removed in master
         :param peppol_state: the state of the received Peppol document
         :param uuid: the UUID of the Peppol document
         :param journal: journal to use for the new move (otherwise the company's peppol journal will be used)
         :return: the created move (if any)
         """
-
+        self.ensure_one()
         journal = journal or self.company_id.peppol_purchase_journal_id
         if not journal:
-            return self.env['account.move']
+            return {}
 
         move = self.env['account.move'].create({
             'journal_id': journal.id,
@@ -162,7 +161,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             attachment_ids=attachment.ids,
         )
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
-        return move
+        return {'uuid': uuid, 'move': move}
 
     def _peppol_get_new_documents(self, skip_no_journal=False):
         params = {
@@ -201,6 +200,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
             for uuids in split_every(BATCH_SIZE, message_uuids):
                 created_moves = self.env['account.move']
+                uuids_to_ack = []
                 # retrieve attachments for filtered messages
                 all_messages = edi_user._call_peppol_proxy(
                     "/api/peppol/1/get_document",
@@ -212,23 +212,26 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     document_content = content["document"]
                     filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
                     decoded_document = edi_user._decrypt_data(document_content, enc_key)
-                    attachment = self.env["ir.attachment"].create(
-                        {
-                            "name": f"{filename}.xml",
-                            "raw": decoded_document,
-                            "type": "binary",
-                            "mimetype": "application/xml",
-                        }
-                    )
-                    created_moves |= edi_user._peppol_import_invoice(attachment, None, content["state"], uuid, journal)
+                    attachment = self.env["ir.attachment"].create({
+                        "name": f"{filename}.xml",
+                        "raw": decoded_document,
+                        "type": "binary",
+                        "mimetype": "application/xml",
+                    })
+                    vals_to_ack = edi_user._peppol_import_invoice(attachment, content["state"], uuid, journal=journal)
+                    if move_to_ack := vals_to_ack.get('move'):
+                        created_moves |= move_to_ack
+                    if uuid_to_ack := vals_to_ack.get('uuid'):
+                        uuids_to_ack.append(uuid_to_ack)
 
                 if not (modules.module.current_test or tools.config['test_enable']):
                     self.env.cr.commit()
-                if created_moves:
+                if uuids_to_ack:
                     edi_user._call_peppol_proxy(
                         "/api/peppol/1/ack",
-                        params={'message_uuids': created_moves.mapped('peppol_message_uuid')},
+                        params={'message_uuids': uuids_to_ack},
                     )
+                if created_moves:
                     journal._notify_einvoices_received(created_moves)
 
     def _peppol_get_message_status(self):
