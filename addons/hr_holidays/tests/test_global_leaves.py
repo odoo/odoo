@@ -3,6 +3,7 @@
 
 from datetime import date, datetime, timedelta
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
 from freezegun import freeze_time
 
@@ -220,3 +221,73 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             ('holiday_id', '=', partially_covered_leave.id)
         ])
         self.assertTrue(resource_leaves, 'Resource leaves linked to the employee leave should exist.')
+
+    @freeze_time('2025-05-11')
+    def test_employee_leave_with_global_leave(self):
+        """
+            When an employee's leave is created, if there are any public holidays within the leave period,
+            the number of leave days is reduced accordingly.
+            eg,.
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            | Leave Requested  |  Leave State  | Public Holiday days  |  # days leave remains |
+            |---------------------------------------------------------------------------------|
+            |       5 Days     |    confirm    |        1 Days        |         4 Days        |
+            |---------------------------------------------------------------------------------|
+            |       4 Days     |   validate1   |        1 Days        |         3 Days        |
+            |---------------------------------------------------------------------------------|
+            |       3 Days     |    validate   |        1 Days        |         2 Days        |
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        """
+        user_david = mail_new_test_user(self.env, login='david', groups='base.group_user')
+        user_timeoff_officer_david = mail_new_test_user(self.env, login='timeoff_officer', groups='base.group_user')
+
+        employee_david = self.env['hr.employee'].create({
+            'name': 'David Employee',
+            'user_id': user_david.id,
+            'leave_manager_id': user_timeoff_officer_david.id,
+            'parent_id': self.employee_hruser.id,
+            'department_id': self.rd_dept.id,
+            'resource_calendar_id': self.calendar_1.id,
+        })
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Sick Time Off',
+            'time_type': 'leave',
+            'requires_allocation': False,
+            'leave_validation_type': 'both',
+        })
+
+        employee_leave = self.env['hr.leave'].create({
+            'name': 'Holiday 5 days',
+            'employee_id': employee_david.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': datetime(2025, 5, 12),
+            'request_date_to': datetime(2025, 5, 16),
+        })
+
+        self.env['resource.calendar.leaves'].with_user(self.user_hrmanager).create({
+            'name': 'Public holiday day 1',
+            'date_from': datetime(2025, 5, 13),
+            'date_to': datetime(2025, 5, 13, 23, 59),
+            'calendar_id': employee_david.resource_calendar_id.id,
+        })
+
+        self.assertEqual(employee_leave.number_of_days, 4, 'Leave duration should be reduced because of public holiday day 1')
+
+        employee_leave.with_user(user_timeoff_officer_david).action_approve()
+        self.env['resource.calendar.leaves'].with_user(self.user_hrmanager).create({
+            'name': 'Public holiday day 2',
+            'date_from': datetime(2025, 5, 14),
+            'date_to': datetime(2025, 5, 14, 23, 59),
+            'calendar_id': employee_david.resource_calendar_id.id,
+        })
+        self.assertEqual(employee_leave.number_of_days, 3, 'Leave duration should be reduced because of public holiday day 2')
+
+        employee_leave.with_user(self.user_hruser).action_approve()
+        self.env['resource.calendar.leaves'].with_user(self.user_hrmanager).create({
+            'name': 'Public holiday day 3',
+            'date_from': datetime(2025, 5, 15),
+            'date_to': datetime(2025, 5, 15, 23, 59),
+            'calendar_id': employee_david.resource_calendar_id.id,
+        })
+        self.assertEqual(employee_leave.number_of_days, 2, 'Leave duration should be reduced because of public holiday day 3')
