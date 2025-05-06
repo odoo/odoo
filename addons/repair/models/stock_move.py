@@ -13,7 +13,7 @@ MAP_REPAIR_LINE_TYPE_TO_MOVE_LOCATIONS_FROM_REPAIR = {
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    repair_id = fields.Many2one('repair.order', check_company=True)
+    repair_id = fields.Many2one('repair.order', check_company=True, copy=False)
     repair_line_type = fields.Selection([
         ('add', 'Add'),
         ('remove', 'Remove'),
