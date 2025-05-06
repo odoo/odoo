@@ -218,8 +218,9 @@ export class NewContentModal extends Component {
         this.action.doAction(action, {
             additionalContext: context ? context : {},
             onClose: (infos) => {
-                if (infos) {
+                if (infos && !infos.dismiss) {
                     this.website.goToWebsite({ path: infos.path, edition: edition });
+                    this.websiteContext.showNewContentModal = false;
                 }
             },
             props: {
