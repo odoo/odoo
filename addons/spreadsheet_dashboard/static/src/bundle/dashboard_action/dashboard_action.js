@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useState } from "@web/owl2/utils";
+import { render, useLayoutEffect, useState, useExternalListener } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
@@ -69,6 +69,8 @@ export class SpreadsheetDashboardAction extends Component {
                 return [dashboard?.model, dashboard?.status];
             }
         );
+        useExternalListener(window, "afterprint", this.logExport.bind(this));
+
         useSetupAction({
             getLocalState: () => ({
                 dashboardLoader: this.loader.getState(),
@@ -184,6 +186,14 @@ export class SpreadsheetDashboardAction extends Component {
                 group.id !== "favorites" && // Skip the FAVORITES group
                 group.dashboards.some(({ data }) => data.id === this.activeDashboardId)
         )?.name;
+    }
+
+    logExport() {
+        const dashboard = this.loader.getActiveDashboard();
+        if (!dashboard || dashboard.status !== Status.Loaded) {
+            return;
+        }
+        dashboard.model.dispatch("LOG_DATASOURCE_EXPORT", { action: "print" });
     }
 }
 

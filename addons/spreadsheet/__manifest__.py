@@ -77,6 +77,8 @@
             'spreadsheet/static/src/helpers/odoo_functions_helpers.js',
             'spreadsheet/static/src/o_spreadsheet/odoo_module.js',
             'spreadsheet/static/src/helpers/helpers.js',
+            'spreadsheet/static/src/o_spreadsheet/cancelled_reason.js',
+            'spreadsheet/static/src/logging/**/*',
             'spreadsheet/static/src/public_readonly_app/**/*.xml',
             'spreadsheet/static/src/public_readonly_app/**/*.scss',
             'spreadsheet/static/src/public_readonly_app/**/*',
