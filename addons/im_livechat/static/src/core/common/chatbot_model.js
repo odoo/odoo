@@ -100,7 +100,7 @@ export class Chatbot extends Record {
         ) {
             return;
         }
-        if (this.currentStep.type === "free_input_multi") {
+        if (this.currentStep.step_type === "free_input_multi") {
             await this._processAnswerDebounced(message);
         } else {
             await this._processAnswer(message);
@@ -203,7 +203,7 @@ export class Chatbot extends Record {
 
     async _processAnswer(message) {
         if (
-            this.currentStep.type === "free_input_multi" &&
+            this.currentStep.step_type === "free_input_multi" &&
             this.thread.composer.text &&
             this.tmpAnswer !== this.thread.composer.text
         ) {
@@ -211,9 +211,9 @@ export class Chatbot extends Record {
         }
         this.tmpAnswer = "";
         let stepCompleted = true;
-        if (this.currentStep.type === "question_email") {
+        if (this.currentStep.step_type === "question_email") {
             stepCompleted = await this._processAnswerQuestionEmail();
-        } else if (this.currentStep.type === "question_selection") {
+        } else if (this.currentStep.step_type === "question_selection") {
             stepCompleted = await this._processAnswerQuestionSelection(message);
         }
         this.currentStep.completed = stepCompleted;

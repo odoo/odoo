@@ -13,9 +13,9 @@ export class ChatbotStep extends Record {
         },
     });
     selectedAnswer = fields.One("chatbot.script.answer");
-    type = fields.Attr("", {
+    step_type = fields.Attr("", {
         compute() {
-            return this.scriptStep?.type;
+            return this.scriptStep?.step_type;
         },
     });
     isLast = false;
@@ -27,7 +27,7 @@ export class ChatbotStep extends Record {
             "question_selection",
             "question_email",
             "question_phone",
-        ].includes(this.type);
+        ].includes(this.step_type);
     }
 }
 ChatbotStep.register();
