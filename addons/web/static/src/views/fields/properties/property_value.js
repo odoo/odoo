@@ -126,6 +126,8 @@ export class PropertyValue extends Component {
             const options = this.props.selection || [];
             const option = options.find((option) => option[0] === value);
             return option && option.length === 2 && option[0] ? option[0] : "";
+        } else if (this.props.type === "many2one") {
+            return !value || !value.id || !value.display_name ? false : value;
         } else if (this.props.type === "many2many") {
             if (!value || !value.length) {
                 return [];
