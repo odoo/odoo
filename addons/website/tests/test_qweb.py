@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+from contextlib import contextmanager
+
 from odoo import http
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -219,18 +222,18 @@ class TestQweb(TransactionCaseWithUserDemo):
 
         FIRST_SEARCH_FETCH = 1  # instead of the first SELECT visibility
         OTHER_SEARCH_FETCH = 3  # "SELECT id + fields from xmlid"
-        ARCH_COMBINE = 8  # SELECT RECURSIVE arch combine
+        ARCH_COMBINE = 4  # SELECT RECURSIVE arch combine
 
         invalidate('templates', 'view')
         check('base.testing_content', 'test-cold-0',
-              FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+              FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         invalidate('templates', 'view')
         check_website('base.testing_content', 'test-cold-0',
-                      FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+                      FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         check('base.testing_content', 'test-cold-0',
-              FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+              FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         check('base.testing_content', 'test-hot-0', 0)
 
@@ -253,24 +256,24 @@ class TestQweb(TransactionCaseWithUserDemo):
         # like 'test-cold-0'
         invalidate('templates')
         check(view.id, 'test-cold-id-1',
-              FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+              FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         invalidate('templates')
         check(view.id, 'test-cold-id-1',
-              0 + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 11
+              0 + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 7
 
         invalidate('templates')
         check_website(view.id, 'test-cold-id-1',
-                      0 + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 11
+                      0 + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 7
 
         # like 'test-cold-0' the first search query is replaced by a fetching
         invalidate('templates', 'view')
         check_website(view.id, 'test-cold-id-2',
-                      FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+                      FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         invalidate('templates', 'view')
         check(view.id, 'test-cold-id-2',
-              FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+              FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         env = self.env(user=self.user_demo, context={
             'lang': 'en_US',
@@ -281,20 +284,20 @@ class TestQweb(TransactionCaseWithUserDemo):
         # like 'test-cold-0'
         invalidate('templates')
         check('base.testing_content', 'test-cold-1',
-              FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+              FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         invalidate('templates')
         check_website('base.testing_content', 'test-cold-1',
-                      FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+                      FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         # like 'test-cold-0'
         invalidate('templates')
         check_website(view.id, 'test-cold-id-3',
-                      0 + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 11
+                      0 + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 7
 
         invalidate('templates')
         check(view.id, 'test-cold-id-3',
-              0 + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 11
+              0 + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 7
 
 
 class TestQwebProcessAtt(TransactionCase):
@@ -513,19 +516,26 @@ class TestQwebDataSnippet(TransactionCase):
         self.assertEqual(self._normalize_xml(rendered), self._normalize_xml(expected_output))
 
     def test_call_query_count_snippets_template(self):
-        init = self.env.cr.sql_log_count
-        with MockRequest(self.env, website=self.env['website'].browse(1)):
-            render = self.env['ir.ui.view'].render_public_asset('website.snippets')
-            self.assertTrue('data-selector=".s_blockquote"' in render)
+        actual_queries = []
+        with contextmanager(lambda: self._patchExecute(actual_queries))():
+            with MockRequest(self.env, website=self.env['website'].browse(1)):
+                render = self.env['ir.ui.view'].render_public_asset('website.snippets')
+                self.assertTrue('data-selector=".s_blockquote"' in render)
+
+        re_sql = re.compile(r'\bir_ui_view\b', re.IGNORECASE)
+        ir_ui_view_queries = [q for q in actual_queries if re_sql.search(q)]
 
         # nb_snippets = 156
         first_search = 1
-        t_call_snippets = 2
-        fetch_snippets = 4
+        t_call_snippets = 3
+        fetch_snippets = 0
         get_root_view = 3
         combine_views = 3
 
-        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 13
-        other_queries = 43
+        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 10
+        self.assertEqual(len(ir_ui_view_queries), all_ir_ui_view_queries, f'ir_ui_view queries: {all_ir_ui_view_queries}')
 
-        self.assertEqual(self.env.cr.sql_log_count - init, all_ir_ui_view_queries + other_queries, f'Maximum queries: {all_ir_ui_view_queries + other_queries}')
+        re_sql = re.compile(r'\bwebsite\b', re.IGNORECASE)
+        website_queries = [q for q in actual_queries if re_sql.search(q)]
+
+        self.assertEqual(len(website_queries), 19, f'Maximum queries: {19}')

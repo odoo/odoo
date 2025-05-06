@@ -587,10 +587,10 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         main_view.with_context(website_id=1).write({'arch': '<body>SPECIFIC<div>Z</div></body>'})
         self.assertEqual(total_views + 3 + 3, View.search_count([]), "It should have duplicated the Main View tree as a specific tree and then removed the specific view from the generic tree as no more needed")
 
-        generic_view = View.with_context(website_id=None)._get_view_id('website.main_view')
-        specific_view = View.with_context(website_id=1)._get_view_id('website.main_view')
-        generic_view_arch = View.browse(generic_view).with_context(load_all_views=True).get_combined_arch()
-        specific_view_arch = View.browse(specific_view).with_context(load_all_views=True, website_id=1).get_combined_arch()
+        generic_view = View.with_context(website_id=None)._get_template_view("website.main_view")
+        specific_view = View.with_context(website_id=1)._get_template_view("website.main_view")
+        generic_view_arch = generic_view.with_context(load_all_views=True).get_combined_arch()
+        specific_view_arch = specific_view.with_context(load_all_views=True, website_id=1).get_combined_arch()
         self.assertEqual(generic_view_arch, '<body>GENERIC<div>VIEW<span>C</span></div></body>')
         self.assertEqual(specific_view_arch, '<body>SPECIFIC<div>VIEW<span>D</span></div></body>', "Writing on top level view hierarchy with a website in context should write on the view and clone it's inherited views")
 

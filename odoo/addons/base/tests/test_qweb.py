@@ -1999,12 +1999,12 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
 
         FIRST_SEARCH_FETCH = 1  # the first "SELECT id + fields from xmlid"
         OTHER_SEARCH_FETCH = 3  # "SELECT id + fields from xmlid"
-        ARCH_COMBINE = 8  # SELECT RECURSIVE arch combine
+        ARCH_COMBINE = 4  # SELECT RECURSIVE arch combine
 
         self.env.registry.clear_cache('templates')
         view.invalidate_model()
 
-        check('base.testing_content', 'test-cold-0', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+        check('base.testing_content', 'test-cold-0', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
         check('base.testing_content', 'test-hot-0', 0)
         check('base.testing_content', 'test-hot-1', 0)
 
@@ -2014,20 +2014,20 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
 
         # like 'test-cold-0'
         self.env.registry.clear_cache('templates')
-        check(view.id, 'test-cold-id-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+        check(view.id, 'test-cold-id-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         # like 'test-cold-0' the first search query is replaced by a fetching
         self.env.registry.clear_cache('templates')
         view.invalidate_model()
-        check(view.id, 'test-cold-id-2', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+        check(view.id, 'test-cold-id-2', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         # like 'test-cold-0'
         self.env.registry.clear_cache('templates')
-        check('base.testing_content', 'test-cold-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 12
+        check('base.testing_content', 'test-cold-1', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE)  # 8
 
         # like 'test-cold-0'
         self.env.registry.clear_cache('templates')
-        check(view.id, 'test-cold-id-3', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 1)  # 11
+        check(view.id, 'test-cold-id-3', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 1)  # 7
 
 
 class TestQwebCache(TransactionCase):

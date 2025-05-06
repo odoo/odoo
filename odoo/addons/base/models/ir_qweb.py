@@ -925,7 +925,8 @@ class IrQweb(models.AbstractModel):
         try:
             trees = views._get_view_etrees()
         except Exception as e:
-            raise QWebException("Error while render the template", self, ref=','.join(refs)) from e
+            ref_name = hasattr(e, 'context') and e.context.get('view') and e.context.get('view').key
+            raise QWebException("Error while render the template", self, template=ref_name, ref=','.join(refs)) from e
 
         # add in cache
         for xmlid, view, tree in zip(xmlids, views, trees):
