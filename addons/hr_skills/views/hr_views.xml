@@ -48,8 +48,12 @@
                             <field name="display_type" required="1"/>
                         </group>
                         <group>
-                            <field name="date_start" string="Duration" widget="daterange" options="{'end_date_field': 'date_end'}"/>
-                            <field name="date_end" invisible="1"/>
+                            <label for="date_start" string="Validity"/>
+                            <div class="o_row">
+                                <field name="date_start"/>
+                                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                                <field name="date_end" placeholder="Never Expires"/>
+                            </div>
                         </group>
                     </group>
                     <field name="description" placeholder="Description"/>
