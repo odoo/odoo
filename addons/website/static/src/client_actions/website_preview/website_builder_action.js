@@ -29,6 +29,8 @@ import { isHTTPSorNakedDomainRedirection } from "./utils";
 import { WebsiteSystrayItem } from "./website_systray_item";
 import { renderToElement } from "@web/core/utils/render";
 
+const websiteSystrayRegistry = registry.category("website_systray");
+
 export class WebsiteBuilder extends Component {
     static template = "html_builder.WebsiteBuilder";
     static components = { LazyComponent, LocalOverlayContainer, ResizablePanel, ResourceEditor };
@@ -68,9 +70,6 @@ export class WebsiteBuilder extends Component {
                 [this.websiteContext]
             );
         });
-        // TODO: to remove: this is only needed to not use the website systray
-        // when using the "website preview" app.
-        this.websiteService.useMysterious = true;
         this.translation = !!this.props.action.context.params?.edit_translations;
 
         this.overlayRef = useChildRef();
@@ -121,9 +120,9 @@ export class WebsiteBuilder extends Component {
         });
         this.publicRootReady = new Deferred();
         this.setIframeLoaded();
+        this.addSystrayItems();
         onWillDestroy(() => {
-            registry.category("systray").remove("website.WebsiteSystrayItem");
-            this.websiteService.useMysterious = false;
+            websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
             this.websiteService.currentWebsiteId = null;
         });
 
@@ -141,7 +140,8 @@ export class WebsiteBuilder extends Component {
                 document.querySelector("body").classList.toggle("o_builder_open", isEditing);
                 if (isEditing) {
                     setTimeout(() => {
-                        registry.category("systray").remove("website.WebsiteSystrayItem");
+                        websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
+                        websiteSystrayRegistry.trigger("EDIT-WEBSITE");
                         document.querySelector(".o_builder_open .o_main_navbar").classList.add("d-none");
                     }, 200);
                 } else {
@@ -189,15 +189,34 @@ export class WebsiteBuilder extends Component {
         };
     }
 
+    isSystrayDisplayed() {
+        // TODO: improve this. These are the minimal requirements for at least
+        // one systray item to be displayed, but it duplicates logic from the
+        // WebsiteSystrayItem component.
+        const websiteMetadata = this.websiteService.currentWebsite?.metadata;
+        return (
+            this.websiteService.websites.length > 1 ||
+            this.websiteService.isRestrictedEditor ||
+            (this.websiteService.currentWebsite && websiteMetadata &&
+                (websiteMetadata.canPublish || websiteMetadata.editableInBackend))
+        );
+    }
+
     addSystrayItems() {
-        if (!registry.category("systray").contains("website.WebsiteSystrayItem")) {
-            registry
-                .category("systray")
-                .add(
-                    "website.WebsiteSystrayItem",
-                    { Component: WebsiteSystrayItem, props: this.systrayProps },
-                    { sequence: -100 }
-                );
+        if (
+            !websiteSystrayRegistry.contains("website.WebsiteSystrayItem") &&
+            this.isSystrayDisplayed()
+        ) {
+            websiteSystrayRegistry.add(
+                "website.WebsiteSystrayItem",
+                {
+                    Component: WebsiteSystrayItem,
+                    props: this.systrayProps,
+                    isDisplayed: this.isSystrayDisplayed.bind(this),
+                },
+                { sequence: -100 }
+            );
+            websiteSystrayRegistry.trigger("EDIT-WEBSITE");
         }
     }
 
@@ -397,6 +416,7 @@ export class WebsiteBuilder extends Component {
     async reloadIframeAndCloseEditor() {
         const isEditing = false;
         this.state.isEditing = isEditing;
+        this.addSystrayItems();
         await this.reloadIframe(isEditing);
     }
 

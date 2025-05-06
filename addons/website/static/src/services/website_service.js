@@ -245,7 +245,7 @@ export const websiteService = {
                 invalidateSnippetCache = value;
             },
 
-            goToWebsite({ websiteId, path, edition, translation, lang, htmlBuilder=false } = {}) {
+            goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
                 this.websiteRootInstance = undefined;
                 if (lang) {
                     invalidateSnippetCache = true;
