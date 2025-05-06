@@ -29,6 +29,10 @@ msgid ""
 "            - Dynamic Followers: all contacts of the chosen record's field will be added/removed from followers.\n"
 "        "
 msgstr ""
+"\n"
+"            - متابعون محددون: حدد جهات اتصال محددة لإضافتها/إزالتها من متابعي السجل.\n"
+"            - المتابعون الديناميكيون: ستتم إضافة/إزالة كافة جهات الاتصال الخاصة بحقل السجل المختار من قائمة المتابعين.\n"
+"        "
 
 #. module: mail
 #. odoo-python
@@ -180,6 +184,12 @@ msgid ""
 "message.%(new_line)sType %(bold_start)s:emoji:%(bold_end)s to insert an "
 "emoji in your message."
 msgstr ""
+"%(new_line)s%(new_line)sاكتب %(bold_start)s@username%(bold_end)s للإشارة إلى"
+" شخص ما للفت انتباهه.%(new_line)sاكتب %(bold_start)s#channel%(bold_end)s "
+"للإشارة إلى القناة.%(new_line)sاكتب %(bold_start)s/command%(bold_end)s "
+"لتنفيذ أمر ما. اكتب %(bold_start)s:shortcut%(bold_end)s لإدراج رد جاهز في "
+"رسالتك.%(new_line)sاكتب %(bold_start)s:emoji:%(bold_end)s لإدراج رمز تعبيري "
+"في رسالتك. "
 
 #. module: mail
 #. odoo-javascript
@@ -2138,6 +2148,8 @@ msgid ""
 " of type 'channel' or 'group'. The sub-channel should have the same type as "
 "the parent."
 msgstr ""
+"تعذر إنشاء %(channels)s: يجب ألا يكون الأصل قناة فرعية ويجب أن يكون نوعه "
+"'قناة'. يجب أن يكون للقناة الفرعية نفس نوع القناة الأصلية. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
