@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
-from unittest import mock, TestCase
+from unittest import TestCase, mock
 
 import psycopg2
 
@@ -13,6 +12,7 @@ from odoo.tools import mute_logger
 
 class CustomError(Exception):
     ...
+
 
 class TestBasic(common.TransactionCase):
     def test_assertRecordValues(self):
@@ -110,7 +110,7 @@ First differing element 0:
 
     def test_assertRaises_rollbacks(self):
         """Checks that a "correctly" executing assertRaises (where the expected
-        exception has been raised and caught) will properly rollback.
+        exception has been raised and caught) will properly roll back.
         """
         self.env.cr.execute("SET LOCAL test_testing_utilities.a_flag = ''")
         with self.assertRaises(CustomError):
@@ -134,7 +134,7 @@ First differing element 0:
 
     def test_assertRaises_error_at_exit(self):
         """Checks that a "correctly" executing assertRaises (where the expected
-        exception has been raised and caught) will properly rollback when the
+        exception has been raised and caught) will properly roll back when the
         error is raised by flush() while exiting the savepoint.
         """
         self.env.cr.execute("SET LOCAL test_testing_utilities.a_flag = ''")

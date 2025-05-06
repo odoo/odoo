@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-from __future__ import division
 
-from itertools import count, zip_longest
+from itertools import zip_longest
 
-from odoo import api, fields, models, Command
+from odoo import Command, api, fields, models
 
 
 class Test_Testing_UtilitiesA(models.Model):
@@ -70,8 +68,8 @@ class Test_Testing_UtilitiesD(models.Model):
         'test_testing_utilities.m2o',
         required=True,
         default=lambda self: self.env['test_testing_utilities.m2o'].search(
-            [], limit=1
-        )
+            [], limit=1,
+        ),
     )
     f2 = fields.Char()
 
@@ -101,7 +99,7 @@ class Test_Testing_UtilitiesE(models.Model):
                     Command.create({'name': str(n)})
                     for n, v in zip_longest(range(r.count), r.m2m or [])
                     if v is None
-                ]
+                ],
             })
 
 
@@ -118,8 +116,7 @@ class Test_Testing_UtilitiesF(models.Model):
     _description = 'Testing Utilities F'
 
     def _get_some(self):
-        r = self.env['test_testing_utilities.sub2'].search([], limit=2)
-        return r
+        return self.env['test_testing_utilities.sub2'].search([], limit=2)
 
     m2m = fields.Many2many(
         'test_testing_utilities.sub2',
@@ -214,7 +211,7 @@ class Test_Testing_UtilitiesDefault(models.Model):
 
     def _default_subs(self):
         return [
-            Command.create({'v': 5})
+            Command.create({'v': 5}),
         ]
 
     @api.onchange('value')
@@ -259,7 +256,7 @@ class Test_Testing_UtilitiesOnchange_Parent(models.Model):
 
     @api.onchange('line_ids')
     def _onchange_line_ids(self):
-        for line in self.line_ids.filtered(lambda l: l.flag):
+        for line in self.line_ids.filtered(lambda line: line.flag):
             self.env['test_testing_utilities.onchange_line'].new({'parent': line.id})
 
 
@@ -321,7 +318,8 @@ class O2m_Readonly_Subfield_Child(models.Model):
             r.f = len(r.name) if r.name else 0
 
     def _inverse_f(self):
-        raise AssertionError("Inverse of f should not be called")
+        msg = "Inverse of f should not be called"
+        raise AssertionError(msg)
 
 
 class Test_Testing_UtilitiesReq_Bool(models.Model):
@@ -341,8 +339,8 @@ class O2m_Changes_Parent(models.Model):
     @api.onchange('name')
     def _onchange_name(self):
         for line in self.line_ids:
-            line.line_ids = [Command.delete(l.id) for l in line.line_ids] + [
-                Command.create({'v': 0, 'vv': 0})
+            line.line_ids = [Command.delete(line.id) for line in line.line_ids] + [
+                Command.create({'v': 0, 'vv': 0}),
             ]
 
 

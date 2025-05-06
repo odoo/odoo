@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 from lxml import etree
+
 from odoo.tests import common
 from odoo.tools.xml_utils import cleanup_xml_node
 
@@ -10,7 +10,7 @@ from odoo.tools.xml_utils import cleanup_xml_node
 class TestXMLTools(common.TransactionCase):
 
     def setUp(self):
-        super(TestXMLTools, self).setUp()
+        super().setUp()
         self.qweb_poor = self.env()['ir.ui.view'].create({
             'type': 'qweb',
             'arch_db': """
@@ -142,8 +142,8 @@ _</h1>
                 'city': 'London',
             },
             'addressSender': {
-                'street': ' '
-            }
+                'street': ' ',
+            },
         })
         self.check_xml_cleanup_result_is_as_expected(qweb, expected)
 
