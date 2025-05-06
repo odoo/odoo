@@ -450,7 +450,31 @@ export class SelfOrder extends Reactive {
         const isSpecialProduct = (p) => this.config._pos_special_products_ids.includes(p.id);
         for (const category_id in this.productByCategIds) {
             this.productByCategIds[category_id] = this.productByCategIds[category_id].filter(
+<<<<<<< 0e50de4234f1966f2f3e194eb1ab18eb5e42e7c8:addons/pos_self_order/static/src/app/services/self_order_service.js
                 (p) => !isSpecialProduct(p)
+||||||| ac3924508016178427c7962fa3b8e645e7e03835:addons/pos_self_order/static/src/app/self_order_service.js
+                (p) => {
+                    if (!isSpecialProduct(p) && !productTmplIds.has(p.raw.product_tmpl_id)) {
+                        productTmplIds.add(p.raw.product_tmpl_id);
+                        p.available_in_pos = false;
+                        return true;
+                    }
+                    return false;
+                }
+=======
+                (p) => {
+                    if (
+                        !isSpecialProduct(p) &&
+                        p.self_order_available &&
+                        !productTmplIds.has(p.raw.product_tmpl_id)
+                    ) {
+                        productTmplIds.add(p.raw.product_tmpl_id);
+                        p.available_in_pos = false;
+                        return true;
+                    }
+                    return false;
+                }
+>>>>>>> 5313f75aa9a5a9ecc09dfc62e85b9dd2017cb7a2:addons/pos_self_order/static/src/app/self_order_service.js
             );
         }
         const productWoCat = this.models["product.template"].filter(
