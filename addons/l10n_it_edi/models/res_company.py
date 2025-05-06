@@ -129,7 +129,7 @@ class ResCompany(models.Model):
     @api.depends("account_edi_proxy_client_ids", "l10n_it_codice_fiscale")
     def _compute_l10n_it_edi_proxy_user_id(self):
         for company in self:
-            company.l10n_it_edi_proxy_user_id = company.account_edi_proxy_client_ids.filtered(lambda x: x.proxy_type == 'l10n_it_edi')
+            company.l10n_it_edi_proxy_user_id = company.root_id.account_edi_proxy_client_ids.filtered(lambda x: x.proxy_type == 'l10n_it_edi')
 
             # If we can't find any proxy user, create a new demo proxy user for this italian company.
             # They must have the Codice Fiscale field filled for the registration process to work.
