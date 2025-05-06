@@ -27,6 +27,7 @@ import {
 } from "@web/core/tree_editor/tree_editor_autocomplete";
 import { Input, List, Range, Select, Within } from "@web/core/tree_editor/tree_editor_components";
 import {
+    getEditorInfoForOptionsWithSelect,
     OPTIONS_WITH_INPUT,
     OPTIONS_WITH_SELECT,
 } from "@web/core/tree_editor/tree_editor_datetime_options";
@@ -68,9 +69,25 @@ function genericDeserializeDate(type, value) {
     return type === "date" ? deserializeDate(value) : deserializeDateTime(value);
 }
 
+function placeholderForSelect(displayPlaceholder) {
+    if (displayPlaceholder) {
+        return _t(`Select one or several criteria`);
+    }
+}
+
+function placeholderForInput(displayPlaceholder) {
+    if (displayPlaceholder) {
+        return _t(`Press "Enter" to add criterion`);
+    }
+}
+
 const STRING_EDITOR = {
     component: Input,
-    extractProps: ({ value, update }) => ({ value, update }),
+    extractProps: ({ value, update, displayPlaceholder }) => ({
+        value,
+        update,
+        placeholder: placeholderForInput(displayPlaceholder),
+    }),
     isSupported: (value) => typeof value === "string",
     defaultValue: () => "",
 };
@@ -79,11 +96,12 @@ function makeSelectEditor(options, params = {}) {
     const getOption = (value) => options.find(([v]) => v === value) || null;
     return {
         component: Select,
-        extractProps: ({ value, update }) => ({
+        extractProps: ({ value, update, displayPlaceholder }) => ({
             value,
             update,
             options,
             addBlankOption: params.addBlankOption,
+            placeholder: placeholderForSelect(displayPlaceholder),
         }),
         isSupported: (value) => Boolean(getOption(value)),
         defaultValue: () => options[0]?.[0] ?? false,
@@ -115,6 +133,7 @@ function makeAutoCompleteEditor(fieldDef) {
             domain: getDomain(fieldDef),
             update: (value) => update(unique(value)),
             resIds: unique(value),
+            placeholder: placeholderForSelect(true),
         }),
         isSupported: (value) => Array.isArray(value),
         defaultValue: () => [],
@@ -250,10 +269,11 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             const formatType = type === "integer" ? "integer" : "float";
             return {
                 component: Input,
-                extractProps: ({ value, update }) => ({
+                extractProps: ({ value, update, displayPlaceholder }) => ({
                     value: String(value),
                     update: (value) => update(parseValue(formatType, value)),
                     startEmpty: params.startEmpty,
+                    placeholder: placeholderForInput(displayPlaceholder),
                 }),
                 isSupported: () => true,
                 defaultValue: () => (params.forBetween ? { start: 1, end: 1 } : 1),
@@ -289,7 +309,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             }
             return {
                 component: DateTimeInput,
-                extractProps: ({ value, update }) => ({
+                extractProps: ({ value, update, displayPlaceholder }) => ({
                     value:
                         params.startEmpty || value === false
                             ? false
@@ -302,6 +322,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                             );
                         }
                     },
+                    placeholder: placeholderForSelect(displayPlaceholder),
                 }),
                 isSupported: (value) => typeof value === "string" && isParsable(type, value),
                 defaultValue: () => {
@@ -364,7 +385,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "datetime_option":
         case "time_option": {
             if (fieldDef.name in OPTIONS_WITH_SELECT) {
-                return OPTIONS_WITH_SELECT[fieldDef.name];
+                return getEditorInfoForOptionsWithSelect(fieldDef.name, params);
             } else if (fieldDef.name === "__time") {
                 return {
                     component: TimePicker,

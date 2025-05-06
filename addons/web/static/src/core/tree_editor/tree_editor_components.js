@@ -3,12 +3,12 @@ import { TagsList } from "@web/core/tags_list/tags_list";
 import { _t } from "@web/core/l10n/translation";
 
 export class Input extends Component {
-    static props = ["value", "update", "startEmpty?"];
+    static props = ["value", "update", "placeholder?", "startEmpty?"];
     static template = "web.TreeEditor.Input";
 }
 
 export class Select extends Component {
-    static props = ["value", "update", "options", "addBlankOption?"];
+    static props = ["value", "update", "options", "placeholder?", "addBlankOption?"];
     static template = "web.TreeEditor.Select";
 
     deserialize(value) {
