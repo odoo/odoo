@@ -20,6 +20,10 @@ export class EditWebsiteSystrayItem extends Component {
         this.websiteService = useService("website");
     }
 
+    onClickEditPage() {
+        this.props.onEditPage();
+    }
+
     get currentWebsiteInfo() {
         return this.websiteService.currentWebsite?.metadata;
     }
@@ -55,11 +59,15 @@ export class EditWebsiteSystrayItem extends Component {
         this.startTranslate();
     }
 
+    getLocation() {
+        return this.websiteService.contentWindow.location;
+    }
+
     editFromTranslate() {
         // We are in translate mode, the pathname starts with '/<url_code>'. By
         // adding a trailing slash we can simply search for the first slash
         // after the language code to remove the language part.
-        const { pathname, search, hash } = this.websiteService.contentWindow.location;
+        const { pathname, search, hash } = this.getLocation();
         const languagePrefix = `${pathname}/`.indexOf("/", 1);
         const defaultLanguagePathname = pathname.substring(languagePrefix);
         this.websiteService.goToWebsite({
@@ -71,7 +79,7 @@ export class EditWebsiteSystrayItem extends Component {
     }
 
     startTranslate() {
-        const { pathname, search, hash } = this.websiteService.contentWindow.location;
+        const { pathname, search, hash } = this.getLocation();
         const searchParams = new URLSearchParams(search);
         searchParams.set("edit_translations", "1");
         this.websiteService.goToWebsite({
