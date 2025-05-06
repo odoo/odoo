@@ -23,6 +23,7 @@ This module allows to generate a project/task from sales orders.
         'views/project_sharing_views.xml',
         'views/project_views.xml',
         'data/sale_project_data.xml',
+        'wizard/project_template_create_wizard.xml',
     ],
     'demo': [
         'data/sale_project_demo.xml',

@@ -903,3 +903,31 @@ class ProjectProject(models.Model):
             action_window['views'] = [[False, 'form']]
             action_window['res_id'] = vendor_bill_ids[0]
         return action_window
+
+    def _fetch_products_linked_to_template(self, limit=None):
+        self.ensure_one()
+        return self.env['product.template'].search([('project_template_id', '=', self.id)], limit=limit)
+
+    def template_to_project_confirmation_callback(self, callbacks):
+        super().template_to_project_confirmation_callback(callbacks)
+        if callbacks.get('unlink_template_products'):
+            self._fetch_products_linked_to_template().project_template_id = False
+
+    def _get_template_to_project_confirmation_callbacks(self):
+        callbacks = super()._get_template_to_project_confirmation_callbacks()
+        if self._fetch_products_linked_to_template(limit=1):
+            callbacks['unlink_template_products'] = True
+        return callbacks
+
+    def _get_template_to_project_warnings(self):
+        self.ensure_one()
+        res = super()._get_template_to_project_warnings()
+        if self.is_template and self._fetch_products_linked_to_template(limit=1):
+            res.append(self.env._('Converting this template to a regular project will unlink it from its associated products.'))
+        return res
+
+    def _get_template_default_context_whitelist(self):
+        return [
+            *super()._get_template_default_context_whitelist(),
+            'allow_billable',
+        ]

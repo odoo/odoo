@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_project_view_form_simplified_template" model="ir.ui.view">
+        <field name="name">project.project.create.wizard.form</field>
+        <field name="model">project.template.create.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Project">
+                <div class="oe_title mb-2">
+                    <label for="name" string="Name"/>
+                    <h1>
+                        <field name="name" class="o_project_name" placeholder="e.g. Office Party"/>
+                    </h1>
+                </div>
+                <div class="mb-2">
+                    <label for="date_start" string="Planned Date" class="pe-2"/>
+                    <field name="date_start" widget="daterange" options='{"end_date_field": "date", "always_range": "1"}'/>
+                </div>
+                <div class="mt-2" colspan="2">
+                    <label for="alias_name" string="Create tasks by sending an email to" class="pe-2"/>
+                    <span>
+                        <field name="alias_name" placeholder="e.g. office-party"/>@
+                        <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                               options="{'no_create': True, 'no_open': True}"/>
+                    </span>
+                </div>
+                <footer>
+                    <button string="Create project" name="create_project_from_template" type="object" class="btn-primary o_open_tasks" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

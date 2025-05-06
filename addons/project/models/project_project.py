@@ -47,7 +47,10 @@ class ProjectProject(models.Model):
         tasks_count_by_project = dict(ProjectTask._read_group(domain, ['project_id'], ['__count']))
         templates_count_by_project = dict(ProjectTask._read_group(AND([domain, [('is_template', '=', True)]]), ['project_id'], ['__count']))
         for project in self:
-            count = tasks_count_by_project.get(project, 0) - templates_count_by_project.get(project, 0)
+            if project.is_template:
+                count = templates_count_by_project.get(project, 0)
+            else:
+                count = tasks_count_by_project.get(project, 0) - templates_count_by_project.get(project, 0)
             project.update({count_field: count})
 
     def _compute_task_count(self):
@@ -111,7 +114,7 @@ class ProjectProject(models.Model):
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count", export_string_translation=False)
     open_task_count = fields.Integer(compute='_compute_open_task_count', string="Open Task Count", export_string_translation=False)
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
-                               domain=lambda self: [('is_closed', '=', False), ('is_template', '=', False)])
+                               domain="[('is_closed', '=', False), ('is_template', 'in', [is_template, True])]")
     color = fields.Integer(string='Color Index', export_string_translation=False)
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True, falsy_value_label=_lt("👤 Unassigned"))
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
@@ -194,6 +197,7 @@ class ProjectProject(models.Model):
     next_milestone_id = fields.Many2one('project.milestone', compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
     can_mark_milestone_as_done = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
     is_milestone_deadline_exceeded = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
+    is_template = fields.Boolean(copy=False, export_string_translation=False)
 
     _project_date_greater = models.Constraint(
         'check(date >= date_start)',
@@ -472,7 +476,20 @@ class ProjectProject(models.Model):
         vals_list = super().copy_data(default=default)
         if default and 'name' in default:
             return vals_list
-        return [dict(vals, name=self.env._("%s (copy)", project.name)) for project, vals in zip(self, vals_list)]
+        copy_from_template = self.env.context.get('copy_from_template')
+        for project, vals in zip(self, vals_list):
+            if project.is_template and not copy_from_template:
+                vals['is_template'] = True
+            if copy_from_template:
+                # We can make last_update_status as None because it is a required field
+                vals.pop("last_update_status", None)
+                for field in set(self._get_template_field_blacklist()) & set(vals.keys()):
+                    del vals[field]
+                vals["name"] = project.name
+            else:
+                if project.is_template or not vals.get("is_template"):
+                    vals["name"] = self.env._("%s (copy)", project.name)
+        return vals_list
 
     def copy(self, default=None):
         default = dict(default or {})
@@ -807,9 +824,16 @@ class ProjectProject(models.Model):
         context = ast.literal_eval(context)
         context.update({
             'create': self.active,
-            'active_test': self.active
+            'active_test': self.active,
+            'active_id': self.id,
             })
         action['context'] = context
+        if self.is_template:
+            action['context'].update({'default_is_template': True})
+            domain = ast.literal_eval(action['domain'].replace('active_id', str(self.id)))
+            domain.remove(('has_template_ancestor', '=', False))
+            action['domain'] = domain
+            action['views'] = [(view_id, view_type) for view_id, view_type in action['views'] if view_type not in ('pivot', 'graph')]
         return action
 
     def action_view_all_rating(self):
@@ -1140,3 +1164,136 @@ class ProjectProject(models.Model):
     def _compute_task_completion_percentage(self):
         for task in self:
             task.task_completion_percentage = task.task_count and 1 - task.open_task_count / task.task_count
+
+    # ---------------------------------------------------
+    #  Project Template Methods
+    # ---------------------------------------------------
+
+    def _get_template_to_project_warnings(self):
+        self.ensure_one()
+        return []
+
+    def template_to_project_confirmation_callback(self, callbacks):
+        self.ensure_one()
+        pass
+
+    def _get_template_to_project_confirmation_callbacks(self):
+        self.ensure_one()
+        return {}
+
+    def action_toggle_project_template_mode(self):
+        self.ensure_one()
+        config = {
+            "params": {
+                "project_id": self.id,
+            },
+        }
+        if self.is_template:
+            config["tag"] = "project_template_show_undo_confirmation_dialog"
+            if callbacks := self._get_template_to_project_confirmation_callbacks():
+                config["params"]["callback_data"] = {
+                    "method": "template_to_project_confirmation_callback",
+                    "args": [self.id, callbacks],
+                }
+            if warning_messages := self._get_template_to_project_warnings():
+                config["params"]["message"] = self.env._(
+                    "%(warning_messages)s\nAre you sure you want to continue?",
+                    warning_messages="\n".join(warning_messages),
+                )
+            else:
+                config["params"]["message"] = self.env._(
+                    "This project is currently a template. Would you like to convert it back into a regular project?",
+                )
+        else:
+            config["tag"] = "project_to_template_redirection_action"
+        return {
+            "type": "ir.actions.client",
+            **config,
+        }
+
+    def create_template_from_project_undo_callback(self, callbacks):
+        self.ensure_one()
+        if callbacks.get("unarchive_project"):
+            self.action_unarchive()
+
+    def _get_template_from_project_undo_callbacks(self):
+        self.ensure_one()
+        callbacks = {}
+        if self.active:
+            self.action_archive()
+            callbacks["unarchive_project"] = True
+        return callbacks
+
+    def action_create_template_from_project(self):
+        self.ensure_one()
+        template = self.copy(default={"is_template": True, "partner_id": False})
+        template._toggle_template_mode(True)
+        template.message_post(body=self.env._("Template created from %s.", self.name))
+        config = {
+            "tag": "project_template_show_notification",
+            "params": {
+                "project_id": template.id,
+                "undo_method": "unlink",
+            },
+        }
+        if callbacks := self._get_template_from_project_undo_callbacks():
+            config["params"]["callback_data"] = {
+                "method": "create_template_from_project_undo_callback",
+                "args": [self.id, callbacks],
+            }
+        return {
+            "type": "ir.actions.client",
+            **config,
+        }
+
+    def action_undo_convert_to_template(self):
+        self.ensure_one()
+        self._toggle_template_mode(False)
+        self.message_post(body=self.env._("Template converted back to regular project."))
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "message": self.env._("Template converted back to regular project."),
+                "next": {
+                    "type": "ir.actions.client",
+                    "tag": "soft_reload",
+                },
+            },
+        }
+
+    def _toggle_template_mode(self, is_template):
+        self.ensure_one()
+        self.is_template = is_template
+        self.task_ids.write({"is_template": is_template})
+
+    @api.model
+    def _get_template_default_context_whitelist(self):
+        """
+        Whitelist of fields that can be set through the `default_` context keys when creating a project from a template.
+        """
+        return []
+
+    @api.model
+    def _get_template_field_blacklist(self):
+        """
+        Blacklist of fields to not copy when creating a project from a template.
+        """
+        return [
+            "partner_id",
+        ]
+
+    def action_create_from_template(self, values=None):
+        self.ensure_one()
+        values = values or {}
+        default = {
+            key.removeprefix('default_'): value
+            for key, value in self.env.context.items()
+            if key.startswith('default_') and key.removeprefix('default_') in self._get_template_default_context_whitelist()
+        } | values | {
+            field: False
+            for field in self._get_template_field_blacklist()
+        }
+        project = self.with_context(copy_from_template=True).copy(default=default)
+        project.message_post(body=self.env._("Project created from template %(name)s.", name=self.name))
+        return project
