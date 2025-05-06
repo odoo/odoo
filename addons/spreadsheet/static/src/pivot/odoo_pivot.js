@@ -481,6 +481,17 @@ export class OdooPivot {
         );
     }
 
+    get source() {
+        const data = this.definition;
+        return {
+            resModel: data.model,
+            type: "pivot",
+            fields: data.measures.map((m) => m.fieldName),
+            groupby: [...data.columns, ...data.rows].map((dim) => dim.nameWithGranularity),
+            domain: this.getDomainWithGlobalFilters(),
+        };
+    }
+
     //--------------------------------------------------------------------------
     // Global filters
     //--------------------------------------------------------------------------
