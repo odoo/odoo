@@ -877,6 +877,9 @@ class TestRepair(common.TransactionCase):
             'quantity': 1.0,
         })]
         self.assertEqual(repair_order.lot_id, sn_1)
+        # duplicate the move and check that the link to the repair order is not copied
+        copied_move = repair_order.move_ids.copy()
+        self.assertFalse(copied_move.repair_id)
 
     def test_missing_production_location_raises_user_error(self):
         """
