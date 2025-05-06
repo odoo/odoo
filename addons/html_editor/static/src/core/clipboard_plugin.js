@@ -1,4 +1,5 @@
 import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
+import { transformListsInPreElement } from "../utils/list";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents, wrapInlinesInBlocks, splitTextNode } from "../utils/dom";
@@ -88,6 +89,7 @@ export const CLIPBOARD_WHITELISTS = {
 };
 
 const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
+const UL_TAG_REGEX = /<ul\b[^>]*>[\s\S]*?<\/ul>/i;
 
 /**
  * @typedef {Object} ClipboardShared
@@ -277,6 +279,12 @@ export class ClipboardPlugin extends Plugin {
             const fragment = parseHTML(this.document, odooEditorHtml);
             this.dependencies.sanitize.sanitize(fragment);
             if (fragment.hasChildNodes()) {
+                if (UL_TAG_REGEX.test(odooEditorHtml)) {
+                    const selection = this.dependencies.selection.getEditableSelection();
+                    if (selection.anchorNode.nodeName === "PRE") {
+                        transformListsInPreElement(fragment);
+                    }
+                }
                 this.dependencies.dom.insert(fragment);
             }
             return true;

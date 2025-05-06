@@ -2347,6 +2347,45 @@ describe("Special cases", () => {
         });
     });
 
+    describe("ul inside pre", () => {
+        test("wrap ul with div when inside pre", async () => {
+            await testEditor({
+                contentBefore: "<pre>[]<br></pre>",
+                stepFunction: async (editor) => {
+                    pasteOdooEditorHtml(editor, '<ul class="o_checklist"><li>item</li></ul>');
+                },
+                contentAfter:
+                    '<pre><div><ul class="o_checklist"><li>item</li></ul></div>[]<br></pre>',
+            });
+        });
+        test("wrap ul with div when inside pre (2)", async () => {
+            await testEditor({
+                contentBefore: "<pre>[]<br></pre>",
+                stepFunction: async (editor) => {
+                    pasteOdooEditorHtml(
+                        editor,
+                        '<ul class="o_checklist"><li>item</li><li>item2</li></ul><ol><li>item</li></ol>'
+                    );
+                },
+                contentAfter:
+                    '<pre><div><ul class="o_checklist"><li>item</li><li>item2</li></ul></div><ol><li>item[]</li></ol></pre>',
+            });
+        });
+        test("wrap ul with div when inside pre (3)", async () => {
+            await testEditor({
+                contentBefore: "<pre>[]<br></pre>",
+                stepFunction: async (editor) => {
+                    pasteOdooEditorHtml(
+                        editor,
+                        "textcontent1<ul><li>item</li></ul>textcontent2\ntextcontent3<ul><li>item1</li><li>item2</li></ul>"
+                    );
+                },
+                contentAfter:
+                    "<pre>textcontent1<div><ul><li>item</li></ul></div>textcontent2\ntextcontent3<div><ul><li>item1</li><li>item2</li></ul></div>[]<br></pre>",
+            });
+        });
+    });
+
     describe("paragraphs", () => {
         test("should paste multiple paragraphs into a list", async () => {
             await testEditor({

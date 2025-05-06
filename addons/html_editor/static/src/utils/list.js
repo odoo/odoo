@@ -70,3 +70,16 @@ export function convertList(node, newMode) {
     }
     return node;
 }
+/**
+ * There is a quirk in 'lxml' library that do not allow 'ul' directly inside <pre>.
+ * This method, wraps such ul containing fragment to div
+ *
+ * @param {DocumentFragment} fragment
+ */
+export function transformListsInPreElement(fragment) {
+    fragment.querySelectorAll("ul").forEach((list) => {
+        const wrapper = document.createElement("div");
+        list.replaceWith(wrapper);
+        wrapper.appendChild(list);
+    });
+}
