@@ -649,6 +649,43 @@ test("upload attachment on draft record", async () => {
     await contains("button[aria-label='Attach files']", { text: "1" });
 });
 
+test("chatter: show more option", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    for (let i = 1; i <= 25; i++) {
+        pyEnv["ir.attachment"].create({
+            mimetype: "text/plain",
+            name: `File${i}.txt`,
+            res_id: partnerId,
+            res_model: "res.partner",
+        });
+    }
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Chatter");
+    await contains(".o-mail-Chatter-topbar");
+    await contains("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach files']", { text: "25" });
+    await contains(".o-mail-AttachmentBox", { count: 0 });
+    await click("button[aria-label='Attach files']");
+    await contains(".o-mail-AttachmentBox");
+    await contains("button", { text: "Show More... (15 remaining)" });
+    await contains(".o-mail-AttachmentCard", { count: 10 });
+    await click("button", { text: "Show More... (15 remaining)" });
+    await contains("button", { text: "Show More... (5 remaining)" });
+    await contains(".o-mail-AttachmentCard", { count: 20 });
+    await click("button", { text: "Show More... (5 remaining)" });
+    await contains("button", { text: "Show Less" });
+    await contains(".o-mail-AttachmentCard", { count: 25 });
+    await click("button", { text: "Show Less" });
+    await contains("button", { text: "Show More... (15 remaining)" });
+    await click("button", { text: "Show More... (15 remaining)" });
+    await contains("button", { text: "Show More... (5 remaining)" });
+    await click("button[aria-label='Attach files']");
+    await click("button[aria-label='Attach files']");
+    await contains("button", { text: "Show More... (15 remaining)" });
+});
+
 test("Follower count of draft record is set to 0", async () => {
     await start();
     await openFormView("res.partner");
