@@ -87,7 +87,7 @@ class ProjectShareWizard(models.TransientModel):
             project_followers_to_remove = [
                 partner.id
                 for partner in project_followers
-                if partner not in wizard.collaborator_ids.partner_id
+                if partner not in wizard.collaborator_ids.partner_id and partner.partner_share
             ]
             project_collaborator_per_partner_id = {c.partner_id.id: c for c in project.collaborator_ids}
             for collaborator in wizard.collaborator_ids:
