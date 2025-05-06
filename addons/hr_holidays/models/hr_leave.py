@@ -788,7 +788,7 @@ class HrLeave(models.Model):
         employee_id = values.get('employee_id', False)
         if not self.env.context.get('leave_fast_create'):
             if values.get('state'):
-                self._check_approval_update(values['state'])
+                self._check_approval_update(values['state'], self._context.get('raise_error_if_not_possible', True))
                 if any(holiday.validation_type == 'both' for holiday in self):
                     if values.get('employee_id'):
                         employees = self.env['hr.employee'].browse(values.get('employee_id'))
