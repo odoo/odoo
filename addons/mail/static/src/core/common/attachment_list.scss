@@ -13,6 +13,25 @@
     height: 1.4em;
 }
 
+.o-mail-AttachmentButtons button:hover {
+    filter: brightness(.95);
+}
+
+.o-mail-Attachment-hover {
+    background: $gray-100;
+
+    &.o-image {
+        background: rgba(0, 0, 0, 0.4);
+    }
+}
+
+.o-mail-Attachment-hoverImageText {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 1.25;
+}
+
 .o-viewable {
     cursor: zoom-in;
 }
