@@ -21,6 +21,12 @@
     padding-right: var(--Chatter-default-padding-x);
 }
 
+.o-mail-Chatter-top .o-mail-Composer {
+    --Chatter-default-padding-x: #{$o-spacer};
+    --mail-Chatter-contentPaddingLeft: var(--ChatterAsideForm-padding-left, calc(var(--Chatter-default-padding-x) / 2));
+    margin-left: calc((var(--mail-Chatter-contentPaddingLeft)) * -1);
+}
+
 .o-mail-Chatter-top {
     padding-left: var(--ChatterAsideForm-padding-left, var(--Chatter-default-padding-x));
 }
