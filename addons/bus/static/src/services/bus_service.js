@@ -8,7 +8,7 @@ import { EventBus } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 // List of worker events that should not be broadcasted.
-const INTERNAL_EVENTS = new Set(["initialized", "outdated", "log_debug", "notification"]);
+const INTERNAL_EVENTS = new Set(["initialized", "outdated", "notification", "provide_logs"]);
 // Slightly delay the reconnection when coming back online as the network is not
 // ready yet and the exponential backoff would delay the reconnection by a lot.
 export const BACK_ONLINE_RECONNECT_DELAY = 5000;
@@ -73,6 +73,20 @@ export const busService = {
         function handleMessage(messageEv) {
             const { type, data } = messageEv.data;
             switch (type) {
+                case "provide_logs": {
+                    const blob = new Blob([JSON.stringify(data, null, 2)], {
+                        type: "application/json",
+                    });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `bus_logs_${luxon.DateTime.now().toFormat(
+                        "yyyy-LL-dd-HH-mm-ss"
+                    )}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    break;
+                }
                 case "notification": {
                     const notifications = data.map(({ id, message }) => ({ id, ...message }));
                     lastNotificationId = notifications.at(-1).id;
@@ -90,9 +104,6 @@ export const busService = {
                 }
                 case "worker_state_updated":
                     workerState = data;
-                    break;
-                case "log_debug":
-                    console.debug(...data);
                     break;
                 case "outdated": {
                     multiTab.unregister();
@@ -220,7 +231,6 @@ export const busService = {
                 capture: true,
             }
         );
-
         return {
             addEventListener: bus.addEventListener.bind(bus),
             addChannel: async (channel) => {
@@ -233,6 +243,8 @@ export const busService = {
                 isActive = true;
             },
             deleteChannel: (channel) => send("delete_channel", channel),
+            setLoggingEnabled: (isEnabled) => send("set_logging_enabled", isEnabled),
+            downloadLogs: () => send("request_logs"),
             forceUpdateChannels: () => send("force_update_channels"),
             trigger: bus.trigger.bind(bus),
             removeEventListener: bus.removeEventListener.bind(bus),
