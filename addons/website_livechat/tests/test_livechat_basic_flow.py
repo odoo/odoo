@@ -225,7 +225,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "last_seen_dt": False,
                         "persona": {"id": self.operator.partner_id.id, "type": "partner"},
                         "seen_message_id": False,
-                        "thread": {"id": channel.id, "model": "discuss.channel"},
+                        "channel_id": {"id": channel.id, "model": "discuss.channel"},
                     },
                     {
                         "create_date": fields.Datetime.to_string(guest_member.create_date),
@@ -235,7 +235,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "last_seen_dt": False,
                         "persona": {"id": guest.id, "type": "guest"},
                         "seen_message_id": False,
-                        "thread": {"id": channel.id, "model": "discuss.channel"},
+                        "channel_id": {"id": channel.id, "model": "discuss.channel"},
                     },
                 ],
                 "im_livechat.channel": [

@@ -920,3 +920,41 @@ test("Can scroll to notification", async () => {
     await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
     await isInViewportOf(".o-mail-NotificationMessage:contains(notification 0)", ".o-mail-Thread");
 });
+
+test("Update unread counter when receiving new message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const userId = pyEnv["res.users"].create({ name: "Demo User", partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({
+                message_unread_counter: 1,
+                partner_id: serverState.partnerId
+            }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(undefined);
+    await contains(".o-discuss-badge", { text: "1" });
+
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "Message 1",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-discuss-badge", { text: "2" });
+});

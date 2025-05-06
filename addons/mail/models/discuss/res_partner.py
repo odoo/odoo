@@ -104,7 +104,7 @@ class ResPartner(models.Model):
         members_domain = [("channel_id", "=", channel.id), ("partner_id", "in", partners.ids)]
         members = self.env["discuss.channel.member"].search(members_domain)
         member_fields = [
-            Store.One("channel_id", [], as_thread=True, rename="thread"),
+            Store.One("channel_id", [], as_thread=True),
             *self.env["discuss.channel.member"]._to_store_persona([]),
         ]
         store = Store(members, member_fields).add(partners)

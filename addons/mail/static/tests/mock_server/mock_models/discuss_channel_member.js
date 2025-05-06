@@ -99,7 +99,7 @@ export class DiscussChannelMember extends models.ServerModel {
                 false
             );
             if ("channel" in fields) {
-                data.thread = mailDataHelpers.Store.one(
+                data.channel_id = mailDataHelpers.Store.one(
                     this.env["discuss.channel"].browse(member.channel_id),
                     makeKwArgs({ as_thread: true, only_id: true })
                 );
