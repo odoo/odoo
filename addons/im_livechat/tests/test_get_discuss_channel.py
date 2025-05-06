@@ -178,7 +178,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "last_seen_dt": False,
                     "persona": {"id": operator.partner_id.id, "type": "partner"},
                     "seen_message_id": False,
-                    "thread": {"id": channel_info["id"], "model": "discuss.channel"},
+                    "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
                 },
                 {
                     "create_date": fields.Datetime.to_string(visitor_member.create_date),
@@ -192,7 +192,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "new_message_separator": 0,
                     "persona": {"id": test_user.partner_id.id, "type": "partner"},
                     "seen_message_id": False,
-                    "thread": {"id": channel_info["id"], "model": "discuss.channel"},
+                    "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
                 },
             ],
         )
@@ -270,7 +270,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "new_message_separator": 0,
                     "persona": {"id": operator.partner_id.id, "type": "partner"},
                     "seen_message_id": False,
-                    "thread": {"id": channel_info["id"], "model": "discuss.channel"},
+                    "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
                 },
             ],
         )

@@ -72,7 +72,7 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel_member.id,
                                 "persona": {"id": channel_member.partner_id.id, "type": "partner"},
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -112,7 +112,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member.partner_id.id,
                                     "type": "partner"
                                 },
-                                "thread": { "id": channel.id, "model": "discuss.channel" }
+                                "channel_id": {"id": channel.id, "model": "discuss.channel"}
                             }
                         ]
                     },
@@ -138,7 +138,7 @@ class TestChannelRTC(MailCommon):
                     {
                         "id": channel_member.id,
                         "persona": {"id": channel_member.partner_id.id, "type": "partner"},
-                        "thread": {
+                        "channel_id": {
                             "id": channel_member.channel_id.id,
                             "model": "discuss.channel",
                         },
@@ -216,7 +216,7 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel_member.id,
                                 "persona": {"id": channel_member.partner_id.id, "type": "partner"},
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -259,7 +259,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_user.partner_id.id,
                                     "type": "partner",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_user.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -336,7 +336,7 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel_member.id,
                                 "persona": {"id": channel_member.partner_id.id, "type": "partner"},
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -376,7 +376,7 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel_member.id,
                                 "persona": {"id": channel_member.partner_id.id, "type": "partner"},
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -424,7 +424,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_user.partner_id.id,
                                     "type": "partner",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_user.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -435,7 +435,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_guest.guest_id.id,
                                     "type": "guest",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_guest.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -519,7 +519,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_user.partner_id.id,
                                     "type": "partner",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_user.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -556,7 +556,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_user.partner_id.id,
                                     "type": "partner",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_user.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -621,7 +621,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_guest.guest_id.id,
                                     "type": "guest",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_guest.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -658,7 +658,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_guest.guest_id.id,
                                     "type": "guest",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_guest.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -731,7 +731,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_user.partner_id.id,
                                     "type": "partner",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_user.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -788,7 +788,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_guest.guest_id.id,
                                     "type": "guest",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_guest.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -879,7 +879,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_user.partner_id.id,
                                     "type": "partner",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_user.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -890,7 +890,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_guest.guest_id.id,
                                     "type": "guest",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_guest.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -1000,7 +1000,7 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel_member.id,
                                 "persona": {"id": channel_member.partner_id.id, "type": "partner"},
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -1044,7 +1044,7 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel_member.id,
                                 "persona": {"id": channel_member.partner_id.id, "type": "partner"},
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -1096,7 +1096,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_user.partner_id.id,
                                     "type": "partner",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_user.channel_id.id,
                                     "model": "discuss.channel",
                                 },
@@ -1107,7 +1107,7 @@ class TestChannelRTC(MailCommon):
                                     "id": channel_member_test_guest.guest_id.id,
                                     "type": "guest",
                                 },
-                                "thread": {
+                                "channel_id": {
                                     "id": channel_member_test_guest.channel_id.id,
                                     "model": "discuss.channel",
                                 },

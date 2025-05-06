@@ -119,7 +119,7 @@ export class RtcSession extends Record {
     logStep;
 
     get channel() {
-        return this.channel_member_id?.thread;
+        return this.channel_member_id?.channel_id;
     }
 
     get isMute() {

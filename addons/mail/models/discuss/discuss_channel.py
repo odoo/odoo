@@ -613,7 +613,7 @@ class DiscussChannel(models.Model):
                     "invited_member_ids": Store.Many(
                         members,
                         [
-                            Store.One("channel_id", [], as_thread=True, rename="thread"),
+                            Store.One("channel_id", [], as_thread=True),
                             *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
                         ],
                         mode="DELETE",
@@ -1054,7 +1054,7 @@ class DiscussChannel(models.Model):
             Store.Many(
                 "invited_member_ids",
                 [
-                    Store.One("channel_id", [], as_thread=True, rename="thread"),
+                    Store.One("channel_id", [], as_thread=True),
                     *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
                 ],
                 mode="ADD",

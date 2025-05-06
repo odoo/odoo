@@ -58,7 +58,7 @@ const threadPatch = {
     setup() {
         super.setup();
         this.channel_member_ids = fields.Many("discuss.channel.member", {
-            inverse: "thread",
+            inverse: "channel_id",
             onDelete: (r) => r.delete(),
             sort: (m1, m2) => m1.id - m2.id,
         });
