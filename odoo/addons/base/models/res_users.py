@@ -25,7 +25,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, DEFAULT_LANG
-from odoo.tools import is_html_empty, frozendict, reset_cached_properties, SQL
+from odoo.tools import email_domain_extract, is_html_empty, frozendict, reset_cached_properties, SQL
 
 
 _logger = logging.getLogger(__name__)
@@ -251,6 +251,7 @@ class ResUsers(models.Model):
     # access to the user but not its corresponding partner
     name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
     email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
+    email_domain_placeholder = fields.Char(compute="_compute_email_domain_placeholder")
     phone = fields.Char(related='partner_id.phone', inherited=True, readonly=False)
 
     group_ids = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=lambda s: s._default_groups(), help="Groups explicitly assigned to the user")
@@ -399,6 +400,11 @@ class ResUsers(models.Model):
                 )
 
         raise AccessDenied()
+
+    @api.depends_context('uid')
+    def _compute_email_domain_placeholder(self):
+        domain = email_domain_extract(self.env.user.email)
+        self.email_domain_placeholder = _('e.g. %(placeholder)s', placeholder=f'email@{domain}') if domain else _('Email')
 
     def _compute_password(self):
         for user in self:
