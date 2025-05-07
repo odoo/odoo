@@ -49,12 +49,19 @@ export class ForecastedButtons extends Component {
 
     async _onClickUpdateQuantity() {
         const action = await this.orm.call(this.resModel, "action_open_quants", [[this.productId]]);
-        if (action.res_model === "stock.quant") { // Quant view in inventory mode.
-            action.views = [[false, "list"]];
+        action.views = [[false, "list"]];  // varies from where called from => only show list
+        if (action.help) {
+            action.help = markup(action.help);
         }
+<<<<<<< ac1d44073c87572a96db65240cb17c6c27eeac23
         if (action.help) {
             action.help = markup(action.help);
         }
         return this.actionService.doAction(action, { onClose: this._onClose.bind(this) });
+||||||| d092ec3fd8b155775bf0f71f670a0b19cd594af1
+        return this.actionService.doAction(action, { onClose: this._onClose.bind(this) });
+=======
+        return this.actionService.doAction(action);
+>>>>>>> 697085683fcf05740d5927f2876c621ac2a147d4
     }
 }
