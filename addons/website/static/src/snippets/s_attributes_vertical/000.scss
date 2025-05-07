@@ -1,0 +1,10 @@
+.s_attributes_vertical {
+    .s_attributes_vertical_img {
+        &.float-start {
+            margin-inline-end: var(--s_attributes_vertical_margin, #{map-get($spacers, 3)}) !important;
+        }
+        &.float-end {
+            margin-inline-start: var(--s_attributes_vertical_margin, #{map-get($spacers, 3)}) !important;
+        }
+    }
+}
