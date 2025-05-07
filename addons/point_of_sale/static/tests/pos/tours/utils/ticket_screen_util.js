@@ -243,3 +243,9 @@ export function clickFilterButton(buttonText) {
         },
     ];
 }
+export function checkCameraIsOpen() {
+    return {
+        content: "Verify that the camera view is visible in the left pane.",
+        trigger: ".ticket-screen .leftpane .o_crop_container",
+    };
+}
