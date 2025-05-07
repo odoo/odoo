@@ -302,7 +302,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     }, {});
     const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
     const records = mapObj(processedModelDefs, () => reactive({}));
-    const orderedRecords = mapObj(processedModelDefs, () => reactive([]));
+    const orderedRecords = reactive(mapObj(processedModelDefs, () => []));
     const callbacks = mapObj(processedModelDefs, () => []);
     const commands = mapObj(processedModelDefs, () => ({
         delete: new Map(),

@@ -451,3 +451,30 @@ registry.category("web_tour.tours").add("AddMultipleSerialsAtOnce", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("ProductEditionTour", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickInfoProduct("Desk Pad"),
+            Dialog.clickButton("Edit"),
+            {
+                content: "Change product name",
+                trigger: "input[id='name_0']",
+                run: "edit Test Desk",
+            },
+            Dialog.confirm(),
+            ProductScreen.productIsDisplayed("Test Desk"),
+            ProductScreen.clickSubcategory("Desk test"),
+            ProductScreen.clickInfoProduct("Test Desk"),
+            Dialog.clickButton("Edit"),
+            {
+                content: "Change product name",
+                trigger: "input[id='name_0']",
+                run: "edit Test Desk 2",
+            },
+            Dialog.confirm(),
+            ProductScreen.productIsDisplayed("Test Desk 2"),
+        ].flat(),
+});
