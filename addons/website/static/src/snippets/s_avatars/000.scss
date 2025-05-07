@@ -1,0 +1,54 @@
+.s_avatars {
+    gap: map-get($spacers, 1) clamp(map-get($spacers, 1), calc(var(--avatars-size) * 2), map-get($spacers, 3));
+
+    .o_avatar {
+        // .o_avatar is a component shared across backend and fronted.
+        --Avatar-size: var(--avatars-size, 1rem);
+    }
+
+    .o_avatar, .s_avatars_more {
+        border: inherit;
+        border-radius: inherit;
+
+        &:not(:first-child) {
+            margin-left: calc(-1 * var(--avatars-size) / 4);
+        }
+    }
+
+    .s_avatars_more {
+        width: var(--avatars-size);
+        aspect-ratio: 1;
+
+        // Fallback: can be eventually overridden by the user in edit mode
+        font-size: calc(var(--avatars-size) * 0.3);
+    }
+
+    // Options
+    &.o_avatars_center {
+        &.flex-row {
+            justify-content: center;
+        }
+        &.flex-column {
+            align-items: center;
+        }
+    }
+
+    &.o_avatars_end {
+        text-align: right;
+
+        &.flex-row {
+            flex-direction: row-reverse !important;
+        }
+        &.flex-column {
+            align-items: end;
+        }
+    }
+
+    &.o_first_on_top {
+        @for $i from 1 through 4 {
+            .o_avatar:nth-child(#{$i}) {
+              z-index: #{5 - $i};
+            }
+        }
+    }
+}
