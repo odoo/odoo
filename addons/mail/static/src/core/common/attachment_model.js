@@ -23,12 +23,19 @@ export class Attachment extends FileModelMixin(Record) {
     /** @type {string} */
     raw_access_token;
     res_name;
-    message = fields.One("mail.message", { inverse: "attachment_ids" });
+    message_ids = fields.Many("mail.message", { inverse: "attachment_ids" });
+    firstMessageOfThread = fields.One("mail.message", {
+        compute() {
+            return this.thread
+                ? this.message_ids.find((message) => message.thread?.eq(this.thread))
+                : this.message_ids[0];
+        },
+    });
     create_date = fields.Datetime();
 
     get isDeletable() {
-        if (this.message && !this.store.self.isInternalUser) {
-            return this.message.editable;
+        if (this.firstMessageOfThread && !this.store.self.isInternalUser) {
+            return this.firstMessageOfThread.editable;
         }
         return true;
     }
@@ -62,7 +69,7 @@ export class Attachment extends FileModelMixin(Record) {
                 { attachment_id: this.id },
                 { access_token: this.access_token }
             );
-            const thread = this.thread || this.message?.thread;
+            const thread = this.thread || this.firstMessageOfThread?.thread;
             if (thread) {
                 Object.assign(rpcParams, thread.rpcParams);
             }

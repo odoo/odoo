@@ -31,7 +31,7 @@ export class Message extends Record {
         }
     }
 
-    attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
+    attachment_ids = fields.Many("ir.attachment", { inverse: "message_ids" });
     author = fields.One("Persona");
     body = fields.Html("");
     call_history_ids = fields.Many("discuss.call.history");
