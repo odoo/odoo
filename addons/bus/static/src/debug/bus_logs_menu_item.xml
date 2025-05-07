@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="bus.BusLogsMenuItem">
+        <DropdownItem>
+            <div class="d-flex align-items-center justify-content-between" style="padding-left: 12px;">
+                <div class="form-check form-switch">
+                    <label class="form-check-label" t-on-click.prevent.stop="onClickToggle">
+                        Enable Bus Logging <input class="form-check-input" t-att-checked="busLogsService.enabled" type="checkbox"/>
+                    </label>
+                </div>
+                <button class="btn btn-light text-muted ms-2" title="Download logs" t-ref="downloadButton" t-on-click="onClickDownload"><i class="fa fa-download"/></button>
+            </div>
+        </DropdownItem>
+    </t>
+</templates>
