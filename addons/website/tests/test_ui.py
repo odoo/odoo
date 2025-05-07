@@ -703,7 +703,7 @@ class TestUi(HttpCaseWithWebsiteUser):
             'model': 'ir.attachment',
             'res_id': attachment.id,
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'drop_404_ir_attachment_url', login='admin', watch=True)
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'drop_404_ir_attachment_url', login='admin')
 
     @unittest.skip
     def test_mobile_order_with_drag_and_drop(self):
