@@ -145,6 +145,7 @@
             </record>
             <record id="tcs_report_line_section_206c_1h_sog" model="account.report.line">
                 <field name="name">Section 206C(1H): Sale of Goods</field>
+                <field name="hide_if_zero" eval="1"/>
                 <field name="expression_ids">
                     <record id="tcs_report_line_section_206c_1h_sog_tag" model="account.report.expression">
                         <field name="label">balance</field>
