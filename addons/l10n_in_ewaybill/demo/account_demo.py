@@ -15,7 +15,7 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _update_l10n_in_demo_data(self, company=False):
         indian_companies = company or self.env['res.company'].search([('account_fiscal_country_id.code', '=', 'IN')])
-        invoices = [
+        invoice_xmlids = [
             'demo_invoice_b2b_1',
             'demo_invoice_b2b_2',
             'demo_invoice_b2cs',
@@ -31,12 +31,16 @@ class AccountChartTemplate(models.AbstractModel):
         }
         for indian_company in indian_companies:
             if indian_company.state_id:
-                self.env['l10n.in.ewaybill'].create([
-                    {
-                    **default_ewaybill_vals,
-                    'account_move_id': self.with_company(indian_company).ref(invoice_ref).id
-                    }
-                    for invoice_ref in invoices
-                ])
+                invoice_ids = []
+                for inv_xmlid in invoice_xmlids:
+                    invoice = self.with_company(indian_company).ref(inv_xmlid)
+                    if invoice and not invoice.l10n_in_ewaybill_ids:
+                        invoice_ids.append(invoice)
+
+                if invoice_ids:
+                    self.env['l10n.in.ewaybill'].create([{
+                        **default_ewaybill_vals,
+                        'account_move_id': invoice.id,
+                    } for invoice in invoice_ids])
             else:
                 _logger.error('Error while loading Indian-Ewaybill demo data in the company "%s".State is not set in the company.', indian_company.name)
