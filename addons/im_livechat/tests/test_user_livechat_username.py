@@ -81,3 +81,31 @@ class TestUserLivechatUsername(TestGetOperatorCommon):
                 "write_date": fields.Datetime.to_string(john.partner_id.write_date),
             },
         )
+
+    def test_user_livechat_username_in_store(self):
+        john = self._create_operator("fr_FR")
+        operator = self._create_operator("en_US")
+        john.livechat_username = "ELOPERADOR"
+        operator.group_ids = [
+            fields.Command.link(self.env.ref("im_livechat.im_livechat_group_user").id),
+        ]
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "The channel",
+                "user_ids": [fields.Command.link(john.id), fields.Command.link(operator.id)],
+            }
+        )
+        channel = self.env["discuss.channel"].with_user(operator).create(
+            {
+                "name": "Livechat session",
+                "channel_type": "livechat",
+                "livechat_operator_id": operator.partner_id.id,
+                "livechat_channel_id": livechat_channel.id,
+            }
+        )
+        data = operator.partner_id.with_user(operator).search_for_channel_invite("fr_FR", channel.id)["data"]
+        john_data = next(filter(lambda partner: partner["id"] == john.partner_id.id, data["res.partner"]))
+        self.assertEqual(
+            john_data["user_livechat_username"],
+            "ELOPERADOR",
+        )
