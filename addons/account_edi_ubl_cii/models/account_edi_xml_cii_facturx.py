@@ -179,6 +179,11 @@ class AccountEdiXmlCII(models.AbstractModel):
             'document_context_id': "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
         }
 
+        # Sets invoice period
+        date_range = self._get_invoicing_period(invoice)
+        template_values['billing_start'] = min(date_range)
+        template_values['billing_end'] = max(date_range)
+
         # data used for IncludedSupplyChainTradeLineItem / SpecifiedLineTradeSettlement
         for line_vals in template_values['invoice_line_vals_list']:
             line = line_vals['line']
@@ -195,7 +200,8 @@ class AccountEdiXmlCII(models.AbstractModel):
                 template_values['intracom_delivery'] = True
             # [BR - IC - 11] - In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
             # "Intra-community supply" the Actual delivery date (BT-72) or the Invoicing period (BG-14) shall not be blank.
-            if tax_detail_vals.get('tax_category_code') == 'K' and not template_values['scheduled_delivery_time']:
+            if tax_detail_vals.get('tax_category_code') == 'K' and not template_values['scheduled_delivery_time'] and (
+                    not template_values.get('billing_start') or not template_values.get('billing_end')):
                 date_range = self._get_invoicing_period(invoice)
                 template_values['billing_start'] = min(date_range)
                 template_values['billing_end'] = max(date_range)
