@@ -249,8 +249,6 @@ class TestUiPublisher(HttpCaseGamification):
             return self.make_fetch_proxy_response(content)
         return super().fetch_proxy(url)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_course_publisher_elearning_manager(self):
         user_demo = self.user_demo
         user_demo.write({
@@ -320,7 +318,7 @@ class TestUiPublisherYoutube(HttpCaseGamification):
 
         self.start_tour('/slides', 'course_member_youtube', login=user_demo.login)
 
-    def test_course_publisher_elearning_manager(self):
+    def test_course_publisher_elearning_manager_2(self):
         user_demo = self.user_demo
         user_demo.write({
             'group_ids': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website_slides.group_website_slides_manager').id)]

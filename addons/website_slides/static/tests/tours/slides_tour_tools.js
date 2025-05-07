@@ -1,4 +1,5 @@
 import { getDataURLFromFile } from "@web/core/utils/urls";
+import { delay } from "@odoo/hoot-dom";
 
 /*
  * Constant
@@ -14,6 +15,11 @@ var addSection = function (sectionName, backend = false) {
     const prefix = backend ? ':iframe ' : '';
 	return [
 {
+    trigger: prefix + 'a.o_wslides_js_slide_section_add',
+    run: async () => {
+        await delay(1500);
+    },
+}, {
     content: 'eLearning: click on Add Section',
     trigger: prefix + 'a.o_wslides_js_slide_section_add',
     run: "click",
@@ -249,8 +255,15 @@ const addPdfToSection = function (sectionName, pageName, backend) {
     run: "click",
 },
 {
+    content: "Wait for PDF to get loaded",
+    trigger: ".o_iframe_container",
+    run: async () => {
+        await delay(1500);
+    },
+},
+{
     content: 'eLearning: check uploaded pdf presence and perform comparison',
-    trigger: (backend ? '.o_iframe:iframe ' : '') + '.o_wslides_fs_content :iframe #PDFSlideViewer',
+    trigger: (backend ? '.o_iframe_container :iframe ' : '') + '.o_wslides_fs_content :iframe #PDFSlideViewer',
     run: async (helpers) => {
         if (await compareBase64Content(helpers.anchor.getAttribute('data-slideurl'), 'Exercise.pdf', 'application/pdf', testPdf)) {
             helpers.anchor.classList.add('o_wslides_tour_pdf_upload_success');
