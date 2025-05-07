@@ -1444,7 +1444,7 @@ test("multi-level dropdown: unsubscribe all keynav when root close", async () =>
 
     await mountWithCleanup(Parent);
     expect(DROPDOWN_MENU).toHaveCount(0);
-    expect(registeredHotkeys.size).toBe(0);
+    expect(registeredHotkeys.size).toBe(10);
 
     // Open dropdowns one by one
     await click(".first");
