@@ -136,6 +136,7 @@ export class LinkPlugin extends Plugin {
         "color",
         "baseContainer",
         "feff",
+        "toolbar",
     ];
     static defaultConfig = {
         allowStripDomain: true,
@@ -430,6 +431,7 @@ export class LinkPlugin extends Plugin {
                 { type: "danger" }
             );
         }
+        this.dependencies.toolbar.closeToolbar();
         let selection = this.dependencies.selection.getEditableSelection();
         let cursorsToRestore = this.dependencies.selection.preserveSelection();
         const commonAncestor = closestElement(selection.commonAncestorContainer);
