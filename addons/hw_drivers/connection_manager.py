@@ -46,12 +46,15 @@ class ConnectionManager(Thread):
         return 14 + 1.01 ** self.n_times_polled
 
     def run(self):
-        while self._should_poll_to_connect_database():
-            if not self.iot_box_registered:
-                self._register_iot_box()
+        # Double loop is needed in case the IoT Box isn't initially connected to the internet
+        while True:
+            while self._should_poll_to_connect_database():
+                if not self.iot_box_registered:
+                    self._register_iot_box()
 
-            self._poll_pairing_result()
-            time.sleep(self._get_next_polling_interval())
+                self._poll_pairing_result()
+                time.sleep(self._get_next_polling_interval())
+            time.sleep(5)
 
     def _should_poll_to_connect_database(self):
         return (
