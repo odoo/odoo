@@ -1022,7 +1022,7 @@ class PosOrder(models.Model):
                 ('product_id.valuation', '=', 'real_time'),
             ])
             for stock_move in stock_moves:
-                product_accounts = stock_move.product_id._get_product_accounts()
+                product_accounts = stock_move.with_company(stock_move.company_id).product_id._get_product_accounts()
                 expense_account = product_accounts['expense']
                 stock_account = product_accounts['stock_valuation']
                 balance = -sum(stock_move.mapped('value'))
