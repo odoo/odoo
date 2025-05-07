@@ -37,15 +37,15 @@
                     <button name="validate" class="oe_highlight"
                             string="Validate" states="Requested"
                             type="object"
-                            groups="cistech.multi_vendor_marketplace_admin"/>
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
                     <button name="reject" class="oe_highlight"
                             string="Rejected" states="Requested"
                             type="object"
-                            groups="cistech.multi_vendor_marketplace_admin"/>
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
                     <button name="request" type="object" string="Request"
                             class="oe_highlight"
                             states="Draft"
-                            groups="cistech.multi_vendor_marketplace_seller,cistech.multi_vendor_marketplace_admin"/>
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_seller,multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
                     <button name="cancel" type="object"
                             string="Cancel" states="Draft"/>
                     <field name="state" widget="statusbar"
@@ -99,6 +99,6 @@
 <!--    Seller Payment menu-->
     <menuitem id="seller_payment" parent="sales"
               name="Seller Payment" sequence="27"
-              groups="cistech.multi_vendor_marketplace_admin,cistech.multi_vendor_marketplace_seller"
-              action="cistech.seller_payment_action"/>
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              action="multi_vendor_marketplace.seller_payment_action"/>
 </odoo>

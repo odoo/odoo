@@ -20,7 +20,7 @@
 #
 #############################################################################
 {
-    'name': "Cistech",
+    'name': "Odoo Multi Vendor Marketplace",
     'version': "16.0.1.0.0",
     'category': 'eCommerce,Sales ,Warehouse',
     'summary': 'Odoo Multi Vendor Marketplace, Odoo16, Multi Vendor',
@@ -32,15 +32,14 @@
                    'payments, maintain quality control. The module provides'
                    'customization options, and user-friendly interfaces for a '
                    'seamless marketplace experience. ',
-    'author': 'Kutman',
-    'company': 'AIT Solutions',
-    'maintainer': 'AIT Solutions',
-    'website': 'https://www.aitkg.com/',
-    'module_aliases': ['multi_vendor_marketplace'],
+    'author': 'Cybrosys Techno solutions',
+    'company': 'Cybrosys Techno Solutions',
+    'maintainer': 'Cybrosys Techno Solutions',
+    'website': 'https://www.cybrosys.com',
     'depends': ['base', 'sale_management', 'account', 'website', 'stock',
                 'website_sale'],
     'data': [
-        'security/multi_vendor_marketplace_groups.xml',
+        'security/cistech_groups.xml',
         'security/inventory_request_security.xml',
         'security/product_template_security.xml',
         'security/sale_order_line_security.xml',
@@ -55,9 +54,6 @@
         'data/product_template_data.xml',
         'data/email_template_data.xml',
         'data/website_menu_data.xml',
-        'views/layout.xml',
-        'views/profile_templates.xml',
-        'views/seller_registration.xml',
         'views/vendor_dashboard_views.xml',
         'views/stock_moves_views.xml',
         'views/sell_page_templates.xml',
@@ -80,31 +76,20 @@
         'views/seller_web_templates.xml',
         'views/seller_product_templates.xml',
         'views/sale_order_line_views.xml',
-        'views/multi_vendor_marketplace_menus.xml',
+        'views/cistech_menus.xml',
         'views/seller_shop_information_templates.xml',
         'views/seller_list_templates.xml',
         'wizard/settings_view_views.xml',
     ],
-    'demo': [
-        'data/demo_product_data.xml',
-    ],
     'assets': {
-        'web._assets_primary_variables': [
-            'cistech/static/src/theme/scss/primary_variables.scss',
-        ],
         'web.assets_backend': [
-            'cistech/static/src/theme/scss/index.scss',
-            'cistech/static/src/theme/scss/backend.scss',
-            'cistech/static/src/theme/scss/vendor_dashboard.scss',
+            'cistech/static/src/xml/saller_dashboard.xml',
+            'cistech/static/src/js/seller_dashboard_action.js',
         ],
         'web.assets_frontend': [
+            'cistech/static/src/js/rating.js',
             'cistech/static/src/scss/partner_rating.css',
             'https://unpkg.com/sweetalert/dist/sweetalert.min.js',
-            'cistech/static/src/css/mobile_nav.css',
-            'cistech/static/src/css/custom_styles.css', 
-            'cistech/static/src/css/profile_styles.css',
-            'cistech/static/src/theme/scss/buttons.scss',
-            'cistech/static/src/theme/scss/custom_styles.scss',
         ],
     },
     'images': [

@@ -23,12 +23,12 @@
     </record>
     <!--    Menu for Inventory-->
     <menuitem id="inventory_root" parent="seller_root"
-              groups="cistech.multi_vendor_marketplace_admin,cistech.multi_vendor_marketplace_seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
               name="Inventory" sequence="41"
               action="vendor_dashboard_action"/>
     <!--    Menu for delivery order-->
     <menuitem id="delivery_order" parent="inventory_root"
               name="Delivery Order" sequence="45"
-              groups="cistech.multi_vendor_marketplace_admin,cistech.multi_vendor_marketplace_seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
               action="stock_picking_action"/>
 </odoo>

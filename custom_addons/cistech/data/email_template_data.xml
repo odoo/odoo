@@ -5,7 +5,7 @@
             model="mail.template">
         <field name="name">New Seller Request- Admin mail</field>
         <field name="model_id"
-               ref="cistech.model_res_partner"/>
+               ref="multi_vendor_marketplace.model_res_partner"/>
         <field name="auto_delete" eval="True"/>
         <field name="email_from">"{{ object.company_id.name }}" &lt;{{
             (object.company_id.email or user.email) }}&gt;
@@ -30,7 +30,7 @@
             model="mail.template">
         <field name="name">New Seller Request- Seller mail</field>
         <field name="model_id"
-               ref="cistech.model_res_partner"/>
+               ref="multi_vendor_marketplace.model_res_partner"/>
         <field name="auto_delete" eval="True"/>
         <field name="email_from">{{object.company_id.email}}</field>
         <field name="email_to">{{ctx['seller_mail']}}</field>
@@ -52,7 +52,7 @@
             model="mail.template">
         <field name="name">Seller Approve/Reject-Admin mail</field>
         <field name="model_id"
-               ref="cistech.model_res_partner"/>
+               ref="multi_vendor_marketplace.model_res_partner"/>
         <field name="auto_delete" eval="True"/>
         <field name="email_from">{{object.company_id.email}}</field>
         <field name="email_to">{{object.company_id.email}}</field>
@@ -82,7 +82,7 @@
             model="mail.template">
         <field name="name">Seller Approve/Reject- Seller mail</field>
         <field name="model_id"
-               ref="cistech.model_res_partner"/>
+               ref="multi_vendor_marketplace.model_res_partner"/>
         <field name="auto_delete" eval="True"/>
         <field name="email_from">{{object.company_id.email}}</field>
         <field name="email_to">{{ object.email }}</field>
@@ -113,7 +113,7 @@
         <field name="name">Product Approve/Reject - Admin mail
         </field>
         <field name="model_id"
-               ref="cistech.model_product_template"/>
+               ref="multi_vendor_marketplace.model_product_template"/>
         <field name="auto_delete" eval="True"/>
         <field name="email_from">{{object.company_id.email}}</field>
         <field name="email_to">{{object.company_id.email}}</field>
@@ -152,7 +152,7 @@
         <field name="name">Product Approve/Reject - Seller mail
         </field>
         <field name="model_id"
-               ref="cistech.model_product_template"/>
+               ref="multi_vendor_marketplace.model_product_template"/>
         <field name="auto_delete" eval="True"/>
         <field name="email_from">{{object.company_id.email}}</field>
         <field name="email_to">{{ object.seller_id.email }}</field>

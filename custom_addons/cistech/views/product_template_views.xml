@@ -11,16 +11,16 @@
                             name="change_state_approved"
                             class="oe_highlight"
                             attrs="{'invisible': [('state', 'in', ('draft', 'approved', 'rejected'))]}"
-                            groups="cistech.multi_vendor_marketplace_admin"/>
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
                     <button string="Request For Approve" type="object"
                             name="change_state_pending"
                             class="oe_highlight"
                             attrs="{'invisible': [('state', 'in', ('pending', 'approved', 'rejected'))]}"
-                            groups="cistech.multi_vendor_marketplace_seller,cistech.multi_vendor_marketplace_admin"/>
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_seller,multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
                     <button string="reject" type="object"
                             name="change_state_reject" class="oe_highlight"
                             attrs="{'invisible': [('state', 'in', ('draft', 'approved', 'rejected'))]}"
-                            groups="cistech.multi_vendor_marketplace_admin"/>
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,pending,approved"/>
                 </header>
@@ -192,13 +192,13 @@
                                                 name="change_state_approved"
                                                 class="oe_highlight"
                                                 attrs="{'invisible': [('state', 'in', ('draft', 'approved', 'rejected'))]}"
-                                                groups="cistech.multi_vendor_marketplace_admin"/>
+                                                groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
                                         <button string="Reject"
                                                 type="object"
                                                 name="change_state_reject"
                                                 class="oe_highlight"
                                                 attrs="{'invisible': [('state', 'in', ('draft', 'approved', 'rejected'))]}"
-                                                groups="cistech.multi_vendor_marketplace_admin"/>
+                                                groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
                                     </div>
                                 </div>
                             </div>
@@ -220,6 +220,6 @@
     <!--    Products menu-->
     <menuitem id="product" parent="product_root"
               name="Products" sequence="35"
-              groups="cistech.multi_vendor_marketplace_admin,cistech.multi_vendor_marketplace_seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
               action="product_template_action"/>
 </odoo>

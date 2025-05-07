@@ -63,13 +63,7 @@ class SellerPayment(models.Model):
                                         ('cancelled', 'Cancelled')],
                              string="state",
                              help="State of the seller payment",
-                             group_expand='_group_expand_states',
                              default="Draft")
-
-    def _group_expand_states(self, states, domain, order):
-        """Expands the selection options for the 'state' field in a group-by
-        operation."""
-        return [key for key, val in type(self).state.selection]
 
     def request(self):
         """ Request for payment and check payment term settings values  """

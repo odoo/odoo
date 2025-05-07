@@ -21,16 +21,16 @@
                 <header>
                     <button name="approve_request" class="oe_highlight"
                             type="object"
-                            groups="cistech.multi_vendor_marketplace_admin"
+                            groups="cistech.cistech_admin"
                             string="Approve" states="Requested"/>
                     <button name="reject_request" class="oe_highlight"
                             type="object"
-                            groups="cistech.multi_vendor_marketplace_admin"
+                            groups="cistech.cistech_admin"
                             string="Reject" states="Requested"/>
                     <button name="request" class="oe_highlight"
                             type="object"
-                            groups="cistech.multi_vendor_marketplace_seller,
-                                cistech.multi_vendor_marketplace_admin"
+                            groups="cistech.cistech_seller,
+                                cistech.cistech_admin"
                             string="Request" states="Draft"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="Draft,Approved,Requested,Rejected"/>
@@ -98,7 +98,7 @@
     </record>
     <!--    Menu for Inventory request-->
     <menuitem id="inventory_request" parent="inventory_root"
-              groups="cistech.multi_vendor_marketplace_admin,cistech.multi_vendor_marketplace_seller"
+              groups="cistech.cistech_admin,cistech.cistech_seller"
               name="Inventory Request" sequence="43"
               action="inventory_request_action"/>
 </odoo>

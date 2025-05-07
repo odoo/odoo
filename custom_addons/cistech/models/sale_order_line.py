@@ -38,13 +38,7 @@ class SaleOrder(models.Model):
                                         ('approved', 'Approved'),
                                         ('shipped', 'Shipped'),
                                         ('cancel', 'Cancel')], string="State",
-                             help="Get the approval states",
-                             group_expand='_group_expand_states')
-
-    def _group_expand_states(self, states, domain, order):
-        """Expands the selection options for the 'state' field in a group-by
-        operation."""
-        return [key for key, val in type(self).state.selection]
+                             help="Get the approval states")
 
     def cancel_order(self):
         """ Function to cancel the current order from order line"""

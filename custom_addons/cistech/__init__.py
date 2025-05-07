@@ -22,7 +22,6 @@
 from . import controller
 from . import models
 from . import wizard
-from . import custom
 
 from odoo import api, SUPERUSER_ID
 

@@ -2,13 +2,13 @@
 <odoo noupdate="1">
     <!--    Seller User Template-->
     <record id="template_seller_user" model="res.users">
-        <field name="name">Cistech Seller User Template</field>
-        <field name="login">Cistech Seller Template</field>
+        <field name="name">Seller User Template</field>
+        <field name="login">Seller Template</field>
         <field name="active" eval="False"/>
         <field name="groups_id"
                eval="[Command.set(
                [ref(
-               'cistech.multi_vendor_marketplace_req_seller'),
+               'multi_vendor_marketplace.multi_vendor_marketplace_req_seller'),
                ref('base.group_user'),ref('sales_team.group_sale_manager')])]"/>
     </record>
 </odoo>

@@ -1,4 +1,4 @@
-odoo.define('cistech.seller_dashboard_action', function (require){
+odoo.define('multi_vendor_marketplace.seller_dashboard_action', function (require){
 "use strict";
 var AbstractAction = require('web.AbstractAction');
 var ControlPanel = require('web.ControlPanel');
@@ -14,48 +14,12 @@ var CustomDashBoard = AbstractAction.extend({
         console.log("started")
         ajax.rpc('/seller_dashboard').then(function (res) {
         console.log("ajax done")
-        $('#pending').text(res.pending + " ")
-        $('#approved').text(res.approved + " ")
-        $('#rejected').text(res.rejected + " ")
+        $('#pending').text(res.pending)
+        $('#approved').text(res.approved)
+        $('#rejected').text(res.rejected)
         if(res.user_type == false){
         $('#check_user_type').hide()
         }
-        
-        // Применяем стили оранжевых кнопок и закругленные углы
-        // Общие стили для всех карточек
-        $('.card').addClass('tile');
-        
-        // Стили для кнопок статусов
-        $('#product_pending, #divseller_pending, #divorder_pending, #div_payment_pending, #inv_req_pending').addClass('o_pending');
-        $('#product_approved, #divseller_approved, #divorder_approved, #div_payment_approved, #inv_req_approved').addClass('o_approved');
-        $('#product_rejected, #divseller_rejected, #divorder_cancel, #div_payment_rejected, #inv_req_rejected').addClass('o_rejected');
-        $('#divorder_shipped').addClass('o_shipped');
-        $('.divcard').addClass('dashboard_icons');
-        
-        // Перевод текста кнопок статусов
-        $(".divdashhover h5:contains('Pending')").text(function(i, text) {
-            return text.replace('Pending', 'Ожидает');
-        });
-        $(".divdashhover h5:contains('Approved')").text(function(i, text) {
-            return text.replace('Approved', 'Одобрено');
-        });
-        $(".divdashhover h5:contains('Rejected')").text(function(i, text) {
-            return text.replace('Rejected', 'Отклонено');
-        });
-        $(".divdashhover h5:contains('Shipped')").text(function(i, text) {
-            return text.replace('Shipped', 'Отправлено');
-        });
-        $(".divdashhover h5:contains('Cancelled')").text(function(i, text) {
-            return text.replace('Cancelled', 'Отменено');
-        });
-        
-        // Перевод заголовков карточек
-        $(".card-title:contains('MarketPlace Product')").text('Товары');
-        $(".card-title:contains('MarketPlace Orders')").text('Заказы');
-        $(".card-title:contains('MarketPlace Payments')").text('Платежи');
-        $(".card-title:contains('Marketplace stock')").text('Склад');
-        $(".card-title:contains('MarketPlace Sellers')").text('Продавцы');
-        
         $("#product_pending").click(function(){
         console.log("product pending")
         self.do_action({
@@ -89,19 +53,19 @@ var CustomDashBoard = AbstractAction.extend({
             domain: [['state', '=', 'rejected']],
         })
         })
-        $("#seller_pending").text(res.seller_pending + " ")
-        $("#seller_approved").text(res.seller_approved + " ")
-        $("#seller_rejected").text(res.seller_rejected + " ")
-        $("#inventory_pending").text(res.inventory_pending + " ")
-        $("#inventory_approved").text(res.inventory_approved + " ")
-        $("#inventory_rejected").text(res.inventory_rejected + " ")
-        $("#payment_pending").text(res.payment_pending + " ")
-        $("#payment_approved").text(res.payment_approved + " ")
-        $("#payment_rejected").text(res.payment_rejected + " ")
-        $("#order_pending").text(res.order_pending + " ")
-        $("#order_approved").text(res.order_approved + " ")
-        $("#order_shipped").text(res.order_shipped + " ")
-        $("#order_cancel").text(res.order_cancel + " ")
+        $("#seller_pending").text(res.seller_pending)
+        $("#seller_approved").text(res.seller_approved)
+        $("#seller_rejected").text(res.seller_rejected)
+        $("#inventory_pending").text(res.inventory_pending)
+        $("#inventory_approved").text(res.inventory_approved)
+        $("#inventory_rejected").text(res.inventory_rejected)
+        $("#payment_pending").text(res.payment_pending)
+        $("#payment_approved").text(res.payment_approved)
+        $("#payment_rejected").text(res.payment_rejected)
+        $("#order_pending").text(res.order_pending)
+        $("#order_approved").text(res.order_approved)
+        $("#order_shipped").text(res.order_shipped)
+        $("#order_cancel").text(res.order_cancel)
         $("#divseller_rejected").click(function(){
         console.log("seller rejetced")
         self.do_action({

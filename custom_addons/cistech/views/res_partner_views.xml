@@ -189,22 +189,22 @@
                     <button type="object" name="register_payment"
                             class="oe_highlight"
                             string="Register for Payment"
-                            groups="cistech.multi_vendor_marketplace_seller"/>
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_seller"/>
                     <button type="object" name="approve_seller"
                             class="oe_highlight"
                             string="Approve"
                             states="Pending for Approval"
-                            groups="cistech.multi_vendor_marketplace_admin"/>
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
                     <button type="object" name="req_approve"
                             class="oe_highlight"
                             string="Request For Approve"
-                            groups="cistech.multi_vendor_marketplace_req_seller,cistech.multi_vendor_marketplace_admin"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_req_seller,multi_vendor_marketplace.multi_vendor_marketplace_admin"
                             states="new"/>
                     <button type="object" name="reject_seller"
                             class="oe_highlight"
                             string="Reject"
                             states="Pending for Approval"
-                            groups="cistech.multi_vendor_marketplace_admin"/>
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="Pending for Approval,Approved,Denied"/>
                 </header>
@@ -248,56 +248,56 @@
     <!--    My Profile menu-->
     <menuitem id="seller_roott" name="My Profile" sequence="1"
               action="action_new_res_partner"
-              groups="cistech.multi_vendor_marketplace_req_seller"
-              web_icon="cistech,static/description/icon.png"/>
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_req_seller"
+              web_icon="multi_vendor_marketplace,static/description/icon.png"/>
     <!--    Seller Dashboard menu-->
     <menuitem id="seller_root" name="Seller Dashboard" sequence="1"
               action="seller_dashboard_action"
-              groups="cistech.multi_vendor_marketplace_admin,cistech.multi_vendor_marketplace_seller"
-              web_icon="cistech,static/description/icon.png"/>
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              web_icon="multi_vendor_marketplace,static/description/icon.png"/>
     <!--    Sales menu-->
     <menuitem id="sales" parent="seller_root"
               name="Sales" sequence="21"
-              groups="cistech.multi_vendor_marketplace_admin,cistech.multi_vendor_marketplace_seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
               action="vendor_dashboard_action"/>
     <!--    Dashboard menu-->
     <menuitem id="dashboard" parent="seller_root"
               name="Dashboard" sequence="3"
-              groups="cistech.multi_vendor_marketplace_admin,cistech.multi_vendor_marketplace_seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
               action="seller_dashboard_action"/>
     <!--    Seller menu-->
     <menuitem id="seller" parent="seller_root"
               name="Seller" sequence="10"
-              groups="cistech.multi_vendor_marketplace_admin,cistech.multi_vendor_marketplace_seller"
-              action="cistech.res_partner_action"/>
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              action="multi_vendor_marketplace.res_partner_action"/>
     <!--    Sellers menu-->
     <menuitem id="seller_ecom" parent="seller"
-              groups="cistech.multi_vendor_marketplace_admin"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
               name="Sellers" sequence="13"
               action="res_partner_action"/>
     <!--    My Profile menu-->
     <menuitem id="my_profile" parent="seller"
-              groups="cistech.multi_vendor_marketplace_seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_seller"
               name="My Profile" sequence="14"
               action="action_res_partner"/>
     <!--    Seller Bill menu-->
     <menuitem id="seller_bill" parent="sales"
-              groups="cistech.multi_vendor_marketplace_admin"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
               name="Seller Bill1" sequence="29"
               action="vendor_dashboard_action"/>
     <!--    Invoice menu-->
     <menuitem id="invoice" parent="seller_root" name="Invoice"
-              groups="cistech.multi_vendor_marketplace_admin"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
               sequence="40"
               action="vendor_dashboard_action"/>
     <!--    Bill menu-->
     <menuitem id="seller_bill" parent="invoice"
-              groups="cistech.multi_vendor_marketplace_admin"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
               name="Seller Bill" sequence="41"
               action="account.action_move_in_invoice_type"/>
     <!--    Payment menu-->
     <menuitem id="payment" parent="invoice"
-              groups="cistech.multi_vendor_marketplace_admin"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
               name="Payment" sequence="42"
               action="account.action_account_payments_payable"/>
 </odoo>

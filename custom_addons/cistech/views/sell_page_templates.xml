@@ -103,13 +103,13 @@
               name="seller_footer" active="True">
         <xpath expr="//ul[hasclass('list-unstyled')]" position="inside">
             <t t-set="sell"
-               t-value="request.env['ir.config_parameter'].sudo().get_param('cistech.show_sell_menu_footer')"/>
+               t-value="request.env['ir.config_parameter'].sudo().get_param('multi_vendor_marketplace.show_sell_menu_footer')"/>
             <t t-set="seller_list"
-               t-value="request.env['ir.config_parameter'].sudo().get_param('cistech.show_sellers_list')"/>
+               t-value="request.env['ir.config_parameter'].sudo().get_param('multi_vendor_marketplace.show_sellers_list')"/>
             <t t-set="seller_label"
-               t-value="request.env['ir.config_parameter'].sudo().get_param('cistech.sell_link_label')"/>
+               t-value="request.env['ir.config_parameter'].sudo().get_param('multi_vendor_marketplace.sell_link_label')"/>
             <t t-set="seller_list_label"
-               t-value="request.env['ir.config_parameter'].sudo().get_param('cistech.seller_list_link_label')"/>
+               t-value="request.env['ir.config_parameter'].sudo().get_param('multi_vendor_marketplace.seller_list_link_label')"/>
             <t t-if="sell">
                 <t t-if="seller_label">
                     <li>

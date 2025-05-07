@@ -826,7 +826,7 @@
                                                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                                                         <div class="o_wsale_products_grid_table_wrapper pt-3 pt-lg-0">
                                                             <t t-set="show_review"
-                                                               t-value="request.env['ir.config_parameter'].sudo().get_param('cistech.show_seller_review')"/>
+                                                               t-value="request.env['ir.config_parameter'].sudo().get_param('multi_vendor_marketplace.show_seller_review')"/>
                                                             <t t-if="show_review">
                                                                 <h4>Reviewed
                                                                     By

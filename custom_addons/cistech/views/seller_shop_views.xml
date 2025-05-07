@@ -18,16 +18,16 @@
                 <header>
                     <button name="approve_request" class="oe_highlight"
                             type="object"
-                            groups="cistech.multi_vendor_marketplace_admin"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
                             string="Approve"
                             attrs="{'invisible': [('state', '=', 'Approved')]}"/>
                     <button name="reject_request" class="oe_highlight"
                             type="object"
-                            groups="cistech.multi_vendor_marketplace_admin"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
                             string="Reject"
                             attrs="{'invisible': [('state', '=', 'Denied')]}"/>
                     <button name="cancel"
-                            groups="cistech.multi_vendor_marketplace_admin"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
                             string="Cancel" special="cancel"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="Pending for Approval,Approved,Denied"/>
@@ -235,12 +235,12 @@
     </record>
     <!--    Seller shop menu-->
     <menuitem id="seller_shop" parent="seller"
-              groups="cistech.multi_vendor_marketplace_admin"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
               name="Seller Shop" sequence="15"
               action="seller_shop_action"/>
     <!--    My Shop menu-->
     <menuitem id="my_shop" parent="seller"
-              groups="cistech.multi_vendor_marketplace_seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_seller"
               name="My Shop" sequence="15"
               action="seller_shop_action"/>
 </odoo>

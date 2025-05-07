@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!--    Template for for seller registration-->
-    <template id="cistech.fields" name="seller reg">
+    <template id="multi_vendor_marketplace.fields" name="seller reg">
         <div class="mb-3 field-login">
             <label for="login">Your Email</label>
             <input type="text" name="login" t-att-value="login" id="login"
@@ -67,7 +67,7 @@
                   t-if="not message">
                 <input type="hidden" name="csrf_token"
                        t-att-value="request.csrf_token()"/>
-                <t t-call="cistech.fields">
+                <t t-call="multi_vendor_marketplace.fields">
                     <t t-set="only_passwords"
                        t-value="bool(token and not invalid_token)"/>
                 </t>
