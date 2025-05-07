@@ -8,14 +8,23 @@ export class AvatarCardPopover extends Component {
     static props = {
         id: { type: Number, required: true },
         close: { type: Function, required: true },
+        model: { type: String, required: false },
     };
+    static defaultProps = { model: "res.users" };
 
     setup() {
         this.actionService = useService("action");
         this.orm = useService("orm");
         this.openChat = useOpenChat("res.users");
         onWillStart(async () => {
-            [this.user] = await this.orm.read("res.users", [this.props.id], this.fieldNames);
+            let userId = this.props.id;
+            if (this.props.model === "res.partner") {
+                const mainUser = await this.orm.call("res.partner", "get_main_user", [
+                    this.props.id,
+                ]);
+                userId = mainUser[0];
+            }
+            [this.user] = await this.orm.read("res.users", [userId], this.fieldNames);
         });
     }
 
