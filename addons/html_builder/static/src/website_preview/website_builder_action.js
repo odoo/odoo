@@ -309,7 +309,14 @@ export class WebsiteBuilder extends Component {
             if (href && target !== "_blank" && !this.state.isEditing) {
                 if (isTopWindowURL(linkEl)) {
                     ev.preventDefault();
-                    browser.location.assign(href);
+                    try {
+                        browser.location.assign(href);
+                    } catch {
+                        this.notification.add(_t("%s is not a valid URL.", href), {
+                            title: _t("Invalid URL"),
+                            type: "danger",
+                        });
+                    }
                 } else if (
                     this.websiteContent.el.contentWindow.location.pathname !==
                     new URL(href).pathname

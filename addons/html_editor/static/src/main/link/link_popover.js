@@ -194,6 +194,9 @@ export class LinkPopover extends Component {
         ) {
             url = "https://" + url;
         }
+        if (url && (url.startsWith("http:") || url.startsWith("https:"))) {
+            url = URL.parse(url) ? url : "";
+        }
         return url;
     }
     deduceUrl(text) {
@@ -228,7 +231,6 @@ export class LinkPopover extends Component {
             this.state.previewIcon = { type: "mimetype", value: mimetype };
             return;
         }
-
         try {
             url = new URL(this.state.url); // relative to absolute
         } catch {
