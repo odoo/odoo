@@ -36,7 +36,7 @@ class WebClient(WebclientController):
                 return
             country_id = (
                 # sudo - res.country: accessing user country is allowed.
-                request.env["res.country"].sudo().search([("code", "=", code)])
+                request.env["res.country"].sudo().search([("code", "=", code)]).id
                 if (code := request.geoip.country_code)
                 else None
             )
