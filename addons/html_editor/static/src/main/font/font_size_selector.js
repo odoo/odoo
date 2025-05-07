@@ -128,7 +128,7 @@ export class FontSizeSelector extends Component {
         if (["Enter", "Tab"].includes(ev.key) && this.dropdown.isOpen) {
             this.dropdown.close();
         } else if (["ArrowUp", "ArrowDown"].includes(ev.key)) {
-            const fontSizeSelectorMenu = document.querySelector(".o_font_size_selector_menu div");
+            const fontSizeSelectorMenu = document.querySelector(".o_font_size_selector_menu");
             if (!fontSizeSelectorMenu) {
                 return;
             }

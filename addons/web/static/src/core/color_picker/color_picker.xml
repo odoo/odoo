@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
 <t t-name="web.ColorPicker">
-    <div t-attf-class="o_font_color_selector user-select-none {{this.props.className}}" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="root">
+    <div t-attf-class="o_font_color_selector user-select-none {{this.props.className}}" t-on-pointerdown.stop="() => {}" t-ref="root">
         <div class="my-1 d-flex">
             <button t-attf-class="btn btn-sm ms-1 text-truncate btn-tab theme-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'theme' ? 'active' : ''}"
                 t-if="this.props.enabledTabs.includes('theme')"

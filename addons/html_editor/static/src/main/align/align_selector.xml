@@ -7,16 +7,14 @@
                 </span>
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true">
-                    <t t-foreach="items" t-as="item" t-key="item_index">
-                        <button
-                            t-attf-class="btn btn-light fa fa-align-{{item.mode}}"
-                            t-att-class="{ active: item.mode === state.displayName }"
-                            t-on-click="() => this.onSelected(item)"
-                            t-on-pointerdown.prevent="() => {}"
-                        />
-                    </t>
-                </div>
+                <t t-foreach="items" t-as="item" t-key="item_index">
+                    <button
+                        t-attf-class="btn btn-light fa fa-align-{{item.mode}}"
+                        t-att-class="{ active: item.mode === state.displayName }"
+                        t-on-click="() => this.onSelected(item)"
+                        t-on-pointerdown.prevent="() => {}"
+                    />
+                </t>
             </t>
         </Dropdown>
     </t>

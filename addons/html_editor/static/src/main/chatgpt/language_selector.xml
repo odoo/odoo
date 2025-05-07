@@ -10,13 +10,11 @@
                 <t t-set="onClick" t-value="() => {}"/>
             </t>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true">
-                    <t t-foreach="state.languages" t-as="language" t-key="language[0]">
-                        <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(language[1])">
-                            <div class="lang" t-esc="language[1]"/>
-                        </DropdownItem>
-                    </t>
-                </div>
+                <t t-foreach="state.languages" t-as="language" t-key="language[0]">
+                    <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(language[1])">
+                        <div class="lang" t-esc="language[1]"/>
+                    </DropdownItem>
+                </t>
             </t>
         </Dropdown>
     </t>

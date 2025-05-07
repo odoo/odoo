@@ -2,7 +2,7 @@
     <t t-name="html_editor.Toolbar">
         <div class="o-we-toolbar d-flex align-items-center m-0" t-att-class="props.class"
             style="overflow-x: auto; overflow-y:hidden" t-on-pointerdown.prevent=""
-                t-att-data-namespace="state.namespace" data-prevent-closing-overlay="true">
+                t-att-data-namespace="state.namespace">
             <t t-foreach="state.buttonGroups" t-as="buttonGroup" t-key="buttonGroup.id">
                 <span class="o-we-toolbar-vertical-separator"></span>
                 <div class="btn-group" t-att-name="buttonGroup.id">

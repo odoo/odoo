@@ -5,15 +5,13 @@
                 <span class="px-1" t-esc="state.displayName"/>
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true">
-                    <t t-foreach="items" t-as="item" t-key="item_index">
-                        <DropdownItem
-                            attrs="{ name: item.tagName }"
-                            onSelected="() => this.onSelected(item)" t-on-pointerdown.prevent="() => {}">
-                            <t t-esc="item.name"/>
-                        </DropdownItem>
-                    </t>
-                </div>
+                <t t-foreach="items" t-as="item" t-key="item_index">
+                    <DropdownItem
+                        attrs="{ name: item.tagName }"
+                        onSelected="() => this.onSelected(item)" t-on-pointerdown.prevent="() => {}">
+                        <t t-esc="item.name"/>
+                    </DropdownItem>
+                </t>
             </t>
         </Dropdown>
     </t>
