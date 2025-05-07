@@ -1643,7 +1643,7 @@
 <!-- Area for blocks shared by all pages (e.g. all pages popups) -->
 <template id="shared_blocks" inherit_id="website.layout" name="Shared blocks">
     <xpath expr="//main" position="inside">
-        <div id="o_shared_blocks" class="oe_unremovable"/>
+        <div>hola</div>
     </xpath>
 </template>
 
@@ -1666,7 +1666,7 @@
                                 <li t-foreach="configurator_footer_links" t-as="link">
                                     <a t-att-href="link['href']" t-esc="link['text']"/>
                                 </li>
-                                <li><a href="/contactus">Contact us</a></li>
+                                <li><a href="/contactus">Contact us!!!!</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-5 pt24 pb24">

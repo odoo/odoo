@@ -1,0 +1,61 @@
+<odoo>
+    <template id="custom_sidebar" name="Custom Sidebar" inherit_id="website.layout">
+        <xpath expr="//head" position="inside">
+            <link rel="stylesheet" type="text/css" href="/mi_website_ext/static/src/css/sidebar.css"/>
+        </xpath>
+
+      <xpath expr="//main" position="before">
+          <t t-set="user" t-value="request.env.user"/>
+  
+          <aside class="custom-sidebar">
+              <!-- Perfil -->
+              <div class="profile-section">
+                  <img t-att-src="'/web/image/res.users/' + str(user.id) + '/image_128'" alt="Avatar" class="avatar"/>
+                  <h2 class="name"><t t-esc="user.name"/></h2>
+                  <p class="position">Analista de Datos</p>
+                  <p class="department">Departamento de TI</p>
+                  <p class="bio">Apasionado por la analítica y la innovación tecnológica.</p>
+                  <button class="btn-time">Maneja tu tiempo</button>
+              </div>
+  
+              <!-- Cards -->
+              <div class="cards-section">
+                  <div class="card">
+                      <h4>Días para vacaciones</h4>
+                      <p>12 días</p>
+                  </div>
+                  <div class="card">
+                      <h4>Permiso disponible</h4>
+                      <p>5 días</p>
+                  </div>
+              </div>
+  
+              <!-- Anuncios -->
+              <div class="announcements-section">
+                  <h3><i class="fa fa-bullhorn"/> Anuncios</h3>
+                  <div class="announcements-panel">
+                      <p>📢 Reunión general este viernes.</p>
+                      <p>📢 Nueva política de trabajo remoto.</p>
+                      <p>📢 ¡No olvides registrar tus horas!</p>
+                  </div>
+              </div>
+  
+              <!-- Calendario -->
+              <div class="calendar-section">
+                  <h3><i class="fa fa-calendar"/> Calendario de actividades</h3>
+                  <div class="calendar-placeholder">
+                      <p>[Calendario aquí]</p>
+                  </div>
+              </div>
+  
+              <!-- Redes Sociales -->
+              <div class="social-buttons">
+                  <button class="facebook">Facebook</button>
+                  <button class="x">X</button>
+                  <button class="linkedin">LinkedIn</button>
+              </div>
+          </aside>
+      </xpath>
+  </template>
+
+  </odoo>
