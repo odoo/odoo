@@ -1,0 +1,41 @@
+.s_avatars {
+    --avatars-size: 3rem;
+    gap: map-get($spacers, 1) map-get($spacers, 3);
+    margin: $grid-gutter-width/2 0;
+
+    .s_avatars_avatar {
+        width: var(--avatars-size) !important;
+        height: var(--avatars-size) !important;
+
+        &:not(:first-child) {
+            margin-left: calc(-1 * var(--avatars-size) / 4);
+        }
+
+        &.s_avatars_more {
+            // Fallback: can be eventually overridden by the user in edit mode
+            font-size: calc(var(--avatars-size) * 0.3);
+        }
+    }
+
+    // Options
+    &.o_avatars_center {
+        &.flex-row {
+            justify-content: center;
+        }
+        &.flex-column {
+            align-items: center;
+        }
+    }
+
+    &.o_avatars_end {
+        text-align: right;
+
+        &.flex-row {
+            flex-direction: row-reverse !important;
+        }
+        &.flex-column {
+            align-items: end;
+        }
+    }
+
+}
