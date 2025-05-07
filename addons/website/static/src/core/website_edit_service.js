@@ -116,7 +116,18 @@ patch(Colibri.prototype, {
         };
     },
     addListener(target, event, fn, options) {
-        fn = fn.bind(this.interaction);
+        const boundFn = fn.bind(this.interaction);
+        if (event.startsWith("slide.bs.carousel")) {
+            // Never allow cancelling this event in edit mode.
+            fn = (...args) => {
+                const ev = args[0];
+                ev.preventDefault = () => {};
+                ev.stopPropagation = () => {};
+                return boundFn(...args);
+            };
+        } else {
+            fn = boundFn;
+        }
         let stealth = true;
         const parts = event.split(".");
         if (parts.includes("keepInHistory") || options?.keepInHistory) {
