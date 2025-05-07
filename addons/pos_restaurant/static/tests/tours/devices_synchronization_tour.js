@@ -85,6 +85,8 @@ registry.category("web_tour.tours").add("test_devices_synchronization", {
                 ],
                 false
             ),
+            ProductScreen.orderLineHas("Coca-Cola", "2"),
+            ProductScreen.orderLineHas("Water", "2"),
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.clickLine("Coca-Cola", 2),
             ProductScreen.clickLine("Coca-Cola", 1),
