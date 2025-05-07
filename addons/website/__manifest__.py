@@ -153,6 +153,7 @@
         'views/snippets/s_badge.xml',
         'views/snippets/s_color_blocks_2.xml',
         'views/snippets/s_attributes_horizontal.xml',
+        'views/snippets/s_attributes_vertical.xml',
         'views/snippets/s_product_list.xml',
         'views/snippets/s_mega_menu_multi_menus.xml',
         'views/snippets/s_mega_menu_menu_image_menu.xml',
