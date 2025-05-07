@@ -8,7 +8,6 @@ class AuthTotpRateLimitLog(models.TransientModel):
     _user_id_limit_type_create_date_idx = models.Index("(user_id, limit_type, create_date)")
 
     user_id = fields.Many2one('res.users', required=True, readonly=True)
-    scope = fields.Char(readonly=True)
     ip = fields.Char(readonly=True)
     limit_type = fields.Selection([
         ('send_email', 'Send Email'),
