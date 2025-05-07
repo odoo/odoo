@@ -161,7 +161,7 @@ export class TicketScreen extends Component {
             const [order] = await this.pos.data.searchRead("pos.order", [["uuid", "=", ref]]);
             if (order) {
                 this.state.filter = "SYNCED";
-                this.state.selectedOrder = order;
+                this.setSelectedOrder(order);
                 this.pos.scanning = !this.pos.scanning;
             } else {
                 this.env.services.notification.add(_t("Invalid QR Code! Please, Scan again!"), {
