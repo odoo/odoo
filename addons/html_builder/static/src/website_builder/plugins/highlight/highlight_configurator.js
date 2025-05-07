@@ -31,8 +31,14 @@ export class HighlightConfigurator extends Component {
     static template = "website.highlightConfigurator";
     static components = { ColorPicker };
     static props = {
-        previewableApplyHighlight: Object,
-        previewableApplyHighlightStyle: Object,
+        applyHighlight: Function,
+        applyHighlightStyle: Function,
+        getHighlightState: Function,
+        getSelection: Function,
+        previewHighlight: Function,
+        previewHighlightStyle: Function,
+        revertHighlight: Function,
+        revertHighlightStyle: Function,
         componentStack: Object,
     };
 

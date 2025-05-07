@@ -10,6 +10,7 @@ import { formatsSpecs } from "@html_editor/utils/formatting";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { removeStyle } from "@html_editor/utils/dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
+import { omit } from "@web/core/utils/objects";
 
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
@@ -170,6 +171,17 @@ formatsSpecs.highlight = {
 };
 
 class HighlightToolbarButton extends Component {
+    static props = {
+        applyHighlight: Function,
+        applyHighlightStyle: Function,
+        getHighlightState: Function,
+        getSelection: Function,
+        previewHighlight: Function,
+        previewHighlightStyle: Function,
+        revertHighlight: Function,
+        revertHighlightStyle: Function,
+        title: String,
+    };
     static template = xml`
         <button t-ref="root" class="btn btn-light" t-on-click="openHighlightConfigurator">
             <i class="fa oi oi-text-effect oi-fw py-1"/>
@@ -181,7 +193,7 @@ class HighlightToolbarButton extends Component {
         this.componentStack = useStackingComponentState();
         this.componentStack.push(HighlightConfigurator, {
             componentStack: this.componentStack,
-            ...this.props,
+            ...omit(this.props, "title"),
         });
         this.configuratorPopover = usePopover(StackingComponent, {
             onClose: () => {
