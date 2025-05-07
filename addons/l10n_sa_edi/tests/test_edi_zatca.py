@@ -56,6 +56,13 @@ class TestEdiZatca(TestSaEdiCommon):
 
             self.assertXmlTreeEqual(current_tree, expected_tree)
 
+        retention_tax = self.env['account.tax'].create({
+            'l10n_sa_is_retention': True,
+            'name': 'Retention Tax',
+            'amount_type': 'percent',
+            'amount': -5.0,
+        })
+
         with freeze_time(datetime(year=2022, month=9, day=5, hour=8, minute=20, second=2, tzinfo=timezone('Etc/GMT-3'))):
             self.partner_us.vat = 'US12345677'
 
@@ -68,7 +75,7 @@ class TestEdiZatca(TestSaEdiCommon):
                         'product_id': self.product_a.id,
                         'price_unit': 1000,
                         'product_uom_qty': 1,
-                        'tax_id': [Command.set(self.tax_15.ids)],
+                        'tax_id': [Command.set((self.tax_15 + retention_tax).ids)],
                     })
                 ]
             })

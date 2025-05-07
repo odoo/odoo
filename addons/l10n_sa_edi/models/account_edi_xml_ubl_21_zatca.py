@@ -396,7 +396,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             # TaxableAmount and the TaxAmount nodes correctly. To avoid this, we re-caclculate the taxes_vals just before
             # we set the values for the down payment line, and we do not pass any filters to the _prepare_edi_tax_details
             # method
-            line_taxes = line.move_id._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
+            line_taxes = line.move_id._prepare_edi_tax_details(filter_to_apply=lambda l, t: not self.env['account.tax'].browse(t['id']).l10n_sa_is_retention, grouping_key_generator=grouping_key_generator)
             taxes_vals = line_taxes['tax_details_per_record'][line]
 
         line_vals = super()._get_invoice_line_vals(line, taxes_vals)
