@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="discuss.ChannelInvitation.main" t-inherit-mode="extension">
         <xpath expr="//*[@name='selectablePartnerDetail']//*" position="inside">
+            <span t-if="props.thread?.channel_type === 'livechat' and selectablePartner.user_livechat_username" t-esc="selectablePartner.user_livechat_username" class="text-truncate text-muted smaller mx-2"/>
             <span t-if="props.thread?.channel_type === 'livechat' and selectablePartner.is_in_call" class="flex-shrink-0 opacity-75 smaller mx-2">
                 <i class="fa fa-volume-up o-discuss-inCallIconColor me-1"/>
                 <span class="o-discuss-ChannelInvitation-inCallTextColor">in a call</span>
