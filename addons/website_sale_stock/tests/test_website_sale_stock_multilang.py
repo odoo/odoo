@@ -25,6 +25,6 @@ class TestWebsiteSaleStockMultilang(HttpCase):
             'out_of_stock_message': 'Out of stock',
         })
         unavailable_product.update_field_translations('out_of_stock_message', {
-            'fr_FR': {'Out of stock': 'Hors-stock'},
+            'fr_FR': 'Hors-stock',
         })
         self.start_tour("/fr/shop?search=unavailable", 'website_sale_stock_multilang')

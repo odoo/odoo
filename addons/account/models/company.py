@@ -9,7 +9,6 @@ from odoo.exceptions import LockError, ValidationError, UserError, RedirectWarni
 from odoo.tools import date_utils, format_list, SQL
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
-from odoo.tools.translate import html_translate
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.account.models.product import ACCOUNT_DOMAIN
 from odoo.addons.account.models.partner import _ref_company_registry
@@ -173,10 +172,10 @@ class ResCompany(models.Model):
     account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.", readonly=False)
     account_opening_date = fields.Date(string='Opening Entry', help="That is the date of the opening entry.")
 
-    invoice_terms = fields.Html(string='Default Terms and Conditions', translate=html_translate)
+    invoice_terms = fields.Html(string='Default Terms and Conditions', translate=True)
     terms_type = fields.Selection([('plain', 'Add a Note'), ('html', 'Add a link to a Web Page')],
                                   string='Terms & Conditions format', default='plain')
-    invoice_terms_html = fields.Html(string='Default Terms and Conditions as a Web page', translate=html_translate,
+    invoice_terms_html = fields.Html(string='Default Terms and Conditions as a Web page', translate=True,
                                      sanitize_attributes=False,
                                      compute='_compute_invoice_terms_html', store=True, readonly=False)
 

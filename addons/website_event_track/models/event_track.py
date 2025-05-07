@@ -15,7 +15,7 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.mail import email_normalize, html_to_inner_content, is_html_empty
-from odoo.tools.translate import _, html_translate
+from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -53,7 +53,7 @@ class EventTrack(models.Model):
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
-    description = fields.Html(translate=html_translate, sanitize_attributes=False, sanitize_form=False)
+    description = fields.Html(translate=True, sanitize_attributes=False, sanitize_form=False)
     color = fields.Integer('Agenda Color')
     priority = fields.Selection([
         ('0', 'Low'), ('1', 'Medium'),

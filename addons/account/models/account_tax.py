@@ -6,7 +6,6 @@ from odoo.fields import Domain
 from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every, SQL
 from odoo.tools.float_utils import float_repr, float_round, float_compare
 from odoo.tools.misc import clean_context, formatLang
-from odoo.tools.translate import html_translate
 
 from collections import defaultdict
 from collections.abc import Iterable
@@ -129,7 +128,7 @@ class AccountTax(models.Model):
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4), default=0.0, tracking=True)
-    description = fields.Html(string='Description', translate=html_translate)
+    description = fields.Html(string='Description', translate=True)
     invoice_label = fields.Char(string='Label on Invoices', translate=True)
     price_include = fields.Boolean(
         compute='_compute_price_include',
@@ -200,7 +199,7 @@ class AccountTax(models.Model):
     country_code = fields.Char(related='country_id.code', readonly=True)
     is_used = fields.Boolean(string="Tax used", compute='_compute_is_used')
     repartition_lines_str = fields.Char(string="Repartition Lines", tracking=True, compute='_compute_repartition_lines_str')
-    invoice_legal_notes = fields.Html(string="Legal Notes", translate=html_translate, help="Legal mentions that have to be printed on the invoices.")
+    invoice_legal_notes = fields.Html(string="Legal Notes", translate=True, help="Legal mentions that have to be printed on the invoices.")
     # Technical field depicting if the tax has at least one repartition line with a percentage below 0.
     # Used for the taxes computation to manage the reverse charge taxes having a repartition +100 -100.
     has_negative_factor = fields.Boolean(compute='_compute_has_negative_factor')

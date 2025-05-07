@@ -32,7 +32,7 @@ class HrJob(models.Model):
         """)
 
     description = fields.Html(
-        'Job Description', translate=html_translate,
+        'Job Description', translate=True,
         prefetch=False,
         sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=False)
@@ -44,7 +44,7 @@ class HrJob(models.Model):
         sanitize_attributes=False, sanitize_form=False)
     job_details = fields.Html(
         'Process Details',
-        translate=html_translate,
+        translate=True,
         help="Complementary information that will appear on the job submission page",
         sanitize_attributes=False,
         default=_get_default_job_details)

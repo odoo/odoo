@@ -8,7 +8,6 @@ from operator import itemgetter
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
-from odoo.tools.translate import html_translate
 
 MOST_USED_TAGS_COUNT = 5  # Number of tags to track as "most used" to display on frontend
 
@@ -65,11 +64,11 @@ class ForumForum(models.Model):
     authorized_group_id = fields.Many2one('res.groups', 'Authorized Group')
     active = fields.Boolean(default=True)
     faq = fields.Html(
-        'Guidelines', translate=html_translate,
+        'Guidelines', translate=True,
         sanitize=True, sanitize_overridable=True)
     description = fields.Text('Description', translate=True)
     welcome_message = fields.Html(
-        'Welcome Message', translate=html_translate,
+        'Welcome Message', translate=True,
         default=_get_default_welcome_message,
         sanitize_attributes=False, sanitize_form=False)
     default_order = fields.Selection([

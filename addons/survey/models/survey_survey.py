@@ -11,7 +11,6 @@ from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
-from odoo.tools.translate import html_translate
 
 
 class SurveySurvey(models.Model):
@@ -55,10 +54,10 @@ class SurveySurvey(models.Model):
     title = fields.Char('Survey Title', required=True, translate=True)
     color = fields.Integer('Color Index', default=0)
     description = fields.Html(
-        "Description", translate=html_translate, sanitize=True, sanitize_overridable=True,
+        "Description", translate=True, sanitize=True, sanitize_overridable=True,
         help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.")
     description_done = fields.Html(
-        "End Message", translate=html_translate,
+        "End Message", translate=True,
         help="This message will be displayed when survey is completed")
     background_image = fields.Image("Background Image")
     background_image_url = fields.Char('Background Url', compute="_compute_background_image_url")

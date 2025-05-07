@@ -3,7 +3,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from collections import defaultdict
 from odoo.tools import SQL, is_html_empty
-from odoo.tools.translate import html_translate
 from itertools import groupby
 from operator import itemgetter
 from datetime import date
@@ -28,7 +27,7 @@ class ProductTemplate(models.Model):
         help="Category used in the Point of Sale.")
     public_description = fields.Html(
         string="Product Description",
-        translate=html_translate,
+        translate=True,
     )
     pos_optional_product_ids = fields.Many2many(
         comodel_name='product.template',

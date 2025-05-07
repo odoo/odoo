@@ -4,7 +4,6 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools.translate import html_translate
 
 from .lunch_supplier import float_to_time
 from datetime import datetime, timedelta
@@ -25,7 +24,7 @@ class LunchAlert(models.Model):
     _order = 'write_date desc, id'
 
     name = fields.Char('Alert Name', required=True, translate=True)
-    message = fields.Html('Message', required=True, translate=html_translate)
+    message = fields.Html('Message', required=True, translate=True)
 
     mode = fields.Selection([
         ('alert', 'Alert in app'),

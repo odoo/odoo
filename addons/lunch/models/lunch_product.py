@@ -8,7 +8,6 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools.translate import html_translate
 
 
 class LunchProduct(models.Model):
@@ -21,7 +20,7 @@ class LunchProduct(models.Model):
 
     name = fields.Char('Product Name', required=True, translate=True)
     category_id = fields.Many2one('lunch.product.category', 'Product Category', check_company=True, required=True)
-    description = fields.Html('Description', translate=html_translate)
+    description = fields.Html('Description', translate=True)
     price = fields.Float('Price', digits='Account', required=True)
     supplier_id = fields.Many2one('lunch.supplier', 'Vendor', check_company=True, required=True)
     active = fields.Boolean(default=True)
