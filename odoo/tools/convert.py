@@ -781,7 +781,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     fields = next(reader)
 
     if not (mode == 'init' or 'id' in fields):
-        _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
+        _logger.error("Import specification does not contain 'id' and we are not in init mode, Cannot continue.")
         return
 
     # filter out empty lines (any([]) == False) and lines containing only empty cells
