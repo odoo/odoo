@@ -69,7 +69,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             // Init event listener
             if (!self.readonly) {
                 self.documentKeydownListener = self._onKeyDown.bind(self);
-                $(document).on('keydown', self.documentKeydownListener);
+                document.addEventListener('keydown', self.documentKeydownListener);
             }
             if (self.options.sessionInProgress &&
                 (self.options.isStartScreen || self.options.hasAnswered || self.options.isPageDescription)) {
@@ -135,11 +135,15 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         // Handle Start / Next / Submit
         if (event.key === "Enter" || event.key === "ArrowRight") {  // Enter or arrow-right: go Next
             event.preventDefault();
+            const isFinish = this.el.querySelector('button[value="finish"]') !== null;
+            const nextSkipped = this.el.querySelector('button[value="next_skipped"]') !== null ? event.key === "Enter" : false;
             if (!this.preventEnterSubmit) {
-                this._submitForm({
-                    isFinish: this.el.querySelectorAll('button[value="finish"]').length !== 0,
-                    nextSkipped: this.el.querySelectorAll('button[value="next_skipped"]').length !== 0 ? event.key === "Enter" : false,
-                });
+                if (!isFinish) {
+                    this._submitForm({ isFinish, nextSkipped });
+                }else {
+                    document.removeEventListener('keydown', this.documentKeydownListener);
+                    this._openDialog({ isFinish, nextSkipped });
+                }
             }
         } else if (event.key === "ArrowLeft") {  // arrow-left: previous (if available)
             // It's easier to actually click on the button (if in the DOM) as it contains necessary
@@ -262,18 +266,26 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             this._submitForm({ nextSkipped: true });
         } else if (target.value === 'finish') {
             // Adding pop-up before the survey is submitted
-            this.call("dialog", "add", ConfirmationDialog, {
-                title: _t("Submit confirmation"),
-                body: _t("Are you sure you want to submit the survey?"),
-                confirmLabel: _t("Submit"),
-                confirm: () => {
-                    this._submitForm({ isFinish: true });
-                },
-                cancel: () => {},
-            });
+            document.removeEventListener('keydown', this.documentKeydownListener);
+            this._openDialog({ isFinish: true });
         } else {
             this._submitForm({});
         }
+    },
+
+    _openDialog({ isFinish = false, nextSkipped = false } = {}) {
+        this.call("dialog", "add", ConfirmationDialog, {
+            title: _t("Submit confirmation"),
+            body: _t("Are you sure you want to submit the survey?"),
+            confirmLabel: _t("Submit"),
+            confirm: () => {
+                this._submitForm({ isFinish: isFinish ? true : false, nextSkipped  : nextSkipped ? true : false });
+                document.addEventListener('keydown', this.documentKeydownListener);
+            },
+            cancel: () => {
+                document.addEventListener('keydown', this.documentKeydownListener);
+            },
+        });
     },
 
     // Custom Events
