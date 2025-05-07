@@ -667,6 +667,22 @@ test("toolbar opens in 'compact' namespace by default", async () => {
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
 });
 
+test.tags("desktop");
+test("expanded toolbar reopens in 'compact' namespace by default after closing", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
+    await expandToolbar();
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+    // Collapse selection
+    setContent(el, "<p>test[]</p>");
+    await waitForNone(".o-we-toolbar");
+    // Reopen toolbar
+    setContent(el, "<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
+});
+
 test("toolbar items without namespace default to 'expanded'", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";

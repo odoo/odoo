@@ -134,7 +134,7 @@ export class ToolbarPlugin extends Plugin {
     static shared = ["getToolbarInfo"];
     resources = {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
-        selection_leave_handlers: () => this.overlay.close(),
+        selection_leave_handlers: () => this.closeToolbar(),
         step_added_handlers: () => this.updateToolbar(),
         user_commands: {
             id: "expandToolbar",
@@ -210,7 +210,7 @@ export class ToolbarPlugin extends Plugin {
             // Mouse interaction behavior:
             // Close toolbar on mousedown and prevent it from opening until mouseup.
             this.addDomListener(this.editable, "mousedown", () => {
-                this.overlay.close();
+                this.closeToolbar();
                 this.debouncedUpdateToolbar.cancel();
                 this.onSelectionChangeActive = false;
             });
@@ -235,7 +235,7 @@ export class ToolbarPlugin extends Plugin {
             // sequential keystrokes.
             this.addDomListener(this.editable, "keydown", (ev) => {
                 if (ev.key.startsWith("Arrow")) {
-                    this.overlay.close();
+                    this.closeToolbar();
                     this.onSelectionChangeActive = false;
                 }
             });
@@ -303,10 +303,14 @@ export class ToolbarPlugin extends Plugin {
     }
 
     updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
-        this.updateToolbarVisibility(selectionData);
-        if (this.overlay.isOpen || this.config.disableFloatingToolbar) {
-            this.updateButtonsStates(selectionData.editableSelection);
+        this.updateNamespace();
+        if (!this.config.disableFloatingToolbar) {
+            this.updateToolbarVisibility(selectionData);
+            if (!this.overlay.isOpen) {
+                return;
+            }
         }
+        this.updateButtonsStates(selectionData.editableSelection);
     }
 
     getFilterTraverseNodes() {
@@ -316,21 +320,12 @@ export class ToolbarPlugin extends Plugin {
     }
 
     updateToolbarVisibility(selectionData) {
-        this.updateNamespace();
-        if (this.config.disableFloatingToolbar) {
-            return;
-        }
-
         if (this.shouldBeVisible(selectionData)) {
             // Open toolbar or update its position
             const props = { toolbar: this.getToolbarInfo(), class: "shadow rounded my-2" };
-            if (!this.overlay.isOpen) {
-                // Open toolbar in compact mode
-                this.isToolbarExpanded = false;
-            }
             this.overlay.open({ props });
         } else if (this.overlay.isOpen && !this.shouldPreventClosing()) {
-            this.overlay.close();
+            this.closeToolbar();
         }
     }
 
@@ -405,6 +400,11 @@ export class ToolbarPlugin extends Plugin {
             }
         }
         this.updateSelection = null;
+    }
+
+    closeToolbar() {
+        this.overlay.close();
+        this.isToolbarExpanded = false;
     }
 }
 
