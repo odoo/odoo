@@ -32,7 +32,7 @@ class NavTabsOptionPlugin extends Plugin {
     }
 
     showTab(navLinkEl, paneEl) {
-        this.document.defaultView.Tab.getOrCreateInstance(navLinkEl).show();
+        this.window.Tab.getOrCreateInstance(navLinkEl).show();
         // Immediately show the pane so the history remains consistent.
         paneEl.classList.add("show");
     }

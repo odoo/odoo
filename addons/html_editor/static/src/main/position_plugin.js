@@ -22,8 +22,8 @@ export class PositionPlugin extends Plugin {
         this.resizeObserver.observe(this.document.body);
         this.resizeObserver.observe(this.editable);
         this.addDomListener(window, "resize", this.layoutGeometryChange);
-        if (this.document.defaultView !== window) {
-            this.addDomListener(this.document.defaultView, "resize", this.layoutGeometryChange);
+        if (this.window !== window) {
+            this.addDomListener(this.window, "resize", this.layoutGeometryChange);
         }
         const scrollableElements = [this.editable, ...ancestors(this.editable)].filter((node) => {
             return couldBeScrollableX(node) || couldBeScrollableY(node);

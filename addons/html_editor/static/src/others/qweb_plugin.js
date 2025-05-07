@@ -99,7 +99,7 @@ export class QWebPlugin extends Plugin {
             } else {
                 return (
                     child.nodeType !== Node.ELEMENT_NODE ||
-                    this.document.defaultView.getComputedStyle(child).display === "inline"
+                    this.window.getComputedStyle(child).display === "inline"
                 );
             }
         });

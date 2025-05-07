@@ -136,7 +136,7 @@ class AnimateOptionPlugin extends Plugin {
             setAnimateIntensity: {
                 getValue: ({ editingElement }) => {
                     const intensity = parseInt(
-                        this.document.defaultView
+                        this.window
                             .getComputedStyle(editingElement)
                             .getPropertyValue("--wanim-intensity")
                     );
@@ -186,7 +186,7 @@ class AnimateOptionPlugin extends Plugin {
             // Trigger a DOM reflow.
             void editingElement.offsetWidth;
             editingElement.style.animationName = "";
-            this.document.defaultView.dispatchEvent(new Event("resize"));
+            this.window.dispatchEvent(new Event("resize"));
         } else {
             // Trigger a DOM reflow (Needed to prevent the animation from
             // being launched twice when previewing the "Intensity" option).

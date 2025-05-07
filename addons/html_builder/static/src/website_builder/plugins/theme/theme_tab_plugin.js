@@ -107,7 +107,7 @@ export class ThemeTabPlugin extends Plugin {
         const hues = [];
         const saturationDiffs = [];
         let oneHasNoSaturation = false;
-        const style = this.document.defaultView.getComputedStyle(this.document.body);
+        const style = this.window.getComputedStyle(this.document.body);
         const baseStyle = getComputedStyle(document.body);
         for (let id = 100; id <= 900; id += 100) {
             const gray = getCSSVariableValue(`${id}`, style);

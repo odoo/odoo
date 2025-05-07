@@ -263,7 +263,7 @@ class ChartOptionPlugin extends Plugin {
             ? color
             : getCSSVariableValue(
                   color,
-                  this.document.defaultView.getComputedStyle(this.document.documentElement)
+                  this.window.getComputedStyle(this.document.documentElement)
               );
     }
 

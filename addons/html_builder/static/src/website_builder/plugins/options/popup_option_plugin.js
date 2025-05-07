@@ -38,8 +38,6 @@ class PopupOptionPlugin extends Plugin {
     };
 
     setup() {
-        this.window = this.document.defaultView;
-
         this.addDomListener(this.editable, "click", (ev) => {
             // Note: links are excluded here so that internal modal buttons do
             // not close the popup as we want to allow edition of those buttons.

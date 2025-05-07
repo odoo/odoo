@@ -6,7 +6,7 @@ export class WebsiteSessionPlugin extends Plugin {
     static shared = ["getSession"];
 
     getSession() {
-        return this.document.defaultView.odoo.loader.modules.get("@web/session").session;
+        return this.window.odoo.loader.modules.get("@web/session").session;
     }
 }
 

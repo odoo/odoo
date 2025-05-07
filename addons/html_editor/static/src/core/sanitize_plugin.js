@@ -18,7 +18,7 @@ export class SanitizePlugin extends Plugin {
         if (!window.DOMPurify) {
             throw new Error("DOMPurify is not available");
         }
-        this.DOMPurify = DOMPurify(this.document.defaultView);
+        this.DOMPurify = DOMPurify(this.window);
     }
     /**
      * Sanitizes in place an html element. Current implementation uses the

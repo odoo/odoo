@@ -77,9 +77,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             }),
             customizeWebsiteColor: this.withCustomHistory({
                 getValue: ({ params: { mainParam: color, colorType, gradientColor } }) => {
-                    const style = this.document.defaultView.getComputedStyle(
-                        this.document.documentElement
-                    );
+                    const style = this.window.getComputedStyle(this.document.documentElement);
                     if (gradientColor) {
                         const gradientValue = this.getWebsiteVariableValue(gradientColor);
                         if (gradientValue) {
@@ -179,9 +177,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     if (bgImage === "none") {
                         return "NONE";
                     }
-                    const style = this.document.defaultView.getComputedStyle(
-                        this.document.documentElement
-                    );
+                    const style = this.window.getComputedStyle(this.document.documentElement);
                     return getCSSVariableValue("body-image-type", style);
                 },
                 load: async ({ editingElement: el, params, value, historyImageSrc }) => {
@@ -265,9 +261,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     return currentValue === value;
                 },
                 getValue: ({ params: { mainParam: which } }) => {
-                    const style = this.document.defaultView.getComputedStyle(
-                        this.document.documentElement
-                    );
+                    const style = this.window.getComputedStyle(this.document.documentElement);
                     const isOutline = getCSSVariableValue(`btn-${which}-outline`, style);
                     const isFlat = getCSSVariableValue(`btn-${which}-flat`, style);
                     return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
@@ -321,7 +315,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         };
     }
     getWebsiteVariableValue(variable) {
-        const style = this.document.defaultView.getComputedStyle(this.document.documentElement);
+        const style = this.window.getComputedStyle(this.document.documentElement);
         let finalValue = getCSSVariableValue(variable, style);
         /* TODO dedicated action ?
         if (!params.colorNames) {

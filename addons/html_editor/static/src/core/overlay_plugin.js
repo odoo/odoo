@@ -24,7 +24,7 @@ export class OverlayPlugin extends Plugin {
     overlays = [];
 
     setup() {
-        this.iframe = this.document.defaultView.frameElement;
+        this.iframe = this.window.frameElement;
         this.topDocument = this.iframe?.ownerDocument || this.document;
         this.container = this.getScrollContainer();
         this.throttledUpdateContainer = throttleForAnimation(() => {
