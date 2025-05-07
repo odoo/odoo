@@ -193,6 +193,7 @@ class AccountMove(models.Model):
             if not move.company_id.anglo_saxon_accounting:
                 continue
 
+            move = move.with_company(move.company_id)
             stock_moves = move._stock_account_get_last_step_stock_moves()
             # In case we return a return, we have to provide the related AMLs so all can be reconciled
             stock_moves |= stock_moves.origin_returned_move_id
