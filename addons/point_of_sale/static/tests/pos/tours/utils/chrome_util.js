@@ -187,6 +187,13 @@ export function isSynced() {
     };
 }
 
+export function clickOnScanButton() {
+    return {
+        content: "Click the Scan button located in the top header.",
+        trigger: ".pos-topheader .status-buttons .fa-barcode",
+        run: "click",
+    };
+}
 export function freezeDateTime(millis) {
     return [
         {
