@@ -190,7 +190,17 @@ TRANSLATED_ATTRS.update(
 )
 
 # This should match the list provided to OWL (see translatableAttributes).
-OWL_TRANSLATED_ATTRS = {"alt", "data-tooltip", "label", "placeholder", "title"}
+OWL_TRANSLATED_ATTRS = {
+    "alt",
+    "aria-label",
+    "aria-placeholder",
+    "aria-roledescription",
+    "aria-valuetext",
+    "data-tooltip",
+    "label",
+    "placeholder",
+    "title",
+}
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 space_pattern = re.compile(r"[\s\uFEFF]*")  # web_editor uses \uFEFF as ZWNBSP
