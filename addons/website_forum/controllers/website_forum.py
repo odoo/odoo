@@ -40,7 +40,7 @@ class WebsiteForum(WebsiteProfile):
             def _get_my_other_forums():
                 post_domain = expression.OR(
                     [[('create_uid', '=', request.uid)],
-                     [('favourite_ids', '=', request.uid)]]
+                     [('user_favourite', '=', True)]]
                 )
                 return request.env['forum.forum'].search(expression.AND([
                     request.website.website_domain(),
@@ -230,7 +230,7 @@ class WebsiteForum(WebsiteProfile):
 
         domain = [('forum_id', '=', forum.id), ('posts_count', '=' if filters == "unused" else '>', 0)]
         if filters == 'followed' and not request.env.user._is_public():
-            domain = expression.AND([domain, [('message_is_follower', '=', True)]])
+            domain = expression.AND([domain, [('is_follower', '=', True)]])
 
         # Build tags result without using tag_char to build pager, then return tags matching it
         values = self._prepare_user_values(forum=forum, searches={'tags': True}, **post)
@@ -343,12 +343,12 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='jsonrpc', auth="user", methods=['POST'], website=True)
     def question_toggle_favorite(self, forum, question, **post):
         favourite = not question.user_favourite
-        question.sudo().favourite_ids = [(favourite and 4 or 3, request.uid)]
+        question.sudo().user_favourite = favourite
         if favourite:
             # Automatically add the user as follower of the posts that he
             # favorites (on unfavorite we chose to keep him as a follower until
             # he decides to not follow anymore).
-            question.sudo().message_subscribe(request.env.user.partner_id.ids)
+            question.is_follower = True
         return favourite
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", methods=['POST'], website=True)
@@ -431,22 +431,23 @@ class WebsiteForum(WebsiteProfile):
             'parent_id': post_parent and post_parent.id or False,
             'tag_ids': post_tag_ids
         })
+        new_question.is_follower = True
         if post_parent:
             post_parent._update_last_activity()
         slug = request.env['ir.http']._slug
         return request.redirect(f'/forum/{slug(forum)}/{slug(post_parent) if post_parent else new_question.id}')
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="user", methods=['POST'], website=True)
-    def post_comment(self, forum, post, **kwargs):
+    def post_comment(self, forum, post, comment):
         question = post.parent_id or post
-        if kwargs.get('comment') and post.forum_id.id == forum.id:
-            # TDE FIXME: check that post_id is the question or one of its answers
-            body = tools.mail.plaintext2html(kwargs['comment'])
-            post.with_context(mail_post_autofollow_author_skip=True).message_post(
-                body=body,
-                message_type='comment',
-                subtype_xmlid='mail.mt_comment')
+        if comment and post.forum_id.id == forum.id:
+            message = request.env['forum.post.comment'].create({
+                'body': tools.mail.plaintext2html(comment),
+                'post_id': post.id,
+            })
+            message._notify_followers()
             question._update_last_activity()
+            post.is_follower = True
         slug = request.env['ir.http']._slug
         return request.redirect(f'/forum/{slug(forum)}/{slug(question)}')
 
@@ -682,14 +683,15 @@ class WebsiteForum(WebsiteProfile):
             values.update(self._prepare_user_values(forum=forums[0] if len(forums) == 1 else True, **post))
             if forums:
                 values.update(self._prepare_open_forum_user(user, forums))
+            else:
+                values['count_questions'] = 0
         return values
 
     def _prepare_open_forum_user(self, user, forums, **kwargs):
         Post = request.env['forum.post']
         Vote = request.env['forum.post.vote']
-        Activity = request.env['mail.message']
+        Activity = request.env['forum.post.comment']
         Followers = request.env['mail.followers']
-        Data = request.env["ir.model.data"]
 
         # questions and answers by user
         user_question_ids = Post.search([
@@ -720,7 +722,7 @@ class WebsiteForum(WebsiteProfile):
 
         # showing Favourite questions of user.
         favourite = Post.search(
-            [('favourite_ids', '=', user.id), ('forum_id', 'in', forums.ids), ('parent_id', '=', False)])
+            [('user_favourite', '=', True), ('forum_id', 'in', forums.ids), ('parent_id', '=', False)])
 
         # votes which given on users questions and answers.
         data = Vote._read_group(
@@ -737,11 +739,8 @@ class WebsiteForum(WebsiteProfile):
         vote_ids = Vote.search([('user_id', '=', user.id), ('forum_id', 'in', forums.ids)])
 
         # activity by user.
-        comment = Data._xmlid_lookup('mail.mt_comment')[1]
-        activities = Activity.search(
-            [('res_id', 'in', (user_question_ids + user_answer_ids).ids), ('model', '=', 'forum.post'),
-             ('subtype_id', '!=', comment)],
-            order='date DESC', limit=100)
+        activities = Activity.search([('post_id', 'in', (user_question_ids + user_answer_ids).ids)],
+            order='create_date DESC', limit=100)
 
         posts = {}
         for act in activities:
@@ -777,9 +776,11 @@ class WebsiteForum(WebsiteProfile):
     # Messaging
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/convert_to_answer', type='http', auth="user", methods=['POST'], website=True)
+    @http.route(
+        '/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("forum.post.comment"):comment>/convert_to_answer',
+        type='http', auth="user", methods=['POST'], website=True)
     def convert_comment_to_answer(self, forum, post, comment, **kwarg):
-        post = request.env['forum.post'].convert_comment_to_answer(comment.id)
+        post = request.env['forum.post'].convert_comment_to_answer(comment)
         slug = request.env['ir.http']._slug
         if not post:
             return request.redirect("/forum/%s" % slug(forum))
@@ -795,6 +796,6 @@ class WebsiteForum(WebsiteProfile):
             return request.redirect("/forum/%s" % slug(forum))
         return request.redirect("/forum/%s/%s" % (slug(forum), request.env['ir.http']._slug(question)))
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/delete', type='jsonrpc', auth="user", website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("forum.post.comment"):comment>/delete', type='jsonrpc', auth="user", website=True)
     def delete_comment(self, forum, post, comment, **kwarg):
-        return post.unlink_comment(comment.id)[0]
+        post.unlink_comment(comment)

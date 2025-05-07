@@ -2,6 +2,7 @@
 
 from . import forum_forum
 from . import forum_post
+from . import forum_post_comment
 from . import forum_post_reason
 from . import forum_post_vote
 from . import forum_tag

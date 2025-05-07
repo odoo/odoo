@@ -60,10 +60,9 @@
                                 data-bs-placement="top"
                                 title="Favorite"/>
                         </a>
-                        <t t-if="question.state == 'active'" t-call="website_forum.follow">
+                        <t t-if="question.state == 'active'" t-call="website_forum.follow_button">
                             <t t-set="object" t-value="question"/>
-                            <t t-set="icons_design" t-value="True"/>
-                            <t t-set="btn_classes" t-value="'opacity-50 opacity-100-hover' "/>
+                            <t t-set="btn_classes" t-value="'opacity-50 opacity-100-hover'"/>
                         </t>
                     </div>
                 </div>
