@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_bento_grid_avatars" name="Bento Avatars">
+    <section class="s_bento_grid_avatars pt64 pb64">
+        <div class="container">
+            <div class="row o_grid_mode" style="gap: 32px;" data-row-count="9">
+                <div class="o_grid_item g-col-lg-4 g-height-9 col-lg-4 oe_img_bg o_bg_img_center rounded o_cc o_cc5 o_colored_level"
+                     style="grid-area: 1 / 1 / 10 / 5; z-index: 1; --grid-item-padding-x: 32px; --grid-item-padding-y: 32px; border-radius: 6.4px !important; background-image: url('/web/image/website.s_bento_grid_default_image_1'); background-position: 50% 80%;">
+                    <div class="o_we_bg_filter bg-black-25"/>
+                    <h2 class="h4-fs">Sustainable Materials</h2>
+                    <p><br/></p>
+                    <p>Made from ethically sourced wood and premium textiles, our furniture is as kind to the planet as it is to your living space.</p>
+                </div>
+                <div class="o_grid_item g-col-lg-4 g-height-6 col-lg-4 oe_img_bg o_bg_img_center rounded o_cc o_cc5 o_colored_level"
+                     style="grid-area: 1 / 5 / 7 / 9; z-index: 2; --grid-item-padding-x: 32px; --grid-item-padding-y: 32px; border-radius: 6.4px !important; background-image: url('/web/image/website.s_bento_grid_default_image_4');">
+                    <div class="o_we_bg_filter bg-black-25"/>
+                    <h2 class="h4-fs">Timeless Design</h2>
+                    <p><br/></p>
+                    <p>Elevate your living space with furniture that blends modern aesthetics and classic charm, crafted to bring both comfort and style to your home.</p>
+                    <p><br/></p>
+                    <t t-snippet-call="website.s_avatars" string="Avatars"/>
+                </div>
+                <div class="o_grid_item g-col-lg-4 g-height-3 col-lg-4 rounded o_cc o_cc5 o_colored_level"
+                     style="grid-area: 7 / 5 / 10 / 9; z-index: 3; --grid-item-padding-x: 32px; --grid-item-padding-y: 32px; border-radius: 6.4px !important;">
+                    <h2 class="h4-fs">30% off wooden desks</h2>
+                    <p>Enjoy 30% on all our wooden desks and elevate your workspace.</p>
+                    <a href="#" title="" role="button" class="btn btn-secondary">
+                        Start saving&#160;&#160;<span class="fa fa-long-arrow-right" role="img"/>
+                    </a>
+                </div>
+                <div class="o_grid_item g-col-lg-4 g-height-9 col-lg-4 rounded o_cc o_cc2 o_colored_level"
+                     style="grid-area: 1 / 9 / 10 / 13; z-index: 4; --grid-item-padding-x: 32px; --grid-item-padding-y: 32px; border-radius: 6.4px !important;">
+                    <h2 style="text-align: center;" class="h4-fs"><br/><br/><br/>Expert’s review<br/></h2>
+                    <blockquote class="s_blockquote s_blockquote_default o_cc o_cc2 o_animable position-relative d-flex flex-column gap-4 w-100 mx-auto p-1 fst-normal" data-vcss="001" data-snippet="s_blockquote" data-name="Blockquote">
+                        <div class="s_blockquote_line_elt position-absolute top-0 start-0 bottom-0 bg-o-color-1"/>
+                        <div class="s_blockquote_wrap_icon position-absolute top-0 start-50 translate-middle w-100">
+                            <i class="s_blockquote_icon fa fa-quote-right d-block mx-auto rounded bg-o-color-1" role="img"/>
+                        </div>
+                        <p class="s_blockquote_quote my-auto lead h5-fs" style="text-align: center;">
+                            “Our furniture balances style, comfort, and sustainability.”<br/>
+                        </p>
+                        <div class="s_blockquote_infos d-flex gap-2 flex-column align-items-center w-100 text-center">
+                            <img src="/web/image/website.s_blockquote_default_image" class="s_blockquote_avatar img rounded-circle" alt=""/>
+                            <div class="s_blockquote_author">
+                                <span class="o_small">
+                                    <strong>Paul Dawson</strong><br/>
+                                    <span class="text-muted">Furniture Design Specialist</span>
+                                </span>
+                            </div>
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>
