@@ -128,6 +128,7 @@ class StockPicking(models.Model):
                 for line in rec.pos_order_id.lines:
                     if not line.product_id.is_storable or line.product_id.valuation != 'real_time':
                         continue
+                    line = line.with_company(line.company_id)
                     out = line.product_id.categ_id.property_stock_account_output_categ_id
                     exp = line.product_id._get_product_accounts()['expense']
                     cost_per_account[(out, exp)] += line.total_cost

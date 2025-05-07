@@ -943,7 +943,7 @@ class HrExpense(models.Model):
 
         # expense account of the product then the product category
         if self.product_id:
-            account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
+            account = self.product_id.with_company(self.company_id).product_tmpl_id._get_product_accounts()['expense']
         else:
             account = self.env['ir.property']._get('property_account_expense_categ_id', 'product.category')
 
