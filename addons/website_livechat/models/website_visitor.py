@@ -3,7 +3,6 @@
 from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
-from odoo.http import request
 from odoo.tools import get_lang
 from odoo.tools.sql import column_exists, create_column
 
@@ -119,32 +118,9 @@ class WebsiteVisitor(models.Model):
         return visitor_id, upsert
 
     def _field_store_repr(self, field_name):
-        if field_name == "country":
-            return [
-                Store.Attr(
-                    "country",
-                    lambda visitor: Store.One(
-                        visitor.partner_id.country_id or visitor.country_id, ["code"]
-                    ),
-                ),
-            ]
         if field_name == "history":
             # sudo: website.track - reading the history of accessible visitor is acceptable
             return [Store.Attr("history", lambda visitor: visitor.sudo()._get_visitor_history())]
-        if field_name == "lang_name":
-            return [Store.Attr("lang_name", lambda visitor: visitor.lang_id.name)]
-        if field_name == "name":
-            return [
-                Store.Attr(
-                    "name",
-                    lambda visitor: visitor.partner_id.name
-                    or visitor.partner_id.display_name
-                    or visitor.display_name
-                    or _("Visitor #%(id)d.", id=visitor.id),
-                ),
-            ]
-        if field_name == "website_name":
-            return [Store.Attr("website_name", lambda visitor: visitor.website_id.name)]
         return [field_name]
 
     def _get_visitor_history(self):

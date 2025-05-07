@@ -211,6 +211,9 @@
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
+        "mail.assets_public": [
+            "website/static/src/**/common/**/*",
+        ],
         'web.assets_frontend': [
             'website/static/src/interactions/**/*',
             'website/static/src/core/**/*',
@@ -311,6 +314,7 @@
             'website/static/src/components/autocomplete_with_pages/*',
             'website/static/src/xml/website.xml',
             'website/static/src/scss/website_controller_page_kanban.scss',
+            'website/static/src/**/common/**/*',
 
             'website/static/src/xml/website_form_editor.xml',
             # TODO Remove the module's form js - this is for testing.
@@ -334,6 +338,7 @@
             'website/static/tests/helpers.js',
             'website/static/tests/interactions/**/*',
             'website/static/tests/builder/**/*',
+            'website/static/tests/mock_server/**/*',
         ],
         'web.assets_unit_tests_setup': [
             'web/static/src/legacy/js/core/class.js',
