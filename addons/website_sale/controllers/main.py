@@ -5,7 +5,7 @@ import json
 import logging
 from datetime import datetime
 
-from psycopg2.errors import LockNotAvailable
+from psycopg2 import DatabaseError
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
@@ -30,6 +30,7 @@ from odoo.tools import lazy
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
 _logger = logging.getLogger(__name__)
+psycopg2_errors_LockNotAvailable = '55P03'
 
 
 class TableCompute(object):
@@ -1810,7 +1811,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
             request.env.cr.execute(
                 f'SELECT 1 FROM sale_order WHERE id = {order_sudo.id} FOR NO KEY UPDATE NOWAIT'
             )
-        except LockNotAvailable:
+        except DatabaseError as e:
+            if e.pgcode != psycopg2_errors_LockNotAvailable:
+                raise
             raise UserError(_("Payment is already being processed."))
 
         kwargs.update({
