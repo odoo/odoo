@@ -2,10 +2,34 @@ import { Plugin } from "@html_editor/plugin";
 import { MEDIA_SELECTOR, isProtected } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
+import { _t } from "@web/core/l10n/translation";
 
 export class MediaWebsitePlugin extends Plugin {
     static id = "media_website";
     static dependencies = ["media", "selection"];
+
+    resources = {
+        user_commands: [
+            {
+                id: "websiteVideo",
+                title: _t("Video"),
+                description: _t("Insert a video"),
+                icon: "fa-file-video-o",
+                run: this.dependencies.media.openMediaDialog.bind(this, {
+                    noVideos: false,
+                    noImages: true,
+                    noIcons: true,
+                    extraTabs: false,
+                }),
+            },
+        ],
+        powerbox_items: [
+            {
+                categoryId: "media",
+                commandId: "websiteVideo",
+            },
+        ],
+    };
 
     setup() {
         const basicMediaSelector = `${MEDIA_SELECTOR}, img`;
