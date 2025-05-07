@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { after } from "@html_builder/utils/option_sequence";
-import { HEADER_BORDER } from "@html_builder/website_builder/plugins/options/header_option";
+import { HEADER_BORDER } from "./header_option_plugin";
 
 const LANGUAGE_SELECTOR = after(HEADER_BORDER);
 class LanguageSelectorOptionPlugin extends Plugin {
