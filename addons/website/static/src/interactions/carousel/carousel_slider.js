@@ -1,5 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { onceAllImagesLoaded } from "@website/utils/images";
 
 export class CarouselSlider extends Interaction {
     static selector = ".carousel";
@@ -97,6 +98,11 @@ export class CarouselSlider extends Interaction {
             // If images are loading, prevent the slide transition. It will
             // slide once the next images are loaded.
             ev.preventDefault();
+            onceAllImagesLoaded(this.carouselInnerEl).then(
+                () => {
+                    window.Carousel.getOrCreateInstance(this.el).to(ev.to);
+                }
+            );
             return;
         }
         if (this.options.scrollMode === "single") {
