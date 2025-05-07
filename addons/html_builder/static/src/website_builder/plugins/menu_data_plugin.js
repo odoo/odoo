@@ -4,7 +4,7 @@ import { NavbarLinkPopover } from "@html_editor/main/link/navbar_link_popover";
 import { MenuDialog, EditMenuDialog } from "@website/components/dialog/edit_menu";
 import { withSequence } from "@html_editor/utils/resource";
 
-class MenuDataPlugin extends Plugin {
+export class MenuDataPlugin extends Plugin {
     static id = "menuDataPlugin";
     resources = {
         link_popovers: [
