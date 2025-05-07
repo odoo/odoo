@@ -343,9 +343,9 @@ class L10n_FrFecExportWizard(models.TransientModel):
             self.env.company.write({'fiscalyear_lock_date': self.date_to})
 
         return {
-            'file_name': f"{company_legal_data}FEC{end_date}{suffix}.csv",
+            'file_name': f"{company_legal_data}FEC{end_date}{suffix}.txt",
             'file_content': content,
-            'file_type': 'csv'
+            'file_type': 'txt'
         }
 
     def create_fec_report_action(self):
