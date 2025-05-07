@@ -59,4 +59,18 @@
             </div>
         </field>
     </record>
+
+    <record id="product_view_search_catalog" model="ir.ui.view">
+        <field name="name">purchase.view.search.catalog.inherit.purchase_stock</field>
+        <field name="model">product.product</field>
+        <field name="mode">extension</field>
+        <field name="inherit_id" ref="purchase.product_view_search_catalog"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='products_in_purchase_order']" position="after">
+                <separator/>
+                <filter string="To Order" name="products_with_negative_forecast" domain="[('virtual_available', '&lt;', 0)]"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
