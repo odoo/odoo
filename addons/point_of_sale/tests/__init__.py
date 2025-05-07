@@ -8,6 +8,7 @@ from . import test_point_of_sale_ui
 from . import test_anglo_saxon
 from . import test_point_of_sale
 from . import test_pos_controller
+from . import test_pos_invoice_consolidation
 from . import test_pos_cash_rounding
 from . import test_pos_setup
 from . import test_pos_simple_orders
