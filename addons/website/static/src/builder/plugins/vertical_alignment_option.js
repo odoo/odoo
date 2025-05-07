@@ -5,8 +5,10 @@ export class VerticalAlignmentOption extends BaseOptionComponent {
     static props = {
         level: { type: Number, optional: true },
         applyTo: { type: String, optional: true },
+        justify: { type: Boolean, optional: true },
     };
     static defaultProps = {
         level: 0,
+        justify: true,
     };
 }
