@@ -13,7 +13,7 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         KanbanHeader: ProjectTaskKanbanHeader,
     };
 
-    static props = [...KanbanRenderer.props, "hideGhostColumns?"];
+    static props = [...KanbanRenderer.props, "hideKanbanStagesNocontent?"];
 
     setup() {
         super.setup();

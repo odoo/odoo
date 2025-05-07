@@ -15,6 +15,7 @@ import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
+import { KanbanColumnExamplesDialog } from "./kanban_column_examples_dialog";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
@@ -85,7 +86,6 @@ export class KanbanRenderer extends Component {
         if (this.exampleData) {
             validateColumnQuickCreateExamples(this.exampleData);
         }
-        this.ghostColumns = this.generateGhostColumns();
         this.lastCheckedRecord = null;
 
         // Sortable
@@ -326,6 +326,12 @@ export class KanbanRenderer extends Component {
         );
     }
 
+    get canShowExamples() {
+        const { allowedGroupBys = [], examples = [] } = this.exampleData || {};
+        const hasExamples = Boolean(examples.length);
+        return hasExamples && allowedGroupBys.includes(this.props.list.groupByField.name);
+    }
+
     get showNoContentHelper() {
         const { model, isGrouped, groupByField, groups } = this.props.list;
         if (model.useSampleModel) {
@@ -400,19 +406,6 @@ export class KanbanRenderer extends Component {
         const records = group.list.records.filter((r) => !r.isInQuickCreation);
         const count = this.props.progressBarState?.getGroupCount(group) || group.count;
         return count - records.length;
-    }
-
-    generateGhostColumns() {
-        let colNames;
-        if (this.exampleData && this.exampleData.ghostColumns) {
-            colNames = this.exampleData.ghostColumns;
-        } else {
-            colNames = [1, 2, 3, 4].map((num) => _t("Column %s", num));
-        }
-        return colNames.map((colName) => ({
-            name: colName,
-            cards: new Array(Math.floor(Math.random() * 4) + 2),
-        }));
     }
 
     /**
@@ -556,6 +549,23 @@ export class KanbanRenderer extends Component {
             const record = this.props.list.records.find((e) => e.id === target.dataset.id);
             this.toggleSelection(record, isRange);
         }
+    }
+
+    showExamples() {
+        this.dialog.add(KanbanColumnExamplesDialog, {
+            examples: this.exampleData.examples,
+            applyExamplesText: this.exampleData.applyExamplesText || _t("Use This For My Kanban"),
+            applyExamples: (index) => {
+                const { examples, foldField } = this.exampleData;
+                const { columns, foldedColumns = [] } = examples[index];
+                for (const groupName of columns) {
+                    this.props.list.createGroup(groupName);
+                }
+                for (const groupName of foldedColumns) {
+                    this.props.list.createGroup(groupName, foldField);
+                }
+            },
+        });
     }
 
     /**

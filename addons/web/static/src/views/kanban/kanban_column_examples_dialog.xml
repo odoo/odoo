@@ -19,7 +19,7 @@
 
     <!-- Note: this dialog isn't responsive, but it is not accessible on mobile -->
     <t t-name="web.KanbanColumnExamplesDialog">
-        <Dialog contentClass="'o_kanban_examples_dialog'" title.translate="Kanban Examples">
+        <Dialog contentClass="'o_kanban_examples_dialog'" title.translate="Kanban Examples" size="'xl'">
             <Notebook orientation="'vertical'" pages="pages" onPageUpdate.bind="onPageUpdate" />
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="applyExamples" t-esc="props.applyExamplesText"/>

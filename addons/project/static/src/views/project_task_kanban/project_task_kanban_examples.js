@@ -9,7 +9,6 @@ const star = markup(`<a style="color: gold;" class="fa fa-star"></a>`);
 const clock = markup(`<a class="fa fa-clock-o"></a>`);
 
 const exampleData = {
-    ghostColumns: [_t('New'), _t('Assigned'), _t('In Progress'), _t('Done')],
     applyExamplesText: _t("Use This For My Project"),
     allowedGroupBys: ['stage_id'],
     foldField: "fold",
