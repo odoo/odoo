@@ -6,8 +6,6 @@
             t-att-class="{
                 'o-inComposer': env.inComposer,
                 'o-inChatWindow': env.inChatWindow,
-                'me-2 pe-4': isInChatWindowAndIsAlignedLeft and !env.inComposer,
-                'ms-2 ps-4': isInChatWindowAndIsAlignedRight and !env.inComposer,
             }"
         >
             <div class="d-flex flex-grow-1 flex-wrap mx-1 align-items-center" t-att-class="{
@@ -43,8 +41,6 @@
                     t-foreach="cards" t-as="attachment" t-key="attachment.id"
                     class="o-mail-AttachmentCard d-flex rounded mb-1 me-1 mw-100 overflow-auto"
                     t-att-class="{
-                               'ms-1': isInChatWindowAndIsAlignedRight,
-                               'me-1': !isInChatWindowAndIsAlignedRight,
                                'o-viewable': attachment.isViewable,
                                'o-isUploading': attachment.uploading,
                                }"
