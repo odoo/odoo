@@ -1,4 +1,4 @@
-import { Component, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useEffect, useRef, useState, status } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 
 export class CodeEditor extends Component {
@@ -22,6 +22,7 @@ export class CodeEditor extends Component {
         },
         maxLines: { type: Number, optional: true },
         sessionId: { type: [Number, String], optional: true },
+        initialCursorPosition: { type: Object, optional: true },
     };
     static defaultProps = {
         readonly: false,
@@ -78,7 +79,10 @@ export class CodeEditor extends Component {
                 session.setValue(this.props.value);
                 session.on("change", () => {
                     if (this.props.onChange && !ignoredAceChange) {
-                        this.props.onChange(this.aceEditor.getValue());
+                        this.props.onChange(
+                            this.aceEditor.getValue(),
+                            this.aceEditor.getCursorPosition()
+                        );
                     }
                 });
                 this.aceEditor.on("blur", () => {
@@ -138,7 +142,10 @@ export class CodeEditor extends Component {
                     });
                     session.on("change", () => {
                         if (this.props.onChange && !ignoredAceChange) {
-                            this.props.onChange(this.aceEditor.getValue());
+                            this.props.onChange(
+                                this.aceEditor.getValue(),
+                                this.aceEditor.getCursorPosition()
+                            );
                         }
                     });
                     sessions[sessionId] = session;
@@ -148,5 +155,24 @@ export class CodeEditor extends Component {
             },
             () => [this.props.sessionId, this.props.mode, this.props.value]
         );
+
+        const initialCursorPosition = this.props.initialCursorPosition;
+        if (initialCursorPosition) {
+            onMounted(() => {
+                // Wait for ace to be fully operational
+                window.requestAnimationFrame(() => {
+                    if (status(this) != "destroyed" && this.aceEditor) {
+                        this.aceEditor.focus();
+                        const { row, column } = initialCursorPosition;
+                        const pos = {
+                            row: row || 0,
+                            column: column || 0,
+                        };
+                        this.aceEditor.selection.moveToPosition(pos);
+                        this.aceEditor.renderer.scrollCursorIntoView(pos, 0.5);
+                    }
+                });
+            });
+        }
     }
 }
