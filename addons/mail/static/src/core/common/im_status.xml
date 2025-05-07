@@ -23,7 +23,7 @@
                     </t>
                     <div t-if="props.member?.isTyping" class="rounded-pill" style="padding: 1px;" t-att-class="{ 'bg-300': env.inChatBubble, 'bg-inherit': !env.inChatBubble }">
                         <div class="bg-success rounded-pill" style="padding: 3px;">
-                            <Typing member="props.member" channel="props.member.threadAsTyping" size="'md'" displayText="false" />
+                            <Typing member="props.member" channel="props.member.threadAsTyping" size="['sm', 'smaller'].includes(props.size) ? 'sm' : 'md'" displayText="false" />
                         </div>
                     </div>
                 </t>
