@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
 
 const oeStructureSelector = "#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]";
 const oeFieldSelector = "#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])";
@@ -222,3 +223,4 @@ export class SavePlugin extends Plugin {
         }
     }
 }
+registry.category("translation-plugins").add(SavePlugin.id, SavePlugin);

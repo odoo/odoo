@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { pyToJsLocale } from "@web/core/l10n/utils";
-import { getElementsWithOption, isMobileView } from "@html_builder/utils/utils";
+import { getElementsWithOption } from "@html_builder/utils/utils";
 import { VisibilityOption } from "./visibility_option";
 import { withSequence } from "@html_editor/utils/resource";
 import {
@@ -10,8 +10,8 @@ import {
     DEVICE_VISIBILITY,
 } from "@html_builder/website_builder/option_sequence";
 
-const visibilityOptionSelector = "section, .s_hr";
-const deviceVisibilityOptionSelector = "section .row > div";
+export const VISIBILITY_OPTION_SELECTOR = "section, .s_hr";
+export const DEVICE_VISIBILITY_OPTION_SELECTOR = "section .row > div";
 
 class VisibilityOptionPlugin extends Plugin {
     static id = "visibilityOption";
@@ -23,19 +23,17 @@ class VisibilityOptionPlugin extends Plugin {
                 props: {
                     websiteSession: this.dependencies.websiteSession.getSession(),
                 },
-                selector: visibilityOptionSelector,
+                selector: VISIBILITY_OPTION_SELECTOR,
                 cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
             }),
             withSequence(DEVICE_VISIBILITY, {
                 template: "html_builder.DeviceVisibilityOption",
-                selector: deviceVisibilityOptionSelector,
+                selector: DEVICE_VISIBILITY_OPTION_SELECTOR,
                 exclude: ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize",
                 cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
             }),
         ],
         builder_actions: this.getActions(),
-        target_show: this.onTargetShow.bind(this),
-        target_hide: this.onTargetHide.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         normalize_handlers: this.normalizeCSSSelectors.bind(this),
         visibility_selector_parameters: [
@@ -145,38 +143,8 @@ class VisibilityOptionPlugin extends Plugin {
         return false;
     }
 
-    onTargetHide(editingEl) {
-        if (
-            editingEl.matches(deviceVisibilityOptionSelector) ||
-            editingEl.matches(visibilityOptionSelector)
-        ) {
-            editingEl.classList.remove("o_snippet_override_invisible");
-
-            const isConditionalHidden = editingEl.matches("[data-visibility='conditional']");
-            if (isConditionalHidden) {
-                editingEl.classList.add("o_conditional_hidden");
-            }
-        }
-    }
-
-    onTargetShow(editingEl) {
-        if (
-            editingEl.matches(deviceVisibilityOptionSelector) ||
-            editingEl.matches(visibilityOptionSelector)
-        ) {
-            const isMobilePreview = isMobileView(editingEl);
-            const isMobileHidden = editingEl.classList.contains("o_snippet_mobile_invisible");
-            const isDesktopHidden = editingEl.classList.contains("o_snippet_desktop_invisible");
-            if ((isMobileHidden && isMobilePreview) || (isDesktopHidden && !isMobilePreview)) {
-                editingEl.classList.add("o_snippet_override_invisible");
-            }
-
-            editingEl.classList.remove("o_conditional_hidden");
-        }
-    }
-
     onSnippetDropped({ snippetEl }) {
-        const selector = [visibilityOptionSelector, deviceVisibilityOptionSelector].join(", ");
+        const selector = [VISIBILITY_OPTION_SELECTOR, DEVICE_VISIBILITY_OPTION_SELECTOR].join(", ");
         const droppedEls = getElementsWithOption(snippetEl, selector);
         droppedEls.forEach((droppedEl) =>
             this.dependencies.visibility.toggleTargetVisibility(droppedEl, true, true)
@@ -184,7 +152,7 @@ class VisibilityOptionPlugin extends Plugin {
     }
 
     normalizeCSSSelectors(rootEl) {
-        for (const el of selectElements(rootEl, visibilityOptionSelector)) {
+        for (const el of selectElements(rootEl, VISIBILITY_OPTION_SELECTOR)) {
             this.updateCSSSelectors(el);
         }
     }

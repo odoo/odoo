@@ -1,5 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { isMobileView } from "@html_builder/utils/utils";
+import { registry } from "@web/core/registry";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class VisibilityPlugin extends Plugin {
     static id = "visibility";
@@ -10,7 +12,7 @@ export class VisibilityPlugin extends Plugin {
         "onOptionVisibilityUpdate",
     ];
     resources = {
-        on_mobile_preview_clicked: this.onMobilePreviewClicked.bind(this),
+        on_mobile_preview_clicked: withSequence(10, this.onMobilePreviewClicked.bind(this)),
         system_attributes: ["data-invisible"],
         system_classes: ["o_snippet_override_invisible"],
     };
@@ -60,17 +62,21 @@ export class VisibilityPlugin extends Plugin {
     }
 
     onMobilePreviewClicked() {
-        const isMobilePreview = isMobileView(this.editable);
         const invisibleOverrideEls = this.editable.querySelectorAll(
             ".o_snippet_mobile_invisible, .o_snippet_desktop_invisible"
         );
         for (const invisibleOverrideEl of [...invisibleOverrideEls]) {
-            const isMobileHidden = invisibleOverrideEl.classList.contains(
-                "o_snippet_mobile_invisible"
-            );
             invisibleOverrideEl.classList.remove("o_snippet_override_invisible");
-            const show = isMobilePreview !== isMobileHidden;
-            this.toggleVisibilityStatus(invisibleOverrideEl, show);
+            const show = this.toggleVisibilityStatus({
+                editingEl: invisibleOverrideEl,
+                considerDeviceVisibility: true,
+            });
+            if (
+                !show &&
+                invisibleOverrideEl.contains(this.dependencies["builder-options"].getTarget())
+            ) {
+                this.dependencies["builder-options"].deactivateContainers();
+            }
         }
     }
 
@@ -83,7 +89,7 @@ export class VisibilityPlugin extends Plugin {
      * @returns {Boolean}
      */
     toggleTargetVisibility(editingEl, show, considerDeviceVisibility) {
-        show = this.toggleVisibilityStatus(editingEl, show, considerDeviceVisibility);
+        show = this.toggleVisibilityStatus({ editingEl, show, considerDeviceVisibility });
         const dispatchName = show ? "target_show" : "target_hide";
         this.dispatchTo(dispatchName, editingEl);
         return show;
@@ -96,8 +102,7 @@ export class VisibilityPlugin extends Plugin {
      * @param {Boolean} show true/false if the element was shown/hidden
      */
     onOptionVisibilityUpdate(editingEl, show) {
-        const isShown = this.toggleVisibilityStatus(editingEl, show);
-
+        const isShown = this.toggleVisibilityStatus({ editingEl, show });
         if (!isShown) {
             this.dependencies["builder-options"].deactivateContainers();
         }
@@ -114,18 +119,14 @@ export class VisibilityPlugin extends Plugin {
      * @param {Boolean} considerDeviceVisibility
      * @returns {Boolean}
      */
-    toggleVisibilityStatus(editingEl, show, considerDeviceVisibility) {
+    toggleVisibilityStatus({ editingEl, show, considerDeviceVisibility = false }) {
         if (
             considerDeviceVisibility &&
             editingEl.matches(".o_snippet_mobile_invisible, .o_snippet_desktop_invisible")
         ) {
             const isMobilePreview = isMobileView(editingEl);
             const isMobileHidden = editingEl.classList.contains("o_snippet_mobile_invisible");
-            if (isMobilePreview === isMobileHidden) {
-                // If the preview mode and the hidden type are the same, the
-                // element is considered as hidden.
-                show = false;
-            }
+            show = isMobilePreview !== isMobileHidden;
         }
 
         if (show === undefined) {
@@ -143,3 +144,5 @@ export class VisibilityPlugin extends Plugin {
 function isTargetVisible(editingEl) {
     return editingEl.dataset.invisible !== "1";
 }
+
+registry.category("translation-plugins").add(VisibilityPlugin.id, VisibilityPlugin);

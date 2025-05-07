@@ -34,7 +34,8 @@
                 <BlockTab />
             </t>
             <t t-if="state.activeTab === 'customize'">
-                <CustomizeTab currentOptionsContainers="state.currentOptionsContainers" snippetModel="snippetModel"/>
+                <t t-if="props.isTranslation" t-call="html_builder.CustomizeTranslationTab"/>
+                <CustomizeTab t-else="" currentOptionsContainers="state.currentOptionsContainers" snippetModel="snippetModel"/>
             </t>
             <t t-if="state.activeTab === 'theme'">
                 <ThemeTab/>

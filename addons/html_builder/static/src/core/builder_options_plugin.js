@@ -20,6 +20,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getContainers",
         "updateContainers",
         "deactivateContainers",
+        "getTarget",
         "getPageContainers",
         "getRemoveDisabledReason",
         "getCloneDisabledReason",
@@ -148,6 +149,10 @@ export class BuilderOptionsPlugin extends Plugin {
         this.lastContainers = newContainers;
         this.dependencies.history.setStepExtra("optionSelection", this.target);
         this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+    }
+
+    getTarget() {
+        return this.target;
     }
 
     deactivateContainers() {

@@ -92,7 +92,7 @@ test("Add an element on the invisible elements tab", async () => {
     ).toHaveCount(1);
 });
 
-test("mobile and desktop invisible elements", async () => {
+test("mobile and desktop invisible elements panel", async () => {
     await setupWebsiteBuilder(`
         <div class="o_snippet_invisible" data-name="Popup1"></div>
         <div class="o_snippet_mobile_invisible" data-name="Popup2"></div>
@@ -107,6 +107,31 @@ test("mobile and desktop invisible elements", async () => {
         "Popup1",
         "Popup2",
     ]);
+});
+
+test("mobile and desktop option container", async () => {
+    await setupWebsiteBuilder(`
+        <section class="o_snippet_desktop_invisible"></section>
+    `);
+    await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
+    expect(".options-container").toBeDisplayed();
+    await contains("button[data-action='mobile']").click();
+    expect(".options-container").toBeDisplayed();
+    await contains("button[data-action='mobile']").click();
+    expect(".options-container").not.toBeDisplayed();
+});
+
+test("keep the option container of a visible snippet even if there are hidden snippet on the page", async () => {
+    await setupWebsiteBuilder(`
+        <section id="my_el">
+            <p>TEST</p>
+        </section>
+        <section class="o_snippet_mobile_invisible"></section>
+    `);
+    await contains(":iframe #my_el").click();
+    expect(".options-container").toBeDisplayed();
+    await contains("button[data-action='mobile']").click();
+    expect(".options-container").toBeDisplayed();
 });
 
 test("invisible elements efficiency", async () => {

@@ -4,6 +4,7 @@ import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
 import { checkElement } from "../builder_options_plugin";
 import { OverlayButtons } from "./overlay_buttons";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class OverlayButtonsPlugin extends Plugin {
     static id = "overlayButtons";
@@ -17,7 +18,7 @@ export class OverlayButtonsPlugin extends Plugin {
     resources = {
         step_added_handlers: this.refreshButtons.bind(this),
         change_current_options_containers_listeners: this.addOverlayButtons.bind(this),
-        on_mobile_preview_clicked: this.refreshButtons.bind(this),
+        on_mobile_preview_clicked: withSequence(20, this.refreshButtons.bind(this)),
     };
 
     setup() {

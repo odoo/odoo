@@ -25,6 +25,7 @@ import { CustomizeTab } from "./sidebar/customize_tab";
 import { ThemeTab } from "@html_builder/website_builder/plugins/theme/theme_tab";
 import { CORE_PLUGINS } from "./core/core_plugins";
 import { EDITOR_COLOR_CSS_VARIABLES, getCSSVariableValue } from "./utils/utils_css";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class Builder extends Component {
     static template = "html_builder.Builder";
@@ -76,7 +77,8 @@ export class Builder extends Component {
                 "BannerPlugin",
             ]
         );
-        const Plugins = [...mainPlugins, ...CORE_PLUGINS, ...(this.props.Plugins || [])];
+        const corePlugins = this.props.isTranslation ? [] : CORE_PLUGINS;
+        const Plugins = [...mainPlugins, ...corePlugins, ...(this.props.Plugins || [])];
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
         this.editor = new Editor(
@@ -103,9 +105,9 @@ export class Builder extends Component {
                     trigger_dom_updated: () => {
                         editorBus.trigger("DOM_UPDATED");
                     },
-                    on_mobile_preview_clicked: () => {
+                    on_mobile_preview_clicked: withSequence(20, () => {
                         editorBus.trigger("DOM_UPDATED");
-                    },
+                    }),
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
                         if (!currentOptionsContainers.length) {

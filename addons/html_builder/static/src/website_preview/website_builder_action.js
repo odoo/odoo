@@ -158,7 +158,10 @@ export class WebsiteBuilder extends Component {
     }
 
     get menuProps() {
-        const WebsitePlugins = registry.category("website-plugins").getAll();
+        const websitePlugins = this.translation
+            ? registry.category("translation-plugins").getAll()
+            : registry.category("website-plugins").getAll();
+
         return {
             closeEditor: this.reloadIframeAndCloseEditor.bind(this),
             reloadEditor: this.reloadEditor.bind(this),
@@ -168,7 +171,7 @@ export class WebsiteBuilder extends Component {
             isTranslation: this.translation,
             iframeLoaded: this.iframeLoaded,
             isMobile: this.websiteContext.isMobile,
-            Plugins: WebsitePlugins,
+            Plugins: websitePlugins,
             config: { initialTarget: this.target, initialTab: this.initialTab },
         };
     }

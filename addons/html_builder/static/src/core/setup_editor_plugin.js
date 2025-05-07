@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { getTranslationEditableEls } from "@html_builder/website_builder/plugins/translation_plugin";
+import { registry } from "@web/core/registry";
 
 export class SetupEditorPlugin extends Plugin {
     static id = "setup_editor_plugin";
@@ -103,3 +104,4 @@ export class SetupEditorPlugin extends Plugin {
         return editablesAreaEls;
     }
 }
+registry.category("translation-plugins").add(SetupEditorPlugin.id, SetupEditorPlugin);

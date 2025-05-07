@@ -57,10 +57,8 @@ export class TranslationPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         get_dirty_els: this.getDirtyTranslations.bind(this),
         after_setup_editor_handlers: () => {
-            if (this.config.isTranslation) {
-                this.setupServicesIfNotSet();
-                this.prepareTranslation();
-            }
+            this.setupServicesIfNotSet();
+            this.prepareTranslation();
         },
     };
 
@@ -306,9 +304,6 @@ export class TranslationPlugin extends Plugin {
      * @returns {HTMLElement[]}
      */
     getDirtyTranslations() {
-        if (!this.config.isTranslation) {
-            return [];
-        }
         const dirtyEls = [];
         for (const [translateEl, translationInfo] of this.elToTranslationInfoMap) {
             for (const [attr, data] of Object.entries(translationInfo)) {
@@ -351,4 +346,4 @@ export class TranslationPlugin extends Plugin {
     }
 }
 
-registry.category("website-plugins").add(TranslationPlugin.id, TranslationPlugin);
+registry.category("translation-plugins").add(TranslationPlugin.id, TranslationPlugin);
