@@ -285,16 +285,17 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
                 isApplied: ({ params }) => {
                     const records = [...(params.views || []), ...(params.assets || [])];
-                    const configKeysIsApplied = records.every((v) => this.getConfigKey(v))
-                    if (params.checkVars && params.checkVars !== undefined) {
+                    const configKeysIsApplied = records.every((v) => this.getConfigKey(v));
+                    if (params.checkVars || params.checkVars === undefined) {
                         return (
                             configKeysIsApplied &&
                             Object.entries(params.vars || {}).every(
-                                ([variable, value]) => value === this.getWebsiteVariableValue(variable)
+                                ([variable, value]) =>
+                                    value === this.getWebsiteVariableValue(variable)
                             )
                         );
                     }
-                    return configKeysIsApplied
+                    return configKeysIsApplied;
                 },
                 apply: async (action) => this.toggleConfig(action, true),
                 clean: (action) => this.toggleConfig(action, false),
