@@ -4767,6 +4767,7 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     def _thread_to_store(self, store: Store, fields, *, request_list=None):
+        request_list = request_list or []
         store.add_records_fields(self, fields, as_thread=True)
         for thread in self:
             res = {}
@@ -4780,16 +4781,15 @@ class MailThread(models.AbstractModel):
                 except AccessError:
                     pass
             if (
-                request_list
-                and "activities" in request_list
+               "activities" in request_list
                 and isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"])
             ):
                 res["activities"] = Store.Many(thread.with_context(active_test=True).activity_ids)
-            if request_list and "attachments" in request_list:
+            if "attachments" in request_list:
                 res["attachments"] = Store.Many(thread._get_mail_thread_data_attachments())
                 res["areAttachmentsLoaded"] = True
                 res["isLoadingAttachments"] = False
-            if request_list and "followers" in request_list:
+            if "followers" in request_list:
                 res["followersCount"] = self.env["mail.followers"].search_count(
                     [("res_id", "=", thread.id), ("res_model", "=", self._name)]
                 )
@@ -4813,13 +4813,13 @@ class MailThread(models.AbstractModel):
                     ]
                 )
                 thread._message_followers_to_store(store, filter_recipients=True, reset=True)
-            if request_list and "display_name" in request_list:
+            if "display_name" in request_list:
                 res["display_name"] = thread.display_name
-            if request_list and "scheduledMessages" in request_list:
+            if "scheduledMessages" in request_list:
                 res["scheduledMessages"] = Store.Many(self.env['mail.scheduled.message'].search([
                     ['model', '=', self._name], ['res_id', '=', thread.id]
                 ]))
-            if request_list and "suggestedRecipients" in request_list:
+            if "suggestedRecipients" in request_list:
                 res["suggestedRecipients"] = thread._message_get_suggested_recipients(
                     reply_discussion=True, no_create=True,
                 )
