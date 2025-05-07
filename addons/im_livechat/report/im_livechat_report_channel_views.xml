@@ -52,7 +52,7 @@
             <field name="name">im_livechat.report.channel.graph</field>
             <field name="model">im_livechat.report.channel</field>
             <field name="arch" type="xml">
-                <graph string="Livechat Support Statistics" type="line" stacked="1" sample="1">
+                <graph js_class="im_livechat.channel_report_graph_views" string="Livechat Support Statistics" type="line" stacked="1" sample="1">
                     <field name="call_duration_hour" type="measure" widget="float_time"/>
                     <field name="has_call" invisible="1"/>
                     <field name="percentage_of_calls" type="measure" widget="percentage"/>
