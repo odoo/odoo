@@ -57,16 +57,19 @@ registry.category("web_tour.tours").add("sale_signature_without_name", {
         {
             content: "Sign & Pay",
             trigger: ":iframe .o_portal_sale_sidebar .btn-primary",
+            alt_trigger: ".o_portal_sale_sidebar .btn-primary",
             run: "click",
         },
         {
             content: "click submit",
             trigger: ":iframe .o_portal_sign_submit:enabled",
+            alt_trigger: ".o_portal_sign_submit:enabled",
             run: "click",
         },
         {
             content: "check error because no name",
             trigger: ':iframe .o_portal_sign_error_msg:contains("Signature is missing.")',
+            alt_trigger: '.o_portal_sign_error_msg:contains("Signature is missing.")'
         },
     ],
 });
