@@ -1,4 +1,4 @@
-import { after, beforeEach, expect, test } from "@odoo/hoot";
+import { after, beforeEach, expect, getFixture, test } from "@odoo/hoot";
 import {
     click,
     dblclick,
@@ -5575,36 +5575,6 @@ test("auto fold group when reach the limit", async () => {
     ]);
 });
 
-test.tags("desktop", "focus required");
-test("show/hide help message (ESC) in quick create", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        groupBy: ["product_id"],
-    });
-
-    await quickCreateKanbanColumn();
-    await animationFrame(); // Wait for the autofocus to trigger after the update
-
-    expect(".o_discard_msg").toHaveCount(1, { message: "the ESC to discard message is visible" });
-
-    // click outside the column (to lose focus)
-    await click(".o_kanban_header");
-    await animationFrame();
-
-    expect(".o_discard_msg").toHaveCount(0, {
-        message: "the ESC to discard message is no longer visible",
-    });
-});
-
 test.tags("desktop");
 test("delete a column in grouped on m2o", async () => {
     stepAllNetworkCalls();
@@ -6007,8 +5977,8 @@ test("quick create column should close on window click if there is no column", a
     expect(".o_column_quick_create input").toHaveCount(1, {
         message: "the quick create should be opened",
     });
-    // click outside should not discard quick create column
-    await contains(".o_kanban_example_background_container").click();
+    // click outside should discard quick create column
+    await contains(getFixture()).click();
     expect(".o_column_quick_create input").toHaveCount(0, {
         message: "the quick create should be closed",
     });
@@ -6091,7 +6061,8 @@ test("quick create column with enter", async () => {
 });
 
 test.tags("desktop");
-test("quick create column and examples", async () => {
+test("empty stages kanban examples", async () => {
+    Partner._records = [];
     registry.category("kanban_examples").add("test", {
         allowedGroupBys: ["product_id"],
         examples: [
@@ -6123,19 +6094,16 @@ test("quick create column and examples", async () => {
         groupBy: ["product_id"],
     });
 
-    expect(".o_column_quick_create").toHaveCount(1, {
-        message: "should have quick create available",
+    expect(".o_kanban_stages_nocontent").toHaveCount(1, {
+        message: "should show the empty stages kanban helper",
     });
 
-    // open the quick create
-    await quickCreateKanbanColumn();
-
-    expect(".o_column_quick_create .o_kanban_examples:visible").toHaveCount(1, {
+    expect(".o_kanban_stages_nocontent .o_kanban_examples").toHaveCount(1, {
         message: "should have a link to see examples",
     });
 
     // click to see the examples
-    await contains(".o_column_quick_create .o_kanban_examples").click();
+    await contains(".o_kanban_stages_nocontent .o_kanban_examples").click();
 
     expect(".modal .o_kanban_examples_dialog").toHaveCount(1, {
         message: "should have open the examples dialog",
@@ -6243,7 +6211,7 @@ test("count of folded groups in empty kanban with sample data", async () => {
 });
 
 test.tags("desktop");
-test("quick create column and examples: with folded columns", async () => {
+test("empty stages kanban examples: with folded columns", async () => {
     registry.category("kanban_examples").add("test", {
         allowedGroupBys: ["product_id"],
         foldField: "folded",
@@ -6279,11 +6247,8 @@ test("quick create column and examples: with folded columns", async () => {
         groupBy: ["product_id"],
     });
 
-    // the quick create should already be unfolded as there are no records
-    expect(".o_column_quick_create.o_quick_create_unfolded").toHaveCount(1);
-
     // click to see the examples
-    await contains(".o_column_quick_create .o_kanban_examples").click();
+    await contains(".o_kanban_stages_nocontent .o_kanban_examples").click();
 
     // apply the examples
     expect.verifySteps([]);
@@ -6302,7 +6267,8 @@ test("quick create column and examples: with folded columns", async () => {
 });
 
 test.tags("desktop");
-test("quick create column's apply button's display text", async () => {
+test("empty stages kanban examples: apply button's display text", async () => {
+    Partner._records = [];
     const applyExamplesText = "Use This For My Test";
     registry.category("kanban_examples").add("test", {
         allowedGroupBys: ["product_id"],
@@ -6334,99 +6300,11 @@ test("quick create column's apply button's display text", async () => {
         groupBy: ["product_id"],
     });
 
-    // open the quick create
-    await quickCreateKanbanColumn();
-
     // click to see the examples
-    await contains(".o_column_quick_create .o_kanban_examples").click();
+    await contains(".o_kanban_stages_nocontent .o_kanban_examples").click();
 
     expect(".modal footer.modal-footer button.btn-primary").toHaveText(applyExamplesText, {
         message: "the primary button should display the value of applyExamplesText",
-    });
-});
-
-test.tags("desktop");
-test("create column and examples background with ghostColumns titles", async () => {
-    registry.category("kanban_examples").add("test", {
-        allowedGroupBys: ["product_id"],
-        ghostColumns: ["Ghost 1", "Ghost 2", "Ghost 3", "Ghost 4"],
-        examples: [
-            {
-                name: "A first example",
-                columns: ["Column 1", "Column 2", "Column 3"],
-            },
-            {
-                name: "A second example",
-                columns: ["Col 1", "Col 2"],
-            },
-        ],
-    });
-    after(() => registry.category("kanban_examples").remove("test"));
-
-    Partner._records = [];
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban examples="test">
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        groupBy: ["product_id"],
-    });
-
-    expect(".o_kanban_example_background").toHaveCount(1, {
-        message: "should have ExamplesBackground when no data",
-    });
-    expect(queryAllTexts(".o_kanban_examples_group h6")).toEqual([
-        "Ghost 1",
-        "Ghost 2",
-        "Ghost 3",
-        "Ghost 4",
-    ]);
-    expect(".o_column_quick_create").toHaveCount(1, {
-        message: "should have a ColumnQuickCreate widget",
-    });
-    expect(".o_column_quick_create .o_kanban_examples:visible").toHaveCount(1, {
-        message: "should not have a link to see examples as there is no examples registered",
-    });
-});
-
-test("create column and examples background without ghostColumns titles", async () => {
-    Partner._records = [];
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        groupBy: ["product_id"],
-    });
-
-    expect(".o_kanban_example_background").toHaveCount(1, {
-        message: "should have ExamplesBackground when no data",
-    });
-    expect(queryAllTexts(".o_kanban_examples_group h6")).toEqual([
-        "Column 1",
-        "Column 2",
-        "Column 3",
-        "Column 4",
-    ]);
-    expect(".o_column_quick_create").toHaveCount(1, {
-        message: "should have a ColumnQuickCreate widget",
-    });
-    expect(".o_column_quick_create .o_kanban_examples:visible").toHaveCount(0, {
-        message: "should not have a link to see examples as there is no examples registered",
     });
 });
 
@@ -6586,7 +6464,7 @@ test("no nocontent helper for grouped kanban with empty groups", async () => {
     expect(".o_kanban_record").toHaveCount(0, { message: "there should be no records" });
 });
 
-test("no nocontent helper for grouped kanban with no records", async () => {
+test("stages nocontent helper for grouped kanban with no records", async () => {
     Partner._records = [];
 
     await mountView({
@@ -6606,15 +6484,11 @@ test("no nocontent helper for grouped kanban with no records", async () => {
 
     expect(".o_kanban_group").toHaveCount(0, { message: "there should be no columns" });
     expect(".o_kanban_record").toHaveCount(0, { message: "there should be no records" });
-    expect(".o_view_nocontent").toHaveCount(0, {
-        message: "there should be no nocontent helper (we are in 'column creation mode')",
-    });
-    expect(".o_column_quick_create").toHaveCount(1, {
-        message: "there should be a column quick create",
-    });
+    expect(".o_view_nocontent.o_kanban_stages_nocontent").toHaveCount(1);
+    expect(".o_column_quick_create").toHaveCount(1);
 });
 
-test("no nocontent helper is shown when no longer creating column", async () => {
+test("basic nocontent helper is shown when no longer creating column", async () => {
     Partner._records = [];
 
     await mountView({
@@ -6632,7 +6506,7 @@ test("no nocontent helper is shown when no longer creating column", async () => 
         noContentHelp: "No content helper",
     });
 
-    expect(".o_view_nocontent").toHaveCount(0, {
+    expect(".o_view_nocontent.o_kanban_stages_nocontent").toHaveCount(1, {
         message: "there should be no nocontent helper (we are in 'column creation mode')",
     });
 
@@ -6648,7 +6522,7 @@ test("no nocontent helper is shown when no longer creating column", async () => 
     await press("Escape");
     await animationFrame();
 
-    expect(".o_view_nocontent").toHaveCount(1, { message: "there should be a nocontent helper" });
+    expect(".o_view_nocontent:not(.o_kanban_stages_nocontent)").toHaveCount(1);
 });
 
 test("no nocontent helper is hidden when quick creating a column", async () => {
@@ -6877,9 +6751,8 @@ test("empty grouped kanban with sample data and no columns", async () => {
         noContentHelp: "No content helper",
     });
 
-    expect(".o_view_nocontent").toHaveCount(0);
+    expect(".o_kanban_stages_nocontent").toHaveCount(1);
     expect(".o_quick_create_unfolded").toHaveCount(1);
-    expect(".o_kanban_example_background_container").toHaveCount(1);
 });
 
 test("empty kanban with sample data grouped by date range (fill temporal)", async () => {

@@ -23,15 +23,12 @@
                             t-on-keydown="onInputKeydown"
                         />
                         <button class="btn btn-primary o_kanban_add" type="button" t-on-click="validate">
-                            Add
+                            <i class="fa fa-check"/>
+                        </button>
+                        <button class="btn btn-danger o_kanban_remove" type="button" t-on-click="fold">
+                            <i class="fa fa-times"/>
                         </button>
                     </div>
-                    <div t-if="!env.isSmall and state.hasInputFocused" t-attf-class="o_discard_msg small text-muted {{ canShowExamples ? 'float-end' : 'text-end'}}">
-                        Press <kbd>Esc</kbd> to discard
-                    </div>
-                    <t t-if="canShowExamples and !env.isSmall">
-                        <button type="button" class="btn btn-link o_kanban_examples p-0" t-on-click="showExamples">See examples</button>
-                    </t>
                 </div>
                 <div t-foreach="[,,,]" t-as="i" t-key="i_index" class="o_kanban_muted_record mb-2 py-5 bg-300 opacity-50" />
             </div>
