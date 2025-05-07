@@ -59,12 +59,14 @@ class AccountChartTemplate(models.AbstractModel):
                 'auto_apply': True,
                 'state_ids': state_ids,
                 'country_id': self.env.ref('base.in').id,
+                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_intra_state'),
             },
             'fiscal_position_in_inter_state': {
                 'name': _('Inter State'),
                 'sequence': 2,
                 'auto_apply': True,
                 'country_group_id': 'l10n_in.inter_state_group',
+                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_inter_state'),
             },
         }
         if company.parent_id:
@@ -76,62 +78,33 @@ class AccountChartTemplate(models.AbstractModel):
                 'sequence': 3,
                 'auto_apply': True,
                 'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX.'),
+                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_export_sez_in'),
             },
             'fiscal_position_in_lut_sez': {
                 'name': _('LUT - Export/SEZ'),
                 'sequence': 4,
                 'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX.'),
+                'tax_ids': self._get_l10n_in_fiscal_tax_vals('fiscal_position_in_lut_sez'),
             },
         }
 
-    @template('in', 'account.tax')
-    def _get_in_account_tax(self):
-        # Tax mappings are dependent on the fiscal positions
-        tax_data_generation_settings = [
-            ('fiscal_position_in_inter_state', None, False, False),
-            ('fiscal_position_in_export_sez_in', '_sez_exp', False, True),
-            ('fiscal_position_in_lut_sez', '_sez_exp_lut', True, True),
-        ]
-        tax_data = {}
-        csv_tax_data = self._parse_csv('in', 'account.tax', module='l10n_in')
-        fiscal_position_data = self._get_in_account_fiscal_position()
-        for xml_id, trailing_id, use_zero_rated_igst, zero_rated_with_igst in tax_data_generation_settings:
-            if xml_id in fiscal_position_data:
-                extra_taxes = self._get_l10n_in_fiscal_tax_vals(xml_id, use_zero_rated_igst=use_zero_rated_igst, trailing_id=trailing_id, get_zero_rated_with_igst=zero_rated_with_igst)
-                tax_data = {
-                    **tax_data,
-                    **{extrak: extrav for extrak, extrav in extra_taxes.items() if extrak in csv_tax_data},
-                }
-        return tax_data
-
+    # unused parameters will be removed in master
     def _get_l10n_in_fiscal_tax_vals(self, fiscal_position_xml_ids, use_zero_rated_igst=False, trailing_id=False, get_zero_rated_with_igst=False):
-        tax_data = {
-            f"igst_{tax_type}_{0 if use_zero_rated_igst and tax_type == 'purchase' else rate}{(tax_type == 'sale' and trailing_id) or ''}": {
-                'fiscal_position_ids': fiscal_position_xml_ids,
-                'original_tax_ids': f"sgst_{tax_type}_{rate}",
-            }
-            for tax_type in ["sale", "purchase"]
-            for rate in [1, 2, 5, 8, 12, 18, 28]  # Available existing GST Rates..... 8?!?!?! Do igst_{sale/purchase}_8 taxes even exist?
-        }
-        # Since the taxes mapped above need to be in the domestic fiscal position
-        tax_data = {
-            **tax_data,
-            **{
-                f"sgst_{tax_type}_{rate}": {
-                    'fiscal_position_ids': 'fiscal_position_in_intra_state',
-                }
-                for tax_type in ["sale", "purchase"]
-                for rate in [1, 2, 5, 8, 12, 18, 28]
-            }
-        }
+        rates = [1, 2, 5, 12, 18, 28]
+        zero_igst = ['igst_sale_0', 'igst_purchase_0']
+        taxes_xml_ids = []
 
-        if get_zero_rated_with_igst:
-            tax_data = {
-                **tax_data,
-                **self._get_l10n_in_zero_rated_with_igst_zero_tax_vals(fiscal_position_xml_ids),
-            }
-        return tax_data
+        if fiscal_position_xml_ids == 'fiscal_position_in_intra_state':
+            taxes_xml_ids = [f"sgst_{tax_type}_{rate}" for tax_type in ["sale", "purchase"] for rate in rates]
+        elif fiscal_position_xml_ids == 'fiscal_position_in_inter_state':
+            taxes_xml_ids = [f"igst_{tax_type}_{rate}" for tax_type in ["sale", "purchase"] for rate in rates]
+        elif fiscal_position_xml_ids == 'fiscal_position_in_export_sez_in':
+            taxes_xml_ids = [f"igst_sale_{rate}_sez_exp" for rate in rates] + [f"igst_purchase_{rate}" for rate in rates] + zero_igst
+        elif fiscal_position_xml_ids == 'fiscal_position_in_lut_sez':
+            taxes_xml_ids = [f"igst_sale_{rate}_sez_exp_lut" for rate in rates] + zero_igst
+        return [Command.set(taxes_xml_ids)]
 
+    # Will be removed in master
     def _get_l10n_in_zero_rated_with_igst_zero_tax_vals(self, fiscal_position_xml_ids):
         return {
             "igst_sale_0": {
