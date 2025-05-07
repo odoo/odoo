@@ -64,8 +64,9 @@ class PosMakeInvoice(models.TransientModel):
                     if not partner:
                         raise UserError(_("Kindly ensure that each order contains a customer."))
 
-                    for fiscal_position, fiscal_position_orders in partner_orders.grouped('fiscal_position_id').items():
-                        grouped_orders.append(((config, partner, fiscal_position), fiscal_position_orders))
+                    for user, user_orders in partner_orders.grouped('user_id').items():
+                        for fiscal_position, fiscal_position_orders in user_orders.grouped('fiscal_position_id').items():
+                            grouped_orders.append(((config, partner, user, fiscal_position), fiscal_position_orders))
 
             for _key, orders in grouped_orders:
                 invoices |= orders._generate_pos_order_invoice()
