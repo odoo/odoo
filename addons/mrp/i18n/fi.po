@@ -213,9 +213,9 @@ msgid ""
 "              2 Steps: Pick components from stock and then produce.\n"
 "              3 Steps: Pick components from stock, produce, and then move final product(s) from production area to stock."
 msgstr ""
-"1 vaihe: Kuluta komponentteja varastosta ja tuota.\n"
-"              2 vaihetta: Poimi komponentit varastosta ja tuota sitten.\n"
-"              3 vaihetta: Komponenttien poimiminen varastosta, valmistaminen ja sen jälkeen lopputuotteen (lopputuotteiden) siirtäminen tuotantoalueelta varastoon."
+"Yksi vaiheinen: Kuluta komponentteja varastosta ja valmista.\n"
+"              Kaksi vaiheinen: Keräile komponentit varastosta ja valmista.\n"
+"              3 vaiheinen: Komponenttien keräily varastosta, valmistaminen ja sen jälkeen lopputuotteen/lopputuotteiden siirtäminen tuotantoalueelta varastoon."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -882,7 +882,7 @@ msgstr "Liitteiden lukumäärä"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_variant_attributes
 msgid "Attribute Values"
-msgstr "Attribuuttien arvot"
+msgstr "Määritteiden arvot"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_mrp_reception_report
@@ -3621,7 +3621,7 @@ msgstr "Omat valmistustilaukseni"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
 msgid "Never attribute values"
-msgstr "Ei koskaan luotavien attribuuttien arvot"
+msgstr "Ei koskaan käytettävät määritteiden arvot"
 
 #. module: mrp
 #. odoo-python
@@ -3884,8 +3884,8 @@ msgid ""
 "                                barcode operator and configure the routing of the reports."
 msgstr ""
 "Odoo avaa oletusarvoisesti PDF-esikatselun. Jos haluat tulostaa heti,\n"
-"                                asenna IoT-sovellus tietokoneeseen, joka on samassa paikallisverkossa kuin\n"
-"                                viivakoodioperaattorin kanssa ja määritä raporttien reititys."
+"                                asenna IoT-sovellus tietokoneelle, joka on samassa paikallisverkossa kuin\n"
+"                                viivakoodioperaattori ja määritä raporttien reititys."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
@@ -4295,7 +4295,7 @@ msgstr "Ponnahdusikkunan tiedot JSON"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__possible_bom_product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__possible_bom_product_template_attribute_value_ids
 msgid "Possible Product Template Attribute Value"
-msgstr "Mahdollinen tuotemallin attribuutin arvo"
+msgstr "Mahdollinen tuotemallin määritteen arvo"
 
 #. module: mrp
 #. odoo-python
@@ -5556,8 +5556,8 @@ msgid ""
 "The attribute value %(attribute)s set on product %(product)s does not match "
 "the BoM product %(bom_product)s."
 msgstr ""
-"Tuotteelle %(product)s asetettu attribuutin arvo %(attribute)s ei vastaa "
-"osaluettelon tuotantoa %(bom_product)s."
+"Tuotteelle %(product)s asetettu määritteen arvo %(attribute)s ei vastaa "
+"materiaaliluettelon tuotetta %(bom_product)s."
 
 #. module: mrp
 #. odoo-python
@@ -6274,7 +6274,7 @@ msgstr "Vahvistettu"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr "Voimassa olevat tuoteominaisuuslinjat"
+msgstr "Voimassa olevat tuotemääriterivit"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form

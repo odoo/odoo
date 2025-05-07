@@ -703,7 +703,7 @@ msgstr "كافة الحركات "
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_raw_ids
 msgid "All Move Raw"
-msgstr ""
+msgstr "كافة حركات المواد الخام "
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_line_bom_qty_zero
@@ -841,6 +841,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"بما أنه قد تم استخدام وحدات قياس أخرى (مثال: %(problem_uom)s) غير %(uom)s "
+"لهذا المنتج، فلا يمكن تغيير وحدة القياس. إذا كنت ترغب في تغييرها، فيُرجى "
+"أرشفة المنتج وإنشاء منتج جديد."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -6357,6 +6360,10 @@ msgid ""
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
+"عندما يكون للشراء مسار ’شراء‘ مع نوع عملية محدد، سوف يحاول إنشاء أمر تصنيع "
+"لذلك المنتج باستخدام قائمة مواد لها نفس نوع العملية. إذا لم يكن كذلك، لا يتم"
+" أخذ نوع العملية بعين الاعتبار في بحث قائمة المواد. يسمح ذلك بتحديد قواعد "
+"المخزون والتي تشغل أوامر تصنيع مختلفة مع قوائم مواد مختلفة. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
@@ -6748,6 +6755,8 @@ msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
 "cancel state."
 msgstr ""
+"لا يمكنك تغيير الكمية التي تمّ إنتاجها لأمر عمل في حالة \"تم الانتهاء منه\" "
+"أو \"تم إلغاؤه\". "
 
 #. module: mrp
 #. odoo-python

@@ -3,8 +3,8 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Malaz Abuidris <msea@odoo.com>, 2025
 # Wil Odoo, 2025
+# Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-27 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +33,15 @@ msgid ""
 "            * OOOO is the sequence number.\n"
 "    "
 msgstr ""
+"\n"
+"        مرجع سهل القراءة لهذا الطلب.\n"
+"            * التنسيق: YYLL-SSS-FOOOO\n"
+"            * YY هي السنة\n"
+"            * LL هي رقم تسجيل الدخول (وكيل للجهاز)\n"
+"            * SSS هو معرّف الجلسة\n"
+"            * F هو 1 أو 0 (1 إذا تم إنشاء رقم التسلسل من العميل)\n"
+"            * OOOO هو رقم التسلسل.\n"
+"    "
 
 #. module: point_of_sale
 #. odoo-python
@@ -1705,6 +1714,8 @@ msgstr ""
 msgid ""
 "Check if you want to group products of this unit in point of sale orders"
 msgstr ""
+"قم بتحديد هذا الخيار إذا كنت ترغب في تجميع المنتجات التابعة لهذه الوحدة في "
+"أوامر نقطة البيع "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -2686,6 +2697,9 @@ msgid ""
 "identity of the device where the UI is opened. And as such, it is the LL "
 "part of the pos_reference field of the pos.order model."
 msgstr ""
+"يحدد عدد المرات التي يتم فيها فتح واجهة المستخدم. يتم استخدامه كوكيل لهوية "
+"الجهاز التي يتم فيها فتح واجهة المستخدم. وعلى هذا النحو، فهو جزء LL من حقل "
+"pos_reference في نموذج pos.order. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3467,6 +3481,8 @@ msgid ""
 "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
 "Make sure to close all sessions first to avoid any issues."
 msgstr ""
+"مهلاً! قيامك بأرشفة المنتجات بينما جلسات نقاط البيع نشطة أشبه بسحب طبق في منتصف الوجبة.\n"
+"تأكد من إغلاق كافة الجلسات أولاً لتجنب أي مشاكل. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_time
@@ -8161,6 +8177,8 @@ msgid ""
 "The tip has been added to the order. However,the selected payment line does "
 "not allow tips to be added."
 msgstr ""
+"تمت إضافة البقشيش إلى الطلب. ومع ذلك، لا يسمح بند الدفع المحدد بإضافة "
+"البقشيش. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen

@@ -149,10 +149,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
-"- Heti: Kaikki mahdolliset variantit luodaan heti, kun attribuutti ja sen arvot lisätään tuotteeseen.\n"
-"        - Dynaamisesti: Kukin variantti luodaan vasta, kun sitä vastaavat attribuutit ja arvot lisätään myyntitilaukseen.\n"
-"        - Ei koskaan: Määritteelle ei koskaan luoda vaihtoehtoja.\n"
-"        Huomautus: tätä ei voi muuttaa, kun attribuutti on käytössä tuotteessa."
+"- Heti: Kaikki mahdolliset variantit luodaan heti, kun määritteen arvot lisätään tuotteeseen.\n"
+"        - Dynaamisesti: Kukin variantti luodaan, kun sitä vastaavat määritteet ja arvot lisätään myyntitilaukseen.\n"
+"        - Ei koskaan: Määritteelle ei koskaan luoda variantteja.\n"
+"        Huomautus: tätä ei voi muuttaa, kun tuote käyttää ominaisuutta."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -319,9 +319,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
-"<strong>Varoitus</strong>: attribuuttien lisääminen ja/tai poistaminen luo "
-"uudet varianttituotteet ja poistaa vanhat, mikä johtaa olemassa olevien "
-"kustomointien menettämiseen."
+"<strong>Varoitus</strong>: määritteiden lisääminen ja/tai poistaminen\n"
+"                  poistaa ja luo uudelleen olemassa olevat variantit ja johtaa\n"
+"                  olemassa olevien räätälöintien menettämiseen."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_uom_barcode_uniq
@@ -670,18 +670,18 @@ msgstr "Liitteen URL"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
 msgid "Attribute"
-msgstr "Attribuutti"
+msgstr "Määrite"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr "Attribuuttirivi"
+msgstr "Määriterivi"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Attribute Name"
-msgstr "Attribuutin nimi"
+msgstr "Määritteen nimi"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
@@ -690,7 +690,7 @@ msgstr "Attribuutin nimi"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__attribute_value_id
 msgid "Attribute Value"
-msgstr "Attribuutin arvo"
+msgstr "Määritteen arvo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
@@ -698,7 +698,7 @@ msgstr "Attribuutin arvo"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_value_list
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
-msgstr "Attribuuttien arvot"
+msgstr "Määritteiden arvot"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -706,12 +706,12 @@ msgstr "Attribuuttien arvot"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Attributes"
-msgstr "Attribuutit"
+msgstr "Määritteet"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attributes & Variants"
-msgstr "Attribuutit ja variantit"
+msgstr "Määritteet & variantit"
 
 #. module: product
 #. odoo-javascript
@@ -929,7 +929,7 @@ msgstr "Yhdistelmähinta"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes."
-msgstr "Yhdistelmätuotteilla ei voi olla attribuutteja"
+msgstr "Yhdistelmätuotteilla ei voi olla määritteitä"
 
 #. module: product
 #. odoo-python
@@ -992,7 +992,7 @@ msgstr "Asetukset"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Configure"
-msgstr "Konfiguroi"
+msgstr "Määritä"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -1398,8 +1398,7 @@ msgstr "Dynaamisesti"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
-msgstr ""
-"Kukin arvo on määriteltävä vain kerran attribuuttia ja tuotetta kohti."
+msgstr "Kukin arvo on määriteltävä vain kerran per määrite ja tuote."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -1486,8 +1485,8 @@ msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200"
 " price extra, 1000 + 200 = 1200."
 msgstr ""
-"Lisähinta variantille, jolla on tämä attribuuttiarvo, myyntihinnan "
-"yhteydessä. esim. 200 lisähinta, 1000 + 200 = 1200."
+"Lisähinta myyntihinnassa variantille, jolla on tämä määritteen arvo. Esim. "
+"200 euron lisähinta, 1000 + 200 = 1200."
 
 #. module: product
 #: model:product.attribute,name:product.fabric_attribute
@@ -1671,8 +1670,8 @@ msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color if the attribute type is 'Color'."
 msgstr ""
-"Tässä voit asettaa tietyn HTML värikoodin (esim. #ff0000) joka näytetään jos"
-" ominaisuuden tyyppi 'Väri."
+"Tässä voit asettaa tietyn HTML-värikoodin (esim. #ff0000), joka näytetään, "
+"jos määritteen tyyppi on 'väri."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -2064,8 +2063,8 @@ msgid ""
 "Make this attribute value not compatible with other values of the product or"
 " some attribute values of optional and accessory products."
 msgstr ""
-"Tee tästä attribuutin arvosta yhteensopimaton tuotteen muiden arvojen tai "
-"joidenkin valinnaisten ja lisätuotteiden attribuuttiarvojen kanssa."
+"Tee tästä määritteen arvosta yhteensopimaton tuotteen muiden arvojen tai "
+"joidenkin valinnaisten ja lisätuotteiden määritteiden arvojen kanssa."
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
@@ -2340,7 +2339,7 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the"
 " attribute %(attribute)s because they do not match."
 msgstr ""
-"Tuotteen %(product)s arvoa %(value)s ei voi yhdistää määritteeseen "
+"Tuotteeseen %(product)s ei voi liittää arvoa %(value)s, jossa on määrite "
 "%(attribute)s, koska ne eivät vastaa toisiaan."
 
 #. module: product
@@ -2350,8 +2349,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
-"Tuotteen %(product)s attribuuttia %(attribute_src)s ei voi muuttaa "
-"attribuutiksi %(attribute_dest)s."
+"Tuotteen %(product)s määritettä %(attribute_src)s ei voi muuttaa "
+"ominaisuudeksi %(attribute_dest)s."
 
 #. module: product
 #. odoo-javascript
@@ -2658,28 +2657,28 @@ msgstr "Tuote"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
-msgstr "Tuotteen ominaisuus"
+msgstr "Tuotteen määrite"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "Tuotteen ominaisuuden mukautettu arvo"
+msgstr "Tuotteen määritteen mukautettu arvo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
 msgid "Product Attribute Values"
-msgstr "Tuotteen ominaisuuksien arvot"
+msgstr "Tuotteen määritteiden arvot"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr "Tuotteen ominaisuudet ja arvot"
+msgstr "Tuotteen määritteet ja arvot"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__attribute_line_ids
 msgid "Product Attributes"
-msgstr "Tuotteen ominaisuudet"
+msgstr "Tuotteen määritteet"
 
 #. module: product
 #: model:ir.model,name:product.model_product_catalog_mixin
@@ -2817,17 +2816,17 @@ msgstr "Tuotemalli"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_exclusion
 msgid "Product Template Attribute Exclusion"
-msgstr "Tuotemallin ominaisuuden poissulkeminen"
+msgstr "Tuotemallin määritteiden rajaaminen"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Tuotemallin ominaisuusrivi"
+msgstr "Tuotemallin määriterivi"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr "Tuotemallin ominaisuuden arvo"
+msgstr "Tuotemallin määritteen arvo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
@@ -3337,7 +3336,7 @@ msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
 msgstr ""
-"Attribuuttia ei voi vaihtaa sen jälkeen kun arvoa on käytetty vähintään "
+"Määritettä ei voi vaihtaa sen jälkeen kun arvoa on käytetty vähintään "
 "yhdessä tuotteessa."
 
 #. module: product
@@ -3356,7 +3355,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_value__display_type
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__display_type
 msgid "The display type used in the Product Configurator."
-msgstr "Tuotekonfiguraattorissa näytetty näkymätyyppi."
+msgstr "Tuotekonfiguraattorissa näytetty näyttötyyppi."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -3404,10 +3403,10 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
-"Muodostettavien vaihtoehtojen määrä ylittää sallitun rajan. Vaihtoehtoja ei "
-"pitäisi joko olla luomatta jokaista yhdistelmää varten tai ne pitäisi luoda "
-"pyydettäessä myyntitilauksesta. Tee näin avaamalla attribuuttien "
-"lomakenäkymä ja vaihtamalla tilaksi *Luo muunnelmia*."
+"Luotavien varianttien määrä ylittää sallitun rajan. Yhdistelmille tulisi "
+"joko olla luomatta lainkaan variantteja tai ne pitäisi luoda pyydettäessä "
+"myyntitilauksen perusteella. Tehdäksesi näin avaaa määritteiden lomakenäkymä"
+" ja vaihda tilaksi *Luo variantteja*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3444,8 +3443,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
 " Variants' button to set the extra attribute prices."
 msgstr ""
-"Myyntihintaa hallitaan tuotemallista. Napsauta Configure Variants (Määritä "
-"muunnelmia) -painiketta asettaaksesi ylimääräiset attribuuttihinnat."
+"Myyntihintaa hallitaan tuotemallista. Napsauta 'Määritä variantteja' "
+"-painiketta asettaaksesi ylimääräiset määritehinnat."
 
 #. module: product
 #. odoo-python
@@ -3454,7 +3453,7 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
-"Tuotteen %(product)s attribuutille %(attribute)s ei ole määritelty arvoa "
+"Tuotteen %(product)s määritteelle %(attribute)s ei ole määritelty arvoa "
 "%(value)s."
 
 #. module: product
@@ -3483,14 +3482,14 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
-"Tämä tuoteattribuuttien, arvojen ja poissulkemisten kokoonpano ei johtaisi "
-"mihinkään mahdolliseen vaihtoehtoon. Arkistoi tai poista tuote suoraan, jos "
-"se on tarkoitettu."
+"Tämä tuotemääritteiden, arvojen ja rajausten kokoonpano ei johtaisi "
+"mihinkään mahdolliseen varianttiin. Arkistoi tai poista tuote suoraan, jos "
+"se on tarkoitus."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr "Tämä on kaikkien attribuuttien ylimääräisen hinnan summa"
+msgstr "Tämä on kaikkien määritteistä koituvien lisähintojen summa"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3624,7 +3623,7 @@ msgstr "Päivitä lisähinnat"
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr "Päivitä tuoteattribuutin arvo"
+msgstr "Päivitä tuotemääritteen arvo"
 
 #. module: product
 #. odoo-python
@@ -3699,7 +3698,7 @@ msgstr "Käyttäjänimi"
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr "Voimassa olevat tuoteominaisuuslinjat"
+msgstr "Voimassa olevat tuotemääriterivit"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3965,7 +3964,7 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
-"Olet lisäämässä arvoa \"%(attribute_value)s\" tuotteisiin %(product_count)s."
+"Olet lisäämässä arvon \"%(attribute_value)s\" tuotteisiin %(product_count)s."
 
 #. module: product
 #. odoo-python
@@ -4018,7 +4017,7 @@ msgstr ""
 msgid ""
 "You can upload an image that will be used as the color of the attribute "
 "value."
-msgstr "Voit ladata kuvan, jota käytetään attribuuttiarvon värinä."
+msgstr "Voit ladata kuvan, jota käytetään määritteen värinä."
 
 #. module: product
 #. odoo-javascript
@@ -4032,7 +4031,7 @@ msgstr "Et voi muokata tätä tuotetta luettelossa."
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
 msgstr ""
-"Tätä ominaisuutta ei voi arkistoida, koska siihen on edelleen liitetty "
+"Tätä määritettä ei voi arkistoida, koska siihen on edelleen liitetty "
 "tuotteita"
 
 #. module: product

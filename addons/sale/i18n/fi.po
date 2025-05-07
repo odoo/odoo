@@ -1142,10 +1142,10 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Tuotekonfiguraation mukaan toimitettu määrä voidaan laskea automaattisesti mekanismin avulla:\n"
-"  - Manuaalinen: määrä asetetaan manuaalisesti linjalla\n"
+"  - Manuaalinen: määrä asetetaan manuaalisesti rivillä\n"
 "  - Analyyttinen kuluista: määrä on kirjattujen kulujen summa\n"
-"  - Työaikakirjaukset: määrä on tähän myyntiriviin liittyviin tehtäviin kirjattujen tuntien summa\n"
-"  - Varastosiirrot: määrä tulee vahvistetuista poiminnoista\n"
+"  - Työaikakirjaukset: määrä on tähän myyntiriviin linkitettyjen tehtävissä olevien kirjattujen tuntien summa\n"
+"  - Varastotuotteiden siirrot: määrä tulee vahvistetuista keräilyistä\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_chart_template
@@ -1340,7 +1340,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Analyyttinen jakelu"
+msgstr "Analyyttinen jako"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -1434,13 +1434,13 @@ msgstr "Liitteiden määrä"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_attribute_value_ids
 msgid "Attribute Values"
-msgstr "Attribuuttien arvot"
+msgstr "Määritteen arvot"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_attribute_action
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Attributes"
-msgstr "Attribuutit"
+msgstr "Määritteet"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__author_id
@@ -1619,9 +1619,9 @@ msgstr ""
 "   - Tuotteet on toimitettu ennen kuin yrität laskuttaa niitä.\n"
 "   - Tuotteen laskutuskäytäntö on määritetty oikein.\n"
 "\n"
-"Jos haluat laskuttaa tilattujen määrien sijaan:\n"
-"   - Avaa kuluvien tai varastoitavien tuotteiden osalta tuote, siirry 'Yleiset tiedot'-välilehdelle ja vaihda 'Laskutuskäytäntö' 'Toimitetut määrät'-asetuksesta 'Tilatut määrät'-asetukseksi.\n"
-"   - Palveluiden (ja muiden tuotteiden) osalta vaihda \"Laskutuskäytäntö\" muotoon \"Ennakkomaksu/kiinteä hinta\".\n"
+"Jos haluat laskuttaa tilattujen määrien perusteella:\n"
+"   - Avaa kulutus- tai varastotuotteet, avaa tuote, siirry 'Yleiset tiedot'-välilehdelle ja vaihda 'Laskutuskäytäntö' 'Toimitetut määrät'-vaihtoehdosta 'Tilatut määrät'-vaihtoehtoon.\n"
+"   - Palveluiden (ja muiden tuotteiden) osalta vaihda 'Laskutuskäytäntö' muotoon 'Ennakkomaksu/kiinteä hinta'.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3495,8 +3495,7 @@ msgstr "Vain luonnoslaskut voidaan merkata käsin lähetetyksi."
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
-msgstr ""
-"Myyntirivillä voi olla käytössä vain yksi räätälöity attribuutin arvo."
+msgstr "Myyntirivillä voi olla käytössä vain yksi räätälöity määritteen arvo."
 
 #. module: sale
 #. odoo-python
@@ -3880,7 +3879,7 @@ msgstr "Tuote"
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "Tuotteen ominaisuuden mukautettu arvo"
+msgstr "Tuotteen määritteen räätälöity arvo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4630,7 +4629,7 @@ msgstr "Myy ja osta tuotteita eri mittayksiköissä tai pakkauksissa"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr "Myy tuotevariantteja, käyttäen ominaisuuksia (koko, väri, yms.)"
+msgstr "Myy tuotevariantteja, käyttäen määritteitä (koko, väri, yms.)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5213,8 +5212,8 @@ msgid ""
 "grant the discount the first time."
 msgstr ""
 "Tälle yritykselle ei näytä olevan vielä määritetty yhtään alennustuotetta. "
-"Voit joko käyttää rivikohtaista alennusta tai pyytää järjestelmänvalvojaa "
-"myöntämään alennuksen ensimmäisellä kerralla."
+"Voit joko käyttää rivikohtaista alennusta tai pyytää ylläpitäjää myöntämään "
+"alennuksen ensimmäisellä kerralla."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_downpayment_categ_id
@@ -5579,9 +5578,9 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
-"Vahvistetut kulut, toimittajan laskut tai varastopoiminnat (jotka on "
+"Vahvistetut kulut, toimittajan laskut tai varastokeräilyt (jotka on "
 "määritetty kustannusten seurantaa varten) voidaan laskuttaa asiakkaalta joko"
-" omakustannus- tai myyntihintaan."
+" kustannus- tai myyntihintaan."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date

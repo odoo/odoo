@@ -50,6 +50,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.\n"
 "Please change the quantity done or the rounding precision in your settings."
 msgstr ""
+"\n"
+"لا تمتثل الكمية المنتهية من المنتج %(product)s بدقة التقريب المحددة في النظام.\n"
+"يرجى تغيير الكمية المنتهية أو دقة التقريب في إعداداتك. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -1327,6 +1330,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"بما أنه قد تم استخدام وحدات قياس أخرى (مثال: %(problem_uom)s) غير %(uom)s "
+"لهذا المنتج، فلا يمكن تغيير وحدة القياس. إذا كنت ترغب في تغييرها، فيُرجى "
+"أرشفة المنتج وإنشاء منتج جديد."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -9278,6 +9284,8 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this "
 "unit/packaging. If it is not set, it is not rounded."
 msgstr ""
+"سيتم تقريب كمية المشتريات إلى مضاعفات هذه الوحدة/ الحزمة. إذا لم يتم "
+"تعيينها، لا يتم تقريبها. "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -9564,6 +9572,8 @@ msgid ""
 "This order point has been created automatically.\n"
 "snoozing it will not affect future ones created for the same product."
 msgstr ""
+"This order point has been created automatically.\n"
+"snoozing it will not affect future ones created for the same product."
 
 #. module: stock
 #. odoo-python
@@ -11074,6 +11084,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
 msgstr ""
+"لا يمكنك حزم المنتجات في نفس الطرد عندما تكون من شحنات مختلفة مع أنواع "
+"عمليات مختلفة "
 
 #. module: stock
 #. odoo-python
