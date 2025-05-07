@@ -588,7 +588,7 @@ export class MailThread extends models.ServerModel {
         const id = kwargs.ids[0];
         store = kwargs.store;
         fields = kwargs.fields;
-        request_list = kwargs.request_list;
+        request_list = kwargs.request_list || [];
 
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
@@ -606,17 +606,17 @@ export class MailThread extends models.ServerModel {
         }
         const [thread] = this.env[this._name].browse(id);
         const [res] = this._read_format(thread.id, fields, false);
-        if (request_list) {
+        if (request_list.length) {
             res.hasReadAccess = true;
             res.hasWriteAccess = thread.hasWriteAccess ?? true; // mimic user with write access by default
             res["canPostOnReadonly"] = this._mail_post_access === "read";
         }
-        if (request_list && request_list.includes("activities") && this.has_activities) {
+        if (request_list.includes("activities") && this.has_activities) {
             res["activities"] = mailDataHelpers.Store.many(
                 MailActivity.browse(thread.activity_ids)
             );
         }
-        if (request_list && request_list.includes("attachments")) {
+        if (request_list.includes("attachments")) {
             res["attachments"] = mailDataHelpers.Store.many(
                 IrAttachment._filter([
                     ["res_id", "=", thread.id],
@@ -633,13 +633,13 @@ export class MailThread extends models.ServerModel {
                 );
             }
         }
-        if (request_list && request_list.includes("display_name")) {
+        if (request_list.includes("display_name")) {
             res.display_name = thread.display_name;
         }
         if (fields.includes("display_name")) {
             res.name = thread.display_name ?? thread.name;
         }
-        if (request_list && request_list.includes("followers")) {
+        if (request_list.includes("followers")) {
             res["followersCount"] = this.env["mail.followers"].search_count([
                 ["res_id", "=", thread.id],
                 ["res_model", "=", this._name],
@@ -675,12 +675,12 @@ export class MailThread extends models.ServerModel {
         if (fields.includes("modelName")) {
             res.modelName = this._description;
         }
-        if (request_list && request_list.includes("suggestedRecipients")) {
+        if (request_list.includes("suggestedRecipients")) {
             res["suggestedRecipients"] = MailThread._message_get_suggested_recipients.call(this, [
                 id,
             ]);
         }
-        if (request_list && request_list.includes("scheduledMessages")) {
+        if (request_list.includes("scheduledMessages")) {
             res["scheduledMessages"] = mailDataHelpers.Store.many(
                 MailScheduledMessage.filter(
                     (message) => message.model === this._name && message.res_id === id
