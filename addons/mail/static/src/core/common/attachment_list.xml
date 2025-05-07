@@ -6,8 +6,6 @@
             t-att-class="{
                 'o-inComposer': env.inComposer,
                 'o-inChatWindow': env.inChatWindow,
-                'me-2 pe-4': isInChatWindowAndIsAlignedLeft and !env.inComposer,
-                'ms-2 ps-4': isInChatWindowAndIsAlignedRight and !env.inComposer,
             }"
         >
             <div class="d-flex flex-wrap" t-att-class="{'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer}" role="menu" >
