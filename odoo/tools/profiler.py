@@ -527,7 +527,7 @@ class Profiler:
     Will save sql and async stack trace by default.
     """
     def __init__(self, collectors=None, db=..., profile_session=None,
-                 description=None, disable_gc=False, params=None, log=False):
+                 description=None, disable_gc=False, params=None, log=False, base_url=None):
         """
         :param db: database name to use to save results.
             Will try to define database automatically by default.
@@ -553,6 +553,7 @@ class Profiler:
         self.sub_profilers = []
         self.entry_count_limit = int(self.params.get("entry_count_limit",0)) # the limit could be set using a smarter way
         self.done = False
+        self.base_url = base_url
 
         if db is ...:
             # determine database from current thread
@@ -643,6 +644,8 @@ class Profiler:
                     cr.execute(query)
                     self.profile_id = cr.fetchone()[0]
                     _logger.info('ir_profile %s (%s) created', self.profile_id, self.profile_session)
+                    if self.base_url:
+                        _logger.info(f"Speedscope url: {self.base_url}/web/speedscope/{self.profile_id}")
         except OperationalError:
             _logger.exception("Could not save profile in database")
         finally:

@@ -806,9 +806,10 @@ class BaseCase(case.TestCase):
             self.profile_session = profiler.make_session(test_method)
         if 'db' not in kwargs:
             kwargs['db'] = self.env.cr.dbname
+        http_port = config['http_port']
         return profiler.Profiler(
             description='%s uid:%s %s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold', description),
-            profile_session=self.profile_session,
+            profile_session=self.profile_session, base_url=f'http://{HOST}:{http_port}',
             **kwargs)
 
     @classmethod
@@ -1019,6 +1020,7 @@ class TransactionCase(BaseCase):
         cls.addClassCleanup(cls._gc_filestore)
         cls.registry = Registry(get_db_name())
         cls.registry_start_invalidated = cls.registry.registry_invalidated
+        cls.registry.registry_invalidated = False
         cls.registry_start_sequence = cls.registry.registry_sequence
         cls.registry_cache_sequences = dict(cls.registry.cache_sequences)
 
