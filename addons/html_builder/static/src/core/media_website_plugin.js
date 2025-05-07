@@ -39,8 +39,8 @@ export class MediaWebsitePlugin extends Plugin {
             .map((s) => `${s}:not([data-oe-xpath])`)
             .join(",");
         this.addDomListener(this.editable, "dblclick", (ev) => {
-            const targetEl = ev.target;
-            if (!targetEl.matches(mediaSelector)) {
+            const targetEl = ev.target.closest(mediaSelector);
+            if (!targetEl) {
                 return;
             }
             let isEditable =
