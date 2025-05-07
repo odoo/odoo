@@ -46,6 +46,7 @@ class ResPartner(models.Model):
                     # sudo: res.users.settings - operator can access other operators expertises
                     "livechat_expertise": partner.user_ids.sudo().livechat_expertise_ids.mapped("name"),
                     "livechat_languages": languages[1:],
+                    "livechat_username": partner.user_livechat_username,
                 },
                 # sudo - res.partner: checking if operator is in call for live
                 # chat invitation is acceptable.

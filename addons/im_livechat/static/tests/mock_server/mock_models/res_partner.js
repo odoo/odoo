@@ -53,6 +53,7 @@ export class ResPartner extends mailModels.ResPartner {
                     data.livechat_expertise = user.livechat_expertise_ids.map(
                         (expId) => Im_LivechatExpertise.browse(expId)[0].name
                     );
+                    data.livechat_username = user.livechat_username;
                 }
             }
             store.add(this.browse(partner.id), data);

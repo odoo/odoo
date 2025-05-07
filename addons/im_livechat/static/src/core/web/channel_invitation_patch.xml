@@ -6,6 +6,9 @@
                 <i class="fa fa-volume-up o-discuss-inCallIconColor me-1"/>
                 <span class="o-discuss-ChannelInvitation-inCallTextColor">in a call</span>
             </span>
+            <span t-if="props.thread?.channel_type === 'livechat' and selectablePartner.livechat_username" class="overflow-hidden opacity-75 smaller mx-2">
+                <span class="text-truncate" t-esc="selectablePartner.livechat_username"/>
+            </span>
         </xpath>
         <xpath expr="//*[@name='selectablePartnerDetail']" position="replace">
             <t t-if="props.thread?.channel_type !== 'livechat' or !selectablePartner.lang_name">$0</t>
