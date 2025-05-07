@@ -102,14 +102,12 @@
 
 <t t-name="mail.Thread.startMessage">
     <div class="pt-4" t-att-class="{ 'px-3': env.inChatWindow, 'px-1': !env.inChatWindow }">
-        <div class="d-flex align-items-end" t-att-class="{
+        <div class="d-flex align-items-end gap-2" t-att-class="{
             'mt-2 mb-1': !props.thread.parent_channel_id,
             'mt-1': props.thread.parent_channel_id,
-            'gap-1': env.inChatWindow,
-            'gap-2': !env.inChatWindow,
         }">
             <div class="o-mail-Thread-avatar d-inline" t-att-class="{'o-mail-Thread-avatarChatWindow': env.inChatWindow }">
-                <img t-if="!props.thread.parent_channel_id" class="rounded o_object_fit_cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
+                <img t-if="!props.thread.parent_channel_id" class="rounded-3 o_object_fit_cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
                 <i t-else="" class="fa fa-comments-o opacity-75"/>
             </div>
             <h1 class="opacity-75" t-att-class="{ 'fs-3': env.inChatWindow, 'mb-0': env.inChatWindow, 'mb-1': !env.inChatWindow }" t-esc="startMessageTitle"/>
