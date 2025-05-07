@@ -5400,6 +5400,7 @@ class AccountMove(models.Model):
         }
 
     def action_update_fpos_values(self):
+        self.invoice_line_ids._compute_price_unit()
         self.invoice_line_ids._compute_tax_ids()
         self.line_ids._compute_account_id()
 
