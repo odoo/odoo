@@ -897,7 +897,7 @@ class PosOrder(models.Model):
                 ('product_id.categ_id.property_valuation', '=', 'real_time')
             ])
             for stock_move in stock_moves:
-                expense_account = stock_move.product_id._get_product_accounts()['expense']
+                expense_account = stock_move.with_company(stock_move.company_id).product_id._get_product_accounts()['expense']
                 stock_output_account = stock_move.product_id.categ_id.property_stock_account_output_categ_id
                 balance = -sum(stock_move.stock_valuation_layer_ids.mapped('value'))
                 aml_vals_list_per_nature['stock'].append({
