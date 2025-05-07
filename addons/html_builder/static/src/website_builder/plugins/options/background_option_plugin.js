@@ -66,8 +66,7 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
             const onClose = this.dependencies.media.openMediaDialog({
                 noIcons: true,
                 noImages: true,
-                noDocuments: true, // TODO: does not seem implemented in
-                // html_editor see why.
+                noDocuments: true,
                 save: (media) => {
                     resolve(media.querySelector("iframe").src);
                 },
