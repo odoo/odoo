@@ -47,8 +47,8 @@ class HrLeaveReport(models.Model):
                 leaves.date_from as date_from,
                 leaves.date_to as date_to, leaves.company_id
                 from (select
-                    allocation.id as allocation_id,
                     null as leave_id,
+                    allocation.id as allocation_id,
                     allocation.employee_id as employee_id,
                     allocation.name as name,
                     allocation.number_of_days as number_of_days,
