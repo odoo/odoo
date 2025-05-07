@@ -120,6 +120,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             other_party = vals["vals"]["accounting_supplier_party_vals"]["party_vals"]
             opposite_generic_tin = 'EI00000000020'
             expected_generic_tin = 'EI00000000030'
+            # Self-billed invoices must use the number given by the supplier.
+            if invoice.ref:
+                vals['vals']['id'] = invoice.ref
 
         # Switch the generic tin to the correct one when it makes sense (For example when a supplier has the buyer generic tin set)
         if other_party:
