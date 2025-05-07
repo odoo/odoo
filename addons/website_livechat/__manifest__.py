@@ -22,6 +22,9 @@
         'demo/im_livechat_session_11.xml',
     ],
     'assets': {
+        "im_livechat.assets_embed_core": [
+            "website/static/src/**/common/**/*",
+        ],
         "mail.assets_public": [
             "website_livechat/static/src/**/common/**/*",
         ],

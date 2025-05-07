@@ -103,7 +103,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             f"{self.livechat_base_url}/mail/data", {"fetch_params": ["channels_as_member"]}
         )
         livechat_info = next(c for c in init_messaging["discuss.channel"] if c["id"] == channel.id)
-        self.assertIn('visitor', livechat_info)
+        self.assertIn("livechat_visitor_id", livechat_info)
 
         # Remove access to visitors and try again, visitors info shouldn't be included
         self.operator.group_ids -= self.group_livechat_user
@@ -111,7 +111,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             f"{self.livechat_base_url}/mail/data", {"fetch_params": ["channels_as_member"]}
         )
         livechat_info = next(c for c in init_messaging["discuss.channel"] if c["id"] == channel.id)
-        self.assertNotIn('visitor', livechat_info)
+        self.assertNotIn("livechat_visitor_id", livechat_info)
 
     def _common_basic_flow(self):
         # Open a new live chat
@@ -202,6 +202,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                             "id": self.operator.partner_id.id,
                             "type": "partner",
                         },
+                        "livechat_visitor_id": self.visitor.id,
                         "member_count": 2,
                         "message_needaction_counter": 0,
                         "message_needaction_counter_bus_id": 0,
@@ -210,7 +211,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "requested_by_operator": False,
                         "rtc_session_ids": [("ADD", [])],
                         "uuid": channel.uuid,
-                        "visitor": {"id": self.visitor.id, "type": "visitor"},
                         "wa_account_id": False,
                         "whatsapp_channel_valid_until": False,
                         "whatsapp_partner_id": False,
@@ -255,6 +255,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 "res.country": [
                     {"code": "BE", "id": self.env["ir.model.data"]._xmlid_to_res_id("base.be")}
                 ],
+                "res.lang": [{"id": self.env.ref("base.lang_en").id, "name": "English (US)"}],
                 "res.partner": self._filter_partners_fields(
                     {
                         "active": True,
@@ -271,16 +272,19 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         ),
                     }
                 ),
+                "website": [
+                    {"id": self.env.ref("website.default_website").id, "name": "My Website"}
+                ],
                 "website.visitor": [
                     {
-                        "country": self.env["ir.model.data"]._xmlid_to_res_id("base.be"),
+                        "country_id": self.env["ir.model.data"]._xmlid_to_res_id("base.be"),
+                        "display_name": f"Website Visitor #{self.visitor.id}",
                         "history": "",
                         "id": self.visitor.id,
                         "is_connected": True,
-                        "lang_name": "English (US)",
-                        "name": f"Website Visitor #{self.visitor.id}",
+                        "lang_id": self.env.ref("base.lang_en").id,
                         "partner_id": False,
-                        "website_name": "My Website",
+                        "website_id": self.env.ref("website.default_website").id,
                     }
                 ],
             },

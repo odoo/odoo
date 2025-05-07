@@ -5,6 +5,6 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     setup() {
         super.setup(...arguments);
-        this.visitor = fields.One("Persona");
+        this.livechat_visitor_id = fields.One("website.visitor");
     },
 });

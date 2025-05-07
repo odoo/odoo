@@ -25,26 +25,6 @@ class DiscussChannel(models.Model):
             self.sudo().unlink()
 
     def _field_store_repr(self, field_name):
-        if field_name == "visitor":
-            return [
-                Store.Attr(
-                    "visitor",
-                    lambda channel: Store.One(
-                        channel.livechat_visitor_id,
-                        [
-                            "country",
-                            "history",
-                            "is_connected",
-                            "lang_name",
-                            "name",
-                            "partner_id",
-                            "website_name",
-                        ],
-                    ),
-                    predicate=lambda channel: channel.livechat_visitor_id
-                    and self.livechat_visitor_id.has_access("read"),
-                ),
-            ]
         if field_name == "requested_by_operator":
             return [
                 Store.Attr(
@@ -58,8 +38,21 @@ class DiscussChannel(models.Model):
 
     def _to_store_defaults(self, for_current_user=True):
         return super()._to_store_defaults(for_current_user=for_current_user) + [
+            Store.One(
+                "livechat_visitor_id",
+                [
+                    Store.One("country_id", ["code"]),
+                    "display_name",
+                    "history",
+                    "is_connected",
+                    Store.One("lang_id", ["name"]),
+                    Store.One("partner_id", [Store.One("country_id", ["code"]), "im_status"]),
+                    Store.One("website_id", ["name"]),
+                ],
+                predicate=lambda channel: channel.livechat_visitor_id
+                and self.livechat_visitor_id.has_access("read"),
+            ),
             "requested_by_operator",
-            "visitor",
         ]
 
     def _get_visitor_history(self, visitor):

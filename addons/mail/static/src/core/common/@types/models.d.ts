@@ -21,6 +21,7 @@ declare module "models" {
     import { Persona as PersonaClass } from "@mail/core/common/persona_model";
     import { ResGroups as ResGroupsClass } from "@mail/core/common/res_groups_model";
     import { ResGroupsPrivilege as ResGroupsPrivilegeClass } from "@mail/core/common/res_groups_privilege_model";
+    import { ResLang as ResLangClass } from "@mail/core/common/res_lang_model";
     import { ResRole as ResRoleClass } from "@mail/core/common/res_role_model";
     import { ResUsers as ResUsersClass } from "@mail/core/common/res_users_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
@@ -49,6 +50,7 @@ declare module "models" {
     export interface Persona extends PersonaClass {}
     export interface ResGroups extends ResGroupsClass {}
     export interface ResGroupsPrivilege extends ResGroupsPrivilegeClass {}
+    export interface ResLang extends ResLangClass {}
     export interface ResRole extends ResRoleClass {}
     export interface ResUsers extends ResUsersClass {}
     export interface Settings extends SettingsClass {}
@@ -78,6 +80,7 @@ declare module "models" {
         "res.country": StaticMailRecord<Country, typeof CountryClass>;
         "res.groups": StaticMailRecord<ResGroups, typeof ResGroupsClass>;
         "res.groups.privilege": StaticMailRecord<ResGroupsPrivilege, typeof ResGroupsPrivilegeClass>;
+        "res.lang": StaticMailRecord<ResLang, typeof ResLangClass>;
         "res.role": StaticMailRecord<ResRole, typeof ResRoleClass>;
         "res.users": StaticMailRecord<ResUsers, typeof ResUsersClass>;
         Settings: StaticMailRecord<Settings, typeof SettingsClass>;
@@ -108,6 +111,7 @@ declare module "models" {
         "res.country": Country;
         "res.groups": ResGroups;
         "res.groups.privilege": ResGroupsPrivilege;
+        "res.lang": ResLang;
         "res.role": ResRole;
         "res.users": ResUsers;
         Settings: Settings;

@@ -27,14 +27,12 @@ export const pyToJsModels = {
     "mail.guest": "Persona",
     "mail.thread": "Thread",
     "res.partner": "Persona",
-    "website.visitor": "Persona",
 };
 
 export const addFieldsByPyModel = {
     "discuss.channel": { model: "discuss.channel" },
     "mail.guest": { type: "guest" },
     "res.partner": { type: "partner" },
-    "website.visitor": { type: "visitor" },
 };
 
 patch(storeInsertFns, {

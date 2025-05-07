@@ -165,11 +165,7 @@ export class Persona extends Record {
     }
 
     _getActualModelName() {
-        return this.type === "partner"
-            ? "res.partner"
-            : this.type === "visitor"
-            ? "website.visitor"
-            : "mail.guest";
+        return this.type === "partner" ? "res.partner" : "mail.guest";
     }
 }
 
