@@ -15,7 +15,7 @@ export class OutdatedPageWatcherService {
     setup(env, { bus_service, multi_tab, notification }) {
         this.notification = notification;
         this.multi_tab = multi_tab;
-        this.lastNotificationId = null;
+        this.lastNotificationId = multi_tab.getSharedValue("last_notification_id");
         this.closeNotificationFn;
         let wasBusAlreadyConnected;
         bus_service.addEventListener(
@@ -27,7 +27,7 @@ export class OutdatedPageWatcherService {
         );
         bus_service.addEventListener(
             "disconnect",
-            () => (this.lastNotificationId = bus_service.lastNotificationId)
+            () => (this.lastNotificationId = multi_tab.getSharedValue("last_notification_id"))
         );
         bus_service.addEventListener("connect", async () => {
             if (wasBusAlreadyConnected) {
@@ -44,7 +44,7 @@ export class OutdatedPageWatcherService {
     }
 
     async checkHasMissedNotifications() {
-        if (!this.multi_tab.isOnMainTab()) {
+        if (!this.multi_tab.isOnMainTab() || !this.lastNotificationId) {
             return;
         }
         const hasMissedNotifications = await rpc(

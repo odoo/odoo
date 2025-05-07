@@ -4,6 +4,7 @@ import { runAllTimers, waitFor } from "@odoo/hoot-dom";
 import {
     asyncStep,
     contains,
+    getService,
     MockServer,
     mountWithCleanup,
     onRpc,
@@ -24,6 +25,7 @@ test("disconnect during vacuum should ask for reload", async () => {
     );
     onRpc("/bus/has_missed_notifications", () => true);
     await mountWithCleanup(WebClient);
+    getService("multi_tab").setSharedValue("last_notification_id", 1);
     startBusService();
     await runAllTimers();
     await waitForSteps(["connect"]);
@@ -45,6 +47,7 @@ test("reconnect after going offline after bus gc should ask for reload", async (
     );
     onRpc("/bus/has_missed_notifications", () => true);
     await mountWithCleanup(WebClient);
+    getService("multi_tab").setSharedValue("last_notification_id", 1);
     startBusService();
     await runAllTimers();
     await waitForSteps(["connect"]);
