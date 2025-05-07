@@ -146,7 +146,10 @@
             <field name="view_mode">kanban,list,pivot,graph,form</field>
             <field name="search_view_id" ref="im_livechat.discuss_channel_view_search"/>
             <field name="domain">[('livechat_channel_id', '!=', None)]</field>
-            <field name="context">{'search_default_filter_session_date': 'custom_rated_on_last_30_days'}</field>
+            <field name="context">{
+                "search_default_filter_session_date": "custom_rated_on_last_30_days",
+                "im_livechat.hide_partner_company": True
+            }</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_empty_folder">
                     No data yet!
