@@ -276,3 +276,19 @@ test("value is formatted on click out (even if same value)", async () => {
     await contains(".o_control_panel").click();
     expect(".o_field_widget input").toHaveValue("8,069");
 });
+
+test("Value should not be a boolean when enable_formatting is false", async () => {
+    onRpc("has_group", () => true);
+    await mountView({
+        type: "list",
+        resModel: "product",
+        arch: `
+            <list editable="bottom">
+                <field name="id" options="{'enable_formatting': false}"/>
+                <field name="price"/>
+            </list>
+        `,
+    });
+    await contains(`.o_list_button_add`).click();
+    expect(".o_selected_row .o_field_integer").toHaveText("");
+});

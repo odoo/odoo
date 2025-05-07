@@ -833,7 +833,8 @@ export class ListRenderer extends Component {
     getFormattedValue(column, record) {
         const fieldName = column.name;
         if (column.options.enable_formatting === false) {
-            return record.data[fieldName];
+            const value = record.data[fieldName];
+            return value === false ? "" : value;
         }
         return getFormattedValue(record, fieldName, column);
     }
