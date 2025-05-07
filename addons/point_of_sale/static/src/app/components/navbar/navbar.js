@@ -106,6 +106,7 @@ export class Navbar extends Component {
                 this.pos.showScreen(screenName);
             }
         }
+        this.pos.ticket_screen_mobile_pane = this.pos.scanning ? "left" : "right";
         this.pos.mobile_pane = "right";
         this.pos.scanning = !this.pos.scanning;
     }
