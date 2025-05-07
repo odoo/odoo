@@ -16,9 +16,26 @@ import {
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import * as dsHelpers from "@web/../tests/core/domain_selector_tests";
+import { registry } from "@web/core/registry";
 
 let serverData;
 let target;
+
+function replaceNotificationService(assert) {
+    registry.category("services").add(
+        "notification",
+        {
+            start() {
+                return {
+                    add(message) {
+                        assert.step(message);
+                    },
+                };
+            },
+        },
+        { force: true }
+    );
+}
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -98,11 +115,13 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("DomainField");
 
     QUnit.test(
-        "The domain editor should not crash the view when given a dynamic filter",
+        "The domain editor should not crash the view when given a dynamic filter (allow_expressions=False)",
         async function (assert) {
             // dynamic filters (containing variables, such as uid, parent or today)
             // are handled by the domain editor
             serverData.models.partner.records[0].foo = `[("int_field", "=", uid)]`;
+
+            replaceNotificationService(assert);
 
             await makeView({
                 type: "form",
@@ -121,6 +140,39 @@ QUnit.module("Fields", (hooks) => {
                 "uid",
                 "The widget should show the dynamic filter."
             );
+            assert.doesNotHaveClass(target.querySelector(".o_field_domain"), "o_field_invalid");
+            assert.verifySteps(["The domain should not involve non-literals"]);
+        }
+    );
+
+    QUnit.test(
+        "The domain editor should not crash the view when given a dynamic filter (allow_expressions=True)",
+        async function (assert) {
+            // dynamic filters (containing variables, such as uid, parent or today)
+            // are handled by the domain editor
+            serverData.models.partner.records[0].foo = `[("int_field", "=", uid)]`;
+
+            replaceNotificationService(assert);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="foo" widget="domain" options="{'model': 'partner', 'allow_expressions':True}" />
+                        <field name="int_field" invisible="1" />
+                    </form>`,
+            });
+
+            assert.strictEqual(
+                dsHelpers.getCurrentValue(target),
+                "uid",
+                "The widget should show the dynamic filter."
+            );
+            assert.doesNotHaveClass(target.querySelector(".o_field_domain"), "o_field_invalid");
+            assert.verifySteps(["The domain involves non-literals. Their evaluation might fail."]);
         }
     );
 
@@ -558,7 +610,7 @@ QUnit.module("Fields", (hooks) => {
                         throw new Error("should not save");
                     }
                     if (route === "/web/domain/validate") {
-                        return JSON.stringify(domain) === "[[\"abc\",\"=\",1]]";
+                        return JSON.stringify(domain) === '[["abc","=",1]]';
                     }
                 },
             });
@@ -714,7 +766,7 @@ QUnit.module("Fields", (hooks) => {
             "partner,false,form": `
                 <form>
                     <field name="bar"/>
-                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                    <field name="foo" widget="domain" options="{'model': 'bar', 'allow_expressions':True}"/>
                 </form>`,
             "partner,false,search": `<search />`,
         };
@@ -765,7 +817,7 @@ QUnit.module("Fields", (hooks) => {
             "partner,false,form": `
                 <form>
                     <field name="bar"/>
-                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                    <field name="foo" widget="domain" options="{'model': 'bar', 'allow_expressions':True}"/>
                 </form>`,
             "partner,false,search": `<search />`,
         };
@@ -1180,4 +1232,79 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("allow_expressions = true", async function (assert) {
+        serverData.models.partner.records[0].foo = "[]";
+
+        patchWithCleanup(odoo, { debug: true });
+        replaceNotificationService(assert);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="domain" options="{'model': 'partner_type', 'allow_expressions':True}" />
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC(route) {
+                if (route === "/web/domain/validate") {
+                    return true;
+                }
+            },
+            context: { path: "name", name: "name" },
+        });
+
+        await editInput(target, dsHelpers.SELECTORS.debugArea, `[("name", "=", [name])]`);
+        assert.doesNotHaveClass(target.querySelector(".o_field_domain"), "o_field_invalid");
+        assert.verifySteps(["The domain involves non-literals. Their evaluation might fail."]);
+
+        await editInput(
+            target,
+            dsHelpers.SELECTORS.debugArea,
+            `["&", ("name", "=", "name"), (path, "=", "other name")]`
+        );
+        assert.doesNotHaveClass(target.querySelector(".o_field_domain"), "o_field_invalid");
+        assert.verifySteps(["The domain involves non-literals. Their evaluation might fail."]);
+    });
+
+    QUnit.test("allow_expressions = false (default)", async function (assert) {
+        serverData.models.partner.records[0].foo = "[]";
+
+        patchWithCleanup(odoo, { debug: true });
+        replaceNotificationService(assert);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="domain" options="{'model': 'partner_type' }" />
+                        </group>
+                    </sheet>
+                </form>`,
+            context: { path: "name", name: "name" },
+        });
+
+        await editInput(target, dsHelpers.SELECTORS.debugArea, `[("name", "=", name)]`);
+        assert.hasClass(target.querySelector(".o_field_domain"), "o_field_invalid");
+        assert.verifySteps(["The domain should not involve non-literals"]);
+
+        await editInput(
+            target,
+            dsHelpers.SELECTORS.debugArea,
+            `["&", ("name", "=", "name"), (path, "=", 1)]`
+        );
+        assert.hasClass(target.querySelector(".o_field_domain"), "o_field_invalid");
+        assert.verifySteps(["The domain should not involve non-literals"]);
+    });
 });

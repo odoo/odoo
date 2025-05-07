@@ -138,6 +138,34 @@ export function complexCondition(value) {
     return { type: "complex_condition", value };
 }
 
+function treeContainsExpressions(tree) {
+    if (tree.type === "condition") {
+        const { path, operator, value } = tree;
+        return [path, operator, value].some(
+            (v) =>
+                v instanceof Expression ||
+                (Array.isArray(v) && v.some((w) => w instanceof Expression))
+        );
+    }
+    for (const child of tree.children) {
+        if (treeContainsExpressions(child)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function domainContainsExpresssions(domain) {
+    let tree;
+    try {
+        tree = treeFromDomain(domain);
+    } catch {
+        return null;
+    }
+    // detect expressions in the domain tree, which we know is well-formed
+    return treeContainsExpressions(tree);
+}
+
 /**
  * @param {Value} value
  * @returns {Value}
