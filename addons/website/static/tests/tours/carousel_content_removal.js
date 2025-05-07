@@ -119,17 +119,12 @@ registerWebsitePreviewTour("snippet_carousel_autoplay", {
     ...clickOnSnippet(".carousel .carousel-item.active"),
     {
         content: "Decrease the interval between slides",
-        trigger: "we-input[data-attribute-name='bsInterval'] input",
+        trigger: "div[data-label='Speed'] input",
         run: 'edit 3',
     },
     {
-        content: "Save the interval between slides",
-        trigger: "we-input[data-attribute-name='bsInterval']",
-        run: 'click',
-    },
-    {
         content: "Enable the autoplay option",
-        trigger: ".autoplay we-checkbox",
+        trigger: "div[data-label='Autoplay'] input",
         run: 'click',
     },
     ...clickOnSave(),
