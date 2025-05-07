@@ -12,9 +12,11 @@ class TestWebsiteSlidesForum(TestForumCommon):
                 "forum_id": self.forum.id,
             }
         )
-        message = self.post.message_post(
-            body="TestWebsiteSlidesForum",
-            message_type="comment",
+        comment = self.env["forum.post.comment"].create(
+            {
+                "post_id": self.post.id,
+                "body": "TestWebsiteSlidesForum",
+            }
         )
 
         # Public channel make the forum visible
@@ -28,10 +30,10 @@ class TestWebsiteSlidesForum(TestForumCommon):
         self.assertEqual(self.post.with_user(self.user_employee).name, "TestQuestion")
 
         self.assertEqual(
-            self.env["mail.message"]
+            self.env["forum.post.comment"]
             .with_user(self.user_employee)
             .search([("body", "ilike", "TestWebsiteSlidesForum")]),
-            message,
+            comment,
         )
 
         # Non-published channel should remove access
@@ -49,16 +51,18 @@ class TestWebsiteSlidesForum(TestForumCommon):
         self.env.flush_all()
         self.env.invalidate_all()
         self.assertEqual(
-            self.env['forum.forum'].with_user(self.user_public).search([('id', '=', self.forum.id)]),
-            self.forum
+            self.env["forum.forum"]
+            .with_user(self.user_public)
+            .search([("id", "=", self.forum.id)]),
+            self.forum,
         )
         self.assertEqual(self.forum.with_user(self.user_public).name, "TestForum")
         self.assertEqual(self.forum.with_user(self.user_employee).name, "TestForum")
         self.assertEqual(
-            self.env["mail.message"]
+            self.env["forum.post.comment"]
             .with_user(self.user_employee)
             .search([("body", "ilike", "TestWebsiteSlidesForum")]),
-            message,
+            comment,
         )
 
         # Connected make it visible for portal / internal users
@@ -73,8 +77,8 @@ class TestWebsiteSlidesForum(TestForumCommon):
         self.assertEqual(self.post.with_user(self.user_employee).name, "TestQuestion")
 
         self.assertEqual(
-            self.env["mail.message"]
+            self.env["forum.post.comment"]
             .with_user(self.user_employee)
             .search([("body", "ilike", "TestWebsiteSlidesForum")]),
-            message,
+            comment,
         )
