@@ -1,0 +1,10 @@
+.s_cols_info_h {
+    .s_cols_info_img {
+        &.float-start {
+            margin-inline-end: var(--s_cols_info_h_margin, #{map-get($spacers, 3)}) !important;
+        }
+        &.float-end {
+            margin-inline-start: var(--s_cols_info_h_margin, #{map-get($spacers, 3)}) !important;
+        }
+    }
+}
