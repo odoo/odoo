@@ -29,14 +29,18 @@ class AccountChartTemplate(models.AbstractModel):
             'vehicle_no': "GJ11AA1234",
             'vehicle_type': "R",
         }
+        ewaybill_vals = []
         for indian_company in indian_companies:
             if indian_company.state_id:
-                self.env['l10n.in.ewaybill'].create([
-                    {
-                    **default_ewaybill_vals,
-                    'account_move_id': self.with_company(indian_company).ref(invoice_ref).id
-                    }
-                    for invoice_ref in invoices
-                ])
+                for inv_ref in invoices:
+                    move = self.with_company(indian_company).ref(inv_ref, raise_if_not_found=False)
+                    if move and not move.l10n_in_ewaybill_ids:
+                        ewaybill_vals.append({
+                            **default_ewaybill_vals,
+                            'account_move_id': move.id,
+                            'company_id': indian_company.id,
+                        })
             else:
                 _logger.error('Error while loading Indian-Ewaybill demo data in the company "%s".State is not set in the company.', indian_company.name)
+        if ewaybill_vals:
+            self.env['l10n.in.ewaybill'].create(ewaybill_vals)
