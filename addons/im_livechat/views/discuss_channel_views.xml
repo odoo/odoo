@@ -12,6 +12,8 @@
                     <field name="livechat_customer_partner_ids" string="Customer"/>
                     <filter name="filter_my_sessions" domain="[('livechat_operator_id.user_ids', '=', uid)]" string="My Sessions"/>
                     <separator/>
+                    <filter name="ongoing" string="Ongoing" domain="[('livechat_active', '=', True)]"/>
+                    <separator/>
                     <filter name="filter_session_rating_happy" domain="[('rating_ids', '!=', False), ('rating_avg', '&gt;=', 3.66)]" string="Happy"/>
                     <filter name="filter_session_rating_neutral" domain="[('rating_ids', '!=', False), ('rating_avg', '&gt;=', 2.33), ('rating_avg', '&lt;', 3.66)]" string="Neutral"/>
                     <filter name="fiter_session_rating_unhappy" domain="[('rating_ids', '!=', False), ('rating_avg', '&lt;', 2.33) ]" string="Unhappy"/>
