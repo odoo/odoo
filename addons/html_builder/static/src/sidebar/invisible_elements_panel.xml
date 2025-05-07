@@ -23,7 +23,7 @@
     <ul t-if="entry.children.length > 0">
         <t t-foreach="entry.children" t-as="child" t-key="child_index">
             <li>
-                <t t-call="html_builder.invisibleSnippetEntry" t-call-context="{'entry': child, menu}"/>
+                <t t-call="html_builder.invisibleSnippetEntry" t-call-context="{'entry': child, toggleElementVisibility}"/>
             </li>
         </t>
     </ul>

@@ -55,7 +55,7 @@ export class InvisibleElementsPanel extends Component {
         //     └ descendantInvisibleSnippet
         //          └ descendantOfDescendantInvisibleSnippet
         //               └ etc...
-        const createInvisibleEntries = (snippetEls, isDescendant) =>
+        const createInvisibleEntries = (snippetEls, parentEl = null) =>
             snippetEls.map((snippetEl) => {
                 const descendantSnippetEls = descendantPerSnippet.get(snippetEl);
                 // An element is considered as "RootParent" if it has one or
@@ -63,17 +63,21 @@ export class InvisibleElementsPanel extends Component {
                 const invisibleElement = {
                     snippetEl: snippetEl,
                     name: getSnippetName(snippetEl),
-                    isRootParent: !isDescendant && !!descendantSnippetEls,
-                    isDescendant,
+                    isRootParent: !parentEl && !!descendantSnippetEls,
+                    isDescendant: !!parentEl,
                     isVisible: snippetEl.dataset.invisible !== "1",
                     children: [],
+                    parentEl,
                 };
                 if (descendantSnippetEls) {
-                    invisibleElement.children = createInvisibleEntries(descendantSnippetEls, true);
+                    invisibleElement.children = createInvisibleEntries(
+                        descendantSnippetEls,
+                        invisibleElement
+                    );
                 }
                 return invisibleElement;
             });
-        this.state.invisibleEntries = createInvisibleEntries(rootInvisibleSnippetEls, false);
+        this.state.invisibleEntries = createInvisibleEntries(rootInvisibleSnippetEls);
     }
 
     toggleElementVisibility(invisibleEntry) {
@@ -97,10 +101,10 @@ export class InvisibleElementsPanel extends Component {
                     this.toggleElementVisibility(child);
                 }
             });
-        } else if (invisibleEntry.parents && !invisibleEntry.parents.isVisible) {
+        } else if (invisibleEntry.parentEl && !invisibleEntry.parentEl.isVisible) {
             // When toggling the visibility of an element to "Show", also toggle
             // all its parents.
-            this.toggleElementVisibility(invisibleEntry.parents);
+            this.toggleElementVisibility(invisibleEntry.parentEl);
         }
         toggleVisibility(invisibleEntry.snippetEl);
     }
