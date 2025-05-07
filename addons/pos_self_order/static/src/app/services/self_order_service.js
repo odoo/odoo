@@ -7,7 +7,7 @@ import { markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
-import { formatDateTime } from "@web/core/l10n/dates";
+import { formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import { printerService } from "@point_of_sale/app/services/printer_service";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
@@ -624,9 +624,7 @@ export class SelfOrder extends Reactive {
             .filter((o) => o.state === "draft" && typeof o.id === "number")
             .map((order) => ({
                 access_token: order.access_token,
-                write_date: order.write_date.plus({ seconds: 1 }).toFormat("yyyy-MM-dd HH:mm:ss", {
-                    numberingSystem: "latn",
-                }),
+                write_date: serializeDateTime(order.write_date.plus({ seconds: 1 })),
             }))
             .filter((order) => order.access_token);
 
