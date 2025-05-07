@@ -307,6 +307,13 @@
                     invisible="documents_count == 0">
                     <field name="documents_count" widget="statinfo" string="Documents"/>
                 </button>
+                <button name="action_open_employees"
+                    class="oe_stat_button"
+                    icon="fa-users"
+                    invisible="not employee_count"
+                    type="object">
+                    <field name="employee_count" widget="statinfo" string="Employees"/>
+                </button>
             </div>
             <xpath expr="//page[@name='job_description_page']" position="after">
                 <page string="Trackers" name="trackers_page">
