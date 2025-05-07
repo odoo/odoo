@@ -9,10 +9,18 @@ import {
     Many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
 import { Avatar } from "../avatar/avatar";
+import { Many2XAvatarUserAutocomplete } from "../avatar_autocomplete/avatar_many2x_autocomplete";
+
+class Many2OneAvatarUser extends Many2One {
+    static components = {
+        ...Many2One.components,
+        Many2XAutocomplete: Many2XAvatarUserAutocomplete,
+    };
+}
 
 export class Many2OneAvatarUserField extends Component {
     static template = "mail.Many2OneAvatarUserField";
-    static components = { Avatar, Many2One };
+    static components = { Avatar, Many2OneAvatarUser };
     static props = {
         ...Many2OneField.props,
         withCommand: { type: Boolean },
