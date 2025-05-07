@@ -11,6 +11,6 @@ export class ProjectTaskKanbanController extends KanbanController {
 
     setup() {
         super.setup();
-        this.hideGhostColumns = this.props.context.hide_kanban_ghost_columns;
+        this.hideKanbanStagesNocontent = this.props.context.hide_kanban_stages_nocontent;
     }
 }

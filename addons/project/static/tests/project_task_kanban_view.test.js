@@ -26,7 +26,7 @@ const viewParams = {
     groupBy: ["stage_id"],
 };
 
-test("shadow stages should be displayed in the project Kanban", async () => {
+test("stages nocontent helper should be displayed in the project Kanban", async () => {
     ProjectTask._records = [];
 
     await mountView({
@@ -48,7 +48,7 @@ test("shadow stages should be displayed in the project Kanban", async () => {
     });
 
     expect(".o_kanban_header").toHaveCount(1);
-    expect(".o_kanban_example_background_container").toHaveCount(1);
+    expect(".o_kanban_stages_nocontent").toHaveCount(1);
 });
 
 test("quick create button is visible when the user has access rights.", async () => {

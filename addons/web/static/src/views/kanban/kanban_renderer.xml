@@ -93,24 +93,16 @@
                         folded="state.columnQuickCreateIsFolded"
                         onFoldChange="folded => state.columnQuickCreateIsFolded = folded"
                         onValidate="props.list.createGroup.bind(props.list)"
-                        exampleData="exampleData"
                         groupByField="props.list.groupByField"
                     />
-                    <!-- Kanban Example Background -->
-                    <div t-if="props.list.groups.length === 0" class="o_kanban_example_background_container d-flex opacity-50">
-                        <div class="o_kanban_example_background flex-grow-1">
-                            <div class="o_kanban_examples d-flex p-2">
-                                <div t-foreach="ghostColumns" t-as="column" t-key="column.name" class="o_kanban_examples_group flex-grow-1 m-3">
-                                    <h6><b t-esc="column.name"/></h6>
-                                    <div t-foreach="column.cards" t-as="card" t-key="card_index" class="o_kanban_examples_ghost d-flex flex-wrap justify-content-between mb-3 p-2 border bg-light">
-                                        <div class="o_ghost_content w-100 pb-3 bg-300"/>
-                                        <div class="o_ghost_content o_ghost_tag d-inline-block w-50 mt-3 pb-3 bg-300"/>
-                                        <span class="mt-2 rounded-circle bg-300">
-                                            <img class="o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                    <div t-if="props.list.groups.length === 0" class="o_view_nocontent o_kanban_stages_nocontent">
+                        <div class="o_nocontent_help">
+                            <p class="o_view_nocontent_smiling_face">
+                                No stages yet, let's create some!
+                            </p>
+                            <p t-if="canShowExamples">
+                                Lack of inspiration? <button type="button" class="btn btn-link o_kanban_examples p-0" t-on-click="showExamples">See examples</button>
+                            </p>
                         </div>
                     </div>
                 </t>
