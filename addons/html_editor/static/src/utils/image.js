@@ -6,9 +6,8 @@ import { isColorGradient } from "@web/core/utils/colors";
  * @param {string} CSS 'background-image' property value
  * @returns {Object} contains the separated 'url' and 'gradient' parts
  */
-export function backgroundImageCssToParts(css) {
+export function backgroundImageCssToParts(css = "") {
     const parts = {};
-    css = css || "";
     if (css.startsWith("url(")) {
         const urlEnd = css.indexOf(")") + 1;
         parts.url = css.substring(0, urlEnd).trim();

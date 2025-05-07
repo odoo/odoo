@@ -8,8 +8,8 @@ class ColorStylePlugin extends Plugin {
     static dependencies = ["color"];
     resources = {
         builder_style_actions: this.getStyleActions(),
-        apply_color_style: withSequence(5, (element, mode, color) => {
-            applyNeededCss(element, mode === "backgroundColor" ? "background-color" : mode, color);
+        apply_style: withSequence(5, (element, cssProp, color) => {
+            applyNeededCss(element, cssProp, color);
             return true;
         }),
     };
