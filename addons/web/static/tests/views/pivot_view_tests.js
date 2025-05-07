@@ -615,6 +615,91 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelectorAll(".o_pivot_cell_value")[1]); // should trigger a do_action
     });
 
+    QUnit.test("clicking on a cell triggers do_action with form view present", async function (assert) {
+        assert.expect(1);
+
+        serverData.views = {
+            "partner,2,form": "<form/>",
+        }
+
+        serviceRegistry.add(
+            "action",
+            {
+                start() {
+                    return {
+                        doAction(action) {
+                            assert.deepEqual(
+                                action.views,
+                                [
+                                    [false, "list"],
+                                    [false, "form"],
+                                ],
+                            );
+                            return Promise.resolve(true);
+                        },
+                    };
+                },
+            },
+            { force: true }
+        );
+
+        await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot string="Partners">
+                    <field name="product_id" type="row"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+            config: {
+                views: [
+                    [false, "form"],
+                ],
+            },
+        });
+
+        await click(target.querySelectorAll(".o_pivot_cell_value")[0]);
+    });
+
+
+    QUnit.test("clicking on a cell triggers do_action without form view", async function (assert) {
+        assert.expect(1);
+
+        serviceRegistry.add(
+            "action",
+            {
+                start() {
+                    return {
+                        doAction(action) {
+                            assert.deepEqual(
+                                action.views,
+                                [
+                                    [false, "list"],
+                                ],
+                            );
+                            return Promise.resolve(true);
+                        },
+                    };
+                },
+            },
+            { force: true }
+        );
+
+        await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot string="Partners">
+                    <field name="product_id" type="row"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+        });
+
+        await click(target.querySelectorAll(".o_pivot_cell_value")[0]);
+    });
+
     QUnit.test("row and column are highlighted when hovering a cell", async function (assert) {
         assert.expect(11);
 

@@ -3408,6 +3408,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("clicking on bar charts triggers a do_action", async function (assert) {
         assert.expect(6);
+        serverData.views["foo,false,form"] = `<form/>`;
 
         serviceRegistry.add(
             "action",
@@ -3447,6 +3448,11 @@ QUnit.module("Views", (hooks) => {
                     <field name="bar"/>
                 </graph>
             `,
+            config: {
+                views: [
+                    [false, "form"],
+                ],
+            },
         });
         checkModeIs(assert, graph, "bar");
         checkDatasets(assert, graph, ["domains"], {
@@ -3459,6 +3465,7 @@ QUnit.module("Views", (hooks) => {
         "Clicking on bar charts removes group_by and search_default_* context keys",
         async function (assert) {
             assert.expect(2);
+            serverData.views["foo,false,form"] = `<form/>`;
 
             serviceRegistry.add(
                 "action",
@@ -3502,11 +3509,89 @@ QUnit.module("Views", (hooks) => {
                     search_default_user: 1,
                     group_by: "bar",
                 },
+                config: {
+                    views: [
+                        [false, "form"],
+                    ],
+                },
             });
 
             await clickOnDataset(graph);
         }
     );
+
+    QUnit.test("clicking on bar charts triggers do_action with form view present", async function (assert) {
+        assert.expect(1);
+
+        serverData.views["foo,false,form"] = `<form/>`;
+
+        serviceRegistry.add(
+            "action",
+            {
+                start() {
+                    return {
+                        doAction(actionRequest) {
+                            assert.deepEqual(actionRequest.views, [
+                                [false, "list"],
+                                [false, "form"],
+                            ]);
+                        },
+                    };
+                },
+            },
+            { force: true }
+        );
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph string="Foo Analysis">
+                    <field name="bar"/>
+                </graph>
+            `,
+            config: {
+                views: [
+                    [false, "form"],
+                ],
+            },
+        });
+        await clickOnDataset(graph);
+    });
+
+    QUnit.test("clicking on bar charts triggers do_action without form view", async function (assert) {
+        assert.expect(1);
+
+        serviceRegistry.add(
+            "action",
+            {
+                start() {
+                    return {
+                        doAction(actionRequest) {
+                            assert.deepEqual(actionRequest.views, [
+                                [false, "list"],
+                            ]);
+                        },
+                    };
+                },
+            },
+            { force: true }
+        );
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph string="Foo Analysis">
+                    <field name="bar"/>
+                </graph>
+            `,
+        });
+
+        await clickOnDataset(graph);
+    });
 
     QUnit.test(
         "clicking on a pie chart trigger a do_action with correct views",

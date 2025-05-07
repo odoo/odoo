@@ -737,8 +737,7 @@ QUnit.module("Board", (hooks) => {
                     doAction(action) {
                         assert.step("do action");
                         assert.deepEqual(action.views, [
-                            [false, "list"],
-                            [false, "form"],
+                            [false, "list"]
                         ]);
                     },
                 };
