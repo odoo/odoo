@@ -29,44 +29,100 @@
 import { renderToElement } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
-publicWidget.registry.s_website_dynamic_employee_card = publicWidget.Widget.extend({
-    selector: ".s_website_dynamic_employee_card",
-    disabledInEditableMode: false,
+publicWidget.registry.s_website_dynamic_employee_card =
+    publicWidget.Widget.extend({
+        selector: ".s_website_dynamic_employee_card",
+        disabledInEditableMode: false,
+        events: {
+            "click .s_website_dynamic_employee_card_load_more_btn": "loadMore",
+        },
 
-    init() {
-        this._super();
-        this.orm = this.bindService("orm");
-    },
+        init() {
+            this._super();
+            this.orm = this.bindService("orm");
+            this.limit = 6;
+        },
 
-    async willStart() {
-        const domain = [["active", "=", true]];
+        async willStart() {
+            this.domain = [["active", "=", true]];
 
-        if (this.el.dataset.department) {
-            domain.push([
-                "department_id",
-                "=",
-                parseInt(this.el.dataset.department),
-            ]);
-        }
+            if (this.el.dataset.department) {
+                this.domain.push([
+                    "department_id",
+                    "=",
+                    parseInt(this.el.dataset.department),
+                ]);
+            }
+            this.employeeCount = await this.orm.searchCount("hr.employee", this.domain);
+            await this.fetchData();
+        },
 
-        this.employees = await this.orm.searchRead("hr.employee", domain, [
-            "id",
-            "name",
-            "image_1920",
-            "job_title",
-            "work_email",
-            "work_phone",
-        ]);
-    },
+        async start() {
+            await this.renderTemplate();
+        },
 
-    async start() {
-        if (this.employees) {
-            const employeeCardElement = await renderToElement(
-                "website_dynamic_employee_snippet.dynamic_employee_card",
-                { employees: this.employees }
+        async loadMore() {
+            this.limit += 6;
+            await this.fetchData();
+            await this.renderTemplate();
+        },
+
+        async renderTemplate() {
+            if (this.employees) {
+
+                let employeeCardElement;
+                switch (this.el.dataset.view_type) {
+                    case "card":
+                        employeeCardElement = await renderToElement(
+                            "website_dynamic_employee_snippet.dynamic_employee_card",
+                            { employees: this.employees }
+                        );
+                        break;
+                    case "list":
+                        employeeCardElement = await renderToElement(
+                            "website_dynamic_employee_snippet.dynamic_employee_list",
+                            { employees: this.employees }
+                        );
+                        break;
+                    default:
+                        employeeCardElement = await renderToElement(
+                            "website_dynamic_employee_snippet.dynamic_employee_card",
+                            { employees: this.employees }
+                        );
+                }
+                const replaceableElement = this.el.querySelector(".container");
+                // replaceableElement?.replaceWith(employeeCardElement);
+                this.el.replaceChild(employeeCardElement, replaceableElement);
+
+                if (
+                    !this.el.querySelector(
+                        ".s_website_dynamic_employee_card_load_more_btn"
+                    ) && this.limit < this.employeeCount
+                ) {
+                    const loadMoreBtn = await renderToElement(
+                        "website_dynamic_employee_snippet.s_website_dynamic_employee_card_load_more_btn"
+                    );
+                    this.el.appendChild(loadMoreBtn);
+                }
+                if (this.limit > this.employeeCount) {
+                    this.el.querySelector(".s_website_dynamic_employee_card_load_more_btn")?.remove();
+                }
+            }
+        },
+
+        async fetchData() {
+            this.employees = await this.orm.searchRead(
+                "hr.employee",
+                this.domain,
+                [
+                    "id",
+                    "name",
+                    "image_1920",
+                    "job_title",
+                    "work_email",
+                    "work_phone",
+                ],
+                { limit: this.limit, offset: this.offset }
             );
-            const replaceableElement = this.el.querySelector(".container");
-            replaceableElement?.replaceWith(employeeCardElement);
-        }
-    },
-});
+        },
+    });

@@ -4,21 +4,63 @@
         <div class="container">
             <h1 class="section_heading">Our Employees...</h1>
             <div class="row">
-                    <t t-foreach="employees" t-as="employee" t-key="employee.id">
-                        <div class="col-lg-4 pt32 pb32" data-name="Team Member">
-                            <div class="o_not_editable" contenteditable="false">
-                                <img class="o_editable_media img img-fluid rounded-circle" t-att-src="'data:image/png;base64,' + employee.image_1920" alt="" style="width: 25% !important;"/>
-                            </div>
-                            <h4 class="h5-fs"><br/><t t-esc="employee.name"/></h4>
-                            <p class="text-muted"><t t-esc="employee.job_title"/></p>
-                            <p class="text-muted">
-                                <t t-esc="employee.work_email"/>
-                            </p>
-                            <p class="text-muted">
-                                <t t-esc="employee.work_phone"/>
-                            </p>
+                <t t-foreach="employees" t-as="employee" t-key="employee.id">
+                    <div class="col-lg-4 pt32 pb32" data-name="Team Member">
+                        <div class="o_not_editable" contenteditable="false">
+                            <img class="o_editable_media img img-fluid rounded-circle" t-att-src="'data:image/png;base64,' + employee.image_1920" alt="" style="width: 25% !important;"/>
                         </div>
-                    </t>
+                        <h4 class="h5-fs"><br/><t t-esc="employee.name"/></h4>
+                        <p class="text-muted"><t t-esc="employee.job_title"/></p>
+                        <p class="text-muted">
+                            <t t-esc="employee.work_email"/>
+                        </p>
+                        <p class="text-muted">
+                            <t t-esc="employee.work_phone"/>
+                        </p>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+    <t t-name="website_dynamic_employee_snippet.dynamic_employee_list">
+        <div class="container">
+            <h1 class="section_heading">Our Employees (List View)</h1>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Photo</th>
+                            <th>Name</th>
+                            <th>Job Title</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="employees" t-as="employee" t-key="employee.id">
+                            <tr>
+                                <td><t t-esc="employee.id"/></td>
+                                <td>
+                                    <img t-att-src="'data:image/png;base64,' + employee.image_1920"
+                                        alt="Employee Photo"
+                                        style="height: 50px; width: 50px; object-fit: cover; border-radius: 50%;" />
+                                </td>
+                                <td><t t-esc="employee.name"/></td>
+                                <td><t t-esc="employee.job_title"/></td>
+                                <td><t t-esc="employee.work_email"/></td>
+                                <td><t t-esc="employee.work_phone"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+    <t t-name="website_dynamic_employee_snippet.s_website_dynamic_employee_card_load_more_btn">
+        <div class="container justify-content-center">
+            <div data-name="s_button" class="s_website_dynamic_employee_card_load_more_btn o_not_editable">
+                <a class="btn btn-primary o_snippet_drop_in_only" href="#">Load More</a>
             </div>
         </div>
     </t>
