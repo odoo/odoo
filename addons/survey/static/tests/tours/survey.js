@@ -71,7 +71,7 @@ const survey_steps = (checkPageTranslation) => [
         run: "click",
     }, {
         content: "Click on Submit",
-        trigger: 'button.btn-primary:contains("Submit")',
+        trigger: ".modal-footer button.btn-primary",
         run: "click",
     },
     // Final page
