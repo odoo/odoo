@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Avatars" id="s_avatars">
+    <div class="s_avatars d-flex flex-row flex-wrap"
+         style="--avatars-size: 3rem"
+        >
+        <div class="s_avatars_wrapper oe_unremovable d-flex">
+            <div
+                class="s_avatars_rules_collector d-contents rounded-circle oe_unremovable"
+                style="border: 3px solid var(--body-bg);"
+            >
+                <img src="/web/image/website.s_company_team_image_1"
+                     class="img o_avatar"
+                     alt=""
+                />
+                <img src="/web/image/website.s_company_team_image_2"
+                     class="img o_avatar"
+                     alt=""
+                />
+                <img src="/web/image/website.s_company_team_image_3"
+                     class="img o_avatar"
+                     alt=""
+                />
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<record id="website.s_avatars_000_scss" model="ir.asset">
+    <field name="name">Avatars 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_avatars/000.scss</field>
+</record>
+
+</odoo>
