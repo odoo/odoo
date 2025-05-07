@@ -126,8 +126,6 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_and_scrollbar', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_and_animations', login='admin', timeout=90)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_drag_and_drop_on_non_editable(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_drag_and_drop_on_non_editable', login='admin')
 
