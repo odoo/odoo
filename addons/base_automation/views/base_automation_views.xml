@@ -89,7 +89,7 @@
                                     options="{'no_open': True, 'no_create': True}"
                                     invisible="not trg_date_id or trg_date_range_type != 'day'"/>
                                 <field name="filter_pre_domain" widget="domain" groups="base.group_no_one"
-                                       options="{'model': 'model_name', 'in_dialog': True}"
+                                       options="{'model': 'model_name', 'in_dialog': True, 'allow_expressions':True}"
                                        invisible="trigger in [
                                             'on_create',
                                             'on_unlink',
@@ -102,11 +102,11 @@
                                 />
                                 <field name="previous_domain" invisible="1"/>
                                 <field name="filter_domain" widget="domain" groups="base.group_no_one"
-                                    options="{'model': 'model_name', 'in_dialog': True}"
+                                    options="{'model': 'model_name', 'in_dialog': True, 'allow_expressions':True}"
                                     invisible="trigger in ['on_webhook']"
                                 />
                                 <field name="filter_domain" widget="domain" groups="!base.group_no_one"
-                                    options="{'model': 'model_name', 'in_dialog': False, 'foldable': True}"
+                                    options="{'model': 'model_name', 'in_dialog': False, 'foldable': True, 'allow_expressions':True}"
                                     invisible="trigger not in ['on_create', 'on_create_or_write', 'on_change', 'on_unlink', 'on_time', 'on_time_created', 'on_time_updated']"
                                 />
                                 <field name="trigger_field_ids" string="When updating" placeholder="Select fields..."
