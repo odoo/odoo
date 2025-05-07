@@ -28,9 +28,6 @@ test("Rendering of visitor banner", async () => {
         lang_id,
         website_id,
     });
-    pyEnv["website.visitor"].write([visitorId], {
-        display_name: `Visitor #${visitorId}`,
-    });
     const guestId = pyEnv["mail.guest"].create({ name: `Visitor #${visitorId}` });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: `Visitor #${visitorId}`,
@@ -55,7 +52,9 @@ test("Rendering of visitor banner", async () => {
     );
     await contains(".o-website_livechat-VisitorBanner .o-mail-ImStatus");
     await contains(".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
-    await contains(".o-website_livechat-VisitorBanner span", { text: `Visitor #${visitorId}` });
+    await contains(".o-website_livechat-VisitorBanner span", {
+        text: `Website Visitor #${visitorId}`,
+    });
     await contains("span", { text: "English" });
     await contains("span > span", { text: "General website" });
     await contains("span", { text: "Home → Contact" });
