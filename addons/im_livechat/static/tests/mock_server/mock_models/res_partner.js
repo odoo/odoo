@@ -55,6 +55,7 @@ export class ResPartner extends mailModels.ResPartner {
                     );
                 }
             }
+            store.add(this.browse(partner.id), makeKwArgs({ fields: ["user_livechat_username"] }));
             store.add(this.browse(partner.id), data);
             store.add(this.browse(partner.id), makeKwArgs({ extra_fields: ["is_in_call"] }));
         }
