@@ -145,3 +145,32 @@ test("Partners invited most frequently by the current user come first", async ()
     await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "John" });
     await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Albert" });
 });
+
+test("Operator invite shows livechat_username", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create({
+        name: "John",
+        im_status: "offline",
+        user_ids: [pyEnv["res.users"].create({ name: "John" })],
+        user_livechat_username: "Johnny",
+    });
+    const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor #1" });
+    pyEnv["discuss.channel"].create({
+        anonymous_name: "Visitor #1",
+        channel_type: "livechat",
+        channel_member_ids: [
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-03 12:00:00",
+            }),
+            Command.create({ guest_id: guestId_1, last_interest_dt: "2021-01-03 12:00:00" }),
+        ],
+        livechat_operator_id: serverState.partnerId,
+        livechat_active: true,
+    });
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #1" });
+    await click("button[title='Invite People']");
+    await contains("input", { parent: [".o-discuss-ChannelInvitation-selectable", { text: "Johnny" }] });
+});

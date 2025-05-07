@@ -1,6 +1,6 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 
-import { getKwArgs, serverState } from "@web/../tests/web_test_helpers";
+import { getKwArgs, serverState, makeKwArgs } from "@web/../tests/web_test_helpers";
 
 export class ResPartner extends mailModels.ResPartner {
     /**
@@ -55,6 +55,7 @@ export class ResPartner extends mailModels.ResPartner {
                     );
                 }
             }
+            store.add(this.browse(partner.id), makeKwArgs({ fields: ["user_livechat_username"] }));
             store.add(this.browse(partner.id), data);
         }
     }
