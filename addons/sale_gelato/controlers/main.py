@@ -100,6 +100,13 @@ class GelatoController(Controller):
         """
         company_sudo = order_sudo.company_id.sudo()  # In sudo mode to read on the company.
         expected_signature = company_sudo.gelato_webhook_secret
+        if not expected_signature:
+            _logger.warning(
+                "gelato_webhook_secret not set for this company %s (id: %s)",
+                company_sudo.name, company_sudo.id
+            )
+            raise Forbidden()
+
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received notification with invalid signature.")
             raise Forbidden()
