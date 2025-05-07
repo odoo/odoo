@@ -521,15 +521,14 @@ def get_conf(key=None, section='iot.box'):
 
 
 def disconnect_from_server():
-    """Disconnect the IoT Box from the server, clears associated caches"""
-    get_odoo_server_url.cache_clear()
+    """Disconnect the IoT Box from the server"""
     update_conf({
         'remote_server': '',
         'token': '',
         'db_uuid': '',
         'enterprise_code': '',
     })
-
+    odoo_restart()
 
 def save_browser_state(url=None, orientation=None):
     """Save the browser state to the file
