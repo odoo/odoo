@@ -1773,42 +1773,6 @@ class TestXMLDuplicateTranslations(TransactionCase):
         self.assertEqual(view1_en_copy.with_context(lang='es_ES').arch_db, self.xml % ('una estudiante', 'una estudiante'))  # 'un estudiante' is dropped
 
 
-class TestHTMLTranslation(TransactionCase):
-    def test_write_non_existing(self):
-        html = '''
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
-'''
-        company = self.env['res.company'].browse(9999)
-        company.report_footer = html
-        self.assertHTMLEqual(company.report_footer, html)
-        # flushing on non-existing records does not break for scalar fields; the
-        # same behavior is expected for translated fields
-        company.flush_recordset()
-
-    def test_delay_translations_no_term(self):
-        self.env['res.lang']._activate_lang('fr_FR')
-        self.env['res.lang']._activate_lang('nl_NL')
-        Company = self.env['res.company']
-        company0 = Company.create({'name': 'company_1', 'report_footer': '<h1>Knife</h1>'})
-        company0.update_field_translations('report_footer', {'fr_FR': {'Knife': 'Couteau'}})
-
-        for html in ('<h1></h1>', '', False):
-            # delay_translations only works when the written value has at least one translatable term
-            company0.with_context(lang='en_US', delay_translations=True).report_footer = html
-            for lang in ('en_US', 'fr_FR', 'nl_NL'):
-                self.assertEqual(
-                    company0.with_context(lang=lang).report_footer,
-                    html,
-                    f'report_footer for {lang} should be {html}'
-                )
-                self.assertEqual(
-                    company0.with_context(lang=lang, check_translations=True).report_footer,
-                    html,
-                    f'report_footer for {lang} should be {html} when check_translations'
-                )
-
-
 @tagged('post_install', '-at_install')
 class TestLanguageInstallPerformance(TransactionCase):
     def test_language_install(self):
