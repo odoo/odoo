@@ -268,6 +268,19 @@ class AccountTax(models.Model):
             ):
                 raise ValidationError(_('Nested group of taxes are not allowed.'))
 
+    @api.constrains('amount_type')
+    def _check_parent_type(self):
+        for tax in self:
+            if tax.amount_type == 'group':
+                group_parent_taxes = self.env['account.tax'].search([
+                    ('amount_type', '=', 'group')
+                ]).filtered(lambda parent_tax: tax in parent_tax.children_tax_ids)
+                if group_parent_taxes:
+                    raise ValidationError(_(
+                        'You can\'t change this tax to a group of taxes because it is used in the following group(s) of taxes:%s',
+                        '\n- '.join([''] + [group_parent_tax_name for group_parent_tax_name in set(group_parent_taxes.mapped('name'))])
+                    ))
+
     @api.constrains('company_id')
     def _check_company_consistency(self):
         if not self:
