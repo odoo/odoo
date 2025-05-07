@@ -67,8 +67,9 @@ class Website(models.Model):
             ('tax_excluded', "Tax Excluded"),
             ('tax_included', "Tax Included"),
         ],
-        required=True,
-        default='tax_excluded',
+        compute='_compute_show_line_subtotals_tax_selection',
+        readonly=False,
+        store=True,
     )
 
     add_to_cart_action = fields.Selection(
@@ -203,6 +204,11 @@ class Website(models.Model):
         for website in self:
             if website.send_abandoned_cart_email:
                 website.send_abandoned_cart_email_activation_time = fields.Datetime.now()
+
+    @api.depends('company_id.account_fiscal_country_id')
+    def _compute_show_line_subtotals_tax_selection(self):
+        for website in self:
+            website.show_line_subtotals_tax_selection = 'tax_excluded'
 
     #=== SELECTION METHODS ===#
 
