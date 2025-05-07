@@ -1,37 +1,84 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_skills
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Jolien De Paepe, 2023
-#
+# Wil Odoo, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"PO-Revision-Date: 2025-05-06 12:03+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_skills
+#. odoo-python
+#: code:addons/hr_skills/models/hr_skill_type.py:0
+msgid "%s (copy)"
+msgstr "%s (kopie)"
 
 #. module: hr_skills
 #: model:ir.actions.report,print_report_name:hr_skills.action_report_employee_cv
 msgid "'CV - %s' % (object.name)"
-msgstr ""
+msgstr "'CV - %s' % (object.name)"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
+msgid "+1234567890"
+msgstr "+1234567890"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "2022"
+msgstr "2022"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "2023"
+msgstr "2023"
 
 #. module: hr_skills
 #. odoo-javascript
-#: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 msgid "ADD"
 msgstr "TOEVOEGEN"
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__active
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__active
+msgid "Active"
+msgstr "Actief"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_adaptability
+msgid "Adaptability"
+msgstr "Aanpassingsvermogen"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_arabic
+msgid "Arabic"
+msgstr "Arabisch"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_search
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_bengali
+msgid "Bengali"
+msgstr "Bengalees"
 
 #. module: hr_skills
 #. odoo-javascript
@@ -42,12 +89,12 @@ msgstr "EEN NIEUWE REGEL MAKEN"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__can_show_others
 msgid "Can Show Others"
-msgstr ""
+msgstr "Kan andere tonen"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__can_show_skills
 msgid "Can Show Skills"
-msgstr ""
+msgstr "Kan vaardigheden tonen"
 
 #. module: hr_skills
 #: model:ir.model.fields.selection,name:hr_skills.selection__hr_resume_line__display_type__classic
@@ -55,9 +102,21 @@ msgid "Classic"
 msgstr "Klassiek"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__color
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill__color
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__color
+msgid "Color"
+msgstr "Kleur"
+
+#. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 msgid "Colors"
-msgstr ""
+msgstr "Kleuren"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_communication
+msgid "Communication"
+msgstr "Communicatie"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__company_id
@@ -65,15 +124,26 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_conflict_management
+msgid "Conflict Management"
+msgstr "Conflictbeheersing"
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__show_contact
 msgid "Contact Information"
+msgstr "Contactgegevens"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
+msgid "Create Resume Lines"
 msgstr ""
 
 #. module: hr_skills
 #. odoo-javascript
-#: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
-msgid "Create a new entry"
-msgstr "Een nieuwe regel maken"
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "Create Skills"
+msgstr ""
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__create_uid
@@ -100,8 +170,18 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_creativity
+msgid "Creativity"
+msgstr "Creativiteit"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_critical_thinking
+msgid "Critical Thinking"
+msgstr "Kritisch denken"
+
+#. module: hr_skills
 #. odoo-javascript
-#: code:addons/hr_skills/static/src/fields/resume_one2many.xml:0
+#: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 msgid "Current"
 msgstr "Huidig"
 
@@ -122,9 +202,24 @@ msgid "Date Start"
 msgstr "Startdatum"
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_decision_making
+msgid "Decision-Making"
+msgstr "Besluitvorming"
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__default_level
 msgid "Default Level"
 msgstr "Standaardniveau"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_company
+msgid "Demo Address"
+msgstr "Demo adres"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_company
+msgid "Demo Company Name"
+msgstr "Demo bedrijfsnaam"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__department_id
@@ -142,24 +237,45 @@ msgstr "Omschrijving"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 msgid "Discard"
-msgstr ""
+msgstr "Negeren"
 
 #. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
+msgid "Display"
+msgstr "Weergave"
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_report_hr_skills_report_employee_cv__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_type
 msgid "Display Type"
 msgstr "Soort weergave"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
+msgid "Duration"
+msgstr "Duur"
+
+#. module: hr_skills
+#: model:hr.resume.line.type,name:hr_skills.resume_type_education
+msgid "Education"
+msgstr "Opleiding"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee
@@ -174,15 +290,10 @@ msgid "Employee"
 msgstr "Werknemer"
 
 #. module: hr_skills
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
-msgid "Employee Name"
-msgstr "Naam werknemer"
-
-#. module: hr_skills
 #: model:ir.actions.report,name:hr_skills.action_report_employee_cv
 #: model:ir.model,name:hr_skills.model_report_hr_skills_report_employee_cv
 msgid "Employee Resume"
-msgstr ""
+msgstr "Cv werknemer"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_employee_skill_report_action
@@ -205,6 +316,38 @@ msgid "Employees without Skills"
 msgstr "Werknemer zonder vaardigheden"
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_english
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "English"
+msgstr "Engels"
+
+#. module: hr_skills
+#: model:hr.resume.line.type,name:hr_skills.resume_type_experience
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "Experience"
+msgstr "Ervaring"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_filipino
+msgid "Filipino"
+msgstr "Filipijns"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "Fluent"
+msgstr "Vloeiend"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_french
+msgid "French"
+msgstr "Frans"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_german
+msgid "German"
+msgstr "Duits"
+
+#. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
 msgid "Group By"
 msgstr "Groeperen op"
@@ -215,7 +358,19 @@ msgid "Group By..."
 msgstr "Groeperen op..."
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__has_department_manager_access
+msgid "Has Department Manager Access"
+msgstr "Heeft toegang tot afdelingsmanager"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_hindi
+msgid "Hindi"
+msgstr "Hindi"
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__id
@@ -224,18 +379,62 @@ msgstr "Groeperen op..."
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__id
+#: model:ir.model.fields,field_description:hr_skills.field_report_hr_skills_report_employee_cv__id
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__id
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_skill_level__default_level
-msgid "If checked, this level will be the default one selected when choosing this skill."
-msgstr "Indien aangevinkt, zal dit niveau het standaardniveau zijn dat geselecteerd is bij het kiezen van deze vaardigheid."
+msgid ""
+"If checked, this level will be the default one selected when choosing this "
+"skill."
+msgstr ""
+"Indien aangevinkt, zal dit niveau het standaardniveau zijn dat geselecteerd "
+"is bij het kiezen van deze vaardigheid."
 
 #. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "If skills are missing, they can be created by an HR officer."
+msgstr ""
+"Ontbrekende vaardigheden kunnen worden gemaakt door een HR-medewerker."
+
+#. module: hr_skills
+#: model:ir.model.fields,help:hr_skills.field_hr_employee_skill_report__active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Als het actief veld uitstaat, kun je het resource record verbergen zonder "
+"deze te verwijderen."
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_indonesian
+msgid "Indonesian"
+msgstr "Indonesisch"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_japanese
+msgid "Japanese"
+msgstr "Japans"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_javanese
+msgid "Javanese"
+msgstr "Javaans"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_korean
+msgid "Korean"
+msgstr "Koreaans"
+
+#. module: hr_skills
+#: model:hr.skill.type,name:hr_skills.hr_skill_type_lang
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
 msgid "Languages"
-msgstr ""
+msgstr "Talen"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__write_uid
@@ -262,9 +461,14 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_leadership
+msgid "Leadership"
+msgstr "Leiderschap"
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__level_progress
 msgid "Level Progress"
-msgstr "Niveau Vooruitgang"
+msgstr "Niveau voortgang"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__skill_level_ids
@@ -280,7 +484,22 @@ msgstr "Regelsoorten"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_company
 msgid "Logo"
-msgstr ""
+msgstr "Logo"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_mandarin_chinese
+msgid "Mandarin Chinese"
+msgstr "Mandarijn Chinees"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_marathi
+msgid "Marathi"
+msgstr "Marathi"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
+msgid "Marc Demo"
+msgstr "Marc Demo"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__name
@@ -292,14 +511,24 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: hr_skills
-#. odoo-python
-#: code:addons/hr_skills/models/hr_skill_level.py:0
-msgid "Only one default level is allowed per skill type."
-msgstr "Per vaardigheidstype is slechts één standaardniveau toegestaan."
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.js:0
+msgid "New Resume line"
+msgstr "Nieuwe cv-regel"
 
 #. module: hr_skills
-#. odoo-python
+#: model:hr.skill,name:hr_skills.hr_skill_openness_to_criticism
+msgid "Openness to criticism"
+msgstr "Openheid voor kritiek"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_organizational
+msgid "Organizational"
+msgstr "Organisatie"
+
+#. module: hr_skills
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_skills/report/hr_employee_cv_report.py:0
 #: code:addons/hr_skills/static/src/views/skills_list_renderer.js:0
 msgid "Other"
@@ -308,22 +537,38 @@ msgstr "Overige"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__show_others
 msgid "Others"
-msgstr ""
+msgstr "Andere"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_persuasion
+msgid "Persuasion"
+msgstr "Overtuiging"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "Pick a skill from the list"
+msgstr "Kies een vaardigheid uit de lijst"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_portuguese
+msgid "Portuguese"
+msgstr "Portugees"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
 msgid "Present"
-msgstr ""
+msgstr "Huidig"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__color_primary
 msgid "Primary Color"
-msgstr ""
+msgstr "Primaire kleur"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 msgid "Print"
-msgstr ""
+msgstr "Afdrukken"
 
 #. module: hr_skills
 #. odoo-python
@@ -333,7 +578,12 @@ msgstr ""
 #: model:ir.model,name:hr_skills.model_hr_employee_cv_wizard
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 msgid "Print Resume"
-msgstr ""
+msgstr "Cv afdrukken"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_problem_solving
+msgid "Problem-Solving"
+msgstr "Probleemoplossend"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__level_progress
@@ -346,6 +596,11 @@ msgstr "Voortgang"
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_form
 msgid "Progress (%)"
 msgstr "Voortgang (%)"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "Progress bar"
+msgstr "Voortgangsbalk"
 
 #. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill__level_progress
@@ -365,6 +620,26 @@ msgid "Public Employee"
 msgstr "Openbare werknemer"
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_punjabi
+msgid "Punjabi"
+msgstr "Punjabi"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "Python"
+msgstr "Python"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_resourcefulness
+msgid "Resourcefulness"
+msgstr "Vindingrijkheid"
+
+#. module: hr_skills
+#: model:ir.model,name:hr_skills.model_resource_resource
+msgid "Resources"
+msgstr "Middelen"
+
+#. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.menu_human_resources_configuration_resume
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_search
@@ -373,13 +648,13 @@ msgstr "Openbare werknemer"
 #: model_terms:ir.ui.view,arch_db:hr_skills.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "Resume"
-msgstr "Curriculum vitae"
+msgstr "Cv"
 
 #. module: hr_skills
 #. odoo-python
 #: code:addons/hr_skills/controllers/main.py:0
 msgid "Resume %s"
-msgstr ""
+msgstr "Cv %s"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_resume_type_action
@@ -389,7 +664,7 @@ msgstr "Soorten cv-regels"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
 msgid "Resume line of an employee"
-msgstr "Cv-regel van een werknemer"
+msgstr "CV-regel van een werknemer"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__resume_line_ids
@@ -402,7 +677,12 @@ msgstr "Cv-regels"
 #. odoo-python
 #: code:addons/hr_skills/controllers/main.py:0
 msgid "Resumes"
-msgstr ""
+msgstr "Cv's"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_russian
+msgid "Russian"
+msgstr "Russisch"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
@@ -415,20 +695,38 @@ msgid "Search Skill"
 msgstr "Zoek vaardigheid"
 
 #. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_search
+msgid "Search Skill Type"
+msgstr "Zoek vaardigheidstype"
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__color_secondary
 msgid "Secondary Color"
-msgstr ""
+msgstr "Secundaire kleur"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/form_view_one2many/form_view_one2many.xml:0
+msgid "Select & Close"
+msgstr "Selecteren & Sluiten"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/form_view_one2many/form_view_one2many.xml:0
+msgid "Select & New"
+msgstr "Selecteren & Nieuw"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.js:0
+msgid "Select Skills"
+msgstr "Selecteer vaardigheden"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__sequence
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__sequence
 msgid "Sequence"
 msgstr "Reeks"
-
-#. module: hr_skills
-#: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_tree
-msgid "Set Default"
-msgstr "Als standaard instellen"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill
@@ -446,7 +744,6 @@ msgstr "Vaardigheid"
 #: model:ir.actions.act_window,name:hr_skills.action_hr_employee_skill_log_department
 #: model:ir.actions.act_window,name:hr_skills.action_hr_employee_skill_log_employee
 #: model:ir.actions.server,name:hr_skills.action_open_skills_log_department
-#: model:ir.actions.server,name:hr_skills.action_open_skills_log_employee
 msgid "Skill History Report"
 msgstr "Rapport vaardigheidsgeschiedenis"
 
@@ -477,14 +774,15 @@ msgstr "Vaardigheidsniveaus"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
 msgid "Skill Type"
-msgstr "Vaardigheidstype"
+msgstr "Soort vaardigheid"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_skill_type_action
 #: model:ir.ui.menu,name:hr_skills.hr_skill_type_menu
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_tree
 msgid "Skill Types"
-msgstr "Vaardigheidstypes"
+msgstr "Vaardigheidssoorten"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill
@@ -492,20 +790,20 @@ msgid "Skill level for an employee"
 msgstr "Vaardigheidsniveau voor een werknemer"
 
 #. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__employee_skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__show_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__employee_skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__employee_skill_ids
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__employee_skill_ids
 #: model:ir.ui.menu,name:hr_skills.hr_employee_skill_report_menu
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_view_form
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_form
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
-#: model_terms:ir.ui.view,arch_db:hr_skills.res_users_view_form
 msgid "Skills"
 msgstr "Vaardigheden"
 
@@ -519,16 +817,75 @@ msgid "Skills History"
 msgstr "Vaardigheidsgeschiedenis"
 
 #. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.js:0
+msgid "Skills Report"
+msgstr "Vaardighedenrapport"
+
+#. module: hr_skills
+#: model:hr.resume.line.type,name:hr_skills.resume_type_social_media
+msgid "Social Media"
+msgstr "Social media"
+
+#. module: hr_skills
+#: model:hr.skill.type,name:hr_skills.hr_skill_type_softskill
+msgid "Soft Skills"
+msgstr "Soft Skills"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
+msgid "Software Developer"
+msgstr "Software Developer"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_spanish
+msgid "Spanish"
+msgstr "Spaans"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_stress_management
+msgid "Stress management"
+msgstr "Stressmanagement"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_teamwork
+msgid "Teamwork"
+msgstr "Teamwerk"
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__technical_is_new_default
+msgid "Technical Is New Default"
+msgstr "Technisch is de nieuwe standaard"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_telugu
+msgid "Telugu"
+msgstr "Telugu"
+
+#. module: hr_skills
+#. odoo-python
+#: code:addons/hr_skills/models/hr_skill_type.py:0
+msgid ""
+"The following skills type must contain at least one skill and one level: %s"
+msgstr ""
+"Het volgende vaardigheidstype moet minstens één vaardigheid en één niveau "
+"bevatten: %s"
+
+#. module: hr_skills
 #. odoo-python
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
-msgstr "De vaardigheid %(name)s en het soort vaardigheid %(type)s komen niet overeen"
+msgstr ""
+"De vaardigheid %(name)s en het soort vaardigheid %(type)s komen niet overeen"
 
 #. module: hr_skills
 #. odoo-python
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
-msgstr "Het vaardigheidsniveau %(level)s is niet geldig voor het soort vaardigheid: %(type)s"
+msgstr ""
+"Het vaardigheidsniveau %(level)s is niet geldig voor het soort vaardigheid: "
+"%(type)s"
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_resume_line_date_check
@@ -536,24 +893,62 @@ msgid "The start date must be anterior to the end date."
 msgstr "De begindatum moet voor de einddatum liggen."
 
 #. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
+msgid "There are no resume lines on this employee."
+msgstr ""
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "There are no skills defined in the library."
+msgstr "Er zijn geen vaardigheden bepaald in de bibliotheek."
+
+#. module: hr_skills
+#: model_terms:ir.actions.act_window,help:hr_skills.hr_employee_skill_report_action
+msgid ""
+"This report will give you an overview of the skills per Employee.\n"
+"                Create them in configuration and add them on the Employee."
+msgstr ""
+"Dit rapport geeft je een overzicht van de vaardigheden per Werknemer.\n"
+"                Maak ze aan in de configuratie en voeg ze toe aan de Werknemer."
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_time_management
+msgid "Time Management"
+msgstr "Tijdbeheer"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "Timeline"
+msgstr "Tijdlijn"
+
+#. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "Title"
 msgstr "Titel"
 
 #. module: hr_skills
-#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill__unique_skill
+#: model:hr.skill,name:hr_skills.hr_skill_turkish
+msgid "Turkish"
+msgstr "Turks"
+
+#. module: hr_skills
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_HrEmployeeSkill__unique_skill
 msgid "Two levels for the same skill is not allowed"
 msgstr "Twee niveaus voor dezelfde vaardigheid is niet toegestaan"
 
 #. module: hr_skills
-#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log__unique_skill_log
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log_HrEmployeeSkillLog__unique_skill_log
 msgid "Two levels for the same skill on the same day is not allowed"
-msgstr "Twee niveaus voor dezelfde vaardigheid op dezelfde dag is niet toegestaan"
+msgstr ""
+"Twee niveaus voor dezelfde vaardigheid op dezelfde dag is niet toegestaan"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__line_type_id
 msgid "Type"
-msgstr "Type"
+msgstr "Soort"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line_type
@@ -561,9 +956,32 @@ msgid "Type of a resume line"
 msgstr "Type cv-regel"
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_urdu
+msgid "Urdu"
+msgstr "Urdu"
+
+#. module: hr_skills
 #: model:ir.model,name:hr_skills.model_res_users
 msgid "User"
 msgstr "Gebruiker"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_wu_chinese
+msgid "Wu Chinese"
+msgstr "Wu Chinees"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "You can add skills from our library to the employee profile."
+msgstr ""
+"Je kunt vaardigheden toevoegen van onze bibliotheek op het "
+"werknemersprofiel."
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
+msgid "demo@email.com"
+msgstr "demo@email.com"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
@@ -574,3 +992,8 @@ msgstr "bijv. Talen"
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "e.g. Odoo Inc."
 msgstr "bijv. Odoo Inc."
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
+msgid "www.demo.com"
+msgstr "www.demo.com"

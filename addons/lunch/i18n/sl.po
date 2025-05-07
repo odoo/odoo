@@ -3,47 +3,21 @@
 # 	* lunch
 # 
 # Translators:
-# JernejEditor, 2024
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"PO-Revision-Date: 2025-05-06 12:03+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sl\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_temaki
-msgid "1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_chirashi
-msgid "2 Tempuras, Cabbages, Onions, Sesame Sauce"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_4formaggi
-msgid "4 Formaggi"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_salmon
-msgid "4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_maki
-msgid "6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado"
-msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -133,7 +107,7 @@ msgid ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "    <div>\n"
 "        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
-"        <t t-set=\"order\" t-value=\"ctx.get('order')\"/>\n"
+"        <t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
 "        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "        <p>\n"
 "        Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
@@ -183,7 +157,7 @@ msgid ""
 "                    <td/>\n"
 "                    <td/>\n"
 "                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\"><strong>Total</strong></td>\n"
-"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"format_amount(order['amount_total'], currency) or ''\">$ 10.00</strong></td>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"order.get('amount_total') and format_amount(order['amount_total'], currency) or ''\">$ 10.00</strong></td>\n"
 "                </tr>\n"
 "            </tbody>\n"
 "        </table>\n"
@@ -228,7 +202,7 @@ msgid ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com\" t-attf-style=\"color: {{user.company_id.email_secondary_color or '#875A7B'}};\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -313,11 +287,6 @@ msgid "Alert Name"
 msgstr "Ime opozorila"
 
 #. module: lunch
-#: model:lunch.alert,name:lunch.alert_office_3
-msgid "Alert for Office 3"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
 msgid "Alert in app"
 msgstr ""
@@ -398,31 +367,9 @@ msgid "Available Toppings 3"
 msgstr ""
 
 #. module: lunch
-#: model:lunch.product,name:lunch.product_bacon
-#: model:lunch.product,name:lunch.product_bacon_0
-msgid "Bacon"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_bacon
-#: model_terms:lunch.product,description:lunch.product_bacon_0
-msgid "Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_cheese_burger_0
-#: model_terms:lunch.product,description:lunch.product_cheeseburger
-msgid "Beef, Cheddar, Salad, Fried Onions, BBQ Sauce"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_Bolognese
-msgid "Bolognese Pasta"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_country
-msgid "Brie, Honey, Walnut Kernels"
+#: model:res.groups,comment:lunch.group_lunch_manager
+msgid ""
+"Be able to create new products, cashmoves and to confirm or cancel orders."
 msgstr ""
 
 #. module: lunch
@@ -486,32 +433,6 @@ msgid "Chat notification"
 msgstr ""
 
 #. module: lunch
-#: model:lunch.product,name:lunch.product_cheese_ham
-msgid "Cheese And Ham"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_cheese_burger_0
-#: model:lunch.product,name:lunch.product_cheeseburger
-msgid "Cheese Burger"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_cheese_ham
-msgid "Cheese, Ham, Salad, Tomatoes, cucumbers, eggs"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_chicken_curry
-msgid "Chicken Curry"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product.category,name:lunch.categ_chirashi
-msgid "Chirashi"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__city
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "City"
@@ -523,17 +444,6 @@ msgid ""
 "Click on the <span class=\"fa fa-phone text-success\" title=\"Order button\"></span> to announce that the order is ordered.<br>\n"
 "            Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
 "            Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> red X to announce that the order isn't available."
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_club
-#: model:lunch.product,name:lunch.product_club_0
-msgid "Club"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_coke_0
-msgid "Coca Cola"
 msgstr ""
 
 #. module: lunch
@@ -707,6 +617,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__display_name
+#: model:ir.model.fields,field_description:lunch.field_res_company__display_name
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:lunch.field_res_users__display_name
 msgid "Display Name"
 msgstr "Prikazani naziv"
 
@@ -844,11 +757,6 @@ msgid "Formatted Email"
 msgstr "Oblikovano e-poštno sporočilo"
 
 #. module: lunch
-#: model_terms:lunch.product,description:lunch.product_italiana
-msgid "Fresh Tomatoes, Basil, Mozzarella"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__fri
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__fri
 msgid "Fri"
@@ -860,11 +768,6 @@ msgid "Friday"
 msgstr "Petek"
 
 #. module: lunch
-#: model:lunch.product,name:lunch.product_gouda
-msgid "Gouda Cheese"
-msgstr ""
-
-#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
@@ -872,25 +775,9 @@ msgid "Group By"
 msgstr "Združi po"
 
 #. module: lunch
-#: model_terms:lunch.product,description:lunch.product_club
-#: model_terms:lunch.product,description:lunch.product_club_0
-msgid "Ham, Cheese, Vegetables"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__has_message
 msgid "Has Message"
 msgstr "Ima sporočilo"
-
-#. module: lunch
-#: model:ir.module.category,description:lunch.module_lunch_category
-msgid ""
-"Helps you handle your lunch needs, if you are a manager you will be able to "
-"create new products, cashmoves and to confirm or cancel orders."
-msgstr ""
-"Pomaga upravljati vaše potrebe po obrokih. Če ste vodja, boste lahko "
-"ustvarjali nove proizvode, premike gotovine in potrjevali ali preklicevali "
-"naročila."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
@@ -919,6 +806,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__id
+#: model:ir.model.fields,field_description:lunch.field_res_company__id
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__id
+#: model:ir.model.fields,field_description:lunch.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -1054,8 +944,8 @@ msgid "Locations"
 msgstr "Lokacije"
 
 #. module: lunch
-#: model:ir.module.category,name:lunch.module_lunch_category
 #: model:ir.ui.menu,name:lunch.menu_lunch
+#: model:res.groups.privilege,name:lunch.res_groups_privilege_lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Lunch"
 msgstr "Obrok"
@@ -1095,11 +985,6 @@ msgid "Lunch Locations"
 msgstr ""
 
 #. module: lunch
-#: model:lunch.product,name:lunch.product_maki
-msgid "Lunch Maki 18pc"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
 msgid "Lunch Minimum Threshold"
 msgstr ""
@@ -1130,18 +1015,8 @@ msgid "Lunch Product Category"
 msgstr ""
 
 #. module: lunch
-#: model:lunch.product,name:lunch.product_salmon
-msgid "Lunch Salmon 20pc"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_supplier
 msgid "Lunch Supplier"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_temaki
-msgid "Lunch Temaki mix 3pc"
 msgstr ""
 
 #. module: lunch
@@ -1176,33 +1051,8 @@ msgid "Lunch: Supplier Order"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_228
-msgid "Lunch: alert chat notification (Alert for Office 3)"
-msgstr ""
-
-#. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_229
-msgid "Lunch: send automatic email to Coin gourmand"
-msgstr ""
-
-#. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_224
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_227
 msgid "Lunch: send automatic email to Lunch Supplier"
-msgstr ""
-
-#. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_230
-msgid "Lunch: send automatic email to Pizza Inn"
-msgstr ""
-
-#. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
-msgid "Lunch: send automatic email to Sushi Shop"
-msgstr ""
-
-#. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_231
-msgid "Lunch: send automatic email to The Corner"
 msgstr ""
 
 #. module: lunch
@@ -1257,16 +1107,6 @@ msgid "Monday"
 msgstr "Ponedeljek"
 
 #. module: lunch
-#: model:lunch.product,name:lunch.product_mozzarella
-msgid "Mozzarella"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_mozzarella
-msgid "Mozzarella, Pesto, Tomatoes"
-msgstr ""
-
-#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
 msgid "My Account"
 msgstr "Moj račun"
@@ -1308,11 +1148,6 @@ msgstr "Moja naročila"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__name
 msgid "Name"
 msgstr "Naziv"
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_Napoli
-msgid "Napoli Pasta"
-msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban_order
@@ -1507,23 +1342,18 @@ msgstr "Naročila"
 
 #. module: lunch
 #: model:mail.template,subject:lunch.lunch_order_mail_supplier
-msgid "Orders for {{ ctx['order']['company_name'] }}"
+msgid "Orders for {{ ctx.get('order', {}).get('company_name') }}"
 msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Overdraft"
-msgstr ""
+msgstr "Prekoračitev"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__pm
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__pm
 msgid "PM"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product.category,name:lunch.categ_pasta
-msgid "Pasta"
 msgstr ""
 
 #. module: lunch
@@ -1552,35 +1382,9 @@ msgid "Pizza"
 msgstr ""
 
 #. module: lunch
-#: model:lunch.product,name:lunch.product_funghi
-msgid "Pizza Funghi"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_italiana
-msgid "Pizza Italiana"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_margherita
-#: model:lunch.product,name:lunch.product_pizza_0
-msgid "Pizza Margherita"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_vege
-msgid "Pizza Vegetarian"
-msgstr ""
-
-#. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 msgid "Please create a location to start ordering."
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.alert,message:lunch.alert_office_3
-msgid "Please order"
 msgstr ""
 
 #. module: lunch
@@ -1595,7 +1399,7 @@ msgstr "Cena"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Product"
-msgstr "Izdelek"
+msgstr "Proizvod"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_available_at
@@ -1656,7 +1460,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_kanban
 msgid "Products"
-msgstr "Izdelki"
+msgstr "Proizvodi"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
@@ -1720,11 +1524,6 @@ msgstr "Odgovoren"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_user_id
 msgid "Responsible User"
 msgstr "Odgovorni uporabnik"
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_chirashi
-msgid "Salmon and Avocado"
-msgstr ""
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sandwich
@@ -1806,11 +1605,6 @@ msgid "Show Until"
 msgstr ""
 
 #. module: lunch
-#: model:lunch.product,name:lunch.product_spicy_tuna
-msgid "Spicy Tuna"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__state_id
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "State"
@@ -1873,21 +1667,6 @@ msgstr "Nedelja"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
 msgid "Supplier"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product.category,name:lunch.categ_sushi
-msgid "Sushi"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product.category,name:lunch.categ_temaki
-msgid "Temaki"
-msgstr ""
-
-#. module: lunch
-#: model:lunch.product,name:lunch.product_country
-msgid "The Country"
 msgstr ""
 
 #. module: lunch
@@ -2030,32 +1809,6 @@ msgid "Today's Orders"
 msgstr "Današnja naročila"
 
 #. module: lunch
-#: model_terms:lunch.product,description:lunch.product_4formaggi
-msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_Napoli
-msgid "Tomatoes, Basil"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_margherita
-#: model_terms:lunch.product,description:lunch.product_pizza_0
-msgid "Tomatoes, Mozzarella"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_vege
-msgid "Tomatoes, Mozzarella, Mushrooms, Peppers, Olives"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_funghi
-msgid "Tomatoes, Mushrooms, Mozzarella"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
 msgid "Topping Category"
 msgstr ""
@@ -2102,16 +1855,6 @@ msgid "Tuesday"
 msgstr "Torek"
 
 #. module: lunch
-#: model:lunch.product,name:lunch.product_tuna
-msgid "Tuna"
-msgstr ""
-
-#. module: lunch
-#: model_terms:lunch.product,description:lunch.product_tuna
-msgid "Tuna, Mayonnaise"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Vrsta dejavnosti izjeme na zapisu. "
@@ -2156,6 +1899,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Vendors"
 msgstr "Dobavitelji"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_location_form_view
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Visible to all"
+msgstr "Vidno vsem"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wed

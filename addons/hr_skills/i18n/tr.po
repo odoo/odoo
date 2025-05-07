@@ -1,30 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_skills
-#
+# 
 # Translators:
-# Umur Akın <umura@projetgrup.com>, 2022
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2022
-# Martin Trigaux, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
-# Halil, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
-#
+# Wil Odoo, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
+"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"PO-Revision-Date: 2025-05-06 12:03+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: hr_skills
+#. odoo-python
+#: code:addons/hr_skills/models/hr_skill_type.py:0
+msgid "%s (copy)"
+msgstr "%s (kopya)"
 
 #. module: hr_skills
 #: model:ir.actions.report,print_report_name:hr_skills.action_report_employee_cv
@@ -32,11 +31,54 @@ msgid "'CV - %s' % (object.name)"
 msgstr ""
 
 #. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
+msgid "+1234567890"
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "2022"
+msgstr "2024"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "2023"
+msgstr "2023"
+
+#. module: hr_skills
 #. odoo-javascript
-#: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 msgid "ADD"
 msgstr "EKLE"
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__active
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__active
+msgid "Active"
+msgstr "Etkin"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_adaptability
+msgid "Adaptability"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_arabic
+msgid "Arabic"
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_search
+msgid "Archived"
+msgstr "Arşivlendi"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_bengali
+msgid "Bengali"
+msgstr ""
 
 #. module: hr_skills
 #. odoo-javascript
@@ -60,25 +102,48 @@ msgid "Classic"
 msgstr "Klasik"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__color
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill__color
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__color
+msgid "Color"
+msgstr "Renk"
+
+#. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 msgid "Colors"
-msgstr ""
+msgstr "Renk"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_communication
+msgid "Communication"
+msgstr "İletişim"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__company_id
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_conflict_management
+msgid "Conflict Management"
+msgstr ""
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__show_contact
 msgid "Contact Information"
+msgstr "Kontak Bilgisi"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
+msgid "Create Resume Lines"
 msgstr ""
 
 #. module: hr_skills
 #. odoo-javascript
-#: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
-msgid "Create a new entry"
-msgstr "Yeni bir kayıt oluşturun"
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "Create Skills"
+msgstr ""
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__create_uid
@@ -90,7 +155,7 @@ msgstr "Yeni bir kayıt oluşturun"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__create_uid
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr "Tarafından oluşturuldu"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__create_date
@@ -102,11 +167,21 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__create_date
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_creativity
+msgid "Creativity"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_critical_thinking
+msgid "Critical Thinking"
+msgstr ""
 
 #. module: hr_skills
 #. odoo-javascript
-#: code:addons/hr_skills/static/src/fields/resume_one2many.xml:0
+#: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 msgid "Current"
 msgstr "Güncel Değer"
 
@@ -124,12 +199,27 @@ msgstr "Bitiş Tarihi"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__date_start
 msgid "Date Start"
-msgstr "Başlama Tarihi"
+msgstr "Başlangıç Tarihi"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_decision_making
+msgid "Decision-Making"
+msgstr ""
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__default_level
 msgid "Default Level"
 msgstr "Varsayılan Seviye"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_company
+msgid "Demo Address"
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_company
+msgid "Demo Company Name"
+msgstr ""
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__department_id
@@ -147,24 +237,45 @@ msgstr "Açıklama"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 msgid "Discard"
-msgstr ""
+msgstr "Sil"
 
 #. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
+msgid "Display"
+msgstr "Ekran"
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_report_hr_skills_report_employee_cv__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr "İsim Göster"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_type
 msgid "Display Type"
 msgstr "Görünüm Türü"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
+msgid "Duration"
+msgstr "Süre"
+
+#. module: hr_skills
+#: model:hr.resume.line.type,name:hr_skills.resume_type_education
+msgid "Education"
+msgstr "Eğitim"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee
@@ -176,12 +287,7 @@ msgstr "Görünüm Türü"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employee"
-msgstr "Personel"
-
-#. module: hr_skills
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
-msgid "Employee Name"
-msgstr "Personel Adı"
+msgstr "Çalışan"
 
 #. module: hr_skills
 #: model:ir.actions.report,name:hr_skills.action_report_employee_cv
@@ -210,6 +316,38 @@ msgid "Employees without Skills"
 msgstr "Yetenekleri Olmayan Çalışanlar"
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_english
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "English"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.resume.line.type,name:hr_skills.resume_type_experience
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "Experience"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_filipino
+msgid "Filipino"
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "Fluent"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_french
+msgid "French"
+msgstr "Fransızca"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_german
+msgid "German"
+msgstr ""
+
+#. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
 msgid "Group By"
 msgstr "Grupla"
@@ -220,7 +358,19 @@ msgid "Group By..."
 msgstr "Grupla..."
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__has_department_manager_access
+msgid "Has Department Manager Access"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_hindi
+msgid "Hindi"
+msgstr ""
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__id
@@ -229,18 +379,61 @@ msgstr "Grupla..."
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__id
+#: model:ir.model.fields,field_description:hr_skills.field_report_hr_skills_report_employee_cv__id
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__id
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_skill_level__default_level
-msgid "If checked, this level will be the default one selected when choosing this skill."
-msgstr "İşaretlenirse, bu seviye bu yetenek seçilirken seçilen varsayılan seviye olacaktır."
+msgid ""
+"If checked, this level will be the default one selected when choosing this "
+"skill."
+msgstr ""
+"İşaretlenirse, bu seviye bu yetenek seçilirken seçilen varsayılan seviye "
+"olacaktır."
 
 #. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "If skills are missing, they can be created by an HR officer."
+msgstr ""
+
+#. module: hr_skills
+#: model:ir.model.fields,help:hr_skills.field_hr_employee_skill_report__active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Etkin alan Yanlış olarak ayarlıysa, kaynak kaydını silmeden gizlemenizi "
+"sağlayacaktır."
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_indonesian
+msgid "Indonesian"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_japanese
+msgid "Japanese"
+msgstr "Japonca"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_javanese
+msgid "Javanese"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_korean
+msgid "Korean"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill.type,name:hr_skills.hr_skill_type_lang
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
 msgid "Languages"
-msgstr ""
+msgstr "Diller"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__write_uid
@@ -267,6 +460,11 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_leadership
+msgid "Leadership"
+msgstr ""
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__level_progress
 msgid "Level Progress"
 msgstr "Seviye İlerlemesi"
@@ -285,7 +483,22 @@ msgstr "Satır Tipleri"
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_company
 msgid "Logo"
+msgstr "Logo"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_mandarin_chinese
+msgid "Mandarin Chinese"
 msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_marathi
+msgid "Marathi"
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
+msgid "Marc Demo"
+msgstr "Marc Demo"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__name
@@ -297,14 +510,24 @@ msgid "Name"
 msgstr "Adı"
 
 #. module: hr_skills
-#. odoo-python
-#: code:addons/hr_skills/models/hr_skill_level.py:0
-msgid "Only one default level is allowed per skill type."
-msgstr "Yetenek türü başına yalnızca bir varsayılan seviyeye izin verilir."
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.js:0
+msgid "New Resume line"
+msgstr ""
 
 #. module: hr_skills
-#. odoo-python
+#: model:hr.skill,name:hr_skills.hr_skill_openness_to_criticism
+msgid "Openness to criticism"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_organizational
+msgid "Organizational"
+msgstr ""
+
+#. module: hr_skills
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_skills/report/hr_employee_cv_report.py:0
 #: code:addons/hr_skills/static/src/views/skills_list_renderer.js:0
 msgid "Other"
@@ -313,22 +536,38 @@ msgstr "Diğer"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__show_others
 msgid "Others"
+msgstr "Diğerleri"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_persuasion
+msgid "Persuasion"
+msgstr ""
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "Pick a skill from the list"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_portuguese
+msgid "Portuguese"
 msgstr ""
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
 msgid "Present"
-msgstr ""
+msgstr "Mevcut"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__color_primary
 msgid "Primary Color"
-msgstr ""
+msgstr "Birincil Renk"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 msgid "Print"
-msgstr ""
+msgstr "Yazdır"
 
 #. module: hr_skills
 #. odoo-python
@@ -338,6 +577,11 @@ msgstr ""
 #: model:ir.model,name:hr_skills.model_hr_employee_cv_wizard
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_cv_wizard_view_form
 msgid "Print Resume"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_problem_solving
+msgid "Problem-Solving"
 msgstr ""
 
 #. module: hr_skills
@@ -351,6 +595,11 @@ msgstr "İlerleme"
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_form
 msgid "Progress (%)"
 msgstr "İlerleme (%)"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "Progress bar"
+msgstr "İlerleme Çubuğu"
 
 #. module: hr_skills
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill__level_progress
@@ -370,6 +619,26 @@ msgid "Public Employee"
 msgstr "Herkese Açık Personel"
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_punjabi
+msgid "Punjabi"
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+msgid "Python"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_resourcefulness
+msgid "Resourcefulness"
+msgstr ""
+
+#. module: hr_skills
+#: model:ir.model,name:hr_skills.model_resource_resource
+msgid "Resources"
+msgstr "Kaynaklar"
+
+#. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.menu_human_resources_configuration_resume
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_search
@@ -378,7 +647,7 @@ msgstr "Herkese Açık Personel"
 #: model_terms:ir.ui.view,arch_db:hr_skills.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "Resume"
-msgstr "Devam Et"
+msgstr "Özgeçmiş"
 
 #. module: hr_skills
 #. odoo-python
@@ -394,7 +663,7 @@ msgstr "Özgeçmiş Satır Türleri"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
 msgid "Resume line of an employee"
-msgstr "Bir çalışanın özgeçmiş satırı"
+msgstr "Bir personelin özgeçmiş satırı"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__resume_line_ids
@@ -410,6 +679,11 @@ msgid "Resumes"
 msgstr ""
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_russian
+msgid "Russian"
+msgstr ""
+
+#. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
 msgid "Search Logs"
 msgstr "Loglarda  Ara"
@@ -420,8 +694,31 @@ msgid "Search Skill"
 msgstr "Yetenek Ara"
 
 #. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_search
+msgid "Search Skill Type"
+msgstr ""
+
+#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__color_secondary
 msgid "Secondary Color"
+msgstr "İkincil Renk"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/form_view_one2many/form_view_one2many.xml:0
+msgid "Select & Close"
+msgstr ""
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/form_view_one2many/form_view_one2many.xml:0
+msgid "Select & New"
+msgstr ""
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.js:0
+msgid "Select Skills"
 msgstr ""
 
 #. module: hr_skills
@@ -429,11 +726,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__sequence
 msgid "Sequence"
 msgstr "Sıralama"
-
-#. module: hr_skills
-#: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_tree
-msgid "Set Default"
-msgstr "Varsayılanı Ayarla"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill
@@ -451,7 +743,6 @@ msgstr "Yetenek"
 #: model:ir.actions.act_window,name:hr_skills.action_hr_employee_skill_log_department
 #: model:ir.actions.act_window,name:hr_skills.action_hr_employee_skill_log_employee
 #: model:ir.actions.server,name:hr_skills.action_open_skills_log_department
-#: model:ir.actions.server,name:hr_skills.action_open_skills_log_employee
 msgid "Skill History Report"
 msgstr "Yetenek Geçmişi Raporu"
 
@@ -487,6 +778,7 @@ msgstr "Yetenek Türü"
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_skill_type_action
 #: model:ir.ui.menu,name:hr_skills.hr_skill_type_menu
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_tree
 msgid "Skill Types"
 msgstr "Yetenek Türü"
@@ -497,20 +789,20 @@ msgid "Skill level for an employee"
 msgstr "Bir personel için yetenek seviyesi"
 
 #. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__employee_skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__show_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__employee_skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__skill_ids
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__employee_skill_ids
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__employee_skill_ids
 #: model:ir.ui.menu,name:hr_skills.hr_employee_skill_report_menu
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_view_form
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_public_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_form
-#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
-#: model_terms:ir.ui.view,arch_db:hr_skills.res_users_view_form
 msgid "Skills"
 msgstr "Yetenekler"
 
@@ -522,6 +814,60 @@ msgstr "Yetenekler"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_tree
 msgid "Skills History"
 msgstr "Yetenek Geçmişi"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.js:0
+msgid "Skills Report"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.resume.line.type,name:hr_skills.resume_type_social_media
+msgid "Social Media"
+msgstr "Sosyal Medya"
+
+#. module: hr_skills
+#: model:hr.skill.type,name:hr_skills.hr_skill_type_softskill
+msgid "Soft Skills"
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_main_panel
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
+msgid "Software Developer"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_spanish
+msgid "Spanish"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_stress_management
+msgid "Stress management"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_teamwork
+msgid "Teamwork"
+msgstr ""
+
+#. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__technical_is_new_default
+msgid "Technical Is New Default"
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_telugu
+msgid "Telugu"
+msgstr ""
+
+#. module: hr_skills
+#. odoo-python
+#: code:addons/hr_skills/models/hr_skill_type.py:0
+msgid ""
+"The following skills type must contain at least one skill and one level: %s"
+msgstr ""
 
 #. module: hr_skills
 #. odoo-python
@@ -541,24 +887,59 @@ msgid "The start date must be anterior to the end date."
 msgstr "Başlangıç ​​tarihi bitiş tarihinden önce olmalıdır."
 
 #. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
+msgid "There are no resume lines on this employee."
+msgstr ""
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "There are no skills defined in the library."
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.actions.act_window,help:hr_skills.hr_employee_skill_report_action
+msgid ""
+"This report will give you an overview of the skills per Employee.\n"
+"                Create them in configuration and add them on the Employee."
+msgstr ""
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_time_management
+msgid "Time Management"
+msgstr "Zaman Yönetimi"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "Timeline"
+msgstr "Çalışma çizelgesi"
+
+#. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "Title"
 msgstr "Başlık"
 
 #. module: hr_skills
-#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill__unique_skill
+#: model:hr.skill,name:hr_skills.hr_skill_turkish
+msgid "Turkish"
+msgstr ""
+
+#. module: hr_skills
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_HrEmployeeSkill__unique_skill
 msgid "Two levels for the same skill is not allowed"
 msgstr "Aynı yetenek için iki seviyeye izin verilmez"
 
 #. module: hr_skills
-#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log__unique_skill_log
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log_HrEmployeeSkillLog__unique_skill_log
 msgid "Two levels for the same skill on the same day is not allowed"
 msgstr "Aynı gün aynı yetenek için iki seviyeye izin verilmez"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__line_type_id
 msgid "Type"
-msgstr "Tür"
+msgstr "Tip"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line_type
@@ -566,9 +947,30 @@ msgid "Type of a resume line"
 msgstr "Özgeçmiş satırının türü"
 
 #. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_urdu
+msgid "Urdu"
+msgstr ""
+
+#. module: hr_skills
 #: model:ir.model,name:hr_skills.model_res_users
 msgid "User"
 msgstr "Kullanıcı"
+
+#. module: hr_skills
+#: model:hr.skill,name:hr_skills.hr_skill_wu_chinese
+msgid "Wu Chinese"
+msgstr ""
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
+msgid "You can add skills from our library to the employee profile."
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
+msgid "demo@email.com"
+msgstr ""
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
@@ -579,3 +981,8 @@ msgstr "örn. Diller"
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "e.g. Odoo Inc."
 msgstr "örn. Odoo Inc."
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
+msgid "www.demo.com"
+msgstr ""
