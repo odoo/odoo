@@ -300,7 +300,8 @@ class AccountFiscalPosition(models.Model):
         if not template['installed']:
             localization_module = self.env['ir.module.module'].search([('name', '=', template['module'])])
             localization_module.sudo().button_immediate_install()
-        self.env["account.chart.template"]._instantiate_foreign_taxes(self.country_id, self.company_id)
+        created_records = self.env["account.chart.template"]._instantiate_foreign_taxes(self.country_id, self.company_id)
+        created_records.get('account.tax', self.env['account.tax']).fiscal_position_ids += self
 
 
 class AccountFiscalPositionAccount(models.Model):
