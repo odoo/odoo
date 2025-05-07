@@ -278,6 +278,9 @@ export class SnippetModel extends Reactive {
             view_id: snippet.viewId,
             template_key: this.snippetsName,
         });
+        // Reload snippet to have updated name.
+        this.loadProm = null;
+        await this.load();
     }
 
     setSnippetName(snippetsDocument) {

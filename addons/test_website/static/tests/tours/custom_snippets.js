@@ -35,17 +35,22 @@ registerWebsitePreviewTour('test_custom_snippet', {
     },
     {
         content: "Save custom snippet",
-        trigger: ".snippet-option-SnippetSave we-button",
+        trigger: "div[data-container-title='Banner'] .oe_snippet_save",
         run: "click",
     },
     {
         content: "Confirm reload",
-        trigger: ".modal-dialog button:contains('Save and Reload')",
+        trigger: ".modal-dialog button:contains('Save')",
+        run: "click",
+    },
+    {
+        content: "Click on the block tab",
+        trigger: ".o-snippets-tabs button[data-name='blocks']",
         run: "click",
     },
     {
         content: "Click on the Custom category block",
-        trigger: "#oe_snippets .oe_snippet[name='Custom'].o_we_draggable .oe_snippet_thumbnail",
+        trigger: "#snippet_groups .o_snippet[name='Custom'].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion) .o_snippet_thumbnail_area",
         run: "click",
     },
     {
@@ -54,17 +59,17 @@ registerWebsitePreviewTour('test_custom_snippet', {
     },
     {
         content: "Rename custom snippet",
-        trigger: ":iframe .o_custom_snippet_wrap > .o_custom_snippet_edit > button",
+        trigger: ":iframe .o_custom_snippet_edit > button",
         run: "click",
     },
     {
         content: "Set name",
-        trigger: ".o_rename_custom_snippet_dialog input[id='customSnippetName']",
+        trigger: ".modal-dialog:not(.o_inactive_modal body) input[id='inputConfirmation']",
         run: "edit Bruce Banner",
     },
     {
         content: "Confirm rename",
-        trigger: ".o_rename_custom_snippet_dialog footer .btn-primary",
+        trigger: ".modal-dialog:not(.o_inactive_modal body) footer .btn-primary",
         run: "click",
     },
     {
@@ -82,12 +87,12 @@ registerWebsitePreviewTour('test_custom_snippet', {
     },
     {
         content: "Click on the Custom category block",
-        trigger: "#oe_snippets .oe_snippet[name='Custom'].o_we_draggable .oe_snippet_thumbnail",
+        trigger: "#snippet_groups .o_snippet[name='Custom'].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion) .o_snippet_thumbnail_area",
         run: "click",
     },
     {
         content: "Delete custom snippet",
-        trigger: ":iframe .o_custom_snippet_wrap > .o_custom_snippet_edit > button + button",
+        trigger: ":iframe .o_custom_snippet_edit > button + button",
         run: "click",
     },
     {
