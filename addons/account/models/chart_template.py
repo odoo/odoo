@@ -994,7 +994,7 @@ class AccountChartTemplate(models.AbstractModel):
             for _command, _id, rep_line in tax_template.get('repartition_line_ids', []):
                 rep_line['account_id'] = existing_accounts.get(rep_line.get('account_id'))
 
-            # Since Foreign Fiscal Positions and Replacement Taxes are not relevant to the OSS company
+            # Template fiscal positions should not be applied, and the tax mappings cannot be determined
             tax_template.pop('fiscal_position_ids', None)
             tax_template.pop('original_tax_ids', None)
 
@@ -1021,7 +1021,7 @@ class AccountChartTemplate(models.AbstractModel):
                 for idx, child_tax in enumerate(children_taxes):
                     children_taxes[idx] = f"{chart_template_code}_{child_tax}"
                 tax_data['children_tax_ids'] = ','.join(children_taxes)
-        self._load_data(data)
+        return self._load_data(data)
 
     # --------------------------------------------------------------------------------
     # Root template functions
