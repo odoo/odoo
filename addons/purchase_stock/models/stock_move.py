@@ -54,9 +54,7 @@ class StockMove(models.Model):
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         line = self.purchase_line_id
         order = line.order_id
-        received_qty = line.qty_received
-        if self.state == 'done':
-            received_qty -= self.product_uom._compute_quantity(self.quantity, line.product_uom_id, rounding_method='HALF-UP')
+        received_qty = self._get_qty_received_without_self()
         if line.product_id.purchase_method == 'purchase' and float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom_id.rounding) > 0:
             move_layer = line.move_ids.sudo().stock_valuation_layer_ids
             invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
@@ -103,19 +101,38 @@ class StockMove(models.Model):
         else:
             price_unit = line._get_gross_price_unit()
         if order.currency_id != order.company_id.currency_id:
-            # The date must be today, and not the date of the move since the move move is still
-            # in assigned state. However, the move date is the scheduled date until move is
-            # done, then date of actual move processing. See:
-            # https://github.com/odoo/odoo/blob/2f789b6863407e63f90b3a2d4cc3be09815f7002/addons/stock/models/stock_move.py#L36
-            convert_date = fields.Date.context_today(self)
-            # use currency rate at bill date when invoice before receipt
-            if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom_id.rounding) > 0:
-                convert_date = max(line.sudo().invoice_lines.move_id.filtered(lambda m: m.state == 'posted').mapped('invoice_date'), default=convert_date)
+            convert_date = self._get_currency_convert_date()
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, order.company_id, convert_date, round=False)
         if self.product_id.lot_valuated:
             return dict.fromkeys(self.lot_ids, price_unit)
         return {self.env['stock.lot']: price_unit}
+
+    def _get_qty_received_without_self(self):
+        qty_received = self.purchase_line_id.qty_received
+        if self.state == 'done':
+            qty_received -= self.product_uom._compute_quantity(
+                self.quantity, self.purchase_line_id.product_uom_id, rounding_method='HALF-UP'
+            )
+        return qty_received
+
+    def _get_currency_convert_date(self):
+        self.ensure_one()
+        # The date must be today, and not the date of the move since the move move is still
+        # in assigned state. However, the move date is the scheduled date until move is
+        # done, then date of actual move processing. See:
+        # https://github.com/odoo/odoo/blob/2f789b6863407e63f90b3a2d4cc3be09815f7002/addons/stock/models/stock_move.py#L36
+        convert_date = fields.Date.context_today(self) if self.state != 'done' else self.date
+        line = self.purchase_line_id
+        if not line:
+            return convert_date
+
+        # Use currency rate at bill date when invoice before receipt
+        qty_received = self._get_qty_received_without_self()
+        if float_compare(line.qty_invoiced, qty_received, precision_rounding=line.product_uom_id.rounding) > 0:
+            posted_bills = line.sudo().invoice_lines.move_id.filtered(lambda m: m.state == 'posted')
+            convert_date = max(posted_bills.mapped('invoice_date'), default=convert_date)
+        return convert_date
 
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
         """ Overridden from stock_account to support amount_currency on valuation lines generated from po
@@ -129,17 +146,18 @@ class StockMove(models.Model):
             return rslt
         svl = self.env['stock.valuation.layer'].browse(svl_id)
         if not svl.account_move_line_id:
+            convert_date = self._get_currency_convert_date()
             rslt['credit_line_vals']['amount_currency'] = company_currency._convert(
                 rslt['credit_line_vals']['balance'],
                 purchase_currency,
                 self.company_id,
-                self.date
+                convert_date
             )
             rslt['debit_line_vals']['amount_currency'] = company_currency._convert(
                 rslt['debit_line_vals']['balance'],
                 purchase_currency,
                 self.company_id,
-                self.date
+                convert_date
             )
             rslt['debit_line_vals']['currency_id'] = purchase_currency.id
             rslt['credit_line_vals']['currency_id'] = purchase_currency.id
