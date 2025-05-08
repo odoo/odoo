@@ -201,7 +201,10 @@
                                                     </t>
                                                 </small>
                                             </span>
-                                            <form class="text-center o_add_cart_form_compare">
+                                            <form
+                                                class="text-center o_add_cart_form_compare"
+                                                t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                            >
                                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                                 <input
                                                     name="product_template_id"

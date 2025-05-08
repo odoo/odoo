@@ -19,6 +19,7 @@ publicWidget.registry.AddToCartSnippet = publicWidget.Widget.extend({
         const productTemplateId = parseInt(dataset.productTemplateId);
         const productId = parseInt(dataset.productVariantId);
         const isCombo = dataset.productType === 'combo';
+        const showQuantity = Boolean(dataset.showQuantity);
         const action = dataset.action;
 
         if (productId) {
@@ -42,6 +43,7 @@ publicWidget.registry.AddToCartSnippet = publicWidget.Widget.extend({
             },
             {
                 isBuyNow: action === 'buy_now',
+                showQuantity: showQuantity,
             }
         );
     },

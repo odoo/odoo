@@ -313,9 +313,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             this._updateRootProduct((ev.currentTarget).closest('form'));
             const isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
             const isConfigured = ev.currentTarget.parentElement.id === 'add_to_cart_wrap';
+            const showQuantity = Boolean(ev.currentTarget.dataset.showQuantity);
             return this.call('cart', 'add', this.rootProduct, {
                 isBuyNow: isBuyNow,
                 isConfigured: isConfigured,
+                showQuantity: showQuantity,
             });
         };
         if ($('.js_add_cart_variants').children().length) {

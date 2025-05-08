@@ -61,12 +61,15 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickSuggestedProduct: function (ev) {
+        const dataset = ev.currentTarget.dataset;
+
         this.call('cart', 'add', {
-            productTemplateId: parseInt(ev.currentTarget.dataset.productTemplateId, 10),
-            productId: parseInt(ev.currentTarget.dataset.productId, 10),
-            isCombo: ev.currentTarget.dataset.productType === 'combo',
+            productTemplateId: parseInt(dataset.productTemplateId, 10),
+            productId: parseInt(dataset.productId, 10),
+            isCombo: dataset.productType === 'combo',
         }, {
             isBuyNow: true,
+            showQuantity: Boolean(dataset.showQuantity),
         });
     },
     /**
