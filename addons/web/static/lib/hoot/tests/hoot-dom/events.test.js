@@ -29,7 +29,7 @@ import {
 import { advanceTime, animationFrame, mockFetch, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { EventList } from "@web/../lib/hoot-dom/helpers/events";
-import { mountForTest, parseUrl, waitForIframes } from "../local_helpers";
+import { mountForTest, parseUrl } from "../local_helpers";
 
 /**
  * @param {Event} ev
@@ -469,8 +469,6 @@ describe(parseUrl(import.meta.url), () => {
             <button>Click me</button>
             <iframe srcdoc="&lt;button&gt;iframe button&lt;/button&gt;" />
         `);
-
-        await waitForIframes();
 
         expect("button").toHaveCount(1);
         expect(":iframe button").toHaveCount(1);
@@ -1314,8 +1312,6 @@ describe(parseUrl(import.meta.url), () => {
             <input type="text" />
             <iframe srcdoc="&lt;input type='text' /&gt;" />
         `);
-
-        await waitForIframes();
 
         expect("input").toHaveCount(1);
         expect(":iframe input").toHaveCount(1);
