@@ -66,6 +66,22 @@ class TestOSSBelgium(AccountTestInvoicingCommon):
 
                 self.assertIn(expected_tag_id, oss_tag_id, f"{doc_type} tag from Belgian CoA not correctly linked")
 
+    def test_oss_tax_copied_name(self):
+        """
+        This test ensures that when refreshing the mapping, if a tax that already exists has to be created, it is created
+        with (Copy) in the name instead of stopping the refresh process.
+        """
+        self.sub_child_company._map_eu_taxes()
+        # get the fiscal position for another eu country
+        another_eu_country = (self.env.ref('base.europe').country_ids - self.company_data['company'].country_id)[0]
+        fpos = self.env['account.fiscal.position'].search([('country_id', '=', another_eu_country.id)], limit=1)
+        original_name = fpos.tax_ids.tax_dest_id[0].name
+        fpos.unlink()
+        self.sub_child_company._map_eu_taxes()
+        fpos = self.env['account.fiscal.position'].search([('country_id', '=', another_eu_country.id)], limit=1)
+        new_name = fpos.tax_ids.tax_dest_id[0].name
+        self.assertEqual(new_name, f"{original_name} (Copy)", "The tax name should be the same as the original one with (Copy) appended to it.")
+
 
 @tagged('post_install', 'post_install_l10n', '-at_install')
 class TestOSSSpain(AccountTestInvoicingCommon):
