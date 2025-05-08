@@ -162,7 +162,6 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['preserveSelection'] } preserveSelection
  * @property { SelectionPlugin['rectifySelection'] } rectifySelection
  * @property { SelectionPlugin['areNodeContentsFullySelected'] } areNodeContentsFullySelected
- * @property { SelectionPlugin['resetActiveSelection'] } resetActiveSelection
  * @property { SelectionPlugin['resetSelection'] } resetSelection
  * @property { SelectionPlugin['setCursorEnd'] } setCursorEnd
  * @property { SelectionPlugin['setCursorStart'] } setCursorStart
@@ -186,8 +185,6 @@ export class SelectionPlugin extends Plugin {
         "modifySelection",
         "rectifySelection",
         "areNodeContentsFullySelected",
-        // todo: ideally, this should not be shared
-        "resetActiveSelection",
         "focusEditable",
         // "collapseIfZWS",
         "isSelectionInEditable",
@@ -272,9 +269,10 @@ export class SelectionPlugin extends Plugin {
      */
     updateActiveSelection() {
         this.previousActiveSelection = this.activeSelection;
+        // getSelectionData sets this.activeSelection to the current selection
         const selectionData = this.getSelectionData();
-        if (selectionData.documentSelectionIsInEditable) {
-            this.fixSelectionOnEditableRoot(this.activeSelection);
+        if (this.fixSelectionOnEditableRoot(selectionData)) {
+            return;
         }
         this.dispatchTo("selectionchange_handlers", selectionData);
     }
@@ -743,15 +741,6 @@ export class SelectionPlugin extends Plugin {
     getTargetedBlocks() {
         return new Set(this.getTargetedNodes().map(closestBlock).filter(Boolean));
     }
-    resetActiveSelection() {
-        const selection = this.document.getSelection();
-        selection.setBaseAndExtent(
-            this.previousActiveSelection.anchorNode,
-            this.previousActiveSelection.anchorOffset,
-            this.previousActiveSelection.focusNode,
-            this.previousActiveSelection.focusOffset
-        );
-    }
 
     // @todo @phoenix we should find a real use case and test it
     // /**
@@ -776,18 +765,33 @@ export class SelectionPlugin extends Plugin {
     // }
 
     /**
-     * Places the cursor in a safe place (not the editable root).
-     * Inserts an empty paragraph if selection results from mouse click and
-     * there's no other way to insert text before/after a block.
-     *
-     * @param {Selection} selection - Collapsed selection at the editable root.
+     * @param {SelectionData} selectionData
+     * @returns {boolean} Whether the selection was fixed
      */
-    fixSelectionOnEditableRoot(selection) {
-        if (!selection.isCollapsed || selection.anchorNode !== this.editable) {
+    fixSelectionOnEditableRoot(selectionData) {
+        const { editableSelection, documentSelectionIsInEditable } = selectionData;
+        if (this.config.allowInlineAtRoot || !documentSelectionIsInEditable) {
             return false;
         }
-
-        this.dispatchTo("fix_selection_on_editable_root_handlers", selection);
+        const isSelectionOnEditableRoot = (s) => s.isCollapsed && s.anchorNode === this.editable;
+        if (!isSelectionOnEditableRoot(editableSelection)) {
+            return false;
+        }
+        if (this.delegateTo("fix_selection_on_editable_root_overrides", editableSelection)) {
+            return true;
+        }
+        // Revert the selection to the previous one
+        if (isSelectionOnEditableRoot(this.previousActiveSelection)) {
+            // Last stored selection is also at the editable root
+            return false;
+        }
+        const selection = this.document.getSelection();
+        if (!selection) {
+            return false;
+        }
+        const { anchorNode, anchorOffset, focusNode, focusOffset } = this.previousActiveSelection;
+        selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+        return true;
     }
 
     /**
