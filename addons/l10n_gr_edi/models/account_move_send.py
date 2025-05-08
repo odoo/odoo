@@ -53,7 +53,7 @@ class AccountMoveSend(models.AbstractModel):
             invoices.l10n_gr_edi_try_send_invoices()
 
         for invoice, invoice_data in invoices_data.items():
-            if invoice in invoices and invoice.l10n_gr_edi_state == 'invoice_error':
+            if invoice in invoices and invoice.l10n_gr_edi_state != 'invoice_sent':
                 invoice_data['error'] = {
                     'error_title': _("Error when sending invoice to MyDATA"),
                     'errors': [invoice.l10n_gr_edi_document_ids.sorted()[0].message],
