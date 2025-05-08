@@ -4,7 +4,6 @@ import io
 import json
 import logging
 import re
-import time
 import requests
 import uuid
 import werkzeug.exceptions
@@ -16,8 +15,13 @@ from datetime import datetime
 from math import floor
 from os.path import join as opj
 
-from odoo.http import request, Response
-from odoo import http, tools, _, SUPERUSER_ID, release
+try:
+    from werkzeug.utils import send_file
+except ImportError:
+    from .tools._vendor.send_file import send_file
+
+from odoo.http import STATIC_CACHE, Response, request
+from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.web_editor.tools import get_video_url_data
 from odoo.exceptions import UserError, MissingError, AccessError
@@ -180,16 +184,18 @@ class Web_Editor(http.Controller):
         # output image
         output = io.BytesIO()
         outimage.save(output, format="PNG")
-        response = Response()
-        response.mimetype = 'image/png'
-        response.data = output.getvalue()
-        response.headers['Cache-Control'] = 'public, max-age=604800'
+        output.seek(0)
+        response = send_file(
+            output,
+            request.httprequest.environ,
+            mimetype='image/png',
+            conditional=False,
+            etag=False,
+            max_age=STATIC_CACHE,
+            response_class=Response,
+        )
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'GET, POST'
-        response.headers['Connection'] = 'close'
-        response.headers['Date'] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime())
-        response.headers['Expires'] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime(time.time()+604800*60))
-
         return response
 
     #------------------------------------------------------
