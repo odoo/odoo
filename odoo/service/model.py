@@ -9,7 +9,7 @@ from functools import partial
 from psycopg2 import IntegrityError, OperationalError, errorcodes, errors
 
 from odoo import api, http
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, ConcurrencyError, UserError, ValidationError
 from odoo.models import BaseModel
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
@@ -147,13 +147,25 @@ def execute(db, uid, obj, method, *args, **kw):
 
 def retrying(func, env):
     """
-    Call ``func`` until the function returns without serialisation
-    error. A serialisation error occurs when two requests in independent
-    cursors perform incompatible changes (such as writing different
-    values on a same record). By default, it retries up to 5 times.
+    Call ``func``in a loop until the SQL transaction commits with no
+    serialisation error. It rollbacks the transaction in between calls.
+
+    A serialisation error occurs when two independent transactions
+    attempt to commit incompatible changes such as writing different
+    values on a same record. The first transaction to commit works, the
+    second is canceled with a :class:`psycopg2.errors.SerializationFailure`.
+
+    This function intercepts those serialization errors, rollbacks the
+    transaction, reset things that might have been modified, waits a
+    random bit, and then calls the function again.
+
+    It calls the function up to ``MAX_TRIES_ON_CONCURRENCY_FAILURE`` (5)
+    times. The time it waits between calls is random with an exponential
+    backoff: ``random.uniform(0.0, 2 ** i)`` where ``i`` is the n° of
+    the current attempt and starts at 1.
 
     :param callable func: The function to call, you can pass arguments
-        using :func:`functools.partial`:.
+        using :func:`functools.partial`.
     :param odoo.api.Environment env: The environment where the registry
         and the cursor are taken.
     """
@@ -165,7 +177,7 @@ def retrying(func, env):
                 if not env.cr._closed:
                     env.cr.flush()  # submit the changes to the database
                 break
-            except (IntegrityError, OperationalError) as exc:
+            except (IntegrityError, OperationalError, ConcurrencyError) as exc:
                 if env.cr._closed:
                     raise
                 env.cr.rollback()
@@ -188,14 +200,19 @@ def retrying(func, env):
                             break
                     message = env._("The operation cannot be completed: %s", model._sql_error_to_message(exc))
                     raise ValidationError(message) from exc
-                if not isinstance(exc, PG_CONCURRENCY_EXCEPTIONS_TO_RETRY):
+
+                if isinstance(exc, PG_CONCURRENCY_EXCEPTIONS_TO_RETRY):
+                    error = errorcodes.lookup(exc.pgcode)
+                elif isinstance(exc, ConcurrencyError):
+                    error = repr(exc)
+                else:
                     raise
                 if not tryleft:
-                    _logger.info("%s, maximum number of tries reached!", errorcodes.lookup(exc.pgcode))
+                    _logger.info("%s, maximum number of tries reached!", error)
                     raise
 
                 wait_time = random.uniform(0.0, 2 ** tryno)
-                _logger.info("%s, %s tries left, try again in %.04f sec...", errorcodes.lookup(exc.pgcode), tryleft, wait_time)
+                _logger.info("%s, %s tries left, try again in %.04f sec...", error, tryleft, wait_time)
                 time.sleep(wait_time)
         else:
             # handled in the "if not tryleft" case

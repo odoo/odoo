@@ -7,7 +7,7 @@ from psycopg2.errorcodes import SERIALIZATION_FAILURE
 from psycopg2.errors import SerializationFailure
 
 from odoo import http
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, ConcurrencyError, UserError
 from odoo.http import request
 from odoo.tools import replace_exceptions, str2bool
 
@@ -20,7 +20,7 @@ CT_JSON = {'Content-Type': 'application/json; charset=utf-8'}
 WSGI_SAFE_KEYS = {'PATH_INFO', 'QUERY_STRING', 'RAW_URI', 'SCRIPT_NAME', 'wsgi.url_scheme'}
 
 
-# Force serialization errors. Patched in some tests.
+# Force concurrency errors. Patched in some tests.
 should_fail = None
 
 
@@ -229,6 +229,20 @@ class TestHttp(http.Controller):
             raise sf
 
         return data.decode()
+
+    @http.route('/test_http/concurrency_error', type='http', auth='none')
+    def concurrency_error(self):
+        global should_fail  # noqa: PLW0603
+        if should_fail is None:
+            e = "should_fail must be set."
+            raise ValueError(e)
+
+        if should_fail:
+            should_fail = False  # Fail once
+            e = "A dummy concurrency error occurred"
+            raise ConcurrencyError(e)
+
+        return ''
 
     # =====================================================
     # Security
