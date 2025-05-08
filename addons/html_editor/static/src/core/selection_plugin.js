@@ -5,7 +5,6 @@ import {
     isProtected,
     isProtecting,
     isUnprotecting,
-    previousLeaf,
 } from "@html_editor/utils/dom_info";
 import {
     childNodes,
@@ -16,7 +15,7 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Plugin } from "../plugin";
-import { DIRECTIONS, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
+import { DIRECTIONS, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
     normalizeDeepCursorPosition,
@@ -25,6 +24,7 @@ import {
     normalizeSelfClosingElement,
 } from "../utils/selection";
 import { closestScrollableY } from "@web/core/utils/scrolling";
+import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef { Object } EditorSelection
@@ -210,8 +210,8 @@ export class SelectionPlugin extends Plugin {
             }
         });
         this.addDomListener(this.editable, "mousedown", (ev) => {
-            if (ev.detail >= 3) {
-                this.correctTripleClick = true;
+            if (ev.detail % 3 === 0) {
+                this.onTripleClick(ev);
             }
         });
         this.addDomListener(this.editable, "keydown", (ev) => {
@@ -274,18 +274,7 @@ export class SelectionPlugin extends Plugin {
         this.previousActiveSelection = this.activeSelection;
         const selectionData = this.getSelectionData();
         if (selectionData.documentSelectionIsInEditable) {
-            if (this.correctTripleClick) {
-                this.correctTripleClick = false;
-                let { anchorNode, anchorOffset, focusNode, focusOffset } = this.activeSelection;
-                if (focusOffset === 0 && anchorNode !== focusNode) {
-                    [focusNode, focusOffset] = endPos(previousLeaf(focusNode));
-                    return this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
-                }
-            }
-
-            if (this.fixSelectionOnEditableRoot(this.activeSelection)) {
-                return;
-            }
+            this.fixSelectionOnEditableRoot(this.activeSelection);
         }
         this.dispatchTo("selectionchange_handlers", selectionData);
     }
@@ -994,5 +983,32 @@ export class SelectionPlugin extends Plugin {
             ? [start, startOffset, end, endOffset]
             : [end, endOffset, start, startOffset];
         return this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+    }
+
+    /**
+     * Chrome and Safari set the selection to an undesired position on triple-click. E.g.:
+     *   Before: <p>abc</p><p>def</p>
+     *   Action: Triple-click on the first paragraph
+     *   After: <p>[abc</p><p>]def</p>
+     * This function overrides the default behavior and sets the selection
+     * around the inner boundaries of the target's block, e.g.:
+     *   <p>[abc]</p><p>def</p>
+     *
+     * This is not needed for Firefox. Moreover, Firefox does not support
+     * selection.modify with "paragraphBoundary".
+     *
+     * @param {MouseEvent} ev
+     */
+    onTripleClick(ev) {
+        if (isBrowserFirefox()) {
+            return;
+        }
+        const selection = this.document.getSelection();
+        if (!selection) {
+            return;
+        }
+        selection.modify("move", "backward", "paragraphBoundary");
+        selection.modify("extend", "forward", "paragraphBoundary");
+        ev.preventDefault();
     }
 }

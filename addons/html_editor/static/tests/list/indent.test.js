@@ -1129,16 +1129,17 @@ describe("with selection", () => {
         });
     });
 
+    test.tags("desktop");
     test("should only indent elements with selected content (mix lists - triple click)", async () => {
         await testEditor({
             contentBefore: unformat(`
                 <ul>
                     <li>a</li>
                     <li>
-                        [b
+                        b
                     </li><li class="oe-nested">
                         <ol>
-                            <li>]c</li>
+                            <li>c</li>
                         </ol>
                     </li>
                 </ul>`),
