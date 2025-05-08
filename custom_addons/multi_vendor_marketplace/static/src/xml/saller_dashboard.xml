@@ -11,189 +11,229 @@
         <section class="dashboard_main_section" id="main_section_manager">
             <style>
                 .divcard {
-                color: #243c64;
-                size: 20rem;
-                text-align: center;
+                    color: #243c64;
+                    size: 20rem;
+                    text-align: center;
                 }
                 .divdashhover{
-                transition: 0.5s ease;
+                    transition: 0.5s ease;
                 }
                 .divdashhover:hover{
-                -webkit-transform: scale(1.2);
-                -ms-transform: scale(1.2);
-                transform: scale(1.2);
-                transition: 1s ease;
+                    -webkit-transform: scale(1.08);
+                    -ms-transform: scale(1.08);
+                    transform: scale(1.08);
+                    transition: 0.3s ease;
                 }
                 .dashboard_main_section{
-                width: 100%;
-                height: 100%;
-                overflow-x: hidden;
-                overflow-y: auto;
+                    width: 100%;
+                    height: 100%;
+                    overflow-x: hidden;
+                    overflow-y: auto;
+                }
+                .dashboard_main_section .row {
+                    gap: 1.7rem;
+                    flex-wrap: wrap;
+                    justify-content: flex-start;
+                }
+                .dashboard_main_section .card {
+                    border-radius: 24px !important;
+                    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+                    margin: 2rem 0 0 2rem;
+                    width: 25rem;
+                    min-height: 29rem;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
+                    padding: 1.5rem 0 2rem 0;
+                }
+                .dashboard_main_section .card-body {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
+                    width: 100%;
+                    height: 100%;
+                    padding: 0;
+                }
+                .dashboard_main_section .card .divcard {
+                    margin-bottom: 1.1rem;
+                    margin-top: 0.2rem;
+                    font-size: 4.2rem;
+                }
+                .dashboard_main_section .card-title {
+                    font-size: 1.35rem;
+                    font-weight: 700;
+                    margin-bottom: 1.2rem;
+                    margin-top: 0;
+                    text-align: center;
+                }
+                .dashboard_main_section .divdashhover {
+                    border-radius: 12px;
+                    margin: 0.7rem 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 40px;
+                    font-size: 1.08rem;
+                    font-weight: 500;
+                    text-align: center;
+                    width: 80%;
+                    min-width: 180px;
+                    max-width: 260px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    padding: 0.3em 0;
+                }
+                .dashboard_main_section .divdashhover h5 {
+                    margin: 0;
+                    width: 100%;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 40px;
+                    font-size: 1.08rem;
+                    font-weight: 500;
+                }
+                .status-count {
+                    margin-right: 0.5em;
+                    font-weight: 700;
+                    font-size: 1.08em;
+                }
+                .status-label {
+                    display: inline-block;
+                    vertical-align: middle;
                 }
             </style>
-                <div class="row">
-                    <div class="card"
-                         style="width: 25rem; height: 25rem; margin-top: 5rem; margin-left: 5rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">MarketPlace Product</h5>
-                            <div class="row">
-                                <div class="divcard fa fa-tags fa-5x"/>
-                                <div id="product_pending" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="pending"/>
-                                        Pending
-                                    </h5>
-                                </div>
-                                <div id="product_approved" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="approved"/>
-                                        Approved
-                                    </h5>
-                                </div>
-                                <div id="product_rejected" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="rejected"/>
-                                        Rejected
-                                    </h5>
-                                </div>
-                            </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="divcard fa fa-tags fa-5x"></div>
+                        <h5 class="card-title">Товары</h5>
+                        <div id="product_pending" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin: 0; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center;">
+                                <span class="status-count" id="pending"></span>
+                                <span class="status-label">В ожидании</span>
+                            </h5>
                         </div>
-                    </div>
-                    <div id="check_user_type" class="card"
-                         style="width: 25rem; height: 25rem; margin-top: 5rem; margin-left: 5rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">MarketPlace Sellers</h5>
-                            <div class="row">
-                                <div class="divcard fa fa-users fa-5x"/>
-                                <div id="divseller_pending"
-                                     class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="seller_pending"/>
-                                        Pending
-                                    </h5>
-                                </div>
-                                <div id="divseller_approved"
-                                     class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="seller_approved"/>
-                                        Approved
-                                    </h5>
-                                </div>
-                                <div id="divseller_rejected"
-                                     class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="seller_rejected"/>
-                                        Rejected
-                                    </h5>
-                                </div>
-                            </div>
+                        <div id="product_approved" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin: 0; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center;">
+                                <span class="status-count" id="approved"></span>
+                                <span class="status-label">Одобрено</span>
+                            </h5>
                         </div>
-                    </div>
-                    <div class="card"
-                         style="width: 25rem; height: 25rem; margin-top: 5rem; margin-left: 5rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">MarketPlace Orders</h5>
-                            <div class="row">
-                                <div class="divcard fa fa-shopping-cart fa-5x"> </div>
-                                <div id="divorder_pending" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="order_pending"> </span>
-                                        Pending
-                                    </h5>
-                                </div>
-                                <div id="divorder_approved" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="order_approved"> </span>
-                                        Approved
-                                    </h5>
-                                </div>
-                                <div id="divorder_shipped" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="order_shipped"> </span>
-                                        Shipped
-                                    </h5>
-                                </div>
-                                <div id="divorder_cancel" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="order_cancel"> </span>
-                                        Cancelled
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card"
-                         style="width: 25rem; height: 25rem; margin-top: 5rem; margin-left: 5rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">MarketPlace Payments</h5>
-                            <div class="row">
-                                <div class="divcard fa fa-money fa-5x"/>
-                                <div id="div_payment_pending" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="payment_pending"> </span>
-                                        Pending
-                                    </h5>
-                                </div>
-                                <div id="div_payment_approved" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="payment_approved"> </span>
-                                        Approved
-                                    </h5>
-                                </div>
-                                <div id="div_payment_rejected" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="payment_rejected"> </span>
-                                        Rejected
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card"
-                         style="width: 25rem; height: 25rem; margin-top: 5rem; margin-left: 5rem;"
-                    >
-                        <div class="card-body">
-                            <h5 class="card-title">Marketplace stock</h5>
-                            <div class="row">
-                                <div class="divcard fa fa-truck fa-5x"/>
-                                <div id="inv_req_pending" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="inventory_pending"/>
-                                        Pending
-                                    </h5>
-                                </div>
-                                <div id="inv_req_approved" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="inventory_approved"/>
-                                        Approved
-                                    </h5>
-                                </div>
-                                <div id="inv_req_rejected" class="divdashhover"
-                                     style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
-                                    <h5 style="margin-top: 5px;">
-                                        <span id="inventory_rejected"/>
-                                        Rejected
-                                    </h5>
-                                </div>
-                            </div>
+                        <div id="product_rejected" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin: 0; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center;">
+                                <span class="status-count" id="rejected"></span>
+                                <span class="status-label">Отклонено</span>
+                            </h5>
                         </div>
                     </div>
                 </div>
+                <div id="check_user_type" class="card">
+                    <div class="card-body">
+                        <div class="divcard fa fa-users fa-5x"/>
+                        <h5 class="card-title">Продавцы</h5>
+                        <div id="divseller_pending" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="divseller_pending_count"></span>
+                                <span class="status-label">В ожидании</span>
+                            </h5>
+                        </div>
+                        <div id="divseller_approved" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="divseller_approved_count"></span>
+                                <span class="status-label">Одобрено</span>
+                            </h5>
+                        </div>
+                        <div id="divseller_rejected" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="divseller_rejected_count"></span>
+                                <span class="status-label">Отклонено</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="divcard fa fa-shopping-cart fa-5x"> </div>
+                        <h5 class="card-title">Заказы</h5>
+                        <div id="divorder_pending" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="divorder_pending_count"></span>
+                                <span class="status-label">В ожидании</span>
+                            </h5>
+                        </div>
+                        <div id="divorder_approved" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="divorder_approved_count"></span>
+                                <span class="status-label">Одобрено</span>
+                            </h5>
+                        </div>
+                        <div id="divorder_shipped" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="divorder_shipped_count"></span>
+                                <span class="status-label">Отправлено</span>
+                            </h5>
+                        </div>
+                        <div id="divorder_cancel" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="divorder_cancel_count"></span>
+                                <span class="status-label">Отменено</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="divcard fa fa-money fa-5x"/>
+                        <h5 class="card-title">Платежи</h5>
+                        <div id="div_payment_pending" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="div_payment_pending_count"></span>
+                                <span class="status-label">В ожидании</span>
+                            </h5>
+                        </div>
+                        <div id="div_payment_approved" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="div_payment_approved_count"></span>
+                                <span class="status-label">Одобрено</span>
+                            </h5>
+                        </div>
+                        <div id="div_payment_rejected" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="div_payment_rejected_count"></span>
+                                <span class="status-label">Отклонено</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="divcard fa fa-truck fa-5x"/>
+                        <h5 class="card-title">Склад</h5>
+                        <div id="inv_req_pending" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="inv_req_pending_count"></span>
+                                <span class="status-label">В ожидании</span>
+                            </h5>
+                        </div>
+                        <div id="inv_req_approved" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="inv_req_approved_count"></span>
+                                <span class="status-label">Одобрено</span>
+                            </h5>
+                        </div>
+                        <div id="inv_req_rejected" class="divdashhover" style="background-color: #f07c0c; color: white; height: 35px; text-align:center;">
+                            <h5 style="margin-top: 5px;">
+                                <span class="status-count" id="inv_req_rejected_count"></span>
+                                <span class="status-label">Отклонено</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     </t>
 </template>

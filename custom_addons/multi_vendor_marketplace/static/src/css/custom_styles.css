@@ -2,31 +2,24 @@
 /* ПРОФИЛЬ */
 /* ############################################################################################################################################################## */
 .btn-warning {
-    background-color: #f08106; /* Оранжевый фон */
-    color: white; /* Белый текст */
-    font-weight: bold; /* Жирный текст */
-    border-radius: 15px; /* Скругленные углы */
-    padding: 20px 30px; /* Увеличили вертикальные отступы для более толстых кнопок */
-    text-transform: uppercase; /* Заглавные буквы */
-    width: 100%; /* Кнопка занимает всю ширину колонки */
-    margin-bottom: 15px; /* Отступ между кнопками */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкая тень */
-    transition: transform 0.2s ease, background-color 0.3s ease; /* Анимация */
-    border: none; /* Убираем стандартную границу */
-    font-size: 16px; /* Чуть увеличенный размер шрифта */
+    background-color: #ff7300 !important; /* Ярко-оранжевый */
+    color: #fff !important;
+    font-weight: bold;
+    border-radius: 15px;
+    padding: 20px 30px;
+    text-transform: uppercase;
+    width: 100%;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    border: none;
+    font-size: 16px;
 }
 
-.btn-warning:hover {
-    background-color: #e6740c; /* Более темный оранжевый при наведении */
-    transform: scale(1.05); /* Легкое увеличение */
-    color: white; /* Белый текст */
-}
-
-.btn-warning:active,
-.btn-warning:focus {
-    background-color: #e6740c; /* Возвращаем цвет при нажатии или фокусе */
-    outline: none; /* Убираем обводку фокуса */
-    color: white; /* Белый текст */
+.btn-warning:hover, .btn-warning:focus, .btn-warning:active {
+    background-color: #ff9100 !important; /* Ещё ярче при наведении */
+    color: #fff !important;
+    outline: none;
 }
 
 /* Стиль для контейнера с группой кнопок */
@@ -1098,6 +1091,57 @@ body.modal-open {
     border-radius: 18px !important;
     box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     padding: 32px 0 24px 0;
+}
+
+/* Кнопка 'Изменить инфо' белый текст */
+.o_custom_profile_page .btn-primary {
+    color: #fff !important;
+    background: #ff7300 !important;
+    border: none !important;
+    font-weight: 600;
+    border-radius: 15px;
+    padding: 10px 28px;
+    font-size: 17px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.o_custom_profile_page .btn-primary:hover, .o_custom_profile_page .btn-primary:focus {
+    background: #ff9100 !important;
+    color: #fff !important;
+    outline: none;
+}
+
+.btn-save {
+    background: #ff7300 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 17px;
+    padding: 10px 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transition: background 0.2s;
+}
+.btn-save:hover, .btn-save:focus {
+    background: #ff9100 !important;
+    color: #fff !important;
+}
+
+.btn-cancel {
+    background: #bdbdbd !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 17px;
+    padding: 10px 28px;
+    margin-left: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transition: background 0.2s;
+}
+.btn-cancel:hover, .btn-cancel:focus {
+    background: #9e9e9e !important;
+    color: #fff !important;
 }
 
 

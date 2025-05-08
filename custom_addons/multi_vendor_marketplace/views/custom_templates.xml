@@ -6,11 +6,11 @@
                 <!-- User Info -->
                 <div class="row text-center">
                     <div class="col-md-12">
-                        <h2 t-esc="user.name" class="mt-3">Nickname</h2>
+                        <h2 t-esc="user.name" class="mt-3">Пользователь</h2>
                         <p>Email: <span t-esc="user.email" /></p>
-                        <p>Phone: <span t-esc="user.phone" /></p>
-                        <p>Address: <span t-esc="user.partner_id.contact_address" /></p>
-                        <a href="/profile/edit" class="btn btn-primary mt-3">Edit Info</a>
+                        <p>Телефон: <span t-esc="user.phone" /></p>
+                        <p>Адрес: <span t-esc="user.partner_id.contact_address" /></p>
+                        <a href="/profile/edit" class="btn btn-primary mt-3">Изменить инфо</a>
                     </div>
                 </div>
 
@@ -18,13 +18,13 @@
                 <div class="button-group-container mt-5">
                     <div class="row">
                         <div class="col-md-4 text-center">
-                            <a href="/user/orders/status" class="btn btn-warning w-100">Order Status</a>
+                            <a href="/user/orders/status" class="btn btn-warning w-100">Статус заказа</a>
                         </div>
                         <div class="col-md-4 text-center">
-                            <a href="/user/orders/history" class="btn btn-warning w-100">Order History</a>
+                            <a href="/user/orders/history" class="btn btn-warning w-100">История заказов</a>
                         </div>
                         <div class="col-md-4 text-center">
-                            <a href="/user/orders/returns" class="btn btn-warning w-100">Returns</a>
+                            <a href="/user/orders/returns" class="btn btn-warning w-100">Возвраты</a>
                         </div>
                     </div>
                 </div>
@@ -32,13 +32,13 @@
                 <div class="button-group-container mt-4">
                     <div class="row">
                         <div class="col-md-4 text-center">
-                            <button class="btn btn-warning w-100">Wallet</button>
+                            <button class="btn btn-warning w-100">Кошелек</button>
                         </div>
                         <div class="col-md-4 text-center">
-                            <a href="/shop/checkout" class="btn btn-warning w-100">Shipping Address</a>
+                            <a href="/shop/checkout" class="btn btn-warning w-100">Адрес доставки</a>
                         </div>
                         <div class="col-md-4 text-center">
-                            <button class="btn btn-warning w-100">Change Currency</button>
+                            <button class="btn btn-warning w-100">Сменить валюту</button>
                         </div>
                     </div>
                 </div>
@@ -46,10 +46,10 @@
                 <div class="button-group-container mt-4">
                     <div class="row">
                         <div class="col-md-6 text-center">
-                            <a href="/seller_reg" class="btn btn-warning w-100">Open Store</a>
+                            <a href="/seller_reg" class="btn btn-warning w-100">Открыть магазин</a>
                         </div>
                         <div class="col-md-6 text-center">
-                            <button class="btn btn-warning w-100">Accounting and Taxes</button>
+                            <button class="btn btn-warning w-100">Бухгалтерия и налоги</button>
                         </div>
                     </div>
                 </div>
@@ -60,12 +60,12 @@
     <template id="edit_user_profile" name="Edit User Profile">
         <t t-call="website.layout">
             <div class="container mt-5">
-                <h2>Edit Profile</h2>
+                <h2>Редактировать профиль</h2>
                 <form method="post" action="/profile/save">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
 
                     <div class="form-group">
-                        <label for="name">Name</label>
+                        <label for="name">Имя</label>
                         <input type="text" id="name" name="name" class="form-control" t-att-value="user.name" />
                     </div>
                     <div class="form-group">
@@ -73,22 +73,22 @@
                         <input type="email" id="email" name="email" class="form-control" t-att-value="user.email" />
                     </div>
                     <div class="form-group">
-                        <label for="phone">Phone</label>
+                        <label for="phone">Телефон</label>
                         <input type="text" id="phone" name="phone" class="form-control" t-att-value="user.phone" />
                     </div>
 
                     <!-- Password Change Fields -->
                     <div class="form-group">
-                        <label for="new_password">New Password</label>
+                        <label for="new_password">Новый пароль</label>
                         <input type="password" id="new_password" name="new_password" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label for="confirm_password">Confirm New Password</label>
+                        <label for="confirm_password">Подтвердите новый пароль</label>
                         <input type="password" id="confirm_password" name="confirm_password" class="form-control" />
                     </div>
 
-                    <button type="submit" class="btn btn-success mt-3">Save</button>
-                    <a href="/profile" class="btn btn-secondary mt-3">Cancel</a>
+                    <button type="submit" class="btn btn-save mt-3">Сохранить</button>
+                    <a href="/profile" class="btn btn-cancel mt-3">Отмена</a>
                 </form>
             </div>
         </t>
