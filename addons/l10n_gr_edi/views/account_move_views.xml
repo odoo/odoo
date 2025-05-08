@@ -148,7 +148,7 @@
                 <field name="l10n_gr_edi_state"/>
             </xpath>
             <xpath expr="//filter[@name='out_refund']" position="after">
-                <filter string="To send to MyDATA" name="l10n_gr_edi_state_false"
+                <filter string="To send to myDATA" name="l10n_gr_edi_state_false"
                         domain="[('l10n_gr_edi_state', 'in', (False, 'bill_fetched'))]"/>
                 <filter string="Sent to MyDATA" name="l10n_gr_edi_state_sent"
                         domain="[('l10n_gr_edi_state', '=', 'invoice_sent')]"/>
