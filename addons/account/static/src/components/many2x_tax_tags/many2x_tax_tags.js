@@ -30,7 +30,7 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
         return this.orm
             .call(this.props.resModel, "search_read", [], {
                 domain: [...this.props.getDomain(), ["name", "ilike", name]],
-                fields: ["id", "name", "tax_scope"],
+                fields: ["id", "display_name", "tax_scope"],
                 context: this.props.context,
             })
             .then((records) => {

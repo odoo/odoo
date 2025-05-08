@@ -55,7 +55,7 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
         let records = await this.orm.searchRead(
             this.props.resModel,
             [...this.props.getDomain(), ["name", "ilike", name]],
-            ["id", "name", "relative_factor", "factor", "relative_uom_id", "parent_path"],
+            ["id", "display_name", "relative_factor", "factor", "relative_uom_id", "parent_path"],
         );
         const hasCommonReference = (uom1, uom2) => {
             const uom1Path = uom1.parent_path.split("/");
