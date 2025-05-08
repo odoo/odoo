@@ -37,6 +37,9 @@ export class IrUiViewCodeEditor extends CodeEditor {
         if (resModel === "ir.ui.view" && resId) {
             const { doc } = this.aceEditor.session;
             for (const spec of invalid_locators) {
+                if (spec.broken_hierarchy) {
+                    continue
+                }
                 const { tag, attrib, sourceline } = spec;
                 const attribRegex = Object.entries(attrib)
                     .map(([key, value]) => {

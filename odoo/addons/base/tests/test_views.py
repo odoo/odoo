@@ -543,6 +543,37 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(child_view3.invalid_locators, [{'tag': 'xpath', 'attrib': {'expr': "//div[hasclass('parasite')]", 'position': 'inside'}, 'sourceline': 2}])
         self.assertEqual(child_view4.invalid_locators, False)
 
+    def test_broken_hierarchy_locators(self):
+        self.patch(self.env.registry.get("ir.ui.view"), "_check_xml", lambda self: True)
+        view = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'arch': "<form></form>",
+            'active': True,
+        })
+        broken = self.View.create({
+            'model': self.model,
+            'inherit_id': view.id,
+            'name': "child_view",
+            'arch': """<data><xpath expr="//group" position="after"><div /></xpath></data>""",
+            'active': True,
+        })
+        not_broken = self.View.create({
+            'model': self.model,
+            'inherit_id': view.id,
+            'name': "child_view",
+            'arch': """<data><xpath expr="/form" position="inside"><div /></xpath></data>""",
+            'active': True,
+        })
+
+        self.assertEqual(broken.invalid_locators, [{
+            'attrib': {'expr': '//group', 'position': 'after'},
+            'sourceline': 1,
+            'tag': 'xpath'
+        }])
+        self.assertEqual(not_broken.invalid_locators, [{"broken_hierarchy": True}])
+
+
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base
     architecture. IO state parameters (cr, uid, model, context) are used for
