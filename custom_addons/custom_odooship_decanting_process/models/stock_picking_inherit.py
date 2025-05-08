@@ -194,7 +194,7 @@ class StockPicking(models.Model):
             else:
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
                 api_url = (
-                "https://shiperooconnect-prod.automation.shiperoo.com/api/discrepency_receiver"
+                "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/discrepency_receiver"
                 if is_production == 'True'
                 else "https://shiperooconnect-dev.automation.shiperoo.com/api/discrepency_receiver"
             )
