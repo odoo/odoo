@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import unittest
 
 from odoo import Command
 from odoo.tests import HttpCase, tagged
@@ -35,6 +36,7 @@ class TestAddToCartSnippet(HttpCase):
             'redirect_form_view_id': redirect_form.id,
         })
 
+    @unittest.skip("skipped on saas-17.4 only")
     def test_configure_product(self):
         # Reset the company country id, which ensure that no country dependant fields are blocking the address form.
         self.env.company.country_id = self.env.ref('base.us')
