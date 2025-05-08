@@ -80,7 +80,18 @@ export const localizationService = {
             JSON.stringify({ lang })
         );
 
-        const translationProm = fetchTranslations(storedTranslations?.hash);
+        const translationProm = fetchTranslations(storedTranslations?.hash).catch(async (e) => {
+            // TypeError means that the fetch request has been cancelled by the browser.
+            // It can occur when the user changes page, or navigate away from the website
+            // client action, so the iframe is unloaded.
+            // see: https://fetch.spec.whatwg.org/#http-network-fetch
+            // In this case, we don't care about reporting the error, it is actually a normal
+            // situation.
+            if (e instanceof TypeError) {
+                await new Promise(() => {});
+            }
+            throw e;
+        });
         if (storedTranslations) {
             updateTranslations(storedTranslations);
         } else {
