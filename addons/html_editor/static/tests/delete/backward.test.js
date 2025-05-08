@@ -1588,21 +1588,10 @@ describe("Selection not collapsed", () => {
         });
     });
 
+    test.tags("desktop");
     test("should delete a heading (triple click backspace) (1)", async () => {
         const { editor, el } = await setupEditor("<h1>abc</h1><p>def</p>", {});
-        tripleClick(el.querySelector("h1"));
-        await microTick();
-        // Chrome puts the cursor at the start of next sibling
-        expect(getContent(el)).toBe("<h1>[abc</h1><p>]def</p>");
-        await tick();
-        // The Editor corrects it on selection change
-        expect(getContent(el)).toBe("<h1>[abc]</h1><p>def</p>");
-        tripleClick(el.querySelector("h1"));
-        await microTick();
-        // Chrome puts the cursor at the start of next sibling
-        expect(getContent(el)).toBe("<h1>[abc</h1><p>]def</p>");
-        await tick();
-        // The Editor corrects it repeatedly on selection change
+        await tripleClick(el.querySelector("h1"));
         expect(getContent(el)).toBe("<h1>[abc]</h1><p>def</p>");
         deleteBackward(editor);
         expect(getContent(el)).toBe(
@@ -1610,14 +1599,10 @@ describe("Selection not collapsed", () => {
         );
     });
 
+    test.tags("desktop");
     test("should delete a heading (triple click backspace) (2)", async () => {
         const { editor, el } = await setupEditor("<h1>abc</h1><p><br></p><p>def</p>", {});
-        tripleClick(el.querySelector("h1"));
-        await microTick();
-        // Chrome puts the cursor at the start of next sibling
-        expect(getContent(el)).toBe("<h1>[abc</h1><p>]<br></p><p>def</p>");
-        await tick();
-        // The Editor corrects it on selection change
+        await tripleClick(el.querySelector("h1"));
         expect(getContent(el)).toBe("<h1>[abc]</h1><p><br></p><p>def</p>");
         deleteBackward(editor);
         expect(getContent(el)).toBe(

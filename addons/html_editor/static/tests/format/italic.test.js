@@ -46,9 +46,10 @@ test("should make qweb tag italic", async () => {
     });
 });
 
+test.tags("desktop");
 test("should make a whole heading italic after a triple click", async () => {
     await testEditor({
-        contentBefore: `<h1>[ab</h1><p>]cd</p>`,
+        contentBefore: `<h1>ab</h1><p>cd</p>`,
         stepFunction: async (editor) => {
             await tripleClick(editor.editable.querySelector("h1"));
             italic(editor);
@@ -57,9 +58,10 @@ test("should make a whole heading italic after a triple click", async () => {
     });
 });
 
+test.tags("desktop");
 test("should make a whole heading not italic after a triple click", async () => {
     await testEditor({
-        contentBefore: `<h1>${em(`[ab`)}</h1><p>]cd</p>`,
+        contentBefore: `<h1>${em(`ab`)}</h1><p>cd</p>`,
         stepFunction: async (editor) => {
             await tripleClick(editor.editable.querySelector("h1"));
             italic(editor);

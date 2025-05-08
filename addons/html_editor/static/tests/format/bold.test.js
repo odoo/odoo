@@ -73,10 +73,11 @@ test("should make qweb tag bold and create a step even with partial selection in
     expect(lastStep.mutations[0].value).toBe("font-weight: bolder;");
 });
 
+test.tags("desktop");
 test("should make a whole heading bold after a triple click", async () => {
     await testEditor({
         styleContent: styleH1Bold,
-        contentBefore: `<h1>${notStrong(`[ab`)}</h1><p>]cd</p>`,
+        contentBefore: `<h1>${notStrong(`ab`)}</h1><p>cd</p>`,
         stepFunction: async (editor) => {
             await tripleClick(editor.editable.querySelector("h1"));
             bold(editor);
@@ -85,8 +86,9 @@ test("should make a whole heading bold after a triple click", async () => {
     });
 });
 
+test.tags("desktop");
 test("should make a whole heading not bold after a triple click (heading is considered bold)", async () => {
-    const { el, editor } = await setupEditor(`<h1>[ab</h1><p>]cd</p>`, {
+    const { el, editor } = await setupEditor(`<h1>ab</h1><p>cd</p>`, {
         styleContent: styleH1Bold,
     });
     await tripleClick(el.querySelector("h1"));
