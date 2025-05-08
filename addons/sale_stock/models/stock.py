@@ -149,15 +149,18 @@ class StockPicking(models.Model):
                 'qty_delivered': quantity,
                 'product_uom_id': move.product_uom.id,
             }
+            so_line = sale_order.order_line.filtered(lambda sol: sol.product_id == product)
             if product.invoice_policy == 'delivery':
                 # Check if there is already a SO line for this product to get
                 # back its unit price (in case it was manually updated).
-                so_line = sale_order.order_line.filtered(lambda sol: sol.product_id == product)
                 if so_line:
                     so_line_vals['price_unit'] = so_line[0].price_unit
             elif product.invoice_policy == 'order':
                 # No unit price if the product is invoiced on the ordered qty.
                 so_line_vals['price_unit'] = 0
+            # New lines should be added at the bottom of the SO (higher sequence number)
+            if not so_line:
+                so_line_vals['sequence'] = max(sale_order.order_line.mapped('sequence')) + len(sale_order_lines_vals) + 1
             sale_order_lines_vals.append(so_line_vals)
 
         if sale_order_lines_vals:
