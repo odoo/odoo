@@ -467,6 +467,16 @@ class MailMail(models.Model):
             link_ids = {int(link) for link in re.findall(r'/web/(?:content|image)/([0-9]+)', body)}
             if link_ids:
                 attachments = attachments - self.env['ir.attachment'].browse(list(link_ids))
+
+        # Convert URL-only attachments (e.g. cloud or plain external links) into email links
+        url_attachments = attachments.sudo().filtered(
+            lambda a: a.url and not a.file_size and a.url.startswith(('http://', 'https://', 'ftp://')))
+        if url_attachments:
+            url_attachments.sudo().generate_access_token()
+            attachments_links = self.env['ir.qweb']._render('mail.mail_attachment_links', {'attachments': url_attachments})
+            body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False)
+            attachments -= url_attachments
+
         # Turn remaining attachments into links if they are too heavy and
         # their ownership are business models (i.e. something != mail.message,
         # otherwise they will be deleted along with the mail message leading to a 404)
