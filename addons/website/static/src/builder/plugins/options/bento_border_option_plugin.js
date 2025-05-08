@@ -10,7 +10,7 @@ class BentoBorderOptionPlugin extends Plugin {
         builder_options: [
             withSequence(after(WEBSITE_BACKGROUND_OPTIONS), {
                 template: "html_builder.BentoBorderOption",
-                selector: ".s_bento_banner section[data-name='Card']",
+                selector: ".s_bento_banner section[data-name='Card'], .s_bento_block_card",
             }),
         ],
     };
