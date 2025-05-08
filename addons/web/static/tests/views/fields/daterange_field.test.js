@@ -10,6 +10,7 @@ import {
     queryValue,
     resize,
     edit,
+    queryOne,
 } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import {
@@ -928,6 +929,26 @@ test("list daterange: column widths (no record)", async () => {
     expect(".o_data_row").toHaveCount(0);
     const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
     expect(columnWidths).toEqual([40, 189, 304, 267]);
+});
+
+test.tags("desktop");
+test("list daterange: start date input width matches its span counterpart", async () => {
+    Partner._records[0].datetime_end = "2017-02-09 17:00:00";
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+            <list multi_edit="1">
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}" />
+            </list>`,
+    });
+
+    expect(".o_data_row").toHaveCount(1);
+    await contains(".o_list_record_selector input").click();
+    const initialWidth = queryOne(".o_field_daterange span:first").offsetWidth;
+    await contains(".o_field_daterange span:first").click();
+    expect(".o_field_daterange input:first").toHaveProperty("offsetWidth", initialWidth);
 });
 
 test("always range: related end date, both start date and end date empty", async () => {
