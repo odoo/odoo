@@ -122,19 +122,21 @@ li.o_wsale_my_cart {
 /* Стили для текстовой информации */
 .oe_product_cart .o_wsale_product_information {
     padding: 15px;
+    font-size: 17px;
 }
 
 /* Заголовок товара */
 .o_wsale_product_information .o_wsale_products_item_title a {
     color: black !important;  /* Черный цвет текста */
     font-weight: 500 !important;  /* Жирное начертание */
+    font-size: 19px !important;
 }
 
 /* Стили для цены */
 .oe_product_cart .product_price {
-    color: #05a01f !important; /* Зеленый цвет цены */
-    font-weight: 700 !important; /* Жирный шрифт */
-    font-size: 18px;
+    color: #ff6600 !important;
+    font-weight: 900 !important;
+    font-size: 26px;
     margin-top: 5px;
 }
 
@@ -210,6 +212,11 @@ li.o_wsale_my_cart {
     /* ...остальные стили */
 }
 
+/* Оранжевый цвет для активного пункта меню */
+.navbar-nav .nav-link.active:before {
+    color: #f08106 !important;
+}
+
 /* ############################################################################################################################################################## */
 /* ПРОДУКТ ДЕТАЛИ - в стиле второго изображения */
 /* ############################################################################################################################################################## */
@@ -268,46 +275,11 @@ li.o_wsale_my_cart {
 /* Кнопки действий */
 #product_detail .action-buttons {
     display: flex;
-    gap: 10px;
+    gap: 0;
     margin: 20px 0;
-}
-
-/* Кнопка купить сейчас */
-#product_detail .action-buttons button[name="express"] {
-    background-color: #ff6a00 !important;
-    border-color: #ff6a00 !important;
-    color: white;
-    font-weight: bold;
-    padding: 12px 20px;
-    border-radius: 4px;
-    flex: 1;
-    transition: all 0.2s ease;
-}
-
-#product_detail .action-buttons button[name="express"]:hover {
-    background-color: #e05d00 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Кнопка добавить в корзину */
-#product_detail .action-buttons #add_to_cart {
-    background-color: #0b7c54 !important;
-    border-color: #0b7c54 !important;
-    color: #fff !important;
-    font-weight: bold;
-    padding: 12px 20px;
-    border-radius: 4px;
-    flex: 1;
-    transition: background-color 0.15s linear, border-color 0.15s linear;
-    box-shadow: none !important;
-}
-
-#product_detail .action-buttons #add_to_cart:hover {
-    background-color: #095c3c !important;
-    border-color: #095c3c !important;
-    color: #fff !important;
-    box-shadow: none !important;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: none;
 }
 
 /* Селектор количества */
@@ -613,23 +585,9 @@ li.o_wsale_my_cart {
     justify-content: center;
 }
 
-#product_detail .action-buttons #buy_now {
-    background-color: #0fa86e !important;
-    border-color: #0fa86e !important;
-    color: #fff !important;
-    font-weight: bold;
-    padding: 12px 20px;
-    border-radius: 4px;
-    flex: 1;
-    transition: background-color 0.15s linear, border-color 0.15s linear;
-    box-shadow: none !important;
-}
-
-#product_detail .action-buttons #buy_now:hover {
-    background-color: #0b7c54 !important;
-    border-color: #0b7c54 !important;
-    color: #fff !important;
-    box-shadow: none !important;
+#product_detail .action-buttons button span {
+    font-weight: 700;
+    font-size: 1.15em;
 }
 
 .product-gallery-img {
@@ -658,6 +616,133 @@ li.o_wsale_my_cart {
         background: #f8f8f8;
         display: block;
     }
+}
+
+/* Специальный шрифт для цены */
+.product_price .oe_currency_value {
+    font-family: 'Schnebel Sans ME Condensed Bold', Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #ff6600;
+}
+.product_price .h6 {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+/* Красивый блок выбора количества */
+.quantity-wrapper {
+  display: inline-flex;
+  border: 1px solid #ced4da; /* Серая обводка */
+  border-radius: 6px;
+  padding: 0 2px;
+  background: #fff;
+  margin-bottom: 18px;
+  align-items: center;
+}
+
+.oe_currency_value {
+  color: #ff6600 !important; /* Цвет как у цены */
+  vertical-align: super;
+  font-size: 0.9em;
+  margin-left: 2px;
+}
+
+.qty-btn {
+  background: #fff;
+  border: none;
+  color: #222;
+  font-size: 1em;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.qty-btn:hover, .qty-btn:focus {
+  background: #fff !important;
+  color: #6c757d !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.qty-input {
+  width: 32px;
+  font-size: 1em;
+}
+
+/* Оранжевая цена с кастомным шрифтом */
+.product_price .oe_price_h4 .text-success {
+    color: #ff6600 !important;
+    font-family: 'Schnebel Sans ME Condensed Bold', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1.5em;
+}
+
+/* Оранжевая валюта рядом с ценой */
+.product_price .currency,
+.oe_product_cart .product_price .currency {
+    color: #ff6600 !important;
+    font-family: 'Schnebel Sans ME Condensed Bold', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1em;
+    margin-left: 0.25em;
+}
+
+/* ############################################################################################################################################################## */
+/* КНОПКИ КОЛИЧЕСТВА (белые с серой обводкой, без эффекта наведения) */
+/* ############################################################################################################################################################## */
+.css_quantity {
+    width: 100px !important;
+    min-width: 0 !important;
+    max-width: 120px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    font-size: 14px !important;
+}
+
+.css_quantity .btn {
+    background-color: #fff !important;   /* Белый фон */
+    color: #007bff !important;           /* Синий текст/иконка */
+    border: 1px solid #ced4da !important;/* Серая рамка */
+    box-shadow: none !important;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 0 !important;
+    font-size: 16px !important;
+    border-radius: 4px !important;
+    transition: none !important;
+}
+
+.css_quantity .btn:hover, 
+.css_quantity .btn:focus {
+    background-color: #fff !important; /* Без изменения фона */
+    color: #007bff !important;         /* Без изменения цвета */
+    border: 1px solid #ced4da !important; /* Серая рамка */
+    box-shadow: none !important;
+}
+
+.css_quantity .btn i {
+    color: #6c757d !important; /* Серый цвет иконки */
+    font-size: 16px !important;
+}
+
+.css_quantity .form-control.quantity {
+    height: 28px !important;
+    padding: 0 4px !important;
+    font-size: 15px !important;
+    text-align: center;
+    border: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+    margin: 0 2px !important;
+    width: 36px !important;
+    min-width: 0 !important;
+    max-width: 40px !important;
 }
 
 

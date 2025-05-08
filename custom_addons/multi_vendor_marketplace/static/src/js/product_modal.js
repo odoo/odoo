@@ -144,4 +144,22 @@ odoo.define('multi_vendor_marketplace.buy_now_button', function (require) {
             }
         }
     });
+});
+
+// Quantity control for product detail page
+odoo.define('multi_vendor_marketplace.product_qty_control', function (require) {
+    $(document).ready(function () {
+        $(document).on('click', '.js_add_qty', function () {
+            var $input = $(this).closest('.input-group').find('.js_quantity');
+            var val = parseInt($input.val()) || 1;
+            $input.val(val + 1).trigger('change');
+        });
+        $(document).on('click', '.js_remove_qty', function () {
+            var $input = $(this).closest('.input-group').find('.js_quantity');
+            var val = parseInt($input.val()) || 1;
+            if (val > 1) {
+                $input.val(val - 1).trigger('change');
+            }
+        });
+    });
 }); 

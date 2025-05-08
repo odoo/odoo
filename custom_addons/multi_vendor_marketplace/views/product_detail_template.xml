@@ -99,10 +99,15 @@
                             <div class="js_product js_main_product">
                                 <div>
                                     <!-- Price display in larger font and with currency symbol -->
-                                    <div class="product_price mt-2 mb-3">
+                                    <div class="product_price mt-2 mb-3 d-inline-block">
                                         <h3 class="oe_price_h4 css_editable_mode_display">
                                             <span t-if="combination_info['has_discounted_price']" style="text-decoration: line-through; white-space: nowrap;" t-out="combination_info['list_price']" class="text-danger me-2"/>
-                                            <span t-att-class="'text-success'" style="white-space: nowrap; font-size: 1.5em; font-weight: bold;" t-out="combination_info['price']"/>
+                                            <span style="white-space: nowrap; font-size: 1.5em; font-weight: bold;" class="text-success">
+                                                <t t-esc="combination_info['price']"/>
+                                            </span>
+                                            <span t-if="pricelist.currency_id" class="ms-1 text-muted oe_currency_value" style="font-size: 1.1em;">
+                                                <t t-esc="pricelist.currency_id.symbol"/>
+                                            </span>
                                             <span t-if="combination_info['base_unit_price']" class="ms-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
                                                 <t t-call='website_sale.base_unit_price'/>
                                             </span>
@@ -152,37 +157,31 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- Add quantity selection widget -->
-                                    <div class="css_quantity input-group mx-auto w-auto">
-                                        <div class="input-group-prepend">
-                                            <button type="button" class="btn btn-secondary js_remove_qty">
-                                                <i class="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-                                        <input type="text" class="js_quantity form-control quantity" name="add_qty" value="1"/>
-                                        <div class="input-group-append">
-                                            <button type="button" class="btn btn-secondary js_add_qty">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
+                                    <!-- Новый красивый блок выбора количества -->
+                                    <div class="input-group">
+                                        <div class="quantity-wrapper">
+                                            <button type="button" class="qty-btn js_remove_qty">-</button>
+                                            <input type="text" class="qty-input js_quantity" name="add_qty" value="1" readonly="readonly" />
+                                            <button type="button" class="qty-btn js_add_qty">+</button>
                                         </div>
                                     </div>
                                     
                                     <!-- Action buttons row (Buy Now and Add to Cart) -->
                                     <div class="action-buttons d-flex mb-3" style="padding: 0; background: none; border-radius: 12px; overflow: hidden; width: 100%;">
                                         <div id="o_wsale_cta_wrapper" class="d-flex w-100" style="width: 100%;">
-                                            <!-- Add to Cart Button (левая) -->
-                                            <button type="button" id="add_to_cart" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center js_check_product a-submit" 
-                                                style="background: #089454; color: #fff; border: none; border-radius: 12px 0 0 12px; font-weight: 600; font-size: 1.1em; height: 48px;"
-                                                data-bs-toggle="modal" data-bs-target="#productOptionsModal" data-action="add_to_cart">
-                                                <i class="fa fa-shopping-cart me-2"></i>
-                                                <span>Add to Cart</span>
-                                            </button>
-                                            <!-- Buy Now Button (правая) -->
-                                            <button type="button" id="buy_now" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center o_we_buy_now" 
-                                                style="background: #089454; color: #fff; border: none; border-radius: 0 12px 12px 0; font-weight: 600; font-size: 1.1em; height: 48px;"
-                                                data-bs-toggle="modal" data-bs-target="#productOptionsModal" data-action="buy_now">
+                                            <!-- Buy Now Button (левая, оранжевый) -->
+                                            <button type="button" id="buy_now" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center o_we_buy_now"
+                                                style="background: linear-gradient(90deg, #ff7300 0%, #ffb300 100%); color: #fff; border: none; border-radius: 16px 0 0 16px; font-weight: 700; font-size: 1.25rem; height: 56px; width: 50%; transition: filter 0.2s;"
+                                                data-action="buy_now">
                                                 <i class="fa fa-bolt me-2"></i>
-                                                <span>Buy Now</span>
+                                                <span>Купить сейчас</span>
+                                            </button>
+                                            <!-- Add to Cart Button (правая, жёлтый) -->
+                                            <button type="button" id="add_to_cart" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center js_check_product a-submit"
+                                                style="background: linear-gradient(90deg, #ffd600 0%, #ffb300 100%); color: #fff; border: none; border-radius: 0 16px 16px 0; font-weight: 700; font-size: 1.25rem; height: 56px; width: 50%; transition: filter 0.2s;"
+                                                data-action="add_to_cart">
+                                                <i class="fa fa-shopping-cart me-2"></i>
+                                                <span>Добавить в корзину</span>
                                             </button>
                                         </div>
                                     </div>
@@ -210,6 +209,7 @@
                         </div>
                         
                         <!-- Terms and conditions, no OdooBot chat -->
+                        <!--
                         <div id="o_product_terms_and_share" class="d-flex justify-content-between flex-column flex-md-row align-items-md-end mb-3">
                             <p class="text-muted mb-0">
                                 <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
@@ -222,6 +222,8 @@
                                 </button>
                             </div>
                         </div>
+                        -->
+                        <div id="o_product_terms_and_share" style="display:none"></div>
                     </div>
                 </div>
                 
