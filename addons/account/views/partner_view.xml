@@ -322,6 +322,7 @@
             <field name="inherit_id" ref="base.view_partner_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='vat']" position="after">
+                    <field name="invoice_sending_method" optional="hide"/>
                     <field name="invoice_edi_format" string="EDI Format" optional="hide"/>
                 </xpath>
             </field>
