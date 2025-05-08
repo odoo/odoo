@@ -4,7 +4,7 @@
 import { WebsocketWorker } from "./websocket_worker";
 
 (function () {
-    const websocketWorker = new WebsocketWorker();
+    const websocketWorker = new WebsocketWorker(self.name);
 
     if (self.name.includes("shared")) {
         // The script is running in a shared worker: let's register every
