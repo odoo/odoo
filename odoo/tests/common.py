@@ -1978,6 +1978,7 @@ class Screencaster:
                 ffmpeg_path,
                 '-y', '-loglevel', 'warning',
                 '-f', 'concat', '-safe', '0', '-i', concat_script_path,
+                '-vf', 'pad=ceil(iw/2)*2:ceil(ih/2)*2',
                 '-pix_fmt', 'yuv420p', '-g', '0',
                 outfile,
             ], preexec_fn=_preexec, check=True)
