@@ -504,6 +504,13 @@ export function getDragHelper() {
 }
 
 /**
+ * Returns the dragged helper when drag and dropping elements from the page.
+ */
+export function getDragMoveHelper() {
+    return document.body.querySelector(".o_drag_move_helper");
+}
+
+/**
  * Waits for the loading element added by the mutex to be removed, indicating
  * that the operation is over.
  */
