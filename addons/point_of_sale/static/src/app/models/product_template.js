@@ -118,7 +118,7 @@ export class ProductTemplate extends Base {
         return (
             this.isConfigurable() &&
             this.attribute_line_ids.length > 0 &&
-            !this.attribute_line_ids.every((l) => l.attribute_id.create_variant === "always")
+            this.attribute_line_ids.some((l) => l.attribute_id.create_variant === "no_variant")
         );
     }
 
