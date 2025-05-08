@@ -23,12 +23,18 @@ export class ExtraHoursSummary extends Component {
         }, () => [this.env.searchModel.domain]);
     }
 
+    get shouldDisplay() {
+        return this.env.searchModel.context.display_extra_hours;
+    }
+
     async updateOvertimeData() {
+        if (!this.shouldDisplay) {
+            return;
+        }
         const { context, domain } = this.env.searchModel;
         const employeeId = context.employee_id;
-        const model = context.model
         const { overtime_adjustments = {}, validated_overtime = {} } =
-            await this.orm.call(`${model}`, "get_overtime_data", [domain, employeeId]);
+            await this.orm.call("hr.employee", "get_overtime_data", [domain, employeeId]);
         const validatedOvertimeHours = validated_overtime[employeeId] || 0;
         const adjustmentOvertimeHours = overtime_adjustments[employeeId] || 0;
         const remainingOvertimeHours = validatedOvertimeHours + adjustmentOvertimeHours;
