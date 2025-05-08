@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { patch } from "@web/core/utils/patch";
-import { VideoSelector } from '@web_editor/components/media_dialog/video_selector';
+import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
 import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -54,7 +54,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the 'Background Video' button option.",
-            trigger: "we-button[data-name='bg_video_toggler_opt']",
+            trigger: "button[data-action-id='toggleBgVideo']",
             run: "click",
         },
         {
