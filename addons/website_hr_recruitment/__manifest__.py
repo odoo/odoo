@@ -35,7 +35,7 @@
             'website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.xml',
             'website_hr_recruitment/static/src/fields/**/*',
         ],
-        'website.assets_wysiwyg': [
+        'html_builder.assets': [
             'website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js',
         ],
         'website.assets_editor': [
