@@ -5,6 +5,7 @@ import re
 
 import odoo
 from odoo.tools.misc import file_open
+from odoo.tests import Form
 from odoo.addons.cloud_storage_google.tests.test_cloud_storage_google import (
     TestCloudStorageGoogleCommon,
 )
@@ -68,3 +69,34 @@ class TestCloudStorageAttachmentController(
                     "upload_info": {"method": "PUT", "response_status": 200, "url": "[url]"},
                 },
             )
+
+    def test_mail_composer_cloud_storage_attachment(self):
+        """Ensure cloud attachments are converted to links in outgoing emails."""
+        self.env["ir.config_parameter"].set_param("cloud_storage_provider", "google")
+        self.env["ir.config_parameter"].set_param("cloud_storage_min_file_size", 1)
+
+        partner = self.env["res.partner"].create({"name": "Cloud Test Partner", "email": "cloud@test.com"})
+        cloud_attachment = self.env["ir.attachment"].create({
+            "name": "cloud_attachment.txt",
+            "type": "cloud_storage",
+            "url": "https://storage.googleapis.com/fakebucket/cloud_attachment.txt",
+            "res_model": "res.partner",
+            "res_id": partner.id,
+            "mimetype": "text/plain",
+        })
+
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            default_model='res.partner',
+            default_res_ids=[partner.id],
+            default_composition_mode='comment',
+            default_partner_ids=[partner.id],
+        ))
+        composer_form.body = "<p>Hello</p>"
+        composer_form.attachment_ids.add(cloud_attachment)
+        composer = composer_form.save()
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer._action_send_mail()
+        sent_mail = next((m for m in self._mails if 'cloud_attachment.txt' in m['body']), None)
+        self.assertIsNotNone(sent_mail)
+        self.assertIn(self.env['ir.qweb']._render('mail.mail_attachment_links', {'attachments': cloud_attachment}), sent_mail['body'])

@@ -3,3 +3,4 @@
 from . import ir_attachment
 from . import ir_http
 from . import res_config_settings
+from . import mail_mail
