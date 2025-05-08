@@ -186,7 +186,7 @@
         >
             <th t-on-keydown="(ev) => this.onCellKeydown(ev, group)"
                 tabindex="-1"
-                t-attf-class="o_group_name fs-6 fw-bold {{!group.isFolded ? 'text-900' : 'text-700'}}"
+                t-attf-class="o_group_name fs-6 fw-bold {{!group.isFolded ? 'text-black' : 'text-body'}}"
                 t-att-colspan="getGroupNameCellColSpan(group)">
                 <div class="d-flex align-items-center">
                     <span t-attf-class="o_group_caret fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
