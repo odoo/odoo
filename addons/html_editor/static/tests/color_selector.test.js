@@ -172,6 +172,30 @@ test("custom background colors used in the editor are shown in the colorpicker",
     expect(queryOne("button[data-color='#00ff00']").style.backgroundColor).toBe("rgb(0, 255, 0)");
 });
 
+test("applied custom color should be shown in colorpicker after switching tab", async () => {
+    const { el } = await setupEditor(
+        '<p><font style="background-color: rgb(255, 0, 0);">[test]</font></p>'
+    );
+    await waitFor(".o-we-toolbar");
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-background");
+    await animationFrame();
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    expect(".o_hex_input").toHaveValue("#FF0000");
+    const newColor = "#00FF00";
+    await contains(".o_hex_input").edit(newColor);
+    expect(".o_hex_input").toHaveValue(newColor);
+    expect(getContent(el)).toBe(
+        '<p><font style="background-color: rgb(0, 255, 0);">[test]</font></p>'
+    );
+    await click(".btn:contains('Solid')");
+    await animationFrame();
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    expect(".o_hex_input").toHaveValue(newColor);
+});
+
 test("select hex color and apply it", async () => {
     const { el } = await setupEditor(`<p>[test]</p>`);
     await waitFor(".o-we-toolbar");
