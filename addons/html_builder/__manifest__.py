@@ -71,6 +71,7 @@
         ],
         'web.assets_frontend': [
             'html_builder/static/src/interactions/**/*',
+            'html_builder/static/src/website_preview/website_builder_action.editor.scss',
             ('remove', 'html_builder/static/src/interactions/**/*.edit.*'),
         ],
     },

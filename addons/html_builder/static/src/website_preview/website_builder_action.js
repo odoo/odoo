@@ -25,6 +25,7 @@ import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { ResourceEditor } from "@website/components/resource_editor/resource_editor";
 import { isHTTPSorNakedDomainRedirection } from "./utils";
 import { WebsiteSystrayItem } from "./website_systray_item";
+import { renderToElement } from "@web/core/utils/render";
 
 export class WebsiteBuilder extends Component {
     static template = "html_builder.WebsiteBuilder";
@@ -73,7 +74,13 @@ export class WebsiteBuilder extends Component {
         useSubEnv({
             localOverlayContainerKey: uniqueId("website"),
         });
-
+        useEffect(
+            () => {
+                this.addWelcomeMessage();
+                return () => this.welcomeMessageEl?.remove();
+            },
+            () => [this.state.isEditing]
+        );
         this.websitePreviewRef = useRef("website_preview");
 
         onWillStart(async () => {
@@ -400,6 +407,19 @@ export class WebsiteBuilder extends Component {
             },
             { once: true }
         );
+    }
+
+    async addWelcomeMessage() {
+        await this.iframeLoaded;
+        if (this.websiteService.isRestrictedEditor && !this.state.isEditing) {
+            const wrapEl = this.websiteContent.el.contentDocument.querySelector(
+                "#wrapwrap.homepage #wrap"
+            );
+            if (wrapEl && !wrapEl.innerHTML.trim()) {
+                this.welcomeMessageEl = renderToElement("website.homepage_editor_welcome_message");
+                wrapEl.replaceChildren(this.welcomeMessageEl);
+            }
+        }
     }
 
     setIframeLoaded() {
