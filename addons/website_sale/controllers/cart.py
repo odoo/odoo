@@ -69,8 +69,9 @@ class Cart(PaymentPortal):
         )
         payment_form_values.update({
             'payment_access_token': payment_form_values.pop('access_token'),  # Rename the key.
+            # Do not include delivery related lines
             'minor_amount': payment_utils.to_minor_currency_units(
-                order.amount_total, order.currency_id
+                order._get_amount_total_excluding_delivery(), order.currency_id
             ),
             'merchant_name': request.website.name,
             'transaction_route': f'/shop/payment/transaction/{order.id}',
@@ -78,6 +79,7 @@ class Cart(PaymentPortal):
             'landing_route': '/shop/payment/validate',
             'payment_method_unknown_id': request.env.ref('payment.payment_method_unknown').id,
             'shipping_info_required': order._has_deliverable_products(),
+            # Todo: remove in master
             'delivery_amount': payment_utils.to_minor_currency_units(
                 order.order_line.filtered(lambda l: l.is_delivery).price_total, order.currency_id
             ),

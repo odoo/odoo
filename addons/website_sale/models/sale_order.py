@@ -220,6 +220,13 @@ class SaleOrder(models.Model):
 
     #=== BUSINESS METHODS ===#
 
+    def _get_non_delivery_lines(self):
+        """Exclude delivery-related lines."""
+        return self.order_line.filtered(lambda line: not line.is_delivery)
+
+    def _get_amount_total_excluding_delivery(self):
+        return sum(self._get_non_delivery_lines().mapped('price_total'))
+
     def action_confirm(self):
         carts = self.filtered('website_id')
         if self.env.su:
