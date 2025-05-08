@@ -1065,7 +1065,7 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         product_infos = {
             'price': product.standard_price,
-            'uomDisplayName': product.uom_id.display_name
+            'uomDisplayName': product.uom_id.display_name,
         }
         params = {'order_id': self}
         # Check if there is a price and a minimum quantity for the order's vendor.
@@ -1075,12 +1075,16 @@ class PurchaseOrder(models.Model):
             date=self.date_order and self.date_order.date(),
             uom_id=product.uom_id,
             ordered_by='min_qty',
-            params=params
+            params=params,
         )
         if seller:
+            price = product.uom_id._compute_price(seller.price_discounted, seller.product_uom_id)
             product_infos.update(
-                price=seller.price_discounted,
+                price=price,
                 min_qty=seller.min_qty,
+                uomDisplayName=seller.product_uom_id.display_name,
+                productUomDisplayName=product.uom_id.display_name,
+                productUnitPrice=seller.product_uom_id._compute_price(price, product.uom_id),
             )
 
         return product_infos
@@ -1161,7 +1165,7 @@ class PurchaseOrder(models.Model):
             if quantity != 0:
                 pol.product_qty = quantity
             elif self.state in ['draft', 'sent']:
-                price_unit = self._get_product_price_and_data(pol.product_id)['price']
+                price_unit = pol.price_unit_discounted
                 pol.unlink()
                 return price_unit
             else:
@@ -1180,7 +1184,9 @@ class PurchaseOrder(models.Model):
                 uom_id=pol.product_uom_id)
             if seller:
                 # Fix the PO line's price on the seller's one.
-                pol.price_unit = seller.price_discounted
+                pol.price_unit = seller.price
+                pol.discount = seller.discount
+
         return pol.price_unit_discounted
 
     def _create_update_date_activity(self, updated_dates):

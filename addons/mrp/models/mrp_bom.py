@@ -510,7 +510,9 @@ class MrpBom(models.Model):
             })
             self.write({child_field: [command]})
 
-        return self.env['product.product'].browse(product_id).standard_price
+        product_id = self.env['product.product'].browse(product_id)
+        bom_line_uom_id = entity.product_uom_id
+        return product_id.uom_id._compute_price(product_id.standard_price, bom_line_uom_id) if bom_line_uom_id != product_id.uom_id else product_id.standard_price
 
     # -------------------------------------------------------------------------
     # DOCUMENT
@@ -731,8 +733,7 @@ class MrpBomLine(models.Model):
         return bom.with_context(child_field='bom_line_ids').action_add_from_catalog()
 
     def _get_product_catalog_lines_data(self, default=False, **kwargs):
-        if self and not default:
-            self.product_id.ensure_one()
+        if len(self) == 1:
             return {
                 **self[0].bom_id._get_product_price_and_data(self[0].product_id),
                 'quantity': sum(
@@ -743,8 +744,27 @@ class MrpBomLine(models.Model):
                         )
                     )
                 ),
-                'readOnly': len(self) > 1,
-                'uomDisplayName': len(self) == 1 and self.product_uom_id.display_name or self.product_id.uom_id.display_name,
+                'readOnly': False,
+                'uomDisplayName': self.product_uom_id.display_name,
+                'price': self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_uom_id) if self.product_uom_id != self.product_id.uom_id
+                else self.product_id.standard_price,
+                'productUnitPrice': self.product_id.standard_price,
+                'productUomDisplayName': self.product_id.uom_id.display_name,
+            }
+        elif self and not default:
+            self.product_id.ensure_one()
+            return {
+                'readOnly': True,
+                'uomDisplayName': self.product_id.uom_id.display_name,
+                'price': self.product_id.standard_price,
+                'quantity': sum(
+                    self.mapped(
+                        lambda line: line.product_uom_id._compute_quantity(
+                            qty=line.product_qty,
+                            to_unit=line.product_uom_id,
+                        )
+                    )
+                ),
             }
         return {
             'quantity': 0,
@@ -806,8 +826,7 @@ class MrpBomByproduct(models.Model):
         return bom.with_context(child_field='byproduct_ids').action_add_from_catalog()
 
     def _get_product_catalog_lines_data(self, default=False, **kwargs):
-        if self and not default:
-            self.product_id.ensure_one()
+        if len(self) == 1:
             return {
                 **self[0].bom_id._get_product_price_and_data(self[0].product_id),
                 'quantity': sum(
@@ -818,8 +837,20 @@ class MrpBomByproduct(models.Model):
                         )
                     )
                 ),
-                'readOnly': len(self) > 1,
-                'uomDisplayName': len(self) == 1 and self.product_uom_id.display_name or self.product_id.uom_id.display_name,
+                'readOnly': False,
+                'uomDisplayName': self.product_uom_id.display_name,
+                'price': self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_uom_id) if self.product_uom_id != self.product_id.uom_id
+                else self.product_id.standard_price,
+                'productUnitPrice': self.product_id.standard_price,
+                'productUomDisplayName': self.product_id.uom_id.display_name,
+            }
+        elif self and not default:
+            self.product_id.ensure_one()
+            return {
+                'readOnly': True,
+                'uomDisplayName': self.product_id.uom_id.display_name,
+                'price': self.product_id.standard_price,
+
             }
         return {
             'quantity': 0,

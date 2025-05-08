@@ -429,11 +429,12 @@ class PurchaseOrderLine(models.Model):
             catalog_info = self.order_id._get_product_price_and_data(self.product_id)
             catalog_info.update(
                 quantity=self.product_qty,
-                price=self.price_unit * (1 - self.discount / 100),
+                price=self.price_unit_discounted,
                 readOnly=self.order_id._is_readonly(),
+                uomDisplayName=self.product_uom_id.display_name,
+                productUomDisplayName=self.product_id.uom_id.display_name,
+                productUnitPrice=self.product_uom_id._compute_price(self.price_unit_discounted, self.product_id.uom_id),
             )
-            if self.product_id.uom_id != self.product_uom_id:
-                catalog_info['uomDisplayName'] = self.product_uom_id.display_name
             return catalog_info
         elif self:
             self.product_id.ensure_one()

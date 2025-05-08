@@ -2146,7 +2146,10 @@ class SaleOrder(models.Model):
         )
         res = super()._get_product_catalog_order_data(products, **kwargs)
         for product in products:
-            res[product.id]['price'] = pricelist.get(product.id)
+            price = pricelist.get(product.id)
+            res[product.id]['price'] = price
+            res[product.id]['productUnitPrice'] = price
+
             if product.sale_line_warn_msg:
                 res[product.id]['warning'] = product.sale_line_warn_msg
         return res
@@ -2207,7 +2210,7 @@ class SaleOrder(models.Model):
                 'product_uom_qty': quantity,
                 'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
             })
-        return sol.price_unit * (1-(sol.discount or 0.0)/100.0)
+        return sol.price_unit
 
     #=== TOOLING ===#
 

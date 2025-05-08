@@ -78,6 +78,7 @@ class ProductCatalogMixin(models.AbstractModel):
             product.id: {
                 'productType': product.type,
                 'uomDisplayName': product.uom_id.display_name,
+                'productUomDisplayName': product.uom_id.display_name,
                 'code': product.code if product.code else '',
             }
             for product in products
@@ -111,6 +112,8 @@ class ProductCatalogMixin(models.AbstractModel):
             }
             if not order_line_info[product.id]['uomDisplayName']:
                 order_line_info[product.id]['uomDisplayName'] = product.uom_id.display_name
+                order_line_info[product.id]['productUomDisplayName'] = product.uom_id.display_name
+
             product_ids.remove(product.id)
 
         products = self.env['product.product'].browse(product_ids)

@@ -2553,8 +2553,8 @@ class AccountMove(models.Model):
             We will check the sellers set on the product and update the price and min_qty for it if needed.
         """
         self.ensure_one()
-        product_infos = {'price': product.list_price if self.is_sale_document() else product.standard_price}
-
+        product_infos = {'price': product.list_price if self.is_sale_document() else product.standard_price, 'uomDisplayName': product.uom_id.display_name}
+        params = {'order_id': self}
         # Check if there is a price and a minimum quantity for the order's vendor.
         if self.is_purchase_document() and self.partner_id:
             seller = product._select_seller(
@@ -2563,12 +2563,14 @@ class AccountMove(models.Model):
                 date=self.invoice_date,
                 uom_id=product.uom_id,
                 ordered_by='min_qty',
-                params={'order_id': self}
+                params=params,
             )
             if seller:
                 product_infos.update(
                     price=seller.price,
                     min_qty=seller.min_qty,
+                    uomDisplayName=seller.product_uom_id.display_name,
+                    productUnitPrice=seller.product_uom_id._compute_price(seller.price, product.uom_id),
                 )
         return product_infos
 
@@ -2588,6 +2590,7 @@ class AccountMove(models.Model):
                  sale order and the quantity selected.
         :rtype: float
         """
+        self.ensure_one()
         move_line = self.line_ids.filtered(lambda line: line.product_id.id == product_id)
         if move_line:
             if quantity != 0:
@@ -2607,6 +2610,14 @@ class AccountMove(models.Model):
                 'quantity': quantity,
                 'product_id': product_id,
             })
+        if self.is_purchase_document() and self.partner_id:
+            seller = move_line.product_id._select_seller(
+                    partner_id=move_line.partner_id,
+                    quantity=move_line.quantity,
+                    uom_id=move_line.product_uom_id)
+            if seller:
+                # Fix the accounting line's price on the seller's one.
+                move_line.price_unit = seller.price
         return move_line.price_unit
 
     def _is_readonly(self):
