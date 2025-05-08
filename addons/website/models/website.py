@@ -1487,13 +1487,11 @@ class Website(models.Model):
         return self.env['ir.ui.view'].sudo().with_context(active_test=False)._get_template_view(view_id, raise_if_not_found=raise_if_not_found)
 
     @api.model
-    @tools.ormcache('key', 'self._context.get("website_id")', cache='templates')
     def is_view_active(self, key):
         """
             Return True if active, False if not active, None if not found
         """
-        view = self.viewref(key, raise_if_not_found=False)
-        return view.active if view else None
+        return self.env['ir.ui.view']._get_cached_template_info(key).get('active')
 
     @api.model
     def get_template(self, template):

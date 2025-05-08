@@ -319,8 +319,8 @@ class Website(Home):
     def sitemap_website_info(env, rule, qs):
         website = env['website'].get_current_website()
         if not (
-            website.viewref('website.website_info', False).active
-            and website.viewref('website.show_website_info', False).active
+            website.is_view_active('website.website_info')
+            and website.is_view_active('website.show_website_info')
         ):
             # avoid 404 or blank page in sitemap
             return False
