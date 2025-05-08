@@ -65,13 +65,13 @@
     <button class="btn btn-primary ms-0 py-0 px-1 me-1"
             title="Move Backward"
             aria-label="Move Backward"
-            t-on-click="slidePrev">
+            t-on-click="() => this.slide('prev')">
         <span class="fa fa-fw fa-angle-left"/>
     </button>
     <button class="btn btn-primary py-0 px-1 me-2"
             title="Move Forward"
             aria-label="Move Forward"
-            t-on-click="slideNext">
+            t-on-click="() => this.slide('next')">
         <span class="fa fa-fw fa-angle-right"/>
     </button>
     <button class="o_we_bg_success btn btn-primary ms-0 py-0 px-1 me-1"

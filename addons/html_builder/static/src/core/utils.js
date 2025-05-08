@@ -429,6 +429,22 @@ export function useHasPreview(getAllActions) {
     );
 }
 
+function useWithLoadingEffect(getAllActions) {
+    const env = useEnv();
+    const getAction = env.editor.shared.builderActions.getAction;
+    let withLoadingEffect = true;
+    for (const descr of getAllActions()) {
+        if (descr.actionId) {
+            const action = getAction(descr.actionId);
+            if (action.withLoadingEffect === false) {
+                withLoadingEffect = false;
+            }
+        }
+    }
+
+    return withLoadingEffect;
+}
+
 export function useClickableBuilderComponent() {
     useBuilderComponent();
     const comp = useComponent();
@@ -445,12 +461,18 @@ export function useClickableBuilderComponent() {
     const hasPreview = useHasPreview(getAllActions);
     const operationWithReload = useOperationWithReload(callApply, reload);
 
+    const withLoadingEffect = useWithLoadingEffect(getAllActions);
+
     const operation = {
         commit: () => {
             if (reload) {
                 callOperation(operationWithReload);
             } else {
-                callOperation(applyOperation.commit);
+                callOperation(applyOperation.commit, {
+                    operationParams: {
+                        withLoadingEffect: withLoadingEffect,
+                    },
+                });
             }
         },
         preview: () => {
@@ -581,6 +603,8 @@ export function useInputBuilderComponent({
     const onReady = usePrepareAction(getAllActions);
     const { reload } = useReloadAction(getAllActions);
 
+    const withLoadingEffect = useWithLoadingEffect(getAllActions);
+
     async function callApply(applySpecs) {
         const proms = [];
         for (const applySpec of applySpecs) {
@@ -622,7 +646,10 @@ export function useInputBuilderComponent({
         if (reload) {
             callOperation(operationWithReload, { userInputValue: rawValue });
         } else {
-            callOperation(applyOperation.commit, { userInputValue: rawValue });
+            callOperation(applyOperation.commit, {
+                userInputValue: rawValue,
+                withLoadingEffect: withLoadingEffect,
+            });
         }
         // If the parsed value is not equivalent to the user input, we want to
         // normalize the displayed value. It is useful in cases of invalid

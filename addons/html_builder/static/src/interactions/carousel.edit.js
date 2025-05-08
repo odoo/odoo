@@ -46,8 +46,7 @@ export class CarouselEdit extends Interaction {
         }
 
         // Slide the carousel
-        const editingCarousel = this.el;
-        const applySpec = { editingElement: editingCarousel, direction: direction };
+        const applySpec = { editingElement: this.el, params: { direction: direction } };
 
         if (this.services["website_edit"].applyAction) {
             this.services["website_edit"].applyAction("slideCarousel", applySpec);

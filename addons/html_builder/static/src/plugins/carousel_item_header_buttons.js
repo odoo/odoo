@@ -4,7 +4,7 @@ import { Component } from "@odoo/owl";
 export class CarouselItemHeaderMiddleButtons extends Component {
     static template = "html_builder.CarouselItemHeaderMiddleButtons";
     static props = {
-        slideCarousel: Function,
+        applyAction: Function,
         addSlide: Function,
         removeSlide: Function,
     };
@@ -13,16 +13,15 @@ export class CarouselItemHeaderMiddleButtons extends Component {
         this.callOperation = useOperation();
     }
 
-    slidePrev() {
-        this.callOperation(async () => {
-            await this.props.slideCarousel("prev", this.env.getEditingElement());
-        });
-    }
+    slide(direction) {
+        const applySpec = {
+            editingElement: this.env.getEditingElement().closest(".carousel"),
+            params: {
+                direction: direction,
+            },
+        };
 
-    slideNext() {
-        this.callOperation(async () => {
-            await this.props.slideCarousel("next", this.env.getEditingElement());
-        });
+        this.props.applyAction("slideCarousel", applySpec);
     }
 
     addSlide() {

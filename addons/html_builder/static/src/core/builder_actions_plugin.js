@@ -11,7 +11,8 @@ import { Plugin } from "@html_editor/plugin";
 
 export class BuilderActionsPlugin extends Plugin {
     static id = "builderActions";
-    static shared = ["getAction"];
+    static shared = ["getAction", "applyAction"];
+    static dependencies = ["operation", "history"];
 
     setup() {
         this.actions = {};
@@ -38,5 +39,30 @@ export class BuilderActionsPlugin extends Plugin {
             throw new Error(`Unknown builder action id: ${actionId}`);
         }
         return action;
+    }
+
+    /**
+     * Apply action for the given action ID.
+     *
+     * @param {string} actionId
+     * @param {Object} spec
+     */
+    applyAction(actionId, spec) {
+        const action = this.getAction(actionId);
+        this.dependencies.operation.next(
+            async () => {
+                await action.apply(spec);
+                this.dependencies.history.addStep();
+            },
+            {
+                ...action,
+                load: async () => {
+                    if (action.load) {
+                        const loadResult = await action.load(spec);
+                        spec.loadResult = loadResult;
+                    }
+                },
+            }
+        );
     }
 }

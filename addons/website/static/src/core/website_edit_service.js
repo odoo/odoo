@@ -223,21 +223,7 @@ registry.category("services").add("website_edit", {
             patches.length = 0;
         };
         const applyAction = (actionId, spec) => {
-            const action = shared.builderActions.getAction(actionId);
-            shared.operation.next(
-                async () => {
-                    await action.apply(spec);
-                    shared.history.addStep();
-                },
-                {
-                    load: async () => {
-                        if (action.load) {
-                            const loadResult = await action.load(spec);
-                            spec.loadResult = loadResult;
-                        }
-                    },
-                }
-            );
+            shared.builderActions.applyAction(actionId, spec);
         };
         const callShared = (pluginName, methodName, args = []) => {
             if (!Array.isArray(args)) {

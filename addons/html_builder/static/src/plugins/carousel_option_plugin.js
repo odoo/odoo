@@ -6,7 +6,7 @@ import { renderToElement } from "@web/core/utils/render";
 
 export class CarouselOptionPlugin extends Plugin {
     static id = "carouselOption";
-    static dependencies = ["clone", "history", "remove", "builder-options"];
+    static dependencies = ["clone", "history", "remove", "builder-options", "builderActions"];
     static shared = ["slide", "addSlide", "removeSlide"];
 
     resources = {
@@ -33,11 +33,10 @@ export class CarouselOptionPlugin extends Plugin {
             selector:
                 ".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item",
             props: {
-                slideCarousel: (direction, editingElement) =>
-                    this.slideCarousel(editingElement.closest(".carousel"), direction),
                 addSlide: (editingElement) => this.addSlide(editingElement.closest(".carousel")),
                 removeSlide: (editingElement) =>
                     this.removeSlide(editingElement.closest(".carousel")),
+                applyAction: this.dependencies.builderActions.applyAction,
             },
         },
         container_title: {
@@ -72,7 +71,8 @@ export class CarouselOptionPlugin extends Plugin {
             },
             slideCarousel: {
                 preview: false,
-                apply: async ({ editingElement, direction: direction }) =>
+                withLoadingEffect: false,
+                apply: async ({ editingElement, params: { direction } }) =>
                     this.slideCarousel(editingElement, direction),
             },
             toggleControllers: {
