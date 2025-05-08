@@ -565,11 +565,17 @@ class MrpBom(models.Model):
         bom_values_by_attribute = no_variant_bom_attributes.grouped('attribute_id')
         never_values_by_attribute = never_attribute_values.grouped('attribute_id')
 
-        for attribute, values in bom_values_by_attribute.items():
-            if any(val.id in never_values_by_attribute[attribute].ids for val in values):
-                continue
+        # Or if there is no overlap between given line values attributes and the ones on on the bom
+        if not any(never_att_id in no_variant_bom_attributes.attribute_id.ids for never_att_id in never_attribute_values.attribute_id.ids):
             return True
-        return not other_attribute_valid
+
+        # Check that at least one variant attribute is correct
+        for attribute, values in bom_values_by_attribute.items():
+            if never_values_by_attribute.get(attribute) and any(val.id in never_values_by_attribute[attribute].ids for val in values):
+                return not other_attribute_valid
+
+        # None were found, so we skip the line
+        return True
 
 
 class MrpBomLine(models.Model):

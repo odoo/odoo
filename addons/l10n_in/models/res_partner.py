@@ -100,7 +100,7 @@ class ResPartner(models.Model):
     @api.model
     def _l10n_in_get_partner_vals_by_vat(self, vat):
         partner_data = self.enrich_by_gst(vat)
-        for fname in partner_data:
+        for fname in list(partner_data.keys()):
             if fname not in self.env['res.partner']._fields:
                 partner_data.pop(fname, None)
         partner_data.update({

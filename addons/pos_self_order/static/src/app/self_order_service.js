@@ -428,7 +428,11 @@ export class SelfOrder extends Reactive {
             const productTmplIds = new Set();
             this.productByCategIds[category_id] = this.productByCategIds[category_id].filter(
                 (p) => {
-                    if (!isSpecialProduct(p) && !productTmplIds.has(p.raw.product_tmpl_id)) {
+                    if (
+                        !isSpecialProduct(p) &&
+                        p.self_order_available &&
+                        !productTmplIds.has(p.raw.product_tmpl_id)
+                    ) {
                         productTmplIds.add(p.raw.product_tmpl_id);
                         p.available_in_pos = false;
                         return true;
@@ -752,10 +756,6 @@ export class SelfOrder extends Reactive {
             type: "success",
         });
         this.router.navigate("default");
-    }
-
-    updateOrderFromServer(order) {
-        this.currentOrder.updateDataFromServer(order);
     }
 
     isOrder() {

@@ -19,6 +19,18 @@ from . import jwt
 
 MAX_PAYLOAD_SIZE = 4096
 
+# size of the overhead of the header for all encryption blocks
+# +-----------+-----------------+---------------------------+------------------------+
+# | salt (16) | record_size (4) | sender_public_key.len (1) | sender_public_key (65) |
+# +-----------+-----------------+---------------------------+------------------------+
+# sender_public_key = 0x04 (1 byte) | X-coord (32 bytes) | Y-coord (32 bytes)
+# using SECP256R1 curve + X9.62 encoding + SEC1 uncompressed formatting
+ENCRYPTION_HEADER_SIZE = 16 + 4 + 1 + (1 + 32 + 32)
+
+# size of the overhead of encryption per encryption block
+# 1 padding delimiter (continue or final block) + 16-bytes in-message authentication tag from AEAD_AES_128_GCM
+ENCRYPTION_BLOCK_OVERHEAD = 1 + 16
+
 _logger = logger.getLogger(__name__)
 
 

@@ -339,6 +339,36 @@ class TestSaleOrder(SaleCommon):
             self.sale_order.partner_id.name,
             self.sale_order.with_context(sale_show_partner_name=True).display_name)
 
+    def test_sol_names(self):
+        """Check that the SOL description gets used for the display name."""
+        self.sale_order.order_line = [
+            Command.create({'is_downpayment': True}),
+            Command.create({'display_type': 'line_note', 'name': "Foo\nBar\nBaz"}),
+        ]
+        sol1, sol2, sol3, sol4 = self.sale_order.order_line
+        sol1.name += "\nOK THANK YOU\nGOOD BYE"
+
+        self.assertEqual(
+            sol1.display_name,
+            f"{self.sale_order.name} - OK THANK YOU ({self.partner.name})",
+            "Product line with description should display the first line of description",
+        )
+        self.assertEqual(
+            sol2.display_name,
+            f"{self.sale_order.name} - {sol2.product_id.name} ({self.partner.name})",
+            "Product line without description should display the product name",
+        )
+        self.assertEqual(
+            sol3.display_name,
+            f"{self.sale_order.name} - {sol3.name} ({self.partner.name})",
+            "Down payment line should display the down payment name",
+        )
+        self.assertEqual(
+            sol4.display_name,
+            f"{self.sale_order.name} - Foo ({self.partner.name})",
+            "Multi-line note should display the first line only",
+        )
+
     def test_state_changes(self):
         """Test some untested state changes methods & logic."""
         self.sale_order.action_quotation_sent()

@@ -16,7 +16,7 @@ export class OutdatedPageWatcherService {
     setup(env, { bus_service, multi_tab, notification }) {
         this.notification = notification;
         this.multi_tab = multi_tab;
-        this.lastNotificationId = null;
+        this.lastNotificationId = multi_tab.getSharedValue("last_notification_id");
         /** @deprecated */
         this.lastDisconnectDt = null;
         this.closeNotificationFn;
@@ -29,7 +29,7 @@ export class OutdatedPageWatcherService {
             { once: true }
         );
         bus_service.addEventListener("disconnect", () => {
-            this.lastNotificationId = bus_service.lastNotificationId;
+            this.lastNotificationId = multi_tab.getSharedValue("last_notification_id");
             this.lastDisconnectDt = DateTime.now();
         });
         bus_service.addEventListener("connect", async () => {

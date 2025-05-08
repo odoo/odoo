@@ -49,13 +49,11 @@ export class PaymentPage extends Component {
     async startPayment() {
         this.selfOrder.paymentError = false;
         try {
-            const result = await rpc(`/kiosk/payment/${this.selfOrder.config.id}/kiosk`, {
+            await rpc(`/kiosk/payment/${this.selfOrder.config.id}/kiosk`, {
                 order: this.selfOrder.currentOrder.serialize({ orm: true }),
                 access_token: this.selfOrder.access_token,
                 payment_method_id: this.state.paymentMethodId,
             });
-            const order = result.order;
-            this.selfOrder.updateOrderFromServer(order);
         } catch (error) {
             this.selfOrder.handleErrorNotification(error);
             this.selfOrder.paymentError = true;
