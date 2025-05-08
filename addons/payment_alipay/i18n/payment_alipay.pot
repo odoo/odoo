@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2022-06-09 14:05+0000\n"
+"POT-Creation-Date: 2025-05-06 20:37+0000\n"
+"PO-Revision-Date: 2025-05-06 20:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,62 +16,61 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment_alipay
-#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_payment_method
-msgid ""
-"* Cross-border: For the overseas seller \n"
-"* Express Checkout: For the Chinese Seller"
-msgstr ""
-
-#. module: payment_alipay
-#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_payment_method
 msgid "Account"
 msgstr ""
 
 #. module: payment_alipay
-#: model:account.payment.method,name:payment_alipay.payment_method_alipay
-#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__code__alipay
+#: model:payment.provider,name:payment_alipay.payment_provider_alipay
 msgid "Alipay"
 msgstr ""
 
 #. module: payment_alipay
-#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_seller_email
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_seller_email
 msgid "Alipay Seller Email"
 msgstr ""
 
 #. module: payment_alipay
-#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__standard_checkout
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__code
+msgid "Code"
+msgstr ""
+
+#. module: payment_alipay
+#: model:payment.provider,display_as:payment_alipay.payment_provider_alipay
+msgid "Credit Card (powered by Alipay)"
+msgstr ""
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__standard_checkout
 msgid "Cross-border"
 msgstr ""
 
 #. module: payment_alipay
-#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese merchants)"
 msgstr ""
 
 #. module: payment_alipay
-#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_md5_signature_key
 msgid "MD5 Signature Key"
 msgstr ""
 
 #. module: payment_alipay
-#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_merchant_partner_id
 msgid "Merchant Partner ID"
 msgstr ""
 
 #. module: payment_alipay
+#. odoo-python
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_alipay
-#: model:ir.model,name:payment_alipay.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr ""
-
-#. module: payment_alipay
-#: model:ir.model,name:payment_alipay.model_account_payment_method
-msgid "Payment Methods"
+#: model:ir.model,name:payment_alipay.model_payment_provider
+msgid "Payment Provider"
 msgstr ""
 
 #. module: payment_alipay
@@ -80,32 +79,57 @@ msgid "Payment Transaction"
 msgstr ""
 
 #. module: payment_alipay
-#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__provider
-msgid "Provider"
-msgstr ""
-
-#. module: payment_alipay
+#. odoo-python
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(r)s or txn_id %(t)s."
 msgstr ""
 
 #. module: payment_alipay
-#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__provider
-msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
-
-#. module: payment_alipay
-#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_seller_email
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_seller_email
 msgid "The public Alipay partner email"
 msgstr ""
 
 #. module: payment_alipay
-#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_merchant_partner_id
 msgid "The public partner ID solely used to identify the account with Alipay"
 msgstr ""
 
 #. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_alipay
+#: model_terms:ir.ui.view,arch_db:payment_alipay.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Asiapay</strong>."
+msgstr ""
+
+#. module: payment_alipay
+#: model_terms:payment.provider,auth_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been authorized."
+msgstr ""
+
+#. module: payment_alipay
+#: model_terms:payment.provider,cancel_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been cancelled."
+msgstr ""
+
+#. module: payment_alipay
+#: model_terms:payment.provider,pending_msg:payment_alipay.payment_provider_alipay
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr ""
+
+#. module: payment_alipay
+#: model_terms:payment.provider,done_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been successfully processed. Thank you!"
+msgstr ""
+
+#. module: payment_alipay
+#. odoo-python
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "received invalid transaction status: %s"
