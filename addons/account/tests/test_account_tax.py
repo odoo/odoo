@@ -242,3 +242,71 @@ class TestAccountTax(AccountTestInvoicingCommon):
         })
         tax_reconciliation.invalidate_model(fnames=['is_used'])
         self.assertTrue(tax_reconciliation.is_used)
+
+    def test_tax_no_duplicate_in_repartition_line(self):
+        """ Test that whenever a tax generate a second tax line
+            the same tax is not applied to the tax line.
+        """
+
+        account_1 = self.company_data['default_account_tax_sale'].copy()
+        account_2 = self.company_data['default_account_tax_sale'].copy()
+        tax = self.env['account.tax'].create({
+            'name': "tax",
+            'amount': 15.0,
+            'include_base_amount': True,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': account_1.id,
+                }),
+                Command.create({
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': account_2.id,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': account_1.id,
+                }),
+                Command.create({
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': account_2.id,
+                }),
+            ],
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'invoice_line',
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax.ids)],
+                }),
+            ],
+        })
+
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 100.0,
+            'amount_tax': 0.0,
+            'amount_total': 100.0,
+        }])
+        self.assertRecordValues(invoice.line_ids, [
+            {'display_type': 'product',         'tax_ids': tax.ids,     'balance': -100.0,  'account_id': self.company_data['default_account_revenue'].id},
+            {'display_type': 'tax',             'tax_ids': [],          'balance': -15.0,   'account_id': account_1.id},
+            {'display_type': 'tax',             'tax_ids': [],          'balance': 15.0,    'account_id': account_2.id},
+            {'display_type': 'payment_term',    'tax_ids': [],          'balance': 100.0,   'account_id': self.company_data['default_account_receivable'].id},
+        ])
