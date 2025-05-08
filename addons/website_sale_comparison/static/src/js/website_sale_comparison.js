@@ -307,9 +307,13 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
         const productId = parseInt(
             form.querySelector('input[type="hidden"][name="product_id"]').value
         );
+        const showQuantity = Boolean(form.dataset.showQuantity);
+
         this.call('cart', 'add', {
             productTemplateId: productTemplateId,
             productId: productId,
+        }, {
+            showQuantity: showQuantity,
         });
     },
 });

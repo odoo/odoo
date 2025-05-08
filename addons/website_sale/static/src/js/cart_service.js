@@ -103,7 +103,8 @@ export class CartService {
      *      redirect the customer to the cart. Defaults to true.
      * @param {Boolean} [options.isConfigured=false] - Whether the product is already configured.
      *      Defaults to false.
-     *
+     * @param {Boolean} [options.showQuantity=true] - Whether quantity selector should be shown
+     *      Defaults to true.
      * @returns {Number} - The product's quantity added to the cart.
      */
     async add({
@@ -120,6 +121,7 @@ export class CartService {
             isBuyNow=false,
             redirectToCart=true,
             isConfigured=false,
+            showQuantity=true,
         } = {},
     ) {
         if (!productId && ptavs.length) {
@@ -170,7 +172,7 @@ export class CartService {
                 remainingData,
                 {
                     isBuyNow: isBuyNow,
-                    showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
+                    showQuantity: showQuantity,
                 },
                 rest
             );
@@ -205,7 +207,7 @@ export class CartService {
                 {
                     isBuyNow: isBuyNow,
                     isMainProductConfigurable: !isConfigured,
-                    showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
+                    showQuantity: showQuantity,
                 },
                 rest
             );
