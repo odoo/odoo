@@ -319,3 +319,9 @@ li.oe-nested {
 .h6-fs {
     font-size: 1rem;
 }
+
+// This class should be applied on div elements that contain a QR code to avoid breaking the QR image on multiple pages
+.o_qr_wrapper {
+    display: table;
+    page-break-inside: avoid;
+}
