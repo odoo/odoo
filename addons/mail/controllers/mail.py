@@ -1,19 +1,24 @@
 import io
 import logging
-import time
-
 from math import floor
-from PIL import Image, ImageFont, ImageDraw
-from werkzeug.urls import url_encode
-from werkzeug.exceptions import NotFound
 from urllib.parse import parse_qsl, urlencode, urlparse
+
+from PIL import Image, ImageDraw, ImageFont
+from werkzeug.exceptions import NotFound
+from werkzeug.urls import url_encode
 
 from odoo import _, http
 from odoo.exceptions import AccessError
-from odoo.http import request, Response
+from odoo.http import STATIC_CACHE, Response, request
 from odoo.tools import consteq
-from odoo.addons.mail.tools.discuss import add_guest_to_context
 from odoo.tools.misc import file_open
+
+from odoo.addons.mail.tools.discuss import add_guest_to_context
+
+try:
+    from werkzeug.utils import send_file
+except ImportError:
+    from .tools._vendor.send_file import send_file
 
 _logger = logging.getLogger(__name__)
 
@@ -369,14 +374,16 @@ class MailController(http.Controller):
         # output image
         output = io.BytesIO()
         outimage.save(output, format="PNG")
-        response = Response()
-        response.mimetype = 'image/png'
-        response.data = output.getvalue()
-        response.headers['Cache-Control'] = 'public, max-age=604800'
+        output.seek(0)
+        response = send_file(
+            output,
+            request.httprequest.environ,
+            mimetype='image/png',
+            conditional=False,
+            etag=False,
+            max_age=STATIC_CACHE,
+            response_class=Response,
+        )
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'GET, POST'
-        response.headers['Connection'] = 'close'
-        response.headers['Date'] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime())
-        response.headers['Expires'] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime(time.time() + 604800 * 60))
-
         return response
