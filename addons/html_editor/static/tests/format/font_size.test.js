@@ -26,9 +26,10 @@ test("should change the font size the qweb tag", async () => {
     });
 });
 
+test.tags("desktop");
 test("should change the font size of a whole heading after a triple click", async () => {
     await testEditor({
-        contentBefore: "<h1>[ab</h1><p>]cd</p>",
+        contentBefore: "<h1>ab</h1><p>cd</p>",
         stepFunction: async (editor) => {
             await tripleClick(editor.editable.querySelector("h1"));
             setFontSize("36px")(editor);

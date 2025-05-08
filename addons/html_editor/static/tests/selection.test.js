@@ -45,6 +45,7 @@ test("plugins should be notified when ranges are removed", async () => {
     expect(getContent(el)).toBe("<p>ab</p>");
 });
 
+test.tags("desktop");
 test("triple click outside of the Editor", async () => {
     const { el } = await setupEditor("<p>[]abc</p><p>d</p>", {});
     const anchorNode = el.parentElement;
@@ -58,10 +59,18 @@ test("triple click outside of the Editor", async () => {
     expect(getContent(el)).toBe("<p>[abc]</p><p>d</p>");
 });
 
+test.tags("desktop");
 test("correct selection after triple click with bold", async () => {
     const { el } = await setupEditor("<p>[]abc<strong>d</strong></p><p>efg</p>", {});
     await tripleClick(queryFirst("p").firstChild);
     expect(getContent(el)).toBe("<p>[abc<strong>d]</strong></p><p>efg</p>");
+});
+
+test.tags("desktop");
+test("selection on triple click should be contained in the paragraph", async () => {
+    const { el } = await setupEditor("<div><p>[]abc</p><br><br><h2>def</h2></div>");
+    await tripleClick(el.querySelector("p"));
+    expect(getContent(el)).toBe("<div><p>[abc]</p><br><br><h2>def</h2></div>");
 });
 
 test("fix selection P in the beggining being a direct child of the editable p after selection", async () => {
