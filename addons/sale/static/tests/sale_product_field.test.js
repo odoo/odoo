@@ -1,78 +1,49 @@
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
-import { expect, test } from "@odoo/hoot";
-import { press, runAllTimers } from "@odoo/hoot-dom";
+import { saleModels } from "./sale_test_helpers";
+import { startServer } from "@mail/../tests/mail_test_helpers";
+import { expect, getFixture, test } from "@odoo/hoot";
+import { animationFrame, click, edit, press, runAllTimers } from "@odoo/hoot-dom";
 import {
+    clickSave,
     contains,
+    Command,
     defineModels,
     fields,
     models,
     mountView,
     onRpc,
+    serverState,
 } from "@web/../tests/web_test_helpers";
 
-class SaleOrder extends models.Model {
-    _name = "sale.order";
 
-    name = fields.Char();
-    order_line = fields.One2many({
-        relation: "sale.order.line",
-        relation_field: "order_id",
-    });
+const WithTranslatedNameForm = `
+    <form>
+        <field name="order_line" widget="sol_o2m" mode="list">
+            <list editable="bottom">
+                <field name="product_id" widget="sol_product_many2one"/>
+                <field name="product_template_id" widget="sol_product_many2one"/>
+                <field name="name" widget="sol_text"/>
+                <field name="translated_product_name" column_invisible="1"/>
+            </list>
+        </field>
+    </form>
+`;
+const WithoutTranslatedNameForm = `
+    <form>
+        <field name="order_line" widget="sol_o2m" mode="list">
+            <list editable="bottom">
+                <field name="product_id" widget="sol_product_many2one"/>
+                <field name="product_template_id" widget="sol_product_many2one"/>
+                <field name="name" widget="sol_text"/>
+            </list>
+        </field>
+    </form>
+`;
 
-    _records = [
-        {
-            id: 1,
-            name: "first record",
-            order_line: [],
-        },
-    ];
-}
-
-class SaleOrderLine extends models.Model {
-    _name = "sale.order.line";
-
-    order_id = fields.Many2one({
-        string: "Order Reference",
-        relation: "sale.order",
-        relation_field: "order_line",
-    });
-    product_template_id = fields.Many2one({
-        string: "Product",
-        relation: "product.template",
-    });
-    product_id = fields.Many2one({
-        string: "Product",
-        relation: "product.product",
-    });
-    name = fields.Char();
-    product_type = fields.Selection({
-        selection: [],
-    });
-    service_tracking = fields.Selection({
-        selection: [],
-    });
-    is_configurable_product = fields.Boolean({
-        string: "Is product configurable",
-    });
+class SaleOrderLine extends saleModels.SaleOrderLine {
     product_template_attribute_value_ids = fields.Many2many({
         string: "Product template attributes values",
         relation: "product.template.attribute.value",
     });
-    // added to the field dependencies by sale_product_matrix module
-    product_add_mode = fields.Selection({
-        selection: [],
-    });
-}
-
-class ProductTemplate extends models.Model {
-    _name = "product.template";
-
-    name = fields.Char();
-    get_single_product_variant() {
-        return { product_id: 14, product_name: "desk" };
-    }
-
-    _records = [{ id: 12, name: "desk" }];
 }
 
 class ProductTemplateAttributeValue extends models.Model {
@@ -81,16 +52,7 @@ class ProductTemplateAttributeValue extends models.Model {
     name = fields.Char();
 }
 
-class Product extends models.Model {
-    _name = "product.product";
-
-    name = fields.Char();
-
-    _records = [{ id: 14, name: "desk" }];
-}
-
-defineModels([SaleOrder, SaleOrderLine, ProductTemplate, ProductTemplateAttributeValue, Product]);
-defineMailModels();
+defineModels({...saleModels, SaleOrderLine, ProductTemplateAttributeValue});
 
 test.tags("desktop");
 test("pressing tab with incomplete text will create a product", async () => {
@@ -127,4 +89,154 @@ test("pressing tab with incomplete text will create a product", async () => {
         "name_create",
         "get_single_product_variant",
     ]);
+});
+
+test("On outdated form, product name should stay hidden", async () => {
+    const product = saleModels.ProductProduct._records[0];
+    const pyEnv = await startServer();
+    const soId = pyEnv["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [Command.create({
+            product_id: product.id,
+            name: product.name.concat("\nA description"),
+            translated_product_name: "Produit de test",
+        })],
+    });
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+        arch: WithTranslatedNameForm,
+    });
+
+    expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
+});
+
+test("On outdated form, translated product name should be hidden if present", async () => {
+    const product = saleModels.ProductProduct._records[0];
+    const pyEnv = await startServer();
+    const translatedProductName = "Produit de test";
+    const soId = pyEnv["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [Command.create({
+            product_id: product.id,
+            name: translatedProductName.concat("\nA description"),
+            translated_product_name: translatedProductName,
+        })],
+    });
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+        arch: WithTranslatedNameForm,
+    });
+
+    expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
+});
+
+test("On updated form, should continue to hide product name", async () => {
+    const product = saleModels.ProductProduct._records[0];
+    const pyEnv = await startServer();
+    const soId = pyEnv["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [Command.create({
+            product_id: product.id,
+            name: product.name.concat("\nA description"),
+            translated_product_name: "Produit de test",
+        })],
+    });
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+        arch: WithoutTranslatedNameForm,
+    });
+
+    expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
+});
+
+test("On updated form and translated product name already in the SOL name, should not hide the translated product name", async () => {
+    const product = saleModels.ProductProduct._records[0];
+    const pyEnv = await startServer();
+    const translatedProductName = "Produit de test";
+    const soId = pyEnv["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [Command.create({
+            product_id: product.id,
+            name: product.name.concat("\n", translatedProductName, "\nA description"),
+            translated_product_name: translatedProductName,
+        })],
+    });
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+        arch: WithoutTranslatedNameForm,
+    });
+
+    expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue(
+        translatedProductName.concat("\nA description"),
+    );
+});
+
+test("On updated form, editing the description should work as before", async () => {
+    const product = saleModels.ProductProduct._records[0];
+    const pyEnv = await startServer();
+    const translatedProductName = "Produit de test";
+    const soId = pyEnv["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [Command.create({
+            product_id: product.id,
+            name: product.name.concat("\nsomething wrong"),
+            translated_product_name: translatedProductName,
+        })],
+    });
+    const [so] = pyEnv["sale.order"].browse(soId);
+    const [sol] = pyEnv["sale.order.line"].browse(so.order_line);
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+        arch: WithoutTranslatedNameForm,
+    });
+
+    await contains(".o_field_product_label_section_and_note_cell textarea").focus();
+    await edit("A description");
+    await click(getFixture());
+    await animationFrame()
+    await clickSave();
+
+    expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
+    expect(sol.name).toBe(product.name.concat("\nA description"));
+});
+
+test("On outdated form, editing the description shouldn't show the translated product name", async () => {
+    const product = saleModels.ProductProduct._records[0];
+    const pyEnv = await startServer();
+    const translatedProductName = "Produit de test";
+    const soId = pyEnv["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [Command.create({
+            product_id: product.id,
+            name: product.name.concat("\nsomething wrong"),
+            translated_product_name: translatedProductName,
+        })],
+    });
+    const [so] = pyEnv["sale.order"].browse(soId);
+    const [sol] = pyEnv["sale.order.line"].browse(so.order_line);
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+        arch: WithTranslatedNameForm,
+    });
+
+    await contains(".o_field_product_label_section_and_note_cell textarea").focus();
+    await edit("A description");
+    await click(getFixture());
+    await animationFrame()
+    await clickSave();
+
+    expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
+    expect(sol.name).toBe(translatedProductName.concat("\nA description"));
 });
