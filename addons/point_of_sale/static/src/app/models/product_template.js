@@ -202,7 +202,7 @@ export class ProductTemplate extends Base {
                     (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
                     (!rule.min_quantity || quantity >= rule.min_quantity) &&
                     (!rule.product_id || rule.product_id.id === product?.id) &&
-                    (!rule.categ_id || product.parentCategories.includes(rule.categ_id.id))
+                    (!rule.categ_id || productTmpl.parentCategories.includes(rule.categ_id.id))
             ) || [];
 
         const rule = rules.length && rules[0];
