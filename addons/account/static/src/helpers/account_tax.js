@@ -492,6 +492,16 @@ export const accountTaxHelpers = {
     },
 
     import_base_line_extra_tax_data(base_line, extra_tax_data) {
+        const currency_dp = base_line.currency_id.decimal_places;
+
+        // compare_amounts does not exist in numbers.js
+        const are_amounts_equal = (a, b) =>
+            floatIsZero(
+                roundPrecision(base_line.price_unit, currency_dp) -
+                    roundPrecision(extra_tax_data.price_unit, currency_dp),
+                currency_dp
+            );
+
         const results = {};
         if (extra_tax_data && extra_tax_data.computation_key) {
             results.computation_key = extra_tax_data.computation_key;
@@ -503,18 +513,9 @@ export const accountTaxHelpers = {
             extra_tax_data &&
             extra_tax_data.manual_tax_amounts &&
             base_line.currency_id.id === extra_tax_data.currency_id &&
-            floatIsZero(
-                base_line.price_unit - extra_tax_data.price_unit,
-                base_line.currency_id.decimal_places
-            ) &&
-            floatIsZero(
-                base_line.discount - extra_tax_data.discount,
-                base_line.currency_id.decimal_places
-            ) &&
-            floatIsZero(
-                base_line.quantity - extra_tax_data.quantity,
-                base_line.currency_id.decimal_places
-            ) &&
+            are_amounts_equal(base_line.price_unit, extra_tax_data.price_unit) &&
+            are_amounts_equal(base_line.discount, extra_tax_data.discount) &&
+            are_amounts_equal(base_line.quantity, extra_tax_data.quantity) &&
             base_line.tax_ids.length === extra_tax_data_tax_ids.size &&
             base_line.tax_ids
                 .map((tax) => tax.id.toString())
@@ -1559,8 +1560,14 @@ export const accountTaxHelpers = {
                 quantity: 1.0,
                 discount: 0.0,
             });
-            const raw_grouping_key = { tax_ids: new_base_line.tax_ids.map((tax) => tax.id) };
-            let grouping_key = {};
+            const raw_grouping_key = {
+                tax_ids: new_base_line.tax_ids.map((tax) => tax.id),
+                computation_key: base_line.computation_key,
+            };
+            let grouping_key = {
+                tax_ids: new_base_line.tax_ids.map((tax) => tax),
+                computation_key: base_line.computation_key,
+            };
             if (grouping_function) {
                 const generated_grouping_key = grouping_function(new_base_line);
 
@@ -1569,20 +1576,39 @@ export const accountTaxHelpers = {
                 // raw_grouping_key (to be jsonified) from the grouping_key (to be added to the values).
                 if ("raw_grouping_key" in generated_grouping_key) {
                     Object.assign(raw_grouping_key, generated_grouping_key.raw_grouping_key);
-                    grouping_key = generated_grouping_key.grouping_key;
+                    Object.assign(grouping_key, generated_grouping_key.grouping_key);
                 } else {
                     Object.assign(raw_grouping_key, generated_grouping_key);
+                    Object.assign(grouping_key, generated_grouping_key);
                 }
             }
 
             const grouping_key_json = JSON.stringify(raw_grouping_key);
-            if (base_line_map[grouping_key_json]) {
-                base_line_map[grouping_key_json].price_unit += new_base_line.price_unit;
+            let target_base_line = base_line_map[grouping_key_json];
+            if (target_base_line) {
+                target_base_line.price_unit += new_base_line.price_unit;
             } else {
                 base_line_map[grouping_key_json] = this.prepare_base_line_for_taxes_computation(
                     new_base_line,
                     grouping_key
                 );
+                target_base_line = base_line_map[grouping_key_json];
+                target_base_line.manual_tax_amounts = {};
+            }
+
+            const manual_tax_amounts = target_base_line.manual_tax_amounts;
+            for (const [tax_id, amounts] of Object.entries(base_line.manual_tax_amounts || {})) {
+                if (!(tax_id in manual_tax_amounts)) {
+                    manual_tax_amounts[tax_id] = { tax_amount_currency: 0.0 };
+                }
+                const aggregated_amounts = manual_tax_amounts[tax_id];
+                aggregated_amounts.tax_amount_currency += amounts.tax_amount_currency;
+                if ("base_amount_currency" in amounts) {
+                    if (!("base_amount_currency" in aggregated_amounts)) {
+                        aggregated_amounts["base_amount_currency"] = 0.0;
+                    }
+                    aggregated_amounts.base_amount_currency += amounts.base_amount_currency;
+                }
             }
         }
 
@@ -1596,12 +1622,7 @@ export const accountTaxHelpers = {
     apply_base_lines_manual_amounts_to_reach(base_lines, target_amount_currency) {
         const currency = base_lines[0].currency_id;
         const currency_pd = currency.rounding;
-        const reduced_amount_currency = this.compute_subset_base_lines_total(base_lines);
-        const delta_reduced_amount_currency = roundPrecision(
-            target_amount_currency - reduced_amount_currency,
-            currency_pd
-        );
-
+        const currency_dp = currency.decimal_places;
         for (const base_line of base_lines) {
             const taxes_data = base_line.tax_details.taxes_data;
             if (!taxes_data.length) {
@@ -1620,6 +1641,11 @@ export const accountTaxHelpers = {
         }
 
         // Smooth distribution of the delta accross the base line, starting at the biggest one.
+        const reduced_amount_currency = this.compute_subset_base_lines_total(base_lines);
+        const delta_reduced_amount_currency = roundPrecision(
+            target_amount_currency - reduced_amount_currency,
+            currency_pd
+        );
         const sorted_base_lines = base_lines
             .slice()
             .sort(
@@ -1640,17 +1666,22 @@ export const accountTaxHelpers = {
                 break;
             }
 
-            const nb_cents = Math.min(
-                Math.max(
-                    Math.ceil(
-                        (Math.abs(base_line.tax_details.total_excluded_currency) *
-                            nb_cents_to_distribute) /
-                            total_excluded_currency
+            let nb_cents;
+            if (floatIsZero(total_excluded_currency, currency_dp)) {
+                nb_cents = nb_cents_to_distribute;
+            } else {
+                nb_cents = Math.min(
+                    Math.max(
+                        Math.ceil(
+                            (Math.abs(base_line.tax_details.total_excluded_currency) *
+                                nb_cents_to_distribute) /
+                                total_excluded_currency
+                        ),
+                        0
                     ),
-                    0
-                ),
-                nb_cents_to_distribute
-            );
+                    nb_cents_to_distribute
+                );
+            }
 
             nb_cents_to_distribute -= nb_cents;
             const delta = sign * nb_cents * currency.rounding;
@@ -1667,7 +1698,7 @@ export const accountTaxHelpers = {
                 if (first_batch.includes(tax)) {
                     base_line.manual_tax_amounts[tax.id.toString()].base_amount_currency += delta;
                 } else {
-                    return;
+                    break;
                 }
             }
         }
@@ -1755,35 +1786,31 @@ export const accountTaxHelpers = {
         }
 
         // Apply percentage to each line.
-        const reduced_base_lines = [];
-        const new_base_lines = this.reduce_base_lines_with_grouping_function(
-            discountable_base_lines,
-            { grouping_function: grouping_function }
-        );
-        for (const base_line of new_base_lines) {
-            const reduced_base_line = this.prepare_base_line_for_taxes_computation(base_line, {
+        const new_base_lines = [];
+        for (const base_line of discountable_base_lines) {
+            const new_base_line = this.prepare_base_line_for_taxes_computation(base_line, {
                 computation_key,
                 price_unit: base_line.price_unit * -percentage,
             });
-            this.add_tax_details_in_base_line(reduced_base_line, company);
+            this.add_tax_details_in_base_line(new_base_line, company);
 
             // Propagate custom values.
             for (const [k, v] of Object.entries(base_line)) {
-                if (!(k in reduced_base_line)) {
-                    reduced_base_line[k] = v;
+                if (!(k in new_base_line)) {
+                    new_base_line[k] = v;
                 }
             }
 
-            reduced_base_lines.push(reduced_base_line);
+            new_base_lines.push(new_base_line);
         }
-        if (reduced_base_lines.length) {
-            this.round_base_lines_tax_details(reduced_base_lines, company);
-            this.apply_base_lines_manual_amounts_to_reach(
-                reduced_base_lines,
-                target_amount_currency
-            );
+
+        if (new_base_lines.length) {
+            this.round_base_lines_tax_details(new_base_lines, company);
+            this.apply_base_lines_manual_amounts_to_reach(new_base_lines, target_amount_currency);
         }
-        return reduced_base_lines;
+        return this.reduce_base_lines_with_grouping_function(new_base_lines, {
+            grouping_function: grouping_function,
+        });
     },
 
     prepare_down_payment_lines(
@@ -1878,34 +1905,30 @@ export const accountTaxHelpers = {
         }
 
         // Apply percentage to each line.
-        const reduced_base_lines = [];
-        const new_base_lines = this.reduce_base_lines_with_grouping_function(
-            discountable_base_lines,
-            { grouping_function: grouping_function }
-        );
-        for (const base_line of new_base_lines) {
-            const reduced_base_line = this.prepare_base_line_for_taxes_computation(base_line, {
+        const new_base_lines = [];
+        for (const base_line of discountable_base_lines) {
+            const new_base_line = this.prepare_base_line_for_taxes_computation(base_line, {
                 computation_key,
                 price_unit: base_line.price_unit * percentage,
             });
-            this.add_tax_details_in_base_line(reduced_base_line, company);
+            this.add_tax_details_in_base_line(new_base_line, company);
 
             // Propagate custom values.
             for (const [k, v] of Object.entries(base_line)) {
-                if (!(k in reduced_base_line)) {
-                    reduced_base_line[k] = v;
+                if (!(k in new_base_line)) {
+                    new_base_line[k] = v;
                 }
             }
 
-            reduced_base_lines.push(reduced_base_line);
+            new_base_lines.push(new_base_line);
         }
-        if (reduced_base_lines.length) {
-            this.round_base_lines_tax_details(reduced_base_lines, company);
-            this.apply_base_lines_manual_amounts_to_reach(
-                reduced_base_lines,
-                target_amount_currency
-            );
+
+        if (new_base_lines.length) {
+            this.round_base_lines_tax_details(new_base_lines, company);
+            this.apply_base_lines_manual_amounts_to_reach(new_base_lines, target_amount_currency);
         }
-        return reduced_base_lines;
+        return this.reduce_base_lines_with_grouping_function(new_base_lines, {
+            grouping_function: grouping_function,
+        });
     },
 };

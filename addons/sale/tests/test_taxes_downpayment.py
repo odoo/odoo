@@ -593,7 +593,74 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             'amount_total': so.amount_total - dp_invoice_2.amount_total,
         }])
 
-    def test_down_payment_100_first_then_0_final_invoice(self):
+    def test_down_payment_100_first_then_0_final_invoice_round_per_line(self):
+        self.env.company.tax_calculation_rounding_method = 'round_per_line'
+        product = self.company_data['product_order_cost']
+        tax_23 = self.percent_tax(23.0)
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'line_1',
+                    'product_id': product.id,
+                    'price_unit': price_unit,
+                    'product_uom_qty': quantity,
+                    'discount': discount,
+                    'tax_ids': [Command.set(tax_23.ids)],
+                })
+                for quantity, price_unit, discount in (
+                    (1.0, 519.03, 2.0),
+                    (2.0, 211.97, 2.0),
+                    (2.0, 75.16, 2.0),
+                    (1.0, 82.84, 2.0),
+                    (4.0, 1.19, 0.0),
+                    (2.0, 13.63, 2.0),
+                    (1.0, 2.86, 2.0),
+                    (1.0, 10.0, 0.0),
+                )
+            ],
+        })
+        so.action_confirm()
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 1196.87,
+            'amount_tax': 275.27,
+            'amount_total': 1472.14,
+        }])
+
+        # Create a down payment invoice of 100%.
+        wizard = (
+            self.env['sale.advance.payment.inv']
+            .with_context(active_model=so._name, active_ids=so.ids)
+            .create({
+                'advance_payment_method': 'percentage',
+                'amount': 100,
+            })
+        )
+        action_values = wizard.create_invoices()
+        dp_invoice = self.env['account.move'].browse(action_values['res_id'])
+        dp_invoice.action_post()
+        self.assertRecordValues(dp_invoice, [{
+            'amount_untaxed': 1196.87,
+            'amount_tax': 275.27,
+            'amount_total': 1472.14,
+        }])
+
+        # Create the final invoice.
+        wizard = (
+            self.env['sale.advance.payment.inv']
+            .with_context(active_model=so._name, active_ids=so.ids)
+            .create({'advance_payment_method': 'delivered'})
+        )
+        action_values = wizard.create_invoices()
+        final_invoice = self.env['account.move'].browse(action_values['res_id'])
+        self.assertRecordValues(final_invoice, [{
+            'amount_untaxed': 0.0,
+            'amount_tax': 0.0,
+            'amount_total': 0.0,
+        }])
+
+    def test_down_payment_100_first_then_0_final_invoice_round_globally(self):
         self.env.company.tax_calculation_rounding_method = 'round_globally'
         product = self.company_data['product_order_cost']
         tax_23 = self.percent_tax(23.0)
