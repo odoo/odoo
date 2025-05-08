@@ -1,16 +1,15 @@
 import { getDeepestPosition, isParagraphRelatedElement } from "@html_editor/utils/dom_info";
 import { Plugin } from "../plugin";
 import { isNotAllowedContent } from "./selection_plugin";
-import { nodeSize } from "@html_editor/utils/position";
+import { endPos, startPos } from "@html_editor/utils/position";
+import { childNodes } from "@html_editor/utils/dom_traversal";
 
 export class NoInlineRootPlugin extends Plugin {
     static id = "noInlineRoot";
     static dependencies = ["baseContainer", "selection", "history"];
 
     resources = {
-        ...(!this.config.allowInlineAtRoot && {
-            fix_selection_on_editable_root_handlers: this.fixSelectionOnEditableRoot.bind(this),
-        }),
+        fix_selection_on_editable_root_overrides: this.fixSelectionOnEditableRoot.bind(this),
     };
 
     setup() {
@@ -22,7 +21,6 @@ export class NoInlineRootPlugin extends Plugin {
         });
         this.addDomListener(this.editable, "pointerup", () => {
             this.isPointerDown = false;
-            this.preventNextPointerdownFix = false;
         });
     }
 
@@ -31,22 +29,24 @@ export class NoInlineRootPlugin extends Plugin {
      * Inserts an empty paragraph if selection results from mouse click and
      * there's no other way to insert text before/after a block.
      *
-     * @param {Selection} selection - Collapsed selection at the editable root.
+     * @param {import("./selection_plugin").EditorSelection} selection
+     * @returns {boolean} Whether the selection was fixed
      */
     fixSelectionOnEditableRoot(selection) {
-        if (
-            !selection.isCollapsed ||
-            selection.anchorNode !== this.editable ||
-            this.config.allowInlineAtRoot
-        ) {
+        if (!selection.isCollapsed || selection.anchorNode !== this.editable) {
             return false;
         }
 
-        const nodeAfterCursor = this.editable.childNodes[selection.anchorOffset];
-        const nodeBeforeCursor = nodeAfterCursor && nodeAfterCursor.previousElementSibling;
+        const children = childNodes(this.editable);
+        const nodeAfterCursor = children[selection.anchorOffset];
+        const nodeBeforeCursor = children[selection.anchorOffset - 1];
+        const key = this.currentKeyDown;
+        delete this.currentKeyDown;
 
+        if (key?.startsWith("Arrow")) {
+            return this.fixSelectionOnEditableRootArrowKeys(nodeAfterCursor, nodeBeforeCursor, key);
+        }
         return (
-            this.fixSelectionOnEditableRootArrowKeys(nodeAfterCursor, nodeBeforeCursor) ||
             this.fixSelectionOnEditableRootGeneric(nodeAfterCursor, nodeBeforeCursor) ||
             this.fixSelectionOnEditableRootCreateP(nodeAfterCursor, nodeBeforeCursor)
         );
@@ -54,60 +54,43 @@ export class NoInlineRootPlugin extends Plugin {
     /**
      * @param {Node} nodeAfterCursor
      * @param {Node} nodeBeforeCursor
-     * @returns {boolean}
+     * @param {string} key
+     * @returns {boolean} Whether the selection was fixed
      */
-    fixSelectionOnEditableRootArrowKeys(nodeAfterCursor, nodeBeforeCursor) {
-        const currentKeyDown = this.currentKeyDown;
-        delete this.currentKeyDown;
-        if (currentKeyDown === "ArrowRight" || currentKeyDown === "ArrowDown") {
-            while (nodeAfterCursor && isNotAllowedContent(nodeAfterCursor)) {
-                nodeAfterCursor = nodeAfterCursor.nextElementSibling;
-            }
-            const [anchorNode] = getDeepestPosition(nodeAfterCursor, 0);
-            if (nodeAfterCursor) {
-                this.dependencies.selection.setSelection({
-                    anchorNode: anchorNode,
-                    anchorOffset: 0,
-                });
-                return true;
-            } else {
-                this.dependencies.selection.resetActiveSelection();
-            }
-        } else if (currentKeyDown === "ArrowLeft" || currentKeyDown === "ArrowUp") {
-            while (nodeBeforeCursor && isNotAllowedContent(nodeBeforeCursor)) {
-                nodeBeforeCursor = nodeBeforeCursor.previousElementSibling;
-            }
-            if (nodeBeforeCursor) {
-                const [anchorNode, anchorOffset] = getDeepestPosition(
-                    nodeBeforeCursor,
-                    nodeSize(nodeBeforeCursor)
-                );
-                this.dependencies.selection.setSelection({
-                    anchorNode: anchorNode,
-                    anchorOffset: anchorOffset,
-                });
-                return true;
-            } else {
-                this.dependencies.selection.resetActiveSelection();
-            }
+    fixSelectionOnEditableRootArrowKeys(nodeAfterCursor, nodeBeforeCursor, key) {
+        if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(key)) {
+            return false;
         }
+        const directionForward = ["ArrowRight", "ArrowDown"].includes(key);
+        let node = directionForward ? nodeAfterCursor : nodeBeforeCursor;
+        while (node && isNotAllowedContent(node)) {
+            node = directionForward ? node.nextElementSibling : node.previousElementSibling;
+        }
+        if (!node) {
+            return false;
+        }
+        let [anchorNode, anchorOffset] = directionForward ? startPos(node) : endPos(node);
+        [anchorNode, anchorOffset] = getDeepestPosition(anchorNode, anchorOffset);
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        return true;
     }
     /**
      * @param {Node} nodeAfterCursor
      * @param {Node} nodeBeforeCursor
-     * @returns {boolean}
+     * @returns {boolean} Whether the selection was fixed
      */
     fixSelectionOnEditableRootGeneric(nodeAfterCursor, nodeBeforeCursor) {
-        // Handle arrow key presses.
-        if (nodeAfterCursor && isParagraphRelatedElement(nodeAfterCursor)) {
+        if (isParagraphRelatedElement(nodeAfterCursor)) {
             // Cursor is right before a 'P'.
             this.dependencies.selection.setCursorStart(nodeAfterCursor);
             return true;
-        } else if (nodeBeforeCursor && isParagraphRelatedElement(nodeBeforeCursor)) {
+        }
+        if (isParagraphRelatedElement(nodeBeforeCursor)) {
             // Cursor is right after a 'P'.
             this.dependencies.selection.setCursorEnd(nodeBeforeCursor);
             return true;
         }
+        return false;
     }
     /**
      * Handle cursor not next to a 'P'.
@@ -120,31 +103,27 @@ export class NoInlineRootPlugin extends Plugin {
      *
      * @param {Node} nodeAfterCursor
      * @param {Node} nodeBeforeCursor
-     * @returns {boolean}
+     * @returns {boolean} Whether the selection was fixed
      */
     fixSelectionOnEditableRootCreateP(nodeAfterCursor, nodeBeforeCursor) {
-        if (this.isPointerDown && !this.preventNextPointerdownFix) {
-            // The setSelection at the end of this fix could trigger another
-            // setSelection (that would re-trigger this fix). So this flag is
-            // used to prevent to fix twice from the same mouse event.
-            this.preventNextPointerdownFix = true;
-
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.append(this.document.createElement("br"));
-            if (!nodeAfterCursor) {
-                // Cursor is at the end of the editable.
-                this.editable.append(baseContainer);
-            } else if (!nodeBeforeCursor) {
-                // Cursor is at the beginning of the editable.
-                this.editable.prepend(baseContainer);
-            } else {
-                // Cursor is between two non-p blocks
-                nodeAfterCursor.before(baseContainer);
-            }
-            this.dependencies.selection.setCursorStart(baseContainer);
-            this.dependencies.history.addStep();
-            return true;
+        if (!this.isPointerDown) {
+            return false;
         }
-        return false;
+
+        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+        baseContainer.append(this.document.createElement("br"));
+        if (!nodeAfterCursor) {
+            // Cursor is at the end of the editable.
+            this.editable.append(baseContainer);
+        } else if (!nodeBeforeCursor) {
+            // Cursor is at the beginning of the editable.
+            this.editable.prepend(baseContainer);
+        } else {
+            // Cursor is between two non-p blocks
+            nodeAfterCursor.before(baseContainer);
+        }
+        this.dependencies.selection.setCursorStart(baseContainer);
+        this.dependencies.history.addStep();
+        return true;
     }
 }
