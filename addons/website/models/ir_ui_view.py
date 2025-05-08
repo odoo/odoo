@@ -381,6 +381,10 @@ class IrUiView(models.Model):
                     """
 
     @api.model
+    def _get_cached_template_prefetched_keys(self):
+        return super()._get_cached_template_prefetched_keys() + ['active', 'visibility']
+
+    @api.model
     def _get_template_minimal_cache_keys(self):
         return super()._get_template_minimal_cache_keys() + ['website_id']
 
@@ -411,7 +415,10 @@ class IrUiView(models.Model):
         return f"website_id asc, {super()._get_template_order()}"
 
     def _get_cached_visibility(self):
-        return self.visibility
+        info = self._get_cached_template_info(self.id, _view=self)
+        if info['error']:
+            raise info['error']
+        return info['visibility']
 
     def _handle_visibility(self, do_raise=True):
         """ Check the visibility set on the main view and raise 403 if you should not have access.
