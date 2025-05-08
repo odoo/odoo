@@ -53,7 +53,11 @@ export function useAutoresize(ref, options = {}) {
     });
 }
 
-function resizeInput(input) {
+/**
+ * @param {HTMLInputElement} input
+ * @param {{ offset?: number }} [options]
+ */
+function resizeInput(input, options) {
     // This mesures the maximum width of the input which can get from the flex layout.
     input.style.width = "100%";
     const maxWidth = input.clientWidth;
@@ -69,9 +73,13 @@ function resizeInput(input) {
         input.style.width = "100%";
         return;
     }
-    input.style.width = input.scrollWidth + 5 + (isSafari16 ? 8 : 0) + "px";
+    input.style.width = input.scrollWidth + 5 + (isSafari16 ? 8 : 0) + (options.offset || 0) + "px";
 }
 
+/**
+ * @param {HTMLTextAreaElement} input
+ * @param {{ minimumHeight?: number }} [options]
+ */
 export function resizeTextArea(textarea, options = {}) {
     const minimumHeight = options.minimumHeight || 0;
     let heightOffset = 0;
