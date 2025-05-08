@@ -178,12 +178,9 @@ class RepairOrder(models.Model):
 
     # Return Binding
     picking_id = fields.Many2one(
-        'stock.picking', 'Return', check_company=True, index='btree_not_null',
+        'stock.picking', 'Transfer', check_company=True, index='btree_not_null',
         domain="[('return_id', '!=', False), ('product_id', '=?', product_id)]",
-        copy=False, help="Return Order from which the product to be repaired comes from.")
-    is_returned = fields.Boolean(
-        "Returned", compute='_compute_is_returned',
-        help="True if this repair is linked to a Return Order and the order is 'Done'. False otherwise.")
+        copy=False, help="Transfer from which the product to be repaired is picked")
     picking_product_ids = fields.One2many('product.product', compute='_compute_picking_product_ids')
     picking_product_id = fields.Many2one(related="picking_id.product_id")
     allowed_lot_ids = fields.One2many('stock.lot', compute='_compute_allowed_lot_ids')
@@ -319,12 +316,6 @@ class RepairOrder(models.Model):
                 repair.is_parts_available = True
             elif repair.parts_availability_state == 'late':
                 repair.is_parts_late = True
-
-    @api.depends('picking_id', 'picking_id.state')
-    def _compute_is_returned(self):
-        self.is_returned = False
-        returned = self.filtered(lambda r: r.picking_id and r.picking_id.state == 'done')
-        returned.is_returned = True
 
     @api.depends('move_ids.quantity', 'move_ids.product_uom_qty', 'move_ids.product_uom.rounding')
     def _compute_has_uncomplete_moves(self):
