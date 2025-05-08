@@ -1,6 +1,6 @@
 .custom-sidebar {
     width: 300px;
-    height: 100vh;
+    height: 1430px;
     background-color: #ffffff;
     padding: 16px;
     gap: 16px;
@@ -8,10 +8,8 @@
     overflow-y: hidden;
     position: sticky;
     left: 79%;
-    margin-top: 5%;
     font-family: Arial, sans-serif;
     border-radius: 8px;
-    z-index: 9999;
 }
 .profile-section {
     text-align: center;
@@ -75,8 +73,10 @@
     margin-bottom: 20px;
 }
 .announcements-section h3 {
-    font-size: 16px;
+    font-size: 24px;
+    font-weight: 800;
     margin-bottom: 10px;
+
 }
 .announcements-panel {
     max-height: 100px;
@@ -87,7 +87,7 @@
     border-radius: 6px;
 }
 .calendar-section h3 {
-    font-size: 16px;
+    font-size: 18px;
     margin-bottom: 10px;
 }
 .calendar-placeholder {
@@ -101,13 +101,27 @@
 }
 .social-buttons {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+flex-direction: row;
+align-items: flex-start;
+gap: 8px;
+align-self: stretch;
+margin-top: 20px;
 }
+
+.social-buttons h4 {
+    color: #5B5959;
+font-family: "Noto Sans";
+font-size: 16px;
+font-style: normal;
+font-weight:  800;
+line-height:  24px; 
+letter-spacing:  0.2px;
+}
+
 .social-buttons button {
     flex: 1;
     margin: 0 5px;
-    padding: 8px;
+    padding: 10px 8px;
     border: none;
     border-radius: 4px;
     color: white;
