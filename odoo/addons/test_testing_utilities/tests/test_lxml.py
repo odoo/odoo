@@ -2,11 +2,12 @@ import base64
 
 from lxml.etree import XMLSchemaError
 
-from odoo.tests import common
+from odoo.tests.common import TransactionCase
 from odoo.tools.xml_utils import _check_with_xsd
 
 
-class TestLXML(common.TransactionCase):
+class TestLXML(TransactionCase):
+
     def test_lxml_import_from_filestore(self):
         resolver_schema_int = b"""
             <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:etype="http://codespeak.net/lxml/test/external">

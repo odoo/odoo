@@ -3,6 +3,7 @@ from odoo.tests.common import TransactionCase
 
 
 class TestEnv(TransactionCase):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

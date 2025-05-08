@@ -4,6 +4,7 @@ from odoo.tests.common import TransactionCase
 
 
 class TestResConfig(TransactionCase):
+
     def test_config_parameter_with_default_value(self):
         self.env['res.config.test'].create({}).execute()
 

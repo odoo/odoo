@@ -6,6 +6,7 @@ from odoo.tests.common import TransactionCase, freeze_time, tagged
 @freeze_time('2021-01-01')
 @tagged('post_install', '-at_install')
 class TestFreezeTimeClassDecorator(TransactionCase):
+
     # Both methods should be frozen.
     def test_http_freeze_time_class_decorator_01(self):
         self.assertEqual(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '2021-01-01 00:00:00')
@@ -16,6 +17,7 @@ class TestFreezeTimeClassDecorator(TransactionCase):
 
 @tagged('post_install', '-at_install')
 class TestFreezeTimeMethodDecorator(TransactionCase):
+
     @freeze_time('2022-02-02')
     def test_freeze_time_method_decorator_with_date_string(self):
         self.assertEqual(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '2022-02-02 00:00:00')
@@ -35,6 +37,7 @@ class TestFreezeTimeMethodDecorator(TransactionCase):
 
 @tagged('post_install', '-at_install')
 class TestFreezeTimeContextManager(TransactionCase):
+
     def test_freeze_time_context_manager(self):
         self.assertNotEqual(
             datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
