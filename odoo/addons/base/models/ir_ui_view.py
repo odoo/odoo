@@ -325,7 +325,20 @@ actual arch.
         for view in self:
             if not view.inherit_id or not view.arch:
                 continue
-            source = view.with_context(ir_ui_view_tree_cut_off_view=view)._get_combined_arch()
+            try:
+                # When an arch above the current one is invalid, we don't want to raise
+                # instead, we want to continue using the form view.
+                # This can happen when an invalid xpath has been forcibly written without checking
+                # Via SQL or during the upgrade process
+                source = view.with_context(ir_ui_view_tree_cut_off_view=view)._get_combined_arch()
+            except (ValidationError, ValueError):  # Xpath syntax Invalid , Xpath element unfound
+                # Flagging The field as not empty and with custom information.
+                # We don't do anything with the object, but the information
+                # may give some clues for debugging.
+                # Also, for display purposes in Form view, the field needs not be falsy.
+                view.invalid_locators = [{"broken_hierarchy": True}]
+                continue
+
             invalid_locators = []
             specs = collections.deque([etree.fromstring(view.arch)])
             while specs:
