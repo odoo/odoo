@@ -95,6 +95,7 @@ This module contains all the common features of Sales Management and eCommerce.
         ],
         'web.assets_unit_tests': [
             'sale/static/tests/mock_server/**/*',
+            'sale/static/tests/sale_test_helpers.js',
             'sale/static/tests/**/*.test.js',
         ],
         'web.report_assets_common': [
