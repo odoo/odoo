@@ -44,18 +44,19 @@ class ResPartner(models.Model):
 
     @api.depends('vat', 'invoice_edi_format')
     def _compute_nilvera_customer_status_and_alias_id(self):
-        if not modules.module.current_test:
-            for partner in self:
-                if partner.vat and partner.invoice_edi_format == 'ubl_tr':
-                    try:
-                        partner.check_nilvera_customer()
-                    except UserError:
-                        # In case of an internet connection issue, exit silently.
-                        continue
-                else:
-                    # Reset the alias if no VAT or UBL format changed.
-                    partner.l10n_tr_nilvera_customer_status = 'not_checked'
-                    partner.l10n_tr_nilvera_customer_alias_id = False
+        if modules.module.current_test:
+            return
+        for partner in self:
+            if partner.vat and partner.invoice_edi_format == 'ubl_tr':
+                try:
+                    partner.check_nilvera_customer()
+                except UserError:
+                    # In case of an internet connection issue, exit silently.
+                    continue
+            else:
+                # Reset the alias if no VAT or UBL format changed.
+                partner.l10n_tr_nilvera_customer_status = 'not_checked'
+                partner.l10n_tr_nilvera_customer_alias_id = False
 
     def check_nilvera_customer(self):
         self.ensure_one()
