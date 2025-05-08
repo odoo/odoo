@@ -95,8 +95,8 @@ export class ProductConfiguratorPopup extends Component {
     }
 
     get selectedValues() {
-        return Object.values(this.state.attributes)
-            .map((attribute) => attribute.selected)
+        return this.props.productTemplate.attribute_line_ids
+            .map((attrLine) => this.state.attributes[attrLine.attribute_id.id]?.selected || [])
             .flat();
     }
 
