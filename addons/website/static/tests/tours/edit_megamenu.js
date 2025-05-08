@@ -26,12 +26,12 @@ registerWebsitePreviewTour('edit_megamenu', {
     // Add a megamenu item to the top menu.
     {
         content: "Click on a menu item",
-        trigger: ":iframe .top_menu .nav-item a",
+        trigger: ":iframe .top_menu .nav-item .nav-link [data-oe-model='website.menu']",
         run: "click",
     },
     {
         content: "Click on 'Link' to open Link Dialog",
-        trigger: ':iframe .o_edit_menu_popover a.js_edit_menu',
+        trigger: '.o-we-linkpopover .js_edit_menu',
         run: "click",
     },
     {
@@ -64,10 +64,10 @@ registerWebsitePreviewTour('edit_megamenu', {
         trigger: "body:not(:has(.modal))",
     },
     {
-        trigger: '#oe_snippets.o_loaded',
+        trigger: '.o_builder_sidebar_open',
     },
     {
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"
+        trigger: ".o_builder_open .o_website_preview:not(.o_is_blocked)"
     },
     // Edit a menu item
     clickOnExtraMenuItem({}, true),
@@ -79,7 +79,7 @@ registerWebsitePreviewTour('edit_megamenu', {
     },
     {
         content: "Hit the delete button to remove the menu link",
-        trigger: ':iframe .oe_overlay .oe_snippet_remove',
+        trigger: '.o_overlay_options .oe_snippet_remove',
         run: "click",
     },
     {

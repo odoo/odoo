@@ -461,8 +461,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_15_website_link_tools(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'link_tools', login="admin")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_16_website_edit_megamenu(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu', login='admin')
 
