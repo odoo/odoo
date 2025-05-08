@@ -1,15 +1,15 @@
-import { debounce, Deferred } from "@bus/workers/websocket_worker_utils";
+import { debounce, Deferred, Logger } from "@bus/workers/websocket_worker_utils";
 
 /**
  * Type of events that can be sent from the worker to its clients.
  *
- * @typedef { 'connect' | 'reconnect' | 'disconnect' | 'reconnecting' | 'notification' | 'initialized' | 'outdated'| 'worker_state_updated' | 'log_debug' } WorkerEvent
+ * @typedef { 'connect' | 'reconnect' | 'disconnect' | 'reconnecting' | 'notification' | 'initialized' | 'outdated'| 'worker_state_updated' | 'provide_logs' } WorkerEvent
  */
 
 /**
  * Type of action that can be sent from the client to the worker.
  *
- * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'initialize_connection' | 'send' | 'leave' | 'stop' | 'start'} WorkerAction
+ * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'initialize_connection' | 'request_logs' | 'send' | 'set_logging_enabled' | 'leave' | 'stop' | 'start'} WorkerAction
  */
 
 export const WEBSOCKET_CLOSE_CODES = Object.freeze({
@@ -37,6 +37,8 @@ export const WORKER_STATE = Object.freeze({
     CONNECTING: "CONNECTING",
 });
 const MAXIMUM_RECONNECT_DELAY = 60000;
+const UUID = Date.now().toString(36) + Math.random().toString(36).substring(2);
+const logger = new Logger("bus_websocket_worker");
 
 /**
  * This class regroups the logic necessary in order for the
@@ -49,7 +51,8 @@ export class WebsocketWorker {
     INITIAL_RECONNECT_DELAY = 1000;
     RECONNECT_JITTER = 1000;
 
-    constructor() {
+    constructor(name) {
+        this.name = name;
         // Timestamp of start of most recent bus service sender
         this.newestStartTs = undefined;
         this.websocketURL = "";
@@ -65,6 +68,7 @@ export class WebsocketWorker {
         this.state = WORKER_STATE.IDLE;
         this.isReconnecting = false;
         this.lastChannelSubscription = null;
+        this.loggingEnabled = null;
         this.firstSubscribeDeferred = new Deferred();
         this.lastNotificationId = 0;
         this.messageWaitQueue = [];
@@ -117,7 +121,9 @@ export class WebsocketWorker {
      * @param {Object} data
      */
     sendToClient(client, type, data) {
-        this._logDebug("sendToClient", type, data);
+        if (type !== "provide_logs") {
+            this._logDebug("sendToClient", type, data);
+        }
         client.postMessage({ type, data: data ? JSON.parse(JSON.stringify(data)) : undefined });
     }
 
@@ -159,6 +165,29 @@ export class WebsocketWorker {
                 return this._deleteChannel(client, data);
             case "force_update_channels":
                 return this._forceUpdateChannels();
+            case "set_logging_enabled":
+                this.loggingEnabled = data;
+                break;
+            case "request_logs":
+                logger.getLogs().then((logs) => {
+                    const workerInfo = {
+                        UUID,
+                        active: this.active,
+                        channels: [
+                            ...new Set([].concat.apply([], [...this.channelsByClient.values()])),
+                        ].sort(),
+                        db: this.currentDB,
+                        is_reconnecting: this.isReconnecting,
+                        last_subscription: this.lastChannelSubscription,
+                        name: this.name,
+                        number_of_clients: this.channelsByClient.size,
+                        reconnect_delay: this.connectRetryDelay,
+                        uid: this.currentUID,
+                        websocket_url: this.websocketURL,
+                    };
+                    this.sendToClient(client, "provide_logs", { workerInfo, logs });
+                });
+                break;
             case "initialize_connection":
                 return this._initializeConnection(client, data);
         }
@@ -366,18 +395,8 @@ export class WebsocketWorker {
     }
 
     _logDebug(title, ...args) {
-        const clientsInDebug = [...this.debugModeByClient.keys()].filter((client) =>
-            this.debugModeByClient.get(client)
-        );
-        for (const client of clientsInDebug) {
-            client.postMessage({
-                type: "log_debug",
-                data: [
-                    `%c${new Date().toLocaleString()} - [${title}]`,
-                    "color: #c6e; font-weight: bold;",
-                    ...args,
-                ],
-            });
+        if (this.loggingEnabled) {
+            logger.log({ dt: new Date().toISOString(), event: title, args, worker: UUID });
         }
     }
 
