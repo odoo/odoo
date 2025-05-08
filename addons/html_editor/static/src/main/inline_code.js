@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { splitTextNode } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
 
 export class InlineCodePlugin extends Plugin {
@@ -8,7 +8,19 @@ export class InlineCodePlugin extends Plugin {
     static dependencies = ["selection", "history", "input"];
     resources = {
         input_handlers: this.onInput.bind(this),
+        normalize_handlers: this.normalize.bind(this),
     };
+
+    normalize(root) {
+        for (const code of selectElements(root, ".o_inline_code")) {
+            if (!code.previousSibling || code.previousSibling.nodeType !== Node.TEXT_NODE) {
+                code.before(document.createTextNode("\u200B"));
+            }
+            if (!code.nextSibling || code.nextSibling.nodeType !== Node.TEXT_NODE) {
+                code.after(document.createTextNode("\u200B"));
+            }
+        }
+    }
 
     onInput(ev) {
         const selection = this.dependencies.selection.getEditableSelection();
@@ -77,12 +89,6 @@ export class InlineCodePlugin extends Plugin {
             codeElement.classList.add("o_inline_code");
             textNode.before(codeElement);
             codeElement.append(textNode);
-            if (
-                !codeElement.previousSibling ||
-                codeElement.previousSibling.nodeType !== Node.TEXT_NODE
-            ) {
-                codeElement.before(document.createTextNode("\u200B"));
-            }
             if (isClosingForward) {
                 // Move selection out of code element.
                 codeElement.after(document.createTextNode("\u200B"));

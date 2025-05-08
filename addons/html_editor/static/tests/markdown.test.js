@@ -42,7 +42,7 @@ describe("inline code", () => {
         await testEditor({
             contentBefore: "<p>ab[]cd`</p>",
             stepFunction: async (editor) => await insertText(editor, "`"),
-            contentAfter: '<p>ab<code class="o_inline_code">[]cd</code></p>',
+            contentAfter: '<p>ab<code class="o_inline_code">[]cd</code>\u200B</p>',
         });
     });
 
@@ -141,7 +141,7 @@ describe("inline code", () => {
                 editor.document.getSelection().anchorNode.after(document.createTextNode("`"));
                 await insertText(editor, "`");
             },
-            contentAfter: '<p>ab<code class="o_inline_code">[]c</code></p>',
+            contentAfter: '<p>ab<code class="o_inline_code">[]c</code>\u200B</p>',
         });
     });
 
