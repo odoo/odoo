@@ -8,6 +8,16 @@
                     t-att-data-view-track="view_track and '1' or '0'"
                     t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
                 
+                <!-- Поисковая строка -->
+                <div class="container" style="margin-top: 18px; margin-bottom: 10px;">
+                    <form action="/shop" method="get" class="d-flex justify-content-center" style="max-width: 600px; margin: 0 auto;">
+                        <input type="text" name="search" class="form-control" placeholder="Поиск товаров..." style="border-radius: 24px 0 0 24px; height: 44px; font-size: 16px; border-right: none;"/>
+                        <button type="submit" class="btn" style="background: #ff7300; color: #fff; border-radius: 0 24px 24px 0; height: 44px; min-width: 48px;">
+                            <i class="fa fa-search"></i>
+                            </button>
+                    </form>
+                    </div>
+                
                 <!-- Breadcrumb section -->
                 <div class="row align-items-center mb-4">
                     <div class="col-12">
@@ -109,10 +119,10 @@
                                     
                                     <!-- Новый красивый блок выбора количества -->
                                     <div class="input-group">
-                                        <div class="quantity-wrapper">
-                                            <button type="button" class="qty-btn js_remove_qty">-</button>
+                                    <div class="quantity-wrapper">
+                                        <button type="button" class="qty-btn js_remove_qty">-</button>
                                             <input type="text" class="qty-input js_quantity" name="add_qty" value="1" readonly="readonly" />
-                                            <button type="button" class="qty-btn js_add_qty">+</button>
+                                        <button type="button" class="qty-btn js_add_qty">+</button>
                                         </div>
                                     </div>
                                     
@@ -138,6 +148,21 @@
                         </form>
                         <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
                         <p t-else="" class="alert alert-warning">This product has no valid combination.</p>
+                        
+                        <!-- Блок информации и параметров -->
+                        <div class="container my-4">
+                            <div style="background: #fff; border-radius: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); padding: 32px 32px 24px 32px; max-width: 900px; margin: 0 auto;">
+                                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 18px;">Информация и параметры</h3>
+                                <div style="color: #333; font-size: 16px;">
+                                    <t t-if="product.description">
+                                        <t t-raw="product.description"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-muted">Нет дополнительной информации.</span>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
                         
                         <!-- Product attributes -->
                         <div id="product_attributes_simple">
@@ -177,18 +202,15 @@
             </section>
             <!-- Product images gallery at the bottom -->
             <div class="container my-5">
-                <div class="row g-4">
-                    <t t-if="product.product_template_image_ids">
-                        <t t-foreach="product.product_template_image_ids" t-as="img">
-                            <div class="col-12 col-md-6 d-flex justify-content-center">
-                                <img t-att-src="image_data_uri(img.image_1920)" class="img-fluid mb-3 product-gallery-img" style="max-width: 600px; height: auto; border-radius: 12px; object-fit: contain; background: #f8f8f8; display: block;" alt="Product image"/>
-                            </div>
-                        </t>
-                    </t>
-                    <t t-else="">
-                        <div class="col-12 text-center text-muted">No additional product images</div>
-                    </t>
-                </div>
+                <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
+                <t t-foreach="product_images" t-as="img">
+                    <div class="w-100 d-flex justify-content-center mb-4">
+                        <img t-att-src="image_data_uri(img.image_1920)"
+                             class="img-fluid product-gallery-img"
+                             style="max-width: 1050px; width: 100%; height: auto; border-radius: 12px; object-fit: contain; background: #f8f8f8; display: block;" 
+                             alt="Product image"/>
+                    </div>
+                </t>
             </div>
             <!-- Новый красивый блок продавца -->
             <div class="seller-info-card" style="background:#fff; border-radius:18px; box-shadow:0 2px 12px rgba(0,0,0,0.04); padding:32px 32px 24px 32px; display:flex; flex-direction:row; align-items:center; justify-content:center; max-width:900px; margin:32px auto 32px auto;">
@@ -223,6 +245,83 @@
                 </div>
             </div>
             <!-- конец блока -->
+            <!-- Блок рекомендаций по магазину -->
+            <div class="seller-recommendations py-4 mb-4" style="background:#f8f8f8; border-radius:0;">
+                <div class="container">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0" style="font-size: 20px; font-weight: 600;">Рекомендации по магазину</h3>
+                        <a href="#" class="text-decoration-none" style="color: #999; font-size: 15px;">Все <i class="fa fa-angle-right"></i></a>
+                    </div>
+                    
+                    <div class="owl-carousel owl-theme">
+                        <t t-if="product and product.seller_id">
+                            <t t-set="seller_products" t-value="request.env['product.template'].sudo().search([('seller_id', '=', product.seller_id.id), ('id', '!=', product.id)], limit=10)"/>
+                            <t t-foreach="seller_products" t-as="seller_product">
+                                <div class="item">
+                                    <div class="card h-100 border" style="border-radius: 12px; overflow: hidden; min-width: 170px; max-width: 200px; min-height: 260px; max-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+                                        <a t-att-href="'/shop/product/%s' % slug(seller_product)" class="text-decoration-none" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                                            <img t-att-src="image_data_uri(seller_product.image_1920)" class="card-img-top" alt="Product Image"
+                                                 style="height: 130px; width: auto; object-fit: contain; margin: 16px auto 8px auto; display: block;"/>
+                                            <div class="card-body p-2" style="width: 100%; text-align: center;">
+                                                <h5 class="card-title mb-1" style="font-size: 14px; font-weight: 500; color: #333; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 38px;">
+                                                    <t t-esc="seller_product.name"/>
+                                                </h5>
+                                                <p class="card-text mb-0" style="color: #FF6000; font-weight: 600; font-size: 16px;">
+                                                    <t t-esc="seller_product.list_price" t-options="{'widget': 'monetary', 'display_currency': request.env.user.company_id.currency_id}"/>
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- JavaScript для инициализации карусели Owl Carousel -->
+            <script type="text/javascript">
+                odoo.define('multi_vendor_marketplace.seller_products_carousel', function (require) {
+                    'use strict';
+                    
+                    var publicWidget = require('web.public.widget');
+                    
+                    publicWidget.registry.SellerProductsCarousel = publicWidget.Widget.extend({
+                        selector: '.seller-recommendations',
+                        
+                        start: function () {
+                            var self = this;
+                            
+                            this.$('.owl-carousel').owlCarousel({
+                                loop: true,
+                                margin: 10,
+                                nav: true,
+                                navText: [
+                                    '<i class="fa fa-chevron-left"></i>',
+                                    '<i class="fa fa-chevron-right"></i>'
+                                ],
+                                responsive: {
+                                    0: {
+                                        items: 2
+                                    },
+                                    576: {
+                                        items: 3
+                                    },
+                                    768: {
+                                        items: 4
+                                    },
+                                    992: {
+                                        items: 5
+                                    }
+                                }
+                            });
+                            
+                            return this._super.apply(this, arguments);
+                        }
+                    });
+                });
+            </script>
+            
             <div class="mobile-bottom-nav d-md-none">
                 <div class="nav-btns">
                     <a href="/shop" class="nav-btn" t-attf-class="nav-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}"><i class="fa fa-home"></i></a>
