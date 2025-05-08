@@ -527,6 +527,9 @@ def disconnect_from_server():
         'token': '',
         'db_uuid': '',
         'enterprise_code': '',
+        'screen_orientation': '',
+        'browser_url': '',
+        'iot_handlers_etag': '',
     })
     odoo_restart()
 
