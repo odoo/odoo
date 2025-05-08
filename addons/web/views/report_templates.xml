@@ -434,7 +434,7 @@
                             </div>
                         </span></li>
                         <li t-else="">
-                            <span t-field="company.company_details" class="text-nowrap">
+                            <span t-field="company.company_details" t-attf-class="'text-nowrap' if len(company.company_details) &lt; 46 else ''">
                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
                                     <strong>Company details block</strong>
                                     <div>Contains the company details.</div>
