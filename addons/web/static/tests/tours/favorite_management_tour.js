@@ -25,8 +25,14 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             run: "click",
         },
         {
+            trigger: ".o_searchview_facet .o_facet_value:contains(Apps1)",
+        },
+        {
             trigger: ".o_group_by_menu > .o-dropdown-item:contains(Category)",
             run: "click",
+        },
+        {
+            trigger: ".o_kanban_header:contains(Account Charts)",
         },
         {
             trigger: ".o_favorite_menu .o_accordion_values .o_input",
