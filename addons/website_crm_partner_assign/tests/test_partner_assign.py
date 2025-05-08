@@ -155,7 +155,7 @@ class TestPartnerAssign(TransactionCase):
             pass
 
 
-class TestPartnerLeadPortal(TestCrmCommon):
+class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
 
     def setUp(self):
         super(TestPartnerLeadPortal, self).setUp()
@@ -295,6 +295,58 @@ class TestPartnerLeadPortal(TestCrmCommon):
             mock_request.render = render_function
             res = WebsiteCrmPartnerAssign().partners()
             self.assertEqual([b'rendered'], res.response, "render_function wasn't called")
+
+    def test_portal_routes_leads_and_opportunities_multiple_companies(self):
+        """This test checks if a portal user can see leads(opportunities) from multiple companies that are assigned to him"""
+
+        original_company = self.user_portal.company_id
+        partner_id = self.user_portal.partner_id.id
+
+        company_a = self.env['res.company'].create({'name': 'Company A'})
+
+        self.user_portal.write({'company_ids': [Command.set([original_company.id, company_a.id])]})
+
+        lead_name_orig = 'Test Portal Lead Orig'
+        lead_name_a = 'Test Portal Lead A'
+        opp_name_orig = 'Test Portal Opp Orig'
+        opp_name_a = 'Test Portal Opp A'
+
+        self.env['crm.lead'].create([
+            {
+                'name': lead_name_orig,
+                'type': 'lead',
+                'company_id': original_company.id,
+                'partner_assigned_id': partner_id,
+            },
+            {
+                'name': lead_name_a,
+                'type': 'lead',
+                'company_id': company_a.id,
+                'partner_assigned_id': partner_id,
+            },
+            {
+                'name': opp_name_orig,
+                'type': 'opportunity',
+                'company_id': original_company.id,
+                'partner_assigned_id': partner_id,
+            },
+            {
+                'name': opp_name_a,
+                'type': 'opportunity',
+                'company_id': company_a.id,
+                'partner_assigned_id': partner_id,
+            },
+        ])
+
+        self.authenticate(self.user_portal.login, 'password')
+
+        response_leads = self.url_open('/my/leads')
+        self.assertIn(lead_name_orig, response_leads.text)
+        self.assertIn(lead_name_a, response_leads.text)
+
+        response_opps = self.url_open('/my/opportunities')
+        self.assertIn(opp_name_orig, response_opps.text)
+        self.assertIn(opp_name_a, response_opps.text)
 
 
 @tagged('post_install', '-at_install')

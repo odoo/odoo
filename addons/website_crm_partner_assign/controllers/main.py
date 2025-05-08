@@ -31,6 +31,7 @@ class WebsiteAccount(CustomerPortal):
 
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
+        request.update_context(allowed_company_ids=request.env.user.company_ids.ids)
         CrmLead = request.env['crm.lead']
         if 'lead_count' in counters:
             values['lead_count'] = (
@@ -49,6 +50,7 @@ class WebsiteAccount(CustomerPortal):
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_leads(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
+        request.update_context(allowed_company_ids=request.env.user.company_ids.ids)
         CrmLead = request.env['crm.lead']
         domain = self.get_domain_my_lead(request.env.user)
 
@@ -92,6 +94,7 @@ class WebsiteAccount(CustomerPortal):
     @http.route(['/my/opportunities', '/my/opportunities/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_opportunities(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
+        request.update_context(allowed_company_ids=request.env.user.company_ids.ids)
         CrmLead = request.env['crm.lead']
         domain = self.get_domain_my_opp(request.env.user)
 
