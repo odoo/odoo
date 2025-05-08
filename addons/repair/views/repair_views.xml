@@ -44,7 +44,6 @@
                 <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
                 <field name="partner_id" readonly="1" optional="show"/>
                 <field name="picking_id" optional="hide"/>
-                <field name="is_returned" optional="hide"/>
                 <field name="sale_order_id" optional="show"/>
                 <field name="location_id" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
@@ -116,7 +115,7 @@
                                 <field name="product_qty" readonly="tracking == 'serial' or state in ('done', 'cancel')"/>
                                 <field name="product_uom" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'"/>
                             </div>
-                            <field name="picking_id" invisible="not is_returned" options="{'no_create': True}"/>
+                            <field name="picking_id" invisible="not picking_id" options="{'no_create': True}"/>
                             <field name="under_warranty" readonly="state in ['cancel', 'done']"/>
                         </group>
                         <group>
