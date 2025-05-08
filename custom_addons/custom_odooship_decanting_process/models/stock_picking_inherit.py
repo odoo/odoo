@@ -169,21 +169,54 @@ class StockPicking(models.Model):
                 "product_lines": product_lines,
                 "schedule_date":schedule_date,
                 "current_date":current_date,
+                "reference_1":picking.reference_1,
+                "container_number":picking.container_number,
             }
-            # Define the URLs for Shiperoo Connect
-            is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
-            api_url = (
+            json_data = json.dumps(payload, indent=4)
+            if picking.tenant_code_id.name == "MYSALE":
+                is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
+                if is_production == 'True':
+                # Production 
+                    api_url = (
+                        "https://shiperoo-connect-fp.prod.automation.shiperoo.com/"
+                        "sc-file-processor/api/receipt-completion"
+                    )
+                    auth = ('apiuser', 'd7oX8L3af6D4FDobC8AFsWRgLamvQs')
+                else:
+                    # UAT 
+                    api_url = (
+                        "https://shiperoo-connect.uat.automation.shiperoo.com/"
+                        "sc-file-processor/api/receipt-completion"
+                    )
+                    auth = ('apiuser', 'apipass')
+                            api_url = "https://shiperoo-connect.uat.automation.shiperoo.com/sc-file-processor/api/receipt-completion"
+                            auth = ('apiuser', 'apipass')
+            else:
+                is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
+                api_url = (
                 "https://shiperooconnect-prod.automation.shiperoo.com/api/discrepency_receiver"
                 if is_production == 'True'
                 else "https://shiperooconnect-dev.automation.shiperoo.com/api/discrepency_receiver"
             )
-            json_data = json.dumps(payload, indent=4)
+                auth = None
+            # Define the URLs for Shiperoo Connect
+            # is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
+            # api_url = (
+            #     "https://shiperooconnect-prod.automation.shiperoo.com/api/discrepency_receiver"
+            #     if is_production == 'True'
+            #     else "https://shiperooconnect-dev.automation.shiperoo.com/api/discrepency_receiver"
+            # )
+            # json_data = json.dumps(payload, indent=4)
             _logger.info(f"Sending payload to {api_url}: {json_data}")
 
-            # Send the payload to the API
+             # Send the payload to the API
             headers = {'Content-Type': 'application/json'}
             try:
-                response = requests.post(api_url, headers=headers, data=json_data)
+                if auth:
+                    response = requests.post(api_url, headers=headers, data=json_data, auth=auth)
+                else:
+                    response = requests.post(api_url, headers=headers, data=json_data)
+                # response = requests.post(api_url, headers=headers, data=json_data)
                 _logger.info(f"Response Status Code: {response.status_code}, Response Body: {response.text}")
 
                 if response.status_code != 200:
