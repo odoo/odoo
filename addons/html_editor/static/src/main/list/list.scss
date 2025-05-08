@@ -20,13 +20,28 @@ ul.o_checklist {
             border: 1px solid;
             cursor: pointer;
         }
-        &.o_checked:after {
-            content: "✓";
-            transition: opacity .5s;
-            position: absolute;
-            left: -18px;
-            top: -1px;
-            opacity: 1;
+        &.o_checked {
+            &::before {
+                content: "✓";
+                transition: opacity .5s;
+                position: absolute;
+                left: -18px;
+                top: -1px;
+                opacity: 1;
+            }
+
+            &:has(ul, ol)::before {
+                opacity: 0.5;
+            }
+
+            &:not(:has(ul, ol)) {
+                text-decoration: line-through;
+                opacity: 0.5;
+            }
+            &:has(ul, ol) > :not(ul, ol) {
+                text-decoration: line-through;
+                opacity: 0.5;
+            }
         }
     }
 }
