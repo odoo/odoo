@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.4a1+e\n"
+"Project-Id-Version: Odoo Server 17.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-09 12:08+0000\n"
 "PO-Revision-Date: 2025-07-07 13:24+0400\n"
@@ -51,18 +51,42 @@ msgstr "- لم يتم إنشاء مفتاح خاص للشركة %s. يعد ال�
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid "- Please make sure the 'Customer Reference' contains the sequential number of the original invoice(s) that the Credit/Debit Note is related to."
-msgstr "- يرجى التأكد من أن 'رقم العميل المرجعي' يحتوي على الرقم التسلسلي للفاتورة (الفواتير) الأصلية التي يرتبط بها إشعار الدائنة/الخصم."
+msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "- Please make sure the 'ZATCA Reason' for the issuance of the Credit/Debit Note is specified."
+msgid ""
+"- No Serial Number was assigned for journal %s. A Serial Number is mandatory"
+" in order to generate Certificate Signing Requests (CSR)."
+msgstr ""
+"- لم يتم تعيين رقم تسلسلي للمجلة %s. الرقم التسلسلي إلزامي لإنشاء طلبات "
+"توقيع الشهادة (CSR)."
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
+msgid ""
+"- Please make sure the 'Customer Reference' contains the sequential number "
+"of the original invoice(s) that the Credit/Debit Note is related to."
+msgstr ""
+"- يرجى التأكد من أن 'رقم العميل المرجعي' يحتوي على الرقم التسلسلي للفاتورة "
+"(الفواتير) الأصلية التي يرتبط بها إشعار الدائنة/الخصم."
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
+msgid ""
+"- Please make sure the 'ZATCA Reason' for the issuance of the Credit/Debit "
+"Note is specified."
 msgstr "- يرجى التأكد من تحديد 'سبب ZATCA' لإصدار إشعار الدائنة/الخصم."
 
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "- Please, make sure the invoice date is set to either the same as or before Today."
+msgid ""
+"- Please, make sure the invoice date is set to either the same as or before "
+"Today."
 msgstr "- يُرجى التأكد من ضبط تاريخ الفاتورة على نفس تاريخ اليوم أو قبله."
 
 #. module: l10n_sa_edi
@@ -417,7 +441,7 @@ msgstr "صيغة EDI "
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid "Error: This invoice is blocked due to %s. Please check it."
-msgstr "خطأ: هذه الفاتورة محظورة بسبب %s. يرجى التحقق من ذلك."
+msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -647,7 +671,7 @@ msgstr "الحي الخاص بالبائع مطلوب في الفواتير ال
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
 msgid "Neighborhood..."
-msgstr "الحي..."
+msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__l10n_sa_otp
@@ -684,6 +708,12 @@ msgstr ""
 "بمجرد أن قيامك بتغيير وضع التسليم إلى <strong>الإنتاج</strong>، لن تتمكن من تغييره بعد ذلك.\n"
 "                            انتبه، فإن كل فاتورة تقوم بتسليمها إلى هيئة الضريبة والزكاة والجمارك (زاتكا) في وضع الإنتاج سيتم وضعها \n"
 "                            بعين الاعتبار وقد تتسبب في <strong>غرامات وعقوبات</strong>. "
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/ir_attachment.py:0
+msgid "Oops! The invoice PDF(s) are linked to a validated EDI document and cannot be deleted according to ZATCA rules: %s"
+msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -837,8 +867,7 @@ msgstr "حدث خطأ غير متوقع في الخادم: %(error)s "
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
 msgid "Set whether the system should use the Production API"
-msgstr ""
-"قم بإعداد ما إذا كان على النظام استخدام الواجهة البرمجية للإنتاج أم لا"
+msgstr "قم بإعداد ما إذا كان على النظام استخدام الواجهة البرمجية للإنتاج أم لا"
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
@@ -864,7 +893,7 @@ msgstr "يحدد نظام الواجهة البرمجية الذي يجب است
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
 msgid "State"
-msgstr "المحافظة"
+msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -875,12 +904,12 @@ msgstr "المحافظة / التقسيمات الدولية"
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
 msgid "Street 2..."
-msgstr "الشارع 2..."
+msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
 msgid "Street..."
-msgstr "الشارع..."
+msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model,name:l10n_sa_edi.model_account_tax
@@ -910,8 +939,7 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_csr
-msgid ""
-"The Certificate Signing Request that is submitted to the Compliance API"
+msgid "The Certificate Signing Request that is submitted to the Compliance API"
 msgstr "طلب توقيع الشهادة المرسل إلى الواجهة البرمجية للامتثال"
 
 #. module: l10n_sa_edi
