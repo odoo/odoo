@@ -27,4 +27,4 @@ class RestaurantOrderCourse(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['uuid', 'fired', 'order_id', 'line_ids', 'index']
+        return ['uuid', 'fired', 'order_id', 'line_ids', 'index', 'write_date']
