@@ -2110,3 +2110,28 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             so.order_line.free_qty_today, 1.0,
             "Free quantity today should be 1.0, indicating the quantity is usable for this SO."
         )
+
+    def test_extra_return_product_so_sequence(self):
+        """
+        Ensure returned products are added to the bottom of the SO
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {'product_id': self.product_a.id, 'product_uom_qty': 2, 'sequence': 42}),
+                (0, 0, {'product_id': self.product_b.id, 'product_uom_qty': 3, 'sequence': 43}),
+            ],
+        })
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.button_validate()
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=picking.id, active_model='stock.picking'))
+        with return_picking_form.product_return_moves.new() as line:
+            line.product_id = self.new_product
+            line.quantity = 4
+        return_wiz = return_picking_form.save()
+        res = return_wiz.action_create_returns()
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick.button_validate()
+        self.assertEqual(sale_order.order_line.mapped('sequence'), [42, 43, 44])
