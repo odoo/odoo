@@ -191,6 +191,10 @@ export class HootFixtureElement extends HTMLElement {
         this.classList.remove(this.constructor.CLASSES.show);
     }
 
+    async waitForIframes() {
+        await Promise.all(this._iframes.values());
+    }
+
     show() {
         this.classList.add(this.constructor.CLASSES.show);
     }
