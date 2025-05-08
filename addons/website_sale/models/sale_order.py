@@ -139,8 +139,8 @@ class SaleOrder(models.Model):
             if not order.user_id:
                 order.user_id = (
                     order.website_id.salesperson_id
-                    or order.partner_id.parent_id.user_id.id
                     or order.partner_id.user_id.id
+                    or order.partner_id.parent_id.user_id.id
                 )
 
     #=== CRUD METHODS ===#
