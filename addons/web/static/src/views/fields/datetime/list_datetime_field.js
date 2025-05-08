@@ -1,7 +1,14 @@
+import { useRef } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { useAutoresize } from "@web/core/utils/autoresize";
 import { DateTimeField, dateField, dateRangeField, dateTimeField } from "./datetime_field";
 
 export class ListDateTimeField extends DateTimeField {
+    setup() {
+        super.setup();
+        const startDateRef = useRef("start-date");
+        useAutoresize(startDateRef, { offset: -5 });
+    }
     /**
      * @override
      */
