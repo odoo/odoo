@@ -22,6 +22,7 @@ Sell event tickets through eCommerce app.
             'website_event_sale/static/tests/**/*',
         ],
         'web.assets_frontend': [
+            'website_event_sale/static/src/interactions/*.js',
             'website_event_sale/static/src/scss/*.scss',
         ],
     },

@@ -9,39 +9,31 @@ export class TicketDetails extends Interaction {
         _envBus: () => this.env.bus,
     };
     dynamicContent = {
+        _root: { "t-on-submit.prevent": this.onSubmit },
         _envBus: {
             "t-on-websiteEvent.enableSubmit": () => this.buttonDisabled = false,
         },
-        ".form-select": {
-            "t-on-change": () => {}, // use updateContent() to enable/disable submit button
-        },
         ".a-submit": {
-            "t-on-click.prevent.stop": this.onSubmitClick,
-            "t-att-disabled": () => this.noTicketsOrdered || this.buttonDisabled ? "disabled" : false,
+            "t-att-disabled": () => this.buttonDisabled ? "disabled" : false,
         },
     };
 
-    get noTicketsOrdered() {
-        return Boolean(
-            !Array.from(this.el.querySelectorAll("select").values()).find(
-                (select) => select.value > 0
-            )
-        );
-    }
-
     /**
-     * @param {MouseEvent} ev
+     * Allow users to submit details for their registrations.
      */
-    async onSubmitClick(ev) {
-        const formEl = ev.currentTarget.closest("form");
+    async onSubmit() {
         this.buttonDisabled = true;
-        const modal = await this.waitFor(rpc(
-            formEl.action,
-            Object.fromEntries(new FormData(formEl)),
+        const response = await this.waitFor(rpc(
+            this.el.action,
+            Object.fromEntries(new FormData(this.el)),
         ));
-
-        const modalEl = new DOMParser().parseFromString(modal, "text/html").body.firstChild;
-        this.insert(modalEl, document.body);
+        if (response.status == "success") {
+            const modalEl = new DOMParser().parseFromString(response.content, "text/html").body.firstChild;
+            this.insert(modalEl, document.body);
+        }
+        else if (response.status == "error" && response.error == "no_availability") {
+            this.renderAt("website_event.registration_insufficient_seats_error", {}, document.body);
+        }
     }
 }
 

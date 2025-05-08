@@ -38,7 +38,7 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
         email_question = event_questions.filtered(lambda q: q.question_type == 'email')
         self.assertTrue(name_question and email_question)
         # get 1 free ticket
-        self.url_open(f'/event/{self.event_0.id}/registration/confirm', data={
+        self.url_open(f'/event/{self.event_0.id}/registration/attendee-details/confirm', data={
             f'1-name-{name_question.id}': 'Bob',
             f'1-email-{email_question.id}': 'bob@test.lan',
             '1-event_ticket_id': self.event_0.event_ticket_ids[0].id,
@@ -78,98 +78,128 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.assertEqual(specific_view.website_meta_title, "Hello, world!")
         self.assertEqual(event.website_meta_title, False)
 
-    def test_website_event_questions(self):
-        """ Will execute the tour that fills up two tickets with a few questions answers
-        and then assert that the answers are correctly saved for each attendee. """
+    def test_website_event_registrations(self):
+        """ Check that registrations with and without tickets work from both the tickets form and
+        the attendee details form. """
+        date_begin = fields.Datetime.now() - relativedelta(days=15)
+        date_end = fields.Datetime.now() + relativedelta(days=15)
 
-        self.design_fair_event = self.env['event.event'].create({
-            'name': 'Design Fair New York',
-            'date_begin': fields.Datetime.now() - relativedelta(days=15),
-            'date_end': fields.Datetime.now() + relativedelta(days=15),
-            'event_ticket_ids': [(0, 0, {
-                'name': 'Free',
-                'start_sale_datetime': fields.Datetime.now() - relativedelta(days=15)
-            }), (0, 0, {
-                'name': 'Other',
-                'start_sale_datetime': fields.Datetime.now() - relativedelta(days=15)
-            })],
+        event_no_tickets_without_questions, event_no_tickets_with_questions, event_without_questions, event_with_questions = self.env['event.event'].create([{
+            'name': 'Event No tickets And Without Questions',
+            'date_begin': date_begin,
+            'date_end': date_end,
             'website_published': True,
-            'question_ids': [(0, 0, {
-                'title': 'Name',
-                'question_type': 'name',
-            }), (0, 0, {
-                'title': 'Email',
-                'question_type': 'email',
-            }), (0, 0, {
-                'title': 'Phone',
-                'question_type': 'phone',
-            }), (0, 0, {
-                'title': 'Company Name',
-                'question_type': 'company_name',
-            }), (0, 0, {
-                'title': 'Meal Type',
-                'question_type': 'simple_choice',
-                'answer_ids': [
-                    (0, 0, {'name': 'Mixed'}),
-                    (0, 0, {'name': 'Vegetarian'}),
-                    (0, 0, {'name': 'Pastafarian'})
-                ]
-            }), (0, 0, {
-                'title': 'Allergies',
-                'question_type': 'text_box'
-            }), (0, 0, {
-                'title': 'How did you learn about this event?',
-                'question_type': 'simple_choice',
-                'once_per_order': True,
-                'answer_ids': [
-                    (0, 0, {'name': 'Our website'}),
-                    (0, 0, {'name': 'Commercials'}),
-                    (0, 0, {'name': 'A friend'})
-                ]
-            })]
-        })
+        }, {
+            'name': 'Event No tickets And With Questions',
+            'date_begin': date_begin,
+            'date_end': date_end,
+            'website_published': True,
+        }, {
+            'name': 'Event Without Questions',
+            'date_begin': date_begin,
+            'date_end': date_end,
+            'website_published': True,
+        }, {
+            'name': 'Event With Questions',
+            'date_begin': date_begin,
+            'date_end': date_end,
+            'website_published': True,
+        }])
+        # Remove default questions from events to test the registrations without attendee details.
+        event_without_questions.question_ids.unlink()
+        event_no_tickets_without_questions.question_ids.unlink()
+        ticket_without_questions_1, ticket_without_questions_2, ticket_with_questions_1, ticket_with_questions_2 = self.env['event.event.ticket'].create([{
+            'name': 'Regular',
+            'event_id': event_without_questions.id,
+            }, {
+            'name': 'VIP',
+            'event_id': event_without_questions.id,
+        }, {
+            'name': 'Regular',
+            'event_id': event_with_questions.id,
+            }, {
+            'name': 'VIP',
+            'event_id': event_with_questions.id,
+        }])
+        name_question, email_question, phone_question = event_with_questions.question_ids.filtered(
+            lambda q: q.question_type in ('name', 'email', 'phone')
+        )
+        company_name_question, meal_type_question, allergies_question, learn_about_question = self.env['event.question'].create([{
+            'title': 'Company Name',
+            'question_type': 'company_name',
+            'event_id': event_with_questions.id,
+        }, {
+            'title': 'Meal Type',
+            'question_type': 'simple_choice',
+            'event_id': event_with_questions.id,
+            'answer_ids': [
+                (0, 0, {'name': 'Mixed'}),
+                (0, 0, {'name': 'Vegetarian'}),
+                (0, 0, {'name': 'Pastafarian'})
+            ]
+        }, {
+            'title': 'Allergies',
+            'question_type': 'text_box',
+            'event_id': event_with_questions.id,
+        }, {
+            'title': 'How did you learn about this event?',
+            'question_type': 'simple_choice',
+            'once_per_order': True,
+            'event_id': event_with_questions.id,
+            'answer_ids': [
+                (0, 0, {'name': 'Our website'}),
+                (0, 0, {'name': 'Commercials'}),
+                (0, 0, {'name': 'A friend'})
+            ]
+        }])
 
-        self.start_tour("/", 'test_tickets_questions', login="portal")
+        self.start_tour('/', 'website_event_registrations', login='portal')
+        # Check that the registrations without tickets work form both tickets form or attendee details form.
+        self.assertEqual(len(event_no_tickets_without_questions.registration_ids), 4)
+        self.assertEqual(len(event_no_tickets_with_questions.registration_ids), 1)
 
-        registrations = self.env['event.registration'].search([
-            ('email', 'in', ['attendee-a@gmail.com', 'attendee-b@gmail.com'])
+        # Check that the registrations without questions have been recorded.
+        self.assertEqual(len(ticket_without_questions_1.registration_ids), 3)
+        self.assertEqual(len(ticket_without_questions_2.registration_ids), 2)
+
+        registration_with_questions_1 = ticket_with_questions_1.registration_ids.filtered_domain([
+            ('name', '=', 'Attendee A'),
+            ('email', '=', 'attendee-a@gmail.com'),
+            ('phone', '=', '+32499123456')
         ])
-        self.assertEqual(len(registrations), 2)
-        first_registration = registrations.filtered(lambda reg: reg.email == 'attendee-a@gmail.com')
-        second_registration = registrations.filtered(lambda reg: reg.email == 'attendee-b@gmail.com')
-        self.assertEqual(first_registration.name, 'Attendee A')
-        self.assertEqual(first_registration.phone, '+32499123456')
-        self.assertEqual(second_registration.name, 'Attendee B')
-        self.assertEqual(second_registration.company_name, 'My Company')
+        registration_with_questions_2 = ticket_with_questions_2.registration_ids.filtered_domain([
+            ('name', '=', 'Attendee B'),
+            ('email', '=', 'attendee-b@gmail.com'),
+            ('company_name', '=', 'My Company')
+        ])
+        # Check that the registrations with questions have been recorded.
+        self.assertEqual(len(registration_with_questions_1), 1)
+        self.assertEqual(len(registration_with_questions_2), 1)
 
-        event_questions = registrations.mapped('event_id.question_ids')
-        self.assertEqual(len(event_questions), 7)
-
-        first_registration_answers = first_registration.registration_answer_ids
-        self.assertEqual(len(first_registration_answers), 6)
-
-        self.assertEqual(first_registration_answers.filtered(
-            lambda answer: answer.question_id.title == 'Meal Type'
-        ).value_answer_id.name, 'Vegetarian')
-
-        self.assertEqual(first_registration_answers.filtered(
-            lambda answer: answer.question_id.title == 'Allergies'
-        ).value_text_box, 'Fish and Nuts')
-
-        self.assertEqual(first_registration_answers.filtered(
-            lambda answer: answer.question_id.title == 'How did you learn about this event?'
-        ).value_answer_id.name, 'A friend')
-
-        second_registration_answers = second_registration.registration_answer_ids
-        self.assertEqual(len(second_registration_answers), 5)
-
-        self.assertEqual(second_registration_answers.filtered(
-            lambda answer: answer.question_id.title == 'Meal Type'
-        ).value_answer_id.name, 'Pastafarian')
-
-        self.assertEqual(first_registration_answers.filtered(
-            lambda answer: answer.question_id.title == 'How did you learn about this event?'
-        ).value_answer_id.name, 'A friend')
+        registration_with_questions_1_answer_ids_data = [
+            (name_question.id, 'Attendee A', False),
+            (email_question.id, 'attendee-a@gmail.com', False),
+            (phone_question.id, '+32499123456', False),
+            (meal_type_question.id, False, 'Vegetarian'),
+            (allergies_question.id, 'Fish and Nuts', False),
+            (learn_about_question.id, False, 'A friend')
+        ]
+        registration_with_questions_2_answer_ids_data = [
+            (name_question.id, 'Attendee B', False),
+            (email_question.id, 'attendee-b@gmail.com', False),
+            (company_name_question.id, 'My Company', False),
+            (meal_type_question.id, False, 'Pastafarian'),
+            (learn_about_question.id, False, 'A friend')
+        ]
+        # Check that the attendee answers of the registration with questions have been recorded.
+        self.assertCountEqual(
+            registration_with_questions_1.registration_answer_ids.mapped(lambda ra: (ra.question_id.id, ra.value_text_box, ra.value_answer_id.name)),
+            registration_with_questions_1_answer_ids_data
+        )
+        self.assertCountEqual(
+            registration_with_questions_2.registration_answer_ids.mapped(lambda ra: (ra.question_id.id, ra.value_text_box, ra.value_answer_id.name)),
+            registration_with_questions_2_answer_ids_data
+        )
 
 
 @tagged('post_install', '-at_install')

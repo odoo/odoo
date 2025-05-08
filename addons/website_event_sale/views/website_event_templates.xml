@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<template id="registration_confirmation_button">
+    <t t-if="website.account_on_checkout == 'mandatory' and website.is_public_user() and has_checkout">
+        Sign In <i class="fa fa-sign-in"/>
+    </t>
+    <t t-elif="has_checkout">Go to Payment</t>
+    <span t-else="" class="o_wevent_registration_confirm">Confirm Registration</span>
+</template>
+
 <template id="modal_ticket_registration" inherit_id="website_event.modal_ticket_registration">
     <!-- Change pricelist -->
     <xpath expr="//div[hasclass('o_wevent_price_range')]" position="after">
@@ -80,19 +88,25 @@
             <span t-else="" class="badge text-bg-secondary fs-6 text-uppercase">Free</span>
         </div>
     </xpath>
+    <!-- Allow the confirmation button updating if some paying tickets are selected -->
+    <xpath expr="//form[@id='registration_form']" position="attributes">
+        <attribute name="t-att-data-account-on-checkout" add="website.account_on_checkout"/>
+    </xpath>
+    <!-- Change 'continue' button to use the website login settings -->
+    <xpath expr="//span[hasclass('o_wevent_registration_confirm')]" position="replace">
+        <t t-call="website_event_sale.registration_confirmation_button">
+            <t t-set="prices" t-value="tickets.mapped('price')"/>
+            <t t-set="has_checkout" t-value="prices and all(prices)"/>
+        </t>
+    </xpath>
 </template>
 
 <template id="registration_attendee_details" inherit_id="website_event.registration_attendee_details">
     <!-- Change 'continue' button to use the website login settings -->
-    <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-primary')]" position="replace">
-        <button t-if="availability_check" class="btn btn-primary">
-            <t t-set="has_paying_ticket" t-value="any(ticket.get('price', 0) > 0 for ticket in tickets)"/>
-            <t t-if="website.account_on_checkout == 'mandatory' and website.is_public_user() and has_paying_ticket">
-                Sign In <i class="fa fa-sign-in"/>
-            </t>
-            <t t-elif="has_paying_ticket">Go to Payment</t>
-            <t t-else="">Confirm Registration</t>
-        </button>
+    <xpath expr="//span[hasclass('o_wevent_registration_confirm')]" position="replace">
+        <t t-call="website_event_sale.registration_confirmation_button">
+            <t t-set="has_checkout" t-value="any(ticket.get('price', 0) for ticket in tickets)"/>
+        </t>
     </xpath>
 </template>
 

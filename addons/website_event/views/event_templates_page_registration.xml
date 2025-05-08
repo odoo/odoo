@@ -179,6 +179,9 @@
         Register
     </button>
     <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger my-3" role="alert">
+        Registration failed! You ordered more tickets than available seats.
+    </div>
+    <div t-elif="registration_error_code == 'no_longer_available_seats'" class="alert alert-danger my-3" role="alert">
         Registration failed! These tickets are not available anymore.
     </div>
     <div t-if="registration_error_code == 'recaptcha_failed'" class="alert alert-danger my-3" role="alert">
@@ -314,7 +317,7 @@
 <template id="registration_attendee_details" name="Registration Attendee Details">
     <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
-            <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post" class="js_website_submit_form">
+            <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/attendee-details/confirm" method="post" class="js_website_submit_form">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="modal-content">
                     <div class="modal-header align-items-center">
@@ -323,7 +326,7 @@
                     </div>
                     <t t-set="counter" t-value="0"/>
                     <t t-set="input_type_by_question_type" t-value="{'name': 'text', 'email': 'email', 'phone': 'tel', 'company_name': 'text'}"/>
-                    <t t-if="availability_check" t-foreach="tickets" t-as="ticket">
+                    <t t-foreach="tickets" t-as="ticket">
                         <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                             <t t-set="counter" t-value="counter + 1"/>
                             <input t-if="event_slot_id" type="hidden" t-attf-name="#{counter}-event_slot_id" t-att-value="event_slot_id"/>
@@ -342,7 +345,7 @@
                             </div>
                         </t>
                     </t>
-                    <div t-if="availability_check and event.general_question_ids" class="modal-body border-top o_wevent_registration_question_global">
+                    <div t-if="event.general_question_ids" class="modal-body border-top o_wevent_registration_question_global">
                         <div class="row">
                             <t t-foreach="event.general_question_ids" t-as="question">
                                 <div class="mt-2" t-att-class="question.question_type=='text_box' and 'col-lg-12' or 'col-lg-6'">
@@ -353,14 +356,11 @@
                             </t>
                         </div>
                     </div>
-                    <t t-elif="not availability_check">
-                        <div class="modal-body border-bottom">
-                            <strong> You ordered more tickets than available seats</strong>
-                        </div>
-                    </t>
                     <div class="modal-footer border-top">
                         <button type="button" class="btn btn-secondary js_goto_event" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" t-if="availability_check">Confirm Registration</button>
+                        <button type="submit" class="btn btn-primary">
+                             <span class="o_wevent_registration_confirm">Confirm registration</span>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -487,13 +487,18 @@
 
             <form t-if="event.event_registrations_open and (not event.event_ticket_ids or any(not ticket.is_expired for ticket in event.event_ticket_ids))"
                 id="registration_form"
-                t-attf-action="/event/#{slug(event)}/registration/new" method="post"
+                t-attf-action="/event/#{slug(event)}/registration/{{'attendee-details' if event.general_question_ids or event.specific_question_ids else 'tickets/confirm'}}" method="post"
+                t-attf-class="o_wevent_js_tickets {{'o_wevent_js_ticket_details' if event.general_question_ids or event.specific_question_ids else ''}}"
+                t-att-data-seats-available="(event_slot.seats_available if event_slot else event.seats_available) if event.seats_limited and not event.general_question_ids and not event.specific_question_ids else ''"
                 itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input t-if="event_slot" type="hidden" name="event_slot_id" t-att-value="event_slot.id"/>
-                <div id="o_wevent_tickets" class="shadow-sm o_wevent_js_ticket_details">
-                    <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger" role="alert">
-                        <p class="mb-0">
+                <div id="o_wevent_tickets" class="shadow-sm">
+                    <div t-if="registration_error_code" class="alert alert-danger" role="alert">
+                        <p t-if="registration_error_code == 'insufficient_seats'" class="mb-0">
+                            Registration failed! You ordered more tickets than available seats.
+                        </p>
+                        <p t-elif="registration_error_code == 'no_longer_available_seats'" class="mb-0">
                             Registration failed! These tickets are not available anymore.
                         </p>
                     </div>
@@ -552,18 +557,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer flex-lg-row border-top">
-                            <button type="button" class="btn btn-light js_goto_event" data-bs-dismiss="modal">
-                                <t t-if="event.is_multi_slots">Cancel</t>
-                                <t t-else="">Close</t>
-                            </button>
-                            <button type="submit" class="btn btn-primary a-submit" disabled="" t-attf-id="#{event.id}">
-                                Register
-                                <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
-                                    (only <t t-out="event.seats_available"/> available)
-                                </t>
-                            </button>
-                        </div>
                     </t>
                     <div t-else="" class="o_wevent_registration_single">
                         <div class="modal-body row px-3 py-2 mx-0">
@@ -610,18 +603,21 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="modal-footer flex-lg-row border-top">
-                            <button type="button" class="btn btn-light js_goto_event" data-bs-dismiss="modal">
-                                <t t-if="event.is_multi_slots">Cancel</t>
-                                <t t-else="">Close</t>
-                            </button>
-                            <button type="submit" class="btn btn-primary a-submit" t-attf-id="#{event.id}" disabled="disabled">
-                                Register
+                    </div>
+                    <div class="modal-footer flex-lg-row border-top">
+                        <button type="button" class="btn btn-light js_goto_event" data-bs-dismiss="modal">
+                            <t t-if="(not event.general_question_ids and not event.specific_question_ids) or event.is_multi_slots">Cancel</t>
+                            <t t-else="">Close</t>
+                        </button>
+                        <button type="submit" class="btn btn-primary a-submit" disabled="disabled" t-attf-id="#{event.id}">
+                            <t t-if="event.general_question_ids or event.specific_question_ids">Register</t>
+                            <t t-else="">
+                                <span class="o_wevent_registration_confirm">Confirm registration</span>
                                 <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
                                     (only <t t-out="event.seats_available"/> available)
                                 </t>
-                            </button>
-                        </div>
+                            </t>
+                        </button>
                     </div>
                 </div>
             </form>
