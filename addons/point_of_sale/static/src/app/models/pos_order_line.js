@@ -328,7 +328,10 @@ export class PosOrderline extends Base {
             this.isPosGroupable() &&
             // don't merge discounted orderlines
             this.getDiscount() === 0 &&
-            floatIsZero(price - order_line_price - orderline.getPriceExtra(), this.currency) &&
+            floatIsZero(
+                price - order_line_price - orderline.getPriceExtra(),
+                this.currency.decimal_places
+            ) &&
             !this.isLotTracked() &&
             this.full_product_name === orderline.full_product_name &&
             isSameCustomerNote &&
