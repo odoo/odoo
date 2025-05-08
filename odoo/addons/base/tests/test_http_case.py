@@ -93,6 +93,12 @@ class TestChromeBrowser(HttpCase):
         self.browser.screencaster.save()
 
 
+@tagged('-at_install', 'post_install')
+class TestChromeBrowserOddDimensions(TestChromeBrowser):
+    allow_inherited_tests_method = True
+    browser_size = "1215x768"
+
+
 class TestRequestRemainingCommon(HttpCase):
     # This test case tries to reproduce the case where a request is lost between two test and is execute during the secone one.
     #
