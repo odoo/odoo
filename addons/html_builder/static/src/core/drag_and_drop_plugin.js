@@ -5,7 +5,7 @@ import { getScrollingElement } from "@web/core/utils/scrolling";
 import { closest, touching } from "@web/core/utils/ui";
 import { clamp } from "@web/core/utils/numbers";
 import { rowSize } from "@html_builder/utils/grid_layout_utils";
-import { isEditable } from "@html_builder/utils/utils";
+import { isEditable, isVisible } from "@html_builder/utils/utils";
 import { DragAndDropMoveHandle } from "./drag_and_drop_move_handle";
 
 export class DragAndDropPlugin extends Plugin {
@@ -190,7 +190,10 @@ export class DragAndDropPlugin extends Plugin {
                 this.dragState.startNextEl = this.overlayTarget.nextElementSibling;
 
                 // Add a clone, to allow to drop where it started.
-                if (parentEl.children.length === 1) {
+                const visibleSiblingEl = [...parentEl.children].find(
+                    (el) => el !== this.overlayTarget && isVisible(el)
+                );
+                if (parentEl.children.length === 1 || !visibleSiblingEl) {
                     const dropCloneEl = document.createElement("div");
                     dropCloneEl.classList.add("oe_drop_clone");
                     dropCloneEl.style.visibility = "hidden";
