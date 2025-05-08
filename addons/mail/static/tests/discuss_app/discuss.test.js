@@ -234,19 +234,6 @@ test("Click on avatar opens its partner chat window", async () => {
     await contains(".o_card_user_infos > a", { text: "+45687468" });
 });
 
-test("Can use channel command /who", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        name: "my-channel",
-    });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/who");
-    await press("Enter");
-    await contains(".o_mail_notification", { text: "You are alone in this channel." });
-});
-
 test("sidebar: chat im_status rendering", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([

@@ -4,6 +4,7 @@ import { loadBundle } from "@web/core/assets";
 import * as _fields from "./_framework/mock_server/mock_fields";
 import * as _models from "./_framework/mock_server/mock_model";
 import { IrAttachment } from "./_framework/mock_server/mock_models/ir_attachment";
+import { IrHttp } from "./_framework/mock_server/mock_models/ir_http";
 import { IrModel } from "./_framework/mock_server/mock_models/ir_model";
 import { IrModelAccess } from "./_framework/mock_server/mock_models/ir_model_access";
 import { IrModelFields } from "./_framework/mock_server/mock_models/ir_model_fields";
@@ -169,6 +170,7 @@ export const fields = _fields;
 export const models = _models;
 
 export const webModels = {
+    IrHttp,
     IrAttachment,
     IrModel,
     IrModelAccess,
