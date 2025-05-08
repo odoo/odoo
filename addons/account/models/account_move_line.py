@@ -338,6 +338,7 @@ class AccountMoveLine(models.Model):
         inverse='_inverse_product_id',
         ondelete='restrict',
         check_company=True,
+        index=True,
     )
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
