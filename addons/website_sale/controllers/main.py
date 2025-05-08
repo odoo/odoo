@@ -440,7 +440,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             attributes = lazy(lambda: ProductAttribute.browse(attribute_ids).sorted())
 
-        if website.viewref('website_sale.products_list_view').active:
+        if website.is_view_active('website_sale.products_list_view'):
             layout_mode = 'list'
         else:
             layout_mode = 'grid'
