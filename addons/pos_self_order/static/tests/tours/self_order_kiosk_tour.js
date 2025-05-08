@@ -145,7 +145,7 @@ registry.category("web_tour.tours").add("self_order_language_changes", {
         LandingPage.checkKioskCountryFlagShown("us"),
 
         LandingPage.selectKioskLocation("Test-Takeout"),
-        CategoryPage.clickKioskCategory("Uncategorised"),
+        CategoryPage.clickKioskCategory("Test Category"),
         ProductPage.clickKioskProduct("Test Product"),
         ProductPage.clickBack(),
         ...CategoryPage.clickCancel(),
@@ -156,7 +156,7 @@ registry.category("web_tour.tours").add("self_order_language_changes", {
 
         Utils.clickBtn("Commander maintenant"),
         LandingPage.selectKioskLocation("Test-Takeout"),
-        CategoryPage.clickKioskCategory("Uncategorised"),
+        CategoryPage.clickKioskCategory("Catégorie Test"),
         ProductPage.clickKioskProduct("Produit Test"),
     ],
 });

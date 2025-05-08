@@ -102,12 +102,18 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
     def test_self_order_language_changes(self):
         self.env['res.lang']._activate_lang('fr_FR')
 
+        test_category = self.env['pos.category'].create({
+            'name': "Test Category",
+        })
+
         product = self.env['product.product'].create({
             'name': "Test Product",
             'list_price': 100,
             'taxes_id': False,
             'available_in_pos': True,
+            'pos_categ_ids': [(4, test_category.id)],
         })
+        test_category.with_context(lang='fr_FR').name = "Catégorie Test"
         product.with_context(lang='fr_FR').name = "Produit Test"
 
         self.pos_config.write({
