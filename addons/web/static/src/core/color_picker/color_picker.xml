@@ -104,7 +104,7 @@
                     <button data-color="white" class="o_color_button btn bg-white"></button>
                 </div>
                 <CustomColorPicker
-                    defaultColor="this.defaultColor"
+                    defaultColor="this.state.currentCustomColor"
                     onColorSelect.bind="(color) => this.applyColor(color.hex)"
                     onColorPreview.bind="onColorPreview"
                     showRgbaField="false"
