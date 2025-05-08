@@ -77,6 +77,7 @@
         'views/seller_shop_information_templates.xml',
         'views/seller_list_templates.xml',
         'wizard/settings_view_views.xml',
+        'views/custom_product_variants.xml',
     ],
     'assets': {
         'web.assets_backend': [

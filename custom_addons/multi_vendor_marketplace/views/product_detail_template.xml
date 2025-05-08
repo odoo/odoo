@@ -8,58 +8,6 @@
                     t-att-data-view-track="view_track and '1' or '0'"
                     t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
                 
-                <!-- Store Header with rating -->
-                <t t-if="product.seller_id">
-                    <div class="store-header d-flex align-items-center py-2 mb-3 border-bottom">
-                        <div class="store-logo me-2">
-                            <t t-if="product.seller_id.image_1920">
-                                <img t-att-src="image_data_uri(product.seller_id.image_1920)" width="40" height="40" alt="Store" class="rounded-circle"/>
-                            </t>
-                            <t t-else="">
-                                <img src="/multi_vendor_marketplace/static/src/img/shop_icon.png" width="40" height="40" alt="Store" class="rounded-circle"/>
-                            </t>
-                        </div>
-                        <div class="store-info flex-grow-1">
-                            <div class="store-name fw-bold" t-esc="product.seller_id.name">Store Name</div>
-                            <div class="store-rating">
-                                <span class="rating-stars text-warning">
-                                    <t t-foreach="range(5)" t-as="star">
-                                        <t t-if="product.seller_id.avg_rating >= star+1">
-                                            <i class="fa fa-star"></i>
-                                        </t>
-                                        <t t-elif="product.seller_id.avg_rating > star and product.seller_id.avg_rating &lt; star+1">
-                                            <i class="fa fa-star-half-o"></i>
-                                        </t>
-                                        <t t-else="">
-                                            <i class="fa fa-star-o"></i>
-                                        </t>
-                                    </t>
-                                </span>
-                                <span class="rating-score" t-esc="round(product.seller_id.avg_rating, 1)">4.0</span>
-                            </div>
-                        </div>
-                        <div class="store-actions">
-                            <button class="btn btn-outline-primary me-2" style="border-radius: 30px; background-color: white; color: #0d6efd;" data-bs-toggle="modal" data-bs-target="#contact_seller_modal">
-                                <i class="fa fa-comments me-1"></i> Contact
-                            </button>
-                            <a t-att-href="'/shop/seller/%s' % (product.seller_id.id)" class="btn btn-primary" style="border-radius: 30px; background-color: white; color: #0d6efd;">
-                                <i class="fa fa-shopping-bag me-1"></i> Visit Store
-                            </a>
-                        </div>
-                    </div>
-                    <!-- MOBILE PRODUCT GALLERY: only visible on mobile -->
-                    <div class="product-gallery d-block d-md-none mt-3">
-                        <t t-if="product.product_template_image_ids">
-                            <t t-foreach="product.product_template_image_ids" t-as="img">
-                                <img t-att-src="image_data_uri(img.image_1920)" class="product-gallery-img mb-3" alt="Product image"/>
-                            </t>
-                        </t>
-                        <t t-else="">
-                            <div class="text-center text-muted">No additional product images</div>
-                        </t>
-                    </div>
-                </t>
-                
                 <!-- Breadcrumb section -->
                 <div class="row align-items-center mb-4">
                     <div class="col-12">
@@ -121,7 +69,9 @@
                                         <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
                                         
                                         <t t-if="product.attribute_line_ids">
-                                            <ul class="list-unstyled js_add_cart_variants" t-att-data-attribute_exclusions="product._get_attribute_exclusions()"/>
+                                            <ul class="list-unstyled js_add_cart_variants" t-att-data-attribute_exclusions="product._get_attribute_exclusions()">
+                                                <t t-call="multi_vendor_marketplace.custom_product_variants"/>
+                                            </ul>
                                         </t>
                                         <t t-else="">
                                             <ul class="list-unstyled js_add_cart_variants d-none" t-att-data-attribute_exclusions="product._get_attribute_exclusions()"/>
@@ -173,14 +123,12 @@
                                             <button type="button" id="buy_now" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center o_we_buy_now"
                                                 style="background: linear-gradient(90deg, #ff7300 0%, #ffb300 100%); color: #fff; border: none; border-radius: 16px 0 0 16px; font-weight: 700; font-size: 1.25rem; height: 56px; width: 50%; transition: filter 0.2s;"
                                                 data-action="buy_now">
-                                                <i class="fa fa-bolt me-2"></i>
                                                 <span>Купить сейчас</span>
                                             </button>
                                             <!-- Add to Cart Button (правая, жёлтый) -->
                                             <button type="button" id="add_to_cart" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center js_check_product a-submit"
                                                 style="background: linear-gradient(90deg, #ffd600 0%, #ffb300 100%); color: #fff; border: none; border-radius: 0 16px 16px 0; font-weight: 700; font-size: 1.25rem; height: 56px; width: 50%; transition: filter 0.2s;"
                                                 data-action="add_to_cart">
-                                                <i class="fa fa-shopping-cart me-2"></i>
                                                 <span>Добавить в корзину</span>
                                             </button>
                                         </div>
@@ -226,50 +174,6 @@
                         <div id="o_product_terms_and_share" style="display:none"></div>
                     </div>
                 </div>
-                
-                <!-- Seller Contact Modal -->
-                <div class="modal fade" id="contact_seller_modal" tabindex="-1" aria-labelledby="contactSellerModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="contactSellerModalLabel">Contact Seller</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="seller-contact-info">
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold"><i class="fa fa-phone me-2"></i>Phone</h6>
-                                        <p t-esc="product.seller_id.phone or '+1 (555) 123-4567'">+1 (555) 123-4567</p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold"><i class="fa fa-envelope me-2"></i>Email</h6>
-                                        <p t-esc="product.seller_id.email or 'seller@example.com'">seller@example.com</p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold"><i class="fa fa-globe me-2"></i>Social Media</h6>
-                                        <div class="social-links">
-                                            <a href="#" class="btn btn-outline-primary me-2 mb-2">
-                                                <i class="fa fa-facebook"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-outline-info me-2 mb-2">
-                                                <i class="fa fa-twitter"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-outline-danger me-2 mb-2">
-                                                <i class="fa fa-instagram"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-outline-success me-2 mb-2">
-                                                <i class="fa fa-whatsapp"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </section>
             <!-- Product images gallery at the bottom -->
             <div class="container my-5">
@@ -284,6 +188,46 @@
                     <t t-else="">
                         <div class="col-12 text-center text-muted">No additional product images</div>
                     </t>
+                </div>
+            </div>
+            <!-- Новый красивый блок продавца -->
+            <div class="seller-info-card" style="background:#fff; border-radius:18px; box-shadow:0 2px 12px rgba(0,0,0,0.04); padding:32px 32px 24px 32px; display:flex; flex-direction:row; align-items:center; justify-content:center; max-width:900px; margin:32px auto 32px auto;">
+                <div class="product-detail-seller-bottom" style="width:100%;">
+                    <div style="display:flex; flex-direction:row; flex:1; align-items:center;">
+                        <div class="card" style="width:90px; height:90px; display:flex; align-items:center; justify-content:center;">
+                            <img width="70" height="70" alt="" src="/multi_vendor_marketplace/static/src/img/user.png" loading="lazy" style="border-radius:50%;"/>
+                        </div>
+                        <div style="margin-left:24px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+                            <div class="seller-name" style="font-weight:600; font-size:18px; margin-bottom:6px;">Administrator</div>
+                            <div class="o_website_rating_static mb-2">
+                                <i class="fa fa-star-o" role="img"></i>
+                                <i class="fa fa-star-o" role="img"></i>
+                                <i class="fa fa-star-o" role="img"></i>
+                                <i class="fa fa-star-o" role="img"></i>
+                                <i class="fa fa-star-o" role="img"></i>
+                            </div>
+                            <a id="test" role="button" class="btn btn-outline-primary" href="/seller_shop?product_id=31" style="min-width:150px; font-weight:500;">
+                                Перейти в магазин
+                            </a>
+                        </div>
+                    </div>
+                    <div style="margin-left:48px; min-width:220px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+                        <div style="font-weight:600; font-size:16px; margin-bottom:8px;">Контакты:</div>
+                        <div style="margin-bottom:4px; color:#333; font-size:15px;"><i class="fa fa-phone me-2"></i>+1 (555) 123-4567</div>
+                        <div style="margin-bottom:4px; color:#333; font-size:15px;"><i class="fa fa-envelope me-2"></i>seller@example.com</div>
+                        <div style="display:flex; gap:12px; margin-top:4px;">
+                            <a href="https://wa.me/15551234567" target="_blank" style="color:#25D366; font-size:22px;"><i class="fa fa-whatsapp"></i></a>
+                            <a href="https://instagram.com/yourshop" target="_blank" style="color:#C13584; font-size:22px;"><i class="fa fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- конец блока -->
+            <div class="mobile-bottom-nav d-md-none">
+                <div class="nav-btns">
+                    <a href="/shop" class="nav-btn" t-attf-class="nav-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}"><i class="fa fa-home"></i></a>
+                    <a href="/shop/cart" class="nav-btn" t-attf-class="nav-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}"><i class="fa fa-shopping-cart"></i></a>
+                    <a href="/profile" class="nav-btn" t-attf-class="nav-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}"><i class="fa fa-user"></i></a>
                 </div>
             </div>
         </xpath>

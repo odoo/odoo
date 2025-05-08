@@ -1,0 +1,21 @@
+<odoo>
+  <template id="custom_product_variants">
+    <div class="custom-variants-group">
+      <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
+        <div class="custom-variant-row mb-2">
+          <div class="custom-variant-title" t-esc="ptal.attribute_id.name"/>
+          <div class="custom-variant-options d-flex flex-wrap">
+            <t t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav">
+              <button type="button"
+                      class="custom-variant-btn btn me-2 mb-2"
+                      t-att-data-attribute_id="ptal.attribute_id.id"
+                      t-att-data-value_id="ptav.id">
+                <span t-esc="ptav.name"/>
+              </button>
+            </t>
+          </div>
+        </div>
+      </t>
+    </div>
+  </template>
+</odoo> 

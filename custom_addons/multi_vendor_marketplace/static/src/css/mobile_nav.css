@@ -1,244 +1,67 @@
-/* Mobile Bottom Navigation Bar Styles */
-.o_mobile_bottom_nav {
+@media (max-width: 768px) {
+  .navbar-toggler {
+    display: none !important;
+  }
+
+  .mobile-bottom-nav {
     position: fixed;
-    bottom: 0;
     left: 0;
-    width: 100%;
-    height: 60px; /* Adjust height as needed */
-    background-color: #ffffff; /* White background */
-    border-top: 1px solid #dee2e6; /* Light border */
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: #fff;
+    border-top: 1px solid #f1f1f1;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 5px 0;
-    z-index: 1000; /* Ensure it's above other content */
-}
-
-.o_mobile_bottom_nav .nav-item {
+    height: 56px;
+    box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
+    padding: 0;
+  }
+  .mobile-bottom-nav .nav-btns {
     display: flex;
-    flex-direction: column;
+    flex: 1 1 0;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+  }
+  .mobile-bottom-nav .nav-btn {
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    display: flex;
     align-items: center;
     justify-content: center;
-    flex-grow: 1;
-    text-decoration: none;
-    color: #495057; /* Default text color */
-    font-size: 0.75rem; /* Smaller font size */
-    position: relative; /* Needed for cart count positioning */
+    flex-direction: column;
+    width: 48px;
+  }
+  .mobile-bottom-nav .nav-btn i {
+    font-size: 22px;
+    color: #888;
+    transition: color 0.2s;
+    background: none;
+    padding: 0;
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-bottom-nav .nav-btn.active i {
+    color: #ff6600;
+    background: none;
+  }
+  .mobile-bottom-nav .nav-btn span {
+    display: none !important;
+  }
+  .mobile-bottom-nav .mobile-search {
+    display: none !important;
+  }
+
+  .btn-light.position-relative.ms-3.d-lg-none {
+    display: none !important;
+  }
 }
-
-.o_mobile_bottom_nav .nav-item i.fa {
-    font-size: 1.4rem; /* Icon size */
-    margin-bottom: 3px;
-}
-
-.o_mobile_bottom_nav .nav-item span {
-    line-height: 1.2;
-}
-
-/* Style for the active link (optional) */
-.o_mobile_bottom_nav .nav-item.active {
-    color: var(--o-color-primary); /* Use Odoo primary color for active item */
-}
-
-/* Cart count badge positioning */
-.o_mobile_bottom_nav .nav-item .o_mobile_cart_count {
-    position: absolute;
-    top: 0px;
-    right: 15px; /* Adjust as needed */
-    font-size: 0.65rem;
-    padding: 2px 5px;
-}
-
-/* Hide on large screens - d-lg-none is added in the template */
-/* @media (min-width: 992px) {
-    .o_mobile_bottom_nav {
-        display: none;
-    }
-} */
-
-/* Add padding to the bottom of the wrapwrap to prevent content overlap */
-#wrapwrap.oe_website_layout {
-    padding-bottom: 60px; /* Match the height of the nav bar */
-}
-
-/* But remove the padding on large screens */
-@media (min-width: 992px) {
-    #wrapwrap.oe_website_layout {
-        padding-bottom: 0;
-    }
-}
-
-/* Custom Profile Page Mobile Adjustments */
-@media (max-width: 767.98px) {
-    .o_custom_profile_page .mt-5 {
-        margin-top: 2rem !important; /* Reduce top margin */
-    }
-
-    .o_custom_profile_page h2 {
-        font-size: 1.5rem; /* Smaller heading */
-        margin-top: 1rem !important;
-    }
-
-    .o_custom_profile_page p {
-        font-size: 0.9rem; /* Smaller text */
-        margin-bottom: 0.5rem;
-    }
-
-    .o_custom_profile_page .btn {
-        font-size: 0.9rem; /* Slightly smaller button text */
-        padding: 0.5rem 1rem; /* Adjust button padding */
-    }
-
-    .o_custom_profile_page .button-group-container {
-        margin-top: 1.5rem !important; /* Reduce space between button groups */
-    }
-
-    .o_custom_profile_page .button-group-container .row > div {
-        margin-bottom: 0.75rem; /* Add some space below each button column */
-    }
-
-    /* Make buttons full width if they aren't already */
-    .o_custom_profile_page .button-group-container .btn {
-         width: 100% !important; /* Ensure buttons are full width */
-    }
-}
-
-/* Hide all headers on mobile */
-@media (max-width: 991.98px) {
-    /* Hide all headers */
-    header {
-        display: none !important;
-    }
-
-    /* Remove top spacing */
-    #wrapwrap main {
-        padding-top: 0 !important;
-    }
-
-    /* Product container styles */
-    #product_detail_mobile {
-        padding: 0 !important;
-        margin: 0 !important;
-        position: relative;
-        min-height: 100vh;
-    }
-
-    /* Fixed bottom buttons container */
-    .product-actions-container {
-        position: fixed;
-        bottom: 60px;
-        left: 0;
-        right: 0;
-        background: white;
-        padding: 0.75rem 1rem;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-        z-index: 999;
-    }
-
-    /* Secondary action button (contact button) */
-    .product-secondary-actions {
-        width: 45px;
-    }
-
-    .product-secondary-actions .btn {
-        width: 45px;
-        height: 45px;
-        padding: 0;
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        color: #666;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        margin: 0;
-    }
-
-    .product-secondary-actions .btn i {
-        font-size: 1.2rem;
-    }
-
-    /* Main action buttons */
-    .product-main-actions {
-        flex: 1;
-    }
-
-    .product-main-actions form {
-        height: 100%;
-    }
-
-    .product-main-actions .btn {
-        height: 45px !important;
-        font-size: 0.9rem !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 4px !important;
-    }
-
-    .btn-add-to-cart, .btn-buy-now, .product-main-actions .btn {
-        all: unset;
-    }
-
-    .btn-add-to-cart {
-        background: #089454 !important;
-        color: white !important;
-        border: none !important;
-        font-weight: 600 !important;
-        padding: 0.75rem !important;
-        border-radius: 8px !important;
-    }
-
-    .btn-buy-now {
-        background: #089454 !important;
-        color: white !important;
-        border: none !important;
-        font-weight: 600 !important;
-        padding: 0.75rem !important;
-        border-radius: 8px !important;
-    }
-
-    /* Add padding to main content */
-    #wrapwrap {
-        padding-bottom: 140px !important;
-    }
-}
-
-/* Hide top navbar on mobile product page */
-@media (max-width: 991.98px) {
-    body.product_page header.o_header_standard {
-        display: none !important;
-    }
-
-    /* Remove top spacing */
-    body.product_page #wrapwrap main {
-        padding-top: 0 !important;
-    }
-
-    /* Ensure full-width container */
-    body.product_page .container {
-        max-width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-
-    /* Product image container adjustments */
-    .product-images-container {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .product-images-container .carousel {
-        margin: 0 !important;
-    }
-
-    /* Fix for variant selection */
-    .js_product.js_main_product {
-        margin-bottom: 120px !important;
-    }
-
-    #add_to_cart_wrap {
-        display: none !important;
-    }
-} 

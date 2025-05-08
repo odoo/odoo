@@ -643,9 +643,12 @@ li.o_wsale_my_cart {
 
 .oe_currency_value {
   color: #ff6600 !important; /* Цвет как у цены */
-  vertical-align: super;
-  font-size: 0.9em;
-  margin-left: 2px;
+  vertical-align: baseline;
+  font-size: 1em;
+  margin-left: 6px;
+  margin-right: 0;
+  position: static;
+  display: inline-block;
 }
 
 .qty-btn {
@@ -743,6 +746,343 @@ li.o_wsale_my_cart {
     width: 36px !important;
     min-width: 0 !important;
     max-width: 40px !important;
+}
+
+body {
+  background: #f7f7fa !important;
+}
+
+.oe_search_box {
+  border: 1.5px solid #ced4da !important;
+  border-radius: 2em !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  color: #222 !important;
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+  height: 40px !important;
+}
+
+.input-group .oe_search_box:focus {
+  border-color: #ff6600 !important;
+  box-shadow: 0 0 0 2px #ffe5d1 !important;
+}
+
+.input-group .oe_search_button {
+  border-radius: 2em !important;
+  margin-left: -44px;
+  background: none !important;
+  color: #ff6600 !important;
+  border: none !important;
+  z-index: 2;
+}
+
+.s_hr hr {
+  display: none !important;
+}
+
+.o_wsale_filmstip .btn-light {
+  background: rgba(255, 102, 0, 0.08) !important;
+  border: none !important;
+  transition: background 0.2s;
+}
+
+/* Скрыть верхний блок продавца */
+#product_detail .store-header {
+    display: none !important;
+}
+
+/* Центрировать нижний кастомный блок продавца */
+.product-detail-seller-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 40px auto 0 auto;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Жёстко скрыть стандартную панель продавца Odoo eCommerce на странице товара */
+#product_detail .seller-info, /* типовой класс Odoo */
+#product_detail .o_wsale_seller_info, /* ещё один вариант */
+#product_detail .o_product_seller_info, /* и такой бывает */
+#product_detail .oe_website_sale .seller-info, /* на всякий случай */
+#product_detail .store-header, /* если вдруг остался */
+#product_detail .o_wsale_product_seller, /* для некоторых тем */
+#product_detail .o_product_seller, /* для некоторых тем */
+#product_detail .o_wsale_product_information .seller-info {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Жёстко скрыть блок продавца с inline-стилями, если он вдруг появляется */
+div[style*="width:354px"][style*="height: 90px"] {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Стили для вариантов товара — как на втором скриншоте */
+.js_add_cart_variants label,
+.js_add_cart_variants span {
+    cursor: pointer;
+    border-radius: 8px;
+    border: 2px solid #d1d1d1;
+    padding: 7px 18px;
+    margin: 0 7px 7px 0;
+    background: #fff;
+    color: #484444;
+    font-size: 1em;
+    font-weight: 500;
+    transition: all 0.15s;
+    display: inline-block;
+    box-shadow: none;
+}
+
+.js_add_cart_variants .active,
+.js_add_cart_variants .selected,
+.js_add_cart_variants input:checked + label,
+.js_add_cart_variants input[type="radio"]:checked + span,
+.js_add_cart_variants input[type="checkbox"]:checked + span {
+    background: #fff !important;
+    border-color: #ff6600 !important;
+    color: #ff6600 !important;
+    box-shadow: none !important;
+    font-weight: 600;
+}
+
+/* Скрыть стандартный radio, стилизовать всю область выбора */
+.js_add_cart_variants .form-check-input[type="radio"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+/* Стилизуем всю .form-check как кнопку */
+.js_add_cart_variants .form-check {
+    border: 2px solid #d1d1d1;
+    border-radius: 10px;
+    background: #fff;
+    color: #484444;
+    font-size: 1em;
+    font-weight: 500;
+    margin: 0 10px 10px 0;
+    padding: 7px 18px;
+    display: inline-flex;
+    align-items: center;
+    min-width: 120px;
+    min-height: 44px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: none;
+    position: relative;
+}
+
+/* При выборе — оранжевая рамка и текст */
+.js_add_cart_variants .form-check-input[type="radio"]:checked + .form-check-label .form-check,
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .form-check {
+    border-color: #ff6600 !important;
+    color: #ff6600 !important;
+}
+
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .radio_input_value,
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .form-check-label {
+    color: #ff6600 !important;
+}
+
+/* При наведении — легкая тень */
+.js_add_cart_variants .form-check:hover {
+    box-shadow: 0 2px 8px rgba(255, 102, 0, 0.08);
+}
+
+/* Убрать ВСЕ внутренние рамки и фон у значений и цен */
+.js_add_cart_variants .form-check-label,
+.js_add_cart_variants .radio_input_value,
+.js_add_cart_variants .badge,
+.js_add_cart_variants .variant_price_extra,
+.js_add_cart_variants .radio_input_value > span,
+.js_add_cart_variants .radio_input_value .badge,
+.js_add_cart_variants .radio_input_value .variant_price_extra {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 0 8px !important;
+    color: inherit !important;
+    font-size: 1em !important;
+}
+
+.js_add_cart_variants .form-check-label,
+.js_add_cart_variants .radio_input_value {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.js_add_cart_variants .badge,
+.js_add_cart_variants .variant_price_extra {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 0 8px !important;
+}
+
+/* --- Варианты товара: стилизация по вашей структуре --- */
+.js_add_cart_variants .js_attribute_value > label > .form-check {
+    border: 2px solid #d1d1d1;
+    border-radius: 10px;
+    background: #fff;
+    color: #484444;
+    font-size: 1em;
+    font-weight: 500;
+    margin: 0 10px 10px 0;
+    padding: 7px 18px;
+    display: flex;
+    align-items: center;
+    min-width: 120px;
+    min-height: 44px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: none;
+    position: relative;
+}
+
+.js_add_cart_variants .form-check-input[type="radio"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .radio_input_value,
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .form-check-label {
+    color: #ff6600 !important;
+    font-weight: 600;
+}
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .radio_input_value .variant_price_extra {
+    color: #ff6600 !important;
+}
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .radio_input_value .badge {
+    color: #ff6600 !important;
+    border-color: #ff6600 !important;
+}
+
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .form-check,
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .radio_input_value,
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .form-check-label {
+    border-color: #ff6600 !important;
+    color: #ff6600 !important;
+    box-shadow: 0 0 0 2px #ffe5b4 !important;
+}
+
+.js_add_cart_variants .radio_input_value,
+.js_add_cart_variants .badge,
+.js_add_cart_variants .variant_price_extra {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 0 8px !important;
+    color: inherit !important;
+    font-size: 1em !important;
+}
+
+/* Заголовки вариантов — более жирные */
+.custom-variant-title {
+    font-weight: 600;
+    font-size: 1.08em;
+    margin-bottom: 6px;
+    color: #222;
+}
+
+/* Только одна рамка у кнопки, никакой внутренней */
+.custom-variant-btn,
+.custom-variant-btn.btn {
+    border: 2px solid #d1d1d1 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    color: #484444 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    font-size: 1em;
+    font-weight: 500;
+    padding: 7px 18px;
+    min-width: 120px;
+    min-height: 44px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+/* Убрать рамки и фон у вложенных элементов */
+.custom-variant-btn span,
+.custom-variant-btn > * {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* При выборе — только одна оранжевая рамка */
+.custom-variant-btn.active,
+.custom-variant-btn:focus {
+    border-color: #ff6600 !important;
+    color: #ff6600 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.custom-variant-price {
+    color: #ff6600;
+    font-size: 0.95em;
+    font-weight: 600;
+}
+
+/* Убрать рамки у контейнеров вариантов */
+.custom-variant-row,
+.custom-variant-options,
+.custom-variant-row.mb-2,
+.custom-variant-options.d-flex {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+/* Жёстко скрыть все модальные окна и backdrop */
+.modal,
+.modal-backdrop,
+#product_variants_modal,
+.oe_advanced_configurator_modal,
+.modal-dialog,
+.modal-content {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+}
+body.modal-open {
+    overflow: auto !important;
 }
 
 
