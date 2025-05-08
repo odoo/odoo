@@ -22,6 +22,7 @@
         'views/product_template_views.xml',
         'views/report_invoice.xml',
         'views/res_company_views.xml',
+        'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
     ],
     'installable': True,

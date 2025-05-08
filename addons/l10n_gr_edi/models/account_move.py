@@ -595,6 +595,15 @@ class AccountMove(models.Model):
         errors = {}
         error_action_company = {'action_text': _("View Company"), 'action': self.company_id._get_records_action(name=_("Company"))}
         error_action_partner = {'action_text': _("View Partner"), 'action': self.commercial_partner_id._get_records_action(name=_("Partner"))}
+        error_action_gr_settings = {
+            'action_text': _("View Settings"),
+            'action': {
+                'name': _("Settings"),
+                'type': 'ir.actions.act_url',
+                'target': 'self',
+                'url': '/odoo/settings#l10n_gr_edi_aade_settings',
+            },
+        }
 
         if self.state != 'posted':
             errors['l10n_gr_edi_move_not_posted'] = {
@@ -603,7 +612,7 @@ class AccountMove(models.Model):
         if not self.company_id.l10n_gr_edi_aade_id or not self.company_id.l10n_gr_edi_aade_key:
             errors['l10n_gr_edi_company_no_cred'] = {
                 'message': _("You need to set AADE ID and Key in the company settings."),
-                **error_action_company,
+                **error_action_gr_settings,
             }
         if self.company_id.country_code != 'GR' and (not self.company_id.city or not self.company_id.zip):
             errors['l10n_gr_edi_company_no_zip_street'] = {
