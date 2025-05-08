@@ -4,7 +4,7 @@
 <record model="ir.ui.view" id="product_template_hs_code">
     <field name="name">product.template.form.hs_code</field>
     <field name="model">product.template</field>
-    <field name="inherit_id" ref="product.product_template_form_view"/>
+    <field name="inherit_id" ref="stock.view_template_property_form"/>
     <field name="arch" type="xml">
         <xpath expr="//group[@name='traceability']" position="attributes">
             <attribute name="invisible">0</attribute>
