@@ -647,3 +647,7 @@ class StockMove(models.Model):
 
     def _get_all_related_sm(self, product):
         return self.filtered(lambda m: m.product_id == product)
+
+    def _get_layer_candidates(self):
+        self.ensure_one()
+        return self.stock_valuation_layer_ids
