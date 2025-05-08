@@ -176,11 +176,14 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         const isCombo = td.querySelector(
             'input[type="hidden"][name="product_type"]'
         )?.value === 'combo';
+        const showQuantity = Boolean(ev.currentTarget.dataset.showQuantity);
 
         const addToCart = this.call('cart', 'add', {
             productTemplateId: productTemplateId,
             productId: parseInt(productId, 10),
             isCombo: isCombo,
+        }, {
+            showQuantity: showQuantity,
         });
 
         if (!document.getElementById('b2b_wish').checked) {

@@ -32,11 +32,14 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
         const productTemplateId = parseInt(dataset.productTemplateId);
         const productId = parseInt(dataset.productId);
         const isCombo = dataset.productType === 'combo';
+        const showQuantity = Boolean(dataset.showQuantity);
 
         await this.call('cart', 'add', {
             productTemplateId: productTemplateId,
             productId: productId,
             isCombo: isCombo,
+        }, {
+            showQuantity: showQuantity,
         });
         if (this.add2cartRerender) {
             this.trigger_up('widgets_start_request', {
