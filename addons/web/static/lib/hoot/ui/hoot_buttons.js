@@ -43,8 +43,8 @@ export class HootButtons extends Component {
         <t t-set="failedSuites" t-value="getFailedSuiteIds()" />
         <div
             class="${HootButtons.name} relative"
-            t-on-mouseenter="() => !isRunning and (state.open = true)"
-            t-on-mouseleave="() => state.open = false"
+            t-on-pointerenter="onPointerEnter"
+            t-on-pointerleave="onPointerLeave"
         >
             <div class="flex rounded gap-px overflow-hidden">
             <button
@@ -61,7 +61,7 @@ export class HootButtons extends Component {
                 <button
                     type="button"
                     class="bg-btn px-2 py-1 transition-colors animate-slide-left"
-                    t-on-click.stop="() => state.open = !state.open"
+                    t-on-click.stop="onToggleClick"
                 >
                     <i class="fa fa-caret-down transition" t-att-class="{ 'rotate-180': state.open }" />
                 </button>
@@ -125,6 +125,28 @@ export class HootButtons extends Component {
         return suiteIds;
     }
 
+    /**
+     * @param {PointerEvent} ev
+     */
+    onPointerLeave(ev) {
+        if (ev.pointerType !== "mouse") {
+            return;
+        }
+        this.state.open = false;
+    }
+
+    /**
+     * @param {PointerEvent} ev
+     */
+    onPointerEnter(ev) {
+        if (ev.pointerType !== "mouse") {
+            return;
+        }
+        if (!this.isRunning) {
+            this.state.open = true;
+        }
+    }
+
     onRunClick() {
         const { runner } = this.env;
         switch (runner.state.status) {
@@ -157,5 +179,9 @@ export class HootButtons extends Component {
 
     onRunFailedClick() {
         storageSet(STORAGE.failed, []);
+    }
+
+    onToggleClick() {
+        this.state.open = !this.state.open;
     }
 }
