@@ -27,6 +27,8 @@ class StockPicking(models.Model):
     is_automation = fields.Boolean(string='Is Automation', default=False)
     is_error_found = fields.Boolean(string='Is Error Found', default=False)
     is_error_found_message = fields.Char(string='Error Found Message')
+    reference_1 = fields.Char(string='Reference', store=True)
+    container_number = fields.Char(string='Container Number', store=True)
 
     @api.onchange('is_error_found')
     def _onchange_is_error_found(self):
