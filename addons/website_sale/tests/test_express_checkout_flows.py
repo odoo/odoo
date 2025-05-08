@@ -7,9 +7,11 @@ from werkzeug import urls
 from odoo.http import root
 from odoo.tests import HttpCase, tagged
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.controllers.delivery import Delivery as WebsiteSaleDeliveryController
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale.controllers.cart import Cart
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -108,6 +110,18 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                 partner.country_id,
                 "Partner's state should be within partner's country",
             )
+
+    def test_express_checkout_takes_order_amount_without_delivery(self):
+        """Test that the amount to pay does not include the delivery costs in express checkout."""
+        amount_without_delivery = payment_utils.to_minor_currency_units(
+            self.cart.amount_total, self.cart.currency_id
+        )
+        self.carrier.fixed_price = 20
+        self.cart.set_delivery_line(self.carrier, self.carrier.fixed_price)
+        with MockRequest(self.env, sale_order_id=self.cart.id, website=self.website):
+            payment_values = Cart()._get_express_shop_payment_values(self.cart)
+
+        self.assertEqual(payment_values['minor_amount'], amount_without_delivery)
 
     def test_express_checkout_public_user(self):
         """ Test that when using express checkout as a public user, a new partner is created. """
@@ -447,7 +461,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                 params={
                     'billing_address': dict(self.express_checkout_billing_values),
                     'shipping_address': dict(self.express_checkout_demo_shipping_values),
-                    'shipping_option': shipping_options[0],
+                    'shipping_option': shipping_options['delivery_methods'][0],
                 },
             )
             self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
@@ -490,7 +504,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
                 params={
                     'billing_address': dict(self.express_checkout_billing_values),
                     'shipping_address': dict(self.express_checkout_demo_shipping_values_2),
-                    'shipping_option': shipping_options[0],
+                    'shipping_option': shipping_options['delivery_methods'][0],
                 },
             )
             self.assertNotEqual(
