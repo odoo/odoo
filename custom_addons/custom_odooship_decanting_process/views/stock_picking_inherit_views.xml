@@ -58,6 +58,10 @@
                 <xpath expr="//form/header/button[@class='o_btn_validate']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="reference_1" readonly="True"/>
+                    <field name="container_number" readonly="True"/>
+                </xpath>
             </field>
         </record>
     </data>
