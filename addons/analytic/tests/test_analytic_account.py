@@ -28,6 +28,13 @@ class TestAnalyticAccount(AnalyticCommon):
             },
         ])
         cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company.id})
+        """ Removes access rights linked to timesheet and project as these add
+        record rules blocking analytic flows; account overrides it"""
+        if 'account.account' not in cls.env:
+            core_group_ids = cls.env.ref("hr_timesheet.group_hr_timesheet_user", raise_if_not_found=False) or cls.env['ir.rule']
+            problematic_group_ids = cls.env.user.groups_id.filtered(lambda g: (g | g.trans_implied_ids) & core_group_ids)
+            if problematic_group_ids:
+                cls.env.user.groups_id -= problematic_group_ids
 
     def test_aggregates(self):
         # debit and credit are hidden by the group when account is installed
