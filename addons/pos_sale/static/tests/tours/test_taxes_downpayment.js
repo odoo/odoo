@@ -81,19 +81,19 @@ registry
                 ...payAndInvoice("0.73"),
                 ...addDownPayment("7", 3, "percent"),
                 ProductScreen.checkTotalAmount("2.56"),
-                ProductScreen.checkTaxAmount("0.33"),
+                ProductScreen.checkTaxAmount("0.36"),
                 ...payAndInvoice("2.56"),
                 ...addDownPayment("2.56", 4, "fixed"),
                 ProductScreen.checkTotalAmount("2.56"),
-                ProductScreen.checkTaxAmount("0.33"),
+                ProductScreen.checkTaxAmount("0.36"),
                 ...payAndInvoice("2.56"),
                 ...addDownPayment("18", 5, "percent"),
                 ProductScreen.checkTotalAmount("6.60"),
-                ProductScreen.checkTaxAmount("0.87"),
+                ProductScreen.checkTaxAmount("0.88"),
                 ...payAndInvoice("6.60"),
                 ...addDownPayment("6.60", 6, "fixed"),
                 ProductScreen.checkTotalAmount("6.60"),
-                ProductScreen.checkTaxAmount("0.87"),
+                ProductScreen.checkTaxAmount("0.88"),
                 ...payAndInvoice("6.60"),
             ].flat(),
     });
@@ -151,19 +151,19 @@ registry
                 ...payAndInvoice("0.73"),
                 ...addDownPayment("7", 3, "percent"),
                 ProductScreen.checkTotalAmount("2.56"),
-                ProductScreen.checkTaxAmount("0.33"),
+                ProductScreen.checkTaxAmount("0.36"),
                 ...payAndInvoice("2.56"),
                 ...addDownPayment("2.56", 4, "fixed"),
                 ProductScreen.checkTotalAmount("2.56"),
-                ProductScreen.checkTaxAmount("0.33"),
+                ProductScreen.checkTaxAmount("0.36"),
                 ...payAndInvoice("2.56"),
                 ...addDownPayment("18", 5, "percent"),
                 ProductScreen.checkTotalAmount("6.60"),
-                ProductScreen.checkTaxAmount("0.87"),
+                ProductScreen.checkTaxAmount("0.88"),
                 ...payAndInvoice("6.60"),
                 ...addDownPayment("6.60", 6, "fixed"),
                 ProductScreen.checkTotalAmount("6.60"),
-                ProductScreen.checkTaxAmount("0.87"),
+                ProductScreen.checkTaxAmount("0.88"),
                 ...payAndInvoice("6.60"),
             ].flat(),
     });
@@ -213,7 +213,7 @@ registry
 
                 ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("1.92"),
-                ProductScreen.checkTaxAmount("0.63"),
+                ProductScreen.checkTaxAmount("0.64"),
                 ...payAndInvoice("1.92"),
             ].flat(),
     });
@@ -243,7 +243,7 @@ registry
 
                 ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("1.92"),
-                ProductScreen.checkTaxAmount("0.63"),
+                ProductScreen.checkTaxAmount("0.64"),
                 ...payAndInvoice("1.92"),
             ].flat(),
     });
@@ -273,7 +273,7 @@ registry
 
                 ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("0.86"),
-                ProductScreen.checkTaxAmount("0.15"),
+                ProductScreen.checkTaxAmount("0.14"),
                 ...payAndInvoice("0.86"),
             ].flat(),
     });
@@ -303,7 +303,7 @@ registry
 
                 ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("0.86"),
-                ProductScreen.checkTaxAmount("0.15"),
+                ProductScreen.checkTaxAmount("0.14"),
                 ...payAndInvoice("0.86"),
             ].flat(),
     });

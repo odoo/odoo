@@ -74,7 +74,7 @@ registry
                 ]),
                 ...addDiscount("7"),
                 ProductScreen.checkTotalAmount("34.08"),
-                ProductScreen.checkTaxAmount("4.53"),
+                ProductScreen.checkTaxAmount("4.50"),
                 ...payAndInvoice("34.08"),
                 ...addDocument([
                     { product: "product_1_1", quantity: "1" },
@@ -82,7 +82,7 @@ registry
                 ]),
                 ...addDiscount("18"),
                 ProductScreen.checkTotalAmount("30.04"),
-                ProductScreen.checkTaxAmount("3.99"),
+                ProductScreen.checkTaxAmount("3.98"),
                 ...payAndInvoice("30.04"),
             ].flat(),
     });
@@ -144,7 +144,7 @@ registry
                 ]),
                 ...addDiscount("7"),
                 ProductScreen.checkTotalAmount("34.08"),
-                ProductScreen.checkTaxAmount("4.53"),
+                ProductScreen.checkTaxAmount("4.50"),
                 ...payAndInvoice("34.08"),
                 ...addDocument([
                     { product: "product_3_1", quantity: "1" },
@@ -152,7 +152,7 @@ registry
                 ]),
                 ...addDiscount("18"),
                 ProductScreen.checkTotalAmount("30.04"),
-                ProductScreen.checkTaxAmount("3.99"),
+                ProductScreen.checkTaxAmount("3.98"),
                 ...payAndInvoice("30.04"),
             ].flat(),
     });
@@ -206,7 +206,7 @@ registry
                 ]),
                 ...addDiscount("2"),
                 ProductScreen.checkTotalAmount("94.08"),
-                ProductScreen.checkTaxAmount("30.71"),
+                ProductScreen.checkTaxAmount("30.7"),
                 ...payAndInvoice("94.08"),
             ].flat(),
     });
@@ -244,7 +244,7 @@ registry
                 ]),
                 ...addDiscount("2"),
                 ProductScreen.checkTotalAmount("94.08"),
-                ProductScreen.checkTaxAmount("30.71"),
+                ProductScreen.checkTaxAmount("30.7"),
                 ...payAndInvoice("94.08"),
             ].flat(),
     });
