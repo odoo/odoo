@@ -812,7 +812,12 @@ class IrActionsServer(models.Model):
 
     def _get_relation_chain(self, searched_field_name):
         self.ensure_one()
-        if not searched_field_name or not searched_field_name in self._fields or not self[searched_field_name]:
+        if (
+            not searched_field_name
+            or not searched_field_name in self._fields
+            or not self[searched_field_name]
+            or not self.model_id
+        ):
             return [], ""
         path = self[searched_field_name].split('.')
         if not path:
