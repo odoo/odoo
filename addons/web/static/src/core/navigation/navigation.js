@@ -34,7 +34,7 @@ class NavigationItem {
         /**
          * @private
          * @type {Navigator}
-        */
+         */
         this._navigator = navigator;
 
         this.el = el;
@@ -43,6 +43,10 @@ class NavigationItem {
             this.target = subInput || el;
         } else {
             this.target = el;
+        }
+
+        if (this.el.ariaSelected !== true) {
+            this.el.ariaSelected = false;
         }
 
         const onFocus = () => this.setActive(false);
@@ -67,6 +71,7 @@ class NavigationItem {
         scrollTo(this.target);
         this._navigator._setActiveItem(this.index);
         this.target.classList.add(ACTIVE_ELEMENT_CLASS);
+        this.target.ariaSelected = true;
 
         if (focus && !this._options.virtualFocus) {
             throttledFocus.cancel();
@@ -76,6 +81,7 @@ class NavigationItem {
 
     setInactive(blur = true) {
         this.target.classList.remove(ACTIVE_ELEMENT_CLASS);
+        this.target.ariaSelected = false;
         if (blur && !this._options.virtualFocus) {
             this.target.blur();
         }
@@ -102,28 +108,22 @@ export class Navigator {
     /**@type {Array<NavigationItem>}*/
     items = [];
 
-    /**@private*/ _enabled = false;
-    /**@private*/ _targetObserver = undefined;
-    /**@private*/ _initialFocusElement = undefined;
     /**@private*/ _hotkeyRemoves = [];
     /**@private*/ _hotkeyService = undefined;
 
     /**
-     * @param {*} containerRef
      * @param {NavigationOptions} options
+     * @param {import("@web/core/hotkeys/hotkey_service").HotkeyService} hotkeyService
      */
-    constructor(containerRef, options, hotkeyService) {
-        this.containerRef = containerRef;
+    constructor(options, hotkeyService) {
         this._hotkeyService = hotkeyService;
 
         /**@private*/
         this._options = deepMerge(
             {
+                isNavigationAvailable: ({ target }) => this.contains(target),
                 shouldFocusChildInput: true,
                 virtualFocus: false,
-                itemsSelector: ":scope .o-navigable",
-                focusInitialElementOnDisabled: () => true,
-
                 hotkeys: {
                     home: () => this.items[0]?.setActive(),
                     end: () => this.items.at(-1)?.setActive(),
@@ -144,6 +144,7 @@ export class Navigator {
                         bypassEditableProtection: true,
                     },
                     enter: {
+                        isAvailable: ({ navigator }) => Boolean(navigator.activeItem),
                         callback: () => {
                             const item = this.activeItem || this.items[0];
                             item?.select();
@@ -154,6 +155,32 @@ export class Navigator {
             },
             options
         );
+
+        for (const [hotkey, hotkeyInfo] of Object.entries(this._options.hotkeys)) {
+            if (!hotkeyInfo) {
+                continue;
+            }
+
+            const callback = typeof hotkeyInfo == "function" ? hotkeyInfo : hotkeyInfo.callback;
+            if (!callback) {
+                continue;
+            }
+
+            const isAvailable = hotkeyInfo?.isAvailable ?? (() => true);
+            const bypassEditableProtection = hotkeyInfo?.bypassEditableProtection ?? false;
+            const allowRepeat = hotkeyInfo?.allowRepeat ?? true;
+
+            this._hotkeyRemoves.push(
+                this._hotkeyService.add(hotkey, async () => await callback(this), {
+                    global: true,
+                    allowRepeat,
+                    isAvailable: (target) =>
+                        this._options.isNavigationAvailable({ navigator: this, target }) &&
+                        isAvailable({ navigator: this, target }),
+                    bypassEditableProtection,
+                })
+            );
+        }
     }
 
     /**
@@ -181,128 +208,71 @@ export class Navigator {
         }
     }
 
-    /**
-     * @private
-     */
-    _enable() {
-        if (!this.containerRef.el || this._targetObserver) {
-            return;
-        }
+    update() {
+        const oldItems = new Map(this.items.map((item) => [item.el, item]));
+        const oldActiveItem = this.activeItem;
+        const elements = this._options.getItems();
+        this.items = [];
 
-        for (const [hotkey, hotkeyInfo] of Object.entries(this._options.hotkeys)) {
-            if (!hotkeyInfo) {
-                continue;
+        for (let index = 0; index < elements.length; index++) {
+            const element = elements[index];
+
+            let item = oldItems.get(element);
+            if (item) {
+                item.index = index;
+                oldItems.delete(element);
+            } else {
+                item = new NavigationItem({
+                    index,
+                    el: element,
+                    options: this._options,
+                    navigator: this,
+                });
             }
-
-            const isFunction = typeof hotkeyInfo === "function";
-            const callback = isFunction ? hotkeyInfo : hotkeyInfo.callback;
-            const isAvailable = hotkeyInfo?.isAvailable ?? (() => true);
-            const bypassEditableProtection = hotkeyInfo?.bypassEditableProtection ?? false;
-            const allowRepeat = "allowRepeat" in hotkeyInfo ? hotkeyInfo.allowRepeat : true;
-
-            this._hotkeyRemoves.push(
-                this._hotkeyService.add(hotkey, () => callback(this), {
-                    allowRepeat,
-                    isAvailable: (target) => isAvailable(this, target),
-                    bypassEditableProtection,
-                })
-            );
+            this.items.push(item);
         }
 
-        this._targetObserver = new MutationObserver(() => this._update());
-        this._targetObserver.observe(this.containerRef.el, {
-            childList: true,
-            subtree: true,
-        });
-
-        this._initialFocusElement = document.activeElement;
-        this.activeItemIndex = -1;
-        this._update();
-
-        if (this._options.onEnabled) {
-            this._options.onEnabled(this);
-        } else if (this.items.length > 0) {
-            this.items[0]?.setActive();
+        for (const item of oldItems.values()) {
+            item._removeListeners();
         }
 
-        this._enabled = true;
+        const activeItemIndex =
+            oldActiveItem && oldActiveItem.el.isConnected
+                ? this.items.findIndex((item) => item.el === oldActiveItem.el)
+                : -1;
+        if (activeItemIndex > -1) {
+            this._updateActiveItemIndex(activeItemIndex);
+        } else if (this.activeItemIndex >= 0) {
+            const closest = Math.min(this.activeItemIndex, elements.length - 1);
+            this._updateActiveItemIndex(closest);
+        } else {
+            this._updateActiveItemIndex(-1);
+        }
+
+        this._options.onUpdated?.(this);
+    }
+
+    /**
+     * @param {HTMLElement} target
+     * @returns {boolean}
+     */
+    contains(target) {
+        return this.items.some((item) => item.target === target);
     }
 
     /**
      * @private
      */
-    _disable() {
-        if (!this._enabled) {
-            return;
+    _destroy() {
+        for (const item of this.items) {
+            item._removeListeners();
         }
+        this.items = [];
 
-        if (this._targetObserver) {
-            this._targetObserver.disconnect();
-            this._targetObserver = undefined;
-        }
-
-        this._clearItems();
         for (const removeHotkey of this._hotkeyRemoves) {
             removeHotkey();
         }
         this._hotkeyRemoves = [];
-
-        if (this._options.focusInitialElementOnDisabled()) {
-            throttledFocus.cancel();
-            throttledFocus(this._initialFocusElement);
-        }
-
-        this._enabled = false;
-    }
-
-    /**
-     * @private
-     */
-    _update() {
-        if (!this.containerRef.el) {
-            return;
-        }
-        const oldActiveItem = this.activeItem;
-        const oldItemsLength = this.items.length;
-
-        const elements = [...this.containerRef.el.querySelectorAll(this._options.itemsSelector)];
-        if (this.items.length > elements.length) {
-            this.items.splice(elements.length - this.items.length);
-        }
-
-        for (let i = 0; i < elements.length; i++) {
-            const navItem = new NavigationItem({
-                index: i,
-                el: elements[i],
-                options: this._options,
-                navigator: this,
-            });
-
-            if (i >= this.items.length) {
-                this.items.push(navItem);
-            } else {
-                this.items[i] = navItem;
-            }
-        }
-
-        // Focus last item if some where removed
-        if (oldItemsLength != this.items.length && this.activeItemIndex >= this.items.length) {
-            this.items.at(-1)?.setActive();
-        }
-        // Focus closest item if the current active item has changed/was removed
-        else if (
-            this.activeItemIndex < this.items.length &&
-            oldActiveItem !== this.items[this.activeItemIndex]
-        ) {
-            const index = elements.indexOf(oldActiveItem?.el);
-            if (index < 0) {
-                this.items[this.activeItemIndex]?.setActive();
-            } else {
-                // set the new active item's index
-                this.activeItemIndex = index;
-                this.activeItem = this.items[this.activeItemIndex];
-            }
-        }
     }
 
     /**
@@ -317,24 +287,24 @@ export class Navigator {
     /**
      * @private
      */
-    _clearItems() {
-        for (const item of this.items) {
-            item._removeListeners();
+    _updateActiveItemIndex(index) {
+        if (this.items[index]) {
+            this.items[index].setActive();
+        } else {
+            this.activeItemIndex = -1;
+            this.activeItem = null;
         }
-        this.items = [];
     }
 }
 
 /**
  * @typedef {Object} NavigationOptions
+ * @property {() => HTMLElement[]} getItems
+ * @property {({{ navigator: Navigator, target: HTMLElement }}) => bool} isNavigationAvailable
  * @property {NavigationHotkeys} hotkeys
- * @property {Function} onEnabled
- * @property {Function} onMouseEnter
+ * @property {Function} onUpdated
  * @property {Boolean} [virtualFocus=false] - If true, items are only visually
  * focused so the actual focus can be kept on another input.
- * @property {string} [itemsSelector=":scope .o-navigable"] - The selector used to get the list
- * of navigable elements.
- * @property {Function} focusInitialElementOnDisabled
  * @property {Boolean} [shouldFocusChildInput=false] - If true, elements like inputs or buttons
  * inside of the items are focused instead of the items themselves.
  */
@@ -358,7 +328,7 @@ export class Navigator {
 /**
  * @typedef HotkeyOptions
  * @param {hotkeyHandler} callback
- * @param {Function} isAvailable
+ * @param {({{ navigator: Navigator, target: HTMLElement }}) => bool} isAvailable
  * @param {boolean} bypassEditableProtection
  * @param {boolean} [allowRepeat=true]
  */
@@ -384,30 +354,35 @@ export class Navigator {
  *
  * @param {string|Object} containerRef
  * @param {NavigationOptions} options
- * @returns {{
- *  enable: Function,
- *  disable: Function,
- * }}
+ * @returns {Navigator}
  */
 export function useNavigation(containerRef, options = {}) {
-    const hotkeyService = useService("hotkey");
     containerRef = typeof containerRef === "string" ? useRef(containerRef) : containerRef;
-    const navigator = new Navigator(containerRef, options, hotkeyService);
+
+    const newOptions = { ...options };
+    if (!newOptions.getItems) {
+        newOptions.getItems = () => containerRef.el?.querySelectorAll(":scope .o-navigable") ?? [];
+    }
+
+    const hotkeyService = useService("hotkey");
+    const navigator = new Navigator(newOptions, hotkeyService);
+    const observer = new MutationObserver(() => navigator.update());
 
     useEffect(
-        (container) => {
-            if (container) {
-                navigator._enable();
-            } else if (navigator) {
-                navigator._disable();
+        (containerEl) => {
+            if (containerEl) {
+                navigator.update();
+                observer.observe(containerEl, {
+                    childList: true,
+                    subtree: true,
+                });
             }
+            return () => observer.disconnect();
         },
         () => [containerRef.el]
     );
-    onWillUnmount(() => navigator._disable());
 
-    return {
-        enable: () => navigator._enable(),
-        disable: () => navigator._disable(),
-    };
+    onWillUnmount(() => navigator._destroy());
+
+    return navigator;
 }
