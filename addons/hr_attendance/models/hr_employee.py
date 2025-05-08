@@ -31,6 +31,7 @@ class HrEmployee(models.Model):
         selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")],
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     hours_last_month = fields.Float(compute='_compute_hours_last_month')
+    hours_last_month_overtime = fields.Float(compute='_compute_hours_last_month')
     hours_today = fields.Float(
         compute='_compute_hours_today',
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
@@ -45,6 +46,7 @@ class HrEmployee(models.Model):
     overtime_ids = fields.One2many(
         'hr.attendance.overtime', 'employee_id', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     total_overtime = fields.Float(compute='_compute_total_overtime', compute_sudo=True)
+    display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -92,7 +94,7 @@ class HrEmployee(models.Model):
 
     def _compute_hours_last_month(self):
         """
-        Compute hours in the current month, if we are the 15th of october, will compute hours from 1 oct to 15 oct
+        Compute hours and overtime hours in the current month, if we are the 15th of october, will compute from 1 oct to 15 oct
         """
         now = fields.Datetime.now()
         now_utc = pytz.utc.localize(now)
@@ -104,15 +106,23 @@ class HrEmployee(models.Model):
             end_tz = now_tz
             end_naive = end_tz.astimezone(pytz.utc).replace(tzinfo=None)
 
-            hours = sum(
-                att.worked_hours or 0
-                for att in employee.attendance_ids.filtered(
-                    lambda att: att.check_in >= start_naive and att.check_out and att.check_out <= end_naive
-                )
+            current_month_attendances = employee.attendance_ids.filtered(
+                lambda att: att.check_in >= start_naive and att.check_out and att.check_out <= end_naive
             )
-
+            hours = 0
+            overtime_hours = 0
+            for att in current_month_attendances:
+                hours += att.worked_hours or 0
+                overtime_hours += att.validated_overtime_hours or 0
             employee.hours_last_month = round(hours, 2)
             employee.hours_last_month_display = "%g" % employee.hours_last_month
+            overtime_adjustments = sum(
+                ot.duration or 0
+                for ot in employee.overtime_ids.filtered(
+                    lambda ot: ot.date >= start_tz.date() and ot.date <= end_tz.date() and ot.adjustment
+                )
+            )
+            employee.hours_last_month_overtime = round(overtime_hours + overtime_adjustments, 2)
 
     def _compute_hours_today(self):
         now = fields.Datetime.now()
@@ -225,23 +235,10 @@ class HrEmployee(models.Model):
             "context": {
                 "create": 0,
                 "search_default_check_in_filter": 1,
+                "employee_id": self.id,
+                "display_extra_hours": self.display_extra_hours,
             },
             "domain": [('employee_id', '=', self.id)]
-        }
-
-    def action_open_total_overtime(self):
-        self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Extra Hours"),
-            "res_model": "hr.attendance",
-            "views": [[self.env.ref('hr_attendance.hr_attendance_validated_hours_employee_simple_tree_view').id, "list"]],
-            "context": {
-                "create": 0,
-                "employee_id": self.id,
-                "model": 'hr.employee',
-            },
-            "domain": [('employee_id', '=', self.id), ('overtime_status', '=', 'approved')]
         }
 
     @api.depends("user_id.im_status", "attendance_state")
