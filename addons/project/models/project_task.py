@@ -318,6 +318,8 @@ class ProjectTask(models.Model):
         'A private task cannot have a parent.',
     )
 
+    _is_template_idx = models.Index('(is_template) WHERE is_template IS TRUE')
+
     @api.constrains('company_id', 'partner_id')
     def _ensure_company_consistency_with_partner(self):
         """ Ensures that the company of the task is valid for the partner. """
@@ -800,7 +802,7 @@ class ProjectTask(models.Model):
     def _search_has_template_ancestor(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             return NotImplemented
-        template_tasks = self.env['project.task'].with_context(active_test=False).search([('is_template', '=', True)])
+        template_tasks = self.env['project.task'].with_context(active_test=False).sudo().search([('is_template', '=', True)])
         domain = [('id', 'child_of', template_tasks.ids)]
         if (operator == "=") != value:
             domain = ['!', ('id', 'child_of', template_tasks.ids)]
