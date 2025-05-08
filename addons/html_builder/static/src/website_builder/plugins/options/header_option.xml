@@ -204,101 +204,61 @@
 
 <t t-name="website.headerBackgroundOption">
     <BuilderRow label.translate="Background">
-        <!-- TODO: theme tab withCombinations="'customizeWebsiteColor'" -->
         <BuilderColorPicker
-            enabledTabs="['custom', 'gradient']"
+            enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
-            action="'reloadComposite'"
-            actionParam="[
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: {
-                        mainParam: 'menu-custom',
-                        gradientColor: 'menu-gradient',
-                        nullValue: 'NULL',
-                    },
-                },
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: 'menu',
-                },
-            ]"/>
-        <!-- TODO: theme tab withCombinations="'customizeWebsiteColor'" -->
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'menu-custom',
+                gradientColor: 'menu-gradient',
+                combinationColor: 'menu',
+                nullValue: 'NULL',
+            }"/>
         <BuilderColorPicker t-if="isActiveItem('header_sales_one_opt')"
-            enabledTabs="['custom', 'gradient']"
+            enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
-            action="'reloadComposite'"
-            actionParam="[
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: {
-                        mainParam: 'header-sales_one-custom',
-                        gradientColor: 'menu-secondary-gradient',
-                        nullValue: 'NULL',
-                    },
-                },
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: 'header-sales_one',
-                },
-            ]"/>
-        <!-- TODO: theme tab withCombinations="'customizeWebsiteColor'" -->
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'header-sales_one-custom',
+                gradientColor: 'menu-secondary-gradient',
+                combinationColor: 'header-sales_one',
+                nullValue: 'NULL',
+            }"/>
         <BuilderColorPicker t-if="isActiveItem('header_sales_two_opt')"
-            enabledTabs="['custom', 'gradient']"
+            enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
-            action="'reloadComposite'"
-            actionParam="[
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: {
-                        mainParam: 'header-sales_two-custom',
-                        gradientColor: 'menu-secondary-gradient',
-                        nullValue: 'NULL',
-                    },
-                },
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: 'header-sales_two',
-                },
-            ]"/>
-        <!-- TODO: theme tab withCombinations="'customizeWebsiteColor'" -->
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'header-sales_two-custom',
+                gradientColor: 'menu-secondary-gradient',
+                combinationColor: 'header-sales_two',
+                nullValue: 'NULL',
+            }"/>
         <BuilderColorPicker t-if="isActiveItem('header_sales_three_opt')"
-            enabledTabs="['custom', 'gradient']"
+            enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
-            action="'reloadComposite'"
-            actionParam="[
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: {
-                        mainParam: 'header-sales_three-custom',
-                        gradientColor: 'menu-secondary-gradient',
-                        nullValue: 'NULL',
-                    },
-                },
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: 'header-sales_three',
-                },
-            ]"/>
-        <!-- TODO: theme tab withCombinations="'customizeWebsiteColor'" -->
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'header-sales_three-custom',
+                gradientColor: 'menu-secondary-gradient',
+                combinationColor: 'header-sales_three',
+                nullValue: 'NULL',
+            }"/>
         <BuilderColorPicker t-if="isActiveItem('header_sales_four_opt')"
-            enabledTabs="['custom', 'gradient']"
+            enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
-            action="'reloadComposite'"
-            actionParam="[
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: {
-                        mainParam: 'header-sales_four-custom',
-                        gradientColor: 'menu-secondary-gradient',
-                        nullValue: 'NULL',
-                    },
-                },
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: 'header-sales_four',
-                },
-            ]"/>
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'header-sales_four-custom',
+                gradientColor: 'menu-secondary-gradient',
+                combinationColor: 'header-sales_four',
+                nullValue: 'NULL',
+            }"/>
     </BuilderRow>
 </t>
 

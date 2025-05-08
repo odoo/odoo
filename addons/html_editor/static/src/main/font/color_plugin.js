@@ -16,7 +16,13 @@ import {
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { isColorGradient, isCSSColor, RGBA_REGEX, rgbaToHex } from "@web/core/utils/colors";
+import {
+    isColorGradient,
+    isCSSColor,
+    RGBA_REGEX,
+    rgbaToHex,
+    COLOR_COMBINATION_CLASSES_REGEX,
+} from "@web/core/utils/colors";
 import { ColorSelector } from "./color_selector";
 
 const RGBA_OPACITY = 0.6;
@@ -35,6 +41,7 @@ export class ColorPlugin extends Plugin {
         "getPropsForColorSelector",
         "removeAllColor",
         "getElementColors",
+        "getColorCombination",
     ];
     resources = {
         user_commands: [
@@ -63,6 +70,7 @@ export class ColorPlugin extends Plugin {
         /** Handlers */
         selectionchange_handlers: this.updateSelectedColor.bind(this),
         remove_format_handlers: this.removeAllColor.bind(this),
+        color_combination_getters: getColorCombinationFromClass,
 
         /** Overridables */
         /**
@@ -463,4 +471,17 @@ export class ColorPlugin extends Plugin {
             this.delegateTo("apply_color_style", element, mode, color);
         }
     }
+
+    getColorCombination(el, actionParam) {
+        for (const handler of this.getResource("color_combination_getters")) {
+            const value = handler(el, actionParam);
+            if (value) {
+                return value;
+            }
+        }
+    }
+}
+
+function getColorCombinationFromClass(el) {
+    return el.className.match?.(COLOR_COMBINATION_CLASSES_REGEX)?.[0];
 }

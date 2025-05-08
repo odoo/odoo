@@ -3,25 +3,17 @@
 
 <t t-name="website.FooterCopyrightOption">
     <BuilderRow label.translate="Colors">
-        <!-- TODO: theme tab withCombinations="'customizeWebsiteColor'" -->
         <BuilderColorPicker
-            enabledTabs="['custom', 'gradient']"
+            enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
-            action="'reloadComposite'"
-            actionParam="[
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: {
-                        mainParam: 'copyright-custom',
-                        gradientColor: 'copyright-gradient',
-                        nullValue: 'NULL',
-                    },
-                },
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: 'copyright',
-                },
-            ]"/>
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'copyright-custom',
+                gradientColor: 'copyright-gradient',
+                combinationColor: 'copyright',
+                nullValue: 'NULL',
+            }"/>
     </BuilderRow>
     <t t-if="this.languages.length > 1">
         <BuilderRow label.translate="Language Selector">

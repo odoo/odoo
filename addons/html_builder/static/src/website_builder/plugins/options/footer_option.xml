@@ -66,25 +66,17 @@
 
 <t t-name="website.FooterColorsOption">
     <BuilderRow label.translate="Colors">
-        <!-- TODO: theme tab withCombinations="'customizeWebsiteColor'" -->
         <BuilderColorPicker
-            enabledTabs="['custom', 'gradient']"
+            enabledTabs="['theme', 'custom', 'gradient']"
             preview="false"
-            action="'reloadComposite'"
-            actionParam="[
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: {
-                        mainParam: 'footer-custom',
-                        gradientColor: 'footer-gradient',
-                        nullValue: 'NULL',
-                    },
-                },
-                {
-                    action: 'customizeWebsiteColor',
-                    actionParam: 'footer',
-                },
-            ]"/>
+            defaultColor="''"
+            action="'customizeWebsiteColor'"
+            actionParam="{
+                mainParam: 'footer-custom',
+                gradientColor: 'footer-gradient',
+                combinationColor: 'footer',
+                nullValue: 'NULL',
+            }"/>
     </BuilderRow>
 </t>
 

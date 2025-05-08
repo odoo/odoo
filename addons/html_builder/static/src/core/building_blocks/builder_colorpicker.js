@@ -10,7 +10,6 @@ import {
     useHasPreview,
 } from "../utils";
 import { isColorGradient } from "@web/core/utils/colors";
-import { COLOR_COMBINATION_CLASSES_REGEX } from "@html_editor/utils/color";
 
 // TODO replace by useInputBuilderComponent after extract unit by AGAU
 export function useColorPickerBuilderComponent() {
@@ -46,8 +45,11 @@ export function useColorPickerBuilderComponent() {
         const { actionId, actionParam } = actionWithGetValue;
         const actionValue = getAction(actionId).getValue({ editingElement, params: actionParam });
         return {
-            selectedColor: actionValue || "#FFFFFF00",
-            selectedColorCombination: getColorCombination(editingElement),
+            selectedColor: actionValue || comp.props.defaultColor,
+            selectedColorCombination: comp.env.editor.shared.color.getColorCombination(
+                editingElement,
+                actionParam
+            ),
         };
     }
     function getColor(colorValue) {
@@ -90,10 +92,12 @@ export class BuilderColorPicker extends Component {
         title: { type: String, optional: true },
         getUsedCustomColors: { type: Function, optional: true },
         selectedTab: { type: String, optional: true },
+        defaultColor: { type: String, optional: true },
     };
     static defaultProps = {
         getUsedCustomColors: () => [],
         enabledTabs: ["theme", "gradient", "custom"],
+        defaultColor: "#FFFFFF00",
     };
     static components = {
         ColorSelector: ColorSelector,
@@ -125,13 +129,22 @@ export class BuilderColorPicker extends Component {
     }
 
     getSelectedColorStyle() {
-        if (isColorGradient(this.state.selectedColor)) {
-            return `background-image: ${this.state.selectedColor}`;
+        if (this.state.selectedColor) {
+            if (isColorGradient(this.state.selectedColor)) {
+                return `background-image: ${this.state.selectedColor}`;
+            }
+            return `background-color: ${this.state.selectedColor}`;
         }
-        return `background-color: ${this.state.selectedColor}`;
+        if (this.state.selectedColorCombination) {
+            const colorCombination = this.state.selectedColorCombination.replace("_", "-");
+            const el = this.env.getEditingElement();
+            const style = el.ownerDocument.defaultView.getComputedStyle(el);
+            if (style.backgroundImage !== "none") {
+                return `background-image: ${style.backgroundImage}`;
+            } else {
+                return `background-color: var(--${colorCombination}-bg)`;
+            }
+        }
+        return "";
     }
-}
-
-function getColorCombination(el) {
-    return el.className.match?.(COLOR_COMBINATION_CLASSES_REGEX)?.[0];
 }

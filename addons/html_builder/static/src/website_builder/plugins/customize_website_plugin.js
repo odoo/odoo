@@ -1,8 +1,4 @@
-import {
-    getCSSVariableValue,
-    isColorCombinationName,
-    isCSSVariable,
-} from "@html_builder/utils/utils_css";
+import { getCSSVariableValue, isCSSVariable } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { parseHTML } from "@html_editor/utils/html";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -12,6 +8,7 @@ import { registry } from "@web/core/registry";
 import { isColorGradient, isCSSColor } from "@web/core/utils/colors";
 import { Deferred } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
+import { withSequence } from "@html_editor/utils/resource";
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
@@ -32,6 +29,13 @@ export class CustomizeWebsitePlugin extends Plugin {
 
     resources = {
         builder_actions: this.getActions(),
+        color_combination_getters: withSequence(5, (el, actionParam) => {
+            const combination = actionParam.combinationColor;
+            if (combination) {
+                const style = this.window.getComputedStyle(this.document.documentElement);
+                return `o_cc${getCSSVariableValue(combination, style)}`;
+            }
+        }),
     };
 
     cache = {};
@@ -76,7 +80,9 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
             }),
             customizeWebsiteColor: this.withCustomHistory({
-                getValue: ({ params: { mainParam: color, colorType, gradientColor } }) => {
+                getValue: ({
+                    params: { mainParam: color, colorType, gradientColor, combinationColor },
+                }) => {
                     const style = this.window.getComputedStyle(this.document.documentElement);
                     if (gradientColor) {
                         const gradientValue = this.getWebsiteVariableValue(gradientColor);
@@ -87,7 +93,13 @@ export class CustomizeWebsitePlugin extends Plugin {
                     return getCSSVariableValue(color, style);
                 },
                 apply: async ({
-                    params: { mainParam: color, colorType, gradientColor },
+                    params: {
+                        mainParam: color,
+                        colorType,
+                        gradientColor,
+                        combinationColor,
+                        nullValue,
+                    },
                     value,
                 }) => {
                     if (gradientColor) {
@@ -102,13 +114,16 @@ export class CustomizeWebsitePlugin extends Plugin {
                             {
                                 [color]: colorValue,
                             },
-                            { colorType }
+                            { colorType, combinationColor, nullValue }
                         );
                         await this.customizeWebsiteVariables({
-                            [gradientColor]: gradientValue,
+                            [gradientColor]: gradientValue || nullValue,
                         }); // reloads bundles
                     } else {
-                        await this.customizeWebsiteColors({ [color]: value }, { colorType });
+                        await this.customizeWebsiteColors(
+                            { [color]: value },
+                            { colorType, combinationColor, nullValue }
+                        );
                     }
                 },
             }),
@@ -360,7 +375,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             nullValue
         );
     }, 0);
-    async customizeWebsiteColors(colors = {}, { colorType, nullValue } = {}) {
+    async customizeWebsiteColors(colors = {}, { colorType, combinationColor, nullValue } = {}) {
         const baseURL = "/website/static/src/scss/options/colors/";
         colorType = colorType ? colorType + "_" : "";
         const url = `${baseURL}user_${colorType}color_palette.scss`;
@@ -369,8 +384,10 @@ export class CustomizeWebsitePlugin extends Plugin {
         for (const [colorName, color] of Object.entries(colors)) {
             finalColors[colorName] = color;
             if (color) {
-                if (isColorCombinationName(color)) {
-                    finalColors[colorName] = parseInt(color);
+                const isColorCombination = /^o_cc[12345]$/.test(color);
+                if (isColorCombination) {
+                    finalColors[combinationColor] = parseInt(color.substring(4));
+                    delete finalColors[colorName];
                 } else if (isCSSVariable(color)) {
                     const customProperty = color.match(/var\(--(.+?)\)/)[1];
                     finalColors[colorName] = this.getWebsiteVariableValue(customProperty);
