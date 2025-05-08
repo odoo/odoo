@@ -44,27 +44,19 @@ class ResUsers(models.Model):
                                                                                officers_to_remove_ids]
     def action_open_last_month_attendances(self):
         self.ensure_one()
+        display_overtime = self.company_id.hr_attendance_display_overtime
+        context = {
+            "create": 0,
+            "display_extra_hours": not display_overtime,
+        }
+        if display_overtime:
+            context["search_default_approved"] = 1
         return {
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
-            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_simple_tree_view').id, "list"]],
-            "context": {
-                "create": 0
-            },
+            "views": [[self.env.ref('hr_attendance.hr_attendance_validated_hours_employee_simple_tree_view').id, "list"]],
+            "context": context,
             "domain": [('employee_id', '=', self.employee_id.id),
                        ('check_in', ">=", fields.Datetime.today().replace(day=1))]
-        }
-
-    def action_open_last_month_overtime(self):
-        self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Overtime"),
-            "res_model": "hr.attendance.overtime",
-            "views": [[False, "list"]],
-            "context": {
-                "create": 0
-            },
-            "domain": [('employee_id', '=', self.employee_id.id)]
         }

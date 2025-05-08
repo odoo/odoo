@@ -26,31 +26,20 @@
                         icon="fa-clock-o"
                         type="object"
                         groups="hr_attendance.group_hr_attendance_officer"
-                        invisible="hours_last_month == 0"
                         help="Worked hours this month">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="hours_last_month" widget="float_time"/> Hours
+                            <field name="hours_last_month" widget="float_time"/>
+                            <span class="o_stat_value text-success" invisible="total_overtime &lt;= 0">
+                                (+<field name="total_overtime" widget="float_time"/>)
+                            </span>
+                            <span class="o_stat_value text-danger" invisible="total_overtime &gt;= 0">
+                                (-<field name="total_overtime" widget="float_time"/>)
+                            </span>
                         </span>
                         <span class="o_stat_text">
-                            This Month
+                            Monthly Hours
                         </span>
-                    </div>
-                </button>
-                <button name="action_open_last_month_overtime"
-                        class="oe_stat_button"
-                        icon="fa-history"
-                        type="object"
-                        invisible="total_overtime == 0.0"
-                        groups="hr_attendance.group_hr_attendance_officer">
-                    <div class="o_stat_info">
-                        <span class="o_stat_value text-success" invisible="total_overtime &lt; 0">
-                            <field name="total_overtime" widget="float_time"/>
-                        </span>
-                        <span class="o_stat_value text-danger" invisible="total_overtime &gt;= 0">
-                            <field name="total_overtime" widget="float_time"/>
-                        </span>
-                        <span class="o_stat_text">Extra Hours</span>
                     </div>
                 </button>
             </xpath>
@@ -72,37 +61,23 @@
                 <field name="employee_ids" invisible="1"/>
                 <button name="action_open_last_month_attendances"
                         class="oe_stat_button"
-                        icon="fa-calendar"
+                        icon="fa-clock-o"
                         type="object"
                         groups="base.group_user"
                         help="Worked hours this month">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="hours_last_month" widget="float_time"/> Hours
+                            <field name="hours_last_month" widget="float_time"/>
+                            <span class="o_stat_value text-success" invisible="total_overtime &lt;= 0 or not display_extra_hours" groups="hr.group_hr_user">
+                                (+<field name="total_overtime" widget="float_time"/>)
+                            </span>
+                            <span class="o_stat_value text-danger" invisible="total_overtime &gt;= 0 or not display_extra_hours" groups="hr.group_hr_user">
+                                (-<field name="total_overtime" widget="float_time"/>)
+                            </span>
                         </span>
                         <span class="o_stat_text">
-                            This Month
+                            Monthly Hours
                         </span>
-                    </div>
-                </button>
-            </xpath>
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <field name="display_extra_hours" invisible="1"/>
-                <button name="action_open_last_month_overtime"
-                        class="oe_stat_button"
-                        icon="fa-history"
-                        type="object"
-                        invisible="total_overtime == 0.0 or not display_extra_hours"
-                        groups="hr.group_hr_user"
-                        help="Amount of extra hours">
-                    <div class="o_stat_info">
-                        <span class="o_stat_value text-success" invisible="total_overtime &lt; 0">
-                            <field name="total_overtime" widget="float_time"/>
-                        </span>
-                        <span class="o_stat_value text-danger" invisible="total_overtime &gt;= 0">
-                            <field name="total_overtime" widget="float_time"/>
-                        </span>
-                        <span class="o_stat_text">Extra Hours</span>
                     </div>
                 </button>
             </xpath>
@@ -184,6 +159,13 @@
                 <field name="check_in"/>
                 <field name="check_out"/>
                 <field name="worked_hours" string="Work Hours" widget="float_time"/>
+                <field name="validated_overtime_hours" string="Extra Hours" widget="float_time" />
+                <field name="overtime_status" string="Status" widget="badge"
+                       decoration-warning="overtime_status == 'to_approve'"
+                       decoration-success="overtime_status == 'approved'"
+                       decoration-danger="overtime_status == 'refused'"
+                       optional="hide"
+                />
             </list>
         </field>
     </record>
@@ -228,7 +210,14 @@
                 <field name="check_in"/>
                 <field name="check_out"/>
                 <field name="worked_hours" string="Worked Hours" widget="float_time"/>
-                <field name="validated_overtime_hours" string="Extra Hours" widget="float_time"/>
+                <field name="validated_overtime_hours" string="Extra Hours" widget="float_time" column_invisible="context.get('display_extra_hours')"/>
+                <field name="overtime_status" string="Status" widget="badge"
+                       decoration-warning="overtime_status == 'to_approve'"
+                       decoration-success="overtime_status == 'approved'"
+                       decoration-danger="overtime_status == 'refused'"
+                       column_invisible="context.get('display_extra_hours')"
+                       optional="hide"
+                />
             </list>
         </field>
     </record>
