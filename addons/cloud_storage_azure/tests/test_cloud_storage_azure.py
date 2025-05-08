@@ -23,7 +23,7 @@ class TestCloudStorageAzure(TransactionCase):
         self.DUMMY_AZURE_TENANT_ID = 'tenantid'
         self.DUMMY_AZURE_CLIENT_ID = 'clientid'
         self.DUMMY_AZURE_CLIENT_SECRET = 'secret'
-        self.container_name = 'container_name'
+        self.container_name = 'container-name'
         self.env['ir.config_parameter'].set_param('cloud_storage_provider', 'azure')
         self.env['ir.config_parameter'].set_param('cloud_storage_azure_account_name', self.DUMMY_AZURE_ACCOUNT_NAME)
         self.env['ir.config_parameter'].set_param('cloud_storage_azure_tenant_id', self.DUMMY_AZURE_TENANT_ID)
@@ -159,6 +159,55 @@ class TestCloudStorageAzure(TransactionCase):
             attachment._post_add_create(cloud_storage=True)
             attachment._generate_cloud_storage_upload_info()
             attachment._generate_cloud_storage_download_info()
+
+    def test_azure_url_validation(self):
+        file_name = 'test.txt'
+
+        def mk_url(account_name='admin', container_name='odoo-container'):
+            return f'https://{account_name}.blob.core.windows.net/{container_name}/{file_name}'
+
+        attachment = self.env['ir.attachment'].create([{
+            'name': file_name,
+            'mimetype': 'text/plain',
+            'datas': b'',
+            'type': 'cloud_storage',
+            'url': mk_url(self.DUMMY_AZURE_ACCOUNT_NAME, self.container_name),
+        }])
+
+        self.assertDictEqual(attachment._get_cloud_storage_azure_info(), {
+            'account_name': self.DUMMY_AZURE_ACCOUNT_NAME,
+            'container_name': self.container_name,
+            'blob_name': file_name,
+        })
+
+        attachment.url = mk_url(account_name='admin4lyfe', container_name='1-c-o-n-t-a-i-n-e-r')
+        self.assertDictEqual(attachment._get_cloud_storage_azure_info(), {
+            'account_name': 'admin4lyfe',
+            'container_name': '1-c-o-n-t-a-i-n-e-r',
+            'blob_name': file_name,
+        })
+
+        # Invalid account names
+        with self.assertRaises(ValidationError):
+            attachment.url = mk_url(account_name='LOWERCASEONLY')
+            attachment._get_cloud_storage_azure_info()
+        with self.assertRaises(ValidationError):
+            attachment.url = mk_url(account_name='no-hyphens')
+            attachment._get_cloud_storage_azure_info()
+        with self.assertRaises(ValidationError):
+            attachment.url = mk_url(account_name='no_underscores')
+            attachment._get_cloud_storage_azure_info()
+
+        # Invalid container names
+        with self.assertRaises(ValidationError):
+            attachment.url = mk_url(container_name='LOWERCASEONLY')
+            attachment._get_cloud_storage_azure_info()
+        with self.assertRaises(ValidationError):
+            attachment.url = mk_url(container_name='-no-starting-hyphens')
+            attachment._get_cloud_storage_azure_info()
+        with self.assertRaises(ValidationError):
+            attachment.url = mk_url(container_name='no_underscores')
+            attachment._get_cloud_storage_azure_info()
 
     def test_uninstall_fail(self):
         with self.assertRaises(UserError, msg="Don't uninstall the module if there are Azure attachments in use"):
