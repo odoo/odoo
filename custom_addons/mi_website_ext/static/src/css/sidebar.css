@@ -1,41 +1,55 @@
 .custom-sidebar {
     width: 300px;
     height: 100vh;
-    background-color: #a10606;
-    padding: 20px;
+    background-color: #ffffff;
+    padding: 16px;
+    gap: 16px;
     box-sizing: border-box;
-    overflow-y: auto;
-    position: fixed;
-    left: 80% !important;
-    top: 10%;
-    border-right: 1px solid #ddd;
+    overflow-y: hidden;
+    position: sticky;
+    left: 79%;
+    margin-top: 5%;
     font-family: Arial, sans-serif;
+    border-radius: 8px;
     z-index: 9999;
 }
 .profile-section {
     text-align: center;
+    background-color: #FAFDFF;
     margin-bottom: 20px;
+    border: 1px solid #EBEAEA;
+    border-radius: 8px;
+    box-shadow: 0px 4px 7.5px #83332733;
+    padding: 24px 0px;
+
 }
 .avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+    width: 280px;
+    height: 130px;
+    border-radius: 8px 8px 0px 0px ;
+    padding: 0px 16px;
 }
 .name {
     font-size: 18px;
     margin: 10px 0 5px;
+    padding: 0px 16px;
 }
 .position, .department, .bio {
     font-size: 14px;
     color: #555;
+    padding: 0px 16px;
+}
+.btn-section{
+    padding: 0px 16px;
 }
 .btn-time {
-    margin-top: 10px;
-    background-color: #007bff;
-    color: white;
-    padding: 6px 12px;
+    margin-top: 8px;
+    background-color: #F9AA4E;
+    color: black;
+    font-weight: 800;
+    padding: 8px 40px;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
 }
 .cards-section {
@@ -46,7 +60,8 @@
 }
 .card {
     flex: 1;
-    background-color: #e9ecef;
+    background-color: #FCFDFF;
+    border: 1px solid #EBEAEA;
     padding: 10px;
     border-radius: 8px;
     text-align: center;
@@ -54,6 +69,7 @@
 .card h4 {
     font-size: 14px;
     margin-bottom: 5px;
+    font-weight: 800;
 }
 .announcements-section {
     margin-bottom: 20px;
