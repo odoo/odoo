@@ -621,6 +621,8 @@ class BaseAutomation(models.Model):
             'uid': self.env.uid,
             'user': self.env.user,
             'model': model,
+            'context_today': safe_eval.datetime.datetime.today,
+            'relativedelta': safe_eval.dateutil.relativedelta.relativedelta,
         }
         if payload is not None:
             eval_context['payload'] = payload
@@ -977,7 +979,10 @@ class BaseAutomation(models.Model):
             domain = []
             context = dict(self._context)
             if automation.filter_domain:
-                domain = safe_eval.safe_eval(automation.filter_domain, eval_context)
+                # to_utc is a purely JS concept where datetime is localized by default
+                # as that is the default in python, and to_utc is undefined, we can disregard it
+                domain = automation.filter_domain.replace('.to_utc()', '')
+                domain = safe_eval.safe_eval(domain, eval_context)
             records = self.env[automation.model_name].with_context(context).search(domain)
 
             def get_record_dt(record):
