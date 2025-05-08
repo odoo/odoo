@@ -618,6 +618,11 @@ class BaseAutomation(models.Model):
             'datetime': safe_eval.datetime,
             'dateutil': safe_eval.dateutil,
             'time': safe_eval.time,
+            'context_today': safe_eval.datetime.date.now,
+            'relativedelta': safe_eval.dateutil.relativedelta.relativedelta,
+            'now': safe_eval.datetime.datetime.now().strftime(r'%Y-%m-%d %H:%M:%S'),
+            'today': safe_eval.datetime.date.now().strftime(r'%Y-%m-%d'),
+            'current_date': safe_eval.datetime.date.now().strftime(r'%Y-%m-%d'),  # deprecated: today should be prefered
             'uid': self.env.uid,
             'user': self.env.user,
             'model': model,
