@@ -53,27 +53,36 @@ export class BlockTab extends Component {
         this.shared.operation.next(
             async () => {
                 let snippetEl;
+                const baseSectionEl = snippet.content.cloneNode(true);
                 this.state.ongoingInsertion = true;
                 await new Promise((resolve) => {
                     this.snippetModel.openSnippetDialog(snippet, {
                         onSelect: (snippet) => {
                             snippetEl = snippet.content.cloneNode(true);
-                            const selectors = this.shared.dropzone.getSelectors(snippetEl);
-                            // Add the dropzones corresponding to the selected
-                            // snippet and make them invisible.
+
+                            // Add the dropzones corresponding to a section and
+                            // make them invisible.
+                            const selectors = this.shared.dropzone.getSelectors(baseSectionEl);
                             const dropzoneEls = this.shared.dropzone.activateDropzones(selectors);
                             this.editable
                                 .querySelectorAll(".oe_drop_zone")
                                 .forEach((dropzoneEl) => dropzoneEl.classList.add("invisible"));
 
                             // Find the dropzone closest to the center of the
-                            // viewport.
+                            // viewport and not located in the top quarter of
+                            // the viewport.
                             const iframeWindow = this.document.defaultView;
                             const viewPortCenterPoint = {
                                 x: iframeWindow.innerWidth / 2,
                                 y: iframeWindow.innerHeight / 2,
                             };
-                            const closestDropzoneEl = closest(dropzoneEls, viewPortCenterPoint);
+                            const validDropzoneEls = dropzoneEls.filter(
+                                (el) => el.getBoundingClientRect().top >= viewPortCenterPoint.y / 2
+                            );
+                            const closestDropzoneEl =
+                                closest(validDropzoneEls, viewPortCenterPoint) ||
+                                dropzoneEls.at(-1);
+
                             // Insert the selected snippet.
                             closestDropzoneEl.after(snippetEl);
                             this.shared.dropzone.removeDropzones();
