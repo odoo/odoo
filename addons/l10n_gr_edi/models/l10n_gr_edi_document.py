@@ -45,7 +45,7 @@ def _make_mydata_request(company, endpoint, xml_content) -> dict[str, str] | dic
         response.raise_for_status()
         root = etree.fromstring(response.content)
     except (RequestException, ValueError) as err:
-        return {'error': err}
+        return {'error': str(err)}
 
     result = {}
     for response_element in root.xpath('//response'):

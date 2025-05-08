@@ -189,7 +189,7 @@ class AccountMove(models.Model):
     @api.depends('fiscal_position_id', 'l10n_gr_edi_available_inv_type')
     def _compute_l10n_gr_edi_inv_type(self):
         for move in self:
-            if move._l10n_gr_edi_eligible_for_mydata():
+            if move.country_code == 'GR':
                 if move.l10n_gr_edi_inv_type or move.move_type == 'entry':
                     # If we have previously calculated the inv_type, reuse it here.
                     # For entry moves, we want the inv_type to be False. (we don't send anything to MyDATA on entry moves)
@@ -357,7 +357,7 @@ class AccountMove(models.Model):
         conditional_address_keys = ('issuer_name', 'issuer_postal_code', 'issuer_city', 'counterpart_vat', 'counterpart_country',
                                     'counterpart_branch', 'counterpart_name', 'counterpart_postal_code', 'counterpart_city')
         values.update({
-            'issuer_vat_number': self.company_id.vat,
+            'issuer_vat_number': self.company_id.vat.replace('EL', '').replace('GR', ''),
             'issuer_country': self.company_id.country_code,
             'issuer_branch': self.company_id.l10n_gr_edi_branch_number or 0,
             **dict.fromkeys(conditional_address_keys),
@@ -372,7 +372,7 @@ class AccountMove(models.Model):
 
         if inv_type_allows_counterpart:
             values.update({
-                'counterpart_vat': self.commercial_partner_id.vat,
+                'counterpart_vat': self.commercial_partner_id.vat.replace('EL', '').replace('GR', ''),
                 'counterpart_country': self.commercial_partner_id.country_code,
                 'counterpart_branch': (self.commercial_partner_id.l10n_gr_edi_branch_number or 0),
             })
@@ -703,7 +703,7 @@ class AccountMove(models.Model):
             # If the request failed at this stage, it is probably caused by connection/credentials issues.
             # In such case, we don't need to attach the xml here as it won't be helpful for the user.
             for move in move_ids:
-                move._l10n_gr_edi_create_error_document(result['error'])
+                move._l10n_gr_edi_create_error_document(result)
         else:
             for result_id, result_dict in result.items():
                 move = move_ids[result_id]
