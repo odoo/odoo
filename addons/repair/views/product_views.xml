@@ -17,7 +17,8 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="product.product_view_search_catalog"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='goods']" position="after">
+            <xpath expr="//filter[@name='favorites']" position="after">
+                <separator/>
                 <filter string="In the Repair Order"
                     invisible="context.get('active_model') != 'stock.move' or
                                 context.get('product_catalog_order_model') != 'repair.order'"
