@@ -28,3 +28,6 @@ class ProductTemplate(models.Model):
     is_serial_number = fields.Boolean(string='By Serial Number', default=False)
     is_dg = fields.Boolean(string='Is DG', default=False)
     is_fragile = fields.Boolean(string='Is Fragile', default=False)
+    is_high_value = fields.Boolean(string='Is High Value', default=False)
+    product_category_2 = fields.Many2one('product.category',string='Product Category Level 2')
+    product_category_3 = fields.Many2one('product.category',string='Product Category Level 3')
