@@ -8436,6 +8436,8 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
+"EU 외의 국가에 있는 고객을 상대로 상품이나 서비스를 판매하는 경우 배송지 주소를 기준으로 부가가치세가 부과됩니다."
+"                                 이 규정은 소재지에 관계없이 적용됩니다."
 
 #. module: account
 #. odoo-python
@@ -9186,7 +9188,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "Invoices/Bills/Mandates"
-msgstr ""
+msgstr "청구서/업체청구서/위임장"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -12946,7 +12948,7 @@ msgstr "분할 명세"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__original_tax_ids
 msgid "Replaces"
-msgstr ""
+msgstr "대체"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__report_id
@@ -15522,6 +15524,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"조정 모델은 명세서 행 라벨이나 거래 세부 정보가 다음과 일치하는 경우에 한해서만 적용됩니다:\n"
+"        * 포함: 명세서 행에 반드시 해당 문자열이 포함되어야 합니다(대소문자 구분 없음)\n"
+"        * 미포함: \"포함\"과 반대되는 경우\n"
+"        * 정규식 매칭: 나만의 정규식 지정"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount

@@ -304,7 +304,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
-msgstr ""
+msgstr "%(user)s ha avviato un thread: %(goto)s%(thread_name)s%(goto_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -577,7 +577,7 @@ msgstr "<span class=\"d-block w-75 py-2\">Pulsante colore</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Button Text</span>"
-msgstr ""
+msgstr "<span class=\"d-block w-75 py-2\">Testo pulsante</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -774,7 +774,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_role_unique_name
 msgid "A role with the same name already exists."
-msgstr ""
+msgstr "Esiste già un ruolo con lo stesso nome."
 
 #. module: mail
 #. odoo-python
@@ -957,6 +957,7 @@ msgstr ""
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_user_id_is_set_if_model
 msgid "Activities must be assigned if not attached to a document."
 msgstr ""
+"Le attività dovrebbero essere assegnate se non allegate a un documento."
 
 #. module: mail
 #. odoo-javascript
@@ -1855,7 +1856,7 @@ msgstr "Intensità sfocatura sfondo"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/badge_selection_icons/badge_selection_icons_field.js:0
 msgid "Badges with Icons"
-msgstr ""
+msgstr "Badge con icone"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -2139,7 +2140,7 @@ msgstr "Può modificare corpo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__can_edit_role
 msgid "Can Edit Role"
-msgstr ""
+msgstr "Può modificare ruolo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
@@ -2168,13 +2169,13 @@ msgstr "Può inviare messaggi via bus.bus"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Can't launch a plan without a record."
-msgstr ""
+msgstr "Impossibile lanciare un piano senza un record."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Can't schedule activities without either a record or a user."
-msgstr ""
+msgstr "Impossibile pianificare attività senza un record o un utente."
 
 #. module: mail
 #. odoo-javascript
@@ -5962,13 +5963,13 @@ msgstr "Unisciti ad un gruppo"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Join the Call"
-msgstr ""
+msgstr "Partecipa alla chiamata"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Join the Call with Camera"
-msgstr ""
+msgstr "Partecipa alla chiamata con video"
 
 #. module: mail
 #. odoo-javascript
@@ -6230,7 +6231,7 @@ msgstr "Abbandona questo canale"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_description
 msgid "Line Description"
-msgstr ""
+msgstr "Descrizione riga"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__link_field_id
@@ -6241,7 +6242,7 @@ msgstr "Campo collegamento"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_link_preview__link_preview_id
 msgid "Link Preview"
-msgstr ""
+msgstr "Anteprima link"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_link_preview_action
@@ -7409,7 +7410,7 @@ msgstr "Nessun messaggio nella cronologia"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/activity_model_selector/activity_model_selector.xml:0
 msgid "No linked model"
-msgstr ""
+msgstr "Nessun modello collegato"
 
 #. module: mail
 #. odoo-python
@@ -7694,18 +7695,21 @@ msgstr "Notifica tutti"
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
 msgid "Notify multiple people at once by @-mentioning roles in conversations."
 msgstr ""
+"Notifica più persone in una volta @-menzionando i ruoli nelle conversazioni."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Notify users with this role"
-msgstr ""
+msgstr "Invia notifiche agli utenti con questo ruolo"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Notify users with this role who have permission to view this channel"
 msgstr ""
+"Invia notifiche agli utenti con questo ruolo che hanno i permessi per "
+"visualizzare il canale"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction_counter
@@ -8557,7 +8561,7 @@ msgstr "Si prega di contattarci utilizzando"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "Please provide a valid email"
-msgstr ""
+msgstr "Fornisci un indirizzo e-mail valido"
 
 #. module: mail
 #. odoo-javascript
@@ -9307,7 +9311,7 @@ msgstr "Ripristina modello"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Reset initial position"
-msgstr ""
+msgstr "RIpristina posizione iniziale"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -9393,7 +9397,7 @@ msgstr "Ruoli"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
 msgid "Roles Search"
-msgstr ""
+msgstr "Ricerca ruoli"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__rtc_session_ids
@@ -10288,7 +10292,7 @@ msgstr "Inizia un meeting"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Started by %(authorName)s"
-msgstr ""
+msgstr "Avviato da %(authorName)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -11064,19 +11068,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of #%(channelName)s channel"
-msgstr ""
+msgstr "Questo è l'inizio del canale #%(channelName)s "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of %(conversationName)s group"
-msgstr ""
+msgstr "Questo è l'inizio del gruppo %(conversationName)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of direct chat with %(userName)s"
-msgstr ""
+msgstr "Questo è l'inizio di una chat diretta con %(userName)s"
 
 #. module: mail
 #. odoo-python
@@ -11582,7 +11586,7 @@ msgstr "Non assegnati"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Unassigned Activities"
-msgstr ""
+msgstr "Attività non assegnate"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form

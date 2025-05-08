@@ -307,6 +307,8 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                        Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                        Gesperrt"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -850,7 +852,8 @@ msgstr "Automatische Vervollständigung aus einer vergangenen Bestellung."
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
 msgstr ""
-"Bestätigte Aufträge automatisch sperren, um eine Bearbeitung zu verhindern"
+"Sperren Sie bestätigte Bestellungen automatisch, um eine Bearbeitung zu "
+"verhindern"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1585,6 +1588,8 @@ msgstr "Geben Sie die Produktmenge an, die Sie bestellen möchten."
 #: model:ir.model.fields,help:purchase.field_purchase_order__purchase_warning_text
 msgid "Internal warning for the partner or the products as set by the user."
 msgstr ""
+"Interne Warnung für den Partner oder die vom Benutzer eingestellten "
+"Produkte."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
@@ -1740,7 +1745,7 @@ msgstr "Sperren"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__lock_confirmed_po
 msgid "Lock Confirmed Orders"
-msgstr "Bestätigte Aufträge sperren"
+msgstr "Bestätigte Bestellungen sperren"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__locked
@@ -1750,7 +1755,7 @@ msgstr "Gesperrt"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__locked
 msgid "Locked Purchase Orders cannot be modified."
-msgstr ""
+msgstr "Gesperrte Bestellungen können nicht bearbeitet werden."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2489,7 +2494,7 @@ msgstr "Einkaufsbericht"
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__purchase_warning_text
 msgid "Purchase Warning"
-msgstr ""
+msgstr "Einkaufswarnung"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -2597,7 +2602,7 @@ msgstr "Abzurechnende Menge"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice
 msgid "Qty to invoice"
-msgstr ""
+msgstr "Abzurechnende Menge"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
@@ -3346,6 +3351,8 @@ msgstr "Entsperren"
 msgid ""
 "Unlocking the order is not allowed as 'Lock Confirmed Orders' is enabled."
 msgstr ""
+"Das Entsperren der Bestellung ist nicht erlaubt, da die Funktion „Bestätigte"
+" Bestellungen sperren“ aktiviert ist."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3368,7 +3375,7 @@ msgstr "Gesamter Nettobetrag"
 #. odoo-javascript
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.xml:0
 msgid "Upload Bill"
-msgstr ""
+msgstr "Rechnung hochladen"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3503,12 +3510,12 @@ msgstr "Möchten Sie dieses Dokument in Odoo importieren?"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning on Purchase Orders"
-msgstr ""
+msgstr "Warnung auf Bestellungen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on Purchase Orders and Bills"
-msgstr ""
+msgstr "Warnung auf Bestellungen und Rechnungen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3572,7 +3579,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "You can only upload a bill for a single partner at a time."
-msgstr ""
+msgstr "Sie können jeweils nur eine Rechnung für einen Partner hochladen."
 
 #. module: purchase
 #. odoo-python
@@ -3643,12 +3650,12 @@ msgstr "Tag(e) vorher"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "e.g. There is a newer version of this product."
-msgstr ""
+msgstr "z. B. Es gibt eine neuere Version dieses Produkts."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "e.g. This vendor is on vacation until the end of August."
-msgstr ""
+msgstr "z. B. Dieser Lieferant hat bis Ende August geschossen."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
