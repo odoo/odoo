@@ -237,8 +237,6 @@ export class DiscussChannel extends models.ServerModel {
 
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").ResGroups} */
-        const ResGroups = this.env["res.groups"];
 
         const [data] = this._read_format(
             ids,
@@ -248,6 +246,7 @@ export class DiscussChannel extends models.ServerModel {
                 "create_uid",
                 "default_display_mode",
                 "description",
+                "group_public_id",
                 "last_interest_dt",
                 "name",
                 "uuid",
@@ -255,10 +254,8 @@ export class DiscussChannel extends models.ServerModel {
             false
         );
         const [channel] = this.browse(ids);
-        const [group_public_id] = ResGroups.browse(channel.group_public_id);
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         Object.assign(data, {
-            authorizedGroupFullName: group_public_id ? group_public_id.name : false,
             group_based_subscription: channel.group_ids.length > 0,
             is_editable: (() => {
                 if (channel.channel_type === "channel") {
@@ -385,6 +382,8 @@ export class DiscussChannel extends models.ServerModel {
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").MailNotification} */
         const MailNotification = this.env["mail.notification"];
+        /** @type {import("mock_models").ResGroups}*/
+        const ResGroups = this.env["res.groups"];
 
         const channels = this.browse(ids);
         for (const channel of channels) {
@@ -401,7 +400,10 @@ export class DiscussChannel extends models.ServerModel {
             res.from_message_id = mailDataHelpers.Store.one(
                 MailMessage.browse(channel.from_message_id)
             );
-            res.group_public_id = channel.group_public_id;
+            res.group_public_id = mailDataHelpers.Store.one(
+                ResGroups.browse(channel.group_public_id),
+                makeKwArgs({ fields: ["full_name"] })
+            );
             if (this.env.user) {
                 const message_needaction_counter = MailNotification._filter([
                     ["res_partner_id", "=", this.env.user.partner_id],
@@ -755,40 +757,28 @@ export class DiscussChannel extends models.ServerModel {
          * @returns {Object[]}
          */
         const mentionSuggestionsFilter = (channels, search, limit) => {
-            const matchingChannels = channels
-                .filter((channel) => {
-                    // no search term is considered as return all
-                    if (!search) {
-                        return true;
-                    }
-                    // otherwise name or email must match search term
-                    if (channel.name && channel.name.includes(search)) {
-                        return true;
-                    }
-                    return false;
-                })
-                .map((channel) => {
-                    // expected format
-                    const parentChannel = this.browse(channel.parent_channel_id);
-                    return {
-                        authorizedGroupFullName: channel.group_public_id
-                            ? channel.group_public_id.name
-                            : false,
-                        channel_type: channel.channel_type,
-                        id: channel.id,
-                        model: "discuss.channel",
-                        name: channel.name,
-                        parent_channel_id: parentChannel.length
-                            ? { id: parentChannel[0].id, model: "discuss.channel" }
-                            : false,
-                    };
-                });
-            // reduce results to max limit
+            const matchingChannels = channels.filter((channel) => {
+                // no search term is considered as return all
+                if (!search) {
+                    return true;
+                }
+                // otherwise name or email must match search term
+                if (channel.name && channel.name.includes(search)) {
+                    return true;
+                }
+                return false;
+            });
             matchingChannels.length = Math.min(matchingChannels.length, limit);
             return matchingChannels;
         };
         const mentionSuggestions = mentionSuggestionsFilter(this, search, limit);
-        return mentionSuggestions;
+        const store = new mailDataHelpers.Store(
+            mentionSuggestions,
+            makeKwArgs({
+                fields: ["name", "channel_type", "group_public_id", "parent_channel_id"],
+            })
+        );
+        return store.get_result();
     }
 
     /**
