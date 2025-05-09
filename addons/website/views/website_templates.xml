@@ -2703,7 +2703,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     </div>
                 </t>
                 <div t-if="results" class="table-responsive">
-                    <t t-call="website.one_hybrid" t-foreach="results" t-as="result" t-key="result_index"/>
+                    <t t-call="website.one_hybrid" t-foreach="results" t-as="result"/>
                 </div>
                 <div t-if="pager" class="o_portal_pager d-flex justify-content-center">
                     <t t-call="website.pager"/>
