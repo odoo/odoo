@@ -10,7 +10,17 @@ class Im_LivechatReportChannel(models.Model):
     leads_created = fields.Integer("Leads created", aggregator="sum", readonly=True)
 
     def _select(self) -> SQL:
-        return SQL("%s, count(distinct crm_lead.id) as leads_created", super()._select())
+        return SQL("%s, crm_lead_data.leads_created AS leads_created", super()._select())
 
     def _from(self) -> SQL:
-        return SQL("%s LEFT JOIN crm_lead ON (crm_lead.origin_channel_id = C.id)", super()._from())
+        return SQL(
+            """%s
+            LEFT JOIN LATERAL
+                (
+                    SELECT count(*) AS leads_created
+                      FROM crm_lead
+                     WHERE crm_lead.origin_channel_id = C.id
+                ) AS crm_lead_data ON TRUE
+            """,
+            super()._from(),
+        )

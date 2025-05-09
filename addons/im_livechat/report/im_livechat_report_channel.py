@@ -69,91 +69,7 @@ class Im_LivechatReportChannel(models.Model):
 
     @property
     def _table_query(self):
-        return SQL("%s %s %s %s %s", self._cte(), self._select(), self._from(), self._where(), self._group_by())
-
-    def _cte(self) -> SQL:
-        return SQL(
-            """
-            WITH message_vals AS (
-                SELECT m.res_id as channel_id,
-                       COUNT(DISTINCT m.id) AS message_count,
-                       MIN(m.create_date) FILTER (
-                           WHERE m.author_id = c.livechat_operator_id
-                       ) AS first_agent_message_dt_legacy,
-                       MAX(m.create_date) AS last_message_dt,
-                       MIN(m.create_date) FILTER (
-                           WHERE h.livechat_member_type = 'agent'
-                       ) AS first_agent_message_dt,
-                       MAX(m.create_date) FILTER (
-                           WHERE h.livechat_member_type = 'bot'
-                       ) AS last_bot_message_dt
-                  FROM mail_message m
-                  JOIN discuss_channel c
-                    ON c.id = m.res_id
-                   AND m.model = 'discuss.channel'
-                   AND c.channel_type = 'livechat'
-             LEFT JOIN im_livechat_channel_member_history h
-                    ON h.channel_id = m.res_id
-                   AND m.model = 'discuss.channel'
-                   AND (h.guest_id = m.author_guest_id or h.partner_id = m.author_id)
-              GROUP BY m.res_id
-            ),
-            channel_member_history AS (
-                SELECT channel_id,
-                       BOOL_OR(livechat_member_type = 'agent') as has_agent,
-                       BOOL_OR(livechat_member_type = 'bot') as has_bot,
-                       MIN(CASE WHEN livechat_member_type = 'visitor' THEN partner_id END) AS visitor_partner_id,
-                       MIN(CASE WHEN chatbot_script_id IS NOT NULL THEN chatbot_script_id END) AS chatbot_script_id
-                  FROM im_livechat_channel_member_history
-              GROUP BY channel_id
-            ),
-            chatbot_answer_history AS (
-                SELECT chatbot_message.discuss_channel_id AS channel_id,
-                       STRING_AGG(user_raw_script_answer_id::TEXT, ' - ' ORDER BY chatbot_message.id) AS answers_path,
-                       STRING_AGG(
-                           COALESCE(
-                               chatbot_script_answer.name->>%s,
-                               chatbot_script_answer.name->>'en_US',
-                               fallback.value,
-                               %s
-                           ),
-                           ' > ' ORDER BY chatbot_message.id
-                       ) AS answers_path_str
-                  FROM chatbot_message
-             LEFT JOIN chatbot_script_answer ON chatbot_message.user_script_answer_id = chatbot_script_answer.id
-     LEFT JOIN LATERAL (
-                      SELECT value
-                      FROM jsonb_each_text(chatbot_script_answer.name)
-                      LIMIT 1
-                    ) AS fallback ON TRUE
-                 WHERE chatbot_message.user_raw_script_answer_id IS NOT NULL
-              GROUP BY chatbot_message.discuss_channel_id
-            ),
-            expertise_history AS (
-                SELECT im_livechat_channel_member_history.channel_id,
-                       STRING_AGG(
-                             COALESCE(
-                                 im_livechat_expertise.name->>%s,
-                                 im_livechat_expertise.name->>'en_US',
-                                 fallback.value
-                             ),
-                             ' - ' ORDER BY im_livechat_expertise.id
-                         ) AS expertises
-                  FROM im_livechat_channel_member_history_im_livechat_expertise_rel REL
-                  JOIN im_livechat_expertise ON im_livechat_expertise.id = REL.im_livechat_expertise_id
-                  JOIN im_livechat_channel_member_history ON im_livechat_channel_member_history.id = REL.im_livechat_channel_member_history_id
-          JOIN LATERAL (
-                            SELECT value
-                              FROM jsonb_each_text(im_livechat_expertise.name)
-                             LIMIT 1
-                        ) AS fallback ON TRUE
-              GROUP BY channel_id
-            )
-            """,
-            self.env.lang,
-            self._unknown_chatbot_answer_name,
-            self.env.lang,
-        )
+        return SQL("%s %s %s", self._select(), self._from(), self._where())
 
     def _select(self) -> SQL:
         return SQL(
@@ -169,43 +85,37 @@ class Im_LivechatReportChannel(models.Model):
                 to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
                 to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
                 EXTRACT(dow from C.create_date)::text AS day_number,
-                EXTRACT('epoch' FROM MAX(message_vals.last_message_dt) - c.create_date)/60 AS duration,
+                EXTRACT('epoch' FROM message_vals.last_message_dt - c.create_date)/60 AS duration,
                 CASE
                     WHEN channel_member_history.has_agent AND channel_member_history.has_bot THEN
-                        EXTRACT('epoch' FROM MIN(message_vals.first_agent_message_dt) - MAX(message_vals.last_bot_message_dt))
+                        EXTRACT('epoch' FROM message_vals.first_agent_message_dt - message_vals.last_bot_message_dt)
                     WHEN channel_member_history.has_agent THEN
-                        EXTRACT('epoch' FROM MIN(message_vals.first_agent_message_dt) - c.create_date)
+                        EXTRACT('epoch' FROM message_vals.first_agent_message_dt - c.create_date)
                     ELSE
-                        EXTRACT('epoch' FROM MIN(message_vals.first_agent_message_dt_legacy) - c.create_date)
+                        EXTRACT('epoch' FROM message_vals.first_agent_message_dt_legacy - c.create_date)
                 END/3600 AS time_to_answer,
-                SUM(message_vals.message_count) as nbr_message,
+                message_vals.message_count as nbr_message,
                 CASE
                     WHEN C.livechat_is_escalated THEN 'escalated'
                     ELSE C.livechat_failure
                 END AS session_outcome,
                 C.country_id,
-                Rate.rating as rating,
+                C.rating_last_value AS rating,
                 CASE
-                    WHEN Rate.rating = 1 THEN 'Unhappy'
-                    WHEN Rate.rating = 5 THEN 'Happy'
-                    WHEN Rate.rating = 3 THEN 'Neutral'
+                    WHEN C.rating_last_value = 1 THEN 'Unhappy'
+                    WHEN C.rating_last_value = 5 THEN 'Happy'
+                    WHEN C.rating_last_value = 3 THEN 'Neutral'
                     ELSE null
                 END as rating_text,
                 C.livechat_operator_id as partner_id,
                 CASE WHEN channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_agent,
                 CASE WHEN channel_member_history.has_bot and not channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_bot,
                 CASE WHEN channel_member_history.chatbot_script_id IS NOT NULL AND NOT channel_member_history.has_agent THEN channel_member_history.chatbot_script_id ELSE NULL END AS chatbot_script_id,
-                CASE WHEN BOOL_OR(discuss_call_history.channel_id IS NOT NULL) THEN 1 ELSE 0 END AS has_call,
-                SUM(
-                    CASE
-                        WHEN discuss_call_history.end_dt IS NOT NULL
-                        THEN EXTRACT(EPOCH FROM discuss_call_history.end_dt - discuss_call_history.start_dt) / 3600
-                        ELSE NULL
-                    END
-                ) AS call_duration_hour,
-                (ARRAY_AGG(chatbot_answer_history.answers_path))[1] as chatbot_answers_path,
-                (ARRAY_AGG(chatbot_answer_history.answers_path_str))[1] as chatbot_answers_path_str,
-                (ARRAY_AGG(expertise_history.expertises))[1] AS session_expertises
+                CASE WHEN call_history_data.call_duration_hour IS NOT NULL THEN 1 ELSE 0 END AS has_call,
+                call_history_data.call_duration_hour,
+                chatbot_answer_history.chatbot_answers_path,
+                chatbot_answer_history.chatbot_answers_path_str,
+                expertise_history.expertises session_expertises
             """,
         )
 
@@ -213,35 +123,91 @@ class Im_LivechatReportChannel(models.Model):
         return SQL(
             """
             FROM discuss_channel C
-            JOIN message_vals ON message_vals.channel_id = c.id
-       LEFT JOIN chatbot_answer_history ON chatbot_answer_history.channel_id = C.id
-       LEFT JOIN expertise_history ON expertise_history.channel_id = C.id
-       LEFT JOIN channel_member_history ON channel_member_history.channel_id = c.id
-       LEFT JOIN discuss_call_history ON discuss_call_history.channel_id = C.id
-       LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'discuss.channel' and Rate.parent_res_model = 'im_livechat.channel')
+       LEFT JOIN LATERAL (
+                SELECT BOOL_OR(livechat_member_type = 'agent') AS has_agent,
+                       BOOL_OR(livechat_member_type = 'bot') AS has_bot,
+                       MIN(CASE WHEN livechat_member_type = 'visitor' THEN partner_id END) AS visitor_partner_id,
+                       MIN(chatbot_script_id) AS chatbot_script_id
+                  FROM im_livechat_channel_member_history
+                 WHERE channel_id = C.id
+        ) AS channel_member_history ON TRUE
+       LEFT JOIN LATERAL
+            (
+                SELECT SUM(
+                           CASE
+                               WHEN discuss_call_history.end_dt IS NOT NULL
+                               THEN EXTRACT(EPOCH FROM discuss_call_history.end_dt - discuss_call_history.start_dt) / 3600
+                           END
+                       ) AS call_duration_hour
+                  FROM discuss_call_history
+                 WHERE discuss_call_history.channel_id = C.id
+            ) AS call_history_data ON TRUE
+        LEFT JOIN LATERAL
+            (
+                SELECT STRING_AGG(chatbot_message.user_raw_script_answer_id::TEXT, ' - ' ORDER BY chatbot_message.id) AS chatbot_answers_path,
+                       STRING_AGG(
+                           COALESCE(
+                               chatbot_script_answer.name->>%s,
+                               chatbot_script_answer.name->>'en_US',
+                               fallback.value,
+                               %s
+                           ),
+                           ' - ' ORDER BY chatbot_message.id
+                        ) AS chatbot_answers_path_str
+                  FROM chatbot_message
+             LEFT JOIN chatbot_script_answer
+                    ON chatbot_message.user_raw_script_answer_id = chatbot_script_answer.id
+             LEFT JOIN LATERAL
+                  (
+                      SELECT value
+                      FROM jsonb_each_text(chatbot_script_answer.name)
+                      LIMIT 1
+                  ) AS fallback ON TRUE
+                WHERE chatbot_message.user_raw_script_answer_id IS NOT NULL
+                  AND chatbot_message.discuss_channel_id = C.id
+            ) AS chatbot_answer_history ON TRUE
+        LEFT JOIN LATERAL
+            (
+                SELECT STRING_AGG(
+                            COALESCE(
+                                im_livechat_expertise.name->>%s,
+                                im_livechat_expertise.name->>'en_US',
+                                fallback.value
+                            ),
+                            ' - ' ORDER BY im_livechat_expertise.id
+                       ) AS expertises
+                  FROM im_livechat_channel_member_history_im_livechat_expertise_rel REL
+                  JOIN im_livechat_expertise
+                    ON im_livechat_expertise.id = REL.im_livechat_expertise_id
+                  JOIN im_livechat_channel_member_history
+                    ON im_livechat_channel_member_history.id = REL.im_livechat_channel_member_history_id
+                  JOIN LATERAL
+                    (
+                        SELECT value
+                          FROM jsonb_each_text(im_livechat_expertise.name)
+                         LIMIT 1
+                    ) AS fallback ON TRUE
+                 WHERE im_livechat_channel_member_history.channel_id = C.id
+            ) AS expertise_history ON TRUE
+        LEFT JOIN LATERAL
+            (
+                SELECT COUNT(DISTINCT M.id) AS message_count,
+                       MAX(M.create_date) as last_message_dt,
+                       MIN(CASE WHEN H.livechat_member_type = 'agent' THEN M.create_date END) AS first_agent_message_dt,
+                       MAX(CASE WHEN H.livechat_member_type = 'bot' THEN M.create_date END) AS last_bot_message_dt,
+                       MIN(CASE WHEN M.author_id = C.livechat_operator_id THEN M.create_date END) AS first_agent_message_dt_legacy
+                  FROM mail_message M
+             LEFT JOIN im_livechat_channel_member_history H on H.channel_id = M.res_id AND (M.author_id = H.partner_id OR M.author_guest_id = H.guest_id)
+                 WHERE M.res_id = C.id and M.model = 'discuss.channel'
+            ) AS message_vals ON TRUE
             """,
+            self.env.lang,
+            self._unknown_chatbot_answer_name,
+            self.env.lang,
         )
 
     def _where(self) -> SQL:
-        return SQL("WHERE C.livechat_operator_id is not null")
-
-    def _group_by(self) -> SQL:
-        return SQL(
-            """
-            GROUP BY
-                C.livechat_operator_id,
-                C.id,
-                C.name,
-                C.livechat_channel_id,
-                C.create_date,
-                C.uuid,
-                Rate.rating,
-                channel_member_history.has_bot,
-                channel_member_history.has_agent,
-                channel_member_history.visitor_partner_id,
-                channel_member_history.chatbot_script_id
-            """,
-        )
+        return SQL("WHERE C.channel_type = 'livechat'")
 
     @api.model
     def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
