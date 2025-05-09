@@ -491,7 +491,6 @@ class TestMrpStockValuation(TestStockValuationBase):
         })
         move = self.env['stock.move'].create({
             'picking_id': production_in.id,
-            'name': 'IN 10 @ 10',
             'location_id': self.stock_location.id,
             'location_dest_id': production_location.id,
             'product_id': self.product1.id,
@@ -515,7 +514,6 @@ class TestMrpStockValuation(TestStockValuationBase):
         })
         move = self.env['stock.move'].create({
             'picking_id': production_out.id,
-            'name': 'OUT 10 @ 10',
             'location_id': production_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -568,7 +566,6 @@ class TestMrpStockValuation(TestStockValuationBase):
         })
         move = self.env['stock.move'].create({
             'picking_id': production_in.id,
-            'name': 'IN 10 @ 10',
             'location_id': self.stock_location.id,
             'location_dest_id': production_location.id,
             'product_id': self.product1.id,
@@ -594,7 +591,6 @@ class TestMrpStockValuation(TestStockValuationBase):
         })
         move = self.env['stock.move'].create({
             'picking_id': production_out.id,
-            'name': 'OUT 10 @ 10',
             'location_id': production_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,

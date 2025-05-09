@@ -193,7 +193,6 @@ class TestMultiCompany(TransactionCase):
         })
         self.assertEqual(picking.company_id, self.company_a)
         move1 = self.env['stock.move'].create({
-            'name': 'test_lot_2',
             'picking_type_id': picking.picking_type_id.id,
             'location_id': picking.location_id.id,
             'location_dest_id': picking.location_dest_id.id,
@@ -381,7 +380,6 @@ class TestMultiCompany(TransactionCase):
             'location_dest_id': self.stock_location_a.id,
             'product_id': product.id,
             'product_uom': product.uom_id.id,
-            'name': 'stock_move',
         })
         with self.assertRaises(UserError):
             move._action_confirm()
@@ -404,7 +402,6 @@ class TestMultiCompany(TransactionCase):
             'location_dest_id': self.stock_location_b.id,
             'product_id': product.id,
             'product_uom': product.uom_id.id,
-            'name': 'stock_move',
         })
         with self.assertRaises(UserError):
             move._action_confirm()
@@ -428,7 +425,6 @@ class TestMultiCompany(TransactionCase):
             'location_dest_id': self.stock_location_a.id,
             'product_id': product.id,
             'product_uom': product.uom_id.id,
-            'name': 'stock_move',
         })
         with self.assertRaises(UserError):
             move._action_confirm()
@@ -481,7 +477,6 @@ class TestMultiCompany(TransactionCase):
 
         move_from_supplier = self.env['stock.move'].with_user(self.user_a).create({
             'company_id': self.company_a.id,
-            'name': 'test_from_supplier',
             'location_id': supplier_location.id,
             'location_dest_id': self.stock_location_a.id,
             'product_id': product_lot.id,
@@ -499,7 +494,6 @@ class TestMultiCompany(TransactionCase):
 
         move_to_transit = self.env['stock.move'].create({
             'company_id': self.company_a.id,
-            'name': 'test_to_transit',
             'location_id': self.stock_location_a.id,
             'location_dest_id': intercom_location.id,
             'product_id': product_lot.id,
@@ -557,7 +551,6 @@ class TestMultiCompany(TransactionCase):
 
         move_sup_to_whb = self.env['stock.move'].create({
             'company_id': self.company_b.id,
-            'name': 'from_supplier_to_whb',
             'location_id': supplier_location.id,
             'location_dest_id': self.warehouse_b.lot_stock_id.id,
             'product_id': product_lot.id,
@@ -582,7 +575,6 @@ class TestMultiCompany(TransactionCase):
             'state': 'draft',
         })
         move_wha_to_cus = self.env['stock.move'].create({
-            'name': "WH_A to Customer",
             'product_id': product_lot.id,
             'product_uom_qty': 1,
             'product_uom': product_lot.uom_id.id,

@@ -48,7 +48,6 @@ class TestDeleteOrder(PurchaseTestCommon):
         partner = self.env['res.partner'].create({'name': 'My Partner'})
 
         move = self.env['stock.move'].create({
-            'name': self.product_2.name,
             'product_id': self.product_2.id,
             'product_uom_qty': 1,
             'product_uom': self.product_2.uom_id.id,

@@ -61,6 +61,15 @@ class StockMove(models.Model):
                 ids_to_super.add(move.id)
         return super(StockMove, self.browse(ids_to_super))._compute_location_dest_id()
 
+    @api.depends('repair_id.name')
+    def _compute_reference(self):
+        moves_with_reference = set()
+        for move in self:
+            if move.repair_id and move.repair_id.name:
+                move.reference = move.repair_id.name
+                moves_with_reference.add(move)
+        super(StockMove, self - self.env['stock.move'].browse(moves_with_reference))._compute_reference()
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
@@ -84,14 +93,13 @@ class StockMove(models.Model):
             if not vals.get('repair_id') or 'repair_line_type' not in vals:
                 continue
             repair_id = self.env['repair.order'].browse([vals['repair_id']])
-            vals['name'] = repair_id.name
+            vals['origin'] = repair_id.name
         moves = super().create(vals_list)
         repair_moves = self.env['stock.move']
         for move in moves:
             if not move.repair_id:
                 continue
             move.group_id = move.repair_id.procurement_group_id.id
-            move.origin = move.name
             move.picking_type_id = move.repair_id.picking_type_id.id
             repair_moves |= move
         no_repair_moves = moves - repair_moves

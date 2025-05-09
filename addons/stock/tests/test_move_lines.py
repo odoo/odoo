@@ -50,7 +50,6 @@ class TestStockMoveLine(TestStockCommon):
     def test_pick_from_2(self):
         """ Create a move line from a quant"""
         move = self.env['stock.move'].create({
-            'name': 'Test move',
             'product_id': self.product.id,
             'product_uom': self.product.uom_id.id,
             'location_id': self.stock_location.id,
@@ -71,7 +70,6 @@ class TestStockMoveLine(TestStockCommon):
     def test_pick_from_3(self):
         """ check the quantity done is added up to the initial demand"""
         move = self.env['stock.move'].create({
-            'name': 'Test move',
             'product_id': self.product.id,
             'product_uom': self.product.uom_id.id,
             'location_id': self.stock_location.id,
@@ -95,7 +93,6 @@ class TestStockMoveLine(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.product, self.shelf_1, -20, lot_id=self.lot, package_id=self.pack, owner_id=self.partner)
         self.assertEqual(self.quant.quantity, -10)
         move = self.env['stock.move'].create({
-            'name': 'Test move',
             'product_id': self.product.id,
             'product_uom': self.product.uom_id.id,
             'location_id': self.stock_location.id,
@@ -113,7 +110,6 @@ class TestStockMoveLine(TestStockCommon):
         precision.digits = 6
         self.product.uom_id = self.uom_kg
         move = self.env['stock.move'].create({
-            'name': 'Test move',
             'product_id': self.product.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
@@ -184,7 +180,6 @@ class TestStockMoveLine(TestStockCommon):
         # we need to freezetime due to write time being too fast for date changes to be observed
         with freeze_time() as freeze:
             move = self.env['stock.move'].create({
-                'name': 'test_move_line_date',
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
                 'product_id': self.productA.id,

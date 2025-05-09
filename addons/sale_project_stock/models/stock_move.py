@@ -46,7 +46,7 @@ class StockMove(models.Model):
 
         return {
             'order_id': order.id,
-            'name': self.name,
+            'name': self.reference,
             'sequence': last_sequence,
             'price_unit': price,
             'tax_ids': [x.id for x in taxes],

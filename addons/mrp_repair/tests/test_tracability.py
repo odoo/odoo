@@ -284,7 +284,6 @@ class TestRepairTraceability(TestMrpCommon):
             'picking_type_id': self.warehouse_1.repair_type_id.id,
             'move_ids': [
                 (0, 0, {
-                    'name': 'foo',
                     'product_id': component.id,
                     'lot_ids': [(4, sn_lot.id)],
                     'repair_line_type': 'remove',
@@ -298,7 +297,6 @@ class TestRepairTraceability(TestMrpCommon):
         ro.action_repair_end()
 
         sm = self.env['stock.move'].create({
-            'name': component.name,
             'product_id': component.id,
             'product_uom_qty': 1,
             'product_uom': component.uom_id.id,

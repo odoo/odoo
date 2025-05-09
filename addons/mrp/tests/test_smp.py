@@ -194,7 +194,6 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         mo_form.product_uom_id = component.uom_id
         # use tracked  as component
         with mo_form.move_raw_ids.new() as move:
-            move.name = tracked_product.name
             move.product_id = tracked_product
             move.product_uom_qty = 2
             move.product_uom = tracked_product.uom_id

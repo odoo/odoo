@@ -358,7 +358,6 @@
                                     <field name="product_uom" widget="many2one_uom"/>
                                     <field name="operation_id"/>
                                     <field name="byproduct_id"/>
-                                    <field name="name"/>
                                     <field name="date_deadline"/>
                                     <field name="picking_type_id"/>
                                     <field name="location_id"/>
@@ -416,7 +415,6 @@
                                     <field name="propagate_cancel" column_invisible="True"/>
                                     <field name="price_unit" column_invisible="True"/>
                                     <field name="company_id" column_invisible="True"/>
-                                    <field name="name" column_invisible="True"/>
                                     <field name="allowed_operation_ids" column_invisible="True"/>
                                     <field name="unit_factor" column_invisible="True"/>
                                     <field name="date_deadline" column_invisible="True" force_save="1"/>
@@ -487,7 +485,6 @@
                                     <field name="product_id" context="{'default_is_storable': True}" domain="[('id', '!=', parent.product_id)]" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)"/>
                                     <field name="location_dest_id" string="To" readonly="1" force_save="1" groups="stock.group_stock_multi_locations"/>
                                     <field name="company_id" column_invisible="True"/>
-                                    <field name="name" column_invisible="True"/>
                                     <field name="allowed_operation_ids" column_invisible="True"/>
                                     <field name="unit_factor" column_invisible="True"/>
                                     <field name="date" column_invisible="True"/>

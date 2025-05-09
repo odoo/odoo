@@ -18,7 +18,6 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'picking_type_id': warehouse.out_type_id.id,
         })
         self.env['stock.move'].create({
-            'name': self.product.name,
             'product_id': self.product.id,
             'product_uom_qty': 10,
             'product_uom': self.product.uom_id.id,

@@ -28,7 +28,6 @@ class TestL10nRoEdiStockCommon(ValuationReconciliationTestCommon):
         for data in product_data or []:
             product = data['product_id']
             cls.env['stock.move'].create({
-                'name': product.name,
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,
                 'product_uom_qty': data['product_uom_qty'],

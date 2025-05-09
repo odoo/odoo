@@ -2284,7 +2284,6 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         })
 
         in_moves = self.env['stock.move'].create([{
-            'name': 'IN move @%s' % p,
             'product_id': self.component_a.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,

@@ -35,7 +35,6 @@ class TestRobustness(TransactionCase):
 
         # reserve a dozen
         move1 = self.env['stock.move'].create({
-            'name': 'test_uom_rounding',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -78,7 +77,6 @@ class TestRobustness(TransactionCase):
 
         # reserve a unit
         move = self.env['stock.move'].create({
-            'name': 'test_location_archive',
             'location_id': test_stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -122,7 +120,6 @@ class TestRobustness(TransactionCase):
 
         # reserve 10 units
         move1 = self.env['stock.move'].create({
-            'name': 'test_uom_rounding',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -172,7 +169,6 @@ class TestRobustness(TransactionCase):
         self.env['stock.quant']._update_available_quantity(product2, self.stock_location, 1, lot_id=lot2)
 
         move1 = self.env['stock.move'].create({
-            'name': 'test_lot_id_product_id_mix_move_1',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product1.id,
@@ -180,7 +176,6 @@ class TestRobustness(TransactionCase):
             'product_uom_qty': 1.0,
         })
         move2 = self.env['stock.move'].create({
-            'name': 'test_lot_id_product_id_mix_move_2',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product2.id,
@@ -224,7 +219,6 @@ class TestRobustness(TransactionCase):
         })
         self.env['stock.quant']._update_available_quantity(productA, self.stock_location, 5, lot_id=lotA)
         moveA = self.env['stock.move'].create({
-            'name': 'TEST_A',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': productA.id,
@@ -258,7 +252,6 @@ class TestRobustness(TransactionCase):
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
         move1 = self.env['stock.move'].create({
-            'name': 'P1',
             'location_id': receipt.location_id.id,
             'location_dest_id': receipt.location_dest_id.id,
             'picking_id': receipt.id,
@@ -277,7 +270,6 @@ class TestRobustness(TransactionCase):
         self.assertEqual(move1.state, 'done')
 
         move2 = self.env['stock.move'].create({
-            'name': 'P2',
             'location_id': receipt.location_id.id,
             'location_dest_id': receipt.location_dest_id.id,
             'picking_id': receipt.id,
@@ -302,7 +294,6 @@ class TestRobustness(TransactionCase):
         quant = self.env['stock.quant']._gather(product_reservation_too_high, self.stock_location)
 
         move = self.env['stock.move'].create({
-            'name': 'test_clean_quants_synch',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product_reservation_too_high.id,
@@ -352,7 +343,6 @@ class TestRobustness(TransactionCase):
         quant = self.env['stock.quant']._gather(product_reservation_too_high, self.stock_location)
         # reserve 0.1 kg with a move
         move = self.env['stock.move'].create({
-            'name': 'test_clean_quants_synch',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product_reservation_too_high.id,
@@ -382,7 +372,6 @@ class TestRobustness(TransactionCase):
             'company_id': self.stock_location.company_id.id,
         })
         reservation_move = self.env['stock.move'].create({
-            'name': 'Lovely move',
             'company_id': self.stock_location.company_id.id,
             'location_id': self.ref('stock.stock_location_inter_company'),
             'location_dest_id': self.stock_location.id,

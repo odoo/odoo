@@ -19,7 +19,6 @@ class TestAnalyticsReinvoice(TestAnalytics):
         })
         picking_out.picking_type_id.analytic_costs = True
         self.MoveObj.create({
-            'name': 'Move',
             'product_uom': self.uom_unit.id,
             'picking_id': picking_out.id,
             'location_id': self.stock_location.id,

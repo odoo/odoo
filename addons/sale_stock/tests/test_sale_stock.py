@@ -1078,7 +1078,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'picking_id': picking.id,
             'location_id': picking.location_id.id,
             'location_dest_id': picking.location_dest_id.id,
-            'name': self.product_b.name,
             'product_id': self.product_b.id,
             'product_uom_qty': 1,
             'product_uom': uom_km_id,

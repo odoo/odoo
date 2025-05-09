@@ -125,7 +125,6 @@ class StockScrap(models.Model):
     def _prepare_move_values(self):
         self.ensure_one()
         return {
-            'name': self.name,
             'origin': self.origin or self.picking_id.name or self.name,
             'company_id': self.company_id.id,
             'product_id': self.product_id.id,
