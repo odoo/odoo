@@ -1249,3 +1249,31 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         so.action_confirm()
         self.assertFalse(self.product_order_service2.project_id.task_ids)
         self.assertFalse(sol.task_id)
+
+    def test_create_sale_order_for_project(self):
+        """ Test when user creates a SO inside stat button displayed in project form view
+
+            Test Case
+            =========
+            When the user clicks on the stat button `Make Billable`, the `create_for_project_id` is added
+            to the contex. With that context, we will make sure the action_confirm will do nothing if the
+            user clicks on it since the SO will automatically be confirmed in that use case.
+        """
+        self.project_global.partner_id = self.partner
+        action_dict = self.project_global.with_context(
+            create_for_project_id=self.project_global.id,
+            default_project_id=self.project_global.id,
+            default_partner_id=self.partner.id
+        ).action_view_sos()
+        sale_order = self.env['sale.order'].with_context(action_dict['context']).create({
+            'order_line': [Command.create({
+                'product_id': self.product_order_service2.id,
+                'product_uom_qty': 2,
+            })],
+        })
+        self.assertEqual(sale_order.partner_id, self.partner)
+        self.assertEqual(sale_order.project_id, self.project_global)
+        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(self.project_global.sale_line_id, sale_order.order_line)
+
+        sale_order.action_confirm()  # no error should be raised even if the SO is already confirmed
