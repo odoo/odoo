@@ -323,16 +323,6 @@ class IrUiView(models.Model):
             return view.inherit_children_ids.filtered(lambda extension: extension.mode != 'primary' or extension.id in original_hierarchy)
         return view.inherit_children_ids
 
-    @api.model
-    def _view_obj(self, view_id):
-        if isinstance(view_id, str):
-            return self.search([('key', '=', view_id)], limit=1) or self.env.ref(view_id)
-        elif isinstance(view_id, int):
-            return self.browse(view_id)
-        # It can already be a view object when called by '_views_get()' that is calling '_view_obj'
-        # for it's inherit_children_ids, passing them directly as object record.
-        return view_id
-
     # Returns all views (called and inherited) related to a view
     # Used by translation mechanism, SEO and optional templates
 
@@ -347,8 +337,11 @@ class IrUiView(models.Model):
             :returns: recordset of ir.ui.view
         """
         try:
-            view = self._view_obj(view_id)
-        except ValueError:
+            if isinstance(view_id, models.BaseModel):
+                view = view_id
+            else:
+                view = self._get_template_view(view_id)
+        except MissingError:
             _logger.warning("Could not find view object with view_id '%s'", view_id)
             return self.env['ir.ui.view']
 
@@ -367,7 +360,7 @@ class IrUiView(models.Model):
             xpath += "| //t[@t-call-assets]"
         for child in node.xpath(xpath):
             try:
-                called_view = self._view_obj(child.get('t-call', child.get('t-call-assets')))
+                called_view = self._get_template_view(child.get('t-call', child.get('t-call-assets')))
             except MissingError:
                 continue
             if called_view and called_view not in views_to_return and called_view.id not in visited:
