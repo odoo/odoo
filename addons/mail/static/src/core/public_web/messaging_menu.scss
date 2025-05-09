@@ -18,6 +18,16 @@
     }
 }
 
+.o-mail-MessagingMenu-tabCounter, .o-mail-MessagingMenu-tabUnread {
+    transform: translate(80%, 50%) !important;
+}
+
+.o-discuss-badge.o-mail-MessagingMenu-tabUnread {
+    --o-discuss-badge-bg: #{transparent};
+    opacity: 50%;
+    color: unset !important;
+}
+
 .o_popover:has(.o-mail-MessagingMenu) {
     --popover-border-color: #{$secondary};
 }
