@@ -300,3 +300,9 @@ class SaleOrder(models.Model):
     def _compute_completed_task_percentage(self):
         for so in self:
             so.completed_task_percentage = so.tasks_count and so.closed_task_count / so.tasks_count
+
+    def action_confirm(self):
+        if len(self) == 1 and self.env.context.get('create_for_project_id') and self.state == 'sale':
+            # do nothing since the SO has been automatically confirmed during its creation
+            return True
+        return super().action_confirm()
