@@ -12,7 +12,8 @@ export class SavePlugin extends Plugin {
     static shared = ["save"];
 
     resources = {
-        handleNewRecords: this.handleMutations,
+        handleNewRecords: this.handleMutations.bind(this),
+        start_edition_handlers: this.startObserving.bind(this),
         // Resource definitions:
         before_save_handlers: [
             // async () => {
@@ -32,6 +33,10 @@ export class SavePlugin extends Plugin {
         ],
         get_dirty_els: () => this.editable.querySelectorAll(".o_dirty"),
     };
+
+    setup() {
+        this.canObserve = false;
+    }
 
     async save() {
         // TODO: implement the "group by" feature for save
@@ -173,6 +178,9 @@ export class SavePlugin extends Plugin {
         return escapedEl;
     }
 
+    startObserving() {
+        this.canObserve = true;
+    }
     /**
      * Handles the flag of the closest savable element to the mutation as dirty
      *
@@ -180,6 +188,9 @@ export class SavePlugin extends Plugin {
      * @param {String} currentOperation - The name of the current operation
      */
     handleMutations(records, currentOperation) {
+        if (!this.canObserve) {
+            return;
+        }
         if (currentOperation === "undo" || currentOperation === "redo") {
             // Do nothing as `o_dirty` has already been handled by the history
             // plugin.
