@@ -1059,6 +1059,9 @@ class PosOrder(models.Model):
         self.env['pos.payment'].create(data)
         self.amount_paid = self._compute_amount_paid()
 
+        if self._is_pos_order_paid():
+            self.state = "paid"
+
     def _prepare_refund_values(self, current_session):
         self.ensure_one()
         return {

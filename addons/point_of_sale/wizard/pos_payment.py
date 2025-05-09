@@ -59,16 +59,12 @@ class PosMakePayment(models.TransientModel):
         init_data = self.read()[0]
         payment_method = self.env['pos.payment.method'].browse(init_data['payment_method_id'][0])
         if not float_is_zero(init_data['amount'], precision_rounding=currency.rounding):
-            order.add_payment({
+            return order.add_payment({
                 'pos_order_id': order.id,
                 'amount': order._get_rounded_amount(init_data['amount'], payment_method.is_cash_count or not self.config_id.only_round_cash_method),
                 'name': init_data['payment_name'],
                 'payment_method_id': init_data['payment_method_id'][0],
             })
-        if order.state == 'draft' and order._is_pos_order_paid():
-            order.state = 'paid'
-            return {'type': 'ir.actions.act_window_close'}
-
         return self.launch_payment()
 
     def launch_payment(self):

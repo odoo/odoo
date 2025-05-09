@@ -188,8 +188,8 @@ export const ormSerialization = (record, opts) => {
     const result = deepSerialization(record, opts, {
         uuidMapping,
     });
-    if (Object.keys(uuidMapping).length !== 0) {
-        result.relations_uuid_mapping = uuidMapping;
-    }
+    // if (Object.keys(uuidMapping).length !== 0) {
+    //     result.relations_uuid_mapping = uuidMapping;
+    // }
     return result;
 };
