@@ -247,7 +247,7 @@ class PosConfig(models.Model):
                         return [(6, 0, [get_record(self.env[model]._fields[key].comodel_name, val).id for val in value])]
                     case _:
                         return value
-            return {key: adapt_value(model, key, value) for key, value in vals.items()}
+            return {key: adapt_value(model, key, value) for key, value in vals.items() if self.env[model]._fields.get(key)}
 
         id_updates = {}
 
