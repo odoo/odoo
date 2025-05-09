@@ -1,7 +1,5 @@
 .s_masonry_block[data-vcss='001'] .row > div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    @extend %flex-column-container;
 }
 
 .s_masonry_block[data-vcss='001'] .row.o_grid_mode {
