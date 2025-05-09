@@ -3,12 +3,11 @@ import { registry } from "@web/core/registry";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { SNIPPET_SPECIFIC_END } from "@html_builder/website_builder/option_sequence";
-
 export const COOKIES_BAR = SNIPPET_SPECIFIC_END;
 
 class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
-    static dependencies = ["anchor", "visibility"];
+    static dependencies = ["anchor", "visibility", "history"];
 
     resources = {
         builder_options: [
@@ -31,6 +30,7 @@ class PopupOptionPlugin extends Plugin {
         },
         builder_actions: this.getActions(),
         on_cloned_handlers: this.onCloned.bind(this),
+        on_remove_handlers: this.onRemove.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
@@ -112,9 +112,27 @@ class PopupOptionPlugin extends Plugin {
         }
     }
 
+    onRemove(el) {
+        this.onTargetHide(el);
+        this.dependencies.history.addCustomMutation({
+            apply: () => {},
+            revert: () => {
+                this.onTargetShow(el);
+            },
+        });
+    }
+
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_popup")) {
             this.assignUniqueID(snippetEl);
+            this.dependencies.history.addCustomMutation({
+                apply: () => {
+                    this.onTargetShow(snippetEl);
+                },
+                revert: () => {
+                    this.onTargetHide(snippetEl);
+                },
+            });
         }
         const droppedEls = getElementsWithOption(snippetEl, ".s_popup");
         droppedEls.forEach((droppedEl) =>
