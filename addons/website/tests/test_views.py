@@ -9,6 +9,7 @@ from itertools import zip_longest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
+from odoo.exceptions import MissingError
 from odoo.modules.module import _DEFAULT_MANIFEST
 from odoo.tests import common, HttpCase, tagged
 
@@ -594,7 +595,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.assertEqual(generic_view_arch, '<body>GENERIC<div>VIEW<span>C</span></div></body>')
         self.assertEqual(specific_view_arch, '<body>SPECIFIC<div>VIEW<span>D</span></div></body>', "Writing on top level view hierarchy with a website in context should write on the view and clone it's inherited views")
 
-    def test_multi_website_view_obj_active(self):
+    def test_multi_website_view_active(self):
         ''' With the following structure:
             * A generic active parent view
             * A generic active child view, that is inactive on website 1
@@ -604,11 +605,11 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         View = self.env['ir.ui.view'].with_context(active_test=False)
         self.inherit_view.with_context(website_id=1).write({'active': False})
 
-        # Test _view_obj() return the inactive specific over active generic
-        inherit_view = View._view_obj(self.inherit_view.key)
-        self.assertEqual(inherit_view.active, True, "_view_obj should return the generic one")
-        inherit_view = View.with_context(website_id=1)._view_obj(self.inherit_view.key)
-        self.assertEqual(inherit_view.active, False, "_view_obj should return the specific one")
+        # Test _get_template_view() return the inactive specific over active generic
+        inherit_view = View._get_template_view(self.inherit_view.key)
+        self.assertEqual(inherit_view.active, True, "_get_template_view should return the generic one")
+        inherit_view = View.with_context(website_id=1)._get_template_view(self.inherit_view.key)
+        self.assertEqual(inherit_view.active, False, "_get_template_view should return the specific one")
 
         # Test get_related_views() return the inactive specific over active generic
         # Note that we cannot test get_related_views without a website in context as it will fallback on a website with get_current_website()
@@ -1418,10 +1419,10 @@ class Crawler(HttpCase):
         # ----------------------------------------------------------------------------------------------------------------
         #  1 | Products Theme Kea              |    1    | _theme_kea_sale.products      | _theme_kea_sale.products      |
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(MissingError):
             # It should crash as it should not find a view on website 1 for '_theme_kea_sale.products', !!and certainly not a theme.ir.ui.view!!.
-            view = View.with_context(website_id=website_1.id)._view_obj('_theme_kea_sale.products')
-        view = View.with_context(website_id=website_2.id)._view_obj('_theme_kea_sale.products')
+            view = View.with_context(website_id=website_1.id)._get_template_view('_theme_kea_sale.products')
+        view = View.with_context(website_id=website_2.id)._get_template_view('_theme_kea_sale.products')
         self.assertEqual(len(view), 1, "It should find the ir.ui.view with key '_theme_kea_sale.products' on website 2..")
         self.assertEqual(view._name, 'ir.ui.view', "..and not a theme.ir.ui.view")
 
