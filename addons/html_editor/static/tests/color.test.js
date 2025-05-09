@@ -87,8 +87,8 @@ test("should not merge line on background color change", async () => {
         contentBefore: "<p><strong>[abcd</strong><br><strong>efghi]</strong></p>",
         stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
         contentAfter:
-            '<p><strong><font style="background-color: rgb(255, 0, 0);">[abcd</font></strong><br>' +
-            '<strong><font style="background-color: rgb(255, 0, 0);">efghi]</font></strong></p>',
+            '<p><font style="background-color: rgb(255, 0, 0);"><strong>[abcd</strong></font><br>' +
+            '<font style="background-color: rgb(255, 0, 0);"><strong>efghi]</strong></font></p>',
     });
 });
 
@@ -97,8 +97,8 @@ test("should not merge line on color change", async () => {
         contentBefore: "<p><strong>[abcd</strong><br><strong>efghi]</strong></p>",
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
-            '<p><strong><font style="color: rgb(255, 0, 0);">[abcd</font></strong><br>' +
-            '<strong><font style="color: rgb(255, 0, 0);">efghi]</font></strong></p>',
+            '<p><font style="color: rgb(255, 0, 0);"><strong>[abcd</strong></font><br>' +
+            '<font style="color: rgb(255, 0, 0);"><strong>efghi]</strong></font></p>',
     });
 });
 

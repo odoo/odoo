@@ -982,7 +982,7 @@ export class ListPlugin extends Plugin {
             return;
         }
         for (const list of selectedNodes) {
-            if (this.dependencies.selection.isNodeContentsFullySelected(list)) {
+            if (this.dependencies.selection.areNodeContentsFullySelected(list)) {
                 for (const node of descendants(list)) {
                     if (node.nodeType === Node.ELEMENT_NODE && node.style.color) {
                         node.style.color = "";
@@ -1010,7 +1010,7 @@ export class ListPlugin extends Plugin {
                 continue;
             }
 
-            if (this.dependencies.selection.isNodeContentsFullySelected(listItem)) {
+            if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
                 for (const node of [listItem, ...descendants(listItem)]) {
                     if (node.nodeType === Node.ELEMENT_NODE) {
                         removeClass(node, ...FONT_SIZE_CLASSES);

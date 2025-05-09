@@ -279,7 +279,7 @@ export class ColorPlugin extends Plugin {
                 return !closestElement(node, "table.o_selected_table");
             }
             const li = closestElement(node, "li");
-            if (li && color && this.dependencies.selection.isNodeContentsFullySelected(li)) {
+            if (li && color && this.dependencies.selection.areNodeContentsFullySelected(li)) {
                 return rgbaToHex(li.style.color).toLowerCase() !== hexColor;
             }
             return true;

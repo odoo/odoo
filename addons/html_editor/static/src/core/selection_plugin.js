@@ -160,7 +160,7 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['modifySelection'] } modifySelection
  * @property { SelectionPlugin['preserveSelection'] } preserveSelection
  * @property { SelectionPlugin['rectifySelection'] } rectifySelection
- * @property { SelectionPlugin['isNodeContentsFullySelected'] } isNodeContentsFullySelected
+ * @property { SelectionPlugin['areNodeContentsFullySelected'] } areNodeContentsFullySelected
  * @property { SelectionPlugin['resetActiveSelection'] } resetActiveSelection
  * @property { SelectionPlugin['resetSelection'] } resetSelection
  * @property { SelectionPlugin['setCursorEnd'] } setCursorEnd
@@ -185,7 +185,7 @@ export class SelectionPlugin extends Plugin {
         "getTraversedBlocks",
         "modifySelection",
         "rectifySelection",
-        "isNodeContentsFullySelected",
+        "areNodeContentsFullySelected",
         // todo: ideally, this should not be shared
         "resetActiveSelection",
         "focusEditable",
@@ -669,19 +669,10 @@ export class SelectionPlugin extends Plugin {
      * @returns {Node[]}
      */
     getSelectedNodes() {
-        const selection = this.getSelectionData().editableSelection;
-        const range = new Range();
-        range.setStart(selection.startContainer, selection.startOffset);
-        range.setEnd(selection.endContainer, selection.endOffset);
-        const isNodeFullySelected = (node) =>
-            // Custom rules
-            this.getResource("fully_selected_node_predicates").some((cb) => cb(node, selection)) ||
-            // Default rule
-            (range.isPointInRange(node, 0) && range.isPointInRange(node, nodeSize(node)));
-        return this.getTraversedNodes().filter(isNodeFullySelected);
+        return this.getTraversedNodes().filter(this.areNodeContentsFullySelected.bind(this));
     }
 
-    isNodeContentsFullySelected(node) {
+    areNodeContentsFullySelected(node) {
         const selection = this.getEditableSelection();
         const range = new Range();
         range.setStart(selection.startContainer, selection.startOffset);
@@ -690,8 +681,11 @@ export class SelectionPlugin extends Plugin {
         const firstLeafNode = firstLeaf(node);
         const lastLeafNode = lastLeaf(node);
         return (
-            range.isPointInRange(firstLeafNode, 0) &&
-            range.isPointInRange(lastLeafNode, nodeSize(lastLeafNode))
+            // Custom rules
+            this.getResource("fully_selected_node_predicates").some((cb) => cb(node, selection)) ||
+            // Default rule
+            (range.isPointInRange(firstLeafNode, 0) &&
+                range.isPointInRange(lastLeafNode, nodeSize(lastLeafNode)))
         );
     }
 

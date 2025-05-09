@@ -265,7 +265,7 @@ export class FormatPlugin extends Plugin {
         );
         const unformattedTextNodes = selectedNodes.filter((n) => {
             const listItem = closestElement(n, "li");
-            if (listItem && this.dependencies.selection.isNodeContentsFullySelected(listItem)) {
+            if (listItem && this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
                 const hasFontSizeStyle =
                     formatName === "setFontSizeClassName"
                         ? listItem.classList.contains(formatProps?.className)
