@@ -1,3 +1,4 @@
+import { EVENT_PAGE, EVENT_PAGE_MAIN } from "@html_builder/website_event/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
@@ -8,14 +9,14 @@ class EventPageOption extends Plugin {
     evenPageSelector = "main:has(.o_wevent_event)";
     resources = {
         builder_options: [
-            withSequence(10, {
+            withSequence(EVENT_PAGE, {
                 template: "website_event.EventPageOption",
                 selector: this.evenPageSelector,
                 editableOnly: false,
                 title: _t("Event Page"),
                 groups: ["website.group_website_designer"],
             }),
-            withSequence(20, {
+            withSequence(EVENT_PAGE_MAIN, {
                 template: "website_event.EventMainPageOption",
                 selector: "main:has(#o_wevent_event_main)",
                 editableOnly: false,
