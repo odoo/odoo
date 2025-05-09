@@ -124,6 +124,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_it_document_type',
         store=True,
         readonly=False,
+        copy=False,
     )
 
     def _auto_init(self):
@@ -803,8 +804,8 @@ class AccountMove(models.Model):
                      'import_type': 'in_refund',
                      'self_invoice': False,
                      'simplified': False},
-            'TD05': {'move_types': ['out_refund'],
-                     'import_type': 'in_refund',
+            'TD05': {'move_types': ['in_invoice', 'out_invoice'],
+                     'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False},
             'TD06': {'move_types': ['out_invoice'],
