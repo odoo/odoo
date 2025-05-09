@@ -270,7 +270,7 @@ class StockMove(models.Model):
             else:
                 move.unit_factor = 1.0
 
-    @api.depends('raw_material_production_id', 'raw_material_production_id.name', 'production_id', 'production_id.name')
+    @api.depends('raw_material_production_id', 'raw_material_production_id.name', 'production_id', 'production_id.name', 'unbuild_id', 'unbuild_id.name')
     def _compute_reference(self):
         moves_with_reference = self.env['stock.move']
         for move in self:
@@ -279,6 +279,9 @@ class StockMove(models.Model):
                 moves_with_reference |= move
             if move.production_id and move.production_id.name:
                 move.reference = move.production_id.name
+                moves_with_reference |= move
+            if move.unbuild_id and move.unbuild_id.name:
+                move.reference = move.unbuild_id.name
                 moves_with_reference |= move
         super(StockMove, self - moves_with_reference)._compute_reference()
 
@@ -365,7 +368,6 @@ class StockMove(models.Model):
                 if not mo:
                     mo = mo.browse(mo_id)
                     mo_id_to_mo[mo_id] = mo
-                values['name'] = mo.name
                 values['origin'] = mo._get_origin()
                 values['group_id'] = mo.procurement_group_id.id
                 values['propagate_cancel'] = mo.propagate_cancel
@@ -441,7 +443,7 @@ class StockMove(models.Model):
                 origin = move._prepare_procurement_origin()
                 procurements.append(self.env['procurement.group'].Procurement(
                     move.product_id, procurement_qty, move.product_uom,
-                    move.location_id, move.name, origin, move.company_id, values))
+                    move.location_id, move.reference, origin, move.company_id, values))
 
         to_assign._action_assign()
         if procurements:
@@ -560,7 +562,6 @@ class StockMove(models.Model):
             'product_uom': bom_line.product_uom_id.id,
             'product_uom_qty': product_qty,
             'quantity': quantity_done,
-            'name': self.name,
             'picked': self.picked,
             'bom_line_id': bom_line.id,
         }

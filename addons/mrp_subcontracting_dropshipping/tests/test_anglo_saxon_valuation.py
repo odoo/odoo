@@ -196,11 +196,11 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             [
                 # DS/01
                 {'reference': dropship_transfer.name, 'quantity': -50, 'value': -500},
-                {'reference': dropship_transfer.move_ids.move_orig_ids[0].name, 'quantity': 50, 'value': 8500},
+                {'reference': dropship_transfer.move_ids.move_orig_ids[0].reference, 'quantity': 50, 'value': 8500},
                 {'reference': dropship_transfer.name, 'quantity': 0, 'value': -8000},
                 # DS/02 - backorder
                 {'reference': dropship_backorder.name, 'quantity': -50, 'value': -500},
-                {'reference': dropship_backorder.move_ids.move_orig_ids[1].name, 'quantity': 50, 'value': 8500},
+                {'reference': dropship_backorder.move_ids.move_orig_ids[1].reference, 'quantity': 50, 'value': 8500},
                 {'reference': dropship_backorder.name, 'quantity': 0, 'value': -8000},
             ]
         )

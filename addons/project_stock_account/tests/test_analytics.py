@@ -57,13 +57,11 @@ class TestAnalytics(TestStockCommon):
         self.MoveObj.create([
             {
                 **move_values,
-                'name': 'Move 1',
                 'product_id': self.product1.id,
                 'product_uom_qty': 3,
             },
             {
                 **move_values,
-                'name': 'Move 2',
                 'product_id': self.product2.id,
                 'product_uom_qty': 5,
             },
@@ -106,13 +104,11 @@ class TestAnalytics(TestStockCommon):
         self.MoveObj.create([
             {
                 **move_values,
-                'name': 'Move 1',
                 'product_id': self.product1.id,
                 'product_uom_qty': 3,
             },
             {
                 **move_values,
-                'name': 'Move 2',
                 'product_id': self.product2.id,
                 'product_uom_qty': 5,
             },
@@ -158,7 +154,6 @@ class TestAnalytics(TestStockCommon):
         picking_in.picking_type_id.analytic_costs = True
         self.project[self.plan1_name] = False  # Remove the mandatory plan from the project linked to the picking
         self.MoveObj.create({
-            'name': 'Move',
             'product_uom': self.uom_unit.id,
             'picking_id': picking_in.id,
             'location_id': self.supplier_location.id,

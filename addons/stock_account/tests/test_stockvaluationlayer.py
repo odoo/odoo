@@ -40,7 +40,6 @@ class TestStockValuationCommon(TransactionCase):
         loc_dest = loc_dest or self.stock_location
         pick_type = pick_type or self.picking_type_in
         in_move = self.env['stock.move'].create({
-            'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
             'product_id': product.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': loc_dest.id,
@@ -83,7 +82,6 @@ class TestStockValuationCommon(TransactionCase):
         loc_src = loc_src or self.stock_location
         pick_type = pick_type or self.picking_type_out
         out_move = self.env['stock.move'].create({
-            'name': 'out %s units' % str(quantity),
             'product_id': product.id,
             'location_id': loc_src.id,
             'location_dest_id': self.customer_location.id,
@@ -129,7 +127,6 @@ class TestStockValuationCommon(TransactionCase):
 
     def _make_dropship_move(self, product, quantity, unit_cost=None, lot_ids=False):
         dropshipped = self.env['stock.move'].create({
-            'name': 'dropship %s units' % str(quantity),
             'product_id': product.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.customer_location.id,
@@ -323,7 +320,6 @@ class TestStockValuationStandard(TestStockValuationCommon):
         for product in (product1, product2):
             product.standard_price = 10
             in_move = self.env['stock.move'].create({
-                'name': 'in %s units @ %s per unit' % (2, str(10)),
                 'product_id': product.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
@@ -1254,7 +1250,6 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCom
         loc_dest = loc_dest or self.stock_location
         pick_type = pick_type or self.picking_type_in
         in_move = self.env['stock.move'].create({
-            'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
             'product_id': product.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': loc_dest.id,
@@ -1282,7 +1277,6 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCom
 
     def _make_dropship_move(self, product, quantity, unit_cost=None):
         dropshipped = self.env['stock.move'].create({
-            'name': 'dropship %s units' % str(quantity),
             'product_id': product.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.customer_location.id,

@@ -86,7 +86,6 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_ids': [(0, 0, {
-                'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 20.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
@@ -110,7 +109,6 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_ids': [(0, 0, {
-                'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 500.0,
                 'product_uom': self.env.ref('uom.product_uom_gram').id,
@@ -168,7 +166,6 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_ids': [(0, 0, {
-                'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 49.5,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
@@ -189,7 +186,6 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_ids': [(0, 0, {
-                'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 10,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
@@ -224,7 +220,6 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_ids': [(0, 0, {
-                'name': product_fifo_negative.name,
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 100,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
@@ -251,7 +246,6 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_ids': [(0, 0, {
-                'name': product_fifo_negative.name,
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 400,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,

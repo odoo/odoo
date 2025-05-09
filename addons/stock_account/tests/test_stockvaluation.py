@@ -117,7 +117,6 @@ class TestStockValuationBase(TransactionCase):
         """
         unit_cost = unit_cost or product.standard_price
         in_move = self.env['stock.move'].create({
-            'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
             'product_id': product.id,
             'location_id': location_id or self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': location_dest_id or self.env.ref('stock.stock_location_stock').id,
@@ -139,7 +138,6 @@ class TestStockValuationBase(TransactionCase):
         """ Helper to create and validate a delivery move.
         """
         out_move = self.env['stock.move'].create({
-            'name': 'out %s units' % str(quantity),
             'product_id': product.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
             'location_dest_id': location_dest_id or self.env.ref('stock.stock_location_customers').id,
@@ -162,7 +160,6 @@ class TestStockValuation(TestStockValuationBase):
         # Enter 10 products while price is 5.0
         self.product1.standard_price = 5.0
         move1 = self.env['stock.move'].create({
-            'name': 'IN 10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -189,7 +186,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.standard_price = 5.0
         self.product1.is_storable = False
         move1 = self.env['stock.move'].create({
-            'name': 'IN 10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -211,7 +207,6 @@ class TestStockValuation(TestStockValuationBase):
         # receive 10 units @ 10.00 per unit
         # ---------------------------------------------------------------------
         move1 = self.env['stock.move'].create({
-            'name': 'IN 10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -253,7 +248,6 @@ class TestStockValuation(TestStockValuationBase):
         # receive 10 units @ 8.00 per unit
         # ---------------------------------------------------------------------
         move2 = self.env['stock.move'].create({
-            'name': 'IN 10 units @ 8.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -295,7 +289,6 @@ class TestStockValuation(TestStockValuationBase):
         # sale 3 units
         # ---------------------------------------------------------------------
         move3 = self.env['stock.move'].create({
-            'name': 'Sale 3 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -367,7 +360,6 @@ class TestStockValuation(TestStockValuationBase):
         # immediately as the new layer is at the top of the queue.
         # ---------------------------------------------------------------------
         move4 = self.env['stock.move'].create({
-            'name': 'Sale 9 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -409,7 +401,6 @@ class TestStockValuation(TestStockValuationBase):
         # valued at the last FIFO cost and the total is negative.
         # ---------------------------------------------------------------------
         move5 = self.env['stock.move'].create({
-            'name': 'Sale 20 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -451,7 +442,6 @@ class TestStockValuation(TestStockValuationBase):
         # will be called directly: 10@10 should be revalued 10@12
         # ---------------------------------------------------------------------
         move6 = self.env['stock.move'].create({
-            'name': 'IN 10 units @ 12.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -512,7 +502,6 @@ class TestStockValuation(TestStockValuationBase):
         # receive 4 to counterbalance now
         # -----------------------------------------------------------
         move7 = self.env['stock.move'].create({
-            'name': 'IN 4 units @ 15.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -562,7 +551,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Beginning Inventory: 68 units @ 15.00 per unit
         move1 = self.env['stock.move'].create({
-            'name': '68 units @ 15.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -582,7 +570,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Purchase 140 units @ 15.50 per unit
         move2 = self.env['stock.move'].create({
-            'name': '140 units @ 15.50 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -603,7 +590,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Sale 94 units @ 19.00 per unit
         move3 = self.env['stock.move'].create({
-            'name': 'Sale 94 units @ 19.00 per unit',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -627,7 +613,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Purchase 40 units @ 16.00 per unit
         move4 = self.env['stock.move'].create({
-            'name': '140 units @ 15.50 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -650,7 +635,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Purchase 78 units @ 16.50 per unit
         move5 = self.env['stock.move'].create({
-            'name': 'Purchase 78 units @ 16.50 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -674,7 +658,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Sale 116 units @ 19.50 per unit
         move6 = self.env['stock.move'].create({
-            'name': 'Sale 116 units @ 19.50 per unit',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -700,7 +683,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Sale 62 units @ 21 per unit
         move7 = self.env['stock.move'].create({
-            'name': 'Sale 62 units @ 21 per unit',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -733,7 +715,6 @@ class TestStockValuation(TestStockValuationBase):
         ], limit=1)
         transit_location.active = True
         move8 = self.env['stock.move'].create({
-            'name': 'Send 10 units in transit',
             'location_id': self.stock_location.id,
             'location_dest_id': transit_location.id,
             'product_id': self.product1.id,
@@ -759,7 +740,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Sale 10 units @ 16.5 per unit
         move9 = self.env['stock.move'].create({
-            'name': 'Sale 10 units @ 16.5 per unit',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -792,7 +772,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # in 10 @ 100
         move1 = self.env['stock.move'].create({
-            'name': 'in 10 @ 100',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -812,7 +791,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # in 10 @ 80
         move2 = self.env['stock.move'].create({
-            'name': 'in 10 @ 80',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -833,7 +811,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # out 15
         move3 = self.env['stock.move'].create({
-            'name': 'out 15',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -857,7 +834,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # in 5 @ 60
         move4 = self.env['stock.move'].create({
-            'name': 'in 5 @ 60',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -880,7 +856,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # out 7
         move5 = self.env['stock.move'].create({
-            'name': 'out 7',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -909,7 +884,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # in 8 @ 10
         move1 = self.env['stock.move'].create({
-            'name': 'in 8 @ 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -928,7 +902,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # in 4 @ 16
         move2 = self.env['stock.move'].create({
-            'name': 'in 4 @ 16',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -955,7 +928,6 @@ class TestStockValuation(TestStockValuationBase):
             'state': 'draft',
         })
         move3 = self.env['stock.move'].create({
-            'name': 'out 10',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -979,7 +951,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # in 2 @ 6
         move4 = self.env['stock.move'].create({
-            'name': 'in 2 @ 6',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1032,7 +1003,6 @@ class TestStockValuation(TestStockValuationBase):
         # Send 50 units you don't have
         # ---------------------------------------------------------------------
         move1 = self.env['stock.move'].create({
-            'name': '50 out',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -1070,7 +1040,6 @@ class TestStockValuation(TestStockValuationBase):
         # Receive 40 units @ 15
         # ---------------------------------------------------------------------
         move2 = self.env['stock.move'].create({
-            'name': '40 in @15',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1114,7 +1083,6 @@ class TestStockValuation(TestStockValuationBase):
         # Receive 20 units @ 25
         # ---------------------------------------------------------------------
         move3 = self.env['stock.move'].create({
-            'name': '20 in @25',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1179,7 +1147,6 @@ class TestStockValuation(TestStockValuationBase):
         # Receive 10@10
         # ---------------------------------------------------------------------
         move1 = self.env['stock.move'].create({
-            'name': '10 in',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1219,7 +1186,6 @@ class TestStockValuation(TestStockValuationBase):
         # Send 12
         # ---------------------------------------------------------------------
         move2 = self.env['stock.move'].create({
-            'name': '12 out (2 negative)',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -1283,7 +1249,6 @@ class TestStockValuation(TestStockValuationBase):
         # Receive 2@10
         # ---------------------------------------------------------------------
         move3 = self.env['stock.move'].create({
-            'name': '10 in',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1338,7 +1303,6 @@ class TestStockValuation(TestStockValuationBase):
         # Receive 10@10
         # ---------------------------------------------------------------------
         move1 = self.env['stock.move'].create({
-            'name': '10 in',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1378,7 +1342,6 @@ class TestStockValuation(TestStockValuationBase):
         # Send 10
         # ---------------------------------------------------------------------
         move2 = self.env['stock.move'].create({
-            'name': '10 out',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -1417,7 +1380,6 @@ class TestStockValuation(TestStockValuationBase):
         # ---------------------------------------------------------------------
         # FIXME sle last fifo price not updated on the product?
         move3 = self.env['stock.move'].create({
-            'name': '10 in',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -1511,7 +1473,6 @@ class TestStockValuation(TestStockValuationBase):
 
         move1 = self.env['stock.move'].create({
             'picking_id': receipt.id,
-            'name': '10 in',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1542,7 +1503,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product2.standard_price = 20
         move2 = self.env['stock.move'].create({
             'picking_id': receipt.id,
-            'name': '10 in',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product2.id,
@@ -1594,7 +1554,6 @@ class TestStockValuation(TestStockValuationBase):
         })
         move3 = self.env['stock.move'].create({
             'picking_id': delivery.id,
-            'name': '11 out',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product2.id,
@@ -1629,7 +1588,6 @@ class TestStockValuation(TestStockValuationBase):
         # Receive 10@10
         # ---------------------------------------------------------------------
         move1 = self.env['stock.move'].create({
-            'name': '10 in',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1691,7 +1649,6 @@ class TestStockValuation(TestStockValuationBase):
         # Receive 10@10
         # ---------------------------------------------------------------------
         move1 = self.env['stock.move'].create({
-            'name': 'receive 10@10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1727,7 +1684,6 @@ class TestStockValuation(TestStockValuationBase):
         # Receive 10@12
         # ---------------------------------------------------------------------
         move2 = self.env['stock.move'].create({
-            'name': 'receive 10@12',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1764,7 +1720,6 @@ class TestStockValuation(TestStockValuationBase):
         # Send 8
         # ---------------------------------------------------------------------
         move3 = self.env['stock.move'].create({
-            'name': '12 out (2 negative)',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -1847,7 +1802,6 @@ class TestStockValuation(TestStockValuationBase):
         # Receive 10@10
         # ---------------------------------------------------------------------
         move1 = self.env['stock.move'].create({
-            'name': 'receive 10@10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1875,7 +1829,6 @@ class TestStockValuation(TestStockValuationBase):
         # Send 10
         # ---------------------------------------------------------------------
         move2 = self.env['stock.move'].create({
-            'name': '12 out (2 negative)',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -1970,7 +1923,6 @@ class TestStockValuation(TestStockValuationBase):
         """Stock Move created directly in Done state must impact de valuation."""
         self.product1.categ_id.property_cost_method = 'average'
         self.env['stock.move'].create({
-            'name': '',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -1997,7 +1949,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Beginning Inventory: 60 units @ 15.00 per unit
         move1 = self.env['stock.move'].create({
-            'name': '60 units @ 15.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2015,7 +1966,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Purchase 140 units @ 15.50 per unit
         move2 = self.env['stock.move'].create({
-            'name': '140 units @ 15.50 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2033,7 +1983,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Sale 190 units @ 15.35 per unit
         move3 = self.env['stock.move'].create({
-            'name': 'Sale 190 units @ 19.00 per unit',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2050,7 +1999,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Purchase 70 units @ $16.00 per unit
         move4 = self.env['stock.move'].create({
-            'name': '70 units @ $16.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2068,7 +2016,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Sale 30 units @ $19.50 per unit
         move5 = self.env['stock.move'].create({
-            'name': '30 units @ $19.50 per unit',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2085,7 +2032,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Receives 10 units but assign them to an owner, the valuation should not be impacted.
         move6 = self.env['stock.move'].create({
-            'name': '10 units to an owner',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2104,7 +2050,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Sale 50 units @ $19.50 per unit (no stock anymore)
         move7 = self.env['stock.move'].create({
-            'name': '50 units @ $19.50 per unit',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2125,7 +2070,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_cost_method = 'average'
 
         move1 = self.env['stock.move'].create({
-            'name': 'Receive 10 units at 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2141,7 +2085,6 @@ class TestStockValuation(TestStockValuationBase):
         self.assertEqual(self.product1.standard_price, 10)
 
         move2 = self.env['stock.move'].create({
-            'name': 'Receive 10 units at 15',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2157,7 +2100,6 @@ class TestStockValuation(TestStockValuationBase):
         self.assertEqual(self.product1.standard_price, 12.5)
 
         move3 = self.env['stock.move'].create({
-            'name': 'Deliver 15 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2172,7 +2114,6 @@ class TestStockValuation(TestStockValuationBase):
         self.assertEqual(self.product1.standard_price, 12.5)
 
         move4 = self.env['stock.move'].create({
-            'name': 'Deliver 10 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2201,7 +2142,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_cost_method = 'average'
 
         move1 = self.env['stock.move'].create({
-            'name': 'Receive  10 units at 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2216,7 +2156,6 @@ class TestStockValuation(TestStockValuationBase):
         move1._action_done()
 
         move2 = self.env['stock.move'].create({
-            'name': 'Receive 10 units at 15',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2231,7 +2170,6 @@ class TestStockValuation(TestStockValuationBase):
         move2._action_done()
 
         move3 = self.env['stock.move'].create({
-            'name': 'Deliver 15 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2245,7 +2183,6 @@ class TestStockValuation(TestStockValuationBase):
         move3._action_done()
 
         move4 = self.env['stock.move'].create({
-            'name': 'Deliver 10 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2265,7 +2202,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_cost_method = 'average'
 
         move1 = self.env['stock.move'].create({
-            'name': 'Receive 1 unit at 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2280,7 +2216,6 @@ class TestStockValuation(TestStockValuationBase):
         move1._action_done()
 
         move2 = self.env['stock.move'].create({
-            'name': 'Receive 3 units at 5',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2302,7 +2237,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_cost_method = 'average'
 
         move1 = self.env['stock.move'].create({
-            'name': 'Receive 1 unit at 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2325,7 +2259,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
 
         move1 = self.env['stock.move'].create({
-            'name': 'Receive 1 unit at 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2339,7 +2272,6 @@ class TestStockValuation(TestStockValuationBase):
         move1.picked = True
 
         move2 = self.env['stock.move'].create({
-            'name': 'Receive 1 units at 5',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2366,7 +2298,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_cost_method = 'average'
 
         move1 = self.env['stock.move'].create({
-            'name': 'IN 5@10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2385,7 +2316,6 @@ class TestStockValuation(TestStockValuationBase):
         self.assertAlmostEqual(self.product1.value_svl, 50)
 
         move2 = self.env['stock.move'].create({
-            'name': 'IN 10@20',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2418,7 +2348,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_cost_method = 'average'
 
         move1 = self.env['stock.move'].create({
-            'name': 'IN 1@10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2434,7 +2363,6 @@ class TestStockValuation(TestStockValuationBase):
         self.assertAlmostEqual(self.product1.standard_price, 10)
 
         move2 = self.env['stock.move'].create({
-            'name': 'IN 1@20',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2450,7 +2378,6 @@ class TestStockValuation(TestStockValuationBase):
         self.assertAlmostEqual(self.product1.standard_price, 10.0)
 
         move3 = self.env['stock.move'].create({
-            'name': 'IN 1@20',
             'location_id': self.customer_location.id,
             'location_dest_id': self.supplier_location.id,
             'product_id': self.product1.id,
@@ -2472,7 +2399,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_cost_method = 'average'
         # receive 10
         move1 = self.env['stock.move'].create({
-            'name': 'IN 5@10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2486,7 +2412,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # deliver 15
         move2 = self.env['stock.move'].create({
-            'name': 'Deliver 10 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2507,7 +2432,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_cost_method = 'average'
         # receive 10
         move1 = self.env['stock.move'].create({
-            'name': 'IN 5@10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2521,7 +2445,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # sell 15
         move2 = self.env['stock.move'].create({
-            'name': 'Deliver 10 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2540,7 +2463,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_cost_method = 'average'
 
         move1 = self.env['stock.move'].create({
-            'name': 'Receive 10 units at 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2555,7 +2477,6 @@ class TestStockValuation(TestStockValuationBase):
         move1._action_done()
 
         move2 = self.env['stock.move'].create({
-            'name': 'send 20 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2601,7 +2522,6 @@ class TestStockValuation(TestStockValuationBase):
         # send 10 units that we do not have
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0)
         move1 = self.env['stock.move'].create({
-            'name': 'test_average_negative_1',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2624,7 +2544,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Receives 10 produts at 10
         move1 = self.env['stock.move'].create({
-            'name': '68 units @ 15.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2642,7 +2561,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # send 10 products
         move2 = self.env['stock.move'].create({
-            'name': 'Sale 94 units @ 19.00 per unit',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2660,7 +2578,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # send 10 products again
         move3 = self.env['stock.move'].create({
-            'name': 'Sale 94 units @ 19.00 per unit',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2682,7 +2599,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Receives 10 produts at 10
         move1 = self.env['stock.move'].create({
-            'name': '68 units @ 15.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2703,7 +2619,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # in 10 @ 10
         move1 = self.env['stock.move'].create({
-            'name': '10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2722,7 +2637,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # in 10 @ 20
         move2 = self.env['stock.move'].create({
-            'name': '10 units @ 20.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2741,7 +2655,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # send 5
         move3 = self.env['stock.move'].create({
-            'name': 'Sale 5 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2758,7 +2671,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # send 30
         move4 = self.env['stock.move'].create({
-            'name': 'Sale 5 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2775,7 +2687,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # in 20 @ 20
         move5 = self.env['stock.move'].create({
-            'name': '20 units @ 20.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2802,7 +2713,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # send 5 products to empty the inventory, the average price should not go to 0
         move6 = self.env['stock.move'].create({
-            'name': 'Sale 5 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2819,7 +2729,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # in 10 @ 10, the new average price should be 10
         move7 = self.env['stock.move'].create({
-            'name': '10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2844,7 +2753,6 @@ class TestStockValuation(TestStockValuationBase):
         # Step 1: Sell (and confirm) 10 units we don't have @ 100
         self.product1.standard_price = 100
         move1 = self.env['stock.move'].create({
-            'name': 'Sale 10 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2871,7 +2779,6 @@ class TestStockValuation(TestStockValuationBase):
         inventory_location.company_id = self.env.company.id
 
         move2 = self.env['stock.move'].create({
-            'name': 'Adjustment of 10 units',
             'location_id': inventory_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2898,7 +2805,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_valuation = 'manual_periodic'
 
         move1 = self.env['stock.move'].create({
-            'name': 'Receive 1 unit at 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2921,7 +2827,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_cost_method = 'standard'
 
         move1 = self.env['stock.move'].create({
-            'name': 'Receive 1 unit at 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2946,7 +2851,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.categ_id.property_valuation = 'manual_periodic'
 
         move1 = self.env['stock.move'].create({
-            'name': 'Receive 1 unit at 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2973,7 +2877,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.standard_price = 10.0
 
         move1 = self.env['stock.move'].with_user(self.inventory_user).create({
-            'name': 'IN 10 units',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -2994,7 +2897,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.standard_price = 10.0
 
         move1 = self.env['stock.move'].with_user(self.inventory_user).create({
-            'name': 'IN 10 units',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3017,7 +2919,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 10@10
         move1 = self.env['stock.move'].create({
-            'name': '10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3033,7 +2934,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 10@15
         move2 = self.env['stock.move'].create({
-            'name': '10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3049,7 +2949,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # sell 1
         move3 = self.env['stock.move'].create({
-            'name': 'Sale 5 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -3100,7 +2999,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 10@10
         move1 = self.env['stock.move'].create({
-            'name': '10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3116,7 +3014,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 10@15
         move2 = self.env['stock.move'].create({
-            'name': '10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3132,7 +3029,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # sell 1
         move3 = self.env['stock.move'].create({
-            'name': 'Sale 5 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -3198,7 +3094,6 @@ class TestStockValuation(TestStockValuationBase):
         })
 
         move1 = self.env['stock.move'].create({
-            'name': '2 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3236,7 +3131,6 @@ class TestStockValuation(TestStockValuationBase):
         self.assertTrue(len(move1.account_move_ids), 1)
 
         move2 = self.env['stock.move'].create({
-            'name': '2 units out',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -3282,7 +3176,6 @@ class TestStockValuation(TestStockValuationBase):
         })
 
         move1 = self.env['stock.move'].create({
-            'name': 'internal but out move',
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3323,7 +3216,6 @@ class TestStockValuation(TestStockValuationBase):
             'location_id': self.stock_location.id,
         })
         move2 = self.env['stock.move'].create({
-            'name': 'internal but in and out move',
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3372,7 +3264,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 10
         move1 = self.env['stock.move'].create({
-            'name': 'in 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3392,7 +3283,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 20
         move2 = self.env['stock.move'].create({
-            'name': 'in 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3412,7 +3302,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # send 15
         move3 = self.env['stock.move'].create({
-            'name': 'out 10',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -3439,7 +3328,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # send 10
         move4 = self.env['stock.move'].create({
-            'name': 'out 10',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -3463,7 +3351,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 90
         move5 = self.env['stock.move'].create({
-            'name': 'in 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3540,7 +3427,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 10@10
         move1 = self.env['stock.move'].create({
-            'name': 'in 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3561,7 +3447,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 10@12
         move2 = self.env['stock.move'].create({
-            'name': 'in 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3582,7 +3467,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # send 15
         move3 = self.env['stock.move'].create({
-            'name': 'out 10',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -3602,7 +3486,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # send 20
         move4 = self.env['stock.move'].create({
-            'name': 'out 10',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -3622,7 +3505,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 100@15
         move5 = self.env['stock.move'].create({
-            'name': 'in 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3674,7 +3556,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 10@10
         move1 = self.env['stock.move'].create({
-            'name': 'in 10@10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3695,7 +3576,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 10@15
         move2 = self.env['stock.move'].create({
-            'name': 'in 10@15',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3716,7 +3596,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # send 30
         move3 = self.env['stock.move'].create({
-            'name': 'out 30',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -3736,7 +3615,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 10@20
         move4 = self.env['stock.move'].create({
-            'name': 'in 10@20',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3758,7 +3636,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # receive 10@10
         move5 = self.env['stock.move'].create({
-            'name': 'in 10@10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3805,7 +3682,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Start Inventory: 12 units
         move1 = self.env['stock.move'].create({
-            'name': 'Adjustment of 12 units',
             'location_id': inventory_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3824,7 +3700,6 @@ class TestStockValuation(TestStockValuationBase):
 
         # Sell the 12 units
         move2 = self.env['stock.move'].create({
-            'name': 'Sell 12 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -3854,7 +3729,6 @@ class TestStockValuation(TestStockValuationBase):
         inventory_location.company_id = self.env.company.id
 
         move1 = self.env['stock.move'].create({
-            'name': 'Adjustment of 10 units',
             'location_id': inventory_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3870,7 +3744,6 @@ class TestStockValuation(TestStockValuationBase):
         move1.stock_valuation_layer_ids._write({'create_date': date1})
 
         move2 = self.env['stock.move'].create({
-            'name': 'Sell 5 units',
             'location_id': self.stock_location.id,
             'location_dest_id': inventory_location.id,
             'product_id': self.product1.id,
@@ -3938,7 +3811,6 @@ class TestStockValuation(TestStockValuationBase):
         # Receive 5 units @ 10.00 per unit (company_1)
         # ---------------------------------------------------------------------
         move_1 = self.env['stock.move'].with_company(company_1).create({
-            'name': 'IN 5 units @ 10.00 U per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': stock_1.id,
             'product_id': self.product1.id,
@@ -3954,7 +3826,6 @@ class TestStockValuation(TestStockValuationBase):
         # Receive 4 units @ 12.00 per unit (company_2)
         # ---------------------------------------------------------------------
         move_2 = self.env['stock.move'].with_company(company_2).create({
-            'name': 'IN 4 units @ 12.00 DD per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': stock_2.id,
             'product_id': self.product1.id,
@@ -3992,7 +3863,6 @@ class TestStockValuation(TestStockValuationBase):
 
         move = self.env['stock.move'].create({
             'picking_id': receipt.id,
-            'name': 'IN 1 @ 10',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -4025,7 +3895,6 @@ class TestStockValuation(TestStockValuationBase):
 
         move = self.env['stock.move'].create({
             'picking_id': receipt.id,
-            'name': 'test',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -4139,7 +4008,6 @@ class TestStockValuation(TestStockValuationBase):
         """
         self.product1.categ_id.property_cost_method = 'fifo'
         move1 = self.env['stock.move'].create({
-            'name': 'IN 10 units @ 7.20 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -4147,7 +4015,6 @@ class TestStockValuation(TestStockValuationBase):
             'price_unit': 7.2,
         })
         move2 = self.env['stock.move'].create({
-            'name': 'IN 20 units @ 15.30 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -4161,7 +4028,6 @@ class TestStockValuation(TestStockValuationBase):
         (move1 + move2).picked = True
         (move1 + move2)._action_done()
         move3 = self.env['stock.move'].create({
-            'name': 'OUT 100 units',
             'product_id': self.product1.id,
             'product_uom_qty': 100,
             'location_id': self.stock_location.id,
@@ -4201,7 +4067,6 @@ class TestStockValuation(TestStockValuationBase):
             'property_stock_journal': self.stock_journal.id,
         })
         move1 = self.env['stock.move'].create({
-            'name': 'IN 10 units @ 7.20 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -4209,7 +4074,6 @@ class TestStockValuation(TestStockValuationBase):
             'price_unit': 7.2,
         })
         move2 = self.env['stock.move'].create({
-            'name': 'IN 20 units @ 15.30 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -4223,7 +4087,6 @@ class TestStockValuation(TestStockValuationBase):
         (move1 + move2).picked = True
         (move1 + move2)._action_done()
         move3 = self.env['stock.move'].create({
-            'name': 'OUT 100 units',
             'product_id': self.product1.id,
             'product_uom_qty': 100,
             'location_id': self.stock_location.id,
@@ -4255,7 +4118,6 @@ class TestStockValuation(TestStockValuationBase):
         unit_uom = self.env.ref('uom.product_uom_unit')
         dozen_uom = self.env.ref('uom.product_uom_dozen')
         move = self.env['stock.move'].create({
-            'name': '12 Units of Product1',
             'product_id': self.product1.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.env.ref('stock.stock_location_stock').id,
@@ -4297,7 +4159,6 @@ class TestStockValuation(TestStockValuationBase):
         self.assertFalse(location._should_be_valued())
 
         move = self.env['stock.move'].create({
-            'name': 'Receipt of 1 unit',
             'product_id': self.product1.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': location.id,
@@ -4342,7 +4203,6 @@ class TestStockValuation(TestStockValuationBase):
         self.product1.standard_price = 10
 
         in_move = self.env['stock.move'].create({
-            'name': 'IN 10 units',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -4367,7 +4227,6 @@ class TestStockValuation(TestStockValuationBase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'move_ids': [Command.create({
-                'name': f'in {product.name}',
                 'product_id': product.id,
                 'product_uom_qty': 10,
                 'quantity': 10,
@@ -4430,7 +4289,6 @@ class TestStockValuation(TestStockValuationBase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'move_ids': [Command.create({
-                'name': 'IN 11g',
                 'product_id': self.product1.id,
                 'product_uom': uom_g.id,
                 'product_uom_qty': 11,
@@ -4451,7 +4309,6 @@ class TestStockValuation(TestStockValuationBase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'move_ids': [Command.create({
-                'name': 'OUT 11g',
                 'product_id': self.product1.id,
                 'product_uom': uom_g.id,
                 'product_uom_qty': 11,

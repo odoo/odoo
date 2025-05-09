@@ -305,7 +305,6 @@ class TestMrpMulticompany(common.TransactionCase):
             'location_id': warehouse_b.lot_stock_id.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),
             'move_ids': [Command.create({
-                'name': semi_kit_product.name,
                 'product_id': semi_kit_product.id,
                 'product_uom_qty': 1,
                 'location_id':  warehouse_b.lot_stock_id.id,

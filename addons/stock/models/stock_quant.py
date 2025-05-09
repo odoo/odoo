@@ -1243,17 +1243,8 @@ class StockQuant(models.Model):
         :return: dict with all values needed to create a new `stock.move` with its move line.
         """
         self.ensure_one()
-        if self.env.context.get('inventory_name'):
-            name = self.env.context.get('inventory_name')
-        elif fields.Float.is_zero(qty, precision_rounding=self.product_uom_id.rounding):
-            name = _('Product Quantity Confirmed')
-        else:
-            name = _('Product Quantity Updated')
-        if self.user_id and self.user_id.id != SUPERUSER_ID:
-            name += f' ({self.user_id.display_name})'
 
-        return {
-            'name': name,
+        res = {
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': qty,
@@ -1277,6 +1268,10 @@ class StockQuant(models.Model):
                 'owner_id': self.owner_id.id,
             })]
         }
+        if self.env.context.get('inventory_name'):
+            res['inventory_name'] = self.env.context.get('inventory_name')
+
+        return res
 
     def _set_view_context(self):
         """ Adds context when opening quants related views. """

@@ -35,7 +35,6 @@ class TestVirtualAvailable(TestStockCommon):
             'picking_type_id': cls.picking_type_out.id
         })
         cls.env['stock.move'].create({
-            'name': 'a move',
             'product_id': cls.product_3.id,
             'product_uom_qty': 3.0,
             'product_uom': cls.product_3.uom_id.id,
@@ -48,7 +47,6 @@ class TestVirtualAvailable(TestStockCommon):
             'picking_type_id': cls.picking_type_out.id})
         cls.env['stock.move'].create({
             'restrict_partner_id': cls.user_stock_user.partner_id.id,
-            'name': 'another move',
             'product_id': cls.product_3.id,
             'product_uom_qty': 5.0,
             'product_uom': cls.product_3.uom_id.id,
@@ -150,7 +148,6 @@ class TestVirtualAvailable(TestStockCommon):
             'state': 'draft',
         })
         self.env['stock.move'].create({
-            'name': 'test',
             'location_id': self.customer_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product.id,

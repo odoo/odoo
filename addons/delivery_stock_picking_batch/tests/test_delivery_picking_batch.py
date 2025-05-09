@@ -60,7 +60,6 @@ class TestDeliveryPickingBatch(common.TransactionCase):
 
         for picking in batch.picking_ids:
             picking.move_ids = self.env['stock.move'].create({
-                'name': 'TBPPSWC move',
                 'product_id': self.product_a.id,
                 'product_uom_qty': 1.0,
                 'location_id': self.stock_location.id,

@@ -54,9 +54,9 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         picking_landed_cost_1 = self.env['stock.picking'].new(vals)
         picking_landed_cost_1._onchange_picking_type()
         picking_landed_cost_1.move_ids._onchange_product_id()
-        picking_landed_cost_1.move_ids.name = 'move 1'
         vals = picking_landed_cost_1._convert_to_write(picking_landed_cost_1._cache)
         picking_landed_cost_1 = self.env['stock.picking'].create(vals)
+        move_1_id = picking_landed_cost_1.move_ids.id
 
         # Confirm and assign picking
         picking_landed_cost_1.picking_type_id.create_backorder = 'never'
@@ -80,9 +80,9 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         picking_landed_cost_2 = self.env['stock.picking'].new(vals)
         picking_landed_cost_2._onchange_picking_type()
         picking_landed_cost_2.move_ids._onchange_product_id()
-        picking_landed_cost_2.move_ids.name = 'move 2'
         vals = picking_landed_cost_2._convert_to_write(picking_landed_cost_2._cache)
         picking_landed_cost_2 = self.env['stock.picking'].create(vals)
+        move_2_id = picking_landed_cost_2.move_ids.id
 
         # Confirm and assign picking
         picking_landed_cost_2.action_confirm()
@@ -132,17 +132,17 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         for valuation in stock_landed_cost_1.valuation_adjustment_lines:
             if valuation.cost_line_id.name == 'equal split':
                 self.assertEqual(valuation.additional_landed_cost, 5)
-            elif valuation.cost_line_id.name == 'split by quantity' and valuation.move_id.name == "move 1":
+            elif valuation.cost_line_id.name == 'split by quantity' and valuation.move_id.id == move_1_id:
                 self.assertEqual(valuation.additional_landed_cost, 50)
-            elif valuation.cost_line_id.name == 'split by quantity' and valuation.move_id.name == "move 2":
+            elif valuation.cost_line_id.name == 'split by quantity' and valuation.move_id.id == move_2_id:
                 self.assertEqual(valuation.additional_landed_cost, 100)
-            elif valuation.cost_line_id.name == 'split by weight' and valuation.move_id.name == "move 1":
+            elif valuation.cost_line_id.name == 'split by weight' and valuation.move_id.id == move_1_id:
                 self.assertEqual(valuation.additional_landed_cost, 50)
-            elif valuation.cost_line_id.name == 'split by weight' and valuation.move_id.name == "move 2":
+            elif valuation.cost_line_id.name == 'split by weight' and valuation.move_id.id == move_2_id:
                 self.assertEqual(valuation.additional_landed_cost, 200)
-            elif valuation.cost_line_id.name == 'split by volume' and valuation.move_id.name == "move 1":
+            elif valuation.cost_line_id.name == 'split by volume' and valuation.move_id.id == move_1_id:
                 self.assertEqual(valuation.additional_landed_cost, 5)
-            elif valuation.cost_line_id.name == 'split by volume' and valuation.move_id.name == "move 2":
+            elif valuation.cost_line_id.name == 'split by volume' and valuation.move_id.id == move_2_id:
                 self.assertEqual(valuation.additional_landed_cost, 15)
             else:
                 raise ValidationError('unrecognized valuation adjustment line')

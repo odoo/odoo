@@ -120,7 +120,6 @@ class TestStockPickingTour(HttpCase):
             'location_id': warehouse.lot_stock_id.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),
             'move_ids': [Command.create({
-                'name': product_lot.name,
                 'product_id': product_lot.id,
                 'location_id': warehouse.lot_stock_id.id,
                 'location_dest_id': self.ref('stock.stock_location_customers'),

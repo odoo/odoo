@@ -53,7 +53,6 @@ class TestStockLot(TestStockCommon):
         })
 
         move_a = self.MoveObj.create({
-            'name': self.productAAA.name,
             'product_id': self.productAAA.id,
             'product_uom_qty': 33,
             'product_uom': self.productAAA.uom_id.id,
@@ -150,7 +149,6 @@ class TestStockLot(TestStockCommon):
         })
 
         move_b = self.MoveObj.create({
-            'name': self.productBBB.name,
             'product_id': self.productBBB.id,
             'product_uom_qty': 44,
             'product_uom': self.productBBB.uom_id.id,
@@ -200,7 +198,6 @@ class TestStockLot(TestStockCommon):
         })
 
         move_c = self.MoveObj.create({
-            'name': self.productCCC.name,
             'product_id': self.productCCC.id,
             'product_uom_qty': 44,
             'product_uom': self.productCCC.uom_id.id,
@@ -532,7 +529,6 @@ class TestStockLot(TestStockCommon):
         })
 
         move = self.env['stock.move'].create({
-            'name': 'move_test',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.apple_product.id,
@@ -608,7 +604,6 @@ class TestStockLot(TestStockCommon):
         })
 
         self.MoveObj.create({
-            'name': self.apple_product.name,
             'product_id': self.apple_product.id,
             'product_uom_qty': 10,
             'product_uom': self.apple_product.uom_id.id,

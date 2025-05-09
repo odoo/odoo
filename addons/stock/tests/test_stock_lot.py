@@ -100,7 +100,6 @@ class TestLotSerial(TestStockCommon):
             'location_dest_id': self.stock_location.id,
             'picking_type_id': self.picking_type_in.id,
             'move_ids': [Command.create({
-                'name': self.productB.name,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
                 'product_id': self.productB.id,
@@ -171,7 +170,6 @@ class TestLotSerial(TestStockCommon):
             'partner_id': customer.id,
             'picking_type_id': self.picking_type_out.id,
             'move_ids': [Command.create({
-                'name': self.productC.name,
                 'product_id': self.productC.id,
                 'product_uom_qty': 5,
                 'quantity': 5,
@@ -207,7 +205,6 @@ class TestLotSerial(TestStockCommon):
         starting_quant = self.lot_p_b.quant_ids
         self.assertEqual(starting_quant.quantity, 1)
         move = self.env["stock.move"].create({
-            'name': 'test_move',
             'location_id': self.locationA.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productB.id,
@@ -225,7 +222,6 @@ class TestLotSerial(TestStockCommon):
         self.assertEqual(self.lot_p_b.location_id.id, self.customer_location.id)
         # create a return
         move = self.env['stock.move'].create({
-            'name': 'test_move',
             'location_id': self.customer_location.id,
             'location_dest_id': self.locationA.id,
             'product_id': self.productB.id,
@@ -259,7 +255,6 @@ class TestLotSerial(TestStockCommon):
             'picking_type_id': branch_receipt_type.id,
         })
         move = self.env["stock.move"].with_company(branch_a).create({
-            'name': 'test_move',
             'location_id': self.supplier_location.id,
             'location_dest_id': branch_a_warehouse.lot_stock_id.id,
             'product_id': self.productB.id,
@@ -288,7 +283,6 @@ class TestLotSerial(TestStockCommon):
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.picking_type_out.id,
             'move_ids': [Command.create({
-                'name': self.productA.name,
                 'location_id': self.locationA.id,
                 'location_dest_id': self.customer_location.id,
                 'product_id': self.productA.id,

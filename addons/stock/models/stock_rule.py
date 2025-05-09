@@ -347,7 +347,6 @@ class StockRule(models.Model):
             values['to_refund'] = True
 
         move_values = {
-            'name': name[:2000],
             'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_dest_id.company_id.id or company_id.id,
             'product_id': product_id.id,
             'product_uom': product_uom.id,

@@ -57,7 +57,6 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         picking_landed_cost_3 = self.env['stock.picking'].new(vals)
         picking_landed_cost_3._onchange_picking_type()
         picking_landed_cost_3.move_ids._onchange_product_id()
-        picking_landed_cost_3.move_ids.name = 'move 3'
         vals = picking_landed_cost_3._convert_to_write(picking_landed_cost_3._cache)
         picking_landed_cost_3 = self.env['stock.picking'].create(vals)
 
@@ -76,7 +75,6 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         picking_landed_cost_4 = self.env['stock.picking'].new(vals)
         picking_landed_cost_4._onchange_picking_type()
         picking_landed_cost_4.move_ids._onchange_product_id()
-        picking_landed_cost_4.move_ids.name = 'move 4'
         vals = picking_landed_cost_4._convert_to_write(picking_landed_cost_4._cache)
         picking_landed_cost_4 = self.env['stock.picking'].create(vals)
 
@@ -233,7 +231,6 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
             'location_id': supplier_location_id,
             'location_dest_id': stock_location.id,
             'move_ids': [(0, 0, {
-                'name': self.product_a.name,
                 'product_id': self.product_a.id,
                 'price_unit': price,
                 'product_uom': self.product_a.uom_id.id,
@@ -273,7 +270,6 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location_id,
             'move_ids': [(0, 0, {
-                'name': self.product_a.name,
                 'product_id': self.product_a.id,
                 'product_uom': self.product_a.uom_id.id,
                 'product_uom_qty': qty,

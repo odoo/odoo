@@ -141,7 +141,6 @@ class StockPackage_Level(models.Model):
                 for quant in package_level.package_id.quant_ids:
                     self.env['stock.move'].create({
                         'picking_id': package_level.picking_id.id,
-                        'name': quant.product_id.display_name,
                         'product_id': quant.product_id.id,
                         'product_uom_qty': quant.quantity,
                         'product_uom': quant.product_id.uom_id.id,

@@ -28,7 +28,6 @@ class TestReportStockQuantity(tests.TransactionCase):
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         # replenish
         cls.move1 = cls.env['stock.move'].create({
-            'name': 'test_in_1',
             'location_id': cls.supplier_location.id,
             'location_dest_id': cls.wh.lot_stock_id.id,
             'product_id': cls.product1.id,
@@ -40,7 +39,6 @@ class TestReportStockQuantity(tests.TransactionCase):
         })
         # ship
         cls.move2 = cls.env['stock.move'].create({
-            'name': 'test_out_1',
             'location_id': cls.wh.lot_stock_id.id,
             'location_dest_id': cls.customer_location.id,
             'product_id': cls.product1.id,
@@ -66,7 +64,6 @@ class TestReportStockQuantity(tests.TransactionCase):
         transit_loc = self.wh.company_id.internal_transit_location_id
 
         self.move_transit_out = self.env['stock.move'].create({
-            'name': 'test_transit_out_1',
             'location_id': self.wh.lot_stock_id.id,
             'location_dest_id': transit_loc.id,
             'product_id': self.product1.id,
@@ -77,7 +74,6 @@ class TestReportStockQuantity(tests.TransactionCase):
             'date_deadline': fields.Datetime.now(),
         })
         self.move_transit_in = self.env['stock.move'].create({
-            'name': 'test_transit_in_1',
             'location_id': transit_loc.id,
             'location_dest_id': wh2.lot_stock_id.id,
             'product_id': self.product1.id,
@@ -132,7 +128,6 @@ class TestReportStockQuantity(tests.TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
         })
         self.env['stock.move'].create({
-            'name': 'Delivery',
             'product_id': self.product_replenished.id,
             'product_uom_qty': 500.0,
             'product_uom': self.uom_unit.id,
@@ -200,7 +195,6 @@ class TestReportStockQuantity(tests.TransactionCase):
 
         # Let's have 2 inter-warehouses stock moves (one for today and one for two days from now)
         move01, move02 = self.env['stock.move'].create([{
-            'name': 'Inter WH Move',
             'location_id': wh01.lot_stock_id.id,
             'location_dest_id': wh02.lot_stock_id.id,
             'product_id': product.id,
