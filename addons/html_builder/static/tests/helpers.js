@@ -63,7 +63,7 @@ class BuilderContainer extends Component {
                 </div>
             </div>
             <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
-            <div t-if="state.isEditing" t-att-class="{'o_builder_sidebar_open': state.isEditing}" class="o-website-builder_sidebar border-start border-dark">
+            <div t-if="state.isEditing" t-att-class="{'o_builder_sidebar_open': state.isEditing and state.showSidebar}" class="o-website-builder_sidebar border-start border-dark">
                 <Builder t-props="this.getBuilderProps()"/>
             </div>
         </div>`;
@@ -71,7 +71,7 @@ class BuilderContainer extends Component {
     static props = { content: String, Plugins: Array };
 
     setup() {
-        this.state = useState({ isMobile: false, isEditing: false });
+        this.state = useState({ isMobile: false, isEditing: false, showSidebar: true });
         this.iframeRef = useRef("iframe");
         const originalIframeLoaded = new Promise((resolve) => {
             this._originalIframeLoadedResolve = resolve;
