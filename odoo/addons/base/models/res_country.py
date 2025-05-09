@@ -258,6 +258,6 @@ class ResCountryState(models.Model):
     def _compute_display_name(self):
         for record in self:
             if self.env.context.get('formatted_display_name'):
-                record.display_name = f"{record.name} <tab> --{record.country_id.code}--"
+                record.display_name = f"{record.name} \t --{record.country_id.code}--"
             else:
                 record.display_name = f"{record.name} ({record.country_id.code})"

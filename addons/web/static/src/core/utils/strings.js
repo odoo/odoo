@@ -123,8 +123,8 @@ export function capitalize(s) {
  *      \*\*text\*\* => Put the text in bold.
  *      --text-- => Put the text in muted.
  *      \`text\` => Put the text in a rounded badge (bg-primary).
- *      \<br> => Insert a breakline.
- *      \<tab> => Insert 4 spaces.
+ *      \n => Insert a breakline.
+ *      \t => Insert 4 spaces.
  *
  * @param {string} text **will be escaped**
  * @returns {ReturnType<markup>} the formatted text

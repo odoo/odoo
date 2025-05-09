@@ -890,7 +890,7 @@ class AccountAccount(models.Model):
                 account.display_name = (
                     f"""{account.code} {account.name}"""
                     f"""{f' `{_("Suggested")}`' if account.id in preferred_account_ids else ''}"""
-                    f"""{f'<br>--{account.description}--' if account.description else ''}"""
+                    + (f'\n--{account.description}--' if account.description else '')
                 )
             else:
                 account.display_name = f"{account.code} {account.name}" if account.code else account.name
