@@ -142,6 +142,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_public": False,
                     "main_user_id": test_user.id,
                     "name": "Roger",
+                    "email": False,
                     "offline_since": False,
                     "user_livechat_username": False,
                     "write_date": fields.Datetime.to_string(test_user.write_date),

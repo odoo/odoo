@@ -1,4 +1,4 @@
-import { isValidEmail } from "@im_livechat/embed/common/misc";
+import { isValidEmail } from "@im_livechat/core/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
 import { Component, useState } from "@odoo/owl";

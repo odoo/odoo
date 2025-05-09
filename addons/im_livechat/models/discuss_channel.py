@@ -366,6 +366,18 @@ class DiscussChannel(models.Model):
             'body_html': mail_body,
         })
         mail.send()
+        if (
+            not self.env.user._is_public()
+            and self.env.user.partner_id not in self.livechat_customer_partner_ids
+        ):
+            # sudo: mail.message - posting send conversation message is allowed
+            self.sudo().message_post(
+                author_id=self.env.user.partner_id.id,
+                body=Markup("<div class='o_mail_notification'>%s</div>")
+                % self.env._("sent the conversation to %(email)s", email=email),
+                message_type="notification",
+                subtype_xmlid="mail.mt_comment",
+            )
 
     def _get_channel_history(self):
         """
