@@ -3169,3 +3169,10 @@ input[value*="data-oe-translation-source-sha"] {
     border-radius: $btn-border-radius;
     padding: $btn-padding-y $btn-padding-x;
 }
+
+// Some snippets need flex column for their columns so this will share the rule
+%flex-column-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
