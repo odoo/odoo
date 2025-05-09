@@ -46,15 +46,20 @@ patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 // Applies patch to hr_presence_status_private to display the time off type instead of default label
 patch(HrPresenceStatusPrivate.prototype, {
     get label() {
-        return this.props.record.data.current_leave_id
-            ? this.props.record.data.current_leave_id.id + _t(", back on ") + this.props.record.data['leave_date_to'].toLocaleString(
-                {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                }
-            )
-            : super.label;
+        if (this.props.record.data.current_leave_id){
+            let label = this.props.record.data.current_leave_id.display_name;
+            if (this.props.record.data.leave_date_to) {
+                label += _t(", back on ") + this.props.record.data['leave_date_to'].toLocaleString(
+                    {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                    }
+                )
+            }
+            return label;
+        }
+        super.label;
     }
 });
 

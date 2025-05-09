@@ -293,7 +293,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             'date_from': datetime(2022, 4, 18, 5, 0, 0),
             'date_to': datetime(2022, 4, 18, 18, 0, 0),
             'resource_id': False,
-            'time_type': "leave",
+            'time_type': "paid",
         }, {
             'name': "Ascension Day",
             'calendar_id': False,

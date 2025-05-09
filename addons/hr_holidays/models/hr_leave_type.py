@@ -100,8 +100,15 @@ class HrLeaveType(models.Model):
             #       by the Time Off Officer, Employee's Approver or both.""")
 
     has_valid_allocation = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
-    time_type = fields.Selection([('other', 'Worked Time'), ('leave', 'Absence')], default='leave', string="Kind of Time Off",
-                                 help="The distinction between working time (ex. Attendance) and absence (ex. Training) will be used in the computation of Accrual's plan rate.")
+    time_type = fields.Selection([
+        ('work', 'Paid, Worked Time'),
+        ('paid', 'Paid, non-Worked Time'),
+        ('unpaid', 'Unpaid, non-Worked Time')
+        ], default='unpaid', string="Kind of Time Off",
+        help="""Define the time of time off type.
+                - Paid, working time like Attendance, Remote Work, Training, ...
+                - Paid, non-working time like Sick Time, Paid Time Off, Extra Hours
+                - Unpaid, non-working time like Unpaid, Unpredictable leave, ...""")
     request_unit = fields.Selection([
         ('day', 'Day'),
         ('half_day', 'Half-Day'),

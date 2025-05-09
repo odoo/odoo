@@ -118,6 +118,7 @@ class HrEmployeeBase(models.AbstractModel):
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
             ('state', '=', 'validate'),
+            ('holiday_status_id.time_type', '!=', 'work'),
         ])
         leave_data = {}
         for holiday in holidays:

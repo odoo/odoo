@@ -20,13 +20,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         super(TestAccrualAllocations, cls).setUpClass()
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
-            'time_type': 'leave',
+            'time_type': 'paid',
             'requires_allocation': True,
             'allocation_validation_type': 'hr',
         })
         cls.leave_type_hour = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
-            'time_type': 'leave',
+            'time_type': 'paid',
             'requires_allocation': True,
             'allocation_validation_type': 'hr',
             'request_unit': 'hour',
@@ -168,7 +168,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Paid Time Off',
                 'requires_allocation': False,
                 'responsible_ids': [(4, self.user_hrmanager_id)],
-                'time_type': 'leave',
+                'time_type': 'paid',
                 'request_unit': 'half_day',
             })
             leave = self.env['hr.leave'].create({
@@ -444,27 +444,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-08-30'):
             attendances = []
             for index in range(5):
-                attendances.append((0, 0, {
-                    'name': '%s_%d' % ('40 Hours', index),
-                    'hour_from': 8,
-                    'hour_to': 12,
-                    'dayofweek': str(index),
-                    'day_period': 'morning'
-                }))
-                attendances.append((0, 0, {
-                    'name': '%s_%d' % ('40 Hours', index),
-                    'hour_from': 12,
-                    'hour_to': 13,
-                    'dayofweek': str(index),
-                    'day_period': 'lunch'
-                }))
-                attendances.append((0, 0, {
-                    'name': '%s_%d' % ('40 Hours', index),
-                    'hour_from': 13,
-                    'hour_to': 17,
-                    'dayofweek': str(index),
-                    'day_period': 'afternoon'
-                }))
+                attendances.extend((
+                    (0, 0, {'name': '%s_%d' % ('40 Hours', index), 'hour_from': 8, 'hour_to': 12, 'dayofweek': str(index), 'day_period': 'morning'}),
+                    (0, 0, {'name': '%s_%d' % ('40 Hours', index), 'hour_from': 12, 'hour_to': 13, 'dayofweek': str(index), 'day_period': 'lunch'}),
+                    (0, 0, {'name': '%s_%d' % ('40 Hours', index), 'hour_from': 13, 'hour_to': 17, 'dayofweek': str(index), 'day_period': 'afternoon'})
+                ))
             calendar_emp = self.env['resource.calendar'].create({
                 'name': '40 Hours',
                 'tz': self.employee_emp.tz,
@@ -519,10 +503,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.setAllocationCreateDate(allocation_not_worked_time.id, '2021-08-01 00:00:00')
             self.setAllocationCreateDate(allocation_worked_time.id, '2021-08-01 00:00:00')
             leave_type = self.env['hr.leave.type'].create({
-                'name': 'Paid Time Off',
+                'name': 'Unpaid Time Off',
                 'requires_allocation': False,
                 'responsible_ids': [Command.link(self.user_hrmanager_id)],
-                'time_type': 'leave',
+                'time_type': 'unpaid',
             })
             leave = self.env['hr.leave'].create({
                 'name': 'leave',
@@ -1376,7 +1360,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_yearly_cap(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Hour Time Off',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
             'leave_validation_type': 'no_validation',
@@ -1833,7 +1817,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_future_accural_time(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
             'request_unit': 'hour',
@@ -2086,7 +2070,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_leaves_cancel_cron(self):
         leave_type_no_negative = self.env['hr.leave.type'].create({
             'name': 'Test Accrual - No negative',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
             'leave_validation_type': 'no_validation',
@@ -2094,7 +2078,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         leave_type_negative = self.env['hr.leave.type'].create({
             'name': 'Test Accrual - Negative',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
             'leave_validation_type': 'no_validation',
@@ -2210,7 +2194,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_allocation_data_persists(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
         })
@@ -2251,7 +2235,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_future_accural_time_with_leaves_taken_in_the_past(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
         })
@@ -3735,7 +3719,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': True,
             'leave_validation_type': 'hr',
             'allocation_validation_type': 'hr',
@@ -3821,7 +3805,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             leave_type_day = self.env['hr.leave.type'].create({
                 'name': 'Test Leave Type',
-                'time_type': 'leave',
+                'time_type': 'unpaid',
                 'requires_allocation': 'yes',
                 'allocation_validation_type': 'no_validation',
                 'request_unit': 'day',
@@ -3863,7 +3847,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             leave_type_day = self.env['hr.leave.type'].create({
                 'name': 'Test Leave Type',
-                'time_type': 'leave',
+                'time_type': 'unpaid',
                 'requires_allocation': 'yes',
                 'allocation_validation_type': 'no_validation',
                 'request_unit': 'half_day',
@@ -3905,7 +3889,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             leave_type_day = self.env['hr.leave.type'].create({
                 'name': 'Test Leave Type',
-                'time_type': 'leave',
+                'time_type': 'unpaid',
                 'requires_allocation': 'yes',
                 'allocation_validation_type': 'no_validation',
                 'request_unit': 'day',

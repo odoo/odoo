@@ -286,7 +286,7 @@ class MrpWorkorder(models.Model):
                     'date_from': wo.date_start,
                     'date_to': wo.date_finished,
                     'resource_id': wo.workcenter_id.resource_id.id,
-                    'time_type': 'other',
+                    'time_type': 'work',
                 })
 
     @api.constrains('blocked_by_workorder_ids')
@@ -444,7 +444,7 @@ class MrpWorkorder(models.Model):
             return (date_start or self.date_start) + timedelta(seconds=duration_in_seconds)
         return workcenter.resource_calendar_id.plan_hours(
             self.duration_expected / 60.0, date_start or self.date_start,
-            compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
+            compute_leaves=True, domain=[('time_type', '!=', False)]
         )
 
     @api.onchange('date_finished')
@@ -460,7 +460,7 @@ class MrpWorkorder(models.Model):
             return ((date_finished or self.date_finished) - (date_start or self.date_start)).total_seconds() / 60
         interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
             date_start or self.date_start, date_finished or self.date_finished,
-            domain=[('time_type', 'in', ['leave', 'other'])]
+            domain=[('time_type', '!=', False)]
         )
         return interval['hours'] * 60
 
@@ -606,7 +606,7 @@ class MrpWorkorder(models.Model):
             'date_from': best_date_start,
             'date_to': best_date_finished,
             'resource_id': best_workcenter.resource_id.id,
-            'time_type': 'other'
+            'time_type': 'work'
         })
         vals['leave_id'] = leave.id
         self.write(vals)
@@ -664,7 +664,7 @@ class MrpWorkorder(models.Model):
                     'date_from': date_start,
                     'date_to': date_start + relativedelta(minutes=wo.duration_expected),
                     'resource_id': wo.workcenter_id.resource_id.id,
-                    'time_type': 'other'
+                    'time_type': 'work'
                 })
                 vals['date_finished'] = leave.date_to
                 vals['leave_id'] = leave.id

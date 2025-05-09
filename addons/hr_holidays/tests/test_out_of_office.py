@@ -20,7 +20,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         super().setUpClass()
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
-            'time_type': 'leave',
+            'time_type': 'paid',
             'requires_allocation': False,
         })
 
@@ -90,7 +90,7 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
         super(TestOutOfOfficePerformance, cls).setUpClass()
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
-            'time_type': 'leave',
+            'time_type': 'paid',
             'requires_allocation': False,
         })
         cls.leave_date_end = (datetime.today() + relativedelta(days=2))

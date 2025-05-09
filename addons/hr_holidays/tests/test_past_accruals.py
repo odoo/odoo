@@ -14,7 +14,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         super(TestAccrualAllocations, cls).setUpClass()
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Accrual Time Off',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': True,
             'allocation_validation_type': 'no',
         })
