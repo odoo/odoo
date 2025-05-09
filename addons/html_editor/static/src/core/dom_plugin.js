@@ -539,14 +539,18 @@ export class DomPlugin extends Plugin {
             newCandidate = baseContainer;
         }
         const cursors = this.dependencies.selection.preserveSelection();
-        const selectedBlocks = [...this.dependencies.selection.getTraversedBlocks()];
-        const deepestSelectedBlocks = selectedBlocks.filter(
+        const targetedBlocks = [...this.dependencies.selection.getTargetedBlocks()];
+        const deepestTargetedBlocks = targetedBlocks.filter(
             (block) =>
-                !descendants(block).some((descendant) => selectedBlocks.includes(descendant)) &&
+                !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
                 block.isContentEditable
         );
-        for (const block of deepestSelectedBlocks) {
-            if (isParagraphRelatedElement(block) || isListItemElement(block)) {
+        for (const block of deepestTargetedBlocks) {
+            if (
+                isParagraphRelatedElement(block) ||
+                block.nodeName === "PRE" || // TODO remove: PRE should be a paragraphRelatedElement
+                isListItemElement(block)
+            ) {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }

@@ -883,7 +883,7 @@ export class TablePlugin extends Plugin {
             .filter((node) => node.nodeName === "TABLE")
             .pop();
 
-        const traversedNodes = this.dependencies.selection.getTraversedNodes();
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
         if ((startTd !== endTd || selectSingleCell) && startTable === endTable) {
             if (!isProtected(startTable) && !isProtecting(startTable)) {
                 // The selection goes through at least two different cells ->
@@ -892,11 +892,11 @@ export class TablePlugin extends Plugin {
                 // one using shift + arrow key.
                 this.selectTableCells(selection);
             }
-        } else if (!traversedNodes.every((node) => closestElement(node.parentElement, "table"))) {
+        } else if (!targetedNodes.every((node) => closestElement(node.parentElement, "table"))) {
             const endSelectionTable = closestElement(selection.focusNode, "table");
             const endSelectionTableTds = endSelectionTable && getTableCells(endSelectionTable);
-            const traversedTds = new Set(traversedNodes.map((node) => closestElement(node, "td")));
-            const isTableFullySelected = endSelectionTableTds?.every((td) => traversedTds.has(td));
+            const targetedTds = new Set(targetedNodes.map((node) => closestElement(node, "td")));
+            const isTableFullySelected = endSelectionTableTds?.every((td) => targetedTds.has(td));
             if (endSelectionTable && !isTableFullySelected) {
                 // Make sure all the cells are traversed in actual selection
                 // when selecting full table. If not, they will be selected
@@ -912,14 +912,14 @@ export class TablePlugin extends Plugin {
                     focusOffset: selection.direction === DIRECTIONS.RIGHT ? nodeSize(targetTd) : 0,
                 });
             }
-            const traversedTables = new Set(
-                traversedNodes
+            const targetedTables = new Set(
+                targetedNodes
                     .map((node) => closestElement(node, "table"))
                     .filter((node) => node && !isProtected(node) && !isProtecting(node))
             );
-            for (const table of traversedTables) {
+            for (const table of targetedTables) {
                 // Don't apply several nested levels of selection.
-                if (!ancestors(table, this.editable).some((node) => traversedTables.has(node))) {
+                if (!ancestors(table, this.editable).some((node) => targetedTables.has(node))) {
                     table.classList.toggle("o_selected_table", true);
                     for (const td of getTableCells(table)) {
                         td.classList.toggle("o_selected_td", true);
@@ -1005,11 +1005,12 @@ export class TablePlugin extends Plugin {
         const startTd = closestElement(selection.startContainer, "td");
         const endTd = closestElement(selection.endContainer, "td");
         if (startTd && startTd === endTd && !isProtected(startTd) && !isProtecting(startTd)) {
-            const selectedNodes = this.dependencies.selection.getSelectedNodes();
+            const targetedNodes = this.dependencies.selection.getTargetedNodes();
             const cellContents = descendants(startTd);
+            /** @todo Test. Should probably use areNodeContentsFullySelected. */
             const areCellContentsFullySelected = cellContents
                 .filter((d) => !isBlock(d))
-                .every((child) => selectedNodes.includes(child));
+                .every((child) => targetedNodes.includes(child));
             if (areCellContentsFullySelected) {
                 const SENSITIVITY = 5;
                 if (!this._mouseMovePositionWhenAllContentsSelected) {
@@ -1166,10 +1167,17 @@ export class TablePlugin extends Plugin {
         }
     }
 
+    /**
+     * @deprecated
+     */
     adjustTraversedNodes(traversedNodes) {
-        const modifiedTraversedNodes = [];
+        return this.adjustTargetedNodes(traversedNodes);
+    }
+
+    adjustTargetedNodes(targetedNodes) {
+        const modifiedTargetedNodes = [];
         const visitedTables = new Set();
-        for (const node of traversedNodes) {
+        for (const node of targetedNodes) {
             const selectedTable = closestElement(node, ".o_selected_table");
             if (selectedTable) {
                 if (visitedTables.has(selectedTable)) {
@@ -1177,13 +1185,13 @@ export class TablePlugin extends Plugin {
                 }
                 visitedTables.add(selectedTable);
                 for (const selectedTd of selectedTable.querySelectorAll(".o_selected_td")) {
-                    modifiedTraversedNodes.push(selectedTd, ...descendants(selectedTd));
+                    modifiedTargetedNodes.push(selectedTd, ...descendants(selectedTd));
                 }
             } else {
-                modifiedTraversedNodes.push(node);
+                modifiedTargetedNodes.push(node);
             }
         }
-        return modifiedTraversedNodes;
+        return modifiedTargetedNodes;
     }
 
     resetTableSelection() {
