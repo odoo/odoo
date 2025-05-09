@@ -2,6 +2,7 @@ import {
     changeOption,
     clickOnExtraMenuItem,
     clickOnSave,
+    openLinkPopup,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
@@ -123,14 +124,10 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
     edition: true,
 }, () => [
        // Add a megamenu item to the top menu.
-    {
-        content: "Click on a menu item",
-        trigger: ":iframe .top_menu .nav-item a",
-        run: "click",
-    },
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home"),
     {
         content: "Click on 'Link' to open Link Dialog",
-        trigger: ":iframe .o_edit_menu_popover a.js_edit_menu",
+        trigger: ".o-we-linkpopover a.js_edit_menu",
         run: "click",
     },
     {
@@ -160,49 +157,23 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
         run: "click",
     },
     {
-        trigger: "#oe_snippets.o_loaded",
+        trigger: "body:not(:has(.modal))",
     },
     {
         content: "Check for the new mega menu",
         trigger: `:iframe .top_menu:has(.nav-item a.o_mega_menu_toggle:contains("Megatron"))`,
     },
-    {
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"
-    },
     clickOnExtraMenuItem({}, true),
     toggleMegaMenu({}),
+    ...openLinkPopup(":iframe .s_mega_menu_odoo_menu .nav-link:contains('Laptops')", "Laptops"),
     {
-        content: "Select the first menu link of the first column",
-        trigger: ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav a",
-        async run(actions) {
-            await actions.click();
-            const iframeDocument = document.querySelector('.o_iframe').contentDocument;
-            const range = iframeDocument.createRange();
-            range.selectNodeContents(this.anchor);
-            const sel = iframeDocument.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-        },
-    },
-    {
-        content: "Click 'edit link' button if URL input is now shown",
-        trigger: "#create-link",
-        async run(actions) {
-            // Note: the 'create-link' button is always here, however the input 
-            // for the URL might not be.
-            // We have to consider both cases:
-            // 1. Single-app website build: a few menu, so no extra menu added 
-            //    and the URL input is shown
-            // 2. Multi-app website build:  many menu, so extra menu added 
-            //    and the URL input is not shown
-            if (!document.querySelector("#o_link_dialog_url_input")) {
-                await actions.click();
-            }
-        },
+        content: "Click on 'Edit Link'",
+        trigger: ".o-we-linkpopover a.o_we_edit_link",
+        run: "click",
     },
     {
         content: "Change the link",
-        trigger: "#o_link_dialog_url_input",
+        trigger: ".o-we-linkpopover input.o_we_href_input_link",
         run: "edit /new_page"
     },
     ...clickOnSave(),
