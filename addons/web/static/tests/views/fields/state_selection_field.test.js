@@ -303,29 +303,6 @@ test("StateSelectionField in editable list view", async () => {
     ).toHaveCount(1, { message: "should still have one green status" });
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
 
-    // Click on the status button to make the dropdown appear
-    await click(".o_state_selection_cell .o_field_state_selection span.o_status");
-    await animationFrame();
-    expect(".o-dropdown--menu").toHaveCount(1, { message: "there should be a dropdown" });
-    expect(".o-dropdown--menu .dropdown-item").toHaveCount(3, {
-        message: "there should be three options in the dropdown",
-    });
-
-    // Click on another row
-    const lastCell = queryAll("tbody td.o_state_selection_cell")[4];
-    await click(lastCell);
-    await animationFrame();
-    expect(".o-dropdown--menu").toHaveCount(0, {
-        message: "there should not be a dropdown anymore",
-    });
-    const firstCell = queryFirst("tbody td.o_state_selection_cell");
-    expect(firstCell.parentElement).not.toHaveClass("o_selected_row", {
-        message: "first row should not be in edit mode anymore",
-    });
-    expect(lastCell.parentElement).toHaveClass("o_selected_row", {
-        message: "last row should be in edit mode",
-    });
-
     // Click on the third status button to make the dropdown appear
     await click(".o_state_selection_cell .o_field_state_selection span.o_status:eq(2)");
     await animationFrame();
@@ -364,6 +341,43 @@ test("StateSelectionField in editable list view", async () => {
         ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_green"
     ).toHaveCount(2, { message: "should have two green status" });
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
+});
+
+test.tags("desktop");
+test("StateSelectionField line stay in edit mode when StateSelectionField is opened", async () => {
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+            <list editable="bottom">
+                <field name="foo"/>
+                <field name="selection" widget="state_selection"/>
+            </list>
+        `,
+    });
+
+    // Click on the status button to make the dropdown appear
+    await click(".o_state_selection_cell .o_field_state_selection span.o_status");
+    await animationFrame();
+    expect(".o-dropdown--menu").toHaveCount(1, { message: "there should be a dropdown" });
+    expect(".o-dropdown--menu .dropdown-item").toHaveCount(3, {
+        message: "there should be three options in the dropdown",
+    });
+
+    // Click on another row
+    const lastCell = queryAll("tbody td.o_state_selection_cell")[4];
+    await click(lastCell);
+    await animationFrame();
+    expect(".o-dropdown--menu").toHaveCount(0, {
+        message: "there should not be a dropdown anymore",
+    });
+    const firstCell = queryFirst("tbody td.o_state_selection_cell");
+    expect(firstCell.parentElement).not.toHaveClass("o_selected_row", {
+        message: "first row should not be in edit mode anymore",
+    });
+    expect(lastCell.parentElement).toHaveClass("o_selected_row", {
+        message: "last row should be in edit mode",
+    });
 });
 
 test('StateSelectionField edited by the smart actions "Set kanban state as <state name>"', async () => {

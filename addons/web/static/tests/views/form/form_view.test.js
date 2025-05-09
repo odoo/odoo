@@ -2007,6 +2007,7 @@ test(`readonly stat buttons stays disabled on mobile`, async () => {
     expect(`button.oe_stat_button[disabled]`).toHaveCount(1);
 
     await contains(`button[name=action_to_perform]`).click();
+    await contains(".o_bottom_sheet_backdrop").click();
     await contains(".o-form-buttonbox .o_button_more").click();
     expect(`button.oe_stat_button[disabled]`).toHaveCount(1, {
         message: "After performing the action, only one button should be disabled.",
@@ -12460,6 +12461,7 @@ test(`statusbar buttons are correctly rendered in mobile`, async () => {
     expect(".o_statusbar_buttons button:eq(0)").toHaveText("Confirm");
     // open the dropdown
     await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v)").click();
+    await animationFrame();
     expect(".o-dropdown--menu:visible").toHaveCount(1, { message: "dropdown should be visible" });
     expect(".o-dropdown--menu button").toHaveCount(1, {
         message: "should have 1 button in the dropdown",
@@ -12503,50 +12505,6 @@ test(`statusbar widgets should appear in the CogMenu dropdown`, async () => {
     expect(".o_statusbar_buttons button:eq(0)").toHaveText("Attach document");
     expect(".o_statusbar_buttons button:has(.oi-ellipsis-v)").toHaveCount(0, {
         message: "shouldn't have 'More' dropdown",
-    });
-});
-
-test.tags("mobile");
-test(`CogMenu dropdown should keep its open/close state`, async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
-                <form>
-                    <header>
-                        <button string="Just more than one" />
-                        <button string="Confirm" invisible="name == ''" />
-                        <button string="Do it" invisible="name != ''" />
-                    </header>
-                    <sheet>
-                        <field name="name" />
-                    </sheet>
-                </form>
-            `,
-    });
-    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveCount(1, {
-        message: "should have a 'CogMenu' dropdown",
-    });
-
-    expect(".o_cp_action_menus button:has(.fa-cog)").not.toHaveClass("show", {
-        message: "dropdown should be closed",
-    });
-
-    // open the dropdown
-    await contains(".o_cp_action_menus button:has(.fa-cog)").click();
-    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveClass("show", {
-        message: "dropdown should be opened",
-    });
-
-    // change name to update buttons' modifiers
-    await contains(".o_field_widget[name=name] input").edit("test");
-
-    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveCount(1, {
-        message: "should have a 'CogMenu' dropdown",
-    });
-
-    expect(".o_cp_action_menus button:has(.fa-cog)").not.toHaveClass("show", {
-        message: "dropdown should be opened",
     });
 });
 

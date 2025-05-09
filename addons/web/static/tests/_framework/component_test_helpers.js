@@ -78,6 +78,9 @@ export function findComponent(parent, predicate) {
  * @returns {HTMLElement | undefined}
  */
 export function getDropdownMenu(togglerSelector) {
+    if (getMockEnv().isSmall) {
+        return queryFirst(".o-dropdown--menu", { eq: -1 });
+    }
     let el = queryFirst(togglerSelector);
     if (el && !el.classList.contains("o-dropdown")) {
         el = el.querySelector(".o-dropdown");

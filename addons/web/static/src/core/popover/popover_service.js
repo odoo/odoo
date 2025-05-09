@@ -13,7 +13,7 @@ import { registry } from "@web/core/registry";
  *   onClose?: () => void;
  *   onPositioned?: import("@web/core/position/position_hook").UsePositionOptions["onPositioned"];
  *   popoverClass?: string;
- *   popoverRole?: string;
+ *   role?: string;
  *   position?: import("@web/core/position/position_hook").UsePositionOptions["position"];
  *   ref?: Function;
  * }} PopoverServiceAddOptions
@@ -51,7 +51,7 @@ export const popoverService = {
                     class: options.popoverClass,
                     animation: options.animation,
                     arrow: options.arrow,
-                    role: options.popoverRole,
+                    role: options.role,
                     position: options.position,
                     onPositioned: options.onPositioned,
                     fixedPosition: options.fixedPosition,

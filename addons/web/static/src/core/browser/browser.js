@@ -55,6 +55,7 @@ export const browser = {
     innerWidth: window.innerWidth,
     ontouchstart: window.ontouchstart,
     BroadcastChannel: window.BroadcastChannel,
+    visualViewport: window.visualViewport,
 };
 
 Object.defineProperty(browser, "location", {

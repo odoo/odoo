@@ -1030,10 +1030,10 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     });
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
     await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
-    expect(queryAllTexts(`.o_popover .o-dropdown-item`)).toEqual(["Export All"]);
+    expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export All"]);
     await clickRecordSelector();
     await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
-    expect(queryAllTexts(`.o_popover .o-dropdown-item`)).toEqual([
+    expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "plaf",
         "Export",
         "Duplicate",
@@ -1041,7 +1041,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     ]);
     await clickRecordSelector();
     await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
-    expect(queryAllTexts(`.o_popover .o-dropdown-item`)).toEqual(["Export All"]);
+    expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export All"]);
 });
 
 test.tags("desktop");
@@ -1122,7 +1122,7 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
 
     await clickRecordSelector();
     await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
-    expect(queryAllTexts(`.o_popover .o-dropdown-item`)).toEqual([
+    expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "",
         "default-selection",
         "Export",
@@ -2427,8 +2427,8 @@ test(`grouped list rendering with groupby m2o field: edit group`, async () => {
     expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1 (3)", "Value 2 (1)"]);
     expect(`.o_group_header:first .o_group_config`).toHaveCount(1);
     await contains(`.o_group_header:first .o_group_config button`, { visible: false }).click();
-    expect(`.o_popover.o-dropdown--group-config-menu`).toHaveCount(1);
-    await contains(`.o_popover.o-dropdown--group-config-menu .o_group_edit`).click();
+    expect(`.o-dropdown--group-config-menu`).toHaveCount(1);
+    await contains(`.o-dropdown--group-config-menu .o_group_edit`).click();
     expect(`.o_dialog`).toHaveCount(1);
     expect(`.o_dialog .o_form_renderer .o_field_char[name="name"]`).toHaveCount(1);
     await contains(`.o_dialog .o_form_renderer .o_field_char[name="name"] input`).edit(
@@ -2439,9 +2439,12 @@ test(`grouped list rendering with groupby m2o field: edit group`, async () => {
     expect.verifySteps(["web_save"]);
     expect(queryAllTexts(`.o_group_name`)).toEqual(["Value edit (3)", "Value 2 (1)"]);
     await contains(`.o_group_header:first .o_group_config button`, { visible: false }).click();
-    expect(`.o_popover.o-dropdown--group-config-menu`).toHaveCount(1);
-    await contains(getFixture()).click();
-    expect(`.o_popover.o-dropdown--group-config-menu`).toHaveCount(0, {
+    if (getMockEnv().isSmall) {
+        await contains(".o_bottom_sheet_backdrop").click();
+    } else {
+        await contains(getFixture()).click();
+    }
+    expect(`.o-dropdown--group-config-menu`).toHaveCount(0, {
         message: "Close on click away should occur properly",
     });
 });
@@ -2461,8 +2464,8 @@ test(`grouped list rendering with groupby m2o field: delete group`, async () => 
     expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1 (3)", "Value 2 (1)"]);
     expect(`.o_group_header:first .o_group_config`).toHaveCount(1);
     await contains(`.o_group_header:first .o_group_config button`, { visible: false }).click();
-    expect(`.o_popover.o-dropdown--group-config-menu`).toHaveCount(1);
-    await contains(`.o_popover.o-dropdown--group-config-menu .o_group_delete`).click();
+    expect(`.o-dropdown--group-config-menu`).toHaveCount(1);
+    await contains(`.o-dropdown--group-config-menu .o_group_delete`).click();
     expect(`.o_dialog`).toHaveCount(1);
     expect(`.o_dialog .modal-body`).toHaveText("Are you sure you want to delete this column?");
     await contains(`.o_dialog footer button:contains(Delete)`).click();

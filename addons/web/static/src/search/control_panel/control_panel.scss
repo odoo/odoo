@@ -161,3 +161,51 @@
         transform: rotate(180deg);
     }
 }
+
+/* Simple button place-holder */
+%-custom-button {
+    $-value: map-get($o-btns-bs-override, 'secondary');
+    @include button-variant(
+            o-safe-get($-value, background),
+            o-safe-get($-value, border),
+            o-safe-get($-value, color),
+            o-safe-get($-value, hover-background),
+            o-safe-get($-value, hover-border),
+            o-safe-get($-value, hover-color),
+            o-safe-get($-value, active-background),
+            o-safe-get($-value, active-border),
+            o-safe-get($-value, active-color),
+    );
+    --#{$prefix}btn-border-width: var(--border-width);
+    --#{$prefix}btn-border-radius: #{$btn-border-radius};
+
+    background-color: var(--#{$prefix}btn-bg);
+    border: var(--#{$prefix}btn-border-width) solid var(--#{$prefix}btn-border-color);
+    @include border-radius(var(--#{$prefix}btn-border-radius));
+
+    &.selected {
+        color: var(--#{$prefix}btn-active-color);
+        background-color: var(--#{$prefix}btn-active-bg);
+        border-color: var(--#{$prefix}btn-active-border-color);
+        box-shadow: var(--#{$prefix}btn-active-shadow);
+    }
+}
+
+.o_bottom_sheet .o_cp_switch_buttons {
+    display: grid;
+    gap: map-get($spacers, 2);
+    grid-template-columns: repeat(3, 1fr);
+
+    .o-dropdown-item {
+        @extend %-custom-button;
+
+        display: grid;
+        justify-items: center;
+        gap: map-get($spacers, 2);
+        padding: map-get($spacers, 3);
+
+        &.selected::before {
+            content: none !important;
+        }
+    }
+}

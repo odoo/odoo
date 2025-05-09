@@ -2,7 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
-import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getMockEnv, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -138,7 +138,11 @@ test("Close dropdown on click outside", async () => {
     await open();
     expect(".o_select_menu_menu").toHaveCount(1);
 
-    await click(document.body);
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    } else {
+        await click(document.body);
+    }
     await animationFrame();
 
     expect(".o_select_menu_menu").toHaveCount(0);

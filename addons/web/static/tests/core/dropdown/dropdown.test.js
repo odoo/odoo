@@ -14,7 +14,7 @@ import {
 import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
 import { Component, onMounted, onPatched, useRef, useState, xml } from "@odoo/owl";
 
-import { makeMockEnv, mockService } from "@web/../tests/_framework/env_test_helpers";
+import { getMockEnv, makeMockEnv, mockService } from "@web/../tests/_framework/env_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     contains,
@@ -74,6 +74,19 @@ class MultiLevelDropdown extends Component {
     `;
 }
 
+class NoBottomSheetDropdown extends Component {
+    static components = { Dropdown, DropdownItem };
+    static props = [];
+    static template = xml`
+        <Dropdown t-props="dropdownProps" bottomSheet="false">
+            <button>Dropdown</button>
+            <t t-set-slot="content">
+                <DropdownItem class="'item-a'">Item A</DropdownItem>
+            </t>
+        </Dropdown>
+    `;
+}
+
 function startOpenState() {
     const state = useState({
         isOpen: true,
@@ -124,7 +137,11 @@ test("can be toggled", async () => {
     expect(DROPDOWN_MENU).toHaveAttribute("role", "menu");
     expect(DROPDOWN_TOGGLE).toHaveAttribute("aria-expanded", "true");
 
-    await click(DROPDOWN_TOGGLE);
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_handle_bar");
+    } else {
+        await click(DROPDOWN_TOGGLE);
+    }
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
     expect(DROPDOWN_TOGGLE).toHaveAttribute("aria-expanded", "false");
@@ -150,7 +167,11 @@ test("close on outside click", async () => {
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
-    await click("div.outside");
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    } else {
+        await click("div.outside");
+    }
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
@@ -182,7 +203,11 @@ test("close on outside click in shadow dom", async () => {
     await animationFrame();
     expect(queryAll(DROPDOWN_MENU, { root: shadowBody })).toHaveCount(1);
 
-    await click(".outside", { root: shadowBody });
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop", { root: shadowBody });
+    } else {
+        await click(".outside", { root: shadowBody });
+    }
     await animationFrame();
     expect(queryAll(DROPDOWN_MENU, { root: shadowBody })).toHaveCount(0);
 });
@@ -517,6 +542,7 @@ test("'o-dropdown-caret' class adds a caret", async () => {
     expect(getContent(".third")).toBe("none");
 });
 
+test.tags("desktop");
 test("direction class set to default when closed", async () => {
     await resize({ height: 600 });
 
@@ -749,6 +775,11 @@ test("don't close dropdown outside the active element", async () => {
     await animationFrame();
 
     expect(DROPDOWN_MENU).toHaveCount(2);
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    } else {
+        await click(".outside-dialog");
+    }
     await click(".outside-dialog");
     await animationFrame();
     expect(".modal-dialog").toHaveCount(1);
@@ -862,7 +893,11 @@ test("Dropdown in dialog in dropdown, first dropdown should stay open when click
     expect(DROPDOWN_MENU).toHaveCount(2);
 
     // Click outside dropdown inside dialog => only first dropdown should be open
-    await click(".inside-dialog");
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+    } else {
+        await click(".inside-dialog");
+    }
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 });
@@ -913,7 +948,15 @@ test("multi-level dropdown: close on outside click", async () => {
     await animationFrame();
 
     expect(DROPDOWN_MENU).toHaveCount(3);
-    await click("div.outside");
+    if (getMockEnv().isSmall) {
+        await click(".o_bottom_sheet_backdrop");
+        await animationFrame();
+        await click(".o_bottom_sheet_backdrop");
+        await animationFrame();
+        await click(".o_bottom_sheet_backdrop");
+    } else {
+        await click("div.outside");
+    }
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
@@ -1263,6 +1306,7 @@ test("multi-level dropdown: keynav when rtl direction", async () => {
     }
 });
 
+test.tags("desktop");
 test("multi-level dropdown: submenu keeps position when patched", async () => {
     expect.assertions(6);
 
@@ -1491,4 +1535,13 @@ test("multi-level dropdown: unsubscribe all keynav when root destroyed", async (
     expect(DROPDOWN_MENU).toHaveCount(0);
     // Second dropdown is completely destroyed => check for removed keys
     checkKeys(removedHotkeys);
+});
+
+test.tags("mobile");
+test("dropdown: no BottomSheet", async () => {
+    await mountWithCleanup(NoBottomSheetDropdown);
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    expect(".o_bottom_sheet").toHaveCount(0);
 });
