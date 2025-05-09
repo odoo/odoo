@@ -1,7 +1,6 @@
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import {
     areEquivalentTrees,
@@ -28,7 +27,6 @@ export class TreeEditor extends Component {
     static components = {
         Dropdown,
         DropdownItem,
-        ModelFieldSelector,
         TreeEditor,
     };
     static props = {
