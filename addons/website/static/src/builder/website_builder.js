@@ -16,6 +16,7 @@ import { PopupVisibilityPlugin } from "./plugins/popup_visibility_plugin";
 import { SaveTranslationPlugin } from "./plugins/save_translation_plugin";
 import { TranslationPlugin } from "./plugins/translation_plugin";
 import { WebsiteVisibilityPlugin } from "./plugins/website_visibility_plugin";
+import { EditInteractionPlugin } from "./plugins/edit_interaction_plugin";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsPlugin,
@@ -29,6 +30,7 @@ const TRANSLATION_PLUGINS = [
     WebsiteVisibilityPlugin,
     HighlightPlugin,
     OperationPlugin,
+    EditInteractionPlugin,
 ];
 
 export class WebsiteBuilder extends Component {
