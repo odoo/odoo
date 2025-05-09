@@ -26,7 +26,7 @@ function isGridItem(el) {
 
 export class GridLayoutPlugin extends Plugin {
     static id = "gridLayout";
-    static dependencies = ["history"];
+    static dependencies = ["history", "selection"];
     resources = {
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),
@@ -214,7 +214,8 @@ export class GridLayoutPlugin extends Plugin {
             if (allowGridMode) {
                 // Toggle the grid mode if it is not already on.
                 if (!isRowInGridMode) {
-                    toggleGridMode(containerEl);
+                    const preserveSelection = this.dependencies.selection.preserveSelection;
+                    toggleGridMode(containerEl, preserveSelection);
                 }
                 const gridItemProps = getGridItemProperties(columnEl);
 
