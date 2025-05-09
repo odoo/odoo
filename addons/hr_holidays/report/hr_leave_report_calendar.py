@@ -3,6 +3,7 @@
 from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.exceptions import ValidationError
 
 
 class HrLeaveReportCalendar(models.Model):
@@ -108,7 +109,25 @@ class HrLeaveReportCalendar(models.Model):
             leave.is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or leave.leave_manager_id == self.env.user
 
     def action_approve(self):
-        self.leave_id.action_approve(check_state=False)
+        current_user = self.env.user
+        if current_user.has_group('hr_holidays.group_hr_holidays_user'):
+            # If the user is a leave manager, approve the leave
+            self.leave_id.action_approve()
+        elif self.leave_manager_id == current_user and self.sudo().holiday_status_id.leave_validation_type in ('manager', 'both'):
+            # If the user is the employee's time off approver, approve the leave
+            self.sudo().leave_id.sudo(False).action_approve()
+        else:
+            # If the user is not a leave manager, raise an error
+            raise ValidationError(self.env._("You are not allowed to approve this leave request."))
 
     def action_refuse(self):
-        self.leave_id.action_refuse()
+        current_user = self.env.user
+        if current_user.has_group('hr_holidays.group_hr_holidays_user'):
+            # If the user is a leave manager, refuse the leave
+            self.leave_id.action_refuse()
+        elif self.leave_manager_id == current_user and self.sudo().holiday_status_id.leave_validation_type in ('manager', 'both'):
+            # If the user is the employee's time off approver, refuse the leave
+            self.sudo().leave_id.sudo(False).action_refuse()
+        else:
+            # If the user is not a leave manager, raise an error
+            raise ValidationError(self.env._("You are not allowed to refuse this leave request."))
