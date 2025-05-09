@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isZWS } from "@html_editor/utils/dom_info";
-import { reactive } from "@odoo/owl";
+import { Component, reactive, xml } from "@odoo/owl";
 import { composeToolbarButton, Toolbar } from "./toolbar";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
@@ -186,7 +186,7 @@ export class ToolbarPlugin extends Plugin {
         this.isMobileToolbar = hasTouch() && window.visualViewport;
 
         if (this.isMobileToolbar) {
-            this.overlay = new MobileToolbarOverlay(this.editable);
+            this.overlay = new MobileToolbarOverlay(this.editable, this.dependencies.overlay);
         } else {
             this.overlay = this.dependencies.overlay.createOverlay(Toolbar, {
                 positionOptions: {
@@ -483,15 +483,23 @@ export class ToolbarPlugin extends Plugin {
 }
 
 class MobileToolbarOverlay {
-    constructor(editable) {
+    constructor(editable, overlayShared) {
         this.isOpen = false;
         this.overlayId = `mobile_toolbar_${Math.random().toString(16).slice(2)}`;
         this.editable = editable;
+        this.fakeOverlay = overlayShared.createOverlay(
+            class extends Component {
+                static template = xml`<div/>`;
+                static props = [];
+            },
+            { closeOnPointerdown: false }
+        );
     }
 
     open({ props }) {
         props.class = "shadow";
         if (!this.isOpen) {
+            this.fakeOverlay.open({});
             const modal = this.editable.closest(".o_modal_full");
             if (modal) {
                 // Same height of the toolbar
@@ -506,11 +514,16 @@ class MobileToolbarOverlay {
     }
 
     close() {
+        this.fakeOverlay.close();
         const modal = this.editable.closest(".o_modal_full");
         if (modal) {
             modal.style.paddingBottom = "";
         }
         registry.category("main_components").remove(this.overlayId, "MobileToolbar");
         this.isOpen = false;
+    }
+
+    overlayContainsElement(el) {
+        return this.fakeOverlay.overlayContainsElement(el);
     }
 }
