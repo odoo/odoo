@@ -17,6 +17,7 @@ class PurchaseOrderSuggest(models.TransientModel):
 
     based_on = fields.Selection(
         selection=[
+            ('actual_demand', "Actual Demand"),
             ('one_week', "Last 7 days"),
             ('one_month', "Last 30 days"),
             ('three_months', "Last 3 months"),
@@ -28,13 +29,13 @@ class PurchaseOrderSuggest(models.TransientModel):
         ],
         default='one_month',
         string='Based on',
+        help="Estimate the sales volume for the period based on past period or order the forecasted quantity for that period.",
         required=True
     )
     number_of_days = fields.Integer(
         string="Replenish for", required=True,
         default=7,
-        help="Suggested quantities to replenish will be computed for all filtered products\
-              in this catalog in order to cover this amount of days of average demand.")
+        help="Suggested quantities to replenish will be computed to cover this amount of days for all filtered products in this catalog.")
     percent_factor = fields.Integer(default=100, required=True)
     estimated_price = fields.Float(
         string="Expected",
@@ -58,13 +59,14 @@ class PurchaseOrderSuggest(models.TransientModel):
             seller_params = {'order_id': suggest.purchase_order_id}
 
             # Explicitly fetch existing records to avoid "NewId origin" shenanigans
-            # and add context's values needed by the monthly demand's compute.
-            products = self.env['product.product'].browse(self.product_ids.ids).with_context(
-                suggest._get_montlhy_demand_context()
-            )
+            products = self.env['product.product'].browse(self.product_ids.ids)
+            products = products.with_context(suggest._get_suggested_products_context())
+
             for product in products:
-                # First, compute the product's quantity.
-                quantity = ceil(product.monthly_demand * suggest.multiplier)
+                if self.based_on == 'actual_demand':
+                    quantity = ceil(product.outgoing_qty * (self.percent_factor / 100))
+                else:
+                    quantity = ceil(product.monthly_demand * self.multiplier)
                 qty_to_deduce = max(product.qty_available, 0) + max(product.incoming_qty, 0)
                 quantity -= qty_to_deduce
                 if quantity <= 0:
@@ -108,8 +110,8 @@ class PurchaseOrderSuggest(models.TransientModel):
             ('partner_id', '=', order.partner_id.id),
         ])
         products = self.product_ids or supplierinfos.product_id
-        # Add context's values needed by the monthly demand's compute.
-        products = products.with_context(self._get_montlhy_demand_context())
+        products = products.with_context(self._get_suggested_products_context())
+
         # Create new PO lines for each product with a monthy demand.
         po_lines_commands = []
         for product in products:
@@ -119,7 +121,11 @@ class PurchaseOrderSuggest(models.TransientModel):
             # lines except the first one (who will be updated.)
             for po_line in existing_po_lines[1:]:
                 po_lines_commands.append(Command.unlink(po_line.id))
-            quantity = ceil(product.monthly_demand * self.multiplier)
+
+            if self.based_on == 'actual_demand':
+                quantity = ceil(product.outgoing_qty * (self.percent_factor / 100))
+            else:
+                quantity = ceil(product.monthly_demand * self.multiplier)
             qty_to_deduce = max(product.qty_available, 0) + max(product.incoming_qty, 0)
             quantity -= qty_to_deduce
             if quantity <= 0:
@@ -158,13 +164,19 @@ class PurchaseOrderSuggest(models.TransientModel):
             'infos': {'refresh': True},
         }
 
-    def _get_montlhy_demand_context(self):
+    def _get_suggested_products_context(self):
         self.ensure_one()
-        start_date, limit_date = self._get_period_of_time()
-        context = {
-            'monthly_demand_start_date': start_date,
-            'monthly_demand_limit_date': limit_date,
-        }
+        if self.based_on == 'actual_demand':
+            context = {
+                'from_date': fields.Datetime.now(),
+                'to_date': fields.Datetime.now() + relativedelta(days=self.number_of_days),
+            }
+        else:
+            start_date, limit_date = self._get_period_of_time()
+            context = {
+                'monthly_demand_start_date': start_date,
+                'monthly_demand_limit_date': limit_date,
+            }
         if self.warehouse_id and not self.hide_warehouse:
             context['warehouse_id'] = self.warehouse_id.id
         return context
