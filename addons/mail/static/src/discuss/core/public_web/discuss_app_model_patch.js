@@ -35,6 +35,7 @@ const discussAppPatch = {
             },
             eager: true,
         });
+        this.unreadChannels = Record.many("Thread", { inverse: "appAsUnreadChannels" });
     },
     computeChats() {
         return {
