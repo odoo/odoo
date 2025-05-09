@@ -220,10 +220,11 @@ class ProductPricelist(models.Model):
 
             if compute_price:
                 price = suitable_rule._compute_price(
-                    product, quantity, target_uom, date=date, currency=currency)
+                    product, quantity, target_uom, date=date, currency=currency, **kwargs)
             else:
                 # Skip price computation when only the rule is requested.
                 price = 0.0
+
             results[product.id] = (price, suitable_rule.id)
 
         return results
