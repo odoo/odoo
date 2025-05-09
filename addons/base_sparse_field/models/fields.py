@@ -50,7 +50,13 @@ def _get_attrs(self, model_class, name):
 def _compute_sparse(self, records):
     for record in records:
         values = record[self.sparse]
-        record[self.name] = values.get(self.name)
+        if self.name in values:
+            record[self.name] = values.get(self.name)
+        elif self.default:
+            record[self.name] = self.default(record)
+        else:
+            record[self.name] = None
+
     if self.relational:
         for record in records:
             record[self.name] = record[self.name].exists()
