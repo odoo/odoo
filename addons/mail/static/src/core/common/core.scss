@@ -96,6 +96,30 @@ $o-discuss-talkingColor: lighten($success, 10%);
     text-decoration: underline;
 }
 
+.o-rounded-bubble {
+    border-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
+}
+
+.o-rounded-top-bubble {
+    border-top-left-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
+    border-top-right-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
+}
+
+.o-rounded-end-bubble {
+    border-top-right-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
+    border-bottom-right-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
+}
+
+.o-rounded-bottom-bubble {
+    border-bottom-right-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
+    border-bottom-left-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
+}
+
+.o-rounded-start-bubble {
+    border-bottom-left-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
+    border-top-left-radius: calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
+}
+
 .o-text-white {
     color: #FFF !important;
 }
