@@ -955,7 +955,6 @@ class StockMoveLine(models.Model):
     def _prepare_stock_move_vals(self):
         self.ensure_one()
         return {
-            'name': _('New Move: %(product)s', product=self.product_id.display_name),
             'product_id': self.product_id.id,
             'product_uom_qty': 0 if self.picking_id and self.picking_id.state != 'done' else self.quantity,
             'product_uom': self.product_uom_id.id,
@@ -1078,7 +1077,7 @@ class StockMoveLine(models.Model):
     def _get_revert_inventory_move_values(self):
         self.ensure_one()
         return {
-            'name':_('%s [reverted]', self.reference),
+            'inventory_name': _('%s [reverted]', self.reference),
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': self.quantity,

@@ -1553,7 +1553,6 @@ class TestMrpOrder(TestMrpCommon):
             'location_dest_id': scrap.location_id.id,
         })
         unscrap_move = self.env['stock.move'].create({
-            'name': 'unscrap',
             'location_id': scrap.scrap_location_id.id,
             'location_dest_id': scrap.location_id.id,
             'product_id': product.id,
@@ -1608,7 +1607,7 @@ class TestMrpOrder(TestMrpCommon):
             'location_dest_id': self.output_location.id,
         })
 
-        self.assertEqual(move.name, mo.name)
+        self.assertEqual(move.reference, mo.name)
         self.assertEqual(move.origin, mo._get_origin())
         self.assertEqual(move.group_id, mo.procurement_group_id)
         self.assertEqual(move.propagate_cancel, mo.propagate_cancel)
@@ -1637,7 +1636,6 @@ class TestMrpOrder(TestMrpCommon):
         mo = mo_form.save()
         for i in range(2):
             move = self.env['stock.move'].create({
-                'name': 'mrp_move_' + str(i),
                 'product_id': self.product_2.id,
                 'product_uom': self.uom_unit.id,
                 'production_id': mo.id,

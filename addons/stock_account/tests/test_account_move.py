@@ -237,7 +237,6 @@ class TestAccountMove(TestAccountMoveStockCommon):
             'picking_type_id': stock_location.warehouse_id.out_type_id.id,
         })
         sm = self.env['stock.move'].create({
-            'name': product.name,
             'product_id': product.id,
             'product_uom_qty': 1,
             'product_uom': product.uom_id.id,
@@ -297,7 +296,6 @@ class TestAccountMove(TestAccountMoveStockCommon):
         })
 
         sm = self.env['stock.move'].create({
-            'name': product.name,
             'product_id': product.id,
             'product_uom_qty': 1,
             'product_uom': product.uom_id.id,

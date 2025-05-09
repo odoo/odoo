@@ -226,7 +226,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
         # Receive 3 components: one @10, one @20 and one @60
         in_moves = self.env['stock.move'].create([{
-            'name': 'IN move @%s' % p,
             'product_id': component.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -268,7 +267,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
         # Receive one @100
         in_moves = self.env['stock.move'].create({
-            'name': 'IN move @100',
             'product_id': component.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -329,7 +327,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
         # Receive 3 components: one @10, one @20 and one @60
         in_moves = self.env['stock.move'].create([{
-            'name': 'IN move @%s' % p,
             'product_id': component.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -371,7 +368,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
         # Receive one @100
         in_moves = self.env['stock.move'].create({
-            'name': 'IN move @100',
             'product_id': component.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,

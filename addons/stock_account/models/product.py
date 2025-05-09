@@ -578,7 +578,7 @@ will update the cost of every lot/serial number in stock."),
                     'remaining_qty': 0,
                     'stock_move_id': move.id,
                     'company_id': move.company_id.id,
-                    'description': 'Revaluation of %s (negative inventory)' % (move.picking_id.name or move.name),
+                    'description': 'Revaluation of %s (negative inventory)' % (move.picking_id.name or move.reference),
                     'stock_valuation_layer_id': svl_to_vacuum.id,
                     'lot_id': svl_to_vacuum.lot_id.id,
                 })

@@ -352,7 +352,6 @@ class TestLotValuation(TestStockValuationCommon):
         # c2 move
         c2_stock_loc = self.env['stock.warehouse'].search([('company_id', '=', c2.id)], limit=1).lot_stock_id
         move1 = self.env['stock.move'].with_company(c2).create({
-            'name': 'IN 10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': c2_stock_loc.id,
             'product_id': self.product1.id,
@@ -752,7 +751,6 @@ class TestLotValuation(TestStockValuationCommon):
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'picking_type_id': self.env.ref('stock.warehouse0').out_type_id.id,
             'move_ids': [Command.create({
-                'name': 'lovely move',
                 'product_id': product_lot.id,
                 'product_uom_qty': 5.0,
                 'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,

@@ -262,7 +262,6 @@ class TestReorderingRule(TransactionCase):
 
         # Create move out of 10 product
         move = self.env['stock.move'].create({
-            'name': 'move out',
             'product_id': product.id,
             'product_uom': product.uom_id.id,
             'product_uom_qty': 10,
@@ -322,7 +321,6 @@ class TestReorderingRule(TransactionCase):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'move_ids': [(0, 0, {
-                'name': self.product_01.name,
                 'product_id': self.product_01.id,
                 'product_uom_qty': 1,
                 'product_uom': self.product_01.uom_id.id,
@@ -341,7 +339,6 @@ class TestReorderingRule(TransactionCase):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'move_ids': [(0, 0, {
-                'name': self.product_01.name,
                 'product_id': self.product_01.id,
                 'product_uom_qty': 1,
                 'product_uom': self.product_01.uom_id.id,
@@ -940,7 +937,6 @@ class TestReorderingRule(TransactionCase):
         })
 
         out_move = self.env['stock.move'].create({
-            'name': self.product_01.name,
             'product_id': self.product_01.id,
             'product_uom': self.product_01.uom_id.id,
             'product_uom_qty': 5,
@@ -1125,7 +1121,6 @@ class TestReorderingRule(TransactionCase):
 
         # out move on January 20th
         move = self.env['stock.move'].create({
-            'name': 'Test move',
             'product_id': self.product_01.id,
             'product_uom': self.product_01.uom_id.id,
             'product_uom_qty': 1,
@@ -1137,7 +1132,6 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(op.qty_to_order, 0, 'sale order is ignored')
         # out move today to force the forecast to be negative
         move = self.env['stock.move'].create({
-            'name': 'Test move',
             'product_id': self.product_01.id,
             'product_uom': self.product_01.uom_id.id,
             'product_uom_qty': 1,
@@ -1166,7 +1160,6 @@ class TestReorderingRule(TransactionCase):
 
         # Out move in 5 days
         out_5_days = self.env['stock.move'].create({
-            'name': '5 days',
             'product_id': self.product_01.id,
             'product_uom_qty': 5,
             'location_id': warehouse.lot_stock_id.id,
@@ -1188,7 +1181,6 @@ class TestReorderingRule(TransactionCase):
 
         # Out move today
         out_today = self.env['stock.move'].create({
-            'name': 'today',
             'product_id': self.product_01.id,
             'product_uom_qty': 3,
             'location_id': warehouse.lot_stock_id.id,
@@ -1244,7 +1236,6 @@ class TestReorderingRule(TransactionCase):
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'picking_type_id': warehouse.out_type_id.id,
             'move_ids': [(0, 0, {
-                'name': product.name,
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,
                 'product_uom_qty': 1,

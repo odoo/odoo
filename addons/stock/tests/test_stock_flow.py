@@ -56,7 +56,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move_a = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 1,
             'product_uom': self.productA.uom_id.id,
@@ -65,7 +64,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move_b = self.MoveObj.create({
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 1,
             'product_uom': self.productB.uom_id.id,
@@ -74,7 +72,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move_c = self.MoveObj.create({
-            'name': self.productC.name,
             'product_id': self.productC.id,
             'product_uom_qty': 10,
             'product_uom': self.productC.uom_id.id,
@@ -83,7 +80,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move_d = self.MoveObj.create({
-            'name': self.productD.name,
             'product_id': self.productD.id,
             'product_uom_qty': 10,
             'product_uom': self.productD.uom_id.id,
@@ -92,7 +88,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.productD.name,
             'product_id': self.productD.id,
             'product_uom_qty': 5,
             'product_uom': self.productD.uom_id.id,
@@ -200,7 +195,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         move_cust_a = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 10,
             'product_uom': self.productA.uom_id.id,
@@ -209,7 +203,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         move_cust_b = self.MoveObj.create({
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 5,
             'product_uom': self.productB.uom_id.id,
@@ -218,7 +211,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         move_cust_c = self.MoveObj.create({
-            'name': self.productC.name,
             'product_id': self.productC.id,
             'product_uom_qty': 3,
             'product_uom': self.productC.uom_id.id,
@@ -227,7 +219,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         move_cust_d = self.MoveObj.create({
-            'name': self.productD.name,
             'product_id': self.productD.id,
             'product_uom_qty': 10,
             'product_uom': self.productD.uom_id.id,
@@ -501,7 +492,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.DozA.name,
             'product_id': self.DozA.id,
             'product_uom_qty': 10,
             'product_uom': self.DozA.uom_id.id,
@@ -510,7 +500,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.SDozA.name,
             'product_id': self.SDozA.id,
             'product_uom_qty': 10.5,
             'product_uom': self.SDozA.uom_id.id,
@@ -519,7 +508,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.kgB.name,
             'product_id': self.kgB.id,
             'product_uom_qty': 0.020,
             'product_uom': self.kgB.uom_id.id,
@@ -528,7 +516,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.gB.name,
             'product_id': self.gB.id,
             'product_uom_qty': 525.3,
             'product_uom': self.gB.uom_id.id,
@@ -591,7 +578,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move_in_a = self.MoveObj.create({
-            'name': self.DozA.name,
             'product_id': self.DozA.id,
             'product_uom_qty': 120,
             'product_uom': self.uom_unit.id,
@@ -600,7 +586,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.SDozA.name,
             'product_id': self.SDozA.id,
             'product_uom_qty': 1512,
             'product_uom': self.uom_unit.id,
@@ -609,7 +594,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.kgB.name,
             'product_id': self.kgB.id,
             'product_uom_qty': 20.0,
             'product_uom': self.uom_gm.id,
@@ -618,7 +602,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.gB.name,
             'product_id': self.gB.id,
             'product_uom_qty': 0.525,
             'product_uom': self.uom_kg.id,
@@ -779,7 +762,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
-            'name': self.kgB.name,
             'product_id': self.kgB.id,
             'product_uom_qty': 0.966,
             'product_uom': self.uom_gm.id,
@@ -788,7 +770,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
-            'name': self.kgB.name,
             'product_id': self.kgB.id,
             'product_uom_qty': 0.034,
             'product_uom': self.uom_gm.id,
@@ -821,7 +802,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
-            'name': self.DozA.name,
             'product_id': self.DozA.id,
             'product_uom_qty': 54,
             'product_uom': self.uom_unit.id,
@@ -830,7 +810,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
-            'name': self.SDozA.name,
             'product_id': self.SDozA.id,
             'product_uom_qty': 288,
             'product_uom': self.uom_unit.id,
@@ -839,7 +818,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
-            'name': self.gB.name,
             'product_id': self.gB.id,
             'product_uom_qty': 0.503,
             'product_uom': self.uom_kg.id,
@@ -848,7 +826,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
-            'name': self.kgB.name,
             'product_id': self.kgB.id,
             'product_uom_qty': 20,
             'product_uom': self.uom_gm.id,
@@ -936,7 +913,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': productKG.name,
             'product_id': productKG.id,
             'product_uom_qty': 1.0,
             'product_uom': self.uom_ton.id,
@@ -985,7 +961,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
-            'name': productKG.name,
             'product_id': productKG.id,
             'product_uom_qty': 25,
             'product_uom': self.uom_gm.id,
@@ -1178,7 +1153,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 4,
             'product_uom': self.productA.uom_id.id,
@@ -1206,7 +1180,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         move_out = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 3,
             'product_uom': self.productA.uom_id.id,
@@ -1254,7 +1227,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         move_out = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 3,
             'product_uom': self.productA.uom_id.id,
@@ -1269,7 +1241,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.pack_location.id,
         })
         move_pack = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 3,
             'product_uom': self.productA.uom_id.id,
@@ -1285,7 +1256,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move_in = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 3,
             'product_uom': self.productA.uom_id.id,
@@ -1386,7 +1356,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.productE.name,
             'product_id': self.productE.id,
             'product_uom_qty': 10,
             'product_uom': self.productE.uom_id.id,
@@ -1417,7 +1386,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
-            'name': self.productE.name,
             'product_id': self.productE.id,
             'product_uom_qty': 3,
             'product_uom': self.productE.uom_id.id,
@@ -1451,7 +1419,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.productE.name,
             'product_id': self.productE.id,
             'product_uom_qty': 200,
             'product_uom': self.productE.uom_id.id,
@@ -1483,7 +1450,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
-            'name': self.productE.name,
             'product_id': self.productE.id,
             'product_uom_qty': 200,
             'product_uom': self.productE.uom_id.id,
@@ -1546,7 +1512,6 @@ class TestStockFlow(TestStockCommon):
         picking_out.move_type = 'one'
 
         self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2,
             'product_uom': self.productA.uom_id.id,
@@ -1587,7 +1552,6 @@ class TestStockFlow(TestStockCommon):
         picking_out.move_type = 'direct'
 
         self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2,
             'product_uom': self.productA.uom_id.id,
@@ -1628,7 +1592,6 @@ class TestStockFlow(TestStockCommon):
         picking_out.move_type = 'direct'
 
         self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2,
             'product_uom': self.productA.uom_id.id,
@@ -1668,7 +1631,6 @@ class TestStockFlow(TestStockCommon):
         picking_out.move_type = 'direct'
 
         self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2,
             'product_uom': self.productA.uom_id.id,
@@ -1693,7 +1655,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         move_mto_alone = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2,
             'product_uom': self.productA.uom_id.id,
@@ -1703,7 +1664,6 @@ class TestStockFlow(TestStockCommon):
             'procure_method': 'make_to_order',
         })
         move_with_ancestors = self.MoveObj.create({
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 2,
             'product_uom': self.productB.uom_id.id,
@@ -1712,7 +1672,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 2,
             'product_uom': self.productB.uom_id.id,
@@ -1722,7 +1681,6 @@ class TestStockFlow(TestStockCommon):
             'move_dest_ids': [Command.link(move_with_ancestors.id)],
         })
         other_move = self.MoveObj.create({
-            'name': self.productC.name,
             'product_id': self.productC.id,
             'product_uom_qty': 2,
             'product_uom': self.productC.uom_id.id,
@@ -1757,7 +1715,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move_a = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 10,
             'product_uom': self.productA.uom_id.id,
@@ -1809,7 +1766,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 10,
             'product_uom': self.productA.uom_id.id,
@@ -1824,7 +1780,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 10,
             'product_uom': self.productA.uom_id.id,
@@ -1839,7 +1794,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 10,
             'product_uom': self.productA.uom_id.id,
@@ -2225,7 +2179,6 @@ class TestStockFlow(TestStockCommon):
                 'state': 'draft',
                 })
             self.MoveObj.create({
-                'name': self.productA.name,
                 'sequence': sequence,
                 'date': fields.Datetime.add(fields.Datetime.now(), second=delay),
                 'reservation_date': fields.Date.today(),
@@ -2272,7 +2225,6 @@ class TestStockFlow(TestStockCommon):
             'state': 'draft',
         })
         move_out = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 10,
             'product_uom': self.productA.uom_id.id,
@@ -2295,7 +2247,6 @@ class TestStockFlow(TestStockCommon):
             'state': 'draft',
         })
         move_a = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 10,
             'product_uom': self.productA.uom_id.id,
@@ -2304,7 +2255,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move_b = self.MoveObj.create({
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 10,
             'product_uom': self.productB.uom_id.id,
@@ -2386,7 +2336,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move = self.env['stock.move'].create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 1,
             'product_uom': self.productA.uom_id.id,
@@ -2503,7 +2452,6 @@ class TestStockFlow(TestStockCommon):
         self.warehouse_1.reception_steps = 'two_steps'
 
         out_move = self.env['stock.move'].create({
-            'name': 'out',
             'product_id': self.productA.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -2515,7 +2463,6 @@ class TestStockFlow(TestStockCommon):
         out_move._action_confirm()
 
         in_input_move = self.env['stock.move'].create({
-            'name': 'in',
             'product_id': self.productA.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
@@ -2589,7 +2536,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         }])
         self.MoveObj.create([{
-            'name': self.DozA.name,
             'product_id': self.DozA.id,
             'product_uom_qty': 10,
             'product_uom': self.DozA.uom_id.id,
@@ -2598,7 +2544,6 @@ class TestStockFlow(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
         }, {
-            'name': self.DozA.name,
             'product_id': self.DozA.id,
             'product_uom_qty': 10,
             'product_uom': self.DozA.uom_id.id,
@@ -2636,7 +2581,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move1 = self.env['stock.move'].create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 10,
             'product_uom': self.productA.uom_id.id,
@@ -2645,7 +2589,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move2 = self.env['stock.move'].create({
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 10,
             'product_uom': self.productB.uom_id.id,
@@ -2675,7 +2618,6 @@ class TestStockFlow(TestStockCommon):
             'company_id': self.env.company.id,
         })
         no_tracking_move = self.env['stock.move'].create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 1,
             'product_uom': self.productA.uom_id.id,
@@ -2684,7 +2626,6 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.env['stock.move'].create({
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 1,
             'product_uom': self.productB.uom_id.id,
@@ -2724,7 +2665,6 @@ class TestStockFlowPostInstall(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'move_ids': [Command.create({
-                'name': product.name,
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,
                 'product_uom_qty': 1.0,
@@ -2748,7 +2688,6 @@ class TestStockFlowPostInstall(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         move01, move02 = self.env['stock.move'].create([{
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 10,
             'product_uom': self.productA.uom_id.id,
@@ -2798,7 +2737,6 @@ class TestStockFlowPostInstall(TestStockCommon):
         picking = self.env['stock.picking'].create({
             'picking_type_id': picking_type_1.id,
             'move_ids': [(0, 0, {
-                'name': self.productA.name,
                 'product_id': self.productA.id,
                 'product_uom_qty': 50,
             })],

@@ -31,7 +31,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
     def _make_in_move(self, product, quantity=1, unit_cost=None):
         unit_cost = unit_cost or product.standard_price
         move = self.env['stock.move'].create({
-            'name': product.name,
             'product_id': product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,

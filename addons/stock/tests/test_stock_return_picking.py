@@ -15,7 +15,6 @@ class TestReturnPicking(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         move_1 = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2,
             'product_uom': self.uom_unit.id,
@@ -24,7 +23,6 @@ class TestReturnPicking(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         move_2 = self.MoveObj.create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 1,
             'product_uom': self.uom_dozen.id,
@@ -75,7 +73,6 @@ class TestReturnPicking(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.MoveObj.create({
-            'name': product_serial.name,
             'product_id': product_serial.id,
             'product_uom_qty': 1,
             'product_uom': self.uom_unit.id,
@@ -121,7 +118,6 @@ class TestReturnPicking(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         out_move = self.MoveObj.create({
-            'name': "OUT move",
             'product_id':self.productA.id,
             'product_uom_qty': 1,
             'picking_id': delivery_picking.id,
@@ -149,7 +145,6 @@ class TestReturnPicking(TestStockCommon):
             'location_dest_id': self.stock_location.id,
             'partner_id': partner.id,
             'move_ids': [Command.create({
-                'name': self.productA.name,
                 'product_id': self.productA.id,
                 'product_uom_qty': 1,
                 'product_uom': self.uom_unit.id,
@@ -186,7 +181,6 @@ class TestReturnPicking(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'move_ids': [Command.create({
-                'name': product_serial.name,
                 'product_id': product_serial.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,

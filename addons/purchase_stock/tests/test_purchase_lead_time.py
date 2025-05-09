@@ -107,7 +107,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         # create a move for product_1 from stock to output and reserve to trigger the
         # rule
         move_1 = self.env['stock.move'].create({
-            'name': 'move_1',
             'product_id': product_1.id,
             'product_uom': self.uom_unit.id,
             'location_id': self.stock_location.id,
@@ -124,7 +123,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(po_line.product_qty, 10, 'the purchase order line has a wrong quantity')
 
         move_2 = self.env['stock.move'].create({
-            'name': 'move_2',
             'product_id': product_1.id,
             'product_uom': self.uom_unit.id,
             'location_id': self.stock_location.id,
@@ -231,7 +229,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         self.env['stock.move'].create({
-            'name': 'Delivery',
             'date': datetime.today() + timedelta(days=3),
             'product_id': prod.id,
             'product_uom': prod.uom_id.id,
@@ -268,7 +265,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         delivery_moves = self.env['stock.move']
         for i in range(0, 6):
             delivery_moves |= self.env['stock.move'].create({
-                'name': 'Delivery',
                 'date': datetime.today() + timedelta(days=i),
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,

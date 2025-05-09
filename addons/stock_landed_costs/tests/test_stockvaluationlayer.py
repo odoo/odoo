@@ -72,7 +72,6 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
         """
         unit_cost = unit_cost or product.standard_price
         in_move = self.env['stock.move'].create({
-            'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
             'product_id': product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -103,7 +102,6 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
         """ Helper to create and validate a delivery move.
         """
         out_move = self.env['stock.move'].create({
-            'name': 'out %s units' % str(quantity),
             'product_id': product.id,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,

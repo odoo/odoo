@@ -43,7 +43,6 @@ class TestPacking(TestPackingCommon):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 20.0)
         pick_move_a = self.env['stock.move'].create({
-            'name': 'The ship move',
             'product_id': self.productA.id,
             'product_uom_qty': 5.0,
             'product_uom': self.productA.uom_id.id,
@@ -54,7 +53,6 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
         })
         pick_move_b = self.env['stock.move'].create({
-            'name': 'The ship move',
             'product_id': self.productB.id,
             'product_uom_qty': 5.0,
             'product_uom': self.productB.uom_id.id,
@@ -281,7 +279,6 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
         })
         ship_move_a = self.env['stock.move'].create({
-            'name': 'move 1',
             'product_id': self.productA.id,
             'product_uom_qty': 5.0,
             'product_uom': self.productA.uom_id.id,
@@ -352,7 +349,6 @@ class TestPacking(TestPackingCommon):
         move = self.env['stock.move'].create({
             **location_dict,
             **{
-                'name': "XXX",
                 'product_id': self.productA.id,
                 'product_uom': self.productA.uom_id.id,
                 'product_uom_qty': 355.40000000000003,  # other number
@@ -422,7 +418,6 @@ class TestPacking(TestPackingCommon):
         """
         prod = self.env['product.product'].create({'name': 'bad dragon', 'type': 'consu'})
         pick_move = self.env['stock.move'].create({
-            'name': 'The ship move',
             'product_id': prod.id,
             'product_uom_qty': 5.0,
             'product_uom': prod.uom_id.id,
@@ -732,7 +727,6 @@ class TestPacking(TestPackingCommon):
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0, lot_id=lot1)
         pick_move_a = self.env['stock.move'].create({
-            'name': 'The ship move',
             'product_id': self.productA.id,
             'product_uom_qty': 5.0,
             'product_uom': self.productA.uom_id.id,
@@ -906,7 +900,7 @@ class TestPacking(TestPackingCommon):
 
     def test_remove_package(self):
         """
-        In the overshipping scenario, if I remove the package after adding it, we should not remove the associated 
+        In the overshipping scenario, if I remove the package after adding it, we should not remove the associated
         stock move.
         """
         self.warehouse.delivery_steps = 'ship_only'
@@ -973,7 +967,6 @@ class TestPacking(TestPackingCommon):
                 'state': 'draft',
                 })
             move_A, move_B = self.env['stock.move'].create([{
-                'name': self.productA.name,
                 'product_id': self.productA.id,
                 'product_uom_qty': 1,
                 'product_uom': self.productA.uom_id.id,
@@ -981,7 +974,6 @@ class TestPacking(TestPackingCommon):
                 'location_id': from_loc.id,
                 'location_dest_id': to_loc.id,
             }, {
-                'name': self.productB.name,
                 'product_id': self.productB.id,
                 'product_uom_qty': 1,
                 'product_uom': self.productB.uom_id.id,
@@ -1118,7 +1110,6 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
         })
         self.env['stock.move'].create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom': self.productA.uom_id.id,
             'product_uom_qty': 100.0,
@@ -1222,7 +1213,6 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
         })
         self.env['stock.move'].create([{
-            'name': p.name,
             'product_id': p.id,
             'product_uom': p.uom_id.id,
             'product_uom_qty': 50,
@@ -1317,7 +1307,6 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': input_location.id,
             'state': 'draft',
             'move_ids': [(0, 0, {
-                'name': p.name,
                 'location_id': supplier_location.id,
                 'location_dest_id': input_location.id,
                 'product_id': p.id,
@@ -1347,7 +1336,6 @@ class TestPacking(TestPackingCommon):
             'location_id': supplier_location.id,
             'location_dest_id': input_location.id,
             'move_ids': [(0, 0, {
-                'name': self.productA.name,
                 'location_id': supplier_location.id,
                 'location_dest_id': input_location.id,
                 'product_id': self.productA.id,
@@ -1385,7 +1373,6 @@ class TestPacking(TestPackingCommon):
             'location_id': supplier_location.id,
             'location_dest_id': input_location.id,
             'move_ids': [(0, 0, {
-                'name': product.name,
                 'location_id': supplier_location.id,
                 'location_dest_id': input_location.id,
                 'product_id': product.id,
@@ -1434,7 +1421,6 @@ class TestPacking(TestPackingCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'move_ids': [(0, 0, {
-                'name': self.productA.name,
                 'product_id': self.productA.id,
                 'product_uom_qty': 0.4,
                 'product_uom': self.productA.uom_id.id,
@@ -1487,7 +1473,6 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
         })
         moveA = self.env['stock.move'].create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 5,
             'product_uom': self.productA.uom_id.id,
@@ -1496,7 +1481,6 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': loc_2.id,
         })
         moveB = self.env['stock.move'].create({
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 4,
             'product_uom': self.productB.uom_id.id,
@@ -1544,7 +1528,6 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.env['stock.move'].create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 5,
             'quantity': 5,
@@ -1560,7 +1543,6 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.stock_location.id,
         })
         self.env['stock.move'].create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 5,
             'quantity': 5,
@@ -1577,7 +1559,6 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
         })
         self.env['stock.move'].create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 5,
             'quantity': 5,
@@ -1651,7 +1632,6 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.customer_location.id,
         })
         move = self.env['stock.move'].create({
-            'name': product.name,
             'product_id': product.id,
             'product_uom': product.uom_id.id,
             'picking_id': picking.id,
@@ -1668,7 +1648,6 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.customer_location.id,
         })
         move_02 = self.env['stock.move'].create({
-            'name': product.name,
             'product_id': product.id,
             'product_uom': product.uom_id.id,
             'picking_id': picking_02.id,
@@ -1685,7 +1664,6 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.customer_location.id,
         })
         move_03 = self.env['stock.move'].create({
-            'name': product.name,
             'product_id': product.id,
             'product_uom': product.uom_id.id,
             'picking_id': picking_03.id,
@@ -1749,7 +1727,6 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
             'move_ids': [
                 Command.create({
-                    'name': self.productA.name,
                     'product_id': self.productA.id,
                     'product_uom_qty': 10,
                     'location_id': loc_1.id,
@@ -1757,7 +1734,6 @@ class TestPacking(TestPackingCommon):
                     'quantity': 8,
                 }),
                 Command.create({
-                    'name': self.productB.name,
                     'product_id': self.productB.id,
                     'product_uom_qty': 10,
                     'location_id': loc_1.id,
@@ -1837,7 +1813,6 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
         })
         self.env['stock.move'].create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2.0,
             'product_uom': self.productA.uom_id.id,
@@ -1893,7 +1868,6 @@ class TestPacking(TestPackingCommon):
                 'location_id': locations[-1].id,
                 'location_dest_id': locations[i].id,
                 'move_ids': [Command.create({
-                    'name': self.productA.name,
                     'location_id':  self.stock_location.id,
                     'location_dest_id': locations[i].id,
                     'product_id': self.productA.id,
@@ -1923,7 +1897,6 @@ class TestPacking(TestPackingCommon):
             'location_id': locations[1].id,
             'location_dest_id': self.customer_location.id,
             'move_ids': [Command.create({
-                'name': self.productA.name,
                 'location_id': locations[1].id,
                 'location_dest_id': self.customer_location.id,
                 'product_id': self.productA.id,
@@ -2007,7 +1980,6 @@ class TestPackagePropagation(TestPackingCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'move_ids': [Command.create({
-                'name': 'move full',
                 'product_id': self.productA.id,
                 'product_uom_qty': 30.0,
                 'product_uom': self.productA.uom_id.id,
@@ -2027,7 +1999,6 @@ class TestPackagePropagation(TestPackingCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'move_ids': [Command.create({
-                'name': 'move partial',
                 'product_id': self.productA.id,
                 'product_uom_qty': qty,
                 'product_uom': self.productA.uom_id.id,

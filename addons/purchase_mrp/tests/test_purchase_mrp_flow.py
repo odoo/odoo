@@ -633,7 +633,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'picking_type_id': warehouse.out_type_id.id,
             'move_ids': [(0, 0, {
-                'name': product.name,
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,
                 'product_uom_qty': 1,

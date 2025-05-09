@@ -316,7 +316,7 @@ class TestMrpStockReports(TestReportsCommon):
         picking.action_confirm()
 
         picking.move_ids.write({'quantity': 1, 'picked': True})
-        move = picking.move_ids.filtered(lambda m: m.name == "Super Kit" and m.product_id == compo03)
+        move = picking.move_ids.filtered(lambda m: m.description_picking == "Super Kit" and m.product_id == compo03)
         move.move_line_ids.result_package_id = self.env['stock.quant.package'].create({'name': 'Package0001'})
         picking.button_validate()
 
@@ -487,7 +487,6 @@ class TestMrpStockReports(TestReportsCommon):
             'location_dest_id': self.stock_location.id,
             'move_type': 'one',
             'move_ids_without_package': [Command.create({
-                    'name': 'test_out_1',
                     'product_id': part.id,
                     'product_uom_qty': 20,
                     'location_id': self.env.ref('stock.stock_location_suppliers').id,

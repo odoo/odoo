@@ -68,7 +68,6 @@ class TestBatchPicking(TransactionCase):
         })
 
         cls.env['stock.move'].create({
-            'name': cls.productA.name,
             'product_id': cls.productA.id,
             'product_uom_qty': 15,
             'product_uom': cls.productA.uom_id.id,
@@ -78,7 +77,6 @@ class TestBatchPicking(TransactionCase):
         })
 
         cls.env['stock.move'].create({
-            'name': cls.productB.name,
             'product_id': cls.productB.id,
             'product_uom_qty': 5,
             'product_uom': cls.productB.uom_id.id,
@@ -96,7 +94,6 @@ class TestBatchPicking(TransactionCase):
         })
 
         cls.env['stock.move'].create({
-            'name': cls.productA.name,
             'product_id': cls.productA.id,
             'product_uom_qty': 5,
             'product_uom': cls.productA.uom_id.id,
@@ -114,7 +111,6 @@ class TestBatchPicking(TransactionCase):
         })
 
         cls.env['stock.move'].create({
-            'name': cls.productB.name,
             'product_id': cls.productB.id,
             'product_uom_qty': 5,
             'product_uom': cls.productB.uom_id.id,
@@ -132,7 +128,6 @@ class TestBatchPicking(TransactionCase):
         })
 
         cls.env['stock.move'].create({
-            'name': cls.productA.name,
             'product_id': cls.productA.id,
             'product_uom_qty': 15,
             'product_uom': cls.productA.uom_id.id,
@@ -142,7 +137,6 @@ class TestBatchPicking(TransactionCase):
         })
 
         cls.env['stock.move'].create({
-            'name': cls.productB.name,
             'product_id': cls.productB.id,
             'product_uom_qty': 5,
             'product_uom': cls.productB.uom_id.id,
@@ -298,7 +292,6 @@ class TestBatchPicking(TransactionCase):
         for i in range(12):
             self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 1.0, lot_id=sns[i])
         dozen_move = self.env['stock.move'].create({
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 1,
             'product_uom': self.uom_dozen.id,
@@ -418,7 +411,6 @@ class TestBatchPicking(TransactionCase):
             'state': 'draft',
         })
         self.env['stock.move'].create({
-            'name': 'Test Wave',
             'product_id': self.productA.id,
             'product_uom_qty': 10,
             'product_uom': self.productA.uom_id.id,
@@ -437,7 +429,6 @@ class TestBatchPicking(TransactionCase):
         picking_1._action_done()
 
         new_move = self.env['stock.move'].create({
-            'name': 'Test Wave',
             'product_id': self.productA.id,
             'product_uom_qty': 5,
             'product_uom': self.productA.uom_id.id,
@@ -471,7 +462,6 @@ class TestBatchPicking(TransactionCase):
             'state': 'draft',
         })
         self.env['stock.move'].create({
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 1,
             'product_uom': self.productA.uom_id.id,
@@ -480,7 +470,6 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
         })
         self.env['stock.move'].create({
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 5,
             'product_uom': self.productB.uom_id.id,
@@ -519,7 +508,6 @@ class TestBatchPicking(TransactionCase):
         ])
         self.env['stock.move'].create([
             {
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2,
             'product_uom': self.productA.uom_id.id,
@@ -528,7 +516,6 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': picking_1.location_dest_id.id,
             },
             {
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 3,
             'product_uom': self.productB.uom_id.id,
@@ -614,7 +601,6 @@ class TestBatchPicking(TransactionCase):
         ])
         self.env['stock.move'].create([
             {
-            'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2,
             'product_uom': self.productA.uom_id.id,
@@ -623,7 +609,6 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': picking_1.location_dest_id.id,
             },
             {
-            'name': self.productB.name,
             'product_id': self.productB.id,
             'product_uom_qty': 3,
             'product_uom': self.productB.uom_id.id,

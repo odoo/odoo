@@ -984,7 +984,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'location_id': wh.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_ids': [Command.create({
-                'name': 'TGVDALT out move',
                 'product_id': final_product.id,
                 'product_uom_qty': 2,
                 'location_id': wh.lot_stock_id.id,

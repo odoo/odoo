@@ -443,7 +443,6 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
         ])
         move = self.env['stock.move'].create({
-            'name': mo.name,
             'product_id': compo2.id,
             'raw_material_production_id': mo.id,
             'location_id': self.ref('stock.stock_location_stock'),

@@ -260,7 +260,7 @@ class StockMove(models.Model):
             for val in vals:
                 val.update(move._prepare_common_svl_vals())
                 if forced_quantity and not move.scrapped:
-                    val['description'] = _('Correction of %s (modification of past move)', move.picking_id.name or move.name)
+                    val['description'] = _('Correction of %s (modification of past move)', move.reference)
                 val['description'] += val.pop('rounding_adjustment', '')
             svl_vals_list += vals
         return svl_vals_list
@@ -299,7 +299,7 @@ class StockMove(models.Model):
 
             common_vals = dict(move._prepare_common_svl_vals(), remaining_qty=0)
             if forced_quantity:
-                common_vals['description'] = _('Correction of %s (modification of past move)', move.picking_id.name or move.name)
+                common_vals['description'] = _('Correction of %s (modification of past move)', move.picking_id.name or move.reference)
 
             # create the in if it does not come from a valued location (eg subcontract -> customer)
             if not move.location_id._should_be_valued():
@@ -524,7 +524,7 @@ class StockMove(models.Model):
             for val in vals:
                 val.update(move._prepare_common_svl_vals())
                 if forced_quantity:
-                    val['description'] = _('Correction of %s (modification of past move)', move.picking_id.name or move.name)
+                    val['description'] = _('Correction of %s (modification of past move)', move.picking_id.name or move.reference)
             svl_vals_list += vals
         return svl_vals_list
 
@@ -599,7 +599,7 @@ class StockMove(models.Model):
     def _prepare_analytic_line_values(self, account_field_values, amount, unit_amount):
         self.ensure_one()
         return {
-            'name': self.name,
+            'name': self.reference,
             'amount': amount,
             **account_field_values,
             'unit_amount': unit_amount,

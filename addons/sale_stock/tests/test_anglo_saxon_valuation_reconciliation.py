@@ -53,7 +53,6 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
 
     def _set_initial_stock_for_product(self, product):
         move1 = self.env['stock.move'].create({
-            'name': 'Initial stock',
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'product_id': product.id,
@@ -224,7 +223,6 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         inv.action_post()
         # Create in_moves for P1/P2 such that the first move compensates the out_svls
         in_moves = self.env['stock.move'].create([{
-            'name': 'in %s units @ %s per unit' % (str(quantity), str(product.standard_price)),
             'description_picking': '%s-%s' % (str(quantity), str(product)),  # to not merge the moves
             'product_id': product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
@@ -338,7 +336,6 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         })
 
         sm_1 = self.env['stock.move'].create({
-            'name': products[0].name,
             'product_id': products[0].id,
             'product_uom_qty': 1,
             'product_uom': products[0].uom_id.id,
@@ -356,7 +353,6 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         })
 
         sm_2 = self.env['stock.move'].create({
-            'name': products[1].name,
             'product_id': products[1].id,
             'product_uom_qty': 1,
             'product_uom': products[1].uom_id.id,

@@ -533,7 +533,6 @@ class RepairOrder(models.Model):
                 owner_id = repair.partner_id.id
 
             product_move_vals.append({
-                'name': repair.name,
                 'product_id': repair.product_id.id,
                 'product_uom': repair.product_uom.id or repair.product_id.uom_id.id,
                 'product_uom_qty': repair.product_qty,

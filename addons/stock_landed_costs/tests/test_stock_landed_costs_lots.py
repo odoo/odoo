@@ -22,7 +22,6 @@ class TestStockLandedCostsLots(TestLotValuation):
         picking_1 = self.env['stock.picking'].create({
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'move_ids': [Command.create({
-                'name': 'Picking 1',
                 'product_id': self.product1.id,
                 'product_uom_qty': 15,
                 'product_uom': self.ref('uom.product_uom_unit'),
@@ -41,7 +40,6 @@ class TestStockLandedCostsLots(TestLotValuation):
         picking_2 = self.env['stock.picking'].create({
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'move_ids': [Command.create({
-                'name': 'Picking 2',
                 'product_id': product2.id,
                 'product_uom_qty': 10,
                 'product_uom': self.ref('uom.product_uom_unit'),

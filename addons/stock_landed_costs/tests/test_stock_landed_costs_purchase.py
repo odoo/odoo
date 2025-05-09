@@ -24,7 +24,6 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'state': 'draft',
             'location_dest_id': cls.warehouse.lot_stock_id.id})
         cls.Move.create({
-            'name': cls.product_refrigerator.name,
             'product_id': cls.product_refrigerator.id,
             'product_uom_qty': 5,
             'product_uom': cls.product_refrigerator.uom_id.id,
@@ -32,7 +31,6 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'location_id': cls.supplier_location_id,
             'location_dest_id': cls.warehouse.lot_stock_id.id})
         cls.Move.create({
-            'name': cls.product_oven.name,
             'product_id': cls.product_oven.id,
             'product_uom_qty': 10,
             'product_uom': cls.product_oven.uom_id.id,
@@ -47,7 +45,6 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'state': 'draft',
             'location_dest_id': cls.customer_location_id})
         cls.Move.create({
-            'name': cls.product_refrigerator.name,
             'product_id': cls.product_refrigerator.id,
             'product_uom_qty': 2,
             'product_uom': cls.product_refrigerator.uom_id.id,
@@ -666,7 +663,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         receipt.button_validate()
 
         # Ensure that the product cost has not been updated yet
-        assert receipt.move_ids[0].stock_valuation_layer_ids[0].unit_cost == 10 
+        assert receipt.move_ids[0].stock_valuation_layer_ids[0].unit_cost == 10
 
         action = bill.button_create_landed_costs()
         lc_form = Form(self.env[action['res_model']].browse(action['res_id']))

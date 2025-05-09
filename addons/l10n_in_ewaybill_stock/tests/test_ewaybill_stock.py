@@ -29,7 +29,6 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'picking_type_id': warehouse.out_type_id.id,
             'move_ids': [Command.create({
-                'name': self.product_a.name,
                 'product_id': self.product_a.id,
                 'product_uom_qty': 5,
                 'quantity': 5,

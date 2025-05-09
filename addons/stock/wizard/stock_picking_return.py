@@ -19,7 +19,6 @@ class StockReturnPickingLine(models.TransientModel):
     def _prepare_move_default_values(self, new_picking):
         picking = new_picking or self.wizard_id.picking_id
         vals = {
-            'name': picking.name,
             'product_id': self.product_id.id,
             'product_uom_qty': self.quantity,
             'product_uom': self.product_id.uom_id.id,

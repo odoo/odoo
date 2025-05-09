@@ -188,7 +188,6 @@ class TestInventory(TransactionCase):
         # Make a chain of two moves, validate the first and check that 10 products are reserved
         # in the second one.
         move_stock_pack = self.env['stock.move'].create({
-            'name': 'test_link_2_1',
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product1.id,
@@ -196,7 +195,6 @@ class TestInventory(TransactionCase):
             'product_uom_qty': 10.0,
         })
         move_pack_cust = self.env['stock.move'].create({
-            'name': 'test_link_2_2',
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -397,7 +395,6 @@ class TestInventory(TransactionCase):
 
         # Deliver 3 units
         move_out = self.env['stock.move'].create({
-            'name': 'Outgoing move of 3 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -440,7 +437,6 @@ class TestInventory(TransactionCase):
 
         # Decrease quant to 3 and inventory line is now outdated
         move_out = self.env['stock.move'].create({
-            'name': 'Outgoing move of 3 units',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,

@@ -1148,7 +1148,6 @@ class MrpProduction(models.Model):
             'product_uom': product_uom,
             'operation_id': operation_id,
             'byproduct_id': byproduct_id,
-            'name': _('New'),
             'date': self.date_finished,
             'date_deadline': self.date_deadline,
             'picking_type_id': self.picking_type_id.id,
@@ -1231,7 +1230,6 @@ class MrpProduction(models.Model):
         source_location = self.location_src_id
         data = {
             'sequence': bom_line.sequence if bom_line else 10,
-            'name': _('New'),
             'date': self.date_start,
             'date_deadline': self.date_start,
             'bom_line_id': bom_line.id if bom_line else False,
@@ -1855,7 +1853,6 @@ class MrpProduction(models.Model):
             if production.backorder_sequence == 0:  # Activate backorder naming
                 production.backorder_sequence = 1
             production.name = self._get_name_backorder(production.name, production.backorder_sequence)
-            (production.move_raw_ids | production.move_finished_ids).name = production.name
             (production.move_raw_ids | production.move_finished_ids).origin = production._get_origin()
             backorder_vals = production.copy_data(default=production._get_backorder_mo_vals())[0]
             backorder_qtys = amounts[production][1:]

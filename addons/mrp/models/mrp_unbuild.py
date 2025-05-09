@@ -277,7 +277,6 @@ class MrpUnbuild(models.Model):
 
     def _generate_move_from_existing_move(self, move, factor, location_id, location_dest_id):
         return self.env['stock.move'].create({
-            'name': self.name,
             'date': self.create_date,
             'product_id': move.product_id.id,
             'product_uom_qty': move.quantity * factor,
@@ -297,7 +296,6 @@ class MrpUnbuild(models.Model):
         location_dest_id = bom_line_id and self.location_dest_id or product_prod_location
         warehouse = location_dest_id.warehouse_id
         return self.env['stock.move'].create({
-            'name': self.name,
             'date': self.create_date,
             'bom_line_id': bom_line_id,
             'byproduct_id': byproduct_id,

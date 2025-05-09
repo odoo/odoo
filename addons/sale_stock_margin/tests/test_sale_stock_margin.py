@@ -267,7 +267,6 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'location_dest_id': incoming_picking_type.default_location_dest_id.id,
         })
         self.env['stock.move'].create({
-            'name': 'Incoming Product',
             'product_id': product.id,
             'location_id': production_location.id,
             'location_dest_id': incoming_picking_type.default_location_dest_id.id,

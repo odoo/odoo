@@ -53,7 +53,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
 
         # IN 10@10 comp1 10@20 comp2
         move1 = self.env['stock.move'].create({
-            'name': 'IN 10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.env.company.subcontracting_location_id.id,
             'product_id': self.comp1.id,
@@ -67,7 +66,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         move1.picked = True
         move1._action_done()
         move2 = self.env['stock.move'].create({
-            'name': 'IN 10 units @ 20.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.env.company.subcontracting_location_id.id,
             'product_id': self.comp2.id,
@@ -231,7 +229,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
 
         # IN 10@10 comp1 10@20 comp2
         move1 = self.env['stock.move'].create({
-            'name': 'IN 10 units @ 10.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.env.company.subcontracting_location_id.id,
             'product_id': self.comp1.id,
@@ -245,7 +242,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         move1.picked = True
         move1._action_done()
         move2 = self.env['stock.move'].create({
-            'name': 'IN 10 units @ 20.00 per unit',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.env.company.subcontracting_location_id.id,
             'product_id': self.comp2.id,

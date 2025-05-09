@@ -258,7 +258,6 @@ class TestProductExpiryTour(TestStockPickingTour):
         })
 
         self.env['stock.move'].create({
-            'name': product_exp.name,
             'product_id': product_exp.id,
             'product_uom_qty': 2,
             'product_uom': product_exp.uom_id.id,

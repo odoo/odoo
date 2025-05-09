@@ -35,7 +35,6 @@ class TestStockLandedCostsBranches(TestStockValuationLCCommon):
             'location_dest_id': warehouse.lot_stock_id.id,
             'picking_type_id': warehouse.in_type_id.id,
             'move_ids': [(0, 0, {
-                'name': self.product1.name,
                 'location_id': supplier_location.id,
                 'location_dest_id': warehouse.lot_stock_id.id,
                 'picking_type_id': warehouse.in_type_id.id,

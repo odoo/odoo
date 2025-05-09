@@ -222,7 +222,6 @@ class TestMrpAccount(TestMrpCommon):
             })],
         })
         in_move = self.env['stock.move'].create({
-            'name': 'in 2 component',
             'product_id': component.id,
             'product_uom_qty': 2.0,
             'location_id': self.supplier_location.id,
@@ -274,7 +273,6 @@ class TestMrpAccount(TestMrpCommon):
             ]
         )
         out_move = self.env['stock.move'].create({
-            'name': 'out 1 final',
             'product_id': final_product.id,
             'product_uom_qty': 1.0,
             'location_id': self.source_location_id,

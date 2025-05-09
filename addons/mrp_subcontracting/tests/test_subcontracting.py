@@ -1056,7 +1056,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             'location_dest_id': self.warehouse.lot_stock_id.id,
             'picking_type_id': self.warehouse.in_type_id.id,
             'move_ids': [(0, 0, {
-                'name': self.finished.name,
                 'product_id': self.finished.id,
                 'product_uom_qty': 10.0,
                 'product_uom': uom_duo.id,
@@ -1879,7 +1878,6 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': warehouse.lot_stock_id.id,
             'move_ids': [Command.create({
-                'name': subcontracted_produt.name,
                 'product_id': subcontracted_produt.id,
                 'product_uom_qty': 100,
                 'product_uom': subcontracted_produt.uom_id.id,

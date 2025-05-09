@@ -199,7 +199,6 @@ class TestMrpReplenish(TestMrpCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'move_ids': [Command.create({
-                'name': 'TGVDALTMR out move',
                 'product_id': finished_product.id,
                 'product_uom_qty': 2,
                 'location_id': self.stock_location.id,

@@ -483,7 +483,6 @@ class TestTraceability(TestMrpCommon):
         })
 
         moveA = self.env['stock.move'].create({
-            'name': 'Picking A move',
             'product_id': endproductA.id,
             'quantity': 1,
             'product_uom': endproductA.uom_id.id,
@@ -551,7 +550,6 @@ class TestTraceability(TestMrpCommon):
 
         # unscrap the component
         internal_move = self.env['stock.move'].create({
-            'name': component.name,
             'location_id': scrap_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': component.id,

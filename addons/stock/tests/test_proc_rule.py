@@ -101,7 +101,6 @@ class TestProcRule(TransactionCase):
             'location_id': self.ref('stock.stock_location_output'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
             'move_ids': [(0, 0, {
-                'name': '/',
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,
                 'product_uom_qty': 10.00,
@@ -190,7 +189,6 @@ class TestProcRule(TransactionCase):
     def test_propagate_deadline_move(self):
         deadline = datetime.now()
         move_dest = self.env['stock.move'].create({
-            'name': 'move_dest',
             'product_id': self.product.id,
             'product_uom': self.uom_unit.id,
             'date_deadline': deadline,
@@ -199,7 +197,6 @@ class TestProcRule(TransactionCase):
         })
 
         move_orig = self.env['stock.move'].create({
-            'name': 'move_orig',
             'product_id': self.product.id,
             'product_uom': self.uom_unit.id,
             'date_deadline': deadline,
@@ -241,7 +238,6 @@ class TestProcRule(TransactionCase):
         rule.delay = 9.0
 
         delivery_move = self.env['stock.move'].create({
-            'name': 'Delivery',
             'date': datetime.today() + timedelta(days=5),
             'product_id': self.product.id,
             'product_uom': self.uom_unit.id,
@@ -310,7 +306,6 @@ class TestProcRule(TransactionCase):
             'picking_type_id': self.ref('stock.picking_type_out'),
         })
         delivery_move = self.env['stock.move'].create({
-            'name': 'Delivery',
             'product_id': self.productA.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 12.0,
@@ -331,7 +326,6 @@ class TestProcRule(TransactionCase):
         self.assertEqual(receipt_move.product_uom_qty, 17.0)
 
         delivery_picking.write({'move_ids': [(0, 0, {
-            'name': 'Extra Move',
             'product_id': self.productB.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 5.0,
@@ -421,14 +415,12 @@ class TestProcRule(TransactionCase):
             'route_ids': [route_2.id, route_3.id]
         })
         moves = self.env['stock.move'].create([{
-            'name': 'Move WH2',
             'location_id': warehouse_2.lot_stock_id.id,
             'location_dest_id': self.partner.property_stock_customer.id,
             'product_id': product.id,
             'product_uom': product.uom_id.id,
             'product_uom_qty': 1,
         }, {
-            'name': 'Move WH3',
             'location_id': warehouse_3.lot_stock_id.id,
             'location_dest_id': self.partner.property_stock_customer.id,
             'product_id': product.id,
@@ -466,7 +458,6 @@ class TestProcRule(TransactionCase):
             'is_storable': True,
         })
         move = self.env['stock.move'].create({
-            'name': 'Move WH2',
             'location_id': replenish_loc.id,
             'location_dest_id': self.partner.property_stock_customer.id,
             'product_id': product.id,
@@ -533,7 +524,6 @@ class TestProcRule(TransactionCase):
         ])
         moves = self.env['stock.move'].create([
             {
-                'name': 'Create a demand move',
                 'location_id': stock_location.id,
                 'location_dest_id': self.partner.property_stock_customer.id,
                 'product_id': product.id,
@@ -630,7 +620,6 @@ class TestProcRule(TransactionCase):
         })
         product = self.env['product.product'].create({'name': 'Test Product', 'is_storable': True})
         stock_move = self.env['stock.move'].create({
-            'name': 'Test Move',
             'product_id': product.id,
             'product_uom': product.uom_id.id,
             'product_uom_qty': 1,
@@ -656,7 +645,6 @@ class TestProcRule(TransactionCase):
         })
         self.assertEqual(orderpoint.qty_to_order, 5)
         stock_move = self.env['stock.move'].create({
-            'name': 'Test Move',
             'product_id': self.product.id,
             'product_uom': self.product.uom_id.id,
             'product_uom_qty': 1,
@@ -685,8 +673,8 @@ class TestProcRule(TransactionCase):
             mto_rule.rule_message,
             'The help message should correctly display information for MTSO.'
         )
-        
-        
+
+
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
         super(TestProcRuleLoad, cls).setUp()

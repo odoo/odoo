@@ -283,7 +283,6 @@ class TestSalePurchaseStockFlow(TransactionCase):
         wh.delivery_steps = 'pick_ship'
         product = self.mto_product
         in_move = self.env['stock.move'].create({
-            'name': 'in move',
             'product_id': product.id,
             'product_uom_qty': 2,
             'product_uom': product.uom_id.id,

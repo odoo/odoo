@@ -44,7 +44,6 @@ class StockGenerateCommon(TransactionCase):
                 'location_dest_id': self.location_dest.id,
             }) for i in range(nbre_of_lines)]
         return self.env['stock.move'].create({
-            'name': 'Move Test',
             'product_id': product.id,
             'product_uom': self.uom_unit.id,
             'location_id': self.location.id,
@@ -284,7 +283,6 @@ class StockGenerateCommon(TransactionCase):
             'state': 'draft',
         })
         move = self.env['stock.move'].create({
-            'name': self.product_serial.name,
             'product_id': self.product_serial.id,
             'product_uom': self.product_serial.uom_id.id,
             'product_uom_qty': 2.0,
@@ -329,7 +327,6 @@ class StockGenerateCommon(TransactionCase):
             'state': 'draft',
         })
         self.env['stock.move'].create({
-            'name': product_lot.name,
             'product_id': product_lot.id,
             'product_uom': product_lot.uom_id.id,
             'product_uom_qty': 5.0,
@@ -377,7 +374,6 @@ class StockGenerateCommon(TransactionCase):
             'state': 'draft',
         })
         move = self.env['stock.move'].create({
-            'name': product_lot.name,
             'product_id': product_lot.id,
             'product_uom': product_lot.uom_id.id,
             'product_uom_qty': 5.0,

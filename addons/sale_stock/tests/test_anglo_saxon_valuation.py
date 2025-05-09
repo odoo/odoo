@@ -50,7 +50,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
     def _fifo_in_one_eight_one_ten(self):
         # Put two items in stock.
         in_move_1 = self.env['stock.move'].create({
-            'name': 'a',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -62,7 +61,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         in_move_1.write({'quantity': 1, 'picked': True})
         in_move_1._action_done()
         in_move_2 = self.env['stock.move'].create({
-            'name': 'a',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -518,7 +516,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         })
         # We don't set the price_unit so that the `standard_price` will be used (see _get_price_unit()):
         self.env['stock.move'].create({
-            'name': 'test_immediate_validate_1',
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'picking_id': picking.id,
@@ -905,7 +902,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.product.standard_price = 10
 
         in_move_1 = self.env['stock.move'].create({
-            'name': 'a',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -937,7 +933,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Make the second receipt
         in_move_2 = self.env['stock.move'].create({
-            'name': 'a',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -980,7 +975,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # +5@8
         in_move_1 = self.env['stock.move'].create({
-            'name': 'a',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -994,7 +988,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # +8@12
         in_move_2 = self.env['stock.move'].create({
-            'name': 'a',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1056,7 +1049,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.product.standard_price = 10
 
         in_move_1 = self.env['stock.move'].create({
-            'name': 'a',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1092,7 +1084,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Make the second receipt
         in_move_2 = self.env['stock.move'].create({
-            'name': 'a',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1117,7 +1108,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Receive 2@10.
         in_move_1 = self.env['stock.move'].create({
-            'name': 'a',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1165,7 +1155,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Receive 1@20
         in_move_2 = self.env['stock.move'].create({
-            'name': 'a',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1288,7 +1277,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Create stock move 1
         in_move_1 = self.env['stock.move'].create({
-            'name': 'a',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1355,7 +1343,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Receive one @10, one @20 and one @60
         in_moves = self.env['stock.move'].create([{
-            'name': 'IN move @%s' % p,
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1397,7 +1384,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Receive one @100
         in_moves = self.env['stock.move'].create({
-            'name': 'IN move @100',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1447,7 +1433,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Receive one @10, one @20 and one @60
         in_moves = self.env['stock.move'].create([{
-            'name': 'IN move @%s' % p,
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1489,7 +1474,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Receive one @100
         in_moves = self.env['stock.move'].create({
-            'name': 'IN move @100',
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1535,7 +1519,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         svl_values = [10, 15, 65]
         total_value = sum(svl_values)
         in_moves = self.env['stock.move'].create([{
-            'name': 'IN move @%s' % p,
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1623,7 +1606,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         })
 
         in_moves = self.env['stock.move'].create([{
-            'name': 'IN move @%s' % p,
             'product_id': self.product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
@@ -1789,7 +1771,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         """
         product = self.product
         in_move = self.env['stock.move'].create({
-            'name': 'in 12 units @ $100',
             'product_id': product.id,
             'price_unit': 100,
             'product_uom_qty': 12,

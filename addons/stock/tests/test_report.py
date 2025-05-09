@@ -145,7 +145,6 @@ class TestReports(TestReportsCommon):
 
         # Delivery of 20.0 units tomorrow
         move_out = self.env['stock.move'].create({
-            'name': 'Move Out 20',
             'date': datetime.now() + timedelta(days=1),
             'location_id': stock.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
@@ -172,7 +171,6 @@ class TestReports(TestReportsCommon):
 
         # Receipt of 10.0 units tomorrow
         move_in = self.env['stock.move'].create({
-            'name': 'Move In 10',
             'date': datetime.now() + timedelta(days=1),
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': stock.id,
@@ -195,7 +193,6 @@ class TestReports(TestReportsCommon):
 
         # Delivery of 20.0 units tomorrow
         move_out = self.env['stock.move'].create({
-            'name': 'Move Out 30 - Day-1',
             'date': datetime.now() - timedelta(days=1),
             'location_id': stock.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
@@ -257,7 +254,6 @@ class TestReports(TestReportsCommon):
             'inventory_quantity': 50
         }).action_apply_inventory()
         move = self.env['stock.move'].create({
-            'name': 'Move outside warehouse',
             'location_id': stock.id,
             'location_dest_id': stock_without_wh.id,
             'product_id': product.id,
@@ -275,7 +271,6 @@ class TestReports(TestReportsCommon):
             ['state'], ['product_qty:sum'])
         self.assertEqual(sum(product_qty for state, product_qty in report_records if state == 'forecast'), 40.0)
         move = self.env['stock.move'].create({
-            'name': 'Move outside warehouse',
             'location_id': stock_without_wh.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'product_id': product.id,
@@ -315,7 +310,6 @@ class TestReports(TestReportsCommon):
 
         # Receipt of 20.0 units tomorrow
         move_in = self.env['stock.move'].create({
-            'name': 'Move In 20',
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': stock.id,
             'product_id': product.id,
@@ -335,7 +329,6 @@ class TestReports(TestReportsCommon):
 
         # Delivery of 10.0 units tomorrow
         move_out = self.env['stock.move'].create({
-            'name': 'Move Out 10',
             'location_id': stock.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'product_id': product.id,
@@ -362,7 +355,6 @@ class TestReports(TestReportsCommon):
 
         # Pick move for delivery of 5 units in 2 days
         move_pick = self.env['stock.move'].create({
-            'name': 'Out',
             'picking_type_id': self.wh_2.pick_type_id.id,
             'location_id': self.wh_2.lot_stock_id.id,
             'location_final_id': customer_loc.id,
@@ -383,7 +375,6 @@ class TestReports(TestReportsCommon):
 
         # In move for receipt of 10 units tomorrow
         move_in = self.env['stock.move'].create({
-            'name': 'In',
             'picking_type_id': self.wh_2.in_type_id.id,
             'location_id': supplier_loc.id,
             'location_final_id': self.wh_2.lot_stock_id.id,
@@ -852,7 +843,6 @@ class TestReports(TestReportsCommon):
             'partner_id': self.partner.id,
             'picking_type_id': wh.out_type_id.id,
             'move_ids': [Command.create({
-                'name': 'Delivery',
                 'product_id': self.product.id,
                 'product_uom_qty': 5,
                 'product_uom': self.product.uom_id.id,
@@ -1419,7 +1409,6 @@ class TestReports(TestReportsCommon):
 
         # Pick move for future delivery
         move_pick = self.env['stock.move'].create({
-            'name': 'Out',
             'picking_type_id': self.wh_2.pick_type_id.id,
             'location_id': self.wh_2.lot_stock_id.id,
             'location_final_id': customer_loc.id,
@@ -1923,7 +1912,6 @@ class TestReports(TestReportsCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_ids': [(0, 0, {
-                'name': 'TRRIT move',
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'product_id': self.product.id,
@@ -1984,7 +1972,6 @@ class TestReports(TestReportsCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'move_ids': [Command.create({
-                'name': f'out 1 units {self.serial_product.name}',
                 'product_id': self.serial_product.id,
                 'product_uom_qty': 1,
                 'location_id': stock_location.id,
@@ -2015,7 +2002,6 @@ class TestReports(TestReportsCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'move_ids': [Command.create({
-                'name': f'out 1 units {self.product.name}',
                 'product_id': self.product.id,
                 'product_uom_qty': 1,
                 'location_id': stock_location.id,
@@ -2026,7 +2012,6 @@ class TestReports(TestReportsCommon):
 
         sn = self.env['stock.lot'].create({'name': 'supersn', 'product_id': self.serial_product.id})
         delivery.move_ids = [Command.create({
-            'name': f'out 1 units {self.serial_product.name}',
             'product_id': self.serial_product.id,
             'product_uom_qty': 1,
             'location_id': stock_location.id,

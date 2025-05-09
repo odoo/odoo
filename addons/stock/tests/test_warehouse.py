@@ -86,7 +86,6 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         customer_move = self.env['stock.move'].create({
-            'name': product.name,
             'product_id': product.id,
             'product_uom_qty': 5,
             'product_uom': product.uom_id.id,
@@ -148,7 +147,6 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.env['stock.move'].create({
-            'name': productA.name,
             'product_id': productA.id,
             'product_uom_qty': 1,
             'product_uom': productA.uom_id.id,
@@ -191,7 +189,6 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.env['stock.move'].create({
-            'name': productA.name,
             'product_id': productA.id,
             'product_uom_qty': 1,
             'product_uom': productA.uom_id.id,
@@ -279,7 +276,6 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         self.env['stock.move'].create({
-            'name': product.name,
             'product_id': product.id,
             'product_uom_qty': 1,
             'product_uom': product.uom_id.id,
@@ -367,7 +363,6 @@ class TestWarehouse(TestStockCommon):
             'state': 'draft',
         })
         self.env['stock.move'].create({
-            'name': product.name,
             'product_id': product.id,
             'product_uom_qty': 1,
             'product_uom': product.uom_id.id,
@@ -415,7 +410,6 @@ class TestWarehouse(TestStockCommon):
             'state': 'draft',
         })
         self.env['stock.move'].create({
-            'name': product.name,
             'product_id': product.id,
             'product_uom_qty': 1,
             'product_uom': product.uom_id.id,
@@ -820,7 +814,6 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': self.customer_location.id,
         })
         customer_move = self.env['stock.move'].create({
-            'name': self.product.name,
             'product_id': self.product.id,
             'product_uom_qty': 1,
             'product_uom': self.product.uom_id.id,
@@ -867,7 +860,6 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': warehouse.wh_output_stock_loc_id.id,
             'company_id': companies.ids[0],
             'move_ids': [Command.create({
-                'name': self.product.name,
                 'product_id': self.product.id,
                 'product_uom_qty': 1,
                 'product_uom': self.product.uom_id.id,
