@@ -129,6 +129,14 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     get items() {
         return this.currentOrder.orderlines?.reduce((items, line) => items + line.quantity, 0) ?? 0;
     }
+    handleOrderLineQuantityChange(selectedLine, buffer, currentQuantity, lastId) {
+        const parsedInput = (buffer && parseFloat(buffer)) || 0;
+        if (lastId != selectedLine.cid || parsedInput < currentQuantity) {
+            this._showDecreaseQuantityPopup();
+        } else if (currentQuantity < parsedInput) {
+            this._setValue(buffer);
+        }
+    }
     async updateSelectedOrderline({ buffer, key }) {
         const order = this.pos.get_order();
         const selectedLine = order.get_selected_orderline();
@@ -166,14 +174,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 });
                 return;
             }
-            const parsedInput = (buffer && parseFloat(buffer)) || 0;
-            if (lastId != selectedLine.cid) {
-                this._showDecreaseQuantityPopup();
-            } else if (currentQuantity < parsedInput) {
-                this._setValue(buffer);
-            } else if (parsedInput < currentQuantity) {
-                this._showDecreaseQuantityPopup();
-            }
+            this.handleOrderLineQuantityChange(selectedLine, buffer, currentQuantity, lastId);
             return;
         } else if (
             selectedLine &&
