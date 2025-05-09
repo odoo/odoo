@@ -12,7 +12,7 @@
                             <field name="withholding_sequence_id" column_invisible="True"/>
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
-                            <field name="tax_id" widget="many2one_tax_tags" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="tax_id" options="{'no_open': True, 'no_create': True}"/>
                             <field name="name" readonly="withholding_sequence_id"/>
                             <field name="base_amount"/>
                             <field name="amount"/>
