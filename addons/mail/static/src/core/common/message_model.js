@@ -357,7 +357,7 @@ export class Message extends Record {
         /** @this {import("models").Message} */
         compute() {
             if (this.notificationType === "call") {
-                return _t("%(caller)s started a call", { caller: this.author.name });
+                return _t("%(caller)s started a call", { caller: this.authorName });
             }
             if (this.isEmpty) {
                 return _t("This message has been removed");
