@@ -136,4 +136,16 @@ export class Overlay {
     updatePosition() {
         this.bus.trigger("updatePosition");
     }
+
+    /**
+     * Check whether `el` is in the overlay or another overlay on top
+     *
+     * @param {HTMLElement} el
+     * @returns {boolean}
+     */
+    overlayContainsElement(el) {
+        const query = { el };
+        this.bus.trigger("queryOverlayContainsElement", query);
+        return query.isContained;
+    }
 }

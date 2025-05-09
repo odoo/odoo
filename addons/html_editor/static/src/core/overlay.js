@@ -1,7 +1,9 @@
 import { Component, onWillDestroy, useEffect, useExternalListener, useRef, xml } from "@odoo/owl";
+import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { closestScrollableY } from "@web/core/utils/scrolling";
+import { useBus } from "@web/core/utils/hooks";
 
 export class EditorOverlay extends Component {
     static template = xml`
@@ -51,6 +53,9 @@ export class EditorOverlay extends Component {
 
         useExternalListener(this.props.bus, "updatePosition", () => {
             position.unlock();
+        });
+        useBus(this.props.bus, "queryOverlayContainsElement", (ev) => {
+            ev.detail.isContained = this.env[OVERLAY_SYMBOL]?.contains(ev.detail.el);
         });
 
         const rootRef = useRef("root");
