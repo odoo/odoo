@@ -18,7 +18,10 @@ Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes
         'account_tax_python'
     ],
     'auto_install': ['account'],
-    'data': ['data/contact_bank_data.xml'],
+    'data': [
+        'data/account.account.tag',
+        'data/contact_bank_data.xml'
+    ],
     'demo': [
         'demo/demo_company.xml',
     ],
