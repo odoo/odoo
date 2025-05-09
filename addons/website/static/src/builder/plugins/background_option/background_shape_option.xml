@@ -5,11 +5,12 @@
     <BuilderRow label.translate="Shape" level="1" t-if="isActiveItem('toggle_bg_shape_id')">
         <button class="btn btn-primary" t-on-click="this.showBackgroundShapes" t-out="state.shapeName"/>
         <BuilderButton
-            title.translate="Show/Hide on Mobile"
-            preview="false"
-            action="'showOnMobile'"
-            iconImg="'/html_builder/static/img/options/mobile_invisible.svg'"
-        />
+                title.translate="Show/Hide on Mobile"
+                preview="false"
+                action="'showOnMobile'"
+                className="'o_hb_device'">
+            <Img src="'/html_builder/static/img/options/mobile_invisible.svg'" style="'width: 12px'" />
+        </BuilderButton>
         <BuilderButton action="'setBackgroundShape'" actionValue="''" preview="false" icon="'fa-times'"/>
     </BuilderRow>
 

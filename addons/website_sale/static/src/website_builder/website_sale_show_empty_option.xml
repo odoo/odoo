@@ -4,7 +4,9 @@
     <t t-name="website_sale.ShowEmptyOption">
         <BuilderContext action="'websiteConfig'">
             <BuilderRow label.translate="Show Empty" id="'show_empty_opt'">
-                <BuilderButton title.translate="Show/hide shopping cart" className="'o_btn_show_empty_cart fa fa-shopping-cart d-flex justify-content-center flex-grow-1'" actionParam="{views: ['!website_sale.header_hide_empty_cart_link']}" />
+                <BuilderButton title.translate="Show/hide shopping cart" icon="'fa-shopping-cart'"
+                    className="'o_btn_show_empty_cart flex-grow-1'"
+                    actionParam="{views: ['!website_sale.header_hide_empty_cart_link']}"/>
             </BuilderRow>
         </BuilderContext>
     </t>
