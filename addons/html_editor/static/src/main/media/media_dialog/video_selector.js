@@ -119,6 +119,9 @@ export class VideoSelector extends Component {
                     "";
                 if (src) {
                     this.state.urlInput = src;
+                    if (!src.includes("https:") && !src.includes("http:")) {
+                        this.state.urlInput = "https:" + this.state.urlInput;
+                    }
                     await this.updateVideo();
 
                     this.state.options = this.state.options.map((option) => {

@@ -13,7 +13,8 @@ export class ReplaceMediaOption extends BaseOptionComponent {
     canSetLink(editingElement) {
         return (
             isImageSupportedForStyle(editingElement) &&
-            !searchSupportedParentLinkEl(editingElement).matches("a[data-oe-xpath]")
+            !searchSupportedParentLinkEl(editingElement).matches("a[data-oe-xpath]") &&
+            !editingElement.classList.contains("media_iframe_video")
         );
     }
     hasHref(editingElement) {
