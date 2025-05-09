@@ -13,15 +13,15 @@ registerWebsitePreviewTour('website_crm_pre_tour', {
     run: "click",
 },
 {
-    trigger: "#oe_snippets .o_we_customize_snippet_btn.active",
+    trigger: ".o-snippets-menu .o-snippets-tabs [data-name='customize'].active",
 },
 {
     content: "Open action select",
-    trigger: "we-select:has(we-button:contains('Create an Opportunity')) we-toggler",
+    trigger: ".o-snippets-menu [data-container-title='Block'] [data-label='Action'] .dropdown-toggle",
     run: "click",
 }, {
     content: "Select 'Create an Opportunity' as form action",
-    trigger: "we-select we-button:contains('Create an Opportunity')",
+    trigger: ".o_popover [data-action-id='selectAction']:contains('Create an Opportunity')",
     run: "click",
 },
 ...clickOnSave(),
