@@ -1,3 +1,4 @@
+import base64
 import json
 from unittest.mock import patch
 
@@ -47,26 +48,33 @@ def mocked_action_post_sign_invoices(self):
     for invoice in self:
         eta_invoice = self.env['account.edi.format']._l10n_eg_eta_prepare_eta_invoice(self)
         eta_invoice['signatures'] = ETA_TEST_SIGNATURES
-        attachment = self.env['ir.attachment'].create(
+        self.env['ir.attachment'].create(
             {
                 'name': ('ETA_INVOICE_DOC_%s', invoice.name),
                 'res_id': invoice.id,
                 'res_model': invoice._name,
+                'res_field': 'l10n_eg_eta_json_doc_file',
                 'type': 'binary',
                 'raw': json.dumps(dict(request=eta_invoice)),
                 'mimetype': 'application/json',
                 'description': ('Egyptian Tax authority JSON invoice generated for %s.', invoice.name),
-            }
+            },
         )
-        invoice.l10n_eg_eta_json_doc_id = attachment.id
+        invoice.invalidate_recordset(fnames=['l10n_eg_eta_json_doc_file'])
     return True
 
 
 def mocked_l10n_eg_edi_post_invoice_web_service(self, invoice):
-    eta_invoice_json = json.loads(invoice.l10n_eg_eta_json_doc_id.raw)
+    eta_invoice_json = json.loads(base64.b64decode(invoice.l10n_eg_eta_json_doc_file))
     eta_invoice_json['response'] = ETA_TEST_RESPONSE
-    invoice.l10n_eg_eta_json_doc_id.raw = json.dumps(eta_invoice_json)
-    return {'success': True, 'attachment': invoice.l10n_eg_eta_json_doc_id}
+    invoice.l10n_eg_eta_json_doc_file = base64.b64encode(json.dumps(eta_invoice_json).encode())
+    invoice.invalidate_recordset(fnames=['l10n_eg_eta_json_doc_file'])
+    json_doc_attachment_id = self.env['ir.attachment'].search([
+        ('res_model', '=', invoice._name),
+        ('res_id', '=', invoice.id),
+        ('res_field', '=', 'l10n_eg_eta_json_doc_file'),
+    ])
+    return {'success': True, 'attachment': json_doc_attachment_id}
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
