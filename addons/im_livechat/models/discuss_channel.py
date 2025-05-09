@@ -89,6 +89,9 @@ class DiscussChannel(models.Model):
     _livechat_is_escalated_idx = models.Index(
         "(livechat_is_escalated) WHERE livechat_is_escalated IS TRUE"
     )
+    _livechat_channel_type_create_date_idx = models.Index(
+        "(channel_type, create_date) WHERE channel_type = 'livechat'"
+    )
 
     @api.depends('message_ids')
     def _compute_duration(self):
