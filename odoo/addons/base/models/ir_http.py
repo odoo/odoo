@@ -9,7 +9,6 @@ import os
 import re
 import threading
 import unicodedata
-
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.routing
@@ -30,7 +29,7 @@ import odoo
 from odoo import api, http, models, tools
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied
-from odoo.http import request, Response, ROUTING_KEYS, SAFE_HTTP_METHODS
+from odoo.http import ROUTING_KEYS, SAFE_HTTP_METHODS, Response, request
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.tools.json import json_default
@@ -320,12 +319,17 @@ class IrHttp(models.AbstractModel):
         env = request.env if request.env.uid else request.env['base'].with_user(SUPERUSER_ID).env
         request.update_context(lang=get_lang(env).code)
 
+        # Replace uid and lang placeholder by the current request.env.uid and request.env.lang
+        # before checking the access.
         for key, val in list(args.items()):
             if not isinstance(val, models.BaseModel):
                 continue
 
-            # Replace uid and lang placeholder by the current request.env.uid and request.env.lang
             args[key] = val.with_env(request.env)
+
+        for key, val in list(args.items()):
+            if not isinstance(val, models.BaseModel):
+                continue
 
             try:
                 # explicitly crash now, instead of crashing later
@@ -333,7 +337,7 @@ class IrHttp(models.AbstractModel):
             except (odoo.exceptions.AccessError, odoo.exceptions.MissingError) as e:
                 # custom behavior in case a record is not accessible / has been removed
                 if handle_error := rule.endpoint.routing.get('handle_params_access_error'):
-                    if response := handle_error(e):
+                    if response := handle_error(e, **args):
                         werkzeug.exceptions.abort(response)
                 if isinstance(e, odoo.exceptions.MissingError):
                     raise werkzeug.exceptions.NotFound() from e
