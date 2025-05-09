@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
-# Fernanda Alvarez, 2025
 # Wil Odoo, 2025
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:36+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -552,7 +552,9 @@ msgstr "Acepte pagos con Mercado Pago en una terminal"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Viva Wallet on a terminal or tap on phone"
-msgstr "Acepte pagos con Viva Wallet en una terminal o al tocar el teléfono"
+msgstr ""
+"Acepte pagos con Viva Wallet en una terminal o al acercar la tarjeta o el "
+"dispositivo al teléfono"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -932,6 +934,7 @@ msgstr "Importe total"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/qr_code_popup/qr_code_popup.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.xml:0
 msgid "Amount:"
 msgstr "Importe:"
 
@@ -2890,10 +2893,10 @@ msgid ""
 "            An Order Printer will only print updates for products belonging to one of\n"
 "            its categories."
 msgstr ""
-"Cada impresora de órdenes tiene una dirección IP que define el proxy\n"
-"                de la caja IoT/Hardware en el que se puede encontrar la impresora, así como una lista de categorías de producto.\n"
-"               Una impresora de órdenes solo imprimirá actualizaciones para productos que pertenezcan\n"
-"                a una de sus categorías."
+"Cada impresora de órdenes tiene una dirección IP que define la caja IoT\n"
+"                o el proxy del dispositivo en el que se puede encontrar la impresora, así como una lista de categorías de producto.\n"
+"               Una impresora de órdenes solo imprimirá las actualizaciones de los productos pertenecientes a\n"
+"                una de sus categorías."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5429,6 +5432,7 @@ msgstr "Registre el número de comprobante"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/qr_code_popup/qr_code_popup.js:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.js:0
 msgid "Please scan the QR code with %s"
 msgstr "Escaneé el código QR con %s"
 
@@ -6228,6 +6232,7 @@ msgstr "Morado"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/qr_code_popup/qr_code_popup.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.xml:0
 msgid "QR Code"
 msgstr "Código QR"
 
@@ -8000,8 +8005,8 @@ msgstr ""
 msgid ""
 "The transactions are processed by Viva Wallet on terminal or tap on phone."
 msgstr ""
-"Viva Wallet procesa las transacciones en la terminal o pulsa para pagar en "
-"el teléfono."
+"Viva Wallet procesa las transacciones en la terminal o al acercar la tarjeta"
+" o el dispositivo para pagar."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_type
@@ -8205,6 +8210,14 @@ msgid ""
 msgstr ""
 "Esta orden ya tiene líneas de reembolso para %s. No podemos cambiar el "
 "cliente asociado a ella. Cree una nueva orden para el nuevo cliente."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"This order has already been paid. You cannot set it back to draft or edit "
+"it."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9062,6 +9075,16 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr ""
+"No puede eliminar un método de redondeo que se utiliza en una configuración "
+"de Punto de venta."
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "You cannot edit a payment for a posted order."
 msgstr "No puede editar el pago de una orden registrada. "
@@ -9071,17 +9094,6 @@ msgstr "No puede editar el pago de una orden registrada. "
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You cannot invoice orders belonging to different companies."
 msgstr "No puede facturar órdenes que pertenezcan a diferentes empresas."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_cash_rounding.py:0
-#, python-format
-msgid ""
-"You cannot delete a rounding method that is used in a Point of Sale "
-"configuration."
-msgstr ""
-"No puede eliminar un método de redondeo que se utiliza en una configuración "
-"de Punto de venta."
 
 #. module: point_of_sale
 #. odoo-python
