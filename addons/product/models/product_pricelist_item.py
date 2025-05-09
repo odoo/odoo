@@ -502,7 +502,7 @@ class ProductPricelistItem(models.Model):
 
         return res
 
-    def _compute_price(self, product, quantity, uom, date, currency=None):
+    def _compute_price(self, product, quantity, uom, date, currency=None, **kwargs):
         """Compute the unit price of a product in the context of a pricelist application.
 
         Note: self and self.ensure_one()
@@ -512,6 +512,7 @@ class ProductPricelistItem(models.Model):
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
         :param currency: currency (for the case where self is empty)
+        :param dict kwargs: unused parameters available for overrides
 
         :returns: price according to pricelist rule or the product price, expressed in the param
                   currency, the pricelist currency or the company currency
@@ -535,10 +536,10 @@ class ProductPricelistItem(models.Model):
         if self.compute_price == 'fixed':
             price = convert(self.fixed_price)
         elif self.compute_price == 'percentage':
-            base_price = self._compute_base_price(product, quantity, uom, date, currency)
+            base_price = self._compute_base_price(product, quantity, uom, date, currency, **kwargs)
             price = (base_price - (base_price * (self.percent_price / 100))) or 0.0
         elif self.compute_price == 'formula':
-            base_price = self._compute_base_price(product, quantity, uom, date, currency)
+            base_price = self._compute_base_price(product, quantity, uom, date, currency, **kwargs)
             # complete formula
             price_limit = base_price
             discount = self.price_discount if self.base != 'standard_price' else -self.price_markup
@@ -555,11 +556,11 @@ class ProductPricelistItem(models.Model):
             if self.price_max_margin:
                 price = min(price, price_limit + convert(self.price_max_margin))
         else:  # empty self, or extended pricelist price computation logic
-            price = self._compute_base_price(product, quantity, uom, date, currency)
+            price = self._compute_base_price(product, quantity, uom, date, currency, **kwargs)
 
         return price
 
-    def _compute_base_price(self, product, quantity, uom, date, currency):
+    def _compute_base_price(self, product, quantity, uom, date, currency, **kwargs):
         """Compute the base price for a given rule.
 
         :param product: recordset of product (product.product/product.template)
@@ -576,7 +577,8 @@ class ProductPricelistItem(models.Model):
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
             price = self.base_pricelist_id._get_product_price(
-                product, quantity, currency=self.base_pricelist_id.currency_id, uom=uom, date=date
+                product, quantity, currency=self.base_pricelist_id.currency_id, uom=uom, date=date,
+                **kwargs
             )
             src_currency = self.base_pricelist_id.currency_id
         elif rule_base == "standard_price":
