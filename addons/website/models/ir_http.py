@@ -401,7 +401,7 @@ class IrHttp(models.AbstractModel):
                 exception_template = int(exception.name)
             except ValueError:
                 exception_template = exception.name
-            view = View._view_obj(exception_template)
+            view = View.sudo()._get_template_view(exception_template)
             if exception.html and exception.html in view.arch:
                 values['view'] = view
             else:
