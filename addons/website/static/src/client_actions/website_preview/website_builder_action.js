@@ -49,7 +49,7 @@ export class WebsiteBuilder extends Component {
         useSubEnv({
             builderRef: useRef("container"),
         });
-        this.state = useState({ isEditing: false, key: 1 });
+        this.state = useState({ isEditing: false, showSidebar: true, key: 1 });
         this.websiteContext = useState(this.websiteService.context);
         this.component = useComponent();
 
@@ -167,7 +167,15 @@ export class WebsiteBuilder extends Component {
             iframeLoaded: this.iframeLoaded,
             isMobile: this.websiteContext.isMobile,
             Plugins: websitePlugins,
-            config: { initialTarget: this.target, initialTab: this.initialTab },
+            config: {
+                initialTarget: this.target,
+                initialTab: this.initialTab,
+                builderSidebar: {
+                    toggle: (show) => {
+                        this.state.showSidebar = show ?? !this.state.showSidebar;
+                    },
+                },
+             },
             getThemeTab: () =>
                 odoo.loader.modules.get("@website/builder/plugins/theme/theme_tab").ThemeTab,
         };
