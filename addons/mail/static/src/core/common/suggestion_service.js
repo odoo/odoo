@@ -104,14 +104,14 @@ export class SuggestionService {
      * @param {string} term
      */
     async fetchThreads(term, { abortSignal } = {}) {
-        const suggestedThreads = await this.makeOrmCall(
+        const data = await this.makeOrmCall(
             "discuss.channel",
             "get_mention_suggestions",
             [],
             { search: term },
             { abortSignal }
         );
-        this.store.Thread.insert(suggestedThreads);
+        this.store.insert(data);
     }
 
     searchCannedResponseSuggestions(cleanedSearchTerm) {
@@ -308,8 +308,8 @@ export class SuggestionService {
                 cleanTerm(thread.displayName).includes(cleanedSearchTerm)
         );
         const sortFunc = (c1, c2) => {
-            const isPublicChannel1 = c1.channel_type === "channel" && !c2.authorizedGroupFullName;
-            const isPublicChannel2 = c2.channel_type === "channel" && !c2.authorizedGroupFullName;
+            const isPublicChannel1 = c1.channel_type === "channel" && !c2.group_public_id;
+            const isPublicChannel2 = c2.channel_type === "channel" && !c2.group_public_id;
             if (isPublicChannel1 && !isPublicChannel2) {
                 return -1;
             }

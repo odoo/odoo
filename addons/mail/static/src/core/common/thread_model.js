@@ -287,11 +287,11 @@ export class Thread extends Record {
     pid;
 
     get accessRestrictedToGroupText() {
-        if (!this.authorizedGroupFullName) {
+        if (!this.group_public_id?.full_name) {
             return false;
         }
         return _t('Access restricted to group "%(groupFullName)s"', {
-            groupFullName: this.authorizedGroupFullName,
+            groupFullName: this.group_public_id.full_name,
         });
     }
 
