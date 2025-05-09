@@ -66,17 +66,17 @@ class AccountChartTemplate(models.AbstractModel):
                 'name@de': 'Skonto',
             },
             'frais_bancaires_htva_template': {
-                'name': 'Bank Fees (No VAT)',
+                'name': 'Bank Fees',
                 'line_ids': [
                     Command.create({
                         'account_id': 'a6560',
                         'amount_type': 'percentage',
                         'amount_string': '100',
-                        'label': 'Bank Fees (No VAT)',
+                        'label': 'Bank Fees',
                     }),
                 ],
-                'name@fr': 'Frais bancaires (Hors TVA)',
-                'name@nl': 'Bankkosten (Geen BTW)',
-                'name@de': 'Bankgebühren (Ohne MwSt.)',
+                'name@fr': 'Frais bancaires',
+                'name@nl': 'Bankkosten',
+                'name@de': 'Bankgebühren',
             },
         }
