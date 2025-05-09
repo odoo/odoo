@@ -287,8 +287,8 @@ test("many2one in form view", async () => {
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
     await contains(".o_avatar_card_buttons button:eq(0)").click();
-    expect(".o-mail-ChatWindow").toHaveCount(2);
     await waitFor(".o-mail-ChatWindow-header:contains('Luigi')");
+    expect(".o-mail-ChatWindow").toHaveCount(2);
 });
 
 test("many2one with hr group widget in form view", async () => {
