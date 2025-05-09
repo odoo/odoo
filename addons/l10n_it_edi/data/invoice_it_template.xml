@@ -143,6 +143,9 @@
             <DatiOrdineAcquisto t-if="origin_document_type == 'purchase_order'">
                 <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
             </DatiOrdineAcquisto>
+            <Datifatturecollegate t-elif="record.debit_origin_id">
+                <IdDocumento t-out="format_alphanumeric(record.ref, 20)"/>
+            </Datifatturecollegate>
             <DatiOrdineAcquisto t-elif="record.ref and not record.reversed_entry_id">
                 <IdDocumento t-out="format_alphanumeric(record.ref, 20)"/>
             </DatiOrdineAcquisto>

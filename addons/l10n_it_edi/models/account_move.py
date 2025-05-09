@@ -159,6 +159,15 @@ class AccountMove(models.Model):
     # Overrides
     # -------------------------------------------------------------------------
 
+    def copy(self, default=None):
+        new_moves = super().copy(default)
+
+        document_type = self.env['l10n_it.document.type'].search([]).grouped('code')
+        for new_move in new_moves:
+            if new_move.debit_origin_id:
+                new_move.l10n_it_document_type = document_type.get('TD05')
+        return new_moves
+
     @api.depends('l10n_it_edi_transaction')
     def _compute_show_reset_to_draft_button(self):
         # EXTENDS 'account'
