@@ -7,7 +7,6 @@ import {
     formatValue,
     condition,
 } from "@web/core/tree_editor/condition_tree";
-import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { deepEqual } from "@web/core/utils/objects";
 import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_selector_operator_editor";
@@ -44,7 +43,6 @@ export class DomainSelector extends Component {
 
     setup() {
         this.fieldService = useService("field");
-        this.loadFieldInfo = useLoadFieldInfo(this.fieldService);
         this.makeGetFieldDef = useMakeGetFieldDef(this.fieldService);
 
         this.tree = null;
