@@ -12,7 +12,7 @@ registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
     },
     {
         content: "Wait for page to load",
-        trigger: ":iframe",
+        trigger: ":iframe h1:contains('Test Category')",
     },
     ...clickOnEditAndWaitEditMode(),
     {
@@ -36,7 +36,7 @@ registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
     },
     {
         content: "Open category option dropdown",
-        trigger: "button[id='product_category_opt']'",
+        trigger: "button[id='product_category_opt']",
         run: "click",
     },
     {
