@@ -7,6 +7,7 @@
                 'o-isTalking': !props.minimized and isTalking,
                 'o-isInvitation opacity-50': !rtcSession,
                 'o-inset': props.inset,
+                'pe-none': rtc.removeMirroringWarning,
                 'o-small': props.inset and (ui.isSmall or props.minimized),
                 'o-active': isActiveRtcSession and !props.inset and props.compact,
                 'p-1 rounded-1': !isActiveRtcSession,
@@ -20,7 +21,14 @@
             t-ref="root"
         >
             <!-- card -->
-            <CallParticipantVideo t-if="hasVideo" session="rtcSession" type="props.cardData.type" inset="props.inset"/>
+            <t t-if="!props.isSidebarItem and props.cardData.type === 'screen' and rtc.state.screenTrack and !rtc.state.screenTrack.enabled">
+                <div class="o-text-white display-4 gap-3">
+                    <button class="pe-auto bg-transparent o-text-white border-0 opacity-25 opacity-75-hover" t-ref="resumeStream" t-on-click.stop="() => (this.rtc.state.screenTrack.enabled = true)">
+                        <i class="fa fa-fw" t-att-class="{ 'fa-play': resumeStreamHover.isHover, 'fa-pause': !resumeStreamHover.isHover }"/> <span><t t-if="resumeStreamHover.isHover">Resume stream</t><t t-else="">Stream paused</t></span>
+                    </button>
+                </div>
+            </t>
+            <CallParticipantVideo t-elif="hasVideo" session="rtcSession" type="props.cardData.type" inset="props.inset"/>
             <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized, 'o-isRemoteVideo': isRemoteVideo }" draggable="false">
                 <img t-if="!showRemoteWarning" alt="Avatar" class="h-100 rounded-circle border-5 o_object_fit_cover" t-att-src="channelMember?.persona.avatarUrl" draggable="false" t-att-class="{
                     'o-isTalking': isTalking,

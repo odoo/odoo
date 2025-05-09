@@ -313,5 +313,19 @@ export class Call extends Component {
         this.state.isFullscreen = Boolean(
             document.webkitFullscreenElement || document.fullscreenElement
         );
+        if (
+            this.rtc.state.sourceScreenStream &&
+            this.rtc.displaySurface !== "browser" &&
+            this.state.isFullscreen
+        ) {
+            this.rtc.showMirroringWarning();
+        } else if (!this.state.isFullscreen) {
+            if (this.rtc.removeMirroringWarning) {
+                this.rtc.removeMirroringWarning();
+            }
+            if (this.rtc.state.screenTrack) {
+                this.rtc.state.screenTrack.enabled = true;
+            }
+        }
     }
 }
