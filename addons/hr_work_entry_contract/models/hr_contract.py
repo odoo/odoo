@@ -85,6 +85,7 @@ class HrContract(models.Model):
             ('date_from', '<=', end_dt.replace(tzinfo=None)),
             ('date_to', '>=', start_dt.replace(tzinfo=None)),
             ('company_id', 'in', [False, self.company_id.id]),
+            ('time_type', '!=', 'work'),
         ]
         return expression.AND([domain, self._get_sub_leave_domain()])
 
@@ -101,12 +102,23 @@ class HrContract(models.Model):
             employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
         result = dict()
         for calendar, employees in employees_by_calendar.items():
-            result.update(calendar._attendance_intervals_batch(
+            attendance = calendar._attendance_intervals_batch(
+                start_dt,
+                end_dt,
+                resources=employees.resource_id,
+                tz=pytz.timezone(calendar.tz)
+            )
+            worked_leaves = (calendar._leave_work_intervals_batch(
                 start_dt,
                 end_dt,
                 resources=employees.resource_id,
                 tz=pytz.timezone(calendar.tz)
             ))
+            res = dict()
+            for resource in attendance | worked_leaves:
+                sub_attendance = attendance.get(resource, WorkIntervals()) - worked_leaves.get(resource, WorkIntervals())
+                res[resource] = sub_attendance | worked_leaves.get(resource, WorkIntervals())
+            result.update(res)
         return result
 
     def _get_lunch_intervals(self, start_dt, end_dt):

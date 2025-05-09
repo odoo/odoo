@@ -7,6 +7,7 @@
         <field name="employee_requests">False</field>
         <field name="leave_validation_type">both</field>
         <field name="allocation_validation_type">hr</field>
+        <field name="time_type">paid</field>
         <field name="leave_notif_subtype_id" ref="mt_leave"/>
         <field name="allocation_notif_subtype_id" ref="mt_leave_allocation"/>
         <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
@@ -20,6 +21,7 @@
     <record id="leave_type_sick_time_off" model="hr.leave.type">
         <field name="name">Sick Time Off</field>
         <field name="requires_allocation">False</field>
+        <field name="time_type">paid</field>
         <field name="leave_notif_subtype_id" ref="mt_leave_sick"/>
         <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
         <field name="support_document">True</field>
@@ -83,6 +85,7 @@
         <field name="request_unit">hour</field>
         <field name="requires_allocation">False</field>
         <field name="leave_validation_type">manager</field>
+        <field name="time_type">paid</field>
         <field name="active" eval="True"/>
         <field name="hide_on_dashboard">True</field>
         <field name="company_id" eval="False"/>

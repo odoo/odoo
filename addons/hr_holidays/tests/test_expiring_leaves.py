@@ -19,7 +19,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         super().setUpClass()
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Test',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
         })

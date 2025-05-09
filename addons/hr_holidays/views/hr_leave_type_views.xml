@@ -64,7 +64,9 @@
                     <group>
                         <group>
                                 <field name="request_unit" widget="radio" options="{'horizontal': True}"/>
-                                <field name="time_type" required="1"/>
+                                <field name="time_type" required="1" widget="radio" string="Count as"
+                                    help="Define the time of time off type.&#10;- Paid, working time like Attendance, Remote Work, Training, ...&#10;- Paid, non-working time like Sick Time, Paid Time Off, Extra Hours&#10;- Unpaid, non-working time like Unpaid, Unpredictable leave, ..."
+                                />
                                 <field name="responsible_ids"
                                     widget="many2many_tags"
                                     placeholder="Nobody to notify"

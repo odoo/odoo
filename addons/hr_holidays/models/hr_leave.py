@@ -261,12 +261,17 @@ class HrLeave(models.Model):
             ('state', 'not in', ['cancel', 'refuse']),
         ])
         for holiday in self:
-            conflicting_holidays = all_leaves.filtered_domain([
+            domain = [
                 ('employee_id', '=', holiday.employee_id.id),
                 ('date_from', '<', holiday.date_to),
                 ('date_to', '>', holiday.date_from),
                 ('id', '!=', holiday.id),
-            ])
+            ]
+            if holiday.holiday_status_id.time_type == 'work':
+                domain.append(('holiday_status_id.time_type', '=', 'work'))
+            else:
+                domain.append(('holiday_status_id.time_type', '!=', 'work'))
+            conflicting_holidays = all_leaves.filtered_domain(domain)
             if not conflicting_holidays:
                 holiday.dashboard_warning_message = False
                 continue
@@ -469,7 +474,7 @@ class HrLeave(models.Model):
                 continue
             employees_by_dates_calendar[(leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, resource_calendar or leave.resource_calendar_id)] += leave.employee_id
         # We force the company in the domain as we are more than likely in a compute_sudo
-        domain = [('time_type', '=', 'leave'),
+        domain = [('time_type', '!=', 'work'),
                   ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
                   # When searching for resource leave intervals, we exclude the one that
                   # is related to the leave we're currently trying to compute for.

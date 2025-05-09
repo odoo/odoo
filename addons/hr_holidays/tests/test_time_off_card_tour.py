@@ -7,7 +7,7 @@ class TestTimeOffCardTour(HttpCase):
     def test_time_off_card_tour(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Time Off with no validation for approval',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': True,
             'allocation_validation_type': 'no_validation',
         })

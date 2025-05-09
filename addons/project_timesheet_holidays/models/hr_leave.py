@@ -16,6 +16,8 @@ class HrLeave(models.Model):
         vals_list = []
         leave_ids = []
         for leave in self:
+            if leave.holiday_status_id.time_type == 'work':
+                continue
             project, task = leave.employee_id.company_id.internal_project_id, leave.employee_id.company_id.leave_timesheet_task_id
 
             if not project or not task:
