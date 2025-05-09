@@ -281,17 +281,8 @@ class AccountReport(models.Model):
         '''
         new_reports = super().copy(default=default)
         for old_report, new_report in zip(self, new_reports):
-            code_mapping = {}
             for line in old_report.line_ids.filtered(lambda x: not x.parent_id):
-                line._copy_hierarchy(new_report, code_mapping=code_mapping)
-
-            # Replace line codes by their copy in aggregation formulas
-            for expression in new_report.line_ids.expression_ids:
-                if expression.engine == 'aggregation':
-                    copied_formula = f" {expression.formula} "  # Add spaces so that the lookahead/lookbehind of the regex can work (we can't do a | in those)
-                    for old_code, new_code in code_mapping.items():
-                        copied_formula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_formula)
-                    expression.formula = copied_formula.strip()  # Remove the spaces introduced for lookahead/lookbehind
+                line.copy({'report_id': new_report.id})
 
             old_report.column_ids.copy({'report_id': new_report.id})
         return new_reports
@@ -359,7 +350,7 @@ class AccountReportLine(models.Model):
         help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.",
     )
     sequence = fields.Integer(string="Sequence")
-    code = fields.Char(string="Code", help="Unique identifier for this line.")
+    code = fields.Char(string="Code", help="Unique identifier for this line.", copy=False)
     foldable = fields.Boolean(string="Foldable", help="By default, we always unfold the lines that can be. If this is checked, the line won't be unfolded by default, and a folding button will be displayed.")
     print_on_new_page = fields.Boolean('Print On New Page', help='When checked this line and everything after it will be printed on a new page.')
     action_id = fields.Many2one(string="Action", comodel_name='ir.actions.actions', help="Setting this field will turn the line into a link, executing the action when clicked.")
@@ -422,36 +413,38 @@ class AccountReportLine(models.Model):
         for line in self.filtered(lambda x: x.parent_id == x):
             raise ValidationError(_('Line "%s" defines itself as its parent.', line.name))
 
-    def _copy_hierarchy(self, copied_report, parent=None, code_mapping=None):
-        ''' Copy the whole hierarchy from this line by copying each line children recursively and adapting the
-        formulas with the new copied codes.
-
-        :param copied_report: The copy of the report.
-        :param parent: The parent line in the hierarchy (a copy of the original parent line).
-        :param code_mapping: A dictionary keeping track of mapping old_code -> new_code
+    def copy(self, default=None):
         '''
-        self.ensure_one()
+        Copy the entire report line hierarchy by duplicating each line and its children recursively.
+        This method replicates the functionality of the former `_copy_hierarchy` method but leverages
+        the standard Odoo `copy` method, allowing for more consistent behavior.
+        '''
+        new_report_lines = super().copy(default)
+        code_mapping = self._context.get('code_mapping') or {}
+        for old_report_line, new_report_line in zip(self, new_report_lines):
+            new_report_line.write({
+                'code': old_report_line._get_copied_code(),
+                'name': old_report_line._get_copied_name()
+            })
 
-        copied_line = self.copy({
-            'report_id': copied_report.id,
-            'parent_id': parent and parent.id,
-            'code': self._get_copied_code(),
-        })
+            # Keep track of old_code -> new_code in a mutable dict
+            if old_report_line.code:
+                code_mapping[old_report_line.code] = new_report_line.code
 
-        # Keep track of old_code -> new_code in a mutable dict
-        if code_mapping is None:
-            code_mapping = {}
-        if self.code:
-            code_mapping[self.code] = copied_line.code
+            # Copy children
+            for line in old_report_line.children_ids:
+                line.with_context(code_mapping=code_mapping).copy({
+                    'report_id': new_report_lines.report_id.id,
+                    'parent_id': new_report_line.id
+                })
 
-        # Copy children
-        for line in self.children_ids:
-            line._copy_hierarchy(copied_report, parent=copied_line, code_mapping=code_mapping)
+            # Update aggregation expressions, so that they use the copied lines
+            for expression in old_report_line.expression_ids:
+                copy_defaults = {'report_line_id': new_report_line.id}
+                expression.copy(copy_defaults)
 
-        # Update aggregation expressions, so that they use the copied lines
-        for expression in self.expression_ids:
-            copy_defaults = {'report_line_id': copied_line.id}
-            expression.copy(copy_defaults)
+        new_report_lines._update_aggregation_expression_formula(new_report_lines.expression_ids, code_mapping)
+        return new_report_lines
 
     def _get_copied_code(self):
         '''Look for an unique copied code.
@@ -465,6 +458,28 @@ class AccountReportLine(models.Model):
         while self.search_count([('code', '=', code)]) > 0:
             code += '_COPY'
         return code
+
+    def _get_copied_name(self):
+        '''Return a copied name of the account.report.line record by adding the suffix (copy) at the end
+        until the name is unique.
+
+        :return: an unique name for the copied account.report.line
+        '''
+        self.ensure_one()
+        name = self.name + ' ' + _('(copy)')
+        while self.search_count([('name', '=', name)]) > 0:
+            name += ' ' + _('(copy)')
+        return name
+
+    def _update_aggregation_expression_formula(self, expression_ids, code_mapping):
+        # Replace line codes by their copy in aggregation formulas
+        for expression in expression_ids:
+            if expression.engine != 'aggregation':
+                continue
+            copied_formula = f" {expression.formula} "  # Add spaces so that the lookahead/lookbehind of the regex can work (we can't do a | in those)
+            for old_code, new_code in code_mapping.items():
+                copied_formula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_formula)
+            expression.formula = copied_formula.strip()  # Remove the spaces introduced for lookahead/lookbehind
 
     def _inverse_domain_formula(self):
         self._create_report_expression(engine='domain')
