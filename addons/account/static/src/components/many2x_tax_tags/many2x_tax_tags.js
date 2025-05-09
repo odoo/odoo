@@ -5,12 +5,10 @@ import {
     Many2ManyTagsField,
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { TaxAutoComplete } from "@account/components/tax_autocomplete/tax_autocomplete";
 
 export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
     static components = {
         ...Many2XAutocomplete.components,
-        AutoComplete: TaxAutoComplete,
     };
 
     async loadOptionsSource(request) {
@@ -24,38 +22,6 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
             });
         }
         return options;
-    }
-
-    mapRecordToOption(record) {
-        let option = super.mapRecordToOption(...arguments);
-        option.label = record.name;
-        return option;
-    }
-
-    search(name) {
-        return this.orm
-            .call(this.props.resModel, "search_read", [], {
-                domain: [...this.props.getDomain(), ["name", "ilike", name]],
-                fields: ["id", "name", "tax_scope"],
-                context: this.props.context,
-            })
-            .then((records) => {
-                return this.orm
-                    .call("account.tax", "fields_get", [], { attributes: ["selection"] })
-                    .then((fields) => {
-                        const selectionOptions = fields.tax_scope.selection;
-
-                        const recordsWithLabels = records.map((record) => {
-                            const selectedOption = selectionOptions.find(
-                                (option) => option[0] === record.tax_scope
-                            );
-                            const label = selectedOption ? selectedOption[1] : undefined;
-                            return { ...record, tax_scope: label };
-                        });
-
-                        return recordsWithLabels;
-                    });
-            });
     }
 
     async onSearchMore(request) {
