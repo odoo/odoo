@@ -14,6 +14,7 @@
             <field name="channel_id" ref="support_bot_session_4_demo"/>
             <field name="last_interest_dt" eval="DateTime.today() + relativedelta(days=-7)"/>
             <field name="livechat_member_type">bot</field>
+            <field name="chatbot_script_id" ref="chatbot_script_support_bot_demo"/>
         </record>
         <record id="support_bot_session_4_guest_demo" model="mail.guest">
             <field name="name">Visitor #304</field>
