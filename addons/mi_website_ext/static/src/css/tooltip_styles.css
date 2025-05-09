@@ -1,0 +1,68 @@
+.custom-tooltip {
+  position: absolute;
+  z-index: 9999;
+  display: flex;
+  width: 320px;
+  padding: 16px 16px 24px 16px;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  border-radius: 16px;
+  border: 1px solid #a1a0a0;
+  background: #f0f8ff;
+  box-shadow: 0px 4px 5.2px 0px rgba(63, 64, 123, 0.06);
+}
+
+.custom-tooltip:hover {
+  transform: scale(0.95) translateY(10px); 
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out,
+    visibility 0s linear 0.3s;
+}
+
+.tooltip-content {
+  display: flex;
+  padding: 32px 16px;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 16px;
+  border: 1px solid #d4c8c8;
+}
+
+.tooltip-icon {
+  display: flex;
+  width: 80px;
+  height: 80px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tooltip-info {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 4px;
+  align-self: stretch;
+}
+
+.tooltip-title {
+  align-self: stretch;
+  color: #323030;
+  font-family: "Rubik";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+  margin: 0;
+}
+
+.tooltip-text {
+  align-self: stretch;
+  color: #7a7a7a;
+  font-family: "Noto Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  margin: 0;
+}

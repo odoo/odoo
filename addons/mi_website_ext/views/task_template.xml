@@ -1,0 +1,18 @@
+<odoo>
+    <template id="task_template" name="Task View">
+        <t t-call="website.layout">
+             <t t-set="hide_sidebar" t-value="True"/>
+            <t t-call-assets="mi_website_ext.assets_task" />
+            <div class="content_container">
+                <div class="task_container">
+                    <h1 class="task_title">Tareas</h1>
+                    <p class="task_subtitle">Aquí puedes mirar las fotos de todas nuestras
+                        actividades.</p>
+                    <div class="task_section">
+
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,577 @@
+<odoo>
+    <template id="custom_sidebar" name="Custom Sidebar" inherit_id="website.layout">
+        <xpath expr="//head" position="inside">
+            <link rel="stylesheet" type="text/css" href="/mi_website_ext/static/src/css/sidebar.css" />
+            <link rel="stylesheet" type="text/css"
+                href="/mi_website_ext/static/src/css/tooltip_styles.css" />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+            <link
+                href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;family=Rubik:ital,wght@0,300..900;1,300..900&amp;display=swap"
+                rel="stylesheet" />
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            ></script>
+        </xpath>
+        <xpath expr="//main" position="before">
+            <t t-if="not hide_sidebar is defined">
+                <t t-set="current_path" t-value="request.httprequest.path" />
+                <t t-set="hide_sidebar"
+                    t-value="current_path in ['/blogs', '/galeria', '/news', '/task', '/policy', '/birthday_single', '/birthday_all', '/announce', '/activity', '/activity_all', '/anniversary', '/anniversary_all', '/program', '/intern_all']" />
+            </t>
+
+            <t t-if="request.website and request.session.uid and not hide_sidebar">
+                <t t-set="user" t-value="request.env.user" />
+                <div class="three-column-layout">
+
+                    <div class="notification-column">
+                        <div class="access-card">
+                            <div class="card-title">
+                                <h3>Accesos</h3>
+                            </div>
+                            <div class="card-items">
+                                <a href="/blogs">
+                                    <img src="/mi_website_ext/static/src/img/Group.svg" alt="Grupo" />
+                                    <p>Blog</p>
+                                </a>
+                            </div>
+                            <div class="card-items">
+                                <a href="/galeria">
+                                    <img src="/mi_website_ext/static/src/img/Gallery.svg"
+                                        alt="Grupo" />
+                                    <p>Galeria</p>
+                                </a>
+                            </div>
+                            <div class="card-items">
+                                <a href="/program">
+                                    <img src="/mi_website_ext/static/src/img/News.svg" alt="Grupo" />
+                                    <p>Noticias</p>
+                                </a>
+                            </div>
+                            <div class="card-items">
+                                <a href="/policy">
+                                    <img src="/mi_website_ext/static/src/img/Policy.svg" alt="Grupo" />
+                                    <p>Politicas y reglamentos</p>
+                                </a>
+                            </div>
+                            <hr class="divider" />
+                            <button class="notify-button">Notificar <img
+                                    src="/mi_website_ext/static/src/img/Sick.svg" alt="Grupo" /></button>
+                        </div>
+                        <div class="benefits-card">
+                            <div class="card-title">
+                                <h3>Mis beneficios</h3>
+                            </div>
+                            <div class="card-items2">
+                                <img src="/mi_website_ext/static/src/img/SEMM.svg" alt="Grupo"
+                                    class="tooltip-img"
+                                    data-tooltip-title="Servicio SEMM"
+                                    data-tooltip-text="Cobertura contra accidentes."
+                                    data-tooltip-icon="/mi_website_ext/static/src/img/SEMM.svg" />
+                            </div>
+                            <div class="card-items2">
+                                <img src="/mi_website_ext/static/src/img/Glasses.svg" alt="Grupo"
+                                    class="tooltip-img"
+                                    data-tooltip-title="Financia tus lentes"
+                                    data-tooltip-text="Financiamos la compra de tus lentes en Óptica Visual Point."
+                                    data-tooltip-icon="/mi_website_ext/static/src/img/Glasses.svg" />
+                            </div>
+                            <div class="card-items2">
+                                <img src="/mi_website_ext/static/src/img/Gymsix.svg" alt="Grupo"
+                                    class="tooltip-img"
+                                    data-tooltip-title="Descuento en el gym"
+                                    data-tooltip-text="¡Lo lograste cumples 6 meses, recibes un descuento en tu plan del Gym! Nosotros cubrimos el mantenimiento."
+                                    data-tooltip-icon="/mi_website_ext/static/src/img/Gymsix.svg" />
+                            </div>
+                            <div class="card-items2">
+                                <img src="/mi_website_ext/static/src/img/Pluxeesix.svg" alt="Grupo"
+                                    class="tooltip-img"
+                                    data-tooltip-title="Pluxee"
+                                    data-tooltip-text="¡Felicidades! Cumpliste 6 meses. Recibes un vale de $25."
+                                    data-tooltip-icon="/mi_website_ext/static/src/img/Pluxeesix.svg" />
+                            </div>
+                            <div class="card-items2">
+                                <img src="/mi_website_ext/static/src/img/Gymfull.svg" alt="Grupo"
+                                    class="tooltip-img"
+                                    data-tooltip-title="Membresia full gym"
+                                    data-tooltip-text="¡Asi se hace! Cumpliste un año, ahora cubrimos los gastos de tu membrecía full en tu gym."
+                                    data-tooltip-icon="/mi_website_ext/static/src/img/Gymfull.svg" />
+                            </div>
+                            <div class="card-items2">
+                                <img src="/mi_website_ext/static/src/img/Parking.svg" alt="Grupo"
+                                    class="tooltip-img"
+                                    data-tooltip-title="Parking gratis"
+                                    data-tooltip-text="Tu auto te ha acompañado, así que ahora no te preocupes, ahora tu parking es gratis mientras trabajas."
+                                    data-tooltip-icon="/mi_website_ext/static/src/img/Parking.svg" />
+                            </div>
+                            <div class="card-items2">
+                                <img src="/mi_website_ext/static/src/img/Pluxeeyear.svg" alt="Grupo"
+                                    class="tooltip-img"
+                                    data-tooltip-title="Pluxee"
+                                    data-tooltip-text="¡Felicidades! Como premio por tu perseverancia al cumplir un año. Ahora recibes un vale de $50."
+                                    data-tooltip-icon="/mi_website_ext/static/src/img/Pluxeeyear.svg" />
+                            </div>
+                            <div class="card-items2">
+                                <img src="/mi_website_ext/static/src/img/Pluxeeyearhalf.svg"
+                                    alt="Grupo" class="tooltip-img"
+                                    data-tooltip-title="Vale Pluxee"
+                                    data-tooltip-text="¡Wao que rápido se va el tiempo! Ya tienes año y medio con nosotros para celebrarlo ahora recibes un vale de $75."
+                                    data-tooltip-icon="/mi_website_ext/static/src/img/Pluxeeyearhalf.svg" />
+                            </div>
+                            <div class="card-items2">
+                                <img src="/mi_website_ext/static/src/img/Pluxeetwoyear.svg"
+                                    alt="Grupo" class="tooltip-img"
+                                    data-tooltip-title="Vale Pluxee"
+                                    data-tooltip-text="¡Te felicitamos por alcanzar este hito! Eres una parte importante de nuestro equipo, por eso ahora recibes un vale de $100."
+                                    data-tooltip-icon="/mi_website_ext/static/src/img/Pluxeetwoyear.svg" />
+                            </div>
+                            <div class="card-items2">
+                                <img src="/mi_website_ext/static/src/img/Insurance.svg" alt="Grupo"
+                                    class="tooltip-img"
+                                    data-tooltip-title="Seguro de vida"
+                                    data-tooltip-text="Descripción corta de la cobertura del seguro de vida?"
+                                    data-tooltip-icon="/mi_website_ext/static/src/img/Insurance.svg" />
+                            </div>
+                            <div class="card-items2">
+                                <img src="/mi_website_ext/static/src/img/Medical.svg" alt="Grupo"
+                                    class="tooltip-img"
+                                    data-tooltip-title="Seguro medico"
+                                    data-tooltip-text="Descripción corta de la cobertura del seguro medico?"
+                                    data-tooltip-icon="/mi_website_ext/static/src/img/Medical.svg" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-column">
+                        <div class="news-card">
+                            <div class="special-new-title">
+                                <h4>🫦¡Noticia!🫦</h4>
+                            </div>
+                            <div class="special-new-p">
+                                <p>Felicitaciones en este dia a Fernando por el nacimiento de su
+                                    hijo, le deseamos lo mejor.
+                                    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                                    aaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+                            </div>
+                        </div>
+                        <div class="info-cards">
+                            <!--This
+                            is the 1st column-->
+                            <div class="column1">
+                                <!--Welcmome
+                                card-->
+                                <div class="welcome-card">
+                                    <div class="welcome-title">
+                                        <h3>Bienvenido a la familia Calengs</h3>
+                                        <img src="/mi_website_ext/static/src/img/Welcome.svg"
+                                            alt="Grupo" />
+                                    </div>
+                                    <div class="welcome-body">
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </div>
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </div>
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="divider" />
+                                </div>
+
+                                <!--Birthday
+                                card-->
+                                <div class="birthday-card">
+                                    <div class="birthday-title">
+                                        <h3>Cumpleaños del mes</h3>
+                                        <img src="/mi_website_ext/static/src/img/Cake.svg"
+                                            alt="Grupo" />
+                                    </div>
+                                    <div class="birthday-body">
+                                        <a class="person" href="/birthday_single">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </a>
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </div>
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="divider" />
+                                    <div class="all-birthday">
+                                        <a href="/birthday_all">Todos los cumpleaños <i
+                                                class="fa fa-long-arrow-right"></i></a>
+                                    </div>
+                                </div>
+
+                                <!--Winner
+                                card-->
+                                <div class="winner-card">
+                                    <div class="winner-title">
+                                        <h3>Ganadores del mes</h3>
+                                        <img src="/mi_website_ext/static/src/img/Win.svg"
+                                            alt="Grupo" />
+                                    </div>
+                                    <div class="winner-body1">
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>180 puntos</p>
+                                                <p>Calteks</p>
+                                            </div>
+                                            <img src="/mi_website_ext/static/src/img/Trophy.svg"
+                                                alt="Grupo" class="trophy" />
+                                        </div>
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>180 puntos</p>
+                                                <p>Calteks</p>
+                                            </div>
+                                            <img src="/mi_website_ext/static/src/img/Trophy.svg"
+                                                alt="Grupo" />
+                                        </div>
+                                    </div>
+                                    <hr class="divider" />
+                                    <div class="winner-body2">
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>180 puntos</p>
+                                            </div>
+                                        </div>
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>180 puntos</p>
+                                            </div>
+                                        </div>
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>180 puntos</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--This
+                            is the 2do column-->
+                            <div class="column2">
+                                <!--This
+                                is the pha=rase card-->
+                                <div class="phrase-card">
+                                    <div class="phrase">
+                                        <h3>"No siempre todo lo que vemos es realmente lo que es."</h3>
+                                    </div>
+                                    <div class="author">
+                                        <h4>Paul Dawnson</h4>
+                                        <p>Fisico y matematico</p>
+                                    </div>
+                                </div>
+
+                                <!--This
+                                is the activity card-->
+                                <div class="activity-card">
+                                    <div class="activity-title">
+                                        <h3>Actividades del mes</h3>
+                                        <img src="/mi_website_ext/static/src/img/Gift.svg"
+                                            alt="Grupo" />
+                                    </div>
+                                    <div class="activity-body">
+                                        <div class="activity-list">
+                                            <a class="activity-item" href="/activity">
+                                                <img
+                                                    src="/mi_website_ext/static/src/img/imagetester.jpg" />
+                                                <h3>Dia del trabajador</h3>
+                                                <p>01 de mayo</p>
+                                            </a>
+                                            <a class="activity-item" href="/activity">
+                                                <img
+                                                    src="/mi_website_ext/static/src/img/imagetester.jpg" />
+                                                <h3>Dia del trabajador</h3>
+                                                <p>01 de mayo</p>
+                                            </a>
+                                            <a class="activity-item" href="/activity">
+                                                <img
+                                                    src="/mi_website_ext/static/src/img/imagetester.jpg" />
+                                                <h3>Dia del trabajador</h3>
+                                                <p>01 de mayo</p>
+                                            </a>
+                                        </div>
+                                        <hr class="divider" />
+                                    </div>
+                                    <div class="all-activity">
+                                        <a href="/activity_all">Todas las actividades <i
+                                                class="fa fa-long-arrow-right"></i></a>
+                                    </div>
+                                </div>
+
+                                <!--This
+                                is the anniversary card-->
+                                <div class="anniversary-card">
+                                    <div class="anniversary-title">
+                                        <h3>Aniversarios del mes</h3>
+                                        <img src="/mi_website_ext/static/src/img/Time.svg"
+                                            alt="Grupo" />
+                                    </div>
+                                    <div class="anniversary-body">
+                                        <a class="person" href="/anniversary">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </a>
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </div>
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="divider" />
+                                    <div class="all-anniversary">
+                                        <a href="/anniversary_all">Todos los aniversarios <i
+                                                class="fa fa-long-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                                <!--This
+                                is the prog.
+                                 ram card-->
+                                <div class="program-card">
+                                    <div class="program-title">
+                                        <h3>Programa de reconocimiento interno</h3>
+                                        <img src="/mi_website_ext/static/src/img/Gift.svg"
+                                            alt="Grupo" />
+                                    </div>
+                                    <div class="program-subtitle">
+                                        <p>Conoce quienes fueron y porque:</p>
+                                    </div>
+                                    <div class="program-body">
+                                        <a class="person" href="/program">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </a>
+                                        <a class="person" href="/program">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </a>
+                                        <div class="person">
+                                            <img
+                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                class="miniuser" />
+                                            <div class="personinfo">
+                                                <h4>Yanitza Aguirre</h4>
+                                                <p>Calteks</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="divider" />
+                                    <div class="all-program">
+                                        <a href="/intern_all">Conoce todos los postulados y postula
+                                            a tu compañero <i
+                                                class="fa fa-long-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <aside class="custom-sidebar">
+                        <!-- Perfil -->
+                        <div class="profile-section">
+                            <div class="avatar-section">
+                                <img
+                                    t-att-src="'/web/image/res.users/' + str(user.id) + '/image_128'"
+                                    alt="Avatar" class="avatar" />
+                            </div>
+                            <h2 class="name">
+
+                                <t t-esc="user.name" />
+                            </h2>
+                            <div class="position-group">
+                                <p class="position"><!--<t
+                                t-esc="user.job_title"/> | <t t-esc="user.company_id"/>--> Electrical Engineer | Calengs Panama</p>
+                                <p class="department">Departamento de TI</p>
+                            </div>
+                            <hr class="divider" />
+                            <div class="badge-area">
+                                <div class="badge-title">
+                                    <h3>Mis Logros</h3>
+                                </div>
+                                <div class="badge_section">
+                                    <img src="/mi_website_ext/static/src/img/Firstplace.svg"
+                                        alt="Grupo" />
+                                    <img src="/mi_website_ext/static/src/img/Collector.svg"
+                                        alt="Grupo" />
+                                    <img src="/mi_website_ext/static/src/img/Informative.svg"
+                                        alt="Grupo" />
+                                    <img src="/mi_website_ext/static/src/img/Firstplace2.svg"
+                                        alt="Grupo" />
+                                </div>
+                                <a class="badge_editor">Ver mis logros</a>
+                            </div>
+
+                            <div class="btn-section">
+                                <button class="btn-time">Maneja tu tiempo</button>
+                            </div>
+                        </div>
+
+                        <!-- Cards -->
+                        <div class="cards-section">
+                            <div class="card">
+                                <h4>Días para vacaciones</h4>
+                                <div class="card-content">
+                                    <p class="vacation_text">264</p>
+                                    <img t-att-src="'/mi_website_ext/static/src/img/sun.png'"
+                                        alt="Sol" />
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h4>Permiso disponible</h4>
+                                <div class="card-content">
+                                    <p class="permiso_text">6H</p>
+                                    <img t-att-src="'/mi_website_ext/static/src/img/sun.png'"
+                                        alt="Sol" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Anuncios -->
+                        <div class="announcements-section">
+                            <h3>Anuncios <img src="/mi_website_ext/static/src/img/Announce.svg"
+                                    alt="Grupo" />
+                            </h3>
+                            <div class="announcements-panel">
+                                <div class="announcement-item">
+                                    <input type="checkbox" class="announcement-checkbox" />
+                                    <a href="/announce">Feriados de Abril</a>
+                                    <i class="fa fa-info-circle announcement-icon"
+                                        aria-hidden="true"></i>
+                                </div>
+                                <div class="announcement-item">
+                                    <input type="checkbox" class="announcement-checkbox" />
+                                    <a href="/announce">Ordenen los cubiculos</a>
+                                    <i class="fa fa-info-circle announcement-icon"
+                                        aria-hidden="true"></i>
+                                </div>
+                                <div class="announcement-item">
+                                    <input type="checkbox" class="announcement-checkbox" />
+                                    <a href="/announce">Mensaje que se debe leer</a>
+                                    <i class="fa fa-info-circle announcement-icon"
+                                        aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calendario -->
+                        <div class="calendar-section">
+                            <h3>Tus próximas actividades <img
+                                    src="/mi_website_ext/static/src/img/Announce.svg"
+                                    alt="Grupo" />
+                            </h3>
+                            <div class="calendar-placeholder">
+                                <p>[Calendario aquí]</p>
+                            </div>
+                        </div>
+
+                        <!-- Redes Sociales -->
+                        <div class="social-section">
+                            <h4>Sigue nuestras redes</h4>
+                            <div class="social-buttons">
+                                <button>
+                                    <i class="fa fa-linkedin linkedin" />
+                                </button>
+                                <button>
+                                    <i class="fa fa-facebook facebook" />
+                                </button>
+                                <button>
+                                    <i class="fa fa-instagram instagram instagram" />
+                                </button>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

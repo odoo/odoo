@@ -1,0 +1,44 @@
+<odoo>
+    <template id="gallery_template" name="Gallery View">
+        <t t-call="website.layout">
+            <t t-set="hide_sidebar" t-value="True" />
+            <t t-call-assets="mi_website_ext.assets_gallery" />
+            <div class="content_container">
+                <div class="gallery_container">
+                    <h1 class="gallery_title">Galería de fotos</h1>
+                    <p class="gallery_subtitle">Aquí puedes mirar las fotos de todas nuestras
+                        actividades.</p>
+                    <div class="album_section">
+                        <div class="album_list">
+                            <div class="album_item">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </div>
+                            <div class="album_item">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </div>
+                            <div class="album_item">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </div>
+                            <div class="album_item">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </div>
+                            <div class="album_item">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

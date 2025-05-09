@@ -1,0 +1,21 @@
+<odoo>
+    <template id="bio_modal_template" name="Bio Modal">
+        <t t-set="user" t-value="request.env.user"/>
+        <div id="bio_modal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar biografía</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="bio_textarea" class="form-control" rows="5" t-esc="user.bio or ''"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="save_bio_btn" type="button" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

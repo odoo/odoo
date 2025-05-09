@@ -1,0 +1,44 @@
+<odoo>
+    <template id="news_template" name="News View">
+        <t t-call="website.layout">
+             <t t-set="hide_sidebar" t-value="True"/>
+            <t t-call-assets="mi_website_ext.assets_news" />
+            <div class="content_container">
+                <div class="news_container">
+                    <h1 class="news_title">Noticias</h1>
+                    <p class="news_subtitle">Aquí puedes mirar las fotos de todas nuestras
+                        actividades.</p>
+                     <div class="news_section">
+                        <div class="album_list">
+                            <div class="album_item">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </div>
+                            <div class="album_item">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </div>
+                            <div class="album_item">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </div>
+                            <div class="album_item">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </div>
+                            <div class="album_item">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

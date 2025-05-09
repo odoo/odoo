@@ -1,0 +1,7 @@
+<odoo>
+    <template id="bio_modal_in_body" inherit_id="website.layout" name="Insertar Modal Bio en Body">
+        <xpath expr="//body" position="inside">
+            <t t-call="mi_website_ext.bio_modal_template"/>
+        </xpath>
+    </template>
+</odoo>

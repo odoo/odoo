@@ -1,0 +1,101 @@
+<odoo>
+    <template id="anniversary_single_template" name="Anniversary Single View">
+        <t t-call="website.layout">
+            <t t-set="hide_sidebar" t-value="True" />
+            <t t-call-assets="mi_website_ext.assets_anniversary_single" />
+            <div class="content_container">
+                <div class="anniversary_container">
+                    <div class="anniversary_header">
+                        <h1 class="anniversary_title">Feliz Aniversario Roland</h1>
+                        <h4>Los éxitos se cosechan con consistencia</h4>
+                    </div>
+                    <div class="anniversary_author">
+                        <p class="anniversary_subtitle">16 de abril de 2025</p>
+                        <p class="anniversary_subtitle">Raisa Montoya</p>
+                    </div>
+                    <img src="/mi_website_ext/static/src/img/imagetester.jpg" alt="Grupo"
+                        class="anniversary_photo" />
+                    <div class="anniversary_section">
+                        <div class="comment_section">
+                            <h4>Comentarios</h4>
+                            <div class="show_comments">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg" />
+                                <div class="name_and_comment">
+                                    <div class="name_user">
+                                        <h3>
+                                            Nombre de usuario
+                                        </h3>
+                                        <p>
+                                            3 dias atras
+                                        </p>
+                                    </div>
+                                    <p>
+                                        Pienso que deberiamos trabajar reomoto.
+                                    </p>
+                                </div>
+                                <!-- This is for the like button-->
+                                <div title="Like" class="heart-container">
+                                    <input id="Give-It-An-Id" class="checkbox" type="checkbox" />
+                                    <div class="svg-container">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="svg-outline"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
+                                            </path>
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="svg-filled"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
+                                            </path>
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 100 100" class="svg-celebrate">
+                                            <polygon points="10,10 20,20"></polygon>
+                                            <polygon points="10,50 20,50"></polygon>
+                                            <polygon points="20,80 30,70"></polygon>
+                                            <polygon points="90,10 80,20"></polygon>
+                                            <polygon points="90,50 80,50"></polygon>
+                                            <polygon points="80,80 70,70"></polygon>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p>
+                                    105
+                                </p>
+                            </div>
+                            <div class="create_comment">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg" />
+                                <div class="input_icons">
+                                    <input class="insert_comment"
+                                        placeholder="Escribe un mensaje..." />
+                                    <button class="emoji" />
+                                    <button class="attach" />
+                                </div>
+                                <button class="send_button">
+                                    <div class="svg-wrapper-1">
+                                        <div class="svg-wrapper">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 24 24"
+                                                width="24"
+                                                height="24"
+                                            >
+                                                <path fill="none" d="M0 0h24v24H0z"></path>
+                                                <path
+                                                    fill="currentColor"
+                                                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
+                                                ></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <span>Send</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
