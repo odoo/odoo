@@ -584,10 +584,11 @@ describe("getters", () => {
                 stepFunction: (editor) => {
                     const editable = editor.editable;
                     const result = editor.shared.selection.getSelectedNodes();
-                    const ab = editable.firstChild.firstChild;
+                    const p1 = editable.firstChild;
+                    const ab = p1.firstChild;
                     const p2 = editable.childNodes[1];
                     const cd = p2.firstChild;
-                    expect(result).toEqual([ab, p2, cd]);
+                    expect(result).toEqual([p1, ab, p2, cd]);
                 },
             });
         });
