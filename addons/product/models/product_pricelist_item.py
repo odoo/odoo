@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import format_amount, format_datetime, formatLang
+from odoo.tools import float_round, format_amount, format_datetime, formatLang
 
 
 class ProductPricelistItem(models.Model):
@@ -245,7 +245,7 @@ class ProductPricelistItem(models.Model):
         'base', 'compute_price', 'price_discount', 'price_markup', 'price_round', 'price_surcharge',
     )
     def _compute_rule_tip(self):
-        base_selection_vals = {elem[0]: elem[1] for elem in self._fields['base']._description_selection(self.env)}
+        base_selection_vals = dict(self._fields['base']._description_selection(self.env))
         self.rule_tip = False
         for item in self:
             if item.compute_price != 'formula':
@@ -255,8 +255,8 @@ class ProductPricelistItem(models.Model):
             discount_factor = (100 - discount) / 100
             discounted_price = base_amount * discount_factor
             if item.price_round:
-                discounted_price = tools.float_round(discounted_price, precision_rounding=item.price_round)
-            surcharge = tools.format_amount(item.env, item.price_surcharge, item.currency_id)
+                discounted_price = float_round(discounted_price, precision_rounding=item.price_round)
+            surcharge = format_amount(item.env, item.price_surcharge, item.currency_id)
             discount_type, discount = self._get_displayed_discount(item)
 
             item.rule_tip = _(
@@ -266,10 +266,10 @@ class ProductPricelistItem(models.Model):
                 discount=discount,
                 discount_type=discount_type,
                 surcharge=surcharge,
-                amount=tools.format_amount(item.env, 100, item.currency_id),
+                amount=format_amount(item.env, 100, item.currency_id),
                 discount_charge=discount_factor,
                 price_surcharge=surcharge,
-                total_amount=tools.format_amount(
+                total_amount=format_amount(
                     item.env, discounted_price + item.price_surcharge, item.currency_id),
             )
 
@@ -310,9 +310,9 @@ class ProductPricelistItem(models.Model):
         for item in self:
             if item.applied_on == "2_product_category" and not item.categ_id:
                 raise ValidationError(_("Please specify the category for which this rule should be applied"))
-            elif item.applied_on == "1_product" and not item.product_tmpl_id:
+            if item.applied_on == "1_product" and not item.product_tmpl_id:
                 raise ValidationError(_("Please specify the product for which this rule should be applied"))
-            elif item.applied_on == "0_product_variant" and not item.product_id:
+            if item.applied_on == "0_product_variant" and not item.product_id:
                 raise ValidationError(_("Please specify the product variant for which this rule should be applied"))
 
     #=== ONCHANGE METHODS ===#
@@ -329,7 +329,7 @@ class ProductPricelistItem(models.Model):
     def _onchange_base_pricelist_id(self):
         for item in self:
             if item.compute_price == 'percentage':
-                item.base = bool(item.base_pricelist_id) and 'pricelist' or 'list_price'
+                item.base = (bool(item.base_pricelist_id) and 'pricelist') or 'list_price'
 
     @api.onchange('compute_price')
     def _onchange_compute_price(self):
@@ -353,21 +353,19 @@ class ProductPricelistItem(models.Model):
     def _onchange_display_applied_on(self):
         for item in self:
             if not (item.product_tmpl_id or item.categ_id):
-                item.update(dict(
-                    applied_on='3_global',
-                ))
+                item.update({'applied_on': '3_global'})
             elif item.display_applied_on == '1_product':
-                item.update(dict(
-                    applied_on='1_product',
-                    categ_id=None,
-                ))
+                item.update({
+                    'applied_on': '1_product',
+                    'categ_id': None,
+                })
             elif item.display_applied_on == '2_product_category':
-                item.update(dict(
-                    product_id=None,
-                    product_tmpl_id=None,
-                    applied_on='2_product_category',
-                    product_uom_name=None,
-                ))
+                item.update({
+                    'product_id': None,
+                    'product_tmpl_id': None,
+                    'applied_on': '2_product_category',
+                    'product_uom_name': None,
+                })
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -393,7 +391,9 @@ class ProductPricelistItem(models.Model):
             # If we aren't coming from a specific product template/variant.
             variants_rules = self.filtered('product_id')
             template_rules = (self-variants_rules).filtered('product_tmpl_id')
-            category_rules = self.filtered(lambda cat: cat.categ_id and cat.categ_id.name != 'All')
+            category_rules = self.filtered(
+                lambda cat: bool(cat.categ_id) and cat.categ_id.name != 'All'
+            )
             variants_rules.update({'applied_on': '0_product_variant'})
             template_rules.update({'applied_on': '1_product'})
             category_rules.update({'applied_on': '2_product_category'})
@@ -433,28 +433,28 @@ class ProductPricelistItem(models.Model):
             # Ensure item consistency for later searches.
             applied_on = values['applied_on']
             if applied_on == '3_global':
-                values.update(dict(product_id=None, product_tmpl_id=None, categ_id=None))
+                values.update({'product_id': None, 'product_tmpl_id': None, 'categ_id': None})
             elif applied_on == '2_product_category':
-                values.update(dict(product_id=None, product_tmpl_id=None))
+                values.update({'product_id': None, 'product_tmpl_id': None})
             elif applied_on == '1_product':
-                values.update(dict(product_id=None, categ_id=None))
+                values.update({'product_id': None, 'categ_id': None})
             elif applied_on == '0_product_variant':
-                values.update(dict(categ_id=None))
+                values.update({'categ_id': None})
         return super().create(vals_list)
 
-    def write(self, values):
-        if values.get('applied_on', False):
+    def write(self, vals):
+        if vals.get('applied_on', False):
             # Ensure item consistency for later searches.
-            applied_on = values['applied_on']
+            applied_on = vals['applied_on']
             if applied_on == '3_global':
-                values.update(dict(product_id=None, product_tmpl_id=None, categ_id=None))
+                vals.update({'product_id': None, 'product_tmpl_id': None, 'categ_id': None})
             elif applied_on == '2_product_category':
-                values.update(dict(product_id=None, product_tmpl_id=None))
+                vals.update({'product_id': None, 'product_tmpl_id': None})
             elif applied_on == '1_product':
-                values.update(dict(product_id=None, categ_id=None))
+                vals.update({'product_id': None, 'categ_id': None})
             elif applied_on == '0_product_variant':
-                values.update(dict(categ_id=None))
-        return super().write(values)
+                vals.update({'categ_id': None})
+        return super().write(vals)
 
     #=== BUSINESS METHODS ===#
 
@@ -482,22 +482,23 @@ class ProductPricelistItem(models.Model):
                 and not product.categ_id.parent_path.startswith(self.categ_id.parent_path)
             ):
                 res = False
-        else:
-            # Applied on a specific product template/variant
-            if is_product_template:
-                if self.applied_on == "1_product" and product.id != self.product_tmpl_id.id:
-                    res = False
-                elif self.applied_on == "0_product_variant" and not (
-                    product.product_variant_count == 1
-                    and product.product_variant_id.id == self.product_id.id
-                ):
-                    # product self acceptable on template if has only one variant
-                    res = False
-            else:
-                if self.applied_on == "1_product" and product.product_tmpl_id.id != self.product_tmpl_id.id:
-                    res = False
-                elif self.applied_on == "0_product_variant" and product.id != self.product_id.id:
-                    res = False
+        # Applied on a specific product template/variant
+        elif is_product_template:
+            if self.applied_on == "1_product" and product.id != self.product_tmpl_id.id:
+                res = False
+            elif self.applied_on == "0_product_variant" and not (
+                product.product_variant_count == 1
+                and product.product_variant_id.id == self.product_id.id
+            ):
+                # product self acceptable on template if has only one variant
+                res = False
+        elif (
+            self.applied_on == "1_product"
+            and product.product_tmpl_id.id != self.product_tmpl_id.id
+        ) or (
+            self.applied_on == "0_product_variant" and product.id != self.product_id.id
+        ):
+            res = False
 
         return res
 
@@ -543,7 +544,7 @@ class ProductPricelistItem(models.Model):
             discount = self.price_discount if self.base != 'standard_price' else -self.price_markup
             price = base_price - (base_price * (discount / 100))
             if self.price_round:
-                price = tools.float_round(price, precision_rounding=self.price_round)
+                price = float_round(price, precision_rounding=self.price_round)
 
             if self.price_surcharge:
                 price += convert(self.price_surcharge)
@@ -559,7 +560,7 @@ class ProductPricelistItem(models.Model):
         return price
 
     def _compute_base_price(self, product, quantity, uom, date, currency):
-        """ Compute the base price for a given rule
+        """Compute the base price for a given rule.
 
         :param product: recordset of product (product.product/product.template)
         :param float quantity: quantity of products requested (in given uom)
@@ -591,8 +592,7 @@ class ProductPricelistItem(models.Model):
         return price
 
     def _compute_price_before_discount(self, *args, **kwargs):
-        """Compute the base price of the lowest pricelist rule,
-        discount is shown by default if computation method is a percentage rule.
+        """Compute the base price of the given rule, considering chained pricelists.
 
         :param product: recordset of product (product.product/product.template)
         :param float qty: quantity of products requested (in given uom)

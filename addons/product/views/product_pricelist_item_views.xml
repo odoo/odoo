@@ -14,37 +14,44 @@
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <filter string="Active" name="visible" domain="[('pricelist_id.active', '=', True)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
-                    <filter string="Variant"
-                      name="groupby_product_variant"
-                      domain="[('applied_on', '=', '0_product_variant')]"
-                      context="{'group_by': 'product_id'}"
-                      groups="product.group_product_variant"/>
-                    <filter string="Pricelist"
-                      name="groupby_vendor"
-                      domain="[]"
-                      context="{'group_by': 'pricelist_id'}"
-                      groups="product.group_product_pricelist"/>
+                    <filter
+                        string="Product"
+                        name="groupby_product"
+                        context="{'group_by': 'product_tmpl_id'}"
+                    />
+                    <filter
+                        string="Variant"
+                        name="groupby_product_variant"
+                        domain="[('applied_on', '=', '0_product_variant')]"
+                        context="{'group_by': 'product_id'}"
+                        groups="product.group_product_variant"
+                    />
+                    <filter
+                        string="Pricelist"
+                        name="groupby_vendor"
+                        context="{'group_by': 'pricelist_id'}"
+                        groups="product.group_product_pricelist"
+                    />
                 </group>
             </search>
         </field>
     </record>
 
     <record id="product_pricelist_item_tree_view" model="ir.ui.view">
-      <field name="name">product.pricelist.item.list</field>
-      <field name="model">product.pricelist.item</field>
-      <field name="priority">10</field>
-      <field name="arch" type="xml">
-        <list string="Price Rules">
-          <field name="pricelist_id"/>
-          <field name="name" string="Applied On"/>
-          <field name="price"/>
-          <field name="min_quantity" colspan="4"/>
-          <field name="date_start" optional="hide"/>
-          <field name="date_end" optional="hide"/>
-          <field name="company_id" groups="base.group_multi_company" optional="show"/>
-        </list>
-      </field>
+        <field name="name">product.pricelist.item.list</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <list string="Price Rules">
+                <field name="pricelist_id"/>
+                <field name="name" string="Applied On"/>
+                <field name="price"/>
+                <field name="min_quantity" colspan="4"/>
+                <field name="date_start" optional="hide"/>
+                <field name="date_end" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
     </record>
 
     <record id="product_pricelist_item_tree_view_from_product" model="ir.ui.view">
@@ -55,37 +62,46 @@
         <field name="arch" type="xml">
             <list string="Pricelist Rules" editable="bottom">
                 <!-- Scope = coming from a product/product template -->
-                <field name="pricelist_id" string="Pricelist" options="{'no_create_edit':1, 'no_open': 1}"/>
-                <field name="product_id"
+                <field
+                    name="pricelist_id"
+                    options="{'no_create_edit': 1, 'no_open': 1}"
+                />
+                <field
+                    name="product_id"
                     groups="product.group_product_variant"
                     readonly="context.get('active_model') == 'product.product'"
                     column_invisible="context.get('product_without_variants', False)"
                     required="applied_on == '0_product_variant'"
                     domain="['|', '|',
-                    ('id', '=', context.get('default_product_id', 0)),
-                    ('product_tmpl_id', '=', context.get('default_product_tmpl_id', 0)),
-                    ('categ_id', '=', context.get('default_categ_id', 0)), '|', ('company_id', '=', company_id), ('company_id', '=', False)
+                        ('id', '=', context.get('default_product_id', 0)),
+                        ('product_tmpl_id', '=', context.get('default_product_tmpl_id', 0)),
+                        ('categ_id', '=', context.get('default_categ_id', 0)), '|', ('company_id', '=', company_id), ('company_id', '=', False)
                     ]"
                     placeholder="All variants"
-                    options="{'no_create_edit':1, 'no_open': 1}"/>
+                    options="{'no_create_edit': 1, 'no_open': 1}"
+                />
                 <field name="company_id" column_invisible="True"/>
                 <field name="categ_id" column_invisible="True"/>
-                <field name="product_tmpl_id"
-                  column_invisible="context.get('active_model') != 'product.category'"
-                  required="applied_on == '1_product'"
-                  domain="[('categ_id', '=', context.get('default_categ_id', True)), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
-                  options="{'no_create_edit':1, 'no_open': 1}"/>
-                <field name="fixed_price"
-                        widget="monetary"
-                        string="Price"
-                        options="{'currency_field': 'currency_id', 'field_digits': True}"
-                        required='1'/>
+                <field
+                    name="product_tmpl_id"
+                    column_invisible="context.get('active_model') != 'product.category'"
+                    required="applied_on == '1_product'"
+                    domain="[('categ_id', '=', context.get('default_categ_id', True)), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                    options="{'no_create_edit': 1, 'no_open': 1}"
+                />
+                <field
+                    name="fixed_price"
+                    widget="monetary"
+                    string="Price"
+                    options="{'currency_field': 'currency_id', 'field_digits': True}"
+                    required="1"
+                />
                 <field name="min_quantity" colspan="4"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="date_start" optional="show"/>
                 <field name="date_end" optional="show"/>
                 <field name="applied_on" column_invisible="True"/>
-                <field name="company_id" groups="base.group_multi_company" optional="hide" options="{'no_create':1, 'no_open': 1}"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide" options="{'no_create': 1, 'no_open': 1}"/>
             </list>
         </field>
     </record>
@@ -106,23 +122,24 @@
                                 widget="radio"
                                 options="{'horizontal': true}"/>
                             <field name="categ_id"
-                                options="{'no_create':1}"
+                                options="{'no_create': 1}"
                                 invisible="display_applied_on != '2_product_category'"
                                 placeholder="All categories"/>
                             <field name="product_tmpl_id"
-                                options="{'no_create':1}"
+                                options="{'no_create': 1}"
                                 invisible="display_applied_on != '1_product'"
                                 placeholder="All products"/>
                             <field name="product_variant_count" invisible="1"/>
                             <field name="product_id"
-                                options="{'no_create':1}"
+                                options="{'no_create': 1}"
                                 invisible="product_variant_count &lt; 2"
                                 placeholder="All variants"/>
                             <field name="compute_price"
                                 string="Price Type"
                                 widget="radio"
                                 options="{'horizontal': true}"
-                                invisible="display_applied_on == '1_product' and compute_price == 'fixed_price'"/>
+                                invisible="display_applied_on == '1_product' and compute_price == 'fixed_price'"
+                            />
                             <label for="fixed_price" invisible="compute_price != 'fixed'"/>
                             <div class="o_row" invisible="compute_price != 'fixed'" style="width: 60% !important;">
                                 <field name="fixed_price"
@@ -131,8 +148,7 @@
                                 <span class="d-flex gap-2 p-0" invisible="not product_uom_name">per<field
                                         name="product_uom_name"/></span>
                             </div>
-                            <label for="percent_price" string="Discount"
-                                invisible="compute_price != 'percentage'"/>
+                            <label for="percent_price" string="Discount" invisible="compute_price != 'percentage'"/>
                             <div class="o_row gap-3" invisible="compute_price != 'percentage'">
                                 <field name="percent_price"/>
                                 <span>%</span>
