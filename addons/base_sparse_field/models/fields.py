@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import json
+import logging
 
 from odoo import fields
-from odoo import tools
-from odoo.tools.query import Query
+from odoo.tools import sql, SQL, Query
 from odoo.osv import expression
+
+_logger = logging.getLogger(__name__)
 
 def monkey_patch(cls):
     """ Return a method decorator to monkey-patch the given class. """
@@ -76,14 +78,14 @@ def _inverse_sparse(self, records):
 @monkey_patch(fields.Field)
 def _search_sparse(self, records, operator, value):
     """ Determine the domain to search on field ``self``. """
-    if isinstance(value, Query):
-        value = list(value)
-    model = records.env[self.model_name]
+    query = Query(self.env, self.model_name)
     cast_type = self.column_type[0]
     sql_op = expression.SQL_OPERATORS[operator].code
+    query.add_where(
+        SQL("(%s ->> %s)::%s %s %s", self.sparse, self.name, cast_type, sql_op, value)
+    )
+    return [("id", "in", query)]
 
-    base_query = f"SELECT id FROM {model._table} WHERE ({self.sparse} ->> %s)::{cast_type} {sql_op} %s"
-    return [("id", "inselect", (base_query, [self.name, value]))]
 
 #
 # Definition and implementation of serialized fields
@@ -109,21 +111,22 @@ class Serialized(fields.Field):
     def update_db(self, model, columns):
         res = super().update_db(model, columns)
         if self.store:
-            constraint_name = f"{model._table}_{self.name}_jsonobject"
             definition = f"CHECK (jsonb_typeof({self.name}) = 'object')"
-            current_definition = tools.constraint_definition(
-                model._cr, model._table, constraint_name
-            )
+            conname = '%s_%s_jsonobject' % (model._table, self.name)
+            if len(conname) > 63:
+                hashed_conname = sql.make_identifier(conname)
+                current_definition = sql.constraint_definition(model._cr, model._table, hashed_conname)
+                if not current_definition:
+                    _logger.info("Constraint name %r has more than 63 characters, internal PG identifier is %r", conname, hashed_conname)
+                conname = hashed_conname
+            else:
+                current_definition = sql.constraint_definition(model._cr, model._table, conname)
+            
             if current_definition != definition:
                 if current_definition:
-                    tools.drop_constraint(model._cr, model._table, constraint_name)
-                model.pool.post_constraint(
-                    tools.add_constraint,
-                    model._cr,
-                    model._table,
-                    constraint_name,
-                    definition,
-                )
+                    # constraint exists but its definition may have changed
+                    sql.drop_constraint(model._cr, model._table, conname)
+                model.pool.post_constraint(model._cr, lambda cr: sql.add_constraint(cr, model._table, conname, definition), conname)
         return res
 
 
