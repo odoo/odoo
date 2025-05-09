@@ -239,19 +239,7 @@ class CardCampaign(models.Model):
 
     def action_preview(self):
         self.ensure_one()
-        card = self.env['card.card'].with_context(active_test=False).search([
-            ('campaign_id', '=', self.id),
-            ('res_id', '=', self.preview_record_ref.id),
-        ])
-        if card:
-            card.image = self.image_preview
-        else:
-            card = self.env['card.card'].create({
-                'campaign_id': self.id,
-                'res_id': self.preview_record_ref.id,
-                'image': self.image_preview,
-                'active': False,
-            })
+        card = self._fetch_or_create_preview_card()
         return {'type': 'ir.actions.act_url', 'url': card._get_path('preview'), 'target': 'new'}
 
     def action_share(self):
@@ -264,7 +252,42 @@ class CardCampaign(models.Model):
                 'default_subject': self.name,
                 'default_card_campaign_id': self.id,
                 'default_mailing_model_id': self.env['ir.model']._get_id(self.res_model),
-                'default_body_arch': f"""
+                'default_body_arch': self._action_share_get_default_body(),
+            },
+            'views': [[False, 'form']],
+            'target': 'new',
+        }
+
+    def _fetch_or_create_preview_card(self):
+        """Fetch the card corresponding to the preview record, or create one if none exists.
+
+        The image also gets the preview render if it has none. It is also archived to ensure
+        it is rerendered later if sent.
+        """
+        self.ensure_one()
+        card = self.env['card.card'].with_context(active_test=False).search([
+            ('campaign_id', '=', self.id),
+            ('res_id', '=', self.preview_record_ref.id),
+        ])
+        image = self.image_preview
+        if card:
+            card.write({
+                'image': image,
+                'active': False,
+            })
+        else:
+            card = self.env['card.card'].create({
+                'campaign_id': self.id,
+                'res_id': self.preview_record_ref.id,
+                'image': image,
+                'active': False,
+            })
+        return card
+
+    def _action_share_get_default_body(self):
+        # try to pick a relevant card if users try to visit during preview/test mailings
+        preview_card = self._fetch_or_create_preview_card() if self else self.env['card.card']
+        return f"""
 <div class="o_layout oe_unremovable oe_unmovable bg-200 o_empty_theme" data-name="Mailing">
 <style id="design-element"></style>
 <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
@@ -285,8 +308,8 @@ class CardCampaign(models.Model):
         <tbody>
             <tr>
                 <td align="center">
-                    <a href="/cards/{self.id}/preview" style="padding-left: 3px !important; padding-right: 3px !important">
-                        <img src="/web/image/card.campaign/{self.id}/image_preview" alt="{_("Card Preview")}" class="img-fluid" style="width: 540px;"/>
+                    <a href="/cards/{preview_card.id or 0}/preview" style="padding-left: 3px !important; padding-right: 3px !important">
+                        <img src="/web/image/card.campaign/{self.id or 0}/image_preview" alt="{_("Card Preview")}" class="img-fluid" style="width: 540px;"/>
                     </a>
                 </td>
             </tr>
@@ -295,11 +318,7 @@ class CardCampaign(models.Model):
 </div>
 
 </div></div></div></div>
-""",
-            },
-            'views': [[False, 'form']],
-            'target': 'new',
-        }
+"""
 
     # ==========================================================================
     # Image generation
