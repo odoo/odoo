@@ -155,7 +155,6 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
             },
             addLanguage: {
-                reload: {},
                 preview: false,
                 apply: async () => {
                     const def = new Deferred();
@@ -174,8 +173,8 @@ export class CustomizeWebsitePlugin extends Plugin {
                     if (!save) {
                         return;
                     }
+                    this.config.builderSidebar.toggle(false);
                     await this.dependencies.savePlugin.save(/* not in translation */);
-                    // TODO doAction in savePlugin.save ?
                     await this.services.action.doAction("base.action_view_base_language_install", {
                         additionalContext: {
                             params: {
@@ -185,7 +184,8 @@ export class CustomizeWebsitePlugin extends Plugin {
                         },
                         onClose: def.resolve,
                     });
-                    return def;
+                    await def;
+                    this.config.builderSidebar.toggle(true);
                 },
             },
             customizeBodyBgType: {
