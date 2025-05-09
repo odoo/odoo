@@ -1670,7 +1670,7 @@ export class Markup {
      */
     static diff(expected, actual) {
         const eType = typeof expected;
-        if (eType !== typeof actual || !(eType === "object" || eType === "string")) {
+        if (eType !== typeof actual || !((expected && eType === "object") || eType === "string")) {
             // Cannot diff
             return null;
         }
