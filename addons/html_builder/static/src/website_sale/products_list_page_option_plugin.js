@@ -1,6 +1,5 @@
 import { ProductsListPageOption } from "@html_builder/website_sale/products_list_page_option";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -9,7 +8,7 @@ class ProductsListPageOptionPlugin extends Plugin {
     static id = "productsListPageOptionPlugin";
     resources = {
         builder_options: [
-            withSequence(15, {
+            {
                 OptionComponent: ProductsListPageOption,
                 selector: "main:has(.o_wsale_products_page)",
                 applyTo:
@@ -17,7 +16,7 @@ class ProductsListPageOptionPlugin extends Plugin {
                 editableOnly: false,
                 title: _t("Products Page"),
                 groups: ["website.group_website_designer"],
-            }),
+            },
         ],
         builder_actions: this.getActions(),
     };
