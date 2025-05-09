@@ -26,6 +26,9 @@ export function patchWithCleanupImg() {
     });
     patchWithCleanup(Img.prototype, {
         loadImage: () => {},
+        getSvg: function () {
+            this.isSvg = () => false;
+        },
     });
 }
 
