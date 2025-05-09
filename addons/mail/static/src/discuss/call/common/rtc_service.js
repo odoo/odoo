@@ -3,6 +3,7 @@ import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream, onChange } from "@mail/utils/common/misc";
+import { CallInfiniteMirroringWarning } from "@mail/discuss/call/common/call_infinite_mirroring_warning";
 
 import { reactive, toRaw } from "@odoo/owl";
 
@@ -369,6 +370,7 @@ export class Rtc extends Record {
     start() {
         const services = this.store.env.services;
         this.notification = services.notification;
+        this.overlay = services.overlay;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
         if (this._broadcastChannel) {
@@ -472,6 +474,33 @@ export class Rtc extends Record {
             }
             this.call();
         }, PING_INTERVAL);
+    }
+
+    get displaySurface() {
+        return this.state.sourceScreenStream?.getVideoTracks()[0]?.getSettings().displaySurface;
+    }
+
+    showMirroringWarning() {
+        this.state.screenTrack.enabled = false;
+        const trackEndedFn = () => this.removeMirroringWarning?.();
+        this.removeMirroringWarning = this.overlay.add(
+            CallInfiniteMirroringWarning,
+            {
+                onClose: ({ stopScreensharing } = {}) => {
+                    this.removeMirroringWarning({ stopScreensharing });
+                },
+            },
+            {
+                onRemove: ({ stopScreensharing } = {}) => {
+                    if (stopScreensharing) {
+                        this.toggleVideo("screen", false);
+                    }
+                    this.state.screenTrack?.removeEventListener("ended", trackEndedFn);
+                    this.removeMirroringWarning = null;
+                },
+            }
+        );
+        this.state.screenTrack.addEventListener("ended", trackEndedFn, { once: true });
     }
 
     setPttReleaseTimeout(duration = 200) {
