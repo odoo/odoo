@@ -6,7 +6,7 @@
         <!-- Render the SelectItem(s) into an invisible node to ensure the label of the
         button is being set. -->
         <div t-ref="root" class="w-100">
-            <div t-att-class="'d-none ' + props.className" t-ref="content"><WithIgnoreItem><t t-slot="default" /></WithIgnoreItem></div>
+            <div inert="" class="h-0 w-0 overflow-hidden" t-att-class="props.className" t-ref="content"><WithIgnoreItem><t t-slot="default" /></WithIgnoreItem></div>
             <Dropdown state="this.dropdown">
                 <button class="btn btn-primary text-start o-dropdown-caret w-100 overflow-hidden" t-ref="button" t-att-id="props.id"
                     style="min-width: 0; text-overflow: ellipsis;">
