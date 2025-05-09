@@ -209,8 +209,6 @@ class TestUiTranslate(odoo.tests.HttpCase):
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'rte_translator', login='admin', timeout=120)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_translate_menu_name(self):
         lang_en = self.env.ref('base.lang_en')
         parseltongue = self.env['res.lang'].create({
