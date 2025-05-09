@@ -3,17 +3,37 @@ import {
     getDefaultShadow,
     shadowToString,
 } from "@html_builder/plugins/shadow_option_plugin";
-import { after, SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequence";
+import {
+    SNIPPET_SPECIFIC_END,
+    SNIPPET_SPECIFIC_NEXT,
+    splitBetween,
+} from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { HeaderBorderOption } from "./header_border_option";
 
-export const HEADER_TEMPLATE = SNIPPET_SPECIFIC_NEXT;
-export const HEADER_TEMPLATE_SECONDARY_OPTIONS = after(HEADER_TEMPLATE);
-export const HEADER_SCROLL_EFFECT = after(HEADER_TEMPLATE_SECONDARY_OPTIONS);
-export const HEADER_ELEMENT = after(HEADER_SCROLL_EFFECT);
-export const HEADER_BORDER = after(HEADER_ELEMENT);
+const [
+    HEADER_TEMPLATE,
+    HEADER_TEMPLATE_SECONDARY_OPTIONS,
+    HEADER_BORDER,
+    HEADER_SCROLL_EFFECT,
+    HEADER_ELEMENT,
+    HEADER_END,
+    ...__ERROR_CHECK__
+] = splitBetween(SNIPPET_SPECIFIC_NEXT, SNIPPET_SPECIFIC_END, 6);
+if (__ERROR_CHECK__.length > 0) {
+    console.error("Wrong count in header option split");
+}
+
+export {
+    HEADER_TEMPLATE,
+    HEADER_TEMPLATE_SECONDARY_OPTIONS,
+    HEADER_BORDER,
+    HEADER_SCROLL_EFFECT,
+    HEADER_ELEMENT,
+    HEADER_END,
+};
 
 class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
