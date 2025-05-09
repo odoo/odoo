@@ -316,11 +316,11 @@ class ProductProduct(models.Model):
                         "free_qty": component.uom_id.round(component.free_qty),
                     }
                 )
-                ratios_virtual_available.append(component.uom_id.round(component_res["virtual_available"] / qty_per_kit))
-                ratios_qty_available.append(component.uom_id.round(component_res["qty_available"] / qty_per_kit))
-                ratios_incoming_qty.append(component.uom_id.round(component_res["incoming_qty"] / qty_per_kit))
-                ratios_outgoing_qty.append(component.uom_id.round(component_res["outgoing_qty"] / qty_per_kit))
-                ratios_free_qty.append(component.uom_id.round(component_res["free_qty"] / qty_per_kit))
+                ratios_virtual_available.append(component.uom_id.round(component_res["virtual_available"] / qty_per_kit, rounding_method='DOWN'))
+                ratios_qty_available.append(component.uom_id.round(component_res["qty_available"] / qty_per_kit, rounding_method='DOWN'))
+                ratios_incoming_qty.append(component.uom_id.round(component_res["incoming_qty"] / qty_per_kit, rounding_method='DOWN'))
+                ratios_outgoing_qty.append(component.uom_id.round(component_res["outgoing_qty"] / qty_per_kit, rounding_method='DOWN'))
+                ratios_free_qty.append(component.uom_id.round(component_res["free_qty"] / qty_per_kit, rounding_method='DOWN'))
             if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
                 res[product.id] = {
                     'virtual_available': component.uom_id.round(min(ratios_virtual_available) * bom_kits[product].product_qty) // 1,
