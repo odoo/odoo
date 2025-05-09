@@ -96,7 +96,6 @@ export function before(position) {
 const SNIPPET_SPECIFIC = DEFAULT;
 const [
     REPLACE_MEDIA,
-    MEDIA_URL,
     FONT_AWESOME,
     IMAGE_TOOL,
     ALIGNMENT_STYLE_PADDING,
@@ -104,7 +103,7 @@ const [
     AFTER_HTML_BUILDER,
     SNIPPET_SPECIFIC_BEFORE,
     ...__DETECT_ERROR_1__
-] = splitBetween(BEGIN, SNIPPET_SPECIFIC, 8);
+] = splitBetween(BEGIN, SNIPPET_SPECIFIC, 7);
 if (__DETECT_ERROR_1__.length > 0) {
     console.error("Wrong count in split before default");
 }
@@ -118,7 +117,6 @@ if (__DETECT_ERROR_2__.length > 0) {
 export {
     BEGIN,
     REPLACE_MEDIA,
-    MEDIA_URL,
     FONT_AWESOME,
     IMAGE_TOOL,
     ALIGNMENT_STYLE_PADDING,
