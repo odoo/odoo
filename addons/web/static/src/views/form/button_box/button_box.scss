@@ -211,3 +211,43 @@
         padding-bottom: map-get($spacers, 2);
     }
 }
+
+.o_bottom_sheet .o-form-buttonbox {
+    --button-box-per-row: 1;
+    --o-stat-text-color: black;
+    --o-stat-button-color: black;
+
+    display: grid;
+    gap: map-get($spacers, 2);
+    padding: map-get($spacers, 3) !important;
+
+    &.o-form-buttonbox-small:not(:has(.o-dropdown-item:only-child)) {
+        width: revert !important;
+    }
+
+    .o-dropdown-item {
+        --oi-font-size: 1.5rem;
+
+        border: solid 1px lightgray;
+        border-radius: 5px;
+        outline: none;
+
+        .oe_stat_button {
+            gap: map-get($spacers, 3);
+            height: unset;
+
+            &, * {
+                font-size: 1rem;
+            }
+
+            .o_button_icon {
+                &::before {
+                    margin-right: unset;
+
+                    width: unset;
+                    text-align: center;
+                }
+            }
+        }
+    }
+}

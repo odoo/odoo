@@ -53,7 +53,12 @@ export function makePopover(addFn, component, options) {
  * @returns {PopoverHookReturnType}
  */
 export function usePopover(component, options = {}) {
-    const popoverService = useService("popover");
+    let service;
+    if (options.useBottomSheet) {
+        service = useService("bottom_sheet");
+    } else {
+        service = useService("popover");
+    }
     const owner = useComponent();
     const newOptions = Object.create(options);
     newOptions.onClose = () => {
@@ -61,7 +66,7 @@ export function usePopover(component, options = {}) {
             options.onClose?.();
         }
     };
-    const popover = makePopover(popoverService.add, component, newOptions);
+    const popover = makePopover(service.add, component, newOptions);
     onWillUnmount(popover.close);
     return popover;
 }

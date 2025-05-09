@@ -3,7 +3,7 @@
     <t t-inherit="mail.MessagingMenu" t-inherit-mode="extension">
         <xpath expr="//*[@t-name='mail.MessagingMenu']" position="inside">
             <div t-if="!env.inDiscussApp" t-att-class="discussSystray.class">
-                <Dropdown state="dropdown" beforeOpen.bind="beforeOpen" position="'bottom-end'" menuClass="discussSystray.menuClass">
+                <Dropdown state="dropdown" beforeOpen.bind="beforeOpen" position="'bottom-end'" menuClass="discussSystray.menuClass" bottomSheet="false">
                     <button class="bg-transparent">
                         <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = ui.isSmall and store.discuss.activeTab === 'main' ? 'main' : store.discuss.activeTab"></i>
                         <span t-if="counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
