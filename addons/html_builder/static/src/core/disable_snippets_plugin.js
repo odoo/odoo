@@ -8,6 +8,8 @@ export class DisableSnippetsPlugin extends Plugin {
     resources = {
         after_remove_handlers: this.disableUndroppableSnippets.bind(this),
         on_mobile_preview_clicked: this.disableUndroppableSnippets.bind(this),
+        post_undo_handlers: this.disableUndroppableSnippets.bind(this),
+        post_redo_handlers: this.disableUndroppableSnippets.bind(this),
     };
 
     setup() {
