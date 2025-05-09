@@ -83,10 +83,10 @@ export class AlignPlugin extends Plugin {
 
     setAlignment(mode = "") {
         const visitedBlocks = new Set();
-        const traversedNode = this.dependencies.selection.getTraversedNodes();
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
         let isAlignmentUpdated = false;
 
-        for (const node of traversedNode) {
+        for (const node of targetedNodes) {
             if (isVisibleTextNode(node) || node.nodeName === "BR") {
                 const block = closestBlock(node);
                 if (!visitedBlocks.has(block)) {
