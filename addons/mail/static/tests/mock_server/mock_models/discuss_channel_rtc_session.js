@@ -38,6 +38,19 @@ export class DiscussChannelRtcSession extends models.ServerModel {
                 }).get_result(),
             ]);
         }
+        for (const record of rtcSessions) {
+            const [channel] = DiscussChannel.browse(record.channel_id);
+            if (channel.rtc_session_ids.length === 1) {
+                DiscussChannel.message_post(
+                    channel.id,
+                    makeKwArgs({
+                        body: `<div data-oe-type="call" class="o_mail_notification"></div>`,
+                        message_type: "notification",
+                        subtype_xmlid: "mail.mt_comment",
+                    })
+                );
+            }
+        }
         BusBus._sendmany(notifications);
         return sessionIds;
     }

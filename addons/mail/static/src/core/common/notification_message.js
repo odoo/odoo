@@ -53,7 +53,7 @@ export class NotificationMessage extends Component {
     get callInformation() {
         const history = this.message.call_history_ids[0];
         if (history?.duration_hour === undefined || !history?.end_dt) {
-            return _t("%(author)s started a call.", { author: this.message.author.name });
+            return _t("%(author)s started a call.", { author: this.message.authorName });
         }
         let duration = luxon.Duration.fromObject({
             seconds: Math.max(1, Math.round(history.duration_hour * 3600)),
