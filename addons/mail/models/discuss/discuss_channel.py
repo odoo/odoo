@@ -419,8 +419,6 @@ class DiscussChannel(models.Model):
     def _field_store_repr(self, field_name):
         """Return the default Store representation of the given field name, which can be passed as
         param to the various Store methods."""
-        if field_name == "group_public_id":
-            return [Store.Attr("authorizedGroupFullName", lambda c: c.group_public_id.full_name)]
         if field_name == "group_ids":
             return [Store.Attr("group_based_subscription", lambda c: bool(c.group_ids))]
         return [field_name]
@@ -1047,7 +1045,7 @@ class DiscussChannel(models.Model):
             "description",
             Store.One("from_message_id"),
             "group_ids",
-            "group_public_id",
+            Store.One("group_public_id", ["full_name"]),
             Store.Many(
                 "invited_member_ids",
                 [
@@ -1313,22 +1311,19 @@ class DiscussChannel(models.Model):
     @api.readonly
     @api.model
     def get_mention_suggestions(self, search, limit=8):
-        """ Return 'limit'-first channels' id, name, channel_type and authorizedGroupFullName fields such that the
+        """ Return 'limit'-first channels' name, channel_type and group_public_id fields such that the
             name matches a 'search' string. Exclude channels of type chat (DM) and group.
         """
         domain = [("name", "ilike", search), ("channel_type", "=", "channel")]
         channels = self.search(domain, limit=limit)
-        return [{
-            'authorizedGroupFullName': channel.group_public_id.full_name,
-            'channel_type': channel.channel_type,
-            'model': "discuss.channel",
-            'id': channel.id,
-            'name': channel.name,
-            'parent_channel_id': {
-                'id': channel.parent_channel_id.id,
-                'model': 'discuss.channel'
-            } if channel.parent_channel_id else False,
-        } for channel in channels]
+        channel_fields = [
+            "name",
+            "channel_type",
+            Store.One("group_public_id", ["full_name"]),
+            Store.One("parent_channel_id", [])
+        ]
+        store = Store(channels, channel_fields)
+        return store.get_result()
 
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""

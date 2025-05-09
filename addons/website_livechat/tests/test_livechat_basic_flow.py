@@ -182,7 +182,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 "discuss.channel": self._filter_channels_fields(
                     {
                         "anonymous_name": f"Visitor #{self.visitor.id}",
-                        "authorizedGroupFullName": False,
                         "avatar_cache_key": "no-avatar",
                         "channel_type": "livechat",
                         "country_id": False,
@@ -192,6 +191,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "fetchChannelInfoState": "fetched",
                         "from_message_id": False,
                         "group_based_subscription": False,
+                        "group_public_id": False,
                         "id": channel.id,
                         "invited_member_ids": [("ADD", [])],
                         "is_editable": True,
@@ -299,7 +299,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             self._filter_channels_fields(
                 {
                     "anonymous_name": f"Visitor #{self.visitor.id}",
-                    "authorizedGroupFullName": False,
                     "avatar_cache_key": "no-avatar",
                     "channel_type": "livechat",
                     "country_id": False,
@@ -311,6 +310,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "fetchChannelInfoState": "fetched",
                     "from_message_id": False,
                     "group_based_subscription": False,
+                    "group_public_id": False,
                     "id": channel.id,
                     "invited_member_ids": [("ADD", [])],
                     "is_editable": False,

@@ -70,6 +70,7 @@ import { MailTemplate } from "./mock_server/mock_models/mail_template";
 import { MailThread } from "./mock_server/mock_models/mail_thread";
 import { MailTrackingValue } from "./mock_server/mock_models/mail_tracking_value";
 import { ResFake } from "./mock_server/mock_models/res_fake";
+import { ResGroups } from "./mock_server/mock_models/res_groups";
 import { ResPartner } from "./mock_server/mock_models/res_partner";
 import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
@@ -134,6 +135,7 @@ export const mailModels = {
     MailThread,
     MailTrackingValue,
     ResFake,
+    ResGroups,
     ResPartner,
     ResRole,
     ResUsers,
