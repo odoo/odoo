@@ -49,8 +49,8 @@ export class IconPlugin extends Plugin {
         toolbar_namespaces: [
             {
                 id: "icon",
-                isApplied: (traversedNodes) =>
-                    traversedNodes.every(
+                isApplied: (targetedNodes) =>
+                    targetedNodes.every(
                         (node) =>
                             // All nodes should be icons, its ZWS child or its ancestors
                             node.classList?.contains("fa") ||
@@ -131,29 +131,36 @@ export class IconPlugin extends Plugin {
         color_apply_overrides: this.applyIconColor.bind(this),
     };
 
+    /**
+     * @deprecated
+     */
     getSelectedIcon() {
-        const selectedNodes = this.dependencies.selection.getSelectedNodes();
-        return selectedNodes.find((node) => node.classList?.contains?.("fa"));
+        return this.getTargetedIcon();
+    }
+
+    getTargetedIcon() {
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        return targetedNodes.find((node) => node.classList?.contains?.("fa"));
     }
 
     resizeIcon({ size }) {
-        const selectedIcon = this.getSelectedIcon();
-        if (!selectedIcon) {
+        const targetedIcon = this.getTargetedIcon();
+        if (!targetedIcon) {
             return;
         }
-        for (const classString of selectedIcon.classList) {
+        for (const classString of targetedIcon.classList) {
             if (classString.match(/^fa-[2-5]x$/)) {
-                selectedIcon.classList.remove(classString);
+                targetedIcon.classList.remove(classString);
             }
         }
         if (size !== "1") {
-            selectedIcon.classList.add(`fa-${size}x`);
+            targetedIcon.classList.add(`fa-${size}x`);
         }
         this.dependencies.history.addStep();
     }
 
     toggleSpinIcon() {
-        const selectedIcon = this.getSelectedIcon();
+        const selectedIcon = this.getTargetedIcon();
         if (!selectedIcon) {
             return;
         }
@@ -161,7 +168,7 @@ export class IconPlugin extends Plugin {
     }
 
     hasIconSize(size) {
-        const selectedIcon = this.getSelectedIcon();
+        const selectedIcon = this.getTargetedIcon();
         if (!selectedIcon) {
             return;
         }
@@ -174,7 +181,7 @@ export class IconPlugin extends Plugin {
     }
 
     hasSpinIcon() {
-        const selectedIcon = this.getSelectedIcon();
+        const selectedIcon = this.getTargetedIcon();
         if (!selectedIcon) {
             return;
         }
@@ -182,7 +189,7 @@ export class IconPlugin extends Plugin {
     }
 
     applyIconColor(color, mode) {
-        const selectedIcon = this.getSelectedIcon();
+        const selectedIcon = this.getTargetedIcon();
         if (!selectedIcon) {
             return;
         }

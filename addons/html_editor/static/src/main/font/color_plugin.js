@@ -105,7 +105,7 @@ export class ColorPlugin extends Plugin {
     }
 
     updateSelectedColor() {
-        const nodes = this.dependencies.selection.getTraversedNodes().filter(isTextNode);
+        const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
         if (nodes.length === 0) {
             return;
         }
@@ -180,7 +180,7 @@ export class ColorPlugin extends Plugin {
                 let max = 40;
                 const hasAnySelectedNodeColor = (mode) => {
                     const nodes = this.dependencies.selection
-                        .getTraversedNodes()
+                        .getTargetedNodes()
                         .filter(
                             (n) =>
                                 isTextNode(n) ||
@@ -223,7 +223,7 @@ export class ColorPlugin extends Plugin {
             color += HEX_OPACITY;
         }
         let selection = this.dependencies.selection.getEditableSelection();
-        let selectionNodes;
+        let targetedNodes;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
             let zws;
@@ -242,19 +242,19 @@ export class ColorPlugin extends Plugin {
                 },
                 { normalize: false }
             );
-            selectionNodes = [zws];
+            targetedNodes = [zws];
         } else {
             selection = this.dependencies.split.splitSelection();
-            selectionNodes = this.dependencies.selection
-                .getSelectedNodes()
+            targetedNodes = this.dependencies.selection
+                .getTargetedNodes()
                 .filter((node) => isContentEditable(node) && node.nodeName !== "T");
             if (isEmptyBlock(selection.endContainer)) {
-                selectionNodes.push(selection.endContainer, ...descendants(selection.endContainer));
+                targetedNodes.push(selection.endContainer, ...descendants(selection.endContainer));
             }
         }
 
         const hexColor = rgbaToHex(color).toLowerCase();
-        const selectedNodes = selectionNodes.filter((node) => {
+        const selectedNodes = targetedNodes.filter((node) => {
             if (mode === "backgroundColor" && color) {
                 return !closestElement(node, "table.o_selected_table");
             }
@@ -265,9 +265,9 @@ export class ColorPlugin extends Plugin {
             return true;
         });
 
-        const selectedFieldNodes = new Set(
+        const targetedFieldNodes = new Set(
             this.dependencies.selection
-                .getSelectedNodes()
+                .getTargetedNodes()
                 .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
                 .filter(Boolean)
         );
@@ -373,7 +373,7 @@ export class ColorPlugin extends Plugin {
                 return font;
             });
 
-        for (const fieldNode of selectedFieldNodes) {
+        for (const fieldNode of targetedFieldNodes) {
             this.colorElement(fieldNode, color, mode);
         }
 
