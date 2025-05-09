@@ -10,7 +10,7 @@
                 <group string="Purchase Withholding" invisible="'AR' not in fiscal_country_codes or not is_company">
                     <field name="l10n_ar_partner_tax_ids" nolabel="1" colspan="2" widget="auto_save_res_partner">
                         <list editable="top">
-                            <field name="tax_id" widget="many2one_tax_tags" options="{'no_create': True, 'no_open': True}" domain="[('l10n_ar_withholding_payment_type', '=', 'supplier')]"/>
+                            <field name="tax_id" options="{'no_create': True, 'no_open': True}" domain="[('l10n_ar_withholding_payment_type', '=', 'supplier')]"/>
                             <field name="from_date" optional="hide"/>
                             <field name="to_date" optional="hide"/>
                             <field name="ref" optional="hide"/>
