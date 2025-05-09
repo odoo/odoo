@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -237,6 +237,12 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
+msgid "%(partner_name)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_input.js:0
 msgid "%(partner_name)s <%(partner_email)s>"
 msgstr "%(partner_name)s <%(partner_email)s>"
 
@@ -331,12 +337,6 @@ msgstr "%s رسائل جديدة "
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "%s raised their hand"
 msgstr "%s قاموا برفع أيديهم "
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel_member.py:0
-msgid "%s started a live conference"
-msgstr "بدأ %s مؤتمراً مباشراً "
 
 #. module: mail
 #. odoo-javascript
@@ -717,7 +717,7 @@ msgstr "لا يمكن التخطيط للنشاط التالي إلا في ال�
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "A scheduled date is needed to schedule a message"
-msgstr ""
+msgstr "يجب تحديد موعد محدد لجدولة رسالة "
 
 #. module: mail
 #. odoo-python
@@ -1107,7 +1107,7 @@ msgstr "إضافة جهات اتصال لإشعارهم..."
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "Add followers based on field: %(field_chain_str)s"
-msgstr ""
+msgstr "أضف المتابعين حسب الحقل: %(field_chain_str)s "
 
 #. module: mail
 #. odoo-javascript
@@ -1163,12 +1163,6 @@ msgid ""
 "people."
 msgstr ""
 "من غير الممكن إضافة المزيد من الأعضاء إلى هذه الدردشة؛ إنه مصمم لشخصين فقط. "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/recipients_input.js:0
-msgid "Additional Contact"
-msgstr "جهة الاتصال الإضافية "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -1797,18 +1791,11 @@ msgstr "لا يمكن للتسجيل الجماعي دعم المرفقات أو
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/chatter/web/chatter.xml:0
 #: code:addons/mail/static/src/core/web/mail_composer_show_bcc_button.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notified_bcc
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__notified_bcc
 msgid "Bcc"
 msgstr "Bcc"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/chatter/web/chatter.xml:0
-msgid "Bcc:"
-msgstr "Bcc:"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
@@ -1882,6 +1869,8 @@ msgid "Bot"
 msgstr "Bot "
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_company__bounce_formatted
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_bounce
@@ -2118,7 +2107,7 @@ msgstr "الردود الجاهزة "
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change authorized group of sub-channel: %(channels)s."
-msgstr ""
+msgstr "لا يمكن تغيير المجموعة المصرح بها للقناة الفرعية: %(channels)s. "
 
 #. module: mail
 #. odoo-python
@@ -2265,7 +2254,7 @@ msgstr "لا يمكن لأعضاء القناة تضمين مستخدمين عا
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
 msgid "Channel must have a name."
-msgstr ""
+msgstr "يجب أن يكون هناك اسم للقناة. "
 
 #. module: mail
 #. odoo-javascript
@@ -3320,6 +3309,7 @@ msgstr "الرسائل المباشرة "
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
+#: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -3667,12 +3657,6 @@ msgid "Edit"
 msgstr "تحرير"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/recipients_input.js:0
-msgid "Edit Partner"
-msgstr "تعديل الشريك"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Edit Partners"
 msgstr "تحرير الشركاء"
@@ -3706,13 +3690,6 @@ msgstr "تحرير علامات التصنيف "
 #: code:addons/mail/static/src/core/web/follower_list.xml:0
 msgid "Edit subscription"
 msgstr "تحرير الاشتراك"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/recipients_input.js:0
-#: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
-msgid "Edit: %s"
-msgstr "تحرير: %s "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__email
@@ -4346,7 +4323,7 @@ msgstr "الملفات"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.xml:0
 msgid "Find or start a conversation"
-msgstr ""
+msgstr "قم بإيجاد أو إنشاء محادثة "
 
 #. module: mail
 #. odoo-javascript
@@ -5034,14 +5011,6 @@ msgid "If SSL required."
 msgstr "إذا كانت SSL مطلوبة."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
-msgid ""
-"If checked, clicking on the tag will open the form that allows to directly "
-"edit it."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__message_needaction
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction
 #: model:ir.model.fields,help:mail.field_mail_thread__message_needaction
@@ -5334,7 +5303,7 @@ msgstr "جهاز الإدخال "
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Insert a Canned response"
-msgstr ""
+msgstr "قم بإدراج رد جاهز "
 
 #. module: mail
 #. odoo-javascript
@@ -5617,7 +5586,7 @@ msgid "Is a note"
 msgstr "ملاحظة "
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_share_is_follower
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__notified_bcc_contains_share
 msgid "Is an external partner follower of the document?"
 msgstr ""
 
@@ -5703,6 +5672,18 @@ msgstr "الانضمام إلى القناة "
 #: model:ir.actions.act_window,name:mail.discuss_channel_action_view
 msgid "Join a group"
 msgstr "الانضمام إلى مجموعة"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+msgid "Join the Call"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+msgid "Join the Call with Camera"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7020,7 +7001,7 @@ msgstr "لا توجد أنشطة "
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
 msgid "No canned response found. Let's create one!"
-msgstr ""
+msgstr "لم يتم العثور على أي رد جاهز. فلنقم بإنشاء واحد! "
 
 #. module: mail
 #. odoo-javascript
@@ -7063,12 +7044,6 @@ msgstr "لم يتم العثور على أي message_id في السياق"
 #: code:addons/mail/static/src/core/common/message_card_list.js:0
 msgid "No messages found"
 msgstr "لم يتم العثور على أي رسائل "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/chatter/web/chatter.xml:0
-msgid "No recipient"
-msgstr "لا يوجد مستلم "
 
 #. module: mail
 #. odoo-python
@@ -7922,6 +7897,11 @@ msgid "Partner"
 msgstr "الشريك"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids_all_have_email
+msgid "Partner Ids All Have Email"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_readonly
 msgid "Partner Readonly"
@@ -8131,6 +8111,12 @@ msgstr "يرجى التواصل معنا عن طريق "
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
+msgid "Please provide a valid email"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Please wait while the file is uploading."
 msgstr "يرجى الانتظار ريثما يتم تحميل الملف. "
@@ -8186,7 +8172,7 @@ msgstr "تم إلغاء الوصول إلى البوابة "
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Portal users can only filter threads by themselves as followers."
-msgstr ""
+msgstr "لا يُسمح لمستخدمي البوابة إلا بتصفية المواضيع بأنفسهم كمتابعين. "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__comment
@@ -8678,7 +8664,7 @@ msgstr "إزالة البريد الإلكتروني من معالج القائ�
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid "Remove followers based on field: %(field_chain_str)s"
-msgstr ""
+msgstr "قم بإزالة المتابعين حسب الحقل: %(field_chain_str)s "
 
 #. module: mail
 #. odoo-python
@@ -9181,7 +9167,7 @@ msgstr "البحث قيد التنفيذ "
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Search people to invite"
-msgstr ""
+msgstr "ابحث عن أشخاص لدعوتهم "
 
 #. module: mail
 #. odoo-javascript
@@ -9285,12 +9271,6 @@ msgstr "اختيار لغة "
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Select a user..."
 msgstr "اختر مستخدماً... "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
-msgid "Select duration"
-msgstr "قم بتحديد المدة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
@@ -9628,6 +9608,8 @@ msgid ""
 "Showing %(result_count)s results out of %(total_count)s. Narrow your search "
 "to see more choices."
 msgstr ""
+"تظهر الآن %(result_count)sنتيجة/نتائج من أصل %(total_count)s.قم بتضييق بحثك "
+"لرؤية المزيد من الخيارات. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
@@ -10384,7 +10366,7 @@ msgstr "يمكن أن تكون هناك جلسة RTC واحدة فقط لكل ع
 #. odoo-python
 #: code:addons/mail/controllers/mail.py:0
 msgid "There is no candidate company that has read access to the record."
-msgstr ""
+msgstr "لا توجد شركة مرشحة تملك صلاحية قراءة السجل. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -10489,7 +10471,7 @@ msgstr "لقد تم إرسال هذه الرسالة بالفعل. "
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "This message has been removed"
-msgstr ""
+msgstr "تمت إزالة هذه الرسالة "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
@@ -10695,12 +10677,6 @@ msgstr "اليوم "
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Today Activities"
 msgstr "أنشطة اليوم "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_model.js:0
-msgid "Today at %(time)s"
-msgstr "اليوم الساعة %(time)s "
 
 #. module: mail
 #. odoo-javascript
@@ -11186,6 +11162,8 @@ msgid ""
 "Use canned responses to quickly insert prewritten messages with "
 "<i>::shortcut</i>. You can edit the text before sending."
 msgstr ""
+"استخدم الردود الجاهزة لإدراج رسائل مكتوبة مسبقاً بسرعة باستخدام <i>الاختصار "
+"::</i>. يمكنك تحرير النص قبل إرساله. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__custom_notifications
@@ -11430,6 +11408,7 @@ msgstr "عرض %s"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_popover.xml:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "View Profile"
 msgstr "عرض الملف التعريفي "
@@ -12113,12 +12092,6 @@ msgid "deaf"
 msgstr "تم حجب الصوت "
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
-msgid "default"
-msgstr "الافتراضي "
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push__mail_push_device_id
 msgid "devices"
 msgstr "الأجهزة "
@@ -12505,6 +12478,12 @@ msgstr "شاشة "
 #: code:addons/mail/models/mail_alias.py:0
 msgid "some specific addresses"
 msgstr "بعض العناوين المحددة "
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel_member.py:0
+msgid "started a live conference"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_ice_server__server_type__stun
