@@ -6,6 +6,8 @@ import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
 import { DynamicSnippetOption } from "./dynamic_snippet_option";
 
+export const DYNAMIC_SNIPPET = SNIPPET_SPECIFIC_END;
+
 class DynamicSnippetOptionPlugin extends Plugin {
     static id = "dynamicSnippetOption";
     static shared = [
@@ -17,7 +19,7 @@ class DynamicSnippetOptionPlugin extends Plugin {
     modelNameFilter = "";
     resources = {
         builder_options: [
-            withSequence(SNIPPET_SPECIFIC_END, {
+            withSequence(DYNAMIC_SNIPPET, {
                 OptionComponent: DynamicSnippetOption,
                 props: {
                     modelNameFilter: this.modelNameFilter,

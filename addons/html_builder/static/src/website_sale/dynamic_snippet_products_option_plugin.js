@@ -1,5 +1,7 @@
+import { DYNAMIC_SNIPPET_CAROUSEL } from "@html_builder/website_builder/plugins/options/dynamic_snippet_carousel_option_plugin";
 import { setDatasetIfUndefined } from "@html_builder/website_builder/plugins/options/dynamic_snippet_option_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import {
     DynamicSnippetProductsOption,
@@ -12,14 +14,14 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
     selector = ".s_dynamic_snippet_products";
     modelNameFilter = "product.product";
     resources = {
-        builder_options: {
+        builder_options: withSequence(DYNAMIC_SNIPPET_CAROUSEL, {
             OptionComponent: DynamicSnippetProductsOption,
             props: {
                 modelNameFilter: this.modelNameFilter,
                 fetchCategories: this.fetchCategories.bind(this),
             },
             selector: this.selector,
-        },
+        }),
         dynamic_snippet_template_updated: this.onTemplateUpdated.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };

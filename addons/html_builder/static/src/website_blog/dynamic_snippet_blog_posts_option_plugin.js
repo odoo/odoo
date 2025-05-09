@@ -1,5 +1,9 @@
-import { setDatasetIfUndefined } from "@html_builder/website_builder/plugins/options/dynamic_snippet_option_plugin";
+import {
+    DYNAMIC_SNIPPET,
+    setDatasetIfUndefined,
+} from "@html_builder/website_builder/plugins/options/dynamic_snippet_option_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { DynamicSnippetBlogPostsOption } from "./dynamic_snippet_blog_posts_option";
 
@@ -9,14 +13,14 @@ class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
     modelNameFilter = "blog.post";
     selector = ".s_dynamic_snippet_blog_posts";
     resources = {
-        builder_options: {
+        builder_options: withSequence(DYNAMIC_SNIPPET, {
             OptionComponent: DynamicSnippetBlogPostsOption,
             props: {
                 modelNameFilter: this.modelNameFilter,
                 fetchBlogs: this.fetchBlogs.bind(this),
             },
             selector: this.selector,
-        },
+        }),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
     setup() {

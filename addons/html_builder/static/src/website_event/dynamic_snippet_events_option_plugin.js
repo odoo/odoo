@@ -1,5 +1,9 @@
-import { setDatasetIfUndefined } from "@html_builder/website_builder/plugins/options/dynamic_snippet_option_plugin";
+import {
+    DYNAMIC_SNIPPET,
+    setDatasetIfUndefined,
+} from "@html_builder/website_builder/plugins/options/dynamic_snippet_option_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { DynamicSnippetEventsOption } from "./dynamic_snippet_events_option";
 
@@ -9,13 +13,13 @@ class DynamicSnippetEventsOptionPlugin extends Plugin {
     modelNameFilter = "event.event";
     selector = ".s_event_upcoming_snippet";
     resources = {
-        builder_options: {
+        builder_options: withSequence(DYNAMIC_SNIPPET, {
             OptionComponent: DynamicSnippetEventsOption,
             props: {
                 modelNameFilter: this.modelNameFilter,
             },
             selector: this.selector,
-        },
+        }),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
     async onSnippetDropped({ snippetEl }) {

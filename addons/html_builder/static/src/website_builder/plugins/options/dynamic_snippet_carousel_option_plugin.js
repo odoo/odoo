@@ -1,7 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { DynamicSnippetCarouselOption } from "./dynamic_snippet_carousel_option";
-import { setDatasetIfUndefined } from "./dynamic_snippet_option_plugin";
+import { DYNAMIC_SNIPPET, setDatasetIfUndefined } from "./dynamic_snippet_option_plugin";
+
+export const DYNAMIC_SNIPPET_CAROUSEL = DYNAMIC_SNIPPET;
 
 class DynamicSnippetCarouselOptionPlugin extends Plugin {
     static id = "dynamicSnippetCarouselOption";
@@ -18,13 +21,13 @@ class DynamicSnippetCarouselOptionPlugin extends Plugin {
                 getValue: ({ editingElement }) => editingElement.dataset.carouselInterval / 1000,
             },
         },
-        builder_options: {
+        builder_options: withSequence(DYNAMIC_SNIPPET_CAROUSEL, {
             OptionComponent: DynamicSnippetCarouselOption,
             props: {
                 modelNameFilter: this.modelNameFilter,
             },
             selector: this.selector,
-        },
+        }),
         dynamic_snippet_template_updated: this.onTemplateUpdated.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
