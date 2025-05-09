@@ -93,8 +93,6 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view (2)")
         self.fix_it('/test_view')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     @mute_logger('odoo.http')
     def test_07_reset_page_view_complete_flow(self):
         self.start_tour(self.env['website'].get_client_action_url('/test_page_view'), 'test_reset_page_view_complete_flow_part1', login="admin")
