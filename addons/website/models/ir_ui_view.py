@@ -321,21 +321,6 @@ class IrUiView(models.Model):
         return extensions.filter_duplicate()
 
     @api.model
-    def _view_obj(self, view_id):
-        ''' Given an xml_id or a view_id, return the corresponding view record.
-            In case of website context, return the most specific one.
-            :param view_id: either a string xml_id or an integer view_id
-            :return: The view record or empty recordset
-        '''
-        if isinstance(view_id, str) or isinstance(view_id, int):
-            return self.env['website'].viewref(view_id)
-        else:
-            # It can already be a view object when called by '_views_get()' that is calling '_view_obj'
-            # for it's inherit_children_ids, passing them directly as object record. (Note that it might
-            # be a view_id from another website but it will be filtered in 'get_related_views()')
-            return view_id if view_id._name == 'ir.ui.view' else self.env['ir.ui.view']
-
-    @api.model
     def _get_inheriting_views_domain(self):
         domain = super()._get_inheriting_views_domain()
         current_website = self.env['website'].browse(self._context.get('website_id'))
