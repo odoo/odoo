@@ -70,8 +70,8 @@ export class TabulationPlugin extends Plugin {
         if (selection.isCollapsed) {
             this.insertTab();
         } else {
-            const traversedBlocks = this.dependencies.selection.getTraversedBlocks();
-            this.indentBlocks(traversedBlocks);
+            const targetedBlocks = this.dependencies.selection.getTargetedBlocks();
+            this.indentBlocks(targetedBlocks);
         }
         this.dependencies.history.addStep();
     }
@@ -80,8 +80,8 @@ export class TabulationPlugin extends Plugin {
         if (this.delegateTo("shift_tab_overrides")) {
             return;
         }
-        const traversedBlocks = this.dependencies.selection.getTraversedBlocks();
-        this.outdentBlocks(traversedBlocks);
+        const targetedBlocks = this.dependencies.selection.getTargetedBlocks();
+        this.outdentBlocks(targetedBlocks);
         this.dependencies.history.addStep();
     }
 
