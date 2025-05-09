@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.TableMenu">
-        <Dropdown menuClass="'m-0'" position="props.type === 'column' ? 'bottom' : 'right'" state="props.dropdownState">
+        <Dropdown menuClass="'m-0'" position="props.type === 'column' ? 'bottom' : 'right'" state="props.dropdownState" bottomSheet="false">
             <button t-att-data-type="props.type" class="o-we-table-menu oi" t-attf-class="oi-ellipsis-{{props.type === 'column' ? 'h w-100' : 'v h-100 px-0'}}" />
             <t t-set-slot="content">
                 <div t-on-pointerdown.stop="() => {}">

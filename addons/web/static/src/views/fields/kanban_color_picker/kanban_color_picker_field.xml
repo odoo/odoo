@@ -2,13 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanColorPickerField">
-        <ul t-if="!props.readonly" class="o_kanban_colorpicker mb-0 ms-2">
+        <div t-if="!props.readonly" class="o_kanban_colorpicker d-grid">
             <t t-foreach="colors" t-as="color" t-key="color_index">
-                <li role="menuitem" t-on-click="() => this.selectColor(color_index)" t-att-title="color" t-att-aria-label="color">
-                    <a href="#" t-attf-class="o_kanban_color_{{ color_index }}" />
-                </li>
+                <button role="menuitem" t-on-click="() => this.selectColor(color_index)" t-attf-class="o_kanban_color_{{ color_index }}" t-att-title="color" t-att-aria-label="color"/>
             </t>
-        </ul>
+        </div>
     </t>
 
 </templates>
