@@ -16,6 +16,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         "getListComputedDomain",
         "getListHeaderValue",
         "getListIdFromPosition",
+        "getListFieldFromPosition",
         "getListCellValueAndFormat",
         "getListDataSource",
         "getAsyncListDataSource",
@@ -265,6 +266,24 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             }
         }
         return undefined;
+    }
+
+    getListFieldFromPosition(position) {
+        const listId = this.getters.getListIdFromPosition(position);
+        if (listId === undefined) {
+            return undefined;
+        }
+        const cell = this.getters.getCell(position);
+        const { args } = getFirstListFunction(cell.compiledFormula.tokens);
+        const fieldArg = args[2];
+        const dataSource = this.getters.getListDataSource(listId);
+        if (!fieldArg || !dataSource.isValid()) {
+            return undefined;
+        }
+        const fieldName = this.getters
+            .evaluateFormula(position.sheetId, astToFormula(fieldArg))
+            ?.toString();
+        return dataSource.getFields()[fieldName];
     }
 
     /**
