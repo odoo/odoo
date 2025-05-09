@@ -76,8 +76,8 @@ export class MediaPlugin extends Plugin {
     }
 
     replaceImage() {
-        const selectedNodes = this.dependencies.selection.getSelectedNodes();
-        const node = selectedNodes.find((node) => node.tagName === "IMG");
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const node = targetedNodes.find((node) => node.tagName === "IMG");
         if (node) {
             this.openMediaDialog({ node });
             this.dependencies.history.addStep();

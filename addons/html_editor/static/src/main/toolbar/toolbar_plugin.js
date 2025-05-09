@@ -18,7 +18,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 /**
  * @typedef {Object} ToolbarNamespace
  * @property {string} id
- * @property {(traversedNodes: Node[]) => boolean} isApplied
+ * @property {(targetedNodes: Node[]) => boolean} isApplied
  *
  *
  * @typedef {Object} ToolbarGroup
@@ -272,9 +272,16 @@ export class ToolbarPlugin extends Plugin {
         }
     }
 
+    /**
+     * @deprecated
+     */
     getFilterTraverseNodes() {
+        return this.getFilteredTargetedNodes();
+    }
+
+    getFilteredTargetedNodes() {
         return this.dependencies.selection
-            .getTraversedNodes()
+            .getTargetedNodes()
             .filter(
                 (node) => !isTextNode(node) || (node.textContent.trim().length && !isZWS(node))
             );
@@ -310,7 +317,7 @@ export class ToolbarPlugin extends Plugin {
         if (isCollapsed) {
             return !!closestElement(selectionData.editableSelection.anchorNode, "td.o_selected_td");
         }
-        return this.getFilterTraverseNodes().length;
+        return this.getFilteredTargetedNodes().length;
     }
 
     shouldPreventClosing(selectionData) {
@@ -321,9 +328,9 @@ export class ToolbarPlugin extends Plugin {
     }
 
     updateNamespace() {
-        const traversedNodes = this.getFilterTraverseNodes();
+        const targetedNodes = this.getFilteredTargetedNodes();
         for (const namespace of this.getResource("toolbar_namespaces")) {
-            if (namespace.isApplied(traversedNodes)) {
+            if (namespace.isApplied(targetedNodes)) {
                 this.state.namespace = namespace.id;
                 return;
             }
@@ -346,7 +353,7 @@ export class ToolbarPlugin extends Plugin {
         if (!selection) {
             return;
         }
-        const nodes = this.getFilterTraverseNodes();
+        const nodes = this.getFilteredTargetedNodes();
         for (const buttonGroup of this.buttonGroups) {
             if (buttonGroup.namespace === this.state.namespace) {
                 for (const button of buttonGroup.buttons) {
