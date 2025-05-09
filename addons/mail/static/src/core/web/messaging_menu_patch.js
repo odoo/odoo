@@ -99,6 +99,7 @@ patch(MessagingMenu.prototype, {
     get tabs() {
         return [
             {
+                counter: this.env.inDiscussApp ? this.store.inbox.counter : undefined,
                 icon: this.env.inDiscussApp ? "fa fa-inbox" : "fa fa-envelope",
                 id: "main",
                 label: this.env.inDiscussApp ? _t("Mailboxes") : _t("All"),

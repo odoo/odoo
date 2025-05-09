@@ -8,6 +8,11 @@ import { patch } from "@web/core/utils/patch";
 const threadPatch = {
     setup() {
         super.setup(...arguments);
+        this.appAsUnreadChannels = fields.One("DiscussApp", {
+            compute() {
+                return this.channel_type === "channel" && this.isUnread ? this.store.discuss : null;
+            },
+        });
         this.discussAppCategory = fields.One("DiscussAppCategory", {
             compute() {
                 return this._computeDiscussAppCategory();
