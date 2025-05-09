@@ -4,7 +4,7 @@
 from calendar import monthrange
 from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
-
+from odoo.tools import format_date
 from odoo import api, fields, models, _
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -176,14 +176,32 @@ class HrLeaveAllocation(models.Model):
                 name_validity = _(
                     "%(allocation_name)s (from %(date_from)s to %(date_to)s)",
                     allocation_name=allocation.name,
-                    date_from=allocation.date_from.strftime("%b %d %Y"),
-                    date_to=allocation.date_to.strftime("%b %d %Y"),
+                    date_from=format_date(
+                        allocation.env,
+                        fields.Date.context_today(
+                        allocation,
+                        fields.Datetime.to_datetime(allocation.date_from),
+                        ),
+                    ),
+                    date_to=format_date(
+                        allocation.env,
+                        fields.Date.context_today(
+                        allocation,
+                        fields.Datetime.to_datetime(allocation.date_to),
+                        ),
+                    ),
                 )
             else:
                 name_validity = _(
                     "%(allocation_name)s (from %(date_from)s to No Limit)",
                     allocation_name=allocation.name,
-                    date_from=allocation.date_from.strftime("%b %d %Y"),
+                    date_from=format_date(
+                        allocation.env,
+                        fields.Date.context_today(
+                            allocation,
+                            fields.Datetime.to_datetime(allocation.date_from),
+                        ),
+                    ),
                 )
             allocation.name_validity = name_validity
 
