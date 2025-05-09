@@ -190,6 +190,7 @@
         'views/snippets/s_website_form_cover.xml',
         'views/snippets/s_form_aside.xml',
         'views/snippets/s_banner_connected.xml',
+        'views/snippets/s_banner_categories.xml',
         'views/new_page_template_templates.xml',
         'views/website_views.xml',
         'views/website_pages_views.xml',

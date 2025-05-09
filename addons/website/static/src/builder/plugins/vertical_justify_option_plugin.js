@@ -9,8 +9,8 @@ class VerticalJustifyOptionPlugin extends Plugin {
         builder_options: [
             withSequence(END, {
                 template: "website.VerticalJustifyOption",
-                selector: ".s_masonry_block .o_grid_item, .s_quadrant .o_grid_item",
-                exclude: ".o_grid_item_image",
+                selector: ".s_masonry_block .o_grid_item, .s_quadrant .o_grid_item, .s_banner_categories .o_grid_item",
+                exclude: ".o_grid_item_image, .s_banner_categories_intro",
             }),
         ],
     };
