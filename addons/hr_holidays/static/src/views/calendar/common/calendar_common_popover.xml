@@ -8,5 +8,11 @@
             <attribute name="class">o_cw_popover_close ms-0 mt-2 me-2</attribute>
             <attribute name="data-hotkey">x</attribute>
         </xpath>
+        <xpath expr="//a[contains(@class, 'o_cw_popover_delete')]" position="replace">
+            <a href="#" class="btn btn-secondary o_cw_popover_delete" t-on-click="onDeleteEvent">
+                <t t-if="canCancel">Cancel</t>
+                <t t-else="">Delete</t>
+            </a>
+        </xpath>
     </t>
 </templates>

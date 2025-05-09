@@ -24,4 +24,42 @@ export class TimeOffCalendarCommonPopover extends CalendarCommonPopover {
             views: [[false, "form"]],
         });
     }
+<<<<<<< bd89035263fb501651a822d184e13558e9b05d30
+||||||| cd428bd75b63f96c67942be5457d0afdb00d29b0
+
+    get isEventDeletable() {
+        return this.props.record.rawRecord.can_cancel || this.state && !['validate', 'refuse', 'cancel'].includes(this.state);
+    }
+
+    get isEventEditable() {
+        return this.state !== undefined;
+    }
+
+    async onClickButton(ev) {
+        const args = (ev.target.name === "action_approve") ? [this.record.id, false] : [this.record.id];
+        await this.orm.call("hr.leave", ev.target.name, args);
+        await this.props.model.load();
+        this.props.close();
+    }
+=======
+
+    get isEventDeletable() {
+        return this.props.record.rawRecord.can_cancel || this.state && !['validate', 'refuse', 'cancel'].includes(this.state);
+    }
+
+    get isEventEditable() {
+        return this.state !== undefined;
+    }
+
+    get canCancel() {
+        return this.record.can_cancel;
+    }
+
+    async onClickButton(ev) {
+        const args = (ev.target.name === "action_approve") ? [this.record.id, false] : [this.record.id];
+        await this.orm.call("hr.leave", ev.target.name, args);
+        await this.props.model.load();
+        this.props.close();
+    }
+>>>>>>> a74f4b95666d0d9f12074c8c40aeaae7b435f0a9
 }
