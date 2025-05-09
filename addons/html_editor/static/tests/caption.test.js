@@ -52,7 +52,7 @@ const toggleCaption = async (captionText) => {
 };
 const addLinkToImage = async (url) => {
     await click("img");
-    await waitFor(".o-we-toolbar");
+    await waitFor(".o-we-toolbar button[name='link']");
     await click(".o-we-toolbar");
     await click("button[name='link']");
     if (url) {

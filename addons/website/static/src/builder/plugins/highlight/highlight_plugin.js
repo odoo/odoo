@@ -74,7 +74,7 @@ export class HighlightPlugin extends Plugin {
     }
 
     updateSelectedHighlight() {
-        const nodes = this.dependencies.selection.getTraversedNodes().filter(isTextNode);
+        const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
         if (nodes.length === 0) {
             return;
         }
@@ -94,7 +94,7 @@ export class HighlightPlugin extends Plugin {
     _applyHighlight(highlightId) {
         const highlightedNodes = new Set(
             this.dependencies.selection
-                .getTraversedNodes()
+                .getTargetedNodes()
                 .map((n) => {
                     const el = n.nodeType === Node.ELEMENT_NODE ? n : n.parentElement;
                     return el.closest(".o_text_highlight");
@@ -126,7 +126,7 @@ export class HighlightPlugin extends Plugin {
     _applyHighlightStyle(style, value) {
         const highlightedNodes = new Set(
             this.dependencies.selection
-                .getTraversedNodes()
+                .getTargetedNodes()
                 .map((n) => {
                     const el = n.nodeType === Node.ELEMENT_NODE ? n : n.parentElement;
                     return el.closest(".o_text_highlight");

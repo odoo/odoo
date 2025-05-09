@@ -34,12 +34,12 @@ export class TextDirectionPlugin extends Plugin {
 
     switchDirection() {
         const selection = this.dependencies.split.splitSelection();
-        const selectedTextNodes = [
+        const targetedTextNodes = [
             selection.anchorNode,
-            ...this.dependencies.selection.getSelectedNodes(),
+            ...this.dependencies.selection.getTargetedNodes(),
         ].filter((n) => isTextNode(n) && isContentEditable(n) && n.nodeValue.trim().length);
         const blocks = new Set(
-            selectedTextNodes.map(
+            targetedTextNodes.map(
                 (textNode) => closestElement(textNode, "ul,ol") || closestBlock(textNode)
             )
         );

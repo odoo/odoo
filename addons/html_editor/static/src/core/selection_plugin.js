@@ -153,10 +153,9 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['extractContent'] } extractContent
  * @property { SelectionPlugin['focusEditable'] } focusEditable
  * @property { SelectionPlugin['getEditableSelection'] } getEditableSelection
- * @property { SelectionPlugin['getSelectedNodes'] } getSelectedNodes
  * @property { SelectionPlugin['getSelectionData'] } getSelectionData
- * @property { SelectionPlugin['getTraversedBlocks'] } getTraversedBlocks
- * @property { SelectionPlugin['getTraversedNodes'] } getTraversedNodes
+ * @property { SelectionPlugin['getTargetedBlocks'] } getTargetedBlocks
+ * @property { SelectionPlugin['getTargetedNodes'] } getTargetedNodes
  * @property { SelectionPlugin['modifySelection'] } modifySelection
  * @property { SelectionPlugin['preserveSelection'] } preserveSelection
  * @property { SelectionPlugin['rectifySelection'] } rectifySelection
@@ -180,9 +179,8 @@ export class SelectionPlugin extends Plugin {
         "extractContent",
         "preserveSelection",
         "resetSelection",
-        "getSelectedNodes",
-        "getTraversedNodes",
-        "getTraversedBlocks",
+        "getTargetedNodes",
+        "getTargetedBlocks",
         "modifySelection",
         "rectifySelection",
         "areNodeContentsFullySelected",
@@ -663,15 +661,6 @@ export class SelectionPlugin extends Plugin {
         };
     }
 
-    /**
-     * Returns an array containing all the nodes fully contained in the selection.
-     *
-     * @returns {Node[]}
-     */
-    getSelectedNodes() {
-        return this.getTraversedNodes().filter(this.areNodeContentsFullySelected.bind(this));
-    }
-
     areNodeContentsFullySelected(node) {
         const selection = this.getEditableSelection();
         const range = new Range();
@@ -690,19 +679,39 @@ export class SelectionPlugin extends Plugin {
     }
 
     /**
-     * Returns the nodes intersected by the current selection, up to the common
-     * ancestor container (inclusive).
+     * Returns the nodes targeted by the current selection, from top to bottom
+     * and left to right.
+     * This includes nodes intersected by the selection, as well as the deepest
+     * anchor and offset nodes.
+     * An element is considered intersected by the selection when reading the
+     * normalized selection's HTML contents would involve reading the opening or
+     * closing tags of the element.
+     *
+     * @example
+     * <p>a[]b</p> -> ["ab"]
+     * @example
+     * <p>a[b</p><h1>c]d</h1> -> [P, "ab", H1, "cd"]
+     * @example
+     * <div><p>a[b</p><h1>cd</h1></div><h2>e]f</h2> -> [DIV, P, "ab", H1, "cd", H2, "ef"]
      *
      * @returns {Node[]}
      */
-    getTraversedNodes() {
+    getTargetedNodes() {
         const selection = this.getSelectionData().deepEditableSelection;
         const { commonAncestorContainer: root } = selection;
 
-        let traversedNodes = [
-            root,
-            ...descendants(root).filter((node) => selection.intersectsNode(node)),
-        ];
+        let targetedNodes;
+        if (selection.isCollapsed || root.nodeType === Node.TEXT_NODE) {
+            targetedNodes = [root];
+        } else {
+            targetedNodes = descendants(root);
+        }
+        targetedNodes = targetedNodes.filter(
+            (node) =>
+                selection.intersectsNode(node) ||
+                (node === selection.anchorNode && node.nodeType === Node.TEXT_NODE) ||
+                (node === selection.focusNode && node.nodeType === Node.TEXT_NODE)
+        );
 
         const modifiers = [
             // Remove the editable from the list
@@ -713,23 +722,21 @@ export class SelectionPlugin extends Plugin {
                 return nodes.filter((node) => !edgeNodes.has(node));
             },
             // Custom modifiers
-            ...this.getResource("traversed_nodes_processors"),
+            ...this.getResource("targeted_nodes_processors"),
         ];
-
         for (const modifier of modifiers) {
-            traversedNodes = modifier(traversedNodes);
+            targetedNodes = modifier(targetedNodes);
         }
-
-        return traversedNodes;
+        return targetedNodes;
     }
 
     /**
-     * Returns a Set of traversed blocks within the given range.
+     * Returns a Set of targeted blocks within the given range.
      *
      * @returns {Set<HTMLElement>}
      */
-    getTraversedBlocks() {
-        return new Set(this.getTraversedNodes().map(closestBlock).filter(Boolean));
+    getTargetedBlocks() {
+        return new Set(this.getTargetedNodes().map(closestBlock).filter(Boolean));
     }
     resetActiveSelection() {
         const selection = this.document.getSelection();

@@ -36,7 +36,7 @@ const IMAGE_SIZE = [
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection"];
-    static shared = ["getSelectedImage", "previewImage"];
+    static shared = ["getTargetedImage", "previewImage"];
     resources = {
         user_commands: [
             {
@@ -80,8 +80,8 @@ export class ImagePlugin extends Plugin {
         toolbar_namespaces: [
             {
                 id: "image",
-                isApplied: (traversedNodes) =>
-                    traversedNodes.every(
+                isApplied: (targetedNodes) =>
+                    targetedNodes.every(
                         // All nodes should be images or its ancestors
                         (node) => node.nodeName === "IMG" || node.querySelector?.("img")
                     ),
@@ -211,108 +211,108 @@ export class ImagePlugin extends Plugin {
     }
 
     get imageSizeName() {
-        const selectedImg = this.getSelectedImage();
-        if (!selectedImg) {
+        const targetedImg = this.getTargetedImage();
+        if (!targetedImg) {
             return "Default";
         }
-        return selectedImg.style.width || "Default";
+        return targetedImg.style.width || "Default";
     }
 
     setImagePadding({ size } = {}) {
-        const selectedImg = this.getSelectedImage();
-        if (!selectedImg) {
+        const targetedImg = this.getTargetedImage();
+        if (!targetedImg) {
             return;
         }
-        for (const classString of selectedImg.classList) {
+        for (const classString of targetedImg.classList) {
             if (classString.match(/^p-[0-9]$/)) {
-                selectedImg.classList.remove(classString);
+                targetedImg.classList.remove(classString);
             }
         }
-        selectedImg.classList.add(`p-${size}`);
+        targetedImg.classList.add(`p-${size}`);
         this.dependencies.history.addStep();
     }
     resizeImage({ size } = {}) {
-        const selectedImg = this.getSelectedImage();
-        if (!selectedImg) {
+        const targetedImg = this.getTargetedImage();
+        if (!targetedImg) {
             return;
         }
-        selectedImg.style.width = size || "";
+        targetedImg.style.width = size || "";
         this.dependencies.history.addStep();
     }
 
     setImageShape(className, { excludeClasses = [] } = {}) {
-        const selectedImg = this.getSelectedImage();
-        if (!selectedImg) {
+        const targetedImg = this.getTargetedImage();
+        if (!targetedImg) {
             return;
         }
         for (const classString of excludeClasses) {
-            if (selectedImg.classList.contains(classString)) {
-                selectedImg.classList.remove(classString);
+            if (targetedImg.classList.contains(classString)) {
+                targetedImg.classList.remove(classString);
             }
         }
-        selectedImg.classList.toggle(className);
+        targetedImg.classList.toggle(className);
         this.dependencies.history.addStep();
     }
 
     previewImage() {
-        const selectedImg = this.getSelectedImage();
-        if (!selectedImg) {
+        const targetedImg = this.getTargetedImage();
+        if (!targetedImg) {
             return;
         }
         let imageName;
         // Keep the result from the first predicate that returns something.
         this.getResource("image_name_predicates").find((p) => {
-            imageName = p(selectedImg);
+            imageName = p(targetedImg);
             return imageName;
         });
         const fileModel = {
             isImage: true,
             isViewable: true,
-            name: imageName || selectedImg.src,
-            defaultSource: selectedImg.src,
-            downloadUrl: selectedImg.src,
+            name: imageName || targetedImg.src,
+            defaultSource: targetedImg.src,
+            downloadUrl: targetedImg.src,
         };
         this.document.getSelection().collapseToEnd();
         this.fileViewer.open(fileModel);
     }
 
     deleteImage() {
-        const selectedImg = this.getSelectedImage();
-        if (selectedImg) {
-            if (this.delegateTo("delete_image_handlers", selectedImg)) {
+        const targetedImg = this.getTargetedImage();
+        if (targetedImg) {
+            if (this.delegateTo("delete_image_handlers", targetedImg)) {
                 return;
             }
             const cursors = this.dependencies.selection.preserveSelection();
-            cursors.update(callbacksForCursorUpdate.remove(selectedImg));
-            const parentEl = closestBlock(selectedImg);
-            selectedImg.remove();
+            cursors.update(callbacksForCursorUpdate.remove(targetedImg));
+            const parentEl = closestBlock(targetedImg);
+            targetedImg.remove();
             cursors.restore();
             fillEmpty(parentEl);
             this.dependencies.history.addStep();
         }
     }
 
-    getSelectedImage() {
-        const selectedNodes = this.dependencies.selection.getSelectedNodes();
-        return selectedNodes.find((node) => node.tagName === "IMG");
+    getTargetedImage() {
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        return targetedNodes.find((node) => node.tagName === "IMG");
     }
 
     hasImageSize(size) {
-        const selectedImg = this.getSelectedImage();
-        return selectedImg?.style?.width === size;
+        const targetedImg = this.getTargetedImage();
+        return targetedImg?.style?.width === size;
     }
 
     isSelectionShaped(shape) {
-        const selectedNodes = this.dependencies.selection
-            .getTraversedNodes()
+        const targetedNodes = this.dependencies.selection
+            .getTargetedNodes()
             .filter((n) => n.tagName === "IMG" && n.classList.contains(shape));
-        return selectedNodes.length > 0;
+        return targetedNodes.length > 0;
     }
 
     getImageAttribute(attributeName) {
-        const selectedNodes = this.dependencies.selection.getSelectedNodes();
-        const selectedImg = selectedNodes.find((node) => node.tagName === "IMG");
-        return selectedImg.getAttribute(attributeName) || undefined;
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const targetedImg = targetedNodes.find((node) => node.tagName === "IMG");
+        return targetedImg.getAttribute(attributeName) || undefined;
     }
 
     /**
@@ -347,12 +347,12 @@ export class ImagePlugin extends Plugin {
     }
 
     updateImageDescription({ description, tooltip } = {}) {
-        const selectedImg = this.getSelectedImage();
-        if (!selectedImg) {
+        const targetedImg = this.getTargetedImage();
+        if (!targetedImg) {
             return;
         }
-        selectedImg.setAttribute("alt", description);
-        selectedImg.setAttribute("title", tooltip);
+        targetedImg.setAttribute("alt", description);
+        targetedImg.setAttribute("title", tooltip);
         this.dependencies.history.addStep();
     }
 
@@ -369,7 +369,7 @@ export class ImagePlugin extends Plugin {
             id: "image_transform",
             icon: "fa-object-ungroup",
             title: _t("Transform the picture (click twice to reset transformation)"),
-            getSelectedImage: this.getSelectedImage.bind(this),
+            getTargetedImage: this.getTargetedImage.bind(this),
             resetImageTransformation: this.resetImageTransformation.bind(this),
             addStep: this.dependencies.history.addStep.bind(this),
             document: this.document,

@@ -369,10 +369,10 @@ export class LinkPlugin extends Plugin {
 
     isLinkAllowedOnSelection() {
         const linksInSelection = this.dependencies.selection
-            .getTraversedNodes()
+            .getTargetedNodes()
             .filter((n) => n.tagName === "A");
         return (
-            linksInSelection.length < 2 && this.dependencies.selection.getTraversedBlocks().size < 2
+            linksInSelection.length < 2 && this.dependencies.selection.getTargetedBlocks().size < 2
         );
     }
 
@@ -731,7 +731,7 @@ export class LinkPlugin extends Plugin {
      */
     extendLinkToSelection(linkElement) {
         this.dependencies.split.splitSelection();
-        const selectedNodes = this.dependencies.selection.getSelectedNodes();
+        const selectedNodes = this.dependencies.selection.getTargetedNodes();
         let before = linkElement.previousSibling;
         while (before !== null && selectedNodes.includes(before)) {
             linkElement.insertBefore(before, linkElement.firstChild);
@@ -790,8 +790,8 @@ export class LinkPlugin extends Plugin {
             this.dependencies.selection.getEditableSelection());
         cursors = this.dependencies.selection.preserveSelection();
         // to remove link from selected images
-        const selectedNodes = this.dependencies.selection.getSelectedNodes();
-        const selectedImageNodes = selectedNodes.filter((node) => node.tagName === "IMG");
+        let targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const selectedImageNodes = targetedNodes.filter((node) => node.tagName === "IMG");
         if (selectedImageNodes.length && startLink && endLink && startLink === endLink) {
             for (const imageNode of selectedImageNodes) {
                 let imageLink;
@@ -824,7 +824,7 @@ export class LinkPlugin extends Plugin {
             // when only unlink an inline image, add step after the unwrapping
             if (
                 selectedImageNodes.length === 1 &&
-                selectedImageNodes.length === selectedNodes.length
+                selectedImageNodes.length === targetedNodes.length
             ) {
                 this.dependencies.history.addStep();
                 return;
@@ -849,7 +849,7 @@ export class LinkPlugin extends Plugin {
                 { normalize: true }
             );
         }
-        const targetedNodes = this.dependencies.selection.getSelectedNodes();
+        targetedNodes = this.dependencies.selection.getTargetedNodes();
         const links = new Set(
             targetedNodes
                 .map((node) => closestElement(node, "a"))

@@ -21,7 +21,7 @@ import { _t } from "@web/core/l10n/translation";
 /**
  * @typedef {Object} ToolbarNamespace
  * @property {string} id
- * @property {(traversedNodes: Node[]) => boolean} isApplied
+ * @property {(targetedNodes: Node[]) => boolean} isApplied
  *
  *
  * @typedef {Object} ToolbarGroup
@@ -316,9 +316,9 @@ export class ToolbarPlugin extends Plugin {
         this.updateButtonsStates(selectionData.editableSelection);
     }
 
-    getFilterTraverseNodes() {
+    getFilteredTargetedNodes() {
         return this.dependencies.selection
-            .getTraversedNodes()
+            .getTargetedNodes()
             .filter((node) => !isTextNode(node) || (node.textContent !== "\n" && !isZWS(node)));
     }
 
@@ -353,7 +353,7 @@ export class ToolbarPlugin extends Plugin {
         if (isCollapsed) {
             return !!closestElement(selectionData.editableSelection.anchorNode, "td.o_selected_td");
         }
-        return this.getFilterTraverseNodes().length;
+        return this.getFilteredTargetedNodes().length;
     }
 
     shouldPreventClosing() {
@@ -365,9 +365,9 @@ export class ToolbarPlugin extends Plugin {
     }
 
     updateNamespace() {
-        const traversedNodes = this.getFilterTraverseNodes();
+        const targetedNodes = this.getFilteredTargetedNodes();
         const namespaces = this.getResource("toolbar_namespaces");
-        const activeNamespace = namespaces.find((ns) => ns.isApplied(traversedNodes));
+        const activeNamespace = namespaces.find((ns) => ns.isApplied(targetedNodes));
         this.state.namespace = activeNamespace?.id || "expanded";
     }
 
@@ -386,7 +386,7 @@ export class ToolbarPlugin extends Plugin {
         if (!selection) {
             return;
         }
-        const nodes = this.getFilterTraverseNodes();
+        const nodes = this.getFilteredTargetedNodes();
         for (const buttonGroup of this.buttonGroups) {
             for (const button of buttonGroup.buttons) {
                 if (!button.namespaces.includes(this.state.namespace)) {

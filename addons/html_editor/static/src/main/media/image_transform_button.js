@@ -9,7 +9,7 @@ export class ImageTransformButton extends Component {
         id: String,
         icon: String,
         title: String,
-        getSelectedImage: Function,
+        getTargetedImage: Function,
         resetImageTransformation: Function,
         addStep: Function,
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
@@ -71,7 +71,7 @@ export class ImageTransformButton extends Component {
     }
 
     onButtonClick() {
-        this.handleImageTransformation(this.props.getSelectedImage());
+        this.handleImageTransformation(this.props.getTargetedImage());
     }
 
     handleImageTransformation(image) {
