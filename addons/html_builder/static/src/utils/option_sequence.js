@@ -2,11 +2,15 @@
 // Module-specific sequences are defined in other option_sequence.js files.
 
 const BEGIN = 1;
-const DEFAULT = 10;
 const END = 100;
 
 /** Ordered set of known positions. */
 const ALL = [BEGIN, END];
+/**
+ * This position should be used for non-snippet options.
+ * For the default position of snippet specific options, use {@link SNIPPET_SPECIFIC}.
+ */
+export const DEFAULT = track(10);
 
 /**
  * Keeps track of a position in the ordered list positions ALL.
@@ -32,8 +36,7 @@ function track(position) {
  * @param {Number} beginPosition position after which to generate positions
  * @param {Number} endPosition position before which to generate positions
  * @param {int} count amount of generated positions
- * @return {Number[]} containing generated positions within range, and the
- *     end position
+ * @return {Number[]} containing {@link count} positions generated within range
  */
 export function splitBetween(beginPosition, endPosition, count) {
     const result = [];
@@ -41,7 +44,6 @@ export function splitBetween(beginPosition, endPosition, count) {
     for (let index = 1; index <= count; index++) {
         result.push(track(beginPosition + delta * index));
     }
-    result.push(endPosition); // to detect errors
     return result;
 }
 /**
@@ -91,7 +93,7 @@ export function before(position) {
     return between(previousPosition, position);
 }
 
-const SNIPPET_SPECIFIC = track(DEFAULT);
+const SNIPPET_SPECIFIC = DEFAULT;
 const [
     REPLACE_MEDIA,
     MEDIA_URL,
@@ -101,16 +103,18 @@ const [
     DYNAMIC_SVG,
     AFTER_HTML_BUILDER,
     SNIPPET_SPECIFIC_BEFORE,
-    __DETECT_ERROR_1__,
+    ...__DETECT_ERROR_1__
 ] = splitBetween(BEGIN, SNIPPET_SPECIFIC, 8);
-if (__DETECT_ERROR_1__ !== SNIPPET_SPECIFIC) {
+if (__DETECT_ERROR_1__.length > 0) {
     console.error("Wrong count in split before default");
 }
-const [SNIPPET_SPECIFIC_AFTER, SNIPPET_SPECIFIC_NEXT, SNIPPET_SPECIFIC_END, __DETECT_ERROR_2__] =
+
+const [SNIPPET_SPECIFIC_AFTER, SNIPPET_SPECIFIC_NEXT, SNIPPET_SPECIFIC_END, ...__DETECT_ERROR_2__] =
     splitBetween(SNIPPET_SPECIFIC, END, 3);
-if (__DETECT_ERROR_2__ !== END) {
+if (__DETECT_ERROR_2__.length > 0) {
     console.error("Wrong count in split after default");
 }
+
 export {
     BEGIN,
     REPLACE_MEDIA,

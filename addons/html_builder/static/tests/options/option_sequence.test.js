@@ -37,8 +37,8 @@ test("after returns a bigger position", async () => {
 });
 
 test("splitBetween correctly splits to the right values", async () => {
-    expect(splitBetween(0, 3, 2)).toMatch([1, 2, 3]);
-    expect(splitBetween(0, 10, 2)).toMatch([10 / 3, (2 * 10) / 3, 10]);
-    expect(splitBetween(0, 8, 7)).toMatch([1, 2, 3, 4, 5, 6, 7, 8]);
-    expect(splitBetween(1, 5, 3)).toMatch([2, 3, 4, 5]);
+    expect(splitBetween(0, 3, 2)).toMatch([1, 2]);
+    expect(splitBetween(0, 10, 2)).toMatch([10 / 3, (2 * 10) / 3]);
+    expect(splitBetween(0, 8, 7)).toMatch([1, 2, 3, 4, 5, 6, 7]);
+    expect(splitBetween(1, 5, 3)).toMatch([2, 3, 4]);
 });
