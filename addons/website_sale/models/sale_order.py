@@ -82,7 +82,13 @@ class SaleOrder(models.Model):
 
     def _compute_require_signature(self):
         website_orders = self.filtered('website_id')
-        website_orders.require_signature = False
+        for company, carts in website_orders.grouped('company_id').items():
+            # disable signature by default for website orders
+            # unless online payment is disabled, to still allow for order confirmation
+            carts.require_signature = (
+                not company.portal_confirmation_pay
+                and company.portal_confirmation_sign
+            )
         super(SaleOrder, self - website_orders)._compute_require_signature()
 
     def _compute_payment_term_id(self):

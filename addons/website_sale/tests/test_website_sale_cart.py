@@ -429,3 +429,55 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
                 quantity=1,
             )
             self.assertEqual(data["quantity"], 1)
+
+    def test_portal_require_payment(self):
+        """Check that website orders don't require a signature if payment is enabled."""
+        new_company = self.website.company_id = self.env['res.company'].create({
+            'name': "Pay Here",
+            'portal_confirmation_sign': True,
+            'portal_confirmation_pay': True,
+        })
+        cart = self.env['sale.order'].with_company(new_company).create({
+            'website_id': self.website.id,
+            'partner_id': self.partner.id,
+        })
+        self.assertTrue(cart.require_payment)
+        self.assertFalse(
+            cart.require_signature,
+            "Signature should be disabled if website order can be confirmed via payment",
+        )
+
+    def test_portal_require_signature(self):
+        """Check that website orders can require a signature if payment is disabled."""
+        new_company = self.website.company_id = self.env['res.company'].create({
+            'name': "Sign Here",
+            'portal_confirmation_sign': True,
+            'portal_confirmation_pay': False,
+            'website_id': self.website.id,
+        })
+        cart = self.env['sale.order'].with_company(new_company).create({
+            'website_id': self.website.id,
+            'partner_id': self.partner.id,
+        })
+        self.assertFalse(cart.require_payment)
+        self.assertTrue(
+            cart.require_signature,
+            "Signature should be enabled if website order cannot be confirmed via payment",
+        )
+
+    def test_portal_disable_order_confirmation(self):
+        """Check that website order confirmation can be disabled in portal."""
+        new_company = self.website.company_id = self.env['res.company'].create({
+            'name': "No Sign No Pay",
+            'portal_confirmation_sign': False,
+            'portal_confirmation_pay': False,
+            'website_id': self.website.id,
+        })
+        cart = self.env['sale.order'].with_company(new_company).create({
+            'website_id': self.website.id,
+            'partner_id': self.partner.id,
+        })
+        self.assertFalse(
+            cart.require_payment or cart.require_signature,
+            "Portal order confirmation should be disabled if portal sign & pay are disabled",
+        )
