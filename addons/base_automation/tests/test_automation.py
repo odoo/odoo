@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo import Command
 
@@ -198,3 +200,52 @@ class TestAutomation(TransactionCaseWithUserDemo):
 
         allowed_models = self.env['ir.model'].search(domain)
         self.assertTrue(base_model._name not in allowed_models.mapped('model'), "The base model should not be in the allowed models")
+
+    def test_eval_context_extension(self):
+        """
+        Test that _get_eval_context contains context_today and relativedelta
+        """
+        model = self.env.ref("base.model_res_partner")
+        automation = self.env['base.automation'].create({
+            'name': 'Test Automation',
+            'model_id': model.id,
+            'trigger': "on_time",
+            'trigger_field_ids': [],
+            'trg_date_range': -60,
+            'trg_date_range_type': "minutes",
+            'trg_date_id': self.env.ref("base.field_res_partner__write_date").id,
+        })
+        eval_context = automation._get_eval_context()
+        self.assertIn('context_today', eval_context)
+        self.assertIn('relativedelta', eval_context)
+        self.assertEqual(eval_context['context_today'], datetime.today)
+        self.assertEqual(eval_context['relativedelta'], relativedelta)
+
+    def test_domain_evaluation_with_time_functions(self):
+        """
+        Test filter domain evaluation when using the "is within" operator.
+        Front-end might builds those with context_today(), relativedelta() and to_utc()
+        """
+        model = self.env.ref("base.model_res_partner")
+
+        automation = self.env['base.automation'].create({
+            'name': 'Test Automation is within operator',
+            'model_id': model.id,
+            'trigger': "on_time",
+            'trigger_field_ids': [],
+            'trg_date_range': -60,
+            'trg_date_range_type': "minutes",
+            'trg_date_id': self.env.ref("base.field_res_partner__create_date").id,
+            'filter_domain': """['&',('create_date', '>=', datetime.datetime.combine(context_today()
+                                + relativedelta(months=-3), datetime.time(0, 0, 0)).to_utc().strftime('%Y-%m-%d %H:%M:%S')),
+                                ('create_date', '<=', datetime.datetime.combine(context_today() +
+                                 relativedelta(days=1), datetime.time(0, 0, 0)).to_utc().strftime('%Y-%m-%d %H:%M:%S'))]""",
+        })
+
+        # Implicitly trigger the automation's domain safe evaluation using _check
+        # Should fail if it can't handle context_today, relativedelta and to_utc methods
+        before = automation.last_run
+        automation._check()
+        after = automation.last_run
+
+        self.assertNotEqual(before, after)
