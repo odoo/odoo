@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
+import base64
 import json
 import logging
 import requests
@@ -82,7 +83,7 @@ class AccountEdiFormat(models.Model):
         access_data = self._l10n_eg_eta_get_access_token(invoice)
         if access_data.get('error'):
             return access_data
-        invoice_json = json.loads(invoice.l10n_eg_eta_json_doc_id.raw)
+        invoice_json = json.loads(base64.b64decode(invoice.l10n_eg_eta_json_doc_file))
         request_url = '/api/v1.0/documentsubmissions'
         request_data = {
             'body': json.dumps({'documents': [invoice_json['request']]}, ensure_ascii=False, indent=4).encode('utf-8'),
@@ -105,8 +106,14 @@ class AccountEdiFormat(models.Model):
                 'l10n_eg_hash_key': response_data['acceptedDocuments'][0].get('hashKey'),
                 'l10n_eg_submission_number': response_data['submissionId'],
             }
-            invoice.l10n_eg_eta_json_doc_id.raw = json.dumps(invoice_json)
-            return {'attachment': invoice.l10n_eg_eta_json_doc_id}
+            invoice.l10n_eg_eta_json_doc_file = base64.b64encode(json.dumps(invoice_json).encode())
+            invoice.invalidate_recordset(fnames=['l10n_eg_eta_json_doc_file'])
+            json_doc_attachment_id = self.env['ir.attachment'].search([
+                ('res_model', '=', invoice._name),
+                ('res_id', '=', invoice.id),
+                ('res_field', '=', 'l10n_eg_eta_json_doc_file'),
+            ])
+            return {'attachment': json_doc_attachment_id}
         return {
             'error': _('an Unknown error has occurred'),
             'blocking_level': 'warning'
@@ -423,14 +430,14 @@ class AccountEdiFormat(models.Model):
         if invoice.l10n_eg_submission_number:
             return {invoice: self._l10n_eg_get_einvoice_status(invoice)}
 
-        if not invoice.l10n_eg_eta_json_doc_id:
+        if not invoice.l10n_eg_eta_json_doc_file:
             return {
                 invoice: {
                     'error':  _("An error occured in created the ETA invoice, please retry signing"),
                     'blocking_level': 'error'
                 }
             }
-        invoice_json = json.loads(invoice.l10n_eg_eta_json_doc_id.raw)['request']
+        invoice_json = json.loads(base64.b64decode(invoice.l10n_eg_eta_json_doc_file))['request']
         if not invoice_json.get('signatures'):
             return {
                 invoice: {

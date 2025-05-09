@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import logging
 import json
 
@@ -19,7 +20,11 @@ class AccountMove(models.Model):
     l10n_eg_qr_code = fields.Char(string='ETA QR Code', compute='_compute_eta_qr_code_str')
     l10n_eg_submission_number = fields.Char(string='Submission ID', compute='_compute_eta_response_data', store=True, copy=False)
     l10n_eg_uuid = fields.Char(string='Document UUID', compute='_compute_eta_response_data', store=True, copy=False)
-    l10n_eg_eta_json_doc_id = fields.Many2one('ir.attachment', copy=False)
+    l10n_eg_eta_json_doc_file = fields.Binary(
+        string='ETA JSON Document',
+        attachment=True,
+        copy=False,
+    )
     l10n_eg_signing_time = fields.Datetime('Signing Time', copy=False)
     l10n_eg_is_signed = fields.Boolean(copy=False)
 
@@ -30,10 +35,10 @@ class AccountMove(models.Model):
             create_column(self.env.cr, "account_move", "l10n_eg_submission_number", "VARCHAR")
         return super()._auto_init()
 
-    @api.depends('l10n_eg_eta_json_doc_id.raw')
+    @api.depends('l10n_eg_eta_json_doc_file')
     def _compute_eta_long_id(self):
         for rec in self:
-            response_data = rec.l10n_eg_eta_json_doc_id and json.loads(rec.l10n_eg_eta_json_doc_id.raw).get('response')
+            response_data = rec.l10n_eg_eta_json_doc_file and json.loads(base64.b64decode(rec.l10n_eg_eta_json_doc_file)).get('response')
             if response_data:
                 rec.l10n_eg_long_id = response_data.get('l10n_eg_long_id')
             else:
@@ -50,10 +55,10 @@ class AccountMove(models.Model):
             else:
                 move.l10n_eg_qr_code = ''
 
-    @api.depends('l10n_eg_eta_json_doc_id.raw')
+    @api.depends('l10n_eg_eta_json_doc_file')
     def _compute_eta_response_data(self):
         for rec in self:
-            response_data = rec.l10n_eg_eta_json_doc_id and json.loads(rec.l10n_eg_eta_json_doc_id.raw).get('response')
+            response_data = rec.l10n_eg_eta_json_doc_file and json.loads(base64.b64decode(rec.l10n_eg_eta_json_doc_file)).get('response')
             if response_data:
                 rec.l10n_eg_uuid = response_data.get('l10n_eg_uuid')
                 rec.l10n_eg_submission_number = response_data.get('l10n_eg_submission_number')
@@ -61,8 +66,12 @@ class AccountMove(models.Model):
                 rec.l10n_eg_uuid = False
                 rec.l10n_eg_submission_number = False
 
+    def _get_fields_to_detach(self):
+        fields_list = super()._get_fields_to_detach()
+        fields_list.append('l10n_eg_eta_json_doc_file')
+        return fields_list
+
     def button_draft(self):
-        self.l10n_eg_eta_json_doc_id = False
         self.l10n_eg_is_signed = False
         return super().button_draft()
 
@@ -91,16 +100,17 @@ class AccountMove(models.Model):
 
         for invoice in invoices:
             eta_invoice = self.env['account.edi.format']._l10n_eg_eta_prepare_eta_invoice(invoice)
-            attachment = self.env['ir.attachment'].create({
+            self.env['ir.attachment'].create({
                     'name': _('ETA_INVOICE_DOC_%s', invoice.name),
                     'res_id': invoice.id,
                     'res_model': invoice._name,
+                    'res_field': 'l10n_eg_eta_json_doc_file',
                     'type': 'binary',
                     'raw': json.dumps(dict(request=eta_invoice)),
                     'mimetype': 'application/json',
                     'description': _('Egyptian Tax authority JSON invoice generated for %s.', invoice.name),
                 })
-            invoice.l10n_eg_eta_json_doc_id = attachment.id
+            invoice.invalidate_recordset(fnames=['l10n_eg_eta_json_doc_file'])
         return drive_id.action_sign_invoices(invoices)
 
     def action_get_eta_invoice_pdf(self):
