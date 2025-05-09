@@ -69,10 +69,10 @@
                                         <t t-else="">
                                             <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div t-if="message.bubbleColor" class="o-mail-Message-bubble position-absolute top-0 start-0 w-100 h-100 border" t-att-class="{
-                                                    'rounded-3': props.squashed,
-                                                    'rounded-bottom-3': !props.squashed,
-                                                    'rounded-start-3': !props.squashed and isAlignedRight,
-                                                    'rounded-end-3': !props.squashed and !isAlignedRight,
+                                                    'o-rounded-bubble': props.squashed,
+                                                    'o-rounded-bottom-bubble': !props.squashed,
+                                                    'o-rounded-start-bubble': !props.squashed and isAlignedRight,
+                                                    'o-rounded-end-bubble': !props.squashed and !isAlignedRight,
                                                     'o-blue': message.bubbleColor === 'blue',
                                                     'o-green': message.bubbleColor === 'green',
                                                     'o-orange': message.bubbleColor === 'orange',
@@ -85,8 +85,8 @@
                                                             'py-2': !message.is_note and !state.isEditing,
                                                             'pt-2 pb-1': !message.is_note and state.isEditing,
                                                             'o-note': message.is_note,
-                                                            'rounded-3': props.squashed,
-                                                            'align-self-start rounded-end-3 rounded-bottom-3': !state.isEditing and !message.is_note and !props.squashed,
+                                                            'o-rounded-bubble': props.squashed,
+                                                            'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !state.isEditing and !message.is_note and !props.squashed,
                                                             'flex-grow-1': state.isEditing,
                                                             }" t-ref="body">
                                                     <i t-if="message.isEmpty" class="text-muted opacity-75" t-esc="message.inlineBody"/>
