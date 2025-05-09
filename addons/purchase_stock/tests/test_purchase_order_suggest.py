@@ -36,7 +36,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
         po_suggest.warehouse_id = warehouse
         self.assertEqual(po_suggest.estimated_price, price)
 
-    def _create_and_process_delivery_at_date(self, products_and_quantities, date=False, warehouse=False):
+    def _create_and_process_delivery_at_date(self, products_and_quantities, date=False, warehouse=False, to_validate=True):
         date = date or datetime.now()
         delivery_type = warehouse.out_type_id if warehouse else self.picking_type_out
         with freeze_time(date):
@@ -54,8 +54,9 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
                 }) for (product, qty) in products_and_quantities],
             })
             delivery.action_confirm()
-            delivery.action_assign()
-            delivery.button_validate()
+            if to_validate:
+                delivery.action_assign()
+                delivery.button_validate()
             return delivery
 
     def test_purchase_order_suggest_quantities(self):
@@ -64,11 +65,11 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
         suggest expected price, are rigthly computed too."""
         today = fields.Datetime.now()
         # Create some products.
-        product_2, product_3 = self.env['product.product'].create([{
+        product_2, product_3, product_4, product_5, product_6 = self.env['product.product'].create([{
             'name': f'Product {i + 1}',
             'standard_price': price,
             'is_storable': True,
-        } for (i, price) in enumerate([25, 50])])
+        } for (i, price) in enumerate([25, 50, 100, 50, 25])])
         self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 42)
         self.env['stock.quant']._update_available_quantity(product_2, self.stock_location, 15)
         self.env['stock.quant']._update_available_quantity(product_3, self.stock_location, 20)
@@ -211,6 +212,112 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
             {'product_id': self.product_1.id, 'product_qty': 25},
             {'product_id': product_2.id, 'product_qty': 10},
             {'product_id': product_3.id, 'product_qty': 20},
+        ])
+
+        # Create supplier info.
+        self.env['product.supplierinfo'].create([{
+            'partner_id': self.partner_1.id,
+            'price': 90,
+            'product_id': product_4.id,
+        }, {
+            'partner_id': self.partner_1.id,
+            'price': 45,
+            'product_id': product_5.id,
+        }, {
+            'partner_id': self.partner_1.id,
+            'price': 24,
+            'product_id': product_6.id,
+        }])
+
+        self.env['stock.quant']._update_available_quantity(product_4, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(product_5, self.stock_location, 2)
+        self.env['stock.quant']._update_available_quantity(product_6, self.stock_location, 10)
+
+        # Create some out delivery on the products and set different scheduled dates.
+        delivery_1 = self._create_and_process_delivery_at_date(
+            [(product_4, 6)], today, to_validate=False
+        )
+        delivery_1.scheduled_date = today + relativedelta(days=3)
+
+        delivery_2 = self._create_and_process_delivery_at_date(
+            [(product_5, 10)], today, to_validate=False
+        )
+        delivery_2.scheduled_date = today + relativedelta(days=5)
+
+        self._create_and_process_delivery_at_date(
+            [(product_6, 10)], today
+        )
+
+        context = {
+            'from_date': fields.Datetime.now(),
+            'to_date': fields.Datetime.now() + relativedelta(days=2),
+        }
+        self.assertEqual(product_4.with_context(context).outgoing_qty, 0)
+        self.assertEqual(product_5.with_context(context).outgoing_qty, 0)
+        self.assertEqual(product_6.with_context(context).outgoing_qty, 0)
+
+        context = {
+            'from_date': fields.Datetime.now(),
+            'to_date': fields.Datetime.now() + relativedelta(days=4),
+        }
+        self.assertEqual(product_4.with_context(context).outgoing_qty, 6)
+        self.assertEqual(product_5.with_context(context).outgoing_qty, 0)
+        self.assertEqual(product_6.with_context(context).outgoing_qty, 0)
+
+        context = {
+            'from_date': fields.Datetime.now(),
+            'to_date': fields.Datetime.now() + relativedelta(days=8),
+        }
+        self.assertEqual(product_4.with_context(context).outgoing_qty, 6)
+        self.assertEqual(product_5.with_context(context).outgoing_qty, 10)
+        self.assertEqual(product_6.with_context(context).outgoing_qty, 0)
+
+        po = self.env['purchase.order'].create({'partner_id': self.partner_1.id})
+        action = po.action_display_suggest()
+        context = {
+            **action['context'],
+            'default_product_ids': (product_4 | product_5 | product_6).ids,
+            }
+        po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
+            'number_of_days': 30,
+        })
+        # Check estimed price when based on actual demand.
+        self.assertEstimatedPrice(po_suggest, 810, based_on='actual_demand')
+        self.assertEstimatedPrice(po_suggest, 1800, based_on='actual_demand', factor=200)
+        self.assertEstimatedPrice(po_suggest, 450, based_on='actual_demand', days=4)
+        self.assertEstimatedPrice(po_suggest, 180, based_on='actual_demand', days=4, factor=50)
+        self.assertEstimatedPrice(po_suggest, 0, based_on='actual_demand', days=2)
+
+        # Use suggest wizard to generate PO lines and check their values.
+        po_suggest.based_on = 'actual_demand'
+        po_suggest.number_of_days = 30
+        po_suggest.percent_factor = 100
+        po_suggest.action_purchase_order_suggest()
+        self.assertRecordValues(po.order_line, [
+            {'product_id': product_4.id, 'product_qty': 5},
+            {'product_id': product_5.id, 'product_qty': 8},
+        ])
+
+        po_suggest.number_of_days = 30
+        po_suggest.percent_factor = 200
+        po_suggest.action_purchase_order_suggest()
+        self.assertRecordValues(po.order_line, [
+            {'product_id': product_4.id, 'product_qty': 11},
+            {'product_id': product_5.id, 'product_qty': 18},
+        ])
+
+        po_suggest.number_of_days = 4
+        po_suggest.percent_factor = 100
+        po_suggest.action_purchase_order_suggest()
+        self.assertRecordValues(po.order_line, [
+            {'product_id': product_4.id, 'product_qty': 5},
+        ])
+
+        po_suggest.number_of_days = 4
+        po_suggest.percent_factor = 50
+        po_suggest.action_purchase_order_suggest()
+        self.assertRecordValues(po.order_line, [
+            {'product_id': product_4.id, 'product_qty': 2},
         ])
 
     def test_purchase_order_suggest_quantities_for_consu(self):
@@ -373,6 +480,65 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
             {'product_id': self.product_1.id, 'product_qty': 6},
         ])
 
+        # Check the same with based_on actual demand.
+        product_ad = self.env['product.product'].create([{
+            'name': 'Product AD',
+            'standard_price': 60,
+            'is_storable': True,
+        }])
+
+        self.env['product.supplierinfo'].create([{
+            'partner_id': self.partner_1.id,
+            'price': 55,
+            'product_id': product_ad.id,
+        }])
+        self.env['stock.quant']._update_available_quantity(product_ad, self.stock_location, 7)
+
+        delivery = self._create_and_process_delivery_at_date(
+            [(product_ad, 12)], today, to_validate=False
+        )
+        delivery.scheduled_date = today + relativedelta(days=3)
+
+        # Create a new PO for the vendor then check suggest wizard estimed price.
+        po = self.env['purchase.order'].create({'partner_id': self.partner_1.id})
+        action = po.action_display_suggest()
+        context = {
+            **action['context'],
+            'default_product_ids': product_ad.ids,
+            }
+        po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
+            'number_of_days': 30,
+        })
+
+        self.assertEstimatedPrice(po_suggest, 275, based_on='actual_demand', days=4)
+        po_suggest.action_purchase_order_suggest()
+        self.assertRecordValues(po.order_line, [
+            {'product_id': product_ad.id, 'product_qty': 5},
+        ])
+
+        # Prepare a receipt for this product and confirm it.
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'name': f'Receipt move test for {product_ad.name}',
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_id': product_ad.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 4,
+            })],
+        })
+        receipt.action_confirm()
+        receipt.action_assign()
+
+        self.assertEstimatedPrice(po_suggest, 55, based_on='actual_demand', days=4)
+        po_suggest.action_purchase_order_suggest()
+        self.assertRecordValues(po.order_line, [
+            {'product_id': product_ad.id, 'product_qty': 1},
+        ])
+
     def test_purchase_order_suggest_quantities_multiwarehouse(self):
         """ Ensure the product's qty demand is correctly computed for the right warehouse."""
         main_warehouse = self.env.ref('stock.warehouse0')
@@ -438,4 +604,105 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
         po_2_suggest.action_purchase_order_suggest()
         self.assertRecordValues(po_2.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 10},
+        ])
+
+        # Check the same with based_on actual demand.
+        product_ad = self.env['product.product'].create([{
+            'name': 'Product AD',
+            'standard_price': 60,
+            'is_storable': True,
+        }])
+
+        self.env['product.supplierinfo'].create([{
+            'partner_id': self.partner_1.id,
+            'price': 55,
+            'product_id': product_ad.id,
+        }])
+        self.env['stock.quant']._update_available_quantity(product_ad, main_warehouse.lot_stock_id, 7)
+        self.env['stock.quant']._update_available_quantity(product_ad, self.warehouse_1.lot_stock_id, 5)
+
+        today = fields.Datetime.now()
+        delivery_1 = self._create_and_process_delivery_at_date(
+            [(product_ad, 10)], today, to_validate=False, warehouse=main_warehouse
+        )
+        delivery_1.scheduled_date = today + relativedelta(days=3)
+
+        delivery_2 = self._create_and_process_delivery_at_date(
+            [(product_ad, 9)], today, to_validate=False, warehouse=self.warehouse_1
+        )
+        delivery_2.scheduled_date = today + relativedelta(days=5)
+
+        context = {
+            'from_date': fields.Datetime.now(),
+            'to_date': fields.Datetime.now() + relativedelta(days=6),
+        }
+        self.assertEqual(product_ad.with_context(context).outgoing_qty, 19)
+        context = {
+            'from_date': fields.Datetime.now(),
+            'to_date': fields.Datetime.now() + relativedelta(days=6),
+            'warehouse_id': main_warehouse.id,
+        }
+        self.assertEqual(product_ad.with_context(context).outgoing_qty, 10)
+        context = {
+            'from_date': fields.Datetime.now(),
+            'to_date': fields.Datetime.now() + relativedelta(days=6),
+            'warehouse_id': self.warehouse_1.id,
+        }
+        self.assertEqual(product_ad.with_context(context).outgoing_qty, 9)
+
+        # Create a PO for each warehouse and check the right quantity is added to the PO line.
+        po_1 = self.env['purchase.order'].create({
+            'partner_id': self.partner_1.id,
+            'picking_type_id': main_warehouse.in_type_id.id,
+        })
+        action = po_1.action_display_suggest()
+        context = {
+            **action['context'],
+            'default_product_ids': product_ad.ids,
+        }
+        po_1_suggest = self.env['purchase.order.suggest'].with_context(context).create({
+            'number_of_days': 30,
+        })
+        self.assertEqual(po_1_suggest.warehouse_id, po_1.picking_type_id.warehouse_id, "Should use PO warehouse by default")
+        self.assertEstimatedPrice(po_1_suggest, 385, based_on='actual_demand', warehouse=False)
+        self.assertEstimatedPrice(po_1_suggest, 165, based_on='actual_demand', warehouse=main_warehouse)
+        self.assertEstimatedPrice(po_1_suggest, 220, based_on='actual_demand', warehouse=self.warehouse_1)
+
+        # Generate PO line for qty demand not based on any warehouse.
+        po_1_suggest.warehouse_id = False
+        po_1_suggest.action_purchase_order_suggest()
+        self.assertRecordValues(po_1.order_line, [
+            {'product_id': product_ad.id, 'product_qty': 7},
+        ])
+
+        # Generate PO line for qty demand based on one specific warehouse.
+        po_1_suggest.warehouse_id = main_warehouse
+        po_1_suggest.action_purchase_order_suggest()
+        self.assertRecordValues(po_1.order_line, [
+            {'product_id': product_ad.id, 'product_qty': 3},
+        ])
+
+        po_2 = self.env['purchase.order'].create({
+            'partner_id': self.partner_1.id,
+            'picking_type_id': self.warehouse_1.in_type_id.id,
+        })
+        action = po_2.action_display_suggest()
+        context = {
+            **action['context'],
+            'default_product_ids': product_ad.ids,
+        }
+        po_2_suggest = self.env['purchase.order.suggest'].with_context(context).create({
+            'number_of_days': 30,
+        })
+
+        self.assertEqual(po_2_suggest.warehouse_id, po_2.picking_type_id.warehouse_id, "Should use PO warehouse by default")
+        self.assertEstimatedPrice(po_2_suggest, 385, based_on='actual_demand', warehouse=False)
+        self.assertEstimatedPrice(po_2_suggest, 165, based_on='actual_demand', warehouse=main_warehouse)
+        self.assertEstimatedPrice(po_2_suggest, 220, based_on='actual_demand', warehouse=self.warehouse_1)
+
+        # Generate PO line for qty demand based on one specific warehouse.
+        po_2_suggest.warehouse_id = self.warehouse_1
+        po_2_suggest.action_purchase_order_suggest()
+        self.assertRecordValues(po_2.order_line, [
+            {'product_id': product_ad.id, 'product_qty': 4},
         ])
