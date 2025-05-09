@@ -3803,4 +3803,44 @@
             </record>
         </field>
     </record>
+    <record id="tax_report_105" model="account.report">
+        <field name="name">105</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ec"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_105_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@es_419">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_line_105_319" model="account.report.line">
+                <field name="name">319 (105)</field>
+                <field name="name@es_419">319 (105)</field>
+                <field name="code">c105319</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_105_319_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">319 (Reporte 105)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_105_320" model="account.report.line">
+                <field name="name">320 (105)</field>
+                <field name="name@es_419">320 (105)</field>
+                <field name="code">c105320</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_105_320_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">320 (Reporte 105)</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
 </odoo>
