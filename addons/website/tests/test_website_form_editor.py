@@ -57,7 +57,6 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
         self.env.company.email = 'after.change@mail.com'
         self.start_tour('/contactus', 'website_form_contactus_check_changed_email', login="portal")
 
-    @unittest.skip
     def test_website_form_editable_content(self):
         self.start_tour('/', 'website_form_editable_content', login="admin")
 
