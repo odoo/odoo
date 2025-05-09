@@ -25,25 +25,25 @@ export class ImageCropPlugin extends Plugin {
         ],
     };
 
-    getSelectedImage() {
-        const selectedNodes = this.dependencies.selection.getSelectedNodes();
-        return selectedNodes.find((node) => node.tagName === "IMG");
+    getTargetedImage() {
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        return targetedNodes.find((node) => node.tagName === "IMG");
     }
 
-    async openCropImage(selectedImg, imageCropProps = {}) {
-        selectedImg = selectedImg || this.getSelectedImage();
-        if (!selectedImg) {
+    async openCropImage(targetedImg, imageCropProps = {}) {
+        targetedImg = targetedImg || this.getTargetedImage();
+        if (!targetedImg) {
             return;
         }
         return registry.category("main_components").add("ImageCropping", {
             Component: ImageCrop,
             props: {
-                media: selectedImg,
+                media: targetedImg,
                 onSave: async (newDataset) => {
                     // todo: should use the mutex if there is one?
                     const updateImageAttributes =
                         await this.dependencies.imagePostProcess.processImage(
-                            selectedImg,
+                            targetedImg,
                             newDataset
                         );
                     updateImageAttributes();

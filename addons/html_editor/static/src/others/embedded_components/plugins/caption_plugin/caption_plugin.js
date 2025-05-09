@@ -31,7 +31,7 @@ export class CaptionPlugin extends Plugin {
                 groupId: "image_description",
                 commandId: "toggleImageCaption",
                 text: "Caption",
-                isActive: () => this.hasImageCaption(this.dependencies.image.getSelectedImage()),
+                isActive: () => this.hasImageCaption(this.dependencies.image.getTargetedImage()),
             },
         ],
         clean_for_save_handlers: this.cleanForSave.bind(this),
@@ -80,7 +80,7 @@ export class CaptionPlugin extends Plugin {
         );
     }
 
-    toggleImageCaption(image = this.dependencies.image.getSelectedImage()) {
+    toggleImageCaption(image = this.dependencies.image.getTargetedImage()) {
         if (!image) {
             return;
         }
