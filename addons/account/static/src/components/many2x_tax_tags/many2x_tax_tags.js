@@ -5,12 +5,10 @@ import {
     Many2ManyTagsField,
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { TaxAutoComplete } from "@account/components/tax_autocomplete/tax_autocomplete";
 
 export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
     static components = {
         ...Many2XAutocomplete.components,
-        AutoComplete: TaxAutoComplete,
     };
 
     async loadOptionsSource(request) {
@@ -26,59 +24,16 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
         return options;
     }
 
-    search(name) {
-        return this.orm
-            .call(this.props.resModel, "search_read", [], {
-                domain: [...this.props.getDomain(), ["name", "ilike", name]],
-                fields: ["id", "name", "tax_scope"],
-                context: this.props.context,
-            })
-            .then((records) => {
-                return this.orm
-                    .call("account.tax", "fields_get", [], { attributes: ["selection"] })
-                    .then((fields) => {
-                        const selectionOptions = fields.tax_scope.selection;
-
-                        const recordsWithLabels = records.map((record) => {
-                            const selectedOption = selectionOptions.find(
-                                (option) => option[0] === record.tax_scope
-                            );
-                            const label = selectedOption ? selectedOption[1] : undefined;
-                            return { ...record, tax_scope: label };
-                        });
-
-                        return recordsWithLabels;
-                    });
-            });
-    }
-
-    mapRecordToOption(result) {
-        return {
-            value: result.id,
-            label: result.name ? result.name.split("\n")[0] : _t("Unnamed"),
-            displayName: result.name,
-            tax_scope: result.tax_scope,
-        };
-    }
-
     async onSearchMore(request) {
-        const { resModel, getDomain, context, fieldString } = this.props;
+        const { getDomain, context, fieldString } = this.props;
 
         const domain = getDomain();
         let dynamicFilters = [];
         if (request.length) {
-            const nameGets = await this.orm.call(resModel, "name_search", [], {
-                name: request,
-                domain: domain,
-                operator: "ilike",
-                limit: this.props.searchMoreLimit,
-                context,
-            });
-
             dynamicFilters = [
                 {
                     description: _t("Quick search: %s", request),
-                    domain: [["id", "in", nameGets.map((nameGet) => nameGet[0])]],
+                    domain: [["name", "ilike", request]],
                 },
             ];
         }

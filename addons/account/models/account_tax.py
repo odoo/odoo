@@ -251,12 +251,14 @@ class AccountTax(models.Model):
                 raise ValidationError(_("The cash basis transition account needs to allow reconciliation."))
 
     @api.model
-    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
+    @api.readonly
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        domain = Domain(domain)
         if 'search_default_domestictax' in self.env.context:
-            domain = expression.AND([domain, ['|', ('fiscal_position_ids', '=', False), ('fiscal_position_ids.is_domestic', '=', True)]])
+            domain &= Domain('fiscal_position_ids', '=', False) | Domain('fiscal_position_ids.is_domestic', '=', True)
         if fp_id := self.env.context.get('dynamic_fiscal_position_id'):
-            domain = expression.AND([domain, [('fiscal_position_ids', 'in', [int(fp_id)])]])
-        return super().search_read(domain, fields, offset, limit, order, **read_kwargs)
+            domain &= Domain('fiscal_position_ids', 'in', [False, int(fp_id)])
+        return super().name_search(name, domain, operator, limit)
 
     @api.depends('company_id')
     def _compute_country_id(self):
@@ -658,17 +660,26 @@ class AccountTax(models.Model):
         return vals_list
 
     @api.depends('type_tax_use', 'tax_scope')
-    @api.depends_context('append_type_to_tax_name')
+    @api.depends_context('append_fields', 'formatted_display_name')
     def _compute_display_name(self):
-        type_tax_use = dict(self._fields['type_tax_use']._description_selection(self.env))
+        type_tax_uses = dict(self._fields['type_tax_use']._description_selection(self.env))
+        scopes = dict(self._fields['tax_scope']._description_selection(self.env))
+
+        needs_markdown = self.env.context.get('formatted_display_name')
+        wrapper = "\t--%s--" if needs_markdown else " (%s)"
+        fields_to_include = set(self.env.context.get('append_fields') or [])
+
         for record in self:
             if name := record.name:
-                if self._context.get('append_type_to_tax_name'):
-                    name += ' (%s)' % type_tax_use.get(record.type_tax_use)
-                if len(self.env.companies) > 1 and self.env.context.get('params', {}).get('model') == 'product.template':
-                    name += ' (%s)' % record.company_id.display_name
+                if 'type_tax_use' in fields_to_include and (use := type_tax_uses.get(record.type_tax_use)):
+                    name += wrapper % use
+                if 'company_id' in fields_to_include and len(self.env.companies) > 1:
+                    name += wrapper % record.company_id.display_name
+                if needs_markdown and (scope := scopes.get(record.tax_scope)):  # scope is always in the dropdown options, never in the tag
+                    name += wrapper % scope
                 if record.country_id != record.company_id._accessible_branches()[:1].account_fiscal_country_id:
-                    name += ' (%s)' % record.country_code
+                    name += wrapper % record.country_code
+
             record.display_name = name
 
     @api.onchange('amount')
