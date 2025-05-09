@@ -1260,6 +1260,10 @@ class ProjectTask(models.Model):
                         project_link_per_task_id[task.id] = project_link
         if vals.get('parent_id') is False:
             additional_vals['display_in_project'] = True
+        if 'description' in vals:
+            # the portal user cannot access to html_field_history and so it would be
+            # better to write in sudo for description field to avoid giving access to html_field_history
+            additional_vals['description'] = vals.pop('description')
 
         # write changes
         if self.env.su or not self.env.user._is_portal():

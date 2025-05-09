@@ -103,12 +103,32 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         def dummy_value(field_name):
             field = task._fields[field_name]
             if field.is_text:
-                return 'dummy'
+                value = 'dummy'
+                if field.type == 'html':
+                    value = f'<p>{value}</p>'
+                return value
             if field.relational:
-                return task.env[field.comodel_name].search([], limit=1).id
+                value = task.env[field.comodel_name].search([], limit=1).id
+                if field.type != 'many2one':
+                    value = [value]
+                return value
             if field.name == 'id':
                 return 42
             return task.default_get([field_name]).get(field_name, False)
+
+        for field_name in self.write_protected_fields_task:
+            field = task._fields[field_name]
+            if field.comodel_name == 'project.task':
+                other_task = self.env['project.task'].create({'name': 'Parent task', 'project_id': task.project_id.id})
+                value = other_task.id if field.type == 'many2one' else other_task.ids
+                task.write({field_name: value})
+                self.assertEqual(task[field_name], other_task)
+            else:
+                value = dummy_value(field_name)
+                task.write({field_name: value})
+                actual_value = task[field_name]
+                expected_value = field.convert_to_record(value, task)
+                self.assertEqual(actual_value, expected_value, f"Field {field} should be editable.")
 
         for field in self.readonly_protected_fields_task:
             with self.assertRaises(AccessError, msg=f"Field {field} should be readonly"):
