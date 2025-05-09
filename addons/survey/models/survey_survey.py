@@ -532,7 +532,7 @@ class SurveySurvey(models.Model):
     # ANSWER MANAGEMENT
     # ------------------------------------------------------------
 
-    def _create_answer(self, user=False, partner=False, email=False, test_entry=False, check_attempts=True, **additional_vals):
+    def _create_answer(self, user=False, nickname=False, partner=False, email=False, test_entry=False, check_attempts=True, **additional_vals):
         """ Main entry point to get a token back or create a new one. This method
         does check for current user access in order to explicitly validate security.
 
@@ -563,14 +563,14 @@ class SurveySurvey(models.Model):
             if user and not user._is_public():
                 answer_vals['partner_id'] = user.partner_id.id
                 answer_vals['email'] = user.email
-                answer_vals['nickname'] = user.name
+                answer_vals['nickname'] = nickname or user.name
             elif partner:
                 answer_vals['partner_id'] = partner.id
                 answer_vals['email'] = partner.email
-                answer_vals['nickname'] = partner.name
+                answer_vals['nickname'] = nickname or partner.name
             else:
                 answer_vals['email'] = email
-                answer_vals['nickname'] = email
+                answer_vals['nickname'] = nickname
 
             if invite_token:
                 answer_vals['invite_token'] = invite_token

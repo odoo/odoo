@@ -184,6 +184,7 @@ class Survey(http.Controller):
             retry_answer_sudo = survey_sudo._create_answer(
                 user=request.env.user,
                 partner=answer_sudo.partner_id,
+                nickname=answer_sudo.nickname,
                 email=answer_sudo.email,
                 invite_token=answer_sudo.invite_token,
                 test_entry=answer_sudo.test_entry,

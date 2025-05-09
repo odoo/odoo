@@ -108,7 +108,7 @@ class SurveyCase(common.TransactionCase):
                 (0, 0, {
                     'value': label['value'],
                     'answer_score': label.get('answer_score', 0),
-                    'is_correct': label.get('is_correct', False)
+                    'is_correct': label.get('is_correct', False),
                 }) for label in kwargs.pop('labels')
             ]
         elif qtype == 'matrix':

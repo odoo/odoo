@@ -1,13 +1,9 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import badge
-from . import challenge
-from . import ir_http
-from . import res_lang
-from . import res_partner
+from . import crm_lead
+from . import res_company
+from . import survey_question_answer
 from . import survey_question
 from . import survey_survey
-from . import survey_survey_template
 from . import survey_user_input
 from . import templates

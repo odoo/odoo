@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <t t-name="survey.SurveyTypeActionHelper">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <p>
+                    No Survey Found
+                </p><p>
+                    Pick a sample or <a action="action_load_sample_custom" class="o_survey_load_sample"
+                        t-on-click.stop.prevent="() => this.onStartFromScratchClick()">Start from scratch</a>.
+                </p>
+
+                <div class="row mb-4 w-100 px-5 justify-content-center">
+                    <t t-set="templateNames" t-value="Object.keys(surveyTypeTemplateData)"/>
+                    <t t-foreach="templateNames" t-as="templateName" t-key="templateName">
+                        <t t-set="templateInfo" t-value="surveyTypeTemplateData[templateName]"/>
+                        <!--We want 2 cards per line on large screens, we will use an offset to do that (offsetRow)-->
+                        <!--A card will take 1/6 of the screen width (col-md-2 -> 12/2=6), so 1/3 for 2 cards-->
+                        <!--Therefore, each line must be shifted by 1/3 (offset-md-4 -> 12/4=3)-->
+                        <t t-set="offsetRow" t-value="templateName_index % 2 === 0 ? 'offset-md-2 offset-xl-4 me-md-3' : 'ms-md-3 me-md-auto'"/>
+                        <div t-attf-class="col-md-4 col-xl-2 p-3 ps-2 pt-4 my-3 flex-row o_survey_load_sample
+                                                survey_sample_card card rounded flex-wrap cursor-pointer {{offsetRow}}"
+                            t-on-click.stop.prevent="() => this.onTemplateClick(templateInfo)">
+                            <div class="col-md-4 p-1 ps-0">
+                                <img class="img-fluid" t-attf-src="{{templateInfo.icon}}" t-attf-alt="{{templateInfo.title}}"/>
+                            </div>
+                            <div class="col-md-8 ps-md-3 text-start">
+                                <h3 t-out="templateInfo.title"/>
+                                <p t-out="templateInfo.description"/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</odoo>
