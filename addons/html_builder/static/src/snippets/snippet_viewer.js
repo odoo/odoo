@@ -109,9 +109,12 @@ export class SnippetViewer extends Component {
         }
         if (this.props.state.search) {
             const strMatches = (str) =>
-                str.toLowerCase().includes(this.props.state.search.toLowerCase());
+                str ? str.toLowerCase().includes(this.props.state.search.toLowerCase()) : false;
             return snippetStructures.filter(
-                (snippet) => strMatches(snippet.title) || strMatches(snippet.keyWords || "")
+                (snippet) =>
+                    strMatches(snippet.name) ||
+                    strMatches(snippet.title) ||
+                    strMatches(snippet.keyWords)
             );
         }
 
