@@ -1584,6 +1584,29 @@ class WebsiteSale(payment_portal.PaymentPortal):
             creation_context
         ).create(address_values)
 
+<<<<<<< ec386c41b0663cc3c9b5442dfbae1786c89c0b99
+||||||| c494ca48eecab80e7310bf1c4ca1381d61f37f86
+    def _get_extra_billing_info_route(self, order_sudo):
+        """ Hook for localizations to request additional billing details in a specific page.
+
+        :param sale.order order_sudo: The current cart.
+        :return: The route to redirect the customer to.
+        :rtype: str
+        """
+        return ''
+
+=======
+    def _get_extra_billing_info_route(self, order_sudo):
+        """ Hook for localizations to request additional billing details in a specific page.
+
+        :param sale.order order_sudo: The current cart.
+        :return: The route to redirect the customer to.
+        :rtype: str
+        """
+        # TODO: remove me in master with call site, not used in standard codebase anymore.
+        return ''
+
+>>>>>>> 2265a917ae3f290bede81c09d169d11c14d288d4
     def _handle_extra_form_data(self, extra_form_data, address_values):
         """ Handling extra form data that were not processed on the address from.
 
