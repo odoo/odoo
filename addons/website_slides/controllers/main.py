@@ -22,7 +22,7 @@ from odoo.tools import consteq, email_normalize_all
 _logger = logging.getLogger(__name__)
 
 
-def handle_wslide_error(exception):
+def handle_wslide_error(exception, **kwargs):
     if isinstance(exception, AccessError):
         return request.redirect("/slides?invite_error=no_rights", 302)
 
