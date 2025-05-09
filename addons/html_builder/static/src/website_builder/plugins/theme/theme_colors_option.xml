@@ -107,6 +107,7 @@
                             <t t-set-slot="collapse">
                                 <BuilderRow label.translate="Background">
                                     <BuilderColorPicker
+                                        enabledTabs="['solid', 'custom', 'gradient']"
                                         action="'customizeWebsiteColor'"
                                         actionParam="{ mainParam: `o-cc${preset.id}-bg`, gradientColor: `o-cc${preset.id}-bg-gradient` }"
                                         enabledTabs="['solid', 'custom']"

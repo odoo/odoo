@@ -37,6 +37,7 @@
         </BuilderRow>
         <BuilderRow label.translate="Background" level="1">
             <BuilderColorPicker t-if="!this.isActiveItem('layout_full_opt')"
+                enabledTabs="['solid', 'custom']"
                 action="'customizeWebsiteColor'"
                 actionParam="'body'"
             />
@@ -300,6 +301,7 @@
         </BuilderRow>
         <BuilderRow label.translate="Background">
             <BuilderColorPicker noTransparency="true"
+                enabledTabs="['solid', 'custom']"
                 action="'customizeWebsiteColor'"
                 actionParam="'input'"
             />
