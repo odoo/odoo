@@ -16,7 +16,6 @@ from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
 from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
-from odoo.tools.image import image_data_uri
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import _
 
@@ -27,9 +26,39 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.const import SHOP_PATH
 from odoo.addons.website_sale.models.website import (
-    PRICELIST_SESSION_CACHE_KEY,
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
+    PRICELIST_SESSION_CACHE_KEY,
 )
+
+
+def handle_product_params_error(exc, product, category=None, **kwargs):
+    """ Handle access and missing errors related to product or category on the eCommerce.
+
+    This function is intended to prevent access-related exceptions when a user attempts to view a
+    product or category page. It checks if the provided product and category records still exist and
+    are accessible, and then attempts to redirect to a valid fallback route if possible. If no valid
+    route is found, it returns a 404 response code (instead of a 403).
+
+    :param odoo.exceptions.AccessError | odoo.exceptions.MissingError exc: The exception thrown
+            by _check_access `base.models.ir_http._pre_dispatch`.
+    :param product.template product: The product the user is trying to access.
+    :param product.public.category category: The category the user is trying to access, if any.
+    :param dict kwargs: Optional data. This parameter is not used here.
+    :return: A redirect response to a valid shop or product page, or a 404 error code if no valid
+             fallback is found.
+    :rtype: int | Response
+    """
+    product = product.exists()
+    if category:
+        category = category.exists()
+
+    if category and not (product and product.has_access('read')):
+        return request.redirect(WebsiteSale._get_shop_path(category))
+
+    if not category and product and product.has_access('read'):
+        return request.redirect(WebsiteSale._get_product_path(product))
+
+    return NotFound.code  # 404
 
 
 class TableCompute:
@@ -251,6 +280,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         auth='public',
         website=True,
         sitemap=sitemap_shop,
+        # Sends a 404 error in case of any Access error instead of 403.
+        handle_params_access_error=lambda e, **kwargs: NotFound.code,
     )
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, tags='', **post):
         if not request.website.has_ecommerce_access():
@@ -475,6 +506,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         auth='public',
         website=True,
         sitemap=sitemap_products,
+        handle_params_access_error=handle_product_params_error,
     )
     def product(self, product, category=None, pricelist=None, **kwargs):
         if not request.website.has_ecommerce_access():
