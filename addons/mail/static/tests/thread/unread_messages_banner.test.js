@@ -233,7 +233,7 @@ test("mobile: mark as read when opening chat", async () => {
     await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Chat" });
+    await click("button:has(.badge:contains('1'))", { text: "Chat" });
     await contains(".o-mail-NotificationItem:has(.badge:contains(1))", { text: "bob" });
     await click(".o-mail-NotificationItem", { text: "bob" });
     await contains(".o-mail-Message");

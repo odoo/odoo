@@ -35,6 +35,7 @@ const discussAppPatch = {
             },
             eager: true,
         });
+        this.unreadChannels = fields.Many("Thread", { inverse: "appAsUnreadChannels" });
     },
     computeChats() {
         return {

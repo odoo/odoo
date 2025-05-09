@@ -125,11 +125,16 @@ export class MessagingMenu extends Component {
     get tabs() {
         return [
             {
+                counter: this.store.getDiscussSidebarCategoryCounter(this.store.discuss.chats.id),
                 icon: "fa fa-user",
                 id: "chat",
                 label: _t("Chat"),
             },
             {
+                channelHasUnread: Boolean(this.store.discuss.unreadChannels.length),
+                counter: this.store.getDiscussSidebarCategoryCounter(
+                    this.store.discuss.channels.id
+                ),
                 icon: "fa fa-users",
                 id: "channel",
                 label: _t("Channel"),

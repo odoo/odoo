@@ -14,6 +14,11 @@ patch(MessagingMenu.prototype, {
         );
         if (hasLivechats) {
             items.push({
+                counter: this.store.discuss.livechats.reduce(
+                    (acc, channel) =>
+                        channel.selfMember?.message_unread_counter > 0 ? acc + 1 : acc,
+                    0
+                ),
                 id: "livechat",
                 icon: "fa fa-commenting-o",
                 label: _t("Livechat"),
