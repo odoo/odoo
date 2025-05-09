@@ -161,7 +161,6 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <BaseImponible>4000.00</BaseImponible>
                     <TipoImpositivo>21.00</TipoImpositivo>
                     <CuotaImpuesto>840.00</CuotaImpuesto>
-                    <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
                   </DetalleIVA>
                 </DesgloseIVA>
               </DetalleNoExenta>

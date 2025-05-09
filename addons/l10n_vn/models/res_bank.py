@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -47,7 +49,8 @@ class ResPartnerBank(models.Model):
 
     def _get_additional_data_field(self, comment):
         if self.country_code == 'VN':
-            return self._serialize(8, comment)
+            # The first check is too permissive for VietQR.
+            return self._serialize(8, re.sub(r"[^a-zA-Z0-9 _\\\-.]+", "", comment))
         return super()._get_additional_data_field(comment)
 
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):

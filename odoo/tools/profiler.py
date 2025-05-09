@@ -634,6 +634,9 @@ class Profiler:
             if self.params:
                 del self.init_thread.profiler_params
 
+    def _get_cm_proxy(self):
+        return _Nested(self)
+
     def _add_file_lines(self, stack):
         for index, frame in enumerate(stack):
             (filename, lineno, name, line) = frame
@@ -691,6 +694,20 @@ class Profiler:
             "duration": self.duration,
             "collectors": {collector.name: collector.entries for collector in self.collectors},
         }, indent=4)
+
+
+class _Nested:
+    __slots__ = ("__profiler",)
+
+    def __init__(self, profiler):
+        self.__profiler = profiler
+
+    def __enter__(self):
+        self.__profiler.__enter__()
+        return self
+
+    def __exit__(self, *args):
+        return self.__profiler.__exit__(*args)
 
 
 class Nested:

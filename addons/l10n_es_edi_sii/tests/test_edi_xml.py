@@ -1,5 +1,5 @@
 # coding: utf-8
-from .common import TestEsEdiCommon
+from .common import TestEsEdiCommon, mocked_l10n_es_edi_call_web_service_sign
 
 import json
 
@@ -7,10 +7,6 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo.tests import tagged
-
-
-def mocked_l10n_es_edi_call_web_service_sign(edi_format, invoices, info_list):
-    return {inv: {'success': True} for inv in invoices}
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
