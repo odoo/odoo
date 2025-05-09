@@ -154,12 +154,12 @@ export class FormatPlugin extends Plugin {
     };
 
     removeFormat() {
-        const traversedNodes = this.dependencies.selection.getTraversedNodes();
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
         this.dispatchTo("remove_format_handlers");
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 !formatsSpecs[format].removeStyle ||
-                !this.hasSelectionFormat(format, traversedNodes)
+                !this.hasSelectionFormat(format, targetedNodes)
             ) {
                 continue;
             }
@@ -173,13 +173,13 @@ export class FormatPlugin extends Plugin {
      * node
      *
      * @param {String} format 'bold'|'italic'|'underline'|'strikeThrough'|'switchDirection'
-     * @param {Node[]} [traversedNodes]
+     * @param {Node[]} [targetedNodes]
      * @returns {boolean}
      */
-    hasSelectionFormat(format, traversedNodes = this.dependencies.selection.getTraversedNodes()) {
-        const selectedNodes = traversedNodes.filter(isTextNode);
+    hasSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+        const targetedTextNodes = targetedNodes.filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
-        return selectedNodes.some((n) => isFormatted(n, this.editable));
+        return targetedTextNodes.some((n) => isFormatted(n, this.editable));
     }
     /**
      * Return true if the current selection on the editable appears as the given
@@ -187,11 +187,11 @@ export class FormatPlugin extends Plugin {
      * text node in it appears as that format.
      *
      * @param {String} format 'bold'|'italic'|'underline'|'strikeThrough'|'switchDirection'
-     * @param {Node[]} [traversedNodes]
+     * @param {Node[]} [targetedNodes]
      * @returns {boolean}
      */
-    isSelectionFormat(format, traversedNodes = this.dependencies.selection.getTraversedNodes()) {
-        const selectedNodes = traversedNodes.filter(
+    isSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+        const targetedTextNodes = targetedNodes.filter(
             (node) =>
                 isTextNode(node) &&
                 !isZwnbsp(node) &&
@@ -200,25 +200,25 @@ export class FormatPlugin extends Plugin {
         );
         const isFormatted = formatsSpecs[format].isFormatted;
         return (
-            selectedNodes.length && selectedNodes.every((node) => isFormatted(node, this.editable))
+            targetedTextNodes.length && targetedTextNodes.every((node) => isFormatted(node, this.editable))
         );
     }
 
     // @todo: issues:
     // - the calls to hasAnyColor should probably be replaced by calls to predicates
     //   registered as resources (e.g. by the ColorPlugin).
-    hasAnyFormat(traversedNodes) {
+    hasAnyFormat(targetedNodes) {
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 formatsSpecs[format].removeStyle &&
-                this.hasSelectionFormat(format, traversedNodes)
+                this.hasSelectionFormat(format, targetedNodes)
             ) {
                 return true;
             }
         }
         return (
-            hasAnyNodesColor(traversedNodes, "color") ||
-            hasAnyNodesColor(traversedNodes, "backgroundColor")
+            hasAnyNodesColor(targetedNodes, "color") ||
+            hasAnyNodesColor(targetedNodes, "backgroundColor")
         );
     }
 
@@ -252,11 +252,12 @@ export class FormatPlugin extends Plugin {
             }
         }
 
-        const selectedNodes = /** @type { Text[] } **/ (
+        const selectedTextNodes = /** @type { Text[] } **/ (
             this.dependencies.selection
-                .getSelectedNodes()
+                .getTargetedNodes()
                 .filter(
                     (n) =>
+                        this.dependencies.selection.areNodeContentsFullySelected(n) &&
                         ((isTextNode(n) &&
                             (isVisibleTextNode(n) ||
                                 isZWS(n) ||
@@ -267,7 +268,7 @@ export class FormatPlugin extends Plugin {
                         isContentEditable(n)
                 )
         );
-        const unformattedTextNodes = selectedNodes.filter((n) => {
+        const unformattedTextNodes = selectedTextNodes.filter((n) => {
             const listItem = closestElement(n, "li");
             if (listItem && this.dependencies.selection.isNodeContentsFullySelected(listItem)) {
                 const hasFontSizeStyle =
@@ -279,9 +280,9 @@ export class FormatPlugin extends Plugin {
             return true;
         });
 
-        const selectedFieldNodes = new Set(
+        const tagetedFieldNodes = new Set(
             this.dependencies.selection
-                .getSelectedNodes()
+                .getTargetedNodes()
                 .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
                 .filter(Boolean)
         );
@@ -349,11 +350,11 @@ export class FormatPlugin extends Plugin {
             }
         }
 
-        for (const selectedFieldNode of selectedFieldNodes) {
+        for (const targetedFieldNode of tagetedFieldNodes) {
             if (applyStyle) {
-                formatSpec.addStyle(selectedFieldNode, formatProps);
+                formatSpec.addStyle(targetedFieldNode, formatProps);
             } else {
-                formatSpec.removeStyle(selectedFieldNode);
+                formatSpec.removeStyle(targetedFieldNode);
             }
         }
 
@@ -379,9 +380,9 @@ export class FormatPlugin extends Plugin {
             unformattedTextNodes[0].textContent === "\u200B"
         ) {
             this.dependencies.selection.setCursorStart(unformattedTextNodes[0]);
-        } else if (selectedNodes.length) {
-            const firstNode = selectedNodes[0];
-            const lastNode = selectedNodes[selectedNodes.length - 1];
+        } else if (selectedTextNodes.length) {
+            const firstNode = selectedTextNodes[0];
+            const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
             let newSelection;
             if (selection.direction === DIRECTIONS.RIGHT) {
                 newSelection = {
@@ -401,7 +402,7 @@ export class FormatPlugin extends Plugin {
             this.dependencies.selection.setSelection(newSelection, { normalize: false });
             return true;
         }
-        if (selectedFieldNodes.size > 0) {
+        if (tagetedFieldNodes.size > 0) {
             return true;
         }
     }

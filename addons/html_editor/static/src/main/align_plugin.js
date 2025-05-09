@@ -16,8 +16,8 @@ export class AlignPlugin extends Plugin {
 
     align(mode) {
         const visitedBlocks = new Set();
-        const traversedNode = this.dependencies.selection.getTraversedNodes();
-        for (const node of traversedNode) {
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        for (const node of targetedNodes) {
             if (isVisibleTextNode(node)) {
                 const block = closestBlock(node);
                 if (!visitedBlocks.has(block)) {
