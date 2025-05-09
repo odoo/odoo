@@ -21,7 +21,7 @@ registerWebsitePreviewTour("snippet_visibility_option", {
     },
     {
         content: "Click the 'No Desktop' visibility option.",
-        trigger: ".snippet-option-DeviceVisibility we-button[data-toggle-device-visibility='no_desktop']",
+        trigger: "[data-container-title='Column'] [data-action-param='no_desktop']",
         run: "click"
     },
     {
@@ -31,7 +31,7 @@ registerWebsitePreviewTour("snippet_visibility_option", {
     },
     {
         content: "Click the 'No Desktop' visibility option.",
-        trigger: "we-button[data-toggle-device-visibility='no_desktop']",
+        trigger: "[data-container-title='Block'] [data-action-param='no_desktop']",
         run: "click"
     },
     {

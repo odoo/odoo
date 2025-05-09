@@ -1038,10 +1038,10 @@ registerWebsitePreviewTour("website_form_editable_content", {
     edition: true,
 }, () => [
     {
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        trigger: ".o-snippets-menu div.o_snippet",
     },
     {
-        trigger: `#oe_snippets .oe_snippet[name="Form"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
+        trigger: `.o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name="Form"].o_draggable .o_snippet_thumbnail`,
         run: "drag_and_drop :iframe #wrap",
     },
     {
@@ -1056,11 +1056,7 @@ registerWebsitePreviewTour("website_form_editable_content", {
             }
         },
     },
-    {
-        content: "Go back to blocks",
-        trigger: ".o_we_add_snippet_btn",
-        run: "click",
-    },
+    goBackToBlocks(),
     ...insertSnippet({id: "s_three_columns", name: "Columns", groupName: "Columns"}),
     {
         content: "Select the first column",
@@ -1069,7 +1065,7 @@ registerWebsitePreviewTour("website_form_editable_content", {
     },
     {
         content: "Drag and drop the selected column inside the form",
-        trigger: ":iframe .o_overlay_move_options .o_move_handle",
+        trigger: ".o_overlay_options .o_move_handle",
         run: "drag_and_drop :iframe section.s_website_form",
     },
     {
@@ -1092,7 +1088,7 @@ registerWebsitePreviewTour("website_form_editable_content", {
     },
     {
         content: "Remove the dropped column",
-        trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove:not(:visible)",
+        trigger: ".o_overlay_options .oe_snippet_remove:not(:visible)",
         run: "click",
     },
     ...clickOnSave(),
