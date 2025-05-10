@@ -848,6 +848,7 @@ Customs form No. 1, 9, etc for Vendor Bills""",
         try:
             qr_code = self.env['ir.actions.report'].barcode(
                 barcode_type='QR',
+                quiet=False,
                 width=128,
                 height=128,
                 humanreadable=1,

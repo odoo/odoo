@@ -151,7 +151,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
             'barLevel': 'M',
             'width': 256,
             'height': 256,
-            'quiet': 1,
+            'quiet': 0,
             'mask': 'ch_cross',
             'value': payload,
         }

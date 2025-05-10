@@ -596,7 +596,7 @@ class AccountMove(models.Model):
                 self.amount_residual,
                 self.payment_reference or self.name,
                 ("Payment for %s" % self.name))
-            barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=payment_url, width=120, height=120)
+            barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=payment_url, width=120, height=120, quiet=False)
             return image_data_uri(base64.b64encode(barcode))
         return super()._generate_qr_code(silent_errors)
 
