@@ -71,7 +71,7 @@ class ReportController(http.Controller):
         :param height: Pixel height of the barcode
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
-        :param quiet: Accepted values: 0 (default) or 1. 1 will display white
+        :param quiet: Accepted values: 0 or 1 (default). 1 will display white
         margins on left and right.
         :param mask: The mask code to be used when rendering this QR-code.
                      Masks allow adding elements on top of the generated image,
