@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:36+0000\n"
-"PO-Revision-Date: 2025-04-07 20:36+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"PO-Revision-Date: 2025-05-07 20:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1261,6 +1261,13 @@ msgid "<strong>Type: </strong>"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
+"disabled again if there are any existing journal items."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "@From: %(email)s"
@@ -1290,6 +1297,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "A bank account can belong to only one journal."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/res_partner_bank.py:0
+msgid ""
+"A bank account with Account Number %(number)s already exists for Partner "
+"%(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
 
 #. module: account
@@ -3186,7 +3201,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
-msgid "Bank Account %(link)s with number %(number)s deleted"
+msgid "Bank Account %(link)s with number %(number)s archived"
 msgstr ""
 
 #. module: account
@@ -3761,6 +3776,12 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "Cannot get aggregation details from a line not using 'aggregation' engine"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Cannot identify the invoices in the generated PDF: %s"
 msgstr ""
 
 #. module: account
@@ -16975,6 +16996,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry!"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "XML format"
 msgstr ""
 
 #. module: account

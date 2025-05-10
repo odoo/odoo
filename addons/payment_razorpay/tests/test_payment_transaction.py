@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_razorpay.tests.common import RazorpayCommon
@@ -85,10 +86,33 @@ class TestPaymentTransaction(RazorpayCommon):
         tx._process_notification_data(self.payment_data)
         self.assertEqual(tx.state, 'done')
 
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    @mute_logger('odoo.addons.payment_razorpay.models.payment_transaction')
+    def test_processing_notification_data_updates_reference_if_not_confirmed(self):
+        """ Test that the provider reference and payment method are not changed when the transaction
+        is already confirmed. This can happen in case of multiple payment attempts. """
+        upi = self.env.ref('payment.payment_method_upi')
+        tx = self._create_transaction(
+            'direct', state='done', provider_reference=self.payment_id, payment_method_id=upi.id
+        )
+        tx._process_notification_data(self.payment_fail_data)
+        self.assertEqual(
+            tx.provider_reference,
+            self.payment_id,
+            msg="The provider reference should not be updated if the transaction is already"
+            " confirmed.",
+        )
+        self.assertEqual(
+            tx.payment_method_id,
+            upi,
+            msg="The payment method should not be updated if the transaction is already confirmed.",
+        )
+
+    @mute_logger('odoo.addons.payment_razorpay.models.payment_transaction')
     def test_processing_notification_data_only_tokenizes_once(self):
         """ Test that only one token is created when notification data of a given transaction are
         processed multiple times. """
-        tx1 = self._create_transaction('redirect', reference='tx1', tokenize=True)
+        tx1 = self._create_transaction('direct', reference='tx1', tokenize=True)
         tx1._process_notification_data(self.tokenize_payment_data)
         with patch(
             'odoo.addons.payment_razorpay.models.payment_transaction.PaymentTransaction'

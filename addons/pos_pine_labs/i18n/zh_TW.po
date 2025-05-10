@@ -1,0 +1,184 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_pine_labs
+# 
+# Translators:
+# Wil Odoo, 2025
+# Tony Ng, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"PO-Revision-Date: 2025-05-09 09:41+0000\n"
+"Last-Translator: Tony Ng, 2025\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_client
+msgid "A client id issued directly to the merchant by Pine Labs."
+msgstr "由 Pine Labs 直接向商家發出的客戶識別碼。"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
+msgid "A merchant id issued directly to the merchant by Pine Labs."
+msgstr "由 Pine Labs 直接向商家發出的商家識別碼。"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
+msgid "A security token issued directly to the merchant by Pine Labs."
+msgstr "由 Pine Labs 直接向商家發出的安全權杖。"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_store
+msgid "A store id issued directly to the merchant by Pine Labs."
+msgstr "由 Pine Labs 直接向商家發出的商店識別碼。"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
+msgid "Accepted payment modes by Pine Labs for transactions."
+msgstr "Pine Labs 接受的交易付款方式。"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__all
+msgid "All"
+msgstr "所有"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Cannot process transactions with negative amount."
+msgstr "無法處理負數金額的交易。"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__card
+msgid "Card"
+msgstr "卡片"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
+msgid "Pine Labs Allowed Payment Modes"
+msgstr "Pine Labs 允許的付款方式"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_client
+msgid "Pine Labs Client ID"
+msgstr "Pine Labs 客戶識別碼"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs Error"
+msgstr "Pine Labs 錯誤"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
+msgid "Pine Labs Merchant ID"
+msgstr "Pine Labs 商家識別碼"
+
+#. module: pos_pine_labs
+#. odoo-python
+#: code:addons/pos_pine_labs/models/pos_payment_method.py:0
+msgid ""
+"Pine Labs POS transaction cancelled. Retry again for collecting payment."
+msgstr "Pine Labs 銷售點交易已取消。請再嘗試收取付款。"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
+msgid "Pine Labs PlutusTransactionReferenceID"
+msgstr "Pine Labs PlutusTransactionReferenceID"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
+msgid "Pine Labs Security Token"
+msgstr "Pine Labs 安全權杖"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_store
+msgid "Pine Labs Store ID"
+msgstr "Pine Labs 商店識別碼"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
+msgid "Pine Labs Test Mode"
+msgstr "Pine Labs 測試模式"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs get payment status request failed"
+msgstr "Pine Labs 讀取付款狀態請求失敗"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs make payment request failed"
+msgstr "Pine Labs 付款請求失敗"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs payment cancellation request failed"
+msgstr "Pine Labs 取消付款請求失敗"
+
+#. module: pos_pine_labs
+#: model:ir.model,name:pos_pine_labs.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "POS付款條件"
+
+#. module: pos_pine_labs
+#: model:ir.model,name:pos_pine_labs.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "POS付款"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Reference number mismatched"
+msgstr "參考編號不對應"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
+msgid ""
+"Required during the refund order process: "
+"https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
+"request-for-Void-ICB-on-UPI-transaction"
+msgstr ""
+"在訂單退款過程中必須提供： https://developer.pinelabs.com/in/instore/cloud-"
+"integration#Example-JSON-request-for-Void-ICB-on-UPI-transaction"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
+msgid "Test Pine Labs transaction process."
+msgstr "測試 Pine Labs 交易流程。"
+
+#. module: pos_pine_labs
+#. odoo-python
+#: code:addons/pos_pine_labs/models/pos_payment_method.py:0
+msgid ""
+"The expected error code for the Pine Labs POS status request was not "
+"included in the response."
+msgstr "回應中未見 Pine Labs 銷售點狀態請求錯誤代碼。預期應會收到該代碼。"
+
+#. module: pos_pine_labs
+#. odoo-python
+#: code:addons/pos_pine_labs/models/pos_payment_method.py:0
+msgid "This Payment Terminal is only valid for INR Currency"
+msgstr "此付款終端只適用於INR貨幣(印度盧比)"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Transaction failed due to inactivity"
+msgstr "由於閒置，交易已失敗"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__upi
+msgid "Upi"
+msgstr "Upi"

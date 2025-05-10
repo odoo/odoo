@@ -3504,6 +3504,29 @@ class TestViewTranslations(common.TransactionCase):
         self.assertIn("<i>", view_fr.arch_db)
         self.assertIn("<i>", view_fr.arch)
 
+    def test_no_groups_for_inherited(self):
+        parent = self.env["ir.ui.view"].create({
+            "name": "test_no_groups_for_inherited_parent",
+            "model": "ir.ui.view",
+            "arch": "<form></form>",
+        })
+
+        view = self.env["ir.ui.view"].create({
+            "name": "test_no_groups_for_inherited_child",
+            "model": "ir.ui.view",
+            "arch": "<data></data>",
+            "inherit_id": parent.id,
+            "mode": "extension",
+        })
+
+        with self.assertRaises(ValidationError):
+            view.write({'groups_id': [1]})
+
+        view.write({'mode': 'primary'})
+        view.write({'groups_id': [1]})
+
+        with self.assertRaises(ValidationError):
+            view.write({'mode': 'extension'})
 
 class ViewModeField(ViewCase):
     """

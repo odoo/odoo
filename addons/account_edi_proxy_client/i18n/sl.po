@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 14:49+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,16 +27,18 @@ msgid ""
 "A user already exists with theses credentials on our server. Please check "
 "your information."
 msgstr ""
+"Uporabnik s temi poverilnicami že obstaja na našem strežniku. Prosimo, "
+"preverite svoje podatke."
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
-msgstr ""
+msgstr "Uporabnik posredniškega računa EDI"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__account_edi_proxy_client_ids
 msgid "Account Edi Proxy Client"
-msgstr ""
+msgstr "Odjemalec proxy-ja za račun Edi"
 
 #. module: account_edi_proxy_client
 #: model_terms:ir.ui.view,arch_db:account_edi_proxy_client.view_form_account_edi_proxy_client_user
@@ -70,12 +73,12 @@ msgstr "Ustvarjeno"
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_certificate_key
 msgid "Cryptographic Keys"
-msgstr ""
+msgstr "Kriptografski ključi"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__demo
 msgid "Demo mode"
-msgstr ""
+msgstr "Demo način"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__display_name
@@ -85,22 +88,22 @@ msgstr "Prikazani naziv"
 #. module: account_edi_proxy_client
 #: model:ir.actions.act_window,name:account_edi_proxy_client.action_tree_account_edi_proxy_client_user
 msgid "EDI Proxy User"
-msgstr ""
+msgstr "Uporabnik posredniškega (proxy) računa EDI"
 
 #. module: account_edi_proxy_client
 #: model:ir.ui.menu,name:account_edi_proxy_client.menu_account_proxy_client_user
 msgid "EDI Proxy Users"
-msgstr ""
+msgstr "Uporabniki posredniškega (proxy) računa EDI"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_mode
 msgid "EDI operating mode"
-msgstr ""
+msgstr "EDI način delovanja"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
 msgid "Edi Identification"
-msgstr ""
+msgstr "EDI Identifikacija"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
@@ -110,7 +113,19 @@ msgstr "ID"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id_client
 msgid "Id Client"
+msgstr "Id Stranka"
+
+#. module: account_edi_proxy_client
+#. odoo-python
+#: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
+msgid ""
+"Invalid signature for request. This might be due to another connection to odoo Access Point server. It can occur if you have duplicated your database. \n"
+"\n"
+"If you are not sure how to fix this, please contact our support."
 msgstr ""
+"Neveljaven podpis za zahtevo. To je lahko posledica druge povezave s strežnikom dostopne točke odoo. Do tega lahko pride, če ste podvojili svojo bazo podatkov.\n"
+"\n"
+"Če niste prepričani, kako to odpraviti, se obrnite na našo podporo."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__write_uid
@@ -130,12 +145,12 @@ msgstr "Privatni ključ"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__prod
 msgid "Production mode"
-msgstr ""
+msgstr "Produkcijski način"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy Type"
-msgstr ""
+msgstr "Vrsta posrednika (Proxy-ja)"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
@@ -145,17 +160,17 @@ msgstr "Osvežitev žetona"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__test
 msgid "Test mode"
-msgstr ""
+msgstr "Preskusni način"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key_id
 msgid "The key to encrypt all the user's data"
-msgstr ""
+msgstr "Ključ za šifriranje vseh uporabnikovih podatkov"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
 msgid "The unique id that identifies this user, typically the vat"
-msgstr ""
+msgstr "Enolični ID, ki identificira tega uporabnika, običajno DDV"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -164,6 +179,8 @@ msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %(url)s. %(error_message)s"
 msgstr ""
+"URL, ki ga je zahtevala ta storitev, je vrnil napako. URL, s katerim se je "
+"poskušala povezati, je bil %(url)s. %(error_message)s"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -172,6 +189,8 @@ msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %s"
 msgstr ""
+"URL, ki ga je zahtevala ta storitev, je vrnil napako. URL, s katerim se je "
+"poskušala povezati, je bil %s"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -179,18 +198,20 @@ msgstr ""
 msgid ""
 "The url that this service tried to contact does not exist. The url was “%s”"
 msgstr ""
+"URL, s katerim je ta storitev poskušala vzpostaviti stik, ne obstaja. URL je"
+" bil “%s”"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_company_proxy
 msgid "This company has an active user already created for this EDI type"
-msgstr ""
+msgstr "To podjetje ima za to vrsto EDI že ustvarjenega aktivnega uporabnika."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_edi_identification
 msgid "This edi identification is already assigned to an active user"
-msgstr ""
+msgstr "Ta identifikacija EDI je že dodeljena aktivnemu uporabniku."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
 msgid "This id_client is already used on another user."
-msgstr ""
+msgstr "Ta id_client se že uporablja pri drugem uporabniku."
