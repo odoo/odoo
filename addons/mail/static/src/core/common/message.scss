@@ -67,7 +67,7 @@
 .o-mail-Message-bubble {
     &.o-blue {
         background-color: mix($o-view-background-color, $info, 87.5%) !important;
-        border-color: rgba(darken(mix($o-view-background-color, $info, 87.5%), 10%), .5) !important;
+        border-color: mix(darken(mix($o-view-background-color, $info, 87.5%), 10%), white, 75%) !important;
 
         &.o-muted {
             background-color: mix($white, mix($o-view-background-color, $info, 87.5%)) !important;
@@ -75,7 +75,7 @@
     }
     &.o-green {
         background-color: mix($o-view-background-color, $success, 87.5%) !important;
-        border-color: rgba(darken(mix($o-view-background-color, $success, 87.5%), 10%), .5) !important;
+        border-color: mix(darken(mix($o-view-background-color, $success, 87.5%), 10%), white, 75%) !important;
 
         &.o-muted {
             background-color: mix($white, mix($o-view-background-color, $success, 87.5%)) !important;
@@ -83,10 +83,42 @@
     }
     &.o-orange {
         background-color: mix($o-view-background-color, $warning, 75%) !important;
-        border-color: rgba(darken(mix($o-view-background-color, $warning, 75%), 10%), .5) !important;
+        border-color: mix(darken(mix($o-view-background-color, $warning, 75%), 10%), white, 75%) !important;
 
         &.o-muted {
             background-color: mix($white, mix($o-view-background-color, $warning, 75%), 85%) !important;
+        }
+    }
+}
+
+.o-mail-Message-bubbleTail {
+    width: 6px;
+    height: 12px;
+    z-index: 1;
+    top: 0;
+
+    &.o-blue {
+        .o-mail-Message-bubbleTailBg {
+            color: mix($o-view-background-color, $info, 87.5%) !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mix(darken(mix($o-view-background-color, $info, 87.5%), 10%), white, 75%) !important;
+        }
+    }
+    &.o-green {
+        .o-mail-Message-bubbleTailBg {
+            color: mix($o-view-background-color, $success, 87.5%) !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mix(darken(mix($o-view-background-color, $success, 87.5%), 10%), white, 75%) !important;
+        }
+    }
+    &.o-orange {
+        .o-mail-Message-bubbleTailBg {
+            color: mix($o-view-background-color, $warning, 75%) !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mix(darken(mix($o-view-background-color, $warning, 75%), 10%), white, 75%) !important;
         }
     }
 }

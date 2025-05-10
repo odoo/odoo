@@ -14,7 +14,7 @@
 .o-mail-Message-bubble {
     &.o-blue {
         background-color: mix($gray-100, $info, 87.5%) !important;
-        border-color: rgba(lighten(mix($gray-100, $info, 87.5%), 2.5%), .5) !important;
+        border-color: mix(lighten(mix($gray-100, $info, 87.5%), 2.5%), black) !important;
     
         &.o-muted {
             background-color: darken(mix($gray-100, $info, 87.5%), 5%) !important;
@@ -22,7 +22,7 @@
     }
     &.o-green {
         background-color: mix($gray-100, $success, 87.5%) !important;
-        border-color: rgba(lighten(mix($gray-100, $success, 87.5%), 2.5%), .5) !important;
+        border-color: mix(lighten(mix($gray-100, $success, 87.5%), 2.5%), black) !important;
     
         &.o-muted {
             background-color: darken(mix($gray-100, $success, 87.5%), 5%) !important;
@@ -30,10 +30,37 @@
     }
     &.o-orange {
         background-color: mix($gray-100, $warning, 72.5%) !important;
-        border-color: rgba(lighten(mix($gray-100, $warning, 72.5%), 2.5%), .5) !important;
+        border-color: mix(lighten(mix($gray-100, $warning, 72.5%), 2.5%), black) !important;
     
         &.o-muted {
             background-color: darken(mix($gray-100, $warning, 72.5%), 10%) !important;
+        }
+    }
+}
+
+.o-mail-Message-bubbleTail {
+     &.o-blue {
+        .o-mail-Message-bubbleTailBg {
+            color:mix($gray-100, $info, 87.5%) !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mix(lighten(mix($gray-100, $info, 87.5%), 2.5%), black) !important;
+        }
+    }
+    &.o-green {
+        .o-mail-Message-bubbleTailBg {
+            color: mix($gray-100, $success, 87.5%) !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mix(lighten(mix($gray-100, $success, 87.5%), 2.5%), black) !important;
+        }
+    }
+    &.o-orange {
+        .o-mail-Message-bubbleTailBg {
+            color: mix($gray-100, $warning, 72.5%) !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mix(lighten(mix($gray-100, $warning, 72.5%), 2.5%), black) !important;
         }
     }
 }
