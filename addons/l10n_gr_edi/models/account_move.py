@@ -307,6 +307,7 @@ class AccountMove(models.Model):
         if document.state in ('invoice_sent', 'bill_sent'):
             barcode_params = urlencode({
                 'barcode_type': 'QR',
+                'quiet': False,
                 'value': document.mydata_url,
                 'width': 180,
                 'height': 180,

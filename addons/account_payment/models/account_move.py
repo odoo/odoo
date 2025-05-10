@@ -170,7 +170,7 @@ class AccountMove(models.Model):
     def _generate_portal_payment_qr(self):
         self.ensure_one()
         portal_url = self._get_portal_payment_link()
-        barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=portal_url, width=128, height=128)
+        barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=portal_url, width=128, height=128, quiet=False)
         return image_data_uri(base64.b64encode(barcode))
 
     def _get_portal_payment_link(self):
