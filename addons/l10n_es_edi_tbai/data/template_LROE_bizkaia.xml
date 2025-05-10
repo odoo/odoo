@@ -44,7 +44,8 @@
             <Ingresos t-if="freelancer">
                 <Ingreso t-foreach="tbai_b64_list" t-as="tbai_b64">
                     <TicketBai t-if="is_emission" t-out="tbai_b64"/>
-                    <Renta><DetalleRenta><Epigrafe t-out="epigrafe"/></DetalleRenta></Renta>
+                    <Renta t-if="is_emission"><DetalleRenta><Epigrafe t-out="epigrafe"/></DetalleRenta></Renta>
+                    <AnulacionTicketBai t-else="" t-out="tbai_b64"/>
                 </Ingreso>
             </Ingresos>
         </template>
