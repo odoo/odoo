@@ -10,7 +10,7 @@ from odoo.fields import Domain
 from odoo.tools import frozendict, float_compare, Query, SQL
 from odoo.addons.web.controllers.utils import clean_action
 
-from odoo.addons.account.models.account_move import MAX_HASH_VERSION
+from odoo.addons.account.models.account_move import MAX_HASH_VERSION, SKIP_READONLY_CHECK
 
 
 _logger = logging.getLogger(__name__)
@@ -1524,6 +1524,7 @@ class AccountMoveLine(models.Model):
         if not vals:
             return True
         protected_fields = self._get_lock_date_protected_fields()
+        unmodifiable_fields = self._get_unmodifiable_fields()
         account_to_write = self.env['account.account'].browse(vals['account_id']) if 'account_id' in vals else None
 
         # Check writing a archived account.
@@ -1546,6 +1547,12 @@ class AccountMoveLine(models.Model):
         lines_to_unreconcile = self.env['account.move.line']
         st_lines_to_unreconcile = self.env['account.bank.statement.line']
         for line in self:
+            # Disallow modifying readonly move line fields on a posted move
+            if line.parent_state == 'posted' and self._context.get('skip_readonly_check') is not SKIP_READONLY_CHECK:
+                readonly_fields = [unmodifiable_field for unmodifiable_field in unmodifiable_fields if self.env['account.move']._field_will_change(line, vals, unmodifiable_field)]
+                if readonly_fields:
+                    raise UserError(_("You cannot modify the following readonly move line fields on a posted move: %s", ', '.join(readonly_fields)))
+
             if not any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in vals):
                 line_to_write -= line
                 continue
@@ -1626,6 +1633,10 @@ class AccountMoveLine(models.Model):
     def _valid_field_parameter(self, field, name):
         # EXTENDS models
         return name == 'tracking' or super()._valid_field_parameter(field, name)
+
+    def _get_unmodifiable_fields(self):
+        return ['invoice_date', 'date', 'journal_id', 'company_id', 'move_name', 'product_id', 'partner_id', 'tax_ids', 'date_maturity', 'product_uom_id',
+                'price_unit', 'discount', 'price_subtotal', 'price_total', 'quantity']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted(self):

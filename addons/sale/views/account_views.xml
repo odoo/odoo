@@ -57,7 +57,7 @@
                 <field name="is_downpayment" column_invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='product_id']" position="attributes">
-                <attribute name="readonly">is_downpayment</attribute>
+                <attribute name="readonly" add="is_downpayment" separator="or"/>
             </xpath>
             <header position="after">
                 <div class="alert alert-warning" role="alert" invisible="not sale_warning_text or move_type != 'out_invoice'">

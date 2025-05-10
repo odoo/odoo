@@ -78,6 +78,7 @@ ALLOWED_MIMETYPES = {
 }
 
 EMPTY = object()
+SKIP_READONLY_CHECK = object()
 
 
 class AccountMove(models.Model):
@@ -3461,6 +3462,9 @@ class AccountMove(models.Model):
                     and not ('name' in vals and (vals['name'] == '/' or not vals['name']))
             ):
                 raise UserError(_('You cannot edit the journal of an account move with a sequence number assigned, unless the name is removed or set to "/". This might create a gap in the sequence.'))
+            if 'journal_id' in vals and move.journal_id.id != vals['journal_id']:
+                # Allow editing the journal on a posted move if previous checks are passed
+                self = self.with_context(skip_readonly_check=SKIP_READONLY_CHECK)  # noqa: PLW0642
 
             # You can't change the date or name of a move being inside a locked period.
             if move.state == "posted" and (
@@ -3477,12 +3481,11 @@ class AccountMove(models.Model):
 
             # Disallow modifying readonly fields on a posted move
             move_state = vals.get('state', move.state)
-            unmodifiable_fields = (
-                'invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id',
-                'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id')
-            readonly_fields = [val for val in vals if val in unmodifiable_fields]
-            if not self._context.get('skip_readonly_check') and move_state == "posted" and readonly_fields:
-                raise UserError(_("You cannot modify the following readonly fields on a posted move: %s", ', '.join(readonly_fields)))
+            unmodifiable_fields = self._get_unmodifiable_fields()
+            if self._context.get('skip_readonly_check') is not SKIP_READONLY_CHECK and move_state == "posted":
+                readonly_fields = [unmodifiable_field for unmodifiable_field in unmodifiable_fields if self._field_will_change(move, vals, unmodifiable_field)]
+                if readonly_fields:
+                    raise UserError(_("You cannot modify the following readonly fields on a posted move: %s", ', '.join(readonly_fields)))
 
             if move.journal_id.sequence_override_regex and vals.get('name') and vals['name'] != '/' and not re.match(move.journal_id.sequence_override_regex, vals['name']):
                 if not self.env.user.has_group('account.group_account_manager'):
@@ -3532,6 +3535,10 @@ class AccountMove(models.Model):
             self.line_ids._check_constrains_account_id_journal_id()
 
         return res
+
+    def _get_unmodifiable_fields(self):
+        return ['invoice_date', 'date', 'partner_id', 'partner_bank_id',
+                'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id']
 
     def check_move_sequence_chain(self):
         return self.filtered(lambda move: move.name != '/')._is_end_of_seq_chain()
@@ -6241,24 +6248,33 @@ class AccountMove(models.Model):
 
     @api.model
     def _field_will_change(self, record, vals, field_name):
-        if field_name not in vals:
-            return False
-        field = record._fields[field_name]
-        if field.type == 'many2one':
-            return record[field_name].id != vals[field_name]
-        if field.type == 'many2many':
-            current_ids = set(record[field_name].ids)
-            after_write_ids = set(record.new({field_name: vals[field_name]})[field_name].ids)
-            return current_ids != after_write_ids
-        if field.type == 'one2many':
-            return True
-        if field.type == 'monetary' and record[field.get_currency_field(record)]:
-            return not record[field.get_currency_field(record)].is_zero(record[field_name] - vals[field_name])
-        if field.type == 'float':
-            record_value = field.convert_to_cache(record[field_name], record)
-            to_write_value = field.convert_to_cache(vals[field_name], record)
-            return record_value != to_write_value
-        return record[field_name] != vals[field_name]
+        def _is_field_changed(record, vals, field_name):
+            field = record._fields[field_name]
+            if field.type == 'many2one':
+                return record[field_name].id != vals[field_name]
+            if field.type == 'many2many':
+                current_ids = set(record[field_name].ids)
+                after_write_ids = set(record.new({field_name: vals[field_name]})[field_name].ids)
+                return current_ids != after_write_ids
+            if field.type == 'one2many':
+                return True
+            if field.type == 'monetary' and record[field.get_currency_field(record)]:
+                return not record[field.get_currency_field(record)].is_zero(record[field_name] - vals[field_name])
+            if field.type == 'float':
+                record_value = field.convert_to_cache(record[field_name], record)
+                to_write_value = field.convert_to_cache(vals[field_name], record)
+                return record_value != to_write_value
+            return record[field_name] != vals[field_name]
+
+        if field_name in vals:
+            return _is_field_changed(record, vals, field_name)
+
+        dependent_fields = record._fields[field_name].get_depends(record)[0]
+        return any(
+            _is_field_changed(record, vals, dependent_field)
+            for dependent_field in dependent_fields
+            if dependent_field in vals
+        )
 
     @api.model
     def _cleanup_write_orm_values(self, record, vals):

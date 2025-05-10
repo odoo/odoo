@@ -6,6 +6,7 @@ from odoo.tests import Form, tagged
 from odoo import fields, Command
 from odoo.exceptions import UserError
 from unittest.mock import patch
+from odoo.addons.account.models.account_move import SKIP_READONLY_CHECK
 
 
 @tagged('post_install', '-at_install')
@@ -93,7 +94,9 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
         # The following fields are not part of the hash so they can be modified
         move.ref = "bla"
-        move.line_ids[0].date_maturity = fields.Date.from_string('2023-01-02')
+        move.line_ids[0].with_context(skip_readonly_check=SKIP_READONLY_CHECK).write({
+            'date_maturity': fields.Date.from_string('2023-01-02'),
+        })
 
     def test_account_move_hash_integrity_report(self):
         """Test the hash integrity report"""
