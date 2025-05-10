@@ -93,6 +93,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         encoded_params = url_encode({
             'barcode_type': 'QR',
+            'quiet': False,
             'value': self.l10n_jo_edi_qr,
             'width': 200,
             'height': 200,

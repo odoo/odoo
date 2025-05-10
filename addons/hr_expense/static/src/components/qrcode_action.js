@@ -15,7 +15,7 @@ class QRModalComponent extends Component {
 
     setup() {
         this.url = sprintf(
-            "/report/barcode/?barcode_type=QR&value=%s&width=256&height=256&humanreadable=1",
+            "/report/barcode/?barcode_type=QR&value=%s&width=256&height=256&humanreadable=1&quiet=0",
             this.props.action.params.url);
     }
 }
