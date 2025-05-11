@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-27 20:36+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -380,6 +380,12 @@ msgstr "1 個月"
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__week
 msgid "1 Week"
 msgstr "1 星期"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
+msgid "1.00"
+msgstr "1.00"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -6135,6 +6141,12 @@ msgid "Pack Type"
 msgstr "包裝類型"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
+msgid "Pack of 6"
+msgstr "6 件裝"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__package_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__package_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__package_id
@@ -9358,16 +9370,6 @@ msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the"
 " warehouse)."
 msgstr "此備註將增加到收貨單中(例如，將產品儲存在倉庫中的位置)."
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/wizard/stock_orderpoint_snooze.py:0
-msgid ""
-"This order point has been created automatically.\n"
-"snoozing it will not affect future ones created for the same product."
-msgstr ""
-"此訂單點已自動建立。\n"
-"延後不會影響為相同產品建立的未來訂單點。"
 
 #. module: stock
 #. odoo-python

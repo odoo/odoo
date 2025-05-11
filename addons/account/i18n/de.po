@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-27 20:36+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -1465,6 +1465,13 @@ msgid "<strong>Type: </strong>"
 msgstr "<strong>Typ: </strong>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
+"disabled again if there are any existing journal items."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "@From: %(email)s"
@@ -1499,6 +1506,17 @@ msgstr ""
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "A bank account can belong to only one journal."
 msgstr "Ein Bankkonto kann nur einem Journal zugeordnet werden."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/res_partner_bank.py:0
+msgid ""
+"A bank account with Account Number %(number)s already exists for Partner "
+"%(partner)s, but is archived. Please unarchive it instead."
+msgstr ""
+"Es existiert bereits ein Bankkonto mit der Kontonummer %(number)s für den "
+"Partner %(partner)s, aber es wurde archiviert. Bitte heben Sie stattdessen "
+"die Archivierung auf."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -3548,8 +3566,8 @@ msgstr "Bankkonto"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
-msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr "Bankkonto %(link)s mit Nummer %(number)s gelöscht"
+msgid "Bank Account %(link)s with number %(number)s archived"
+msgstr "Bankkonto %(link)s mit Nummer %(number)s archiviert"
 
 #. module: account
 #. odoo-python
@@ -4172,6 +4190,14 @@ msgid ""
 msgstr ""
 "Aggregationsdetails können nicht von einer Zeile abgerufen werden, die keine"
 " „Aggregations“-Maschine verwendet"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Cannot identify the invoices in the generated PDF: %s"
+msgstr ""
+"Die Rechnungen in der generierten PDF-Datei können nicht identifiziert "
+"werden: %s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -9068,12 +9094,12 @@ msgstr "Investitionen & Außerordentliche Aktivitäten"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Invoice"
-msgstr "Ausgangsrechnung"
+msgstr "Rechnung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "Invoice #"
-msgstr "Ausgangsrechnung #"
+msgstr "Rechnung #"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
@@ -9083,7 +9109,7 @@ msgstr "Rechnungsanalyse"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__invoice_count
 msgid "Invoice Count"
-msgstr "Anzahl Ausgangsrechnungen"
+msgstr "Anzahl Rechnungen"
 
 #. module: account
 #. odoo-python
@@ -18292,6 +18318,11 @@ msgid "Wrong credit or debit value in accounting entry!"
 msgstr "Falscher Buchungsbetrag in Soll oder Haben!"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "XML format"
+msgstr "XML-Format"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
 msgid "Yearly"
 msgstr "Jährlich"
@@ -19223,7 +19254,7 @@ msgstr "die Währung der Eingangsrechnung aktivieren"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the invoice"
-msgstr "die Währung der Ausgangsrechnung aktivieren"
+msgstr "die Währung der Rechnung aktivieren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
