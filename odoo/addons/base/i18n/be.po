@@ -3,7 +3,7 @@
 # 	* base
 # 
 # Translators:
-# Ivan Shakh, 2024
+# Ivan Shakh, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:09+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ivan Shakh, 2024\n"
+"Last-Translator: Ivan Shakh, 2025\n"
 "Language-Team: Belarusian (https://app.transifex.com/odoo/teams/41243/be/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31647,6 +31647,7 @@ msgstr ""
 #, python-format
 msgid "You cannot rename config parameters with keys %s"
 msgstr ""
+"Вы не можаце перайменаваць параметры канфігурацыі з дапамогай клавішаў %s"
 
 #. module: base
 #. odoo-python
@@ -31657,13 +31658,16 @@ msgid ""
 "\n"
 "(Operation: %(operation)s)"
 msgstr ""
+"У вас недастаткова правоў для доступу да палёў \"%(fields)s\" у %(document_kind)s (%(document_model)s). Звярніцеся да сістэмнага адміністратара.\n"
+"\n"
+"(Аперацыя: %(operation)s)"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "You don't have enough access rights to run this action."
-msgstr ""
+msgstr "У вас недастаткова правоў доступу для выканання гэтага дзеяння."
 
 #. module: base
 #. odoo-python
@@ -31671,24 +31675,25 @@ msgstr ""
 #, python-format
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
-msgstr ""
+msgstr "Вы не маеце правоў на экспарт дадзеных. Звярніцеся да Адміністратара."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/wizard/base_partner_merge.py:0
 #, python-format
 msgid "You have to specify a filter for your selection."
-msgstr ""
+msgstr "Вы павінны вызначыць фільтр для свайго выбару."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
 msgid "You should try other search criteria."
-msgstr ""
+msgstr "Варта паспрабаваць іншыя крытэрыі пошуку."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
+"Вам варта абнавіць гэты дакумент, каб адлюстраваць вашы ўмовы і палажэнні."
 
 #. module: base
 #. odoo-python
@@ -31698,6 +31703,8 @@ msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
 "But the latter module is not available in your system."
 msgstr ""
+"Вы спрабуеце усталяваць модуль '%s', які залежыць ад модуля '%s'.\n"
+"Але ў вашай сістэме гэты модуль недаступны."
 
 #. module: base
 #. odoo-python
@@ -31707,6 +31714,8 @@ msgid ""
 "You try to upgrade the module %s that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Вы спрабуеце абнавіць модуль %s, які залежыць ад модуля %s.\n"
+"Але ў вашай сістэме гэты модуль недаступны."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -31714,6 +31723,8 @@ msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
 msgstr ""
+"Вы можаце задаць дадатковыя правы доступу, адрэдагаваўшы нядаўна створанага "
+"карыстальніка ў меню Налады / Карыстальнікі."
 
 #. module: base
 #. odoo-python
@@ -31724,12 +31735,15 @@ msgid ""
 "instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
 "should do the trick."
 msgstr ""
+"Ваш сервер Odoo не падтрымлівае SMTP-over-SSL. Замест гэтага вы можаце "
+"выкарыстоўваць STARTTLS. Калі патрабуецца SSL, абнаўленне да Python 2.6 на "
+"баку сервера павінна спрацаваць."
 
 #. module: base
 #: model_terms:res.company,sign_terms:base.main_company
 #: model_terms:res.company,sign_terms_html:base.main_company
 msgid "Your conditions..."
-msgstr ""
+msgstr "Вашы ўмовы..."
 
 #. module: base
 #: model_terms:res.company,lunch_notify_message:base.main_company
@@ -31737,6 +31751,8 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"Ваш абед дастаўлены.\n"
+"Смачна есці!"
 
 #. module: base
 #. odoo-python
@@ -31746,6 +31762,7 @@ msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
 "instead"
 msgstr ""
+"Здаецца, што ваш сервер не падтрымлівае SSL, вы можаце паспрабаваць STARTTLS"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -31754,17 +31771,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "ZIP"
-msgstr ""
+msgstr "Індэкс"
 
 #. module: base
 #: model:res.country,name:base.zm
 msgid "Zambia"
-msgstr ""
+msgstr "Замбія"
 
 #. module: base
 #: model:res.country,name:base.zw
 msgid "Zimbabwe"
-msgstr ""
+msgstr "Зімбабвэ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__zip
@@ -31772,171 +31789,171 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__zip
 #: model:ir.model.fields,field_description:base.field_res_users__zip
 msgid "Zip"
-msgstr ""
+msgstr "Індэкс"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__zip_required
 msgid "Zip Required"
-msgstr ""
+msgstr "Індэкс абавязковы"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
-msgstr ""
+msgstr "рахунак"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
 msgid "account_qr_code_sepa"
-msgstr ""
+msgstr "account_qr_code_sepa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__active
 msgid "active"
-msgstr ""
+msgstr "актыўна"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "allowed for groups %s"
-msgstr ""
+msgstr "дазволена для груп %s"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "always forbidden"
-msgstr ""
+msgstr "заўжды забаронена"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 #, python-format
 msgid "and"
-msgstr ""
+msgstr "і"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_assets
 msgid "assets"
-msgstr ""
+msgstr "актывы"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "at"
-msgstr ""
+msgstr "у"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__binary
 msgid "binary"
-msgstr ""
+msgstr "binary"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "binary_field_real_user should be a res.users record."
-msgstr ""
+msgstr "binary_field_real_user павінен быць запісам res.users."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean
 msgid "boolean"
-msgstr ""
+msgstr "boolean"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
 msgid "bpost Shipping"
-msgstr ""
+msgstr "дастаўка bpost"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_budget
 msgid "budget"
-msgstr ""
+msgstr "бюджэт"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__char
 msgid "char"
-msgstr ""
+msgstr "сімвал"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__state__choose
 msgid "choose"
-msgstr ""
+msgstr "выбар"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "database id"
-msgstr ""
+msgstr "id базы дадезеных"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__date
 msgid "date"
-msgstr ""
+msgstr "дата"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__datetime
 msgid "datetime"
-msgstr ""
+msgstr "дата час"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "day"
-msgstr ""
+msgstr "дзень"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_mondialrelay
 msgid "delivery_mondialrelay"
-msgstr ""
+msgstr "delivery_mondialrelay"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "documentation"
-msgstr ""
+msgstr "дакументацыя"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_module_update__state__done
 msgid "done"
-msgstr ""
+msgstr "завершана"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. \"B2B\", \"VIP\", \"Consulting\", ..."
-msgstr ""
+msgstr "напрыклад, \"B2B\", \"VIP\", \"Кансалтынг\", ..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "e.g. \"Consulting Services\""
-msgstr ""
+msgstr "напрыклад, \"Кансалтынгавыя паслугі\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. BE0477472701"
-msgstr ""
+msgstr "напрыклад, 500326797"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Brandom Freeman"
-msgstr ""
+msgstr "напрыклад, Канстанцін Міцкевіч"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 msgid "e.g. English"
-msgstr ""
+msgstr "напрыклад, беларуская"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_group_form
 msgid "e.g. Europe"
-msgstr ""
+msgstr "напрыклад, Еўропа"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "e.g. French"
-msgstr ""
+msgstr "напрыклад, французская"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -31948,61 +31965,61 @@ msgstr "напрыклад, Іван Луцэвіч"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Lumber Inc"
-msgstr ""
+msgstr "напрыклад, Lumber Inc"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. Mister"
-msgstr ""
+msgstr "напрыклад, Спадар"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. Mr."
-msgstr ""
+msgstr "напрыклад, Спадар"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 msgid "e.g. My Company"
-msgstr ""
+msgstr "напрыклад, Мая кампанія"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "e.g. My Outgoing Server"
-msgstr ""
+msgstr "напрыклад, Мой сервер выходнай пошты"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Sales Director"
-msgstr ""
+msgstr "напрыклад, Камерцыйны дырэктар"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "e.g. Update order quantity"
-msgstr ""
+msgstr "напрыклад, Абнавіць замоўленую колькасць"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "e.g. email@yourcompany.com"
-msgstr ""
+msgstr "напрыклад, email@yourcompany.com"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 msgid "e.g. en_US"
-msgstr ""
+msgstr "напрыклад, be_BY"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. https://www.odoo.com"
-msgstr ""
+msgstr "напрыклад, https://www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
 msgid "eBay Connector"
-msgstr ""
+msgstr "Канектар eBay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
@@ -32048,31 +32065,31 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
-msgstr ""
+msgstr "Электроннае навучанне"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
-msgstr ""
+msgstr "выдаткі"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "external id"
-msgstr ""
+msgstr "знешні id"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "false"
-msgstr ""
+msgstr "няпраўда"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__float
 msgid "float"
-msgstr ""
+msgstr "float"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -32081,13 +32098,15 @@ msgid ""
 "for record in self:\n"
 "        record['size'] = len(record.name)"
 msgstr ""
+"for record in self:\n"
+"        record['size'] = len(record.name)"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 #, python-format
 msgid "forbidden for groups %s"
-msgstr ""
+msgstr "забаронена для груп %s"
 
 #. module: base
 #. odoo-python
@@ -32099,7 +32118,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__state__get
 msgid "get"
-msgstr ""
+msgstr "атрымаць"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
@@ -32107,408 +32126,410 @@ msgid ""
 "has been successfully installed.\n"
 "                            Users can choose their favorite language in their preferences."
 msgstr ""
+"паспяхова ўсталяваны.\n"
+"                            Карыстальнікі могуць выбраць мову ў наладах свайго профілю."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "hour"
-msgstr ""
+msgstr "гадзіна"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__html
 msgid "html"
-msgstr ""
+msgstr "html"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_module_update__state__init
 msgid "init"
-msgstr ""
+msgstr "init"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__integer
 msgid "integer"
-msgstr ""
+msgstr "integer"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_menu__action__ir_actions_act_url
 msgid "ir.actions.act_url"
-msgstr ""
+msgstr "ir.actions.act_url"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_menu__action__ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_menu__action__ir_actions_client
 msgid "ir.actions.client"
-msgstr ""
+msgstr "ir.actions.client"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_menu__action__ir_actions_report
 msgid "ir.actions.report"
-msgstr ""
+msgstr "ir.actions.report"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_menu__action__ir_actions_server
 msgid "ir.actions.server"
-msgstr ""
+msgstr "ir.actions.server"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__json
 msgid "json"
-msgstr ""
+msgstr "json"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_pos_sale
 msgid "l10n_be_pos_sale"
-msgstr ""
+msgstr "l10n_be_pos_sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt
 msgid "l10n_it_stock_ddt"
-msgstr ""
+msgstr "l10n_it_stock_ddt"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_bot_hr
 msgid "mail_bot_hr"
-msgstr ""
+msgstr "mail_bot_hr"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
 msgid "many2many"
-msgstr ""
+msgstr "many2many"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one
 msgid "many2one"
-msgstr ""
+msgstr "many2one"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one_reference
 msgid "many2one_reference"
-msgstr ""
+msgstr "many2one_reference"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "minute"
-msgstr ""
+msgstr "хвіліна"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "module(s) failed to install and were disabled"
-msgstr ""
+msgstr "модулі не ўдалося ўсталяваць, і яны былі адключаны"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__monetary
 msgid "monetary"
-msgstr ""
+msgstr "monetary"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "month"
-msgstr ""
+msgstr "месяц"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting
 msgid "mrp_subcontracting"
-msgstr ""
+msgstr "mrp_subcontracting"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "name"
-msgstr ""
+msgstr "назва"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "no"
-msgstr ""
+msgstr "не"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
 msgid "o_onboarding_confetti"
-msgstr ""
+msgstr "o_onboarding_confetti"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "on"
-msgstr ""
+msgstr "на"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__one2many
 msgid "one2many"
-msgstr ""
+msgstr "one2many"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_payroll
 msgid "payroll"
-msgstr ""
+msgstr "разліковая ведамасць"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_account_reports
 msgid "pos_account_reports"
-msgstr ""
+msgstr "pos_account_reports"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cache
 msgid "pos_cache"
-msgstr ""
+msgstr "pos_cache"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_epson_printer
 msgid "pos_epson_printer"
-msgstr ""
+msgstr "pos_epson_printer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_epson_printer_restaurant
 msgid "pos_epson_printer_restaurant"
-msgstr ""
+msgstr "pos_epson_printer_restaurant"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr
 msgid "pos_hr"
-msgstr ""
+msgstr "pos_hr"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mrp
 msgid "pos_mrp"
-msgstr ""
+msgstr "pos_mrp"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale
 msgid "pos_sale"
-msgstr ""
+msgstr "pos_sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale_loyalty
 msgid "pos_sale_loyalty"
-msgstr ""
+msgstr "pos_sale_loyalty"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale_margin
 msgid "pos_sale_margin"
-msgstr ""
+msgstr "pos_sale_margin"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale_product_configurator
 msgid "pos_sale_product_configurator"
-msgstr ""
+msgstr "pos_sale_product_configurator"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_predict_product
 msgid "predict the product from the expense description based on old ones"
-msgstr ""
+msgstr "прагназаваць прадукт па апісанні выдаткаў на аснове старых"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__properties
 msgid "properties"
-msgstr ""
+msgstr "уласцівасці"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__properties_definition
 msgid "properties_definition"
-msgstr ""
+msgstr "properties_definition"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__reference
 msgid "reference"
-msgstr ""
+msgstr "спасылка"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_budget_sale
 msgid "sale"
-msgstr ""
+msgstr "продаж"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_sales
 msgid "sales"
-msgstr ""
+msgstr "продажы"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "second"
-msgstr ""
+msgstr "секунда"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__selection
 msgid "selection"
-msgstr ""
+msgstr "выбар"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account
 msgid "snailmail_account"
-msgstr ""
+msgstr "snailmail_account"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_sales_subscriptions
 msgid "subscriptions"
-msgstr ""
+msgstr "падпіскі"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_module_install
 msgid "test installation of data module"
-msgstr ""
+msgstr "тэставая ўстаноўка модуля дадзеных"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
 msgid "test mimetypes-guessing"
-msgstr ""
+msgstr "праверка mimetypes-guessing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_module
 msgid "test module to test data only modules"
-msgstr ""
+msgstr "тэставы модуль для праверкі модуляў толькі з дадзенымі"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights
 msgid "test of access rights and rules"
-msgstr ""
+msgstr "праверка правоў доступу і правілаў"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_read_group
 msgid "test read_group"
-msgstr ""
+msgstr "test read_group"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_xlsx_export
 msgid "test xlsx export"
-msgstr ""
+msgstr "праверка экспарту xlsx"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
 msgid "test-assetsbundle"
-msgstr ""
+msgstr "test-assetsbundle"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_exceptions
 msgid "test-exceptions"
-msgstr ""
+msgstr "test-exceptions"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_converter
 msgid "test-field-converter"
-msgstr ""
+msgstr "test-field-converter"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_impex
 msgid "test-import-export"
-msgstr ""
+msgstr "test-import-export"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherit
 msgid "test-inherit"
-msgstr ""
+msgstr "test-inherit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherit_depends
 msgid "test-inherit-depends"
-msgstr ""
+msgstr "test-inherit-depends"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits
 msgid "test-inherits"
-msgstr ""
+msgstr "test-inherits"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits_depends
 msgid "test-inherits-depends"
-msgstr ""
+msgstr "test-inherits-depends"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
-msgstr ""
+msgstr "test-limits"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_lint
 msgid "test-lint"
-msgstr ""
+msgstr "test-lint"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_populate
 msgid "test-populate"
-msgstr ""
+msgstr "test-populate"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_translation_import
 msgid "test-translation-import"
-msgstr ""
+msgstr "test-translation-import"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_uninstall
 msgid "test-uninstall"
-msgstr ""
+msgstr "test-uninstall"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_convert
 msgid "test_convert"
-msgstr ""
+msgstr "test_convert"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_search_panel
 msgid "test_search_panel"
-msgstr ""
+msgstr "test_search_panel"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__text
 msgid "text"
-msgstr ""
+msgstr "тэкст"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_budget_sale_timesheet
 msgid "timesheet"
-msgstr ""
+msgstr "табель"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
 msgid "title"
-msgstr ""
+msgstr "зварот"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "true"
-msgstr ""
+msgstr "праўда"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery_mondialrelay
 msgid "website_sale_delivery_mondialrelay"
-msgstr ""
+msgstr "website_sale_delivery_mondialrelay"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "week"
-msgstr ""
+msgstr "тыдзень"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "year"
-msgstr ""
+msgstr "год"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "yes"
-msgstr ""
+msgstr "так"
 
 #. module: base
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
-msgstr ""
+msgstr "Аландскія астравы"

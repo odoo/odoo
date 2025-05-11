@@ -22,9 +22,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 11:06+0000\n"
+"POT-Creation-Date: 2025-05-06 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
@@ -412,7 +412,7 @@ msgstr "Predloga kontnega načrta"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__account_move_id
 msgid "Account Move"
-msgstr ""
+msgstr "Premik računa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
@@ -6741,6 +6741,15 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js:0
 #, python-format
@@ -7678,7 +7687,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js:0
 #, python-format
 msgid "in"
-msgstr ""
+msgstr "v"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7773,12 +7782,3 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "so bili dvojniki obstoječih naročil"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with payment method %s that is being used by "
-"order %s in the active pos session %s"
-msgstr ""

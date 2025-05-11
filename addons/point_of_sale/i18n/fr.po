@@ -13,9 +13,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 11:06+0000\n"
+"POT-Creation-Date: 2025-05-06 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -6968,6 +6968,17 @@ msgstr ""
 "son type."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+"Ce journal est associé à la méthode de paiement %s utilisée par la commande "
+"%s dans la session de point de vente active %s."
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js:0
 #, python-format
@@ -8064,14 +8075,3 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "a été dupliqué de commandes existantes"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with payment method %s that is being used by "
-"order %s in the active pos session %s"
-msgstr ""
-"Ce journal est associé à la méthode de paiement %s utilisée par la commande "
-"%s dans la session de point de vente active %s."

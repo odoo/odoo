@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:27+0000\n"
+"POT-Creation-Date: 2025-05-08 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -43,20 +43,6 @@ msgstr "บันทึก"
 #, python-format
 msgid "# Code editor"
 msgstr "# ตัวแก้ไขโค้ด"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "#{i.display_name} is current state"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "#{i.display_name} is not current state"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -1320,13 +1306,6 @@ msgstr "ลายเซ็นที่ชัดเจน"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "Click to change current state to #{i.display_name}"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
@@ -2272,6 +2251,13 @@ msgstr "ใส่ที่อยู่อีเมล"
 #, python-format
 msgid "Enterprise"
 msgstr "องค์กร"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
+#, python-format
+msgid "Entry Count"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3631,6 +3617,7 @@ msgstr "ไม่มีมุมมองของประเภท '%s' สา
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
@@ -3667,13 +3654,6 @@ msgstr "สถานะไม่ใช้งาน"
 #, python-format
 msgid "Not active state, click to change it"
 msgstr "สถานะไม่ใช้งาน คลิกเพื่อเปลี่ยน"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/filter_menu/custom_filter_item.xml:0
-#, python-format
-msgid "Number using {{ DECIMAL_POINT }} as decimal separator."
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5264,14 +5244,6 @@ msgstr "เคล็ดลับ"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "Tag color: #{colornames[color]}"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
@@ -6297,11 +6269,9 @@ msgstr "ประมาณหนึ่งชั่วโมงที่ผ่า
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "all"
 msgstr "ทั้งหมด"
@@ -6737,14 +6707,6 @@ msgstr "แท็บใหม่"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#, python-format
-msgid "new_template"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
@@ -6894,14 +6856,6 @@ msgstr "บันทึกที่ถูกเลือก"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "self"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_leaf_node.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
@@ -6928,27 +6882,6 @@ msgstr "เพื่อเรียกใช้ทางลัด"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "type a default text or press ENTER"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
-#, python-format
-msgid "{{ progressBar.count }} {{ progressBar.string }}"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
-#, python-format
-msgid "{{ relatedFieldName }}..."
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/kanban.xml:0
-#, python-format
-msgid "{{ widget.groupByFieldString }}..."
 msgstr ""
 
 #. module: web

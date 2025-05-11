@@ -9,16 +9,16 @@
 # Yan-Kuan Wu, 2023
 # Martin Trigaux, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
-# Wil Odoo, 2025
 # Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-05-06 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -153,9 +153,9 @@ msgstr "%s （副本）"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_payment_term.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s （副本）"
@@ -264,12 +264,6 @@ msgstr "（包括此日期）。"
 #, python-format
 msgid "(including this document) "
 msgstr "（包括此文件）"
-
-#. module: account
-#: model:ir.actions.report,print_report_name:account.account_invoices
-#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
-msgid "(object._get_report_base_filename())"
-msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -2260,7 +2254,7 @@ msgstr ""
 msgid ""
 "Adjusting Entry for {link}: {percent:.2f}% of {amount} recognized on "
 "{new_date}"
-msgstr "{link}的調整分錄：{percent:.2f}%的{amount}在{new_date}上確認"
+msgstr "調整記項 {link}：款項 {amount} 的 {percent:.2f}%，於 {new_date} 認列"
 
 #. module: account
 #. odoo-python
@@ -2268,7 +2262,7 @@ msgstr "{link}的調整分錄：{percent:.2f}%的{amount}在{new_date}上確認"
 #, python-format
 msgid ""
 "Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}"
-msgstr "調整條目 {link}：從 {date} 認定的 {amount} 的 {percent:.2f}% "
+msgstr "調整記項 {link}：款項 {amount} 的 {percent:.2f}%，由 {date} 開始認列"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_advance_tax_payment_account_id
@@ -5374,26 +5368,6 @@ msgid "Delivery address for current invoice."
 msgstr "目前應收憑單的交貨地址."
 
 #. module: account
-#: model:account.account.tag,name:account.demo_ceo_wages_account
-msgid "Demo CEO Wages Account"
-msgstr "CEO薪資科目範例"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_capital_account
-msgid "Demo Capital Account"
-msgstr "資金科目範例"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_sale_of_land_account
-msgid "Demo Sale of Land Account"
-msgstr "出售土地科目範例"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_stock_account
-msgid "Demo Stock Account"
-msgstr "庫存科目範例"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
 msgstr "已棄用"
@@ -6373,11 +6347,6 @@ msgid "Financial Tags"
 msgstr "財務會計標籤"
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_financing
-msgid "Financing Activities"
-msgstr "財務會計科目活動"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
 msgid "Find Text in Label"
 msgstr "在標籤中查尋文字"
@@ -7084,6 +7053,7 @@ msgstr "識別號"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "INV"
@@ -7679,11 +7649,6 @@ msgid "Invert Tags"
 msgstr "反轉標籤"
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_investing
-msgid "Investing & Extraordinary Activities"
-msgstr "投資與特別活動"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
@@ -7890,13 +7855,11 @@ msgid "Invoice: Sending"
 msgstr "發票：向外發送"
 
 #. module: account
-#: model:mail.template,report_name:account.email_template_edi_invoice
-msgid ""
-"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
-" and '_draft' or '' }}"
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoice_%(name)s%(post)s"
 msgstr ""
-"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
-" and '_draft' or '' }}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -8118,6 +8081,13 @@ msgstr "表示應收/付款憑單已發送."
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "之前是\"%(previous)s\"，現在是\"%(current)s\"."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Items With Missing Analytic Distribution"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -9869,11 +9839,6 @@ msgid "Off-Balance Sheet"
 msgstr "資產負債表"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_office_furniture_account
-msgid "Office Furniture"
-msgstr "辦公家具"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -9923,6 +9888,13 @@ msgstr "應收憑單準備好後，按確認."
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr "此合作夥伴設定的一個或多個銀行帳戶也被其他人使用"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "一個或多個資料行需要 100% 的分析分配。"
 
 #. module: account
 #. odoo-python
@@ -10043,11 +10015,6 @@ msgstr "期初傳票已過帳"
 #, python-format
 msgid "Opening balance"
 msgstr "期初餘額"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_operating
-msgid "Operating Activities"
-msgstr "營運活動"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -11375,7 +11342,7 @@ msgstr "接收者"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Recognition Date"
-msgstr "確認日期"
+msgstr "認列日期"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line_template
@@ -12168,6 +12135,13 @@ msgstr "安全密鑰"
 #, python-format
 msgid "See all activities"
 msgstr "檢視所有活動"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "See items"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -13873,7 +13847,7 @@ msgid ""
 "validation."
 msgstr ""
 "開支會在供應商賬單獲驗證時入賬，但在使用永續庫存估值的英式（Anglo-"
-"Saxon）會計中除外。在該情況下，開支（銷貨成本賬戶）會在客戶發票獲驗證時確認。"
+"Saxon）會計中除外。在該情況下，開支（銷貨成本賬戶）會在客戶發票獲驗證時認列。"
 
 #. module: account
 #. odoo-python
@@ -14767,14 +14741,6 @@ msgid ""
 "This journal already contains items, therefore you cannot modify its "
 "company."
 msgstr "這個日記帳已經包含項目，因此您不能更改它所屬的公司."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with a payment method. You cannot archive it"
-msgstr "此日記賬與付款方式相關聯，不可封存"
 
 #. module: account
 #. odoo-python
@@ -16693,6 +16659,13 @@ msgid "[Not set]"
 msgstr "[沒有設定]"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "_draft"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the bill"
 msgstr "於應付帳單啟用此幣別"
@@ -16878,6 +16851,12 @@ msgid "name"
 msgstr "名稱"
 
 #. module: account
+#: model:ir.actions.report,print_report_name:account.account_invoices
+#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
+msgid "object._get_report_base_filename()"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__tax
 msgid "of tax"
@@ -17001,12 +16980,17 @@ msgstr "{label}：調整記項，日期為 {new_date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% to recognize on {new_date}"
-msgstr "{percent:0.2f}% 認可於 {new_date}"
+msgstr "{percent:0.2f}% 將於 {new_date} 認列"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "{{ (object.name or '').replace('/','-') }}"
 msgstr "{{ (object.name or '').replace('/','-') }}"
+
+#. module: account
+#: model:mail.template,report_name:account.email_template_edi_invoice
+msgid "{{ object._get_report_mail_attachment_filename() }}"
+msgstr ""
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

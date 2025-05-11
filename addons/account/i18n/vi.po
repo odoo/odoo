@@ -8,16 +8,16 @@
 # Dao Nguyen <trucdao.uel@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Nancy Momoland <thanh.np2502@gmail.com>, 2024
-# Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-05-06 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,9 +152,9 @@ msgstr "%s (Sao chép)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_payment_term.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (sao chép)"
@@ -263,12 +263,6 @@ msgstr "(đã gồm)."
 #, python-format
 msgid "(including this document) "
 msgstr "(bao gồm tài liệu này) "
-
-#. module: account
-#: model:ir.actions.report,print_report_name:account.account_invoices
-#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
-msgid "(object._get_report_base_filename())"
-msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -5545,26 +5539,6 @@ msgid "Delivery address for current invoice."
 msgstr "Địa chỉ giao hàng cho hoá đơn hiện tại."
 
 #. module: account
-#: model:account.account.tag,name:account.demo_ceo_wages_account
-msgid "Demo CEO Wages Account"
-msgstr "Tài khoản tiền lương của CEO demo"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_capital_account
-msgid "Demo Capital Account"
-msgstr "Tài khoản nguồn vốn demo"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_sale_of_land_account
-msgid "Demo Sale of Land Account"
-msgstr "Tài khoản buôn bán đất đai demo"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_stock_account
-msgid "Demo Stock Account"
-msgstr "Tài khoản tồn kho demo"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
 msgstr "Ngừng sử dụng"
@@ -6568,11 +6542,6 @@ msgid "Financial Tags"
 msgstr "Từ khóa tài chính"
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_financing
-msgid "Financing Activities"
-msgstr "Hoạt động tài chính"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
 msgid "Find Text in Label"
 msgstr "Tìm văn bản trong nhãn"
@@ -7300,6 +7269,7 @@ msgstr "ID"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "INV"
@@ -7947,11 +7917,6 @@ msgid "Invert Tags"
 msgstr "Từ khóa đảo"
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_investing
-msgid "Investing & Extraordinary Activities"
-msgstr "Đầu tư & hoạt động khác"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
@@ -8161,13 +8126,11 @@ msgid "Invoice: Sending"
 msgstr "Hóa đơn: Đang gửi"
 
 #. module: account
-#: model:mail.template,report_name:account.email_template_edi_invoice
-msgid ""
-"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
-" and '_draft' or '' }}"
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoice_%(name)s%(post)s"
 msgstr ""
-"Hóa đơn_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
-" and '_draft' or '' }}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -8389,6 +8352,13 @@ msgstr "Nó chỉ ra rằng hóa đơn / thanh toán đã được gửi đi."
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "Trước đây là'%(previous)s' và bây giờ là '%(current)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Items With Missing Analytic Distribution"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -10190,11 +10160,6 @@ msgid "Off-Balance Sheet"
 msgstr "Các khoản mục ngoài bảng cân đối"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_office_furniture_account
-msgid "Office Furniture"
-msgstr "Nội thất văn phòng"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -10251,6 +10216,13 @@ msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
 "Một hoặc nhiều Tài khoản ngân hàng được đặt trên đối tác này cũng được sử "
 "dụng bởi đối tác khác"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "Một hoặc nhiều dòng yêu cầu phân phối phân tích 100%."
 
 #. module: account
 #. odoo-python
@@ -10380,11 +10352,6 @@ msgstr "Chi tiết bút toán đầu kỳ đã vào sổ"
 #, python-format
 msgid "Opening balance"
 msgstr "Số dư đầu kỳ"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_operating
-msgid "Operating Activities"
-msgstr "Hoạt động nghiệp vụ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -12530,6 +12497,13 @@ msgstr "Mã bảo mật"
 #, python-format
 msgid "See all activities"
 msgstr "Xem tất cả hoạt động"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "See items"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -15318,16 +15292,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with a payment method. You cannot archive it"
-msgstr ""
-"Sổ nhật ký được liên kết với một phương thức thanh toán. Bạn không thể lưu "
-"trữ nó"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -17410,6 +17374,13 @@ msgid "[Not set]"
 msgstr "[Không cài]"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "_draft"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the bill"
 msgstr "kích hoạt đơn vị tiền tệ của hóa đơn"
@@ -17613,6 +17584,12 @@ msgid "name"
 msgstr "tên"
 
 #. module: account
+#: model:ir.actions.report,print_report_name:account.account_invoices
+#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
+msgid "object._get_report_base_filename()"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__tax
 msgid "of tax"
@@ -17751,6 +17728,11 @@ msgstr "{percent:0.2f}% để ghi nhận vào {new_date}"
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "{{ (object.name or '').replace('/','-') }}"
 msgstr "{{ (object.name or '').replace('/','-') }}"
+
+#. module: account
+#: model:mail.template,report_name:account.email_template_edi_invoice
+msgid "{{ object._get_report_mail_attachment_filename() }}"
+msgstr ""
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

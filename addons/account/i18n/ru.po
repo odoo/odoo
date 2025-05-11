@@ -38,16 +38,16 @@
 # Смородин Даниил, 2024
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
 # Nadia Martynova, 2024
-# Wil Odoo, 2025
 # Ilya Rozhkov, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-05-06 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ilya Rozhkov, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -181,9 +181,9 @@ msgstr " %s (Копия)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_payment_term.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -292,12 +292,6 @@ msgstr "(в комплекте)."
 #, python-format
 msgid "(including this document) "
 msgstr ""
-
-#. module: account
-#: model:ir.actions.report,print_report_name:account.account_invoices
-#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
-msgid "(object._get_report_base_filename())"
-msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -5487,26 +5481,6 @@ msgid "Delivery address for current invoice."
 msgstr "Адрес доставки для текущего документа продажи."
 
 #. module: account
-#: model:account.account.tag,name:account.demo_ceo_wages_account
-msgid "Demo CEO Wages Account"
-msgstr "Демо-счет заработной платы генерального директора"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_capital_account
-msgid "Demo Capital Account"
-msgstr "Демо-счет капитала"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_sale_of_land_account
-msgid "Demo Sale of Land Account"
-msgstr "Демонстрационный счет продажи земли"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_stock_account
-msgid "Demo Stock Account"
-msgstr "Демо-счет акций"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
 msgstr "Устаревшие"
@@ -6512,11 +6486,6 @@ msgid "Financial Tags"
 msgstr ""
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_financing
-msgid "Financing Activities"
-msgstr "Финансовая деятельность"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
 msgid "Find Text in Label"
 msgstr "Найти текст в метке"
@@ -7241,6 +7210,7 @@ msgstr "Идентификатор"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "INV"
@@ -7891,11 +7861,6 @@ msgid "Invert Tags"
 msgstr "Теги Инвертировать"
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_investing
-msgid "Investing & Extraordinary Activities"
-msgstr "Инвестиционная и чрезвычайная деятельность"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
@@ -8110,10 +8075,10 @@ msgid "Invoice: Sending"
 msgstr "Счет-фактура: отправка"
 
 #. module: account
-#: model:mail.template,report_name:account.email_template_edi_invoice
-msgid ""
-"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
-" and '_draft' or '' }}"
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoice_%(name)s%(post)s"
 msgstr ""
 
 #. module: account
@@ -8338,6 +8303,13 @@ msgstr ""
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "Раньше было '%(previous)s', теперь стало '%(current)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Items With Missing Analytic Distribution"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -10139,11 +10111,6 @@ msgid "Off-Balance Sheet"
 msgstr "Забалансовый счёт"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_office_furniture_account
-msgid "Office Furniture"
-msgstr "Принадлежности офисные"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -10200,6 +10167,13 @@ msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
 "Один или несколько банковских счетов, установленных на этого партнера, также"
 " используются другими"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "Одна или несколько линий требуют 100% aнального распределения."
 
 #. module: account
 #. odoo-python
@@ -10327,11 +10301,6 @@ msgstr "Открытие перемещения опубликовано"
 #, python-format
 msgid "Opening balance"
 msgstr "Начальное сальдо"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_operating
-msgid "Operating Activities"
-msgstr "Операционная деятельность"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -12471,6 +12440,13 @@ msgstr "Код доступа"
 #, python-format
 msgid "See all activities"
 msgstr "Посмотреть все мероприятия"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "See items"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -15268,14 +15244,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with a payment method. You cannot archive it"
-msgstr "Этот журнал связан с методом оплаты. Вы не можете его архивировать"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -17382,6 +17350,13 @@ msgid "[Not set]"
 msgstr "[Не установлено]"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "_draft"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the bill"
 msgstr "активировать валюту купюры"
@@ -17581,6 +17556,12 @@ msgid "name"
 msgstr "имя"
 
 #. module: account
+#: model:ir.actions.report,print_report_name:account.account_invoices
+#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
+msgid "object._get_report_base_filename()"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__tax
 msgid "of tax"
@@ -17718,6 +17699,11 @@ msgstr ""
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "{{ (object.name or '').replace('/','-') }}"
+msgstr ""
+
+#. module: account
+#: model:mail.template,report_name:account.email_template_edi_invoice
+msgid "{{ object._get_report_mail_attachment_filename() }}"
 msgstr ""
 
 #. module: account

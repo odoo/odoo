@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-05-06 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -32,12 +32,6 @@ msgstr ""
 "\n"
 "                (object.state in ('draft', 'sent') and 'Angebotsanfrage - %s' % (object.name) or\n"
 "                'Bestellung - %s' % (object.name))"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
-#: model:ir.model.fields,field_description:purchase.field_res_users__supplier_invoice_count
-msgid "# Vendor Bills"
-msgstr "# Lieferantenrechnungen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
@@ -817,7 +811,8 @@ msgstr "Automatische Vervollständigung aus einer vergangenen Bestellung."
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
 msgstr ""
-"Bestätigte Aufträge automatisch sperren, um eine Bearbeitung zu verhindern"
+"Sperren Sie bestätigte Bestellungen automatisch, um eine Bearbeitung zu "
+"verhindern"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1569,7 +1564,7 @@ msgstr "Sperren"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__lock_confirmed_po
 msgid "Lock Confirmed Orders"
-msgstr "Bestätigte Aufträge sperren"
+msgstr "Bestätigte Bestellungen sperren"
 
 #. module: purchase
 #. odoo-python
@@ -3190,7 +3185,6 @@ msgstr "Lieferantenrechnung"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "Lieferantenrechnungen"

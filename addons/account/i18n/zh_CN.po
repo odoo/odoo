@@ -20,17 +20,17 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Raymond Yu <cl_yu@hotmail.com>, 2024
 # Chloe Wang, 2025
-# Wil Odoo, 2025
 # kunqing shi, 2025
 # 何彬 <vnsoft.he@gmail.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-05-06 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -165,9 +165,9 @@ msgstr "%s (副本)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_payment_term.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -276,12 +276,6 @@ msgstr "(包含)."
 #, python-format
 msgid "(including this document) "
 msgstr "(包含本文档) "
-
-#. module: account
-#: model:ir.actions.report,print_report_name:account.account_invoices
-#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
-msgid "(object._get_report_base_filename())"
-msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -5405,26 +5399,6 @@ msgid "Delivery address for current invoice."
 msgstr "当前结算单的交货地址。"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_ceo_wages_account
-msgid "Demo CEO Wages Account"
-msgstr "演示首席执行官（CEO）工资科目"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_capital_account
-msgid "Demo Capital Account"
-msgstr "演示资本科目"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_sale_of_land_account
-msgid "Demo Sale of Land Account"
-msgstr "演示土地销售科目"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_stock_account
-msgid "Demo Stock Account"
-msgstr "演示库存科目"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
 msgstr "废弃"
@@ -6404,11 +6378,6 @@ msgid "Financial Tags"
 msgstr "财务标签"
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_financing
-msgid "Financing Activities"
-msgstr "融资活动"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
 msgid "Find Text in Label"
 msgstr "在标签中查找文本"
@@ -7115,6 +7084,7 @@ msgstr "ID"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "INV"
@@ -7712,11 +7682,6 @@ msgid "Invert Tags"
 msgstr "反转标签"
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_investing
-msgid "Investing & Extraordinary Activities"
-msgstr "投资活动和特别活动"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
@@ -7923,13 +7888,11 @@ msgid "Invoice: Sending"
 msgstr "结算单：发送"
 
 #. module: account
-#: model:mail.template,report_name:account.email_template_edi_invoice
-msgid ""
-"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
-" and '_draft' or '' }}"
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoice_%(name)s%(post)s"
 msgstr ""
-"结算单_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and"
-" '_draft' or '' }}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -8151,6 +8114,13 @@ msgstr "它指示已发送结算单/支付。"
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "以前的是 '%(previous)s' 现在的是 '%(current)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Items With Missing Analytic Distribution"
+msgstr "项目缺少分析性的分配"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -9904,11 +9874,6 @@ msgid "Off-Balance Sheet"
 msgstr "资产负债表不平"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_office_furniture_account
-msgid "Office Furniture"
-msgstr "办公家具"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -9958,6 +9923,13 @@ msgstr "结算单准备好后，按\"确认\"。"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr "在此合作伙伴上设置的一个或多个银行账户也被其他人使用"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "一条或多条线需要 100% 的分析分摊。"
 
 #. module: account
 #. odoo-python
@@ -10078,11 +10050,6 @@ msgstr "期初凭证已发布"
 #, python-format
 msgid "Opening balance"
 msgstr "期初余额"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_operating
-msgid "Operating Activities"
-msgstr "经营活动"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -12203,6 +12170,13 @@ msgstr "安全令牌"
 #, python-format
 msgid "See all activities"
 msgstr "查看所有活动"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "See items"
+msgstr "查看项目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -14806,14 +14780,6 @@ msgstr "这个日记账已经包含明细账，因此您不能更改它所属的
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with a payment method. You cannot archive it"
-msgstr "此日记账与付款方式相关联。无法存档"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -16722,6 +16688,13 @@ msgid "[Not set]"
 msgstr "[未设置]"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "_draft"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the bill"
 msgstr "激活票据的货币"
@@ -16907,6 +16880,12 @@ msgid "name"
 msgstr "名称"
 
 #. module: account
+#: model:ir.actions.report,print_report_name:account.account_invoices
+#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
+msgid "object._get_report_base_filename()"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__tax
 msgid "of tax"
@@ -17036,6 +17015,11 @@ msgstr "{percent:0.2f}% 确认于 {new_date} "
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "{{ (object.name or '').replace('/','-') }}"
 msgstr "{{ (object.name or '').replace('/','-') }}"
+
+#. module: account
+#: model:mail.template,report_name:account.email_template_edi_invoice
+msgid "{{ object._get_report_mail_attachment_filename() }}"
+msgstr ""
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

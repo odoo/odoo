@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:27+0000\n"
+"POT-Creation-Date: 2025-05-08 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -49,20 +49,6 @@ msgstr "רשומות"
 #, python-format
 msgid "# Code editor"
 msgstr "מס' עורך קוד"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "#{i.display_name} is current state"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "#{i.display_name} is not current state"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -124,7 +110,7 @@ msgstr "לפני%s ימים"
 #: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "%s records"
-msgstr ""
+msgstr "%s רשומות"
 
 #. module: web
 #. odoo-javascript
@@ -222,7 +208,7 @@ msgstr "(כמות)"
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #, python-format
 msgid "(create)"
-msgstr ""
+msgstr "(יצירה)"
 
 #. module: web
 #. odoo-javascript
@@ -1312,13 +1298,6 @@ msgstr "נקה חתימה"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "Click to change current state to #{i.display_name}"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
@@ -2263,6 +2242,13 @@ msgstr "הזן את כתובת הדוא\"ל"
 #: code:addons/web/static/src/webclient/settings_form_view/highlight_text/form_label_highlight_text.xml:0
 #, python-format
 msgid "Enterprise"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
+#, python-format
+msgid "Entry Count"
 msgstr ""
 
 #. module: web
@@ -3608,6 +3594,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
@@ -3644,13 +3631,6 @@ msgstr "מצב לא פעיל"
 #, python-format
 msgid "Not active state, click to change it"
 msgstr "מצב לא פעיל, לחץ על מנת לשנות זאת"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/filter_menu/custom_filter_item.xml:0
-#, python-format
-msgid "Number using {{ DECIMAL_POINT }} as decimal separator."
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3712,7 +3692,7 @@ msgstr "יישומי Odoo"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #, python-format
 msgid "Odoo Server Error"
-msgstr ""
+msgstr "שגיאת שרת של Odoo"
 
 #. module: web
 #. odoo-javascript
@@ -5238,14 +5218,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "Tag color: #{colornames[color]}"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
@@ -6247,11 +6219,9 @@ msgstr "לפני כשעה"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "all"
 msgstr "הכל"
@@ -6687,14 +6657,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#, python-format
-msgid "new_template"
-msgstr "תבנית_חדשה"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
@@ -6844,14 +6806,6 @@ msgstr "רשומות שנבחרו,"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
-#: code:addons/web/static/src/legacy/xml/base.xml:0
-#, python-format
-msgid "self"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_leaf_node.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
@@ -6878,27 +6832,6 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "type a default text or press ENTER"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
-#, python-format
-msgid "{{ progressBar.count }} {{ progressBar.string }}"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
-#, python-format
-msgid "{{ relatedFieldName }}..."
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/xml/kanban.xml:0
-#, python-format
-msgid "{{ widget.groupByFieldString }}..."
 msgstr ""
 
 #. module: web

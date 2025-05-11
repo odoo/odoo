@@ -784,7 +784,7 @@ msgstr "Előleghez használt főkönyvi számla"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "Elhatárolt bevétel tétel"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -868,6 +868,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Felülértékesített rendelésnél a szállított mennyiség meghaladja az eredetileg rendelt mennyiséget,\n"
+"            és a számlázási szabály a rendelt mennyiségre alapul."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -935,6 +937,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Például előre fizetett szolgáltatási órák értékesítése esetén a rendszer felajánlja \n"
+"            extra órák értékesítését, ha az összes rendelt óra elfogyott."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1001,6 +1005,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Értékesítés növelés különféle programokkal: kuponok, promóciók, "
+"ajándékkártyák, hűségkártyák. Egyedi feltételeket lehet beállítani "
+"(termékek, vevők, minimális vásárlási összeg, időszak). A jutalom lehet "
+"kedvezmény (% vagy összeg), illetve ingyenes termék is."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1490,6 +1498,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"A vevőnek megígérhető szállítási dátum. Szolgáltatás termékek esetén a "
+"rendelési sorok legkisebb átfutási ideje. Kiszállítás esetén a rendelésen "
+"megadott szállítási szabálynak megfelelően a rendelési sorok legkisebb vagy "
+"legnagyobb átfutási ideje."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -1927,7 +1939,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr ""
+msgstr "Ha igaz, akkor a csomagolás használható vevői rendeléseken"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -1939,7 +1951,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "Amazon rendelések importálása és szállítások szinkronizálása"
 
 #. module: sale
 #. odoo-python
@@ -2039,6 +2051,9 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Számlázott bevétel a jelenlegi hónapban. Ez az értékesítési csatorna által "
+"számlázott teljes összeg ebben a hónapban. Ennek segítségével követhető "
+"nyomon a jelenlegi és a tervezett árbevétel aránya a kanban nézeten."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
@@ -2338,6 +2353,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Kézi mennyiség a rendelésen: számlázás a kézzel megadott mennyiség alapján analitikus számla létrehozása nélkül.\n"
+"Szerződéses munkaidő: számlázás a kapcsolódó időnyilvántartásokon megadott órák alapján.\n"
+"Feladat létrehozása és idő követése: vevői rendelés megerősítésekor feladat létrehozása és munkaidő rögzítése."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
@@ -2490,7 +2508,7 @@ msgstr "Nem találhatóak számlázandó rendelések"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "Nem található felülértékesíthető rendelés."
 
 #. module: sale
 #. odoo-javascript
@@ -2623,6 +2641,8 @@ msgstr "Csak a megrendelés tervezetek jelölhetők közvetlenül elküldöttnek
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"Egy vevői rendelés soron tulajdonságértékenként csak egy egyedi érték "
+"engedélyezett."
 
 #. module: sale
 #. odoo-javascript
@@ -2882,7 +2902,7 @@ msgstr "Árcsökkentés adó nélkül"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Bruttó árengedmény"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -2977,7 +2997,7 @@ msgstr "Terméktípus"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "Termék m.e. csak olvasható"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -3152,7 +3172,7 @@ msgstr "Árajánlat elküldve"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "Az ajánlatot megtekintette a vevő: %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3196,7 +3216,7 @@ msgstr "Költségek újraszámlázása"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr ""
+msgstr "Újraszámlázási szabály látható"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__recipient_ids
@@ -3294,7 +3314,7 @@ msgstr "Bevételek"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr ""
+msgstr "Kampány által generált bevételek"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -3330,7 +3350,7 @@ msgstr "Értékesítési rendelések"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
-msgstr ""
+msgstr "Fizetési szolgáltató beállítás varázsló"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4047,6 +4067,7 @@ msgstr ""
 #, python-format
 msgid "The order is not in a state requiring customer signature."
 msgstr ""
+"A rendelés nincs olyan állapotban, hogy vevői aláírás lenne szükséges."
 
 #. module: sale
 #. odoo-python
@@ -4058,7 +4079,7 @@ msgstr "A rendelt mennyiség frissítve lett."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "A vevői rendelés fizetéséhez kapcsolódó kommunikáció."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
@@ -4180,6 +4201,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
 msgstr ""
+"A termék csomagolása: %(pack_size).2f %(pack_name)s. Értékesítéshez "
+"használandó: %(quantity).2f %(unit)s."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4442,7 +4465,7 @@ msgstr "Adók frissítése"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "Felülértékesítés: %(order)s Vevő: %(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -4596,6 +4619,8 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"Nem lehet megváltoztatni a termék típusát, mert már használatra került vevői"
+" rendelésen."
 
 #. module: sale
 #. odoo-python
@@ -4605,6 +4630,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Nem lehet megváltoztatni vevői rendelés sorának típusát. Inkább törölje a "
+"sort és vegyen fel egy újat a megfelelő típussal."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -4648,12 +4675,14 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Az ajánlat a(z) %(product_company)s vállalathoz tartozó termékeket tartalmaz, de az ajánlat a(z) %(quote_company)svállalathoz tartozik. \n"
+" Kérjük, változtassa meg az ajánlaton a vállalatot vagy távolítsa el a más vállalatokhoz tartozó termékeket (%(bad_products)s)."
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
 #: model:ir.cron,cron_name:sale.send_invoice_cron
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "automatikus számlázás: előkészített számla elküldése"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

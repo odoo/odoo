@@ -3,6 +3,7 @@
 # 	* account
 # 
 # Translators:
+# Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2022
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2022
 # Kari Lindgren <karisatu@gmail.com>, 2022
 # Johanna Valkonen <miujohanna@gmail.com>, 2022
@@ -32,14 +33,13 @@
 # Pekka Ikonen, 2022
 # Kimmo Lehtonen <leban@netzionale.com>, 2022
 # Tommi Rintala <tommi.rintala@gmail.com>, 2022
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
 # Joakim Weckman, 2023
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Martin Trigaux, 2024
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
-# Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2024
 # Konsta Aavaranta, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
@@ -49,7 +49,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-05-06 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -185,9 +185,9 @@ msgstr "%s (Kopio)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_payment_term.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopio)"
@@ -296,12 +296,6 @@ msgstr "(sisältyy)."
 #, python-format
 msgid "(including this document) "
 msgstr "(sisältäen tämän dokumentin) "
-
-#. module: account
-#: model:ir.actions.report,print_report_name:account.account_invoices
-#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
-msgid "(object._get_report_base_filename())"
-msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -3770,7 +3764,7 @@ msgstr "Käteisperusteinen siirtotili"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_expense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
 msgid "Cash Difference Expense Account"
-msgstr "Käteiserotuksen kulutili"
+msgstr "Maksuperusteisen kirjanpidon erotukson menotili"
 
 #. module: account
 #. odoo-python
@@ -5563,26 +5557,6 @@ msgid "Delivery address for current invoice."
 msgstr "Toimitusosoite nykyiselle laskulle."
 
 #. module: account
-#: model:account.account.tag,name:account.demo_ceo_wages_account
-msgid "Demo CEO Wages Account"
-msgstr "Demo toimitusjohtajan palkkatili"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_capital_account
-msgid "Demo Capital Account"
-msgstr "Demo pääomatili"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_sale_of_land_account
-msgid "Demo Sale of Land Account"
-msgstr "Demo Maanmyyntitili"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_stock_account
-msgid "Demo Stock Account"
-msgstr "Demo varastotili"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
 msgstr "Vanhentunut"
@@ -6585,11 +6559,6 @@ msgid "Financial Tags"
 msgstr "Taloudelliset tunnisteet"
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_financing
-msgid "Financing Activities"
-msgstr "Rahoituksen rahavirrat"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
 msgid "Find Text in Label"
 msgstr "Etsi tekstiä otsikosta"
@@ -7318,6 +7287,7 @@ msgstr "ID"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "INV"
@@ -7969,11 +7939,6 @@ msgid "Invert Tags"
 msgstr "Käännä etiketit"
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_investing
-msgid "Investing & Extraordinary Activities"
-msgstr "Investointien rahavirrat"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
@@ -8186,13 +8151,11 @@ msgid "Invoice: Sending"
 msgstr "Lasku: Lähettää"
 
 #. module: account
-#: model:mail.template,report_name:account.email_template_edi_invoice
-msgid ""
-"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
-" and '_draft' or '' }}"
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoice_%(name)s%(post)s"
 msgstr ""
-"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
-" and '_draft' or '' }}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -8414,6 +8377,13 @@ msgstr "Se ilmaisee, että lasku/maksu on lähetetty."
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "Oli aiemmin '%(previous)s' ja on nyt '%(current)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Items With Missing Analytic Distribution"
+msgstr "Tuotteet, joilla ei ole analyyttistä jakoa"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -10213,11 +10183,6 @@ msgid "Off-Balance Sheet"
 msgstr "Taseen ulkopuolella"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_office_furniture_account
-msgid "Office Furniture"
-msgstr "Toimistokalusteet"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -10274,6 +10239,13 @@ msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
 "Yksi tai useampi pankkitili, joka on asetettu tälle partnerille, on myös "
 "muiden käytössä"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "Yksi tai useampi rivi tarvitsevat 100% analyyttista jakoa."
 
 #. module: account
 #. odoo-python
@@ -10402,11 +10374,6 @@ msgstr "Avaus siirto Lähetetty"
 #, python-format
 msgid "Opening balance"
 msgstr "Avaava tase"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_operating
-msgid "Operating Activities"
-msgstr "Liiketoiminnan rahavirrat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -12554,6 +12521,13 @@ msgstr "Turvatunnus"
 #, python-format
 msgid "See all activities"
 msgstr "Näytä kaikki toiminnot"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "See items"
+msgstr "Katso merkinnät"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -15331,14 +15305,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with a payment method. You cannot archive it"
-msgstr "Tämä päiväkirja liittyy maksutapaan. Et voi arkistoida sitä."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -17418,6 +17384,13 @@ msgid "[Not set]"
 msgstr "[Ei määritetty]"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "_draft"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the bill"
 msgstr "aktivoi laskun valuutta"
@@ -17618,6 +17591,12 @@ msgid "name"
 msgstr "nimi"
 
 #. module: account
+#: model:ir.actions.report,print_report_name:account.account_invoices
+#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
+msgid "object._get_report_base_filename()"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__tax
 msgid "of tax"
@@ -17756,6 +17735,11 @@ msgstr "{percent:0.2f}% to tunnistaa {new_date}"
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "{{ (object.name or '').replace('/','-') }}"
 msgstr "{{ (object.name or '').replace('/','_') }}"
+
+#. module: account
+#: model:mail.template,report_name:account.email_template_edi_invoice
+msgid "{{ object._get_report_mail_attachment_filename() }}"
+msgstr ""
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

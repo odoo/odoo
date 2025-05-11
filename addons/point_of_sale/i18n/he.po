@@ -36,9 +36,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 11:06+0000\n"
+"POT-Creation-Date: 2025-05-06 20:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -1115,7 +1115,7 @@ msgstr "עיגול מזומן"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_cash_rounding
 msgid "Cash Rounding (PoS)"
-msgstr ""
+msgstr "עיגול מזומן (קופה)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2804,7 +2804,7 @@ msgstr "חשבון ארעי"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Intermediary account used for unidentified customers."
-msgstr ""
+msgstr "חשבון מתווך המשמש ללקוחות לא מזוהים"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -3117,7 +3117,7 @@ msgstr "עור"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Leave empty to use the default account from the company setting"
-msgstr ""
+msgstr "השאר ריק כדי להשתמש בחשבון ברירת המחדל מהגדרות החברה"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
@@ -3132,11 +3132,13 @@ msgid ""
 "Leave empty to use the default account from the company setting.\n"
 "Overrides the company's receivable account (for Point of Sale) used in the journal entries."
 msgstr ""
+"השאר ריק כדי להשתמש בחשבון ברירת המחדל מהגדרות החברה.\n"
+"פעולה זו תעקוף את חשבון הלקוחות של החברה (לצורך הקופה) המשמש ברישומים חשבונאיים."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Leave empty to use the receivable account of customer"
-msgstr ""
+msgstr "השאר ריק כדי להשתמש בחשבון תקבולים של הלקוח"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__journal_id
@@ -3332,14 +3334,14 @@ msgstr "רווח & עלות"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Maximum Exceeded"
-msgstr ""
+msgstr "חריגה מהערך המרבי"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Maximum value reached"
-msgstr ""
+msgstr "הגעת לערך המרבי"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -3396,7 +3398,7 @@ msgstr "מידע נוסף"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "More settings:"
-msgstr ""
+msgstr "הגדרות נוספות:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3781,7 +3783,7 @@ msgstr "החל עיגול על מזומן בלבד"
 #, python-format
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
-msgstr ""
+msgstr "ניתן להשתמש רק ביומנים מסוג 'מזומן' או 'בנק' עם שיטות תשלום/"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4380,7 +4382,7 @@ msgstr "תמונה"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_plastic
 msgid "Plastic"
-msgstr ""
+msgstr "פלסטיק"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4472,7 +4474,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid ""
 "Please enter your billing information <small class=\"text-muted\">or</small>"
-msgstr ""
+msgstr "אנא הזן את פרטי התשלום שלך<small class=\"text-muted\">או</small>"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5330,7 +5332,7 @@ msgstr "דו\"חות"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Reprint Invoice"
-msgstr ""
+msgstr "הדפס חשבונית בשנית"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5621,7 +5623,7 @@ msgstr "בחר מעמד פיסקלי"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Select a payment method to validate the order."
-msgstr ""
+msgstr "בחר אמצעי תשלום על מנת לאשר את ההזמנה."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5817,7 +5819,7 @@ msgstr "הגדר איזה מטבעות/שטרות יהיו בשימוש בפתי
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Set the new quantity"
-msgstr ""
+msgstr "הגדר כמות חדשה"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration
@@ -6054,7 +6056,7 @@ msgstr "כלל מלאי "
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Stock input for %s"
-msgstr ""
+msgstr "קלט מלאי ל %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6256,7 +6258,7 @@ msgstr "טלפון:"
 #: code:addons/point_of_sale/controllers/main.py:0
 #, python-format
 msgid "The %s must be filled in your details."
-msgstr ""
+msgstr "יש למלא את %s בפרטים שלך"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6272,7 +6274,7 @@ msgstr ""
 msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
-msgstr ""
+msgstr "הקופה תומכת רק בשיטה \" הוספת שורת עיגול\"."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6411,7 +6413,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_bill.py:0
 #, python-format
 msgid "The name of the Coins/Bills must be a number."
-msgstr ""
+msgstr "השם על המטבעות\\שטרות צריך להיות מספר."
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -6759,6 +6761,15 @@ msgstr ""
 #, python-format
 msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
 msgstr ""
 
 #. module: point_of_sale
@@ -7794,12 +7805,3 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "היו כפילויות של הזמנות קיימות"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with payment method %s that is being used by "
-"order %s in the active pos session %s"
-msgstr ""
