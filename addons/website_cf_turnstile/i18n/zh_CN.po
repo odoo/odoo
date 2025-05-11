@@ -3,13 +3,14 @@
 # 	* website_cf_turnstile
 # 
 # Translators:
+# Chloe Wang, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -41,7 +42,7 @@ msgstr "CF 网站密钥"
 
 #. module: website_cf_turnstile
 #. odoo-javascript
-#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
 msgid "Cloudflare Turnstile Error"
 msgstr "Cloudflare Turnstile 错误"
 
@@ -51,9 +52,34 @@ msgid "Config Settings"
 msgstr "配置设置"
 
 #. module: website_cf_turnstile
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: website_cf_turnstile
 #: model:ir.model,name:website_cf_turnstile.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 路由"
+
+#. module: website_cf_turnstile
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_ir_http__id
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_cf_turnstile
+#. odoo-javascript
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
+msgid ""
+"Please make sure your credentials for this service are properly set up.\\n"
+msgstr ""
+
+#. module: website_cf_turnstile
+#. odoo-python
+#: code:addons/website_cf_turnstile/models/ir_http.py:0
+msgid "Suspicious activity detected by Turnstile CAPTCHA."
+msgstr "Turnstile CAPTCHA 检测到可疑活动。"
 
 #. module: website_cf_turnstile
 #. odoo-python
@@ -68,6 +94,12 @@ msgid "The Cloudflare turnstile private key is invalid."
 msgstr "Cloudflare Turnstile 私钥无效。"
 
 #. module: website_cf_turnstile
+#. odoo-javascript
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
+msgid "The error code is: %s.\\n"
+msgstr ""
+
+#. module: website_cf_turnstile
 #. odoo-python
 #: code:addons/website_cf_turnstile/models/ir_http.py:0
 msgid "The request is invalid or malformed."
@@ -75,17 +107,17 @@ msgstr "该请求无效或格式错误。"
 
 #. module: website_cf_turnstile
 #. odoo-javascript
-#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
-msgid ""
-"There was an error with Cloudflare Turnstile, the captcha system.\n"
-"Please make sure your credentials for this service are properly set up.\n"
-"The error code is: %s.\n"
-"You can find more information about this error code here: https://developers.cloudflare.com/turnstile/reference/errors."
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
+msgid "There was an error with Cloudflare Turnstile, the captcha system.\\n"
 msgstr ""
-"验证码系统 Cloudflare Turnstile 出现错误。\n"
-"请确保您正确设置了此服务的凭证。\n"
-"错误代码是：%s。\n"
-"有关此错误代码更多信息，请访问：https://developers.cloudflare.com/turnstile/reference/errors。"
+
+#. module: website_cf_turnstile
+#. odoo-javascript
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
+msgid ""
+"You can find more information about this error code here: "
+"https://developers.cloudflare.com/turnstile/reference/errors."
+msgstr ""
 
 #. module: website_cf_turnstile
 #. odoo-python

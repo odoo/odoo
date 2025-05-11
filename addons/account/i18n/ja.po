@@ -3,16 +3,16 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2025
 # Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:27+0000\n"
+"POT-Creation-Date: 2025-05-09 20:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1591,6 +1591,125 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<t t-set=\"invoices\" t-value=\"ctx.get('einvoices', [])\"/>\n"
+"<t t-set=\"invoice_preview_ids\" t-value=\"','.join([str(i) for i in invoices.ids]) if invoices else ''\"/>\n"
+"<t t-set=\"invoice_count\" t-value=\"len(invoices)\"/>\n"
+"<t t-set=\"MAX_TABLE_LINES\" t-value=\"10\"/>\n"
+"\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td align=\"center\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td valign=\"middle\">\n"
+"                                    <span style=\"font-size: 10px;\">通知</span>\n"
+"                                    <br/>\n"
+"                                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                                        新しい電子請求書を受信しました                                    </span>\n"
+"                                    <div style=\"margin-bottom: 5px; margin-top: 18px;\">\n"
+"                                        <a t-if=\"invoice_count != 1\" t-attf-href=\"/odoo/accounting/action-account.action_account_moves_email_preview?active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {{ object.company_id.email_primary_color or '#FFFFFF' }}; text-decoration: none !important; font-weight: 400; background-color: {{ object.company_id.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"                                            請求書を確認する\n"
+"                                        </a>\n"
+"                                        <a t-else=\"\" t-attf-href=\"/odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {{ object.company_id.email_primary_color or '#FFFFFF' }}; text-decoration: none !important; font-weight: 400; background-color: {{ object.company_id.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"                                            請求書を確認する\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td>\n"
+"                                <td valign=\"middle\" align=\"right\">\n"
+"                                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
+"                                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"height: auto; width: 80px; margin-right: 10px;\" t-att-alt=\"'%s' % object.company_id.name\"/>\n"
+"                                    </t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                    <hr style=\"background-color:#CCCCCC; border:none; height:1px; margin:16px 0;\"/>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- BODY -->\n"
+"                <tr>\n"
+"                    <td align=\"center\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td style=\"font-size: 14px;\">\n"
+"                                    <p>\n"
+"                                         <t t-out=\"object.company_id.name or 'Company'\"/>様\n"
+"                                        <br/><br/>\n"
+"                                         <strong><t t-out=\"invoice_count or 'new'\"/></strong> 件の請求書を受信しました。\n"
+"                                        Odoo内でご確認いただけます。\n"
+"                                        <br/><br/>\n"
+"                                        </p><table width=\"100%\" cellpadding=\"6\" cellspacing=\"0\" style=\"border: 1px solid #DDDDDD; border-collapse: collapse; font-size: 13px; margin-bottom: 16px;\">\n"
+"                                            <thead style=\"background-color: #F9F9F9; text-align: left;\">\n"
+"                                                <tr>\n"
+"                                                    <th style=\"border: 1px solid #DDDDDD;\">請求書</th>\n"
+"                                                    <th style=\"border: 1px solid #DDDDDD;\">仕入先</th>\n"
+"                                                    <th style=\"border: 1px solid #DDDDDD;\">日付</th>\n"
+"                                                    <th style=\"border: 1px solid #DDDDDD;\">合計</th>\n"
+"                                                </tr>\n"
+"                                            </thead>\n"
+"                                            <tbody>\n"
+"                                                <t t-set=\"MAX_TABLE_LINES\" t-value=\"10\"/>\n"
+"                                                <t t-foreach=\"invoices[:MAX_TABLE_LINES]\" t-as=\"inv\">\n"
+"                                                    <tr>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out=\"inv.name or 'INV'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out=\"inv.partner_id.name or 'Unknown'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out=\"inv.invoice_date or 'Unknown'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-if=\"inv.amount_total is not None\" t-out=\"inv.amount_total\" t-options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or object.company_id.currency_id}\"/>\n"
+"                                                            <t t-else=\"\">不明</t>\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                </t>\n"
+"                                                <t t-if=\"invoice_count &gt; MAX_TABLE_LINES\">\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"4\" style=\"border: 1px solid #DDDDDD; text-align: center;\">\n"
+"                                                            <strong>...</strong>\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                </t>\n"
+"                                                <t t-if=\"invoice_count == 0\">\n"
+"                                                    <tr>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out=\"'INV'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            仕入先例\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            2025-01-01\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out=\"1234.56\" t-options=\"{'widget': 'monetary', 'display_currency': object.company_id.currency_id}\"/>\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                </t>\n"
+"                                            </tbody>\n"
+"                                        </table>\n"
+"                                        これらのメールが不要ですか？<a t-attf-href=\"/my/journal/{{ object.id }}/unsubscribe\">こちらから配信を停止</a> するか <a t-attf-href=\"/mail/view?model=account.journal&amp;res_id={{ object.id }}\"><t t-out=\"object.name or 'Vendor Bills'\"/></a> ジャーナル設定を更新してください。\n"
+"                                    \n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"            "
 
 #. module: account
 #. odoo-python
@@ -3806,6 +3925,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_payment
 msgid "Based on Payment"
 msgstr "支払いに基づく"
+
+#. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "基本"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
@@ -7514,6 +7638,7 @@ msgstr "固定資産"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_fixed
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Fixed Assets"
 msgstr "固定資産"
 
@@ -7703,6 +7828,11 @@ msgid ""
 msgstr ""
 " "
 "line_code.expression_label形式の式。これにより、(_carryover_*ラベルの付いた式で)親行と異なる場合に、この式のキャリーオーバーの対象を設定することができます。"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+msgid "Frequent Expenses"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -9171,11 +9301,6 @@ msgstr "顧客請求書/仕入先請求書/委任状"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
 msgstr "請求"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Invoicing & Banks"
-msgstr "請求 & 銀行"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -13397,6 +13522,7 @@ msgstr "このページを保存して、戻って機能を設定してくださ
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
 msgstr "銀行のアプリで私をスキャンします。"
 
@@ -14306,6 +14432,12 @@ msgstr "小計"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "Successfully unsubscribed from invoice notifications"
 msgstr "顧客請求書の配信停止が完了しました。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid "Suggested"
+msgstr "提案"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__suitable_journal_ids
@@ -18157,11 +18289,6 @@ msgstr "請求書が使う通貨を有効にしてください"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the invoice"
 msgstr "請求書が使う通貨を有効にしてください"
-
-#. module: account
-#: model:res.groups,comment:account.group_account_basic
-msgid "adds the accounting dashboard, bank management and follow-up reports."
-msgstr "会計ダッシュボード、銀行管理、フォローアップレポートを追加します。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form

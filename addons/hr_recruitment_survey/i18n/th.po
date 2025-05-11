@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -24,49 +24,27 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t><br><br>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t><br/><br/>\n"
 "        <t>\n"
 "            You've progressed through the recruitment process and we would like you to answer some questions.\n"
 "        </t>\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-style=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
 "                <t>\n"
 "                    Start the written interview\n"
 "                </t>\n"
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the interview for <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br><br>\n"
+"            Please answer the interview for <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t>\n"
 "            We wish you good luck! Thank you in advance for your participation.\n"
 "        </t>\n"
-"    </p>\n"
+"    \n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        เรียน <t t-out=\"object.partner_id.name or 'applicant'\">[ชื่อผู้สมัคร]</t><br><br>\n"
-"        <t>\n"
-"            คุณได้มีความคืบหน้าในกระบวนการสรรหางานและเราต้องการให้คุณตอบคำถามบางส่วน\n"
-"        </t>\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                <t>\n"
-"                    เริ่มการสัมภาษณ์แบบเขียน\n"
-"                </t>\n"
-"            </a>\n"
-"        </div>\n"
-"        <t t-if=\"object.deadline\">\n"
-"            กรุณาตอบคำถามสัมภาษณ์ภายในวันที่ <t t-out=\"format_date(object.deadline)\">[วันที่สิ้นสุด]</t><br><br>\n"
-"        </t>\n"
-"        <t>\n"
-"            ขอให้โชคดี! ขอบคุณล่วงหน้าสำหรับการเข้าร่วมของคุณ\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
@@ -81,16 +59,6 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_text\">ปรึกษา</span>\n"
 "                        <span class=\"o_stat_text\">สัมภาษณ์</span>"
-
-#. module: hr_recruitment_survey
-#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
-msgid "About you"
-msgstr "เกี่ยวกับคุณ"
-
-#. module: hr_recruitment_survey
-#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid "Activities"
-msgstr "กิจกรรม"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
@@ -110,6 +78,11 @@ msgid "Applicant: Interview"
 msgstr "ผู้สมัคร: สัมภาษณ์"
 
 #. module: hr_recruitment_survey
+#: model:ir.model,website_form_label:hr_recruitment_survey.model_hr_applicant
+msgid "Apply for a Job"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
 msgid ""
@@ -124,44 +97,22 @@ msgid "Display Interview Form"
 msgstr "แสดงแบบฟอร์มสัมภาษณ์"
 
 #. module: hr_recruitment_survey
-#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
-msgid "Education"
-msgstr "การศึกษา"
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
 
 #. module: hr_recruitment_survey
-#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
-msgid "From which university did or will you graduate?"
-msgstr "เรียนจบหรือจะกำลังจะสำเร็จการศึกษาจากมหาวิทยาลัยอะไร?"
-
-#. module: hr_recruitment_survey
-#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
-msgid "Getting on with colleagues"
-msgstr "ทำความรู้จักกับเพื่อนร่วมงาน"
-
-#. module: hr_recruitment_survey
-#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row8
-msgid "Getting perks such as free parking, gym passes"
-msgstr "รับสิทธิพิเศษ เช่น ที่จอดรถฟรี บัตรเข้ายิม"
-
-#. module: hr_recruitment_survey
-#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
-msgid "Having a good pay"
-msgstr "ได้ผลตอบแทนดี"
-
-#. module: hr_recruitment_survey
-#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row3
-msgid "Having a nice office environment"
-msgstr "มีสภาพแวดล้อมสำนักงานที่ดี"
-
-#. module: hr_recruitment_survey
-#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row7
-msgid "Having freebies such as tea, coffee and stationery"
-msgstr "มีของแจกฟรี เช่น ชา กาแฟ เครื่องเขียน"
-
-#. module: hr_recruitment_survey
-#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
-msgid "Important"
-msgstr "สำคัญ"
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__id
+msgid "ID"
+msgstr "ไอดี"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
@@ -194,51 +145,9 @@ msgid "Job Position"
 msgstr "ตำแหน่งงาน"
 
 #. module: hr_recruitment_survey
-#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q6
-msgid "Knowledge"
-msgstr "ความรู้"
-
-#. module: hr_recruitment_survey
-#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
-msgid "Management quality"
-msgstr "คุณภาพการจัดการ"
-
-#. module: hr_recruitment_survey
-#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col1
-msgid "Not important"
-msgstr "ไม่สำคัญ"
-
-#. module: hr_recruitment_survey
-#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row5
-msgid "Office location"
-msgstr "ที่ตั้งสำนักงาน"
-
-#. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Participate to {{ object.survey_id.display_name }} interview"
 msgstr "เข้าร่วมการสัมภาษณ์ {{ object.survey_id.display_name }}"
-
-#. module: hr_recruitment_survey
-#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid "Past work experiences"
-msgstr "ประสบการณ์การทำงานที่ผ่านมา"
-
-#. module: hr_recruitment_survey
-#: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
-msgid ""
-"Please answer those questions to help recruitment officers to preprocess "
-"your application."
-msgstr ""
-"โปรดตอบคำถามเหล่านี้เพื่อช่วยเจ้าหน้าที่สรรหาในการประมวลผลใบสมัครของคุณล่วงหน้า"
-
-#. module: hr_recruitment_survey
-#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
-msgid ""
-"Please fill information about you: who you are, what are your education, experience, and activities.\n"
-"    It will help us managing your application."
-msgstr ""
-"กรุณากรอกข้อมูลเกี่ยวกับตัวคุณ: คุณเป็นใคร การศึกษา ประสบการณ์ และกิจกรรมต่างๆ\n"
-"    มันจะช่วยให้เราจัดการใบสมัครของคุณได้"
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -247,28 +156,9 @@ msgid "Please provide an applicant name."
 msgstr "กรุณาระบุชื่อผู้สมัคร"
 
 #. module: hr_recruitment_survey
-#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
-#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid ""
-"Please summarize your education history: schools, location, diplomas, ..."
-msgstr "กรุณาสรุปประวัติการศึกษาของคุณ: โรงเรียน, สถานที่, อนุปริญญา, ..."
-
-#. module: hr_recruitment_survey
-#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid ""
-"Please tell us a bit more about yourself: what are your main activities, ..."
-msgstr ""
-"โปรดเล่าให้เราฟังเพิ่มเติมเกี่ยวกับตัวคุณหน่อย: กิจกรรมหลักของคุณคืออะไร ..."
-
-#. module: hr_recruitment_survey
 #: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
 msgid "Recruitment"
 msgstr "การรับสมัคร"
-
-#. module: hr_recruitment_survey
-#: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
-msgid "Recruitment Form"
-msgstr "แบบฟอร์มการรับสมัคร"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
@@ -315,11 +205,6 @@ msgid "Survey User Input"
 msgstr "แบบสอบถามข้อมูลผู้ใช้"
 
 #. module: hr_recruitment_survey
-#: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
-msgid "Thank you for answering this survey. We will come back to you soon."
-msgstr "ขอขอบคุณที่ตอบแบบสอบถามนี้ เราจะกลับมาหาคุณในไม่ช้า"
-
-#. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_user_input.py:0
 msgid "The applicant \"%s\" has finished the survey."
@@ -330,36 +215,6 @@ msgstr "ผู้สมัคร \"%s\" ทำแบบสอบถามเส�
 #: code:addons/hr_recruitment_survey/wizard/survey_invite.py:0
 msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
 msgstr "แบบสอบถาม %(survey_link)s ถูกส่งไปยัง %(partner_link)s"
-
-#. module: hr_recruitment_survey
-#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
-msgid "Very important"
-msgstr "สำคัญมาก"
-
-#. module: hr_recruitment_survey
-#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
-msgid "Were you referred by an employee?"
-msgstr "คุณได้รับการแนะนำโดยพนักงานหรือไม่?"
-
-#. module: hr_recruitment_survey
-#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
-msgid "What are your main knowledge regarding the job you are applying to?"
-msgstr "ความรู้หลักของคุณเกี่ยวกับงานที่คุณสมัครคืออะไร?"
-
-#. module: hr_recruitment_survey
-#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
-msgid "What is important for you?"
-msgstr "อะไรคือสิ่งที่สำคัญสำหรับคุณ?"
-
-#. module: hr_recruitment_survey
-#: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
-msgid "Which country are you from?"
-msgstr "คุณมาจากประเทศอะไร?"
-
-#. module: hr_recruitment_survey
-#: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
-msgid "Working with state of the art technology"
-msgstr "ทำงานด้วยศิลปะแห่งเทคโนโลยี"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment

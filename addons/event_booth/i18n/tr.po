@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -164,24 +164,6 @@ msgid "Booth"
 msgstr "Stand"
 
 #. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_00_event_7
-#: model:event.booth,name:event_booth.event_booth_0_event_0
-msgid "Booth A1"
-msgstr "Stand A1"
-
-#. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_01_event_7
-#: model:event.booth,name:event_booth.event_booth_1_event_0
-msgid "Booth A2"
-msgstr "Stand A2"
-
-#. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_02_event_7
-#: model:event.booth,name:event_booth.event_booth_2_event_0
-msgid "Booth A3"
-msgstr "Stand A3"
-
-#. module: event_booth
 #: model:mail.message.subtype,name:event_booth.mt_event_booth_booked
 msgid "Booth Booked"
 msgstr "Stand Rezerve Edildi"
@@ -278,6 +260,8 @@ msgstr "Açıklama"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__display_name
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__display_name
+#: model:ir.model.fields,field_description:event_booth.field_event_event__display_name
+#: model:ir.model.fields,field_description:event_booth.field_event_type__display_name
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__display_name
 msgid "Display Name"
 msgstr "İsim Göster"
@@ -356,21 +340,6 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Yazı tipi harika simgesi ör. fa-görevler"
 
 #. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_20_event_7
-msgid "Gold Booth 1"
-msgstr "Altın Stand 1"
-
-#. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_21_event_7
-msgid "Gold Booth 2"
-msgstr "Altın Stand 2"
-
-#. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_22_event_7
-msgid "Gold Booth 3"
-msgstr "Altın Stand 3"
-
-#. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
 #: model_terms:ir.ui.view,arch_db:event_booth.event_type_booth_view_search
 msgid "Group By"
@@ -384,6 +353,8 @@ msgstr "Mesaj Var"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__id
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__id
+#: model:ir.model.fields,field_description:event_booth.field_event_event__id
+#: model:ir.model.fields,field_description:event_booth.field_event_type__id
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__id
 msgid "ID"
 msgstr "ID"
@@ -524,21 +495,6 @@ msgid "Number of messages with delivery error"
 msgstr "Teslimat hatası olan mesaj adedi"
 
 #. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_10_event_7
-msgid "OpenWood Demonstrator 1"
-msgstr "OpenWood Göstericisi 1"
-
-#. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_11_event_7
-msgid "OpenWood Demonstrator 2"
-msgstr "OpenWood Göstericisi 2"
-
-#. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_12_event_7
-msgid "OpenWood Demonstrator 3"
-msgstr "OpenWood Göstericisi 3"
-
-#. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_form_from_event
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event_booth.event_type_booth_view_form_from_type
@@ -554,25 +510,6 @@ msgstr ""
 #: model:event.booth.category,name:event_booth.event_booth_category_premium
 msgid "Premium Booth"
 msgstr "Premium Stand"
-
-#. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_3_event_0
-msgid "Premium Booth A4"
-msgstr "Premium Stand A4"
-
-#. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_2_event_2
-#: model:event.booth,name:event_booth.event_booth_2_event_3
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_2
-msgid "Premium Showbooth 1"
-msgstr "Premium Showbooth 1"
-
-#. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_3_event_2
-#: model:event.booth,name:event_booth.event_booth_3_event_3
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_3
-msgid "Premium Showbooth 2"
-msgstr "Premium Showbooth 2"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__rating_ids
@@ -617,20 +554,6 @@ msgid "Sequence"
 msgstr "Sıralama"
 
 #. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_0_event_2
-#: model:event.booth,name:event_booth.event_booth_0_event_3
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_0
-msgid "Showbooth 1"
-msgstr "Showbooth 1"
-
-#. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_1_event_2
-#: model:event.booth,name:event_booth.event_booth_1_event_3
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_1
-msgid "Showbooth 2"
-msgstr "Showbooth 2"
-
-#. module: event_booth
 #: model:event.booth.category,name:event_booth.event_booth_category_standard
 msgid "Standard Booth"
 msgstr "Standard Stand"
@@ -673,11 +596,6 @@ msgstr "Kullanım dışı"
 #: model:event.booth.category,name:event_booth.event_booth_category_vip
 msgid "VIP Booth"
 msgstr "VIP Stand"
-
-#. module: event_booth
-#: model:event.booth,name:event_booth.event_booth_4_event_0
-msgid "VIP Booth A5"
-msgstr "VIP Stand A5"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__website_message_ids

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
@@ -20,14 +20,18 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: project_purchase
-#: model:product.template,name:project_purchase.product_product_bricks_product_template
-msgid "Bricks"
-msgstr ""
+#: model:ir.model.fields,field_description:project_purchase.field_project_project__display_name
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_order_line__display_name
+msgid "Display Name"
+msgstr "Rodomas pavadinimas"
 
 #. module: project_purchase
-#: model:product.template,name:project_purchase.product_product_cement_product_template
-msgid "Cement"
-msgstr ""
+#: model:ir.model.fields,field_description:project_purchase.field_project_project__id
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_order__id
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_order_line__id
+msgid "ID"
+msgstr "ID"
 
 #. module: project_purchase
 #. odoo-python
@@ -55,12 +59,6 @@ msgid "Purchase Order"
 msgstr "Pirkimo užsakymas"
 
 #. module: project_purchase
-#. odoo-python
-#: code:addons/project_purchase/models/project_project.py:0
-msgid "Purchase Order Items"
-msgstr ""
-
-#. module: project_purchase
 #: model:ir.model,name:project_purchase.model_purchase_order_line
 msgid "Purchase Order Line"
 msgstr "Pirkimo užsakymo eilutė "
@@ -69,10 +67,6 @@ msgstr "Pirkimo užsakymo eilutė "
 #. odoo-python
 #: code:addons/project_purchase/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_purchase.project_embedded_action_purchase_orders
+#: model:ir.embedded.actions,name:project_purchase.project_embedded_action_purchase_orders_dashboard
 msgid "Purchase Orders"
 msgstr "Pirkimų užsakymai"
-
-#. module: project_purchase
-#: model:product.template,name:project_purchase.product_product_sand_product_template
-msgid "Sand"
-msgstr ""

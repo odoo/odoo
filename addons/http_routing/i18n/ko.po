@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"POT-Creation-Date: 2025-05-09 20:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -20,9 +20,19 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+msgid "400: Bad Request"
+msgstr ""
+
+#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.403
 msgid "403: Forbidden"
 msgstr "403 : 접근 금지"
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+msgid "415: Unsupported Media Type"
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
@@ -41,6 +51,13 @@ msgstr "<strong>오류 메시지 :</strong>"
 #: model_terms:ir.ui.view,arch_db:http_routing.500
 msgid "Back"
 msgstr "뒤로"
+
+#. module: http_routing
+#: model:ir.model.fields,field_description:http_routing.field_ir_http__display_name
+#: model:ir.model.fields,field_description:http_routing.field_ir_qweb__display_name
+#: model:ir.model.fields,field_description:http_routing.field_res_lang__display_name
+msgid "Display Name"
+msgstr "표시명"
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
@@ -64,6 +81,20 @@ msgid "Home"
 msgstr "홈"
 
 #. module: http_routing
+#: model:ir.model.fields,field_description:http_routing.field_ir_http__id
+#: model:ir.model.fields,field_description:http_routing.field_ir_qweb__id
+#: model:ir.model.fields,field_description:http_routing.field_res_lang__id
+msgid "ID"
+msgstr "ID"
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+msgid ""
+"It looks like the URL you are accessing doesn't support the format of the "
+"request. Take a look at the error message below."
+msgstr ""
+
+#. module: http_routing
 #: model:ir.model,name:http_routing.model_res_lang
 msgid "Languages"
 msgstr "언어"
@@ -74,7 +105,8 @@ msgid "Maybe you were looking for one of these <b>popular pages?</b>"
 msgstr "<b>인기 페이지</b> 중 하나를 찾고 계셨나요?"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
 msgid "Oops! Something went wrong."
 msgstr "이런! 문제가 발생했습니다"
 
@@ -89,7 +121,8 @@ msgid "Qweb"
 msgstr "Qweb"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
 msgid "Take a look at the error message below."
 msgstr "아래의 오류 메시지를 확인하세요."
 
@@ -102,6 +135,13 @@ msgstr "서식 파일을 만드는 중 오류가 발생했습니다."
 #: model_terms:ir.ui.view,arch_db:http_routing.403
 msgid "The page you were looking for could not be authorized."
 msgstr "찾으려는 페이지를 승인할 수 없습니다."
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+msgid ""
+"The server couldn't understand the request. Take a look at the error message"
+" below."
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug

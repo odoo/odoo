@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -25,25 +25,41 @@ msgid "Config Settings"
 msgstr "환경 설정"
 
 #. module: pos_online_payment_self_order
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: pos_online_payment_self_order
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Online Payment"
 msgstr "온라인 결제"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
+#: code:addons/pos_online_payment_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Order"
 msgstr "주문"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
+#: code:addons/pos_online_payment_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Pay"
 msgstr "지불"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
+#: code:addons/pos_online_payment_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Pay at cashier"
 msgstr "계산대에서 결제"
 
@@ -59,7 +75,7 @@ msgstr "지급 방법"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
+#: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Payment in progress"
 msgstr "결제 진행 중"
 
@@ -80,7 +96,7 @@ msgstr "POS 결제 수단"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
+#: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Scan the QR code to pay"
 msgstr "QR 코드를 스캔하여 결제"
 
@@ -92,7 +108,7 @@ msgstr "온라인 셀프 결제"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
-#: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.js:0
+#: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.js:0
 msgid "The current order cannot be paid (maybe it is already paid)."
 msgstr "현재 주문을 결제할 수 없습니다. (이미 결제가 되었는지 확인하십시오)"
 

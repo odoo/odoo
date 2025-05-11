@@ -3,13 +3,14 @@
 # 	* sale_project
 # 
 # Translators:
+# Maitê Dietze, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -139,11 +140,11 @@ msgstr "<span>)</span>"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid ""
-"A project must be defined on the quotation or on the form of products creating a task on order.\n"
-"The following products need a project in which to put their task: %(product_names)s"
+"A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
+"The following product need a project in which to put its task: %(product_name)s"
 msgstr ""
-"Um projeto deve ser definido na cotação ou no formulário de produtos que criam uma tarefa no pedido.\n"
-"Os seguintes produtos precisam de um projeto no qual colocar sua tarefa: %(product_names)s"
+"Um projeto deve ser definido na cotação %(order)s ou na forma de produtos que criam uma tarefa ao fazer o pedido.\n"
+"O produto a seguir precisa de um projeto no qual colocar sua tarefa:%(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -204,6 +205,11 @@ msgstr "Configurações"
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
 msgid "Create Project"
 msgstr "Criar projeto"
+
+#. module: sale_project
+#: model:ir.model,website_form_label:sale_project.model_project_task
+msgid "Create a Task"
+msgstr "Criar uma tarefa"
 
 #. module: sale_project
 #. odoo-python
@@ -305,9 +311,22 @@ msgid "Delivered"
 msgstr "Entregue"
 
 #. module: sale_project
-#: model:product.template,name:sale_project.product_service_create_project_only_product_template
-msgid "Digital Marketing Campaign (project)"
-msgstr "Campanha de marketing digital (projeto)"
+#: model:ir.model.fields,field_description:sale_project.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_project.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_project.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale_project.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_milestone__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_project__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_task__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__display_name
+#: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__display_name
+#: model:ir.model.fields,field_description:sale_project.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_report__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
@@ -332,9 +351,22 @@ msgid "Empty project"
 msgstr "Projeto vazio"
 
 #. module: sale_project
-#: model:product.template,name:sale_project.product_product_flooring_product_template
-msgid "Flooring Services"
-msgstr "Serviços de instalação de pisos"
+#: model:ir.model.fields,field_description:sale_project.field_account_move__id
+#: model:ir.model.fields,field_description:sale_project.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_project.field_product_product__id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__id
+#: model:ir.model.fields,field_description:sale_project.field_project_milestone__id
+#: model:ir.model.fields,field_description:sale_project.field_project_project__id
+#: model:ir.model.fields,field_description:sale_project.field_project_task__id
+#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__id
+#: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__id
+#: model:ir.model.fields,field_description:sale_project.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_report__id
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_project
 #. odoo-python
@@ -439,11 +471,6 @@ msgid "Not Billed"
 msgstr "Não faturado"
 
 #. module: sale_project
-#: model:product.template,name:sale_project.product_service_create_task_only_product_template
-msgid "Office Furniture Set (task)"
-msgstr "Conjunto de móveis para escritório (tarefa)"
-
-#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid ""
@@ -458,11 +485,6 @@ msgid "Other Services"
 msgstr "Outros serviços"
 
 #. module: sale_project
-#: model:product.template,name:sale_project.product_product_painting_product_template
-msgid "Painting"
-msgstr "Pintura"
-
-#. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
 msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
@@ -470,11 +492,6 @@ msgid ""
 msgstr ""
 "Porcentagem da quantidade pedida que será automaticamente entregue quando o "
 "marco for alcançado."
-
-#. module: sale_project
-#: model:product.template,name:sale_project.product_product_plumbing_product_template
-msgid "Plumbing Services"
-msgstr "Serviços de encanamento"
 
 #. module: sale_project
 #. odoo-python
@@ -585,7 +602,6 @@ msgstr "Relatório de análise de vendas"
 #: model:ir.model.fields,field_description:sale_project.field_project_project__reinvoiced_sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
-#: model:project.project,name:sale_project.so_template_project
 msgid "Sales Order"
 msgstr "Pedido de venda"
 
@@ -654,11 +670,6 @@ msgid "Sales order to which the task is linked."
 msgstr "Pedidos de venda aos quais a tarefa está vinculada."
 
 #. module: sale_project
-#: model:product.template,name:sale_project.product_product_screw_driver_product_template
-msgid "Screw Driver"
-msgstr "Chave de fenda"
-
-#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Invoice"
@@ -667,8 +678,8 @@ msgstr "Buscar nas faturas"
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
-msgid "Search in Sales Order"
-msgstr "Buscar no pedido de venda"
+msgid "Search in Sales Order Item"
+msgstr "Buscar no item do pedido de venda"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -708,11 +719,6 @@ msgstr "Tarefa criada (%(name)s): %(link)s"
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
 msgstr "Recorrência de tarefa"
-
-#. module: sale_project
-#: model:project.project,label_tasks:sale_project.so_template_project
-msgid "Tasks"
-msgstr "Tarefas"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_report_project_task_user
@@ -794,9 +800,31 @@ msgid "Track Service"
 msgstr "Serviço de rastreamento"
 
 #. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+"Use estas palavras-chave no título para definir novas tarefas:\n"
+"\n"
+"        30h Alocar 30 horas à tarefa\n"
+"        #tags Definir marcadores na tarefa\n"
+"        @user Atribuir a tarefa a um usuário\n"
+"        ! Definir a tarefa como de alt aprioridade\n"
+"\n"
+"        Certifique-se de usar a ordem e o formato certo, por exemplo: Melhorar a tela de configuração 5h #feature #v16 @Mitchell !"
+
+#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills
+#: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills_dashboard
 msgid "Vendor Bills"
 msgstr "Faturas de fornecedor"
 
@@ -804,16 +832,6 @@ msgstr "Faturas de fornecedor"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
 msgstr "Exibir pedido de venda"
-
-#. module: sale_project
-#: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
-msgid "Website Redesign Service (project & task)"
-msgstr "Serviço de redesign no site (projeto e tarefa)"
-
-#. module: sale_project
-#: model:product.template,name:sale_project.product_product_wiring_product_template
-msgid "Wiring Services"
-msgstr "Serviços de instalação de fiação"
 
 #. module: sale_project
 #. odoo-python
@@ -830,3 +848,21 @@ msgstr ""
 #: code:addons/sale_project/models/project_project.py:0
 msgid "You will be able to create an invoice and collect the payment."
 msgstr "Você poderá criar uma fatura e receber o pagamento."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product_template.py:0
+msgid "delivered_manual"
+msgstr "delivered_manual"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+msgid "sale_line_id"
+msgstr "sale_line_id"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+msgid "sale_order_id"
+msgstr "sale_order_id"

@@ -3,13 +3,14 @@
 # 	* web_tour
 # 
 # Translators:
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -35,6 +36,11 @@ msgstr "(ejecutar:"
 #: model:ir.model.constraint,message:web_tour.constraint_web_tour_tour_uniq_name
 msgid "A tour already exists with this name . Tour's name must be unique!"
 msgstr "Ya existe un recorrido con este nombre, su nombre debe ser único."
+
+#. module: web_tour
+#: model:ir.model.fields.selection,name:web_tour.selection__web_tour_tour_step__tooltip_position__bottom
+msgid "Bottom"
+msgstr "Inferior"
 
 #. module: web_tour
 #. odoo-javascript
@@ -79,6 +85,8 @@ msgid "Custom tour '%s' has been added."
 msgstr "Agregó el recorrido personalizado %s. "
 
 #. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_ir_http__display_name
+#: model:ir.model.fields,field_description:web_tour.field_res_users__display_name
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__display_name
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__display_name
 msgid "Display Name"
@@ -95,6 +103,8 @@ msgid "HTTP Routing"
 msgstr "Enrutamiento HTTP"
 
 #. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_ir_http__id
+#: model:ir.model.fields,field_description:web_tour.field_res_users__id
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__id
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__id
 msgid "ID"
@@ -130,7 +140,6 @@ msgstr "Nombre:"
 
 #. module: web_tour
 #. odoo-javascript
-#: code:addons/web_tour/static/src/tour_service/tour_service.js:0
 #: code:addons/web_tour/static/src/widgets/tour_start.xml:0
 #: model:ir.model.fields,field_description:web_tour.field_res_users__tour_enabled
 msgid "Onboarding"
@@ -160,6 +169,11 @@ msgid "Record Tour"
 msgstr "Grabar recorrido"
 
 #. module: web_tour
+#: model:ir.model.fields.selection,name:web_tour.selection__web_tour_tour_step__tooltip_position__right
+msgid "Right"
+msgstr "Derecha"
+
+#. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__run
 msgid "Run"
 msgstr "Ejecutar"
@@ -175,6 +189,18 @@ msgstr "Guardar"
 #: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
 msgid "Scroll down to reach the next step."
 msgstr "Baje para continuar con el siguiente paso."
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
+msgid "Scroll left to reach the next step."
+msgstr "Deslícese a la izquierda para pasar al siguiente paso."
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
+msgid "Scroll right to reach the next step."
+msgstr "Deslícese a la derecha para pasar al siguiente paso."
 
 #. module: web_tour
 #. odoo-javascript
@@ -240,6 +266,16 @@ msgid "Tip"
 msgstr "Consejo"
 
 #. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__tooltip_position
+msgid "Tooltip Position"
+msgstr ""
+
+#. module: web_tour
+#: model:ir.model.fields.selection,name:web_tour.selection__web_tour_tour_step__tooltip_position__top
+msgid "Top"
+msgstr "Arriba"
+
+#. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_step__tour_id
 msgid "Tour"
 msgstr "Recorrido"
@@ -281,6 +317,11 @@ msgstr "Usuario consumido"
 #: model_terms:ir.ui.view,arch_db:web_tour.tour_form
 msgid "e.g. My_Tour"
 msgstr "Por ejemplo, Mi_recorrido"
+
+#. module: web_tour
+#: model:ir.model.fields.selection,name:web_tour.selection__web_tour_tour_step__tooltip_position__left
+msgid "left"
+msgstr "izquierda"
 
 #. module: web_tour
 #. odoo-javascript

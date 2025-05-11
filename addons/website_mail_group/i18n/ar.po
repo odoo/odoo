@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -18,6 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: website_mail_group
+#: model_terms:ir.ui.view,arch_db:website_mail_group.mail_group_view_form
+msgid ""
+"<i class=\"fa fa-fw o_button_icon fa-globe text-success\" title=\"Mail group"
+" accessible on website\"/>"
+msgstr ""
 
 #. module: website_mail_group
 #: model_terms:ir.ui.view,arch_db:website_mail_group.mail_group_view_form
@@ -33,6 +40,16 @@ msgstr "صقم بإنشاء مجموعة مناقشة عامة في الواجه
 #: model_terms:ir.ui.view,arch_db:website_mail_group.snippets
 msgid "Discussion Group"
 msgstr "مجموعة نقاش "
+
+#. module: website_mail_group
+#: model:ir.model.fields,field_description:website_mail_group.field_mail_group__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: website_mail_group
+#: model:ir.model.fields,field_description:website_mail_group.field_mail_group__id
+msgid "ID"
+msgstr "المُعرف"
 
 #. module: website_mail_group
 #: model:ir.model,name:website_mail_group.model_mail_group
@@ -63,15 +80,12 @@ msgid "New Mail Group"
 msgstr "مجموعة بريدية جديدة "
 
 #. module: website_mail_group
-#. odoo-javascript
-#: code:addons/website_mail_group/static/src/snippets/s_group/options.js:0
 #: model_terms:ir.ui.view,arch_db:website_mail_group.s_group
 msgid "Subscribe"
 msgstr "اشتراك"
 
 #. module: website_mail_group
-#. odoo-javascript
-#: code:addons/website_mail_group/static/src/snippets/s_group/000.js:0
+#: model_terms:ir.ui.view,arch_db:website_mail_group.s_group
 msgid "Unsubscribe"
 msgstr "إلغاء الاشتراك"
 

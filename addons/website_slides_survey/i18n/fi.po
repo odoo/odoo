@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,33 +45,19 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br><br>\n"
-"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br><br>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br/><br/>\n"
+"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br/><br/>\n"
 "        Don't hesitate to enroll again!\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-style=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
 "                Enroll now\n"
 "            </a>\n"
 "        </div>\n"
 "        Thank you for your participation.\n"
-"    </p>\n"
+"    \n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hyvä <t t-out=\"object.partner_id.name or 'participant' or ''\">osallistuja</t><br><br>\n"
-"        Valitettavasti olet epäonnistunut sertifioinnissa, etkä ole enää kurssin jäsen: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Puutarhanhoidon perusteet</t>.<br><br>\n"
-"        Älä epäröi ilmoittautua uudelleen!\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                Ilmoittaudu nyt\n"
-"            </a>\n"
-"        </div>\n"
-"        Kiitos osallistumisestasi.\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -200,11 +186,6 @@ msgstr ""
 "%s"
 
 #. module: website_slides_survey
-#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_3
-msgid "Ash"
-msgstr "Tuhka"
-
-#. module: website_slides_survey
 #: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
 msgid ""
 "Assess the level of understanding of your attendees\n"
@@ -222,16 +203,6 @@ msgstr "Yritys nro"
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
 msgid "Avg Score (%)"
 msgstr "Keskimääräinen pistemäärä (%)"
-
-#. module: website_slides_survey
-#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_5
-msgid "Bed"
-msgstr "Sänky"
-
-#. module: website_slides_survey
-#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_4
-msgid "Beech"
-msgstr "Pyökki"
 
 #. module: website_slides_survey
 #. odoo-javascript
@@ -338,11 +309,6 @@ msgid "Certified"
 msgstr "Sertifioitu"
 
 #. module: website_slides_survey
-#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
-msgid "Chair"
-msgstr "Tuoli"
-
-#. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_channel_partner
 msgid "Channel / Partners (Members)"
 msgstr "Kanava / Kumppanit (Jäsenet)"
@@ -377,36 +343,20 @@ msgid "Create a Certification"
 msgstr "Luo sertifiointi"
 
 #. module: website_slides_survey
-#: model:slide.slide,name:website_slides_survey.slide_slide_demo_6_0
-msgid "DIY Furniture Certification"
-msgstr "Tee se itse huonekalu sertifikaatti"
-
-#. module: website_slides_survey
-#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_3
-msgid "Desk"
-msgstr "Pöytä"
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
 
 #. module: website_slides_survey
 #. odoo-javascript
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 msgid "Download certification"
 msgstr "Lataa sertifikaatti"
-
-#. module: website_slides_survey
-#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_1
-msgid "Fir"
-msgstr "Jalokuusi"
-
-#. module: website_slides_survey
-#: model:survey.question,title:website_slides_survey.furniture_certification_page_1
-msgid "Furniture"
-msgstr "Huonekalut"
-
-#. module: website_slides_survey
-#: model:slide.slide,name:website_slides_survey.slide_slide_demo_5_4
-#: model:survey.survey,title:website_slides_survey.furniture_certification
-msgid "Furniture Creation Certification"
-msgstr "Huonekalujen luomissertifikaatti"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
@@ -420,9 +370,14 @@ msgid "How to upload a certification on your course?"
 msgstr "Kuinka ladata sertifikaatti kurssillesi?"
 
 #. module: website_slides_survey
-#: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_6_0
-msgid "It's time to test your knowledge!"
-msgstr "On aika testata tietosi!"
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__id
+msgid "ID"
+msgstr "Tunnus"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.res_config_settings_view_form
@@ -452,22 +407,11 @@ msgid "No certifications yet!"
 msgstr "Ei vielä sertifikaatteja!"
 
 #. module: website_slides_survey
-#: model_terms:slide.slide,description:website_slides_survey.slide_slide_demo_5_4
-msgid ""
-"Now that you have completed the course, it's time to test your knowledge!"
-msgstr "Nyt kun olet suorittanut kurssin, on aika testata tietosi!"
-
-#. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__nbr_certification
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel_partner__nbr_certification
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__nbr_certification
 msgid "Number of Certifications"
 msgstr "Sertifikaattien määrä"
-
-#. module: website_slides_survey
-#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_1_choice_2
-msgid "Oak"
-msgstr "Tammi"
 
 #. module: website_slides_survey
 #. odoo-javascript
@@ -502,11 +446,6 @@ msgid "Select a certification"
 msgstr "Valitse sertifiointi"
 
 #. module: website_slides_survey
-#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
-msgid "Select all the furniture shown in the video"
-msgstr "Valitse kaikki videolla näkyvät huonekalut"
-
-#. module: website_slides_survey
 #. odoo-javascript
 #: code:addons/website_slides_survey/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid ""
@@ -520,11 +459,6 @@ msgstr ""
 #: model:mail.template,description:website_slides_survey.mail_template_user_input_certification_failed
 msgid "Sent to participant if they failed the certification"
 msgstr "Lähetetään osallistujalle, jos hän ei läpäissyt sertifiointia"
-
-#. module: website_slides_survey
-#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_4
-msgid "Shelf"
-msgstr "Hylly"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_slide_partner
@@ -581,11 +515,6 @@ msgid "Survey: Certification Failure"
 msgstr "Tutkimus: Sertifioinnin epäonnistuminen"
 
 #. module: website_slides_survey
-#: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_2
-msgid "Table"
-msgstr "Pöytä"
-
-#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 msgid "Take Quiz"
 msgstr "Vastaa kyselyyn"
@@ -596,12 +525,6 @@ msgstr "Vastaa kyselyyn"
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 msgid "Test Certification"
 msgstr "Testisertifiointi"
-
-#. module: website_slides_survey
-#: model_terms:survey.question,description:website_slides_survey.furniture_certification_page_1
-#: model_terms:survey.survey,description:website_slides_survey.furniture_certification
-msgid "Test your furniture knowledge!"
-msgstr "Testaa huonekalutietämyksesi!"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview
@@ -633,16 +556,6 @@ msgstr "Diat, joihin tämä kysely on linkitetty e-learning-sovelluksen kautta"
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__name
 msgid "Title"
 msgstr "Otsikko"
-
-#. module: website_slides_survey
-#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3
-msgid "What do you think about the content of the course? (not rated)"
-msgstr "Mitä mieltä olet kurssin sisällöstä? (ei arvioida)"
-
-#. module: website_slides_survey
-#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_1
-msgid "What type of wood is the best for furniture?"
-msgstr "Minkälainen puu on paras huonekaluille?"
 
 #. module: website_slides_survey
 #. odoo-python

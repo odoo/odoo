@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"POT-Creation-Date: 2025-05-09 20:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -45,8 +45,13 @@ msgid "Add Quiz"
 msgstr "Lisää koe"
 
 #. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
+msgid "All Events"
+msgstr "Kaikki tapahtumat"
+
+#. module: website_event_track_quiz
 #. odoo-javascript
-#: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
+#: code:addons/website_event_track_quiz/static/src/interactions/quiz.js:0
 msgid "All questions must be answered!"
 msgstr "Kaikkiin kysymyksiin on vastattava!"
 
@@ -77,11 +82,6 @@ msgstr "Tarkista vastauksesi"
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__quiz_completed
 msgid "Completed"
 msgstr "Valmis"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_0
-msgid "Concrete Blocks Wall"
-msgstr "Betonilohkoseinä"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
@@ -125,23 +125,14 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__display_name
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__display_name
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__display_name
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__display_name
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_1
-msgid "Even if there will be some."
-msgstr "Vaikka siinä on jotain."
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_1
-msgid "Even if you have a big trunk, some long products need to be secured."
-msgstr ""
-"Vaikka käsittelet isoa tavaratilaa, pitkät tuotteet on kiinnitettävä "
-"paikoilleen turvallisesti."
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_event
@@ -198,30 +189,14 @@ msgid "Group By"
 msgstr "Ryhmittely"
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_0
-msgid "Hammer"
-msgstr "Vasara"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_1_0
-msgid "Hammer won't be of any help here!"
-msgstr "Vasarasta ei ole apua tässä!"
-
-#. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__id
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__id
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__id
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__id
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__id
 msgid "ID"
 msgstr "ID"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_0
-msgid ""
-"In order to avoid accident, you need to secure any product of this kind "
-"during transportation!"
-msgstr ""
-"Kaikki tuotteet on kiinnitettävä huolellisesti matkan ajaksi, jotta "
-"vältytään onnettomuudelta."
 
 #. module: website_event_track_quiz
 #. odoo-javascript
@@ -254,34 +229,14 @@ msgid "Let attendees reset the quiz and try again."
 msgstr "Salli osallistujien nollata kysely ja yrittää uudelleen"
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_1_1
-msgid "Lumbers need first to be cut from trees!"
-msgstr "Sahatavara tulee ensin leikata puista!"
-
-#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
 msgid "Mobile sub-nav"
 msgstr "Mobiilinäkymän ala-navigaatio"
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_2
-msgid "Mud Wall"
-msgstr "Mutaseinä"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_1
-msgid "Music"
-msgstr "Musiikki"
-
-#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__name
 msgid "Name"
 msgstr "Nimi"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_0_1
-msgid "No"
-msgstr "Ei"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
@@ -310,16 +265,6 @@ msgid "Oopsie, you did not score any point on this quiz."
 msgstr "Oho, et saanut tästä kokeesta yhtään pistettä."
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_2
-msgid "Open Source Apps"
-msgstr "Avoimen lähdekoodin sovellukset"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_2
-msgid "OpenWood is not an Open Source congres about Apps."
-msgstr "OpenWood ei ole avoimen lähdekoodien sovellusten kongressi."
-
-#. module: website_event_track_quiz
 #. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 msgid "Point"
@@ -331,11 +276,6 @@ msgstr "Piste"
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__awarded_points
 msgid "Points"
 msgstr "Pisteet"
-
-#. module: website_event_track_quiz
-#: model:event.quiz,name:website_event_track_quiz.event_7_track_13_quiz
-msgid "Pretty. Ugly. Lovely."
-msgstr "Nätti. Ruma. Kaunis."
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__question_id
@@ -401,7 +341,7 @@ msgstr "Kyselyn kysymykset"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
-#: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
+#: code:addons/website_event_track_quiz/static/src/interactions/quiz.js:0
 msgid "Quiz validation error"
 msgstr "Kyselyn tarkastuksen virhe"
 
@@ -420,11 +360,6 @@ msgid "Reset"
 msgstr "Palauta"
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_2
-msgid "Scotch tape"
-msgstr "Läpinäkyvä teippi"
-
-#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
 msgid "Search"
 msgstr "Hae"
@@ -440,25 +375,10 @@ msgid "Search users"
 msgstr "Etsi käyttäjiä"
 
 #. module: website_event_track_quiz
-#: model:event.quiz,name:website_event_track_quiz.event_7_track_5_quiz
-msgid "Securing your Lumber during transport"
-msgstr "Puutavaran kiinnitys kuljetuksen aikana"
-
-#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__sequence
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__sequence
 msgid "Sequence"
 msgstr "Järjestys"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_1
-msgid "Steel Wall"
-msgstr "Terässeinä"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_1_1
-msgid "Stores!"
-msgstr "Kaupat!"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_content
@@ -478,7 +398,7 @@ msgstr "Pistetaulukkoa ei ole tällä hetkellä käytettävissä"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
-#: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
+#: code:addons/website_event_track_quiz/static/src/interactions/quiz.js:0
 msgid "There was an error validating this quiz."
 msgstr "Tämän kyselyn vahvistamisessa tapahtui virhe."
 
@@ -493,14 +413,9 @@ msgstr ""
 
 #. module: website_event_track_quiz
 #. odoo-javascript
-#: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
+#: code:addons/website_event_track_quiz/static/src/interactions/quiz.js:0
 msgid "This quiz is already done. Retaking it is not possible."
 msgstr "Tämä kysely on jo suoritettu. Et voi suorittaa sitä uudelleen."
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_1
-msgid "Tie-down straps and other wooden blocks"
-msgstr "Kuormanauhat ja muut puulohkot"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
@@ -513,16 +428,6 @@ msgid "Track / Visitor Link"
 msgstr "Esityksen tai vierailijan linkki"
 
 #. module: website_event_track_quiz
-#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_0
-msgid "Transporting lumber from stores to your house is safe."
-msgstr "Puun kuljetus kaupasta kotiin on turvallista"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_1_0
-msgid "Trees!"
-msgstr "Puut!"
-
-#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__repeatable
 msgid "Unlimited Tries"
 msgstr "Rajaton määrä yrityksiä"
@@ -533,55 +438,10 @@ msgid "User rank"
 msgstr "Käyttäjän paikka pistekisassa"
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_1_2
-msgid "Well, it could work but you will need a lot of tape!"
-msgstr "Voidaan tehdä noin, mutta teippiä kuluisi paljon!"
-
-#. module: website_event_track_quiz
-#: model:event.quiz,name:website_event_track_quiz.event_7_track_1_quiz
-msgid "What This Event Is All About"
-msgstr "Mistä tässä tapahtumassa on kyse"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_1
-msgid "What kind of tool are needed to secure your lumber?"
-msgstr "Millaisia työkaluja tarvitaan puutavaran kiinnittämiseen?"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_13_question_0
-msgid "What kind of wall is transformed here?"
-msgstr "Minkälainen seinä tässä on muuttunut?"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_1_question_0
-msgid "What will we talk about during this event?"
-msgstr "Mistä puhumme tässä tapahtumassa?"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_1_question_1
-msgid "Where does lumber comes from?"
-msgstr "Mistä puutavara tulee?"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_0
-msgid "Wood"
-msgstr "Puu"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_0_0
-msgid "Yes"
-msgstr "Kyllä"
-
-#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.all_visitor_card
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.top3_visitor_card
 msgid "You"
 msgstr "Sinä"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_0
-msgid "You're really smart!"
-msgstr "Olet todella fiksu!"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form

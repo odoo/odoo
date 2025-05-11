@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"POT-Creation-Date: 2025-05-09 20:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -45,8 +45,13 @@ msgid "Add Quiz"
 msgstr "Adicionar questionário"
 
 #. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
+msgid "All Events"
+msgstr "Todos os eventos "
+
+#. module: website_event_track_quiz
 #. odoo-javascript
-#: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
+#: code:addons/website_event_track_quiz/static/src/interactions/quiz.js:0
 msgid "All questions must be answered!"
 msgstr "Todas as perguntas devem ser respondidas!"
 
@@ -77,11 +82,6 @@ msgstr "Verificar suas respostas"
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__quiz_completed
 msgid "Completed"
 msgstr "Concluído"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_0
-msgid "Concrete Blocks Wall"
-msgstr "Parede de blocos de concreto"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
@@ -125,23 +125,14 @@ msgid "Created on"
 msgstr "Criado em"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__display_name
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__display_name
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__display_name
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__display_name
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__display_name
 msgid "Display Name"
 msgstr "Nome exibido"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_1
-msgid "Even if there will be some."
-msgstr "Mesmo que haja alguns."
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_1
-msgid "Even if you have a big trunk, some long products need to be secured."
-msgstr ""
-"Mesmo que você tenha um porta-malas grande, alguns produtos longos precisam "
-"estar presos firmemente."
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_event
@@ -200,30 +191,14 @@ msgid "Group By"
 msgstr "Agrupar por"
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_0
-msgid "Hammer"
-msgstr "Martelo"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_1_0
-msgid "Hammer won't be of any help here!"
-msgstr "O martelo não será útil aqui!"
-
-#. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__id
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__id
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__id
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__id
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__id
 msgid "ID"
 msgstr "ID"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_0
-msgid ""
-"In order to avoid accident, you need to secure any product of this kind "
-"during transportation!"
-msgstr ""
-"Para evitar acidentes, você deve prender bem qualquer produto deste tipo "
-"durante o transporte."
 
 #. module: website_event_track_quiz
 #. odoo-javascript
@@ -257,34 +232,14 @@ msgstr ""
 "Permita que os participantes reiniciem o questionário e tentem novamente."
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_1_1
-msgid "Lumbers need first to be cut from trees!"
-msgstr "A madeira precisa ser cortada das árvores primeiro!"
-
-#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
 msgid "Mobile sub-nav"
 msgstr "Sub-nav em dispositivo móvel"
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_2
-msgid "Mud Wall"
-msgstr "Parede de barro"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_1
-msgid "Music"
-msgstr "Música"
-
-#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__name
 msgid "Name"
 msgstr "Nome"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_0_1
-msgid "No"
-msgstr "Não"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
@@ -313,16 +268,6 @@ msgid "Oopsie, you did not score any point on this quiz."
 msgstr "Ops, você não fez pontos neste questionário."
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_2
-msgid "Open Source Apps"
-msgstr "Aplicativos de código aberto"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_2
-msgid "OpenWood is not an Open Source congres about Apps."
-msgstr "OpenWood não é um congresso de código aberto sobre aplicativos."
-
-#. module: website_event_track_quiz
 #. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 msgid "Point"
@@ -334,11 +279,6 @@ msgstr "Ponto"
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__awarded_points
 msgid "Points"
 msgstr "Pontos"
-
-#. module: website_event_track_quiz
-#: model:event.quiz,name:website_event_track_quiz.event_7_track_13_quiz
-msgid "Pretty. Ugly. Lovely."
-msgstr "Bonito. Feio. Adorável."
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__question_id
@@ -402,7 +342,7 @@ msgstr "Perguntas do questionário"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
-#: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
+#: code:addons/website_event_track_quiz/static/src/interactions/quiz.js:0
 msgid "Quiz validation error"
 msgstr "Erro de validação de questionário"
 
@@ -421,11 +361,6 @@ msgid "Reset"
 msgstr "Redefinir"
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_2
-msgid "Scotch tape"
-msgstr "Fita Scotch"
-
-#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
 msgid "Search"
 msgstr "Pesquisar"
@@ -441,25 +376,10 @@ msgid "Search users"
 msgstr "Pesquisar usuários"
 
 #. module: website_event_track_quiz
-#: model:event.quiz,name:website_event_track_quiz.event_7_track_5_quiz
-msgid "Securing your Lumber during transport"
-msgstr "Prendendo madeira durante o transporte"
-
-#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__sequence
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__sequence
 msgid "Sequence"
 msgstr "Sequência"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_1
-msgid "Steel Wall"
-msgstr "Parede de aço"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_1_1
-msgid "Stores!"
-msgstr "Lojas!"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_content
@@ -479,7 +399,7 @@ msgstr "Não tem placar de líderes disponível ainda"
 
 #. module: website_event_track_quiz
 #. odoo-javascript
-#: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
+#: code:addons/website_event_track_quiz/static/src/interactions/quiz.js:0
 msgid "There was an error validating this quiz."
 msgstr "Ocorreu um erro ao validar este questionário."
 
@@ -494,14 +414,9 @@ msgstr ""
 
 #. module: website_event_track_quiz
 #. odoo-javascript
-#: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
+#: code:addons/website_event_track_quiz/static/src/interactions/quiz.js:0
 msgid "This quiz is already done. Retaking it is not possible."
 msgstr "O questionário já foi concluído. Não é possível fazê-lo novamente."
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_1
-msgid "Tie-down straps and other wooden blocks"
-msgstr "Tiras de amarração e outros blocos de madeira"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
@@ -514,16 +429,6 @@ msgid "Track / Visitor Link"
 msgstr "Link do visitante/sessão"
 
 #. module: website_event_track_quiz
-#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_0
-msgid "Transporting lumber from stores to your house is safe."
-msgstr "É seguro transportar madeira de lojas até a sua casa."
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_1_0
-msgid "Trees!"
-msgstr "Árvores."
-
-#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__repeatable
 msgid "Unlimited Tries"
 msgstr "Tentativas ilimitadas"
@@ -534,55 +439,10 @@ msgid "User rank"
 msgstr "Classificação do usuário"
 
 #. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_1_2
-msgid "Well, it could work but you will need a lot of tape!"
-msgstr "Até pode funcionar, mas vai precisar de muita fita adesiva!"
-
-#. module: website_event_track_quiz
-#: model:event.quiz,name:website_event_track_quiz.event_7_track_1_quiz
-msgid "What This Event Is All About"
-msgstr "Sobre o que é este evento"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_1
-msgid "What kind of tool are needed to secure your lumber?"
-msgstr "Que tipo de ferramenta é necessária para afixar sua madeira?"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_13_question_0
-msgid "What kind of wall is transformed here?"
-msgstr "Que tipo de parede é transformada aqui?"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_1_question_0
-msgid "What will we talk about during this event?"
-msgstr "Sobre o que falaremos neste evento?"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_1_question_1
-msgid "Where does lumber comes from?"
-msgstr "De onde vem a madeira?"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_0
-msgid "Wood"
-msgstr "Madeira"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_0_0
-msgid "Yes"
-msgstr "Sim"
-
-#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.all_visitor_card
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.top3_visitor_card
 msgid "You"
 msgstr "Você"
-
-#. module: website_event_track_quiz
-#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_0
-msgid "You're really smart!"
-msgstr "Você é inteligente demais!"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form

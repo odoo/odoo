@@ -3,13 +3,14 @@
 # 	* base_vat
 # 
 # Translators:
+# Jessica Jakara, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-23 21:07+0000\n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -22,8 +23,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "'219999830019' (should be 12 digits)"
-msgstr "\"219999830019\" (oltava 12-numeroinen)"
+msgid "1-01-85004-3 or 101850043"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -49,12 +50,6 @@ msgstr "1792060346001 tai 1792060346"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "3101012009"
-msgstr "3101012009"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
 msgstr ""
 "310175397400003 [Viisitoista numeroa, ensimmäisen ja viimeisen numeron on "
@@ -69,20 +64,8 @@ msgstr "49-098-576 tai 49098576"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "AR200-5536168-2 or 20055361682"
-msgstr "AR200-5536168-2 tai 20055361682"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
 msgstr "CHE-123.456.788 TVA tai CHE-123.456.788 MWST tai CHE-123.456.788 IVA"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "CO213123432-1 or CO213.123.432-1"
-msgstr "CO213123432-1 tai CO213.123.432-1"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -109,16 +92,30 @@ msgid "Contact"
 msgstr "Kontakti"
 
 #. module: base_vat
+#: model:ir.model,name:base_vat.model_res_country
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__country_id
+#: model:ir.model.fields,field_description:base_vat.field_res_users__country_id
+msgid "Country"
+msgstr "Maa"
+
+#. module: base_vat
+#: model:ir.model,website_form_label:base_vat.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "DE123456788 or 12/345/67890"
 msgstr "DE123456788 tai 12/345/67890"
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "DO1-01-85004-3 or 101850043"
-msgstr "DO1-01-85004-3 tai 101850043"
+#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -130,17 +127,11 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-#, python-format
 msgid ""
 "Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
 msgstr ""
 "Esimerkki: \"219999830019\" (muoto: 12 numeroa, kaikki numerot, kelvollinen "
 "tarkistusnumero)"
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_account_fiscal_position
-msgid "Fiscal Position"
-msgstr "Verokanta"
 
 #. module: base_vat
 #. odoo-python
@@ -151,8 +142,27 @@ msgstr "GB123456782 tai XI123456782"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "GODE561231GR8"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "HU12345676 or 12345678-1-11 or 8071592153"
 msgstr "HU12345676 tai 12345678-1-11 tai 8071592153"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_country__has_foreign_fiscal_position
+msgid "Has Foreign Fiscal Position"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__id
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_vat.field_res_country__id
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
+msgid "ID"
+msgstr "Tunnus"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -172,8 +182,8 @@ msgstr "Kelvollinen Yhteisön sisäinen"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "MXGODE561231GR8 or GODE561231GR8"
-msgstr "MXGODE56121231GR8 tai GODE561231GR8"
+msgid "Note: the expected format is %(expected_format)s"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
@@ -182,6 +192,8 @@ msgid "Perform Vies Validation"
 msgstr "Suorita VIES-tarkastus"
 
 #. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "ALV-numero"
@@ -190,47 +202,34 @@ msgstr "ALV-numero"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
+"%(expected_note)s"
 msgstr ""
-"ALV-tunnuksen %(vat_label)s numero [%(wrong_vat)s] ei näytä kelvolliselta. \n"
-"Huomaa: odotettu muotoilu on %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
+"to be valid. %(expected_note)s"
 msgstr ""
-"ALV-tunnuksen %(vat_label)s numero [%(wrong_vat)s] tietueelle %(record_label)s ei näytä kelvolliselta. \n"
-"Huomaa: odotettu muotoilu on %(expected_format)s"
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid ""
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
+msgstr ""
+"Verotunniste. Tässä olevat arvot validoidaan maamuodon perusteella. Voit "
+"käyttää '/'-merkkiä osoittaaksesi, että kumppani ei ole verovelvollinen."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VAT number %s could not be interpreted by the VIES server."
 msgstr "VIES-palvelin ei pystynyt tulkitsemaan ALV-numeroa %s."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid ""
-"The country detected for this foreign VAT number does not match any of the "
-"countries composing the country group set on this fiscal position."
-msgstr ""
-"Tämän ulkomaisen ALV-numeron kohdalla havaittu maa ei vastaa mitään maata, "
-"joka muodostaa tämän verokannan maaryhmän."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
-msgstr ""
-"Ulkomaisen alv-numeron maata ei voitu havaita. Määritä maa verokannalle tai "
-"aseta maaryhmä"
 
 #. module: base_vat
 #. odoo-python
@@ -241,6 +240,12 @@ msgid ""
 msgstr ""
 "Arvonlisäveron vahvistamista koskevaa pyyntöä ei käsitelty. VIES-palvelu on "
 "vastannut seuraavalla virheilmoituksella: %s"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -260,12 +265,6 @@ msgid "Verify VAT numbers using the European VIES service"
 msgstr "Varmista ALV-numerot eurooppalaisen VIES-palvelun avulla"
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
-#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
-msgid "Vies Vat To Check"
-msgstr "VIES-palvelun ALV-tarkastettavaksi"
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
@@ -278,12 +277,6 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 digits for CNPJ"
 msgstr "joko 11 numeroa CPF:n osalta tai 14 numeroa CNPJ:n osalta"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid "fiscal position [%s]"
-msgstr "verokanta [%s]"
 
 #. module: base_vat
 #. odoo-python

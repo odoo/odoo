@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-23 21:07+0000\n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Sarah Park, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,8 +22,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "'219999830019' (should be 12 digits)"
-msgstr "'219999830019' (12자리 숫자)"
+msgid "1-01-85004-3 or 101850043"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -49,12 +48,6 @@ msgstr "1792060346001 또는 1792060346"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "3101012009"
-msgstr "3101012009"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
 msgstr "310175397400003 [15자리, 앞자리와 뒷자리는 \"3\"이어야 합니다.]"
 
@@ -67,20 +60,8 @@ msgstr "49-098-576 또는 49098576"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "AR200-5536168-2 or 20055361682"
-msgstr "AR200-5536168-2 또는 20055361682"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
 msgstr "CHE-123.456.788 TVA 또는 CHE-123.456.788 MWST 또는 CHE-123.456.788 IVA"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "CO213123432-1 or CO213.123.432-1"
-msgstr "CO213123432-1 또는 CO213.123.432-1"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -106,16 +87,30 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: base_vat
+#: model:ir.model,name:base_vat.model_res_country
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__country_id
+#: model:ir.model.fields,field_description:base_vat.field_res_users__country_id
+msgid "Country"
+msgstr "국가"
+
+#. module: base_vat
+#: model:ir.model,website_form_label:base_vat.model_res_partner
+msgid "Create a Customer"
+msgstr "고객 만들기"
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "DE123456788 or 12/345/67890"
 msgstr "DE123456788 또는 12/345/67890"
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "DO1-01-85004-3 or 101850043"
-msgstr "DO1-01-85004-3 또는 101850043"
+#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
+msgid "Display Name"
+msgstr "표시명"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -126,15 +121,9 @@ msgstr "유럽 지역의 VAT 번호는 VIES 데이터베이스에서 자동으�
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-#, python-format
 msgid ""
 "Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
 msgstr "예: '219999830019' (형식: 12자리, 모든 유효한 숫자)"
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_account_fiscal_position
-msgid "Fiscal Position"
-msgstr "재정 위치"
 
 #. module: base_vat
 #. odoo-python
@@ -145,8 +134,27 @@ msgstr "GB123456782 또는 XI123456782"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "GODE561231GR8"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "HU12345676 or 12345678-1-11 or 8071592153"
 msgstr "HU12345676 또는 12345678-1-11 또는 8071592153"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_country__has_foreign_fiscal_position
+msgid "Has Foreign Fiscal Position"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__id
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_vat.field_res_country__id
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
+msgid "ID"
+msgstr "ID"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -164,8 +172,8 @@ msgstr "커뮤니티 내 유효"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "MXGODE561231GR8 or GODE561231GR8"
-msgstr "MXGODE561231GR8 또는 GODE561231GR8"
+msgid "Note: the expected format is %(expected_format)s"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
@@ -174,6 +182,8 @@ msgid "Perform Vies Validation"
 msgstr "VIES 확인 수행"
 
 #. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "사업자등록번호"
@@ -182,21 +192,27 @@ msgstr "사업자등록번호"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
+"%(expected_note)s"
 msgstr ""
-"유효하지 않은%(vat_label)s 숫자 [%(wrong_vat)s]입니다.\n"
-"메모: 예상 서식은 %(expected_format)s입니다. "
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
+"to be valid. %(expected_note)s"
 msgstr ""
-"%(record_label)s로 유효하지 않은 %(vat_label)s 숫자  [%(wrong_vat)s]입니다.\n"
-"메모: 예상 서식은 %(expected_format)s입니다."
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid ""
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
+msgstr ""
+"세무 신고용 등록 번호입니다. 국가별로 지정된 형식을 기준으로 값을 검증합니다. 협력사가 과세 대상이 아닌 경우에는 '/'를 입력하세요."
 
 #. module: base_vat
 #. odoo-python
@@ -206,27 +222,17 @@ msgstr "%s VAT 번호는 VIES 서버에서 확인할 수 없습니다."
 
 #. module: base_vat
 #. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid ""
-"The country detected for this foreign VAT number does not match any of the "
-"countries composing the country group set on this fiscal position."
-msgstr "이 해외 VAT 번호로 등록된 국가가 이 재정 위치에 설정된 국가 그룹 중 어느 국가와도 일치하지 않습니다."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
-msgstr "해외 VAT 번호의 국가를 확인할 수 없습니다. 재정 위치에 국가를 부여하거나 국가 그룹을 설정하세요."
-
-#. module: base_vat
-#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
 "The request for VAT validation was not processed. VIES service has responded"
 " with the following error: %s"
 msgstr "VAT 유효성 검사 요청이 실패했습니다. VIES 서비스가 다음 오류를 확인했습니다 %s"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -246,12 +252,6 @@ msgid "Verify VAT numbers using the European VIES service"
 msgstr "유럽 VIES 서비스를 사용하여 부가가치세 번호 확인"
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
-#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
-msgid "Vies Vat To Check"
-msgstr "확인할 VIES VAT"
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
@@ -262,12 +262,6 @@ msgstr "XXXXXXXXX [9자리]이며, Luhn 알고리즘 체크섬을 준수해야 �
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 digits for CNPJ"
 msgstr "CPF의 경우 11자리 또는 CNPJ의 경우 14자리입니다."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid "fiscal position [%s]"
-msgstr "재정 위치 [%s]"
 
 #. module: base_vat
 #. odoo-python

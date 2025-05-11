@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Fernanda Alvarez, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-06 09:27+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +53,23 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    Si varios productos comparten el mismo prefijo, compartirán la misma secuencia. De lo contrario, la secuencia será exclusiva para el producto.\n"
+"\n"
+"\n"
+"    * Leyenda (para el prefijo):\n"
+"    - Año actual con siglo: %(year)s\n"
+"    - Año actual sin siglo: %(y)s\n"
+"    - Mes: %(month)s\n"
+"    - Día: %(day)s\n"
+"    - Día del año: %(doy)s\n"
+"    - Semana del año: %(woy)s\n"
+"    - Día de la semana (0: lunes): %(weekday)s\n"
+"    - Hora 00->24: %(h24)s\n"
+"    - Hora 00->12: %(h12)s\n"
+"    - Minuto: %(min)s\n"
+"    - Segundo: %(sec)s\n"
+"\n"
 
 #. module: stock
 #. odoo-python
@@ -680,7 +697,7 @@ msgstr "<span class=\"o_stat_text\">Números de lote o serie</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "<span class=\"o_stat_text\">Lots/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Números de serie y lote</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -5659,7 +5676,7 @@ msgstr "Siguiente esperado"
 #: model:ir.model.fields,field_description:stock.field_product_product__next_serial
 #: model:ir.model.fields,field_description:stock.field_product_template__next_serial
 msgid "Next Serial"
-msgstr ""
+msgstr "Siguiente número de serie"
 
 #. module: stock
 #. odoo-python
@@ -6532,7 +6549,7 @@ msgstr "Dirección del contacto"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Partner-Specific Instructions"
-msgstr ""
+msgstr "Instrucciones específicas del contacto"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
@@ -6584,7 +6601,7 @@ msgstr "Recolección"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_warning_text
 msgid "Picking Instructions"
-msgstr ""
+msgstr "Instrucciones de recolección"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -8343,7 +8360,7 @@ msgstr "Números de serie"
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_sequence_id
 #: model:ir.model.fields,field_description:stock.field_product_template__lot_sequence_id
 msgid "Serial/Lot Numbers Sequence"
-msgstr ""
+msgstr "Secuencia de los números de serie o lote"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -11479,6 +11496,7 @@ msgstr "Por ejemplo, Existencias de reserva"
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "e.g. The delivery area is at the back of the building."
 msgstr ""
+"Por ejemplo, El área de entrega está en la parte de atrás del edificio."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
