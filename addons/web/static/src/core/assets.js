@@ -1,6 +1,7 @@
 import { Component, onWillStart, whenReady, xml } from "@odoo/owl";
 import { session } from "@web/session";
 import { registry } from "./registry";
+import { registerTemplate } from "@web/core/templates";
 
 /**
  * @typedef {{
@@ -81,6 +82,10 @@ export function loadCSS() {
     return assets.loadCSS(...arguments);
 }
 
+export function loadXML() {
+    return assets.loadXML(...arguments);
+}
+
 export class AssetsLoadingError extends Error {}
 
 /**
@@ -112,6 +117,8 @@ export const assets = {
         delay: 5000,
         extraDelay: 2500,
     },
+
+    templateDependencies: new Map(),
 
     /**
      * Get the files information as descriptor object from a public asset template.
@@ -252,6 +259,42 @@ export const assets = {
         );
         cacheMap.set(url, promise);
         targetDoc.head.appendChild(scriptEl);
+        return promise;
+    },
+
+    async loadXML(url, { targetDoc = document, checkDependencies = true } = {}) {
+        const cacheMap = getCacheMap(targetDoc);
+        if (cacheMap.has(url)) {
+            return cacheMap.get(url);
+        }
+
+        const promise = fetch(url)
+            .then(async (response) => {
+                if (!response.ok) {
+                    throw new AssetsLoadingError(`The loading of ${url} failed`, {
+                        cause: response.statusText,
+                    });
+                }
+                return response.text();
+            })
+            .then(async (xmlText) => {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+                // Find all templates in the XML
+                const templates = xmlDoc.querySelectorAll("template, t[t-name]");
+
+                for (const template of templates) {
+                    const name = template.getAttribute("t-name");
+                    registerTemplate(name, url, template.outerHTML);
+                }
+            })
+            .catch((error) => {
+                cacheMap.delete(url);
+                throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: error });
+            });
+
+        cacheMap.set(url, promise);
         return promise;
     },
 };

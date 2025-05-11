@@ -27,6 +27,7 @@ export class Colibri {
     }
 
     async start() {
+        await this.interaction.loadXMLTemplates();
         await this.interaction.willStart();
         if (this.isDestroyed) {
             return;
@@ -185,7 +186,7 @@ export class Colibri {
             }
             for (const cl in value) {
                 let toApply = value[cl];
-                for (let c of cl.trim().split(" ")) {
+                for (const c of cl.trim().split(" ")) {
                     if (toApply === INITIAL_VALUE) {
                         toApply = initialValue[cl];
                     }
@@ -250,7 +251,9 @@ export class Colibri {
     processContent(content) {
         for (const sel in content) {
             if (sel.startsWith("t-")) {
-                throw new Error(`Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`);
+                throw new Error(
+                    `Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`
+                );
             }
             let nodes;
             if (this.dynamicNodes.has(sel)) {
@@ -350,7 +353,9 @@ export class Colibri {
                     if (!owl) {
                         owl = odoo.loader.modules.get("@odoo/owl");
                     }
-                    const value = node.children.length ? owl.markup(node.innerHTML) : node.textContent;
+                    const value = node.children.length
+                        ? owl.markup(node.innerHTML)
+                        : node.textContent;
                     valuePerNode.set(node, value);
                 }
                 this.applyTOut(node, definition.call(interaction, node), tOut[2].get(node));
