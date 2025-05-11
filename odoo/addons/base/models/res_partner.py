@@ -474,14 +474,20 @@ class Partner(models.Model):
                              'company then a new contact should be created under that new '
                              'company. You can use the "Discard" button to abandon this change.')}
         if partner.type == 'contact' or self.type == 'contact':
-            # for contacts: copy the parent address, if set (aka, at least one
-            # value is set in the address: otherwise, keep the one from the
-            # contact)
-            address_fields = self._address_fields()
-            if any(self.parent_id[key] for key in address_fields):
-                def convert(value):
-                    return value.id if isinstance(value, models.BaseModel) else value
-                result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
+            result.update(self._onchange_copy_parent_partner_address())
+        return result
+
+    def _onchange_copy_parent_partner_address(self):
+        # for contacts: copy the parent address, if set (aka, at least one
+        # value is set in the address: otherwise, keep the one from the
+        # contact)
+        self.ensure_one()
+        result = {}
+        address_fields = self._address_fields()
+        if any(self.parent_id[key] for key in address_fields):
+            def convert(value):
+                return value.id if isinstance(value, models.BaseModel) else value
+            result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
         return result
 
     @api.onchange('parent_id')
