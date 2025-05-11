@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 14:42+0000\n"
+"POT-Creation-Date: 2025-03-03 11:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -12653,8 +12653,18 @@ msgstr "(บันทึก: %(record)s, ผู้ใช้: %(user)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
+msgid "(Same"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "), are you sure you want to create a new one?"
 msgstr ") คุณแน่ใจหรือไม่ว่าต้องการสร้างอันใหม่?"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_partner_form
+msgid ") and"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -24771,11 +24781,6 @@ msgid "Footer text displayed at the bottom of all reports."
 msgstr "ข้อความส่วนท้ายแสดงอยู่ด้านล่างของรายงานทั้งหมด"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_l10n_be_codabox
-msgid "For Accounting Firms"
-msgstr "สำหรับสำนักงานบัญชี"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__value
 #: model:ir.model.fields,help:base.field_ir_cron__value
 msgid ""
@@ -33146,6 +33151,14 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_module.py:0
+msgid ""
+"Odoo is currently processing another module operation.\n"
+"Please try again later or contact your system administrator."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid ""
 "Odoo is unable to merge the generated PDFs because of %(num_errors)s "
@@ -41345,13 +41358,9 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codabox
 msgid ""
-"This module allows Accounting Firms to connect to CodaBox\n"
-"and automatically import CODA and SODA statements for their clients in Odoo.\n"
-"The connection must be done by the Accounting Firm.\n"
+"This module allows connection to CodaBox and automatically imports CODA and "
+"SODA statements in Odoo."
 msgstr ""
-"โมดูลนี้ช่วยให้สำนักงานบัญชีสามารถเชื่อมต่อกับ CodaBox\n"
-"และนำเข้าคำสั่ง CODA และ SODA ให้กับลูกค้าใน Odoo โดยอัตโนมัติ\n"
-"การเชื่อมต่อจะต้องดำเนินการโดยสำนักงานบัญชี\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_online_payment
@@ -44804,6 +44813,11 @@ msgstr "อนุญาตสำหรับกลุ่ม %s"
 #: code:addons/models.py:0
 msgid "always forbidden"
 msgstr "ห้ามอยู่เสมอ"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_partner_form
+msgid "and"
+msgstr "และ"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_assets

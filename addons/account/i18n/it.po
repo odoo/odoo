@@ -1471,6 +1471,8 @@ msgid ""
 "<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
 "disabled again if there are any existing journal items."
 msgstr ""
+"<strong>Attenzione:</strong> una volta attivata la traccia di audit, non è "
+"possibile disattivarla di nuovo se sono presenti movimenti contabili."
 
 #. module: account
 #. odoo-python
@@ -1517,6 +1519,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"Esiste già un conto bancario con numero %(number)s per il partner "
+"%(partner)s ma è archiviato. Annulla l'archiviazione."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -3551,7 +3555,7 @@ msgstr "Conto bancario"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s archived"
-msgstr ""
+msgstr "Conto bancario %(link)s con numero %(number)s archiviato"
 
 #. module: account
 #. odoo-python
@@ -4184,7 +4188,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Cannot identify the invoices in the generated PDF: %s"
-msgstr ""
+msgstr "Impossibile individuare le fatture nel PDF generato: %s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
