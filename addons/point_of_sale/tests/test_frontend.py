@@ -1989,7 +1989,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'hour_from': 0,
                 'hour_to': 24,
                 'day_period': 'morning',
-            }) for day in range(0, 6)],
+            }) for day in range(0, 7)],
         })
         self.preset_takeaway.write({
             'use_timing': True,
