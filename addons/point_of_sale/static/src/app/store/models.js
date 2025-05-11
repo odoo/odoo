@@ -365,7 +365,7 @@ export class Product extends PosModel {
         const taxes = this.pos.get_taxes_after_fp(this.taxes_id, order && order.fiscal_position);
         const currentTaxes = this.pos.getTaxesByIds(this.taxes_id);
         const priceAfterFp = this.pos.computePriceAfterFp(price, currentTaxes);
-        const allPrices = this.pos.compute_all(taxes, priceAfterFp, 1, this.pos.currency.rounding);
+        const allPrices = this.pos.compute_all(taxes, priceAfterFp, quantity, this.pos.currency.rounding);
         if (iface_tax_included === "total") {
             return allPrices.total_included;
         } else {
@@ -498,7 +498,7 @@ export class Orderline extends PosModel {
                 pricelist: this.order.pricelist,
                 quantity: this.get_quantity(),
                 price: unitPriceDiscount,
-            }) * this.get_quantity();
+            });
         return displayPrice !== productDisplayedPrice ? "manual" : "original";
     }
     getPackLotLinesToEdit(isAllowOnlyOneLot) {

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -469,15 +469,15 @@ msgid ""
 msgstr ""
 "<span invisible=\"mail_post_method != 'email'\">\n"
 "                                El mensaje se enviará como un correo electrónico a los destinatarios\n"
-"                                de la plantilla y no aparecerá en el historial de mensajería.\n"
+"                                de la plantilla y no aparecerá en el historial de mensajes.\n"
 "                            </span>\n"
 "                            <span invisible=\"mail_post_method != 'note'\">\n"
-"                                El mensaje se publicará como una nota interna visible para los usuarios internos\n"
-"                                en el historial de mensajería.\n"
+"                                El mensaje se publicará como una nota interna visible para los usuarios\n"
+"                                internos en el historial de mensajes.\n"
 "                            </span>\n"
 "                            <span invisible=\"mail_post_method != 'comment'\">\n"
-"                                El mensaje se publicará como mensaje en el registro,\n"
-"                                con lo cual se notificará a todos los seguidores. También aparecerá en el historial de mensajería.\n"
+"                                El mensaje se publicará como mensaje en el registro\n"
+"                                y notificará a todos los seguidores. Aparecerá en el historial de mensajes.\n"
 "                            </span>"
 
 #. module: mail
@@ -11739,13 +11739,6 @@ msgstr "su seudónimo"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "{{ object.partner_id.lang }}"
 msgstr "{{ object.partner_id.lang }}"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/autoresize_input.xml:0
-#, python-format
-msgid "{{ props.placeholder }}"
-msgstr "{{ props.placeholder }}"
 
 #. module: mail
 #. odoo-python

@@ -7,17 +7,17 @@
 # krnkris, 2023
 # Martin Trigaux, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2024
 # Valics Lehel, 2025
+# gezza <geza.nagy@oregional.hu>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Valics Lehel, 2025\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -194,6 +194,13 @@ msgid "Costs Hour Account"
 msgstr ""
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Felosztási analitikus számla"
+
+#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
 msgid "Domain"
 msgstr "Tartomány"
@@ -291,6 +298,11 @@ msgstr "Készletmozgás"
 #: model:ir.model,name:mrp_account.model_stock_rule
 msgid "Stock Rule"
 msgstr "Készletszabály"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
