@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -4521,7 +4521,7 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
-"設定されている場合、キューマネジャーは日付の後に電子メールを送信します。 "
+"設定されている場合、送信予約管理機能は日付の後に電子メールを送信します。 "
 "設定されていない場合、Eメールはできるだけ早く送信されます。タイムゾーンは指定されない限り、UTCタイムゾーンとみなされます。 "
 
 #. module: mail
@@ -4530,8 +4530,7 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. You can use dynamic expression."
 msgstr ""
-"設定されている場合、キューマネジャーは日付の後に電子メールを送信します。 "
-"設定されていない場合、Eメールはできるだけ早く送信されます。ダイナミックエクスプレッションを使用可能です。 "
+"送信日時が設定されている場合、送信予約管理機能はその日時以降にEメールを送信します。設定されていない場合は、可能な限り早く送信されます。また、動的な式を使用することもできます。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -5620,12 +5619,12 @@ msgstr "%(action_name)sのメールテンプレートモデルがアクション
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__mail_template_ids
 msgid "Mail template using this mail server"
-msgstr "このメールサーバを使用するめーるテンプレート"
+msgstr "このメールサーバを使用するメールテンプレート"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_scheduler_action_ir_actions_server
 msgid "Mail: Email Queue Manager"
-msgstr "メール: Eメールキューマネジャー"
+msgstr "メール: メール送信予約管理機能"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_gateway_action_ir_actions_server
@@ -9267,7 +9266,7 @@ msgstr "プラン\"%(plan_name)s\"が開始されました。"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
 msgid "The queue manager will send the email after the date"
-msgstr "キューマネージャーは、日付の後に電子メールを送信します"
+msgstr "メールは送信予約管理機能により、指定日時を過ぎると自動送信されます。"
 
 #. module: mail
 #. odoo-python
@@ -11402,13 +11401,6 @@ msgstr "あなたのエイリアス"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "{{ object.partner_id.lang }}"
 msgstr "{{ object.partner_id.lang }}"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/autoresize_input.xml:0
-#, python-format
-msgid "{{ props.placeholder }}"
-msgstr ""
 
 #. module: mail
 #. odoo-python

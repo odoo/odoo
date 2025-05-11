@@ -8,15 +8,15 @@
 # Martin Trigaux, 2023
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
 # Milan Bojovic <mbojovic@outlook.com>, 2024
-# コフスタジオ, 2024
+# コフスタジオ, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: コフスタジオ, 2024\n"
+"Last-Translator: コフスタジオ, 2025\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -193,6 +193,13 @@ msgid "Costs Hour Account"
 msgstr ""
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr ""
+
+#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
 msgid "Domain"
 msgstr "Domen"
@@ -290,6 +297,11 @@ msgstr "Premeštanje zaliha"
 #: model:ir.model,name:mrp_account.model_stock_rule
 msgid "Stock Rule"
 msgstr "Pravilo zalihe"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr "Stock Valuation Layer"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id

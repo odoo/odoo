@@ -5,17 +5,16 @@
 # Translators:
 # Tâm Doãn Bắc, 2024
 # Nancy Momoland <thanh.np2502@gmail.com>, 2024
-# Wil Odoo, 2025
-# Martin Trigaux, 2025
 # Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"POT-Creation-Date: 2025-05-07 20:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,11 +86,6 @@ msgid "# Vendor Bills"
 msgstr "# Hóa đơn mua hàng"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
-msgid "# of Digits"
-msgstr "# chữ số"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
@@ -152,9 +146,9 @@ msgstr "%s (Bản sao)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_payment_term.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (bản sao)"
@@ -5779,8 +5773,15 @@ msgstr "Số tiền chiết khấu theo loại tiền tệ"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "Discount of %(amount)s if paid %(when)s"
-msgstr ""
+msgid "Discount of %(amount)s if paid today"
+msgstr "Chiết khấu %(amount)s nếu thanh toán hôm nay"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Discount of %(amount)s if paid within %(days)s days"
+msgstr "Chiết khấu %(amount)s nếu thanh toán trong vòng %(days)s ngày"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -5895,6 +5896,12 @@ msgstr "Hiển thị tổng số tiền của hóa đơn bằng chữ cái"
 #: model:ir.model.fields,field_description:account.field_account_tax__repartition_line_ids
 msgid "Distribution"
 msgstr "Phân bổ"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Tài khoản phân tích phân phối"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -8552,6 +8559,13 @@ msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "Trước đây là '%(previous)s' và bây giờ là '%(current)s'."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Items With Missing Analytic Distribution"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
 msgid "January"
 msgstr "Tháng 1"
@@ -10358,6 +10372,13 @@ msgstr ""
 #, python-format
 msgid "One or more invoices couldn't be processed."
 msgstr "Không thể xử lý một hoặc nhiều hóa đơn."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "Một hoặc nhiều dòng yêu cầu phân phối phân tích 100%."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -12628,6 +12649,13 @@ msgstr "Token bảo mật"
 #, python-format
 msgid "See all activities"
 msgstr "Xem tất cả hoạt động"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "See items"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -15162,13 +15190,6 @@ msgid "This Quarter"
 msgstr "Quý này"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "This specific error occurred during the import:"
-msgstr "Lỗi này đã xảy ra trong quá trình nhập:"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
 msgid "This Tax Period"
 msgstr "Kỳ thuế này"
@@ -15362,16 +15383,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with a payment method. You cannot archive it"
-msgstr ""
-"Sổ nhật ký được liên kết với một phương thức thanh toán. Bạn không thể lưu "
-"trữ nó"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -15478,6 +15489,13 @@ msgstr "Bút toán định kỳ này xuất phát từ %s"
 #: model:ir.model.fields,help:account.field_account_payment__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
 msgstr "Bút toán định kỳ này sẽ được vào sổ cho đến và bao gồm cả ngày này."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "This specific error occurred during the import:"
+msgstr "Lỗi này đã xảy ra trong quá trình nhập:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16367,8 +16385,8 @@ msgstr "Hóa đơn mua hàng đã được tạo"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:account.journal,name:account.1_purchase
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -18034,13 +18052,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "with a pdf of an invoice as attachment."
 msgstr "với một tệp pdf của hóa đơn được đình kèm."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "within %(days)s days"
-msgstr ""
 
 #. module: account
 #. odoo-python

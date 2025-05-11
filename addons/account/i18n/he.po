@@ -5,6 +5,7 @@
 # Translators:
 # yacov mosbacher <ymosba@gmail.com>, 2023
 # Mor Kir <morki@013.net.il>, 2023
+# Lilach Gilliam <lilach@apprcase.com>, 2023
 # Zvika Rap <zvikara@gmail.com>, 2023
 # yizhaq agronov <yizhaq@gmail.com>, 2023
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2023
@@ -34,7 +35,6 @@
 # Yoram Lavi, 2024
 # Eyal arkush, 2025
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025
-# Lilach Gilliam <lilach@apprcase.com>, 2025
 # yael terner, 2025
 # Sagi Ahiel, 2025
 # or balmas, 2025
@@ -43,7 +43,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"POT-Creation-Date: 2025-05-07 20:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -105,11 +105,6 @@ msgstr "מספר שורות שהותאמו"
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
 msgstr "מס' חשבונית ספק "
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
-msgid "# of Digits"
-msgstr "# ספרות"
 
 #. module: account
 #. odoo-python
@@ -174,9 +169,9 @@ msgstr "%s (העתק)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_payment_term.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (העתק)"
@@ -5646,8 +5641,15 @@ msgstr "מאזן הנחה במטבע"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "Discount of %(amount)s if paid %(when)s"
-msgstr ""
+msgid "Discount of %(amount)s if paid today"
+msgstr "הנחה של %(amount)s אם ישולם היום"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Discount of %(amount)s if paid within %(days)s days"
+msgstr "הנחה של %(amount)s אם ישולם בתוך %(days)s ימים "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -5762,6 +5764,12 @@ msgstr "הצג את הסכום הכולל של חשבונית באותיות"
 #: model:ir.model.fields,field_description:account.field_account_tax__repartition_line_ids
 msgid "Distribution"
 msgstr "תפוצה"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "מיפוי חשבון אנליטי"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -8362,6 +8370,13 @@ msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "בעבר זה היה '%(previous)s' ועכשיו זה '%(current)s'."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Items With Missing Analytic Distribution"
+msgstr "פריטים עם חלוקה לחשבונות אנליטים חסרים"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
 msgid "January"
 msgstr "ינואר"
@@ -10140,6 +10155,13 @@ msgstr "חשבון בנק אחד או יותר המוגדרים לשותף זה 
 #, python-format
 msgid "One or more invoices couldn't be processed."
 msgstr "לא ניתן היה לעבד חשבונית אחת או יותר."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -12386,6 +12408,13 @@ msgstr "אסימון אבטחה"
 #, python-format
 msgid "See all activities"
 msgstr "ראה את כל הפעילויות"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "See items"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -14769,13 +14798,6 @@ msgid "This Quarter"
 msgstr "רבעון נוכחי"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "This specific error occurred during the import:"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
 msgid "This Tax Period"
 msgstr "תקופת מס זו"
@@ -14945,14 +14967,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with a payment method. You cannot archive it"
-msgstr "יומן זה משויך לאמצעי תשלום. לא ניתן להעביר אותו לארכיון."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -15050,6 +15064,13 @@ msgstr "המקור של פעולה מחזורית זו %s"
 #: model:ir.model.fields,help:account.field_account_payment__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
 msgstr "הפרסום האוטומטי החוזר הזה יפורסם עד וכולל תאריך זה."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "This specific error occurred during the import:"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15905,8 +15926,8 @@ msgstr "חשבונית ספק נוצרה"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:account.journal,name:account.1_purchase
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -17434,13 +17455,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "with a pdf of an invoice as attachment."
 msgstr "בצירוף חשבונית ב-PDF"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "within %(days)s days"
-msgstr ""
 
 #. module: account
 #. odoo-python
