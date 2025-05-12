@@ -367,7 +367,7 @@ class AccountJournal(models.Model):
         method_information_mapping = results['method_information_mapping']
         providers_per_code = results['providers_per_code']
 
-        journal_bank_cash = self.filtered(lambda j: j.type in ('bank', 'cash'))
+        journal_bank_cash = self.filtered(lambda j: j.type in ('bank', 'cash', 'credit'))
         journal_other = self - journal_bank_cash
         journal_other.available_payment_method_ids = False
 
