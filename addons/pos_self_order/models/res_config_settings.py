@@ -11,6 +11,11 @@ from odoo.tools.misc import split_every
 from odoo.osv.expression import AND
 from werkzeug.urls import url_unquote
 
+try:
+    import xlsxwriter
+except ImportError:
+    xlsxwriter = None
+
 
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
@@ -97,11 +102,24 @@ class ResConfigSettings(models.TransientModel):
             'svg': qr.make_image(fill_color="black", back_color="transparent", image_factory=qrcode.image.svg.SvgImage)
         }
 
+    def _generate_excel(self, rows, headers):
+        with BytesIO() as buffer:
+            with xlsxwriter.Workbook(buffer, {'in_memory': True}) as workbook:
+                worksheet = workbook.add_worksheet()
+
+                for col, header in enumerate(headers):
+                    worksheet.write(0, col, header)
+                for row_idx, row in enumerate(rows, start=1):
+                    for col_idx, cell in enumerate(row):
+                        worksheet.write(row_idx, col_idx, cell)
+            return buffer.getvalue()
+
     def generate_qr_codes_zip(self):
         if not self.pos_self_ordering_mode in ['mobile', 'consultation']:
             raise ValidationError(_("QR codes can only be generated in mobile or consultation mode."))
 
         qr_images = []
+        excel_rows = []
 
         if self.pos_module_pos_restaurant:
             table_ids = self.pos_config_id.floor_ids.table_ids
@@ -109,20 +127,31 @@ class ResConfigSettings(models.TransientModel):
             if not table_ids:
                 raise ValidationError(_("In Self-Order mode, you must have at least one table to generate QR codes"))
 
-            for table in table_ids:
+            for row_num, table in enumerate(table_ids, start=1):
+                table_number = table.table_number
+                floor_name = table.floor_id.name
+                url = url_unquote(self.pos_config_id._get_self_order_url(table.id))
                 qr_images.append({
-                    'images': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url(table.id))),
-                    'name': f"{table.floor_id.name} - {table.table_number}",
+                    'images': self._generate_single_qr_code(url),
+                    'name': f"{floor_name} - {table_number}",
                 })
+                excel_rows.append([self.pos_config_id.name, floor_name, table_number, url])
+            headers = ['Pos config', 'Floor', 'Table id', 'Url shortened']
         else:
+            url = url_unquote(self.pos_config_id._get_self_order_url())
             qr_images.append({
-                'images': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url())),
+                'images': self._generate_single_qr_code(url),
                 'name': "generic",
             })
+            excel_rows.append([self.pos_config_id.name, url])
+            headers = ['Pos config', 'Url shortened']
+
+        xlsx_content = self._generate_excel(excel_rows, headers)
 
         # Create a zip with all images in qr_images
         zip_buffer = BytesIO()
         with zipfile.ZipFile(zip_buffer, "w", 0) as zip_file:
+            zip_file.writestr("Table_url.xlsx", xlsx_content)
             for index, qr_image in enumerate(qr_images):
                 with zip_file.open(f"{qr_image['name']} ({index + 1}).png", "w") as buf:
                     qr_image['images']['png'].save(buf, format="PNG")
