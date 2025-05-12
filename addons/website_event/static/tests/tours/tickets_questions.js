@@ -6,6 +6,7 @@ registry.category("web_tour.tours").add("test_tickets_questions", {
             content: "Click on the Design Fair event",
             trigger: 'article:contains("Design Fair New York")',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Click on Register modal tickets button",
@@ -74,6 +75,7 @@ registry.category("web_tour.tours").add("test_tickets_questions", {
             trigger:
                 ".modal#modal_attendees_registration:not(.o_inactive_modal) button[type=submit].btn-primary",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             // The tour stops too early and the registration fails if we don't wait the confirmation.
