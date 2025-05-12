@@ -1024,6 +1024,18 @@ class ProjectTask(models.Model):
                 return field.name in writeable
         return True
 
+    def _ensure_fields_write(self, vals, defaults=False):
+        if defaults:
+            vals = {
+                **{key[8:]: value for key, value in self.env.context.items() if key.startswith("default_")},
+                **vals
+            }
+
+        for fname, value in vals.items():
+            field = self._fields.get(fname)
+            if field and field.type == 'many2one':
+                self.env[field.comodel_name].browse(value).check_access('read')
+
     def _set_stage_on_project_from_task(self):
         stage_ids_per_project = defaultdict(list)
         for task in self:
@@ -1083,6 +1095,9 @@ class ProjectTask(models.Model):
                 additional_vals['personal_stage_type_id'] = default_personal_stage[0]
             if not vals.get('name') and vals.get('display_name'):
                 vals['name'] = vals['display_name']
+
+            if self.env.user._is_portal() and not self.env.su:
+                self._ensure_fields_write(vals, defaults=True)
 
             if project_id and not "company_id" in vals:
                 additional_vals["company_id"] = self.env["project.project"].browse(
@@ -1168,6 +1183,8 @@ class ProjectTask(models.Model):
         # sudo for portal users, because they do not have access to these
         # fields. Other values must not be written as sudo.
         additional_vals = {}
+        if self.env.user._is_portal() and not self.env.su:
+            self._ensure_fields_write(vals, defaults=False)
 
         if 'milestone_id' in vals:
             # WARNING: has to be done after 'project_id' vals is written on subtasks
