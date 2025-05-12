@@ -467,7 +467,8 @@ class Base(models.AbstractModel):
         if (
             len(groupby) == 1
             and self.env.context.get('read_group_expand')
-            and (field := self._fields[groupby[0].split('.')[0].split(':')[0]])
+            and '.' not in groupby[0]
+            and (field := self._fields[groupby[0].split(':')[0]])
             and field.group_expand
         ):
             return field
@@ -720,20 +721,28 @@ class Base(models.AbstractModel):
 
         return result
 
-    def _web_read_group_groupby_formatter(self, groupby_spec, values):
+    def _web_read_group_groupby_formatter(self, groupby_spec, values, previous_path=None):
         """ Return a formatter method that returns value/label and the domain that the group
         value represent """
-        field_name = groupby_spec.split(':')[0].split('.')[0]
+        field_path = groupby_spec.split(':')[0]
+        field_name, remaining_path = field_path.split('.', 1) if '.' in field_path else (field_path, None)
         field = self._fields[field_name]
+
+        if remaining_path and field.type == 'many2one':
+            model = self.env[field.comodel_name]
+            new_path = f"{previous_path}.{field_name}" if previous_path else field_name
+            return model._web_read_group_groupby_formatter(remaining_path, values, new_path)
+
+        domain_path = f"{previous_path}.{field_path}" if previous_path else field_path
 
         if field.type == 'many2many':
 
             # Special case for many2many because (<many2many>, '=', False) domain bypass ir.rule.
             def formatter_many2many(value):
                 if not value:
-                    return False, [(field_name, 'not any', [])]
+                    return False, [(domain_path, 'not any', [])]
                 id_ = value.id
-                return (id_, value.sudo().display_name), [(field_name, '=', id_)]
+                return (id_, value.sudo().display_name), [(domain_path, '=', id_)]
 
             return formatter_many2many
 
@@ -741,9 +750,9 @@ class Base(models.AbstractModel):
 
             def formatter_many2one(value):
                 if not value:
-                    return False, [(field_name, '=', False)]
+                    return False, [(domain_path, '=', False)]
                 id_ = value.id
-                return (id_, value.sudo().display_name), [(field_name, '=', id_)]
+                return (id_, value.sudo().display_name), [(domain_path, '=', id_)]
 
             return formatter_many2one
 
@@ -756,7 +765,7 @@ class Base(models.AbstractModel):
 
                 def formatter_time_granularity(value):
                     if not value:
-                        return value, [(field_name, '=', value)]
+                        return value, [(domain_path, '=', value)]
                     range_start = value
                     range_end = value + interval
                     if field.type == 'datetime':
@@ -787,8 +796,8 @@ class Base(models.AbstractModel):
                         label = f"W{week} {year:04}"
 
                     additional_domain = ['&',
-                        (field_name, '>=', range_start.strftime(fmt)),
-                        (field_name, '<', range_end.strftime(fmt)),
+                        (domain_path, '>=', range_start.strftime(fmt)),
+                        (domain_path, '<', range_end.strftime(fmt)),
                     ]
                     # TODO: date label should be created by the webclient.
                     return (range_start.strftime(fmt), label), additional_domain
@@ -799,8 +808,8 @@ class Base(models.AbstractModel):
 
                 def formatter_date_number_granularity(value):
                     if value is None:
-                        return [(field_name, '=', value)]
-                    return value, [(f"{field_name}.{granularity}", '=', value)]
+                        return [(domain_path, '=', value)]
+                    return value, [(f"{domain_path}.{granularity}", '=', value)]
 
                 return formatter_date_number_granularity
 
@@ -809,7 +818,7 @@ class Base(models.AbstractModel):
         if field.type == "properties":
             return self._web_read_group_groupby_properties_formatter(groupby_spec, values)
 
-        return lambda value: (value, [(field_name, '=', value)])
+        return lambda value: (value, [(domain_path, '=', value)])
 
     def _web_read_group_groupby_properties_formatter(self, groupby_spec, values):
         if '.' not in groupby_spec:
