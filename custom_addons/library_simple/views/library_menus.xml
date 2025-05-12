@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_library_book" model="ir.actions.act_window">
+        <field name="name">Books</field>
+        <field name="res_model">library.book</field>
+        <field name="view_mode">tree,form</field> <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new book
+          </p><p>
+            Manage the books available in the library.
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="library_base_menu"
+              name="Library"
+              sequence="10"/> <menuitem id="library_book_menu"
+              name="Books"
+              parent="library_base_menu" action="action_library_book" sequence="10"/> </odoo>
