@@ -69,6 +69,7 @@ class ProgressBarOptionPlugin extends Plugin {
             },
             progressBarValue: {
                 apply: ({ editingElement, value }) => {
+                    value = parseInt(value);
                     value = clamp(value, 0, 100);
                     const progressBarEl = editingElement.querySelector(".progress-bar");
                     const progressBarTextEl = editingElement.querySelector(".s_progress_bar_text");
