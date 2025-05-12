@@ -21,35 +21,35 @@ class AccountMoveLine(models.Model):
 
     l10n_gr_edi_detail_type = fields.Selection(
         selection=[('1', '1'), ('2', '2')],
-        string='MyDATA Detail Type',
+        string='Detail Type',
         compute='_compute_l10n_gr_edi_detail_type',
         store=True,
         readonly=False,
     )
     l10n_gr_edi_cls_category = fields.Selection(
         selection=CLASSIFICATION_CATEGORY_SELECTION,
-        string='MyDATA Category',
+        string='myDATA Category',
         compute='_compute_l10n_gr_edi_cls_category',
         store=True,
         readonly=False,
     )
     l10n_gr_edi_cls_type = fields.Selection(
         selection=CLASSIFICATION_TYPE_SELECTION,
-        string='MyDATA Type',
+        string='myDATA Type',
         compute='_compute_l10n_gr_edi_cls_type',
         store=True,
         readonly=False,
     )
     l10n_gr_edi_cls_vat = fields.Selection(
         selection=CLASSIFICATION_VAT_SELECTION,
-        string='MyDATA VAT Classification',
+        string='VAT Classification',
         compute='_compute_l10n_gr_edi_cls_vat',
         store=True,
         readonly=False,
     )
     l10n_gr_edi_tax_exemption_category = fields.Selection(
         selection=TAX_EXEMPTION_CATEGORY_SELECTION,
-        string='MyDATA Tax Exemption Category',
+        string='Tax Exemption Category',
         compute='_compute_l10n_gr_edi_tax_exemption_category',
         store=True,
         readonly=False,
