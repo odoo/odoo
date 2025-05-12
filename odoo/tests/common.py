@@ -66,7 +66,6 @@ from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDic
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
 from odoo.tools.xml_utils import _validate_xml
-from odoo.addons.base.models import ir_actions_report
 
 from . import case, test_cursor
 from .result import OdooTestResult
@@ -1144,28 +1143,6 @@ class TransactionCase(BaseCase):
             self.registry_leave_test_mode()
             env.invalidate_all()
 
-    @contextmanager
-    def allow_pdf_render(self):
-        """
-        Allows wkhtmltopdf to send requests to the backend.
-        Enters registry mode if necessary.
-        """
-        with ExitStack() as stack:
-            if not type(self)._registry_patched:
-                stack.enter_context(self.enter_registry_test_mode())
-            old_run_wkhtmltopdf = ir_actions_report._run_wkhtmltopdf
-
-            def _patched_run_wkhtmltopdf(args):
-                with patch.object(self, 'http_request_key', 'wkhtmltopdf'), release_test_lock():
-                    args = ['--cookie', TEST_CURSOR_COOKIE_NAME, 'wkhtmltopdf', *args]
-                    return old_run_wkhtmltopdf(args)
-
-            stack.enter_context(
-                patch.object(ir_actions_report, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf)
-            )
-            yield
-
-
 class SingleTransactionCase(BaseCase):
     """ TestCase in which all test methods are run in the same transaction,
     the transaction is started with the first test method and rolled back at
@@ -2101,17 +2078,6 @@ class HttpCase(TransactionCase):
         # setup an url opener helper
         self.opener = Opener(self)
         self.http_key_sequence = itertools.count()
-        # we need to allow requests during pdf rendering.
-        old_run_wkhtmltopdf = ir_actions_report._run_wkhtmltopdf
-
-        def _patched_run_wkhtmltopdf(args):
-            with patch.object(self, 'http_request_key', 'wkhtmltopdf'), release_test_lock():
-                args = ['--cookie', TEST_CURSOR_COOKIE_NAME, 'wkhtmltopdf', *args]
-                return old_run_wkhtmltopdf(args)
-
-        self.startPatcher(
-            patch.object(ir_actions_report, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
-        )
 
     @contextmanager
     def enter_registry_test_mode(self):

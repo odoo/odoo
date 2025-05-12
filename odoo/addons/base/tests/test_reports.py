@@ -7,6 +7,7 @@ from unittest import skipIf
 
 import odoo
 import odoo.tests
+from odoo.addons.base_report_engine_wkhtmltox.tests.common import TransactionCaseWithPdf, HttpCaseWithPdf
 
 try:
     from pdfminer.converter import PDFPageAggregator
@@ -23,7 +24,7 @@ _logger = logging.getLogger(__name__)
 
 
 @odoo.tests.tagged('post_install', '-at_install', 'post_install_l10n')
-class TestReports(odoo.tests.TransactionCase):
+class TestReports(TransactionCaseWithPdf):
     def test_reports(self):
         invoice_domain = [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt'))]
         specific_model_domains = {
@@ -173,7 +174,7 @@ class Box:
 
 
 @skipIf(pdfminer is False, "pdfminer not installed")
-class TestReportsRenderingCommon(odoo.tests.HttpCase):
+class TestReportsRenderingCommon(HttpCaseWithPdf):
 
     def setUp(self):
         super().setUp()
@@ -587,7 +588,7 @@ class TestReportsRenderingLimitations(TestReportsRenderingCommon):
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestAggregatePdfReports(odoo.tests.HttpCase):
+class TestAggregatePdfReports(HttpCaseWithPdf):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

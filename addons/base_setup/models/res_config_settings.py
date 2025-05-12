@@ -44,6 +44,12 @@ class ResConfigSettings(models.TransientModel):
     company_country_code = fields.Char(related="company_id.country_id.code", string="Company Country Code", readonly=True)
     company_country_group_codes = fields.Json(related="company_id.country_id.country_group_codes")
     profiling_enabled_until = fields.Datetime("Profiling enabled until", config_parameter='base.profiling_enabled_until')
+    company_report_rendering_engine = fields.Selection(
+        related="company_id.report_rendering_engine",
+        string="Rendering Engine",
+        readonly=False,
+        help="Rendering engine used to generate the reports. (e.g. Web Kit HTML to PDF, Paper Muncher, etc.)",
+    )
 
     def open_company(self):
         return {
