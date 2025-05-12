@@ -27,7 +27,7 @@ registry.category('web_tour.tours').add('donation_snippet_use', {
     steps: () => [
         // -- Testing the minimum amount --
         {
-            content: "Enter a negative custom amount, testing the minimum amount",
+            content: "Enter a custom amount smaller than the minimum, testing the minimum amount",
             trigger: "#s_donation_amount_input",
             run: "edit 1",
         },
@@ -92,10 +92,12 @@ registry.category('web_tour.tours').add('donation_snippet_use', {
             run: "edit 1",
         },
         {
-            content:
-                "Verify whether the minimum value warning message is displayed while other warning messages remain hidden",
-            trigger:
-                "small#warning_min_message_id:contains('The minimum donation amount is $5.'), .o_donation_payment_form:has(small#warning_message_id.d-none)",
+            content: "Verify whether the minimum value warning message is displayed",
+            trigger: "small#warning_min_message_id:contains('The minimum donation amount is $5.')",
+        },
+        {
+            content: "Verify other warning messages remain hidden",
+            trigger: ".o_donation_payment_form:has(small#warning_message_id.d-none)",
         },
         {
             content: "Click on the first radio button",
@@ -104,7 +106,11 @@ registry.category('web_tour.tours').add('donation_snippet_use', {
         },
         {
             content: "Ensure the custom amount value is cleared",
-            trigger: "input#other_amount_value:empty, #warning_min_message_id.d-none",
+            trigger: "input#other_amount_value:empty",
+        },
+        {
+            content: "Ensure no warning message is displayed",
+            trigger: ".o_donation_payment_form:has(#warning_min_message_id.d-none)",
         },
     ],
 });
