@@ -1381,7 +1381,7 @@ test("multi-level dropdown: mouseentering a dropdown item should close any subdr
 });
 
 test.tags("desktop");
-test("multi-level dropdown: unsubscribe all keynav when root close", async () => {
+test("multi-level dropdown: unsubscribe all keynav when root destroyed", async () => {
     class Parent extends Component {
         static components = { Dropdown };
         static props = [];
@@ -1444,7 +1444,8 @@ test("multi-level dropdown: unsubscribe all keynav when root close", async () =>
 
     await mountWithCleanup(Parent);
     expect(DROPDOWN_MENU).toHaveCount(0);
-    expect(registeredHotkeys.size).toBe(0);
+    expect(registeredHotkeys.size).toBe(10);
+    checkKeys(registeredHotkeys);
 
     // Open dropdowns one by one
     await click(".first");
@@ -1460,13 +1461,12 @@ test("multi-level dropdown: unsubscribe all keynav when root close", async () =>
     await hover(".third");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(3);
-    checkKeys(registeredHotkeys);
 
     // Close third
     await press("escape");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(2);
-    checkKeys(removedHotkeys);
+    expect(removedHotkeys.size).toBe(0);
 
     // Reset hover
     await hover(getFixture());
@@ -1475,19 +1475,20 @@ test("multi-level dropdown: unsubscribe all keynav when root close", async () =>
     await hover(".third");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(3);
-    checkKeys(registeredHotkeys);
+    expect(registeredHotkeys.size).toBe(0);
 
     // Close third, second and first
     await press("escape");
     await animationFrame();
-    checkKeys(removedHotkeys);
 
     await press("escape");
     await animationFrame();
+    // Third dropdown is completely destroyed => check for removed keys
     checkKeys(removedHotkeys);
 
     await press("escape");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
+    // Second dropdown is completely destroyed => check for removed keys
     checkKeys(removedHotkeys);
 });

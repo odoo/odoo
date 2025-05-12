@@ -74,16 +74,7 @@ export class TimePicker extends Component {
 
         return {
             virtualFocus: true,
-            focusInitialElementOnDisabled: () => false,
-            onEnabled: (navigator) => {
-                this.navigator = navigator;
-                if (this.state.value) {
-                    const index = this.suggestions.findIndex((s) => s.equals(this.state.value, this.props.showSeconds));
-                    if (index >= 0) {
-                        navigator.items[index]?.setActive();
-                    }
-                }
-            },
+            onUpdated: (navigator) => (this.navigator = navigator),
             hotkeys: {
                 enter: {
                     bypassEditableProtection: true,
@@ -251,5 +242,16 @@ export class TimePicker extends Component {
     getPlaceholder() {
         const seconds = this.props.showSeconds ? ":ss" : "";
         return `hh:mm${seconds}`;
+    }
+
+    onDropdownOpened() {
+        if (this.navigator) {
+            const index = this.state.value
+                ? this.suggestions.findIndex((s) =>
+                      s.equals(this.state.value, this.props.showSeconds)
+                  )
+                : 0;
+            this.navigator.items[index]?.setActive();
+        }
     }
 }

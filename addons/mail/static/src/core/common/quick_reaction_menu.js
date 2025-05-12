@@ -130,7 +130,11 @@ export class QuickReactionMenu extends Component {
     get navigationOptions() {
         return {
             // Bypass nested dropdown behavior to allow initial focus.
-            onEnabled: null,
+            onUpdated: (navigator) => {
+                if (!navigator.activeItem) {
+                    navigator.items[0]?.setActive();
+                }
+            },
             hotkeys: {
                 arrowright: (navigator) => navigator.next(),
                 arrowleft: (navigator) => navigator.previous(),
