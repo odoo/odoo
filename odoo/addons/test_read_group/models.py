@@ -229,6 +229,8 @@ class Test_Read_GroupRelated_Foo(models.Model):
 
     bar_base_ids = fields.Many2many(related='bar_id.base_ids')
 
+    schedule_datetime = fields.Datetime()
+
 
 class Test_Read_GroupRelated_Base(models.Model):
     _name = 'test_read_group.related_base'
@@ -254,3 +256,10 @@ class Test_Read_GroupRelated_Inherits(models.Model):
     }
 
     base_id = fields.Many2one('test_read_group.related_base', required=True, ondelete='cascade')
+
+
+class Test_Read_GroupSequence_Inherits(models.Model):
+    _name = 'test_read_group.sequence_inherits'
+    _description = "SequenceInherits"
+
+    inherited_id = fields.Many2one('test_read_group.related_inherits', required=True)

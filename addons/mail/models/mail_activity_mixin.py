@@ -254,9 +254,9 @@ class MailActivityMixin(models.AbstractModel):
             ('user_id', '=', self.env.user.id)
         ])]
 
-    def _read_group_groupby(self, groupby_spec, query):
+    def _read_group_groupby(self, alias, groupby_spec, query):
         if groupby_spec != 'activity_state':
-            return super()._read_group_groupby(groupby_spec, query)
+            return super()._read_group_groupby(alias, groupby_spec, query)
         self._check_field_access(self._fields['activity_state'], 'read')
 
         # if already grouped by activity_state, do not add the join again

@@ -107,7 +107,7 @@ class AnalyticMixin(models.AbstractModel):
                 model._field_to_sql(alias, 'analytic_distribution', query),
             ))
 
-    def _read_group_groupby(self, groupby_spec: str, query: Query) -> SQL:
+    def _read_group_groupby(self, alias: str, groupby_spec: str, query: Query) -> SQL:
         """To group by `analytic_distribution`, we first need to separate the analytic_ids and associate them with the ids to be counted
         Do note that only '__count' can be passed in the `aggregates`"""
         if groupby_spec == 'analytic_distribution':
@@ -126,7 +126,7 @@ class AnalyticMixin(models.AbstractModel):
             query._where_clauses = []
             return SQL("account_id")
 
-        return super()._read_group_groupby(groupby_spec, query)
+        return super()._read_group_groupby(alias, groupby_spec, query)
 
     def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
         if query.table == 'distribution' and aggregate_spec != '__count':
