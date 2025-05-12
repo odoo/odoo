@@ -982,11 +982,11 @@ export class FormOptionPlugin extends Plugin {
             const field = Object.assign({}, fields[getFieldName(fieldEl)]);
             const type = getFieldType(fieldEl);
 
-            const optionText = selectEl
-                ? "Option"
+            const [optionText, checkType] = selectEl
+                ? [_t("Option"), "exclusive_boolean"]
                 : type === "selection"
-                ? _t("Radio")
-                : _t("Checkbox");
+                ? [_t("Radio"), "exclusive_boolean"]
+                : [_t("Checkbox"), "boolean"];
             const defaults = [...fieldEl.querySelectorAll("[checked], [selected]")].map((el) =>
                 /^-?[0-9]{1,15}$/.test(el.value) ? parseInt(el.value) : el.value
             );
@@ -998,6 +998,7 @@ export class FormOptionPlugin extends Plugin {
             valueList = reactive({
                 title: _t("%s List", optionText),
                 addItemTitle: _t("Add new %s", optionText),
+                checkType,
                 defaultItemName: _t("Item"),
                 hasDefault: ["one2many", "many2many"].includes(type) ? "multiple" : "unique",
                 defaults: JSON.stringify(defaults),

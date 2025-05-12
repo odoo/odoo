@@ -16,7 +16,12 @@ export class BuilderList extends Component {
         addItemTitle: { type: String, optional: true },
         itemShape: {
             type: Object,
-            values: [{ value: "number" }, { value: "text" }, { value: "boolean" }],
+            values: [
+                { value: "number" },
+                { value: "text" },
+                { value: "boolean" },
+                { value: "exclusive_boolean" },
+            ],
             validate: (value) =>
                 // is not empty object and doesn't include reserved fields
                 Object.keys(value).length > 0 && !Object.keys(value).includes("_id"),
@@ -146,6 +151,11 @@ export class BuilderList extends Component {
             targetInputEl.type === "checkbox" ? targetInputEl.checked : targetInputEl.value;
 
         const items = this.formatRawValue(this.state.value);
+        if (value === true && this.props.itemShape[propertyName] === "exclusive_boolean") {
+            for (const item of items) {
+                item[propertyName] = false;
+            }
+        }
         const item = items.find((item) => item._id === id);
         item[propertyName] = value;
 

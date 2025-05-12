@@ -217,7 +217,7 @@
         <BuilderList
             action="'setFormCustomFieldValueList'"
             addItemTitle="state.valueList.addItemTitle"
-            itemShape="{ display_name: 'text', selected: 'boolean' }"
+            itemShape="{ display_name: 'text', selected: state.valueList.checkType }"
             default="{ display_name: state.valueList.defaultItemName, selected: false }"
         />
     </BuilderRow>
