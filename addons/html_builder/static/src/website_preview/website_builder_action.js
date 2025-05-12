@@ -4,6 +4,8 @@ import {
     onMounted,
     onWillDestroy,
     onWillStart,
+    status,
+    useComponent,
     useEffect,
     useRef,
     useState,
@@ -49,6 +51,7 @@ export class WebsiteBuilder extends Component {
         });
         this.state = useState({ isEditing: false, key: 1 });
         this.websiteContext = useState(this.websiteService.context);
+        this.component = useComponent();
 
         this.onKeydownRefresh = this._onKeydownRefresh.bind(this);
 
@@ -56,10 +59,13 @@ export class WebsiteBuilder extends Component {
             // You can't wait for rendering because the Builder depends on the page style synchronously.
             effect(
                 (websiteContext) => {
+                    if (status(this.component) === "destroyed") {
+                        return;
+                    }
                     if (websiteContext.isMobile) {
-                        this.websitePreviewRef.el?.classList.add("o_is_mobile");
+                        this.websitePreviewRef.el.classList.add("o_is_mobile");
                     } else {
-                        this.websitePreviewRef.el?.classList.remove("o_is_mobile");
+                        this.websitePreviewRef.el.classList.remove("o_is_mobile");
                     }
                 },
                 [this.websiteContext]
