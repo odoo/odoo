@@ -679,3 +679,109 @@ export function setupChatHub({ opened = [], folded = [] } = {}) {
 export function assertChatHub({ opened = [], folded = [] }) {
     expect(browser.localStorage.getItem(CHAT_HUB_KEY)).toEqual(toChatHubData(opened, folded));
 }
+
+/**
+ * @typedef VoiceMessagePatchResources
+ * @property {AudioProcessor}
+ */
+
+/** @returns {VoiceMessagePatchResources} */
+export function patchVoiceMessageAudio() {
+    const res = { audioProcessor: undefined };
+    const {
+        AnalyserNode,
+        AudioBufferSourceNode,
+        AudioContext,
+        AudioWorkletNode,
+        GainNode,
+        MediaStreamAudioSourceNode,
+    } = browser;
+    Object.assign(browser, {
+        AnalyserNode: class {
+            connect() {}
+            disconnect() {}
+        },
+        AudioBufferSourceNode: class {
+            buffer;
+            constructor() {}
+            connect() {}
+            disconnect() {}
+            start() {}
+            stop() {}
+        },
+        AudioContext: class {
+            audioWorklet;
+            currentTime;
+            destination;
+            sampleRate;
+            state;
+            constructor() {
+                this.audioWorklet = {
+                    addModule(url) {},
+                };
+            }
+            close() {}
+            /** @returns {AnalyserNode} */
+            createAnalyser() {
+                return new browser.AnalyserNode();
+            }
+            /** @returns {AudioBufferSourceNode} */
+            createBufferSource() {
+                return new browser.AudioBufferSourceNode();
+            }
+            /** @returns {GainNode} */
+            createGain() {
+                return new browser.GainNode();
+            }
+            /** @returns {MediaStreamAudioSourceNode} */
+            createMediaStreamSource(microphone) {
+                return new browser.MediaStreamAudioSourceNode();
+            }
+            /** @returns {AudioBuffer} */
+            decodeAudioData(...args) {
+                return new AudioContext().decodeAudioData(...args);
+            }
+        },
+        AudioWorkletNode: class {
+            port;
+            constructor(audioContext, processorName) {
+                this.port = {
+                    onmessage(e) {},
+                    postMessage(data) {
+                        this.onmessage({ data, timeStamp: new Date().getTime() });
+                    },
+                };
+                res.audioProcessor = this;
+            }
+            connect() {
+                this.port.postMessage();
+            }
+            disconnect() {}
+            process(allInputs) {
+                const inputs = allInputs[0][0];
+                this.port.postMessage(inputs);
+                return true;
+            }
+        },
+        GainNode: class {
+            connect() {}
+            close() {}
+            disconnect() {}
+        },
+        MediaStreamAudioSourceNode: class {
+            connect(processor) {}
+            disconnect() {}
+        },
+    });
+    after(() => {
+        Object.assign(browser, {
+            AnalyserNode,
+            AudioBufferSourceNode,
+            AudioContext,
+            AudioWorkletNode,
+            GainNode,
+            MediaStreamAudioSourceNode,
+        });
+    });
+    return res;
+}
