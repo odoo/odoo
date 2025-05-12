@@ -8,12 +8,14 @@ export class RetryPrintPopup extends Component {
     static props = {
         title: { type: String, optional: true },
         message: { type: String, optional: true },
+        canRetry: { type: Boolean, optional: true },
         download: Function,
         retry: Function,
         close: Function,
     };
     static defaultProps = {
         title: _t("Printing error"),
+        message: _t("An unknown error occurred. Do you want to download the receipt instead?"),
     };
 
     onClickDownload() {
