@@ -230,6 +230,8 @@ class TestForumKarma(TestForumCommon):
         self.post.with_user(self.user_portal).close(None)
 
     def test_close_post_crash(self):
+        self.user_portal.karma = KARMA['close_all'] - 1
+
         with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).close(None)
 
@@ -238,12 +240,17 @@ class TestForumKarma(TestForumCommon):
         self.post.close(None)
 
     def test_comment(self):
+        # Allow to post notification without karma
         self.post.with_user(self.user_employee).message_post(body='Test0', message_type='notification')
         self.user_employee.karma = KARMA['com_all']
+        self.assertEqual(len(self.post.message_ids), 3)
+        self.assertFalse(self.post.message_follower_ids)
         self.post.with_user(self.user_employee).message_post(body='Test1', message_type='comment')
         self.assertEqual(len(self.post.message_ids), 4, 'website_forum: wrong behavior of message_post')
+        self.assertEqual(self.user_employee.karma, KARMA['com_all'])
 
     def test_comment_crash(self):
+        self.user_portal.karma = KARMA['com_all'] - 1
         with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).message_post(body='Should crash', message_type='comment')
 
@@ -271,6 +278,7 @@ class TestForumKarma(TestForumCommon):
         self.post.with_user(self.user_portal).write({'active': False})
 
     def test_deactivate_post_crash(self):
+        self.user_portal.karma = KARMA['unlink_all'] - 1
         with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).write({'active': False})
 
@@ -306,8 +314,10 @@ class TestForumKarma(TestForumCommon):
         self.post.write({'name': 'Actually I am your dog.'})
         self.user_portal.karma = KARMA['edit_all']
         self.post.with_user(self.user_portal).write({'name': 'Actually I am your cat.'})
+        self.assertEqual(self.user_portal.karma, KARMA['edit_all'])
 
     def test_edit_post_crash(self):
+        self.user_portal.karma = KARMA['edit_all'] - 1
         with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).write({'name': 'I am not your father.'})
 
@@ -328,6 +338,7 @@ class TestForumKarma(TestForumCommon):
         post.state = 'active'
         post.with_user(self.user_portal)._flag()
         self.assertEqual(post.state, 'flagged', 'website_forum: wrong state when flagging a post')
+        self.assertEqual(self.user_portal.karma, KARMA['flag'])
 
     def test_mark_a_post_as_offensive(self):
         Post = self.env['forum.post']
@@ -368,6 +379,7 @@ class TestForumKarma(TestForumCommon):
         post.with_user(self.user_portal)._refuse()
         self.assertEqual(post.moderator_id, self.user_portal, 'website_forum: wrong moderator_id when refusing')
         self.assertEqual(post.create_uid.karma, init_karma, 'website_forum: wrong karma when refusing a post')
+        self.assertEqual(self.user_portal.karma, KARMA['moderate'])
 
     def test_unlink_post_all(self):
         self.user_portal.karma = KARMA['unlink_all']
@@ -378,8 +390,18 @@ class TestForumKarma(TestForumCommon):
             self.post.with_user(self.user_portal).unlink()
 
     def test_unlink_post_own(self):
-        self.post.create_uid.karma = KARMA['unlink_own']
-        self.post.unlink()
+        self.user_portal.karma = 100
+        post = self.env['forum.post'].with_user(self.user_portal).create({'name': 'Test', 'forum_id': self.forum.id})
+        self.user_portal.karma = KARMA['unlink_own']
+        post.with_user(post.create_uid).unlink()
+
+    def test_unlink_post_own_crash(self):
+        self.user_portal.karma = 100
+        post = self.env['forum.post'].with_user(self.user_portal).create({'name': 'Test', 'forum_id': self.forum.id})
+        self.user_portal.karma = KARMA['unlink_own'] - 1
+
+        with self.assertRaises(AccessError):
+            post.with_user(post.create_uid).unlink()
 
     def test_validate_a_post(self):
         Post = self.env['forum.post']
