@@ -31,7 +31,6 @@ export class QtyAtDatePopover extends Component {
     }
 }
 
-
 export class QtyAtDateWidget extends Component {
     static components = { Popover: QtyAtDatePopover };
     static template = "sale_stock.QtyAtDate";
@@ -40,26 +39,14 @@ export class QtyAtDateWidget extends Component {
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.orm = useService("orm");
         this.calcData = {};
-        onWillRender(async () => {
-            await this.initCalcData();
-        })
+        onWillRender(() => {
+            this.initCalcData();
+        });
     }
 
-    async initCalcData() {
+    initCalcData() {
         // calculate data not in record
         const { data } = this.props.record;
-        let lineUom;
-        if (data.product_uom_id?.[0]) {
-            lineUom = (await this.orm.read("uom.uom", [data.product_uom_id[0]], ["factor", "rounding"]))[0];
-        }
-        let lineProduct;
-        if (data.product_id?.[0]) {
-            lineProduct = await this.orm.searchRead("product.product", [["id", "=", data.product_id[0]]], ["uom_id"]);
-        }
-        let productUom;
-        if (lineProduct?.[0]?.uom_id?.[0]) {
-            productUom = (await this.orm.searchRead("uom.uom", [["id", "=", lineProduct[0].uom_id[0]]], ["factor", "name"]))[0];
-        }
         if (data.scheduled_date) {
             // TODO: might need some round_decimals to avoid errors
             if (data.state === 'sale') {
@@ -75,6 +62,22 @@ export class QtyAtDateWidget extends Component {
                 // Moves are created, using the forecasted data of related moves
                 this.calcData.forecasted_issue = !this.calcData.will_be_fulfilled || this.calcData.will_be_late;
             }
+        }
+    }
+
+    async calcDataForDisplay() {
+        const { data } = this.props.record;
+        let lineUom;
+        if (data.product_uom_id?.[0]) {
+            lineUom = (await this.orm.read("uom.uom", [data.product_uom_id[0]], ["factor", "rounding"]))[0];
+        }
+        let lineProduct;
+        if (data.product_id?.[0]) {
+            lineProduct = await this.orm.searchRead("product.product", [["id", "=", data.product_id[0]]], ["uom_id"]);
+        }
+        let productUom;
+        if (lineProduct?.[0]?.uom_id?.[0]) {
+            productUom = (await this.orm.searchRead("uom.uom", [["id", "=", lineProduct[0].uom_id[0]]], ["factor", "name"]))[0];
         }
         if (lineUom && productUom) {
             this.calcData.product_uom_virtual_available_at_date = roundPrecision(data.virtual_available_at_date * lineUom.factor / productUom.factor, 1);
@@ -95,9 +98,11 @@ export class QtyAtDateWidget extends Component {
         }
     }
 
-    showPopup(ev) {
+    async showPopup(ev) {
+        const target = ev.currentTarget;
+        await this.calcDataForDisplay();
         this.updateCalcData();
-        this.popover.open(ev.currentTarget, {
+        this.popover.open(target, {
             record: this.props.record,
             calcData: this.calcData,
         });
