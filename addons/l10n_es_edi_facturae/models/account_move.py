@@ -9,7 +9,13 @@ from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
+<<<<<<< d83801027c9a88b6e4db8166b6e2aad41ed760b9
 from odoo.tools import float_round, float_repr, date_utils, SQL
+||||||| 6b78b6498f19a162b8f3b2ba53cfd755640b65c6
+from odoo.tools import float_repr, date_utils
+=======
+from odoo.tools import float_repr, date_utils, float_round
+>>>>>>> 495144214d58ce631b70c3c203d3d613247c62b5
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
 from odoo.addons.l10n_es_edi_facturae.xml_utils import (
     NS_MAP,
@@ -290,6 +296,25 @@ class AccountMove(models.Model):
             'Charges': [],
             'GrossAmount': line.price_subtotal,
         }
+<<<<<<< d83801027c9a88b6e4db8166b6e2aad41ed760b9
+||||||| 6b78b6498f19a162b8f3b2ba53cfd755640b65c6
+        taxes = []
+        taxes_withheld = []
+        invoice_ref = self.ref[:20] if self.ref else False
+        for line in self.invoice_line_ids:
+            if line.display_type in {'line_section', 'line_note'}:
+                continue
+            invoice_line_values = {}
+=======
+        taxes = []
+        taxes_withheld = []
+        invoice_ref = self.ref[:20] if self.ref else False
+        unit_price_decimals = self.env['decimal.precision'].precision_get('Product Price')
+        for line in self.invoice_line_ids:
+            if line.display_type in {'line_section', 'line_note'}:
+                continue
+            invoice_line_values = {}
+>>>>>>> 495144214d58ce631b70c3c203d3d613247c62b5
 
         if line.discount == 100.0:
             raw_total_cost = line.price_unit * line.quantity
@@ -302,6 +327,7 @@ class AccountMove(models.Model):
         else:
             xml_values['UnitPriceWithoutTax'] = 0.0
 
+<<<<<<< d83801027c9a88b6e4db8166b6e2aad41ed760b9
         raw_discount_amount = xml_values['TotalCost'] - line.price_subtotal
         discount_amount = max(raw_discount_amount, 0.0)
         if discount_amount:
@@ -309,6 +335,79 @@ class AccountMove(models.Model):
                 'DiscountReason': '/',
                 'DiscountRate': f'{line.discount:.2f}',
                 'DiscountAmount': discount_amount,
+||||||| 6b78b6498f19a162b8f3b2ba53cfd755640b65c6
+            taxes_output = [self._l10n_es_edi_facturae_convert_computed_tax_to_template(tax) for tax in taxes_normal_computed]
+            totals['total_tax_outputs'] += sum((abs(tax["tax_amount"]) for tax in taxes_normal_computed))
+
+            tax_withheld_output = [self._l10n_es_edi_facturae_convert_computed_tax_to_template(tax) for tax in taxes_withheld_computed]
+            totals['total_taxes_withheld'] += sum((abs(tax["tax_amount"]) for tax in taxes_withheld_computed))
+
+            receiver_transaction_reference = (
+                line.sale_line_ids.order_id.client_order_ref[:20]
+                if 'sale_line_ids' in line._fields and line.sale_line_ids.order_id.client_order_ref
+                else invoice_ref
+            )
+
+            invoice_line_values.update({
+                'ReceiverTransactionReference': receiver_transaction_reference,
+                'FileReference': invoice_ref,
+                'ReceiverContractReference': invoice_ref,
+                'FileDate': fields.Date.context_today(self),
+                'ItemDescription': line.name,
+                'Quantity': line.quantity,
+                'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
+                'UnitPriceWithoutTax': line.currency_id.round(price_before_discount / line.quantity if line.quantity else 0.),
+                'TotalCost': price_before_discount,
+                'DiscountsAndRebates': [{
+                    'DiscountReason': '/',
+                    'DiscountRate': f'{line.discount:.2f}',
+                    'DiscountAmount': discount
+                }, ] if discount != 0. else [],
+                'Charges': [{
+                    'ChargeReason': '/',
+                    'ChargeRate': f'{max(0, -line.discount):.2f}',
+                    'ChargeAmount': surcharge,
+                }, ] if surcharge != 0. else [],
+                'GrossAmount': line.price_subtotal,
+                'TaxesOutputs': taxes_output,
+                'TaxesWithheld': tax_withheld_output,
+=======
+            taxes_output = [self._l10n_es_edi_facturae_convert_computed_tax_to_template(tax) for tax in taxes_normal_computed]
+            totals['total_tax_outputs'] += sum((abs(tax["tax_amount"]) for tax in taxes_normal_computed))
+
+            tax_withheld_output = [self._l10n_es_edi_facturae_convert_computed_tax_to_template(tax) for tax in taxes_withheld_computed]
+            totals['total_taxes_withheld'] += sum((abs(tax["tax_amount"]) for tax in taxes_withheld_computed))
+
+            receiver_transaction_reference = (
+                line.sale_line_ids.order_id.client_order_ref[:20]
+                if 'sale_line_ids' in line._fields and line.sale_line_ids.order_id.client_order_ref
+                else invoice_ref
+            )
+
+            invoice_line_values.update({
+                'ReceiverTransactionReference': receiver_transaction_reference,
+                'FileReference': invoice_ref,
+                'ReceiverContractReference': invoice_ref,
+                'FileDate': fields.Date.context_today(self),
+                'ItemDescription': line.name,
+                'Quantity': line.quantity,
+                'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
+                'UnitPriceWithoutTax': float_round(price_before_discount / line.quantity if line.quantity else 0, precision_digits=unit_price_decimals),
+                'TotalCost': price_before_discount,
+                'DiscountsAndRebates': [{
+                    'DiscountReason': '/',
+                    'DiscountRate': f'{line.discount:.2f}',
+                    'DiscountAmount': discount
+                }, ] if discount != 0. else [],
+                'Charges': [{
+                    'ChargeReason': '/',
+                    'ChargeRate': f'{max(0, -line.discount):.2f}',
+                    'ChargeAmount': surcharge,
+                }, ] if surcharge != 0. else [],
+                'GrossAmount': line.price_subtotal,
+                'TaxesOutputs': taxes_output,
+                'TaxesWithheld': tax_withheld_output,
+>>>>>>> 495144214d58ce631b70c3c203d3d613247c62b5
             })
 
         surcharge_amount = -min(0.0, raw_discount_amount)
@@ -370,6 +469,7 @@ class AccountMove(models.Model):
         # Multi-currencies.
         eur_curr = self.env['res.currency'].search([('name', '=', 'EUR')])
         inv_curr = self.currency_id
+<<<<<<< d83801027c9a88b6e4db8166b6e2aad41ed760b9
         conversion_needed = inv_curr != eur_curr
 
         # Invoice xml values.
@@ -447,6 +547,14 @@ class AccountMove(models.Model):
             - invoice_values['TotalGeneralDiscounts']
             + invoice_values['TotalGeneralSurcharges']
         )
+||||||| 6b78b6498f19a162b8f3b2ba53cfd755640b65c6
+        legal_literals = self.narration.striptags() if self.narration else False
+        legal_literals = legal_literals.split(";") if legal_literals else False
+=======
+        unit_price_decimals = self.env['decimal.precision'].precision_get('Product Price')
+        legal_literals = self.narration.striptags() if self.narration else False
+        legal_literals = legal_literals.split(";") if legal_literals else False
+>>>>>>> 495144214d58ce631b70c3c203d3d613247c62b5
 
         template_values = {
             'self_party': company.partner_id,
@@ -461,6 +569,7 @@ class AccountMove(models.Model):
             'is_outstanding': self.move_type.startswith('out_'),
             'float_repr': float_repr,
             'file_currency': inv_curr,
+            'unit_price_decimals': unit_price_decimals,
             'eur': eur_curr,
             'conversion_needed': conversion_needed,
             'refund_multiplier': -1 if self.move_type in ('out_refund', 'in_refund') else 1,
