@@ -5,3 +5,10 @@ export const SELECTORS = {
     debugArea: ".o_domain_selector_debug_container textarea",
     resetButton: ".o_domain_selector_row > button",
 };
+
+export const userContext = {
+    allowed_company_ids: [1],
+    lang: "en",
+    tz: "taht",
+    uid: 7,
+};

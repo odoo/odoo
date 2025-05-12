@@ -10,7 +10,7 @@ from odoo.tools.misc import mute_logger
 class Domain(Controller):
 
     @http.route('/web/domain/validate', type='jsonrpc', auth="user")
-    def validate(self, model, domain):
+    def validate(self, model, domain, context=None):
         """ Parse `domain` and verify that it can be used to search on `model`
         :return: True when the domain is valid, otherwise False
         :raises ValidationError: if `model` is invalid
@@ -21,7 +21,7 @@ class Domain(Controller):
         try:
             # go through the motions of preparing the final SQL for the domain,
             # so that anything invalid will raise an exception.
-            query = Model.sudo()._search(domain)
+            query = Model.with_context(context)._search(domain)
 
             # Execute the search in EXPLAIN mode, to have the query parser
             # verify it. EXPLAIN will make sure the query is never actually executed
