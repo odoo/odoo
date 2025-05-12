@@ -6,7 +6,6 @@ composerActionsRegistry
     .add("voice-start", {
         condition: (component) =>
             component.thread?.model === "discuss.channel" &&
-            component.thread?.channel_type !== "whatsapp" &&
             component.voiceRecorder &&
             !component.voiceRecorder?.recording &&
             !component.props.composer.voiceAttachment,
