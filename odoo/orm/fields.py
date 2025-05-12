@@ -927,7 +927,7 @@ class Field(typing.Generic[T]):
         query = model._as_query(ordered=False)
         groupby = self.name if self.type not in ('date', 'datetime') else f"{self.name}:month"
         try:
-            model._read_group_groupby(groupby, query)
+            model._read_group_groupby(model._table, groupby, query)
             return True
         except (ValueError, AccessError):
             return False

@@ -79,7 +79,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         interval = date_groupby.split(':')[1]
         sql_interval = '1 %s' % interval if interval != 'quarter' else '3 month'
 
-        simple_date_groupby_sql = self._read_group_groupby(f"date:{interval}", main_query)
+        simple_date_groupby_sql = self._read_group_groupby('project_task_burndown_chart_report', f"date:{interval}", main_query)
         # Removing unexistant table name from the expression
         simple_date_groupby_sql = self.env.cr.mogrify(simple_date_groupby_sql).decode()
         simple_date_groupby_sql = simple_date_groupby_sql.replace('"project_task_burndown_chart_report".', '')
