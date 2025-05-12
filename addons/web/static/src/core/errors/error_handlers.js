@@ -149,13 +149,18 @@ const defaultDialogs = new Map([
  * @returns {boolean}
  */
 export function defaultHandler(env, error) {
-    const DialogComponent = defaultDialogs.get(error.constructor) || ErrorDialog;
-    env.services.dialog.add(DialogComponent, {
-        traceback: error.traceback,
-        message: error.message,
-        name: error.name,
-        serverHost: error.event?.target?.location.host,
-    });
+    if (env.services.dialog) {
+        const DialogComponent = defaultDialogs.get(error.constructor) || ErrorDialog;
+        env.services.dialog.add(DialogComponent, {
+            traceback: error.traceback,
+            message: error.message,
+            name: error.name,
+            serverHost: error.event?.target?.location.host,
+        });
+    } else {
+        // error occurred before the dialog service is started => log inside the console the full traceback
+        console.error(error.traceback);
+    }
     return true;
 }
 errorHandlerRegistry.add("defaultHandler", defaultHandler, { sequence: 100 });
@@ -183,5 +188,7 @@ if (user.isInternalUser === undefined) {
         );
     }
 } else {
-    registry.category("error_handlers").add("swallowAllVisitorErrors", swallowAllVisitorErrors, { sequence: 0 });
+    registry
+        .category("error_handlers")
+        .add("swallowAllVisitorErrors", swallowAllVisitorErrors, { sequence: 0 });
 }
