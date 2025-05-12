@@ -167,10 +167,18 @@ li.o_wsale_my_cart {
     font-size: 1.2rem;
 }
 
+/* Иконка видео для /videos */
+.navbar-nav .nav-link[href="/videos"]:before {
+    content: "\f04b"; /* fa-play */
+    font-family: 'FontAwesome';
+    font-size: 1.2rem;
+}
+
 /* Убираем текст */
 .navbar-nav .nav-link[href="/shop"],
 .navbar-nav .nav-link[href="/shop/cart"],
-.navbar-nav .nav-link[href="/profile"] {
+.navbar-nav .nav-link[href="/profile"],
+.navbar-nav .nav-link[href="/videos"] {
     font-size: 0;
 }
 
@@ -203,6 +211,11 @@ li.o_wsale_my_cart {
 .navbar-nav .nav-link[href="/profile"]:hover:after {
     content: "Profile";
     /* ...остальные стили */
+}
+
+.navbar-nav .nav-link[href="/videos"]:hover:after {
+    content: "Videos";
+    /* ...остальные стили, если нужно */
 }
 
 /* Оранжевый цвет для активного пункта меню */

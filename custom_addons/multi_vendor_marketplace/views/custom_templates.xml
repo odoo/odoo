@@ -6,11 +6,7 @@
                 <!-- User Info -->
                 <div class="row text-center">
                     <div class="col-md-12">
-                        <h2 t-esc="user.name" class="mt-3">Пользователь</h2>
-                        <p>Email: <span t-esc="user.email" /></p>
-                        <p>Телефон: <span t-esc="user.phone" /></p>
-                        <p>Адрес: <span t-esc="user.partner_id.contact_address" /></p>
-                        <a href="/profile/edit" class="btn btn-primary mt-3">Изменить инфо</a>
+                        <!-- Удалено: имя пользователя и кнопка 'Изменить инфо' -->
                     </div>
                 </div>
 
@@ -31,14 +27,11 @@
 
                 <div class="button-group-container mt-4">
                     <div class="row">
-                        <div class="col-md-4 text-center">
+                        <div class="col-md-6 text-center">
                             <button class="btn btn-warning w-100">Кошелек</button>
                         </div>
-                        <div class="col-md-4 text-center">
+                        <div class="col-md-6 text-center">
                             <a href="/shop/checkout" class="btn btn-warning w-100">Адрес доставки</a>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <button class="btn btn-warning w-100">Сменить валюту</button>
                         </div>
                     </div>
                 </div>
@@ -168,6 +161,7 @@
             <div class="mobile-bottom-nav d-md-none">
                 <div class="nav-btns">
                     <a href="/shop" class="nav-btn" t-attf-class="nav-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}"><i class="fa fa-home"></i></a>
+                    <a href="/videos" class="nav-btn" style="display: flex; align-items: center; justify-content: center;"><i class="fa fa-play"></i></a>
                     <a href="/shop/cart" class="nav-btn" t-attf-class="nav-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}"><i class="fa fa-shopping-cart"></i></a>
                     <a href="/profile" class="nav-btn" t-attf-class="nav-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}"><i class="fa fa-user"></i></a>
                 </div>
