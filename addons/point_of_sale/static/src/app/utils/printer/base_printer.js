@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { htmlToCanvas } from "@point_of_sale/app/services/render_service";
 /**
  * Implements basic printer functions.
@@ -30,9 +31,12 @@ export class BasePrinter {
             );
             try {
                 printResult = await this.sendPrintingJob(image);
-            } catch {
+            } catch (error) {
                 // Error in communicating to the IoT box.
                 this.receiptQueue.length = 0;
+                if (error instanceof ConnectionLostError) {
+                    return this.getOfflineError();
+                }
                 return this.getActionError();
             }
             // rpc call is okay but printing failed because
@@ -66,11 +70,45 @@ export class BasePrinter {
      * if it failed to connect to the IoT box.
      */
     getActionError() {
+        if (window.isSecureContext) {
+            // We assume if we get a network error over HTTPS that it is a certificate issue.
+            return {
+                successful: false,
+                canRetry: false,
+                message: {
+                    title: _t("Connection to IoT Box failed"),
+                    body: _t(
+                        "Your database is not registered.\n" +
+                            "Buy a subscription, or register your subscription code, then retry.\n\n" +
+                            "You can still download the receipt and print it manually."
+                    ),
+                },
+            };
+        } else {
+            return {
+                successful: false,
+                canRetry: true,
+                message: {
+                    title: _t("Connection to IoT Box failed"),
+                    body: _t(
+                        "Please ensure the IoT box is turned on and connected to the network before retrying."
+                    ),
+                },
+            };
+        }
+    }
+
+    /**
+     * Return value of this method will be the result of calling `printReceipt`
+     * if it failed due to the client being offline.
+     */
+    getOfflineError() {
         return {
             successful: false,
+            canRetry: true,
             message: {
-                title: _t("Connection to IoT Box failed"),
-                body: _t("Please check if the IoT Box is still connected."),
+                title: _t("No Internet Connection"),
+                body: _t("Please ensure you are connected to the internet before retrying."),
             },
         };
     }
@@ -82,13 +120,11 @@ export class BasePrinter {
     getResultsError(_printResult) {
         return {
             successful: false,
+            canRetry: true,
             message: {
                 title: _t("Connection to the printer failed"),
                 body: _t(
-                    "Please check if the printer is still connected. \n" +
-                        "Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). " +
-                        "If it is the case, you will need to follow Odoo's documentation for " +
-                        "'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue. "
+                    "Your IoT box cannot find the printer, please ensure it is connected and turned on before retrying."
                 ),
             },
         };

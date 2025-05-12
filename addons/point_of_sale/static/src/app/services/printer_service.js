@@ -36,6 +36,7 @@ export class PrinterService extends Reactive {
         throw {
             title: printResult.message.title || "Error",
             body: printResult.message.body,
+            canRetry: printResult.canRetry,
             errorCode: printResult.errorCode,
         };
     }
