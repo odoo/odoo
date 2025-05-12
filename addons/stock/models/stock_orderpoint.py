@@ -322,6 +322,8 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             if orderpoint.trigger == 'auto':
                 orderpoint.qty_to_order_manual = 0
+            elif not orderpoint.qty_to_order_manual and not orderpoint.qty_to_order:
+                orderpoint.qty_to_order = orderpoint.qty_to_order_computed
             elif orderpoint.qty_to_order != orderpoint.qty_to_order_computed:
                 orderpoint.qty_to_order_manual = orderpoint.qty_to_order
 
@@ -341,8 +343,7 @@ class StockWarehouseOrderpoint(models.Model):
             # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
             # there is a already something to ressuply base on lead times.
             return (
-                orderpoint.product_id
-                and orderpoint.location_id
+                orderpoint.id
                 and float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0
             )
 
