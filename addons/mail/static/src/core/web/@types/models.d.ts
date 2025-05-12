@@ -27,6 +27,7 @@ declare module "models" {
     }
     export interface Thread {
         activities: Activity[];
+        follow: () => Promise<void>;
         loadMoreFollowers: () => Promise<void>;
         loadMoreRecipients: () => Promise<void>;
         recipients: Follower[];

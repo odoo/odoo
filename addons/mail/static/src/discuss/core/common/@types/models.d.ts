@@ -49,6 +49,9 @@ declare module "models" {
         lastInterestDt: luxon.DateTime;
         lastMessageSeenByAllId: undefined|number;
         lastSelfMessageSeenByEveryone: Message;
+        markedAsUnread: boolean;
+        markingAsRead: boolean;
+        markReadSequential: () => Promise<any>;
         member_count: number|undefined;
         membersThatCanSeen: Readonly<ChannelMember[]>;
         name: string;
