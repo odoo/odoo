@@ -23,6 +23,8 @@ class BlogBlog(models.Model):
     ]
     _order = 'name'
 
+    _CUSTOMER_HEADERS_LIMIT_COUNT = 0  # never use X-Msg-To headers
+
     def _default_sequence(self):
         return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
 
