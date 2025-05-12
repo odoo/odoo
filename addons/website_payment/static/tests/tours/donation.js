@@ -23,7 +23,7 @@ registry.category('web_tour.tours').add('donation_snippet_use', {
     steps: () => [
         // -- Testing the minimum amount --
         {
-            content: "Enter a negative custom amount, testing the minimum amount",
+            content: "Enter a custom amount smaller than the minimum, testing the minimum amount",
             trigger: "#s_donation_amount_input",
             run: "edit 1",
         },
@@ -50,12 +50,10 @@ registry.category('web_tour.tours').add('donation_snippet_use', {
         {
             content: "Check if custom amount radio input is selected",
             trigger: "input#other_amount:checked",
-            run: () => {}, // This is a check
         },
         {
             content: "Check if custom amount radio input has value 55",
             trigger: 'input#other_amount[value="55.0"]',
-            run: () => {}, // This is a check
         },
         {
             content: "Select the amount of 25",
@@ -65,12 +63,10 @@ registry.category('web_tour.tours').add('donation_snippet_use', {
         {
             content: "Verify that amount_1 is checked",
             trigger: "input#amount_1:checked",
-            run: () => {}, // This is a check
         },
         {
             content: "Verify that other_amount is not checked",
             trigger: "input#other_amount:not(:checked)",
-            run: () => {}, // This is a check
         },
         {
             content: "Change custom amount to 67",
@@ -80,7 +76,7 @@ registry.category('web_tour.tours').add('donation_snippet_use', {
                 input.value = "67";
                 input.dispatchEvent(new Event("input", { bubbles: true }));
                 input.dispatchEvent(new Event("change", { bubbles: true }));
-            }
+            },
         },
         {
             content: "Select the custom amount radio button",
@@ -95,8 +91,7 @@ registry.category('web_tour.tours').add('donation_snippet_use', {
         {
             content: "Verify that the amount displayed is 67",
             trigger: 'span.oe_currency_value:contains("67.00")',
-            run: () => {}, // This is a check
-            timeout: 10000  // Make sure the payment process animation is finished
+            timeout: 10000, // Make sure the payment process animation is finished
         },
     ],
 });
