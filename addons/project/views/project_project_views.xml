@@ -443,10 +443,9 @@
                                     <span name="partner_name" class="text-muted d-flex align-items-baseline" t-if="record.partner_id.value">
                                         <span class="fa fa-user me-2" aria-label="Partner" title="Partner"></span><field class="text-truncate" name="partner_id"/>
                                     </span>
-                                    <div t-if="record.date.raw_value or record.date_start.raw_value" class="text-muted">
-                                        <span class="fa fa-clock-o me-2" title="Dates"></span><field name="date_start"/>
-                                        <i t-if="record.date.raw_value and record.date_start.raw_value" class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow"/>
-                                        <field name="date"/>
+                                    <div t-if="record.date.raw_value or record.date_start.raw_value" class="text-muted d-flex align-items-baseline">
+                                        <span class="fa fa-clock-o me-2" title="Dates"/>
+                                        <field name="date_start" widget="daterange" options="{'end_date_field': 'date'}"/>
                                     </div>
                                     <div t-if="record.alias_email.value" class="text-muted text-truncate" t-att-title="record.alias_email.value">
                                         <span class="fa fa-envelope-o me-2" aria-label="Domain Alias" title="Domain Alias"></span><field name="alias_email"/>
