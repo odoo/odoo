@@ -1026,3 +1026,33 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.lock_confirmed_po = 'lock'
         po.button_unlock()
         self.assertFalse(po.locked)
+
+    def test_action_view_po_when_product_template_archived(self):
+        """
+        Test to ensure that the purchased_product_qty value remains the same
+        after archiving the product template. Also check that the purchased smart
+        button returns the correct purchase order lines.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_qty': 10,
+                    'price_unit': 1,
+                }),
+            ],
+        })
+        po.button_confirm()
+        product_tmpl = self.product_a.product_tmpl_id
+        self.assertEqual(product_tmpl.purchased_product_qty, 10)
+
+        product_tmpl.active = False
+        # Need to flush the recordsets to recalculate the purchased_product_qty after archiving
+        product_tmpl.invalidate_recordset()
+
+        self.assertEqual(product_tmpl.purchased_product_qty, 10)
+
+        action = product_tmpl.action_view_po()
+        action_record = self.env[action['res_model']].search(action['domain'])
+        self.assertEqual(action_record, po.order_line)
