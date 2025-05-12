@@ -8,6 +8,7 @@ import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { markup } from "@odoo/owl";
 import { RPCError } from "@web/core/network/rpc";
+import { redirect } from "@web/core/utils/urls";
 
 export class SnippetModel extends Reactive {
     constructor(services, { snippetsName, context }) {
@@ -16,8 +17,11 @@ export class SnippetModel extends Reactive {
         this.dialog = services.dialog;
         this.notification = services.notification;
         this.snippetsName = snippetsName;
+        this.websiteService = services.website;
+        this.uiService = services.ui;
         this.context = context;
         this.loadProm = null;
+        this.beforeReload = null;
 
         this.snippetsByCategory = {
             snippet_groups: [],
@@ -79,6 +83,14 @@ export class SnippetModel extends Reactive {
         return this.snippetsByCategory[category].find((snippet) => snippet.name === name);
     }
 
+    registerBeforeReload(func) {
+        this.beforeReload = func;
+    }
+
+    unregisterBeforeReload() {
+        this.beforeReload = null;
+    }
+
     installSnippetModule(snippet) {
         // TODO: Should be the app name, not the snippet name ... Maybe both ?
         const bodyText = _t("Do you want to install %s App?", snippet.title);
@@ -89,30 +101,39 @@ export class SnippetModel extends Reactive {
         this.dialog.add(ConfirmationDialog, {
             title: _t("Install %s", snippet.title),
             body: markup`${bodyText}\n<a href="${linkUrl}" target="_blank">${linkText}</a>`,
-            confirm: async () => {
-                try {
-                    await this.orm.call("ir.module.module", "button_immediate_install", [
-                        [Number(snippet.moduleId)],
-                    ]);
-                    // TODO Need to Reload webclient
-                    // this._onSaveRequest({
-                    //     data: {
-                    //         reloadWebClient: true,
-                    //     },
-                    // });
-                } catch (e) {
-                    if (e instanceof RPCError) {
-                        const message = _t("Could not install module %(title)s", {
-                            title: snippet.title,
-                        });
-                        this.notification.add(message, {
-                            type: "danger",
-                            sticky: true,
-                        });
-                        return;
+            confirm: () => {
+                this.uiService.block();
+                (async () => {
+                    try {
+                        await this.orm.call("ir.module.module", "button_immediate_install", [
+                            [Number(snippet.moduleId)],
+                        ]);
+                        if (this.beforeReload) {
+                            await this.beforeReload();
+                        }
+                        const currentPath = encodeURIComponent(window.location.pathname);
+                        const websiteId = this.websiteService.currentWebsite.id;
+                        redirect(
+                            `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
+                                websiteId
+                            )}&path=${currentPath}&enable_editor=1`
+                        );
+                    } catch (e) {
+                        if (e instanceof RPCError) {
+                            const message = _t("Could not install module %(title)s", {
+                                title: snippet.title,
+                            });
+                            this.notification.add(message, {
+                                type: "danger",
+                                sticky: true,
+                            });
+                            return;
+                        }
+                        throw e;
+                    } finally {
+                        this.uiService.unblock();
                     }
-                    throw e;
-                }
+                })();
             },
             confirmLabel: _t("Save and Install"),
             cancel: () => {},
@@ -146,21 +167,22 @@ export class SnippetModel extends Reactive {
 
     load() {
         if (!this.loadProm) {
-            this.loadProm = new Promise((resolve) => {
+            this.loadProm = (async () => {
                 const context = { ...this.context, rendering_bundle: true };
                 if (context.user_lang) {
                     context.lang = this.context.user_lang;
                     context.snippet_lang = this.context.lang;
                 }
-                this.orm.silent
-                    .call("ir.ui.view", "render_public_asset", [this.snippetsName, {}], { context })
-                    .then((html) => {
-                        const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
-                        this.computeSnippetTemplates(snippetsDocument);
-                        this.setSnippetName(snippetsDocument);
-                        resolve();
-                    });
-            });
+                const html = await this.orm.silent.call(
+                    "ir.ui.view",
+                    "render_public_asset",
+                    [this.snippetsName, {}],
+                    { context }
+                );
+                const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
+                this.computeSnippetTemplates(snippetsDocument);
+                this.setSnippetName(snippetsDocument);
+            })();
         }
         return this.loadProm;
     }
@@ -402,10 +424,10 @@ export class SnippetModel extends Reactive {
 }
 
 registry.category("services").add("html_builder.snippets", {
-    dependencies: ["orm", "dialog", "website", "notification"],
+    dependencies: ["orm", "dialog", "website", "notification", "ui"],
 
-    start(env, { orm, dialog, website, notification }) {
-        const services = { orm, dialog, website, notification };
+    start(env, { orm, dialog, website, notification, ui }) {
+        const services = { orm, dialog, website, notification, ui };
         const context = {
             website_id: website.currentWebsite?.id,
             lang: website.currentWebsite?.metadata.lang,
