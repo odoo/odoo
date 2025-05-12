@@ -132,17 +132,15 @@ export class SelectMenu extends Component {
     }
 
     get multiSelectChoices() {
-        return this.selectedChoice.map((c) => {
-            return {
-                id: c.value,
-                text: c.label,
-                onDelete: () => {
-                    const values = [...this.props.value];
-                    values.splice(values.indexOf(c.value), 1);
-                    this.props.onSelect(values);
-                },
-            };
-        });
+        return this.selectedChoice.map((c) => ({
+            id: c.value,
+            text: c.label,
+            onDelete: () => {
+                const values = [...this.props.value];
+                values.splice(values.indexOf(c.value), 1);
+                this.props.onSelect(values);
+            },
+        }));
     }
 
     get menuClass() {
@@ -157,15 +155,7 @@ export class SelectMenu extends Component {
     }
 
     async onBeforeOpen() {
-        if (this.state.searchValue.length) {
-            this.state.searchValue = "";
-        }
-        if (this.props.onInput) {
-            // This props can be used by the parent to fetch items dynamically depending
-            // the search value. It must be called with the empty search value.
-            await this.executeOnInput("");
-        }
-        this.filterOptions();
+        await this.onInput("");
     }
 
     onStateChanged(open) {
@@ -194,11 +184,7 @@ export class SelectMenu extends Component {
         }
     }
 
-    async executeOnInput(searchString) {
-        await this.props.onInput(searchString);
-    }
-
-    onInput(searchString) {
+    async onInput(searchString) {
         this.filterOptions(searchString);
         this.state.searchValue = searchString;
 
@@ -208,7 +194,7 @@ export class SelectMenu extends Component {
             inputEl.parentNode.scrollTo(0, 0);
         }
         if (this.props.onInput) {
-            this.executeOnInput(searchString);
+            await this.props.onInput(searchString);
         }
     }
 
@@ -222,9 +208,9 @@ export class SelectMenu extends Component {
         // Combine previously selected choices + newly selected choice from
         // the searched choices and then filter the choices based on
         // props.value i.e. valueSet.
-        return [...(this.selectedChoice || []), ...choices].filter((c, index, self) =>
-            valueSet.has(c.value)
-            && self.findIndex((t) => t.value === c.value) === index
+        return [...(this.selectedChoice || []), ...choices].filter(
+            (c, index, self) =>
+                valueSet.has(c.value) && self.findIndex((t) => t.value === c.value) === index
         );
     }
 
