@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['name', 'state', 'user_id', 'order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed', 'amount_unpaid',
-            'picking_ids', 'partner_shipping_id', 'partner_invoice_id', 'date_order']
+            'picking_ids', 'partner_shipping_id', 'partner_invoice_id', 'date_order', 'write_date']
 
     def _count_pos_order(self):
         for order in self:
@@ -53,10 +53,8 @@ class SaleOrder(models.Model):
     def _compute_amount_to_invoice(self):
         super()._compute_amount_to_invoice()
         for order in self:
-            if order.invoice_status == 'invoiced':
-                continue
-            # We need to account for the downpayment paid in POS with and without invoice
-            order_amount = sum(order.sudo().pos_order_line_ids.filtered(lambda pol: pol.sale_order_line_id.is_downpayment).mapped('price_subtotal_incl'))
+            # We need to account for all amount paid in POS with and without invoice
+            order_amount = sum(order.sudo().pos_order_line_ids.mapped('price_subtotal_incl'))
             order.amount_to_invoice -= order_amount
 
     @api.depends('order_line.pos_order_line_ids')
@@ -83,7 +81,7 @@ class SaleOrderLine(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['discount', 'display_name', 'price_total', 'price_unit', 'product_id', 'product_uom_qty', 'qty_delivered',
-            'qty_invoiced', 'qty_to_invoice', 'display_type', 'name', 'tax_id', 'is_downpayment']
+            'qty_invoiced', 'qty_to_invoice', 'display_type', 'name', 'tax_id', 'is_downpayment', 'write_date']
 
     @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state')
     def _compute_qty_delivered(self):

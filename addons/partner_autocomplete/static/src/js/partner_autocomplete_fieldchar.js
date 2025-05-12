@@ -80,7 +80,9 @@ export class PartnerAutoCompleteCharField extends CharField {
         data.company = this.partnerAutocomplete.removeUselessFields(data.company, Object.keys(this.props.record.fields));
 
         // Update record with retrieved values
-        await this.props.record.update({name: data.company.name});  // Needed otherwise name it is not saved
+        if (data.company.name) {
+            await this.props.record.update({name: data.company.name});  // Needed otherwise name it is not saved
+        }
         await this.props.record.update(data.company);
 
         // Add UNSPSC codes (tags)

@@ -85,13 +85,11 @@ export default class DevicesSynchronisation {
      * and synchronize the records with other devices.
      */
     async readDataFromServer() {
-        const serverOpenOrders = this.pos.get_open_orders().filter((o) => typeof o.id === "number");
-        const recordIds = this.getDynamicRecordServerIds();
-        const domain = this.constructOrdersDomain(serverOpenOrders);
+        const { domain, recordsIds } = this.constructOrdersDomain();
         const response = await this.pos.data.call("pos.config", "read_config_open_orders", [
             odoo.pos_config_id,
             domain,
-            recordIds,
+            recordsIds,
         ]);
 
         if (Object.keys(response.dynamic_records).length) {
@@ -152,38 +150,59 @@ export default class DevicesSynchronisation {
      * This method will get local open orders with a server id.
      * @returns {Array} - Array of domain conditions.
      */
-    constructOrdersDomain(serverOpenOrders) {
-        const localDomain = serverOpenOrders.map((o) => {
-            const dateTime = DateTime.fromSQL(o.write_date);
-            const newDateTime = dateTime.plus({ seconds: 1 });
-            return new Domain([
-                "&",
-                ["id", "=", o.id],
-                "|",
-                [
-                    "write_date",
-                    ">",
-                    newDateTime.toFormat("yyyy-MM-dd HH:mm:ss", { numberingSystem: "latn" }),
-                ],
-                ["state", "!=", o.state],
-            ]);
-        });
-        const localIds = serverOpenOrders.map((o) => o.id);
-        let domain = new Domain(["&", ["state", "=", "draft"], ["id", "not in", localIds]]);
-        domain = Domain.or([domain, ...localDomain]);
-        domain = Domain.and([
-            domain,
-            new Domain([
-                "|",
-                ["config_id", "=", odoo.pos_config_id],
-                [
-                    "config_id",
-                    "in",
-                    this.models["pos.config"].get(odoo.pos_config_id).raw.trusted_config_ids,
-                ],
-            ]),
-        ]);
-        return domain.toList();
+    constructOrdersDomain() {
+        const dynamicModels = this.dynamicModels;
+        const recordsToCheck = Array.from(dynamicModels).reduce((acc, model) => {
+            acc[model] = this.models[model].filter(
+                (r) => !this.pos.data.opts.databaseTable[model]?.condition(r)
+            );
+            return acc;
+        }, {});
+
+        const recordIdsByModel = {};
+        const domainByModel = Object.entries(recordsToCheck).reduce((acc, [model, records]) => {
+            const serverRecs = records.filter((r) => typeof r.id === "number");
+            const ids = serverRecs.map((r) => r.id);
+            const config = this.pos.config;
+            const domains = [];
+
+            if (ids.length === 0 && model !== "pos.order") {
+                return acc;
+            }
+
+            recordIdsByModel[model] = ids;
+            for (const record of serverRecs) {
+                const recordDate = DateTime.fromSQL(record.write_date);
+                const recordDateTime = recordDate.plus({ seconds: 1 });
+                const recordDateTimeString = recordDateTime.toFormat("yyyy-MM-dd HH:mm:ss", {
+                    numberingSystem: "latn",
+                });
+                domains.push(
+                    new Domain([
+                        ["id", "=", record.id],
+                        ["write_date", ">", recordDateTimeString],
+                    ])
+                );
+            }
+
+            let domain = Domain.or(domains);
+            if (model === "pos.order") {
+                domain = Domain.or([
+                    domain,
+                    new Domain([
+                        ["id", "not in", ids],
+                        ["state", "=", "draft"],
+                        ["config_id", "in", [config.id, ...config.trusted_config_ids]],
+                    ]),
+                ]);
+
+                acc[model] = domain.toList();
+            }
+
+            return acc;
+        }, {});
+
+        return { domain: domainByModel, recordsIds: recordIdsByModel };
     }
 
     /**

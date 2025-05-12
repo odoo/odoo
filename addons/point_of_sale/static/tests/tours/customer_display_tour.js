@@ -53,7 +53,7 @@ const PAY_WITH_CARD = {
     paymentLines: [{ name: "CARD", amount: "2,972.75" }],
     change: 0,
     onlinePaymentData: {},
-    qrPaymentData: undefined,
+    qrPaymentData: null,
 };
 
 const SEND_QR = {

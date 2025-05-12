@@ -48,6 +48,15 @@ class SaleOrder(models.Model):
                 or order.order_line.available_product_document_ids
             )
 
+    # === ONCHANGE METHODS === #
+
+    @api.onchange('sale_order_template_id')
+    def _onchange_sale_order_template_id(self):
+        super()._onchange_sale_order_template_id()
+        for order in self:
+            # Remove documents which are no longer available.
+            order.quotation_document_ids &= order.available_product_document_ids
+
     # === ACTION METHODS === #
 
     def get_update_included_pdf_params(self):

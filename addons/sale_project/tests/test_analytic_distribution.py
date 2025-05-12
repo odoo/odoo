@@ -106,3 +106,34 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
             1,
             "Analytic distribution is not set on the payable/receivable lines"
         )
+
+    def test_get_so_mapping_domain_with_no_analytic_distribution(self):
+        """
+        Ensure _get_so_mapping_domain doesnt fail when analytic_distribution is not set
+        """
+
+        account = self.env['account.account'].create({
+            'name': 'Receivable test account',
+            'code': '00001',
+            'account_type': 'asset_receivable',
+        })
+
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+        })
+
+        line = self.env['account.move.line'].create({
+            'move_id': move.id,
+            'name': 'Line without analytic',
+            'quantity': 1,
+            'price_unit': 100,
+            'account_id': account.id,
+        })
+        domain = line._get_so_mapping_domain()
+
+        self.assertEqual(
+            domain,
+            [(0, '=', 1)],
+            "Domain should be (0, '=', 1) when analytic_distribution is missing."
+        )

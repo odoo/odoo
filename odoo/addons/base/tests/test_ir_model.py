@@ -545,3 +545,27 @@ class TestIrModelFieldsTranslation(HttpCase):
         field.update_field_translations('field_description', {'fr_FR': 'Identifiant2'})
         # check the name column of res.users is displayed as 'Identifiant2'
         self.start_tour("/odoo", 'ir_model_fields_translation_fr_tour2', login="admin")
+
+
+class TestIrModelInherit(TransactionCase):
+    def test_inherit(self):
+        imi = self.env["ir.model.inherit"].search([("model_id.model", "=", "ir.actions.server")])
+        self.assertEqual(len(imi), 1)
+        self.assertEqual(imi.parent_id.model, "ir.actions.actions")
+        self.assertFalse(imi.parent_field_id)
+
+    def test_inherits(self):
+        imi = self.env["ir.model.inherit"].search(
+            [("model_id.model", "=", "res.users"), ("parent_field_id", "!=", False)]
+        )
+        self.assertEqual(len(imi), 1)
+        self.assertEqual(imi.parent_id.model, "res.partner")
+        self.assertEqual(imi.parent_field_id.name, "partner_id")
+
+    def test_delegate_field(self):
+        imi = self.env["ir.model.inherit"].search(
+            [("model_id.model", "=", "ir.cron"), ("parent_field_id", "!=", False)]
+        )
+        self.assertEqual(len(imi), 1)
+        self.assertEqual(imi.parent_id.model, "ir.actions.server")
+        self.assertEqual(imi.parent_field_id.name, "ir_actions_server_id")

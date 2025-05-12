@@ -7,16 +7,16 @@
 # Martin Trigaux, 2024
 # pezzin <christian.pezzin@gmail.com>, 2024
 # Wil Odoo, 2025
-# Marianna Ciofani, 2025
 # Sergio Zanchetta <primes2h@gmail.com>, 2025
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:36+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1480,6 +1480,15 @@ msgid "<strong>Type: </strong>"
 msgstr "<strong>Tipo: </strong>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
+"disabled again if there are any existing journal items."
+msgstr ""
+"<strong>Attenzione:</strong> una volta attivata la traccia di audit, non è "
+"possibile disattivarla di nuovo se sono presenti movimenti contabili."
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "@From: %(email)s"
@@ -1516,6 +1525,16 @@ msgstr ""
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "A bank account can belong to only one journal."
 msgstr "Un conto bancario può appartenere a un solo registro."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/res_partner_bank.py:0
+msgid ""
+"A bank account with Account Number %(number)s already exists for Partner "
+"%(partner)s, but is archived. Please unarchive it instead."
+msgstr ""
+"Esiste già un conto bancario con numero %(number)s per il partner "
+"%(partner)s ma è archiviato. Annulla l'archiviazione."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -3530,8 +3549,8 @@ msgstr "Conto bancario"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
-msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr "Conto bancario %(link)s con numero %(number)s eliminato"
+msgid "Bank Account %(link)s with number %(number)s archived"
+msgstr "Conto bancario %(link)s con numero %(number)s archiviato"
 
 #. module: account
 #. odoo-python
@@ -4140,6 +4159,12 @@ msgid ""
 msgstr ""
 "Impossibile ottenere i dettagli di aggregazione da una riga che non utilizza"
 " il motore di \"aggregazione\""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Cannot identify the invoices in the generated PDF: %s"
+msgstr "Impossibile individuare le fatture nel PDF generato: %s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -18118,6 +18143,11 @@ msgstr "Cancellazione è conto di scambio"
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry!"
 msgstr "Valore debito o credito errato nella registrazione contabile!"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "XML format"
+msgstr "Formato XML"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly

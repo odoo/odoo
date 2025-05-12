@@ -946,3 +946,38 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.amount_untaxed, 15.0)
         po.company_id = company_a.id
         self.assertEqual(po.amount_untaxed, 10.0)
+
+    def test_bill_in_purchase_matching_individual(self):
+        """
+        Tests that if the vendor is an individual with a company, the bill will still appear when
+        using the purchase matching button on a vendor bill
+        """
+        company_partner = self.env['res.partner'].create({
+            'name': 'Small Company',
+            'company_type': 'company',
+        })
+        self.partner_a.parent_id = company_partner
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_qty': 1,
+                'price_unit': 100,
+            })]
+        })
+        purchase_order.button_confirm()
+        vendor_bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 100,
+            })]
+        })
+        self.env['purchase.order.line'].flush_model()
+        result = vendor_bill.action_purchase_matching()
+        matching_records = self.env['purchase.bill.line.match'].search(result['domain'])
+        self.assertEqual(len(matching_records), 2)
+        self.assertEqual(matching_records.account_move_id, vendor_bill)
+        self.assertEqual(matching_records.purchase_order_id, purchase_order)
