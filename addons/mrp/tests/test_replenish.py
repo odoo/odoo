@@ -211,3 +211,36 @@ class TestMrpReplenish(TestMrpCommon):
         lead_days_date = datetime.strptime(
             loads(repl_info.json_lead_days)['lead_days_date'], '%m/%d/%Y').date()
         self.assertEqual(lead_days_date, fields.Date.today() + timedelta(days=365))
+
+    def test_orderpoint_onchange_reordering_rule(self):
+        """ Ensure onchange logic works properly when editing a reordering rule
+            linked to a confirmed MO, which is started but not finished by the
+            end of the stock forecast.
+        """
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+
+        self.product_4.route_ids = [Command.set([route_manufacture.id])]
+        self.product_4.bom_ids.produce_delay = 2
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product_4.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        })
+
+        orderpoint.action_replenish()
+
+        prod = self.env['mrp.production'].search([('origin', '=', orderpoint.name)])
+        # Error is triggered for date_start <= lead_days_date < date_finished
+        prod.date_start = fields.Date.today() + timedelta(days=1)
+
+        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+            form.product_min_qty = 3
+        self.assertEqual(orderpoint.qty_to_order, 1)
+
+        orderpoint.trigger = 'manual'
+        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+            form.product_min_qty = 10
+            self.assertEqual(form.qty_to_order, 0)
+        self.assertEqual(form.qty_to_order, 8)
+        self.assertEqual(orderpoint.qty_to_order, 8)
