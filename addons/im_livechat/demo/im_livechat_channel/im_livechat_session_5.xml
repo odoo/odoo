@@ -34,6 +34,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=18)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=18)" name="create_date"/>
         </record>
         <record id="livechat_channel_session_5_message_2" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -45,6 +46,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=19)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=19)" name="create_date"/>
         </record>
         <record id="livechat_channel_session_5_message_3" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -54,6 +56,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=20)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=20)" name="create_date"/>
         </record>
         <record id="livechat_channel_session_5_message_4" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -65,6 +68,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=21)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=21)" name="create_date"/>
         </record>
         <record id="livechat_channel_session_5_rating_message" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -74,6 +78,7 @@
             <field name="subtype_id" ref="mail.mt_note"/>
             <field name="message_type">notification</field>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=33)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-4, minutes=33)" name="create_date"/>
         </record>
         <record id="livechat_channel_session_5_rating" model="rating.rating">
             <field name="access_token">LIVECHAT_5</field>
