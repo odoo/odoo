@@ -149,6 +149,17 @@ composerActionsRegistry
         sequence: 5,
     });
 
+export const composerActionsInternal = {
+    condition(component, id, action) {
+        if (!action?.condition) {
+            return true;
+        }
+        return typeof action.condition === "function"
+            ? action.condition(component)
+            : action.condition;
+    },
+};
+
 function transformAction(component, id, action) {
     return {
         get btnClass() {
@@ -161,12 +172,7 @@ function transformAction(component, id, action) {
             return action.componentProps?.(component, this);
         },
         get condition() {
-            if (!action?.condition) {
-                return true;
-            }
-            return typeof action.condition === "function"
-                ? action.condition(component)
-                : action.condition;
+            return composerActionsInternal.condition(component, id, action);
         },
         get disabledCondition() {
             return action.disabledCondition?.(component);
