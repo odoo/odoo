@@ -27,6 +27,7 @@ patch(Persona.prototype, {
             return super.updateImStatus(...arguments);
         }
     },
+    /** @returns {string} */
     get outOfOfficeDateEndText() {
         if (!this.leave_date_to) {
             return "";

@@ -1,5 +1,5 @@
 declare module "models" {
     export interface Persona {
-        outOfOfficeText: Readonly<string>;
+        outOfOfficeDateEndText: Readonly<string>;
     }
 }
