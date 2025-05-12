@@ -122,3 +122,39 @@ test("many2many_tags_email widget can load more than 40 records", async () => {
     await clickFieldDropdownItem("partner_ids", "Public user");
     await contains('.o_field_widget[name="partner_ids"] .badge', { count: 101 });
 });
+
+test("many2many_tags_email widget shows email if name is null", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "",
+        email: "normal_valid_email@test.com",
+    });
+
+    // Simulate the action that opens the mail.compose.message wizard
+    const wizardId = pyEnv["mail.compose.message"].create({
+        partner_ids: [partnerId],
+        subject: "Test Subject",
+        body: "<p>Hello</p>",
+    });
+
+    await start();
+
+    await openFormView("mail.compose.message", wizardId, {
+        arch: `
+            <form string="Send">
+                <field name="partner_ids" widget="many2many_tags_email"/>
+                <field name="subject"/>
+                <field name="body"/>
+                <footer>
+                    <button string="Send" type="object" name="send_mail"/>
+                </footer>
+            </form>
+        `,
+    });
+
+    await contains('.o_field_widget[name="partner_ids"] .badge', { count: 1 });
+
+    // Now check the text content of the badge to verify it shows the email
+    const badge = document.querySelector('.o_field_many2many_tags_email[name="partner_ids"] .badge');
+    expect(badge?.textContent).toBe("normal_valid_email@test.com");
+});
