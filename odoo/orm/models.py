@@ -93,7 +93,7 @@ _unlink = logging.getLogger('odoo.models.unlink')
 regex_order = re.compile(r'''
     ^
     (\s*
-        (?P<term>((?P<field>[a-z0-9_]+|"[a-z0-9_]+")(\.(?P<property>[a-z0-9_]+))?(:(?P<func>[a-z_]+))?))
+        (?P<term>((?P<field>[a-z0-9_]+)(\.(?P<property>[a-z0-9_]+))?(:(?P<func>[a-z_]+))?))
         (\s+(?P<direction>desc|asc))?
         (\s+(?P<nulls>nulls\ first|nulls\ last))?
         \s*
@@ -102,8 +102,12 @@ regex_order = re.compile(r'''
     (?<!,)
     $
 ''', re.IGNORECASE | re.VERBOSE)
+regex_order_part_read_group = re.compile(r"""
+    (?P<term>(?P<field>[a-z0-9_]+)(\.([\w\.]+))?(:(?P<func>[a-z_]+))?)
+    (\s+(?P<direction>desc|asc))?(\s+(?P<nulls>nulls\ first|nulls\ last))?
+""", re.IGNORECASE | re.VERBOSE)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')  # For read_group
-regex_read_group_spec = re.compile(r'(\w+)(\.(\w+))?(?::(\w+))?$')  # For _read_group
+regex_read_group_spec = re.compile(r'(\w+)(\.([\w\.]+))?(?::(\w+))?$')  # For _read_group
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
@@ -1646,7 +1650,7 @@ class BaseModel(metaclass=MetaModel):
         query.offset = offset
 
         groupby_terms: dict[str, SQL] = {
-            spec: self._read_group_groupby(spec, query)
+            spec: self._read_group_groupby(self._table, spec, query)
             for spec in groupby
         }
         if groupby_terms:
@@ -1709,28 +1713,49 @@ class BaseModel(metaclass=MetaModel):
         sql_field = self._field_to_sql(self._table, fname, query)
         return READ_GROUP_AGGREGATE[func](self._table, sql_field)
 
-    def _read_group_groupby(self, groupby_spec: str, query: Query) -> SQL:
+    def _read_group_groupby(self, alias: str, groupby_spec: str, query: Query) -> SQL:
         """ Return <SQL expression> corresponding to the given groupby element.
         The method also checks whether the fields used in the groupby are
         accessible for reading.
         """
-        fname, property_name, granularity = parse_read_group_spec(groupby_spec)
+        fname, seq_fnames, granularity = parse_read_group_spec(groupby_spec)
         if fname not in self._fields:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
 
         field = self._fields[fname]
 
         if field.type == 'properties':
-            sql_expr = self._read_group_groupby_properties(field, property_name, query)
+            sql_expr = self._read_group_groupby_properties(alias, field, seq_fnames, query)
 
-        elif property_name:
-            raise ValueError(f"Property access on non-property field: {groupby_spec!r}")
+        elif seq_fnames:
+            if field.type != 'many2one':
+                raise ValueError(f"Only many2one path is accepted for the {groupby_spec!r} groupby spec")
+
+            comodel = self.env[field.comodel_name]
+            coquery = comodel.with_context(active_test=False)._search([])
+            if self.env.su or not coquery.where_clause:
+                coalias = query.make_alias(alias, fname)
+            else:
+                coalias = query.make_alias(alias, f"{fname}__{self.env.uid}")
+            condition = SQL(
+                "%s = %s",
+                SQL.identifier(alias, fname),
+                SQL.identifier(coalias, 'id'),
+            )
+            if coquery.where_clause:
+                condition = SQL(
+                    "%s AND %s IN %s",
+                    condition,
+                    SQL.identifier(coalias, 'id'),
+                    coquery.subselect(),
+                )
+            query.add_join('LEFT JOIN', coalias, comodel._table, condition)
+            return comodel._read_group_groupby(coalias, f"{seq_fnames}:{granularity}" if granularity else seq_fnames, query)
 
         elif granularity and field.type not in ('datetime', 'date', 'properties'):
             raise ValueError(f"Granularity set on a no-datetime field or property: {groupby_spec!r}")
 
         elif field.type == 'many2many':
-            alias = self._table
             if field.related and not field.store:
                 _model, field, alias = self._traverse_related_sql(alias, field, query)
 
@@ -1762,7 +1787,7 @@ class BaseModel(metaclass=MetaModel):
             return SQL.identifier(rel_alias, field.column2)
 
         else:
-            sql_expr = self._field_to_sql(self._table, fname, query)
+            sql_expr = self._field_to_sql(alias, fname, query)
 
         if field.type in ('datetime', 'date') or (field.type == 'properties' and granularity):
             if not granularity:
@@ -1771,10 +1796,10 @@ class BaseModel(metaclass=MetaModel):
                 raise ValueError(f"Granularity specification isn't correct: {granularity!r}")
 
             if granularity in READ_GROUP_NUMBER_GRANULARITY:
-                sql_expr = field.property_to_sql(sql_expr, granularity, self, self._table, query)
+                sql_expr = field.property_to_sql(sql_expr, granularity, self, alias, query)
             elif field.type == 'datetime':
                 # set the timezone only
-                sql_expr = field.property_to_sql(sql_expr, 'tz', self, self._table, query)
+                sql_expr = field.property_to_sql(sql_expr, 'tz', self, alias, query)
 
             if granularity == 'week':
                 # first_week_day: 0=Monday, 1=Tuesday, ...
@@ -1848,7 +1873,7 @@ class BaseModel(metaclass=MetaModel):
         orderby_terms = []
 
         for order_part in order.split(','):
-            order_match = regex_order.match(order_part)
+            order_match = regex_order_part_read_group.fullmatch(order_part)
             if not order_match:
                 raise ValueError(f"Invalid order {order!r} for _read_group()")
             term = order_match['term']
@@ -1906,13 +1931,17 @@ class BaseModel(metaclass=MetaModel):
         """ Return the empty value corresponding to the given groupby spec or aggregate spec. """
         if spec == '__count':
             return 0
-        fname, __, func = parse_read_group_spec(spec)  # func is either None, granularity or an aggregate
+        fname, seq_fnames, func = parse_read_group_spec(spec)  # func is either None, granularity or an aggregate
         if func in ('count', 'count_distinct'):
             return 0
         if func in ('array_agg', 'array_agg_distinct'):
             return []
         field = self._fields[fname]
         if (not func or func == 'recordset') and (field.relational or fname == 'id'):
+            if seq_fnames and field.type == 'many2one':
+                groupby_seq = f"{seq_fnames}:{func}" if func else seq_fnames
+                model = self.env[field.comodel_name]
+                return model._read_group_empty_value(groupby_seq)
             return self.env[field.comodel_name] if field.relational else self.env[self._name]
         return False
 
@@ -1926,10 +1955,15 @@ class BaseModel(metaclass=MetaModel):
         """
         empty_value = self._read_group_empty_value(groupby_spec)
 
-        fname, *__ = parse_read_group_spec(groupby_spec)
+        fname, seq_fnames, granularity = parse_read_group_spec(groupby_spec)
         field = self._fields[fname]
 
         if field.relational or fname == 'id':
+            if seq_fnames and field.relational:
+                groupby_seq = f"{seq_fnames}:{granularity}" if granularity else seq_fnames
+                model = self.env[field.comodel_name]
+                return model._read_group_postprocess_groupby(groupby_seq, raw_values)
+
             Model = self.pool[field.comodel_name] if field.relational else self.pool[self._name]
             prefetch_ids = tuple(raw_value for raw_value in raw_values if raw_value)
 
@@ -2613,15 +2647,15 @@ class BaseModel(metaclass=MetaModel):
             sql = field.property_to_sql(sql, property_name, self, alias, query)
         return sql
 
-    def _read_group_groupby_properties(self, field: Field, property_name: str, query: Query) -> SQL:
+    def _read_group_groupby_properties(self, alias: str, field: Field, property_name: str, query: Query) -> SQL:
         fname = field.name
         definition = self.get_property_definition(f"{fname}.{property_name}")
         property_type = definition.get('type')
-        sql_property = self._field_to_sql(self._table, f'{fname}.{property_name}', query)
+        sql_property = self._field_to_sql(alias, f'{fname}.{property_name}', query)
 
         # JOIN on the JSON array
         if property_type in ('tags', 'many2many'):
-            property_alias = query.make_alias(self._table, f'{fname}_{property_name}')
+            property_alias = query.make_alias(alias, f'{fname}_{property_name}')
             sql_property = SQL(
                 """ CASE
                         WHEN jsonb_typeof(%(property)s) = 'array'
@@ -2665,7 +2699,7 @@ class BaseModel(metaclass=MetaModel):
             options = [option[0] for option in definition.get('selection') or ()]
 
             # check the existence of the option
-            property_alias = query.make_alias(self._table, f'{fname}_{property_name}')
+            property_alias = query.make_alias(alias, f'{fname}_{property_name}')
             query.add_join(
                 "LEFT JOIN",
                 property_alias,
