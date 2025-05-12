@@ -1,6 +1,5 @@
 <odoo>
-    <data>
-        
+    <data> 
         <record id="view_order_form_inherit_item" model="ir.ui.view">
             <field name="name">sale.view_order_form.inherit.item_delivery_time</field>
             <field name="model">sale.order</field>
@@ -38,6 +37,41 @@
             </field>
         </record>
 
+
+        <record id="view_order_form_inherit_hide_fields" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.hide.fields</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='other_information']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='customer_signature']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_order_form_inherit_hide_optional_products" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.hide.optional.products</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sale_order_template_id']" position="replace">
+                </xpath>
+                <xpath expr="//page[@name='optional_products']" position="replace">
+                    <page name="optional_products" string="Optional Products" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
         <!--templates-->
 
         <template id="report_saleorder_document_inherit_delivery_date" inherit_id="sale.report_saleorder_document">
@@ -48,6 +82,5 @@
                 </div>
             </xpath>
         </template>
-
     </data>
 </odoo>
