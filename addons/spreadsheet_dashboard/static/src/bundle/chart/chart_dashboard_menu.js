@@ -4,18 +4,21 @@ import { patch } from "@web/core/utils/patch";
 const { chartSubtypeRegistry } = registries;
 
 patch(components.ChartDashboardMenu.prototype, {
-    getAvailableTypes() {
+    get changeChartTypeMenuItems() {
         const definition = this.env.model.getters.getChartDefinition(this.props.figureUI.id);
         if (["odoo_bar", "odoo_line", "odoo_pie"].includes(definition.type)) {
             return ["odoo_bar", "odoo_line", "odoo_pie"].map((type) => {
                 const item = chartSubtypeRegistry.get(type);
                 return {
-                    ...item,
-                    icon: this.getIconClasses(item.chartType),
+                    id: item.chartType,
+                    label: item.displayName,
+                    onClick: () => this.onTypeChange(item.chartType),
+                    isSelected: item.chartType === this.selectedChartType,
+                    iconClass: this.getIconClasses(item.chartType),
                 };
             });
         }
-        return super.getAvailableTypes();
+        return super.changeChartTypeMenuItems;
     },
     onTypeChange(type) {
         if (!type.startsWith("odoo_")) {
