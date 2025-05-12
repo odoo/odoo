@@ -146,12 +146,10 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
         const env = this.custom.env;
         return {
             onClick: async (event, items) => {
-                if (!items.length) {
+                if (!items.length || !env || event.type !== "click") {
                     return;
                 }
-                if (!env) {
-                    return;
-                }
+                event.native.preventDefault(); // Prevent other click actions
                 const { datasetIndex, index } = items[0];
                 const dataset = datasets[datasetIndex];
                 let name = labels[index];
