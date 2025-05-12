@@ -4,16 +4,16 @@
 <t t-name="html_builder.TopMenuVisibilityOption">
     <BuilderRow label.translate="Header Position">
         <BuilderSelect preview="false" action="'setWebsiteHeaderVisibility'">
-            <BuilderSelectItem actionValue="'overTheContent'" id="'overTheContent'">Over The Content</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'overTheContent'" id="'overTheContent'" t-if="props.doesPageOptionExist('header_overlay')">Over The Content</BuilderSelectItem>
             <BuilderSelectItem actionValue="'regular'">Regular</BuilderSelectItem>
             <BuilderSelectItem actionValue="'hidden'">Hidden</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>    
     <t t-if="isActiveItem('overTheContent')">
-        <BuilderRow label.translate="Background" level="1">
+        <BuilderRow label.translate="Background" level="1" t-if="props.doesPageOptionExist('header_color')">
             <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'background-color'" enabledTabs="['custom']"/>
         </BuilderRow>
-        <BuilderRow label.translate="Text Color" level="1">
+        <BuilderRow label.translate="Text Color" level="1" t-if="props.doesPageOptionExist('header_text_color')">
             <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
         </BuilderRow>
     </t>

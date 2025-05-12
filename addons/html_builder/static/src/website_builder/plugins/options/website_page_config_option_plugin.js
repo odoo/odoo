@@ -5,6 +5,7 @@ import { rgbToHex } from "@web/core/utils/colors";
 import { withSequence } from "@html_editor/utils/resource";
 import { FOOTER_SCROLL_TO } from "./footer_option_plugin";
 import { HEADER_SCROLL_EFFECT } from "./header_option_plugin";
+import { TopMenuVisibilityOption } from "./website_page_config_option";
 
 export const TOP_MENU_VISIBILITY = after(HEADER_SCROLL_EFFECT);
 export const HIDE_FOOTER = after(FOOTER_SCROLL_TO);
@@ -16,11 +17,14 @@ class WebsitePageConfigOptionPlugin extends Plugin {
         builder_actions: this.getActions(),
         builder_options: [
             withSequence(TOP_MENU_VISIBILITY, {
-                template: "html_builder.TopMenuVisibilityOption",
+                OptionComponent: TopMenuVisibilityOption,
                 selector:
                     "[data-main-object]:has(input.o_page_option_data[name='header_visible']) #wrapwrap > header",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
+                props: {
+                    doesPageOptionExist: this.doesPageOptionExist.bind(this),
+                },
             }),
             withSequence(HIDE_FOOTER, {
                 template: "html_builder.HideFooterOption",
@@ -82,16 +86,29 @@ class WebsitePageConfigOptionPlugin extends Plugin {
             return;
         }
         const item = this.getVisibilityItem();
+        const pageOptions = {
+            header_overlay: () => item === "overTheContent",
+            header_color: () => this.getColorValue("background-color", "bg-o-color-"),
+            header_text_color: () => this.getColorValue("color", "text-o-color-"),
+            header_visible: () => item !== "hidden",
+            footer_visible: () => !this.getFooterVisibility(),
+        };
+
+        const args = {};
+        for (const [pageOptionName, valueGetter] of Object.entries(pageOptions)) {
+            if (this.doesPageOptionExist(pageOptionName)) {
+                args[pageOptionName] = valueGetter();
+            }
+        }
+
         const mainObject = this.services.website.currentWebsite.metadata.mainObject;
-        return Promise.all([
-            this.services.orm.write(mainObject.model, [mainObject.id], {
-                header_overlay: item === "overTheContent",
-                header_visible: item !== "hidden",
-                header_color: this.getColorValue("background-color", "bg-o-color-"),
-                header_text_color: this.getColorValue("color", "text-o-color-"),
-                footer_visible: !this.getFooterVisibility(),
-            }),
-        ]);
+        return Promise.all([this.services.orm.write(mainObject.model, [mainObject.id], args)]);
+    }
+
+    doesPageOptionExist(pageOptionName) {
+        return this.document.querySelector(
+            `[data-main-object]:has(input.o_page_option_data[name='${pageOptionName}'])`
+        );
     }
 
     visibilityHandlers = {

@@ -6,10 +6,10 @@ import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 
 defineWebsiteModels();
 
-test("TopMenuVisibility option should appear", async () => {
+test("TopMenuVisibility option should appear without overTheContent", async () => {
     await setupWebsiteBuilder("", {
         openEditor: true,
-        beforeWrapwrapContent: `<input type="hidden" class="o_page_option_data" autocomplete="off" data-oe-model="ir.ui.view" data-oe-id="543" data-oe-field="arch" data-oe-xpath="/data/xpath[13]/t[1]/t[1]/input[1]" name="header_visible" value="True">`,
+        beforeWrapwrapContent: `<input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">`,
         headerContent: `
             <header id="top" data-anchor="true" data-name="Header">   
                     Menu Content
@@ -18,6 +18,26 @@ test("TopMenuVisibility option should appear", async () => {
     await contains(":iframe #wrapwrap > header").click();
     await waitFor("[data-label='Header Position']");
     expect("[data-label='Header Position']").toBeVisible();
+    await contains("[data-label='Header Position'] .dropdown").click();
+    expect(".o-overlay-container [data-action-value='overTheContent']").not.toBeVisible();
+});
+
+test("TopMenuVisibility option should appear with overTheContent", async () => {
+    await setupWebsiteBuilder("", {
+        openEditor: true,
+        beforeWrapwrapContent: `
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_overlay">`,
+        headerContent: `
+            <header id="top" data-anchor="true" data-name="Header">   
+                    Menu Content
+            </header>`,
+    });
+    await contains(":iframe #wrapwrap > header").click();
+    await waitFor("[data-label='Header Position']");
+    expect("[data-label='Header Position']").toBeVisible();
+    await contains("[data-label='Header Position'] .dropdown").click();
+    expect(".o-overlay-container [data-action-value='overTheContent']").toBeVisible();
 });
 
 test("page is not customisable, TopMenuVisibility option should not appear", async () => {
@@ -35,7 +55,9 @@ test("page is not customisable, TopMenuVisibility option should not appear", asy
 test("undo overTheContent visibility", async () => {
     const { getEditor } = await setupWebsiteBuilder("", {
         openEditor: true,
-        beforeWrapwrapContent: `<input type="hidden" class="o_page_option_data" autocomplete="off" data-oe-model="ir.ui.view" data-oe-id="543" data-oe-field="arch" data-oe-xpath="/data/xpath[13]/t[1]/t[1]/input[1]" name="header_visible" value="True">`,
+        beforeWrapwrapContent: `
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_overlay">`,
         headerContent: `
             <header id="top" data-anchor="true" data-name="Header" class="">   
                     Menu Content
@@ -45,7 +67,7 @@ test("undo overTheContent visibility", async () => {
     await contains(":iframe #wrapwrap > header").click();
     const precedentWrapwrap = queryOne(":iframe #wrapwrap").outerHTML;
     await contains("[data-label='Header Position'] .dropdown").click();
-    await contains("[data-action-value='overTheContent']").click();
+    await contains(".o-overlay-container [data-action-value='overTheContent']").click();
     undo(editor);
     redo(editor);
     undo(editor);
@@ -56,7 +78,10 @@ test("undo overTheContent visibility", async () => {
 test("undo and comeback to a custom overTheContent color", async () => {
     const { getEditor } = await setupWebsiteBuilder("", {
         openEditor: true,
-        beforeWrapwrapContent: `<input type="hidden" class="o_page_option_data" autocomplete="off" data-oe-model="ir.ui.view" data-oe-id="543" data-oe-field="arch" data-oe-xpath="/data/xpath[13]/t[1]/t[1]/input[1]" name="header_visible" value="True">`,
+        beforeWrapwrapContent: `
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_overlay">
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_color">`,
         headerContent: `
             <header id="top" data-anchor="true" data-name="Header" class="">   
                     Menu Content
@@ -65,12 +90,12 @@ test("undo and comeback to a custom overTheContent color", async () => {
     const editor = getEditor();
     await contains(":iframe #wrapwrap > header").click();
     await contains("[data-label='Header Position'] .dropdown").click();
-    await contains("[data-action-value='overTheContent']").click();
+    await contains(".o-overlay-container [data-action-value='overTheContent']").click();
     await contains("[data-label='Background'].o_we_sublevel_1 .o_we_color_preview").click();
     await contains("[data-color='600']").click();
     const precedentWrapwrap = queryOne(":iframe #wrapwrap").outerHTML;
     await contains("[data-label='Header Position'] .dropdown").click();
-    await contains("[data-action-value='regular']").click();
+    await contains(".o-overlay-container [data-action-value='regular']").click();
     undo(editor);
     redo(editor);
     undo(editor);
@@ -81,7 +106,8 @@ test("undo and comeback to a custom overTheContent color", async () => {
 test("undo hidden and come back to regular", async () => {
     const { getEditor } = await setupWebsiteBuilder("", {
         openEditor: true,
-        beforeWrapwrapContent: `<input type="hidden" class="o_page_option_data" autocomplete="off" data-oe-model="ir.ui.view" data-oe-id="543" data-oe-field="arch" data-oe-xpath="/data/xpath[13]/t[1]/t[1]/input[1]" name="header_visible" value="True">`,
+        beforeWrapwrapContent: `
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">`,
         headerContent: `
             <header id="top" data-anchor="true" data-name="Header">   
                     Menu Content
@@ -91,7 +117,7 @@ test("undo hidden and come back to regular", async () => {
     await contains(":iframe #wrapwrap > header").click();
     const precedentWrapwrap = queryOne(":iframe #wrapwrap").outerHTML;
     await contains("[data-label='Header Position'] .dropdown").click();
-    await contains("[data-action-value='hidden']").click();
+    await contains(".o-overlay-container [data-action-value='hidden']").click();
     undo(editor);
     const modifiedWrapwrap = queryOne(":iframe #wrapwrap");
     expect(modifiedWrapwrap).toHaveOuterHTML(precedentWrapwrap);
@@ -100,7 +126,8 @@ test("undo hidden and come back to regular", async () => {
 test("regular -> hidden -> regular", async () => {
     await setupWebsiteBuilder("", {
         openEditor: true,
-        beforeWrapwrapContent: `<input type="hidden" class="o_page_option_data" autocomplete="off" data-oe-model="ir.ui.view" data-oe-id="543" data-oe-field="arch" data-oe-xpath="/data/xpath[13]/t[1]/t[1]/input[1]" name="header_visible" value="True">`,
+        beforeWrapwrapContent: `
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="header_visible">`,
         headerContent: `
             <header id="top" data-anchor="true" data-name="Header" class="">   
                     Menu Content
@@ -109,9 +136,9 @@ test("regular -> hidden -> regular", async () => {
     await contains(":iframe #wrapwrap > header").click();
     const precedentWrapwrap = queryOne(":iframe #wrapwrap").outerHTML;
     await contains("[data-label='Header Position'] .dropdown").click();
-    await contains("[data-action-value='hidden']").click();
+    await contains(".o-overlay-container [data-action-value='hidden']").click();
     await contains("[data-label='Header Position'] .dropdown").click();
-    await contains("[data-action-value='regular']").click();
+    await contains(".o-overlay-container [data-action-value='regular']").click();
     const modifiedWrapwrap = queryOne(":iframe #wrapwrap");
     expect(modifiedWrapwrap).toHaveOuterHTML(precedentWrapwrap);
 });
