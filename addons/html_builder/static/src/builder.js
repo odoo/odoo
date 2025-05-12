@@ -156,6 +156,7 @@ export class Builder extends Component {
         );
 
         this.snippetModel = useState(useService("html_builder.snippets"));
+        this.snippetModel.registerBeforeReload(this.save.bind(this));
 
         onWillStart(async () => {
             await this.snippetModel.load();
@@ -175,6 +176,7 @@ export class Builder extends Component {
         // });
         onWillDestroy(() => {
             this.editor.destroy();
+            this.snippetModel.unregisterBeforeReload();
             // actionService.setActionMode("current");
         });
 
