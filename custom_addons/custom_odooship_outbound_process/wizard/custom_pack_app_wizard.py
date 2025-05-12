@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-from email.policy import default
-
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
 import logging
 import json
 import requests
 import xml.etree.ElementTree as ET
 import urllib
+import socket
+
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
+
 
 _logger = logging.getLogger(__name__)
 
@@ -648,7 +649,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             }
 
         _logger.info(f"[ONETRAKER][SINGLE PICK PAYLOAD] Sending payload:\n{json.dumps(payload, indent=4)}")
-        self.send_payload_to_api(config["ONETRAKER_CREATE_ORDER_URL"], payload)
+
+        # ✅ USE the full method that sends AND prints the label
+        self.send_payload_and_print_label(payload, picking.name)
 
         # Mark picking and order as packed
         picking.write({'current_state': 'pack'})
