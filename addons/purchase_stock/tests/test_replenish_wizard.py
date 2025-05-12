@@ -5,6 +5,8 @@ from freezegun import freeze_time
 from odoo.addons.stock.tests.common import TestStockCommon
 
 from odoo import fields
+from odoo.fields import Command
+from odoo.tests import Form
 
 
 class TestReplenishWizard(TestStockCommon):
@@ -495,3 +497,31 @@ class TestReplenishWizard(TestStockCommon):
             'product_uom_id': self.uom_unit.id,
         })
         self.assertTrue(replenish_wizard._get_route_domain(self.product1.product_tmpl_id))
+
+    def test_inter_wh_replenish(self):
+        """ Test that the replenish order has the correct supplier in a replenish between
+        warehouses of the same company.
+        """
+        main_warehouse = self.wh
+        second_warehouse = self.env['stock.warehouse'].create({
+            'name': 'Second Warehouse',
+            'code': 'WH02',
+        })
+        main_warehouse.write({
+            'resupply_wh_ids': [Command.set(second_warehouse.ids)]
+        })
+        interwh_route = self.env['stock.route'].search([('supplied_wh_id', '=', main_warehouse.id), ('supplier_wh_id', '=', second_warehouse.id)])
+
+        self.product1.route_ids = [Command.link(interwh_route.id)]
+
+        wizard_form = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id))
+        wizard_form.route_id = interwh_route
+        wizard = wizard_form.save()
+        generated_picking = wizard.launch_replenishment()
+        links = generated_picking.get("params", {}).get("links")
+        url = links and links[0].get("url", "") or ""
+        stock_picking_id, model_name = self.url_extract_rec_id_and_model(url)
+
+        stock_picking = self.env[model_name].browse(int(stock_picking_id))
+
+        self.assertEqual(stock_picking.partner_id, second_warehouse.partner_id)
