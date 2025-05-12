@@ -124,10 +124,12 @@ class Intervals(object):
 
     def remove(self, interval):
         """ Remove an interval from the set. """
+        warnings.warn("Deprecated since 19.0, do not mutate intervals", DeprecationWarning)
         self._items.remove(interval)
 
     def items(self):
         """ Return the intervals. """
+        warnings.warn("Deprecated since 19.0, just iterate over Intervals", DeprecationWarning)
         return self._items
 
 def sum_intervals(intervals):
