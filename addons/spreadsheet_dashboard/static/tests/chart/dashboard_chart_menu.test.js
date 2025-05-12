@@ -123,6 +123,7 @@ test("Click on chart element in dashboard mode do not redirect twice", async fun
     expect.verifySteps(["chartMenuRedirect"]);
 });
 
+test.tags("desktop");
 test("Middle-click on chart in dashboard mode open the odoo menu in a new tab", async function () {
     const { model } = await createModelWithDataSource({ serverData });
     await mountSpreadsheet(model);
