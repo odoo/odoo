@@ -1,11 +1,12 @@
-import { after, SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequence";
+import { after } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { rgbToHex } from "@web/core/utils/colors";
 import { withSequence } from "@html_editor/utils/resource";
 import { FOOTER_SCROLL_TO } from "./footer_option_plugin";
+import { HEADER_SCROLL_EFFECT } from "./header_option_plugin";
 
-export const TOP_MENU_VISIBILITY = SNIPPET_SPECIFIC_NEXT;
+export const TOP_MENU_VISIBILITY = after(HEADER_SCROLL_EFFECT);
 export const HIDE_FOOTER = after(FOOTER_SCROLL_TO);
 
 class WebsitePageConfigOptionPlugin extends Plugin {

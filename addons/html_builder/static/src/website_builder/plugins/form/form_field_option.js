@@ -35,7 +35,6 @@ export class FormFieldOption extends BaseOptionComponent {
         onWillStart(async () => {
             const el = this.env.getEditingElement();
             const fieldOptionData = await this.props.loadFieldOptionData(el);
-            console.log(38, fieldOptionData);
             this.state.availableFields.push(...fieldOptionData.availableFields);
             this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
             this.state.valueList = fieldOptionData.valueList;
