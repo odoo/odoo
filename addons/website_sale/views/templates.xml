@@ -497,6 +497,7 @@
                                         t-valuef="d-none d-lg-flex w-100 p-0 mb-0 small"
                                     />
                                 </t>
+<<<<<<< fdacea989ba8e763272ad5efd5f92607b985b557
                                 <h1
                                     t-if="category or search"
                                     t-attf-class="d-flex gap-1 align-items-center mb-0 lh-lg {{search and 'base-fs font-sans-serif' or 'fs-3'}} {{search and bool(category) and 'mb-2'}}"
@@ -509,6 +510,39 @@
                                         t-attf-title="Back to {{category.parent_id and category.parent_id.name or 'Shop'}}"
                                     >
                                         <i class="oi oi-arrow-left" role="img"/>
+||||||| f1bf07b4b3becc8195e6cd2b85d8e6b05826f915
+
+                                <t t-call="website_sale.pricelist_list" t-cache="pricelist">
+                                    <t t-set="_classes" t-valuef="d-none d-lg-inline"/>
+                                </t>
+
+                                <t t-if="is_view_active('website_sale.sort')" t-call="website_sale.sort">
+                                    <t t-set="_classes" t-valuef="d-none me-auto d-lg-inline-block"/>
+                                </t>
+
+                                <div t-if="category" class="d-flex align-items-center d-lg-none me-auto">
+                                    <t t-if="not category.parent_id" t-set="backUrl" t-valuef="/shop"/>
+                                    <t t-else="" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
+
+                                    <a t-attf-class="btn btn-{{navClass}} me-2" t-att-href="category.parent_id and keep('/shop/category/' + slug(category.parent_id), category=0) or '/shop'">
+                                        <i class="fa fa-angle-left"/>
+=======
+
+                                <t t-call="website_sale.pricelist_list" t-cache="pricelist">
+                                    <t t-set="_classes" t-valuef="d-none d-lg-inline"/>
+                                </t>
+
+                                <t t-if="is_view_active('website_sale.sort')" t-call="website_sale.sort">
+                                    <t t-set="_classes" t-valuef="d-none me-auto d-lg-inline-block"/>
+                                </t>
+
+                                <div t-if="category" class="d-flex align-items-center d-lg-none me-auto o_not_editable">
+                                    <t t-if="not category.parent_id" t-set="backUrl" t-valuef="/shop"/>
+                                    <t t-else="" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
+
+                                    <a t-attf-class="btn btn-{{navClass}} me-2" t-att-href="category.parent_id and keep('/shop/category/' + slug(category.parent_id), category=0) or '/shop'">
+                                        <i class="fa fa-angle-left"/>
+>>>>>>> 098580630aa18777971ada4ce84f65c284a98707
                                     </a>
                                     <t t-if="search and category">
                                         <span class="text-muted">Searching</span>
