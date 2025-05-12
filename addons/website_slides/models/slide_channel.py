@@ -285,6 +285,8 @@ class SlideChannel(models.Model):
     _order = 'sequence, id'
     _partner_unfollow_enabled = True
 
+    _CUSTOMER_HEADERS_LIMIT_COUNT = 0  # never use X-Msg-To headers
+
     def _default_cover_properties(self):
         """ Cover properties defaults are overridden to keep a consistent look for the slides
         channels headers across Odoo versions (pre-customization, with purple gradient fitting the
@@ -863,12 +865,6 @@ class SlideChannel(models.Model):
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return []
-
-    def _notify_by_email_get_headers(self, headers=None):
-        # Never use explicit recipients
-        headers = super()._notify_by_email_get_headers(headers=headers)
-        headers.pop('X-Msg-To-Add', False)
-        return headers
 
     # ---------------------------------------------------------
     # Business / Actions
