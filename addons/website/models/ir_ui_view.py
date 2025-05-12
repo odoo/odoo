@@ -6,7 +6,6 @@ import werkzeug
 
 from odoo import api, fields, models
 from odoo import tools
-from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
@@ -510,11 +509,6 @@ class IrUiView(models.Model):
         return super()._get_allowed_root_attrs() + [
             'data-bg-video-src', 'data-shape', 'data-scroll-background-ratio',
         ]
-
-    def _get_combined_arch(self):
-        root = super()._get_combined_arch()
-        add_form_signature(root, self.sudo().env)
-        return root
 
     # --------------------------------------------------------------------------
     # Snippet saving
