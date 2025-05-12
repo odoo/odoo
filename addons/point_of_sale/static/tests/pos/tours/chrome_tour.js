@@ -9,6 +9,7 @@ import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { refresh, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 
 registry.category("web_tour.tours").add("ChromeTour", {
     steps: () =>
@@ -228,5 +229,28 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
             ReceiptScreen.totalAmountContains("100"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("CustomerNoteIsPresentAfterRefresh", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
+            inLeftSide([
+                { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
+                ...ProductScreen.addCustomerNote("Test customer note"),
+                ...Order.hasLine({
+                    customerNote: "Test customer note",
+                }),
+            ]),
+            refresh(),
+            inLeftSide([
+                { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
+                ...Order.hasLine({
+                    customerNote: "Test customer note",
+                }),
+            ]),
         ].flat(),
 });
