@@ -45,6 +45,7 @@ export class PosPrinterService extends PrinterService {
             this.dialog.add(RetryPrintPopup, {
                 title: error.title,
                 message: error.body,
+                canRetry: error.canRetry,
                 retry: () => {
                     this.printHtml(...arguments);
                 },
