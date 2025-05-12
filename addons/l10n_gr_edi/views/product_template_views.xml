@@ -7,8 +7,8 @@
         <field name="inherit_id" ref="account.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='invoicing']//group[@name='accounting']" position="after">
-                <group name="mydata" string="MyDATA" invisible="'GR' not in fiscal_country_codes">
-                    <field name="l10n_gr_edi_preferred_classification_ids">
+                <group name="mydata" string="myDATA Classification" invisible="'GR' not in fiscal_country_codes">
+                    <field name="l10n_gr_edi_preferred_classification_ids" nolabel="1">
                         <list editable="bottom" default_order="priority desc">
                             <field name="priority" widget="handle"/>
                             <field name="l10n_gr_edi_available_inv_type" column_invisible="1"/>
