@@ -1,7 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
-import { delay } from "@web/core/utils/concurrency";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addActionOption,

@@ -1,4 +1,4 @@
-import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { ColorPicker } from "@web/core/color_picker/color_picker";
 import { HighlightPicker } from "./highlight_picker";
 import { applyTextHighlight } from "@website/js/highlight_utils";

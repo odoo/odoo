@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin"
+import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
@@ -125,10 +125,13 @@ class SnippetsPowerboxPlugin extends Plugin {
                 commandId: "s_hr",
             },
         ],
-    }
+    };
 
     insertSnippet(name) {
-        const snippet = this.services["html_builder.snippets"].getSnippetByName("snippet_content", name);
+        const snippet = this.services["html_builder.snippets"].getSnippetByName(
+            "snippet_content",
+            name
+        );
         const content = snippet.content.cloneNode(true);
         this.dependencies.dom.insert(content);
         this.dependencies.history.addStep();

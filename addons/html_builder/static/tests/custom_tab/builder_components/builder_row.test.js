@@ -53,7 +53,9 @@ describe("website tests", () => {
                     <BuilderButton applyTo="'.my-custom-class'" classAction="'test'"/>
                 </BuilderRow>`,
         });
-        await setupWebsiteBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
+        await setupWebsiteBuilder(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
         const selectorRowLabel = ".options-container .hb-row:not(.d-none) .hb-row-label";
         await contains(":iframe .parent-target").click();
         expect(queryAllTexts(selectorRowLabel)).toEqual(["Row 1", "Row 2"]);
@@ -65,7 +67,9 @@ describe("website tests", () => {
     /* ================= Collapse template ================= */
     const collapseOptionTemplate = (dependency = false, expand = false) => xml`
         <BuilderRow label="'Test Collapse'" expand="${expand}">
-            <BuilderButton classAction="'a'" ${dependency ? "id=\"'test_opt'\"" : ""}>A</BuilderButton>
+            <BuilderButton classAction="'a'" ${
+                dependency ? "id=\"'test_opt'\"" : ""
+            }>A</BuilderButton>
             <t t-set-slot="collapse">
                 <BuilderRow level="1" label="'B'" ${
                     dependency ? "t-if=\"isActiveItem('test_opt')\"" : ""
@@ -216,7 +220,9 @@ describe("website tests", () => {
             await animationFrame();
             expect(".o_we_collapse_toggler:not(.d-none)").toHaveCount(2);
             expect(".o_we_collapse_toggler:not(.d-none):first").toHaveClass("active");
-            expect(".o_we_collapse_toggler:not(.d-none):not(.d-none):last").not.toHaveClass("active");
+            expect(".o_we_collapse_toggler:not(.d-none):not(.d-none):last").not.toHaveClass(
+                "active"
+            );
             await contains(".options-container .o_we_collapse_toggler:not(.d-none):last").click();
             expect(".o_we_collapse_toggler:not(.d-none):first").toHaveClass("active");
             expect(".o_we_collapse_toggler:not(.d-none):last").toHaveClass("active");

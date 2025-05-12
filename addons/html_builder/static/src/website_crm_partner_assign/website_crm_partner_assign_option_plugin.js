@@ -4,21 +4,21 @@ import { registry } from "@web/core/registry";
 import { WebsiteCRMPartnersPage } from "./website_crm_partner_assign_option";
 
 class WebsiteCRMPartnersPageOption extends Plugin {
-  static id = "websiteCRMPartnersPageOption";
+    static id = "websiteCRMPartnersPageOption";
 
-  resources = {
-    builder_options: [
-      {
-        OptionComponent: WebsiteCRMPartnersPage,
-        selector: "main:has(#oe_structure_website_crm_partner_assign_layout_1)",
-        title: _t("Partners Page"),
-        editableOnly: false,
-        groups: ["website.group_website_designer"],
-      },
-    ],
-  };
+    resources = {
+        builder_options: [
+            {
+                OptionComponent: WebsiteCRMPartnersPage,
+                selector: "main:has(#oe_structure_website_crm_partner_assign_layout_1)",
+                title: _t("Partners Page"),
+                editableOnly: false,
+                groups: ["website.group_website_designer"],
+            },
+        ],
+    };
 }
 
 registry
-  .category("website-plugins")
-  .add(WebsiteCRMPartnersPageOption.id, WebsiteCRMPartnersPageOption);
+    .category("website-plugins")
+    .add(WebsiteCRMPartnersPageOption.id, WebsiteCRMPartnersPageOption);
