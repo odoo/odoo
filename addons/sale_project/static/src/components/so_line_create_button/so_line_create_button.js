@@ -23,6 +23,7 @@ export class SoLineCreateButton extends Component {
             resModel: "sale.order",
             context: {
                 ...context,
+                form_view_ref: context.so_form_view_ref,
                 default_company_id: context.default_company_id || user.activeCompany.id,
                 default_user_id: user.userId,
             },
