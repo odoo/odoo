@@ -29,6 +29,7 @@ export function insertChartInSpreadsheet(
         },
         definition,
     });
+    return definition.id;
 }
 /**
  *

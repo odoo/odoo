@@ -1,5 +1,6 @@
 import { navigateTo } from "@spreadsheet/actions/helpers";
 import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 
 export function onOdooChartItemClick(getters, chart) {
     return navigateInOdooMenuOnClick(getters, chart, (chartJsItem) => {
@@ -52,12 +53,10 @@ export function onWaterfallOdooChartItemClick(getters, chart) {
 function navigateInOdooMenuOnClick(getters, chart, getDomainFromChartItem) {
     return async (event, items) => {
         const env = getters.getOdooEnv();
-        if (!items.length) {
+        if (!items.length || !env || event.type !== "click") {
             return;
         }
-        if (!env) {
-            return;
-        }
+        event.native.preventDefault(); // Prevent other click actions
         const { name, domain } = getDomainFromChartItem(items[0]);
         await navigateTo(
             env,
@@ -85,4 +84,20 @@ export function onOdooChartItemHover() {
             event.native.target.style.cursor = "";
         }
     };
+}
+
+export async function navigateToOdooMenu(menu, actionService, notificationService, newWindow) {
+    if (!menu) {
+        throw new Error(`Cannot find any menu associated with the chart`);
+    }
+    if (!menu.actionID) {
+        notificationService.add(
+            _t(
+                "The menu linked to this chart doesn't have an corresponding action. Please link the chart to another menu."
+            ),
+            { type: "danger" }
+        );
+        return;
+    }
+    await actionService.doAction(menu.actionID, { newWindow });
 }
