@@ -865,7 +865,8 @@ class Base(models.AbstractModel):
         if (
             len(groupby) == 1
             and self.env.context.get('read_group_expand')
-            and (field := self._fields[groupby[0].split('.')[0].split(':')[0]])
+            and '.' not in groupby[0]
+            and (field := self._fields[groupby[0].split(':')[0]])
             and field.group_expand
         ):
             return field
@@ -1114,8 +1115,21 @@ class Base(models.AbstractModel):
     def _web_read_group_groupby_formatter(self, groupby_spec, values):
         """ Return a formatter method that returns value/label and the domain that the group
         value represent """
-        field_name = groupby_spec.split(':')[0].split('.')[0]
+        field_path = groupby_spec.split(':')[0]
+        field_name, _dot, remaining_path = field_path.partition('.')
         field = self._fields[field_name]
+
+        if remaining_path and field.type == 'many2one':
+            model = self.env[field.comodel_name]
+            sub_formatter = model._web_read_group_groupby_formatter(groupby_spec.split('.', 1)[1], values)
+
+            def formatter_follow_many2one(value):
+                value, domain = sub_formatter(value)
+                if not value:
+                    return value, ['|', (field_name, 'not any', []), (field_name, 'any', domain)]
+                return value, [(field_name, 'any', domain)]
+
+            return formatter_follow_many2one
 
         if field.type == 'many2many':
 
@@ -1139,7 +1153,8 @@ class Base(models.AbstractModel):
             return formatter_many2one
 
         if field.type in ('date', 'datetime'):
-            granularity = groupby_spec.split(':')[1] if ':' in groupby_spec else 'month'
+            assert ':' in groupby_spec, "Granularity is missing"
+            granularity = groupby_spec.split(':')[1]
             if granularity in READ_GROUP_TIME_GRANULARITY:
                 locale = get_lang(self.env).code
                 fmt = DEFAULT_SERVER_DATETIME_FORMAT if field.type == 'datetime' else DEFAULT_SERVER_DATE_FORMAT

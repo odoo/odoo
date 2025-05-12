@@ -368,9 +368,6 @@ class TestPrivateReadGroup(common.TransactionCase):
         with self.assertRaises(ValueError):
             Model._read_group([], ['"create_date:unknown_number'])
 
-        with self.assertRaises(ValueError):
-            Model._read_group([], ['order_id.id'])
-
         # Test malformed aggregate clause
         with self.assertRaises(ValueError):
             Model._read_group([], aggregates=['value'])  # No aggregate
@@ -1280,6 +1277,12 @@ class TestPrivateReadGroup(common.TransactionCase):
         """]):
             RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
 
+        # Test sequence of fields have the same result than the related one (no ir.rule)
+        self.assertEqual(
+            RelatedFoo._read_group([], ['bar_base_ids'], ['__count']),
+            RelatedFoo._read_group([], ['bar_id.base_ids'], ['__count']),
+        )
+
     def test_many2many_aggregate(self):
         """ many2many fields are not aggregable """
         Model = self.env['test_read_group.task']
@@ -1304,3 +1307,211 @@ class TestPrivateReadGroup(common.TransactionCase):
                 (1, 1, 5, 5, 1),
             ],
         )
+
+    def test_groupby_sequence_fnames_many2one(self):
+        RelatedBar = self.env['test_read_group.related_bar']
+        RelatedFoo = self.env['test_read_group.related_foo']
+        RelatedBase = self.env['test_read_group.related_base']
+
+        bars = RelatedBar.create([
+            {'name': 'bar_a'},
+            {'name': False},
+        ])
+
+        foos = RelatedFoo.create([
+            {'name': 'foo_a_bar_a', 'bar_id': bars[0].id},
+            {'name': 'foo_b_bar_false', 'bar_id': bars[1].id},
+            {'name': False, 'bar_id': bars[0].id},
+            {'name': False},
+        ])
+
+        RelatedBase.create([
+            {'name': 'base_foo_a_1', 'foo_id': foos[0].id},
+            {'name': 'base_foo_a_2', 'foo_id': foos[0].id},
+            {'name': 'base_foo_b_bar_false', 'foo_id': foos[1].id},
+            {'name': 'base_false_foo_bar_a', 'foo_id': foos[2].id},
+            {'name': 'base_false_foo', 'foo_id': foos[3].id},
+        ])
+
+        # warmup ormcache
+        RelatedBase._read_group([], ['foo_id.bar_id'], ['__count'])
+
+        expected_query = """
+            SELECT "test_read_group_related_base__foo_id"."bar_id",
+                    COUNT(*)
+            FROM "test_read_group_related_base"
+            LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_base__foo_id"
+                ON ("test_read_group_related_base"."foo_id" = "test_read_group_related_base__foo_id"."id")
+            GROUP BY "test_read_group_related_base__foo_id"."bar_id"
+            ORDER BY "test_read_group_related_base__foo_id"."bar_id" ASC
+        """
+        with self.assertQueries([expected_query]):
+            self.assertEqual(
+                RelatedBase._read_group([], ['foo_id.bar_id'], ['__count']),
+                [(bars[0], 3), (bars[1], 1), (RelatedBar, 1)],
+            )
+
+        # Test without sudo but without ir_rules
+        RelatedBase = RelatedBase.with_user(self.base_user)
+
+        # warmup ormcache
+        RelatedBase._read_group([], ['foo_id.bar_id'], ['__count'])
+
+        with self.assertQueries([expected_query]):
+            self.assertEqual(
+                RelatedBase._read_group([], ['foo_id.bar_id'], ['__count']),
+                [(bars[0], 3), (bars[1], 1), (RelatedBar, 1)],
+            )
+
+        # Test without sudo + ir_rules
+        users_model = self.env['ir.model']._get(RelatedFoo._name)
+        self.env['ir.rule'].create({
+            'name': "Only The Lone Wanderer allowed",
+            'model_id': users_model.id,
+            'domain_force': [('id', 'in', foos[1:].ids)],
+        })
+        RelatedBase = RelatedBase.with_user(self.base_user)
+
+        # warmup ormcache
+        RelatedBase._read_group([], ['foo_id.bar_id'], ['__count'])
+
+        alias_join = f"test_read_group_related_base__foo_id__{self.base_user.id}"
+        with self.assertQueries([f"""
+            SELECT "{alias_join}"."bar_id",
+                   COUNT(*)
+            FROM "test_read_group_related_base"
+            LEFT JOIN (
+                SELECT "test_read_group_related_foo".*
+                FROM "test_read_group_related_foo"
+                WHERE "test_read_group_related_foo"."id" IN %s
+            ) AS "{alias_join}"
+            ON (
+                "test_read_group_related_base"."foo_id" = "{alias_join}"."id"
+            )
+            GROUP BY "{alias_join}"."bar_id"
+            ORDER BY "{alias_join}"."bar_id" ASC
+        """]):
+            # foos[0] not accessible, then foo_id.bar_id result into empty recordset
+            self.assertEqual(
+                RelatedBase._read_group([], ['foo_id.bar_id'], ['__count']),
+                [(bars[0], 1), (bars[1], 1), (RelatedBar, 3)],
+            )
+
+    def test_groupby_sequence_fnames_char(self):
+        RelatedBar = self.env['test_read_group.related_bar']
+        RelatedFoo = self.env['test_read_group.related_foo']
+        RelatedBase = self.env['test_read_group.related_base']
+
+        bars = RelatedBar.create([
+            {'name': 'bar_a'},
+            {'name': False},
+        ])
+
+        foos = RelatedFoo.create([
+            {'name': 'foo_a_bar_a', 'bar_id': bars[0].id},
+            {'name': 'foo_b_bar_false', 'bar_id': bars[1].id},
+            {'name': False, 'bar_id': bars[0].id},
+            {'name': False},
+        ])
+
+        RelatedBase.create([
+            {'name': 'base_foo_a_1', 'foo_id': foos[0].id},
+            {'name': 'base_foo_a_2', 'foo_id': foos[0].id},
+            {'name': 'base_foo_b_bar_false', 'foo_id': foos[1].id},
+            {'name': 'base_false_foo_bar_a', 'foo_id': foos[2].id},
+            {'name': 'base_false_foo', 'foo_id': foos[3].id},
+        ])
+
+        # Warmup ormcache
+        RelatedBase._read_group([], ['foo_id.bar_id.name'], ['__count'])
+
+        # Same query generated by grouping foo_id.bar_id.name/foo_id.bar_name/foo_id.bar_name_sudo
+        query_expected = """
+            SELECT "test_read_group_related_base__foo_id__bar_id"."name",
+                    COUNT(*)
+            FROM "test_read_group_related_base"
+            LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_base__foo_id"
+                ON ("test_read_group_related_base"."foo_id" = "test_read_group_related_base__foo_id"."id")
+            LEFT JOIN "test_read_group_related_bar" AS "test_read_group_related_base__foo_id__bar_id"
+                ON ("test_read_group_related_base__foo_id"."bar_id" = "test_read_group_related_base__foo_id__bar_id"."id")
+            GROUP BY "test_read_group_related_base__foo_id__bar_id"."name"
+            ORDER BY "test_read_group_related_base__foo_id__bar_id"."name" ASC
+        """
+        with self.assertQueries([query_expected] * 3):
+            for fname_sequence in ['foo_id.bar_id.name', 'foo_id.bar_name_sudo', 'foo_id.bar_name']:
+                self.assertEqual(
+                    RelatedBase._read_group([], [fname_sequence], ['__count']),
+                    [('bar_a', 3), (False, 2)],
+                )
+
+        # Cannot groupby on foo_ids.name because it traverse One2many
+        with self.assertRaises(ValueError):
+            RelatedBar._read_group([], ['foo_ids.name'])
+
+        # Test without sudo but without ir_rules
+        RelatedBase = RelatedBase.with_user(self.base_user)
+
+        # Warmup ormcache
+        RelatedBase._read_group([], ['foo_id.bar_id.name'], ['__count'])
+
+        # Same query generated by grouping foo_id.bar_id.name/foo_id.bar_name_sudo
+        expected_query = """
+            SELECT "test_read_group_related_base__foo_id__bar_id"."name",
+                    COUNT(*)
+            FROM "test_read_group_related_base"
+            LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_base__foo_id"
+                ON ("test_read_group_related_base"."foo_id" = "test_read_group_related_base__foo_id"."id")
+            LEFT JOIN "test_read_group_related_bar" AS "test_read_group_related_base__foo_id__bar_id"
+                ON ("test_read_group_related_base__foo_id"."bar_id" = "test_read_group_related_base__foo_id__bar_id"."id")
+            GROUP BY "test_read_group_related_base__foo_id__bar_id"."name"
+            ORDER BY "test_read_group_related_base__foo_id__bar_id"."name" ASC
+        """
+        for fname_sequence in ['foo_id.bar_id.name', 'foo_id.bar_name_sudo']:
+            with self.assertQueries([expected_query]):
+                self.assertEqual(
+                    RelatedBase._read_group([], [fname_sequence], ['__count']),
+                    [('bar_a', 3), (False, 2)],
+                )
+
+        # Doesn't work since bar_name is unsudoed
+        with self.assertRaises(ValueError):
+            RelatedBase._read_group([], ['foo_id.bar_name'], ['__count'])
+
+        # Test without sudo + ir_rules
+        users_model = self.env['ir.model']._get(RelatedFoo._name)
+        self.env['ir.rule'].create({
+            'name': "Only The Lone Wanderer allowed",
+            'model_id': users_model.id,
+            'domain_force': [('id', 'in', foos[1:].ids)],
+        })
+
+        # Warmup ormcache
+        RelatedBase._read_group([], ['foo_id.bar_id.name'], ['__count'])
+
+        # Same query generated by grouping foo_id.bar_id.name/foo_id.bar_name_sudo
+        alias_join = f"test_read_group_related_base__foo_id__{self.base_user.id}"
+        expected_query = f"""
+            SELECT "{alias_join}__bar_id"."name",
+                   COUNT(*)
+            FROM "test_read_group_related_base"
+            LEFT JOIN (
+                SELECT "test_read_group_related_foo".*
+                FROM "test_read_group_related_foo"
+                WHERE "test_read_group_related_foo"."id" IN %s
+            ) AS "{alias_join}" ON (
+                "test_read_group_related_base"."foo_id" = "{alias_join}"."id"
+            )
+            LEFT JOIN "test_read_group_related_bar" AS "{alias_join}__bar_id" ON (
+                "{alias_join}"."bar_id" = "{alias_join}__bar_id"."id"
+            )
+            GROUP BY "{alias_join}__bar_id"."name"
+            ORDER BY "{alias_join}__bar_id"."name" ASC
+        """
+
+        with self.assertQueries([expected_query] * 2):
+            for fname_sequence in ['foo_id.bar_id.name', 'foo_id.bar_name_sudo']:
+                # foos[0] not accessible, then bar_a is only exist via foos[2]
+                self.assertEqual(
+                    RelatedBase._read_group([], [fname_sequence], ['__count']),
+                    [('bar_a', 1), (False, 4)],
+                )
