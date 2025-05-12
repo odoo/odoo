@@ -785,11 +785,15 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             _logger.info(f"[ONETRAKER][LABEL] Retrieved label URL: {label_url}")
 
             # Open label in browser for printing
-            return {
-                'type': 'ir.actions.act_url',
-                'url': label_url,
-                'target': 'new',
-            }
+            # return {
+            #     'type': 'ir.actions.act_url',
+            #     'url': label_url,
+            #     'target': 'new',
+            # }
+            # Enhanced: Send to Zebra printer
+            self.print_label_via_pack_bench(label_url)
+            return {'type': 'ir.actions.act_window_close'}
+
 
         except requests.exceptions.RequestException as e:
             _logger.error(f"[ONETRAKER][ERROR] Request failed: {str(e)}")
@@ -798,6 +802,44 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         except ValueError:
             _logger.error("[ONETRAKER][ERROR] Failed to parse JSON from response")
             raise UserError(_("Failed to decode OneTraker API response. Please check logs."))
+
+    def print_label_via_pack_bench(self, label_url):
+        """
+        Downloads label (ZPL/PDF) and sends it to Zebra printer via Pack Bench IP.
+        """
+        self.ensure_one()
+
+        if not label_url:
+            raise UserError(_("No label URL provided to print."))
+
+        bench_ip = self.pack_bench_id.printer_ip
+        if not bench_ip:
+            raise UserError(_("Pack Bench is missing IP address. Please configure it."))
+
+        try:
+            label_resp = requests.get(label_url)
+            label_resp.raise_for_status()
+
+            label_data = label_resp.content
+            content_type = label_resp.headers.get('Content-Type')
+
+            _logger.info(f"[ZEBRA] Downloaded label: {len(label_data)} bytes, type: {content_type}")
+
+            printer_url = f"http://{bench_ip}:9100"  # RAW print port for Zebra
+
+            send_resp = requests.post(
+                printer_url,
+                data=label_data,
+                headers={'Content-Type': 'application/octet-stream'},
+                timeout=5
+            )
+            send_resp.raise_for_status()
+
+            _logger.info(f"[ZEBRA] Label sent to Zebra printer at {printer_url}")
+
+        except requests.exceptions.RequestException as e:
+            _logger.error(f"[ZEBRA ERROR] Failed to print label via {bench_ip}: {e}")
+            raise UserError(_("Failed to print label via Pack Bench %s:\n%s") % (bench_ip, str(e)))
 
     def send_payload_to_onetraker(self, env, picking, lines, config):
         """
@@ -951,14 +993,17 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
             # Print label URL (for multi-pick)
             label_url = generic.get("label_url")
+            # if label_url:
+            #     _logger.info(f"[ONETRAKER][LABEL] {label_url}")
+            #     self.env['ir.actions.act_url'].create({
+            #         'name': 'Print Label',
+            #         'type': 'ir.actions.act_url',
+            #         'url': label_url,
+            #         'target': 'new',
+            #     })
             if label_url:
                 _logger.info(f"[ONETRAKER][LABEL] {label_url}")
-                self.env['ir.actions.act_url'].create({
-                    'name': 'Print Label',
-                    'type': 'ir.actions.act_url',
-                    'url': label_url,
-                    'target': 'new',
-                })
+                self.print_label_via_pack_bench(label_url)
 
             # Update Sale Order + Picking
             picking.write({'current_state': 'pack'})
