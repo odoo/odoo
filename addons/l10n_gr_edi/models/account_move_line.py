@@ -143,6 +143,24 @@ class AccountMoveLine(models.Model):
         if not preferred_id and self.product_id:
             preferred_id = self.product_id.product_tmpl_id.l10n_gr_edi_preferred_classification_ids.filtered_domain(domain)[:1]
 
+        # If by the end nothing is still found, set the default preferred classification as [ 1.1 inv-type | 1.2 category | E3_561_007 type ]
+        if not preferred_id:
+            preferred_id = self.env.ref('l10n_gr_edi.default_preferred_classification', raise_if_not_found=False)
+        if not preferred_id:
+            preferred_id = self.env['l10n_gr_edi.preferred_classification'].create([{
+                'l10n_gr_edi_inv_type': '1.1',
+                'l10n_gr_edi_cls_category': 'category1_2',
+                'l10n_gr_edi_cls_type': 'E3_561_007',
+            }])
+            # Save the newly made preferred cls so that we don't have to create a new one everytime.
+            self.env['ir.model.data'].create([{
+                'name': 'default_preferred_classification',
+                'module': 'l10n_gr_edi',
+                'model': 'l10n_gr_edi.preferred_classification',
+                'res_id': preferred_id.id,
+                'noupdate': True,
+            }])
+
         return preferred_id
 
     @api.depends(
