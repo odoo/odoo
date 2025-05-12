@@ -257,15 +257,16 @@ class HolidaysAllocation(models.Model):
     @api.depends('employee_ids', 'allocation_type', 'accrual_plan_id')
     def _compute_from_employee_ids(self):
         for allocation in self:
+            employees = allocation.with_context(active_test=False).employee_ids
             accrual_plan = allocation.accrual_plan_id
-            if len(allocation.employee_ids) == 1 or (
-                allocation.employee_ids and not accrual_plan.is_based_on_worked_time
+            if len(employees) == 1 or (
+                employees and not accrual_plan.is_based_on_worked_time
                 and accrual_plan.level_ids and not accrual_plan.level_ids[0].frequency == 'hourly'
             ):
-                allocation.employee_id = allocation.employee_ids[0]._origin
+                allocation.employee_id = employees[0]._origin
             else:
                 allocation.employee_id = False
-            allocation.multi_employee = len(allocation.employee_ids) > 1
+            allocation.multi_employee = len(employees) > 1
 
     @api.depends('holiday_type')
     def _compute_from_holiday_type(self):
