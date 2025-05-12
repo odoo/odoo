@@ -2,7 +2,7 @@ import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useBus, useChildRef, useService } from "@web/core/utils/hooks";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
 import { fuzzyTest } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
@@ -12,7 +12,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { ACTIVE_ELEMENT_CLASS } from "@web/core/navigation/navigation";
+import { ACTIVE_ELEMENT_CLASS, useNavigation } from "@web/core/navigation/navigation";
 
 const parsers = registry.category("parsers");
 
@@ -107,8 +107,11 @@ export class SearchBar extends Component {
         this.items = useState([]);
         this.subItems = {};
 
+        this.facetContainerRef = useRef("facetContainerRef");
+        this.menuRef = useChildRef();
+        this.setupFacetNavigation();
         this.inputDropdownState = useDropdownState();
-        this.inputDropdownNavOptions = this.getInputDropdownNavOptions();
+        this.inputDropdownNavOptions = this.getDropdownNavigation();
 
         this.searchBarDropdownState = useDropdownState();
 
@@ -500,6 +503,141 @@ export class SearchBar extends Component {
         this.computeState({ expanded });
     }
 
+    setupFacetNavigation() {
+        const isFacet = (target) => target && target.classList.contains("o_searchview_facet");
+
+        useNavigation(this.facetContainerRef, {
+            shouldFocusChildInput: false,
+            getItems: () => {
+                if (this.root.el && this.inputRef.el) {
+                    return [
+                        ...this.root.el.querySelectorAll(":scope .o_searchview_facet"),
+                        this.inputRef.el,
+                    ];
+                }
+                return [];
+            },
+            isNavigationAvailable: ({ navigator, target }) => navigator.contains(target),
+            hotkeys: {
+                enter: {
+                    isAvailable: () => !this.inputDropdownState.isOpen,
+                    callback: () => this.env.searchModel.search() /** @todo keep this thing ?*/,
+                },
+                arrowdown: {
+                    callback: () => this.env.searchModel.trigger("focus-view"),
+                },
+                backspace: {
+                    bypassEditableProtection: true,
+                    allowRepeat: false,
+                    isAvailable: ({ target }) =>
+                        isFacet(target) ||
+                        (target.selectionStart === 0 && target.selectionEnd === 0),
+                    callback: (navigator) => {
+                        const facets = this.env.searchModel.facets;
+                        if (isFacet(navigator.activeItem.el)) {
+                            this.removeFacet(facets[navigator.activeItemIndex]);
+                        } else if (facets.length > 0) {
+                            this.removeFacet(facets[facets.length - 1]);
+                        }
+                    },
+                },
+                arrowright: {
+                    bypassEditableProtection: true,
+                    allowRepeat: false,
+                    isAvailable: ({ target }) =>
+                        isFacet(target) || target.selectionStart === this.state.query.length,
+                    callback: (navigator) => {
+                        navigator.next();
+                        if (navigator.activeItem.el === this.inputRef.el) {
+                            this.inputRef.el.setSelectionRange(0, 0);
+                        }
+                    },
+                },
+                arrowleft: {
+                    bypassEditableProtection: true,
+                    isAvailable: ({ target }) => isFacet(target) || target.selectionStart === 0,
+                    callback: (navigator) => {
+                        navigator.previous();
+                        if (navigator.activeItem.el === this.inputRef.el) {
+                            const inputLength = this.inputRef.el.value.length;
+                            this.inputRef.el.setSelectionRange(inputLength, inputLength);
+                        }
+                    },
+                },
+            },
+        });
+    }
+
+    /**
+     * @returns {import("@web/core/navigation/navigation").NavigationOptions}
+     */
+    getDropdownNavigation() {
+        const isExpansible = (index) => {
+            const item = this.items[index];
+            return item && item.isParent;
+        };
+
+        const isCollapsible = (index) => {
+            const item = this.items[index];
+            return (
+                item && ((item.isParent && item.isExpanded) || item.isChild || item.isFieldProperty)
+            );
+        };
+
+        return {
+            virtualFocus: true,
+            getItems: () => this.menuRef.el?.querySelectorAll(":scope .o-dropdown-item") ?? [],
+            isNavigationAvailable: ({ navigator, target }) =>
+                this.inputDropdownState.isOpen &&
+                (this.facetContainerRef.el?.contains(target) || navigator.contains(target)),
+            onUpdated: (navigator) => (this.navigator = navigator),
+            hotkeys: {
+                escape: {
+                    callback: () => {
+                        this.inputDropdownState.close();
+                        this.resetState();
+                    },
+                },
+                arrowright: {
+                    bypassEditableProtection: true,
+                    allowRepeat: false,
+                    isAvailable: ({ navigator }) => isExpansible(navigator.activeItemIndex),
+                    callback: (navigator) => {
+                        const item = this.items[navigator.activeItemIndex];
+                        if (item.isParent) {
+                            if (item.isExpanded) {
+                                navigator.next();
+                            } else {
+                                this.toggleItem(item, true);
+                            }
+                        }
+                    },
+                },
+                arrowleft: {
+                    bypassEditableProtection: true,
+                    isAvailable: ({ navigator }) => isCollapsible(navigator.activeItemIndex),
+                    callback: (navigator) => {
+                        const item = this.items[navigator.activeItemIndex];
+
+                        const findIndex = (id) =>
+                            this.items.findIndex(
+                                (item) => item.isParent && item.searchItemId === id
+                            );
+                        if (item && item.isParent && item.isExpanded) {
+                            this.toggleItem(item, false);
+                        } else if (item && item.isChild) {
+                            navigator.items[findIndex(item.searchItemId)]?.setActive();
+                        } else if (item && item.isFieldProperty) {
+                            navigator.items[findIndex(item.propertyItemId)]?.setActive();
+                        } else if (this.inputRef.el.selectionStart === 0) {
+                            navigator.items[this.env.searchModel.facets.length - 1]?.setActive();
+                        }
+                    },
+                },
+            },
+        };
+    }
+
     //---------------------------------------------------------------------
     // Handlers
     //---------------------------------------------------------------------
@@ -532,88 +670,9 @@ export class SearchBar extends Component {
 
     /**
      * @param {Object} facet
-     * @param {number} facetIndex
-     * @param {KeyboardEvent} ev
-     */
-    onFacetKeydown(facet, facetIndex, ev) {
-        switch (ev.key) {
-            case "ArrowLeft": {
-                ev.preventDefault();
-                ev.stopPropagation();
-                if (facetIndex === 0) {
-                    this.inputRef.el.focus();
-                    const inputLength = this.inputRef.el.value.length;
-                    this.inputRef.el.setSelectionRange(inputLength, inputLength);
-                } else {
-                    this.focusFacet(facetIndex - 1);
-                }
-                break;
-            }
-            case "ArrowRight": {
-                ev.preventDefault();
-                ev.stopPropagation();
-                const facets = this.root.el.getElementsByClassName("o_searchview_facet");
-                if (facetIndex === facets.length - 1) {
-                    this.inputRef.el.focus();
-                    this.inputRef.el.setSelectionRange(0, 0);
-                } else {
-                    this.focusFacet(facetIndex + 1);
-                }
-                break;
-            }
-            case "Backspace": {
-                this.removeFacet(facet);
-                break;
-            }
-        }
-    }
-
-    /**
-     * @param {Object} facet
      */
     onFacetRemove(facet) {
         this.removeFacet(facet);
-    }
-
-    /**
-     * @param {KeyboardEvent} ev
-     */
-    onSearchKeydown(ev) {
-        if (ev.isComposing || this.inputDropdownState.isOpen) {
-            // This case happens with an IME for example: we let it handle all key events.
-            return;
-        }
-        switch (ev.key) {
-            case "ArrowDown":
-                ev.preventDefault();
-                this.env.searchModel.trigger("focus-view");
-                break;
-            case "ArrowLeft":
-                if (ev.target.selectionStart === 0) {
-                    // focus rightmost facet if any.
-                    this.focusFacet();
-                }
-                break;
-            case "ArrowRight":
-                if (ev.target.selectionStart === this.state.query.length) {
-                    // focus leftmost facet if any.
-                    this.focusFacet(0);
-                }
-                break;
-            case "Backspace": {
-                const facets = this.env.searchModel.facets;
-                if (facets.length) {
-                    this.removeFacet(facets[facets.length - 1]);
-                }
-                break;
-            }
-            case "Enter":
-                this.env.searchModel.search(); /** @todo keep this thing ?*/
-                break;
-            case "Escape":
-                this.resetState();
-                break;
-        }
     }
 
     onSearchClick() {
@@ -663,73 +722,11 @@ export class SearchBar extends Component {
         this.state.showSearchBar = !this.state.showSearchBar;
     }
 
-    /**
-     * @returns {import("@web/core/navigation/navigation").NavigationOptions}
-     */
-    getInputDropdownNavOptions() {
-        return {
-            virtualFocus: true,
-            hotkeys: {
-                arrowright: {
-                    bypassEditableProtection: true,
-                    allowRepeat: false,
-                    isAvailable: (navigator) => {
-                        const focusedItem = this.items[navigator.activeItemIndex];
-                        return (
-                            focusedItem &&
-                            this.inputRef.el.selectionStart === this.state.query.length
-                        );
-                    },
-                    callback: (navigator) => {
-                        const focusedItem = this.items[navigator.activeItemIndex];
-                        if (focusedItem.isParent) {
-                            if (focusedItem.isExpanded) {
-                                navigator.next();
-                            } else {
-                                this.toggleItem(focusedItem, true);
-                            }
-                        } else {
-                            this.focusFacet(0);
-                        }
-                    },
-                },
-                arrowleft: {
-                    bypassEditableProtection: true,
-                    isAvailable: (navigator) => {
-                        const focusedItem = this.items[navigator.activeItemIndex];
-                        return (
-                            this.inputRef.el.selectionStart === 0 ||
-                            (focusedItem &&
-                                ((focusedItem.isParent && focusedItem.isExpanded) ||
-                                    focusedItem.isChild ||
-                                    focusedItem.isFieldProperty))
-                        );
-                    },
-                    callback: (navigator) => {
-                        const focusedItem = this.items[navigator.activeItemIndex];
-                        const findIndex = (id) =>
-                            this.items.findIndex(
-                                (item) => item.isParent && item.searchItemId === id
-                            );
-                        if (focusedItem && focusedItem.isParent && focusedItem.isExpanded) {
-                            this.toggleItem(focusedItem, false);
-                        } else if (focusedItem && focusedItem.isChild) {
-                            navigator.items[findIndex(focusedItem.searchItemId)]?.setActive();
-                        } else if (focusedItem && focusedItem.isFieldProperty) {
-                            navigator.items[findIndex(focusedItem.propertyItemId)]?.setActive();
-                        } else if (this.inputRef.el.selectionStart === 0) {
-                            this.focusFacet();
-                        }
-                    },
-                },
-            },
-            onEnabled: (navigator) => navigator.items[0]?.setActive(),
-        };
-    }
-
     onInputDropdownChanged(isOpen) {
         if (!isOpen && status(this) === "mounted") {
             this.resetState({ focus: false });
+        } else if (this.navigator) {
+            this.navigator.items[0]?.setActive();
         }
     }
 }

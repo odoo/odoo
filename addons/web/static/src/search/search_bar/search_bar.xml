@@ -8,7 +8,6 @@
                 role="listitem"
                 aria-label="search"
                 tabindex="0"
-                t-on-keydown="ev => this.onFacetKeydown(facet, facet_index, ev)"
                 >
 
                 <!-- :hover overlay -->
@@ -96,6 +95,7 @@
                 menuClass="'o_searchview_autocomplete'"
                 navigationOptions="inputDropdownNavOptions"
                 onStateChanged.bind="onInputDropdownChanged"
+                menuRef="menuRef"
             >
                 <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0"
                     role="search" aria-autocomplete="list">
@@ -109,7 +109,7 @@
                             role="img"
                         />
                     </button>
-                    <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 mw-100">
+                    <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 mw-100" t-ref="facetContainerRef">
                         <t t-call="web.SearchBar.Facets"/>
                         <input type="text"
                             class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"
@@ -117,7 +117,6 @@
                             placeholder="Search..."
                             role="searchbox"
                             t-ref="autofocus"
-                            t-on-keydown="onSearchKeydown"
                             t-on-click="onSearchClick"
                             t-on-input="onSearchInput"
                         />
