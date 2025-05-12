@@ -9,11 +9,11 @@ function websiteCreateEventTourSteps() {
     return [
         {
             content: "Click here to add new content to your website.",
-            trigger: ".o_menu_systray .o_new_content_container > a",
+            trigger: ".o_menu_systray .o_new_content_container > button",
             tooltipPosition: "bottom",
             run: "click",
         }, {
-            trigger: "a[data-module-xml-id='base.module_website_event']",
+            trigger: "[data-module-xml-id='base.module_website_event']",
             content: "Click here to create a new event.",
             tooltipPosition: "bottom",
             run: "click",
@@ -46,7 +46,7 @@ function websiteCreateEventTourSteps() {
         },
         {
             trigger: '.modal-footer button.btn-primary',
-            content: "Click Continue to create the event.",
+            content: "Click Save to create the event.",
             tooltipPosition: "right",
             run: "click",
         },
@@ -57,7 +57,7 @@ function websiteCreateEventTourSteps() {
         }), {
             // Wait until the drag and drop is resolved (causing a history step)
             // before clicking save.
-            trigger: ".o_we_external_history_buttons button.fa-undo:not([disabled])",
+            trigger: ".o-snippets-top-actions .fa-undo:not([disabled])",
         }, {
             trigger: "button[data-action=save]",
             content: "Once you click on save, your event is updated.",
@@ -100,6 +100,11 @@ function websiteEditEventTourSteps() {
             }
         },
         ...clickOnSave(),
+        {
+            content: "Check that the event page is loaded",
+            trigger: ".o_website_preview :iframe html[data-view-xmlid='website_event.index']",
+            timeout: 30000,
+        },
         {
             content: "is short description updated?",
             trigger: ":iframe .opt_events_list_columns small:contains('new short description')",
