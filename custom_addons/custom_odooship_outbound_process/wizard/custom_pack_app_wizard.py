@@ -753,7 +753,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         Full OneTraker Label Process:
         1. Send payload to OneTraker
         2. Extract label URL from response
-        3. Trigger browser print for label
+        3. Print label via Zebra printer
         """
         config = self.get_onetraker_config()
         api_url = config.get("ONETRAKER_CREATE_ORDER_URL")
@@ -768,36 +768,29 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             # Send payload to OneTraker
             response = requests.post(api_url, headers=headers, data=json.dumps(payload))
             _logger.info(
-                f"[ONETRAKER][SEND] Response ({response.status_code}) for {pick_name or 'N/A'}: {response.text}")
+                f"[ONETRAKER][SEND] Response ({response.status_code}) for {pick_name or 'N/A'}: {response.text}"
+            )
 
             if response.status_code != 200:
                 raise UserError(
-                    _("Label sending failed.\nStatus: %s\nResponse: %s") % (response.status_code, response.text))
+                    _("Label sending failed.\nStatus: %s\nResponse: %s") % (response.status_code, response.text)
+                )
 
             response_json = response.json()
             _logger.info(f"[ONETRAKER][FULL RESPONSE] for {pick_name or 'N/A'}:\n{json.dumps(response_json, indent=4)}")
-            generic_response = response_json.get("genericResponse", {})
 
-            if generic_response.get("apiStatusCode") != 200:
-                raise UserError(
-                    _("OneTraker API Error:\n%s") % generic_response.get("apiStatusMessage", "Unknown error"))
+            # ✅ Extract from correct path in OneTraker response
+            label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
+                                                                                                    {}).get("url")
 
-            label_url = generic_response.get("label_url")
             if not label_url:
                 raise UserError(_("Label URL not found in the OneTraker response."))
 
             _logger.info(f"[ONETRAKER][LABEL] Retrieved label URL: {label_url}")
 
-            # Open label in browser for printing
-            # return {
-            #     'type': 'ir.actions.act_url',
-            #     'url': label_url,
-            #     'target': 'new',
-            # }
             # Enhanced: Send to Zebra printer
             self.print_label_via_pack_bench(label_url)
             return {'type': 'ir.actions.act_window_close'}
-
 
         except requests.exceptions.RequestException as e:
             _logger.error(f"[ONETRAKER][ERROR] Request failed: {str(e)}")
