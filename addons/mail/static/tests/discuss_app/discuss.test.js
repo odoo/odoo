@@ -1333,7 +1333,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     );
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", {
-        text: "Mitchell Admin and Dumbledore",
+        text: "Mitchell Admin, Dumbledore",
     });
     expect(titleService.current).toBe("(1) Inbox");
 });
@@ -1978,7 +1978,9 @@ test("composer state: attachments save and restore", async () => {
         ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]",
         files
     );
-    await contains(".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", { count: 3 });
+    await contains(".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", {
+        count: 3,
+    });
     // Switch back to #general
     await click("button", { text: "General" });
     await contains(".o-mail-Composer .o-mail-AttachmentCard");
