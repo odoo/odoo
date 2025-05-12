@@ -258,7 +258,7 @@ class SMSCase(MockSMS):
         ]
         if messages is not None:
             base_domain += [('mail_message_id', 'in', messages.ids)]
-        notifications = self.env['mail.notification'].search(base_domain)
+        notifications = self.env['mail.notification'].sudo().search(base_domain)
 
         self.assertEqual(notifications.mapped('res_partner_id'), partners)
 

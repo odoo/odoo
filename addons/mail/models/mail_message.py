@@ -715,13 +715,17 @@ class MailMessage(models.Model):
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed and not self.env.is_system():
             raise AccessError(_("Only administrators can modify 'model' and 'res_id' fields."))
+        notif_changed = 'notification_ids' in vals or 'partner_ids' in vals
+        if notif_changed and not self.env.is_system():
+            raise AccessError(_("Only administrators can modify 'notification_ids' and 'partner_ids' fields."))
+
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
         res = super().write(vals)
         if vals.get('attachment_ids'):
             for mail in self:
                 mail.attachment_ids.check(mode='read')
-        if 'notification_ids' in vals or record_changed:
+        if notif_changed or record_changed:
             self._invalidate_documents()
         return res
 
@@ -971,9 +975,11 @@ class MailMessage(models.Model):
         ]
         if self.env.user._is_internal():
             field_names.append(
+                # sudo: notifications are private
                 Store.Many(
                     "notification_ids",
-                    value=lambda m: m.notification_ids._filtered_for_web_client(),
+                    value=lambda m: m.sudo().notification_ids._filtered_for_web_client(),
+                    sudo=True,
                 )
             )
         return field_names
@@ -1140,8 +1146,10 @@ class MailMessage(models.Model):
                 "date",
                 "message_type",
                 Store.Many(
+                    # sudo: notifications are private
                     "notification_ids",
-                    value=lambda m: m.notification_ids._filtered_for_web_client(),
+                    value=lambda m: m.sudo().notification_ids._filtered_for_web_client(),
+                    sudo=True,
                 ),
                 Store.One(
                     "thread",

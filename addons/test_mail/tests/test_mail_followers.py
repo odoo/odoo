@@ -648,12 +648,12 @@ class RecipientsNotificationTest(MailCommon):
             ('model', '=', 'mail.test.track'),
             ('message_type', '=', 'user_notification')
         ])
-        notif = self.env['mail.notification'].search([
+        notif_su = self.env['mail.notification'].sudo().search([
             ('mail_message_id', '=', mail_message.id),
             ('res_partner_id', '=', self.common_partner.id)
         ])
-        self.assertEqual(len(notif), 1)
-        self.assertEqual(notif.notification_type, 'inbox', 'Multi users should take internal users if possible')
+        self.assertEqual(len(notif_su), 1)
+        self.assertEqual(notif_su.notification_type, 'inbox', 'Multi users should take internal users if possible')
 
         recipients_data = self.env['mail.followers']._get_recipient_data(
             test, 'comment', self.env.ref('mail.mt_comment').id,
