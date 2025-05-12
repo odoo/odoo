@@ -28,7 +28,7 @@
                                 options="{'no_create': True, 'no_open': True}"
                                 context="{
                                     'search_default_order_id': sale_order_id,
-                                    'form_view_ref': 'sale_project.view_order_simple_form',
+                                    'so_form_view_ref': 'sale_project.view_order_simple_form',
                                     'create_for_employee_mapping': True,
                                     'default_partner_id': partner_id,
                                     'default_company_id': company_id,
@@ -81,6 +81,7 @@
                                         widget="so_line_create_button"
                                         context="{
                                             'search_default_order_id': sale_order_id,
+                                            'so_form_view_ref': 'sale_project.view_order_simple_form',
                                             'create_for_employee_mapping': True,
                                             'default_partner_id': partner_id,
                                             'default_company_id': company_id,
