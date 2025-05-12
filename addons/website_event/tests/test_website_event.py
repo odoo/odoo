@@ -15,8 +15,6 @@ from odoo.tests.common import users
 import unittest
 
 
-# TODO master-mysterious-egg fix error
-@unittest.skip("prepare mysterious-egg for merging")
 class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
     def test_event_registration_utm_values(self):
         self.event_0.registration_ids.unlink()
