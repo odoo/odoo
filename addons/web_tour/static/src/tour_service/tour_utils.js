@@ -7,22 +7,22 @@ import { _t } from "@web/core/l10n/translation";
  * if it will result to unloading of the page.
  * @param {(...args: any[]) => void} func
  * @param  {any[]} args
- * @returns {boolean | Promise<boolean>}
+ * @returns {Promise<boolean>}
  */
-export function callWithUnloadCheck(func, ...args) {
+export async function callWithUnloadCheck(func) {
     let willUnload = false;
     const beforeunload = () => (willUnload = true);
     window.addEventListener("beforeunload", beforeunload);
-    const result = func(...args);
-    if (result instanceof Promise) {
-        return result.then(() => {
+    await func();
+    return new Promise((resolve) => {
+        // Since router.pushState may be delayed (debounced with setTimeout),
+        // we wait a short amount of time before removing the beforeunload listener.
+        // This gives the pending navigation a chance to trigger the event.
+        setTimeout(() => {
             window.removeEventListener("beforeunload", beforeunload);
-            return willUnload;
-        });
-    } else {
-        window.removeEventListener("beforeunload", beforeunload);
-        return willUnload;
-    }
+            resolve(willUnload);
+        }, 10);
+    });
 }
 
 function formatValue(key, value, maxLength = 200) {
