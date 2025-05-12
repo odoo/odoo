@@ -45,10 +45,12 @@ export class BlockTab extends Component {
         return this.env.editor.shared;
     }
 
-    get resources() {
-        return this.env.editor.resources;
-    }
-
+    /**
+     * Opens and manages the snippet dialog after clicking on a snippet group,
+     * and inserts the selected snippet in the page.
+     *
+     * @param {Object} snippet the clicked snippet group
+     */
     onSnippetGroupClick(snippet) {
         this.shared.operation.next(
             async () => {
@@ -104,7 +106,7 @@ export class BlockTab extends Component {
     }
 
     /**
-     * Opens and manages the snippet dialog after dropping a snippet group
+     * Opens and manages the snippet dialog after dropping a snippet group.
      * If a snippet is selected in the dialog, it will replace the given
      * placeholder snippet.
      *
@@ -151,6 +153,11 @@ export class BlockTab extends Component {
         delete this.cancelDragAndDrop;
     }
 
+    /**
+     * Shows a tooltip telling to drag the snippet when clicking on it.
+     *
+     * @param {Event} ev
+     */
     showSnippetTooltip(ev) {
         const snippetEl = ev.currentTarget.closest(".o_snippet.o_draggable");
         if (snippetEl) {
@@ -164,6 +171,9 @@ export class BlockTab extends Component {
 
     // TODO bounce animation on click if empty editable
 
+    /**
+     * Initializes the drag and drop for the snippets in the block tabs.
+     */
     makeSnippetDraggable() {
         let dropzoneEls = [];
         let dragAndDropResolve;
@@ -205,18 +215,20 @@ export class BlockTab extends Component {
                 return draggedEl;
             },
             onDragStart: ({ element }) => {
-                this.cancelDragAndDrop = this.shared.history.makeSavePoint();
-                this.hideSnippetToolTip?.();
-
                 this.shared.operation.next(
                     async () => {
                         await new Promise((resolve) => (dragAndDropResolve = () => resolve()));
                     },
                     { withLoadingEffect: false }
                 );
+                this.cancelDragAndDrop = this.shared.history.makeSavePoint();
+                this.hideSnippetToolTip?.();
 
                 this.document.body.classList.add("oe_dropzone_active");
                 this.state.ongoingInsertion = true;
+
+                this.dragState = {};
+                dropzoneEls = [];
 
                 const category = element.closest(".o_snippets_container").id;
                 const id = element.dataset.id;
@@ -259,7 +271,11 @@ export class BlockTab extends Component {
                 dropzoneEls = this.shared.dropzone.activateDropzones(selectors, {
                     toInsertInline: isInlineSnippet,
                 });
-                this.onDropzoneStart();
+
+                this.env.editor.dispatchTo("on_snippet_dragged_handlers", {
+                    snippetEl,
+                    dragState: this.dragState,
+                });
             },
             dropzoneOver: ({ dropzone }) => {
                 const dropzoneEl = dropzone.el;
@@ -269,14 +285,20 @@ export class BlockTab extends Component {
                 }
                 dropzoneEl.after(snippetEl);
                 dropzoneEl.classList.add("invisible");
-                this.onDropZoneOver();
+                this.dragState.currentDropzoneEl = dropzoneEl;
+
+                this.env.editor.dispatchTo("on_snippet_over_dropzone_handlers", {
+                    snippetEl,
+                    dragState: this.dragState,
+                });
 
                 // Preview the snippet correctly.
                 // Note: no async previews, in order to not slow down the drag.
                 this.cancelSnippetPreview = this.shared.history.makeSavePoint();
-                this.resources["on_snippet_preview_handlers"]?.forEach((onSnippetPreview) =>
-                    onSnippetPreview({ snippetEl })
-                );
+                this.env.editor.dispatchTo("on_snippet_preview_handlers", {
+                    snippetEl,
+                    dragState: this.dragState,
+                });
             },
             dropzoneOut: ({ dropzone }) => {
                 const dropzoneEl = dropzone.el;
@@ -288,9 +310,14 @@ export class BlockTab extends Component {
                 this.cancelSnippetPreview();
                 delete this.cancelSnippetPreview;
 
+                this.env.editor.dispatchTo("on_snippet_out_dropzone_handlers", {
+                    snippetEl,
+                    dragState: this.dragState,
+                });
+
                 snippetEl.remove();
                 dropzoneEl.classList.remove("invisible");
-                this.onDropZoneOut();
+                this.dragState.currentDropzoneEl = null;
             },
             onDragEnd: async ({ x, y, helper, dropzone }) => {
                 // Undo the preview if any.
@@ -331,7 +358,6 @@ export class BlockTab extends Component {
                 }
 
                 this.state.ongoingInsertion = false;
-                this.onDropZoneStop(); // TODO check if it is the best place.
                 delete this.cancelSnippetPreview;
                 if (!isSnippetGroup) {
                     delete this.cancelDragAndDrop;
@@ -351,8 +377,8 @@ export class BlockTab extends Component {
         this.updateDroppedSnippet(snippetEl);
         await scrollTo(snippetEl, { extraOffset: 50 });
         // Build the snippet.
-        for (const onSnippetDropped of this.resources["on_snippet_dropped_handlers"] || []) {
-            const cancel = await onSnippetDropped({ snippetEl });
+        for (const onSnippetDropped of this.env.editor.getResource("on_snippet_dropped_handlers")) {
+            const cancel = await onSnippetDropped({ snippetEl, dragState: this.dragState });
             // Cancel everything if the resource asked to.
             if (cancel) {
                 this.cancelDragAndDrop?.();
@@ -361,7 +387,7 @@ export class BlockTab extends Component {
         }
         this.env.editor.config.updateInvisibleElementsPanel();
         this.shared.disableSnippets.disableUndroppableSnippets();
-        this.env.editor.shared.history.addStep();
+        this.shared.history.addStep();
     }
 
     /**
@@ -379,12 +405,4 @@ export class BlockTab extends Component {
             delete snippetEl.dataset.name;
         }
     }
-
-    /**
-     * Hooks allowing other modules to react to drop zones being enabled.
-     */
-    onDropzoneStart() {}
-    onDropZoneOver() {}
-    onDropZoneOut() {}
-    onDropZoneStop() {}
 }

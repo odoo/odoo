@@ -206,6 +206,25 @@ export class Editor {
         return Object.freeze(resources);
     }
 
+    /**
+     * @param {string} resourceId
+     * @returns {Array}
+     */
+    getResource(resourceId) {
+        return this.resources[resourceId] || [];
+    }
+
+    /**
+     * Executes the functions registered under resourceId with the given
+     * arguments.
+     *
+     * @param {string} resourceId
+     * @param  {...any} args The arguments to pass to the handlers
+     */
+    dispatchTo(resourceId, ...args) {
+        this.getResource(resourceId).forEach((handler) => handler(...args));
+    }
+
     getContent() {
         return this.getElContent().innerHTML;
     }
