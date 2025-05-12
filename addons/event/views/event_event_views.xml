@@ -217,9 +217,7 @@
                         <field name="user_id" widget="many2one_avatar_user"/>
                         <div class="flex-grow-1">
                             <field name="name" string="Event Name" class="o_text_block o_text_bold"/>
-                            <field name="date_begin"/>
-                            <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" />
-                            <field name="date_end"/>
+                            <field name="date_begin" widget="daterange" options="{'end_date_field': 'date_end'}"/>
                         </div>
                     </div>
                 </templates>
