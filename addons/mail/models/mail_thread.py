@@ -122,6 +122,9 @@ class MailThread(models.AbstractModel):
     _mail_thread_customer = False  # subscribe customer when being in post recipients
     _mail_post_access = 'write'  # access required on the document to post on it
     _primary_email = 'email'  # Must be set for the models that can be created by alias
+
+    _CUSTOMER_HEADERS_LIMIT_COUNT = 50
+
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
 
     message_is_follower = fields.Boolean(
@@ -3730,12 +3733,12 @@ class MailThread(models.AbstractModel):
         # prepare headers (as sudo as accessing mail.alias.domain, restricted)
         headers = {}
         # prepare external emails to modify Msg[To] and enable Reply-All including external people
-        external = ','.join(
+        external_emails = [
             formataddr((r['name'], r['email_normalized']))
             for r in recipients_data if r['id'] and r['active'] and r['email_normalized'] and r['share']
-        )
-        if external:
-            headers['X-Msg-To-Add'] = external
+        ]
+        if external_emails and len(external_emails) < self._CUSTOMER_HEADERS_LIMIT_COUNT:  # more than threshold = considered as public record (slide, forum, ...) -> do not leak
+            headers['X-Msg-To-Add'] = ','.join(external_emails)
         if message_sudo.record_alias_domain_id.bounce_email:
             headers['Return-Path'] = message_sudo.record_alias_domain_id.bounce_email
         headers = self._notify_by_email_get_headers(headers=headers)

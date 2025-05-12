@@ -12,8 +12,7 @@ from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('mail_thread', 'mail_thread_api', 'mail_tools')
-class TestAPI(MailCommon, TestRecipients):
+class ThreadRecipients(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -72,6 +71,14 @@ class TestAPI(MailCommon, TestRecipients):
             'email': f'"Do not do this neither" <{cls.mail_alias_domain.catchall_email}>',
             'name': 'Someone created a partner with email=catchall',
         })
+
+
+@tagged('mail_thread', 'mail_thread_api', 'mail_tools')
+class TestAPI(ThreadRecipients):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.ticket_record = cls.env['mail.test.ticket.mc'].create({
             'company_id': cls.user_employee.company_id.id,
@@ -973,12 +980,50 @@ class TestAPI(MailCommon, TestRecipients):
 
 
 @tagged('mail_thread')
-class TestChatterTweaks(MailCommon, TestRecipients):
+class TestChatterTweaks(ThreadRecipients):
 
     @classmethod
     def setUpClass(cls):
         super(TestChatterTweaks, cls).setUpClass()
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+
+    @users('employee')
+    def test_post_headers_recipients_limit(self):
+        test_record = self.test_record.with_env(self.env)
+
+        for recipients_limit, has_header in (
+            (0, False),
+            (2, False),  # zut alors, 2 recipients is the limit !
+            (10, True),
+        ):
+            MailTestSimple._CUSTOMER_HEADERS_LIMIT_COUNT = recipients_limit
+            with self.mock_mail_gateway(mail_unlink_sent=False), \
+                    self.mock_mail_app():
+                message = test_record.message_post(
+                    body='With To Headers',
+                    partner_ids=(self.test_partner + self.test_partner_catchall).ids,
+                )
+
+            headers = {
+                'Return-Path': f'{self.mail_alias_domain.bounce_email}',
+                'X-Custom': 'Done',  # model override
+                'X-Odoo-Objects': f'{test_record._name}-{test_record.id}',
+            }
+            if has_header:
+                headers['X-Msg-To-Add'] = f'{self.test_partner.email_formatted},{self.test_partner_catchall.email_formatted}'
+            for recipient in self.test_partner + self.test_partner_catchall:
+                self.assertMailMail(
+                    recipient,
+                    'sent',
+                    author=self.partner_employee,
+                    mail_message=message,
+                    email_values={
+                        'headers': headers,
+                    },
+                    fields_values={
+                        'headers': headers,
+                    },
+                )
 
     def test_post_no_subscribe_author(self):
         original = self.test_record.message_follower_ids

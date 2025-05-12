@@ -25,6 +25,8 @@ class ForumPost(models.Model):
     ]
     _order = "is_correct DESC, vote_count DESC, last_activity_date DESC"
 
+    _CUSTOMER_HEADERS_LIMIT_COUNT = 0  # never use X-Msg-To headers
+
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True, index=True)
     content = fields.Html('Content', strip_style=True)
@@ -733,12 +735,6 @@ class ForumPost(models.Model):
                 if not post.can_edit:
                     raise AccessError(_('%d karma required to edit a post.', post.karma_edit))
         return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
-
-    def _notify_by_email_get_headers(self, headers=None):
-        # Never use explicit recipients
-        headers = super()._notify_by_email_get_headers(headers=headers)
-        headers.pop('X-Msg-To-Add', False)
-        return headers
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         groups = super()._notify_get_recipients_groups(
