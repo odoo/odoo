@@ -347,7 +347,7 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
     def _compute_qty_to_order_computed(self):
         for orderpoint in self:
-            if not orderpoint.product_id or not orderpoint.location_id:
+            if not orderpoint.id:
                 orderpoint.qty_to_order_computed = False
                 continue
             orderpoint.qty_to_order_computed = orderpoint._get_qty_to_order(qty_in_progress_by_orderpoint=orderpoint._quantity_in_progress())
