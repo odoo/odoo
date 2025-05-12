@@ -30,7 +30,6 @@ export class Animation extends Interaction {
                 "o_animating": this.isAnimating,
                 "o_animated": this.isAnimated,
                 "o_animate_in_dropdown": !!el.closest(".dropdown"),
-                // TODO Remove with edit mode
                 "o_animate_preview": undefined,
             }),
             "t-att-style": (el) => {
@@ -208,9 +207,3 @@ export class Animation extends Interaction {
 registry
     .category("public.interactions")
     .add("website.animation", Animation);
-
-registry
-    .category("public.interactions.edit")
-    .add("website.animation", {
-        Interaction: Animation,
-    });
