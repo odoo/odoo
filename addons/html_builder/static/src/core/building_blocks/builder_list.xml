@@ -13,14 +13,26 @@
                             </td>
                             <t t-foreach="Object.entries(props.itemShape).filter(([key,_]) => !props.hiddenProperties.includes(key))" t-as="entry" t-key="entry[0]">
                                 <td>
-                                    <input
-                                            t-att-type="entry[1]"
-                                            t-att-name="entry[0]"
-                                            t-att-value="item[entry[0]]"
-                                            t-att-data-id="item._id"
-                                            t-on-input="onInput"
-                                            t-on-change="onChange"
-                                    />
+                                    <t t-if="entry[1] === 'boolean'">
+                                        <div class="o-checkbox form-check o_field_boolean o_boolean_toggle form-switch">
+                                            <input type="checkbox" class="form-check-input"
+                                                t-att-name="entry[0]"
+                                                t-att-checked="item[entry[0]]"
+                                                t-att-data-id="item._id"
+                                                t-on-click="onChange"
+                                            />
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+	                                    <input
+	                                            t-att-type="entry[1]"
+	                                            t-att-name="entry[0]"
+	                                            t-att-value="item[entry[0]]"
+	                                            t-att-data-id="item._id"
+	                                            t-on-input="onInput"
+	                                            t-on-change="onChange"
+	                                    />
+                                    </t>
                                 </td>
                             </t>
                             <td>

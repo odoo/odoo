@@ -213,20 +213,14 @@
             unit="'MB'"
         />
     </BuilderRow>
-    <BuilderRow label.translate="TODO value list">
-        <div>TODO</div>
+    <BuilderRow t-if="state.valueList" label="state.valueList.label">
+        <BuilderList
+            action="'setFormCustomFieldValueList'"
+            addItemTitle="state.valueList.addItemTitle"
+            itemShape="{ display_name: 'text', selected: 'boolean' }"
+            default="{ display_name: state.valueList.defaultItemName, selected: false }"
+        />
     </BuilderRow>
-    <!-- TODO Implement a BuilderList
-    <WeList t-if="renderContext.valueList"
-        title="renderContext.valueList.title"
-        addItemTitle="renderContext.valueList.addItemTitle"
-        renderListItems="''"
-        hasDefault="renderContext.valueList.hasDefault"
-        defaults="renderContext.valueList.defaults"
-        availableRecords="renderContext.valueList.availableRecords"
-        newRecordId="renderContext.valueList.newRecordId"
-    />
-    -->
     <BuilderRow label.translate="Visibility">
         <BuilderSelect preview="false" action="'setVisibility'">
             <BuilderSelectItem actionValue="'visible'" classAction="''">Always Visible</BuilderSelectItem>

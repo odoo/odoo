@@ -533,6 +533,19 @@ export class FormOptionPlugin extends Plugin {
                     return currentValue === value;
                 },
             },
+            setFormCustomFieldValueList: {
+                apply: ({ editingElement: fieldEl, value }) => {
+                    const fields = [];
+                    const field = getActiveField(fieldEl, { fields });
+                    field.records = JSON.parse(value);
+                    this.replaceField(fieldEl, field, fields);
+                },
+                getValue: ({ editingElement: fieldEl }) => {
+                    const fields = [];
+                    const field = getActiveField(fieldEl, { fields });
+                    return JSON.stringify(field.records);
+                },
+            },
         };
     }
     setup() {
@@ -985,6 +998,7 @@ export class FormOptionPlugin extends Plugin {
             valueList = reactive({
                 title: _t("%s List", optionText),
                 addItemTitle: _t("Add new %s", optionText),
+                defaultItemName: _t("Item"),
                 hasDefault: ["one2many", "many2many"].includes(type) ? "multiple" : "unique",
                 defaults: JSON.stringify(defaults),
                 availableRecords: availableRecords,

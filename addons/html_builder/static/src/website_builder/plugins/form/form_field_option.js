@@ -20,6 +20,7 @@ export class FormFieldOption extends BaseOptionComponent {
             conditionInputs: [],
             conditionValueList: [],
             dependencyEl: null,
+            valueList: null,
         });
         this.domState = useDomState((el) => {
             const modelName = el.closest("form")?.dataset.model_name;
@@ -36,6 +37,7 @@ export class FormFieldOption extends BaseOptionComponent {
             const fieldOptionData = await this.props.loadFieldOptionData(el);
             this.state.availableFields.push(...fieldOptionData.availableFields);
             this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
+            this.state.valueList = fieldOptionData.valueList;
             this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
             this.state.dependencyEl = getDependencyEl(el);
         });
@@ -46,6 +48,7 @@ export class FormFieldOption extends BaseOptionComponent {
             this.state.availableFields.push(...fieldOptionData.availableFields);
             this.state.conditionInputs.length = 0;
             this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
+            this.state.valueList = fieldOptionData.valueList;
             this.state.conditionValueList.length = 0;
             this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
             this.state.dependencyEl = getDependencyEl(el);
