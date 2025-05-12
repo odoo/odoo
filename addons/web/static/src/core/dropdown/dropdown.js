@@ -79,6 +79,7 @@ export class Dropdown extends Component {
         menuRef: { type: Function, optional: true }, // to be used with useChildRef
         disabled: { type: Boolean, optional: true },
         holdOnHover: { type: Boolean, optional: true },
+        focusToggleOnClosed: { type: Boolean, optional: true },
 
         beforeOpen: { type: Function, optional: true },
         onOpened: { type: Function, optional: true },
@@ -109,6 +110,7 @@ export class Dropdown extends Component {
     static defaultProps = {
         disabled: false,
         holdOnHover: false,
+        focusToggleOnClosed: true,
         menuClass: "",
         state: undefined,
         noClasses: false,
@@ -121,9 +123,18 @@ export class Dropdown extends Component {
         this.state = this.props.state || useDropdownState();
         this.nesting = useDropdownNesting(this.state);
         this.group = useDropdownGroup();
+
         this.navigation = useNavigation(this.menuRef, {
-            focusInitialElementOnDisabled: () => !this.group.isInGroup,
-            itemsSelector: ":scope .o-navigable, :scope .o-dropdown",
+            isNavigationAvailable: () => this.state.isOpen,
+            getItems: () => {
+                if (this.state.isOpen && this.menuRef.el) {
+                    return this.menuRef.el.querySelectorAll(
+                        ":scope .o-navigable, :scope .o-dropdown"
+                    );
+                } else {
+                    return [];
+                }
+            },
             // Using deepMerge allows to keep entries of both option.hotkeys
             ...deepMerge(this.nesting.navigationOptions, this.props.navigationOptions),
         });
@@ -325,11 +336,15 @@ export class Dropdown extends Component {
 
     closePopover() {
         this.popover.close();
-        this.navigation.disable();
+        if (this.props.focusToggleOnClosed && !this.group.isInGroup) {
+            this._focusedElBeforeOpen?.focus();
+            this._focusedElBeforeOpen = undefined;
+        }
     }
 
     onOpened() {
-        this.navigation.enable();
+        this._focusedElBeforeOpen = document.activeElement;
+        this.navigation.update();
         this.props.onOpened?.();
         this.props.onStateChanged?.(true);
 
@@ -337,15 +352,27 @@ export class Dropdown extends Component {
             this.target.ariaExpanded = true;
             this.target.classList.add("show");
         }
+
+        this.observer = new MutationObserver(() => this.navigation.update());
+        this.observer.observe(this.menuRef.el, {
+            childList: true,
+            subtree: true,
+        });
     }
 
     onClosed() {
+        this.navigation.update();
         this.props.onStateChanged?.(false);
 
         if (this.target) {
             this.target.ariaExpanded = false;
             this.target.classList.remove("show");
             this.setTargetDirectionClass(this.defaultDirection);
+        }
+
+        if (this.observer) {
+            this.observer.disconnect();
+            this.observer = null;
         }
     }
 }

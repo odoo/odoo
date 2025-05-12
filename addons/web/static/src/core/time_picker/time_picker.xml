@@ -9,9 +9,11 @@
                 state="dropdownState"
                 menuRef="menuRef"
                 manual="true"
+                focusToggleOnClosed="false"
                 position="'bottom-start'"
                 menuClass="'o_time_picker_dropdown pt-0 mt-0'"
                 navigationOptions="navigationOptions"
+                onOpened.bind="onDropdownOpened"
             >
                 <input
                     type="text"

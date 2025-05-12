@@ -105,40 +105,41 @@ export function useDropdownNesting(state) {
         current.remove();
     });
 
+    const isDropdown = (target) => target && target.classList.contains("o-dropdown");
+    const isRTL = () => localization.direction === "rtl";
+
     return {
         get hasParent() {
             return Boolean(current.parent);
         },
         /**@type {import("@web/core/navigation/navigation").NavigationOptions} */
         navigationOptions: {
-            onEnabled: (navigator) => {
-                if (current.parent) {
+            onUpdated: (navigator) => {
+                if (current.parent && !navigator.activeItem) {
                     navigator.items[0]?.setActive();
-                }
-            },
-            onMouseEnter: (item) => {
-                if (item.target.classList.contains("o-dropdown")) {
-                    item.select();
                 }
             },
             hotkeys: {
                 escape: () => current.close(),
-                arrowleft: (navigator) => {
-                    if (
-                        localization.direction === "rtl" &&
-                        navigator.activeItem?.target.classList.contains("o-dropdown")
-                    ) {
-                        navigator.activeItem?.select();
-                    } else if (current.parent) {
-                        current.close();
-                    }
+                arrowleft: {
+                    isAvailable: ({ target }) => current.parent || (isRTL() && isDropdown(target)),
+                    callback: (navigator) => {
+                        if (isRTL() && isDropdown(navigator.activeItem?.target)) {
+                            navigator.activeItem?.select();
+                        } else if (current.parent) {
+                            current.close();
+                        }
+                    },
                 },
-                arrowright: (navigator) => {
-                    if (localization.direction === "rtl" && current.parent) {
-                        current.close();
-                    } else if (navigator.activeItem?.target.classList.contains("o-dropdown")) {
-                        navigator.activeItem?.select();
-                    }
+                arrowright: {
+                    isAvailable: ({ target }) => isDropdown(target) || (isRTL() && current.parent),
+                    callback: (navigator) => {
+                        if (isRTL() && current.parent) {
+                            current.close();
+                        } else if (isDropdown(navigator.activeItem?.target)) {
+                            navigator.activeItem?.select();
+                        }
+                    },
                 },
             },
         },
