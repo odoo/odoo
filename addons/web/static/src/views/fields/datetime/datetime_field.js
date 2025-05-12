@@ -8,6 +8,7 @@ import { ensureArray } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { formatDate, formatDateTime } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
+import { localization } from "@web/core/l10n/localization";
 
 function getFormattedPlaceholder(value, type, options) {
     if (value instanceof luxon.DateTime) {
@@ -193,12 +194,19 @@ export class DateTimeField extends Component {
      */
     getFormattedValue(valueIndex) {
         const value = this.values[valueIndex];
+        if (!value) {
+            return "";
+        }
         const { condensed, showSeconds, showTime } = this.props;
-        return value
-            ? this.field.type === "date"
-                ? formatDate(value, { condensed })
-                : formatDateTime(value, { condensed, showSeconds, showTime })
-            : "";
+        if (this.field.type === "date") {
+            return formatDate(value, { condensed });
+        }
+        if (showTime && valueIndex === 1 && this.values[0].hasSame(value, "day")) {
+            return formatDateTime(value, {
+                format: showSeconds ? localization.timeFormat : localization.shortTimeFormat,
+            });
+        }
+        return formatDateTime(value, { condensed, showSeconds, showTime });
     }
 
     /**

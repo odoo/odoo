@@ -1211,3 +1211,19 @@ test("updating time keeps selected dates", async () => {
     expect(".o_time_picker:first .o_time_picker_input").toHaveValue("15:35");
     expect(".o_time_picker:last .o_time_picker_input").toHaveValue("5:05");
 });
+
+test("daterange in readonly with same dates but different hours", async () => {
+    Partner._records[0].datetime_end = "2017-02-08 17:00:00";
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form edit="0">
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
+            </form>`,
+    });
+    expect(".o_field_daterange").toHaveText("02/08/2017 15:30\n22:30", {
+        message: "end date only shows time since it has the same day as start date",
+    });
+});
