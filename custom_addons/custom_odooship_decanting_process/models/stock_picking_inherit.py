@@ -183,16 +183,17 @@ class StockPicking(models.Model):
                     else "https://shiperoo-connect.uat.automation.shiperoo.com/sc-file-processor/api/receipt-completion"
                 )
                 auth = ('apiuser', 'apipass')
+#                 api_url = "https://shiperoo-connect.uat.automation.shiperoo.com/sc-file-processor/api/receipt-completion"
+#                 auth = ('apiuser', 'apipass')
 
-            else:
-                is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
-                api_url = (
-                "https://shiperooconnect-prod.automation.shiperoo.com/api/discrepency_receiver"
-                if is_production == 'True'
-                else "https://shiperooconnect-dev.automation.shiperoo.com/api/discrepency_receiver"
-            )
-                auth = None
-
+            # Define the URLs for Shiperoo Connect
+            # is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
+            # api_url = (
+            #     "https://shiperooconnect-prod.automation.shiperoo.com/api/discrepency_receiver"
+            #     if is_production == 'True'
+            #     else "https://shiperooconnect-dev.automation.shiperoo.com/api/discrepency_receiver"
+            # )
+            # json_data = json.dumps(payload, indent=4)
             _logger.info(f"Sending payload to {api_url}: {json_data}")
 
              # Send the payload to the API
