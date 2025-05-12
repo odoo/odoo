@@ -945,6 +945,7 @@ test("reference field should await fetch model before render", async () => {
         `,
     });
 
+    await animationFrame();
     expect(".o_form_view").toHaveCount(0);
     def.resolve();
 
