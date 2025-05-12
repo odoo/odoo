@@ -12,11 +12,8 @@ from odoo.exceptions import AccessError
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 from odoo.tests.common import users
-import unittest
 
 
-# TODO master-mysterious-egg fix error
-@unittest.skip("prepare mysterious-egg for merging")
 class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
     def test_event_registration_utm_values(self):
         self.event_0.registration_ids.unlink()
@@ -55,8 +52,6 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
         self.assertEqual(new_registration.utm_medium_id, self.env.ref('utm.utm_medium_email'))
 
 
-# TODO master-mysterious-egg fix error
-@unittest.skip("prepare mysterious-egg for merging")
 @tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
