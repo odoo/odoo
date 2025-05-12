@@ -1410,3 +1410,42 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': date(2022, 3, 12),
         })
         self.assertEqual(leave.number_of_days, 2)
+
+    def test_get_default_leave_type(self):
+        #  ===================================================================
+        #  | Case 1 -> Choose hour leave type if hour leave type exists      |
+        #  | Case 2 -> Choose first leave type if hour leave type not exists |
+        #  | Case 3 -> Choose none if not leave type exists                  |
+        #  ===================================================================
+
+        self.env['hr.leave.type'].search([]).unlink()
+        half_day_leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test half day Leave Type',
+            'requires_allocation': False,
+            'request_unit': 'half_day',
+            'company_id': self.company.id,
+            'sequence': 10,
+        })
+        hour_leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test hour Leave Type',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+            'company_id': self.company.id,
+        })
+
+        hr_leave_default_value = self.env['hr.leave'].with_context({
+            'default_request_unit_hours': True,
+        }).default_get(list(self.env['hr.leave'].fields_get()) + ['holiday_status_id'])
+        self.assertEqual(hr_leave_default_value.get('holiday_status_id'), hour_leave_type.id)
+
+        self.env['hr.leave.type'].search([('id', '=', hour_leave_type.id)]).unlink()
+        hr_leave_default_value = self.env['hr.leave'].with_context({
+            'default_request_unit_hours': True,
+        }).default_get(list(self.env['hr.leave'].fields_get()) + ['holiday_status_id'])
+        self.assertEqual(hr_leave_default_value.get('holiday_status_id'), half_day_leave_type.id)
+
+        self.env['hr.leave.type'].search([]).unlink()
+        hr_leave_default_value = self.env['hr.leave'].with_context({
+            'default_request_unit_hours': True,
+        }).default_get(list(self.env['hr.leave'].fields_get()) + ['holiday_status_id'])
+        self.assertEqual(hr_leave_default_value.get('holiday_status_id'), False)
