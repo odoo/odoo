@@ -140,8 +140,8 @@ class TestProjectSubtasks(TestProjectCommon):
                     child_task_form.name = 'Test Subtask 1'
                     child_task_form.project_id = self.project_goats
             with Form(self.task_1.child_ids.with_context({'tracking_disable': True})) as subtask_form:
-                subtask_form.project_id = self.env['project.project']
                 subtask_form.parent_id = self.env['project.task']
+                subtask_form.project_id = self.env['project.project']
             orphan_subtask = subtask_form.save()
 
             self.assertFalse(orphan_subtask.project_id, "The project should be removed as expected.")
