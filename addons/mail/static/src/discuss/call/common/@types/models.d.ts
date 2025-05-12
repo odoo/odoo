@@ -27,9 +27,11 @@ declare module "models" {
         cancelRtcInvitationTimeout: number|undefined;
         hadSelfSession: boolean;
         lastSessionIds: Set<number>;
-        rtcInvitingSession: RtcSession;
+        promoteFullscreen: typeof CALL_PROMOTE_FULLSCREEN[keyof CALL_PROMOTE_FULLSCREEN];
         rtc_session_ids: RtcSession[];
-        videoCount: Readonly<number>;
+        rtcInvitingSession: RtcSession;
+        videoCount: number;
+        videoCountNotSelf: number;
     }
 
     export interface Models {

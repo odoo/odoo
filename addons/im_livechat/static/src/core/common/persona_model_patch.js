@@ -6,7 +6,9 @@ import { patch } from "@web/core/utils/patch";
 const personaPatch = {
     setup() {
         super.setup();
+        /** @type {String[]} */
         this.livechat_languages = [];
+        /** @type {String[]} */
         this.livechat_expertise = [];
     },
     _computeDisplayName() {
