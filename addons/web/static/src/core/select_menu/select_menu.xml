@@ -9,7 +9,7 @@
                 position="'bottom-fit'"
                 beforeOpen.bind="onBeforeOpen"
                 onStateChanged.bind="onStateChanged"
-                navigationOptions="{ virtualFocus: this.props.searchable }"
+                navigationOptions="navigationOptions"
             >
                 <button type="button" t-att-class="`o_select_menu_toggler btn btn-light w-100 bg-light ${props.togglerClass || ''} ${canDeselect ? 'o_can_deselect' : ''}`" t-att-disabled="props.disabled">
                     <t t-if="props.multiSelect">

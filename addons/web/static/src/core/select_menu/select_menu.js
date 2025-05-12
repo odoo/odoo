@@ -121,6 +121,21 @@ export class SelectMenu extends Component {
             () => [this.props.choices, this.props.groups]
         );
         useAutofocus({ refName: "inputRef" });
+
+        this.navigationOptions = {
+            virtualFocus: this.props.searchable,
+            hotkeys: {
+                enter: {
+                    isAvailable: ({ navigator }) => navigator.items.length > 0,
+                    callback: (navigator) => {
+                        const item = navigator.activeItem || navigator.items[0];
+                        if (item) {
+                            item.select();
+                        }
+                    },
+                },
+            },
+        };
     }
 
     get displayValue() {
@@ -132,17 +147,15 @@ export class SelectMenu extends Component {
     }
 
     get multiSelectChoices() {
-        return this.selectedChoice.map((c) => {
-            return {
-                id: c.value,
-                text: c.label,
-                onDelete: () => {
-                    const values = [...this.props.value];
-                    values.splice(values.indexOf(c.value), 1);
-                    this.props.onSelect(values);
-                },
-            };
-        });
+        return this.selectedChoice.map((c) => ({
+            id: c.value,
+            text: c.label,
+            onDelete: () => {
+                const values = [...this.props.value];
+                values.splice(values.indexOf(c.value), 1);
+                this.props.onSelect(values);
+            },
+        }));
     }
 
     get menuClass() {
@@ -222,9 +235,9 @@ export class SelectMenu extends Component {
         // Combine previously selected choices + newly selected choice from
         // the searched choices and then filter the choices based on
         // props.value i.e. valueSet.
-        return [...(this.selectedChoice || []), ...choices].filter((c, index, self) =>
-            valueSet.has(c.value)
-            && self.findIndex((t) => t.value === c.value) === index
+        return [...(this.selectedChoice || []), ...choices].filter(
+            (c, index, self) =>
+                valueSet.has(c.value) && self.findIndex((t) => t.value === c.value) === index
         );
     }
 
