@@ -353,7 +353,7 @@ test("Add a view to dashboard doesn't save default filters", async () => {
     };
 
     // makes mouseEnter work
-    serverState.debug = true;
+    serverState.debug = "1";
 
     onRpc("/board/add_to_dashboard", async (request) => {
         const { params: args } = await request.json();
@@ -368,9 +368,7 @@ test("Add a view to dashboard doesn't save default filters", async () => {
         });
         return true;
     });
-    onRpc("/web/domain/validate", () => {
-        return true;
-    });
+    onRpc("/web/domain/validate", () => true);
 
     await mountWithCleanup(WebClient);
 
