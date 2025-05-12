@@ -28845,9 +28845,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 : 0 /* CommandResult.Success */;
         }
         checkChartExists(cmd) {
-            return this.getters.getFigureSheetId(cmd.id)
-                ? 0 /* CommandResult.Success */
-                : 86 /* CommandResult.ChartDoesNotExist */;
+            return this.isChartDefined(cmd.id) ? 0 /* CommandResult.Success */ : 86 /* CommandResult.ChartDoesNotExist */;
         }
     }
     ChartPlugin.getters = [
@@ -43847,9 +43845,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.69';
-    __info__.date = '2025-05-02T12:50:10.021Z';
-    __info__.hash = '51188e8';
+    __info__.version = '16.0.70';
+    __info__.date = '2025-05-12T05:29:58.112Z';
+    __info__.hash = 'bbdc034';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
