@@ -805,9 +805,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             raise UserError(_("Failed to decode OneTraker API response. Please check logs."))
 
     def print_label_via_pack_bench(self, label_url):
-        """
-        Downloads label (ZPL/PDF) and sends it to Zebra printer via Pack Bench IP.
-        """
         self.ensure_one()
 
         if not label_url:
@@ -818,29 +815,29 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             raise UserError(_("Pack Bench is missing IP address. Please configure it."))
 
         try:
+            # Download ZPL label content
             label_resp = requests.get(label_url)
             label_resp.raise_for_status()
 
-            label_data = label_resp.content
-            content_type = label_resp.headers.get('Content-Type')
+            zpl_data_str = label_resp.text.strip()
+            if not zpl_data_str:
+                raise UserError(_("Label data is empty. Check label format or contact support."))
 
-            _logger.info(f"[ZEBRA] Downloaded label: {len(label_data)} bytes, type: {content_type}")
+            # Send ZPL directly to Zebra printer via raw socket (not HTTP)
+            printer_port = 9100
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                sock.connect((bench_ip, printer_port))
+                sock.sendall(zpl_data_str.encode('utf-8'))
 
-            printer_url = f"http://{bench_ip}:9100"  # RAW print port for Zebra
-
-            send_resp = requests.post(
-                printer_url,
-                data=label_data,
-                headers={'Content-Type': 'application/octet-stream'},
-                timeout=5
-            )
-            send_resp.raise_for_status()
-
-            _logger.info(f"[ZEBRA] Label sent to Zebra printer at {printer_url}")
+            _logger.info(f"[ZEBRA] Label sent to printer at {bench_ip}:9100")
 
         except requests.exceptions.RequestException as e:
-            _logger.error(f"[ZEBRA ERROR] Failed to print label via {bench_ip}: {e}")
-            raise UserError(_("Failed to print label via Pack Bench %s:\n%s") % (bench_ip, str(e)))
+            _logger.error(f"[ZEBRA ERROR] Failed to download label: {e}")
+            raise UserError(_("Failed to download label:\n%s") % str(e))
+
+        except socket.error as e:
+            _logger.error(f"[ZEBRA ERROR] Socket error while printing label: {e}")
+            raise UserError(_("Failed to print label to printer %s:\n%s") % (bench_ip, str(e)))
 
     def send_payload_to_onetraker(self, env, picking, lines, config):
         """
