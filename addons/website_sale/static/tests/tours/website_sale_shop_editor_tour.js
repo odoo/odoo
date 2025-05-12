@@ -41,7 +41,7 @@ registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
     run: "click",
 }, {
     content: "Select a ribbon",
-    trigger: ".o_popover div:contains('Sale')",
+    trigger: ".o_popover div.o-dropdown-item:contains('Sale')",
     run: "click",
 },
 ...clickOnSave(),
