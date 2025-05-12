@@ -2,12 +2,13 @@
 
 import logging
 import pprint
+import re
 import time
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
@@ -199,6 +200,29 @@ class PaymentTransaction(models.Model):
 
         if not self.token_id:
             raise UserError("Razorpay: " + _("The transaction is not linked to a token."))
+
+        # Prevent multiple token payments for the same document within 36 hours. Another transaction
+        # with the same token could be pending processing due to Razorpay waiting 24 hours.
+        # See https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=11668.
+        # Remove every character after the last "-", "-" included
+        reference_prefix = re.sub(r'-(?!.*-).*$', '', self.reference) or self.reference
+        earlier_pending_tx = self.search([
+            ('provider_code', '=', 'razorpay'),
+            ('state', '=', 'pending'),
+            ('token_id', '=', self.token_id.id),
+            ('operation', 'in', ['online_token', 'offline']),
+            ('reference', '=like', f'{reference_prefix}%'),
+            ('create_date', '>=', fields.Datetime.now() - relativedelta(hours=36)),
+            ('id', '!=', self.id),
+        ], limit=1)
+        if earlier_pending_tx:
+            raise UserError(
+                "Razorpay: " + _(
+                    "Your last payment with reference %s will soon be processed. Please wait up to"
+                    " 24 hours before trying again, or use another payment method.",
+                    earlier_pending_tx.reference
+                )
+            )
 
         try:
             order_data = self._razorpay_create_order()
