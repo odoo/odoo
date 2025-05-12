@@ -626,9 +626,9 @@ actual arch.
         """ Return a domain to filter the sub-views to inherit from. """
         tree_cut_off_view = self.env.context.get("ir_ui_view_tree_cut_off_view")
         if not tree_cut_off_view:
-            return [('active', '=', True)]
+            return Domain('active', '=', True)
         else:
-            return ['|', ('active', '=', True), ('id','=', tree_cut_off_view.id)]
+            return Domain('active', '=', True) | Domain('id', '=', tree_cut_off_view.id)
 
     @api.model
     def _get_filter_xmlid_query(self):

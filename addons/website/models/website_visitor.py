@@ -8,10 +8,10 @@ import pytz
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tools import _, SQL
 from odoo.tools.misc import _format_time_ago
 from odoo.http import request
-from odoo.osv import expression
 
 
 class WebsiteTrack(models.Model):
@@ -304,7 +304,7 @@ class WebsiteVisitor(models.Model):
 
     def _add_tracking(self, domain, website_track_values):
         """ Add the track and update the visitor"""
-        domain = expression.AND([domain, [('visitor_id', '=', self.id)]])
+        domain = Domain.AND([domain, Domain('visitor_id', '=', self.id)])
         last_view = self.env['website.track'].sudo().search(domain, limit=1)
         if not last_view or last_view.visit_datetime < datetime.now() - timedelta(minutes=30):
             website_track_values['visitor_id'] = self.id
@@ -357,7 +357,7 @@ class WebsiteVisitor(models.Model):
 
         delay_days = int(self.env['ir.config_parameter'].sudo().get_param('website.visitor.live.days', 60))
         deadline = datetime.now() - timedelta(days=delay_days)
-        return [('last_connection_datetime', '<', deadline), ('partner_id', '=', False)]
+        return Domain('last_connection_datetime', '<', deadline) & Domain('partner_id', '=', False)
 
     def _update_visitor_timezone(self, timezone):
         """ We need to do this part here to avoid concurrent updates error. """

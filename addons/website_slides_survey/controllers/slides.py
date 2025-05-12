@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug
@@ -8,8 +7,8 @@ import werkzeug.exceptions
 from odoo import _
 from odoo import http
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 
 from odoo.addons.website_slides.controllers.main import WebsiteSlides
 
@@ -136,7 +135,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
         values = super(WebsiteSlidesSurvey, self)._prepare_ranks_badges_values(**kwargs)
 
         # 1. Getting all certification badges, sorted by granted user desc
-        domain = expression.AND([[('survey_id', '!=', False)], self._prepare_badges_domain(**kwargs)])
+        domain = Domain.AND([[('survey_id', '!=', False)], self._prepare_badges_domain(**kwargs)])
         certification_badges = request.env['gamification.badge'].sudo().search(domain)
         # keep only the badge with challenge category = slides (the rest will be displayed under 'normal badges' section
         certification_badges = certification_badges.filtered(

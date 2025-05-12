@@ -3,7 +3,7 @@ from ast import literal_eval
 from collections import OrderedDict
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, MissingError
-from odoo.osv import expression
+from odoo.fields import Domain
 from lxml import etree, html
 import logging
 from random import randint
@@ -94,16 +94,17 @@ class WebsiteSnippetFilter(models.Model):
 
         if self.filter_id:
             filter_sudo = self.filter_id.sudo()
-            domain = filter_sudo._get_eval_domain()
+            domain = Domain(filter_sudo._get_eval_domain())
             if 'website_id' in self.env[filter_sudo.model_id]:
-                domain = expression.AND([domain, self.env['website'].get_current_website().website_domain()])
+                domain &= self.env['website'].get_current_website().website_domain()
             if 'company_id' in self.env[filter_sudo.model_id]:
                 website = self.env['website'].get_current_website()
-                domain = expression.AND([domain, [('company_id', 'in', [False, website.company_id.id])]])
+                domain &= Domain('company_id', 'in', [False, website.company_id.id])
             if 'is_published' in self.env[filter_sudo.model_id]:
-                domain = expression.AND([domain, [('is_published', '=', True)]])
+                domain &= Domain('is_published', '=', True)
             if search_domain:
-                domain = expression.AND([domain, search_domain])
+                search_domain = Domain(search_domain)
+                domain &= search_domain
             try:
                 records = self.env[filter_sudo.model_id].sudo(False).with_context(**literal_eval(filter_sudo.context)).search(
                     domain,
