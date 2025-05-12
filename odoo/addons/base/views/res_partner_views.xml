@@ -82,14 +82,14 @@
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>
                         <h1>
-                            <field id="company" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact' and is_company"/>
-                            <field id="individual" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact' and not is_company"/>
+                            <field id="company" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="is_company"/>
+                            <field id="individual" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="is_individual"/>
                         </h1>
                         <field name="parent_id"
                             widget="res_partner_many2one"
                             placeholder="Company Name..."
-                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
-                            invisible="is_company"/>
+                            domain="[('can_be_parent', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
+                            invisible="not can_be_child"/>
                     </div>
                     <group>
                         <field name="function" placeholder="e.g. Sales Director" invisible="is_company"/>
@@ -158,14 +158,14 @@
                         <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                         <h1>
                             <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact'"/>
-                            <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact'"/>
+                            <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="is_individual"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
                                 widget="res_partner_many2one"
                                 placeholder="Company Name..."
-                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
-                                invisible="((is_company and not parent_id) or company_name) and company_name != ''"/>
+                                domain="[('can_be_parent', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
+                                invisible="not can_be_child"/>
                                 <field name="company_name" invisible="not company_name or company_name == '' or is_company"/>
                                 <button name="create_company" icon="fa-plus-square" string="Create company"
                                     type="object" class="oe_edit_only btn-link"
@@ -205,7 +205,7 @@
                             <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids"/>
                             <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                             <field name="title" options='{"no_open": True}' placeholder="e.g. Mister"
-                                invisible="is_company"/>
+                                invisible="not is_individual"/>
                             <field name="lang" invisible="active_lang_count &lt;= 1"/>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"
                                    placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
@@ -262,14 +262,14 @@
                                         <hr/>
                                         <group>
                                             <group>
-                                                <field name="name" string="Contact Name" required="type == 'contact'"
+                                                <field name="name" string="Contact Name" required="is_individual or is_company"
                                                      placeholder="e.g. New Address"/>
                                                 <field name="title" options="{'no_open': True}" placeholder="e.g. Mr."
-                                                    invisible="type != 'contact'"/>
+                                                    invisible="not is_individual"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
-                                                    invisible="type != 'contact'"/>
-                                                <label for="street" string="Address" invisible="type == 'contact'"/>
-                                                <div invisible="type == 'contact'">
+                                                    invisible="not is_individual"/>
+                                                <label for="street" string="Address" invisible="is_address_readonly"/>
+                                                <div invisible="is_address_readonly">
                                                     <div class="o_address_format" name="div_address">
                                                         <field name="street" placeholder="Street..." class="o_address_street"/>
                                                         <field name="street2" placeholder="Street 2..." class="o_address_street"/>

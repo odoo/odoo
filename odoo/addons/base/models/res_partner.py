@@ -283,6 +283,22 @@ class Partner(models.Model):
     is_company = fields.Boolean(string='Is a Company', default=False,
         help="Check if the contact is a company, otherwise it is a person")
     is_public = fields.Boolean(compute='_compute_is_public')
+    is_address_readonly = fields.Boolean(
+        compute="_compute_contact_type",
+        help="If true, the address fields are readonly.",
+    )
+    is_individual = fields.Boolean(
+        compute="_compute_contact_type", help="If true, the partner name is splitted."
+    )
+    can_be_parent = fields.Boolean(
+        compute="_compute_contact_type",
+        search="_search_can_be_parent",
+        help="If true, the partner is available as parent.",
+    )
+    can_be_child = fields.Boolean(
+        compute="_compute_contact_type",
+        help="If true, the partner_id field is available.",
+    )
     industry_id: ResPartnerIndustry = fields.Many2one('res.partner.industry', 'Industry')
     # company_type is only an interface field, do not use it in business logic
     company_type = fields.Selection(string='Company Type',
@@ -337,6 +353,26 @@ class Partner(models.Model):
     @api.depends('name', 'user_ids.share', 'image_128', 'is_company', 'type')
     def _compute_avatar_128(self):
         super()._compute_avatar_128()
+
+    @api.depends("is_company", "type", "parent_id")
+    def _compute_contact_type(self):
+        for partner in self:
+            partner.is_address_readonly = not (
+                partner.is_company
+                or not partner.parent_id
+                or partner.type not in ["contact"]
+            )
+            partner.is_individual = not partner.is_company and partner.type in [
+                "contact",
+                "other",
+            ]
+
+            partner.can_be_parent = partner.is_company
+            partner.can_be_child = not partner.is_company
+
+    @api.model
+    def _search_can_be_parent(self, operator, value):
+        return [("is_company", operator, value)]
 
     def _compute_avatar(self, avatar_field, image_field):
         partners_with_internal_user = self.filtered(lambda partner: partner.user_ids - partner.user_ids.filtered('share'))
