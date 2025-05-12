@@ -730,7 +730,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         try:
             response = requests.post(api_url, headers=headers, data=json.dumps(payload))
             if response.status_code == 200:
-                _logger.info("Label sent successfully to OneTraker.")
+                _logger.info(f"[ONETRAKER][SIMPLE API] Label created. Response:\n{response.text}")
                 return {
                     'warning': {
                         'title': _("Success"),
@@ -772,6 +772,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     _("Label sending failed.\nStatus: %s\nResponse: %s") % (response.status_code, response.text))
 
             response_json = response.json()
+            _logger.info(f"[ONETRAKER][FULL RESPONSE] for {pick_name or 'N/A'}:\n{json.dumps(response_json, indent=4)}")
             generic_response = response_json.get("genericResponse", {})
 
             if generic_response.get("apiStatusCode") != 200:
@@ -986,7 +987,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             response.raise_for_status()
             resp_data = response.json()
             generic = resp_data.get("genericResponse", {})
-            _logger.error(json.dumps(resp_data, indent=4))
+            _logger.info(f"[ONETRAKER][FULL RESPONSE] for {order_number}:\n{json.dumps(resp_data, indent=4)}")
 
             if generic.get("apiStatusCode") != 200:
                 raise UserError(generic.get("apiStatusMessage", "Unknown OneTraker API error."))
