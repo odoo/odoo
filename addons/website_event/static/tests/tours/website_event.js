@@ -3,40 +3,45 @@ import {
     registerWebsitePreviewTour,
     clickOnEditAndWaitEditMode,
     clickOnSave,
-} from '@website/js/tours/tour_utils';
+} from "@website/js/tours/tour_utils";
+import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
 
 function websiteCreateEventTourSteps() {
     return [
         {
             content: "Click here to add new content to your website.",
-            trigger: ".o_menu_systray .o_new_content_container > a",
+            trigger: ".o_menu_systray .o_new_content_container > button",
             tooltipPosition: "bottom",
             run: "click",
-        }, {
-            trigger: "a[data-module-xml-id='base.module_website_event']",
+        },
+        {
+            trigger: "[data-module-xml-id='base.module_website_event']",
             content: "Click here to create a new event.",
             tooltipPosition: "bottom",
             run: "click",
-        }, {
+        },
+        {
             trigger: '.modal-dialog .o_field_widget[name="name"] .o_input',
             content: "Create a name for your new event and click Continue. e.g: Technical Training",
             run: "edit Technical Training",
             tooltipPosition: "left",
-        }, {
+        },
+        {
             trigger: ".modal-dialog div[name=date_begin]",
             content: "Open date range picker. Pick a Start date for your event",
             run() {
                 const el1 = document.querySelector("input[data-field='date_begin']");
                 el1.value = "09/30/2020 08:00:00";
-                el1.dispatchEvent(new Event("change", {bubbles: true, cancelable: true}));
+                el1.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
                 const el2 = document.querySelector("input[data-field='date_end']");
                 el2.value = "10/02/2020 23:00:00";
-                el2.dispatchEvent(new Event("change", {bubbles: true, cancelable: true}));
+                el2.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
                 el1.click();
-            }
+            },
         },
         {
-            trigger: '.modal-dialog div[name="event_ticket_ids"] .o_field_x2many_list_row_add a:contains("Add a line")',
+            trigger:
+                ".modal-dialog div[name='event_ticket_ids'] .o_field_x2many_list_row_add a:contains('Add a line')",
             content: "Click here to add a ticket",
             tooltipPosition: "bottom",
             run: "click",
@@ -45,8 +50,8 @@ function websiteCreateEventTourSteps() {
             trigger: ".modal-dialog input[type=text]:not(:value(''))",
         },
         {
-            trigger: '.modal-footer button.btn-primary',
-            content: "Click Continue to create the event.",
+            trigger: ".modal-footer button.btn-primary",
+            content: "Click Save to create the event.",
             tooltipPosition: "right",
             run: "click",
         },
@@ -61,7 +66,8 @@ function websiteCreateEventTourSteps() {
             content: "Click to publish your event.",
             tooltipPosition: "top",
             run: "click",
-        }, {
+        },
+        {
             trigger: ".o_website_edit_in_backend > a",
             content: "Click here to customize your event further.",
             tooltipPosition: "bottom",
@@ -83,10 +89,13 @@ function websiteEditEventTourSteps() {
         ...clickOnEditAndWaitEditMode(),
         {
             content: "edit the short description of the event",
-            trigger: ":iframe .opt_events_list_columns small",
+            trigger: ":iframe .opt_events_list_columns",
             run: function () {
-                this.anchor.innerHTML = "new short description";
-            }
+                const descriptionEl = this.anchor.querySelector("[itemprop='description']");
+                descriptionEl.textContent = "new short description";
+                const editor = editorsWeakMap.get(this.anchor.ownerDocument);
+                editor.shared.history.addStep();
+            },
         },
         ...clickOnSave(),
         {
@@ -97,7 +106,8 @@ function websiteEditEventTourSteps() {
 }
 
 registerWebsitePreviewTour(
-    "website_event_tour", {
+    "website_event_tour",
+    {
         url: "/",
     },
     () => [...websiteCreateEventTourSteps(), ...websiteEditEventTourSteps()]
