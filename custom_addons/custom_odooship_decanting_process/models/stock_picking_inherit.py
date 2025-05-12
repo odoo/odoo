@@ -176,16 +176,16 @@ class StockPicking(models.Model):
             }
             json_data = json.dumps(payload, indent=4)
             if picking.tenant_code_id.name == "MYSALE":
-                api_url = "https://shiperoo-connect.uat.automation.shiperoo.com/sc-file-processor/api/receipt-completion"
-                auth = ('apiuser', 'apipass')
-            else:
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
                 api_url = (
-                "https://shiperooconnect-prod.automation.shiperoo.com/api/discrepency_receiver"
-                if is_production == 'True'
-                else "https://shiperooconnect-dev.automation.shiperoo.com/api/discrepency_receiver"
-            )
-                auth = None
+                    "https://shiperoo-connect.prod.automation.shiperoo.com/sc-file-processor/api/receipt-completion"
+                    if is_production == 'True'
+                    else "https://shiperoo-connect.uat.automation.shiperoo.com/sc-file-processor/api/receipt-completion"
+                )
+                auth = ('apiuser', 'apipass')
+#                 api_url = "https://shiperoo-connect.uat.automation.shiperoo.com/sc-file-processor/api/receipt-completion"
+#                 auth = ('apiuser', 'apipass')
+
             # Define the URLs for Shiperoo Connect
             # is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
             # api_url = (

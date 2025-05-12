@@ -32,6 +32,13 @@ class PackAPP(models.Model):
     pc_container_code_ids = fields.Many2many('pc.container.barcode.configuration', string='PC Totes')
     picking_ids = fields.Many2many('stock.picking', string='Pick Numbers', store=True)
     user_id = fields.Many2one('res.users', string='Created By', default=lambda self: self.env.user, readonly=True)
+    pack_bench_id = fields.Many2one(
+        'pack.bench.configuration',
+        string='Pack Bench',
+        required=False,
+        domain="[('site_code_id', '=', site_code_id)]",
+        store=True
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -48,6 +55,8 @@ class PackAPP(models.Model):
         for record in self:
             if not record.site_code_id:
                 raise ValidationError(_("Please select a Site Code before proceeding to the Pack Screen."))
+            if not record.pack_bench_id:
+                raise ValidationError(_("Please select a Pack Bench before proceeding to the Pack Screen."))
             self.state = 'in_progress'
             return {
                 'name': _('Pack Screen'),

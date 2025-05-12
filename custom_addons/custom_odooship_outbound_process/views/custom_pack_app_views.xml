@@ -23,8 +23,11 @@
                         <group>
                             <field name="name"/>
                             <field name="picking_ids"
+                                   invisible="1"
                                    options="{'no_create':True, 'no_open': True, 'no_quick_create': True, 'no_create_edit':True}"
                                    widget="many2many_tags"/>
+                            <field name="pack_bench_id"
+                                   options="{'no_create':True, 'no_open': True, 'no_quick_create': True, 'no_create_edit':True}"/>
                         </group>
                         <group>
 <!--                            <field name="automation_bulk_manual"/>-->
