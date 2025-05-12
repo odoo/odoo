@@ -1,13 +1,14 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class SetupEditorPlugin extends Plugin {
     static id = "setup_editor_plugin";
     static shared = ["getEditableAreas"];
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
-        normalize_handlers: this.setContenteditable.bind(this),
+        normalize_handlers: withSequence(0, this.setContenteditable.bind(this)),
     };
 
     setup() {

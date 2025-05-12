@@ -111,11 +111,9 @@ function createIcons({ editingElement, nbActiveIcons, nbTotalIcons }) {
     const iconEls = getAllIcons(editingElement);
     [...iconEls].forEach((iconEl) => iconEl.remove());
     for (let i = 0; i < nbTotalIcons; i++) {
-        if (i < nbActiveIcons) {
-            activeIconEl.appendChild(document.createElement("i"));
-        } else {
-            inactiveIconEl.append(document.createElement("i"));
-        }
+        const targetEl = i < nbActiveIcons ? activeIconEl : inactiveIconEl;
+        targetEl.appendChild(document.createElement("i"));
+        targetEl.appendChild(document.createTextNode(" "));
     }
     renderIcons(editingElement);
 }
