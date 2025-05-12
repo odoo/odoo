@@ -15,10 +15,12 @@ import { SpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/da
  */
 export async function createSpreadsheetDashboard(params = {}) {
     let model = undefined;
+    let env = undefined;
     patchWithCleanup(Spreadsheet.prototype, {
         setup() {
             super.setup();
             model = this.env.model;
+            env = this.env;
         },
     });
 
@@ -33,7 +35,7 @@ export async function createSpreadsheetDashboard(params = {}) {
         },
     });
 
-    return { model, fixture: getFixture() };
+    return { env, model, fixture: getFixture() };
 }
 
 export async function createDashboardActionWithData(data) {
@@ -41,7 +43,9 @@ export async function createDashboardActionWithData(data) {
     const dashboard = SpreadsheetDashboard._records[0];
     dashboard.spreadsheet_data = json;
     dashboard.json_data = json;
-    const { fixture, model } = await createSpreadsheetDashboard({ spreadsheetId: dashboard.id });
+    const { env, fixture, model } = await createSpreadsheetDashboard({
+        spreadsheetId: dashboard.id,
+    });
     await animationFrame();
-    return { fixture, model };
+    return { env, fixture, model };
 }
