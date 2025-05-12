@@ -1788,7 +1788,7 @@ class ResGroups(models.Model):  # noqa: F811
                     xml4.append(E.group(*right_group))
 
             xml4.append({'class': "o_label_nowrap"})
-            user_type_invisible = f'{user_type_field_name} != {group_employee.id}' if user_type_field_name else None
+            user_type_invisible = f'{user_type_field_name} != {group_employee.id}' if user_type_field_name else ''
 
             for xml_cat in sorted(xml_by_category.keys(), key=lambda it: it[0]):
                 master_category_name = xml_cat[1]
