@@ -3826,7 +3826,9 @@ test("many2one field with false as name", async () => {
 });
 
 test("many2one search with false as name", async () => {
-    onRpc("web_name_search", () => [{ id: 1, display_name: false, __formatted_display_name: false }]);
+    onRpc("web_name_search", () => [
+        { id: 1, display_name: false, __formatted_display_name: false },
+    ]);
     await mountView({
         type: "form",
         resModel: "partner",
