@@ -590,7 +590,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
         self.start_pos_tour('pos_pricelist')
         self.env['pos.order'].search([]).unlink()  # the previous tour created a draft order; if we don't delete it it will be present in the next tour
-        self.start_pos_tour('pos_basic_order_01_multi_payment_and_change')
+        self.start_pos_tour('pos_basic_order_01_multi_payment_and_change', watch=True, step_delay=400)
         self.env['pos.order'].search([('state', '=', 'draft')]).unlink()  # the previous test created a draft order
         self.start_pos_tour('pos_basic_order_02_decimal_order_quantity')
         self.start_pos_tour('pos_basic_order_03_tax_position')

@@ -31,11 +31,11 @@ export class SelfOrderRouter extends Reactive {
         return url.searchParams.get("table_identifier");
     }
 
-    deleteTableIdentifier() {
-        const url = new URL(browser.location.href);
-        url.searchParams.delete("table_identifier");
-        history.replaceState({}, "", url);
-    }
+    // deleteTableIdentifier() {
+    //     const url = new URL(browser.location.href);
+    //     url.searchParams.delete("table_identifier");
+    //     history.replaceState({}, "", url);
+    // }
 
     back() {
         if (!this.historyPage.length) {

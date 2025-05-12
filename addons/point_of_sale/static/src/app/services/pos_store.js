@@ -350,7 +350,7 @@ export class PosStore extends WithLazyGetterTrap {
         // safely take the first element.this.models
         this.config = this.data.models["pos.config"].getFirst();
         this.user = this.data.models["res.users"].getFirst();
-        this.currency = this.config.currency_id;
+        this.currency = this.config?.currency_id;
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
         this.screenState.partnerList.offsetBySearch = {
