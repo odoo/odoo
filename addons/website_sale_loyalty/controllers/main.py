@@ -12,7 +12,7 @@ from odoo.addons.website_sale.controllers import main
 class WebsiteSale(main.WebsiteSale):
 
     @route()
-    def pricelist(self, promo, **post):
+    def pricelist(self, promo, reward_id=None, **post):
         order = request.website.sale_get_order()
         if not order:
             return request.redirect('/shop')
@@ -25,8 +25,12 @@ class WebsiteSale(main.WebsiteSale):
             reward_successfully_applied = True
             if len(coupon_status) == 1:
                 coupon, rewards = next(iter(coupon_status.items()))
-                if request.env.context.get('product_id') or (len(rewards) == 1 and not rewards.multi_product):
-                    reward_successfully_applied = self._apply_reward(order, rewards, coupon)
+                if len(rewards) == 1:
+                    reward = rewards
+                else:
+                    reward = reward_id in rewards.ids and rewards.browse(reward_id)
+                if reward and (not reward.multi_product or request.env.get('product_id')):
+                    reward_successfully_applied = self._apply_reward(order, reward, coupon)
 
             if reward_successfully_applied:
                 request.session['successful_code'] = promo
@@ -106,7 +110,7 @@ class WebsiteSale(main.WebsiteSale):
                         and program_sudo.applies_on == 'future'
                         and program_sudo.program_type not in ('ewallet', 'loyalty'))
                 ):
-                    return self.pricelist(code)
+                    return self.pricelist(code, reward_id=reward_id)
         if coupon:
             self._apply_reward(order_sudo, reward_sudo, coupon)
         return request.redirect(redirect)
