@@ -947,6 +947,44 @@ test("empty readonly many2one field", async () => {
     expect(".o_field_widget[name=trululu] .o_many2one").toHaveText("");
 });
 
+test("empty many2one field with no result", async () => {
+    class M2O extends models.Model {
+        m2o = fields.Many2one({ relation: "m2o" });
+    }
+    defineModels([M2O]);
+    await mountView({
+        type: "form",
+        resModel: "m2o",
+        arch: `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="m2o" />
+                    </group>
+                </sheet>
+            </form>`,
+    });
+
+    await contains(".o_field_many2one input").click();
+    expect(".dropdown-menu li.o_m2o_dropdown_option").toHaveCount(1);
+    expect(".dropdown-menu li.o_m2o_dropdown_option").toHaveText("Create...");
+    expect(".dropdown-menu li.o_m2o_start_typing").toHaveCount(0);
+
+    await contains(".dropdown-menu li.o_m2o_dropdown_option").click();
+    expect(".o_dialog").toHaveCount(1);
+    expect(".o_dialog .o_field_many2one[name=m2o] input").toHaveValue("");
+    press("Esc");
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(0);
+
+    await contains(".o_field_many2one input").edit("abc", { confirm: false });
+    await runAllTimers();
+
+    expect(".dropdown-menu li.o_m2o_dropdown_option").toHaveCount(2);
+    expect(".dropdown-menu li.o_m2o_start_typing").toHaveCount(0);
+    expect(".dropdown-menu li.o_m2o_no_result").toHaveCount(0);
+});
+
 test("empty many2one field with node options", async () => {
     expect.assertions(2);
 
