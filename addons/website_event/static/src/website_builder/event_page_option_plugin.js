@@ -20,7 +20,7 @@ class EventPageOption extends Plugin {
                 template: "website_event.EventMainPageOption",
                 selector: "main:has(#o_wevent_event_main)",
                 editableOnly: false,
-                title: _t("Event Cover Position"),
+                title: _t("Event Page"),
                 groups: ["website.group_website_designer"],
             }),
         ],
