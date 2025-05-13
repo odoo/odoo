@@ -1,14 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime, timedelta
 
-from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.product.tests import common
 from odoo.tests import Form
 
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.product.tests.common import ProductVariantsCommon
 
-class TestCreatePicking(common.TestProductCommon):
+
+class TestCreatePicking(ProductVariantsCommon):
 
     @classmethod
     def setUpClass(cls):
