@@ -515,7 +515,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_website_megamenu_active_nav_link(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'megamenu_active_nav_link', login='admin')
 
-    @unittest.skip
     def test_17_website_edit_menus(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus', login='admin')
 
