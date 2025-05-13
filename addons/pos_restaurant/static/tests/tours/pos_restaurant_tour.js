@@ -430,6 +430,9 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                     if (!rendered.innerHTML.includes("14:20")) {
                         throw new Error("14:20 not found in printed receipt");
                     }
+                    if (rendered.innerHTML.includes("DUPLICATA!")) {
+                        throw new Error("DUPLICATA! should not be present in printed receipt");
+                    }
                 },
             },
         ].flat(),
