@@ -3918,3 +3918,89 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             leave.action_validate()
             allocation_data = leave_type_day.get_allocation_data(self.employee_emp)
             self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 1)
+
+    def test_accrual_allocation_date_in_the_future(self):
+        vals = {
+            'accrual_validity': True,
+            'accrual_validity_count': 6,
+            'accrual_validity_type': 'month',
+            'accrued_gain_time': 'start',
+            'action_with_unused_accruals': 'maximum',
+            'cap_accrued_time_yearly': False,
+            'frequency': 'yearly',
+            'postpone_max_days': 5,
+            'week_day': 'mon',
+        }
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Test accrual plan',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'start',
+            'level_ids': [(0, 0, {
+                **vals,
+                'added_value': 20,
+                'start_count': 0,
+                'start_type': 'day',
+                'maximum_leave': 20,
+            }),
+            (0, 0, {
+                **vals,
+                'added_value': 21,
+                'start_count': 1,
+                'start_type': 'year',
+                'maximum_leave': 26,
+            }),
+            (0, 0, {
+                **vals,
+                'added_value': 22,
+                'start_count': 2,
+                'start_type': 'year',
+                'maximum_leave': 27,
+            }),
+            (0, 0, {
+               **vals,
+                'added_value': 23,
+                'start_count': 3,
+                'start_type': 'year',
+                'maximum_leave': 28,
+            })]
+        })
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+        })
+
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Accrual allocation for employee',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 20,
+            'allocation_type': 'accrual',
+            'accrual_plan_id': accrual_plan.id,
+            'date_from': '2025-01-01',
+        })
+        allocation.action_validate()
+        # Test after one year "First Level"
+        allocation_data = leave_type.get_allocation_data(self.employee_emp, '2026-03-01')
+        self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 26, "Since the carryover"
+                                                                                                   "did not expire yet so the remaining leaves should be 26")
+        allocation_data = leave_type.get_allocation_data(self.employee_emp, '2026-09-01')
+        self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 21, "Since the carryover"
+                                                                                                   "expires after 6 month so the remaining leaves should be 21")
+        # Test after two years "Second Level"
+        allocation_data = leave_type.get_allocation_data(self.employee_emp, '2027-03-01')
+        self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 27, "Since the carryover"
+                                                                                                   "did not expire yet so the remaining leaves should be 27")
+        allocation_data = leave_type.get_allocation_data(self.employee_emp, '2027-09-01')
+        self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 22, "Since the carryover"
+                                                                                                   "expires after 6 month so the remaining leaves should be 22")
+        # Test after three years "Third Level"
+        allocation_data = leave_type.get_allocation_data(self.employee_emp, '2028-03-01')
+        self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 28, "Since the carryover"
+                                                                                                    "did not expire yet so the remaining leaves should be 28")
+        allocation_data = leave_type.get_allocation_data(self.employee_emp, '2028-09-01')
+        self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 23, "Since the carryover"
+                                                                                                   "expires after 6 month so the remaining leaves should be 23")
