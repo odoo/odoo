@@ -9321,7 +9321,7 @@ msgstr ""
 msgid ""
 "This location (if it's internal) and all its descendants filtered by "
 "type=Internal."
-msgstr ""
+msgstr "מיקום זה (אם הוא פנימי) וכל הצאצאים שלו, מסוננים לפי סוג = פנימי."
 
 #. module: stock
 #. odoo-python
@@ -9441,6 +9441,9 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
+"קידומת הרצף הזו כבר נמצאת בשימוש על ידי סוג פעולה אחר. מומלץ לבחור קידומת "
+"ייחודית כדי למנוע בעיות ו/או ערכי ייחוס כפולים, או לשייך את רצף הייחוס הקיים"
+" לסוג הפעולה ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9564,7 +9567,7 @@ msgstr "להזמין"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_computed
 msgid "To Order Computed"
-msgstr ""
+msgstr "מחושב לפי הזמנה"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_manual
@@ -10535,6 +10538,8 @@ msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
+"כאשר הערך מוגדר כ-True, מיקום היעד של תנועת המלאי (stock.move) יהיה לפי "
+"הכלל. אחרת, הוא יילקח מסוג האיסוף (picking type)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10552,6 +10557,8 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
 msgstr ""
+"כאשר המלאי הווירטואלי יורד מתחת לכמות המינימום שצוינה בשדה זה, Odoo יוצרת "
+"דרישת רכש כדי להעלות את הכמות החזויה מעל כמות המינימום הזו. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10560,6 +10567,9 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
+"כאשר המלאי הווירטואלי יורד מתחת לכמות המינימום, Odoo יוצרת דרישת רכש כדי "
+"להעלות את הכמות החזויה עד (או קרוב ל) כמות המקסימום שצוינה בשדה זה (או עד "
+"כמות המינימום – הגבוהה מביניהן)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier

@@ -157,6 +157,18 @@ describe('applyColor', () => {
             contentAfter: '<p>[abcabc]</p>',
         });
     });
+    it('should remove font tag after removing gradient color applied as style', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcabc]</font></p>',
+            stepFunction: setColor('', 'backgroundColor'),
+            contentAfter: '<p>[abcabc]</p>',
+        });
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcabc]</font></p>',
+            stepFunction: setColor('', 'color'),
+            contentAfter: '<p>[abcabc]</p>',
+        });
+    });
     it('Shall not apply font tag to t nodes (protects if else nodes separation)', async () => {
         await testEditor(BasicEditor, {
             contentBefore: unformat(`[

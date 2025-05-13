@@ -1612,6 +1612,15 @@ msgid ""
 "   • For consumable or storable products, open the product, go to the 'General Information' tab and change the 'Invoicing Policy' from 'Delivered Quantities' to 'Ordered Quantities'.\n"
 "   • For services (and other products), change the 'Invoicing Policy' to 'Prepaid/Fixed Price'.\n"
 msgstr ""
+"Nem lehet számlát létrehozni, mivel nincsenek számlázható tételek.\n"
+"\n"
+"Számla kiállításához ellenőrizze az alábbiakat:\n"
+"   • A termékek kiszállításra kerültek a számlázás előtt.\n"
+"   • A termékek számlázási szabályai megfelelően beállításra kerültek.\n"
+"\n"
+"Ha rendelt mennyiség alapján szeretne számlázni:\n"
+"   • Fogyóeszközök vagy készletezett termékek esetén nyissa meg a terméket, menjen az 'Általános információk' fülre és változtassa meg a 'Számlázási szabály' beállítást 'Szállított mennyiség' értékről 'Rendelt mennyiség' értékre.\n"
+"   • Szolgáltatás (és egyéb) termékek esetén változtassa meg a 'Számlázási szabály' beállítást 'Rögzített ár' értékre.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2158,6 +2167,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"A vevőnek megígérhető szállítási dátum. Szolgáltatás termékek esetén a "
+"rendelési sorok legkisebb átfutási ideje. Kiszállítás esetén a rendelésen "
+"megadott szállítási szabálynak megfelelően a rendelési sorok legkisebb vagy "
+"legnagyobb átfutási ideje."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2743,7 +2756,7 @@ msgstr "Importálási sablon termékekhez"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "In the Order"
-msgstr ""
+msgstr "A rendelésen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3150,6 +3163,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Kézi mennyiség a rendelésen: számlázás a kézzel megadott mennyiség alapján analitikus számla létrehozása nélkül.\n"
+"Szerződéses munkaidő: számlázás a kapcsolódó időnyilvántartásokon megadott órák alapján.\n"
+"Feladat létrehozása és idő követése: vevői rendelés megerősítésekor feladat létrehozása és munkaidő rögzítése."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
@@ -3395,6 +3411,8 @@ msgid ""
 "Once a sales order is confirmed, you can't remove one of its lines (we need to track if something gets invoiced or delivered).\n"
 "                Set the quantity to 0 instead."
 msgstr ""
+"Ha a vevői rendelés megerősítésre került, akkor már nem lehet eltávolítani a sorait (nyomon kell követnünk, ha bármi szállításra vagy számlázásra került).\n"
+"                Állítsa be inkább a mennyiséget 0-ra."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -4056,6 +4074,7 @@ msgstr "Ajánlat elküldve"
 #: code:addons/sale/wizard/res_config_settings.py:0
 msgid "Quotation Validity is required and must be greater or equal to 0."
 msgstr ""
+"Ajánlat érvényesség kötelező és 0 vagy annál nagyobb számnak kell lennie."
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
@@ -4194,12 +4213,12 @@ msgstr "Kimutatás"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
 msgid "Request a online payment from the customer to confirm the order."
-msgstr ""
+msgstr "Kérjen online fizetést a vevőtől a rendelés megerősítéséhez."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
 msgid "Request a online signature from the customer to confirm the order."
-msgstr ""
+msgstr "Kérjen online aláírást a vevőtől a rendelés megerősítéséhez."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4207,6 +4226,8 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
+"Kérjen teljes (100%) vagy részleges fizetést a rendelések megerősítéséhez. "
+"Az alapértelmezés megváltoztatható rendelésenként vagy sablononként."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4214,6 +4235,8 @@ msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
 msgstr ""
+"Kérje meg a vevőit az ajánlatok aláírására a rendelések megerősítéséhez. Az "
+"alapértelmezés megváltoztatható rendelésenként vagy sablononként."
 
 #. module: sale
 #. odoo-python
@@ -5751,7 +5774,7 @@ msgstr "Saját hivatkozás:"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "A böngésző nem támogatja iframe használatát."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5786,17 +5809,19 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Az ajánlat a(z) %(product_company)s vállalathoz tartozó termékeket tartalmaz, de az ajánlat a(z) %(quote_company)svállalathoz tartozik. \n"
+" Kérjük, változtassa meg az ajánlaton a vállalatot vagy távolítsa el a más vállalatokhoz tartozó termékeket (%(bad_products)s)."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "add the price of your product."
-msgstr ""
+msgstr "termék árának megadása."
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "automatikus számlázás: előkészített számla elküldése"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -5817,23 +5842,23 @@ msgstr "nap"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "for the"
-msgstr ""
+msgstr "ehhez: "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "for this Sale Order."
-msgstr ""
+msgstr "ehhez a vevői rendeléshez."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "let's continue"
-msgstr ""
+msgstr "folytassuk"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "quote."
-msgstr ""
+msgstr "ajánlat."
 
 #. module: sale
 #. odoo-python
@@ -5847,6 +5872,8 @@ msgid ""
 "selected\n"
 "                    items?"
 msgstr ""
+"kiválasztott\n"
+"                    tételek?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5856,7 +5883,7 @@ msgstr "egység"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "you confirm acceptance on the behalf of"
-msgstr ""
+msgstr "megerősíti az elfogadása az ő nevében: "
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

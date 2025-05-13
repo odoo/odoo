@@ -82,7 +82,7 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
         )
 
         # Check the whole qr code string
-        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA52040000530370454031005802VN5914company_1_data6007Vietnam62170813INV/TEST/00016304600B')
+        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA52040000530370454031005802VN5914company_1_data6007Vietnam62150811INVTEST000163042656')
 
     def test_remove_vietnamese_accents(self):
         accent_string = "áàảãạăắằẳẵặâấầẩẫậÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬéèẻẽẹêếềểễệÉÈẺẼẸÊẾỀỂỄỆóòỏõọôốồổỗộơớờởỡợÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢíìỉĩịÍÌỈĨỊúùủũụưứừửữựÚÙỦŨỤƯỨỪỬỮỰýỳỷỹỵÝỲỶỸỴđĐ"
@@ -103,4 +103,4 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
         )
 
         # Check the whole qr code string
-        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA52040000530370454031005802VN5914aAeEoOiIuUyYdD6007Vietnam62170813INV/TEST/000263041AA5')
+        self.assertEqual(emv_qr_vals, '00020101021238590010A0000007270129000697042201156607040600001290208QRIBFTTA52040000530370454031005802VN5914aAeEoOiIuUyYdD6007Vietnam62150811INVTEST00026304E1C2')
