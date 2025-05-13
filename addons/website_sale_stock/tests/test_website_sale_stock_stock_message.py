@@ -10,6 +10,7 @@ from odoo.addons.product.tests.common import ProductCommon
 class TestWebsiteSaleStockProductConfigurator(ProductCommon, HttpCase):
 
     def test_01_stock_message_update_after_close_with_optional_products(self):
+        self.env['delivery.carrier'].search([]).is_published = False
         product_product_with_options = self.env['product.product'].create({
             'name': 'Product With Optional (TEST)',
             'standard_price': 500.0,
@@ -33,6 +34,7 @@ class TestWebsiteSaleStockProductConfigurator(ProductCommon, HttpCase):
         )
 
     def test_02_stock_message_update_after_close_without_optional_products(self):
+        self.env['delivery.carrier'].search([]).is_published = False
         product_product_without_options = self.env['product.product'].create({
             'name': 'Product Without Optional (TEST)',
             'standard_price': 500.0,

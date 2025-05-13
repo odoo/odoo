@@ -147,7 +147,7 @@
                         </page>
                         <page string="Availability" name="destination">
                             <group col="1">
-                                <p>
+                                <p name="availability_description">
                                     Filling this form allows you to make the shipping method available according to the content of the order or its destination.
                                 </p>
                                 <group>
@@ -169,12 +169,12 @@
                                     </group>
                                     <group name="content" string="Content">
                                         <label for="max_weight"/>
-                                        <div class="o_row">
+                                        <div name="max_weight_row" class="o_row">
                                             <field name="max_weight" class="oe_inline"/>
                                             <field name="weight_uom_name"/>
                                         </div>
                                         <label for="max_volume"/>
-                                        <div class="o_row">
+                                        <div name="max_volume_row" class="o_row">
                                             <field name="max_volume" class="oe_inline"/>
                                             <field name="volume_uom_name"/>
                                         </div>
@@ -186,7 +186,7 @@
                                                 options="{'no_open': True, 'no_create': True}"/>
                                     </group>
                                 </group>
-                                <p class="fst-italic" invisible="country_ids">
+                                <p name="country_warning" class="fst-italic" invisible="country_ids">
                                     Please select a country before choosing a state or a zip prefix.
                                 </p>
                             </group>

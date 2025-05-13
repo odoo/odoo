@@ -17,10 +17,17 @@ def format_product_stock_values(product, wh_id=None, free_qty=None, include_out_
     if product.is_product_variant:  # Only available for `product.product` records.
         if free_qty is None:
             free_qty = product.with_context(warehouse_id=wh_id).free_qty
-        in_stock = free_qty > 0 or include_out_of_stock and product.allow_out_of_stock_order
+
+        out_of_stock_allowed = include_out_of_stock and product.allow_out_of_stock_order
+        in_stock = free_qty > 0 or out_of_stock_allowed
+        show_quantity = (
+            not out_of_stock_allowed  # If out-of-stock is allowed, don't show the quantity.
+            and product.show_availability
+            and product.available_threshold >= free_qty
+        )
         return {
             'in_stock': in_stock,
-            'show_quantity': product.show_availability and product.available_threshold >= free_qty,
+            'show_quantity': show_quantity,
             'quantity': free_qty,
         }
     else:

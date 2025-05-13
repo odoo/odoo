@@ -5,36 +5,33 @@
         inherit_id="website_sale_collect.unavailable_products_warning"
     >
         <div name="o_wsale_unavailable_line_button_container" position="inside">
-            <span class="d-none d-md-inline-block ms-1">
+            <t t-if="not available_qty">
+                <t t-set="in_wishlist" t-value="order_line.product_id._is_in_wishlist()"/>
                 <a
+                    t-if="not in_wishlist"
                     title="Add to Wishlist"
                     href="#"
-                    class="o_add_wishlist js_wsc_delete_product small px-2 border-start"
+                    class="o_add_wishlist_dyn alert-link border-start ps-2 small"
                     t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
                     t-att-data-product-product-id="order_line.product_id.id"
                     data-action="o_wishlist"
                 >
                     <span
+                        class="js_wsc_update_product_qty"
                         t-att-data-line-id="order_line.id"
                         t-att-data-product-id="order_line.product_id.id"
                     >
-                        Save for Later
+                        <i class="fa fa-fw fa-heart-o" role="presentation" aria-label="Add to Wishlist"/>
+                        Wishlist
                     </span>
                 </a>
-            </span>
-            <button
-                title="Add to Wishlist"
-                class="o_add_wishlist js_wsc_delete_product small btn btn-light d-md-none"
-                t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
-                t-att-data-product-product-id="order_line.product_id.id"
-                data-action="o_wishlist"
-            >
-                <i
-                    class="fa fa-heart-o"
-                    t-att-data-line-id="order_line.id"
-                    t-att-data-product-id="order_line.product_id.id"
-                />
-            </button>
+                <span
+                    t-else=""
+                    class="alert-link border-start ps-2 small"
+                >
+                    <i class="fa fa-fw fa-heart"/> In wishlist
+                </span>
+            </t>
         </div>
     </template>
 </odoo>

@@ -15,6 +15,27 @@
             <field name="invoice_policy" position="attributes">
                 <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
             </field>
+            <p name="availability_description" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </p>
+            <group name="country_details" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </group>
+            <label for="max_weight" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </label>
+            <div name="max_weight_row" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </div>
+            <label for="max_volume" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </label>
+            <div name="max_volume_row" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </div>
+            <p name="country_warning" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </p>
             <page name="pricing" position="before">
                 <page string="Stores" name="warehouses" invisible="delivery_type != 'in_store'">
                     <field name="warehouse_ids">

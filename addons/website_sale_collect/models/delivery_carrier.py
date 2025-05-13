@@ -2,6 +2,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Command
 from odoo.http import request
 
 from odoo.addons.website_sale_collect import utils
@@ -41,6 +42,15 @@ class DeliveryCarrier(models.Model):
         for vals in vals_list:
             if vals.get('delivery_type') == 'in_store':
                 vals['integration_level'] = 'rate'
+
+                # Set the default warehouses and publish if one is found.
+                warehouses = self.env['stock.warehouse'].search(
+                    [('company_id', 'in', self.env.company.id)]
+                )
+                vals.update({
+                    'warehouse_ids': [Command.set(warehouses.ids)],
+                    'is_published': bool(warehouses),
+                })
         return super().create(vals_list)
 
     def write(self, vals):

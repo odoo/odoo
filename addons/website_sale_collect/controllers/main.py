@@ -41,9 +41,12 @@ class WebsiteSaleCollect(WebsiteSale):
         location and set the pickup location when there is only one warehouse available. """
         res = super()._prepare_checkout_page_values(order_sudo, **query_params)
 
+        if order_sudo.only_services:
+            return res
+
         res.update(order_sudo._prepare_in_store_default_location_data())
         if order_sudo.carrier_id.delivery_type == 'in_store' and order_sudo.pickup_location_data:
-            res['unavailable_order_lines'] = order_sudo._get_unavailable_order_lines(
+            res['insufficient_stock_data'] = order_sudo._get_insufficient_stock_data(
                 order_sudo.pickup_location_data.get('id')
             )
         return res

@@ -6,11 +6,11 @@
             - delivery_methods: The delivery methods to display, as a `delivery.carrier` recordset.
             - selected_dm_id: The selected delivery method id.
         -->
-        <form id="o_delivery_form" class="o_delivery_form mb-4 pt-2">
-            <h5>Delivery method</h5>
+        <form id="o_delivery_form" class="o_delivery_form">
+            <h4 class="mb-3">Delivery method</h4>
             <ul t-if="delivery_methods" id="o_delivery_methods" class="list-group">
                 <t t-foreach="delivery_methods" t-as="dm">
-                    <li name="o_delivery_method" class="list-group-item text-muted o_outline">
+                    <li name="o_delivery_method" class="list-group-item">
                         <t t-call="website_sale.delivery_method">
                             <t t-set="is_selected" t-value="dm.id == selected_dm_id"/>
                         </t>
@@ -33,41 +33,39 @@
             t-set="is_pickup_needed"
             t-value="delivery_type in dm.fields_get() and dm[delivery_type]"
         />
-        <div class="row flex-column flex-md-row flex-grow-1 gap-lg-3">
-            <div class="col">
-                <div class="d-flex form-check mb-0 gap-2">
-                    <!-- === Radio button === -->
-                    <input
-                        t-attf-id="o_delivery_{{dm.id}}"
-                        name="o_delivery_radio"
-                        type="radio"
-                        t-att-checked="is_selected"
-                        disabled="true"
-                        class="form-check-input position-absolute"
-                        t-att-data-dm-id="dm.id"
-                        t-att-data-delivery-type="dm.delivery_type"
-                        t-att-data-is-pickup-location-required="is_pickup_needed"
-                    />
-                    <!-- === Carrier label === -->
-                    <label
-                        class="o_delivery_carrier_label"
-                        t-field="dm.name"
-                        t-attf-for="o_delivery_{{dm.id}}"
-                    />
-                </div>
+        <div class="d-flex justify-content-between gap-3">
+            <div class="form-check flex-grow-1 cursor-pointer">
+                <!-- === Radio button === -->
+                <input
+                    t-attf-id="o_delivery_{{dm.id}}"
+                    name="o_delivery_radio"
+                    type="radio"
+                    t-att-checked="is_selected"
+                    disabled="true"
+                    class="form-check-input position-absolute"
+                    t-att-data-dm-id="dm.id"
+                    t-att-data-delivery-type="dm.delivery_type"
+                    t-att-data-is-pickup-location-required="is_pickup_needed"
+                />
+                <!-- === Delivery method label === -->
+                <label
+                    name="o_delivery_method_label"
+                    class="form-check-label w-100"
+                    t-attf-for="o_delivery_{{dm.id}}"
+                >
+                    <span name="o_delivery_method_name" t-field="dm.name"/>
+                </label>
             </div>
-            <div class="col col-auto">
-                <!-- === Delivery price badge === -->
-                <span class="o_wsale_delivery_price_badge float-end fw-bold" name="price">
-                    Select to compute delivery rate
-                </span>
-            </div>
+            <!-- === Delivery price badge === -->
+            <span class="o_wsale_delivery_price_badge text-muted fw-bold text-end" name="price">
+                <small class="fw-normal">Select to compute delivery rate</small>
+            </span>
         </div>
         <!-- === Pick up location === -->
         <div
             t-if="is_pickup_needed"
             name="o_pickup_location"
-            t-attf-class="position-relative d-flex gap-2 mt-2 {{'' if is_selected else 'd-none'}}"
+            t-attf-class="position-relative d-flex gap-2 mt-3 mb-2 {{'' if is_selected else 'd-none'}}"
         >
             <t
                 t-set="pickup_location_data"
@@ -75,13 +73,14 @@
             />
             <div
                 name="o_pickup_location_details"
-                t-attf-class="ms-4 {{'' if pickup_location_data else 'd-none'}}"
+                t-attf-class="d-flex justify-items-between align-items-center gap-3 w-100 border p-3 rounded {{'' if pickup_location_data else 'd-none'}}"
             >
                 <span>
                     <b name="o_pickup_location_name" t-out="pickup_location_data.get('name', '')"/>
                     <br/>
-                    <i
+                    <span
                         name="o_pickup_location_address"
+                        class="text-muted"
                         t-out="(pickup_location_data.get('street', ) or '')
                                + ' '
                                + (pickup_location_data.get('zip_code') or '')
@@ -91,7 +90,7 @@
                 </span>
                 <span
                     name="o_pickup_location_selector"
-                    class="btn btn-primary fa fa-pencil ms-2 p-1"
+                    class="btn btn-light fa fa-pencil ms-auto p-3"
                     title="Change location"
                     aria-label="Change location"
                     t-att-data-location-id="pickup_location_data.get('id')"
