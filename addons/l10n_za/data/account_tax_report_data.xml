@@ -131,7 +131,7 @@
                                 <field name="aggregation_formula">(VAT5.balance * 0.6) + VAT7.balance</field>
                             </record>
                             <record id="vat_on_accomodation_28_days" model="account.report.line">
-                                <field name="name">[9] x 15 / (100 ??) </field>
+                                <field name="name">[9] x 15 / 100 </field>
                                 <field name="aggregation_formula">SEC6.balance * 0.6 + SEC7.balance </field>
                                 <field name="children_ids">
                                     <record id="vat_on_accomodation_exceeding_28_days" model="account.report.line">
