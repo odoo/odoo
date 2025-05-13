@@ -127,16 +127,11 @@ class PaymentProvider(models.Model):
             'secret': webhook_secret,
             'events': const.HANDLED_WEBHOOK_EVENTS,
         }
-        _logger.info(
-            "Sending '/accounts/%(account_id)s/webhooks' request:\n%(payload)s",
-            {'account_id': self.razorpay_account_id, 'payload': pprint.pformat(payload)},
-        )
-        webhook_data = self._razorpay_make_request(
-            f'accounts/{self.razorpay_account_id}/webhooks', payload=payload, api_version='v2'
-        )
-        _logger.info(
-            "Response of '/accounts/%(account_id)s/webhooks' request:\n%(response)s",
-            {'account_id': self.razorpay_account_id, 'response': pprint.pformat(webhook_data)},
+        self._make_request(
+            'POST',
+            f'accounts/{self.razorpay_account_id}/webhooks',
+            json_payload=payload,
+            api_version='v2',
         )
         self.razorpay_webhook_secret = webhook_secret
 
@@ -161,58 +156,38 @@ class PaymentProvider(models.Model):
             )
         return supported_currencies
 
-    def _razorpay_make_request(self, endpoint, payload=None, method='POST', api_version='v1'):
-        """ Make a request to Razorpay API at the specified endpoint.
+    def _build_request_url(self, endpoint, *, api_version='v1', is_proxy_request=False, **kwargs):
+        if self.code != 'razorpay':
+            return super()._build_request_url(endpoint, **kwargs)
+        if is_proxy_request:
+            return f'{const.OAUTH_URL}{endpoint}'
+        return f'https://api.razorpay.com/{api_version}/{endpoint}'
 
-        Note: self.ensure_one()
-
-        :param str endpoint: The endpoint to be reached by the request.
-        :param dict payload: The payload of the request.
-        :param str method: The HTTP method of the request.
-        :param str api_version: The version of the API to use.
-        :return The JSON-formatted content of the response.
-        :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
-        """
-        self.ensure_one()
-        url = f'https://api.razorpay.com/{api_version}/{endpoint}'
+    def _prepare_request_headers(self, *, method=None, is_proxy_request=False, **kwargs):
+        if self.code != 'razorpay':
+            return super()._prepare_request_headers(method=method, **kwargs)
         headers = None
-        if self.razorpay_access_token:
+        if not is_proxy_request and self.razorpay_access_token:
             headers = {'Authorization': f'Bearer {self.razorpay_access_token}'}
-        auth = (self.razorpay_key_id, self.razorpay_key_secret) if self.razorpay_key_id else None
-        try:
-            if method == 'GET':
-                response = requests.get(
-                    url,
-                    params=payload,
-                    headers=headers,
-                    auth=auth,
-                    timeout=10,
-                )
-            else:
-                response = requests.post(
-                    url,
-                    json=payload,
-                    headers=headers,
-                    auth=auth,
-                    timeout=10,
-                )
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
-                )
-                raise ValidationError("Razorpay: " + _(
-                    "Razorpay gave us the following information: '%s'",
-                    response.json().get('error', {}).get('description')
-                ))
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Razorpay: " + _("Could not establish the connection to the API.")
-            )
-        return response.json()
+        return headers
+
+    def _prepare_request_auth(self, *, is_proxy_request=False, **kwargs):
+        if self.code != 'razorpay':
+            return super()._prepare_request_auth(is_proxy_request=is_proxy_request, **kwargs)
+        auth = None
+        if not is_proxy_request and self.razorpay_key_id:
+            auth = (self.razorpay_key_id, self.razorpay_key_secret)
+        return auth
+
+    def _parse_response_error(self, response):
+        if self.code != 'razorpay':
+            return super()._parse_response_error(response)
+        return response.json().get('error', {}).get('description', '')
+
+    def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
+        if self.code != 'razorpay' or not is_proxy_request:
+            return super()._parse_response_content(response)
+        return self._parse_proxy_response(response)
 
     def _razorpay_calculate_signature(self, data, is_redirect=True):
         """ Compute the signature for the request's data according to the Razorpay documentation.
@@ -259,45 +234,6 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - OAUTH FLOW === #
 
-    def _razorpay_make_proxy_request(self, endpoint, payload=None):
-        """ Make a request to the Razorpay proxy at the specified endpoint.
-
-        :param str endpoint: The proxy endpoint to be reached by the request; prefixed with '/'.
-        :param dict payload: The payload of the request.
-        :return: The JSON-formatted content of the response.
-        :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
-        """
-        proxy_payload = {
-            'jsonrpc': '2.0',
-            'id': uuid.uuid4().hex,
-            'method': 'call',
-            'params': payload,
-        }
-        url = f'{const.OAUTH_URL}{endpoint}'
-        try:
-            response = requests.post(url, json=proxy_payload, timeout=10)
-            response.raise_for_status()
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError("Razorpay Proxy: " + _("Could not establish the connection."))
-        except requests.exceptions.HTTPError:
-            _logger.exception(
-                "Invalid API request at %s with data %s", url, pprint.pformat(payload)
-            )
-            raise ValidationError(
-                "Razorpay Proxy: " + _("An error occurred when communicating with the proxy.")
-            )
-
-        # Razorpay proxy endpoints always respond with HTTP 200 as they implement JSON-RPC 2.0.
-        response_content = response.json()
-        if response_content.get('error'):  # An exception was raised on the proxy side.
-            error_message = response_content['error']['data']['message']
-            _logger.exception("Request forwarded with error: %s", error_message)
-            raise ValidationError(f"Razorpay Proxy: {error_message}")  # pylint: disable=missing-gettext
-
-        return response_content['result']
-
     def _razorpay_refresh_access_token(self):
         """ Refresh the access token.
 
@@ -306,9 +242,15 @@ class PaymentProvider(models.Model):
         :return: dict
         """
         self.ensure_one()
+        proxy_payload = self._prepare_proxy_request_payload(
+            payload={'refresh_token': self.razorpay_refresh_token}
+        )
 
-        response_content = self._razorpay_make_proxy_request(
-            '/refresh_access_token', payload={'refresh_token': self.razorpay_refresh_token}
+        response_content = self._make_request(
+            'POST',
+            '/refresh_access_token',
+            json_payload=proxy_payload,
+            is_proxy_request=True,
         )
         if response_content.get('access_token'):
             expiry = fields.Datetime.now() + timedelta(seconds=int(response_content['expires_in']))

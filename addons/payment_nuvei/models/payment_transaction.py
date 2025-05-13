@@ -105,33 +105,10 @@ class PaymentTransaction(models.Model):
         }
         return rendering_values
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of `payment` to find the transaction based on Nuvei data.
-
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: payment.transaction
-        :raise ValidationError: If inconsistent data are received.
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'nuvei' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('invoice_id')
-        if not reference:
-            raise ValidationError(
-                "Nuvei: " + _("Received data with missing reference.")
-            )
-
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'nuvei')])
-        if not tx:
-            raise ValidationError(
-                "Nuvei: " + _("No transaction found matching reference %(ref)s.", ref=reference)
-            )
-
-        return tx
+    def _get_ref_from_tx_notification_data(self, provider_code, notification_data):
+        if provider_code != 'nuvei':
+            return super()._get_ref_from_tx_notification_data(provider_code, notification_data)
+        return notification_data.get('invoice_id')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Nuvei data.

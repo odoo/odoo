@@ -20,8 +20,8 @@ class TestProcessingFlows(MercadoPagoCommon, PaymentHttpCommon):
         self._create_transaction(flow='redirect')
         url = self._build_url(MercadoPagoController._return_url)
         with patch(
-            'odoo.addons.payment_mercado_pago.models.payment_provider.PaymentProvider'
-            '._mercado_pago_make_request', return_value=self.verification_data
+            'odoo.addons.payment.models.payment_provider.PaymentProvider'
+            '._make_request', return_value=self.verification_data
         ), patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._handle_notification_data'
@@ -36,8 +36,8 @@ class TestProcessingFlows(MercadoPagoCommon, PaymentHttpCommon):
         tx = self._create_transaction(flow='redirect')
         url = self._build_url(f'{MercadoPagoController._webhook_url}/{tx.reference}')
         with patch(
-            'odoo.addons.payment_mercado_pago.models.payment_provider.PaymentProvider'
-            '._mercado_pago_make_request', return_value=self.verification_data
+            'odoo.addons.payment.models.payment_provider.PaymentProvider'
+            '._make_request', return_value=self.verification_data
         ), patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._handle_notification_data'

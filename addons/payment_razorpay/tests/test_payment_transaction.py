@@ -56,7 +56,8 @@ class TestPaymentTransaction(RazorpayCommon):
             'token', reference='INV123', token_id=shared_token.id, state='pending'
         )
         tx2 = self._create_transaction('token', reference='INV123-1', token_id=shared_token.id)
-        self.assertRaises(UserError, tx2._send_payment_request)
+        tx2._send_payment_request()
+        self.assertEqual(tx2.state, 'error')
 
     def test_allow_multi_payments_on_non_recurring_transactions(self):
         """Test that the payment of non-recurring transactions is allowed."""
@@ -77,8 +78,8 @@ class TestPaymentTransaction(RazorpayCommon):
             for other_tx in other_txs:
                 converted_amount = payment_utils.to_minor_currency_units(other_tx.amount, other_tx.currency_id)
                 with patch(
-                    'odoo.addons.payment_razorpay.models.payment_provider.PaymentProvider'
-                    '._razorpay_make_request',
+                    'odoo.addons.payment.models.payment_provider.PaymentProvider'
+                    '._make_request',
                     return_value={'status': 'created', 'id': '12345', 'amount': converted_amount, 'currency': other_tx.currency_id.name}
                 ):
                     self._assert_does_not_raise(UserError, other_tx._send_payment_request)

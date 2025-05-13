@@ -32,16 +32,15 @@ class PaymentToken(models.Model):
         self.ensure_one()
 
         # Fetch the available payment method of type 'card' for the given customer
-        response_content = self.provider_id._stripe_make_request(
+        response_content = self.provider_id._make_request(
+            'GET',
             'payment_methods',
-            payload={
+            data={
                 'customer': self.provider_ref,
                 'type': 'card',
                 'limit': 1,  # A new customer is created for each new token. Never > 1 card.
             },
-            method='GET'
         )
-        _logger.info("received payment_methods response:\n%s", pprint.pformat(response_content))
 
         # Store the payment method ID on the token
         payment_methods = response_content.get('data', [])

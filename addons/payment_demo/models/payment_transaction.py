@@ -71,9 +71,6 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'demo':
             return
 
-        if not self.token_id:
-            raise UserError("Demo: " + _("The transaction is not linked to a token."))
-
         simulated_state = self.token_id.demo_simulated_state
         notification_data = {'reference': self.reference, 'simulated_state': simulated_state}
         self._handle_notification_data('demo', notification_data)
@@ -123,27 +120,6 @@ class PaymentTransaction(models.Model):
         tx._handle_notification_data('demo', notification_data)
 
         return child_void_tx
-
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of payment to find the transaction based on dummy data.
-
-        :param str provider_code: The code of the provider that handled the transaction
-        :param dict notification_data: The dummy notification data
-        :return: The transaction if found
-        :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if the data match no transaction
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'demo' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('reference')
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'demo')])
-        if not tx:
-            raise ValidationError(
-                "Demo: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to skip the transaction comparison for dummy flows.
