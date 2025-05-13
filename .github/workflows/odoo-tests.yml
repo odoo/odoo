@@ -95,7 +95,7 @@ jobs:
       - name: Install ONLY custom addon (and deps)
         run: |
           ./odoo-bin \
-            --addons-path=odoo/odoo/addons,custom_addons \
+            --addons-path=addons,custom_addons \
             -d test_db \
             --db_host=$DB_HOST --db_user=$DB_USER --db_password=$DB_PASSWORD \
             --stop-after-init \
