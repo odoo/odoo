@@ -29,6 +29,14 @@ class StockMove(models.Model):
             if move.sale_line_id:
                 move.packaging_uom_id = move.sale_line_id.product_uom_id
 
+    @api.depends('sale_line_id')
+    def _compute_description_picking(self):
+        super()._compute_description_picking()
+        for move in self:
+            if move.sale_line_id:
+                sale_line_id = move.sale_line_id.with_context(lang=move.sale_line_id.order_id.partner_id.lang)
+                move.description_picking += sale_line_id._get_sale_order_line_multiline_description_variants()
+
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices
         related to this stock move.

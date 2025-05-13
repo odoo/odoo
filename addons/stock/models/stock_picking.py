@@ -1077,10 +1077,6 @@ class StockPicking(models.Model):
                 lambda m: m.picking_type_id != self.picking_type_id
             ).picking_type_id = self.picking_type_id
             (self.move_ids | self.move_ids_without_package).company_id = self.company_id
-            for move in (self.move_ids | self.move_ids_without_package):
-                if not move.product_id:
-                    continue
-                move.description_picking = move.product_id._get_description(move.picking_type_id)
 
     @api.onchange('location_dest_id')
     def _onchange_location_dest_id(self):
@@ -1133,11 +1129,6 @@ class StockPicking(models.Model):
                 picking.with_context(mail_notrack=True).write({'scheduled_date': scheduled_date})
         pickings._autoconfirm_picking()
 
-        for picking, vals in zip(pickings, vals_list):
-            if vals.get('picking_type_id'):
-                for move in picking.move_ids:
-                    if not move.description_picking:
-                        move.description_picking = move.product_id.with_context(lang=move._get_lang())._get_description(move.picking_id.picking_type_id)
         return pickings
 
     def write(self, vals):

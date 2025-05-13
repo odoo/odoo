@@ -87,7 +87,7 @@ class StockMoveLine(models.Model):
     reference = fields.Char(related='move_id.reference', readonly=False)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     origin = fields.Char(related='move_id.origin', string='Source')
-    description_picking = fields.Text(string="Description picking")
+    description_picking = fields.Text(related='move_id.description_picking')
     quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
     picking_location_id = fields.Many2one(related='picking_id.location_id')
     picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
@@ -185,9 +185,6 @@ class StockMoveLine(models.Model):
     @api.onchange('product_id', 'product_uom_id')
     def _onchange_product_id(self):
         if self.product_id:
-            if self.picking_id:
-                product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
-                self.description_picking = product._get_description(self.picking_id.picking_type_id)
             self.lots_visible = self.product_id.tracking != 'none'
 
     @api.onchange('lot_name', 'lot_id')
@@ -958,7 +955,6 @@ class StockMoveLine(models.Model):
             'product_id': self.product_id.id,
             'product_uom_qty': 0 if self.picking_id and self.picking_id.state != 'done' else self.quantity,
             'product_uom': self.product_uom_id.id,
-            'description_picking': self.description_picking or self.product_id.with_context(lang=self.env.context.get('lang'))._get_description(self.picking_type_id),
             'location_id': self.picking_id.location_id.id,
             'location_dest_id': self.picking_id.location_dest_id.id,
             'picked': self.picked,
