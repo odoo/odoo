@@ -115,7 +115,8 @@ registry.category("web_tour.tours").add("create_thread_for_attachment_without_bo
         },
         {
             content: "Hover on attachment",
-            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("file2.txt")',
+            trigger:
+                '.o-mail-Message:not(:has(.o-mail-Message-pendingProgress)) .o-mail-AttachmentCard:contains("file2.txt")',
             run: "hover",
         },
         {
