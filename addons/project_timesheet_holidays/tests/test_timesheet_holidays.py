@@ -248,6 +248,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         flex_40h_calendar = self.env['resource.calendar'].create({
             'name': 'Flexible 40h/week',
             'hours_per_day': 8.0,
+            'full_time_required_hours': 40.0,
             'flexible_hours': True,
         })
 
@@ -267,5 +268,6 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             ('date', '<=', self.leave_end_datetime),
             ('employee_id', '=', self.empl_employee.id),
         ])
-        self.assertEqual(timesheet.unit_amount, 24, "The duration of the timesheet for flexible employee leave "
+        self.assertEqual(len(timesheet), 3, "Three timesheets should be created for each leave day")
+        self.assertEqual(sum(timesheet.mapped('unit_amount')), 24, "The duration of the timesheet for flexible employee leave "
                                                         "should be number of days * hours per day")
