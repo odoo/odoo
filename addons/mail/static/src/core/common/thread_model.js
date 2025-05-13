@@ -844,6 +844,7 @@ export class Thread extends Record {
             tmpMsg = this.store["mail.message"].insert(
                 {
                     ...tmpData,
+                    attachment_ids: attachments,
                     body: prettyContent,
                     isPending: true,
                     thread: this,
