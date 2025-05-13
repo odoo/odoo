@@ -260,8 +260,14 @@
                                 <div class="item">
                                     <div class="card h-100 border" style="border-radius: 12px; overflow: hidden; min-width: 170px; max-width: 200px; min-height: 260px; max-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
                                         <a t-att-href="'/shop/product/%s' % slug(seller_product)" class="text-decoration-none" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                                            <img t-att-src="image_data_uri(seller_product.image_1920)" class="card-img-top" alt="Product Image"
-                                                 style="height: 130px; width: auto; object-fit: contain; margin: 16px auto 8px auto; display: block;"/>
+                                            <t t-if="seller_product.image_1920">
+                                                <img t-att-src="image_data_uri(seller_product.image_1920)" class="card-img-top" alt="Product Image"
+                                                     style="height: 130px; width: auto; object-fit: contain; margin: 16px auto 8px auto; display: block;"/>
+                                            </t>
+                                            <t t-else="">
+                                                <img src="/multi_vendor_marketplace/static/src/img/product.png" class="card-img-top" alt="No Image"
+                                                     style="height: 130px; width: auto; object-fit: contain; margin: 16px auto 8px auto; display: block;"/>
+                                            </t>
                                             <div class="card-body p-2" style="width: 100%; text-align: center;">
                                                 <h5 class="card-title mb-1" style="font-size: 14px; font-weight: 500; color: #333; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 38px;">
                                                     <t t-esc="seller_product.name"/>

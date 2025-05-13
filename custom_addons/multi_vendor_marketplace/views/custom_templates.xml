@@ -1,4 +1,34 @@
 <odoo>
+    <!-- Каталог с выпадающими категориями -->
+    <template id="catalog_dropdown" name="Каталог с категориями">
+        <div id="catalog-toggle-container" style="margin-bottom: 20px;">
+            <!-- Кнопка Каталог -->
+            <button id="catalog-toggle-btn" class="btn btn-warning w-100 mb-3 d-lg-block d-none" style="z-index: 1001; position: relative;">Каталог</button>
+            <div id="catalog-categories" style="display: none;">
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="/shop">All Products</a></li>
+                    <li class="list-group-item"><a href="/shop/category/dom">Для дома</a></li>
+                    <!-- Добавьте другие категории по аналогии или с помощью t-foreach -->
+                </ul>
+            </div>
+        </div>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                var btn = document.getElementById('catalog-toggle-btn');
+                var cat = document.getElementById('catalog-categories');
+                btn.addEventListener('click', function() {
+                    cat.style.display = (cat.style.display === 'none' || cat.style.display === '') ? 'block' : 'none';
+                });
+            });
+        </script>
+        <style>
+            #catalog-categories {
+                transition: all 0.3s;
+                margin-top: 10px;
+            }
+        </style>
+    </template>
+
     <!-- Custom User Profile Template -->
     <template id="custom_user_profile" name="Custom User Profile">
         <t t-call="website.layout">
@@ -167,5 +197,63 @@
                 </div>
             </div>
         </xpath>
+    </template>
+
+    <!-- Aside с категориями, скрыт по умолчанию -->
+    <template id="catalog_aside" name="Каталог Aside">
+        <div style="display: flex; justify-content: flex-end;">
+            <button id="catalog-toggle-btn" class="btn btn-warning mb-3 catalog-anim-btn" style="width: 110px; font-weight: bold; font-size: 13px; padding: 10px 0; border-radius: 24px; outline: none; box-shadow: none; border: none; margin-right: 0; transition: background 0.2s, filter 0.2s, transform 0.1s; background: #ff9800; color: #fff;">КАТАЛОГ</button>
+        </div>
+        <div id="catalog-categories-block" style="display: none; background: #fff; border-radius: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); padding: 24px 20px 20px 20px; margin-top: 10px;">
+            <t t-call="website_sale.products_categories_list"/>
+        </div>
+        <style>
+            #catalog-toggle-btn:focus, #catalog-toggle-btn:active {
+                outline: none !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            #catalog-toggle-btn:active {
+                filter: brightness(0.85);
+                transform: scale(0.97);
+            }
+            #catalog-toggle-btn {
+                border-radius: 24px !important;
+                transition: background 0.2s, filter 0.2s, transform 0.1s;
+                background: #ff9800 !important;
+                color: #fff !important;
+            }
+            #catalog-toggle-btn:hover {
+                background: #ff9800 !important;
+                color: #fff !important;
+                filter: none !important;
+            }
+            #catalog-categories-block {
+                background: #fff;
+                border-radius: 18px;
+                box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+                padding: 24px 20px 20px 20px;
+                margin-top: 10px;
+            }
+            #catalog-categories-block .o_categories_collapse_title {
+                display: none !important;
+            }
+        </style>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                var btn = document.getElementById('catalog-toggle-btn');
+                var block = document.getElementById('catalog-categories-block');
+                btn.addEventListener('click', function() {
+                    if (block.style.display === 'none' || block.style.display === '') {
+                        block.style.display = 'block';
+                    } else {
+                        block.style.display = 'none';
+                    }
+                    setTimeout(function() {
+                        btn.blur();
+                    }, 200);
+                });
+            });
+        </script>
     </template>
 </odoo>
