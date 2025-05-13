@@ -18,18 +18,16 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_razorpay.controllers.main')
     def test_webhook_notification_triggers_processing(self):
         """ Test that receiving a valid webhook notification triggers the processing of the
-        notification data. """
+        payment data. """
         self._create_transaction('direct')
         url = self._build_url(RazorpayController._webhook_url)
         with patch(
-            'odoo.addons.payment_razorpay.controllers.main.RazorpayController.'
-            '_verify_notification_signature'
+            'odoo.addons.payment_razorpay.controllers.main.RazorpayController._verify_signature'
         ), patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_notification_data'
-        ) as handle_notification_data_mock:
-            self._make_json_request(url, data=self.webhook_notification_data)
-        self.assertEqual(handle_notification_data_mock.call_count, 1)
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'
+        ) as process_mock:
+            self._make_json_request(url, data=self.webhook_payment_data)
+        self.assertEqual(process_mock.call_count, 1)
 
     @mute_logger('odoo.addons.payment_razorpay.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
@@ -37,13 +35,11 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
         self._create_transaction('redirect')
         url = self._build_url(RazorpayController._webhook_url)
         with patch(
-            'odoo.addons.payment_razorpay.controllers.main.RazorpayController'
-            '._verify_notification_signature'
+            'odoo.addons.payment_razorpay.controllers.main.RazorpayController._verify_signature'
         ) as signature_check_mock, patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_notification_data'
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'
         ):
-            self._make_json_request(url, data=self.webhook_notification_data)
+            self._make_json_request(url, data=self.webhook_payment_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_accept_webhook_notification_with_valid_signature(self):
@@ -55,8 +51,8 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
         ):
             self._assert_does_not_raise(
                 Forbidden,
-                RazorpayController._verify_notification_signature,
-                self.webhook_notification_data,
+                RazorpayController._verify_signature,
+                self.webhook_payment_data,
                 'valid_signature',
                 tx,
                 is_redirect=False,
@@ -67,11 +63,7 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
         """ Test the verification of a notification with a missing signature. """
         tx = self._create_transaction('redirect')
         self.assertRaises(
-            Forbidden,
-            RazorpayController._verify_notification_signature,
-            self.webhook_notification_data,
-            None,
-            tx,
+            Forbidden, RazorpayController._verify_signature, self.webhook_payment_data, None, tx
         )
 
     @mute_logger('odoo.addons.payment_razorpay.controllers.main')
@@ -84,8 +76,8 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
         ):
             self.assertRaises(
                 Forbidden,
-                RazorpayController._verify_notification_signature,
-                self.webhook_notification_data,
+                RazorpayController._verify_signature,
+                self.webhook_payment_data,
                 'bad_signature',
                 tx,
             )

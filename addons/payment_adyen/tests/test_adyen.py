@@ -49,10 +49,10 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
         # Send the refund request
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
             new=lambda *args, **kwargs: {'pspReference': "refund_reference", 'status': "received"}
         ):
-            tx._send_refund_request()
+            tx._refund()
 
         refund_tx = self.env['payment.transaction'].search([('source_transaction_id', '=', tx.id)])
         self.assertTrue(
@@ -71,7 +71,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                 "the source transaction."
         )
 
-    def test_get_tx_from_notification_data_returns_refund_tx(self):
+    def test_search_by_reference_returns_refund_tx(self):
         source_tx = self._create_transaction(
             'direct', state='done', provider_reference=self.original_reference
         )
@@ -93,10 +93,10 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='REFUND',
         )
-        returned_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        returned_tx = self.env['payment.transaction']._search_by_reference('adyen', data)
         self.assertEqual(returned_tx, refund_tx, msg="The existing refund tx is the one returned")
 
-    def test_get_tx_from_notification_data_creates_refund_tx_when_missing(self):
+    def test_search_by_reference_creates_refund_tx_when_missing(self):
         source_tx = self._create_transaction(
             'direct', state='done', provider_reference=self.original_reference
         )
@@ -108,7 +108,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='REFUND',
         )
-        refund_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        refund_tx = self.env['payment.transaction']._search_by_reference('adyen', data)
         self.assertTrue(
             refund_tx,
             msg="If no refund tx is found with received refund data, a refund tx should be created"
@@ -116,7 +116,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertNotEqual(refund_tx, source_tx)
         self.assertEqual(refund_tx.source_transaction_id, source_tx)
 
-    def test_get_tx_from_notification_data_returns_partial_capture_child_tx(self):
+    def test_search_by_reference_returns_partial_capture_child_tx(self):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(
             'direct', state='authorized', provider_reference=self.original_reference
@@ -139,10 +139,10 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='CAPTURE',
         )
-        returned_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        returned_tx = self.env['payment.transaction']._search_by_reference('adyen', data)
         self.assertEqual(returned_tx, capture_tx, msg="The existing capture tx is the one returned")
 
-    def test_get_tx_from_notification_data_creates_capture_tx_when_missing(self):
+    def test_search_by_reference_creates_capture_tx_when_missing(self):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(
             'direct', state='authorized', provider_reference=self.original_reference
@@ -157,7 +157,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='CAPTURE',
         )
-        capture_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        capture_tx = self.env['payment.transaction']._search_by_reference('adyen', data)
         self.assertTrue(
             capture_tx,
             msg="If no child tx is found with received capture data, a child tx should be created.",
@@ -165,7 +165,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertNotEqual(capture_tx, source_tx)
         self.assertEqual(capture_tx.source_transaction_id, source_tx)
 
-    def test_get_tx_from_notification_data_returns_void_tx(self):
+    def test_search_by_reference_returns_void_tx(self):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(
             'direct', state='authorized', provider_reference=self.original_reference
@@ -188,10 +188,10 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='CANCELLATION',
         )
-        returned_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        returned_tx = self.env['payment.transaction']._search_by_reference('adyen', data)
         self.assertEqual(returned_tx, cancel_tx, msg="The existing void tx is the one returned")
 
-    def test_get_tx_from_notification_data_creates_void_tx_when_missing(self):
+    def test_search_by_reference_creates_void_tx_when_missing(self):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(
             'direct', state='authorized', provider_reference=self.original_reference
@@ -206,7 +206,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             },
             eventCode='CANCELLATION',
         )
-        void_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        void_tx = self.env['payment.transaction']._search_by_reference('adyen', data)
         self.assertTrue(
             void_tx,
             msg="If no child tx is found with received void data, a child tx should be created."
@@ -214,47 +214,16 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertNotEqual(void_tx, source_tx)
         self.assertEqual(void_tx.source_transaction_id, source_tx)
 
-    def test_send_full_capture_request_does_not_create_capture_tx(self):
-        self.provider.capture_manually = True
-        source_tx = self._create_transaction(flow='direct', state='authorized')
-        with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
-            return_value={'status': 'received', 'pspreference': 'dummy ref'},
-        ):
-            child_tx = source_tx._send_capture_request()
-        self.assertFalse(
-            child_tx, msg="Full capture should not create a child transaction."
-        )
-
-    def test_send_partial_capture_request_creates_capture_tx(self):
-        self.provider.capture_manually = True
-        source_tx = self._create_transaction(flow='direct', state='authorized')
-        with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
-            return_value={'status': 'received', 'pspreference': 'dummy ref'},
-        ):
-            child_tx = source_tx._send_capture_request(amount_to_capture=10)
-        self.assertTrue(
-            source_tx.child_transaction_ids,
-            msg="Partial capture should create a child transaction and linked it to the source tx.",
-        )
-        self.assertEqual(
-            child_tx.amount, 10, msg="Child transaction should have the requested amount."
-        )
-        self.assertEqual(
-            child_tx.state, 'draft', msg="Child transaction are created in draft until confirmed."
-        )
-
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_tx_state_after_send_full_capture_request(self):
         self.provider.capture_manually = True
         tx = self._create_transaction('direct', state='authorized')
 
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
             return_value={'status': 'received'},
         ):
-            tx._send_capture_request()
+            tx._capture()
         self.assertEqual(
             tx.state,
             'authorized',
@@ -263,15 +232,15 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
-    def test_tx_state_after_send_partial_capture_request(self):
+    def test_tx_state_after_partial_capture_request(self):
         self.provider.capture_manually = True
         tx = self._create_transaction('direct', state='authorized')
 
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
             return_value={'status': 'received'},
         ):
-            tx._send_capture_request(amount_to_capture=10)
+            tx._capture(amount_to_capture=10)
         self.assertEqual(
             tx.state,
             'authorized',
@@ -285,53 +254,38 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                 "stays as 'draft' until a success notification is sent.",
         )
 
-    def test_send_full_void_request_does_not_create_void_tx(self):
-        self.provider.capture_manually = True
-        source_tx = self._create_transaction(flow='direct', state='authorized')
-        with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
-            return_value={'status': 'received', 'pspreference': 'dummy ref'},
-        ):
-            child_tx = source_tx._send_void_request()
-        self.assertFalse(
-            child_tx, msg="Full void should not create a child transaction."
-        )
-
-    def test_send_partial_void_request_creates_void_tx(self):
-        self.provider.capture_manually = True
-        source_tx = self._create_transaction(flow='direct', state='authorized')
-        with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
-            return_value={'status': 'received', 'pspreference': 'dummy ref'},
-        ):
-            child_tx = source_tx._send_void_request(amount_to_void=10)
-        self.assertTrue(
-            source_tx.child_transaction_ids,
-            msg="Partial void should create a child transaction and linked it to the source tx.",
-        )
-        self.assertEqual(
-            child_tx.amount, 10, msg="Child transaction should have the requested amount."
-        )
-        self.assertEqual(
-            child_tx.state, 'draft', msg="Child transaction are created in draft until confirmed."
-        )
-
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_tx_state_after_send_void_request(self):
         self.provider.capture_manually = True
         tx = self._create_transaction('direct', state='authorized')
 
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
             return_value={'status': 'received'},
         ):
-            tx._send_void_request()
+            tx._void()
         self.assertEqual(
             tx.state,
             'authorized',
             msg="A void request as been made, but the state of the transaction stays as"
                 " 'authorized' until a success notification is sent",
         )
+
+    def test_extract_token_values_maps_fields_correctly(self):
+        tx = self._create_transaction('direct')
+        payment_data = {
+            'additionalData': {
+                'recurring.recurringDetailReference': 'token_reference',
+                'cardSummary': '4242',
+                'recurring.shopperReference': 'partner_reference',
+            },
+        }
+        token_values = tx._extract_token_values(payment_data)
+        self.assertDictEqual(token_values, {
+            'provider_ref': 'token_reference',
+            'payment_details': '4242',
+            'adyen_shopper_reference': 'partner_reference',
+        })
 
     def test_webhook_notification_confirms_transaction(self):
         tx = self._create_transaction('direct')
@@ -489,10 +443,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
     def _webhook_notification_flow(self, payload):
         """ Send a notification to the webhook, ignore the signature, and check the response. """
         url = self._build_url(AdyenController._webhook_url)
-        with patch(
-            'odoo.addons.payment_adyen.controllers.main.AdyenController'
-            '._verify_notification_signature'
-        ):
+        with patch('odoo.addons.payment_adyen.controllers.main.AdyenController._verify_signature'):
             response = self._make_json_request(url, data=payload).json()
         self.assertEqual(
             response, '[accepted]', msg="The webhook should always respond '[accepted]'",
@@ -504,11 +455,9 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self._create_transaction('direct')
         url = self._build_url(AdyenController._webhook_url)
         with patch(
-            'odoo.addons.payment_adyen.controllers.main.AdyenController'
-            '._verify_notification_signature'
+            'odoo.addons.payment_adyen.controllers.main.AdyenController._verify_signature'
         ) as signature_check_mock, patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_notification_data'
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'
         ):
             self._make_json_request(url, data=self.webhook_notification_batch_data)
             self.assertEqual(signature_check_mock.call_count, 1)
@@ -517,10 +466,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         """ Test the verification of a webhook notification with a valid signature. """
         tx = self._create_transaction('direct')
         self._assert_does_not_raise(
-            Forbidden,
-            AdyenController._verify_notification_signature,
-            self.webhook_notification_payload,
-            tx,
+            Forbidden, AdyenController._verify_signature, self.webhook_notification_payload, tx
         )
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
@@ -528,14 +474,14 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         """ Test the verification of a webhook notification with a missing signature. """
         payload = dict(self.webhook_notification_payload, additionalData={'hmacSignature': None})
         tx = self._create_transaction('direct')
-        self.assertRaises(Forbidden, AdyenController._verify_notification_signature, payload, tx)
+        self.assertRaises(Forbidden, AdyenController._verify_signature, payload, tx)
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     def test_reject_webhook_notification_with_invalid_signature(self):
         """ Test the verification of a webhook notification with an invalid signature. """
         payload = dict(self.webhook_notification_payload, additionalData={'hmacSignature': 'dummy'})
         tx = self._create_transaction('direct')
-        self.assertRaises(Forbidden, AdyenController._verify_notification_signature, payload, tx)
+        self.assertRaises(Forbidden, AdyenController._verify_signature, payload, tx)
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_no_information_missing_from_partner_address(self):

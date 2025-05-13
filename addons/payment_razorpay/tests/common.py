@@ -24,7 +24,7 @@ class RazorpayCommon(PaymentCommon):
         cls.payment_id = 'pay_123'
         cls.refund_id = 'rfd_456'
         cls.order_id = 'order_789'
-        cls.redirect_notification_data = {
+        cls.redirect_payment_data = {
             'razorpay_payment_id': cls.payment_id,
             'razorpay_order_id': cls.order_id,
             'razorpay_signature': 'dummy',
@@ -57,7 +57,7 @@ class RazorpayCommon(PaymentCommon):
             'payment_id': cls.payment_id,
             'amount': cls.amount,
         }
-        cls.webhook_notification_data = {
+        cls.webhook_payment_data = {
             'event': 'payment.captured',
             'payload': {
                 'payment': {

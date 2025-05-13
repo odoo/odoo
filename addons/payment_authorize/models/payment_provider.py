@@ -1,18 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import logging
 import pprint
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_authorize import const
 from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentProvider(models.Model):
@@ -43,7 +43,7 @@ class PaymentProvider(models.Model):
                     _("Only one currency can be selected by Authorize.Net account.")
                 )
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS === #
 
     def _compute_feature_support_fields(self):
         """ Override of `payment` to enable additional features. """
@@ -53,6 +53,15 @@ class PaymentProvider(models.Model):
             'support_refund': 'full_only',
             'support_tokenization': True,
         })
+
+    # === CRUD METHODS === #
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        self.ensure_one()
+        if self.code != 'authorize':
+            return super()._get_default_payment_method_codes()
+        return const.DEFAULT_PAYMENT_METHOD_CODES
 
     # === ACTION METHODS ===#
 
@@ -111,10 +120,3 @@ class PaymentProvider(models.Model):
             'client_key': self.authorize_client_key,
         }
         return json.dumps(inline_form_values)
-
-    def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
-        if self.code != 'authorize':
-            return default_codes
-        return const.DEFAULT_PAYMENT_METHOD_CODES

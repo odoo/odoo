@@ -1,18 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import pprint
-
 from werkzeug import urls
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paymob.controllers.main import PaymobController
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -45,20 +43,18 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific rendering values.
         :rtype: dict
         """
-        res = super()._get_specific_rendering_values(processing_values)
         if self.provider_code != 'paymob':
-            return res
+            return super()._get_specific_rendering_values(processing_values)
 
         payload = self._paymob_prepare_payment_request_payload()
-        _logger.info(
-            "Sending '/v1/intention/' request for link creation:\n%s", pprint.pformat(payload)
-        )
-        payment_data = self.provider_id._paymob_make_request(
-            '/v1/intention/', payload=payload, is_client_request=True
-        )
-        _logger.info(
-            "Received response from '/v1/intention/' request:\n%s", pprint.pformat(payment_data)
-        )
+        try:
+            payment_data = self._send_api_request(
+                'POST', '/v1/intention/', json=payload, is_client_request=True
+            )
+        except ValidationError as error:
+            self._set_error(str(error))
+            return {}
+
         # The provider reference is set to allow fetching the payment status after redirection.
         self.provider_reference = payment_data.get('id')
         paymob_client_secret = payment_data.get('client_secret')
@@ -114,69 +110,42 @@ class PaymentTransaction(models.Model):
             },
         }
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of payment to find the transaction based on Paymob data.
+    @api.model
+    def _extract_reference(self, provider_code, payment_data):
+        """Override of `payment` to extract the reference from the payment data."""
+        if provider_code != 'paymob':
+            return super()._extract_reference(provider_code, payment_data)
+        return payment_data.get('merchant_order_id')
 
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: payment.transaction
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'paymob' or len(tx) == 1:
-            return tx
-
-        tx = self.search([
-            ('reference', '=', notification_data.get('merchant_order_id')),
-            ('provider_code', '=', 'paymob'),
-        ])
-        if not tx:
-            raise ValidationError(_(
-                "No transaction found matching reference %(ref)s.",
-                ref=notification_data.get('merchant_order_id'),
-            ))
-        return tx
-
-    def _compare_notification_data(self, notification_data):
-        """ Override of `payment` to compare the transaction based on Paymob data.
-
-        :param dict notification_data: The notification data sent by the provider.
-        :return: None
-        :raise ValidationError: If the transaction's amount and currency don't match the
-                                notification data.
-        """
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
         if self.provider_code != 'paymob':
-            return super()._compare_notification_data(notification_data)
+            return super()._extract_amount_data(payment_data)
 
-        amount_cents = float(notification_data.get('amount_cents'))
+        amount_cents = float(payment_data.get('amount_cents'))
         amount = payment_utils.to_major_currency_units(amount_cents, self.currency_id)
-        currency_code = notification_data.get('currency')
-        self._validate_amount_and_currency(amount, currency_code)
+        currency_code = payment_data.get('currency')
+        return {
+            'amount': amount,
+            'currency_code': currency_code,
+        }
 
-    def _process_notification_data(self, notification_data):
-        """ Override of `payment` to process the transaction based on Paymob data.
-
-        Note: self.ensure_one()
-
-        :param dict notification_data: The notification data sent by the provider.
-        :return: None
-        """
-        super()._process_notification_data(notification_data)
+    def _apply_updates(self, payment_data):
+        """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != 'paymob':
-            return
+            return super()._apply_updates(payment_data)
 
         # Update the payment state.
-        if notification_data.get('pending') == 'true':
+        if payment_data.get('pending') == 'true':
             self._set_pending()
-        elif notification_data.get('success') == 'true':
+        elif payment_data.get('success') == 'true':
             self._set_done()
         else:
             _logger.info(
-                "Received data with unsuccessful payment status for transaction with reference %s",
+                "Received data with unsuccessful payment status for transaction %s.",
                 self.reference
             )
-            message = notification_data.get('data.message')
+            message = payment_data.get('data.message')
             self._set_error(_(
                 "An error occurred during the processing of your payment (%(msg)s). Please try"
                 " again.", msg=message

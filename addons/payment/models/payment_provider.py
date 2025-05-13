@@ -1,15 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
+import uuid
+from pprint import pformat
+
+import requests
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment.const import REPORT_REASONS_MAPPING
+from odoo.addons.payment.const import REPORT_REASONS_MAPPING, SENSITIVE_KEYS
+from odoo.addons.payment.logging import get_payment_logger
 
-
-_logger = logging.getLogger(__name__)
+# Pass the possibly empty set of sensitive keys to the logger in case a provider module extends it.
+_logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
 
 
 class PaymentProvider(models.Model):
@@ -182,7 +186,7 @@ class PaymentProvider(models.Model):
     module_state = fields.Selection(string="Installation State", related='module_id.state')
     module_to_buy = fields.Boolean(string="Odoo Enterprise Module", related='module_id.to_buy')
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS === #
 
     @api.depends('code')
     def _compute_available_currency_ids(self):
@@ -199,6 +203,21 @@ class PaymentProvider(models.Model):
                 provider.available_currency_ids = supported_currencies
             else:
                 provider.available_currency_ids = None
+
+    def _get_supported_currencies(self):
+        """Return the supported currencies for the payment provider.
+
+        By default, all currencies are considered supported, including the inactive ones. For a
+        provider to filter out specific currencies, it must override this method and return the
+        subset of supported currencies.
+
+        Note: `self.ensure_one()`
+
+        :return: The supported currencies.
+        :rtype: res.currency
+        """
+        self.ensure_one()
+        return self.env['res.currency'].with_context(active_test=False).search([])
 
     @api.depends('state', 'module_state')
     def _compute_color(self):
@@ -245,7 +264,7 @@ class PaymentProvider(models.Model):
             'support_refund': 'none',
         })
 
-    #=== ONCHANGE METHODS ===#
+    # === ONCHANGE METHODS === #
 
     @api.onchange('state')
     def _onchange_state_switch_is_published(self):
@@ -308,8 +327,7 @@ class PaymentProvider(models.Model):
                     " capture: %s", ", ".join(incompatible_pms.mapped('name'))
                 ))
 
-
-    #=== CRUD METHODS ===#
+    # === CRUD METHODS === #
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -414,6 +432,17 @@ class PaymentProvider(models.Model):
             pms = provider.with_context(active_test=False).payment_method_ids
             (pms + pms.brand_ids).filtered(lambda pm: pm.code in pm_codes).active = True
 
+    def _get_default_payment_method_codes(self):
+        """Return the default payment methods for this provider.
+
+        Note: `self.ensure_one()`
+
+        :return: The default payment method codes.
+        :rtype: set
+        """
+        self.ensure_one()
+        return set()
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_data(self):
         """ Prevent the deletion of the payment provider if it has an xmlid. """
@@ -426,7 +455,7 @@ class PaymentProvider(models.Model):
                     " instead.", provider.name
                 ))
 
-    #=== ACTION METHODS ===#
+    # === ACTION METHODS === #
 
     def button_immediate_install(self):
         """ Install the module and reload the page.
@@ -477,7 +506,7 @@ class PaymentProvider(models.Model):
             'context': {'active_test': False, 'create': False},
         }
 
-    #=== BUSINESS METHODS ===#
+    # === BUSINESS METHODS === #
 
     @api.model
     def _get_compatible_providers(
@@ -592,21 +621,6 @@ class PaymentProvider(models.Model):
 
         return providers
 
-    def _get_supported_currencies(self):
-        """ Return the supported currencies for the payment provider.
-
-        By default, all currencies are considered supported, including the inactive ones. For a
-        provider to filter out specific currencies, it must override this method and return the
-        subset of supported currencies.
-
-        Note: `self.ensure_one()`
-
-        :return: The supported currencies.
-        :rtype: res.currency
-        """
-        self.ensure_one()
-        return self.env['res.currency'].with_context(active_test=False).search([])
-
     def _is_tokenization_required(self, **kwargs):
         """ Return whether tokenizing the transaction is required given its context.
 
@@ -694,16 +708,197 @@ class PaymentProvider(models.Model):
         self.ensure_one()
         return self.redirect_form_view_id
 
-    @api.model
-    def _get_provider_domain(self, provider_code, **kwargs):
-        """ Return the payment provider domain.
+    # === REQUEST HELPERS === #
 
-        :param str provider_code: The code of the provider to search for.
-        :param dict kwargs: Additional keyword arguments.
-        :return: The domain to search for the provider.
-        :rtype: list[tuple]
+    def _send_api_request(
+        self, method, endpoint, *, params=None, data=None, json=None, reference=None, **kwargs
+    ):
+        """Send a request to the API.
+
+        Whenever possible, calls to this method should be wrapped in a try-except block to prevent
+        the `ValidationError` that is raised when the request fails from bubbling up. Exceptions to
+        this rule include calls from a controller that must return the error message to the client.
+
+        Note: `self.ensure_one()`
+
+        :param str method: The HTTP method of the request.
+        :param str endpoint: The endpoint of the API to reach with the request.
+        :param dict params: The query string parameters of the request.
+        :param dict|str data: The body of the request.
+        :param dict json: The JSON-formatted body of the request.
+        :param str reference: The reference of the transaction, if any.
+        :param dict kwargs: Provider-specific data forwarded to the specialized helper methods.
+        :return: The formatted content of the response.
+        :rtype: dict|str
+        :raise ValidationError: If an HTTP error occurs.
         """
-        return [('code', '=', provider_code)]
+        self.ensure_one()
+
+        # Build the request.
+        url = self._build_request_url(endpoint, **kwargs)
+        headers = self._build_request_headers(method, endpoint, **kwargs)
+        auth = self._build_request_auth(**kwargs)
+
+        # Log the request.
+        self._log_request(method, url, params or data or json, reference=reference)
+
+        # Send the request.
+        try:
+            response = requests.request(
+                method, url, params=params, data=data, json=json, headers=headers, auth=auth,
+                timeout=10,
+            )
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            raise ValidationError(_("Could not establish the connection to the payment provider."))
+
+        # Log the response.
+        self._log_response(response, reference=reference)
+
+        # Parse the response.
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError:
+            error_msg = self._parse_response_error(response)
+            raise ValidationError(_("The payment provider rejected the request.\n%s", error_msg))
+        return self._parse_response_content(response, **kwargs)
+
+    def _build_request_url(self, endpoint, **kwargs):
+        """Build the URL of the request.
+
+        This method serves as a hook to allow providers to build the request URL.
+
+        :param str endpoint: The endpoint of the API to reach with the request.
+        :param dict kwargs: Provider-specific data.
+        :return: The request URL.
+        :rtype: str
+        """
+        return ''
+
+    def _build_request_headers(self, method, endpoint, **kwargs):
+        """Build the headers of the request.
+
+        This method serves as a hook to allow providers to build the request headers.
+
+        :param dict headers: The default headers.
+        :param dict kwargs: Provider-specific data.
+        :return: The request headers.
+        :rtype: dict
+        """
+        return {}
+
+    def _build_request_auth(self, **kwargs):
+        """Set the basic HTTP Auth of the request
+
+        This method serves as a hook to allow providers to build the request's basic HTTP Auth.
+
+        :param dict kwargs: Provider-specific data.
+        :return: The basic HTTP Auth, if any.
+        :rtype: tuple
+        """
+        return tuple()
+
+    def _log_request(self, method, url, payload, *, reference=None):
+        """Log the request.
+
+        The transaction reference is included in the log when possible to contextualize the request.
+        When the request is not linked to a transaction, the provider's id is used instead.
+
+        :param str method: The HTTP method of the request.
+        :param str url: The URL of the request.
+        :param str payload: The payload of the request.
+        :param str reference: The reference of the transaction, if any.
+        :rtype: None
+        """
+        if reference:
+            log_msg = "Sending %(method)s API request to %(url)s for transaction %(ref)s."
+            log_values = {'method': method, 'url': url, 'ref': reference}
+        else:
+            log_msg = "Sending %(method)s API request to %(url)s for provider %(p_id)s."
+            log_values = {'method': method, 'url': url, 'p_id': self.id}
+
+        # Add the payload to the log if any.
+        if payload:
+            log_msg += " Payload:\n%(payload)s"
+            log_values['payload'] = pformat(payload)
+
+        _logger.info(log_msg, log_values)
+
+    def _log_response(self, response, *, reference=None):
+        """Log the response.
+
+        The transaction reference is included in the log when possible to contextualize the
+        response. When the response is not linked to a transaction, the provider's id is used
+        instead.
+
+        :param requests.Response response: The response to log.
+        :param str reference: The reference of the transaction, if any.
+        :rtype: None
+        """
+        if reference:
+            log_msg = "Received API response from %(url)s for transaction %(ref)s.\n%(data)s"
+        else:
+            log_msg = "Received API response from %(url)s for provider %(p_id)s.\n%(data)s"
+        log_values = {'url': response.url, 'ref': reference, 'p_id': self.id, 'data': response.text}
+        if response.ok:
+            _logger.info(log_msg, log_values)
+        else:
+            _logger.error(log_msg, log_values)
+
+    def _parse_response_content(self, response, **kwargs):
+        """Retrieve the JSON-formatted content of the response.
+
+        This method serves as a hook to allow providers to parse the response content.
+
+        :param requests.Response response: The response to parse.
+        :param dict kwargs: Provider-specific data.
+        :return: The response content.
+        :rtype: dict
+        """
+        return response.json()
+
+    def _parse_response_error(self, response):
+        """Retrieve the error message from the response.
+
+        This method serves as a hook to allow providers to parse the response's error message.
+
+        :param requests.Response response: The response to parse.
+        :return: The error message.
+        :rtype: str
+        """
+        return response.text
+
+    def _prepare_json_rpc_payload(self, data):
+        """Prepare a JSON-RPC 2.0 formatted payload for proxy requests.
+
+        :param dict data: The data to include in the JSON-RPC request.
+        :return: The JSON-RPC 2.0 formatted proxy payload.
+        :rtype: dict
+        """
+        return {
+            'jsonrpc': '2.0',
+            'id': uuid.uuid4().hex,
+            'method': 'call',
+            'params': data,
+        }
+
+    def _parse_proxy_response(self, response):
+        """Retrieve JSON-RPC 2.0 formatted response content of a proxy request.
+
+        Note: Proxies always respond with HTTP 200 as they implement JSON-RPC 2.0.
+
+        :param requests.Response response: The JSON-RPC 2.0 formatted proxy response.
+        :return: The response content.
+        :rtype: dict
+        """
+        response_content = response.json()
+        if response_content.get('error'):  # An exception was raised on the proxy.
+            error_data = response_content['error']['data']
+            raise ValidationError(_(
+                "The payment provider rejected the request.\n%s", pformat(error_data['message'])
+            ))
+        return response_content['result']
+
+    # === SETUP METHODS === #
 
     @api.model
     def _setup_provider(self, provider_code, **kwargs):
@@ -731,6 +926,17 @@ class PaymentProvider(models.Model):
         providers = self.search(self._get_provider_domain(provider_code, **kwargs))
         providers.write(self._get_removal_values())
 
+    @api.model
+    def _get_provider_domain(self, provider_code, **kwargs):
+        """Return the payment provider domain.
+
+        :param str provider_code: The code of the provider to search for.
+        :param dict kwargs: Additional keyword arguments.
+        :return: The domain to search for the provider.
+        :rtype: list[tuple]
+        """
+        return [('code', '=', provider_code)]
+
     def _get_removal_values(self):
         """ Return the values to update a provider with when its module is uninstalled.
 
@@ -750,35 +956,13 @@ class PaymentProvider(models.Model):
             'express_checkout_form_view_id': None,
         }
 
-    def _get_provider_name(self):
-        """ Return the translated name of the provider.
-
-        Note: self.ensure_one()
-
-        :return: The translated name of the provider.
-        :rtype: str
-        """
-        self.ensure_one()
-        return dict(self._fields['code']._description_selection(self.env))[self.code]
-
     def _get_code(self):
         """ Return the code of the provider.
 
-        Note: self.ensure_one()
+        Note: `self.ensure_one()`
 
         :return: The code of the provider.
         :rtype: str
         """
         self.ensure_one()
         return self.code
-
-    def _get_default_payment_method_codes(self):
-        """ Return the default payment methods for this provider.
-
-        Note: self.ensure_one()
-
-        :return: The default payment method codes.
-        :rtype: set
-        """
-        self.ensure_one()
-        return set()

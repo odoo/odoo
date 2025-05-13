@@ -3,20 +3,16 @@
 import base64
 import hashlib
 import hmac
-import logging
-import pprint
 from wsgiref.handlers import format_date_time
 
-import requests
-
-from odoo import _, fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 from odoo.fields import Datetime
 
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_worldline import const
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentProvider(models.Model):
@@ -46,25 +42,42 @@ class PaymentProvider(models.Model):
             'support_tokenization': True,
         })
 
-    # === BUSINESS METHODS === #
+    # === CRUD METHODS === #
 
-    def _worldline_make_request(self, endpoint, payload=None, method='POST', idempotency_key=None):
-        """ Make a request to Worldline API at the specified endpoint.
-
-        Note: self.ensure_one()
-
-        :param str endpoint: The endpoint to be reached by the request.
-        :param dict payload: The payload of the request.
-        :param str method: The HTTP method of the request.
-        :param str idempotency_key: The idempotency key to pass in the request.
-        :return: The JSON-formatted content of the response.
-        :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
-        """
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
         self.ensure_one()
+        if self.code != 'worldline':
+            return super()._get_default_payment_method_codes()
+        return const.DEFAULT_PAYMENT_METHOD_CODES
 
+    # === REQUEST HELPERS === #
+
+    def _build_request_url(self, endpoint, **kwargs):
+        """Override of `payment` to build the request URL."""
+        if self.code != 'worldline':
+            return super()._build_request_url(endpoint, **kwargs)
         api_url = self._worldline_get_api_url()
-        url = f'{api_url}/v2/{self.worldline_pspid}/{endpoint}'
+        return f'{api_url}/v2/{self.worldline_pspid}/{endpoint}'
+
+    def _worldline_get_api_url(self):
+        """ Return the URL of the API corresponding to the provider's state.
+
+        :return: The API URL.
+        :rtype: str
+        """
+        if self.state == 'enabled':
+            return 'https://payment.direct.worldline-solutions.com'
+        else:  # 'test'
+            return 'https://payment.preprod.direct.worldline-solutions.com'
+
+    def _build_request_headers(self, method, endpoint, *, idempotency_key=None, **kwargs):
+        """Override of `payment` to build the request headers."""
+        if self.code != 'worldline':
+            return super()._build_request_headers(
+               method, endpoint, idempotency_key=idempotency_key, **kwargs
+            )
+
         content_type = 'application/json; charset=utf-8' if method == 'POST' else ''
         dt = format_date_time(Datetime.now().timestamp())  # Datetime in locale-independent RFC1123
         signature = self._worldline_calculate_signature(
@@ -78,38 +91,7 @@ class PaymentProvider(models.Model):
         }
         if method == 'POST' and idempotency_key:
             headers['X-GCS-Idempotence-Key'] = idempotency_key
-        try:
-            response = requests.request(method, url, json=payload, headers=headers, timeout=10)
-            try:
-                if response.status_code not in const.VALID_RESPONSE_CODES:
-                    response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload)
-                )
-                msg = ', '.join(
-                    [error.get('message', '') for error in response.json().get('errors', [])]
-                )
-                raise ValidationError(
-                    "Worldline: " + _("The communication with the API failed. Details: %s", msg)
-                )
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError(
-                "Worldline: " + _("Could not establish the connection to the API.")
-            )
-        return response.json()
-
-    def _worldline_get_api_url(self):
-        """ Return the URL of the API corresponding to the provider's state.
-
-        :return: The API URL.
-        :rtype: str
-        """
-        if self.state == 'enabled':
-            return 'https://payment.direct.worldline-solutions.com'
-        else:  # 'test'
-            return 'https://payment.preprod.direct.worldline-solutions.com'
+        return headers
 
     def _worldline_calculate_signature(
         self, method, endpoint, content_type, dt_rfc, idempotency_key=None
@@ -138,9 +120,9 @@ class PaymentProvider(models.Model):
         )
         return base64.b64encode(signature.digest()).decode('utf-8')
 
-    def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
+    def _parse_response_error(self, response):
+        """Override of `payment` to parse the error message."""
         if self.code != 'worldline':
-            return default_codes
-        return const.DEFAULT_PAYMENT_METHOD_CODES
+            return super()._parse_response_error(response)
+        msg = ', '.join([error.get('message', '') for error in response.json().get('errors', [])])
+        return msg

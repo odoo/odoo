@@ -11,7 +11,7 @@ class PaymentProvider(models.Model):
 
     code = fields.Selection(selection_add=[('demo', 'Demo')], ondelete={'demo': 'set default'})
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS === #
 
     def _compute_feature_support_fields(self):
         """ Override of `payment` to enable additional features. """
@@ -30,9 +30,11 @@ class PaymentProvider(models.Model):
         if self.filtered(lambda p: p.code == 'demo' and p.state not in ('test', 'disabled')):
             raise UserError(_("Demo providers should never be enabled."))
 
+    # === CRUD METHODS ===#
+
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
+        self.ensure_one()
         if self.code != 'demo':
-            return default_codes
+            return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES

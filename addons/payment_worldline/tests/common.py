@@ -25,7 +25,7 @@ class WorldlineCommon(PaymentCommon):
             'currencyCode': cls.currency.name,
         }
 
-        cls.notification_data = {
+        cls.payment_data = {
             'payment': {
                 'paymentOutput': {
                     'references': {
@@ -45,7 +45,7 @@ class WorldlineCommon(PaymentCommon):
             },
         }
 
-        cls.notification_data_insufficient_funds = {
+        cls.payment_data_insufficient_funds = {
             'errorId': 'ffffffff-fff-fffff-ffff-ffffffffffff',
             'errors': [{
                 'category': 'IO_ERROR',
@@ -106,7 +106,7 @@ class WorldlineCommon(PaymentCommon):
             },
         }
 
-        cls.notification_data_expired_card = {
+        cls.payment_data_expired_card = {
             'apiFullVersion': 'v1.1',
             'apiVersion': 'v1',
             'created': '2025-02-20T03:09:47.3706109+01:00',

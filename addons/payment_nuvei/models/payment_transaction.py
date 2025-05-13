@@ -1,19 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 from urllib.parse import urlencode
 from uuid import uuid4
 
-from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
+from odoo import _, api, models
+from odoo.exceptions import UserError
 from odoo.tools import float_round
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_nuvei import const
 from odoo.addons.payment_nuvei.controllers.main import NuveiController
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -29,9 +29,8 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific rendering values.
         :rtype: dict
         """
-        res = super()._get_specific_rendering_values(processing_values)
         if self.provider_code != 'nuvei':
-            return res
+            return super()._get_specific_rendering_values(processing_values)
 
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         if self.payment_method_code in const.FULL_NAME_METHODS and not (first_name and last_name):
@@ -105,99 +104,68 @@ class PaymentTransaction(models.Model):
         }
         return rendering_values
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of `payment` to find the transaction based on Nuvei data.
+    @api.model
+    def _extract_reference(self, provider_code, payment_data):
+        """Override of `payment` to extract the reference from the payment data."""
+        if provider_code != 'nuvei':
+            return super()._extract_reference(provider_code, payment_data)
+        return payment_data.get('invoice_id')
 
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: payment.transaction
-        :raise ValidationError: If inconsistent data are received.
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'nuvei' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('invoice_id')
-        if not reference:
-            raise ValidationError(
-                "Nuvei: " + _("Received data with missing reference.")
-            )
-
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'nuvei')])
-        if not tx:
-            raise ValidationError(
-                "Nuvei: " + _("No transaction found matching reference %(ref)s.", ref=reference)
-            )
-
-        return tx
-
-    def _compare_notification_data(self, notification_data):
-        """ Override of `payment` to compare the transaction based on Nuvei data.
-
-        :param dict notification_data: The notification data sent by the provider.
-        :return: None
-        :raise ValidationError: If the transaction's amount and currency don't match the
-            notification data.
-        """
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
         if self.provider_code != 'nuvei':
-            return super()._compare_notification_data(notification_data)
+            return super()._extract_amount_data(payment_data)
 
-        amount = notification_data.get('totalAmount')
-        currency_code = notification_data.get('currency')
-        self._validate_amount_and_currency(amount, currency_code)
+        amount = payment_data.get('totalAmount')
+        currency_code = payment_data.get('currency')
+        return {
+            'amount': float(amount),
+            'currency_code': currency_code,
+        }
 
-    def _process_notification_data(self, notification_data):
-        """ Override of `payment` to process the transaction based on Nuvei data.
-
-        Note: self.ensure_one()
-
-        :param dict notification_data: The notification data sent by the provider.
-        :return: None
-        :raise ValidationError: If inconsistent data are received.
-        """
-        super()._process_notification_data(notification_data)
+    def _apply_updates(self, payment_data):
+        """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != 'nuvei':
-            return
+            return super()._apply_updates(payment_data)
 
-        if not notification_data:
+        if not payment_data:
             self._set_canceled(state_message=_("The customer left the payment page."))
             return
 
         # Update the provider reference.
-        self.provider_reference = notification_data.get('TransactionID')
+        self.provider_reference = payment_data.get('TransactionID')
 
         # Update the payment method.
-        payment_option = notification_data.get('payment_method', '')
+        payment_option = payment_data.get('payment_method', '')
         payment_method = self.env['payment.method']._get_from_code(
             payment_option.lower(), mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
-        status = notification_data.get('Status') or notification_data.get('ppp_status')
+        status = payment_data.get('Status') or payment_data.get('ppp_status')
         if not status:
-            raise ValidationError("Nuvei: " + _("Received data with missing payment state."))
+            self._set_error(_("Received data with missing payment state."))
+            return
         status = status.lower()
         if status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
         elif status in const.PAYMENT_STATUS_MAPPING['done']:
             self._set_done()
         elif status in const.PAYMENT_STATUS_MAPPING['error']:
-            failure_reason = notification_data.get('Reason') or notification_data.get('message')
+            failure_reason = payment_data.get('Reason') or payment_data.get('message')
             self._set_error(_(
                 "An error occurred during the processing of your payment (%(reason)s). Please try"
                 " again.", reason=failure_reason,
             ))
         else:  # Classify unsupported payment states as the `error` tx state.
-            status_description = notification_data.get('Reason')
+            status_description = payment_data.get('Reason')
             _logger.info(
                 "Received data with invalid payment status (%(status)s) and reason '%(reason)s' "
-                "for transaction with reference %(ref)s",
+                "for transaction %(ref)s.",
                 {'status': status, 'reason': status_description, 'ref': self.reference},
             )
-            self._set_error("Nuvei: " + _(
+            self._set_error(_(
                 "Received invalid transaction status %(status)s and reason '%(reason)s'.",
                 status=status, reason=status_description
             ))
