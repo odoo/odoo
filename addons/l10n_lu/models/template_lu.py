@@ -48,17 +48,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('lu', 'account.reconcile.model')
     def _get_lu_reconcile_model(self):
         return {
-            'bank_fees_template': {
-                'name': 'Bank Fees',
-                'line_ids': [
-                    Command.create({
-                        'account_id': 'lu_2011_account_61333',
-                        'amount_type': 'percentage',
-                        'amount_string': '100',
-                        'label': 'Bank Fees',
-                    }),
-                ],
-            },
             'cash_discount_template': {
                 'name': 'Cash Discount',
                 'line_ids': [
@@ -71,3 +60,13 @@ class AccountChartTemplate(models.AbstractModel):
                 ],
             },
         }
+
+    def _get_bank_fees_reco_account(self, company):
+        # Luxembourgish account for the bank fees reco model. We need to be as precise
+        # as possible in case it's modified so it's missing and not replaced.
+        lu_account = self.env['account.account'].with_company(company).search([
+            ('code', '=', '613330'),
+            ('account_type', '=', 'expense'),
+            ('name', '=', 'Bank account charges and bank commissions (included custody fees on securities)'),
+        ], limit=1)
+        return lu_account or super()._get_bank_fees_reco_account(company)

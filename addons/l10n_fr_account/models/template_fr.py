@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, Command
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -47,17 +47,12 @@ class AccountChartTemplate(models.AbstractModel):
             'purchase': {'refund_sequence': True},
         }
 
-    @template('fr', 'account.reconcile.model')
-    def _get_fr_reconcile_model(self):
-        return {
-            'bank_charges_reconcile_model': {
-                'name': 'Bank fees',
-                'line_ids': [
-                    Command.create({
-                        'account_id': 'pcg_6278',
-                        'amount_type': 'percentage',
-                        'amount_string': '100',
-                    }),
-                ],
-            },
-        }
+    def _get_bank_fees_reco_account(self, company):
+        # French account for the bank fees reco model. We need to be as precise
+        # as possible in case it's modified so it's missing and not replaced.
+        fr_account = self.env['account.account'].with_company(company).search([
+            ('code', '=', '627800'),
+            ('account_type', '=', 'expense'),
+            ('name', '=', 'Other expenses and commissions on services supplied'),
+        ], limit=1)
+        return fr_account or super()._get_bank_fees_reco_account(company)
