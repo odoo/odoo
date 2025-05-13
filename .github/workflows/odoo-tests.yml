@@ -40,7 +40,7 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip setuptools wheel
           python3 -m pip install -r requirements.txt
-          pip install -e odoo
+          pip install -e .
 
       - name: Read test modules
         id: read_modules
@@ -61,7 +61,7 @@ jobs:
         run: |
           # Creamos la base pero NO instalamos TODO el repo, solo lo mínimo
           createdb -h $DB_HOST -U $DB_USER test_db
-          ./odoo/odoo-bin \
+          ./odoo-bin \
             --addons-path=odoo/odoo/addons,custom_addons \
             -d test_db \
             --db_host=$DB_HOST --db_user=$DB_USER --db_password=$DB_PASSWORD \
@@ -76,7 +76,7 @@ jobs:
           DB_PASSWORD: odoo
         run: |
           # Ahora ejecutamos tests, filtrando por tag
-          ./odoo/odoo-bin \
+          ./odoo-bin \
             --addons-path=odoo/odoo/addons,custom_addons \
             -d test_db \
             --db_host=$DB_HOST --db_user=$DB_USER --db_password=$DB_PASSWORD \
