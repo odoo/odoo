@@ -1,18 +1,48 @@
+from __future__ import annotations
+
 import calendar
 import math
+import re
 import typing
-from collections.abc import Callable, Iterable, Iterator
 from datetime import date, datetime, time, timedelta, tzinfo
 
-import babel
 import pytz
 from dateutil.relativedelta import relativedelta, weekdays
 
 from .float_utils import float_round
 
-D = typing.TypeVar('D', date, datetime)
+if typing.TYPE_CHECKING:
+    import babel
+    from collections.abc import Callable, Iterable, Iterator
+    from odoo.orm.types import Environment
+    D = typing.TypeVar('D', date, datetime)
+
 utc = pytz.utc
 
+TRUNCATE_TODAY = relativedelta(microsecond=0, second=0, minute=0, hour=0)
+TRUNCATE_UNIT = {
+    'day': TRUNCATE_TODAY,
+    'month': TRUNCATE_TODAY,
+    'year': TRUNCATE_TODAY,
+    'week': TRUNCATE_TODAY,
+    'hour': relativedelta(microsecond=0, second=0, minute=0),
+    'minute': relativedelta(microsecond=0, second=0),
+    'second': relativedelta(microsecond=0),
+}
+WEEKDAY_NUMBER = dict(zip(
+    ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'),
+    range(7),
+    strict=True,
+))
+_SHORT_DATE_UNIT = {
+    'd': 'days',
+    'm': 'months',
+    'y': 'years',
+    'w': 'weeks',
+    'H': 'hours',
+    'M': 'minutes',
+    'S': 'seconds',
+}
 
 __all__ = [
     'date_range',
@@ -23,6 +53,8 @@ __all__ = [
     'get_quarter_number',
     'get_timedelta',
     'localized',
+    'parse_date',
+    'parse_iso_date',
     'sum_intervals',
     'time_to_float',
     'to_timezone',
@@ -57,6 +89,110 @@ def to_timezone(tz: tzinfo | None) -> Callable[[datetime], datetime]:
     if tz is None:
         return lambda dt: dt.astimezone(utc).replace(tzinfo=None)
     return lambda dt: dt.astimezone(tz)
+
+
+def parse_iso_date(value: str) -> date | datetime:
+    """ Parse a ISO encoded string to a date or datetime.
+
+    :raises ValueError: when the format is invalid or has a timezone
+    """
+    # Looks like ISO format
+    if len(value) <= 10:
+        return date.fromisoformat(value)
+    now = datetime.fromisoformat(value)
+    if now.tzinfo is not None:
+        raise ValueError(f"expecting only datetimes with no timezone: {value!r}")
+    return now
+
+
+def parse_date(value: str, env: Environment) -> date | datetime:
+    r""" Parse a technical date string into a date or datetime.
+
+    This supports ISO formatted dates and dates relative to now.
+    `parse_iso_date` is used if the input starts with r'\d+-'.
+    Otherwise, the date is computed by starting from now at user's timezone.
+    We can also start 'today' (resulting in a date type). Then we apply offsets:
+
+    - we can add 'd', 'w', 'm', 'y', 'H', 'M', 'S':
+      days, weeks, months, years, hours, minutes, seconds
+      - "+3d" to add 3 days
+      - "-1m" to subtract one month
+    - we can set a part of the date which will reset to midnight or only lower
+      date parts
+      - "=1d" sets first day of month at midnight
+      - "=6m" sets June and resets to midnight
+      - "=3H" sets time to 3:00:00
+    - weekdays are handled similarly
+      - "=tuesday" sets to Tuesday of the current week (starting Monday) at midnight
+      - "+monday" goes to next Monday (no change if we are on Monday)
+
+    The DSL for relative dates is as follows:
+    ```
+    relative_date := ('today' | 'now')? offset*
+    offset := date_rel | time_rel | weekday
+    date_rel := (regex) [=+-]\d+[dwmy]
+    time_rel := (regex) [=+-]\d+[HMS]
+    weekday := [=+-] ('monday' | ... | 'sunday')
+    ```
+
+    :param value: The string to parse
+    :param env: The environment to get the current date (in user's tz)
+    :param naive: Whether to cast the result to a naive datetime.
+    """
+    if re.match(r'\d+-', value):
+        return parse_iso_date(value)
+    terms = value.split()
+    if not terms:
+        raise ValueError("Empty date value")
+
+    # Find the starting point
+    from odoo.orm.fields_temporal import Date, Datetime  # noqa: PLC0415
+
+    dt: datetime | date = Datetime.now()
+    term = terms.pop(0) if terms[0] in ('today', 'now') else 'now'
+    if term == 'today':
+        dt = Date.context_today(env['base'], dt)
+    else:
+        dt = Datetime.context_timestamp(env['base'], dt)
+
+    for term in terms:
+        operator = term[0]
+        if operator not in ('+', '-', '=') or len(term) < 3:
+            raise ValueError(f"Invalid term {term!r} in expression date: {value!r}")
+
+        # Weekday
+        if (weekday := WEEKDAY_NUMBER.get(term[1:])) is not None:
+            # current week starting on Monday
+            weekday_offset = weekday - dt.weekday()
+            if operator in ('+', '-'):
+                if operator == '+' and weekday_offset < 0:
+                    weekday_offset += 7
+                elif operator == '-' and weekday_offset > 0:
+                    weekday_offset -= 7
+            elif isinstance(dt, datetime):
+                dt += TRUNCATE_TODAY
+            dt += timedelta(weekday_offset)
+            continue
+
+        # Operations on dates
+        try:
+            unit = _SHORT_DATE_UNIT[term[-1]]
+            if operator in ('+', '-'):
+                number = int(term[:-1])  # positive or negative
+            else:
+                number = int(term[1:-1])
+                unit = unit.removesuffix('s')
+                if isinstance(dt, datetime):
+                    dt += TRUNCATE_UNIT[unit]
+                # note: '=Nw' is not supported
+            dt += relativedelta(**{unit: number})
+        except (ValueError, TypeError, KeyError):
+            raise ValueError(f"Invalid term {term!r} in expression date: {value!r}")
+
+    # always return a naive date
+    if isinstance(dt, datetime) and dt.tzinfo is not None:
+        dt = dt.astimezone(pytz.utc).replace(tzinfo=None)
+    return dt
 
 
 def get_month(date: D) -> tuple[D, D]:
