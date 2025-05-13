@@ -16,8 +16,15 @@ class AccountMoveLine(models.Model):
     def _get_attachment_domains(self):
         attachment_domains = super(AccountMoveLine, self)._get_attachment_domains()
         if self.expense_id:
-            attachment_domains.append([('res_model', '=', 'hr.expense'), ('res_id', '=', self.expense_id.id)])
+            attachment_domains.append([('res_model', '=', 'hr.expense'), ('res_id', 'in', self.expense_id.ids)])
         return attachment_domains
+
+    @api.model
+    def _get_attachment_by_record(self, id_model2attachments, move_line):
+        return (
+            super()._get_attachment_by_record(id_model2attachments, move_line)
+            or id_model2attachments.get(('hr.expense', move_line.expense_id.id))
+        )
 
     def _compute_totals(self):
         expenses = self.filtered('expense_id')
