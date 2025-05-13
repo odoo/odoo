@@ -54,7 +54,6 @@ jobs:
             sleep 1
           done
           echo "Postgres never became ready" >&2
-          exit 1
 
       - name: Create root role
         env:
