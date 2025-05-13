@@ -2125,7 +2125,7 @@
      *   formula, commas are used to separate arguments
      * - it does not support % symbol, in formulas % is an operator
      */
-    const formulaNumberRegexp = /(^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+)(?!\w|!)/;
+    const formulaNumberRegexp = /(^-?\d+(\.?\d*(e(\+|-)?\d+)?)?|^-?\.\d+)(?!\w|!)/;
     const pIntegerAndDecimals = "(\\d+(,\\d{3,})*(\\.\\d*)?)"; // pattern that match integer number with or without decimal digits
     const pOnlyDecimals = "(\\.\\d+)"; // pattern that match only expression with decimal digits
     const pScientificFormat = "(e(\\+|-)?\\d+)?"; // pattern that match scientific format between zero and one time (should be placed before pPercentFormat)
@@ -17683,6 +17683,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         return value === null || value === undefined;
     }
     const getNeutral = { number: 0, string: "", boolean: false };
+    function areAlmostEqual(value1, value2, epsilon = 2e-16) {
+        return Math.abs(value1 - value2) < epsilon;
+    }
     const EQ = {
         description: _lt(`Equal.`),
         args: args(`
@@ -17698,6 +17701,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             if (typeof value2 === "string") {
                 value2 = value2.toUpperCase();
+            }
+            if (typeof value1 === "number" && typeof value2 === "number") {
+                return areAlmostEqual(value1, value2);
             }
             return value1 === value2;
         },
@@ -17733,6 +17739,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         returns: ["BOOLEAN"],
         compute: function (value1, value2) {
             return applyRelationalOperator(value1, value2, (v1, v2) => {
+                if (typeof v1 === "number" && typeof v2 === "number") {
+                    return !areAlmostEqual(v1, v2) && v1 > v2;
+                }
                 return v1 > v2;
             });
         },
@@ -17749,6 +17758,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         returns: ["BOOLEAN"],
         compute: function (value1, value2) {
             return applyRelationalOperator(value1, value2, (v1, v2) => {
+                if (typeof v1 === "number" && typeof v2 === "number") {
+                    return areAlmostEqual(v1, v2) || v1 > v2;
+                }
                 return v1 >= v2;
             });
         },
@@ -43845,9 +43857,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.70';
-    __info__.date = '2025-05-12T05:29:58.112Z';
-    __info__.hash = 'bbdc034';
+    __info__.version = '16.0.71';
+    __info__.date = '2025-05-13T17:55:53.089Z';
+    __info__.hash = '2ff9f1a';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
