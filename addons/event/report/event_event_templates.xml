@@ -356,7 +356,7 @@
                 <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
                 <t t-set="ticket" t-value="attendee.event_ticket_id if attendee else first_ticket"/>
                 <div t-if="ticket" class="text-center w-100" t-attf-style="background-color: {{ticket.color or '#875A7B'}};">
-                    <div class="p-3 fs-3" t-out="ticket.name"/>
+                    <div class="p-2 fs-5" t-out="ticket.name"/>
                 </div>
             </div>
         </div>
