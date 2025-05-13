@@ -14,8 +14,14 @@ class TestPaymentTransaction(PaymentCommon):
 
     def test_capture_allowed_for_authorized_users(self):
         """ Test that users who have access to a transaction can capture it. """
+<<<<<<< 9b0c1c416eaa0df64fbe28c5672f2590a218f315
         if not self.env.ref('account.group_account_invoice', raise_if_not_found=False):
             self.skipTest("account needed for test")
+||||||| 786b6876092d389112251256e61d1a432c6fb457
+=======
+        if 'account' not in self.env["ir.module.module"]._installed():
+            self.skipTest("account module is not installed")
+>>>>>>> 7c85728323229839e67e56d567c794e4e95c7aa9
         self.provider.support_manual_capture = 'full_only'
         tx = self._create_transaction('redirect', state='authorized')
         user = self._prepare_user(self.internal_user, 'account.group_account_invoice')
@@ -23,8 +29,14 @@ class TestPaymentTransaction(PaymentCommon):
 
     def test_void_allowed_for_authorized_users(self):
         """ Test that users who have access to a transaction can void it. """
+<<<<<<< 9b0c1c416eaa0df64fbe28c5672f2590a218f315
         if not self.env.ref('account.group_account_invoice', raise_if_not_found=False):
             self.skipTest("account needed for test")
+||||||| 786b6876092d389112251256e61d1a432c6fb457
+=======
+        if 'account' not in self.env["ir.module.module"]._installed():
+            self.skipTest("account module is not installed")
+>>>>>>> 7c85728323229839e67e56d567c794e4e95c7aa9
         self.provider.support_manual_capture = 'full_only'
         tx = self._create_transaction('redirect', state='authorized')
         user = self._prepare_user(self.internal_user, 'account.group_account_invoice')
@@ -32,8 +44,14 @@ class TestPaymentTransaction(PaymentCommon):
 
     def test_refund_allowed_for_authorized_users(self):
         """ Test that users who have access to a transaction can refund it. """
+<<<<<<< 9b0c1c416eaa0df64fbe28c5672f2590a218f315
         if not self.env.ref('account.group_account_invoice', raise_if_not_found=False):
             self.skipTest("account needed for test")
+||||||| 786b6876092d389112251256e61d1a432c6fb457
+=======
+        if 'account' not in self.env["ir.module.module"]._installed():
+            self.skipTest("account module is not installed")
+>>>>>>> 7c85728323229839e67e56d567c794e4e95c7aa9
         self.provider.support_refund = 'full_only'
         tx = self._create_transaction('redirect', state='done')
         user = self._prepare_user(self.internal_user, 'account.group_account_invoice')
