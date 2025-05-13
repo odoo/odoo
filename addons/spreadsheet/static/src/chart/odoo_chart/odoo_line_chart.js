@@ -28,6 +28,7 @@ export class OdooLineChart extends OdooChart {
         this.cumulative = definition.cumulative;
         this.axesDesign = definition.axesDesign;
         this.fillArea = definition.fillArea;
+        this.cumulatedStart = definition.cumulatedStart;
     }
 
     getDefinition() {
@@ -38,6 +39,7 @@ export class OdooLineChart extends OdooChart {
             cumulative: this.cumulative,
             axesDesign: this.axesDesign,
             fillArea: this.fillArea,
+            cumulatedStart: this.cumulatedStart,
         };
     }
 }
