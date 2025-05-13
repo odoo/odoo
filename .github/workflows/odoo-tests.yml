@@ -12,7 +12,8 @@ jobs:
       DB_PORT: 5432
       DB_USER: odoo
       DB_PASSWORD: odoo
-
+      PGUSER: odoo
+      
     services:
       postgres:
         image: postgres:13
@@ -58,6 +59,7 @@ jobs:
       - name: Wait for Postgres to be ready
         run: |
           for i in {1..30}; do
+            echo "$DB_USER"
             if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER > /dev/null 2>&1; then
               echo "Postgres is up"
               exit 0
