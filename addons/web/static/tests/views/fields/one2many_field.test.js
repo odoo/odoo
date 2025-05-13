@@ -11683,6 +11683,77 @@ test("open a one2many record containing a one2many", async () => {
     ]);
 });
 
+test("open a one2many record with optional open record displayed", async () => {
+    Partner._views = {
+        [["form", false]]: `<form>
+            <field name="p" context="{ 'form_view_ref': 1234 }">
+                <list editable="bottom"><field name="name" /></list>
+            </field>
+        </form>`,
+        [["form", 1234]]: `
+            <form>
+                <field name="name"/>
+            </form>`,
+        [["search", false]]: `<search/>`,
+    };
+    let firstLoad = true;
+
+    patchWithCleanup(localStorage, {
+        getItem(key) {
+            const value = super.getItem(...arguments);
+            if (key.startsWith("debug_open_view")) {
+                expect.step(["getItem", key, value]);
+            }
+            return value;
+        },
+        setItem(key, value) {
+            if (key.startsWith("debug_open_view")) {
+                expect.step(["setItem", key, value]);
+            }
+            super.setItem(...arguments);
+        },
+    });
+    onRpc("get_views", ({ model, method, kwargs }) => {
+        if (firstLoad) {
+            firstLoad = false;
+        } else {
+            expect(kwargs.context.form_view_ref).toBe(1234);
+            expect.step(`${model}.${method}`);
+        }
+    });
+    serverState.debug = true;
+    const rec = Partner._records.find(({ id }) => id === 2);
+    rec.p = [1];
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+        res_id: 2,
+    });
+
+    const localStorageKey = "debug_open_view,partner,form,false,p,list,name";
+    expect.verifySteps([["getItem", localStorageKey, null]]);
+
+    expect(`td.o_list_record_open_form_view`).toHaveCount(0);
+    expect(".o_optional_columns_dropdown").toHaveCount(1);
+    await contains(".o_optional_columns_dropdown button").click();
+    expect(".o-dropdown-item:contains('View Button')").toHaveCount(1);
+    await contains(".o-dropdown-item:contains('View Button')").click();
+    expect.verifySteps([
+        ["setItem", localStorageKey, true],
+        ["getItem", localStorageKey, "true"],
+    ]);
+
+    expect(`td.o_list_record_open_form_view`).toHaveCount(1, {
+        message: "button to open form view should be present on each rows",
+    });
+
+    await contains(`td.o_list_record_open_form_view`).click();
+    expect.verifySteps(["partner.get_views"]);
+});
+
 test("if there are less than 4 lines in a one2many, empty lines must be displayed to cover the difference.", async () => {
     await mountView({
         type: "form",
