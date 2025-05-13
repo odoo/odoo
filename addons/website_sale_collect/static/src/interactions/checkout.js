@@ -1,3 +1,4 @@
+import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 import { patchDynamicContent } from '@web/public/utils';
 import { rpc } from '@web/core/network/rpc';
@@ -7,25 +8,60 @@ patch(Checkout.prototype, {
      setup() {
         super.setup();
         patchDynamicContent(this.dynamicContent, {
-            '.js_wsc_delete_product': { 't-on-click': this.onClickDeleteProduct.bind(this) },
+            '.js_wsc_update_product_qty': { 't-on-click': this.onClickUpdateProductQty.bind(this) },
         });
+        this.deliveryAddressTitle = this.el.querySelector('[name="delivery_address_title"]');
+        this.deliveryTitle = this.deliveryAddressTitle.textContent;
+        this.useDeliveryAsBillingLabel = this.el.querySelector(
+            '[name="use_delivery_as_billing_text"]'
+        );
+        this.useDeliveryAsBillingLabelText = this.useDeliveryAsBillingLabel.textContent;
+        this.inStoreTitle = _t('Contact Details');
+        this.useDeliveryAsBillingLabelInStoreText = _t('Same as contact details');
+        this._adaptDeliveryTitles();
+    },
+
+    async selectDeliveryMethod(ev) {
+        this._adaptDeliveryTitles();
+        await super.selectDeliveryMethod(...arguments);
     },
 
     /**
-     * Remove a product from the cart.
+     * Remove a product from the cart or update its quantity to match the available quantity.
      *
      * @param {Event} ev
      */
-    async onClickDeleteProduct(ev) {
+    async onClickUpdateProductQty(ev) {
         await this.waitFor(rpc('/shop/cart/update', {
-            line_id: parseInt(ev.target.dataset.lineId, 10),
-            product_id: parseInt(ev.target.dataset.productId, 10),
-            quantity: 0,
+            line_id: parseInt(ev.currentTarget.dataset.lineId, 10),
+            product_id: parseInt(ev.currentTarget.dataset.productId, 10),
+            quantity: parseInt(ev.currentTarget.dataset.availableQty || 0, 10),
         }));
         window.location.reload(); // Reload all cart values.
     },
 
     // #=== DOM MANIPULATION ===#
+
+    /**
+     * Change the delivery address title and the 'use delivery as billing' label depending on the
+     * selected delivery method.
+     *
+     * @private
+     * @return {void}
+     */
+    _adaptDeliveryTitles() {
+        const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+        if (!checkedRadio || !this.deliveryAddressTitle || !this.useDeliveryAsBillingLabel) {
+            return;
+        }
+        if (checkedRadio.dataset.deliveryType === 'in_store') {
+            this.deliveryAddressTitle.textContent = this.inStoreTitle;
+            this.useDeliveryAsBillingLabel.textContent = this.useDeliveryAsBillingLabelInStoreText;
+        } else {
+            this.deliveryAddressTitle.textContent = this.deliveryTitle;
+            this.useDeliveryAsBillingLabel.textContent = this.useDeliveryAsBillingLabelText;
+        }
+    },
 
     /**
      * Remove a warning if available pickup location is selected.

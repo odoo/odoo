@@ -381,13 +381,13 @@ export class Checkout extends Interaction {
      * @param {Boolean} disable - Whether the radio should be disabled.
      */
     _toggleDeliveryMethodRadio(radio, disable=false) {
-        const deliveryMethodContainer = this._getDeliveryMethodContainer(radio);
+        const deliveryPriceBadge = this._getDeliveryPriceBadge(radio);
         radio.disabled = disable;
         if (disable) {
-            deliveryMethodContainer.classList.add('text-muted');
+            deliveryPriceBadge.classList.add('text-muted');
         }
         else {
-            deliveryMethodContainer.classList.remove('text-muted');
+            deliveryPriceBadge.classList.remove('text-muted');
         }
     }
 
