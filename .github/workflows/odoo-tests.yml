@@ -8,7 +8,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      DB_HOST: 127.0.0.1
+      DB_HOST: postgres
       DB_PORT: 5432
       DB_USER: odoo
       DB_PASSWORD: odoo
@@ -21,6 +21,7 @@ jobs:
           POSTGRES_USER: odoo
           POSTGRES_PASSWORD: odoo
           POSTGRES_DB: odoo
+          POSTGRES_HOST_AUTH_METHOD: trust
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -56,15 +57,10 @@ jobs:
           EOF
           )" >> $GITHUB_OUTPUT
 
-      - name: Create root role
-        env:
-            PGPASSWORD: ${{ env.DB_PASSWORD }}
-        run: |
-          psql -h $DB_HOST -U $DB_USER -c "CREATE ROLE root WITH LOGIN SUPERUSER PASSWORD 'password';"
-
+      
       - name: Wait for Postgres to be ready
         run: |
-          for i in {1..30}; do
+          for i in {1..60}; do
             if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER > /dev/null 2>&1; then
               echo "Postgres is up"
               exit 0
@@ -82,7 +78,13 @@ jobs:
         if: failure()
         run: |
           docker logs $(docker ps -q --filter "ancestor=postgres:13")
-        
+          
+      - name: Create root role
+        env:
+            PGPASSWORD: ${{ env.DB_PASSWORD }}
+        run: |
+          psql -h $DB_HOST -U $DB_USER -c "CREATE ROLE root WITH LOGIN SUPERUSER PASSWORD 'password';"
+
       - name: Create test database
         env:
           PGPASSWORD: ${{ env.DB_PASSWORD }}
