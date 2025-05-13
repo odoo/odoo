@@ -1,3 +1,4 @@
+import {_t} from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import publicWidget from '@web/legacy/js/public/public_widget';
 
@@ -6,7 +7,21 @@ publicWidget.registry.WebsiteSaleCheckout.include({
         'click .js_wsc_delete_product': '_onClickDeleteProduct',
     }),
 
+    async start() {
+        await this._super(...arguments);
+        this.deliveryAddressTitle = this.el.querySelector('[name="delivery_address_title"]');
+        this.deliveryTitle = this.deliveryAddressTitle.textContent;
+        this.inStoreTitle = _t('Contact Address');
+        this._adaptDeliveryAddressRowTitle();
+
+    },
+
     // #=== EVENT HANDLERS ===#
+
+    async _selectDeliveryMethod(ev) {
+        this._adaptDeliveryAddressRowTitle();
+        await this._super(...arguments);
+    },
 
     /**
      * Remove a product from the cart.
@@ -24,6 +39,15 @@ publicWidget.registry.WebsiteSaleCheckout.include({
     },
 
     // #=== DOM MANIPULATION ===#
+
+    _adaptDeliveryAddressRowTitle() {
+        const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+        if (checkedRadio.dataset.deliveryType === 'in_store') {
+            this.deliveryAddressTitle.textContent = this.inStoreTitle;
+        } else {
+            this.deliveryAddressTitle.textContent = this.deliveryTitle;
+        }
+    },
 
     /**
      * Remove a warning if available pickup location is selected.
@@ -59,6 +83,15 @@ publicWidget.registry.WebsiteSaleCheckout.include({
             );
         }
         return this._super.apply(this, arguments) && !hasWarning;
+    },
+
+    /**
+     *  Override to disable the toggle when pick up in store is selected.
+     *
+     */
+    _isUseDeliveryAsBillingDisabled() {
+        const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+        return this._super(...arguments) || checkedRadio?.dataset.deliveryType === 'in_store';
     },
 
     /**
