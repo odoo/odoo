@@ -4,6 +4,7 @@
             acceptedFileExtensions="props.acceptedFileExtensions"
             fileUploadClass="'document_file_uploader'"
             multiUpload="true"
+            onClick.bind="onClick"
             onUploaded.bind="onFileUploaded"
             onUploadComplete.bind="onUploadComplete">
             <t t-set-slot="toggler">
