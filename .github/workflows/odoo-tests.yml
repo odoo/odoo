@@ -63,13 +63,8 @@ jobs:
 
       - name: Debug Postgres readiness
         run: |
-          docker exec $(docker ps -q --filter "ancestor=postgres:13") pg_isready -h localhost -p 5432
-
-      - name: Create root role
-        env:
-          PGPASSWORD: ${{ env.DB_PASSWORD }}
-        run: |
-          psql -h $DB_HOST -U $DB_USER -c "CREATE ROLE root WITH LOGIN SUPERUSER PASSWORD 'password';"
+          docker ps -a
+          docker logs $(docker ps -aq --filter "ancestor=postgres:13") || true
 
       - name: Create test database
         env:
