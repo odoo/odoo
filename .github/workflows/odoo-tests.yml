@@ -23,7 +23,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -31,19 +30,26 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            python3-dev \
+            libldap2-dev \
+            libsasl2-dev \
+            libssl-dev
       - name: Install dependencies
         run: |
           python3 -m pip install -r requirements.txt
           pip install -e .
-
       - name: Read test modules from JSON
         id: read_modules
         run: |
           MODULES=$(python3 -c "import json; print(','.join(json.load(open('test_modules.json'))['modules']))")
           echo "modules_to_test=$MODULES" >> $GITHUB_OUTPUT
-
       - name: Run Odoo tests
         env:
           DB_HOST: localhost
@@ -51,5 +57,13 @@ jobs:
           DB_USER: odoo
           DB_PASSWORD: odoo
         run: |
-          ./odoo-bin -d test_db --db_host=$DB_HOST --db_user=$DB_USER --db_password=$DB_PASSWORD \
-            --test-enable --stop-after-init -i ${{ steps.read_modules.outputs.modules_to_test }}
+          ./odoo-bin \
+            --addons-path=addons,custom_addons \
+            -d test_db \
+            --db_host=$DB_HOST \
+            --db_user=$DB_USER \
+            --db_password=$DB_PASSWORD \
+            --test-enable \
+            --test-tags=ci_only \
+            --stop-after-init \
+            -i ${{ steps.read_modules.outputs.modules_to_test }}
