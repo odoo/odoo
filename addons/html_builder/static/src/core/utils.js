@@ -299,7 +299,10 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
         const selectableState = env.selectableContext.getSelectableState();
         isSelectableActive = () => {
             env.selectableContext.refreshCurrentItem();
-            return toRaw(selectableState.currentSelectedItem) === selectableItem;
+            return (
+                toRaw(selectableState.currentSelectedItem) === selectableItem ||
+                (id && selectableState.currentSelectedItem?.id === id)
+            );
         };
 
         const selectableItem = {
@@ -308,6 +311,7 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
             getLabel,
             clean,
             getActions,
+            id,
         };
 
         env.selectableContext.addSelectableItem(selectableItem);
@@ -316,7 +320,9 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
         });
         effect(
             ({ currentSelectedItem }) => {
-                state.isActive = toRaw(currentSelectedItem) === selectableItem;
+                state.isActive =
+                    toRaw(currentSelectedItem) === selectableItem ||
+                    (id && currentSelectedItem?.id === id);
             },
             [selectableState]
         );
