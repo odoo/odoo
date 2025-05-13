@@ -17,6 +17,7 @@
                 t-ref="root"
                 t-if="message.exists()"
             >
+                <div t-if="props.asCard and isMobileOS" class="position-absolute end-0 z-1"><t t-call="mail.Message.actions"/></div>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0 justify-content-center" t-att-class="{ 'align-items-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view rounded-3" t-att-class="getAvatarContainerAttClass()">
@@ -30,7 +31,7 @@
                         </t>
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': message.composer }" t-ref="messageContent">
-                        <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note }" name="header">
+                        <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note, 'pe-2': props.asCard and isMobileOS }" name="header">
                             <span t-if="authorName and shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="getAuthorAttClass()">
                                 <strong class="me-1" t-esc="authorName"/>
                             </span>
@@ -53,7 +54,7 @@
                                 </span>
                             </div>
                             <t t-if="isAlignedRight" t-call="mail.Message.notification"/>
-                            <t t-if="!message.bubbleColor" t-call="mail.Message.actions"/>
+                            <t t-if="!message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
                         <div
                             class="o-mail-Message-contentContainer position-relative d-flex"
@@ -119,7 +120,7 @@
                                             </div>
                                         </t>
                                     </t>
-                                    <t t-if="message.bubbleColor and message.hasTextContent and !env.inChatWindow" t-call="mail.Message.actions"/>
+                                    <t t-if="message.bubbleColor and message.hasTextContent and !env.inChatWindow and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
                                 </div>
                                 <div class="position-relative">
                                     <AttachmentList
@@ -131,7 +132,7 @@
                                 </div>
                                 <LinkPreviewList t-if="message.link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="props.message.editable"/>
                             </div>
-                            <t t-if="message.bubbleColor and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
+                            <t t-if="message.bubbleColor and (!message.hasTextContent or env.inChatWindow) and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
                         <MessageReactions message="message" openReactionMenu="openReactionMenu" t-if="message.reactions.length"/>
                     </div>
@@ -149,8 +150,8 @@
         t-att-class="{
             'start-0': isAlignedRight,
             'mx-1': !isMobileOS,
-            'mt-1': message.bubbleColor,
-            'my-n2': !message.bubbleColor,
+            'mt-1': message.bubbleColor and !props.asCard and !isMobileOS,
+            'my-n2': !message.bubbleColor and !props.asCard and !isMobileOS,
             'invisible': !isActive and !isMobileOS,
             'o-expanded': optionsDropdown.isOpen
         }"
