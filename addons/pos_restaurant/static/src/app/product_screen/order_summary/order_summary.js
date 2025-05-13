@@ -24,6 +24,8 @@ patch(OrderSummary.prototype, {
         const order = this.pos.get_order();
         await this.pos._onBeforeDeleteOrder(order);
         order.state = "cancel";
+        // Notify the kitchen display to reflect the cancelled order status on table release
+        await this.pos.sendOrderInPreparationUpdateLastChange(order);
         this.pos.showScreen("FloorScreen");
     },
     showUnbookButton() {

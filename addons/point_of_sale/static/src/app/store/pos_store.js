@@ -645,9 +645,36 @@ export class PosStore extends Reactive {
         return await this.addLineToOrder(vals, order, opts, configure);
     }
 
+    // Handles errors thrown by assert_editable and shows an appropriate dialog if the order is finalized or cancelled
+    assert_order_editable(order) {
+        try {
+            return order.assert_editable();
+        } catch (error) {
+            let errorTitle = _t("Finalized Order");
+            let errorMessage = error.message;
+
+            if (order.state === "cancel") {
+                errorTitle = _t("Cancelled Order");
+                errorMessage = _t("This order has been cancelled and cannot be modified.");
+            }
+
+            this.dialog.add(AlertDialog, {
+                title: errorTitle,
+                body: errorMessage,
+                confirm: () =>
+                    this.showScreen(
+                        this.config.module_pos_restaurant ? "FloorScreen" : "ProductScreen"
+                    ),
+            });
+            return false;
+        }
+    }
+
     async addLineToOrder(vals, order, opts = {}, configure = true) {
         let merge = true;
-        order.assert_editable();
+        if (!this.assert_order_editable(order)) {
+            return;
+        }
 
         const options = {
             ...opts,
@@ -1885,7 +1912,7 @@ export class PosStore extends Reactive {
     async selectPartner() {
         // FIXME, find order to refund when we are in the ticketscreen.
         const currentOrder = this.get_order();
-        if (!currentOrder) {
+        if (!currentOrder || (currentOrder && !this.assert_order_editable(currentOrder))) {
             return false;
         }
         const currentPartner = currentOrder.get_partner();
