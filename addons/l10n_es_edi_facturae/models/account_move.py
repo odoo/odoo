@@ -275,7 +275,7 @@ class AccountMove(models.Model):
         :return: A tuple containing the Face items, the taxes and the invoice totals data.
         """
         self.ensure_one()
-        extended_dp = 6 if self.company_id.tax_calculation_rounding_method == 'round_globally' else 2
+        extended_dp = self.env['decimal.precision'].precision_get('Product Price')
         invoice_ref = self.ref and self.ref[:20]
         line = base_line['record']
         tax_details = base_line['tax_details']
@@ -469,6 +469,7 @@ class AccountMove(models.Model):
             'is_outstanding': self.move_type.startswith('out_'),
             'float_repr': float_repr,
             'file_currency': inv_curr,
+            'unit_price_decimals': self.env['decimal.precision'].precision_get('Product Price'),
             'eur': eur_curr,
             'conversion_needed': conversion_needed,
             'refund_multiplier': -1 if self.move_type in ('out_refund', 'in_refund') else 1,
@@ -509,7 +510,6 @@ class AccountMove(models.Model):
         :rtype:  str
         """
         self.ensure_one()
-        company = self.company_id
         template_values, signature_values = self._l10n_es_edi_facturae_export_facturae()
         xml_content = cleanup_xml_node(self.env['ir.qweb']._render('l10n_es_edi_facturae.account_invoice_facturae_export', template_values))
 
