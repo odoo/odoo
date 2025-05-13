@@ -2,6 +2,7 @@ import { beforeEach, expect, test } from "@odoo/hoot";
 import { cookie } from "@web/core/browser/cookie";
 import { redirect } from "@web/core/utils/urls";
 import {
+    contains,
     defineModels,
     fields,
     getService,
@@ -26,7 +27,7 @@ class Partner extends models.Model {
         form: `
             <form>
                 <group>
-                    <field name="display_name"/>
+                    <field name="name"/>
                 </group>
             </form>
         `,
@@ -96,6 +97,36 @@ test("open record withtout the correct company (doAction)", async () => {
     });
 });
 
+test("create/modify a record with a non-connected company", async () => {
+    cookie.set("cids", "1");
+    onRpc("web_save", ({ kwargs }) => {
+        expect.step(kwargs.context.allowed_company_ids);
+        if (
+            kwargs.context.allowed_company_ids.length === 1 &&
+            kwargs.context.allowed_company_ids[0] === 1
+        ) {
+            throw makeServerError({
+                type: "AccessError",
+                message: "Wrong Company",
+                context: { suggested_company: { id: 2, display_name: "Company 2" } },
+            });
+        }
+    });
+
+    await mountWebClient();
+    await getService("action").doAction({
+        type: "ir.actions.act_window",
+        res_model: "res.partner",
+        views: [[false, "form"]],
+    });
+    await contains(`.o_field_widget[name=name] input`).edit("some foo value");
+    await contains(`.o_form_button_save`).click();
+    await animationFrame();
+    expect.verifySteps([[1], [1, 2]]);
+    expect(cookie.get("cids")).toBe("1-2");
+    expect(`.o_field_widget[name=name] input`).toHaveValue("some foo value");
+});
+
 test.tags("desktop");
 test("form view in dialog shows wrong company error", async () => {
     expect.errors(1);
@@ -122,4 +153,3 @@ test("form view in dialog shows wrong company error", async () => {
     expect(cookie.get("cids")).toBe("1"); // cookies were not modified
     expect.verifySteps([]); // don't reload
 });
-

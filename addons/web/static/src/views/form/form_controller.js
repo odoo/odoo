@@ -402,19 +402,36 @@ export class FormController extends Component {
      */
     async onWillSaveRecord() {}
 
-    async onSaveError(error, { discard }) {
-        const proceed = await new Promise((resolve) => {
-            this.model.dialog.add(FormErrorDialog, {
-                message: error.data.message,
-                data: error.data,
-                onDiscard: () => {
-                    discard();
-                    resolve(true);
-                },
-                onStayHere: () => resolve(false),
+    async onSaveError(error, { discard, retry }, leaving) {
+        const suggestedCompany = error.data?.context?.suggested_company;
+        const activeCompanyIds = user.activeCompanies.map((c) => c.id);
+        if (
+            error.data?.name === "odoo.exceptions.AccessError" &&
+            suggestedCompany &&
+            !activeCompanyIds.includes(suggestedCompany.id)
+        ) {
+            // update the context with the needed company
+            this.model.config.context.allowed_company_ids.push(suggestedCompany.id);
+            // activate the company without reloading !
+            activeCompanyIds.push(suggestedCompany.id);
+            user.activateCompanies(activeCompanyIds, { reload: false });
+            return retry();
+        }
+        if (leaving) {
+            const proceed = await new Promise((resolve) => {
+                this.model.dialog.add(FormErrorDialog, {
+                    message: error.data.message,
+                    data: error.data,
+                    onDiscard: () => {
+                        discard();
+                        resolve(true);
+                    },
+                    onStayHere: () => resolve(false),
+                });
             });
-        });
-        return proceed;
+            return proceed;
+        }
+        throw error;
     }
 
     displayName() {
@@ -426,7 +443,7 @@ export class FormController extends Component {
         try {
             if (dirty) {
                 await this.model.root.save({
-                    onError: this.onSaveError.bind(this),
+                    onError: (error, options) => this.onSaveError(error, options, true),
                     nextId: resIds[offset],
                 });
             } else {
@@ -452,7 +469,7 @@ export class FormController extends Component {
         if (this.model.root.dirty) {
             return this.save({
                 reload: false,
-                onError: this.onSaveError.bind(this),
+                onError: (error, options) => this.onSaveError(error, options, true),
             });
         }
     }
@@ -550,9 +567,9 @@ export class FormController extends Component {
         if ((dirty || this.model.root.isNew) && !item.skipSave) {
             let hasError = false;
             const isSaved = await this.model.root.save({
-                onError: (...args) => {
+                onError: (error, options) => {
                     hasError = true;
-                    return this.onSaveError(...args);
+                    return this.onSaveError(error, options, true);
                 },
             });
             return isSaved && !hasError;
@@ -603,7 +620,7 @@ export class FormController extends Component {
 
     async create() {
         const dirty = await this.model.root.isDirty();
-        const onError = this.onSaveError.bind(this);
+        const onError = (error, options) => this.onSaveError(error, options, true);
         const canProceed = !dirty || (await this.model.root.save({ onError }));
         // FIXME: disable/enable not done in onPagerUpdate
         if (canProceed) {
@@ -619,7 +636,10 @@ export class FormController extends Component {
         if (this.props.saveRecord) {
             saved = await this.props.saveRecord(record, params);
         } else {
-            saved = await record.save(params);
+            saved = await record.save({
+                onError: (error, options) => this.onSaveError(error, options, false),
+                ...params,
+            });
         }
         if (saved && this.props.onSave) {
             this.props.onSave(record, params);
