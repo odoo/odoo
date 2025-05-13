@@ -56,15 +56,20 @@ jobs:
           EOF
           )" >> $GITHUB_OUTPUT
 
+      - name: Create root role
+        env:
+            PGPASSWORD: ${{ env.DB_PASSWORD }}
+        run: |
+          psql -h $DB_HOST -U $DB_USER -c "CREATE ROLE root WITH LOGIN SUPERUSER PASSWORD 'password';"
+
       - name: Wait for Postgres to be ready
         run: |
           for i in {1..30}; do
-            echo "$DB_USER"
-            if pg_isready -h $DB_HOST -p $DB_PORT -U odoo > /dev/null 2>&1; then
+            if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER > /dev/null 2>&1; then
               echo "Postgres is up"
               exit 0
             else
-              echo "Attempt $i: $(pg_isready -h $DB_HOST -p $DB_PORT -U odoo 2>&1)"
+              echo "Attempt $i: $(pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER 2>&1)"
             fi
             echo "Waiting for Postgres..."
             sleep 1
