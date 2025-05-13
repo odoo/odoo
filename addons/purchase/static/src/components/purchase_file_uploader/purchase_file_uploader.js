@@ -2,6 +2,8 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { WarningDialog } from "@web/core/errors/error_dialogs";
+import { _t } from "@web/core/l10n/translation";
 
 import { Component } from "@odoo/owl";
 
@@ -17,6 +19,7 @@ export class PurchaseFileUploader extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
+        this.dialog = useService("dialog");
         this.attachmentIdsToProcess = [];
     }
 
@@ -33,6 +36,20 @@ export class PurchaseFileUploader extends Component {
             return this.props.record.data.id;
         }
         return this.props.list.getResIds(true);
+    }
+
+    onClick(ev) {
+        if (this.env.config.viewType !== "list") {
+            return;
+        }
+        const vendorSet = new Set(this.props.list.selection.map((record) => record.data.partner_id.id));
+        if (vendorSet.size > 1) {
+            this.dialog.add(WarningDialog, {
+                title: _t("Validation Error"),
+                message: _t("You can only upload a bill for a single vendor at a time."),
+            });
+            return false;
+        }
     }
 
     async onFileUploaded(file) {

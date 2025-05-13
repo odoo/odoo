@@ -4,7 +4,7 @@ from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
-
+from ast import literal_eval
 from markupsafe import escape, Markup
 from werkzeug.urls import url_encode
 
@@ -711,7 +711,7 @@ class PurchaseOrder(models.Model):
             return self.action_view_invoice(invoices)
 
         if len(invoices) != 1:
-            raise ValidationError(_("You can only upload a bill for a single partner at a time."))
+            raise ValidationError(_("You can only upload a bill for a single vendor at a time."))
         invoices.with_context(skip_is_manually_modified=True)._extend_with_attachments(attachments, new=True)
 
         invoices.with_context(
@@ -855,6 +855,8 @@ class PurchaseOrder(models.Model):
         else:
             result = {'type': 'ir.actions.act_window_close'}
 
+        result['context'] = literal_eval(result['context'])
+        result['context']['default_partner_id'] = self.partner_id.id
         return result
 
     @api.model
