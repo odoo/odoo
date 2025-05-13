@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import UserError
 from odoo.osv.expression import OR
 
@@ -147,7 +148,7 @@ class Message(models.Model):
 
     @api.ondelete(at_uninstall=True)
     def _except_audit_log(self):
-        if self.env.context.get('bypass_audit') is bypass_token:
+        if self.env.context.get('bypass_audit') is bypass_token or self.env.context.get(MODULE_UNINSTALL_FLAG):
             return
         to_check = self
         partner_message = self.filtered(lambda m: m.account_audit_log_partner_id)
