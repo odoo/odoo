@@ -1888,6 +1888,62 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
     return parent_ids
 
 
+@operator_optimization(['expr'], OptimizationLevel.DYNAMIC_VALUES)
+def _operator_expr_eval(condition, model):
+    """Evaluate a dynamic value given by the expression.
+
+    The value can be a `str` of `list[str]`. We search for the first expression
+    that will have a non-falsy value.
+
+    - "{rec}" or "{rec}.{value}" where rec is user, company, companies,
+      partner_id, groups are recordsets on which we can map a value;
+      for example "user.name" is `in user.mapped('name')`
+    - "context.{value}" read a value from env.context
+    """
+    env = model.env
+    expr_value = condition.value
+    # TODO alternative use expr_eval (if it has name access)
+    if isinstance(expr_value, str):
+        expr_value = [expr_value]
+    elif not expr_value:
+        condition._raise(f"Invalid expression: {expr_value!r}")
+    for expr in expr_value:
+        if not isinstance(expr, str):
+            condition._raise(f"Invalid expression: {expr!r}")
+        env_name, is_mapped, path = expr.partition('.')
+        if env_name == 'user':
+            value = env.user
+        elif env_name == 'company':
+            value = env.company
+        elif env_name == 'companies':
+            value = env.companies
+        elif env_name == 'partner_id':
+            value = env.user.partner_id
+        elif env_name == 'groups':
+            value = env.user.all_group_ids
+        elif env_name == 'context':
+            value = env.context.get(path, ())
+            is_mapped = False  # the path is resolved entirely
+            if not isinstance(value, COLLECTION_TYPES):
+                value = (value,) if value else ()
+        else:
+            condition._raise(f"Invalid expression: {expr!r}")
+
+        if is_mapped:
+            # map the values using the environment to avoid reading in sudo
+            value = value.with_env(env).mapped(path)
+        if any(value):
+            break
+
+    from .models import BaseModel  # noqa: PLC0415
+    if isinstance(value, BaseModel):
+        field = condition._field(model)
+        if (field.model_name if field.name == 'id' else field.comodel_name) != value._name:
+            condition._raise(f"Cannot compare {field} and {value}")
+        value = value.ids
+    return DomainCondition(condition.field_expr, 'in', value)
+
+
 @operator_optimization(['access'], level=OptimizationLevel.DYNAMIC_VALUES)
 def _operator_access_rule_domain(condition, model):
     operation = condition.value
