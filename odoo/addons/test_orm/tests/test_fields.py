@@ -1171,6 +1171,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertFalse(record.filtered_domain([('moment', '!=', False)]))
         self.assertTrue(record.filtered_domain([('moment', '=', False)]))
 
+    def test_21_date_dynamic(self):
+        record = self.env['test_orm.mixed'].create({'moment': fields.Datetime.now()})
+        self.assertEqual(record, self._search(record, [('moment', '<', 'now +1d')], [('id', 'in', record.ids)]))
+        self.assertFalse(self._search(record, [('moment', '<', 'today')], [('id', 'in', record.ids)]))
+        self.assertEqual(record, self._search(record, [('moment', '>', '-1H')], [('id', 'in', record.ids)]))
+
     def test_22_selection(self):
         """ test selection fields """
         record_list = self.env['test_orm.selection'].create({})
