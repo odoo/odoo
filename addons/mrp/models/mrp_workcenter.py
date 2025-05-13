@@ -79,6 +79,13 @@ class MrpWorkcenter(models.Model):
     kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
     resource_calendar_id = fields.Many2one(check_company=True)
 
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        for workcenter in self:
+            # Show the red icon(workcenter is blocked) only when the Gantt view is accessed from MRP > Planning > Planning by Workcenter.
+            if self._context.get('group_by') and self._context.get('show_workcenter_status') and workcenter.working_state == 'blocked':
+                workcenter.display_name = f"{workcenter.display_name}\u00A0\u00A0🔴"
+
     @api.constrains('alternative_workcenter_ids')
     def _check_alternative_workcenter(self):
         for workcenter in self:
