@@ -16,6 +16,7 @@ jobs:
     services:
       postgres:
         image: postgres:13
+        restart: always
         env:
           POSTGRES_USER: odoo
           POSTGRES_PASSWORD: odoo
