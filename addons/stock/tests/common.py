@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
 
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.product.tests.common import TestProductCommon
+from odoo.addons.product.tests.common import ProductVariantsCommon
 
 
-class TestStockCommon(TestProductCommon):
+class TestStockCommon(ProductVariantsCommon):
     """
     This class provides some common resources for stock tests. Most notably, it
     provides a dedicated warehouse: `warehouse_1`, along with its own:
@@ -48,7 +48,45 @@ class TestStockCommon(TestProductCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestStockCommon, cls).setUpClass()
+        super().setUpClass()
+
+        # Product environment related data
+        cls.uom_dunit = cls.env['uom.uom'].create({
+            'name': 'DeciUnit',
+            'relative_factor': 10.0,
+            'relative_uom_id': cls.uom_unit.id,
+        })
+
+        cls.product_1, cls.product_2 = cls.env['product.product'].create([{
+            'name': 'Courage',  # product_1
+            'type': 'consu',
+            'default_code': 'PROD-1',
+            'uom_id': cls.uom_dunit.id,
+        }, {
+            'name': 'Wood',  # product_2
+        }])
+
+        # Kept for reduced diff in other modules (mainly stock & mrp)
+        cls.prod_att_1 = cls.color_attribute
+        cls.prod_attr1_v1 = cls.color_attribute_red
+        cls.prod_attr1_v2 = cls.color_attribute_blue
+        cls.prod_attr1_v3 = cls.color_attribute_green
+
+        cls.product_7_template = cls.product_template_sofa
+
+        cls.product_7_attr1_v1 = cls.product_7_template.attribute_line_ids[
+            0].product_template_value_ids[0]
+        cls.product_7_attr1_v2 = cls.product_7_template.attribute_line_ids[
+            0].product_template_value_ids[1]
+        cls.product_7_attr1_v3 = cls.product_7_template.attribute_line_ids[
+            0].product_template_value_ids[2]
+
+        cls.product_7_1 = cls.product_7_template._get_variant_for_combination(
+            cls.product_7_attr1_v1)
+        cls.product_7_2 = cls.product_7_template._get_variant_for_combination(
+            cls.product_7_attr1_v2)
+        cls.product_7_3 = cls.product_7_template._get_variant_for_combination(
+            cls.product_7_attr1_v3)
 
         cls.ProductObj = cls.env['product.product']
         cls.UomObj = cls.env['uom.uom']
