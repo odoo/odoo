@@ -4,10 +4,7 @@ from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.addons.product.tests.common import (
-    ProductAttributesCommon,
-    ProductVariantsCommon,
-)
+from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.sale.tests.common import SaleCommon
 
 
@@ -324,61 +321,53 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         # Make sure that deleted value is not selected
         self.assertNotIn(archived_ptav.id, selected_values)
 
-
-@tagged('post_install', '-at_install')
-class TestSaleProductVariants(ProductAttributesCommon, SaleCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        cls.product_template_2lines_2attributes = cls.env['product.template'].create({
+    def test_attribute_removal(self):
+        product_template_2lines_2attributes = self.env['product.template'].create({
             'name': '2 lines 2 attributes',
-            'uom_id': cls.uom_unit.id,
-            'categ_id': cls.product_category.id,
+            'uom_id': self.uom_unit.id,
+            'categ_id': self.product_category.id,
             'attribute_line_ids': [
                 Command.create({
-                    'attribute_id': cls.color_attribute.id,
+                    'attribute_id': self.color_attribute.id,
                     'value_ids': [Command.set([
-                        cls.color_attribute_red.id,
-                        cls.color_attribute_blue.id,
+                        self.color_attribute_red.id,
+                        self.color_attribute_blue.id,
                     ])],
                 }),
                 Command.create({
-                    'attribute_id': cls.size_attribute.id,
+                    'attribute_id': self.size_attribute.id,
                     'value_ids': [Command.set([
-                        cls.size_attribute_s.id,
-                        cls.size_attribute_m.id,
+                        self.size_attribute_s.id,
+                        self.size_attribute_m.id,
                     ])]
                 })
             ]
         })
 
         # Sell all variants
-        cls.empty_order.order_line = [
+        self.empty_order.order_line = [
             Command.create({
                 'product_id': product.id,
             })
-            for product in cls.product_template_2lines_2attributes.product_variant_ids
+            for product in product_template_2lines_2attributes.product_variant_ids
         ]
 
-    def test_attribute_removal(self):
         def _get_ptavs():
-            return self.product_template_2lines_2attributes.with_context(
+            return product_template_2lines_2attributes.with_context(
                 active_test=False
             ).attribute_line_ids.product_template_value_ids
 
         def _get_archived_variants():
-            return self.product_template_2lines_2attributes.with_context(
+            return product_template_2lines_2attributes.with_context(
                 active_test=False
             ).product_variant_ids.filtered(lambda p: not p.active)
 
         def _get_active_variants():
-            return self.product_template_2lines_2attributes.product_variant_ids
+            return product_template_2lines_2attributes.product_variant_ids
 
         self.assertEqual(len(_get_ptavs()), 4)
-        self.product_template_2lines_2attributes.attribute_line_ids = [
-            Command.unlink(self.product_template_2lines_2attributes.attribute_line_ids.filtered(
+        product_template_2lines_2attributes.attribute_line_ids = [
+            Command.unlink(product_template_2lines_2attributes.attribute_line_ids.filtered(
                 lambda ptal: ptal.attribute_id.id == self.size_attribute.id
             ).id)
         ]
@@ -389,13 +378,13 @@ class TestSaleProductVariants(ProductAttributesCommon, SaleCommon):
             Command.create({
                 'product_id': product.id,
             })
-            for product in self.product_template_2lines_2attributes.product_variant_ids
+            for product in product_template_2lines_2attributes.product_variant_ids
         ]
 
         self.assertEqual(len(_get_archived_variants()), 4)
         self.assertEqual(len(_get_active_variants()), 2)
 
-        self.product_template_2lines_2attributes.attribute_line_ids = [
+        product_template_2lines_2attributes.attribute_line_ids = [
             Command.create({
                 'attribute_id': self.size_attribute.id,
                 'value_ids': [Command.set([
@@ -412,7 +401,7 @@ class TestSaleProductVariants(ProductAttributesCommon, SaleCommon):
         # Leading to a state where the database holds two variants with the same combination
         # We don't want this combination to be excluded from the product configurator as it is valid
         # as long as there is one active variant with this configuration.
-        exclusions_data = self.product_template_2lines_2attributes._get_attribute_exclusions()
+        exclusions_data = product_template_2lines_2attributes._get_attribute_exclusions()
         self.assertTrue(
             all(
                 tuple(product.product_template_attribute_value_ids.ids) not in exclusions_data['archived_combinations']
