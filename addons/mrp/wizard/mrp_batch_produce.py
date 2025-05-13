@@ -104,7 +104,8 @@ class MrpBatchProduce(models.TransientModel):
                 'name': lot_name,
                 'product_id': productions.product_id.id
             })
-        lots = lots + self.env['stock.lot'].create(raw_lots)
+        generated_lots = self.env['stock.lot'].create(raw_lots)
+        lots = lots + generated_lots
 
         productions_to_set = OrderedSet()
         for production, finished_lot in zip(productions, lots):
@@ -120,6 +121,8 @@ class MrpBatchProduce(models.TransientModel):
                 production.set_qty_producing()
 
         if mark_done:
+            if self.production_id.picking_type_id.auto_print_generated_mrp_lot:
+                return productions.with_context(from_wizard=True, picking_type=self.production_id.picking_type_id, generated_lots=generated_lots).button_mark_done()
             return productions.with_context(from_wizard=True).button_mark_done()
         return
 
