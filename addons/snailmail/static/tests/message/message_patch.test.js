@@ -5,9 +5,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-mock";
-import { asyncStep, getService, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
+import { describe, test } from "@odoo/hoot";
 import { defineSnailmailModels } from "../snailmail_test_helpers";
 
 describe.current.tags("desktop");
@@ -107,24 +105,12 @@ test("No Price Available", async () => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const def = new Deferred();
-    onRpc("mail.message", "cancel_letter", (args) => {
-        if (args.args[0][0] === messageId) {
-            asyncStep(args.method);
-            def.resolve();
-        }
-        return true;
-    });
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
-    await contains(".o-snailmail-SnailmailError .modal-body", {
-        text: "The country to which you want to send the letter is not supported by our service.",
+    await contains(".o-snailmail-SnailmailNotificationPopover", {
+        text: "(Country Not Supported)",
     });
-    await click("button", { text: "Cancel letter" });
-    await contains(".o-snailmail-SnailmailError", { count: 0 });
-    await def;
-    await waitForSteps(["cancel_letter"]);
 });
 
 test("Credit Error", async () => {
@@ -146,25 +132,12 @@ test("Credit Error", async () => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const def = new Deferred();
-    onRpc("mail.message", "send_letter", (args) => {
-        if (args.args[0][0] === messageId) {
-            asyncStep(args.method);
-            def.resolve();
-        }
-        return true;
-    });
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
-    await contains(".o-snailmail-SnailmailError p", {
-        text: "The letter could not be sent due to insufficient credits on your IAP account.",
+    await contains(".o-snailmail-SnailmailNotificationPopover", {
+        text: "(Insufficient Credits)",
     });
-    await contains("button", { text: "Cancel letter" });
-    await click("button", { text: "Re-send letter" });
-    await contains(".o-snailmail-SnailmailError", { count: 0 });
-    await def;
-    await waitForSteps(["send_letter"]);
 });
 
 test("Trial Error", async () => {
@@ -186,25 +159,12 @@ test("Trial Error", async () => {
         notification_type: "snail",
         res_partner_id: partnerId,
     });
-    const def = new Deferred();
-    onRpc("mail.message", "send_letter", (args) => {
-        if (args.args[0][0] === messageId) {
-            asyncStep(args.method);
-            def.resolve();
-        }
-        return true;
-    });
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message-notification i.fa-paper-plane");
-    await contains(".o-snailmail-SnailmailError p", {
-        text: "You need credits on your IAP account to send a letter.",
+    await contains(".o-snailmail-SnailmailNotificationPopover", {
+        text: "(No IAP Credits)",
     });
-    await contains("button", { text: "Cancel letter" });
-    await click("button", { text: "Re-send letter" });
-    await contains(".o-snailmail-SnailmailError", { count: 0 });
-    await def;
-    await waitForSteps(["send_letter"]);
 });
 
 test("Format Error", async () => {
@@ -228,16 +188,10 @@ test("Format Error", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    getService("action").doAction = (action, options) => {
-        asyncStep("do_action");
-        expect(action).toBe("snailmail.snailmail_letter_format_error_action");
-        expect(options.additionalContext.message_id).toBe(messageId);
-        def.resolve();
-    };
-    const def = new Deferred();
     await click(".o-mail-Message-notification i.fa-paper-plane");
-    await def;
-    await waitForSteps(["do_action"]);
+    await contains(".o-snailmail-SnailmailNotificationPopover", {
+        text: "(Format Error)",
+    });
 });
 
 test("Missing Required Fields", async () => {
@@ -255,19 +209,10 @@ test("Missing Required Fields", async () => {
         notification_status: "exception",
         notification_type: "snail",
     });
-    const snailMailLetterId1 = pyEnv["snailmail.letter"].create({
-        message_id: messageId,
-    });
     await start();
     await openFormView("res.partner", partnerId);
-    getService("action").doAction = (action, options) => {
-        asyncStep("do_action");
-        expect(action).toBe("snailmail.snailmail_letter_missing_required_fields_action");
-        expect(options?.additionalContext.default_letter_id).toBe(snailMailLetterId1);
-        def.resolve();
-    };
-    const def = new Deferred();
     await click(".o-mail-Message-notification i.fa-paper-plane");
-    await def;
-    await waitForSteps(["do_action"]);
+    await contains(".o-snailmail-SnailmailNotificationPopover", {
+        text: "(Missing Required Fields)",
+    });
 });
