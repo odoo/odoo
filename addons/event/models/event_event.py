@@ -449,6 +449,9 @@ class EventEvent(models.Model):
             return Domain('address_id', operator, domain)
         if operator == 'ilike' and isinstance(value, str):
             return Domain('address_id', 'any', make_codomain(value))
+        # for the trivial "empty" case, there is no empty address
+        if operator == 'in' and (not value or not any(value)):
+            return Domain(False)
         return NotImplemented
 
     # seats
