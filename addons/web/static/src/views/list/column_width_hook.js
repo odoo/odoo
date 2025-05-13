@@ -435,7 +435,8 @@ export function useMagicColumnWidths(tableRef, getState) {
         const resizeHeader = (ev) => {
             ev.preventDefault();
             ev.stopPropagation();
-            const delta = ev.clientX - initialX;
+            let delta = ev.clientX - initialX;
+            delta = this.isRTL ? -delta : delta;
             const newWidth = Math.max(10, initialWidth + delta);
             const tableDelta = newWidth - initialWidth;
             th.style.width = `${Math.floor(newWidth)}px`;
