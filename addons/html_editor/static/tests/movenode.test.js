@@ -116,6 +116,93 @@ describe("drag", () => {
             `<div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>a[]</p><p>b</p><p>c</p>`
         );
     });
+    test("should drop LI at correct position within list", async () => {
+        const { el } = await setupEditor(`<ol><li>a[]</li><li>b</li><li>c</li><li>d</li></ol>`, {
+            styleContent: styles,
+        });
+        await animationFrame();
+        const firstLI = el.querySelector("li");
+        await hover(firstLI);
+        const moveElement = document.querySelector(".oe-sidewidget-move");
+        let dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
+        expect(dropzones).toHaveLength(0);
+        await tick();
+        const handle = await contains(moveElement).drag();
+        dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
+        expect(dropzones).toHaveLength(8);
+        await handle.moveTo(dropzones[5]);
+        await handle.drop();
+        expect(getContent(el)).toBe(`<ol><li>b</li><li>c</li><li>a[]</li><li>d</li></ol>`);
+    });
+    test("should drop LI from bulleted list to checklist at correct position", async () => {
+        const { el } = await setupEditor(
+            `<ul><li>a[]</li><li>b</li><li>c</li><li>d</li></ul><p>p</p><ul class="o_checklist"><li>One</li><li>Two</li></ul>`,
+            {
+                styleContent: styles,
+            }
+        );
+        await animationFrame();
+        const firstLI = el.querySelector("li");
+        await hover(firstLI);
+        const moveElement = document.querySelector(".oe-sidewidget-move");
+        let dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
+        expect(dropzones).toHaveLength(0);
+        await tick();
+        const handle = await contains(moveElement).drag();
+        dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
+        expect(dropzones).toHaveLength(14);
+        await handle.moveTo(dropzones[11]);
+        await handle.drop();
+        expect(getContent(el)).toBe(
+            `<ul><li>b</li><li>c</li><li>d</li></ul><p>p</p><ul class="o_checklist"><li>One</li><li>a[]</li><li>Two</li></ul>`
+        );
+    });
+    test("should wrap LI in new UL or OL when moved outside existing list", async () => {
+        const { el } = await setupEditor(
+            `<ul class="o_checklist"><li>a[]</li><li>b</li><li>c</li><li>d</li></ul><p>e</p>`,
+            {
+                styleContent: styles,
+            }
+        );
+        await animationFrame();
+        const firstLI = el.querySelector("li");
+        await hover(firstLI);
+        const moveElement = document.querySelector(".oe-sidewidget-move");
+        let dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
+        expect(dropzones).toHaveLength(0);
+        await tick();
+        const handle = await contains(moveElement).drag();
+        dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
+        expect(dropzones).toHaveLength(10);
+        await handle.moveTo(dropzones[9]);
+        await handle.drop();
+        expect(getContent(el)).toBe(
+            `<ul class="o_checklist"><li>b</li><li>c</li><li>d</li></ul><p>e</p><ul class="o_checklist"><li>a</li>[]</ul>`
+        );
+    });
+    test("should wrap non-LI element in LI and insert it into list at correct position", async () => {
+        const { el } = await setupEditor(
+            `<ul class="o_checklist"><li>a[]</li><li>b</li><li>c</li><li>d</li></ul><p>e</p>`,
+            {
+                styleContent: styles,
+            }
+        );
+        await animationFrame();
+        const p = el.querySelector("p");
+        await hover(p);
+        const moveElement = document.querySelector(".oe-sidewidget-move");
+        let dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
+        expect(dropzones).toHaveLength(0);
+        await tick();
+        const handle = await contains(moveElement).drag();
+        dropzones = [...document.querySelectorAll(".oe-dropzone-box-side")];
+        expect(dropzones).toHaveLength(10);
+        await handle.moveTo(dropzones[3]);
+        await handle.drop();
+        expect(getContent(el)).toBe(
+            `<ul class="o_checklist"><li>a</li><li>b</li><li><p>e</p>[]</li><li>c</li><li>d</li></ul>`
+        );
+    });
     test("should do nothing when dropping outside the editable", async () => {
         const { el } = await setupEditor(
             `<p>a[]</p><div class="oe_unbreakable"><br></div><div>d</div><p>b</p><p>c</p>`,
