@@ -2027,7 +2027,7 @@ class SaleOrder(models.Model):
         :return The newly created SO lines.
         """
         self.ensure_one()
-        sequence = max(self.order_line.mapped('sequence') or 10) + 1
+        sequence = max(self.order_line.mapped('sequence') or [10]) + 1
         return self.env['sale.order.line'] \
             .with_context(sale_no_log_for_new_lines=True) \
             .create([
@@ -2049,7 +2049,7 @@ class SaleOrder(models.Model):
         if any(line.display_type and line.is_downpayment for line in self.order_line):
             return
 
-        sequence = max(self.order_line.mapped('sequence') or 10) + 1
+        sequence = max(self.order_line.mapped('sequence') or [10]) + 1
         return self.env['sale.order.line'] \
             .with_context(sale_no_log_for_new_lines=True) \
             .create({
