@@ -30,6 +30,8 @@ class AccountTax(models.Model):
             ('recargo', 'Recargo de Equivalencia'),
             ('dua', 'DUA'),
             ('ignore', 'Ignore even the base amount'),
+            ('igic', 'IGIC'),
+            ('ipsi', 'IPSI'),
         ],
         string="Tax Type (Spain)", default='sujeto'
     )
