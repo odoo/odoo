@@ -15,8 +15,8 @@ class TestPaymentTransaction(FlutterwaveCommon):
         """ Test that the rendered values are conform to the transaction fields. """
         tx = self._create_transaction(flow='redirect')
         with patch(
-            'odoo.addons.payment_flutterwave.models.payment_provider.PaymentProvider'
-            '._flutterwave_make_request', return_value={'data': {'link': 'https://dummy.com'}}
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+            return_value={'link': 'https://dummy.com'},
         ):
             rendering_values = tx._get_specific_rendering_values(None)
         self.assertDictEqual(rendering_values, {'api_url': 'https://dummy.com'})
@@ -35,20 +35,18 @@ class TestPaymentTransaction(FlutterwaveCommon):
         self.assertEqual(form_info['method'], 'get')
         self.assertDictEqual(form_info['inputs'], {})
 
-    def test_processing_notification_data_confirms_transaction(self):
-        """ Test that the transaction state is set to 'done' when the notification data indicate a
+    def test_apply_updates_confirms_transaction(self):
+        """ Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment. """
         tx = self._create_transaction(flow='redirect')
-        tx._process_notification_data(self.verification_data['data'])
+        tx._apply_updates(self.verification_data['data'])
         self.assertEqual(tx.state, 'done')
 
-    def test_processing_notification_data_tokenizes_transaction(self):
-        """ Test that the transaction is tokenized when it was requested and the notification data
-        include token data. """
-        tx = self._create_transaction(flow='redirect', tokenize=True)
-        with patch(
-            'odoo.addons.payment_flutterwave.models.payment_transaction.PaymentTransaction'
-            '._flutterwave_tokenize_from_notification_data'
-        ) as tokenize_mock:
-            tx._process_notification_data(self.verification_data['data'])
-        self.assertEqual(tokenize_mock.call_count, 1)
+    def test_extract_token_values_maps_fields_correctly(self):
+        tx = self._create_transaction(flow='redirect')
+        token_values = tx._extract_token_values(self.verification_data['data'])
+        self.assertDictEqual(token_values, {
+            'payment_details': '2950',
+            'provider_ref': 'flw-t1nf-f9b3bf384cd30d6fca42b6df9d27bd2f-m03k',
+            'flutterwave_customer_email': 'user@example.com',
+        })

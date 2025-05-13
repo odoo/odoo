@@ -22,30 +22,28 @@ class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
         self._create_transaction(flow='redirect')
         url = self._build_url(FlutterwaveController._return_url)
         with patch(
-            'odoo.addons.payment_flutterwave.models.payment_provider.PaymentProvider'
-            '._flutterwave_make_request', return_value=self.verification_data
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+            return_value=self.verification_data,
         ), patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_notification_data'
-        ) as handle_notification_data_mock:
-            self._make_http_get_request(url, params=self.redirect_notification_data)
-        self.assertEqual(handle_notification_data_mock.call_count, 1)
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'
+        ) as process_mock:
+            self._make_http_get_request(url, params=self.redirect_payment_data)
+        self.assertEqual(process_mock.call_count, 1)
 
     @mute_logger('odoo.addons.payment_flutterwave.controllers.main')
     def test_webhook_notification_triggers_processing(self):
         """ Test that receiving a valid webhook notification triggers the processing of the
-        notification data. """
+        payment data. """
         self._create_transaction('redirect')
         url = self._build_url(FlutterwaveController._webhook_url)
         with patch(
             'odoo.addons.payment_flutterwave.controllers.main.FlutterwaveController.'
-            '_verify_notification_signature'
+            '_verify_signature'
         ), patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_notification_data'
-        ) as handle_notification_data_mock:
-            self._make_json_request(url, data=self.webhook_notification_data)
-        self.assertEqual(handle_notification_data_mock.call_count, 1)
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'
+        ) as process_mock:
+            self._make_json_request(url, data=self.webhook_payment_data)
+        self.assertEqual(process_mock.call_count, 1)
 
     @mute_logger('odoo.addons.payment_flutterwave.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
@@ -54,12 +52,11 @@ class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
         url = self._build_url(FlutterwaveController._webhook_url)
         with patch(
             'odoo.addons.payment_flutterwave.controllers.main.FlutterwaveController'
-            '._verify_notification_signature'
+            '._verify_signature'
         ) as signature_check_mock, patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_notification_data'
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'
         ):
-            self._make_json_request(url, data=self.webhook_notification_data)
+            self._make_json_request(url, data=self.webhook_payment_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_accept_webhook_notification_with_valid_signature(self):
@@ -67,7 +64,7 @@ class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         self._assert_does_not_raise(
             Forbidden,
-            FlutterwaveController._verify_notification_signature,
+            FlutterwaveController._verify_signature,
             self.provider.flutterwave_webhook_secret,
             tx,
         )
@@ -76,12 +73,10 @@ class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
         tx = self._create_transaction('redirect')
-        self.assertRaises(Forbidden, FlutterwaveController._verify_notification_signature, None, tx)
+        self.assertRaises(Forbidden, FlutterwaveController._verify_signature, None, tx)
 
     @mute_logger('odoo.addons.payment_flutterwave.controllers.main')
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
         tx = self._create_transaction('redirect')
-        self.assertRaises(
-            Forbidden, FlutterwaveController._verify_notification_signature, 'dummy', tx
-        )
+        self.assertRaises(Forbidden, FlutterwaveController._verify_signature, 'dummy', tx)

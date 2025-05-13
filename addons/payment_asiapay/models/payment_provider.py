@@ -60,6 +60,15 @@ class PaymentProvider(models.Model):
                     currencies=", ".join(unsupported_currency_codes),
                 ))
 
+    # === CRUD METHODS === #
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        self.ensure_one()
+        if self.code != 'asiapay':
+            return super()._get_default_payment_method_codes()
+        return const.DEFAULT_PAYMENT_METHOD_CODES
+
     # === BUSINESS METHODS ===#
 
     def _asiapay_get_api_url(self):
@@ -89,10 +98,3 @@ class PaymentProvider(models.Model):
         shasign = hashnew(self.asiapay_secure_hash_function)
         shasign.update(signing_string.encode())
         return shasign.hexdigest()
-
-    def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
-        if self.code != 'asiapay':
-            return default_codes
-        return const.DEFAULT_PAYMENT_METHOD_CODES

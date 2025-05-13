@@ -23,17 +23,17 @@ class TestPaymentTransaction(DPOCommon):
         ):
             self.assertEqual(tx._get_specific_rendering_values(None), expected_values)
 
-    def test_get_tx_from_notification_data_returns_tx(self):
-        """ Test that the transaction is returned from the notification data. """
+    def test_search_by_reference_returns_tx(self):
+        """ Test that the transaction is returned from the payment data. """
         tx = self._create_transaction(flow='redirect')
-        tx_found = self.env['payment.transaction']._get_tx_from_notification_data(
-            'dpo', self.notification_data
+        tx_found = self.env['payment.transaction']._search_by_reference(
+            'dpo', self.payment_data
         )
         self.assertEqual(tx, tx_found)
 
-    def test_processing_notification_data_confirms_transaction(self):
-        """ Test that the transaction state is set to 'done' when the notification data indicate a
+    def test_apply_updates_confirms_transaction(self):
+        """ Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment. """
         tx = self._create_transaction(flow='redirect')
-        tx._process_notification_data(self.notification_data)
+        tx._apply_updates(self.payment_data)
         self.assertEqual(tx.state, 'done')

@@ -18,8 +18,8 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
         URL_PARAMS corresponding to the response of API request. """
         tx = self._create_transaction('redirect')
         with patch(
-            'odoo.addons.payment_paymob.models.payment_provider.PaymentProvider'
-            '._paymob_make_request', return_value={'client_secret': 'dummy_secret'}
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+            return_value={'client_secret': 'dummy_secret'},
         ):
             rendering_values = tx._get_specific_rendering_values(None)
         paymob_url = self.paymob._paymob_get_api_url()
@@ -32,13 +32,13 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
         """ Test the processing of the paymob return data. """
         tx = self._create_transaction('redirect')
         with patch(
-            'odoo.addons.payment_paymob.models.payment_provider.PaymentProvider'
-            '._paymob_make_request', return_value={'id': 'dummy_id'}
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+            return_value={'id': 'dummy_id'}
         ):
             tx._get_specific_rendering_values(None)  # Set provider reference here
             self.assertEqual(tx.provider_reference, self.redirection_data['id'])
             self.assertEqual(tx.state, 'draft')
-            tx._handle_notification_data('paymob', self.redirection_data)
+            tx._process('paymob', self.redirection_data)
             self.assertEqual(tx.state, 'done')
 
     @mute_logger('odoo.addons.payment_paymob.controllers.main')

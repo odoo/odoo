@@ -10,7 +10,6 @@ from odoo.tools import mute_logger
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_xendit.controllers.main import XenditController
-from odoo.addons.payment_xendit.models.payment_provider import PaymentProvider
 from odoo.addons.payment_xendit.tests.common import XenditCommon
 
 
@@ -24,7 +23,11 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         url = 'https://dummy.com'
         return_value = {'invoice_url': url}
         with (
-            patch.object(PaymentProvider, '_xendit_make_request', return_value=return_value),
+            patch.object(
+                self.env.registry['payment.provider'],
+                '_send_api_request',
+                return_value=return_value,
+            ),
             patch.object(payment_utils, 'generate_access_token', self._generate_test_access_token),
         ):
             rendering_values = tx._get_specific_rendering_values(None)
@@ -36,8 +39,8 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         card_pm = self.env.ref('payment.payment_method_card').id
         tx = self._create_transaction('direct', payment_method_id=card_pm)
         with patch(
-            'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
-            '._xendit_make_request', return_value={'data': {'link': 'https://dummy.com'}}
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+            return_value={'data': {'link': 'https://dummy.com'}},
         ) as mock:
             rendering_values = tx._get_specific_rendering_values(None)
             self.assertEqual(mock.call_count, 0)
@@ -109,54 +112,46 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         currency_idr = self.env.ref('base.IDR')
         tx = self._create_transaction('redirect', amount=1000.50, currency_id=currency_idr.id)
         with patch(
-            'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
-            '._xendit_make_request', return_value={**self.charge_notification_data, 'amount': 1000}
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+            return_value={**self.charge_payment_data, 'amount': 1000},
         ) as mock_req:
             tx._xendit_create_charge('dummytoken')
-            payload = mock_req.call_args.kwargs.get('payload')
+            payload = mock_req.call_args.kwargs.get('json')
             self.assertEqual(payload['amount'], 1000)
 
-    def test_get_tx_from_notification_data_returns_tx(self):
-        """ Test that the transaction is found based on the notification data. """
+    def test_search_by_reference_returns_tx(self):
+        """ Test that the transaction is found based on the payment data. """
         tx = self._create_transaction('redirect')
-        tx_found = self.env['payment.transaction']._get_tx_from_notification_data(
-            'xendit', self.webhook_notification_data
+        tx_found = self.env['payment.transaction']._search_by_reference(
+            'xendit', self.webhook_payment_data
         )
         self.assertEqual(tx, tx_found)
 
-    def test_processing_notification_data_confirms_transaction(self):
-        """ Test that the transaction state is set to 'done' when the notification data indicate a
+    def test_apply_updates_confirms_transaction(self):
+        """ Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment. """
         tx = self._create_transaction('redirect')
-        tx._process_notification_data(self.webhook_notification_data)
+        tx._apply_updates(self.webhook_payment_data)
         self.assertEqual(tx.state, 'done')
 
     @mute_logger('odoo.addons.payment_xendit.controllers.main')
-    def test_processing_notification_data_tokenizes_transaction(self):
+    def test_apply_updates_tokenizes_transaction(self):
         """ Test that the transaction is tokenized when a charge request is successfully made on a
         transaction that saves payment details. """
         tx = self._create_transaction('direct', tokenize=True)
         with patch(
-            'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
-            '._xendit_make_request', return_value=self.charge_notification_data
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+            return_value=self.charge_payment_data,
         ), patch(
-            'odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction'
-            '._xendit_tokenize_from_notification_data'
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._tokenize'
         ) as tokenize_mock:
             tx._xendit_create_charge('dummytoken')
             self.assertEqual(tokenize_mock.call_count, 1)
 
-    @mute_logger('odoo.addons.payment_xendit.controllers.main')
-    def test_tokenization_flow_not_save_payment_details(self):
-        """ Test that `_xendit_tokenize_from_notification_data` would not be triggered on a
-        transaction that doesn't save the payment details. """
+    def test_extract_token_values_maps_fields_correctly(self):
         tx = self._create_transaction('direct')
-        with patch(
-            'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider.'
-            '_xendit_make_request', return_value=self.charge_notification_data
-        ), patch(
-            'odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction.'
-            '_xendit_tokenize_from_notification_data'
-        ) as tokenize_check_mock:
-            tx._xendit_create_charge('dummytoken')
-            self.assertEqual(tokenize_check_mock.call_count, 0)
+        token_values = tx._extract_token_values(self.charge_payment_data)
+        self.assertDictEqual(token_values, {
+            'payment_details': '2151',
+            'provider_ref': '6645aaa2f00da60017cdc669',
+        })

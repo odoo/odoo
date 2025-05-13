@@ -11,7 +11,7 @@ class PaymentDemoController(http.Controller):
     def demo_simulate_payment(self, **data):
         """ Simulate the response of a payment request.
 
-        :param dict data: The simulated notification data.
+        :param dict data: The simulated payment data.
         :return: None
         """
-        request.env['payment.transaction'].sudo()._handle_notification_data('demo', data)
+        request.env['payment.transaction'].sudo()._process('demo', data)

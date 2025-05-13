@@ -20,18 +20,17 @@ class TestProcessingFlow(XenditCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_xendit.controllers.main')
     def test_webhook_notification_triggers_processing(self):
         """ Test that receiving a valid webhook notification and signature verified triggers the
-        processing of the notification data. """
+        processing of the payment data. """
         self._create_transaction('redirect')
         url = self._build_url(XenditController._webhook_url)
         with patch(
             'odoo.addons.payment_xendit.controllers.main.XenditController'
             '._verify_notification_token'
         ), patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_notification_data'
-        ) as handle_notification_data_mock:
-            self._make_json_request(url, data=self.webhook_notification_data)
-        self.assertEqual(handle_notification_data_mock.call_count, 1)
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'
+        ) as process_mock:
+            self._make_json_request(url, data=self.webhook_payment_data)
+        self.assertEqual(process_mock.call_count, 1)
 
     @mute_logger('odoo.addons.payment_xendit.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
@@ -42,7 +41,7 @@ class TestProcessingFlow(XenditCommon, PaymentHttpCommon):
             'odoo.addons.payment_xendit.controllers.main.XenditController.'
             '_verify_notification_token'
         ) as signature_check_mock:
-            self._make_json_request(url, data=self.webhook_notification_data)
+            self._make_json_request(url, data=self.webhook_payment_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_accept_webhook_notification_with_valid_signature(self):

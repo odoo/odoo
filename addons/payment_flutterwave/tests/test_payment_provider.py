@@ -1,5 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
+import requests
+
 from odoo.tests import tagged
 
 from odoo.addons.payment_flutterwave.tests.common import FlutterwaveCommon
@@ -19,3 +23,9 @@ class TestPaymentProvider(FlutterwaveCommon):
             self.company_id, self.partner.id, 0., is_validation=True
         )
         self.assertNotIn(self.flutterwave, compatible_providers)
+
+    def test_parse_response_content(self):
+        response = requests.Response()
+        response._content = json.dumps({'data': 'value'}).encode('utf-8')
+        parsed_response = self.flutterwave._parse_response_content(response)
+        self.assertEqual(parsed_response, 'value')

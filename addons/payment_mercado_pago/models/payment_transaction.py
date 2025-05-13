@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import pprint
 from urllib.parse import quote as url_quote
 
 from werkzeug import urls
@@ -10,11 +8,12 @@ from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mercado_pago import const
 from odoo.addons.payment_mercado_pago.controllers.main import MercadoPagoController
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -29,19 +28,20 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific processing values.
         :rtype: dict
         """
-        res = super()._get_specific_rendering_values(processing_values)
         if self.provider_code != 'mercado_pago':
-            return res
+            return super()._get_specific_rendering_values(processing_values)
 
         # Initiate the payment and retrieve the payment link data.
         payload = self._mercado_pago_prepare_preference_request_payload()
-        _logger.info(
-            "Sending '/checkout/preferences' request for link creation:\n%s",
-            pprint.pformat(payload),
-        )
-        api_url = self.provider_id._mercado_pago_make_request(
-            '/checkout/preferences', payload=payload
-        )['init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point']
+        try:
+            response_content = self._send_api_request('POST', '/checkout/preferences', json=payload)
+        except ValidationError as error:
+            self._set_error(str(error))
+            return {}
+
+        api_url = response_content[
+            'init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point'
+        ]
 
         # Extract the payment link URL and params and embed them in the redirect form.
         parsed_url = urls.url_parse(api_url)
@@ -63,7 +63,7 @@ class PaymentTransaction(models.Model):
         sanitized_reference = url_quote(self.reference)
         webhook_url = urls.url_join(
             base_url, f'{MercadoPagoController._webhook_url}/{sanitized_reference}'
-        )  # Append the reference to identify the transaction from the webhook notification data.
+        )  # Append the reference to identify the transaction from the webhook payment data.
 
         unit_price = self.amount
         decimal_places = const.CURRENCY_DECIMALS.get(self.currency_id.name)
@@ -98,73 +98,42 @@ class PaymentTransaction(models.Model):
             },
         }
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of `payment` to find the transaction based on Mercado Pago data.
+    @api.model
+    def _extract_reference(self, provider_code, payment_data):
+        """Override of `payment` to extract the reference from the payment data."""
+        if provider_code != 'mercado_pago':
+            return super()._extract_reference(provider_code, payment_data)
+        return payment_data.get('external_reference')
 
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: recordset of `payment.transaction`
-        :raise ValidationError: If inconsistent data were received.
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'mercado_pago' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('external_reference')
-        if not reference:
-            raise ValidationError("Mercado Pago: " + _("Received data with missing reference."))
-
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'mercado_pago')])
-        if not tx:
-            raise ValidationError(
-                "Mercado Pago: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
-
-    def _compare_notification_data(self, notification_data):
-        """ Override of `payment` to compare the transaction based on Mercado Pago data.
-
-        :param dict notification_data: The notification data sent by the provider.
-        :return: None
-        :raise ValidationError: If the transaction's amount and currency don't match the
-            notification data.
-        """
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
         if self.provider_code != 'mercado_pago':
-            return super()._compare_notification_data(notification_data)
+            return super()._extract_amount_data(payment_data)
 
-        amount = notification_data.get('additional_info', {}).get('items', [{}])[0].get(
+        amount = payment_data.get('additional_info', {}).get('items', [{}])[0].get(
             'unit_price'
         )
-        # The currency code isn't included in the notification data, so we can't validate it.
-        self._validate_amount_and_currency(
-            amount,
-            self.currency_id.name,
-            precision_digits=const.CURRENCY_DECIMALS.get(self.currency_id.name),
-        )
+        currency_code = payment_data.get('currency_id')
+        return {
+            'amount': float(amount),
+            'currency_code': currency_code,
+            'precision_digits': const.CURRENCY_DECIMALS.get(currency_code),
+        }
 
-    def _process_notification_data(self, notification_data):
-        """ Override of `payment` to process the transaction based on Mercado Pago data.
-
-        Note: self.ensure_one() from `_process_notification_data`
-
-        :param dict notification_data: The notification data sent by the provider.
-        :return: None
-        :raise ValidationError: If inconsistent data were received.
-        """
-        super()._process_notification_data(notification_data)
+    def _apply_updates(self, payment_data):
+        """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != 'mercado_pago':
-            return
+            return super()._apply_updates(payment_data)
 
         # Update the provider reference.
-        payment_id = notification_data.get('id')
+        payment_id = payment_data.get('id')
         if not payment_id:
-            raise ValidationError("Mercado Pago: " + _("Received data with missing payment id."))
+            self._set_error(_("Received data with missing payment id."))
+            return
         self.provider_reference = payment_id
 
         # Update the payment method.
-        payment_method_type = notification_data.get('payment_type_id', '')
+        payment_method_type = payment_data.get('payment_type_id', '')
         for odoo_code, mp_codes in const.PAYMENT_METHODS_MAPPING.items():
             if any(payment_method_type == mp_code for mp_code in mp_codes.split(',')):
                 payment_method_type = odoo_code
@@ -179,9 +148,10 @@ class PaymentTransaction(models.Model):
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
-        payment_status = notification_data.get('status')
+        payment_status = payment_data.get('status')
         if not payment_status:
-            raise ValidationError("Mercado Pago: " + _("Received data with missing status."))
+            self._set_error(_("Received data with missing status."))
+            return
 
         if payment_status in const.TRANSACTION_STATUS_MAPPING['pending']:
             self._set_pending()
@@ -190,21 +160,19 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.TRANSACTION_STATUS_MAPPING['canceled']:
             self._set_canceled()
         elif payment_status in const.TRANSACTION_STATUS_MAPPING['error']:
-            status_detail = notification_data.get('status_detail')
+            status_detail = payment_data.get('status_detail')
             _logger.warning(
-                "Received data for transaction with reference %s with status %s and error code: %s",
+                "Received data for transaction %s with status %s and error code: %s.",
                 self.reference, payment_status, status_detail
             )
             error_message = self._mercado_pago_get_error_msg(status_detail)
             self._set_error(error_message)
         else:  # Classify unsupported payment status as the `error` tx state.
             _logger.warning(
-                "Received data for transaction with reference %s with invalid payment status: %s",
+                "Received data for transaction %s with invalid payment status: %s.",
                 self.reference, payment_status
             )
-            self._set_error(
-                "Mercado Pago: " + _("Received data with invalid status: %s", payment_status)
-            )
+            self._set_error(_("Received data with invalid status: %s.", payment_status))
 
     @api.model
     def _mercado_pago_get_error_msg(self, status_detail):
@@ -214,6 +182,6 @@ class PaymentTransaction(models.Model):
         :return: The error message.
         :rtype: str
         """
-        return "Mercado Pago: " + const.ERROR_MESSAGE_MAPPING.get(
+        return const.ERROR_MESSAGE_MAPPING.get(
             status_detail, const.ERROR_MESSAGE_MAPPING['cc_rejected_other_reason']
         )

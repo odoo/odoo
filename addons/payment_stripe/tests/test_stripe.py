@@ -45,15 +45,14 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         tx = self._create_transaction('direct', state='authorized')
 
         with patch(
-            'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
-            '._stripe_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
             return_value={
                 'id': 'pi_3KTk9zAlCFm536g81Wy7RCPH',
                 'status': 'succeeded',
                 **self.notification_amount_and_currency,
             },
         ):
-            tx._send_capture_request()
+            tx._capture()
         self.assertEqual(
             tx.state, 'done', msg="The state should be 'done' after a successful capture."
         )
@@ -64,17 +63,16 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect', state='authorized')
 
         with patch(
-            'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
-            '._stripe_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
             return_value={
                 'id': 'pi_3KTk9zAlCFm536g81Wy7RCPH',
                 'status': 'canceled',
                 **self.notification_amount_and_currency,
             },
         ):
-            tx._send_void_request()
+            child_tx = tx._void()
         self.assertEqual(
-            tx.state, 'cancel', msg="The state should be 'cancel' after voiding the transaction."
+            child_tx.state, 'cancel', msg="The state should be 'cancel' after voiding the transaction."
         )
 
     @mute_logger('odoo.addons.payment_stripe.controllers.main')
@@ -83,11 +81,35 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         url = self._build_url(StripeController._webhook_url)
         with patch(
-            'odoo.addons.payment_stripe.controllers.main.StripeController'
-            '._verify_notification_signature'
+            'odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature'
         ):
-            self._make_json_request(url, data=self.notification_data)
+            self._make_json_request(url, data=self.payment_data)
         self.assertEqual(tx.state, 'done')
+
+    def test_extract_token_values_maps_fields_correctly(self):
+        tx = self._create_transaction('direct')
+        payment_data = {
+           'payment_intent': {
+              'charges': {'data': [{}]},
+              'customer': 'test_customer',
+           },
+           'payment_method': {
+              'card': {
+                 'brand': 'visa',
+                 'last4': '1111'
+              },
+              'id': 'pm_test',
+              'object': 'payment_method',
+              'type': 'card',
+           }
+        }
+        token_values = tx._extract_token_values(payment_data)
+        self.assertDictEqual(token_values, {
+            'payment_details': '1111',
+            'provider_ref': 'test_customer',
+            'stripe_mandate': None,
+            'stripe_payment_method': 'pm_test'
+        })
 
     @mute_logger('odoo.addons.payment_stripe.controllers.main')
     def test_webhook_notification_tokenizes_payment_method(self):
@@ -100,18 +122,15 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             'type': 'card'
         }
         with patch(
-            'odoo.addons.payment_stripe.controllers.main.StripeController'
-            '._verify_notification_signature'
+            'odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature'
         ), patch(
-            'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
-            '._stripe_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
             return_value=payment_method_response,
         ), patch(
-            'odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction'
-            '._stripe_tokenize_from_notification_data'
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._tokenize'
         ) as tokenize_check_mock:
             self._make_json_request(
-                url, data=dict(self.notification_data, type="setup_intent.succeeded")
+                url, data=dict(self.payment_data, type="setup_intent.succeeded")
             )
         self.assertEqual(tokenize_check_mock.call_count, 1)
 
@@ -121,13 +140,11 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         self._create_transaction('redirect')
         url = self._build_url(StripeController._webhook_url)
         with patch(
-            'odoo.addons.payment_stripe.controllers.main.StripeController'
-            '._verify_notification_signature'
+            'odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature'
         ) as signature_check_mock, patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_notification_data'
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'
         ):
-            self._make_json_request(url, data=self.notification_data)
+            self._make_json_request(url, data=self.payment_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_onboarding_action_redirect_to_url(self):
@@ -150,25 +167,25 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
     def test_only_create_webhook_if_not_already_done(self):
         """ Test that a webhook is created only if the webhook secret is not already set. """
         self.stripe.stripe_webhook_secret = False
-        with patch.object(type(self.env['payment.provider']), '_stripe_make_request') as mock:
+        with patch.object(self.env.registry['payment.provider'], '_send_api_request') as mock:
             self.stripe.action_stripe_create_webhook()
             self.assertEqual(mock.call_count, 1)
 
     def test_do_not_create_webhook_if_already_done(self):
         """ Test that no webhook is created if the webhook secret is already set. """
         self.stripe.stripe_webhook_secret = 'dummy'
-        with patch.object(type(self.env['payment.provider']), '_stripe_make_request') as mock:
+        with patch.object(self.env.registry['payment.provider'], '_send_api_request') as mock:
             self.stripe.action_stripe_create_webhook()
             self.assertEqual(mock.call_count, 0)
 
     def test_create_account_link_pass_required_parameters(self):
         """ Test that the generation of an account link includes all the required parameters. """
         with patch.object(
-            type(self.env['payment.provider']), '_stripe_make_proxy_request',
+            self.env.registry['payment.provider'], '_send_api_request',
             return_value={'url': 'https://dummy.url'},
         ) as mock:
             self.stripe._stripe_create_account_link('dummy', 'dummy')
             mock.assert_called_once()
-            call_args = mock.call_args.kwargs['payload'].keys()
+            call_args = mock.call_args.kwargs['json']['params']['payload'].keys()
             for payload_param in ('account', 'return_url', 'refresh_url', 'type'):
                 self.assertIn(payload_param, call_args)

@@ -1,14 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
-import logging
 
 from odoo import fields, models
 
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_aps import const
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentProvider(models.Model):
@@ -39,7 +39,16 @@ class PaymentProvider(models.Model):
         groups='base.group_system',
     )
 
-    #=== BUSINESS METHODS ===#
+    # === CRUD METHODS === #
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        self.ensure_one()
+        if self.code != 'aps':
+            return super()._get_default_payment_method_codes()
+        return const.DEFAULT_PAYMENT_METHOD_CODES
+
+    # === BUSINESS METHODS === #
 
     def _aps_get_api_url(self):
         if self.state == 'enabled':
@@ -60,10 +69,3 @@ class PaymentProvider(models.Model):
         key = self.aps_sha_response if incoming else self.aps_sha_request
         signing_string = ''.join([key, sign_data, key])
         return hashlib.sha256(signing_string.encode()).hexdigest()
-
-    def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
-        if self.code != 'aps':
-            return default_codes
-        return const.DEFAULT_PAYMENT_METHOD_CODES

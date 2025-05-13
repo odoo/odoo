@@ -25,11 +25,22 @@ class PaymentProvider(models.Model):
     qr_code = fields.Boolean(
         string="Enable QR Codes", help="Enable the use of QR-codes when paying by wire transfer.")
 
+    # === CRUD METHODS ===#
+
     @api.model_create_multi
     def create(self, vals_list):
         providers = super().create(vals_list)
         providers.filtered(lambda p: p.custom_mode == 'wire_transfer').pending_msg = None
         return providers
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        self.ensure_one()
+        if self.code != 'custom' or self.custom_mode != 'wire_transfer':
+            return super()._get_default_payment_method_codes()
+        return const.DEFAULT_PAYMENT_METHOD_CODES
+
+    # === ACTION METHODS ===#
 
     def action_recompute_pending_msg(self):
         """ Recompute the pending message to include the existing bank accounts. """
@@ -49,6 +60,8 @@ class PaymentProvider(models.Model):
                     f'<ul>{account_names}</ul>'\
                     f'<p><br></p>' \
                     f'</div>'
+
+    # === SETUP METHODS === #
 
     @api.model
     def _get_provider_domain(self, provider_code, *, custom_mode='', **kwargs):
@@ -70,10 +83,3 @@ class PaymentProvider(models.Model):
         )
         if transfer_providers_without_msg:
             transfer_providers_without_msg.action_recompute_pending_msg()
-
-    def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
-        if self.code != 'custom' or self.custom_mode != 'wire_transfer':
-            return default_codes
-        return const.DEFAULT_PAYMENT_METHOD_CODES

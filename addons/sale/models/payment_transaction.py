@@ -218,14 +218,13 @@ class PaymentTransaction(models.Model):
                 tx.invoice_ids = [Command.set(invoices.ids)]
 
     @api.model
-    def _compute_reference_prefix(self, provider_code, separator, **values):
+    def _compute_reference_prefix(self, separator, **values):
         """ Override of payment to compute the reference prefix based on Sales-specific values.
 
         If the `values` parameter has an entry with 'sale_order_ids' as key and a list of (4, id, O)
         or (6, 0, ids) X2M command as value, the prefix is computed based on the sales order name(s)
         Otherwise, the computation is delegated to the super method.
 
-        :param str provider_code: The code of the provider handling the transaction
         :param str separator: The custom separator used to separate data references
         :param dict values: The transaction values used to compute the reference prefix. It should
                             have the structure {'sale_order_ids': [(X2M command), ...], ...}.
@@ -239,7 +238,7 @@ class PaymentTransaction(models.Model):
             orders = self.env['sale.order'].browse(order_ids).exists()
             if len(orders) == len(order_ids):  # All ids are valid
                 return separator.join(orders.mapped('name'))
-        return super()._compute_reference_prefix(provider_code, separator, **values)
+        return super()._compute_reference_prefix(separator, **values)
 
     @api.readonly
     def action_view_sales_orders(self):

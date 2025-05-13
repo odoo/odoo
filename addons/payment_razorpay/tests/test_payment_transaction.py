@@ -47,7 +47,7 @@ class TestPaymentTransaction(RazorpayCommon):
     def test_void_is_not_supported(self):
         """ Test that trying to void an authorized transaction raises an error. """
         tx = self._create_transaction('direct', state='authorized')
-        self.assertRaises(UserError, func=tx._send_void_request)
+        self.assertRaises(UserError, func=tx._void)
 
     def test_prevent_multi_payments_on_recurring_transactions(self):
         """ Test that no retry is allowed within the 36 hours of the first attempt using token. """
@@ -56,7 +56,8 @@ class TestPaymentTransaction(RazorpayCommon):
             'token', reference='INV123', token_id=shared_token.id, state='pending'
         )
         tx2 = self._create_transaction('token', reference='INV123-1', token_id=shared_token.id)
-        self.assertRaises(UserError, tx2._send_payment_request)
+        tx2._charge_with_token()
+        self.assertEqual(tx2.state, 'error')
 
     def test_allow_multi_payments_on_non_recurring_transactions(self):
         """Test that the payment of non-recurring transactions is allowed."""
@@ -77,18 +78,22 @@ class TestPaymentTransaction(RazorpayCommon):
             for other_tx in other_txs:
                 converted_amount = payment_utils.to_minor_currency_units(other_tx.amount, other_tx.currency_id)
                 with patch(
-                    'odoo.addons.payment_razorpay.models.payment_provider.PaymentProvider'
-                    '._razorpay_make_request',
-                    return_value={'status': 'created', 'id': '12345', 'amount': converted_amount, 'currency': other_tx.currency_id.name}
+                    'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+                    return_value={
+                        'status': 'created',
+                        'id': '12345',
+                        'amount': converted_amount,
+                        'currency': other_tx.currency_id.name,
+                    }
                 ):
                     self._assert_does_not_raise(UserError, other_tx._send_payment_request)
                 other_tx.state = 'draft'
 
-    def test_get_tx_from_notification_data_returns_refund_tx(self):
+    def test_search_by_reference_returns_refund_tx(self):
         """ Test that the refund transaction is returned if it exists when processing refund
-        notification data. """
+        payment data. """
         refund_tx = self._create_transaction('direct')
-        returned_tx = self.env['payment.transaction']._get_tx_from_notification_data(
+        returned_tx = self.env['payment.transaction']._search_by_reference(
             'razorpay', dict(self.refund_data, **{
                 'entity_type': 'refund',
                 'notes': {
@@ -98,13 +103,13 @@ class TestPaymentTransaction(RazorpayCommon):
         )
         self.assertEqual(returned_tx, refund_tx)
 
-    def test_get_tx_from_notification_data_creates_refund_tx_when_missing(self):
-        """ Test that a refund transaction is created when processing refund notification data
+    def test_search_by_reference_creates_refund_tx_when_missing(self):
+        """ Test that a refund transaction is created when processing refund payment data
         without reference. """
         source_tx = self._create_transaction(
             'direct', state='done', provider_reference=self.payment_id
         )
-        refund_tx = self.env['payment.transaction']._get_tx_from_notification_data(
+        refund_tx = self.env['payment.transaction']._search_by_reference(
             'razorpay', dict(self.refund_data, entity_type='refund')
         )
         self.assertTrue(
@@ -114,23 +119,23 @@ class TestPaymentTransaction(RazorpayCommon):
         self.assertNotEqual(refund_tx, source_tx)
         self.assertEqual(refund_tx.source_transaction_id, source_tx)
 
-    def test_processing_notification_data_confirms_transaction(self):
-        """ Test that the transaction state is set to 'done' when the notification data indicate a
+    def test_apply_updates_confirms_transaction(self):
+        """ Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment. """
         tx = self._create_transaction('direct')
-        tx._process_notification_data(self.payment_data)
+        tx._apply_updates(self.payment_data)
         self.assertEqual(tx.state, 'done')
 
     @mute_logger('odoo.addons.payment.models.payment_transaction')
     @mute_logger('odoo.addons.payment_razorpay.models.payment_transaction')
-    def test_processing_notification_data_updates_reference_if_not_confirmed(self):
+    def test_apply_updates_updates_reference_if_not_confirmed(self):
         """ Test that the provider reference and payment method are not changed when the transaction
         is already confirmed. This can happen in case of multiple payment attempts. """
         upi = self.env.ref('payment.payment_method_upi')
         tx = self._create_transaction(
             'direct', state='done', provider_reference=self.payment_id, payment_method_id=upi.id
         )
-        tx._process_notification_data(self.payment_fail_data)
+        tx._apply_updates(self.payment_fail_data)
         self.assertEqual(
             tx.provider_reference,
             self.payment_id,
@@ -143,32 +148,16 @@ class TestPaymentTransaction(RazorpayCommon):
             msg="The payment method should not be updated if the transaction is already confirmed.",
         )
 
-    @mute_logger('odoo.addons.payment_razorpay.models.payment_transaction')
-    def test_processing_notification_data_only_tokenizes_once(self):
-        """ Test that only one token is created when notification data of a given transaction are
-        processed multiple times. """
-        tx1 = self._create_transaction('direct', reference='tx1', tokenize=True)
-        tx1._process_notification_data(self.tokenize_payment_data)
-        with patch(
-            'odoo.addons.payment_razorpay.models.payment_transaction.PaymentTransaction'
-            '._razorpay_tokenize_from_notification_data'
-        ) as tokenize_mock:
-            # Create the second transaction with the first transaction's token.
-            tx2 = self._create_transaction('token', reference='tx2', token_id=tx1.token_id.id)
-            tx2._process_notification_data(self.tokenize_payment_data)
-            self.assertEqual(
-                tokenize_mock.call_count,
-                0,
-                msg="No new token should be created for transactions already linked to a token.",
-            )
+    def test_extract_token_values_maps_fields_correctly(self):
+        tx = self._create_transaction('direct')
+        token_values = tx._extract_token_values(self.tokenize_payment_data)
+        self.assertDictEqual(token_values, {
+            'payment_details': None,
+            'provider_ref': f'{self.customer_id},{self.token_id}',
+        })
 
-    def test_processing_notification_data_tokenizes_transaction(self):
-        """ Test that the transaction is tokenized when it was requested and the notification data
-        include token data. """
-        tx = self._create_transaction('direct', tokenize=True)
-        with patch(
-            'odoo.addons.payment_razorpay.models.payment_transaction.PaymentTransaction'
-            '._razorpay_tokenize_from_notification_data'
-        ) as tokenize_mock:
-            tx._process_notification_data(self.tokenize_payment_data)
-            self.assertEqual(tokenize_mock.call_count, 1)
+    def test_token_values_not_extracted_if_token_already_exists(self):
+        tx = self._create_transaction('direct')
+        tx.token_id = self._create_token()
+        token_values = tx._extract_token_values(self.tokenize_payment_data)
+        self.assertFalse(token_values)
