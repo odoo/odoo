@@ -21,7 +21,9 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="order.internal_note" class="internal-note-container d-flex flex-wrap gap-2" t-attf-class="{{this.props.mode === 'receipt' ? 'py-2' : 'p-2'}}">
+                    <div t-if="order.internal_note and props.mode !== 'receipt'" 
+                        class="internal-note-container d-flex flex-wrap gap-2" 
+                        t-attf-class="{{this.props.mode === 'receipt' ? 'py-2' : 'p-2'}}">
                         <TagsList tags="getInternalNotes()"/>
                     </div>
                 </div>
