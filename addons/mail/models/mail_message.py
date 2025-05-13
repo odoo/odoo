@@ -1050,7 +1050,7 @@ class MailMessage(models.Model):
             record_fields.append(
                 Store.One(
                     "selfFollower",
-                    ["is_active", Store.One("partner_id", [], rename="partner")],
+                    ["is_active", Store.One("partner_id", [])],
                     value=lambda r: follower_by_record_and_partner.get((r, current_partner)),
                 )
             )

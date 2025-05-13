@@ -550,6 +550,6 @@ GROUP BY fol.id%s%s""" % (
             "name",
             # sudo: res.partner - can read partners of found followers, in particular allows
             # by-passing multi-company ACL for portal partners
-            Store.One("partner_id", rename="partner", sudo=True),
+            Store.One("partner_id", sudo=True),
             Store.One("thread", [], as_thread=True),
         ]
