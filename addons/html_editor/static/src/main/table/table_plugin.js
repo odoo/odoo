@@ -89,6 +89,8 @@ export class TablePlugin extends Plugin {
         "resetTableSize",
         "clearColumnContent",
         "clearRowContent",
+        "mergeSelectedCells",
+        "unmergeSelectedCell",
     ];
     resources = {
         user_commands: [
@@ -551,6 +553,81 @@ export class TablePlugin extends Plugin {
         table.before(baseContainer);
         table.remove();
         this.dependencies.selection.setCursorStart(baseContainer);
+    }
+
+    /**
+     * Merges the given list of <td> elements by applying rowspan or colspan,
+     * moving their content into the first cell, and removing the rest.
+     *
+     * @param {HTMLElement[]} tds - The cells to merge.
+     * @param {"rowspan" | "colspan"} spanAttr - The attribute to apply for merging.
+     */
+    mergeSelectedCells(tds, spanAttr) {
+        if (!spanAttr || tds.length === 0) {
+            return;
+        }
+        const firstTd = tds[0];
+        firstTd.setAttribute(spanAttr, tds.length);
+
+        for (let i = 1; i < tds.length; i++) {
+            const currentTd = tds[i];
+            firstTd.append(
+                ...Array.from(currentTd.childNodes).filter((node) => !isEmptyBlock(node))
+            );
+            currentTd.remove();
+        }
+        this.dependencies.selection.setSelection({
+            anchorNode: firstTd,
+            anchorOffset: 0,
+            focusNode: firstTd,
+            focusOffset: firstTd.childNodes.length,
+        });
+    }
+
+    /**
+     * Splits a merged cell (with rowspan or colspan) into individual <td> cells,
+     * restoring the original structure by inserting new empty cells.
+     */
+    unmergeSelectedCell() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const td = closestElement(selection.anchorNode, "td");
+
+        if (!td) {
+            return;
+        }
+
+        let tr = closestElement(td, "tr");
+        const colIndex = getColumnIndex(td);
+
+        // If the <td> has a rowspan attribute
+        if (td.hasAttribute("rowspan")) {
+            const spanAttr = td.rowSpan;
+            td.removeAttribute("rowspan");
+            for (let i = 1; i < spanAttr; i++) {
+                const nextTr = tr.nextElementSibling;
+
+                if (nextTr) {
+                    const newTd = td.cloneNode(false);
+                    fillEmpty(newTd);
+
+                    const targetTd = nextTr.childNodes[colIndex];
+                    if (targetTd) {
+                        nextTr.insertBefore(newTd, targetTd);
+                    } else {
+                        nextTr.appendChild(newTd);
+                    }
+                    tr = nextTr;
+                }
+            }
+            // If the <td> has a colspan attribute
+        } else if (td.hasAttribute("colspan")) {
+            for (let i = 1; i < td.colSpan; i++) {
+                const newTd = this.document.createElement("td");
+                fillEmpty(newTd);
+                tr.appendChild(newTd);
+            }
+            td.removeAttribute("colspan");
+        }
     }
 
     // @todo @phoenix: handle deleteBackward on table cells

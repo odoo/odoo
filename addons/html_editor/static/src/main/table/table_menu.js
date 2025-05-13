@@ -1,4 +1,5 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -18,10 +19,13 @@ export class TableMenu extends Component {
         resetColumnWidth: Function,
         resetTableSize: Function,
         clearColumnContent: Function,
+        mergeSelectedCells: Function,
+        unmergeSelectedCell: Function,
         clearRowContent: Function,
         overlay: Object,
         dropdownState: Object,
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
+        editable: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
         direction: { type: String, optional: true },
     };
     static defaultProps = { direction: "ltr" };
@@ -36,6 +40,7 @@ export class TableMenu extends Component {
             this.isFirst = !tr.previousElementSibling;
             this.isLast = !tr.nextElementSibling;
         }
+        this.editable = this.props.editable.ownerDocument;
         this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
     }
 
@@ -62,13 +67,30 @@ export class TableMenu extends Component {
         );
     }
 
+    get hasAlreadyMerged() {
+        const selection = this.editable.getSelection();
+        if (!selection.anchorNode || !selection.isCollapsed) {
+            return false;
+        }
+        const anchorTd = closestElement(selection.anchorNode, "td");
+        if (anchorTd) {
+            return anchorTd.rowSpan > 1 || anchorTd.colSpan > 1;
+        }
+        return false;
+    }
+
     onSelected(item) {
         item.action(this.props.target);
         this.props.overlay.close();
     }
 
+    isDisableMergeOption(span) {
+        return span ? false : true;
+    }
+
     colItems() {
         const ltr = this.props.direction === "ltr";
+        const [tds, spanAttr] = getSelectedCellsMergeInfo(this.editable);
         return [
             !this.isFirst && {
                 name: "move_left",
@@ -118,10 +140,25 @@ export class TableMenu extends Component {
                 text: _t("Clear content"),
                 action: this.props.clearColumnContent.bind(this),
             },
+            (spanAttr === "rowspan" || !spanAttr) && {
+                name: "merge_cell",
+                icon: "fa fa-compress",
+                text: _t("Merge Cells"),
+                disable: this.isDisableMergeOption(spanAttr),
+                tooltip: _t("only rows or cells selection can be merged"),
+                action: () => this.props.mergeSelectedCells(tds, spanAttr),
+            },
+            this.hasAlreadyMerged && {
+                name: "unmerge_cell",
+                icon: "fa fa-compress",
+                text: _t("unmerge Cells"),
+                action: this.props.unmergeSelectedCell.bind(this),
+            },
         ].filter(Boolean);
     }
 
     rowItems() {
+        const [tds, spanAttr] = getSelectedCellsMergeInfo(this.editable);
         return [
             !this.isFirst && {
                 name: "move_up",
@@ -170,6 +207,20 @@ export class TableMenu extends Component {
                 icon: "fa-times-circle",
                 text: _t("Clear content"),
                 action: (target) => this.props.clearRowContent(target.parentElement),
+            },
+            (spanAttr === "colspan" || !spanAttr) && {
+                name: "merge_cell",
+                icon: "fa fa-compress",
+                text: _t("Merge Cells"),
+                disable: this.isDisableMergeOption(spanAttr),
+                tooltip: _t("only rows or cells selection can be merged"),
+                action: () => this.props.mergeSelectedCells(tds, spanAttr),
+            },
+            this.hasAlreadyMerged && {
+                name: "unmerge_cell",
+                icon: "fa fa-compress",
+                text: _t("unmerge Cells"),
+                action: this.props.unmergeSelectedCell.bind(this),
             },
         ].filter(Boolean);
     }
