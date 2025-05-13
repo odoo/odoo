@@ -5,7 +5,9 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnExtraMenuItem,
     clickOnSave,
+    goBackToBlocks,
     insertSnippet,
+    openLinkPopup,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -65,14 +67,10 @@ registerWebsitePreviewTour('edit_menus', {
     },
     // Add a menu item in edit mode.
     ...clickOnEditAndWaitEditMode(),
-    {
-        content: "Click on a menu item",
-        trigger: ":iframe .top_menu .nav-item a",
-        run: "click",
-    },
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home"),
     {
         content: "Click on Edit Menu",
-        trigger: ':iframe .o_edit_menu_popover a.js_edit_menu',
+        trigger: '.o-we-linkpopover a.js_edit_menu',
         run: "click",
     },
     {
@@ -127,27 +125,16 @@ registerWebsitePreviewTour('edit_menus', {
     {
         trigger: "body:not(:has(.modal))",
     },
-    {
-        trigger: "#oe_snippets.o_loaded",
-    },
     // Edit the new menu item from the "edit link" popover button
     clickOnExtraMenuItem({}, true),
-    {
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
-    },
-    {
-        content: "Menu should have a new link item",
-        trigger: ':iframe .top_menu .nav-item a:contains("Random!")',
-        // Don't click the new menu when the editor is still blocked.
-        run: "click",
-    },
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Random!')", "Random!"),
     {
         content: "navbar shouldn't have any zwnbsp and no o_link_in_selection class",
         trigger: ':iframe nav.navbar:not(:has(.o_link_in_selection)):not(:contains("\ufeff"))',
     },
     {
         content: "Click on Edit Link",
-        trigger: ':iframe .o_edit_menu_popover a.o_we_edit_link',
+        trigger: '.o-we-linkpopover a.o_we_edit_link',
         run: "click",
     },
     {
@@ -169,14 +156,10 @@ registerWebsitePreviewTour('edit_menus', {
     // Edit the menu item from the "edit menu" popover button
     ...clickOnEditAndWaitEditMode(),
     clickOnExtraMenuItem({}, true),
-    {
-        content: "Click on the 'Modnar' link",
-        trigger: ':iframe .top_menu .nav-item a:contains("Modnar")',
-        run: "click",
-    },
+    ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar"),
     {
         content: "Click on the popover Edit Menu button",
-        trigger: ':iframe .o_edit_menu_popover a.js_edit_menu',
+        trigger: '.o-we-linkpopover a.js_edit_menu',
         run: "click",
     },
     {
@@ -206,6 +189,7 @@ registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     // Drag a block to be able to scroll later.
+    goBackToBlocks(),
     ...insertSnippet({ id: "s_media_list", name: "Media List", groupName: "Content" }),
     ...clickOnSave(),
     clickOnExtraMenuItem({}, true),
