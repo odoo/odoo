@@ -160,7 +160,9 @@ class LivechatController(http.Controller):
         )
 
     def _post_feedback_message(self, channel, rating, reason):
-        reason = Markup("<br>" + re.sub(r'\r\n|\r|\n', "<br>", reason) if reason else "")
+        reason = Markup(
+            "<br>" + re.sub(r"\r\n|\r|\n", "<br>", tools.html_escape(reason)) if reason else ""
+        )
         body = Markup('''
             <div class="o_mail_notification o_hide_author">
                 %(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s
