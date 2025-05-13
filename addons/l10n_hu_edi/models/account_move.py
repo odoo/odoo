@@ -272,18 +272,11 @@ class AccountMove(models.Model):
     def _l10n_hu_get_currency_rate(self):
         """ Get the invoice currency / HUF rate.
 
-        If the company currency is HUF, we estimate this based on the invoice lines
-        (or if this is not an invoice, based on the AMLs), using a MMSE estimator.
-
-        If the company currency is not HUF (e.g. Hungarian companies that do their accounting in euro),
-        we get the rate from the currency rates.
+            We don't use `invoice_currency_rate` to avoid rounding error as 1/0.002470 ≃ 404.87,
+            and we want exactly 404.87, i.e. the rate given by the MNB of Hungary, to avoid NAV error
+            upon XML submission.
         """
-        if self.currency_id.name == 'HUF':
-            return 1
-        if self.company_id.currency_id.name == 'HUF':
-            squared_amount_currency = sum(line.amount_currency ** 2 for line in (self.invoice_line_ids or self.line_ids))
-            squared_balance = sum(line.balance ** 2 for line in self.invoice_line_ids)
-            return math.sqrt(squared_balance / squared_amount_currency)
+        self.ensure_one()
         return self.env['res.currency']._get_conversion_rate(
             from_currency=self.currency_id,
             to_currency=self.env.ref('base.HUF'),
