@@ -16,7 +16,6 @@ jobs:
     services:
       postgres:
         image: postgres:13
-        restart: always
         env:
           POSTGRES_USER: odoo
           POSTGRES_PASSWORD: odoo
@@ -58,10 +57,8 @@ jobs:
 
       - name: Wait for Postgres to be ready
         run: |
-          sudo apt-get update && sudo apt-get install -y postgresql-client
-
           for i in {1..30}; do
-            if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER; then
+            if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER > /dev/null 2>&1; then
               echo "Postgres is up"
               break
             fi
