@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import base64
+
+from lxml.etree import XMLSchemaError
 
 from odoo.tests import common
 from odoo.tools.xml_utils import _check_with_xsd
 
-import base64
-from lxml.etree import XMLSchemaError
 
 class TestLXML(common.TransactionCase):
     def test_lxml_import_from_filestore(self):
@@ -36,13 +37,13 @@ class TestLXML(common.TransactionCase):
 
         self.env['ir.attachment'].create([{
             'datas': base64.b64encode(resolver_schema_int),
-            'name': 'resolver_schema_int.xsd'
+            'name': 'resolver_schema_int.xsd',
         }, {
             'datas': base64.b64encode(incomplete_schema_int),
-            'name': 'incomplete_schema_int.xsd'
+            'name': 'incomplete_schema_int.xsd',
         }, {
             'datas': base64.b64encode(imported_schema),
-            'name': 'imported_schema.xsd'
+            'name': 'imported_schema.xsd',
         }])
 
         _check_with_xsd("<a><b></b></a>", 'resolver_schema_int.xsd', self.env)

@@ -1,244 +1,321 @@
-# -*- coding: utf-8 -*-
-"""
-Test for the pseudo-form implementation (odoo.tests.Form), which should
-basically be a server-side implementation of form views (though probably not
-complete) intended for properly validating business "view" flows (onchanges,
-readonly, required, ...) and make it easier to generate sensible & coherent
-business objects.
-"""
-from lxml import etree
 from operator import itemgetter
 
-from odoo.tests import TransactionCase, Form
+from lxml import etree
+
 from odoo import Command
+from odoo.tests import Form, TransactionCase
 
 
-class TestBasic(TransactionCase):
-    def test_defaults(self):
-        """
-        Checks that we can load a default form view and perform trivial
-        default_get & onchanges & computations
-        """
-        f = Form(self.env['test_testing_utilities.a'])
-        self.assertEqual(f.id, False, "check that our record is not in db (yet)")
+class TestFormFields(TransactionCase):
+    def test_form_create(self):
+        form = Form(self.env['test_testing_utilities.form_create'])
 
-        self.assertEqual(f.f2, 42)
-        self.assertEqual(f.f3, 21)
-        self.assertEqual(f.f4, 42)
+        self.assertEqual(form.id, False)
 
-        f.f1 = '4'
-        self.assertEqual(f.f2, 42)
-        self.assertEqual(f.f3, 21)
-        self.assertEqual(f.f4, 10)
-
-        f.f2 = 8
-        self.assertEqual(f.f3, 4)
-        self.assertEqual(f.f4, 2)
-
-        # f.record cannot be accessed yet
-        with self.assertRaises(AssertionError):
-            f.record
-
-        r = f.save()
-        self.assertEqual(
-            (r.f1, r.f2, r.f3, r.f4),
-            ('4', 8, 4, 2),
-        )
-        self.assertEqual(f.record, r)
-
-    def test_required(self):
-        f = Form(self.env['test_testing_utilities.a'])
-        # f1 no default & no value => should fail
-        with self.assertRaisesRegex(AssertionError, 'f1 is a required field'):
-            f.save()
-        # set f1 and unset f2 => should work
-        f.f1 = '1'
-        f.f2 = False
-        r = f.save()
-        self.assertEqual(
-            (r.f1, r.f2, r.f3, r.f4),
-            ('1', 0, 0, 0)
-        )
-
-    def test_required_bool(self):
-        f = Form(self.env['test_testing_utilities.req_bool'])
-        f.f_bool = False
-        r = f.save()
-        self.assertEqual(r.f_bool, 0)
-
-        f2 = Form(self.env['test_testing_utilities.req_bool'])
-        r2 = f2.save()
-        self.assertEqual(r2.f_bool, 0)
-
-    def test_readonly(self):
-        """
-        Checks that fields with readonly modifiers (marked as readonly or
-        computed w/o set) raise an error when set.
-        """
-        f = Form(self.env['test_testing_utilities.readonly'])
+        form.field = 42
 
         with self.assertRaises(AssertionError):
-            f.f1 = '5'
+            form.record
+
+        record = form.save()
+
+        self.assertEqual(record.field, 42)
+        self.assertEqual(form.record, record)
+
+    def test_form_field_with_default(self):
+        form = Form(self.env['test_testing_utilities.form_default'])
+
+        self.assertEqual(form.field_default, 42)
+
+        record = form.save()
+
+        self.assertEqual(record.field_default, 42)
+
+    def test_form_field_with_onchange(self):
+        form = Form(self.env['test_testing_utilities.form_onchange'])
+
+        self.assertEqual(form.field_onchange, 0)
+
+        form.field_trigger_onchange = 84
+
+        self.assertEqual(form.field_onchange, 42)
+
+        record = form.save()
+
+        self.assertEqual(record.field_onchange, 42)
+
+    def test_form_field_with_compute(self):
+        form = Form(self.env['test_testing_utilities.form_compute'])
+
+        self.assertEqual(form.field_compute, 0)
+
+        form.field_trigger_compute = 84
+
+        self.assertEqual(form.field_compute, 42)
+
+        record = form.save()
+
+        self.assertEqual(record.field_compute, 42)
+
+    def test_form_field_with_required(self):
+        form = Form(self.env['test_testing_utilities.form_required'])
+
+        self.assertEqual(form.field_required, False)
+
         with self.assertRaises(AssertionError):
-            f.f2 = 42
+            form.save()
 
-    def test_readonly_save(self):
-        """ Should not save readonly fields unless they're force_save
-        """
-        f = Form(self.env['test_testing_utilities.a'], view='test_testing_utilities.non_normalized_attrs')
+        form.field_required = '42'
 
-        f.f1 = '1'
-        f.f2 = 987
-        self.assertEqual(f.f5, 987)
-        self.assertEqual(f.f6, 987)
-        r = f.save()
-        self.assertEqual(r.f5, 0)
-        self.assertEqual(r.f6, 987)
+        self.assertEqual(form.field_required, '42')
 
-    def test_attrs(self):
-        """ Checks that attrs/modifiers with non-normalized domains work
-        """
-        f = Form(self.env['test_testing_utilities.a'], view='test_testing_utilities.non_normalized_attrs')
+        record = form.save()
 
-        # not readonly yet, should work
-        f.f2 = 5
-        # make f2 readonly
-        f.f1 = '63'
-        f.f3 = 5
+        self.assertEqual(record.field_required, '42')
+
+    def test_form_field_with_required_from_xml(self):
+        form = Form(self.env['test_testing_utilities.form_required_xml'], view='test_testing_utilities.form_required')
+
+        self.assertEqual(form.field_required, False)
+
         with self.assertRaises(AssertionError):
-            f.f2 = 6
+            form.save()
+
+        form.field_required = '42'
+
+        self.assertEqual(form.field_required, '42')
+
+        record = form.save()
+
+        self.assertEqual(record.field_required, '42')
+
+    def test_form_boolean_with_required(self):
+        form = Form(self.env['test_testing_utilities.form_required_boolean'])
+
+        form.field_required_boolean = False
+
+        record = form.save()
+
+        self.assertEqual(record.field_required_boolean, False)
+
+    def test_form_empty_boolean_with_required(self):
+        form = Form(self.env['test_testing_utilities.form_required_boolean'])
+
+        record = form.save()
+
+        self.assertEqual(record.field_required_boolean, False)
+
+    def test_form_field_with_readonly(self):
+        form = Form(self.env['test_testing_utilities.form_readonly'])
+
+        with self.assertRaises(AssertionError):
+            form.field_readonly = '42'
+
+    def test_form_field_with_readonly_from_xml_and_force_save(self):
+        form = Form(self.env['test_testing_utilities.form_readonly_xml'], view='test_testing_utilities.readonly')
+
+        form.field_trigger_without_force_save = 42
+        form.field_trigger_with_force_save = 42
+
+        self.assertEqual(form.field_without_force_save, 42)
+        self.assertEqual(form.field_with_force_save, 42)
+
+        record = form.save()
+
+        self.assertEqual(record.field_without_force_save, 0)
+        self.assertEqual(record.field_with_force_save, 42)
+
+    def test_form_field_with_conditional_readonly_from_xml(self):
+        form = Form(self.env['test_testing_utilities.form_readonly_xml'], view='test_testing_utilities.form_readonly')
+
+        # field_with_condition is not readonly yet.
+        form.field_with_condition = 42
+
+        # Make field_with_condition readonly.
+        form.field_trigger_condition = 42
+
+        with self.assertRaises(AssertionError):
+            form.field_with_condition = 43
+
+    def test_form_field_with_compute_and_without_inverse(self):
+        form = Form(self.env['test_testing_utilities.form_readonly'])
+
+        with self.assertRaises(AssertionError):
+            form.field_compute_readonly = 42
+
 
 class TestM2O(TransactionCase):
-    def test_default_and_onchange(self):
-        """ Checks defaults & onchanges impacting m2o fields
-        """
-        Sub = self.env['test_testing_utilities.m2o']
-        a = Sub.create({'name': "A"})
-        b = Sub.create({'name': "B"})
+    def test_default(self):
+        form_before_record = Form(self.env['test_testing_utilities.m2o_default'])
 
-        f = Form(self.env['test_testing_utilities.d'])
+        self.assertFalse(form_before_record.field_default)
 
-        self.assertFalse(
-            f.f,
-            "The default value gets overridden by the onchange"
-        )
-        f.f2 = "B"
-        self.assertEqual(
-            f.f, b,
-            "The new m2o value should match the second field by name"
-        )
-
-        f.save()
-
-    def test_set(self):
-        """
-        Checks that we get/set recordsets for m2o & that set correctly
-        triggers onchange
-        """
-        r1 = self.env['test_testing_utilities.m2o'].create({'name': "A"})
-        r2 = self.env['test_testing_utilities.m2o'].create({'name': "B"})
-
-        f = Form(self.env['test_testing_utilities.c'])
-
-        # check that basic manipulations work
-        f.f2 = r1
-        self.assertEqual(f.f2, r1)
-        self.assertEqual(f.name, 'A')
-        f.f2 = r2
-        self.assertEqual(f.name, 'B')
-
-        # can't set an int to an m2o field
         with self.assertRaises(AssertionError):
-            f.f2 = r1.id
-        self.assertEqual(f.f2, r2)
-        self.assertEqual(f.name, 'B')
+            form_before_record.save()
 
-        # can't set a record of the wrong model
-        temp = self.env['test_testing_utilities.readonly'].create({})
+        record = self.env['test_testing_utilities.m2o'].create({'name': "trigger_default"})
+        form_after_record = Form(self.env['test_testing_utilities.m2o_default'])
+
+        self.assertEqual(form_after_record.field_default, record)
+
+        form_after_record.save()
+
+    def test_onchange(self):
+        form_before_record = Form(self.env['test_testing_utilities.m2o_onchange'])
+
+        self.assertFalse(form_before_record.field_onchange)
+
+        record = self.env['test_testing_utilities.m2o'].create({'name': "trigger_onchange"})
+
+        form_after_record = Form(self.env['test_testing_utilities.m2o_onchange'])
+
+        form_after_record.field_trigger_onchange = "trigger_onchange"
+        self.assertEqual(form_after_record.field_onchange, record)
+
+        form_after_record.save()
+
+    def test_many_2_one(self):
+        record = self.env['test_testing_utilities.m2o'].create({'name': "A"})
+
+        form = Form(self.env['test_testing_utilities.m2o_xxx'])
+
+        form.field_m2o = record
+        self.assertEqual(form.field_m2o, record)
+
+        record_saved = form.save()
+        self.assertEqual(record_saved.field_m2o, record)
+
+    def test_m2o_set_id(self):
+        record = self.env['test_testing_utilities.m2o'].create({'name': "A"})
+
+        form = Form(self.env['test_testing_utilities.m2o_xxx'])
+
+        form.field_m2o = record
+        self.assertEqual(form.field_m2o, record)
+
         with self.assertRaises(AssertionError):
-            f.f2 = temp
-        self.assertEqual(f.f2, r2)
-        self.assertEqual(f.name, 'B')
+            form.field_m2o = record.id
 
-        r = f.save()
-        self.assertEqual(r.f2, r2)
+        form.field_m2o = record
+        self.assertEqual(form.field_m2o, record)
+
+    def test_m2o_wrong_model(self):
+        record = self.env['test_testing_utilities.m2o'].create({'name': "A"})
+        wrong_record = self.env['test_testing_utilities.m2o_xxx'].create({})
+
+        form = Form(self.env['test_testing_utilities.m2o_xxx'])
+
+        form.field_m2o = record
+        self.assertEqual(form.field_m2o, record)
+
+        with self.assertRaises(AssertionError):
+            form.field_m2o = wrong_record
+
+        form.field_m2o = record
+        self.assertEqual(form.field_m2o, record)
+
+    def test_compute(self):
+        pass
+
 
 class TestM2M(TransactionCase):
-    def test_add(self):
-        Sub = self.env['test_testing_utilities.sub2']
-        r1 = Sub.create({'name': "Item"})
-        r2 = Sub.create({'name': "Item2"})
+    def test_m2m(self):
+        model = self.env['test.dummy']
+        record_1 = model.create({'name': "Item"})
+        record_2 = model.create({'name': "Item"})
 
-        with Form(self.env['test_testing_utilities.e']) as f:
-            f.m2m.add(r1)
-            f.m2m.add(r2)
+        with Form(self.env['test.m2m']) as form:
+            form.field_m2m.add(record_1)
+            form.field_m2m.add(record_2)
 
-        self.assertEqual(
-            f.record.m2m,
-            r1 | r2
-        )
+        self.assertEqual(form.record.field_m2m, record_1 | record_2)
 
     def test_remove_by_index(self):
-        Sub = self.env['test_testing_utilities.sub2']
-        r1 = Sub.create({'name': "Item"})
-        r2 = Sub.create({'name': "Item2"})
+        model = self.env['test.dummy']
+        record_1 = model.create({'name': "Item"})
+        record_2 = model.create({'name': "Item2"})
 
-        with Form(self.env['test_testing_utilities.e']) as f:
-            f.m2m.add(r1)
-            f.m2m.add(r2)
-            f.m2m.remove(index=0)
+        with Form(self.env['test.m2m']) as form:
+            form.field_m2m.add(record_1)
+            form.field_m2m.add(record_2)
+            form.field_m2m.remove(index=0)
 
         self.assertEqual(
-            f.record.m2m,
-            r2
+            form.record.field_m2m,
+            record_2,
         )
 
     def test_remove_by_id(self):
-        Sub = self.env['test_testing_utilities.sub2']
-        r1 = Sub.create({'name': "Item"})
-        r2 = Sub.create({'name': "Item2"})
+        model = self.env['test.dummy']
+        record_1 = model.create({'name': "Item"})
+        record_2 = model.create({'name': "Item2"})
 
-        with Form(self.env['test_testing_utilities.e']) as f:
-            f.m2m.add(r1)
-            f.m2m.add(r2)
-            f.m2m.remove(id=r1.id)
+        with Form(self.env['test.m2m']) as form:
+            form.field_m2m.add(record_1)
+            form.field_m2m.add(record_2)
+            form.field_m2m.remove(id=record_1.id)
 
         self.assertEqual(
-            f.record.m2m,
-            r2
+            form.record.field_m2m,
+            record_2,
         )
 
     def test_set(self):
-        Sub = self.env['test_testing_utilities.sub2']
-        r1 = Sub.create({'name': "Item"})
-        r2 = Sub.create({'name': "Item2"})
-        r3 = Sub.create({'name': "Item3"})
+        model = self.env['test.dummy']
+        record_1 = model.create({'name': "Item"})
+        record_2 = model.create({'name': "Item2"})
+        record_3 = model.create({'name': "Item3"})
 
-        with Form(self.env['test_testing_utilities.e']) as f:
-            f.m2m.set(r1 + r2)
+        with Form(self.env['test.m2m']) as form:
+            form.field_m2m.set(record_1 + record_2)
 
-        self.assertEqual(f.record.m2m, r1 + r2)
+        self.assertEqual(form.record.field_m2m, record_1 + record_2)
 
-        with f:
-            f.m2m = r3
+        with form:
+            form.field_m2m = record_3
 
-        self.assertEqual(f.record.m2m, r3)
+        self.assertEqual(form.record.field_m2m, record_3)
 
-    def test_on_m2m_change(self):
-        Sub = self.env['test_testing_utilities.sub2']
-        f = Form(self.env['test_testing_utilities.e'])
+    def test_compute(self):
+        model = self.env['test.dummy']
+        form = Form(self.env['test.m2m_compute'])
 
-        self.assertEqual(f.count, 0)
-        f.m2m.add(Sub.create({'name': 'a'}))
-        self.assertEqual(f.count, 1)
-        f.m2m.add(Sub.create({'name': 'a'}))
-        f.m2m.add(Sub.create({'name': 'a'}))
-        f.m2m.add(Sub.create({'name': 'a'}))
-        self.assertEqual(f.count, 4)
-        f.m2m.remove(index=0)
-        f.m2m.remove(index=0)
-        f.m2m.remove(index=0)
-        self.assertEqual(f.count, 1)
+        self.assertEqual(form.field_compute, 0)
+
+        form.field_trigger_compute.add(model.create({'name': 'a'}))
+        self.assertEqual(form.field_compute, 1)
+
+        form.field_trigger_compute.add(model.create({'name': 'a'}))
+        form.field_trigger_compute.add(model.create({'name': 'a'}))
+        form.field_trigger_compute.add(model.create({'name': 'a'}))
+        self.assertEqual(form.field_compute, 4)
+
+        form.field_trigger_compute.remove(index=0)
+        form.field_trigger_compute.remove(index=0)
+        form.field_trigger_compute.remove(index=0)
+        self.assertEqual(form.field_compute, 1)
+
+    def test_default(self):
+        model = self.env['test.dummy']
+        record_1 = model.create({'name': 'a'})
+        record_2 = model.create({'name': 'b'})
+
+        form = Form(self.env['test.m2m_default'])
+
+        self.assertEqual(form.field_default[:], record_1 | record_2)
+
+    def test_onchange(self):
+        model = self.env['test.dummy']
+        a = model.create({'name': 'a'})
+        b = model.create({'name': 'b'})
+
+        form = Form(self.env['test.m2m_onchange'])
+
+        form.field_trigger_onchange = a
+        self.assertEqual(form.field_onchange[:], a)
+
+        form.field_trigger_onchange = b
+        self.assertEqual(form.field_onchange[:], a | b)
 
     def test_m2m_changed(self):
         r1 = self.env['test_testing_utilities.m2o'].create({'name': "A"})
@@ -260,12 +337,15 @@ class TestM2M(TransactionCase):
         f.m2o = d
         self.assertEqual(f.m2m[:], a | b | c | d)
 
+    def test_readonly(self):
+        pass
+
     def test_m2m_readonly(self):
         Sub = self.env['test_testing_utilities.sub3']
         a = Sub.create({'name': 'a'})
         b = Sub.create({'name': 'b'})
         r = self.env['test_testing_utilities.g'].create({
-            'm2m': [Command.set(a.ids)]
+            'm2m': [Command.set(a.ids)],
         })
 
         f = Form(r)
@@ -287,10 +367,13 @@ class TestM2M(TransactionCase):
         r = f.save()
         self.assertEqual(
             r.m2m.mapped('name'),
-            ['ok', '1', '2', '3', '4']
+            ['ok', '1', '2', '3', '4'],
         )
 
+
 get = itemgetter('name', 'value', 'v')
+
+
 class TestO2M(TransactionCase):
     def test_basic_alterations(self):
         """ Tests that the o2m proxy allows adding, removing and editing o2m
@@ -306,7 +389,7 @@ class TestO2M(TransactionCase):
 
         self.assertEqual(
             [get(s) for s in r.subs],
-            [("2", 2, 2), ("2", 2, 2)]
+            [("2", 2, 2), ("2", 2, 2)],
         )
         self.assertEqual(r.v, 5)
 
@@ -322,7 +405,7 @@ class TestO2M(TransactionCase):
 
         self.assertEqual(
             [get(s) for s in r.subs],
-            [("2", 2, 2), ("5", 5, 5), ("2", 2, 2)]
+            [("2", 2, 2), ("5", 5, 5), ("2", 2, 2)],
         )
         self.assertEqual(r.v, 10)
 
@@ -341,7 +424,7 @@ class TestO2M(TransactionCase):
         self.assertEqual(
             [el.get('name') for el in f._view['tree'].xpath('//field[@name="subs"]/list//field')],
             [el.get('name') for el in etree.fromstring(custom_tree['arch']).xpath('//field')],
-            'check that the list view is the one referenced by list_view_ref'
+            'check that the list view is the one referenced by list_view_ref',
         )
         subs_field = f._view['fields']['subs']
         self.assertIs(subs_field['edition_view']['tree'], f._view['tree'].xpath('//field[@name="subs"]/list')[0], "check that the edition view is the list view")
@@ -362,7 +445,7 @@ class TestO2M(TransactionCase):
         self.assertEqual(r.v, 12)
         self.assertEqual(
             [get(s) for s in r.subs],
-            [('1', 1, 1), ('3', 3, 3), ('7', 7, 7)]
+            [('1', 1, 1), ('3', 3, 3), ('7', 7, 7)],
         )
 
     def test_o2m_inline(self):
@@ -378,7 +461,7 @@ class TestO2M(TransactionCase):
         self.assertEqual(
             [get(s) for s in r.subs],
             [("0", 42, 0)],
-            "should not have set v (and thus not name)"
+            "should not have set v (and thus not name)",
         )
 
     def test_o2m_parent_context(self):
@@ -400,7 +483,7 @@ class TestO2M(TransactionCase):
 
         self.assertEqual(
             [get(s) for s in r.subs],
-            [("5", 2, 5)]
+            [("5", 2, 5)],
         )
 
     def test_o2m_inner_default(self):
@@ -460,7 +543,7 @@ class TestO2M(TransactionCase):
         view) can't be written to
         """
         r = self.env['test_testing_utilities.parent'].create({
-            'subs': [Command.create({})]
+            'subs': [Command.create({})],
         })
         f = Form(r, view='test_testing_utilities.o2m_parent_readonly')
 
@@ -482,7 +565,7 @@ class TestO2M(TransactionCase):
         r = f.record
         self.assertEqual(
             (r.line_ids.name, r.line_ids.f),
-            ('ok', 2)
+            ('ok', 2),
         )
 
     def test_o2m_dyn_onchange(self):
@@ -586,7 +669,7 @@ class TestO2M(TransactionCase):
 
         self.assertEqual(
             r.subs,
-            a | b | c
+            a | b | c,
         )
 
     def test_o2m_onchange_change_saved(self):
@@ -627,6 +710,7 @@ class TestO2M(TransactionCase):
         self.assertEqual(r.mapped('line_ids.vv'), [1, 2])
         self.assertEqual(r.mapped('line_ids.v'), [7, 7])
 
+
 class TestNestedO2M(TransactionCase):
     def test_id_cannot_be_assigned(self):
         # MO with:
@@ -651,8 +735,8 @@ class TestNestedO2M(TransactionCase):
                     'move_line_ids': [Command.create({
                         'product_id': product2,
                         'product_uom_qty': 1.0,
-                        'qty_done': 0.0 # -> 1.0
-                    })] # -> new line with qty=0, qty_done=2
+                        'qty_done': 0.0,  # -> 1.0
+                    })],  # -> new line with qty=0, qty_done=2
                 }),
                 Command.create({
                     'product_id': product1,
@@ -660,11 +744,11 @@ class TestNestedO2M(TransactionCase):
                     'move_line_ids': [Command.create({
                         'product_id': product1,
                         'product_uom_qty': 4.0,
-                        'qty_done': 0.0 # -> 4.0
-                    })] # -> new line with qty=0, qty_done=8
-                })
+                        'qty_done': 0.0,  # -> 4.0
+                    })],  # -> new line with qty=0, qty_done=8
+                }),
             ],
-            'move_finished_ids': [Command.create({'product_id': product0})]
+            'move_finished_ids': [Command.create({'product_id': product0})],
             # -> new line with qty=0, qty_done=3
         })
         form = Form(obj)
@@ -696,8 +780,8 @@ class TestNestedO2M(TransactionCase):
                     'move_line_ids': [Command.create({
                         'product_id': product2,
                         'product_uom_qty': 1.0,
-                        'qty_done': 0.0 # -> 1.0
-                    })] # -> new line with qty=0, qty_done=2
+                        'qty_done': 0.0,  # -> 1.0
+                    })],  # -> new line with qty=0, qty_done=2
                 }),
                 Command.create({
                     'product_id': product1,
@@ -705,11 +789,11 @@ class TestNestedO2M(TransactionCase):
                     'move_line_ids': [Command.create({
                         'product_id': product1,
                         'product_uom_qty': 4.0,
-                        'qty_done': 0.0 # -> 4.0
-                    })] # -> new line with qty=0, qty_done=8
-                })
+                        'qty_done': 0.0,  # -> 4.0
+                    })],  # -> new line with qty=0, qty_done=8
+                }),
             ],
-            'move_finished_ids': [Command.create({'product_id': product0})]
+            'move_finished_ids': [Command.create({'product_id': product0})],
             # -> new line with qty=0, qty_done=3
         })
         form = Form(obj)
@@ -736,8 +820,8 @@ class TestNestedO2M(TransactionCase):
                     'name': 'line 1',
                     'v': 42,
                     'line_ids': [Command.create({'v': 1, 'vv': 1})],
-                })
-            ]
+                }),
+            ],
         })
 
         with Form(r) as f:
@@ -747,6 +831,7 @@ class TestNestedO2M(TransactionCase):
         self.assertEqual(len(r.line_ids.line_ids), 1)
         self.assertEqual(r.line_ids.line_ids.v, 0)
         self.assertEqual(r.line_ids.line_ids.vv, 0)
+
 
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record
@@ -802,7 +887,7 @@ class TestEdition(TransactionCase):
         sub = self.env['test_testing_utilities.sub2'].create({'name': 'a'})
 
         r = self.env['test_testing_utilities.f'].create({
-            'm2m': []
+            'm2m': [],
         })
 
         with Form(r) as f:
@@ -818,7 +903,7 @@ class TestEdition(TransactionCase):
         c = Sub.create({'name': 'c'})
 
         r = self.env['test_testing_utilities.f'].create({
-            'm2m': [Command.set((a | b | c).ids)]
+            'm2m': [Command.set((a | b | c).ids)],
         })
 
         with Form(r) as f:

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Test testing utilities",
     'category': "Hidden/Tests",
@@ -9,8 +8,9 @@ supposed to do
     """,
     'depends': ['base', 'web'],
     'data': [
-        'ir.model.access.csv',
-        'menu.xml',
+        'security/ir.model.access.csv',
+        'views/menu.xml',
+        'views/form.xml'
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
