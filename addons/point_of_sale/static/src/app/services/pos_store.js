@@ -489,7 +489,10 @@ export class PosStore extends WithLazyGetterTrap {
         }
         for (const order of orders) {
             if (order && (await this._onBeforeDeleteOrder(order))) {
-                if (!ignoreChange && Object.keys(order.last_order_preparation_change).length > 0) {
+                if (
+                    !ignoreChange &&
+                    Object.keys(order.last_order_preparation_change.lines).length > 0
+                ) {
                     const orderPresetDate = DateTime.fromISO(order.preset_time);
                     const isSame = DateTime.now().hasSame(orderPresetDate, "day");
                     if (!order.preset_time || isSame) {
@@ -799,6 +802,7 @@ export class PosStore extends WithLazyGetterTrap {
         // It will return the combo prices and the selected products
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
+        let combo_line_vals = [];
         if (values.product_tmpl_id.isCombo() && configure) {
             const payload =
                 vals?.payload && Object.keys(vals?.payload).length
@@ -822,35 +826,26 @@ export class PosStore extends WithLazyGetterTrap {
                 comboExtraLines
             );
 
-            values.combo_line_ids = comboPrices.map((comboItem) => [
-                "create",
-                {
-                    product_id: comboItem.combo_item_id.product_id,
-                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
-                        "link",
-                        tax,
-                    ]),
-                    combo_item_id: comboItem.combo_item_id,
-                    price_unit: comboItem.price_unit,
-                    price_type: "manual",
-                    order_id: order,
-                    qty: comboItem.qty,
-                    attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
-                        "link",
-                        attr,
-                    ]),
-                    custom_attribute_value_ids: Object.entries(
-                        comboItem.attribute_custom_values
-                    ).map(([id, cus]) => [
+            combo_line_vals = comboPrices.map((comboItem) => ({
+                product_id: comboItem.combo_item_id.product_id,
+                tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => ["link", tax]),
+                combo_item_id: comboItem.combo_item_id,
+                price_unit: comboItem.price_unit,
+                price_type: "manual",
+                order_id: order,
+                qty: comboItem.qty,
+                attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => ["link", attr]),
+                custom_attribute_value_ids: Object.entries(comboItem.attribute_custom_values).map(
+                    ([id, cus]) => [
                         "create",
                         {
                             custom_product_template_attribute_value_id:
                                 this.data.models["product.template.attribute.value"].get(id),
                             custom_value: cus,
                         },
-                    ]),
-                },
-            ]);
+                    ]
+                ),
+            }));
         }
 
         // In the case of a product with tracking enabled, we need to ask the user for the lot/serial number.
@@ -926,6 +921,16 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
+        // Ensure that child order lines are created only after the parent line
+        // to preserve the correct parent-child sequence order in lines
+        if (combo_line_vals.length) {
+            combo_line_vals.forEach((combo_line_val) => {
+                this.data.models["pos.order.line"].create({
+                    ...combo_line_val,
+                    combo_parent_id: line.id,
+                });
+            });
+        }
         line.setOptions(options);
         this.selectOrderLine(order, line);
         if (configure) {
@@ -1333,6 +1338,10 @@ export class PosStore extends WithLazyGetterTrap {
     }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
+        if (this.data.network.offline) {
+            this.data.network.warningTriggered = false;
+            throw new ConnectionLostError();
+        }
         if (this.config.printerCategories.size && !opts.byPassPrint) {
             try {
                 let reprint = false;
@@ -1366,13 +1375,6 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
         order.updateLastOrderChange();
-    }
-    async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
-        if (this.data.network.offline) {
-            this.data.network.warningTriggered = false;
-            throw new ConnectionLostError();
-        }
-        await this.sendOrderInPreparation(o, { cancelled });
     }
 
     getStrNotes(note) {

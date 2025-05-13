@@ -583,10 +583,8 @@ class PosSession(models.Model):
         self.ensure_one()
         # Even if this is called in `post_closing_cash_details`, we need to call this here too for case
         # where cash_control = False
-        open_order_ids = self.get_session_orders().filtered(lambda o: o.state == 'draft' and len(o.lines) > 0).ids
         check_closing_session = self._cannot_close_session(bank_payment_method_diffs)
         if check_closing_session:
-            check_closing_session['open_order_ids'] = open_order_ids
             return check_closing_session
 
         validate_result = self.action_pos_session_closing_control(bank_payment_method_diffs=bank_payment_method_diffs)
@@ -596,7 +594,6 @@ class PosSession(models.Model):
         if isinstance(validate_result, dict):
             # imbalance accounting entry
             return {
-                'open_order_ids': open_order_ids,
                 'successful': False,
                 'message': validate_result.get('name'),
                 'redirect': True
@@ -630,8 +627,6 @@ class PosSession(models.Model):
         self.ensure_one()
         check_closing_session = self._cannot_close_session()
         if check_closing_session:
-            open_order_ids = self.get_session_orders().filtered(lambda o: o.state == 'draft').ids
-            check_closing_session['open_order_ids'] = open_order_ids
             return check_closing_session
 
         if not self.cash_journal_id:

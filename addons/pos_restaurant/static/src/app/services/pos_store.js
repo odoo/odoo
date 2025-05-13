@@ -116,13 +116,13 @@ patch(PosStore.prototype, {
         currentOrder.setCustomerCount(guestCount);
         return true;
     },
-    async sendOrderInPreparationUpdateLastChange(order, cancelled = false) {
+    async sendOrderInPreparation(order, opts = {}) {
         const currentPreset = order.preset_id;
         if (
             this.config.use_presets &&
             currentPreset?.use_guest &&
             !order.uiState.guestSetted &&
-            !cancelled
+            !opts.cancelled
         ) {
             const response = await this.setCustomerCount(order);
             if (!response) {
@@ -131,7 +131,7 @@ patch(PosStore.prototype, {
             order.uiState.guestSetted = true;
         }
 
-        if (!cancelled) {
+        if (!opts.cancelled) {
             order.cleanCourses();
             const firstCourse = order.getFirstCourse();
             if (firstCourse && !firstCourse.fired) {
@@ -140,7 +140,7 @@ patch(PosStore.prototype, {
             }
         }
 
-        return await super.sendOrderInPreparationUpdateLastChange(order, cancelled);
+        return await super.sendOrderInPreparation(order, opts);
     },
     handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
         const srcKey = srcLine.preparationKey;
