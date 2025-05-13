@@ -179,11 +179,13 @@ class Form:
         # retrieve <field> nodes at the current level
         flevel = tree.xpath('count(ancestor::field)')
         daterange_field_names = {}
+        field_infos = self._models_info.get(model._name, {}).get("fields", {})
+
         for node in tree.xpath(f'.//field[count(ancestor::field) = {flevel}]'):
             field_name = node.get('name')
 
             # add field_info into fields
-            field_info = self._models_info.get(model._name, {}).get("fields", {}).get(field_name) or {'type': None}
+            field_info = field_infos.get(field_name) or {'type': None}
             fields[field_name] = field_info
             fields_spec[field_name] = field_spec = {}
 
@@ -255,6 +257,15 @@ class Form:
                     field_info['type'] = 'many2many'
 
         for related_field, start_field in daterange_field_names.items():
+            # If the field doesn't exist in the view add it implicitly
+            if related_field not in modifiers:
+                field_info = field_infos.get(related_field) or {'type': None}
+                fields[related_field] = field_info
+                fields_spec[related_field] = {}
+                modifiers[related_field] = {
+                    'required': field_info.get('required', False),
+                    'readonly': field_info.get('readonly', False),
+                }
             modifiers[related_field]['invisible'] = modifiers[start_field].get('invisible', False)
 
         return {
