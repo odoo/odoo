@@ -3,6 +3,7 @@ from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.tests import tagged, users
 from odoo.tools import formataddr, mute_logger
+from odoo.fields import Command
 
 
 @tagged('post_install', '-at_install', 'mail_flow', 'mail_tools')
@@ -209,12 +210,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 self.assertEqual(task.project_id, self.project_followers)
                 self.assertEqual(task.stage_id, self.project_followers.type_ids[0])
                 # followers: email cc is added in followers at creation time, aka only recognized partners
-                if not test_user:
-                    self.assertEqual(task.message_partner_ids, internal_followers + self.partner_1 + self.partner_2,
-                                    'Note that author is not added by mailgateway, as he is external'
-                                    'But project subscribe "current_partner" at create time.')
-                else:
-                    self.assertEqual(task.message_partner_ids, internal_followers + author + self.partner_1 + self.partner_2)
+                self.assertEqual(task.message_partner_ids, internal_followers + author + self.partner_1 + self.partner_2)
                 # messages
                 self.assertEqual(len(task.message_ids), 2)
                 # first message: incoming email: sent to email followers
@@ -349,10 +345,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                         subject=f'Re: {task.name}',
                         subtype_id=self.env.ref('mail.mt_comment').id,
                     )
-                if not test_user:
-                    self.assertEqual(task.message_partner_ids, internal_followers + self.partner_1 + self.partner_2)
-                else:
-                    self.assertEqual(task.message_partner_ids, internal_followers + author + self.partner_1 + self.partner_2)
+                self.assertEqual(task.message_partner_ids, internal_followers + author + self.partner_1 + self.partner_2)
 
                 external_partners = self.partner_1 + self.partner_2 + new_partner_cc + new_partner_customer
                 self.assertMailNotifications(
@@ -422,16 +415,10 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                     '"Valid Poilvache" <valid.other@gmail.com>',
                     'Updated with new Cc')
                 self.assertEqual(len(task.message_ids), 4, 'Incoming email + acknowledgement + chatter reply + customer reply')
-                if not test_user:
-                    self.assertEqual(
-                        task.message_partner_ids,
-                        internal_followers + self.partner_1 + self.partner_2 + self.partner_3 + new_partner_cc + new_partner_customer,
-                        'Project adds recognized recipients as followers')
-                else:
-                    self.assertEqual(
-                        task.message_partner_ids,
-                        internal_followers + author + self.partner_1 + self.partner_2 + self.partner_3 + new_partner_cc + new_partner_customer,
-                        'Project adds recognized recipients as followers')
+                self.assertEqual(
+                    task.message_partner_ids,
+                    internal_followers + author + self.partner_1 + self.partner_2 + self.partner_3 + new_partner_cc + new_partner_customer,
+                    'Project adds recognized recipients as followers')
 
                 self.assertMailNotifications(
                     task.message_ids[0],
@@ -552,3 +539,28 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
             'Task Created', copied_task.message_ids[0].preview,
             "Expected 'Task Created' message not found in copied task's chatter."
         )
+
+    def test_task_portal_share_adds_followers(self):
+        """ Test that sharing a task through the portal share wizard adds recipients as followers.
+
+            Test Cases:
+            ===========
+            1) Verify that the portal user is not a follower of the task.
+            2) Create and execute a portal share wizard to share the task with the portal user.
+            3) Verify that the portal user has been added as a follower after sharing.
+        """
+
+        self.assertNotIn(self.user_portal.partner_id, self.task_1.message_partner_ids,
+                        "Portal user's partner should not be a follower initially")
+
+        share_wizard = self.env['portal.share'].create({
+            'res_model': 'project.task',
+            'res_id': self.task_1.id,
+            'partner_ids': [Command.set(self.user_portal.partner_id.ids)]
+        })
+
+        with self.mock_mail_gateway():
+            share_wizard.action_send_mail()
+
+        self.assertIn(self.user_portal.partner_id, self.task_1.message_partner_ids,
+                    "Portal user's partner should be added as a follower after sharing")
