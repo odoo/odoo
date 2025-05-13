@@ -27,6 +27,7 @@ export class OdooLineChart extends OdooChart {
         this.cumulatedStart = definition.cumulatedStart;
         this.axesDesign = definition.axesDesign;
         this.fillArea = definition.fillArea;
+        this.cumulatedStart = definition.cumulatedStart;
     }
 
     getDefinition() {

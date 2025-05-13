@@ -652,6 +652,9 @@ test("cumulative line chart with past data before domain period without cumulate
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data).toEqual([
         3, 7, 12,
     ]);
+    const figure = model.exportData().sheets[0].figures[0];
+    expect(figure.data.cumulative).toBe(true);
+    expect(figure.data.cumulatedStart).toBe(undefined);
 });
 
 test("cumulative line chart with past data before domain period with cumulated start", async () => {
@@ -697,6 +700,9 @@ test("cumulative line chart with past data before domain period with cumulated s
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data).toEqual([
         15, 19, 24,
     ]);
+    const figure = model.exportData().sheets[0].figures[0];
+    expect(figure.data.cumulative).toBe(true);
+    expect(figure.data.cumulatedStart).toBe(true);
 });
 
 test("update existing chart to cumulate past data", async () => {
@@ -743,6 +749,9 @@ test("update existing chart to cumulate past data", async () => {
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data).toEqual([
         3, 7, 12,
     ]);
+    const figure = model.exportData().sheets[0].figures[0];
+    expect(figure.data.cumulative).toBe(true);
+    expect(figure.data.cumulatedStart).toBe(false);
 
     model.dispatch("UPDATE_CHART", {
         definition: {
