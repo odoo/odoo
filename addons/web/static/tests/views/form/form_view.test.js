@@ -9471,6 +9471,12 @@ test(`Can switch to form view on inline tree`, async () => {
         doAction(action, options) {
             expect.step("doAction");
             expect(action).toEqual({
+                context: {
+                    allowed_company_ids: [1],
+                    lang: "en",
+                    tz: "taht",
+                    uid: 7,
+                },
                 res_id: id,
                 res_model: "partner",
                 type: "ir.actions.act_window",
