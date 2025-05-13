@@ -545,29 +545,15 @@ Contracts:
             if not leave.date_from or not leave.date_to or not calendar:
                 result[leave.id] = (0, 0)
                 continue
-            if calendar.flexible_hours:
-                days = (leave.date_to - leave.date_from).days + (1 if not leave.request_unit_half else 0.5)
-                public_holidays = self.env['resource.calendar.leaves'].search([
-                    ('resource_id', '=', False),
-                    ('calendar_id', '=', calendar.id),
-                    ('date_from', '<=', leave.date_to),
-                    ('date_to', '>=', leave.date_from)
-                ])
-                excluded_days = sum(
-                    (min(holiday.date_to, leave.date_to) - max(holiday.date_from, leave.date_from)).days + 1
-                    for holiday in public_holidays
-                )
-                days = days - excluded_days
-                hours = leave.request_hour_to - leave.request_hour_from if leave.request_unit_hours \
-                    else (days * calendar.hours_per_day)
-                result[leave.id] = (days, hours)
-                continue
-            hours, days = (0, 0)
             if leave.employee_id:
+                # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
-                if leave.employee_id.sudo().is_flexible and leave.leave_type_request_unit in ['day', 'half_day']:
-                    duration = leave.date_to - leave.date_from
-                    days = ceil(duration.total_seconds() / (24 * 3600))
+                if leave.employee_id.sudo().is_flexible and leave.date_to.date() == leave.date_from.date():
+                    hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+                    if not leave.request_unit_hours:
+                        days = 1 if not leave.request_unit_half else 0.5
+                    else:
+                        days = (leave.date_to - leave.date_from).total_seconds() / 3600 / 24
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
                     # list of tuples (day, hours)
                     work_time_per_day_list = work_time_per_day_mapped[(leave.date_from, leave.date_to, calendar)][leave.employee_id.id]
@@ -1516,24 +1502,39 @@ is approved, validated or refused.')
         the earliest hour_from and latest hour_to that exist in the schedule.
         """
         self.ensure_one()
+
         domain = [
             ('calendar_id', '=', self.resource_calendar_id.id),
             ('display_type', '=', False),
             ('day_period', '!=', 'lunch'),
         ]
-        if day_period:
-            domain.append(('day_period', '=', day_period))
-        attendances = self.env['resource.calendar.attendance']._read_group(domain,
-            ['week_type', 'dayofweek'],
-            ['hour_from:min', 'hour_to:max'])
+        # In the case of flexible hours, we resort to centering the holiday hours around 12pm
+        if self.resource_calendar_id.flexible_hours:
+            hours_per_day = self.resource_calendar_id.hours_per_day
+            attendances = []
+            default_start = 12.0 - (hours_per_day / 2)
+            default_end = 12.0 + (hours_per_day / 2)
+            for week_type in [0, 1]:
+                for day in range(7):
+                    if day_period:
+                        attendances.append(DummyAttendance(default_start if day_period == 'morning' else 12, 12 if day_period == 'morning' else default_end, day, day_period, week_type))
+                    else:
+                        attendances.append(DummyAttendance(default_start, default_end, day, None, week_type))
+            attendances = sorted(attendances, key=lambda att: att.dayofweek)
+        else:
+            if day_period:
+                domain.append(('day_period', '=', day_period))
+            # Must be sorted by dayofweek ASC and day_period DESC
+            attendances = self.env['resource.calendar.attendance']._read_group(domain,
+                ['week_type', 'dayofweek'],
+                ['hour_from:min', 'hour_to:max'], order="dayofweek ASC")
 
-        # Must be sorted by dayofweek ASC and day_period DESC
-        attendances = sorted([DummyAttendance(hour_from, hour_to, dayofweek, None, week_type) for week_type, dayofweek, hour_from, hour_to in attendances], key=lambda att: att.dayofweek)
+            attendances = [DummyAttendance(hour_from, hour_to, dayofweek, None, week_type) for week_type, dayofweek, hour_from, hour_to in attendances]
 
-        # If we can't find any attendances on the exact days of the request,
-        # we default to the widest possible range that exists in the schedule.
-        default_start = min((attendance.hour_from for attendance in attendances), default=0)
-        default_end = max((attendance.hour_to for attendance in attendances), default=0)
+            # If we can't find any attendances on the exact days of the request,
+            # we default to the widest possible range that exists in the schedule.
+            default_start = min((attendance.hour_from for attendance in attendances), default=0)
+            default_end = max((attendance.hour_to for attendance in attendances), default=0)
 
         start_week_type = 0
         end_week_type = 0

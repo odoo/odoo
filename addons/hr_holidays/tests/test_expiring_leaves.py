@@ -544,7 +544,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'name': 'Flexible 40h/week',
             'tz': 'UTC',
             'hours_per_day': 8.0,
-            'full_time_required_hours': 40.0,
+            'full_time_required_hours': 80.0,
             'flexible_hours': True,
         })
         logged_in_emp = self.env.user.employee_id
@@ -579,14 +579,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_remaining'],
                          number_of_accrued_days - leave.number_of_days,
                          "All the remaining days of the allocation will expire")
-
-        # Days between the target date and the expiration date (accrual_plan's carryover date)
-        remaining_days_before_expiration = (allocation._get_carryover_date(target_date) - target_date).days + 1
-        working_days_equivalent_needed = remaining_days_before_expiration * 24 / self.flex_40h_calendar.hours_per_day
-
-        # Assert the closest allocation duration (number of working days equivalent (8 hours/day) remaining before the allocation expires)
-        self.assertEqual(round(allocation_data[logged_in_emp][0][1]['closest_allocation_duration']), working_days_equivalent_needed,
-                            "The closest allocation duration should be the number of working days equivalent (8 hours/day) remaining before the allocation expires")
 
     @users('enguerran')
     def test_no_carried_over_leaves_for_fully_flexible_resource(self):

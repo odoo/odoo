@@ -429,18 +429,71 @@ class ResourceCalendar(models.Model):
         result_per_resource_id = dict()
         for tz, resources in resources_per_tz.items():
             res = result_per_tz[tz]
+
             res_intervals = Intervals(res, keep_distinct=True)
+            start_datetime = start_dt.astimezone(tz)
+            end_datetime = end_dt.astimezone(tz)
+
             for resource in resources:
-                if resource and resource._is_flexible():
-                # If the resource is flexible, return the whole period from start_dt to end_dt with a dummy attendance
+                if resource and resource._is_fully_flexible():
                     dummy_attendance = self.env['resource.calendar.attendance'].new({
                         'duration_hours': (end - start).total_seconds() / 3600,
                         'duration_days': (end - start).days + 1,
                     })
                     result_per_resource_id[resource.id] = Intervals([(start, end, dummy_attendance)], keep_distinct=True)
+                elif resource and resource.calendar_id.flexible_hours:
+                    # For flexible Calendars, we create intervals to fill in the weekly intervals with the average daily hours
+                    # until the full time required hours are met. This gives us the most correct approximation when looking at a daily
+                    # and weekly range for time offs and overtime calculations and work entry generation
+                    start_date = start_datetime.date()
+                    end_datetime_adjusted = end_datetime - relativedelta(seconds=1)
+                    end_date = end_datetime_adjusted.date()
+
+                    full_time_required_hours = resource.calendar_id.full_time_required_hours
+                    max_hours_per_day = resource.calendar_id.hours_per_day
+
+                    intervals = []
+                    current_monday = start_date - timedelta(days=start_date.weekday())
+
+                    while current_monday <= end_date:
+                        current_sunday = current_monday + timedelta(days=6)
+
+                        week_start = max(current_monday, start_date)
+                        week_end = min(current_sunday, end_date)
+
+                        if current_monday < start_date:
+                            prior_days = (start_date - current_monday).days
+                            prior_hours = min(full_time_required_hours, max_hours_per_day * prior_days)
+                        else:
+                            prior_hours = 0
+
+                        remaining_hours = max(0, full_time_required_hours - prior_hours)
+
+                        current_day = week_start
+                        while current_day <= week_end:
+                            if remaining_hours > 0:
+                                allocate_hours = min(max_hours_per_day, remaining_hours)
+                                remaining_hours -= allocate_hours
+
+                                # Create interval centered at 12:00 PM
+                                midpoint = tz.localize(datetime.combine(current_day, time(12, 0)))
+                                start_time = midpoint - timedelta(hours=allocate_hours / 2)
+                                end_time = midpoint + timedelta(hours=allocate_hours / 2)
+
+                                dummy_attendance = self.env['resource.calendar.attendance'].new({
+                                    'duration_hours': allocate_hours,
+                                    'duration_days': 1,
+                                })
+
+                                intervals.append((start_time, end_time, dummy_attendance))
+
+                            current_day += timedelta(days=1)
+
+                        current_monday += timedelta(days=7)
+
+                    result_per_resource_id[resource.id] = Intervals(intervals, keep_distinct=True)
                 elif resource in per_resource_result:
-                    resource_specific_result = [(max(bounds_per_tz[tz][0], tz.localize(val[0])), min(bounds_per_tz[tz][1], tz.localize(val[1])), val[2])
-                        for val in per_resource_result[resource]]
+                    resource_specific_result = [(max(bounds_per_tz[tz][0], tz.localize(val[0])), min(bounds_per_tz[tz][1], tz.localize(val[1])), val[2]) for val in per_resource_result[resource]]
                     result_per_resource_id[resource.id] = Intervals(itertools.chain(res, resource_specific_result), keep_distinct=True)
                 else:
                     result_per_resource_id[resource.id] = res_intervals
@@ -509,7 +562,7 @@ class ResourceCalendar(models.Model):
                     tz_dates[(tz, end_dt)] = end
                 dt0 = leave_date_from.astimezone(tz)
                 dt1 = leave_date_to.astimezone(tz)
-                if leave_resource and leave_resource._is_flexible():
+                if leave_resource and leave_resource._is_fully_flexible():
                     dt0, dt1 = self._handle_flexible_leave_interval(dt0, dt1, leave)
                 result[resource.id].append((max(start, dt0), min(end, dt1), leave))
 
