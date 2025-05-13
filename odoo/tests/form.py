@@ -123,6 +123,8 @@ class Form:
         object.__setattr__(self, '_models_info', views['models'])
         # self._models_info = {model_name: {fields: {field_name: field_info}}}
         tree = etree.fromstring(views['views']['form']['arch'])
+
+
         view = self._process_view(tree, record)
         object.__setattr__(self, '_view', view)
         # self._view = {

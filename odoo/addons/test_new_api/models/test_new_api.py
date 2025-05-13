@@ -2344,3 +2344,11 @@ class Test_New_ApiCreatePerformance(models.Model):
     _name = _description = 'test_new_api.create.performance.line'
 
     perf_id = fields.Many2one('test_new_api.create.performance')
+
+
+class OnchangePartialView(models.Model):
+    _name = _description = 'test_new_api.onchange.partial'
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company', default=lambda r: r.env.company)
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')

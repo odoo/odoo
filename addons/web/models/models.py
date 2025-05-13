@@ -1544,7 +1544,7 @@ class Base(models.AbstractModel):
             # set changed values to null in initial_values; not setting them
             # triggers default_get() on the new record when creating snapshot0
             initial_values.update(dict.fromkeys(field_names, False))
-            record = self.new(initial_values, origin=self)
+            record = self.new(initial_values)
 
         # make parent records match with the form values; this ensures that
         # computed fields on parent records have all their dependencies at
@@ -1582,7 +1582,7 @@ class Base(models.AbstractModel):
             for field in self.pool.field_computed.get(mod_field) or [mod_field]
         ]
         with self.env.protecting(protected, record):
-            record.modified(todo)
+            record.modified(list(self._fields) if first_call else todo, create=first_call)
             for field_name in todo:
                 field = self._fields[field_name]
                 if field.inherited:
