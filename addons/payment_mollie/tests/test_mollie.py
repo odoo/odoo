@@ -30,12 +30,11 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         url = self._build_url(MollieController._webhook_url)
         with patch(
-            'odoo.addons.payment_mollie.models.payment_provider.PaymentProvider'
-            '._mollie_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
             return_value={
                 'status': 'paid',
                 'amount': {'value': str(self.amount), 'currency': self.currency.name},
             },
         ):
-            self._make_http_post_request(url, data=self.notification_data)
+            self._make_http_post_request(url, data=self.payment_data)
         self.assertEqual(tx.state, 'done')

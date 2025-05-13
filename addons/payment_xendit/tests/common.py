@@ -17,7 +17,7 @@ class XenditCommon(PaymentCommon):
         cls.provider = cls.xendit
         cls.amount = 11100
         cls.currency = cls._enable_currency('IDR')
-        cls.webhook_notification_data = {
+        cls.webhook_payment_data = {
             'amount': cls.amount,
             'status': 'PAID',
             'created': '2023-07-12T09:31:13.111Z',
@@ -35,7 +35,7 @@ class XenditCommon(PaymentCommon):
             'payment_channel': 'BNI',
             'payment_destination': '880891384013',
         }
-        cls.charge_notification_data = {
+        cls.charge_payment_data = {
             'status': 'CAPTURED',
             'authorized_amount': cls.amount,
             'capture_amount': cls.amount,

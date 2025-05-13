@@ -1,18 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import pprint
-
-import requests
 import xml.etree.ElementTree as ET
 
-from odoo import _, fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_dpo import const
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentProvider(models.Model):
@@ -26,41 +22,34 @@ class PaymentProvider(models.Model):
         groups='base.group_system',
     )
 
-    # === BUSINESS METHODS === #
-
-    def _dpo_make_request(self, payload=None):
-        """ Make a request to DPO API to create or verify the Transaction Token.
-
-        Note: self.ensure_one()
-
-        :param dict payload: The payload of the request.
-        :return: The JSON-formatted content of the response.
-        :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
-        """
-        self.ensure_one()
-        api_url = 'https://secure.3gdirectpay.com/API/v6/'
-        headers = {'Content-Type': 'application/xml; charset=utf-8'}
-        try:
-            response = requests.post(url=api_url, data=payload, headers=headers, timeout=10)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", api_url, pprint.pformat(payload)
-                )
-                raise ValidationError("DPO: " + _("The communication with the API failed."))
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach %s", api_url)
-            raise ValidationError("DPO: " + _("The communication with the API failed."))
-        root = ET.fromstring(response.content.decode('utf-8'))
-        transaction_data = {element.tag: element.text for element in root}
-
-        return transaction_data
+    # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
+        self.ensure_one()
         if self.code != 'dpo':
-            return default_codes
+            return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
+
+    # === REQUEST HELPERS === #
+
+    def _build_request_url(self, endpoint, **kwargs):
+        """Override of `payment` to build the request URL."""
+        if self.code != 'dpo':
+            return super()._build_request_url(endpoint, **kwargs)
+        return 'https://secure.3gdirectpay.com/API/v6/'
+
+    def _build_request_headers(self, *args, **kwargs):
+        """Override of `payment` to build the request headers."""
+        if self.code != 'dpo':
+            return super()._build_request_headers(*args, **kwargs)
+        return {'Content-Type': 'application/xml; charset=utf-8'}
+
+    def _parse_response_content(self, response, **kwargs):
+        """Override of `payment` to parse the response content."""
+        if self.code != 'dpo':
+            return super()._parse_response_content(response, **kwargs)
+
+        root = ET.fromstring(response.content.decode('utf-8'))
+        transaction_data = {element.tag: element.text for element in root}
+        return transaction_data

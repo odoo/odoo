@@ -53,10 +53,29 @@ class AuthorizeTest(AuthorizeCommon):
             'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI'
             '.get_transaction_details', return_value={'transaction': {'authAmount': self.amount}},
         ):
-            source_tx._handle_notification_data('authorize', {
+            source_tx._process('authorize', {
                 'response': {
                     'x_response_code': '1',
                     'x_type': 'void',
                 },
             })
         self.assertEqual(source_tx.state, 'cancel')
+
+    @mute_logger('odoo.addons.payment_authorize.models.payment_transaction')
+    def test_extract_token_values_maps_fields_correctly(self):
+        tx = self._create_transaction('direct')
+        payment_data = {
+            'payment_details': '1234',
+            'payment_profile_id': '123456789',
+            'profile_id': '987654321',
+        }
+        with patch(
+            'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI'
+            '.create_customer_profile', return_value=payment_data,
+        ):
+            token_values = tx._extract_token_values({})
+        self.assertDictEqual(token_values, {
+            'payment_details': '1234',
+            'provider_ref': '123456789',
+            'authorize_profile': '987654321',
+        })

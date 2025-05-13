@@ -15,11 +15,11 @@ class MercadoPagoCommon(PaymentCommon):
             'mercado_pago_access_token': 'TEST-4850554046279901-TEST-TEST',
         })
         cls.payment_id = '123456'
-        cls.redirect_notification_data = {
+        cls.redirect_payment_data = {
             'external_reference': cls.reference,
             'payment_id': cls.payment_id,
         }
-        cls.webhook_notification_data = {
+        cls.webhook_payment_data = {
             'action': 'payment.created',
             'data': {'id': cls.payment_id},
         }

@@ -23,7 +23,7 @@ class StripeCommon(PaymentCommon):
             'amount': payment_utils.to_minor_currency_units(cls.amount, cls.currency),
             'currency': cls.currency.name.lower(),
         }
-        cls.notification_data = {
+        cls.payment_data = {
             'data': {
                 'object': {
                     'id': 'pi_3KTk9zAlCFm536g81Wy7RCPH',
@@ -46,7 +46,7 @@ class StripeCommon(PaymentCommon):
             'status': 'succeeded',
             **cls.notification_amount_and_currency,
         }
-        cls.refund_notification_data = {
+        cls.refund_payment_data = {
             'data': {
                 'object': {
                     'id': 'ch_000000000000000000000000',
@@ -63,7 +63,7 @@ class StripeCommon(PaymentCommon):
             },
             'type': 'charge.refunded'
         }
-        cls.canceled_refund_notification_data = {
+        cls.canceled_refund_payment_data = {
             'data': {
                 'object': dict(cls.refund_object, status='failed'),
             },

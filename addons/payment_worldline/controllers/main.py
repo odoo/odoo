@@ -2,7 +2,6 @@
 
 import hashlib
 import hmac
-import logging
 import pprint
 from base64 import b64encode
 
@@ -12,8 +11,10 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment.logging import get_payment_logger
 
-_logger = logging.getLogger(__name__)
+
+_logger = get_payment_logger(__name__)
 
 
 class WorldlineController(http.Controller):
@@ -22,9 +23,9 @@ class WorldlineController(http.Controller):
 
     @http.route(_return_url, type='http', auth='public', methods=['GET'])
     def worldline_return_from_checkout(self, **data):
-        """ Process the notification data sent by Worldline after redirection.
+        """Process the payment data sent by Worldline after redirection.
 
-        :param dict data: The notification data, including the provider id appended to the URL in
+        :param dict data: The payment data, including the provider id appended to the URL in
                           `_get_specific_rendering_values`.
         """
         _logger.info("Handling redirection from Worldline with data:\n%s", pprint.pformat(data))
@@ -35,66 +36,56 @@ class WorldlineController(http.Controller):
             _logger.warning("Received payment data with invalid provider id.")
             raise Forbidden()
 
-        # Fetch the checkout session data from Worldline.
-        checkout_session_data = provider_sudo._worldline_make_request(
-            f'hostedcheckouts/{data["hostedCheckoutId"]}', method='GET'
-        )
-        _logger.info(
-            "Response of '/hostedcheckouts/<hostedCheckoutId>' request:\n%s",
-            pprint.pformat(checkout_session_data)
-        )
-        notification_data = checkout_session_data.get('createdPaymentOutput', {})
-
-        # Handle the notification data.
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-            'worldline', notification_data
-        )
-        tx_sudo._handle_notification_data('worldline', notification_data)
+        try:
+            # Fetch the checkout session data from Worldline.
+            checkout_session_data = provider_sudo._send_api_request(
+                'GET', f'hostedcheckouts/{data["hostedCheckoutId"]}'
+            )
+        except ValidationError:
+            _logger.error("Unable to process the payment data")
+        else:
+            payment_data = checkout_session_data.get('createdPaymentOutput', {})
+            request.env['payment.transaction'].sudo()._process(
+                'worldline', payment_data
+            )
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
     def worldline_webhook(self):
-        """ Process the notification data sent by Worldline to the webhook.
+        """Process the payment data sent by Worldline to the webhook.
 
         See https://docs.direct.worldline-solutions.com/en/integration/api-developer-guide/webhooks.
 
         :return: An empty string to acknowledge the notification.
         :rtype: str
         """
-        notification_data = request.get_json_data()
+        data = request.get_json_data()
         _logger.info(
-            "Notification received from Worldline with data:\n%s", pprint.pformat(notification_data)
+            "Notification received from Worldline with data:\n%s", pprint.pformat(data)
         )
-        try:
-            # Check the integrity of the notification.
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                'worldline', notification_data
-            )
+
+        # Check the integrity of the notification.
+        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('worldline', data)
+        if tx_sudo:
             received_signature = request.httprequest.headers.get('X-GCS-Signature')
             request_data = request.httprequest.data
-            self._verify_notification_signature(request_data, received_signature, tx_sudo)
-
-            # Handle the notification data.
-            tx_sudo._handle_notification_data('worldline', notification_data)
-        except ValidationError:  # Acknowledge the notification to avoid getting spammed.
-            _logger.exception("Unable to handle the notification data; skipping to acknowledge.")
-
+            self._verify_signature(request_data, received_signature, tx_sudo)
+            tx_sudo._process('worldline', data)
         return request.make_json_response('')  # Acknowledge the notification.
 
     @staticmethod
-    def _verify_notification_signature(request_data, received_signature, tx_sudo):
-        """ Check that the received signature matches the expected one.
+    def _verify_signature(request_data, received_signature, tx_sudo):
+        """Check that the received signature matches the expected one.
 
         :param dict|bytes request_data: The request data.
         :param str received_signature: The signature to compare with the expected signature.
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the notification
-                                            data.
+        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
         :return: None
         :raise Forbidden: If the signatures don't match.
         """
         # Retrieve the received signature from the payload.
         if not received_signature:
-            _logger.warning("Received notification with missing signature.")
+            _logger.warning("Received payment data with missing signature.")
             raise Forbidden()
 
         # Compare the received signature with the expected signature computed from the payload.
@@ -103,5 +94,5 @@ class WorldlineController(http.Controller):
             hmac.new(webhook_secret.encode(), request_data, hashlib.sha256).digest()
         )
         if not hmac.compare_digest(received_signature.encode(), expected_signature):
-            _logger.warning("Received notification with invalid signature.")
+            _logger.warning("Received payment data with invalid signature.")
             raise Forbidden()

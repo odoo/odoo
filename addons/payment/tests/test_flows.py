@@ -347,7 +347,7 @@ class TestFlows(PaymentHttpCommon):
         self.user = self.portal_user
         with patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._send_payment_request'
+            '._charge_with_token'
         ) as patched:
             self._portal_transaction(
                 **self._prepare_transaction_values(self.payment_method_id, None, 'direct')
@@ -361,7 +361,7 @@ class TestFlows(PaymentHttpCommon):
         self.user = self.portal_user
         with patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._send_payment_request'
+            '._charge_with_token'
         ) as patched:
             self._portal_transaction(
                 **self._prepare_transaction_values(self.payment_method_id, None, 'redirect')
@@ -375,7 +375,7 @@ class TestFlows(PaymentHttpCommon):
         self.user = self.portal_user
         with patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._send_payment_request'
+            '._charge_with_token'
         ) as patched:
             self._portal_transaction(
                 **self._prepare_transaction_values(None, self._create_token().id, 'token')

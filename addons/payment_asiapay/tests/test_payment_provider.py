@@ -34,6 +34,6 @@ class TestPaymentProvider(AsiaPayCommon):
     def test_signature_calculation_for_incoming_data(self):
         """ Test that the calculated signature matches the expected signature for incoming data. """
         calculated_signature = self.asiapay._asiapay_calculate_signature(
-            self.webhook_notification_data, incoming=True
+            self.webhook_payment_data, incoming=True
         )
         self.assertEqual(calculated_signature, '3e5bf55d9a23969130a6686db7aa4f0230956d0a')

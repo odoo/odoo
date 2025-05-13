@@ -1,19 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import pprint
-
 from werkzeug import urls
 
-from odoo import _, models
+from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mollie import const
 from odoo.addons.payment_mollie.controllers.main import MollieController
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -28,13 +26,15 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific rendering values
         :rtype: dict
         """
-        res = super()._get_specific_rendering_values(processing_values)
         if self.provider_code != 'mollie':
-            return res
+            return super()._get_specific_rendering_values(processing_values)
 
         payload = self._mollie_prepare_payment_request_payload()
-        _logger.info("sending '/payments' request for link creation:\n%s", pprint.pformat(payload))
-        payment_data = self.provider_id._mollie_make_request('/payments', data=payload)
+        try:
+            payment_data = self._send_api_request('POST', '/payments', json=payload)
+        except ValidationError as error:
+            self._set_error(str(error))
+            return {}
 
         # The provider reference is set now to allow fetching the payment status after redirection
         self.provider_reference = payment_data.get('id')
@@ -78,67 +78,42 @@ class PaymentTransaction(models.Model):
             'webhookUrl': f'{webhook_url}?ref={self.reference}',
         }
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of payment to find the transaction based on Mollie data.
+    @api.model
+    def _extract_reference(self, provider_code, payment_data):
+        """Override of `payment` to extract the reference from the payment data."""
+        if provider_code != 'mollie':
+            return super()._extract_reference(provider_code, payment_data)
+        return payment_data.get('ref')
 
-        :param str provider_code: The code of the provider that handled the transaction
-        :param dict notification_data: The notification data sent by the provider
-        :return: The transaction if found
-        :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if the data match no transaction
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'mollie' or len(tx) == 1:
-            return tx
-
-        tx = self.search(
-            [('reference', '=', notification_data.get('ref')), ('provider_code', '=', 'mollie')]
-        )
-        if not tx:
-            raise ValidationError("Mollie: " + _(
-                "No transaction found matching reference %s.", notification_data.get('ref')
-            ))
-        return tx
-
-    def _compare_notification_data(self, notification_data):
-        """ Override of `payment` to compare the transaction based on Mollie data.
-
-        :param dict notification_data: The notification data sent by the provider.
-        :return: None
-        :raise ValidationError: If the transaction's amount and currency don't match the
-            notification data.
-        """
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
         if self.provider_code != 'mollie':
-            return super()._compare_notification_data(notification_data)
+            return super()._extract_amount_data(payment_data)
 
-        amount_data = notification_data.get('amount', {})
+        amount_data = payment_data.get('amount', {})
         amount = amount_data.get('value')
         currency_code = amount_data.get('currency')
-        self._validate_amount_and_currency(amount, currency_code)
+        return {
+            'amount': float(amount),
+            'currency_code': currency_code,
+        }
 
-    def _process_notification_data(self, notification_data):
-        """ Override of payment to process the transaction based on Mollie data.
-
-        Note: self.ensure_one()
-
-        :param dict notification_data: The notification data sent by the provider
-        :return: None
-        """
-        super()._process_notification_data(notification_data)
+    def _apply_updates(self, payment_data):
+        """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != 'mollie':
-            return
+            return super()._apply_updates(payment_data)
 
         # Update the payment method.
-        payment_method_type = notification_data.get('method', '')
+        payment_method_type = payment_data.get('method', '')
         if payment_method_type == 'creditcard':
-            payment_method_type = notification_data.get('details', {}).get('cardLabel', '').lower()
+            payment_method_type = payment_data.get('details', {}).get('cardLabel', '').lower()
         payment_method = self.env['payment.method']._get_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
-        payment_status = notification_data.get('status')
+        payment_status = payment_data.get('status')
         if payment_status == 'pending':
             self._set_pending()
         elif payment_status == 'authorized':
@@ -146,12 +121,10 @@ class PaymentTransaction(models.Model):
         elif payment_status == 'paid':
             self._set_done()
         elif payment_status in ['expired', 'canceled', 'failed']:
-            self._set_canceled("Mollie: " + _("Cancelled payment with status: %s", payment_status))
+            self._set_canceled(_("Cancelled payment with status: %s", payment_status))
         else:
             _logger.info(
-                "received data with invalid payment status (%s) for transaction with reference %s",
+                "Received data with invalid payment status (%s) for transaction %s.",
                 payment_status, self.reference
             )
-            self._set_error(
-                "Mollie: " + _("Received data with invalid payment status: %s", payment_status)
-            )
+            self._set_error(_("Received data with invalid payment status: %s.", payment_status))

@@ -18,7 +18,7 @@ class BuckarooCommon(PaymentCommon):
         cls.provider = cls.buckaroo
         cls.currency = cls.currency_euro
 
-        cls.sync_notification_data = {
+        cls.sync_payment_data = {
             'brq_payment': 'ABCDEF0123456789ABCDEF0123456789',
             'brq_payment_method': 'paypal',
             'brq_statuscode': '190',  # confirmed
@@ -31,7 +31,7 @@ class BuckarooCommon(PaymentCommon):
             'brq_signature': '5d389aa4f563cd99666a2e6bef79da3d4a32eb50',
         }
 
-        cls.async_notification_data = {
+        cls.async_payment_data = {
             'brq_transactions': '0123456789ABCDEF0123456789ABCDEF',
             'brq_transaction_method': 'paypal',
             'brq_statuscode': '190',  # confirmed

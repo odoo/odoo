@@ -58,19 +58,19 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         self.assertEqual(form_info['method'], 'get')
         self.assertDictEqual(form_info['inputs'], {})
 
-    def test_processing_notification_data_confirms_transaction(self):
-        """ Test that the transaction state is set to 'done' when the notification data indicate a
+    def test_apply_updates_confirms_transaction(self):
+        """ Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment. """
         tx = self._create_transaction(flow='redirect')
-        tx._process_notification_data(self.verification_data)
+        tx._apply_updates(self.verification_data)
         self.assertEqual(tx.state, 'done')
 
     @mute_logger('odoo.addons.payment_mercado_pago.models.payment_transaction')
-    def test_processing_notification_data_rejects_transaction(self):
-        """ Test that the transaction state is set to 'error' when the notification data indicate a status of
+    def test_apply_updates_rejects_transaction(self):
+        """ Test that the transaction state is set to 'error' when the payment data indicate a status of
         404 error payment. """
         tx = self._create_transaction(flow='redirect')
-        tx._process_notification_data(self.verification_data_for_error_state)
+        tx._apply_updates(self.verification_data_for_error_state)
         self.assertEqual(tx.state, 'error')
 
     def test_cop_currency_rounding(self):

@@ -80,5 +80,5 @@ class PaymentRefundWizard(models.TransientModel):
             wizard.has_pending_refund = pending_refunds_count > 0
 
     def action_refund(self):
-        for wizard in self:
-            wizard.transaction_id.action_refund(amount_to_refund=wizard.amount_to_refund)
+        self.ensure_one()
+        return self.transaction_id.action_refund(amount_to_refund=self.amount_to_refund)

@@ -44,24 +44,24 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_buckaroo.models.payment_transaction')
     def test_feedback_processing(self):
-        notification_data = BuckarooController._normalize_data_keys(self.sync_notification_data)
+        payment_data = BuckarooController._normalize_data_keys(self.sync_payment_data)
         tx = self._create_transaction(flow='redirect')
-        tx._handle_notification_data('buckaroo', notification_data)
+        tx._process('buckaroo', payment_data)
         self.assertEqual(tx.state, 'done')
-        self.assertEqual(tx.provider_reference, notification_data.get('brq_transactions'))
-        tx._handle_notification_data('buckaroo', notification_data)
+        self.assertEqual(tx.provider_reference, payment_data.get('brq_transactions'))
+        tx._process('buckaroo', payment_data)
         self.assertEqual(tx.state, 'done', 'Buckaroo: validation did not put tx into done state')
-        self.assertEqual(tx.provider_reference, notification_data.get('brq_transactions'))
+        self.assertEqual(tx.provider_reference, payment_data.get('brq_transactions'))
 
         self.reference = 'Test Transaction 2'
         tx = self._create_transaction(flow='redirect')
-        notification_data = BuckarooController._normalize_data_keys(dict(
-            self.sync_notification_data,
+        payment_data = BuckarooController._normalize_data_keys(dict(
+            self.sync_payment_data,
             brq_invoicenumber=self.reference,
             brq_statuscode='2',
             brq_signature='b8e54e26b2b5a5e697b8ed5085329ea712fd48b2',
         ))
-        self.env['payment.transaction']._handle_notification_data('buckaroo', notification_data)
+        self.env['payment.transaction']._process('buckaroo', payment_data)
         self.assertEqual(tx.state, 'error')
 
     @mute_logger('odoo.addons.payment_buckaroo.controllers.main')
@@ -70,10 +70,9 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         url = self._build_url(BuckarooController._webhook_url)
         with patch(
-            'odoo.addons.payment_buckaroo.controllers.main.BuckarooController'
-            '._verify_notification_signature'
+            'odoo.addons.payment_buckaroo.controllers.main.BuckarooController._verify_signature'
         ):
-            self._make_http_post_request(url, data=self.async_notification_data)
+            self._make_http_post_request(url, data=self.async_payment_data)
         self.assertEqual(tx.state, 'done')
 
     @mute_logger('odoo.addons.payment_buckaroo.controllers.main')
@@ -82,13 +81,11 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         self._create_transaction('redirect')
         url = self._build_url(BuckarooController._return_url)
         with patch(
-            'odoo.addons.payment_buckaroo.controllers.main.BuckarooController'
-            '._verify_notification_signature'
+            'odoo.addons.payment_buckaroo.controllers.main.BuckarooController._verify_signature'
         ) as signature_check_mock, patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_notification_data'
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._process'
         ):
-            self._make_http_post_request(url, data=self.async_notification_data)
+            self._make_http_post_request(url, data=self.async_payment_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_accept_notification_with_valid_signature(self):
@@ -96,9 +93,9 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         self._assert_does_not_raise(
             Forbidden,
-            BuckarooController._verify_notification_signature,
-            self.async_notification_data,
-            self.async_notification_data['brq_signature'],
+            BuckarooController._verify_signature,
+            self.async_payment_data,
+            self.async_payment_data['brq_signature'],
             tx,
         )
 
@@ -107,11 +104,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         """ Test the verification of a notification with a missing signature. """
         tx = self._create_transaction('redirect')
         self.assertRaises(
-            Forbidden,
-            BuckarooController._verify_notification_signature,
-            self.async_notification_data,
-            None,
-            tx,
+            Forbidden, BuckarooController._verify_signature, self.async_payment_data, None, tx
         )
 
     @mute_logger('odoo.addons.payment_buckaroo.controllers.main')
@@ -119,11 +112,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         """ Test the verification of a notification with an invalid signature. """
         tx = self._create_transaction('redirect')
         self.assertRaises(
-            Forbidden,
-            BuckarooController._verify_notification_signature,
-            self.async_notification_data,
-            'dummy',
-            tx,
+            Forbidden, BuckarooController._verify_signature, self.async_payment_data, 'dummy', tx
         )
 
     def test_signature_is_computed_based_on_lower_case_data_keys(self):

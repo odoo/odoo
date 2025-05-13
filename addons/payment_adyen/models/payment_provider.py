@@ -1,19 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import logging
 import re
 
-import requests
-
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_adyen import const
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentProvider(models.Model):
@@ -40,7 +37,7 @@ class PaymentProvider(models.Model):
         required_if_provider='adyen',
     )
 
-    #=== CRUD METHODS ===#
+    # === CRUD METHODS === #
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -51,6 +48,13 @@ class PaymentProvider(models.Model):
     def write(self, vals):
         self._adyen_extract_prefix_from_api_url(vals)
         return super().write(vals)
+
+    def _get_default_payment_method_codes(self):
+        """Override of `payment` to return the default payment method codes."""
+        self.ensure_one()
+        if self.code != 'adyen':
+            return super()._get_default_payment_method_codes()
+        return const.DEFAULT_PAYMENT_METHOD_CODES
 
     @api.model
     def _adyen_extract_prefix_from_api_url(self, values):
@@ -64,7 +68,7 @@ class PaymentProvider(models.Model):
                 r'(?:https://)?(\w+-\w+).*', r'\1', values['adyen_api_url_prefix']
             )
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS === #
 
     def _compute_feature_support_fields(self):
         """ Override of `payment` to enable additional features. """
@@ -75,80 +79,7 @@ class PaymentProvider(models.Model):
             'support_tokenization': True,
         })
 
-    #=== BUSINESS METHODS - PAYMENT FLOW ===#
-
-    def _adyen_make_request(self, endpoint, endpoint_param=None, payload=None, method='POST', idempotency_key=None):
-        """ Make a request to Adyen API at the specified endpoint.
-
-        Note: self.ensure_one()
-
-        :param str endpoint: The endpoint to be reached by the request
-        :param str endpoint_param: A variable required by some endpoints which are interpolated with
-                                   it if provided. For example, the provider reference of the source
-                                   transaction for the '/payments/{}/refunds' endpoint.
-        :param dict payload: The payload of the request
-        :param str method: The HTTP method of the request
-        :param str idempotency_key: The idempotency key to pass in the request.
-        :return: The JSON-formatted content of the response
-        :rtype: dict
-        :raise: ValidationError if an HTTP error occurs
-        """
-
-        def _build_url(prefix_, version_, endpoint_):
-            """ Build an API URL by appending the version and endpoint to a base URL.
-
-            The final URL follows this pattern: `<_base>/V<_version>/<_endpoint>`.
-
-            :param str prefix_: The API URL prefix of the account.
-            :param int version_: The version of the endpoint.
-            :param str endpoint_: The endpoint of the URL.
-            :return: The final URL.
-            :rtype: str
-            """
-            prefix_ = prefix_.rstrip('/')  # Remove potential trailing slash
-            endpoint_ = endpoint_.lstrip('/')  # Remove potential leading slash
-            test_mode_ = self.state == 'test'
-            prefix_ = f'{prefix_}.adyen' if test_mode_ else f'{prefix_}-checkout-live.adyenpayments'
-            return f'https://{prefix_}.com/checkout/V{version_}/{endpoint_}'
-
-        self.ensure_one()
-
-        version = const.API_ENDPOINT_VERSIONS[endpoint]
-        endpoint = endpoint if not endpoint_param else endpoint.format(endpoint_param)
-        url = _build_url(self.adyen_api_url_prefix, version, endpoint)
-        headers = {'X-API-Key': self.adyen_api_key}
-        if method == 'POST' and idempotency_key:
-            headers['idempotency-key'] = idempotency_key
-        try:
-            response = requests.request(method, url, json=payload, headers=headers, timeout=60)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "invalid API request at %s with data %s: %s", url, payload, response.text
-                )
-                msg = response.json().get('message', '')
-                raise ValidationError(
-                    "Adyen: " + _("The communication with the API failed. Details: %s", msg)
-                )
-        except requests.exceptions.ConnectionError:
-            _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError("Adyen: " + _("Could not establish the connection to the API."))
-        return response.json()
-
-    def _adyen_compute_shopper_reference(self, partner_id):
-        """ Compute a unique reference of the partner for Adyen.
-
-        This is used for the `shopperReference` field in communications with Adyen and stored in the
-        `adyen_shopper_reference` field on `payment.token` if the payment method is tokenized.
-
-        :param recordset partner_id: The partner making the transaction, as a `res.partner` id
-        :return: The unique reference for the partner
-        :rtype: str
-        """
-        return f'ODOO_PARTNER_{partner_id}'
-
-    #=== BUSINESS METHODS - GETTERS ===#
+    # === BUSINESS METHODS === #
 
     def _adyen_get_inline_form_values(self, pm_code, amount=None, currency=None):
         """ Return a serialized JSON of the required values to render the inline form.
@@ -189,9 +120,50 @@ class PaymentProvider(models.Model):
             'currency': currency_code,
         }
 
-    def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
+    def _adyen_compute_shopper_reference(self, partner_id):
+        """ Compute a unique reference of the partner for Adyen.
+
+        This is used for the `shopperReference` field in communications with Adyen and stored in the
+        `adyen_shopper_reference` field on `payment.token` if the payment method is tokenized.
+
+        :param recordset partner_id: The partner making the transaction, as a `res.partner` id
+        :return: The unique reference for the partner
+        :rtype: str
+        """
+        return f'ODOO_PARTNER_{partner_id}'
+
+    # === REQUEST HELPERS === #
+
+    def _build_request_url(self, endpoint, *, endpoint_param=None, **kwargs):
+        """Override of `payment` to build the request URL based on the API URL prefix.
+
+        The final URL follows the pattern `<_base>/V<_version>/<_endpoint>`.
+        """
         if self.code != 'adyen':
-            return default_codes
-        return const.DEFAULT_PAYMENT_METHOD_CODES
+            return self._build_request_url(endpoint, endpoint_param=endpoint_param, **kwargs)
+
+        version = const.API_ENDPOINT_VERSIONS[endpoint]
+        endpoint = endpoint if not endpoint_param else endpoint.format(endpoint_param)
+        prefix_ = self.adyen_api_url_prefix.rstrip('/')  # Remove potential trailing slash.
+        endpoint = endpoint.lstrip('/')  # Remove potential leading slash.
+        test_mode_ = self.state == 'test'
+        prefix_ = f'{prefix_}.adyen' if test_mode_ else f'{prefix_}-checkout-live.adyenpayments'
+        return f'https://{prefix_}.com/checkout/V{version}/{endpoint}'
+
+    def _build_request_headers(self, method, *args, idempotency_key=None, **kwargs):
+        """Override of `payment` to include the API key and idempotency key in the headers."""
+        if self.code != 'adyen':
+            return self._build_request_headers(
+                method, *args, idempotency_key=idempotency_key, **kwargs
+            )
+
+        headers = {'X-API-Key': self.adyen_api_key}
+        if method == 'POST' and idempotency_key:
+            headers['idempotency-key'] = idempotency_key
+        return headers
+
+    def _parse_response_error(self, response):
+        """Override of `payment` to extract the error message from the response."""
+        if self.code != 'adyen':
+            return super()._parse_response_error(response)
+        return response.json().get('message', '')

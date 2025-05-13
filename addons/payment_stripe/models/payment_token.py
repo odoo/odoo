@@ -1,13 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import pprint
-
 from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.payment.logging import get_payment_logger
 
-_logger = logging.getLogger(__name__)
+
+_logger = get_payment_logger(__name__)
 
 
 class PaymentToken(models.Model):
@@ -32,21 +31,20 @@ class PaymentToken(models.Model):
         self.ensure_one()
 
         # Fetch the available payment method of type 'card' for the given customer
-        response_content = self.provider_id._stripe_make_request(
+        response_content = self.provider_id._send_api_request(
+            'GET',
             'payment_methods',
-            payload={
+            data={
                 'customer': self.provider_ref,
                 'type': 'card',
                 'limit': 1,  # A new customer is created for each new token. Never > 1 card.
             },
-            method='GET'
         )
-        _logger.info("received payment_methods response:\n%s", pprint.pformat(response_content))
 
         # Store the payment method ID on the token
         payment_methods = response_content.get('data', [])
         payment_method_id = payment_methods and payment_methods[0].get('id')
         if not payment_method_id:
-            raise ValidationError("Stripe: " + _("Unable to convert payment token to new API."))
+            raise ValidationError(_("Unable to convert payment token to new API."))
         self.stripe_payment_method = payment_method_id
         _logger.info("converted token with id %s to new API", self.id)

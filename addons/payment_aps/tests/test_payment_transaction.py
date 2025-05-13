@@ -64,9 +64,9 @@ class TestPaymentTransaction(APSCommon):
         self.assertEqual(form_info['method'], 'post')
         self.assertListEqual(list(form_info['inputs'].keys()), expected_input_keys)
 
-    def test_processing_notification_data_confirms_transaction(self):
-        """ Test that the transaction state is set to 'done' when the notification data indicate a
+    def test_processing_payment_data_confirms_transaction(self):
+        """ Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment. """
         tx = self._create_transaction(flow='redirect')
-        tx._process_notification_data(self.notification_data)
+        tx._apply_updates(self.payment_data)
         self.assertEqual(tx.state, 'done')

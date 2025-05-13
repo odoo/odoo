@@ -16,7 +16,7 @@ class NuveiCommon(PaymentHttpCommon):
 
         cls.provider = cls.nuvei
 
-        cls.notification_data = {
+        cls.payment_data = {
             "ppp_status": "OK",
             "currency": "USD",
             "PPP_TransactionID": "489616878",

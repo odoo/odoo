@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import pprint
 
 from odoo import _, http
@@ -8,9 +7,10 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class AuthorizeController(http.Controller):
@@ -27,15 +27,15 @@ class AuthorizeController(http.Controller):
         """
         # Check that the transaction details have not been altered
         if not payment_utils.check_access_token(access_token, reference, partner_id):
-            raise ValidationError("Authorize.Net: " + _("Received tampered payment request data."))
+            raise ValidationError(_("Received tampered payment request data."))
 
-        # Make the payment request to Authorize.Net
+        # Send the payment request to Authorize.Net.
         tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
         response_content = tx_sudo._authorize_create_transaction_request(opaque_data)
 
         # Handle the payment request response
         _logger.info(
-            "payment request response for transaction with reference %s:\n%s",
+            "Payment request response for transaction %s:\n%s",
             reference, pprint.pformat(response_content)
         )
-        tx_sudo._handle_notification_data('authorize', {'response': response_content})
+        tx_sudo._process('authorize', {'response': response_content})

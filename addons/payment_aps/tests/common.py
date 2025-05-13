@@ -18,7 +18,7 @@ class APSCommon(PaymentHttpCommon):
 
         cls.provider = cls.aps
 
-        cls.notification_data = {
+        cls.payment_data = {
             'access_code': cls.provider.aps_access_code,
             'amount': cls.amount,
             'authorization_code': '123456',

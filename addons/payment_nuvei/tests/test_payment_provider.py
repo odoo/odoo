@@ -41,8 +41,8 @@ class TestPaymentProvider(NuveiCommon):
     def test_signature_calculation_for_incoming_data(self):
         """ Test that the calculated signature matches the expected signature for incoming data. """
         calculated_signature = self.provider._nuvei_calculate_signature(
-            self.notification_data, incoming=True
+            self.payment_data, incoming=True
         )
-        received_signature = self.notification_data.get('advanceResponseChecksum')
+        received_signature = self.payment_data.get('advanceResponseChecksum')
         self.assertEqual(calculated_signature, received_signature)
 

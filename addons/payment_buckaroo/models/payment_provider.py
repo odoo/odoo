@@ -20,6 +20,8 @@ class PaymentProvider(models.Model):
     buckaroo_secret_key = fields.Char(
         string="Buckaroo Secret Key", required_if_provider='buckaroo', groups='base.group_system')
 
+    # === COMPUTE METHODS ===#
+
     def _get_supported_currencies(self):
         """ Override of `payment` to return the supported currencies. """
         supported_currencies = super()._get_supported_currencies()
@@ -28,6 +30,17 @@ class PaymentProvider(models.Model):
                 lambda c: c.name in const.SUPPORTED_CURRENCIES
             )
         return supported_currencies
+
+    # === CRUD METHODS ===#
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        self.ensure_one()
+        if self.code != 'buckaroo':
+            return super()._get_default_payment_method_codes()
+        return const.DEFAULT_PAYMENT_METHOD_CODES
+
+    # === BUSINESS METHODS === #
 
     def _buckaroo_get_api_url(self):
         """ Return the API URL according to the state.
@@ -74,12 +87,3 @@ class PaymentProvider(models.Model):
         sign_string += self.buckaroo_secret_key
         # Calculate the SHA-1 hash over the signing string
         return sha1(sign_string.encode('utf-8')).hexdigest()
-
-    # === BUSINESS METHODS ===#
-
-    def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
-        if self.code != 'buckaroo':
-            return default_codes
-        return const.DEFAULT_PAYMENT_METHOD_CODES

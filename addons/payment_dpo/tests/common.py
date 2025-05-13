@@ -16,7 +16,7 @@ class DPOCommon(PaymentCommon):
 
         cls.provider = cls.dpo
 
-        cls.notification_data = {
+        cls.payment_data = {
             'TransID': '123456',
             'CompanyRef': 'Test Transaction',
             'CustomerCreditType': 'VISA',

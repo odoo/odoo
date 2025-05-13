@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import pprint
 import re
 import time
 from datetime import datetime
@@ -13,11 +11,12 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_razorpay import const
 from odoo.addons.payment_razorpay.controllers.main import RazorpayController
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -33,15 +32,15 @@ class PaymentTransaction(models.Model):
         :return: The provider-specific processing values.
         :rtype: dict
         """
-        res = super()._get_specific_processing_values(processing_values)
         if self.provider_code != 'razorpay':
-            return res
+            return super()._get_specific_processing_values(processing_values)
 
         if self.operation in ('online_token', 'offline'):
             return {}
 
-        customer_id = self._razorpay_create_customer()['id']
-        order_id = self._razorpay_create_order(customer_id)['id']
+        customer_id = self._razorpay_create_customer().get('id')
+        order_id = self._razorpay_create_order(customer_id).get('id')
+
         return {
             'razorpay_key_id': self.provider_id.razorpay_key_id,
             'razorpay_public_token': self.provider_id.razorpay_public_token,
@@ -67,15 +66,12 @@ class PaymentTransaction(models.Model):
             'contact': self.partner_phone and self._validate_phone_number(self.partner_phone) or '',
             'fail_existing': '0',  # Don't throw an error if the customer already exists.
         }
-        _logger.info(
-            "Sending '/customers' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(payload)
-        )
-        customer_data = self.provider_id._razorpay_make_request('customers', payload=payload)
-        _logger.info(
-            "Response of '/customers' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(customer_data)
-        )
+        customer_data = {}
+        try:
+            customer_data = self._send_api_request('POST', 'customers', json=payload)
+        except ValidationError as e:
+            self._set_error(str(e))
+
         return customer_data
 
     @api.model
@@ -88,14 +84,14 @@ class PaymentTransaction(models.Model):
         :raise ValidationError: If the phone number is missing or incorrect.
         """
         if not phone and self.tokenize:
-            raise ValidationError("Razorpay: " + _("The phone number is missing."))
+            raise ValidationError(_("The phone number is missing."))
 
         try:
             phone = self._phone_format(
                 number=phone, country=self.partner_country_id, raise_exception=self.tokenize
             )
         except Exception:
-            raise ValidationError("Razorpay: " + _("The phone number is invalid."))
+            raise ValidationError(_("The phone number is invalid."))
         return phone
 
     def _razorpay_create_order(self, customer_id=None):
@@ -107,15 +103,11 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         payload = self._razorpay_prepare_order_payload(customer_id=customer_id)
-        _logger.info(
-            "Sending '/orders' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(payload)
-        )
-        order_data = self.provider_id._razorpay_make_request('orders', payload=payload)
-        _logger.info(
-            "Response of '/orders' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(order_data)
-        )
+        order_data = {}
+        try:
+            order_data = self._send_api_request('POST', 'orders', json=payload)
+        except ValidationError as e:
+            self._set_error(str(e))
         return order_data
 
     def _razorpay_prepare_order_payload(self, customer_id=None):
@@ -195,19 +187,9 @@ class PaymentTransaction(models.Model):
         return inr_currency._convert(amount, currency_id)
 
     def _send_payment_request(self):
-        """ Override of `payment` to send a payment request to Razorpay.
-
-        Note: self.ensure_one()
-
-        :return: None
-        :raise UserError: If the transaction is not linked to a token.
-        """
-        super()._send_payment_request()
+        """Override of `payment` to send a payment request to Razorpay."""
         if self.provider_code != 'razorpay':
-            return
-
-        if not self.token_id:
-            raise UserError("Razorpay: " + _("The transaction is not linked to a token."))
+            return super()._send_payment_request()
 
         # Prevent multiple token payments for the same document within 36 hours. Another transaction
         # with the same token could be pending processing due to Razorpay waiting 24 hours.
@@ -224,13 +206,11 @@ class PaymentTransaction(models.Model):
             ('id', '!=', self.id),
         ], limit=1)
         if earlier_pending_tx:
-            raise UserError(
-                "Razorpay: " + _(
-                    "Your last payment with reference %s will soon be processed. Please wait up to"
-                    " 24 hours before trying again, or use another payment method.",
-                    earlier_pending_tx.reference
-                )
-            )
+            self._set_error(_(
+                "Your last payment %s will soon be processed. Please wait up to 24 hours before"
+                " trying again, or use another payment method.", earlier_pending_tx.reference
+            ))
+            return
 
         try:
             order_data = self._razorpay_create_order()
@@ -247,155 +227,111 @@ class PaymentTransaction(models.Model):
                 'description': self.reference,
                 'recurring': '1',
             }
-            _logger.info(
-                "Sending '/payments/create/recurring' request for transaction with reference %s:\n%s",
-                self.reference, pprint.pformat(payload)
+            recurring_payment_data = self._send_api_request(
+                'POST', 'payments/create/recurring', json=payload
             )
-            recurring_payment_data = self.provider_id._razorpay_make_request(
-                'payments/create/recurring', payload=payload
-            )
-            _logger.info(
-                "Response of '/payments/create/recurring' request for transaction with reference "
-                "%s:\n%s", self.reference, pprint.pformat(recurring_payment_data)
-            )
-            self._handle_notification_data('razorpay', recurring_payment_data)
         except ValidationError as e:
-            if self.operation == 'offline':
-                self._set_error(str(e))
-            else:
-                raise
+            self._set_error(str(e))
+        else:
+            self._process('razorpay', recurring_payment_data)
 
-    def _send_refund_request(self, amount_to_refund=None):
-        """ Override of `payment` to send a refund request to Razorpay.
-
-        Note: self.ensure_one()
-
-        :param float amount_to_refund: The amount to refund.
-        :return: The refund transaction created to process the refund request.
-        :rtype: recordset of `payment.transaction`
-        """
-        refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
+    def _send_refund_request(self):
+        """Override of `payment` to send a refund request to Razorpay."""
         if self.provider_code != 'razorpay':
-            return refund_tx
+            return super()._send_refund_request()
 
-        # Make the refund request to Razorpay.
+        # Send the refund request to Razorpay.
         converted_amount = payment_utils.to_minor_currency_units(
-            -refund_tx.amount, refund_tx.currency_id
+            -self.amount, self.currency_id
         )  # The amount is negative for refund transactions.
         payload = {
             'amount': converted_amount,
             'notes': {
-                'reference': refund_tx.reference,  # Allow retrieving the ref. from webhook data.
+                'reference': self.reference,  # Allow retrieving the ref. from webhook data.
             },
         }
-        _logger.info(
-            "Payload of '/payments/<id>/refund' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(payload)
-        )
-        response_content = refund_tx.provider_id._razorpay_make_request(
-            f'payments/{self.provider_reference}/refund', payload=payload
-        )
-        _logger.info(
-            "Response of '/payments/<id>/refund' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(response_content)
+        response_content = self._send_api_request(
+            'POST', f'payments/{self.provider_reference}/refund', json=payload
         )
         response_content.update(entity_type='refund')
-        refund_tx._handle_notification_data('razorpay', response_content)
+        self._process('razorpay', response_content)
 
-        return refund_tx
-
-    def _send_capture_request(self, amount_to_capture=None):
-        """ Override of `payment` to send a capture request to Razorpay. """
-        child_capture_tx = super()._send_capture_request(amount_to_capture=amount_to_capture)
+    def _send_capture_request(self):
+        """Override of `payment` to send a capture request to Razorpay."""
         if self.provider_code != 'razorpay':
-            return child_capture_tx
+            return super()._send_capture_request()
 
         converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
         payload = {'amount': converted_amount, 'currency': self.currency_id.name}
-        _logger.info(
-            "Payload of '/payments/<id>/capture' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(payload)
-        )
-        response_content = self.provider_id._razorpay_make_request(
-            f'payments/{self.provider_reference}/capture', payload=payload
-        )
-        _logger.info(
-            "Response of '/payments/<id>/capture' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(response_content)
+        response_content = self._send_api_request(
+            'POST', f'payments/{self.provider_reference}/capture', json=payload
         )
 
-        # Handle the capture request response.
-        self._handle_notification_data('razorpay', response_content)
+        # Process the capture request response.
+        self._process('razorpay', response_content)
 
-        return child_capture_tx
-
-    def _send_void_request(self, amount_to_void=None):
-        """ Override of `payment` to explain that it is impossible to void a Razorpay transaction.
-        """
-        child_void_tx = super()._send_void_request(amount_to_void=amount_to_void)
+    def _send_void_request(self):
+        """Override of `payment` to explain that it is impossible to void a Razorpay transaction."""
         if self.provider_code != 'razorpay':
-            return child_void_tx
+            return super()._send_void_request()
 
         raise UserError(_("Transactions processed by Razorpay can't be manually voided from Odoo."))
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
+    @api.model
+    def _search_by_reference(self, provider_code, payment_data):
         """ Override of `payment` to find the transaction based on razorpay data.
 
         :param str provider_code: The code of the provider that handled the transaction
-        :param dict notification_data: The normalized notification data sent by the provider
+        :param dict payment_data: The normalized payment data sent by the provider
         :return: The transaction if found
-        :rtype: recordset of `payment.transaction`
+        :rtype: payment.transaction
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'razorpay' or len(tx) == 1:
-            return tx
+        if provider_code != 'razorpay':
+            return super()._search_by_reference(provider_code, payment_data)
 
-        entity_type = notification_data.get('entity_type', 'payment')
+        entity_type = payment_data.get('entity_type', 'payment')
+        tx = self
         if entity_type == 'payment':
-            reference = notification_data.get('description')
+            reference = payment_data.get('description')
             if not reference:
-                raise ValidationError("Razorpay: " + _("Received data with missing reference."))
+                _logger.warning("Received data with missing reference.")
+                return tx
             tx = self.search([('reference', '=', reference), ('provider_code', '=', 'razorpay')])
         else:  # 'refund'
-            notes = notification_data.get('notes')
+            notes = payment_data.get('notes')
             reference = isinstance(notes, dict) and notes.get('reference')
             if reference:  # The refund was initiated from Odoo.
                 tx = self.search([('reference', '=', reference), ('provider_code', '=', 'razorpay')])
             else:  # The refund was initiated from Razorpay.
                 # Find the source transaction based on its provider reference.
                 source_tx = self.search([
-                    ('provider_reference', '=', notification_data['payment_id']),
+                    ('provider_reference', '=', payment_data['payment_id']),
                     ('provider_code', '=', 'razorpay'),
                 ])
                 if source_tx:
                     # Manually create a refund transaction with a new reference.
-                    tx = self._razorpay_create_refund_tx_from_notification_data(
-                        source_tx, notification_data
+                    tx = self._razorpay_create_refund_tx_from_payment_data(
+                        source_tx, payment_data
                     )
                 else:  # The refund was initiated for an unknown source transaction.
                     pass  # Don't do anything with the refund notification.
-        if not tx:
-            raise ValidationError(
-                "Razorpay: " + _("No transaction found matching reference %s.", reference)
-            )
-
         return tx
 
-    def _razorpay_create_refund_tx_from_notification_data(self, source_tx, notification_data):
+    def _razorpay_create_refund_tx_from_payment_data(self, source_tx, payment_data):
         """ Create a refund transaction based on Razorpay data.
 
         :param recordset source_tx: The source transaction for which a refund is initiated, as a
                                     `payment.transaction` recordset.
-        :param dict notification_data: The notification data sent by the provider.
+        :param dict payment_data: The payment data sent by the provider.
         :return: The newly created refund transaction.
-        :rtype: recordset of `payment.transaction`
+        :rtype: payment.transaction
         :raise ValidationError: If inconsistent data were received.
         """
-        refund_provider_reference = notification_data.get('id')
-        amount_to_refund = notification_data.get('amount')
+        refund_provider_reference = payment_data.get('id')
+        amount_to_refund = payment_data.get('amount')
         if not refund_provider_reference or not amount_to_refund:
-            raise ValidationError("Razorpay: " + _("Received incomplete refund data."))
+            raise ValidationError(_("Received incomplete refund data."))
 
         converted_amount = payment_utils.to_major_currency_units(
             amount_to_refund, source_tx.currency_id
@@ -404,55 +340,46 @@ class PaymentTransaction(models.Model):
             converted_amount, is_refund=True, provider_reference=refund_provider_reference
         )
 
-    def _compare_notification_data(self, notification_data):
-        """ Override of `payment` to compare the transaction based on Razorpay data.
-
-        :param dict notification_data: The notification data sent by the provider.
-        :return: None
-        :raise ValidationError: If the transaction's amount and currency don't match the
-            notification data.
-        """
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
         if self.provider_code != 'razorpay':
-            return super()._compare_notification_data(notification_data)
+            return super()._extract_amount_data(payment_data)
 
         # Amount and currency are not sent in notification data for REDIRECT_PAYMENT_METHOD_CODES.
         if self.payment_method_id.code in const.REDIRECT_PAYMENT_METHOD_CODES:
             return
 
         amount = payment_utils.to_major_currency_units(
-            notification_data.get('amount', 0), self.currency_id
+            payment_data.get('amount', 0), self.currency_id
         )
-        currency_code = notification_data.get('currency')
-        self._validate_amount_and_currency(amount, currency_code)
+        return {
+            'amount': amount,
+            'currency_code': payment_data.get('currency'),
+        }
 
-    def _process_notification_data(self, notification_data):
-        """ Override of `payment` to process the transaction based on Razorpay data.
-
-        Note: self.ensure_one()
-
-        :param dict notification_data: The notification data sent by the provider
-        :return: None
-        """
-        super()._process_notification_data(notification_data)
+    def _apply_updates(self, payment_data):
+        """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != 'razorpay':
-            return
+            return super()._apply_updates(payment_data)
 
-        if 'id' in notification_data:  # We have the full entity data (S2S request or webhook).
-            entity_data = notification_data
+        if 'id' in payment_data:  # We have the full entity data (S2S request or webhook).
+            entity_data = payment_data
         else:  # The payment data are not complete (Payments made by a token).
             # Fetch the full payment data.
-            entity_data = self.provider_id._razorpay_make_request(
-                f'payments/{notification_data["razorpay_payment_id"]}', method='GET'
-            )
-            _logger.info(
-                "Response of '/payments' request for transaction with reference %s:\n%s",
-                self.reference, pprint.pformat(entity_data)
-            )
+            try:
+                entity_data = self._send_api_request(
+                    'GET', f'payments/{payment_data["razorpay_payment_id"]}'
+                )
+            except ValidationError as e:
+                self._set_error(str(e))
+                return
 
         # Update the provider reference.
         entity_id = entity_data.get('id')
         if not entity_id:
-            raise ValidationError("Razorpay: " + _("Received data with missing entity id."))
+            self._set_error(_("Received data with missing entity id."))
+            return
+
         # One reference can have multiple entity ids as Razorpay allows retry on payment failure.
         # Making sure the last entity id is the one we have in the provider reference.
         allowed_to_modify = self.state not in ('done', 'authorized')
@@ -472,7 +399,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         entity_status = entity_data.get('status')
         if not entity_status:
-            raise ValidationError("Razorpay: " + _("Received data with missing status."))
+            self._set_error(_("Received data with missing status."))
 
         if entity_status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
@@ -485,7 +412,8 @@ class PaymentTransaction(models.Model):
                 and entity_data.get('token_id')
                 and self.provider_id.allow_tokenization
             ):
-                self._razorpay_tokenize_from_notification_data(entity_data)
+                # In case the tokenization was requested on provider side not from odoo form.
+                self.tokenize = True
             self._set_done()
 
             # Immediately post-process the transaction if it is a refund, as the post-processing
@@ -494,7 +422,7 @@ class PaymentTransaction(models.Model):
                 self.env.ref('payment.cron_post_process_payment_tx')._trigger()
         elif entity_status in const.PAYMENT_STATUS_MAPPING['error']:
             _logger.warning(
-                "The transaction with reference %s underwent an error. Reason: %s",
+                "The transaction %s underwent an error. Reason: %s",
                 self.reference, entity_data.get('error_description')
             )
             self._set_error(
@@ -502,47 +430,39 @@ class PaymentTransaction(models.Model):
             )
         else:  # Classify unsupported payment status as the `error` tx state.
             _logger.warning(
-                "Received data for transaction with reference %s with invalid payment status: %s",
+                "Received data for transaction %s with invalid payment status: %s.",
                 self.reference, entity_status
             )
             self._set_error(
                 "Razorpay: " + _("Received data with invalid status: %s", entity_status)
             )
 
-    def _razorpay_tokenize_from_notification_data(self, notification_data):
-        """ Create a new token based on the notification data.
+    def _extract_token_values(self, payment_data):
+        """Override of `payment` to return token data based on Razorpay data.
 
-        :param dict notification_data: The notification data built with Razorpay objects.
-                                       See `_process_notification_data`.
-        :return: None
+        Note: self.ensure_one() from :meth: `_tokenize`
+
+        :param dict payment_data: The payment data sent by the provider.
+        :return: Data to create a token.
+        :rtype: dict
         """
+        if self.provider_code != 'razorpay':
+            return super()._extract_token_values(payment_data)
+
+        has_token_data = payment_data.get('token_id')
+        if self.token_id or not self.provider_id.allow_tokenization or not has_token_data:
+            return {}
+
         pm_code = (self.payment_method_id.primary_payment_method_id or self.payment_method_id).code
         if pm_code == 'card':
-            details = notification_data.get('card', {}).get('last4')
+            details = payment_data.get('card', {}).get('last4')
         elif pm_code == 'upi':
-            temp_vpa = notification_data.get('vpa')
+            temp_vpa = payment_data.get('vpa')
             details = temp_vpa[temp_vpa.find('@') - 1:]
         else:
             details = pm_code
-
-        token = self.env['payment.token'].create({
-            'provider_id': self.provider_id.id,
-            'payment_method_id': self.payment_method_id.id,
+        return {
             'payment_details': details,
-            'partner_id': self.partner_id.id,
             # Razorpay requires both the customer ID and the token ID which are extracted from here.
-            'provider_ref': f'{notification_data["customer_id"]},{notification_data["token_id"]}',
-        })
-        self.write({
-            'token_id': token,
-            'tokenize': False,
-        })
-        _logger.info(
-            "Created token with id %(token_id)s for partner with id %(partner_id)s from "
-            "transaction with reference %(ref)s",
-            {
-                'token_id': token.id,
-                'partner_id': self.partner_id.id,
-                'ref': self.reference,
-            },
-        )
+            'provider_ref': f'{payment_data["customer_id"]},{payment_data["token_id"]}',
+        }

@@ -11,6 +11,17 @@ class PaymentProvider(models.Model):
 
     custom_mode = fields.Selection(selection_add=[('on_site', "Pay on site")])
 
+    # === CRUD METHODS === #
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        self.ensure_one()
+        if self.custom_mode != 'on_site':
+            return super()._get_default_payment_method_codes()
+        return const.DEFAULT_PAYMENT_METHOD_CODES
+
+    # === BUSINESS METHODS === #
+
     @api.model
     def _get_compatible_providers(
         self, company_id, *args, sale_order_id=None, website_id=None, report=None, **kwargs
@@ -52,10 +63,3 @@ class PaymentProvider(models.Model):
             )
 
         return compatible_providers
-
-    def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
-        default_codes = super()._get_default_payment_method_codes()
-        if self.custom_mode != 'on_site':
-            return default_codes
-        return const.DEFAULT_PAYMENT_METHOD_CODES

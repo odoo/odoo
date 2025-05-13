@@ -77,6 +77,24 @@ class TestPaymentTransaction(PaymentCommon):
             msg="The refunds count should only consider transactions with operation 'refund'."
         )
 
+    def test_capturing_tx_creates_child_tx(self):
+        """Test that capturing a transaction creates a child capture transaction."""
+        self.provider.capture_manually = True
+        self.provider.support_manual_capture = 'partial'
+        source_tx = self._create_transaction('direct', state='authorized')
+        child_tx = source_tx._capture()
+        self.assertTrue(child_tx)
+        self.assertNotEqual(child_tx, source_tx)
+
+    def test_voiding_tx_creates_child_tx(self):
+        """Test that voiding a transaction creates a child void transaction."""
+        self.provider.capture_manually = True
+        self.provider.support_manual_capture = 'partial'
+        source_tx = self._create_transaction('direct', state='authorized')
+        child_tx = source_tx._void()
+        self.assertTrue(child_tx)
+        self.assertNotEqual(child_tx, source_tx)
+
     def test_refund_transaction_values(self):
         self.provider.support_refund = 'partial'
         tx = self._create_transaction('redirect', state='done')
@@ -169,12 +187,6 @@ class TestPaymentTransaction(PaymentCommon):
             msg="The partner of the partial capture should be that of the source transaction.",
         )
 
-    def test_compare_notification_data_throws(self):
-        """ Test that `_compare_notification_data` throws if not overridden by the provider. """
-        tx = self._create_transaction('redirect')
-        with self.assertRaises(NotImplementedError):
-            tx._compare_notification_data({})
-
     def test_capturing_child_tx_triggers_source_tx_state_update(self):
         self.provider.support_manual_capture = 'partial'
         self.provider.capture_manually = True
@@ -229,6 +241,37 @@ class TestPaymentTransaction(PaymentCommon):
                 "'done'."
         )
 
+    def test_processing_tokenizes_validated_transaction(self):
+        """Test that `_process` tokenizes 'authorized' and 'done' transactions when possible."""
+        self.provider.support_manual_capture = 'partial'
+        self.provider.capture_manually = True
+        for state in ['authorized', 'done']:
+            tx = self._create_transaction(
+                'redirect', reference=f'Test {state}', state=state, tokenize=True
+            )
+            with patch(
+                'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+                '._validate_amount', return_value=None
+            ), patch(
+                'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+                '._extract_token_values', return_value={'provider_ref': 'test'}
+            ):
+                tx._process('test', {})
+            self.assertTrue(tx.token_id)
+
+    def test_processing_only_tokenizes_when_requested(self):
+        """Test that `_process` only triggers tokenization if the user requested it."""
+        tx = self._create_transaction('redirect', state='done', tokenize=False)
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._validate_amount', return_value=None
+        ), patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._tokenize'
+        ) as tokenize_mock:
+            tx._process('test', {})
+        self.assertEqual(tokenize_mock.call_count, 0)
+
     @mute_logger('odoo.addons.payment.models.payment_transaction')
     def test_update_state_to_illegal_target_state(self):
         tx = self._create_transaction('redirect', state='done')
@@ -254,16 +297,3 @@ class TestPaymentTransaction(PaymentCommon):
 
         tx._set_done()
         self.assertFalse(tx.is_post_processed)
-
-    def test_log_processing_values(self):
-        PaymentTransaction = self.env.registry['payment.transaction']
-        tx = self._create_transaction('redirect', state='done', reference='TX-12345')
-        secret_keys = {'provider_id': None}.keys()
-        with (
-            patch.object(PaymentTransaction, '_get_specific_secret_keys', lambda tx: secret_keys),
-            self.assertLogs('odoo.addons.payment.models.payment_transaction') as cm,
-        ):
-            values = tx._get_processing_values()
-            self.assertRegex(cm.output[0], r".reference.: .TX-12345.", "Values should be logged")
-            self.assertNotRegex(cm.output[0], r"provider_id", "Secret keys should be hidden")
-            self.assertEqual(values['provider_id'], tx.provider_id.id)

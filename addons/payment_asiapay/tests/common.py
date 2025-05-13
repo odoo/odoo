@@ -19,10 +19,10 @@ class AsiaPayCommon(PaymentCommon):
 
         cls.provider = cls.asiapay
 
-        cls.redirect_notification_data = {
+        cls.redirect_payment_data = {
             'Ref': cls.reference,
         }
-        cls.webhook_notification_data = {
+        cls.webhook_payment_data = {
             'src': 'dummy',
             'prc': 'dummy',
             'successcode': '0',

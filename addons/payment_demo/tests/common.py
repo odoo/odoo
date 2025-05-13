@@ -11,7 +11,7 @@ class PaymentDemoCommon(PaymentCommon):
 
         cls.provider = cls._prepare_provider(code='demo')
 
-        cls.notification_data = {
+        cls.payment_data = {
             'reference': cls.reference,
             'payment_details': '1234',
             'simulated_state': 'done',

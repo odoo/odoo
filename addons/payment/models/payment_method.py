@@ -106,7 +106,7 @@ class PaymentMethod(models.Model):
         context={'active_test': False},
     )
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS === #
 
     def _compute_is_primary(self):
         for payment_method in self:
@@ -117,7 +117,7 @@ class PaymentMethod(models.Model):
             return NotImplemented
         return [('primary_payment_method_id', operator, [False])]
 
-    #=== ONCHANGE METHODS ===#
+    # === ONCHANGE METHODS === #
 
     @api.onchange('active', 'provider_ids', 'support_tokenization')
     def _onchange_warn_before_disabling_tokens(self):
@@ -188,7 +188,7 @@ class PaymentMethod(models.Model):
                 " manual capture activated: %s", ", ".join(incompatible_pms.mapped('name'))
             ))
 
-    #=== CRUD METHODS ===#
+    # === CRUD METHODS === #
 
     def write(self, vals):
         # Handle payment methods being archived, detached from providers, or blocking tokenization.
