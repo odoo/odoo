@@ -70,6 +70,18 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         self.env.user.write(
             {'group_ids': [Command.link(self.env.ref('product.group_product_pricelist').id)]}
         )
+        self.env['product.pricelist'].create({
+            'name': 'Custom pricelist (TEST)',
+            'sequence': 4,
+            'item_ids': [(0, 0, {
+                'base': 'list_price',
+                'applied_on': '1_product',
+                'product_tmpl_id': self.product_product_custo_desk.id,
+                'price_discount': 20,
+                'min_quantity': 2,
+                'compute_price': 'formula'
+            })]
+        })
         self.start_tour("/", 'a_shop_custom_attribute_value', login="admin")
 
     def test_02_admin_shop_custom_attribute_value_tour(self):

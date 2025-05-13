@@ -1,14 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
-from odoo.tests.common import HttpCase, tagged
+from odoo.fields import Command
+from odoo.tests.common import tagged
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
 
 
 @tagged('post_install', '-at_install')
-class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
+class TestProductConfiguratorUi(TestProductConfiguratorCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -83,15 +83,11 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         product_attribute_no_variant_single_pav = self.env['product.attribute'].create({
             'name': 'PA9',
             'display_type': 'radio',
-            'create_variant': 'no_variant'
+            'create_variant': 'no_variant',
+            'value_ids': [
+                Command.create({'name': 'Single PAV'}),
+            ]
         })
-
-        self.env['product.attribute.value'].create({
-            'name': 'Single PAV',
-            'attribute_id': product_attribute_no_variant_single_pav.id
-        })
-
-        product_attributes += product_attribute_no_variant_single_pav
 
         product_template = self.product_product_custo_desk
 
@@ -99,7 +95,7 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
             'attribute_id': product_attribute.id,
             'product_tmpl_id': product_template.id,
             'value_ids': [(6, 0, product_attribute.value_ids.ids)],
-        } for product_attribute in product_attributes])
+        } for product_attribute in (product_attributes + product_attribute_no_variant_single_pav)])
 
         self.assertEqual(len(product_template.product_variant_ids), 0)
         self.assertEqual(
@@ -115,10 +111,20 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         )
 
     def test_03_product_configurator_edition(self):
-        # Enable pricelist
-        self.env.user.write(
-            {'group_ids': [Command.link(self.env.ref('product.group_product_pricelist').id)]}
-        )
+        # Required to see `pricelist_id` in the view
+        self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_product_pricelist').id)]})
+        self.env['product.pricelist'].create({
+            'name': 'Custom pricelist (TEST)',
+            'sequence': 4,
+            'item_ids': [(0, 0, {
+                'base': 'list_price',
+                'applied_on': '1_product',
+                'product_tmpl_id': self.product_product_custo_desk.id,
+                'price_discount': 20,
+                'min_quantity': 2,
+                'compute_price': 'formula'
+            })]
+        })
         self.start_tour("/odoo", 'sale_product_configurator_edition_tour', login='salesman')
 
     def test_04_product_configurator_single_custom_value(self):
@@ -158,6 +164,20 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
 
         # Required to see `pricelist_id` in the view
         self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_product_pricelist').id)]})
+
+        self.env['product.pricelist'].create({
+            'name': 'Custom pricelist (TEST)',
+            'sequence': 4,
+            'item_ids': [(0, 0, {
+                'base': 'list_price',
+                'applied_on': '1_product',
+                'product_tmpl_id': self.product_product_custo_desk.id,
+                'price_discount': 20,
+                'min_quantity': 2,
+                'compute_price': 'formula'
+            })]
+        })
+
         self.env['res.partner'].create({
             'name': 'Azure Interior',
             'email': 'azure.Interior24@example.com',
@@ -243,17 +263,16 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
             'display_type': 'multi',
             'create_variant': 'no_variant',
             'value_ids': [
-                (0, 0, {'name': 'Cheese'}),
+                Command.create({'name': 'Cheese'}),
             ]
         })
-        attribute_topping_cheese = attribute_topping.value_ids
 
         product_template = self.env['product.template'].create({
             'name': 'Big Burger',
             'attribute_line_ids': [
-                (0, 0, {
+                Command.create({
                     'attribute_id': attribute_topping.id,
-                    'value_ids': [(6, 0, [attribute_topping_cheese.id])],
+                    'value_ids': [Command.set(attribute_topping.value_ids.ids)],
                 }),
             ],
         })

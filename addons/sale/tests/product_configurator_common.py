@@ -2,11 +2,14 @@
 
 import base64
 
-from odoo.tests.common import TransactionCase
+from odoo.fields import Command
+from odoo.tests import HttpCase
 from odoo.tools.misc import file_open
 
+from odoo.addons.base.tests.common import BaseCommon
 
-class TestProductConfiguratorCommon(TransactionCase):
+
+class TestProductConfiguratorCommon(BaseCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -85,13 +88,14 @@ class TestProductConfiguratorCommon(TransactionCase):
             'name': 'Conference Chair (TEST)',
             'image_1920': img_content,
             'list_price': 16.50,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': cls.product_attribute_1.id,
+                    'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
+                })
+            ]
         })
 
-        cls.env['product.template.attribute.line'].create({
-            'product_tmpl_id': cls.product_product_conf_chair.id,
-            'attribute_id': cls.product_attribute_1.id,
-            'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
-        })
         cls.product_product_conf_chair.attribute_line_ids[0].product_template_value_ids[1].price_extra = 6.40
         cls.product_product_custo_desk.optional_product_ids = [(4, cls.product_product_conf_chair.id)]
 
@@ -101,16 +105,3 @@ class TestProductConfiguratorCommon(TransactionCase):
             'list_price': 12.0,
         })
         cls.product_product_conf_chair.optional_product_ids = [(4, cls.product_product_conf_chair_floor_protect.id)]
-
-        cls.custom_pricelist = cls.env['product.pricelist'].create({
-            'name': 'Custom pricelist (TEST)',
-            'sequence': 4,
-            'item_ids': [(0, 0, {
-                'base': 'list_price',
-                'applied_on': '1_product',
-                'product_tmpl_id': cls.product_product_custo_desk.id,
-                'price_discount': 20,
-                'min_quantity': 2,
-                'compute_price': 'formula'
-            })]
-        })

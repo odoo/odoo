@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add("product_attribute_multi_type", {
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),
-        ...tourUtils.selectCustomer("Azure"),
+        ...tourUtils.selectCustomer("Test Partner"),
         ...tourUtils.addProduct("Big Burger"),
         configuratorTourUtils.selectAttribute("Big Burger", "Toppings", "Cheese", "multi"),
         ...configuratorTourUtils.saveConfigurator(),
