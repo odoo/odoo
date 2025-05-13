@@ -1,9 +1,8 @@
-name: Run Odoo tests
+name: Run only custom-addon tests
 
 on:
   pull_request:
-    branches:
-      - dev
+    branches: [ dev ]
 
 jobs:
   test:
@@ -16,13 +15,12 @@ jobs:
           POSTGRES_USER: odoo
           POSTGRES_PASSWORD: odoo
           POSTGRES_DB: odoo
-        ports:
-          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -32,38 +30,56 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install system dependencies
+      - name: Install system deps
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            build-essential \
-            python3-dev \
-            libldap2-dev \
-            libsasl2-dev \
-            libssl-dev
-      - name: Install dependencies
+            build-essential python3-dev libldap2-dev libsasl2-dev libssl-dev
+
+      - name: Install Python deps
         run: |
+          python3 -m pip install --upgrade pip setuptools wheel
           python3 -m pip install -r requirements.txt
-          pip install -e .
-      - name: Read test modules from JSON
+          pip install -e odoo
+
+      - name: Read test modules
         id: read_modules
         run: |
-          MODULES=$(python3 -c "import json; print(','.join(json.load(open('test_modules.json'))['modules']))")
-          echo "modules_to_test=$MODULES" >> $GITHUB_OUTPUT
-      - name: Run Odoo tests
+          echo "modules_to_test=$(python3 - <<EOF
+import json
+mods = json.load(open('test_modules.json'))['modules']
+print(','.join(mods))
+EOF
+)" >> $GITHUB_OUTPUT
+
+      - name: Install ONLY custom addon and its dependencies
         env:
           DB_HOST: localhost
           DB_PORT: 5432
           DB_USER: odoo
           DB_PASSWORD: odoo
         run: |
-          ./odoo-bin \
-            --addons-path=addons,custom_addons \
+          # Creamos la base pero NO instalamos TODO el repo, solo lo mínimo
+          createdb -h $DB_HOST -U $DB_USER test_db
+          ./odoo/odoo-bin \
+            --addons-path=odoo/odoo/addons,custom_addons \
             -d test_db \
-            --db_host=$DB_HOST \
-            --db_user=$DB_USER \
-            --db_password=$DB_PASSWORD \
+            --db_host=$DB_HOST --db_user=$DB_USER --db_password=$DB_PASSWORD \
+            --stop-after-init \
+            -i ${MODS}  # esto instalará sólo tu módulo y las dependencias que declares en manifest
+
+      - name: Run ONLY your tests
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: odoo
+          DB_PASSWORD: odoo
+        run: |
+          # Ahora ejecutamos tests, filtrando por tag
+          ./odoo/odoo-bin \
+            --addons-path=odoo/odoo/addons,custom_addons \
+            -d test_db \
+            --db_host=$DB_HOST --db_user=$DB_USER --db_password=$DB_PASSWORD \
             --test-enable \
             --test-tags=ci_only \
-            --stop-after-init \
-            -i ${{ steps.read_modules.outputs.modules_to_test }}
+            --stop-after-init
