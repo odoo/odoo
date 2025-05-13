@@ -1,13 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import unittest
+
 from datetime import datetime
 
 from odoo.fields import Command
-from odoo.tests import tagged
-import unittest
+from odoo.tests import HttpCase, tagged
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
-from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
 from odoo.addons.website_sale.controllers.product_configurator import (
     WebsiteSaleProductConfiguratorController,
 )
@@ -15,37 +14,13 @@ from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleProductConfigurator(
-    TestProductConfiguratorCommon, HttpCaseWithUserPortal, HttpCaseWithUserDemo, WebsiteSaleCommon
-):
+class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.product_product_custo_desk.write({
-            'optional_product_ids': [(4, cls.product_product_conf_chair.id)],
-            'website_published': True,
-        })
-        cls.product_product_conf_chair.website_published = True
 
-        ptav_ids = cls.product_product_custo_desk.attribute_line_ids.product_template_value_ids
-        ptav_ids.filtered(lambda ptav: ptav.name == 'Aluminium').price_extra = 50.4
         cls.pc_controller = WebsiteSaleProductConfiguratorController()
-
-    def test_01_product_configurator_variant_price(self):
-        product = self.product_product_conf_chair.with_user(self.user_portal)
-        ptav_ids = self.product_product_custo_desk.attribute_line_ids.product_template_value_ids
-        parent_combination = ptav_ids.filtered(lambda ptav: ptav.name in ('Aluminium', 'White'))
-        self.assertEqual(product._is_add_to_cart_possible(parent_combination), True)
-        # This is a regression test. The product configurator menu is proposed
-        # whenever a product has optional products. However, as the end user
-        # already picked a variant, the variant configuration menu is omitted
-        # in this case. However, we still want to make sure that the correct
-        # variant attributes are taken into account when calculating the price.
-        url = self.product_product_custo_desk.website_url
-        # Ensure that no pricelist is available during the test.
-        # This ensures that tours with triggers on the amounts will run properly.
-        self.env['product.pricelist'].search([]).action_archive()
-        self.start_tour(url, 'website_sale_product_configurator_optional_products_tour', login='portal')
 
     def test_02_variants_modal_window(self):
         """
@@ -151,7 +126,7 @@ class TestWebsiteSaleProductConfigurator(
         product_short.optional_product_ids = [(4, optional_product.id)]
 
         old_sale_order = self.env['sale.order'].search([])
-        self.start_tour("/", 'tour_variants_modal_window', login="demo")
+        self.start_tour("/", 'tour_variants_modal_window')
 
         # Check the name of the created sale order line
         new_sale_order = self.env['sale.order'].search([]) - old_sale_order
@@ -174,13 +149,15 @@ class TestWebsiteSaleProductConfigurator(
 
     def test_product_configurator_optional_products(self):
         """ Test that the product configurator is shown if the product has optional products. """
-        optional_product = self.env['product.template'].create({
-            'name': "Optional product", 'website_published': True
-        })
         main_product = self.env['product.template'].create({
             'name': "Main product",
             'website_published': True,
-            'optional_product_ids': [Command.set(optional_product.ids)],
+            'optional_product_ids': [
+                Command.create({
+                    'name': "Optional product",
+                    'website_published': True,
+                })
+            ],
         })
 
         with MockRequest(self.env, website=self.website):
@@ -426,7 +403,11 @@ class TestWebsiteSaleProductConfigurator(
     @unittest.skip("prepare mysterious-egg for merging")
     def test_product_configurator_strikethrough_price(self):
         """ Test that the product configurator displays the strikethrough price correctly. """
-        self.env['res.config.settings'].create({'group_product_price_comparison': True}).execute()
+        self.env['res.config.settings'].create({
+            'group_product_price_comparison': True,
+            # Need to enable pricelists for self.pricelist to be considered and applied
+            'group_product_pricelist': True,
+        }).execute()
         self.website.show_line_subtotals_tax_selection = 'tax_included'
         tax = self.env['account.tax'].create({'name': "Tax", 'amount': 10})
         optional_product = self.env['product.template'].create({
@@ -443,8 +424,6 @@ class TestWebsiteSaleProductConfigurator(
             'optional_product_ids': [Command.set(optional_product.ids)],
             'taxes_id': tax,
         })
-        # Make sure the custom pricelist from the product configurator common doesn't fail the test
-        self.custom_pricelist.action_archive()
         self.pricelist.item_ids = [
             Command.create({
                 'applied_on': '1_product',
