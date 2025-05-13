@@ -1331,3 +1331,27 @@ class TestSaleToInvoice(TestSaleCommon):
             invoice.team_id, team2,
             "Invoice team should be the same as the order's team",
         )
+
+    def test_invoice_from_order_without_lines(self):
+        """Test that an invoice can be created from a sale order with no product lines"""
+        sale_order = self.env['sale.order'].create({'partner_id': self.partner.id})
+        self.env['sale.order.line'].create({
+            'display_type': 'line_section',
+            'name': 'Test section',
+            'order_id': sale_order.id,
+        }).unlink()
+        sale_order.action_confirm()
+        wizard = self.env['sale.advance.payment.inv'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }).create({
+            'advance_payment_method': 'percentage',
+            'amount': 10,
+        })
+        action_values = wizard.create_invoices()
+
+        invoice = self.env['account.move'].browse(action_values['res_id'])
+        self.assertTrue(invoice)
+        self.assertEqual(invoice.partner_id, sale_order.partner_id)
