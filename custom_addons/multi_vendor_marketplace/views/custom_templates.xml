@@ -256,4 +256,56 @@
             });
         </script>
     </template>
+
+    <template id="custom_shop_with_catalog" inherit_id="website_sale.products">
+        <!-- Кнопка Каталог слева от поиска -->
+        <xpath expr="//t[@t-call='website_sale.search']" position="before">
+            <div style="display: flex; align-items: center; margin-bottom: 16px; margin-left: 32px;">
+                <div style="margin-right: 12px; position: relative; display: flex; align-items: center;">
+                    <button id="catalog-toggle-btn" class="btn btn-warning" type="button" style="padding: 8px 22px; font-size: 15px; border-radius: 32px; min-width: 110px; height: 44px; display: flex; align-items: center;">Каталог</button>
+                    <div id="catalog-dropdown-list" style="position: absolute; top: 110%; left: 0; z-index: 1002; width: 220px; display: none;"></div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="inside">
+            <style>
+                .o_categories_collapse_title {
+                    display: none !important;
+                }
+                .wsale_products_categories_list {
+                    display: none !important;
+                }
+                .wsale_products_categories_list.active {
+                    display: block !important;
+                    background: #fff !important;
+                    border-radius: 18px !important;
+                    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+                    padding: 16px 12px 12px 12px;
+                    margin-top: 8px;
+                }
+            </style>
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    var btn = document.getElementById('catalog-toggle-btn');
+                    var catList = document.querySelector('.wsale_products_categories_list');
+                    var dropdown = document.getElementById('catalog-dropdown-list');
+                    if (btn &amp;&amp; catList &amp;&amp; dropdown) {
+                        // Перемещаем список категорий внутрь dropdown
+                        dropdown.appendChild(catList);
+                        btn.addEventListener('click', function(e) {
+                            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                            catList.classList.toggle('active');
+                            e.stopPropagation();
+                        });
+                        document.addEventListener('click', function(e) {
+                            if (dropdown.style.display === 'block' &amp;&amp; !dropdown.contains(e.target) &amp;&amp; e.target !== btn) {
+                                dropdown.style.display = 'none';
+                                catList.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            </script>
+        </xpath>
+    </template>
 </odoo>
