@@ -60,7 +60,9 @@ jobs:
           for i in {1..30}; do
             if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER > /dev/null 2>&1; then
               echo "Postgres is up"
-              break
+              exit 0
+            else
+              echo "Attempt $i: $(pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER 2>&1)"
             fi
             echo "Waiting for Postgres..."
             sleep 1
