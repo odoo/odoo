@@ -4,7 +4,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
-from odoo.tests.common import tagged
+from odoo.tests.common import new_test_user, tagged
 
 
 @tagged("post_install", "-at_install")
@@ -68,3 +68,15 @@ class TestImLivechatReport(TestImLivechatCommon):
     def _create_message(cls, channel, author, date):
         with patch.object(cls.env.cr, 'now', lambda: date):
             return channel.message_post(author_id=author.id, body=f'Message {date}')
+
+    def test_redirect_to_form_from_pivot(self):
+        operator = new_test_user(self.env, login="operator", groups="im_livechat.im_livechat_group_manager")
+        self.livechat_channel.user_ids |= operator
+        data = self.make_jsonrpc_request("/im_livechat/get_session", {
+            "channel_id": self.livechat_channel.id,
+            "anonymous_name": "Visitor",
+            "previous_operator_id": operator.partner_id.id
+        })
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        channel.with_user(operator).message_post(body="Hello, how can I help you?")
+        self.start_tour("/odoo", "im_livechat_report_pivot_redirect_tour", login="operator")
