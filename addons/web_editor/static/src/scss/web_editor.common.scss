@@ -572,7 +572,12 @@ blockquote {
     font-style: italic;
 }
 
-pre {
+pre {    
+    padding: map-get($spacers, 2) map-get($spacers, 3);
+    border: $border-width solid $border-color;
+    border-radius: $border-radius;
+    background-color: $gray-100;
+    color: $gray-900;
     white-space: pre-wrap;
 
     p {
