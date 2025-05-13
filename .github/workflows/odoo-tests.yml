@@ -8,7 +8,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      DB_HOST: postgres
+      DB_HOST: odoo
       DB_PORT: 5432
       DB_USER: odoo
       DB_PASSWORD: odoo
@@ -20,6 +20,7 @@ jobs:
           POSTGRES_USER: odoo
           POSTGRES_PASSWORD: odoo
           POSTGRES_DB: odoo
+          POSTGRES_EXTRA_OPTS: "-c listen_addresses='*'"
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -74,7 +75,7 @@ jobs:
         env:
           PGPASSWORD: ${{ env.DB_PASSWORD }}
         run: |
-          psql -h localhost -U $DB_USER -c "CREATE DATABASE test_db;"
+          psql -h $DB_USER -U $DB_USER -c "CREATE DATABASE test_db;"
 
       - name: Install Python deps
         run: |
