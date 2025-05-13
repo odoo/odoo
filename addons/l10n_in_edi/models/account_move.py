@@ -27,6 +27,19 @@ class AccountMove(models.Model):
                 and i.state in ("sent", "to_cancel", "cancelled")
             ))
 
+    def action_retry_edi_documents_error(self):
+        for move in self:
+            if move.country_code == 'IN':
+                move.message_post(body=_(
+                    "Retrying EDI processing for the following documents:<br/>%s",
+                    "<br/>".join(
+                        move.edi_document_ids
+                        .filtered(lambda doc: doc.blocking_level == "error")
+                        .mapped("edi_format_name")
+                    )
+                ))
+        return super().action_retry_edi_documents_error()
+
     def button_cancel_posted_moves(self):
         """Mark the edi.document related to this move to be canceled."""
         reason_and_remarks_not_set = self.env["account.move"]
