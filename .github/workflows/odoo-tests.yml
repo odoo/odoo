@@ -7,6 +7,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_USER: odoo
+      DB_PASSWORD: odoo
 
     services:
       postgres:
@@ -53,7 +58,7 @@ jobs:
       - name: Wait for Postgres to be ready
         run: |
           for i in {1..30}; do
-            if pg_isready -h localhost -p 5432 -U odoo; then
+            if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER; then
               echo "Postgres is up"
               break
             fi
@@ -68,11 +73,6 @@ jobs:
           psql -h localhost -U $DB_USER -c "CREATE DATABASE test_db;"
 
       - name: Install ONLY custom addon (and deps)
-        env:
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_USER: odoo
-          DB_PASSWORD: odoo
         run: |
           ./odoo-bin \
             --addons-path=odoo/odoo/addons,custom_addons \
@@ -82,11 +82,6 @@ jobs:
             -i ${{ steps.read_modules.outputs.modules_to_test }}
 
       - name: Run ONLY your tests
-        env:
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_USER: odoo
-          DB_PASSWORD: odoo
         run: |
           ./odoo-bin \
             --addons-path=odoo/odoo/addons,custom_addons \
