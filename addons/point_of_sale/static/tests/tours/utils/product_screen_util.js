@@ -112,6 +112,7 @@ export function clickDisplayedProduct(
         step.push(...productCardQtyIs(name, nextQuantity));
     }
 
+    step.push(Chrome.isSynced());
     return step;
 }
 export function clickInfoProduct(name) {
