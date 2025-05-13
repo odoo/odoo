@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
 from odoo import _, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_custom.controllers.main import CustomController
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -23,9 +21,8 @@ class PaymentTransaction(models.Model):
         :return: The dict of provider-specific processing values
         :rtype: dict
         """
-        res = super()._get_specific_rendering_values(processing_values)
         if self.provider_code != 'custom':
-            return res
+            return super()._get_specific_rendering_values(processing_values)
 
         return {
             'api_url': CustomController._process_url,
@@ -50,27 +47,6 @@ class PaymentTransaction(models.Model):
             communication = self.sale_order_ids[0].reference
         return communication or self.reference
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of payment to find the transaction based on custom data.
-
-        :param str provider_code: The code of the provider that handled the transaction
-        :param dict notification_data: The notification feedback data
-        :return: The transaction if found
-        :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if the data match no transaction
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'custom' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('reference')
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'custom')])
-        if not tx:
-            raise ValidationError(
-                "Wire Transfer: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
-
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to skip the transaction comparison for custom flows.
 
@@ -88,9 +64,8 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The custom data
         :return: None
         """
-        super()._process_notification_data(notification_data)
         if self.provider_code != 'custom':
-            return
+            return super()._process_notification_data(notification_data)
 
         _logger.info(
             "validated custom payment for transaction with reference %s: set as pending",

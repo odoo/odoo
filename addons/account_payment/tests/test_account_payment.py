@@ -145,7 +145,7 @@ class TestAccountPayment(AccountPaymentCommon):
 
         with patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._send_payment_request'
+            '._charge_with_token'
         ) as patched:
             payment_without_token.action_post()
             patched.assert_not_called()

@@ -1,5 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.payment.const import SENSITIVE_KEYS as PAYMENT_SENSITIVE_KEYS
+
+SENSITIVE_KEYS = {'client_secret'}
+
+# Add Stripe-specific sensitive keys to the global set.
+PAYMENT_SENSITIVE_KEYS.update(SENSITIVE_KEYS)
+
+
 API_VERSION = '2019-05-16'  # The API version of Stripe implemented in this module
 
 # Stripe proxy URL

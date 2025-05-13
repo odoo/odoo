@@ -135,7 +135,7 @@ class AccountPayment(models.Model):
         res = super(AccountPayment, self - payments_need_tx).action_post()
 
         for tx in transactions:  # Process the transactions with a payment by token
-            tx._send_payment_request()
+            tx._charge_with_token()
 
         # Post payments for issued transactions
         transactions._post_process()

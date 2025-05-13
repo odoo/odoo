@@ -66,7 +66,7 @@ class PaymentTransaction(models.Model):
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
     @api.model
-    def _compute_reference_prefix(self, provider_code, separator, **values):
+    def _compute_reference_prefix(self, separator, **values):
         """ Compute the reference prefix from the transaction values.
 
         If the `values` parameter has an entry with 'invoice_ids' as key and a list of (4, id, O) or
@@ -75,7 +75,6 @@ class PaymentTransaction(models.Model):
 
         Note: This method should be called in sudo mode to give access to documents (INV, SO, ...).
 
-        :param str provider_code: The code of the provider handling the transaction
         :param str separator: The custom separator used to separate data references
         :param dict values: The transaction values used to compute the reference prefix. It should
                             have the structure {'invoice_ids': [(X2M command), ...], ...}.
@@ -92,7 +91,7 @@ class PaymentTransaction(models.Model):
                 if name := values.get('name_next_installment'):
                     prefix = name
                 return prefix
-        return super()._compute_reference_prefix(provider_code, separator, **values)
+        return super()._compute_reference_prefix(separator, **values)
 
     #=== BUSINESS METHODS - POST-PROCESSING ===#
 

@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import pprint
 import re
 import unicodedata
 from datetime import datetime
@@ -11,13 +9,16 @@ from dateutil import relativedelta
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_normalize_all, float_round, format_amount
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.const import SENSITIVE_KEYS
+from odoo.addons.payment.logging import get_payment_logger
 
 
-_logger = logging.getLogger(__name__)
+_logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
 
 
 class PaymentTransaction(models.Model):
@@ -126,7 +127,7 @@ class PaymentTransaction(models.Model):
         'Reference must be unique!',
     )
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS === #
 
     def _compute_refunds_count(self):
         rg_data = self.env['payment.transaction']._read_group(
@@ -138,7 +139,7 @@ class PaymentTransaction(models.Model):
         for record in self:
             record.refunds_count = data.get(record.id, 0)
 
-    #=== CONSTRAINT METHODS ===#
+    # === CONSTRAINT METHODS === #
 
     @api.constrains('state')
     def _check_state_authorized_supported(self):
@@ -158,7 +159,7 @@ class PaymentTransaction(models.Model):
         if self.token_id and not self.token_id.active:
             raise ValidationError(_("Creating a transaction from an archived token is forbidden."))
 
-    #=== CRUD METHODS ===#
+    # === CRUD METHODS === #
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -218,7 +219,7 @@ class PaymentTransaction(models.Model):
         """
         return dict()
 
-    #=== ACTION METHODS ===#
+    # === ACTION METHODS === #
 
     def action_view_refunds(self):
         """ Return the windows action to browse the refund transactions linked to the transaction.
@@ -269,9 +270,11 @@ class PaymentTransaction(models.Model):
                 },
             }
         else:
+            captured_txs_sudo = self.env['payment.transaction'].sudo()
             for tx in self.filtered(lambda tx: tx.state == 'authorized'):
                 # In sudo mode because we need to be able to read on provider fields.
-                tx.sudo()._send_capture_request()
+                captured_txs_sudo |= tx.sudo()._capture()
+            return captured_txs_sudo._build_action_feedback_notification()
 
     def action_void(self):
         """ Check the state of the transaction and request to have them voided. """
@@ -280,13 +283,15 @@ class PaymentTransaction(models.Model):
         if any(tx.state != 'authorized' for tx in self):
             raise ValidationError(_("Only authorized transactions can be voided."))
 
+        voided_txs_sudo = self.env['payment.transaction'].sudo()
         for tx in self:
             # Consider all the confirmed partial capture (same operation as parent) child txs.
             captured_amount = sum(child_tx.amount for child_tx in tx.child_transaction_ids.filtered(
                 lambda t: t.state == 'done' and t.operation == tx.operation
             ))
             # In sudo mode because we need to be able to read on provider fields.
-            tx.sudo()._send_void_request(amount_to_void=tx.amount - captured_amount)
+            voided_txs_sudo |= tx.sudo()._void(amount_to_void=tx.amount - captured_amount)
+        return voided_txs_sudo._build_action_feedback_notification()
 
     def action_refund(self, amount_to_refund=None):
         """ Check the state of the transactions and request their refund.
@@ -300,9 +305,35 @@ class PaymentTransaction(models.Model):
         payment_utils.check_rights_on_recordset(self)
         for tx in self:
             # In sudo mode because we need to be able to read on provider fields.
-            tx.sudo()._send_refund_request(amount_to_refund=amount_to_refund)
+            tx.sudo()._refund(amount_to_refund=amount_to_refund)
+        return self._build_action_feedback_notification()
 
-    #=== BUSINESS METHODS - PAYMENT FLOW ===#
+    def _build_action_feedback_notification(self):
+        """ Build a client notification to display the result of an action.
+
+        :return: The client notification.
+        :rtype: dict
+        """
+        if not (failed_txs := self.filtered(lambda tx: tx.state == 'error')):
+            notification_type = 'success'
+            msg = self.env._("The request was successfully sent.")
+        else:
+            notification_type = 'danger'
+            msg = self.env._(
+                "The request failed for the following transactions: %(tx_refs)s",
+                tx_refs=', '.join(failed_txs.mapped('reference'))
+            )
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': notification_type,
+                'message': msg,
+                'next': {'type': 'ir.actions.act_window_close'},  # Close any open wizard.
+            },
+        }
+
+    # === BUSINESS METHODS - PRE-PROCESSING === #
 
     @api.model
     def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):
@@ -347,7 +378,7 @@ class PaymentTransaction(models.Model):
             # Replace special characters by their ASCII alternative (é -> e ; ä -> a ; ...)
             prefix = unicodedata.normalize('NFKD', prefix).encode('ascii', 'ignore').decode('utf-8')
         if not prefix:  # Prefix not provided or voided above, compute it based on the kwargs.
-            prefix = self.sudo()._compute_reference_prefix(provider_code, separator, **kwargs)
+            prefix = self.sudo()._compute_reference_prefix(separator, **kwargs)
         if not prefix:  # Prefix not computed from the kwargs, fallback on time-based value
             prefix = payment_utils.singularize_reference_prefix()
 
@@ -386,13 +417,12 @@ class PaymentTransaction(models.Model):
         return reference
 
     @api.model
-    def _compute_reference_prefix(self, provider_code, separator, **values):
+    def _compute_reference_prefix(self, separator, **values):
         """ Compute the reference prefix from the transaction values.
 
         Note: This method should be called in sudo mode to give access to the documents (invoices,
         sales orders) referenced in the transaction values.
 
-        :param str provider_code: The code of the provider handling the transaction.
         :param str separator: The custom separator used to separate parts of the computed
                               reference prefix.
         :param dict values: The transaction values used to compute the reference prefix.
@@ -434,30 +464,30 @@ class PaymentTransaction(models.Model):
 
         # Complete generic processing values with provider-specific values.
         processing_values.update(self._get_specific_processing_values(processing_values))
-        secret_keys = self._get_specific_secret_keys()
-        logged_values = {k: v for k, v in processing_values.items() if k not in secret_keys}
-        _logger.info(
-            "generic and provider-specific processing values for transaction with reference "
-            "%(ref)s:\n%(values)s",
-            {'ref': self.reference, 'values': pprint.pformat(logged_values)},
-        )
 
-        # Render the html form for the redirect flow if available.
+        # Render the HTML form for the redirect flow if available.
         if self.operation in ('online_redirect', 'validation'):
             redirect_form_view = self.provider_id._get_redirect_form_view(
                 is_validation=self.operation == 'validation'
             )
-            if redirect_form_view:  # Some provider don't need a redirect form.
+            if redirect_form_view:  # Some providers don't need a redirect form.
                 rendering_values = self._get_specific_rendering_values(processing_values)
-                _logger.info(
-                    "provider-specific rendering values for transaction with reference "
-                    "%(ref)s:\n%(values)s",
-                    {'ref': self.reference, 'values': pprint.pformat(rendering_values)},
+                redirect_form_html = self.env['ir.qweb']._render(
+                    redirect_form_view.id, rendering_values
                 )
-                redirect_form_html = self.env['ir.qweb']._render(redirect_form_view.id, rendering_values)
                 processing_values.update(redirect_form_html=redirect_form_html)
 
+        # Include the state and state message only after they might have been updated by calling the
+        # `_get_specific_rendering/processing_values` methods (due to possible external requests).
+        processing_values.update({
+            'state': self.state,
+            'state_message': self.state_message,
+        })
+
         return processing_values
+
+    def _obfuscate_log_values(self, values):
+        return values
 
     def _get_specific_processing_values(self, processing_values):
         """ Return a dict of provider-specific values used to process the transaction.
@@ -486,14 +516,6 @@ class PaymentTransaction(models.Model):
         """
         return dict()
 
-    def _get_specific_secret_keys(self):
-        """ Return dict keys of provider-specific values that should be hidden when logged.
-
-        :return: The provider-specific secret keys
-        :rtype: dict_keys
-        """
-        return dict().keys()
-
     def _get_mandate_values(self):
         """ Return a dict of module-specific values used to create a mandate.
 
@@ -508,14 +530,8 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         return dict()
 
-    def _send_payment_request(self):
-        """ Request the provider handling the transaction to make the payment.
-
-        This method is exclusively used to make payments by token, which correspond to both the
-        `online_token` and the `offline` transaction's `operation` field.
-
-        For a provider to support tokenization, it must override this method and make an API request
-        to make a payment.
+    def _charge_with_token(self):
+        """ Pay the transaction with the given token.
 
         Note: `self.ensure_one()`
 
@@ -524,12 +540,27 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         self._ensure_provider_is_not_disabled()
         self._log_sent_message()
+        try:
+            self._send_payment_request()
+        except ValidationError as e:
+            self._set_error(str(e))
 
-    def _send_refund_request(self, amount_to_refund=None):
-        """ Request the provider handling the transaction to refund it.
+    def _send_payment_request(self):
+        """Hook to override to send a payment request to the provider.
 
-        For a provider to support refunds, it must override this method and make an API request to
-        make a refund.
+        This method is exclusively used to make payments by token, which correspond to both the
+        `online_token` and the `offline` transaction's `operation` field.
+
+        For a provider to support tokenization, it must override this method and make an API request
+        to make a payment.
+
+        Note: `self.ensure_one()` from :meth:`_charge_with_token`
+
+        :return: None
+        """
+
+    def _refund(self, amount_to_refund=None):
+        """ Refund the transaction.
 
         Note: `self.ensure_one()`
 
@@ -542,50 +573,83 @@ class PaymentTransaction(models.Model):
 
         refund_tx = self._create_child_transaction(amount_to_refund or self.amount, is_refund=True)
         refund_tx._log_sent_message()
+        try:
+            refund_tx._send_refund_request()
+        except ValidationError as e:
+            self._set_error(str(e))
         return refund_tx
 
-    def _send_capture_request(self, amount_to_capture=None):
-        """ Request the provider handling the transaction to capture the payment.
+    def _send_refund_request(self):
+        """ Request the provider handling the transaction to refund it.
 
-        For partial captures, create a child transaction linked to the source transaction.
+        For a provider to support refunds, it must override this method and make an API request to
+        make a refund.
 
-        For a provider to support authorization, it must override this method and make an API
-        request to capture the payment.
+        Note: `self.ensure_one()` from :meth:`_refund`
+        """
+        return
+
+    def _capture(self, amount_to_capture=None):
+        """ Capture the authorized transaction.
 
         Note: `self.ensure_one()`
 
         :param float amount_to_capture: The amount to capture.
-        :return: The created capture child transaction, if any.
-        :rtype: `payment.transaction`
+        :return: The capture transaction created to process the capture request.
+        :rtype: recordset of `payment.transaction`
         """
         self.ensure_one()
         self._ensure_provider_is_not_disabled()
 
-        if amount_to_capture and amount_to_capture != self.amount:
-            return self._create_child_transaction(amount_to_capture)
-        return self.env['payment.transaction']
+        capture_tx = self._create_child_transaction(amount_to_capture or self.amount)
+        capture_tx._log_sent_message()
+        try:
+            capture_tx._send_capture_request()
+        except ValidationError as e:
+            self._set_error(str(e))
+        return capture_tx
 
-    def _send_void_request(self, amount_to_void=None):
-        """ Request the provider handling the transaction to void the payment.
+    def _send_capture_request(self):
+        """ Request the provider handling the transaction to capture the payment.
 
-        For partial voids, create a child transaction linked to the source transaction.
+        Create a child transaction linked to the source transaction.
 
         For a provider to support authorization, it must override this method and make an API
-        request to void the payment.
+        request to capture the payment.
+
+        Note: `self.ensure_one()` from :meth:`_capture`
+        """
+        return
+
+    def _void(self, amount_to_void=None):
+        """Void the authorized transaction.
 
         Note: `self.ensure_one()`
 
         :param float amount_to_void: The amount to be voided.
-        :return: The created void child transaction, if any.
-        :rtype: payment.transaction
+        :return: The void transaction created to process the void request.
+        :rtype: recordset of `payment.transaction`
         """
         self.ensure_one()
         self._ensure_provider_is_not_disabled()
 
-        if amount_to_void and amount_to_void != self.amount:
-            return self._create_child_transaction(amount_to_void)
+        void_tx = self._create_child_transaction(amount_to_void or self.amount)
+        void_tx._log_sent_message()
+        try:
+            void_tx._send_void_request()
+        except ValidationError as e:
+            self._set_error(str(e))
+        return void_tx
 
-        return self.env['payment.transaction']
+    def _send_void_request(self):
+        """ Request the provider handling the transaction to void the payment.
+
+        For a provider to support authorization, it must override this method and make an API
+        request to void the payment.
+
+        Note: `self.ensure_one()` from :meth:`_void`
+        """
+        return
 
     def _ensure_provider_is_not_disabled(self):
         """ Ensure that the provider's state is not `disabled` before sending a request to its
@@ -636,6 +700,8 @@ class PaymentTransaction(models.Model):
             **custom_create_values,
         })
 
+    # === BUSINESS METHODS - PROCESSING === #
+
     def _handle_notification_data(self, provider_code, notification_data):
         """ Match the transaction with the notification data, update its state and return it.
 
@@ -644,23 +710,45 @@ class PaymentTransaction(models.Model):
         :return: The transaction.
         :rtype: recordset of `payment.transaction`
         """
-        tx = self._get_tx_from_notification_data(provider_code, notification_data)
-        tx._compare_notification_data(notification_data)
-        tx._process_notification_data(notification_data)
+        tx = self or self._get_tx_from_notification_data(provider_code, notification_data)
+        if tx:
+            tx.ensure_one()
+            tx._compare_notification_data(notification_data)
+            tx._process_notification_data(notification_data)
         return tx
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Find the transaction based on the notification data.
-
-        For a provider to handle transaction processing, it must overwrite this method and return
-        the transaction matching the notification data.
 
         :param str provider_code: The code of the provider handling the transaction.
         :param dict notification_data: The notification data sent by the provider.
         :return: The transaction, if found.
         :rtype: recordset of `payment.transaction`
         """
-        return self
+        reference = self._get_ref_from_notification_data(provider_code, notification_data)
+        if not reference:
+            _logger.warning(
+                "Received notification from provider %s with missing reference", provider_code
+            )
+            return self
+        tx = self.search(
+            Domain('reference', '=', reference) & Domain('provider_code', '=', provider_code)
+        )
+        if not tx:
+            _logger.warning("No transaction found matching reference %s.", reference)
+        return tx
+
+    def _get_ref_from_notification_data(self, provider_code, notification_data):
+        """Extract the reference from the notification data.
+
+        This method must be overwritten by providers to extract the reference from the notification
+        in order to find the transaction based on it.
+
+        :param str provider_code: The code of the provider handling the transaction.
+        :param dict notification_data: The notification data sent by the provider.
+        :return: The reference of the transaction.
+        """
+        return notification_data.get('reference')
 
     def _compare_notification_data(self, notification_data):
         """ Compare the transaction's amount and currency with the notification data.
@@ -686,12 +774,12 @@ class PaymentTransaction(models.Model):
         For a provider to handle transaction processing, it must overwrite this method and process
         the notification data.
 
-        Note: `self.ensure_one()`
+        Note: `self.ensure_one()` from :meth:`_handle_notification_data`
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
         """
-        self.ensure_one()
+        return
 
     def _validate_amount_and_currency(
         self, amount, currency_code, precision_digits=None, rounding_method='DOWN'
@@ -901,7 +989,7 @@ class PaymentTransaction(models.Model):
                 # Call `_update_state` directly instead of `_set_authorized` to avoid looping.
                 child_tx.source_transaction_id._update_state(('authorized',), 'done', state_message)
 
-    #=== BUSINESS METHODS - POST-PROCESSING ===#
+    # === BUSINESS METHODS - POST-PROCESSING === #
 
     def _cron_post_process(self):
         """ Trigger the post-processing of the transactions that were not handled by the client in
@@ -943,7 +1031,43 @@ class PaymentTransaction(models.Model):
         """
         self.is_post_processed = True
 
-    #=== BUSINESS METHODS - LOGGING ===#
+    # === REQUEST HELPERS === #
+
+    def _send_api_request(self, method, endpoint, *, params=None, data=None, json=None, **kwargs):
+        """Send a request to the API.
+
+        This method serves as a helper to:
+
+        1. Pass the transaction reference to the provider's
+           :meth:`~odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request`
+           method.
+        2. Set the transaction's state to `error` if the request fails, with the exception's message
+           as the `state_message`.
+
+        Note: `self.ensure_one()`
+
+        :param str method: The HTTP method of the request.
+        :param str endpoint: The endpoint of the API to reach with the request.
+        :param dict params: The query string parameters of the request.
+        :param dict|str data: The body of the request.
+        :param dict json: The JSON-formatted body of the request.
+        :param dict kwargs: Provider-specific data forwarded to the specialized helper methods.
+        :return: The formatted content of the response.
+        :rtype: dict|str
+        :raise ValidationError: If an HTTP error occurs.
+        """
+        self.ensure_one()
+        return self.provider_id._send_api_request(
+            method,
+            endpoint,
+            params=params,
+            data=data,
+            json=json,
+            reference=self.reference,
+            **kwargs,
+        )
+
+    # === LOGGING HELPERS === #
 
     def _log_sent_message(self):
         """ Log that the transactions have been initiated in the chatter of relevant documents.
@@ -979,7 +1103,7 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-    #=== BUSINESS METHODS - GETTERS ===#
+    # === GETTERS === #
 
     def _get_sent_message(self):
         """ Return the message stating that the transaction has been requested.
