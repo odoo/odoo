@@ -295,6 +295,7 @@
                     <field name="company_id" invisible="1"/>
                     <templates>
                         <t t-name="card">
+<<<<<<< d3686999d5f02db59a1f99594424b77799251a2c:addons/hr_timesheet/views/account_analytic_line_views.xml
                             <div class="d-flex gap-1 flex-row">
                                 <div class="align-self-center me-2" invisible="context.get('default_date')">
                                     <field name="date" invisible="1"/>
@@ -302,6 +303,23 @@
                                     <div t-out="luxon.DateTime.fromISO(record.date.raw_value).toFormat('yyyy')"/>
                                 </div>
                                 <div class="text-truncate d-flex flex-column min-w-1 max-w-10 lh-sm">
+||||||| 004ba620147b8b94cbc99e144d4108c4e050ce44:addons/hr_timesheet/views/hr_timesheet_views.xml
+                            <div class="d-flex gap-1">
+                                <span t-att-title="record.employee_id.value">
+                                    <field name="employee_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_image_64_cover me-2 float-start"/>
+                                </span>
+                                <div class="d-flex flex-column min-w-0 lh-sm">
+=======
+                            <div class="d-flex gap-1">
+                                <span t-att-title="record.employee_id.value">
+                                    <field name="employee_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_image_64_cover me-2 float-start" invisible="1"/>
+                                    <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128'
+                                    + '?unique=' + record.write_date.raw_value"
+                                    class="o_image_64_cover float-start me-2"
+                                    alt="Employee's image"/>
+                                </span>
+                                <div class="d-flex flex-column min-w-0 lh-sm">
+>>>>>>> 87184f9eaf48f5d55112b169f71f5ed10cab2cfe:addons/hr_timesheet/views/hr_timesheet_views.xml
                                     <span class="text-truncate" invisible="context.get('default_project_id')" t-att-title="record.project_id.value">
                                         <field name="project_id" class="p-0 fw-bold fs-5"/>
                                     </span>
