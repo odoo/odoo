@@ -77,9 +77,11 @@ class AccountMove(models.Model):
         invoice = render_context['record']
         invoice_country = invoice.commercial_partner_id.country_code
         company_country = invoice.company_id.country_code
-        if company_country in PEPPOL_MAILING_COUNTRIES and invoice_country in PEPPOL_MAILING_COUNTRIES:
+        company_on_peppol = invoice.company_id.account_peppol_proxy_state == 'active'
+        if company_on_peppol and company_country in PEPPOL_MAILING_COUNTRIES and invoice_country in PEPPOL_MAILING_COUNTRIES:
             render_context['peppol_info'] = {
                 'peppol_country': invoice_country,
                 'is_peppol_sent': invoice.peppol_move_state in ('processing', 'done'),
+                'partner_on_peppol': invoice.commercial_partner_id.account_peppol_is_endpoint_valid,
             }
         return render_context
