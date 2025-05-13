@@ -137,3 +137,32 @@ test("visitor leaving ends the livechat conversation", async () => {
     await click("button[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
+
+test("operator can leave ended livechat", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
+    const channel_id = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [
+            Command.create({ message_unread_counter: 1, partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+        livechat_active: true,
+        livechat_operator_id: serverState.partnerId,
+        create_uid: serverState.publicUserId,
+    });
+    pyEnv["mail.message"].create({
+        body: "Hello, I need help!",
+        model: "discuss.channel",
+        res_id: channel_id,
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
+    await withGuest(guestId, () => rpc("/im_livechat/visitor_leave_session", { channel_id }));
+    await click(".o-mail-DiscussSidebarChannel", { text: "Visitor" });
+    await contains("span", { text: "This livechat conversation has ended" });
+    await click("button[title*='Leave Channel']");
+    await click("button", { text: "Leave Conversation" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor", count: 0 });
+});
