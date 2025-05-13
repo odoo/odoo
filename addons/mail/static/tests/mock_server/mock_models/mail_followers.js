@@ -32,7 +32,7 @@ export class MailFollowers extends models.ServerModel {
                 false
             );
             if ("partner" in fields) {
-                data.partner = mailDataHelpers.Store.one(
+                data.partner_id = mailDataHelpers.Store.one(
                     ResPartner.browse(follower.partner_id),
                     makeKwArgs({ fields: fields.partner })
                 );

@@ -56,7 +56,7 @@ export class FollowerSubtypeDialog extends Component {
                 "message_subscribe",
                 [[this.props.follower.thread.id]],
                 {
-                    partner_ids: [this.props.follower.partner.id],
+                    partner_ids: [this.props.follower.partner_id.id],
                     subtype_ids: selectedSubtypes.map((subtype) => subtype.id),
                 }
             );
@@ -73,6 +73,6 @@ export class FollowerSubtypeDialog extends Component {
     }
 
     get title() {
-        return _t("Edit Subscription of %(name)s", { name: this.props.follower.partner.name });
+        return _t("Edit Subscription of %(name)s", { name: this.props.follower.partner_id.name });
     }
 }

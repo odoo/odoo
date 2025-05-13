@@ -10,19 +10,19 @@ export class Follower extends Record {
     id;
     /** @type {boolean} */
     is_active;
-    partner = fields.One("Persona");
+    partner_id = fields.One("Persona");
 
     /** @returns {boolean} */
     get isEditable() {
         const hasWriteAccess = this.thread ? this.thread.hasWriteAccess : false;
-        return this.partner.eq(this.store.self) ? this.thread.hasReadAccess : hasWriteAccess;
+        return this.partner_id.eq(this.store.self) ? this.thread.hasReadAccess : hasWriteAccess;
     }
 
     async remove() {
         const data = await rpc("/mail/thread/unsubscribe", {
             res_model: this.thread.model,
             res_id: this.thread.id,
-            partner_ids: [this.partner.id],
+            partner_ids: [this.partner_id.id],
         });
         this.store.insert(data);
     }

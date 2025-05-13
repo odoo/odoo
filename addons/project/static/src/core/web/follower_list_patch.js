@@ -15,7 +15,7 @@ const followerListPatch = {
      * @param {import("models").Follower} follower
      */
     async onClickRemove(ev, follower) {
-        if (follower.partner.in(follower.thread.collaborator_ids)) {
+        if (follower.partner_id.in(follower.thread.collaborator_ids)) {
             this.dialogService.add(ConfirmationDialog, {
                 title: _t("Remove Collaborator"),
                 body: _t(
