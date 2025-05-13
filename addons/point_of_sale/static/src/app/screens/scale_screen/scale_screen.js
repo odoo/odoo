@@ -25,6 +25,7 @@ export class ScaleScreen extends Component {
     }
 
     onError(message) {
+        this.props.getPayload(null);
         this.dialog.add(
             AlertDialog,
             {
