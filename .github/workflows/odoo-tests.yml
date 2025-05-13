@@ -56,7 +56,9 @@ jobs:
           exit 1
 
       - name: Print PostgreSQL logs
+        if: failure()
         run: |
+          docker ps
           docker logs $(docker ps -q --filter "ancestor=postgres:13")
 
       - name: Create root role
