@@ -111,7 +111,6 @@ class TestProcRule(TransactionCase):
             'state': 'draft',
         }
         pick_output = self.env['stock.picking'].create(vals)
-        pick_output.move_ids._onchange_product_id()
 
         # Confirm delivery order.
         pick_output.action_confirm()

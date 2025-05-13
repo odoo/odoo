@@ -42,6 +42,13 @@ class StockMove(models.Model):
         not_dropshipped_moves = self.filtered(lambda m: not m._is_dropshipped())
         super(StockMove, not_dropshipped_moves)._compute_partner_id()
 
+    @api.depends('purchase_line_id.name')
+    def _compute_description_picking(self):
+        super()._compute_description_picking()  # Only to update the depends
+
+    def _get_description(self):
+        return self.purchase_line_id.name if self.purchase_line_id else super()._get_description()
+
     def _should_ignore_pol_price(self):
         self.ensure_one()
         return self.origin_returned_move_id or not self.purchase_line_id or not self.product_id.id

@@ -801,11 +801,6 @@ class TestReorderingRule(TransactionCase):
         self.env['procurement.group'].run_scheduler()
         self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 20.0}])
         self.assertEqual(len(po_line.order_id.order_line), 1)
-        # the moves_dest_ids are not expected to be merged since the scheduler is excuted by robodoo in en_US rather fr_FR
-        self.assertRecordValues(po_line.move_dest_ids.sorted('product_uom_qty'), [
-            {"description_picking": "produit en français", "product_uom_qty": 9.0},
-            {"description_picking": "product TEST", "product_uom_qty": 11.0},
-        ])
 
     def test_multi_locations_and_reordering_rule(self):
         """ Suppose two orderpoints for the same product, each one to a different location

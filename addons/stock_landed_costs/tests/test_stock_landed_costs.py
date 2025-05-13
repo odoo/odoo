@@ -53,7 +53,6 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         })
         picking_landed_cost_1 = self.env['stock.picking'].new(vals)
         picking_landed_cost_1._onchange_picking_type()
-        picking_landed_cost_1.move_ids._onchange_product_id()
         vals = picking_landed_cost_1._convert_to_write(picking_landed_cost_1._cache)
         picking_landed_cost_1 = self.env['stock.picking'].create(vals)
         move_1_id = picking_landed_cost_1.move_ids.id
@@ -79,7 +78,6 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         })
         picking_landed_cost_2 = self.env['stock.picking'].new(vals)
         picking_landed_cost_2._onchange_picking_type()
-        picking_landed_cost_2.move_ids._onchange_product_id()
         vals = picking_landed_cost_2._convert_to_write(picking_landed_cost_2._cache)
         picking_landed_cost_2 = self.env['stock.picking'].create(vals)
         move_2_id = picking_landed_cost_2.move_ids.id
