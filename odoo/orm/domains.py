@@ -62,14 +62,14 @@ from datetime import date, datetime, time, timedelta, timezone
 
 from odoo.exceptions import UserError
 from odoo.tools import SQL, OrderedSet, Query, classproperty, partition, str2bool
-
+from odoo.tools.date_utils import parse_date, parse_iso_date
 from .identifiers import NewId
 from .utils import COLLECTION_TYPES, parse_field_expr
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable
-    from odoo.fields import Field
-    from odoo.models import BaseModel
+    from .fields import Field
+    from .models import BaseModel
 
     M = typing.TypeVar('M', bound=BaseModel)
 
@@ -174,6 +174,7 @@ class OptimizationLevel(enum.IntEnum):
     """Indicator whether the domain was optimized."""
     NONE = 0
     BASIC = enum.auto()
+    DYNAMIC_VALUES = enum.auto()
     FULL = enum.auto()
 
 
@@ -1013,8 +1014,8 @@ class DomainCondition(Domain):
         if not records:
             return lambda _: False
 
-        if self._opt_level < OptimizationLevel.BASIC:
-            return self._optimize(records, OptimizationLevel.BASIC)._as_predicate(records)
+        if self._opt_level < OptimizationLevel.DYNAMIC_VALUES:
+            return self._optimize(records, OptimizationLevel.DYNAMIC_VALUES)._as_predicate(records)
 
         operator = self.operator
         if operator in ('child_of', 'parent_of'):
@@ -1434,18 +1435,25 @@ def _optimize_boolean_in_all(condition, model):
     return condition
 
 
-def _value_to_date(value):
+def _value_to_date(value, env, iso_only=False):
     # check datetime first, because it's a subclass of date
     if isinstance(value, datetime):
         return value.date()
     if isinstance(value, date) or value is False:
         return value
     if isinstance(value, str):
-        if len(value) <= 10:
-            return date.fromisoformat(value)
-        return datetime.fromisoformat(value).date()
+        if iso_only:
+            try:
+                value = parse_iso_date(value)
+            except ValueError:
+                # check format
+                parse_date(value, env)
+                return value
+        else:
+            value = parse_date(value, env)
+        return _value_to_date(value, env)
     if isinstance(value, COLLECTION_TYPES):
-        return OrderedSet(_value_to_date(v) for v in value)
+        return OrderedSet(_value_to_date(v, env=env, iso_only=iso_only) for v in value)
     if isinstance(value, SQL):
         warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
         return value
@@ -1453,19 +1461,35 @@ def _value_to_date(value):
 
 
 @field_type_optimization(['date'])
-def _optimize_type_date(condition, _):
+def _optimize_type_date(condition, model):
     """Make sure we have a date type in the value"""
-    if condition.operator.endswith('like') or "." in condition.field_expr:
-        return condition
     operator = condition.operator
-    value = _value_to_date(condition.value)
+    if (
+        operator not in ('in', 'not in', '>', '<', '<=', '>=')
+        or "." in condition.field_expr
+    ):
+        return condition
+    value = _value_to_date(condition.value, model.env, iso_only=True)
     if value is False and operator[0] in ('<', '>'):
         # comparison to False results in an empty domain
         return _FALSE_DOMAIN
     return DomainCondition(condition.field_expr, operator, value)
 
 
-def _value_to_datetime(value):
+@field_type_optimization(['date'], level=OptimizationLevel.DYNAMIC_VALUES)
+def _optimize_type_date_relative(condition, model):
+    operator = condition.operator
+    if (
+        operator not in ('in', 'not in', '>', '<', '<=', '>=')
+        or "." in condition.field_expr
+        or not isinstance(condition.value, (str, OrderedSet))
+    ):
+        return condition
+    value = _value_to_date(condition.value, model.env)
+    return DomainCondition(condition.field_expr, operator, value)
+
+
+def _value_to_datetime(value, env, iso_only=False):
     """Convert a value(s) to datetime.
 
     :returns: A tuple containing the converted value and a boolean indicating
@@ -1481,12 +1505,20 @@ def _value_to_datetime(value):
     if value is False:
         return False, True
     if isinstance(value, str):
-        dt, _ = _value_to_datetime(datetime.fromisoformat(value))
-        return dt, len(value) == 10
+        if iso_only:
+            try:
+                value = parse_iso_date(value)
+            except ValueError:
+                # check formatting
+                _dt, is_date = _value_to_datetime(parse_date(value, env), env)
+                return value, is_date
+        else:
+            value = parse_date(value, env)
+        return _value_to_datetime(value, env)
     if isinstance(value, date):
         return datetime.combine(value, time.min), True
     if isinstance(value, COLLECTION_TYPES):
-        value, is_date = zip(*(_value_to_datetime(v) for v in value))
+        value, is_date = zip(*(_value_to_datetime(v, env=env, iso_only=iso_only) for v in value))
         return OrderedSet(value), all(is_date)
     if isinstance(value, SQL):
         warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
@@ -1495,13 +1527,16 @@ def _value_to_datetime(value):
 
 
 @field_type_optimization(['datetime'])
-def _optimize_type_datetime(condition, _):
+def _optimize_type_datetime(condition, model):
     """Make sure we have a datetime type in the value"""
-    if condition.operator.endswith('like') or "." in condition.field_expr:
-        return condition
     field_expr = condition.field_expr
     operator = condition.operator
-    value, is_date = _value_to_datetime(condition.value)
+    if (
+        operator not in ('in', 'not in', '>', '<', '<=', '>=')
+        or "." in field_expr
+    ):
+        return condition
+    value, is_date = _value_to_datetime(condition.value, model.env, iso_only=True)
 
     # Handle inequality
     if operator[0] in ('<', '>'):
@@ -1546,6 +1581,19 @@ def _optimize_type_datetime(condition, _):
         return domain
 
     return DomainCondition(field_expr, operator, value)
+
+
+@field_type_optimization(['datetime'], level=OptimizationLevel.DYNAMIC_VALUES)
+def _optimize_type_datetime_relative(condition, model):
+    operator = condition.operator
+    if (
+        operator not in ('in', 'not in', '>', '<', '<=', '>=')
+        or "." in condition.field_expr
+        or not isinstance(condition.value, (str, OrderedSet))
+    ):
+        return condition
+    value, _ = _value_to_datetime(condition.value, model.env)
+    return DomainCondition(condition.field_expr, operator, value)
 
 
 @field_type_optimization(['binary'])
