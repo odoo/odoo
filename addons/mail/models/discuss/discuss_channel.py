@@ -1223,6 +1223,14 @@ class DiscussChannel(models.Model):
     def channel_rename(self, name):
         self.ensure_one()
         self.write({'name': name})
+        label = self.env._("thread") if self.parent_channel_id else self.env._("channel")
+        notification = Markup('<div class="o_mail_notification">%s</div>') % _(
+            "%(user)s changed the %(label)s name: %(channel)s",
+            user=self.env.user.display_name,
+            label=label,
+            channel=Markup("<strong>%s</strong>") % name,
+        )
+        self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
 
     def channel_change_description(self, description):
         self.ensure_one()

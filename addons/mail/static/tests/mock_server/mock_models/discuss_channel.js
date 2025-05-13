@@ -508,8 +508,21 @@ export class DiscussChannel extends models.ServerModel {
         delete kwargs.ids;
         name = kwargs.name || "";
 
+        /** @type {import {"mock_model"}.ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const [partner] = ResPartner._get_current_persona();
         const [channel] = this.browse(ids);
+        const label = channel.parent_channel_id ? "thread" : "channel";
         this.write([channel.id], { name });
+        this.message_post(
+            channel.id,
+            makeKwArgs({
+                body: `<div class="o_mail_notification">${partner.display_name} changed the ${label} name: <strong>${name}</strong></div>`,
+                message_type: "notification",
+                subtype_xmlid: "mail.mt_comment",
+            })
+        );
     }
 
     /**
