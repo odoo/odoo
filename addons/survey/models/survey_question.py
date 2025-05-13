@@ -178,6 +178,10 @@ class SurveyQuestion(models.Model):
         ]"""
     )
 
+    # lives sessions - settings
+    survey_session_speed_rating = fields.Boolean(related="survey_id.session_speed_rating")
+    survey_session_speed_rating_time_limit = fields.Integer(related="survey_id.session_speed_rating_time_limit", string="General Time limit (seconds)")
+
     _positive_len_min = models.Constraint(
         'CHECK (validation_length_min >= 0)',
         'A length must be positive!',
