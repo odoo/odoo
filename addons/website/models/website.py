@@ -493,6 +493,10 @@ class Website(models.Model):
         }
 
     def configurator_set_menu_links(self, menu_company, module_data):
+        if self.env['ir.module.module'].search([('name', '=', 'pos_restaurant_appointment')]).state == 'installed':
+            appointment_menu = self.env['website.menu'].search([('url', '=', '/appointment'), ('website_id', '=', self.id)])
+            appointment_menu.unlink()
+
         menus = self.env['website.menu'].search([('url', 'in', list(module_data.keys())), ('website_id', '=', self.id)])
         for m in menus:
             m.sequence = module_data[m.url]['sequence']
@@ -608,6 +612,12 @@ class Website(models.Model):
 
         # Update CTA
         cta_data = website.get_cta_data(kwargs.get('website_purpose'), kwargs.get('website_type'))
+        if self.env['ir.module.module'].search([('name', '=', 'pos_restaurant_appointment')]).state == 'installed':
+            cta_data.update({
+                'cta_btn_text': self.env._('Book a Table'),
+                'cta_btn_href': '/appointment'
+            })
+
         if cta_data['cta_btn_text']:
             xpath_view = 'website.snippets'
             parent_view = self.env['website'].with_context(website_id=website.id).viewref(xpath_view)
