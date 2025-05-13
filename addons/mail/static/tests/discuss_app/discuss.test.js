@@ -88,6 +88,43 @@ test("can change the thread name of #general", async () => {
     await contains("input.o-mail-DiscussContent-threadName:value(special)");
 });
 
+test.tags("focus required");
+test("should log notification when channel/thread is renamed", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        create_uid: serverState.userId,
+    });
+    pyEnv["discuss.channel"].create({
+        name: "test",
+        parent_channel_id: channelId,
+        create_uid: serverState.userId,
+    });
+    onRpc("discuss.channel", "channel_rename", ({ route }) => expect.step(route));
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-DiscussContent-threadName:value(general)");
+    await insertText(".o-mail-DiscussContent-threadName:enabled", "special", { replace: true });
+    triggerHotkey("Enter");
+    await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
+    await contains(".o-mail-DiscussContent-threadName:value(special)");
+    await contains(".o-mail-NotificationMessage", {
+        text: `${serverState.partnerName} changed the channel name to special`,
+    });
+
+    await click(".o-mail-DiscussSidebarChannel-subChannel", { text: "test" });
+    await click(".o-mail-DiscussContent-threadName:value(test)");
+    await insertText(".o-mail-DiscussContent-threadName:enabled", "specialThread", {
+        replace: true,
+    });
+    triggerHotkey("Enter");
+    await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
+    await contains(".o-mail-DiscussContent-threadName:value(specialThread)");
+    await contains(".o-mail-NotificationMessage", {
+        text: `${serverState.partnerName} changed the thread name to specialThread`,
+    });
+});
+
 test("can active change thread from messaging menu", async () => {
     const pyEnv = await startServer();
     const [, teamId] = pyEnv["discuss.channel"].create([
