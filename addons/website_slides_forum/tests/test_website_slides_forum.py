@@ -46,7 +46,12 @@ class TestWebsiteSlidesForum(TestForumCommon):
 
         # Making the forum public should re-give access
         self.forum.privacy = "public"
+        self.env.flush_all()
         self.env.invalidate_all()
+        self.assertEqual(
+            self.env['forum.forum'].with_user(self.user_public).search([('id', '=', self.forum.id)]),
+            self.forum
+        )
         self.assertEqual(self.forum.with_user(self.user_public).name, "TestForum")
         self.assertEqual(self.forum.with_user(self.user_employee).name, "TestForum")
         self.assertEqual(
