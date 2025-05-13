@@ -12,6 +12,7 @@ from odoo.addons.account.controllers.portal import PortalAccount
 from odoo.addons.hr_timesheet.controllers.portal import TimesheetCustomerPortal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.project.controllers.portal import ProjectCustomerPortal
+from odoo.addons.sale.controllers.portal import CustomerPortal
 
 
 class PortalProjectAccount(PortalAccount, ProjectCustomerPortal):
@@ -136,3 +137,16 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
     @http.route()
     def portal_my_timesheets(self, *args, groupby='sol', **kw):
         return super().portal_my_timesheets(*args, groupby=groupby, **kw)
+
+
+class SaleTimesheetSaleCustomerPortal(CustomerPortal):
+
+    @http.route()
+    def portal_order_page(self, *args, **kwargs):
+        response = super().portal_order_page(*args, **kwargs)
+        if 'sale_order' not in response.qcontext:
+            return response
+        order = response.qcontext['sale_order']
+        domain = request.env['account.analytic.line']._sale_order_portal_domain(order.order_line)
+        response.qcontext['timesheets'] = request.env['account.analytic.line'].sudo().search(domain)
+        return response
