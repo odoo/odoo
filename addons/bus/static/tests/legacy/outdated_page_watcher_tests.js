@@ -12,15 +12,16 @@ import { createWebClient } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
-QUnit.test("disconnect during bus gc should ask for reload", async () => {
+QUnit.test("disconnect during bus gc should ask for reload", async (assert) => {
     // When the bus table is cleared, reload might be required to recover
     // coherent state in apps like Discuss.
     addBusServicesToRegistry();
     registry.category("services").add("bus.outdated_page_watcher", outdatedPageWatcherService);
     const pyEnv = await startServer();
     const { env } = await createWebClient({
-        mockRPC(route) {
+        mockRPC(route, args) {
             if (route === "/bus/has_missed_notifications") {
+                assert.ok("last_notification_id" in args);
                 return true;
             }
         },
@@ -36,13 +37,14 @@ QUnit.test("disconnect during bus gc should ask for reload", async () => {
     await assertSteps(["reload"]);
 });
 
-QUnit.test("reconnect after going offline after bus gc should ask for reload", async () => {
+QUnit.test("reconnect after going offline after bus gc should ask for reload", async (assert) => {
     addBusServicesToRegistry();
     registry.category("services").add("bus.outdated_page_watcher", outdatedPageWatcherService);
     const { advanceTime } = mockTimeout();
     const { env } = await createWebClient({
-        mockRPC(route) {
+        mockRPC(route, args) {
             if (route === "/bus/has_missed_notifications") {
+                assert.ok("last_notification_id" in args);
                 return true;
             }
         },
