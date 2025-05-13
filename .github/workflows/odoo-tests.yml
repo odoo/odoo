@@ -61,7 +61,6 @@ jobs:
       #     docker logs $(docker ps -q --filter "ancestor=postgres:13")
 
       - name: Debug Postgres readiness
-        if: failure()
         run: |
           docker exec $(docker ps -q --filter "ancestor=postgres:13") pg_isready -h localhost -p 5432
 
