@@ -60,6 +60,8 @@ function isUnremovableTableComponent(node, root) {
  * @property { TablePlugin['resetTableSize'] } resetTableSize
  * @property { TablePlugin['clearColumnContent'] } clearColumnContent
  * @property { TablePlugin['clearRowContent'] } clearRowContent
+ * @property { TablePlugin['mergeSelectedCells'] } mergeSelectedCells
+ * @property { TablePlugin['unmergeSelectedCell'] } unmergeSelectedCell
  */
 
 /**
@@ -90,6 +92,8 @@ export class TablePlugin extends Plugin {
         "resetTableSize",
         "clearColumnContent",
         "clearRowContent",
+        "mergeSelectedCells",
+        "unmergeSelectedCell",
     ];
     resources = {
         user_commands: [
@@ -555,6 +559,85 @@ export class TablePlugin extends Plugin {
         table.before(baseContainer);
         table.remove();
         this.dependencies.selection.setCursorStart(baseContainer);
+    }
+
+    /**
+     * Merges the given list of <td> elements by applying rowspan or colspan,
+     * moving their content into the first cell, and removing the rest.
+     *
+     * @param {HTMLTableCellElement[]} tds - The cells to merge.
+     * @param {"rowspan" | "colspan"} spanAttr - The attribute to apply for merging.
+     */
+    mergeSelectedCells(tds, spanAttr) {
+        if (!spanAttr || tds.length === 0) {
+            return;
+        }
+        const firstTd = tds[0];
+        firstTd.setAttribute(
+            spanAttr,
+            tds.reduce((total, td) => total + Math.max(1, td[spanAttr] || 1), 0)
+        );
+
+        for (let i = 1; i < tds.length; i++) {
+            const currentTd = tds[i];
+            firstTd.append(
+                ...Array.from(currentTd.childNodes).filter((node) => !isEmptyBlock(node))
+            );
+            currentTd.remove();
+        }
+        this.dependencies.selection.setSelection({
+            anchorNode: firstTd,
+            anchorOffset: 0,
+            focusNode: firstTd,
+            focusOffset: nodeSize(firstTd),
+        });
+    }
+
+    /**
+     * Splits a merged table cell (using either `rowspan` or `colspan`) back
+     * into individual cells by inserting new emoty `<td>` elements
+     */
+    unmergeSelectedCell() {
+        const selectedTds = Array.from(this.editable.querySelectorAll(".o_selected_td"));
+        const { anchorNode, isCollapsed } = this.dependencies.selection.getEditableSelection();
+        if (isCollapsed && anchorNode && closestElement(anchorNode, "td")) {
+            selectedTds.push(closestElement(anchorNode, "td"));
+        }
+        if (!selectedTds.length) {
+            return;
+        }
+
+        for (const td of selectedTds) {
+            if (td.hasAttribute("rowspan")) {
+                let tr = closestElement(td, "tr");
+                const colIndex = getColumnIndex(td);
+                for (let i = 1; i < td.rowSpan; i++) {
+                    const nextTr = tr.nextElementSibling;
+                    if (nextTr) {
+                        const newTd = this.document.createElement("td");
+                        fillEmpty(newTd);
+
+                        const targetTd = nextTr.childNodes[colIndex];
+                        if (targetTd) {
+                            nextTr.insertBefore(newTd, targetTd);
+                        } else {
+                            nextTr.appendChild(newTd);
+                        }
+                        tr = nextTr;
+                    }
+                }
+                td.removeAttribute("rowspan");
+                delete this.currentGridTable;
+            } else if (td.hasAttribute("colspan")) {
+                for (let i = 1; i < td.colSpan; i++) {
+                    const newTd = this.document.createElement("td");
+                    fillEmpty(newTd);
+                    td.after(newTd);
+                }
+                td.removeAttribute("colspan");
+                delete this.currentGridTable;
+            }
+        }
     }
 
     // @todo @phoenix: handle deleteBackward on table cells

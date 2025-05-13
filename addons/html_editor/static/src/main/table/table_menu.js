@@ -1,4 +1,5 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -18,10 +19,13 @@ export class TableMenu extends Component {
         resetColumnWidth: Function,
         resetTableSize: Function,
         clearColumnContent: Function,
+        mergeSelectedCells: Function,
+        unmergeSelectedCell: Function,
         clearRowContent: Function,
         overlay: Object,
         dropdownState: Object,
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
+        editable: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
         direction: { type: String, optional: true },
     };
     static defaultProps = { direction: "ltr" };
@@ -36,6 +40,7 @@ export class TableMenu extends Component {
             this.isFirst = !tr.previousElementSibling;
             this.isLast = !tr.nextElementSibling;
         }
+        this.editableDocument = this.props.editable.ownerDocument;
         this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
     }
 
@@ -62,13 +67,33 @@ export class TableMenu extends Component {
         );
     }
 
+    get areAlreadyMerged() {
+        const selectedTds = Array.from(this.editableDocument.querySelectorAll(".o_selected_td"));
+        const { anchorNode, focusNode, isCollapsed } = this.editableDocument.getSelection();
+        if (isCollapsed && anchorNode && closestElement(anchorNode, "td")) {
+            selectedTds.push(closestElement(anchorNode, "td"));
+        }
+        if (
+            !selectedTds.length ||
+            closestElement(anchorNode, "table") !== closestElement(focusNode, "table")
+        ) {
+            return false;
+        }
+        return selectedTds.some((td) => td.colSpan > 1 || td.rowSpan > 1);
+    }
+
     onSelected(item) {
         item.action(this.props.target);
         this.props.overlay.close();
     }
 
+    isDisableMergeOption(span) {
+        return span ? false : true;
+    }
+
     colItems() {
         const ltr = this.props.direction === "ltr";
+        const [tds, spanAttr] = getSelectedCellsMergeInfo(this.editableDocument);
         return [
             !this.isFirst && {
                 name: "move_left",
@@ -118,10 +143,25 @@ export class TableMenu extends Component {
                 text: _t("Clear content"),
                 action: this.props.clearColumnContent.bind(this),
             },
+            spanAttr !== "colSpan" && {
+                name: "merge_cell",
+                icon: "fa fa-compress",
+                text: _t("Merge Cells"),
+                disable: !spanAttr,
+                tooltip: _t("only rows or cells selection can be merged"),
+                action: () => this.props.mergeSelectedCells(tds, spanAttr),
+            },
+            this.areAlreadyMerged && {
+                name: "unmerge_cell",
+                icon: "fa fa-compress",
+                text: _t("unmerge Cells"),
+                action: this.props.unmergeSelectedCell.bind(this),
+            },
         ].filter(Boolean);
     }
 
     rowItems() {
+        const [tds, spanAttr] = getSelectedCellsMergeInfo(this.editableDocument);
         return [
             !this.isFirst && {
                 name: "move_up",
@@ -170,6 +210,20 @@ export class TableMenu extends Component {
                 icon: "fa-times-circle",
                 text: _t("Clear content"),
                 action: (target) => this.props.clearRowContent(target.parentElement),
+            },
+            spanAttr !== "rowSpan" && {
+                name: "merge_cell",
+                icon: "fa fa-compress",
+                text: _t("Merge Cells"),
+                disable: !spanAttr,
+                tooltip: _t("only rows or cells selection can be merged"),
+                action: () => this.props.mergeSelectedCells(tds, spanAttr),
+            },
+            this.areAlreadyMerged && {
+                name: "unmerge_cell",
+                icon: "fa fa-compress",
+                text: _t("Unmerge Cells"),
+                action: this.props.unmergeSelectedCell.bind(this),
             },
         ].filter(Boolean);
     }

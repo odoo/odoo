@@ -154,6 +154,7 @@ test("list of table commands in first column", async () => {
         "insert_right",
         "delete",
         "clear_content",
+        "merge_cell",
     ]);
 });
 
@@ -179,6 +180,7 @@ test("list of table commands in second column", async () => {
         "insert_right",
         "delete",
         "clear_content",
+        "merge_cell",
     ]);
 });
 
@@ -204,6 +206,7 @@ test("list of table commands in last column", async () => {
         "insert_right",
         "delete",
         "clear_content",
+        "merge_cell",
     ]);
 });
 
@@ -236,6 +239,7 @@ test("list of table commands in first row", async () => {
         "insert_below",
         "delete",
         "clear_content",
+        "merge_cell",
     ]);
 });
 
@@ -263,6 +267,7 @@ test("list of table commands in second row", async () => {
         "insert_below",
         "delete",
         "clear_content",
+        "merge_cell",
     ]);
 });
 
@@ -290,6 +295,7 @@ test("list of table commands in last row", async () => {
         "insert_below",
         "delete",
         "clear_content",
+        "merge_cell",
     ]);
 });
 
