@@ -371,9 +371,9 @@ export class Many2XAutocomplete extends Component {
             error instanceof RPCError &&
             error.exceptionName === "odoo.exceptions.ValidationError"
         ) {
-            return this.openMany2X({  
-                context: this.getCreationContext(request),  
-                nextRecordsContext: this.props.context,  
+            return this.openMany2X({
+                context: this.getCreationContext(request),
+                nextRecordsContext: this.props.context,
             });
         } else {
             throw error;
@@ -423,13 +423,12 @@ export class Many2XAutocomplete extends Component {
             }
         }
 
+        const slowCreate = () =>
+            this.openMany2X({
+                context: this.getCreationContext(request),
+                nextRecordsContext: this.props.context,
+            });
         if (request.length) {
-            const slowCreate = () =>
-                this.openMany2X({
-                    context: this.getCreationContext(request),
-                    nextRecordsContext: this.props.context,
-                });
-
             if (this.props.quickCreate) {
                 options.push({
                     label: _t('Create "%s"', request),
@@ -451,6 +450,12 @@ export class Many2XAutocomplete extends Component {
                     action: slowCreate,
                 });
             }
+        } else if (canCreateEdit && !addSearchMore) {
+            options.push({
+                label: _t("Create..."),
+                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create_new",
+                action: slowCreate,
+            });
         }
 
         if (!this.props.noSearchMore && addSearchMore) {
