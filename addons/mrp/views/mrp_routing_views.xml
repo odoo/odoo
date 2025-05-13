@@ -120,6 +120,30 @@
                                 <field name="company_id" groups="base.group_multi_company" />
                             </group>
                         </group>
+<<<<<<< a25b11e4f3a914ef59a260fbe918147472d9497e
+||||||| 5bf596641ef548bf09be6dbfbeeb2e9ed481a374
+                        <notebook>
+                            <page string="Work Sheet" name="worksheet">
+                                <group>
+                                    <field name="worksheet_type" widget="radio"/>
+                                    <field name="worksheet" help="Upload your PDF file." widget="pdf_viewer" invisible="worksheet_type != 'pdf'" required="worksheet_type == 'pdf'"/>
+                                    <field name="worksheet_google_slide" placeholder="Google Slide Link" widget="google_slide_viewer" invisible="worksheet_type != 'google_slide'" required="worksheet_type == 'google_slide'"/>
+                                    <field name="note" invisible="worksheet_type != 'text'"/>
+                                </group>
+                            </page>
+                        </notebook>
+=======
+                        <notebook>
+                            <page string="Work Sheet" name="worksheet">
+                                <group>
+                                    <field name="worksheet_type" widget="radio"/>
+                                    <field name="worksheet" help="Upload your PDF file." widget="pdf_viewer" invisible="worksheet_type != 'pdf'" required="worksheet_type == 'pdf'"/>
+                                    <field name="worksheet_google_slide" placeholder="Google Slide Link" widget="google_slide_viewer" invisible="worksheet_type != 'google_slide'" required="worksheet_type == 'google_slide'"/>
+                                    <field name="note" invisible="worksheet_type != 'text'" options="{'embedded_components': False}"/>
+                                </group>
+                            </page>
+                        </notebook>
+>>>>>>> 70849a1b16f486c556bb2f01e40de255c7a3757f
                     </sheet>
                     <chatter/>
                 </form>
