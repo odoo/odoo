@@ -41,41 +41,41 @@ jobs:
             build-essential python3-dev libldap2-dev \
             libsasl2-dev libssl-dev postgresql-client
 
-      # - name: Wait for Postgres to be ready
-      #   run: |
-      #     for i in {1..60}; do  # Intentaremos 60 veces (1 minuto de espera total)
-      #       if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER > /dev/null 2>&1; then
-      #         echo "Postgres is up"
-      #         exit 0
-      #       else
-      #         echo "Attempt $i: PostgreSQL is not ready yet"
-      #       fi
-      #       sleep 1
-      #     done
-      #     echo "Postgres did not become ready in time" >&2
-      #     exit 1
+      - name: Wait for Postgres to be ready
+        run: |
+          for i in {1..60}; do  # Intentaremos 60 veces (1 minuto de espera total)
+            if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER > /dev/null 2>&1; then
+              echo "Postgres is up"
+              exit 0
+            else
+              echo "Attempt $i: PostgreSQL is not ready yet"
+            fi
+            sleep 1
+          done
+          echo "Postgres did not become ready in time" >&2
+          exit 1
 
-      # - name: Print PostgreSQL logs
-      #   if: failure()
-      #   run: |
-      #     docker ps
-      #     docker logs $(docker ps -q --filter "ancestor=postgres:13")
+      - name: Print PostgreSQL logs
+        if: failure()
+        run: |
+          docker ps
+          docker logs $(docker ps -q --filter "ancestor=postgres:13")
 
-      # - name: Debug Postgres readiness
-      #   run: |
-      #     docker exec $(docker ps -q --filter "ancestor=postgres:13") pg_isready -h localhost -p 5432
+      - name: Debug Postgres readiness
+        run: |
+          docker exec $(docker ps -q --filter "ancestor=postgres:13") pg_isready -h localhost -p 5432
 
-      # # - name: Create root role
-      # #   env:
-      # #     PGPASSWORD: ${{ env.DB_PASSWORD }}
-      # #   run: |
-      # #     psql -h $DB_HOST -U $DB_USER -c "CREATE ROLE root WITH LOGIN SUPERUSER PASSWORD 'password';"
+      - name: Create root role
+        env:
+          PGPASSWORD: ${{ env.DB_PASSWORD }}
+        run: |
+          psql -h $DB_HOST -U $DB_USER -c "CREATE ROLE root WITH LOGIN SUPERUSER PASSWORD 'password';"
 
-      # - name: Create test database
-      #   env:
-      #     PGPASSWORD: ${{ env.DB_PASSWORD }}
-      #   run: |
-      #     psql -h $DB_HOST -U $DB_USER -c "CREATE DATABASE test_db;"
+      - name: Create test database
+        env:
+          PGPASSWORD: ${{ env.DB_PASSWORD }}
+        run: |
+          psql -h $DB_HOST -U $DB_USER -c "CREATE DATABASE test_db;"
 
       - name: Install Python deps
         run: |
