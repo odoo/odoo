@@ -1498,8 +1498,10 @@ class AccountTax(models.Model):
                 for tag_id in tax_data[base_tags_field]:
                     base_tags_ids.add(tag_id)
         base_tags = self.env['account.account.tag'].browse(list(base_tags_ids))
+        product_tags = self.env['account.account.tag']
         if product:
-            base_tags |= product.sudo().account_tag_ids
+            product_tags = product.sudo().account_tag_ids
+            base_tags |= product_tags
 
         # Convert id to records.
         taxes_data = taxes_computation['taxes_data']
@@ -1512,7 +1514,7 @@ class AccountTax(models.Model):
                 'tax': tax,
                 'group': group,
                 'taxes': subsequent_taxes,
-                'tags': subsequent_tags,
+                'tags': subsequent_tags | product_tags,
             })
 
         # Repartition lines.
