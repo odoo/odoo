@@ -8,6 +8,7 @@ from markupsafe import Markup
 
 import odoo
 from odoo import models
+from odoo.exceptions import MissingError
 from odoo.http import request
 from odoo.tools import groupby
 from odoo.addons.bus.websocket import wsrequest
@@ -274,7 +275,10 @@ class Store:
                 if isinstance(field, dict):
                     record_data_list.append(field)
                 elif not field.predicate or field.predicate(record):
-                    record_data_list.append({field.field_name: field._get_value(record)})
+                    try:
+                        record_data_list.append({field.field_name: field._get_value(record)})
+                    except MissingError:
+                        break
         return records_data_list
 
     def _get_record_index(self, model_name, values):

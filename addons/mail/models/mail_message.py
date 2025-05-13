@@ -8,7 +8,7 @@ from binascii import Error as binascii_error
 from collections import defaultdict
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Command, Domain
 from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.misc import OrderedSet
@@ -211,7 +211,10 @@ class MailMessage(models.Model):
         free.record_name = False
         # sudo here, as it behaves like a m2o -> can read message, can read name_get
         for message, record in (self - free)._record_by_message().items():
-            message.record_name = record.sudo().display_name
+            try:
+                message.record_name = record.sudo().display_name
+            except MissingError:
+                message.record_name = False
 
     @api.depends('author_id', 'author_guest_id')
     @api.depends_context('guest', 'uid')
