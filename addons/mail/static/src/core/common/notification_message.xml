@@ -7,6 +7,9 @@
             <t t-if="message.notificationType === 'call'">
                 <span class="text-muted opacity-50" t-esc="callInformation"/>
             </t>
+            <t t-elif="message.notificationType === 'channel_rename'">
+                <span class="text-muted opacity-50" t-out="message.inlineBody"/>
+            </t>
             <t t-else="">
                 <span class="o-mail-NotificationMessage-author d-inline text-muted opacity-50" t-if="message.authorName and !message.richBody.includes(escape(message.authorName))" t-esc="message.authorName"/> <span class="text-muted opacity-50" t-out="message.richBody"/>
             </t>

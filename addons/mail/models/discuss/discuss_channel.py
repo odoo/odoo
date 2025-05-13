@@ -1366,6 +1366,8 @@ class DiscussChannel(models.Model):
     def channel_rename(self, name):
         self.ensure_one()
         self.write({'name': name})
+        body = Markup('<div data-oe-type="channel_rename" class="o_mail_notification">%s</div>') % name
+        self.message_post(body=body, message_type="notification", subtype_xmlid="mail.mt_comment")
 
     def channel_change_description(self, description):
         self.ensure_one()
