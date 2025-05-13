@@ -53,7 +53,7 @@ jobs:
       - name: Wait for Postgres to be ready
         run: |
           for i in {1..30}; do
-            if pg_isready -h localhost -p 5432 -U $DB_USER; then
+            if pg_isready -h localhost -p 5432 -U odoo; then
               echo "Postgres is up"
               break
             fi
