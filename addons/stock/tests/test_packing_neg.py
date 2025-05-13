@@ -48,7 +48,6 @@ class TestPackingNeg(TransactionCase):
         }
         pick_neg = self.env['stock.picking'].create(vals)
         pick_neg._onchange_picking_type()
-        pick_neg.move_ids._onchange_product_id()
 
         # Confirm and assign picking
         pick_neg.action_confirm()
@@ -106,7 +105,6 @@ class TestPackingNeg(TransactionCase):
         }
         delivery_order_neg = self.env['stock.picking'].create(vals)
         delivery_order_neg._onchange_picking_type()
-        delivery_order_neg.move_ids._onchange_product_id()
 
         # Assign and confirm
         delivery_order_neg.action_confirm()
@@ -163,7 +161,6 @@ class TestPackingNeg(TransactionCase):
         }
         delivery_reconcile = self.env['stock.picking'].create(vals)
         delivery_reconcile._onchange_picking_type()
-        delivery_reconcile.move_ids._onchange_product_id()
 
         # Receive 20 products with lot neg in stock with a new incoming shipment that should be on pallet 2
         delivery_reconcile.action_confirm()

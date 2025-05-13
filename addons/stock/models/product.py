@@ -285,19 +285,26 @@ class ProductProduct(models.Model):
         return self.ids
 
     def _get_description(self, picking_type_id):
-        """ return product receipt/delivery/picking description depending on
-        picking type passed as argument.
+        """
+            Return product description based on the picking type:
+            * For outgoing pickings, we always use the product name.
+            * For all other pickings, we try to use the product description (if one has been set),
+              otherwise we fall back to the product name.
         """
         self.ensure_one()
-        picking_code = picking_type_id.code
-        description = html2plaintext(self.description) if not is_html_empty(self.description) else self.name
-        if picking_code == 'incoming':
-            return self.description_pickingin or description
-        if picking_code == 'outgoing':
-            return self.description_pickingout or self.name
-        if picking_code == 'internal':
-            return self.description_picking or description
-        return description
+        if picking_type_id.code == 'outgoing':
+            return self.name
+        return html2plaintext(self.description) if not is_html_empty(self.description) else self.name
+
+    def _get_picking_description(self, picking_type_id):
+        """
+        Return product receipt/delivery/picking description depending on picking type passed as argument.
+        """
+        return {
+            'incoming': self.description_pickingin,
+            'outgoing': self.description_pickingout,
+            'internal': self.description_picking
+        }.get(picking_type_id.code, '')
 
     def _get_domain_locations(self):
         '''

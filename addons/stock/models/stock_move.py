@@ -52,7 +52,8 @@ class StockMove(models.Model):
         'move_id', 'template_attribute_value_id',
         string="Never attribute Values"
     )
-    description_picking = fields.Text('Description of Picking')
+    description_picking = fields.Text(string="Description Of Picking", compute='_compute_description_picking', inverse='_inverse_description_picking')
+    description_picking_manual = fields.Text(readonly=True)
     product_qty = fields.Float(
         'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
         digits=0, store=True, compute_sudo=True,
@@ -698,6 +699,25 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move.product_id.code and '%s: ' % move.product_id.code or '',
                 move.location_id.name, move.location_dest_id.name)
 
+    @api.depends('product_id', 'picking_type_id', 'description_picking_manual')
+    def _compute_description_picking(self):
+        for move in self:
+            if move.description_picking_manual:
+                move.description_picking = move.description_picking_manual
+            elif move.product_id:
+                product = move.product_id.with_context(lang=self._get_lang())
+                move.description_picking = product._get_picking_description(move.picking_type_id) or move._get_description()
+            else:
+                move.description_picking = ""
+
+    def _get_description(self):
+        product = self.product_id.with_context(lang=self._get_lang())
+        return product._get_description(self.picking_type_id)
+
+    def _inverse_description_picking(self):
+        for move in self:
+            move.description_picking_manual = move.description_picking
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -1294,12 +1314,6 @@ Please change the quantity done or the rounding precision in your settings.""",
             else:
                 return moves_todo[-1:].state or 'draft'
 
-    @api.onchange('product_id', 'picking_type_id')
-    def _onchange_product_id(self):
-        product = self.product_id.with_context(lang=self._get_lang())
-        if product:
-            self.description_picking = product._get_description(self.picking_type_id)
-
     @api.onchange('lot_ids')
     def _onchange_lot_ids(self):
         quantity = sum(ml.quantity_product_uom for ml in self.move_line_ids.filtered(lambda ml: not ml.lot_id and ml.lot_name))
@@ -1638,7 +1652,8 @@ Please change the quantity done or the rounding precision in your settings.""",
         if self.procure_method == "make_to_order":
             move_dest_ids = self
         return {
-            'product_description_variants': self.description_picking and self.description_picking.replace(product_id._get_description(self.picking_type_id), ''),
+            # TODO CLPI: maybe make this a little cleaner
+            'product_description_variants': self.description_picking and self.description_picking.replace(product_id._get_description(self.picking_type_id), '').replace(product_id._get_picking_description(self.picking_type_id) or '', ''),
             'never_product_template_attribute_value_ids': self.never_product_template_attribute_value_ids,
             'date_planned': dates_info.get('date_planned'),
             'date_order': dates_info.get('date_order'),

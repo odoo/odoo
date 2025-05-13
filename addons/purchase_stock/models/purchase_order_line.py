@@ -299,7 +299,6 @@ class PurchaseOrderLine(models.Model):
             'picking_type_id': self.order_id.picking_type_id.id,
             'group_id': self.order_id.group_id.id,
             'origin': self.order_id.name,
-            'description_picking': product.description_pickingin or self.name,
             'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
