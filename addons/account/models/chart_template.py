@@ -728,6 +728,16 @@ class AccountChartTemplate(models.AbstractModel):
         if reco:
             reco.line_ids.sudo().write({'account_id': company.transfer_account_id.id})
 
+        bank_fees = self.ref('bank_fees_reco', raise_if_not_found=False)
+        if bank_fees:
+            bank_fees.line_ids.sudo().write({'account_id': self._get_bank_fees_reco_account(company).id})
+
+    def _get_bank_fees_reco_account(self, company):
+        # We want a bank fees account if possible and the first expense account as a fallback.
+        AccountAccount = self.env['account.account'].with_company(company)
+        domain = [*self.env['account.account']._check_company_domain(company.id)]
+        return AccountAccount.search([*domain, ('name', 'like', 'Bank Fees')], limit=1) or AccountAccount.search([*domain, ('account_type', '=', 'expense')], limit=1)
+
     def _get_property_accounts(self, additional_properties):
         return {
             **additional_properties,
@@ -1116,6 +1126,18 @@ class AccountChartTemplate(models.AbstractModel):
                     }),
                 ],
             },
+            'bank_fees_reco': {
+                'name': _('Bank Fees'),
+                'match_label': 'contains',
+                'match_label_param': 'Bank Fees',
+                'line_ids': [
+                    Command.create({
+                        'label': _('Bank Fees'),
+                        'amount_type': 'percentage',
+                        'amount_string': '100',
+                    }),
+                ],
+            }
         }
 
     # --------------------------------------------------------------------------------

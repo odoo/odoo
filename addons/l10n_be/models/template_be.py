@@ -65,18 +65,14 @@ class AccountChartTemplate(models.AbstractModel):
                 'name@nl': 'Betalingskorting',
                 'name@de': 'Skonto',
             },
-            'frais_bancaires_htva_template': {
-                'name': 'Bank Fees',
-                'line_ids': [
-                    Command.create({
-                        'account_id': 'a6560',
-                        'amount_type': 'percentage',
-                        'amount_string': '100',
-                        'label': 'Bank Fees',
-                    }),
-                ],
-                'name@fr': 'Frais bancaires',
-                'name@nl': 'Bankkosten',
-                'name@de': 'Bankgebühren',
-            },
         }
+
+    def _get_bank_fees_reco_account(self, company):
+        # Belgian account for the bank fees reco model. We need to be as precise
+        # as possible in case it's modified so it's missing and not replaced.
+        be_account = self.env['account.account'].with_company(company).search([
+            ('code', '=', '656000'),
+            ('account_type', '=', 'expense'),
+            ('name', '=', 'Provisions of a Financial Nature - Appropriations'),
+        ], limit=1)
+        return be_account or super()._get_bank_fees_reco_account(company)

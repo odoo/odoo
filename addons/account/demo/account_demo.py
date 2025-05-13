@@ -467,23 +467,6 @@ class AccountChartTemplate(models.AbstractModel):
                     }),
                 ]
             },
-            'bank_fees_label_bank_fees': {
-                'name': 'Bank Fees (label bank fees)',
-                'match_label': 'contains',
-                'match_label_param': 'Bank Fees',
-                'line_ids': [
-                    Command.create({
-                        'label': 'Bank Fees',
-                        'account_id': self._get_demo_account(
-                            'expense_finance',
-                            'expense',
-                            self.env.company,
-                        ).id,
-                        'amount_type': 'percentage',
-                        'amount_string': '100',
-                    }),
-                ]
-            },
             'owner_current_account_model': {
                 'name': "Owner's Current Account",
                 'line_ids': [
