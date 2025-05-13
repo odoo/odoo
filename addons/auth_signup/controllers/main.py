@@ -92,9 +92,9 @@ class AuthSignupHome(Home):
         if 'error' not in qcontext and request.httprequest.method == 'POST':
             try:
                 if qcontext.get('token'):
-                    self.do_signup(qcontext)
+                    self.do_signup(qcontext, do_login=False)
                     request.update_context(skip_captcha_login=SKIP_CAPTCHA_LOGIN)
-                    return self.web_login(*args, **kw)
+                    qcontext['message'] = _("Your password has been reset successfully.")
                 else:
                     login = qcontext.get('login')
                     assert login, _("No login provided.")
@@ -102,7 +102,7 @@ class AuthSignupHome(Home):
                         "Password reset attempt for <%s> by user <%s> from %s",
                         login, request.env.user.login, request.httprequest.remote_addr)
                     request.env['res.users'].sudo().reset_password(login)
-                    qcontext['message'] = _("Password reset instructions sent to your email")
+                    qcontext['message'] = _("Password reset instructions sent to your email address.")
             except UserError as e:
                 qcontext['error'] = e.args[0]
             except SignupError:
@@ -160,16 +160,17 @@ class AuthSignupHome(Home):
             values['lang'] = lang
         return values
 
-    def do_signup(self, qcontext):
+    def do_signup(self, qcontext, do_login=True):
         """ Shared helper that creates a res.partner out of a token """
         values = self._prepare_signup_values(qcontext)
-        self._signup_with_values(qcontext.get('token'), values)
+        self._signup_with_values(qcontext.get('token'), values, do_login)
         request.env.cr.commit()
 
-    def _signup_with_values(self, token, values):
+    def _signup_with_values(self, token, values, do_login):
         login, password = request.env['res.users'].sudo().signup(values, token)
         credential = {'login': login, 'password': password, 'type': 'password'}
-        request.session.authenticate(request.env, credential)
+        if do_login:
+            request.session.authenticate(request.env, credential)
 
 class AuthBaseSetup(BaseSetup):
     @http.route()

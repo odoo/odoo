@@ -2,26 +2,22 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 export class ShowPassword extends Interaction {
-    static selector = "#showPass";
+    static selector = ".input-group";
+    static selectorHas = ":scope > .o_show_password";
     dynamicContent = {
-        _root: { "t-on-pointerdown": this.showText },
+        ".o_show_password": {
+            "t-on-click": () => this.showPassword = !this.showPassword,
+        },
+        "input[type='text'], input[type='password']": {
+            "t-att-type": () => this.showPassword ? "text" : "password",
+        },
+        ".o_show_password > i": {
+            "t-att-class": () => ({
+                "fa-eye": !this.showPassword,
+                "fa-eye-slash": !!this.showPassword,
+            }),
+        },
     };
-
-    setup() {
-        this.passwordEl = this.el.closest(".input-group").querySelector("#password");
-    }
-
-    showText() {
-        this.passwordEl.setAttribute("type", "text");
-        this.addListener(
-            document.body,
-            "pointerup",
-            () => this.passwordEl.setAttribute("type", "password"),
-            { once: true },
-        );
-    }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.show_password", ShowPassword);
+registry.category("public.interactions").add("web.show_password", ShowPassword);

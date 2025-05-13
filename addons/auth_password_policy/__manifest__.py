@@ -11,6 +11,7 @@
     'assets': {
         'web.assets_backend': [
             'auth_password_policy/static/src/**/*',
+            ('remove', 'auth_password_policy/static/src/css/password_field.css'),
         ],
         'web.assets_frontend': [
             'auth_password_policy/static/src/css/password_field.css',
