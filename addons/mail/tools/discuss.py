@@ -6,6 +6,7 @@ from datetime import date, datetime
 
 import odoo
 from odoo import models
+from odoo.exceptions import MissingError
 from odoo.tools import groupby
 
 
@@ -212,7 +213,10 @@ class Store:
                 if isinstance(field, dict):
                     data.update(field)
                 elif not field.predicate or field.predicate(record):
-                    data[field.rename or field.field_name] = field._get_value(record)
+                    try:
+                        data[field.rename or field.field_name] = field._get_value(record)
+                    except MissingError:
+                        break
         return records_data
 
     def _get_record_index(self, model_name, values):
