@@ -11,6 +11,7 @@ from odoo.addons.account.controllers.portal import PortalAccount
 from odoo.addons.hr_timesheet.controllers.portal import TimesheetCustomerPortal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.project.controllers.portal import ProjectCustomerPortal
+from odoo.addons.sale.controllers.portal import CustomerPortal
 
 
 class PortalProjectAccount(PortalAccount, ProjectCustomerPortal):
@@ -120,3 +121,17 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
     @http.route()
     def portal_my_timesheets(self, *args, groupby='so_line', **kw):
         return super().portal_my_timesheets(*args, groupby=groupby, **kw)
+
+
+class SaleTimesheetSaleCustomerPortal(CustomerPortal):
+
+    def _sale_order_get_page_view_values(self, order_sudo, access_token, values, history_session_key, **kwargs):
+        values = super()._sale_order_get_page_view_values(order_sudo, access_token, values, history_session_key, **kwargs)
+
+        domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
+        domain = Domain.AND([
+            domain,
+            [('so_line', 'in', values.get('sale_order').order_line.ids)],
+        ])
+        values['is_timesheet'] = request.env['account.analytic.line'].sudo().search_count(domain, limit=1)
+        return values
