@@ -309,7 +309,9 @@ class ProjectTask(models.Model):
         help="""Use these keywords in the title to set new tasks:\n
             #tags Set tags on the task
             @user Assign the task to a user
-            ! Set the task a high priority\n
+            ! Set the task a medium priority
+            !! Set the task a high priority
+            !!! Set the task a urgent priority\n
             Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !""",
     )
     link_preview_name = fields.Char(compute='_compute_link_preview_name', export_string_translation=False)
@@ -730,7 +732,7 @@ class ProjectTask(models.Model):
     def _get_group_pattern(self):
         return {
             'tags_and_users': r'\s([#@]%s[^\s]+)',
-            'priority': r'\s(!)',
+            'priority': r'(?:^|\s)(!{1,3})(?=\s|$)',
         }
 
     def _prepare_pattern_groups(self):
@@ -773,9 +775,11 @@ class ProjectTask(models.Model):
         self.display_name, dummy = re.subn(pattern, '', self.display_name)
 
     def _extract_priority(self):
-        self.priority = "1"
         priority_group = self._get_group_pattern()['priority']
-        self.display_name, dummy = re.subn(priority_group, '', self.display_name)
+        match = re.search(priority_group, self.display_name)
+        if match:
+            self.priority = str(min(len(match.group(1)), 3))
+            self.display_name, _dummy = re.subn(priority_group, '', self.display_name)
 
     def _get_groups(self):
         return [
