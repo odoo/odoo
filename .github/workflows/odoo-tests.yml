@@ -12,8 +12,7 @@ jobs:
       DB_PORT: 5432
       DB_USER: odoo
       DB_PASSWORD: odoo
-      PGUSER: odoo
-      
+
     services:
       postgres:
         image: postgres:13
@@ -21,7 +20,7 @@ jobs:
           POSTGRES_USER: odoo
           POSTGRES_PASSWORD: odoo
           POSTGRES_DB: odoo
-          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_HOST_AUTH_METHOD: trust  # Simplifies authentication
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -42,6 +41,33 @@ jobs:
             build-essential python3-dev libldap2-dev \
             libsasl2-dev libssl-dev postgresql-client
 
+      - name: Wait for Postgres to be ready
+        run: |
+          for i in {1..30}; do
+            if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER > /dev/null 2>&1; then
+              echo "Postgres is up"
+              exit 0
+            else
+              echo "Attempt $i: $(pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER 2>&1)"
+            fi
+            echo "Waiting for Postgres..."
+            sleep 1
+          done
+          echo "Postgres never became ready" >&2
+          exit 1
+
+      - name: Create root role
+        env:
+          PGPASSWORD: ${{ env.DB_PASSWORD }}
+        run: |
+          psql -h $DB_HOST -U $DB_USER -c "CREATE ROLE root WITH LOGIN SUPERUSER PASSWORD 'password';"
+
+      - name: Create test database
+        env:
+          PGPASSWORD: ${{ env.DB_PASSWORD }}
+        run: |
+          psql -h $DB_HOST -U $DB_USER -c "CREATE DATABASE test_db;"
+
       - name: Install Python deps
         run: |
           pip install --upgrade pip setuptools wheel
@@ -56,40 +82,6 @@ jobs:
           print(','.join(json.load(open('test_modules.json'))['modules']))
           EOF
           )" >> $GITHUB_OUTPUT
-
-      
-      - name: Wait for Postgres to be ready
-        run: |
-          for i in {1..60}; do
-            if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER > /dev/null 2>&1; then
-              echo "Postgres is up"
-              exit 0
-            else
-              echo "Attempt $i: $(pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER 2>&1)"
-            fi
-            echo "Waiting for Postgres..."
-            sleep 1
-          done
-
-          echo "Postgres never became ready" >&2
-          exit 1
-
-      - name: Print PostgreSQL logs
-        if: failure()
-        run: |
-          docker logs $(docker ps -q --filter "ancestor=postgres:13")
-          
-      - name: Create root role
-        env:
-            PGPASSWORD: ${{ env.DB_PASSWORD }}
-        run: |
-          psql -h $DB_HOST -U $DB_USER -c "CREATE ROLE root WITH LOGIN SUPERUSER PASSWORD 'password';"
-
-      - name: Create test database
-        env:
-          PGPASSWORD: ${{ env.DB_PASSWORD }}
-        run: |
-          psql -h $DB_HOST -U $DB_USER -c "CREATE DATABASE test_db;"
 
       - name: Install ONLY custom addon (and deps)
         run: |
