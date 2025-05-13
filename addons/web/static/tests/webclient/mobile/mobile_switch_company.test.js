@@ -147,8 +147,8 @@ test("single company selected: toggling it off will keep it", async () => {
     expect(cookie.get("cids")).toEqual("1");
     expect(user.activeCompanies.map((c) => c.id)).toEqual([1]);
     expect(user.activeCompany.id).toBe(1);
-    expect("[data-company-id] .fa-check-squarqe").toHaveCount(0);
-    expect("[data-company-id] .fa-square-o").toHaveCount(3);
+    expect("[data-company-id] .fa-check-square").toHaveCount(1);
+    expect("[data-company-id] .fa-square-o").toHaveCount(2);
 });
 
 test("single company mode: companies can be logged in", async () => {

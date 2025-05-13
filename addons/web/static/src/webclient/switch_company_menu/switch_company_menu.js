@@ -7,11 +7,11 @@ import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { _t } from "@web/core/l10n/translation";
 import { symmetricalDifference } from "@web/core/utils/arrays";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useBus, useChildRef, useService } from "@web/core/utils/hooks";
 import { SwitchCompanyItem } from "@web/webclient/switch_company_menu/switch_company_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { user } from "@web/core/user";
+import { user, userBus } from "@web/core/user";
 import { router } from "@web/core/browser/router";
 
 function getCompany(cid) {
@@ -190,6 +190,9 @@ export class SwitchCompanyMenu extends Component {
         });
 
         useCommand(_t("Switch Company"), () => this.dropdown.open(), { hotkey: "alt+shift+u" });
+        useBus(userBus, "ACTIVE_COMPANIES_CHANGED", () => {
+            this.companySelector.reset();
+        });
 
         this.containerRef = useChildRef();
         this.navigationOptions = {

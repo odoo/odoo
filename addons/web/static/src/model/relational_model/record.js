@@ -1172,7 +1172,10 @@ export class Record extends DataPoint {
             );
         } catch (e) {
             if (onError) {
-                return onError(e, { discard: () => this._discard() });
+                return onError(e, {
+                    discard: () => this._discard(),
+                    retry: () => this._save(...arguments),
+                });
             }
             if (!this.isInEdition) {
                 await this._load({});

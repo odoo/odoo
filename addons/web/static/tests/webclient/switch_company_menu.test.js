@@ -188,8 +188,8 @@ test("single company selected: toggling it off will keep it", async () => {
     expect(user.activeCompany.id).toBe(3);
 
     await openCompanyMenu();
-    expect("[data-company-id] .fa-check-square").toHaveCount(0);
-    expect("[data-company-id] .fa-square-o").toHaveCount(5);
+    expect("[data-company-id] .fa-check-square").toHaveCount(1);
+    expect("[data-company-id] .fa-square-o").toHaveCount(4);
 });
 
 test("single company mode: companies can be logged in", async () => {
