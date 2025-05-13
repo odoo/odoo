@@ -86,7 +86,7 @@ class StockMoveLine(models.Model):
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     origin = fields.Char(related='move_id.origin', string='Source')
     description_picking = fields.Text(string="Description picking")
-    quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
+    quant_id = fields.Many2one('stock.quant', "Pick From", compute="_compute_quant_id", readonly=False)  # Dummy field for the detailed operation view
     picking_location_id = fields.Many2one(related='picking_id.location_id')
     picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
 
@@ -162,6 +162,17 @@ class StockMoveLine(models.Model):
     def _compute_quantity_product_uom(self):
         for line in self:
             line.quantity_product_uom = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id, rounding_method='HALF-UP')
+
+    def _compute_quant_id(self):
+        for line in self:
+            if line.move_id and not line.quant_id:
+                line.quant_id = self.env['stock.quant'].search([
+                    ('product_id', '=', line.product_id),
+                    ('location_id', '=', line.location_id),
+                    ('lot_id', '=', line.lot_id),
+                    ('package_id', '=', line.package_id),
+                    ('owner_id', '=', line.owner_id)
+                ], limit=1)
 
     @api.constrains('lot_id', 'product_id')
     def _check_lot_product(self):
