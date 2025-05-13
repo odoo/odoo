@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MessageSeenIndicator">
-        <span class="o-mail-MessageSeenIndicator position-relative" t-att-class="{ 'opacity-50': !props.message.hasEveryoneSeen, 'text-primary opacity-75': props.message.hasEveryoneSeen, 'cursor-pointer': props.message.channelMemberHaveSeen.length }" t-att-title="summary" t-attf-class="{{ props.className }}" t-on-click="openDialog">
-            <t t-if="!props.message.isMessagePreviousToLastSelfMessageSeenByEveryone">
-                <i t-if="props.message.hasSomeoneFetched or props.message.hasSomeoneSeen" class="fa fa-check ps-1"/>
-                <i t-if="props.message.hasSomeoneSeen" class="o-second start-0 fa fa-check position-absolute"/>
+        <a role="button" t-on-click="openDialog" class="d-flex justify-content-end">
+            <small t-if="props.message.channelMemberHaveSeen.length gt 5" class="text-muted opacity-75 o-smaller">
+                +<t t-out="props.message.channelMemberHaveSeen.length - 5" />
+            </small>
+            <t t-foreach="props.message.channelMemberHaveSeen.slice(0, 5)" t-as="member" t-key="member.id">
+                <span t-if="props.message.id gte member.seen_message_id.id" class="o_avatar_seen_indicator ms-1" style="width:15px;height:15px;">
+                    <img t-att-src="member.persona.avatarUrl" class="w-100 h-100 rounded" t-att-title="'Saw by ' + member.name" />
+                </span>
             </t>
-        </span>
+        </a>
     </t>
 
     <t t-name="mail.MessageSeenIndicatorPopover.card">
