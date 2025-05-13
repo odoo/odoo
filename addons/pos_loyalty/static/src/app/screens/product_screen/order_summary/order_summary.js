@@ -141,24 +141,13 @@ patch(OrderSummary.prototype, {
         this.dialog.add(ManageGiftCardPopup, {
             title: _t("Sell/Manage physical gift card"),
             placeholder: _t("Enter Gift Card Number"),
-            getPayload: async (code, points, expirationDate) => {
+            getPayload: async (code, points, expirationDate, existingGiftCardId) => {
                 points = parseFloat(points);
                 if (isNaN(points)) {
                     console.error("Invalid amount value:", points);
                     return;
                 }
                 code = code.trim();
-                const res = await this.pos.data.searchRead(
-                    "loyalty.card",
-                    ["&", ["program_type", "=", "gift_card"], ["code", "=", code]],
-                    []
-                );
-                if (res.length > 0) {
-                    this.notification.add(_t("This Gift card has already been sold."), {
-                        type: "danger",
-                    });
-                    return;
-                }
 
                 // check for duplicate code
                 if (this.currentOrder.duplicateCouponChanges(code)) {
@@ -170,7 +159,7 @@ patch(OrderSummary.prototype, {
                 }
 
                 await this._updateGiftCardOrderline(code, points);
-                this.currentOrder.processGiftCard(code, points, expirationDate);
+                this.currentOrder.processGiftCard(code, points, expirationDate, existingGiftCardId);
 
                 // update indexedDB
                 this.pos.data.synchronizeLocalDataInIndexedDB();
