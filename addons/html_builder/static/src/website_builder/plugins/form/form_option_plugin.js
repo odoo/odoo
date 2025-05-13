@@ -221,7 +221,7 @@ export class FormOptionPlugin extends Plugin {
                         // We use it if there is no value on the email_to input.
                         const formId = el.id;
                         const dataForValues = getParsedDataFor(formId, el.ownerDocument);
-                        return dataForValues["email_to"] || this.defaultEmailToValue
+                        return dataForValues?.["email_to"] || this.defaultEmailToValue;
                     }
                     if (value) {
                         return value;
