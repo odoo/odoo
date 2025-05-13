@@ -139,6 +139,9 @@ class CrmLead2opportunityPartner(models.TransientModel):
                     'user_id': self.user_id.id,
                     'team_id': self.team_id.id,
                 })
+        if self.lead_id != result_opportunity:
+            # Prevent unwanted cascade during unlinks, keeping other operations and overrides possible
+            self.write({'lead_id': result_opportunity})
         (to_merge - result_opportunity).sudo().unlink()
         return result_opportunity
 
