@@ -521,6 +521,14 @@ export class DiscussChannel extends models.ServerModel {
 
         const [channel] = this.browse(ids);
         this.write([channel.id], { name });
+        this.message_post(
+            channel.id,
+            makeKwArgs({
+                body: `<div data-oe-type="channel_rename" class="o_mail_notification">${name}</div>`,
+                message_type: "notification",
+                subtype_xmlid: "mail.mt_comment",
+            })
+        );
     }
 
     /**
