@@ -35,6 +35,12 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
             'task A 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bast @raouf !': ('task A 30H 2.5h @raouf', 3, 2, "1", 0),
             'task A 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bastttt @raouf1 @raouf2 !': ('task A 30H 2.5h @Bastttt', 3, 3, "1", 0),
             'task A 30H 2.5h #TAG1 #tag1 #TAG2': ('task A 30H 2.5h', 2, 0, "0", 0),
+            'task A 30H 2.5h #Tag1 #tag2 @Armande @Bast @raouf1 @raouf2 !!': ('task A 30H 2.5h', 2, 4, "2", 0),
+            'task A !!': ('task A', 0, 0, "2", 0),
+            'task A 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bastttt @raouf1 @raouf2 !!': ('task A 30H 2.5h @Bastttt', 3, 3, "2", 0),
+            'task A 30H 2.5h #Tag1 #tag2 @Armande @Bast @raouf1 @raouf2 !!!': ('task A 30H 2.5h', 2, 4, "3", 0),
+            'task A !!!': ('task A', 0, 0, "3", 0),
+            'task A 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bastttt @raouf1 @raouf2 !!!': ('task A 30H 2.5h @Bastttt', 3, 3, "3", 0),
         }
 
         for expression, values in valid_expressions.items():
@@ -49,7 +55,13 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
             '#tag1 #tag2 #tag3 @Armande @Bast @raouf1 @raouf2',
             '@Armande @Bast @raouf1 @raouf2',
             '!',
-            'task A!'
+            'task A!',
+            'task A!!',
+            'task A!!!',
+            '!!',
+            '!!!',
+            '!! @Armande',
+            '!!! #tag1',
         )
 
         for expression in invalid_expressions:
