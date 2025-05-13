@@ -3,6 +3,7 @@ import { PublicRoot } from "@web/legacy/js/public/public_root";
 import { Colibri } from "@web/public/colibri";
 import { Interaction } from "@web/public/interaction";
 import { patch } from "@web/core/utils/patch";
+import { setupIgnoreDOMMutations } from "@website/js/content/auto_hide_menu";
 
 export function buildEditableInteractions(builders) {
     const result = [];
@@ -221,6 +222,7 @@ registry.category("services").add("website_edit", {
                 removePatch();
             }
             patches.length = 0;
+            setupIgnoreDOMMutations(null);
         };
         const applyAction = (actionId, spec) => {
             shared.builderActions.applyAction(actionId, spec);
@@ -262,6 +264,7 @@ registry.category("services").add("website_edit", {
             );
             Object.assign(shared, ev.shared);
             historyCallbacks.ignoreDOMMutations = shared.history.ignoreDOMMutations;
+            setupIgnoreDOMMutations(shared.history.ignoreDOMMutations);
         });
 
         return websiteEditService;

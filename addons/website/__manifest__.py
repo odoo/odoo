@@ -329,6 +329,7 @@
             'web/static/src/legacy/js/public/public_widget.js',
             'web/static/src/legacy/js/public/public_root.js',
             'website/static/lib/multirange/*.js',
+            'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/core/**/*',
             'website/static/src/utils/**/*',
             'website/static/src/interactions/**/*',
