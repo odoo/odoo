@@ -163,6 +163,9 @@ export class TableUIPlugin extends Plugin {
             resetTableSize: withAddStep(this.dependencies.table.resetTableSize),
             clearColumnContent: withAddStep(this.dependencies.table.clearColumnContent),
             clearRowContent: withAddStep(this.dependencies.table.clearRowContent),
+            mergeSelectedCells: withAddStep(this.dependencies.table.mergeSelectedCells),
+            unmergeSelectedCell: withAddStep(this.dependencies.table.unmergeSelectedCell),
+            buildTableGrid: this.dependencies.table.buildTableGrid,
         };
         if (td.cellIndex === 0) {
             this.rowMenu.open({
@@ -171,6 +174,7 @@ export class TableUIPlugin extends Plugin {
                     type: "row",
                     overlay: this.rowMenu,
                     target: td,
+                    editable: this.editable,
                     dropdownState: this.createDropdownState(this.colMenu),
                     ...tableMethods,
                 },
@@ -183,6 +187,7 @@ export class TableUIPlugin extends Plugin {
                     type: "column",
                     overlay: this.colMenu,
                     target: td,
+                    editable: this.editable,
                     dropdownState: this.createDropdownState(this.rowMenu),
                     direction: this.config.direction || "ltr",
                     ...tableMethods,
