@@ -29,6 +29,7 @@
         </field>
     </record>
 
+    <!-- TODO: remove me in master -->
     <record id="product_template_form_view_inherit_sale_project" model="ir.ui.view">
         <field name="name">product.template.sale.project.form</field>
         <field name="model">product.template</field>
@@ -42,4 +43,16 @@
         </field>
     </record>
 
+    <record id="product_product_form_view_inherit_sale_project" model="ir.ui.view">
+        <field name="name">product.product.sale.project.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <field name="type" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
 </odoo>
