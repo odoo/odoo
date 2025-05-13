@@ -237,6 +237,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         flex_40h_calendar = self.env['resource.calendar'].create({
             'name': 'Flexible 40h/week',
             'hours_per_day': 8.0,
+            'full_time_required_hours': 40.0,
             'flexible_hours': True,
         })
 
@@ -254,6 +255,6 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
 
         entries = self.jules_emp.contract_id.generate_work_entries(date(2024, 9, 9), date(2024, 9, 14))
         paid_leave_entry = entries.filtered_domain([('work_entry_type_id', '=', entry_type_paid.id)])
-
-        self.assertEqual(paid_leave_entry.duration, 32, "The duration of the work entry for flexible employee should "
-                                                        "be number of days * hours per day")
+        self.assertEqual(len(paid_leave_entry), 4, "Four work entries should be created for a flexible employee")
+        self.assertEqual(sum(paid_leave_entry.mapped('duration')), 32, "The combined duration of the work entries for flexible employee should "
+                                                                        "be number of days * hours per day")
