@@ -235,6 +235,11 @@ class DiscussChannelMember(models.Model):
 
     def _notify_mute(self):
         for member in self:
+            user = self.env['res.users'].search([('partner_id', '=', self.partner_id.id)])
+            if user:
+                if not member.mute_until_dt:
+                    settings_changed = self.env['res.users.settings']._find_or_create_for_user(user)
+                    settings_changed.set_res_users_settings({'mute_all_whatsapp': False})
             member._bus_send_store(member.channel_id, {"mute_until_dt": member.mute_until_dt})
             if member.mute_until_dt and member.mute_until_dt != -1:
                 self.env.ref("mail.ir_cron_discuss_channel_member_unmute")._trigger(member.mute_until_dt)

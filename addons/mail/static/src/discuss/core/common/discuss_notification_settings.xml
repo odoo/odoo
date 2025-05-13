@@ -13,6 +13,20 @@
                 </label>
                 <span class="mt-1 text-muted small">Muting prevents unread indicators and notifications from appearing.</span>
             </div>
+             <t t-if="!store.settings.mute_until_dt">
+                <div class="d-flex flex-column my-1">
+                    <label class="cursor-pointer d-flex align-items-center">
+                        <h5>Mute WhatsApp Conversations</h5>
+                        <div class="flex-grow-1"/>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch"
+                                   t-att-checked="store.settings.mute_all_whatsapp"
+                                   t-on-change="onChangeMuteWhatsapp"/>
+                        </div>
+                    </label>
+                     <span class="mt-1 text-muted small">Mute or unmute conversations identified as WhatsApp channels.</span>
+                </div>
+            </t>
             <label t-if="store.settings.mute_until_dt" class="d-flex align-items-baseline my-1">
                 <div class="d-flex flex-column">
                     <h6 class="flex-shrink-0 mb-1">Mute duration</h6>
@@ -20,6 +34,17 @@
                 </div>
                 <div class="flex-grow-1"/>
                 <select class="form-select w-auto d-flex" t-on-change="onChangeMuteDuration">
+                    <t t-foreach="store.settings.MUTES" t-as="mute" t-key="mute.label">
+                        <option t-att-value="mute.value" t-esc="mute.name" t-att-selected="mute.value === state.selectedDuration"/>
+                    </t>
+                </select>
+            </label>
+            <label t-if="store.settings.mute_all_whatsapp" class="d-flex align-items-baseline my-1">
+                <div class="d-flex flex-column">
+                    <h6 class="flex-shrink-0 mb-1">Mute duration</h6>
+                </div>
+                <div class="flex-grow-1"/>
+                <select class="form-select w-auto d-flex" t-on-change="onChangeMuteDurationWhatsapp">
                     <t t-foreach="store.settings.MUTES" t-as="mute" t-key="mute.label">
                         <option t-att-value="mute.value" t-esc="mute.name" t-att-selected="mute.value === state.selectedDuration"/>
                     </t>

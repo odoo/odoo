@@ -58,7 +58,7 @@ export class Settings extends Record {
         },
     });
     mute_until_dt = fields.Datetime();
-
+    mute_all_whatsapp = fields.Attr(false);
     // Voice settings
     // DeviceId of the audio input selected by the user
     audioInputDeviceId = "";
@@ -144,7 +144,17 @@ export class Settings extends Record {
             },
         ];
     }
-
+    /**
+     * Toggles the mute state for all WhatsApp conversations via a single RPC call.
+     *
+     * @param {boolean} shouldMute True to mute, False to unmute.
+     */
+    async toggleMuteWhatsappConversations(shouldMute , minutes) {
+        return rpc("/discuss/settings/whatsapp_mute_toggle", {
+            shouldMute : shouldMute ,
+            minutes : minutes
+        });
+    }
     getMuteUntilText(dt) {
         if (dt) {
             return dt.year <= luxon.DateTime.now().year + 2
@@ -153,7 +163,7 @@ export class Settings extends Record {
         }
         return undefined;
     }
-
+    
     /**
      * @param {string} custom_notifications
      * @param {import("models").Thread} thread

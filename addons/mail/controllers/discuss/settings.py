@@ -47,3 +47,32 @@ class DiscussSettingsController(Controller):
         if not record:
             raise request.not_found()
         record.set_custom_notifications(custom_notifications)
+
+    @route("/discuss/settings/whatsapp_mute_toggle", methods=["POST"], type="jsonrpc", auth="user")
+    def discuss_whatsapp_mute_toggle(self, shouldMute, minutes):
+        """
+        Handles toggling the mute state for all WhatsApp channels for the current user
+        and updates the global flag.
+        :param mute_state: (boolean) True to mute, False to unmute.
+        """
+        user = request.env.user
+        settings = request.env['res.users.settings']._find_or_create_for_user(user)
+        if not settings:
+            raise request.not_found()
+        settings.set_res_users_settings({'mute_all_whatsapp': shouldMute})
+        if shouldMute and minutes != -1:
+            target_dt = fields.Datetime.now() + relativedelta(minutes=minutes)
+        elif shouldMute and minutes:
+            target_dt = datetime.max
+        else:
+            target_dt = False
+        whatsapp_member_domain = [
+            ('partner_id', '=', user.partner_id.id),
+            ('channel_id.channel_type', '=', 'whatsapp')
+        ]
+        whatsapp_members = request.env['discuss.channel.member'].search(whatsapp_member_domain)
+        if whatsapp_members:
+            whatsapp_members.write({'mute_until_dt': target_dt})
+            for member in whatsapp_members:
+                member._notify_mute()
+        return True
