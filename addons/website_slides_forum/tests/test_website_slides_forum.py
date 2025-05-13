@@ -119,6 +119,8 @@ class TestWebsiteSlidesForum(TestForumCommon):
             self.assertEqual(self.env["forum.post"].with_user(user).search(
                 [("id", "=", self.post.id)]), self.post)
 
+            self.assertTrue(self.forum.with_user(user).sudo().can_access)
+
         else:
             with self.assertRaises(AccessError):
                 self.forum.with_user(user).name
@@ -129,3 +131,5 @@ class TestWebsiteSlidesForum(TestForumCommon):
                 [("id", "=", self.forum.id)]))
             self.assertFalse(self.env["forum.post"].with_user(user).search(
                 [("id", "=", self.post.id)]))
+
+            self.assertFalse(self.forum.with_user(user).sudo().can_access)
