@@ -47,10 +47,7 @@ export default function useTours() {
             if (states.index >= states.selectedTours.length) {
                 states.index = 0;
             }
-            await tour.startTour(states.selectedTours[states.index], {
-                stepDelay: 150,
-                throw: false,
-            });
+            await tour.startTour(states.selectedTours[states.index]);
 
             states.index++;
         } catch (error) {

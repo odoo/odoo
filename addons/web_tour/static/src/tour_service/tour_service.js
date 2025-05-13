@@ -65,6 +65,13 @@ const TourSchema = {
     name: { type: String, optional: true },
     steps: Function,
     url: { type: String, optional: true },
+    stepDelay: {
+        type: Number,
+        optional: true,
+        validate(value) {
+            return value >= 0 && value <= 10000;
+        },
+    },
     wait_for: { type: [Function, Object], optional: true },
 };
 
@@ -153,7 +160,7 @@ export const tourService = {
 
             let tourConfig = {
                 delayToCheckUndeterminisms: 0,
-                stepDelay: 0,
+                stepDelay: tour.stepDelay || 0,
                 keepWatchBrowser: false,
                 mode: "auto",
                 showPointerDuration: 0,
@@ -166,7 +173,7 @@ export const tourService = {
             tourState.setCurrentTour(tour.name);
             tourState.setCurrentIndex(0);
 
-            const willUnload = callWithUnloadCheck(() => {
+            const willUnload = await callWithUnloadCheck(() => {
                 if (tour.url && tourConfig.startUrl != tour.url && tourConfig.redirect) {
                     redirect(tour.url);
                 }

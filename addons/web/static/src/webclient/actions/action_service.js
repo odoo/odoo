@@ -1141,6 +1141,7 @@ export function makeActionManager(env, router = _router) {
             url = "/" + url;
         }
         if (action.target === "download" || action.target === "self") {
+            browser.skipBeforeUnload = true;
             browser.location.assign(url);
         } else {
             _openURL(url);
