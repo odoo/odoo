@@ -795,7 +795,7 @@ export class MockWebSocket extends MockEventTarget {
             return;
         }
         this._readyState = WebSocket.CLOSING;
-        dispatchClose(this, { code, reason });
+        tick().then(() => dispatchClose(this, { code, reason }));
     }
 
     /** @type {WebSocket["send"]} */
