@@ -75,7 +75,7 @@ jobs:
         env:
           PGPASSWORD: ${{ env.DB_PASSWORD }}
         run: |
-          psql -h $DB_USER -U $DB_USER -c "CREATE DATABASE test_db;"
+          psql -h localhost -U $DB_USER -c "CREATE DATABASE test_db;"
 
       - name: Install Python deps
         run: |
