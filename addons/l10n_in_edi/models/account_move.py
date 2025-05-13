@@ -425,9 +425,8 @@ class AccountMove(models.Model):
             unit_price_in_inr = -unit_price_in_inr
             quantity = -quantity
         in_round = self._l10n_in_round_value
-        return {
+        line_details = {
             'SlNo': str(index),
-            'PrdDesc': line.name.replace("\n", ""),
             'IsServc': line.product_id.type == 'service' and 'Y' or 'N',
             'HsnCd': self._l10n_in_extract_digits(line.l10n_in_hsn_code),
             'Qty': in_round(quantity or 0.0, 3),
@@ -463,6 +462,9 @@ class AccountMove(models.Model):
             'OthChrg': in_round(tax_details_by_code.get('other_amount', 0.00)),
             'TotItemVal': in_round((sign * line.balance) + line_tax_details.get('tax_amount', 0.00)),
         }
+        if line.name:
+            line_details['PrdDesc'] = line.name.replace("\n", "")
+        return line_details
 
     def _l10n_in_edi_generate_invoice_json_managing_negative_lines(self, json_payload):
         """Set negative lines against positive lines as discount with same HSN code and tax rate
