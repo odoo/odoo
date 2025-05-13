@@ -680,6 +680,9 @@ test("cumulative line chart with past data before domain period specifying cumul
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data).toEqual([
         15, 19, 24,
     ]);
+    const figure = model.exportData().sheets[0].figures[0];
+    expect(figure.data.cumulative).toBe(true);
+    expect(figure.data.cumulatedStart).toBe(true);
 });
 
 test("cumulative line chart with past data before domain period specifying cumulated start as false", async () => {
@@ -698,6 +701,9 @@ test("cumulative line chart with past data before domain period specifying cumul
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data).toEqual([
         3, 7, 12,
     ]);
+    const figure = model.exportData().sheets[0].figures[0];
+    expect(figure.data.cumulative).toBe(true);
+    expect(figure.data.cumulatedStart).toBe(false);
 });
 
 test("Can insert odoo chart from a different model", async () => {
