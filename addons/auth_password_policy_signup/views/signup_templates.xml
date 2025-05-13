@@ -1,7 +1,7 @@
 <odoo>
     <template id="fields" inherit_id="auth_signup.fields"
               name="Password policy data for auth_signup">
-        <xpath expr="//input[@name='password']" position="after">
+        <xpath expr="//label[@for='password']" position="after">
             <owl-component name="password_meter" props='{"selector": "input[name=password]"}'/>
         </xpath>
         <xpath expr="//input[@name='password']" position="attributes">
