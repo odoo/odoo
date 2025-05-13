@@ -48,7 +48,9 @@ class ProjectTask(models.Model):
         30h Allocate 30 hours to the task
         #tags Set tags on the task
         @user Assign the task to a user
-        ! Set the task a high priority\n
+        ! Set the task a medium priority
+        !! Set the task a high priority
+        !!! Set the task a urgent priority\n
         Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !""",
     )
     @property
