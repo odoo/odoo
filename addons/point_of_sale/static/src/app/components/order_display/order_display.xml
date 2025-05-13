@@ -21,7 +21,7 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="order.internal_note"
+                    <div t-if="order.internal_note and props.mode !== 'receipt'"
                         class="internal-note-container d-flex gap-2 flex-wrap m-1">
                         <t t-foreach="order.internal_note.split('\n') or []" t-as="note"
                             t-key="note_index">
