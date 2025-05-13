@@ -1,7 +1,6 @@
 from odoo.tests.common import TransactionCase
 from lxml import etree
 
-@tagged('ci_only')
 class TestSaleOrderView(TransactionCase):
 
     def test_payment_term_id_is_invisible(self):
