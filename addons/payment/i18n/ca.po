@@ -6,7 +6,6 @@
 # Eric Antones <eantones@users.noreply.github.com>, 2024
 # Jonatan Gk, 2024
 # martioodo hola, 2024
-# Santiago Payà <santiagopim@gmail.com>, 2024
 # Iván Infantes Castarnado, 2024
 # Joan Ignasi Florit <jfloritmir@gmail.com>, 2024
 # Óscar Fonseca <tecnico@pyming.com>, 2024
@@ -27,14 +26,15 @@
 # Juande Gutierrez <juni55mcyt@gmail.com>, 2024
 # Xavier, 2025
 # Noemi Pla, 2025
+# Santiago Payà <santiagopim@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-05-07 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Noemi Pla, 2025\n"
+"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2967,7 +2967,7 @@ msgstr "No publicat"
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__none
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__none
 msgid "Unsupported"
-msgstr ""
+msgstr "No suportat"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -3111,6 +3111,12 @@ msgstr ""
 msgid ""
 "You cannot change the company of a payment provider with existing "
 "transactions."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+msgid "You cannot delete the default payment method."
 msgstr ""
 
 #. module: payment

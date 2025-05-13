@@ -19,7 +19,7 @@ export class PosOrder extends Base {
     setup(vals) {
         super.setup(vals);
 
-        if (!this.session_id && (!this.finalized || typeof this.id !== "number")) {
+        if (!this.session_id?.id && (!this.finalized || typeof this.id !== "number")) {
             this.update({ session_id: this.session });
 
             if (this.state === "draft" && this.lines.length == 0 && this.payment_ids.length == 0) {
@@ -343,7 +343,7 @@ export class PosOrder extends Base {
                         product_id: line.get_product().id,
                         name: line.get_full_product_name(),
                         basic_name: line.get_product().name,
-                        display_name: line.get_product().name,
+                        display_name: line.get_product().display_name,
                         note: line.getNote(),
                         quantity: line.get_quantity(),
                     };
@@ -527,7 +527,7 @@ export class PosOrder extends Base {
             );
         }
         const combo_children_lines = this.lines.filter(
-            (line) => line.price_type === "original" && line.combo_parent_id
+            (line) => line.price_type === "automatic" && line.combo_parent_id
         );
         combo_children_lines.forEach((line) => {
             line.set_unit_price(

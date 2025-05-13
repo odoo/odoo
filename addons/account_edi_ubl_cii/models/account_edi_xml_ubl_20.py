@@ -41,6 +41,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }
 
     def _get_partner_party_identification_vals_list(self, partner):
+        if partner.ref:
+            return [{'id': partner.ref}]
         return []
 
     def _get_partner_address_vals(self, partner):

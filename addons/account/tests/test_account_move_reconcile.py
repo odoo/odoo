@@ -4,7 +4,7 @@ from contextlib import closing
 from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, users
 from odoo.exceptions import UserError
 from odoo import fields, Command
 
@@ -205,6 +205,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def _get_caba_moves(self, moves):
         return moves.search([('tax_cash_basis_origin_move_id', 'in', moves.ids)])
 
+    @users('simple_accountman')
     def test_full_reconcile_bunch_lines(self):
         """ Test the reconciliation with multiple lines at the same time and ensure the result is always a full
         reconcile whatever the number of involved currencies.
@@ -1875,6 +1876,174 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         ])
 
         self.assertTrue(all([line.full_reconcile_id for line in reversed_lines]))
+
+    def test_reconcile_foreign_currency_rounding_issue(self):
+        comp_curr = self.company_data['currency']
+        foreign_currency = self.env['res.currency'].create({
+            'name': "Bread",
+            'symbol': '🍞',
+            'rounding': 0.01,
+            'rate_ids': [
+                Command.create({'name': '2019-06-01', 'rate': 0.052972554919}),
+            ],
+        })
+
+        non_rec_pay_account = self.company_data['default_account_revenue'].copy()
+        non_rec_pay_account.reconcile = True
+        self.assertFalse(non_rec_pay_account.account_type in ('asset_receivable', 'liability_payable'))
+        rec_pay_account = self.company_data['default_account_receivable'].copy()
+        self.assertTrue(rec_pay_account.reconcile)
+        self.assertTrue(rec_pay_account.account_type in ('asset_receivable', 'liability_payable'))
+
+        # Check that the reconciliation works independently of
+        # - whether the foreign amount is debit or credit
+        # - the account type (payable / receivable)
+        for sign, reco_account in [
+            (-1, non_rec_pay_account),
+            (1, non_rec_pay_account),
+            (-1, rec_pay_account),
+            (1, rec_pay_account),
+        ]:
+            with self.subTest(sub_test_name=f'sign: {sign}, reco_account: {reco_account.name}'):
+                line_1 = self.create_line_for_reconciliation(
+                    balance=sign * 377554.0,
+                    amount_currency=sign * 20000.0,
+                    currency=foreign_currency,
+                    move_date='2019-06-01',
+                    account_1=reco_account,
+                )
+                line_2 = self.create_line_for_reconciliation(
+                    balance=-sign * 372239.38,
+                    amount_currency=-sign * 372239.38,
+                    currency=comp_curr,
+                    move_date='2019-06-01',
+                    account_1=reco_account,
+                )
+                line_3 = self.create_line_for_reconciliation(
+                    balance=-sign * 5314.62,
+                    amount_currency=-sign * 281.53,
+                    currency=foreign_currency,
+                    move_date='2019-06-01',
+                    account_1=reco_account,
+                )
+                amls = line_1 + line_2 + line_3
+                amls.reconcile()
+
+                full_reconcile = amls.full_reconcile_id
+                self.assertTrue(full_reconcile)
+                self.assertTrue(all(line.full_reconcile_id == full_reconcile for line in amls))
+                self.assertRecordValues(
+                    amls,
+                    [{'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'reconciled': True}] * len(amls),
+                )
+
+                partials = self._get_partials(amls)
+                if sign == 1:
+                    expected_partials = [
+                        {
+                            'amount': 5314.62,
+                            'debit_amount_currency': 281.53,
+                            'credit_amount_currency': 281.53,
+                            'debit_move_id': line_1.id,
+                            'credit_move_id': line_3.id,
+                        },
+                        {
+                            'amount': 372239.38,
+                            'debit_amount_currency': 19718.47,
+                            'credit_amount_currency': 372239.38,
+                            'debit_move_id': line_1.id,
+                            'credit_move_id': line_2.id,
+                        },
+                    ]
+                else:
+                    expected_partials = [
+                        {
+                            'amount': 5314.62,
+                            'debit_amount_currency': 281.53,
+                            'credit_amount_currency': 281.53,
+                            'debit_move_id': line_3.id,
+                            'credit_move_id': line_1.id,
+                        },
+                        {
+                            'amount': 372239.38,
+                            'debit_amount_currency': 372239.38,
+                            'credit_amount_currency': 19718.47,
+                            'debit_move_id': line_2.id,
+                            'credit_move_id': line_1.id,
+                        },
+                    ]
+                self.assertRecordValues(partials.sorted('amount'), expected_partials)
+
+    def test_reconcile_partial_exchange_rounding_issue(self):
+        comp_curr = self.company_data['currency']
+        foreign_currency = self.env['res.currency'].create({
+            'name': "Bread",
+            'symbol': '🍞',
+            'rounding': 0.01,
+            'rate_ids': [
+                Command.create({'name': '2019-06-01', 'rate': 0.052972554919}),
+            ],
+        })
+
+        non_rec_pay_account = self.company_data['default_account_revenue'].copy()
+        non_rec_pay_account.reconcile = True
+        self.assertFalse(non_rec_pay_account.account_type in ('asset_receivable', 'liability_payable'))
+        rec_pay_account = self.company_data['default_account_receivable'].copy()
+        self.assertTrue(rec_pay_account.reconcile)
+        self.assertTrue(rec_pay_account.account_type in ('asset_receivable', 'liability_payable'))
+
+        # Check that the reconciliation works independently of
+        # - whether the foreign amount is debit or credit
+        # - the account type (payable / receivable)
+        for sign, reco_account in [
+            (-1, non_rec_pay_account),
+            (1, non_rec_pay_account),
+            (-1, rec_pay_account),
+            (1, rec_pay_account),
+        ]:
+            with self.subTest(sub_test_name=f'sign: {sign}, reco_account: {reco_account.name}'):
+                line_1 = self.create_line_for_reconciliation(
+                    balance=sign * 377554.0,
+                    amount_currency=sign * 20000.0,
+                    currency=foreign_currency,
+                    move_date='2019-06-01',
+                    account_1=reco_account,
+                )
+                line_2 = self.create_line_for_reconciliation(
+                    balance=-sign * 372239.38,
+                    amount_currency=-sign * 372239.38,
+                    currency=comp_curr,
+                    move_date='2019-06-01',
+                    account_1=reco_account,
+                )
+                amls = line_1 + line_2
+                amls.reconcile()
+
+                full_reconcile = amls.full_reconcile_id
+                self.assertFalse(full_reconcile)
+
+                partials = self._get_partials(amls)
+                if sign == 1:
+                    expected_partials = [
+                        {
+                            'amount': 372239.38,
+                            'debit_amount_currency': 19718.47,
+                            'credit_amount_currency': 372239.38,
+                            'debit_move_id': line_1.id,
+                            'credit_move_id': line_2.id,
+                        },
+                    ]
+                else:
+                    expected_partials = [
+                        {
+                            'amount': 372239.38,
+                            'debit_amount_currency': 372239.38,
+                            'credit_amount_currency': 19718.47,
+                            'debit_move_id': line_2.id,
+                            'credit_move_id': line_1.id,
+                        },
+                    ]
+                self.assertRecordValues(partials.sorted('amount'), expected_partials)
 
     def test_reconcile_special_mexican_workflow_1(self):
         comp_curr = self.company_data['currency']

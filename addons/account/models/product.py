@@ -286,26 +286,26 @@ class ProductProduct(models.Model):
             # cut Sales Description from the name
             name = name.split('\n')[0]
         domains = []
-        if default_code:
-            domains.append([('default_code', '=', default_code)])
         if barcode:
             domains.append([('barcode', '=', barcode)])
+        if default_code:
+            domains.append([('default_code', '=', default_code)])
+        if name:
+            domains += [[('name', '=', name)], [('name', 'ilike', name)]]
 
-        # Search for the product with the exact name, then ilike the name
-        name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
         company = company or self.env.company
-        for name_domain in name_domains:
-            for extra_domain in (
-                [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
-                [('company_id', '=', False)],
-            ):
-                product = self.env['product.product'].search(
-                    expression.AND([
-                        expression.OR(domains + [name_domain]),
-                        extra_domain,
-                    ]),
-                    limit=1,
-                )
-                if product:
-                    return product
+        for company_domain in (
+            [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
+            [('company_id', '=', False)],
+        ):
+            products = self.env['product.product'].search(
+                expression.AND([
+                    expression.OR(domains),
+                    company_domain,
+                    extra_domain or [],
+                ]),
+            )
+            for domain in domains:
+                if products_by_domain := products.filtered_domain(domain):
+                    return products_by_domain[0]
         return self.env['product.product']

@@ -3984,6 +3984,32 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move.journal_id = second_journal
         self.assertEqual(move.currency_id, self.other_currency)
 
+    def test_invoice_currency_mismatch_account_currency(self):
+        """
+        Test that an invoice cannot be posted if the invoice currency does not match the currency on the receivable/payable account.
+        """
+        # Create a receivable account with a specific currency (EUR)
+        receivable_account = self.company_data['default_account_receivable'].copy()
+        receivable_account.currency_id = self.other_currency  # Gold
+
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.other_currency.id,  # EUR
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1.0,
+                    'account_id': receivable_account.id,
+                    'tax_ids': [],
+                })
+            ]
+        })
+
+        # Try to change the currency to one that conflicts with account's fixed currency
+        with self.assertRaisesRegex(UserError, "The account selected on your journal entry forces to provide a secondary currency"):
+            move.currency_id = self.company_data['currency']
+
     @freeze_time('2019-01-01')
     def test_date_reversal_exchange_move(self):
         """
@@ -4697,3 +4723,42 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'tax_line_id': tax_a.id, 'tax_tag_ids': (tags_a[2] + tags_b[0]).ids},
             {'tax_line_id': tax_b.id, 'tax_tag_ids': tags_b[1].ids},
         ])
+
+    def test_lines_recomputation_after_currency_rate_change(self):
+        currency = self.setup_other_currency('EUR', rates=[
+            ('2025-01-01', 0.5),
+            ('2025-02-01', 0.4),
+        ])
+
+        with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as move_form:
+            # init the invoice
+            move_form.partner_id = self.partner_a
+            move_form.invoice_date = '2025-01-01'
+            move_form.currency_id = currency
+            with move_form.invoice_line_ids.new() as line_form:
+                line_form.product_id = self.product_a
+                line_form.price_unit = 1000.0
+            self.assertRecordValues(move_form.save().line_ids, [
+                {'amount_currency':   -1000.0, 'balance':   -2000.0},  # Product line
+                {'amount_currency':    -150.0, 'balance':    -300.0},  # Tax line
+                {'amount_currency':    1150.0, 'balance':    2300.0},  # Receivable line
+            ])
+
+            # change the invoice date to change the currency rate
+            move_form.invoice_date = '2025-02-01'
+            self.assertRecordValues(move_form.save().line_ids, [
+                {'amount_currency':   -1000.0, 'balance':   -2500.0},  # Product line
+                {'amount_currency':    -150.0, 'balance':    -375.0},  # Tax line
+                {'amount_currency':    1150.0, 'balance':    2875.0},  # Receivable line
+            ])
+
+            # change the invoice date to change the currency rate
+            move_form.invoice_date = '2025-01-01'
+            with move_form.invoice_line_ids.edit(0) as line_form:
+                # also change the price unit to check that the new computation is based on it
+                line_form.price_unit = 100.0
+            self.assertRecordValues(move_form.save().line_ids, [
+                {'amount_currency':   -100.0, 'balance':   -200.0},  # Product line
+                {'amount_currency':    -15.0, 'balance':    -30.0},  # Tax line
+                {'amount_currency':    115.0, 'balance':    230.0},  # Receivable line
+            ])

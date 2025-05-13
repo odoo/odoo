@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     trigger: ".o_opportunity_kanban",
 },
 {
-    trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-of-type",
+    trigger: ".o_opportunity_kanban:not(:has(.o_view_sample_data)) .o_kanban_group .o_kanban_record:last-of-type",
     content: markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
     tooltipPosition: "right",
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(2))",

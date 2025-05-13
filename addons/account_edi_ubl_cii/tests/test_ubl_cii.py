@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
-from odoo import Command
+from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tools import file_open
@@ -38,6 +38,21 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             ._create_document_from_attachment(attachment.id)
 
     def test_import_product(self):
+        products = self.env['product.product'].create([{
+            'name': 'XYZ',
+            'default_code': '1234',
+        }, {
+            'name': 'XYZ',
+            'default_code': '5678',
+        }, {
+            'name': 'XXX',
+            'default_code': '1111',
+            'barcode': '00001',
+        }, {
+            'name': 'YYY',
+            'default_code': '1111',
+            'barcode': '00002',
+        }])
         line_vals = [
             {
                 'product_id': self.place_prdct.id,
@@ -55,7 +70,23 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
                 'product_id': self.displace_prdct.id,
                 'product_uom_id': self.uom_dozens.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
-            }
+            }, {
+                'product_id': products[0].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            }, {
+                'product_id': products[1].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            }, {
+                'product_id': products[2].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            }, {
+                'product_id': products[3].id,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [self.company_data_2['default_tax_sale'].id],
+            },
         ]
         company = self.company_data_2['company']
         company.country_id = self.env['res.country'].search([('code', '=', 'FR')])
@@ -237,6 +268,35 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
         })
         self.assertEqual(actual_delivery_date.text, '20241231')
+
+    def test_billing_date_in_cii_xml(self):
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_date': "2024-12-01",
+            'invoice_date_due': "2024-12-31",
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        invoice.action_post()
+        invoice.invoice_date_due = fields.Date.from_string('2024-12-31')
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+        xml_tree = etree.fromstring(xml_attachment.raw)
+        start_date = xml_tree.find('.//ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', {
+            'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+            'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+        })
+        end_date = xml_tree.find('.//ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', {
+            'rsm': "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+            'ram': "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            'udt': "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+        })
+        self.assertEqual(start_date.text, '20241201')
+        self.assertEqual(end_date.text, '20241231')
 
     def test_import_partner_fields(self):
         """ We are going to import the e-invoice and check partner is correctly imported."""

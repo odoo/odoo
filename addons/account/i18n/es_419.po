@@ -6,15 +6,15 @@
 # Larissa Manderfeld, 2024
 # allen_infante <allen.infante@outlook.com>, 2024
 # Martin Trigaux, 2025
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Wil Odoo, 2025
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:36+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -1484,6 +1484,13 @@ msgid "<strong>Type: </strong>"
 msgstr "<strong>Tipo: </strong>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
+"disabled again if there are any existing journal items."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "@From: %(email)s"
@@ -1519,6 +1526,14 @@ msgstr ""
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "A bank account can belong to only one journal."
 msgstr "Una cuenta bancaria solo puede pertenecer a un diario."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/res_partner_bank.py:0
+msgid ""
+"A bank account with Account Number %(number)s already exists for Partner "
+"%(partner)s, but is archived. Please unarchive it instead."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -3534,8 +3549,8 @@ msgstr "Cuenta bancaria"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
-msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr "Se borró la cuenta bancaria %(link)s con el número %(number)s"
+msgid "Bank Account %(link)s with number %(number)s archived"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -3867,7 +3882,7 @@ msgstr "Referencia de factura"
 #: model_terms:ir.ui.view,arch_db:account.view_account_bill_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Bills"
-msgstr "Facturas"
+msgstr "Facturas de clientes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4139,6 +4154,12 @@ msgid ""
 msgstr ""
 "No puede obtener detalles de agregación de una línea que no utiliza un motor"
 " de \"agregación\""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Cannot identify the invoices in the generated PDF: %s"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -6915,7 +6936,7 @@ msgstr "Descuento por pago anticipado de"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Descuento por pago anticipado: <b>%(amount)s</b> si se paga antes del "
+"Descuento por pago anticipado: <b>%(amount)s</b> al pagar antes del "
 "<b>%(date)s</b>"
 
 #. module: account
@@ -10356,22 +10377,22 @@ msgstr "Marcar como pagado en su totalidad"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_note__match_regex
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_transaction_type__match_regex
 msgid "Match Regex"
-msgstr "Expresión regular coincidente"
+msgstr "Coincidir con expresión regular"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_label
 msgid "Match Text Location Label"
-msgstr "Emparejar con la etiqueta de ubicación de texto"
+msgstr "Coincidir con la etiqueta de ubicación de texto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_note
 msgid "Match Text Location Note"
-msgstr "Emparejar con la nota de ubicación de texto"
+msgstr "Coincidir con la nota de ubicación de texto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_reference
 msgid "Match Text Location Reference"
-msgstr "Emparejar con la referencia de ubicación de texto"
+msgstr "Coincidir con la referencia de ubicación de texto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_credit_ids
@@ -11290,7 +11311,7 @@ msgstr "Antiguos primero"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
 msgid "On early payment"
-msgstr "En el pago anticipado"
+msgstr "Con pago anticipado"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_fiscal_year
@@ -13456,7 +13477,7 @@ msgstr "Estrategia de redondeo"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
 msgid "Rule to match invoices/bills"
-msgstr "Regla para emparejar facturas"
+msgstr "Regla para conciliar facturas"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
@@ -16891,8 +16912,8 @@ msgid ""
 "To keep the audit trail, you can not delete journal entries once they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
-"Para mantener mantener la auditoría en orden, no puede eliminar los asientos contables una vez que los haya registrado.\n"
-"Mejor cancele el asiento contable."
+"Para mantener la pista de auditoría, no puede eliminar los asientos contables una vez que los haya registrado.\n"
+"Cancele el asiento contable."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -18117,9 +18138,14 @@ msgid "Wrong credit or debit value in accounting entry!"
 msgstr "¡Valor de crédito o débito incorrecto en el asiento contable!"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "XML format"
+msgstr "Formato XML"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
 msgid "Yearly"
-msgstr "Anualmente"
+msgstr "Anual"
 
 #. module: account
 #. odoo-javascript

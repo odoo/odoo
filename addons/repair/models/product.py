@@ -41,3 +41,9 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     create_repair = fields.Boolean('Create Repair', help="Create a linked Repair Order on Sale Order confirmation of this product.", groups='stock.group_stock_user')
+
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        if not (self.env.user.has_group('stock.group_stock_user') or self.env.is_superuser()):
+            default = dict(default or {}, create_repair=False)
+        return super().copy_data(default)

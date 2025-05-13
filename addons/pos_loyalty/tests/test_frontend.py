@@ -1080,6 +1080,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("PosLoyalty2DiscountsSpecificGlobal")
 
     def test_specific_product_discount_with_global_discount(self):
+        if self.env['ir.module.module']._get('pos_discount').state != 'installed':
+            self.skipTest("pos_discount module is required for this test")
+
         self.env['loyalty.program'].search([]).write({'active': False})
 
         self.discount_product = self.env["product.product"].create({
@@ -2669,6 +2672,26 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Create gift card program
         self.create_programs([('name', 'gift_card')])
         self.start_pos_tour("test_gift_card_no_date")
+
+    def test_not_create_loyalty_card_expired_program(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['res.partner'].create({'name': 'Test Partner'})
+
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+        loyalty_program.write({
+            'date_from': date.today() - timedelta(days=10),
+            'date_to': date.today() - timedelta(days=5),
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_not_create_loyalty_card_expired_program",
+            login="pos_user",
+        )
+
+        self.assertEqual(loyalty_program.coupon_count, 0)
 
     def test_physical_gift_card_invoiced(self):
         """

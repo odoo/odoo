@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:36+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -1259,7 +1259,7 @@ msgstr "<span>描述</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.%</span>"
-msgstr "<span>折扣率%</span>"
+msgstr "<span>折扣 %</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1454,6 +1454,13 @@ msgid "<strong>Type: </strong>"
 msgstr "<strong>類型：</strong>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
+"disabled again if there are any existing journal items."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "@From: %(email)s"
@@ -1484,6 +1491,14 @@ msgstr "當創建別名的新記錄時，一個Python字典被提供作為默認
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "A bank account can belong to only one journal."
 msgstr "同一個銀行賬戶，只能連結至單一流水賬戶。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/res_partner_bank.py:0
+msgid ""
+"A bank account with Account Number %(number)s already exists for Partner "
+"%(partner)s, but is archived. Please unarchive it instead."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2459,14 +2474,14 @@ msgstr "調整記項"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
-msgstr "調整記項 {link} 款項 {amount} 的 {percent}%% ，由 {date} 開始確認"
+msgstr "調整記項 {link} 款項 {amount} 的 {percent}%% ，由 {date} 開始認列"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid ""
 "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
-msgstr "調整記項 {link} 款項 {amount} 的 {percent}%% ，由 {new_date} 開始確認"
+msgstr "調整記項 {link} 款項 {amount} 的 {percent}%% ，於 {new_date} 認列"
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
@@ -3392,8 +3407,8 @@ msgstr "銀行帳戶"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
-msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr "銀行賬戶 %(link)s（號碼 %(number)s）已被刪除"
+msgid "Bank Account %(link)s with number %(number)s archived"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -3974,6 +3989,12 @@ msgstr "無法生成未使用的日記賬代碼。請更改日記賬名稱%s。"
 msgid ""
 "Cannot get aggregation details from a line not using 'aggregation' engine"
 msgstr "無法從不使用“整合”引擎的明細獲取整合詳細訊息"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Cannot identify the invoices in the generated PDF: %s"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -8394,7 +8415,7 @@ msgstr "資訊"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
-msgstr "在這裡插入您的條款和條件..."
+msgstr "在此處插入你的條款及條件⋯"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__installments_switch_amount
@@ -12484,7 +12505,7 @@ msgstr "收款銀行項目"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Recognition Date"
-msgstr "確認日期"
+msgstr "認列日期"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15045,7 +15066,7 @@ msgid ""
 "validation."
 msgstr ""
 "開支會在供應商賬單獲驗證時入賬，但在使用永續庫存估值的英式（Anglo-"
-"Saxon）會計中除外。在該情況下，開支（銷貨成本賬戶）會在客戶發票獲驗證時確認。"
+"Saxon）會計中除外。在該情況下，開支（銷貨成本賬戶）會在客戶發票獲驗證時認列。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_expression_line_label_uniq
@@ -17329,6 +17350,11 @@ msgid "Wrong credit or debit value in accounting entry!"
 msgstr "會計記項的貸方或借方金額錯誤！"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "XML format"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
 msgid "Yearly"
 msgstr "每年"
@@ -18291,7 +18317,7 @@ msgstr "已套用。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "here"
-msgstr "這裡"
+msgstr "此處"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__fixed_amount
