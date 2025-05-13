@@ -2,6 +2,8 @@
 
 from odoo import fields, models, _
 
+import pytz
+
 
 class HrLeave(models.Model):
     _inherit = "hr.leave"
@@ -25,9 +27,16 @@ class HrLeave(models.Model):
             if not leave.employee_id:
                 continue
 
-            work_hours_data = leave.employee_id._list_work_time_per_day(
-                leave.date_from,
-                leave.date_to)[leave.employee_id.id]
+            if leave.employee_id.resource_calendar_id.flexible_hours and (leave.request_unit_hours or leave.request_unit_half):
+                calendar_timezone = pytz.timezone(leave.employee_id.resource_calendar_id.tz)
+                if leave.request_unit_hours:
+                    work_hours_data = [(leave.date_from.astimezone(calendar_timezone).date(), leave.request_hour_to - leave.request_hour_from)]
+                else:
+                    work_hours_data = [(leave.date_from.astimezone(calendar_timezone).date(), leave.employee_id.resource_calendar_id.hours_per_day / 2)]
+            else:
+                work_hours_data = leave.employee_id._list_work_time_per_day(
+                    leave.date_from,
+                    leave.date_to)[leave.employee_id.id]
 
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 vals_list.append(leave._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count, project, task))
