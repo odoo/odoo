@@ -32,7 +32,7 @@ def migrate(cr, version):
             ids = [r[0] for r in cr.fetchmany(10000)]
             cr.execute(
                 f"UPDATE {table} SET uuid = (%s::json)->>(id::text) WHERE id IN %s",
-                [Json({id_: str(uuid.uuid4()) for id_ in ids}), ids]
+                [Json({id_: str(uuid.uuid4()) for id_ in ids}), tuple(ids)]
             )
 
     deduplicate_uuids("pos_order")
