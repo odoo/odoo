@@ -60,7 +60,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         return self._round_max_dp(self._get_unit_price_jod(line)) * self._round_max_dp(line.quantity) - self._round_max_dp(self._get_line_discount_jod(line))
 
     def _get_payment_method_code(self, invoice):
-        return PAYMENT_CODES_MAP[invoice.company_id.l10n_jo_edi_taxpayer_type]['receivable']
+        return PAYMENT_CODES_MAP.get(invoice.company_id.l10n_jo_edi_taxpayer_type, {}).get('receivable', '')
 
     def _aggregate_totals(self, vals):
         """
@@ -384,7 +384,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             'order_reference': '',
             'sales_order_id': '',
             'profile_id': 'reporting:1.0',
-            'id': invoice.name.replace('/', '_'),
+            'id': (invoice.name or '').replace('/', '_'),
             'uuid': invoice.l10n_jo_edi_uuid,
             'document_currency_code': 'JOD',
             'tax_currency_code': 'JOD',
