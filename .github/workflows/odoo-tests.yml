@@ -46,11 +46,11 @@ jobs:
         id: read_modules
         run: |
           echo "modules_to_test=$(python3 - <<EOF
-import json
-mods = json.load(open('test_modules.json'))['modules']
-print(','.join(mods))
-EOF
-)" >> $GITHUB_OUTPUT
+          import json
+          mods = json.load(open('test_modules.json'))['modules']
+          print(','.join(mods))
+          EOF
+          )" >> $GITHUB_OUTPUT
 
       - name: Install ONLY custom addon and its dependencies
         env:
