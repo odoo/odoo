@@ -44,7 +44,7 @@ jobs:
       - name: Wait for Postgres to be ready
         run: |
           for i in {1..60}; do  # Intentaremos 60 veces (1 minuto de espera total)
-            if pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER > /dev/null 2>&1; then
+            if pg_isready -h $DB_HOST -p $DB_PORT -U postgres > /dev/null 2>&1; then
               echo "Postgres is up"
               exit 0
             else
