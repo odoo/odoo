@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
+import contextlib
 import logging
 import re
 import textwrap
@@ -8,7 +9,7 @@ from binascii import Error as binascii_error
 from collections import defaultdict
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.misc import OrderedSet
@@ -1069,13 +1070,17 @@ class MailMessage(models.Model):
         for message in self:
             # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated
             record = record_by_message.get(message)
+            record_name = False
+            default_subject = False
             if record:
                 # sudo: if mentionned in a non accessible thread, user should be able to see the name
-                record_name = record.sudo().display_name
-                default_subject = record_name
-                if hasattr(record, "_message_compute_subject"):
-                    # sudo: if mentionned in a non accessible thread, user should be able to see the subject
-                    default_subject = record.sudo()._message_compute_subject()
+                with contextlib.suppress(MissingError):
+                    record_name = record.sudo().display_name
+                if record_name:
+                    default_subject = record_name
+                    if hasattr(record, "_message_compute_subject"):
+                        # sudo: if mentionned in a non accessible thread, user should be able to see the subject
+                        default_subject = record.sudo()._message_compute_subject()
             else:
                 record_name = False
                 default_subject = False
