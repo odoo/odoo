@@ -16,9 +16,11 @@ create_ramdisk () {
 }
 
 echo "Creating ramdisks..."
+# Note: As of 2025 we are using 2 Gb ram rpi4 as basic IoT Boxes.
+# The 2 Gb limit applies here
 create_ramdisk "/var" "192M"
-create_ramdisk "/etc" "16M"
-create_ramdisk "/tmp" "64M"
+create_ramdisk "/etc" "64M"
+create_ramdisk "/tmp" "1G" # big size necessary for chromium kiosk usage
 
 # bind mount / so that we can get to the real /var and /etc
 mount --bind / /root_bypass_ramdisks
