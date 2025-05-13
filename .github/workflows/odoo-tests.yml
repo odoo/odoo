@@ -22,11 +22,9 @@ jobs:
           --health-retries 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -34,12 +32,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            build-essential python3-dev libldap2-dev libsasl2-dev libssl-dev
+            build-essential python3-dev libldap2-dev \
+            libsasl2-dev libssl-dev postgresql-client
 
       - name: Install Python deps
         run: |
-          python3 -m pip install --upgrade pip setuptools wheel
-          python3 -m pip install -r requirements.txt
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
           pip install -e .
 
       - name: Read test modules
@@ -47,26 +46,40 @@ jobs:
         run: |
           echo "modules_to_test=$(python3 - <<EOF
           import json
-          mods = json.load(open('test_modules.json'))['modules']
-          print(','.join(mods))
+          print(','.join(json.load(open('test_modules.json'))['modules']))
           EOF
           )" >> $GITHUB_OUTPUT
 
-      - name: Install ONLY custom addon and its dependencies
+      - name: Wait for Postgres to be ready
+        run: |
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5432 -U $DB_USER; then
+              echo "Postgres is up"
+              break
+            fi
+            echo "Waiting for Postgres..."
+            sleep 1
+          done
+
+      - name: Create test database
+        env:
+          PGPASSWORD: ${{ env.DB_PASSWORD }}
+        run: |
+          psql -h localhost -U $DB_USER -c "CREATE DATABASE test_db;"
+
+      - name: Install ONLY custom addon (and deps)
         env:
           DB_HOST: localhost
           DB_PORT: 5432
           DB_USER: odoo
           DB_PASSWORD: odoo
         run: |
-          # Creamos la base pero NO instalamos TODO el repo, solo lo mínimo
-          createdb -h $DB_HOST -U $DB_USER test_db
           ./odoo-bin \
             --addons-path=odoo/odoo/addons,custom_addons \
             -d test_db \
             --db_host=$DB_HOST --db_user=$DB_USER --db_password=$DB_PASSWORD \
             --stop-after-init \
-            -i ${MODS}  # esto instalará sólo tu módulo y las dependencias que declares en manifest
+            -i ${{ steps.read_modules.outputs.modules_to_test }}
 
       - name: Run ONLY your tests
         env:
@@ -75,7 +88,6 @@ jobs:
           DB_USER: odoo
           DB_PASSWORD: odoo
         run: |
-          # Ahora ejecutamos tests, filtrando por tag
           ./odoo-bin \
             --addons-path=odoo/odoo/addons,custom_addons \
             -d test_db \
