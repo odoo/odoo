@@ -1,13 +1,19 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { press, queryFirst } from "@odoo/hoot-dom";
+import { isInViewPort, press, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    models,
+    mountView,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { Plugin } from "../src/plugin";
 import { MAIN_PLUGINS } from "../src/plugin_sets";
 import { setupEditor } from "./_helpers/editor";
-import { getContent } from "./_helpers/selection";
+import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, tripleClick } from "./_helpers/user_actions";
 
 test("getEditableSelection should work, even if getSelection returns null", async () => {
@@ -241,4 +247,63 @@ test("preserveSelection's restore should always set the selection, even if it's 
     const cursors = editor.shared.selection.preserveSelection();
     cursors.restore();
     expect.verifySteps(["setBaseAndExtent"]);
+});
+
+test.tags("desktop");
+test("should not autoscroll if selection is partially visible in viewport", async () => {
+    class Test extends models.Model {
+        name = fields.Char();
+        txt = fields.Html();
+        _records = [{ id: 1, name: "Test", txt: "<p>This is some text</p>".repeat(50) }];
+    }
+
+    defineModels([Test]);
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "test",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+
+    const scrollableElement = queryOne(".o_content");
+    const editable = queryOne(".odoo-editor-editable");
+    const lastParagraph = editable.lastElementChild;
+    const fifthLastParagraph = editable.children[45];
+
+    // Select the last five paragraphs in backward.
+    setSelection({
+        anchorNode: lastParagraph,
+        anchorOffset: 1,
+        focusNode: fifthLastParagraph,
+        focusOffset: 0,
+    });
+    await animationFrame();
+
+    // Both ends of the selection are initially visible in the viewport.
+    expect(isInViewPort(fifthLastParagraph)).toBe(true);
+    expect(isInViewPort(lastParagraph)).toBe(true);
+
+    // Scroll above so that last paragraph becomes invisible in viewport.
+    scrollableElement.scrollTop -= 70;
+    await animationFrame();
+    expect(isInViewPort(lastParagraph)).toBe(false);
+    expect(isInViewPort(fifthLastParagraph)).toBe(true);
+
+    const scrollTop = scrollableElement.scrollTop;
+    // Extend the selection to include one more paragraph above.
+    setSelection({
+        anchorNode: lastParagraph,
+        anchorOffset: 1,
+        focusNode: fifthLastParagraph.previousElementSibling,
+        focusOffset: 0,
+    });
+    await animationFrame();
+
+    // Ensure that extending selection did not trigger any auto-scrolling.
+    expect(scrollableElement.scrollTop).toBe(scrollTop);
+    expect(isInViewPort(lastParagraph)).toBe(false);
 });

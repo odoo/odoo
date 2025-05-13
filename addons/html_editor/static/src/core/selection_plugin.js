@@ -136,8 +136,8 @@ function scrollToSelection(selection) {
     const offsetTop = rect.top - containerRect.top + container.scrollTop;
     const offsetBottom = rect.bottom - containerRect.top + container.scrollTop;
 
-    if (rect.height >= containerRect.height) {
-        // Selection is larger than scrollable so we do nothing.
+    if (rect.bottom > containerRect.top && rect.top < containerRect.bottom) {
+        // If selection is partially visible, no need to scroll.
         return;
     }
     // Simulate the "nearest" behavior by scrolling to the closest top/bottom edge
