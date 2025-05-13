@@ -193,7 +193,7 @@ class RawRecordDialog extends Component {
 }
 
 export function viewRawRecord({ component, env }) {
-    const { resId, resModel } = component.model.config;
+    const { resId, resModel, fields } = component.model.config;
     if (!resId) {
         return null;
     }
@@ -202,7 +202,10 @@ export function viewRawRecord({ component, env }) {
         type: "item",
         description,
         callback: async () => {
-            const records = await component.model.orm.read(resModel, [resId]);
+            const serializableFields = Object.entries(fields).reduce(
+                (acc, [k, v]) => v.type !== "binary" ? acc.concat(k) : acc, []
+            );
+            const records = await component.model.orm.read(resModel, [resId], serializableFields);
             env.services.dialog.add(RawRecordDialog, {
                 title: _t("Data: %(model)s(%(id)s)", { model: resModel, id: resId }),
                 record: records[0],
