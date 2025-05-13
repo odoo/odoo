@@ -40,3 +40,9 @@ class StockMove(models.Model):
     def _action_assign(self, force_qty=False):
         super()._action_assign(force_qty=force_qty)
         self.move_line_ids._auto_wave()
+
+    def action_show_details(self):
+        action = super().action_show_details()
+        if self.picking_id.batch_id:
+            action['context']['default_picking_id'] = self.picking_id.id
+        return action
