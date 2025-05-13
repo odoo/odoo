@@ -3443,12 +3443,16 @@
             <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
             <div id="shop_checkout">
                 <t t-if="order._has_deliverable_products()">
-                    <t t-call="website_sale.delivery_address_list">
-                        <t t-set="addresses" t-value="delivery_addresses"/>
-                    </t>
-                    <t t-call="website_sale.delivery_form">
-                        <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
-                    </t>
+                    <div class="mb-4">
+                        <t t-call="website_sale.delivery_form">
+                            <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
+                        </t>
+                    </div>
+                    <div class="mb-4">
+                        <t t-call="website_sale.delivery_address_list">
+                            <t t-set="addresses" t-value="delivery_addresses"/>
+                        </t>
+                    </div>
                 </t>
                 <t t-call="website_sale.billing_address_list">
                     <t t-set="addresses" t-value="billing_addresses"/>
@@ -3463,9 +3467,9 @@
             t-set="new_address_url"
             t-valuef="{{address_url}}?address_type={{address_type}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
         />
-        <div id="delivery_address_list" class="mb-4">
+        <div id="delivery_address_list">
             <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                <h4 class="mb-0">Delivery address</h4>
+                <h5 name="delivery_address_title" class="mb-0">Delivery address</h5>
                 <!-- We don't allow public users to have multiple delivery addresses. -->
                 <a
                     t-if="not order.website_id.is_public_user()"
@@ -3513,7 +3517,10 @@
                         id="use_delivery_as_billing"
                         class="form-check-input"
                         t-att-checked="use_delivery_as_billing"
-                    /> Same as delivery address
+                    />
+                    <span name="use_delivery_as_billing_text">
+                        Same as delivery address
+                    </span>
                 </label>
             </div>
             <div
@@ -3640,7 +3647,7 @@
                     t-set="use_delivery_as_billing"
                     t-value="order.partner_invoice_id == order.partner_shipping_id and not order.pickup_location_data"
                 />
-                <div class="row g-0">
+                <div class="row">
                     <div
                         t-if="not use_delivery_as_billing and order._has_deliverable_products()"
                         t-attf-class="{{not use_delivery_as_billing and not only_services and 'col-md-6'}}"
@@ -3648,11 +3655,11 @@
                         <t t-if="order.pickup_location_data">
                             <p t-att-class="delivery_title_classes">Deliver to pickup point</p>
                             <div
-                                t-out="order.pickup_location_data.get('name', '')
-                                    + ', ' + order.pickup_location_data.get('street', '')
-                                    + ' ' + order.pickup_location_data.get('zip_code', '')
-                                    + ' ' + order.pickup_location_data.get('city','')
-                                "
+                                class="fw-bold" t-out="order.pickup_location_data.get('name', '')"
+                            />
+                            <div t-out="order.pickup_location_data.get('street', '')"/>
+                            <div t-out="order.pickup_location_data.get('city', '')
+                                        + ' ' + order.pickup_location_data.get('zip_code','')"
                             />
                         </t>
                         <t t-else="">
