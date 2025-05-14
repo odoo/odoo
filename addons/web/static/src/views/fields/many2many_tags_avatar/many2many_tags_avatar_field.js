@@ -105,6 +105,7 @@ export class KanbanMany2ManyTagsAvatarFieldTagsList extends TagsList {
         this.popover = usePopover(Many2ManyTagsAvatarFieldPopover, {
             popoverClass: "o_m2m_tags_avatar_field_popover",
             closeOnClickAway: (target) => !target.closest(".modal"),
+            useBottomSheet: false,
         });
     }
 

@@ -12,6 +12,8 @@ import { throttleForAnimation } from "@web/core/utils/timing";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
+import { useService } from "@web/core/utils/hooks";
+import { StatusBarBottomSheet } from "./statusbar_bottom_sheet";
 
 /**
  * @typedef {import("../standard_field_props").StandardFieldProps & {
@@ -36,12 +38,12 @@ import { standardFieldProps } from "../standard_field_props";
 /**
  * @param {...HTMLElement} els
  */
-const hide = (...els) => els.forEach((el) => el.classList.add("d-none"));
+const hide = (...els) => els.filter(Boolean).forEach((el) => el.classList.add("d-none"));
 
 /**
  * @param {...HTMLElement} els
  */
-const show = (...els) => els.forEach((el) => el.classList.remove("d-none"));
+const show = (...els) => els.filter(Boolean).forEach((el) => el.classList.remove("d-none"));
 
 /** @extends {Component<StatusBarFieldProps>} */
 export class StatusBarField extends Component {
@@ -66,10 +68,14 @@ export class StatusBarField extends Component {
         this.rootRef = useRef("root");
         this.afterRef = useRef("after");
         this.dropdownRef = useRef("dropdown");
+        this.bottomSheetService = useService("bottomSheet");
 
         // Resize listeners
         let status = "idle";
         const adjust = () => {
+            // Skip adjustment on mobile
+            if (this.env.isSmall) return;
+
             status = "adjusting";
             this.adjustVisibleItems();
             this.render();
@@ -151,6 +157,20 @@ export class StatusBarField extends Component {
     }
 
     /**
+     * Opens the bottom sheet for mobile status selection
+     */
+    openBottomSheet() {
+        this.bottomSheetService.add(
+            StatusBarBottomSheet,
+            {
+                items: this.getAllItems(),
+                onSelect: this.selectItem.bind(this),
+                isDisabled: this.props.isDisabled,
+            },
+        );
+    }
+
+    /**
      * @returns {{ selection?: [string, string][], string: string, type: "many2one" | "selection" }}
      */
     get field() {
@@ -174,6 +194,9 @@ export class StatusBarField extends Component {
      * 4. If that still doesn't suffice: all items are combined in a single dropdown.
      */
     adjustVisibleItems() {
+        // Skip adjustment on mobile
+        if (this.env.isSmall) return;
+
         // Get all visible buttons
         const itemEls = [
             ...this.rootRef.el.querySelectorAll(".o_arrow_button:not(.dropdown-toggle)"),
@@ -304,6 +327,10 @@ export class StatusBarField extends Component {
      * @param {StatusBarItem} item
      */
     async selectItem(item) {
+        if (item.isSelected || this.props.isDisabled) {
+            return;
+        }
+
         const { name, record } = this.props;
         const value = this.field.type === "many2one" ? { id: item.value, display_name: item.label } : item.value;
         await record.update({ [name]: value });

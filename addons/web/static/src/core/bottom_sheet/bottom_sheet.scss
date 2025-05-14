@@ -1,0 +1,375 @@
+// =============================================
+// Layout and inner elements
+// =============================================
+.o_bottom_sheet {
+    --BottomSheet-slideIn-duration: #{$o_BottomSheet_slideIn_duration};
+    --BottomSheet-slideIn-easing: #{$o_BottomSheet_slideIn_easing};
+    --BottomSheet-slideOut-duration: #{$o_BottomSheet_slideOut_duration};
+    --BottomSheet-slideOut-easing: #{$o_BottomSheet_slideOut_easing};
+
+    --BottomSheet-Sheet-borderColor: #{$o_BottomSheet_Sheet_borderColor};
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100dvh;
+    z-index: $zindex-offcanvas;
+    opacity: 0;
+    transform-style: preserve-3d;
+    contain: layout paint size;
+
+    // Main scroll container for gesture handling
+    &_rail {
+        @include o-position-absolute(0, 0, 0, 0);
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        touch-action: pan-y;
+        pointer-events: auto;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        &.o_bottom_sheet_rail_prevent_overscroll,
+        &.o_bottom_sheet_rail_prevent_overscroll * {
+            overscroll-behavior: contain;
+        }
+    }
+
+    // Set snapping behaviors
+    &_dismiss, &_spacer, &_sheet {
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+
+    // Backdrop overlay
+    &_backdrop {
+        position: fixed;
+        inset: 0;
+        background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
+        opacity: 0;
+        transition: all 0.2s ease;
+        pointer-events: auto;
+        touch-action: none;
+        z-index: $zindex-offcanvas - 1;
+        backdrop-filter: blur(0px) grayscale(0%);
+    }
+
+    // Dismiss area
+    &_dismiss {
+        height: var(--dismiss-height, 50dvh);
+    }
+
+    // Spacer area
+    &_spacer {
+        height: calc(100dvh - var(--sheet-initial-height, 50dvh));
+        pointer-events: none;
+    }
+
+    &_sheet, &_footer {
+        width: 100%;
+        max-width: map-get($grid-breakpoints, sm);
+        border: $border-width solid var(--BottomSheet-Sheet-borderColor, transparent);
+        will-change: transform;
+    }
+
+    // The actual sheet
+    &_sheet {
+        --offcanvas-box-shadow: #{$box-shadow};
+
+        margin: 0 auto;
+        min-height: var(--sheet-initial-height);
+        max-height: var(--sheet-max-height, 90dvh);
+        border-radius: $border-radius-xl $border-radius-xl 0 0;
+        border-bottom-width: 0;
+        visibility: visible;
+        transition: none;
+        contain: content;
+        backface-visibility: hidden;
+        perspective: 1000px;
+        user-select: none;
+
+        .o_bottom_sheet_handle_bar {
+            background-color: currentColor;
+        }
+
+        .o_bottom_sheet_header.offcanvas-header {
+            --offcanvas-padding-y: #{map-get($spacers, 2)};
+
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+
+            .btn-close {
+                justify-self: end;
+            }
+
+            .offcanvas-title {
+                padding: 0 map-get($spacers, 1);
+                text-align: center;
+                font-weight: $o-font-weight-medium;
+            }
+
+            &.o_no_back {
+                grid-template-columns: auto 1fr;
+
+                .offcanvas-title {
+                    text-align: left;
+                    padding-left: 0;
+                    grid-column: 1;
+                }
+
+                .btn-close, .btn:last-child {
+                    grid-column: 2;
+                }
+            }
+
+            &.o_no_title {
+                grid-template-columns: 1fr 1fr;
+
+                .btn-close {
+                    grid-column: 2;
+                }
+            }
+        }
+
+        .o_bottom_sheet_body {
+            overflow-y: hidden; // Initially hidden, will be 'auto' when extended
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            flex: 1;
+        }
+    }
+
+    &_footer {
+        --_footerTranslation: calc((1 - min(var(--BottomSheet-progress) * 2, 1)) * 100%);
+
+        position: fixed;
+        left: 50%;
+        bottom: 0;
+        z-index: $zindex-offcanvas + 1;
+        transform: translateX(-50%) translateY(var(--_footerTranslation));
+        background: $offcanvas-bg-color;
+        border-width: 0 $border-width;
+        padding: $offcanvas-padding-y $offcanvas-padding-x;
+    }
+}
+
+// =============================================
+// States
+// =============================================
+.o_bottom_sheet {
+    @keyframes bottom-sheet-in {
+        from { transform: translateY(100%) translateZ(0); }
+          to { transform: translateY(0) translateZ(0); }
+    }
+
+    @keyframes bottom-sheet-out {
+        from { transform: translateY(0) translateZ(0); }
+          to { transform: translateY(100%) translateZ(0); }
+    }
+
+    // BottomSheet is ready to be rendered on screen
+    &.o_bottom_sheet_ready {
+        opacity: 1;
+
+        .o_bottom_sheet_sheet {
+            animation: var(--BottomSheet-slideIn-duration, 500ms) bottom-sheet-in var(--BottomSheet-slideIn-easing, ease-out) forwards;
+        }
+
+        .o_bottom_sheet_backdrop {
+            opacity: MAX(var(--BottomSheet-progress, 0), 0.2);
+            backdrop-filter: blur(.5px) grayscale(50%);
+        }
+    }
+
+    // User interactions are now allowed
+    &.o_bottom_sheet_snapping .o_bottom_sheet_rail {
+        // Enable snap behavior
+        scroll-snap-type: y mandatory;
+
+        .o_bottom_sheet_backdrop {
+            transition: none;
+        }
+
+        // Provide a visual safenet in case of elastic
+        // overscroll (mostly iOS).
+        &:before {
+            position: fixed;
+            inset: auto auto 0 50%;
+            height: calc(var(--sheet-initial-height) - #{$border-radius-xl * 2});
+            width: calc(100% - #{$border-width * 2});
+            max-width: map-get($grid-breakpoints, sm) - ($border-width * 2);
+            background: $offcanvas-bg-color;
+            z-index: $zindex-offcanvas;
+            transform: translateY(calc((1 - var(--BottomSheet-progress)) * 150%)) translateX(-50%);
+            content: "";
+        }
+    }
+
+    // The sheet reached the "extended" snap point
+    &.o_bottom_sheet_extended {}
+
+    &.o_bottom_sheet_footer_shadow .o_bottom_sheet_footer {
+        box-shadow: 0 0 1rem rgba(black, .2);
+    }
+
+    // Dismissing the sheet
+    &.o_bottom_sheet_dismissing {
+        .o_bottom_sheet_sheet {
+            animation: var(--BottomSheet-slideOut-duration, 300ms) bottom-sheet-out var(--BottomSheet-slideOut-easing, ease-in) forwards;
+        }
+
+        .o_bottom_sheet_backdrop {
+            opacity: 0;
+            backdrop-filter: blur(0) grayscale(0%);
+            transition: all var(--BottomSheet-slideOut-duration, 300ms) var(--BottomSheet-slideOut-easing, ease-in);
+        }
+    }
+
+    // When bottom sheet is open, apply styles to the body
+    @at-root .bottom-sheet-open {
+        overflow: hidden;
+
+        // Scale down the main content
+        .o_navbar, .o_action_manager {
+            transition: transform $o_BottomSheet_slideIn_duration ease;
+            transform: scale(.95) translateZ(0);
+            transform-origin: center top;
+        }
+
+        &:has(.o_bottom_sheet_dismissing) {
+            .o_navbar, .o_action_manager {
+                transition: transform $o_BottomSheet_slideOut_duration ease;
+                transform: scale(1) translateZ(0);
+            }
+        }
+    }
+
+    &.o_bottom_sheet_nested {
+        --BottomSheet-progress: 1;
+
+        /* For nested sheets, initially make backdrop transparent */
+        .o_bottom_sheet_backdrop {
+            opacity: 0;
+        }
+
+        /* Once the nested sheet reaches its position, show its backdrop */
+        &.o_bottom_sheet_ready .o_bottom_sheet_backdrop {
+            opacity: 1;
+        }
+    }
+
+    /* For parent sheets when a nested sheet is positioned */
+    &.o_bottom_sheet_parent_of_active {
+        .o_bottom_sheet_backdrop {
+            opacity: 0;
+            transition: opacity 0.2s ease !important;
+        }
+
+        .o_bottom_sheet_sheet, .o_bottom_sheet_rail:before {
+            visibility: hidden;
+        }
+    }
+}
+
+// =============================================
+// Inner components design
+// =============================================
+.o_bottom_sheet .o_bottom_sheet_sheet {
+    --BottomSheet-Entry-paddingX: #{$list-group-item-padding-x};
+
+    %BottomSheet-Entry-active {
+        position: relative;
+        border: $border-width solid $list-group-active-border-color;
+        border-radius: $border-radius-lg;
+        background: rgba($component-active-bg, .5);
+        color: color-contrast($component-active-bg);
+
+        &:before, &:after {
+            @include o-position-absolute(50%, $list-group-item-padding-x);
+            background: $o-action;
+            border-radius: 100%;
+            height: 1rem;
+            aspect-ratio: 1;
+            transform: translateY(-50%);
+            content: ""
+        }
+
+        &:after {
+            transform: translateY(-50%) scale(.4);
+            background: white;
+        }
+
+        &.o-boolean {
+            &:before {
+                aspect-ratio: 1.6;
+                border-radius: $border-radius-pill;
+                background: $success;
+            }
+            &:after {
+                transform: translateY(-50%) scale(.8);
+            }
+        }
+    }
+
+    hr {
+        color: $border-color;
+        opacity: 1;
+    }
+
+    &, .list-group.list-group-flush {
+        --list-group-bg: transparent;
+        --list-group-color: inherit;
+        --list-group-item-padding-y: #{map-get($spacers, 3)};
+        --list-group-active-bg: #{rgba($component-active-bg, .5)};
+        --list-group-active-color: #{color-contrast($component-active-bg)};
+    }
+
+    .list-group-flush .list-group-item.active {
+        @extend %BottomSheet-Entry-active;
+    }
+
+    .list-group:where(:not(.list-group-flush)) {
+        --list-group-border-radius: #{$border-radius-lg};
+        --list-group-item-padding-y: #{map-get($spacers, 3)};
+        --list-group-item-padding-x: #{map-get($spacers, 3)};
+    }
+
+    .list-group-item {
+        font-weight: $o-font-weight-medium;
+        font-size: $h5-font-size;
+    }
+
+    // TreeEntry
+    --treeEntry-padding-v: 1.4rem;
+
+    // Dropdown
+    &.o-dropdown--bottom-sheet {
+        .dropdown-divider {
+            --dropdown-divider-bg: #{$border-color};
+            margin: map-get($spacers, 2) ($offcanvas-padding-x * .5);
+        }
+
+        .dropdown-item {
+            --dropdown-item-padding-y: #{map-get($spacers, 3)};
+            --dropdown-item-padding-x: var(--BottomSheet-Entry-paddingX);
+
+            font-size: $h5-font-size;
+            font-weight: $o-font-weight-medium;
+
+            &.active, &.selected {
+                @extend %BottomSheet-Entry-active;
+            }
+        }
+    }
+
+    // ColorPicker
+    .o_field_kanban_color_picker {
+        --fieldWidget-display: block;
+        --ColorListField-padding: #{map-get($spacers, 3)} var(--BottomSheet-Entry-paddingX);
+        --ColorListField-gap: #{map-get($spacers, 3)};
+        --ColorListField-Entry-fontSize: 1.4em;
+    }
+}

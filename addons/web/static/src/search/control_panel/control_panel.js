@@ -16,6 +16,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Transition } from "@web/core/transition";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 import { SearchBar } from "../search_bar/search_bar";
+import { ViewSwitcherBottomSheet } from "./view_switcher_bottom_sheet";
 
 import { Component, useState, onMounted, useRef, useEffect } from "@odoo/owl";
 
@@ -50,6 +51,7 @@ export class ControlPanel extends Component {
         AccordionItem,
         CheckBox,
         Transition,
+        ViewSwitcherBottomSheet,
     };
     static props = {
         display: { type: Object, optional: true },
@@ -65,6 +67,7 @@ export class ControlPanel extends Component {
         this.breadcrumbs = useState(this.env.config.breadcrumbs);
         this.orm = useService("orm");
         this.dialogService = useService("dialog");
+        this.bottomSheetService = useService("bottomSheet");
 
         this.root = useRef("root");
         this.newActionNameRef = useRef("newActionNameRef");
@@ -300,6 +303,19 @@ export class ControlPanel extends Component {
         }
         this.state.embeddedInfos.showEmbedded = !this.state.embeddedInfos.showEmbedded;
         browser.localStorage.setItem("showEmbeddedActions", this.state.embeddedInfos.showEmbedded);
+    }
+
+    showViewSwitcherBottomSheet() {
+        return this.bottomSheetService.add(ViewSwitcherBottomSheet, {
+            views: this.env.config.viewSwitcherEntries,
+            switchView: this.switchView.bind(this),
+            activeViewType: this.env.config.viewType
+        }, {
+            title: _t("Switch View Type"),
+            initialHeightPercent: 40,
+            showCloseBtn: true,
+            startExpanded: true,
+        });
     }
 
     /**

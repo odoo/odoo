@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ActivityListBottomSheet">
+        <div class="o-mail-ActivityListBottomSheet">
+            <div class="overflow-y-auto">
+                <div t-if="activities.length === 0" class="p-4 text-center fst-italic text-500 border-bottom fs-6">Schedule activities to help you get things done.</div>
+                <t t-if="overdueActivities.length > 0">
+                    <div class="d-flex p-3 pb-2 border-bottom">
+                        <span class="text-danger fw-bold">Overdue</span>
+                        <span class="flex-grow-1"/>
+                        <span class="badge rounded-pill text-bg-danger align-self-center" t-esc="overdueActivities.length"/>
+                    </div>
+                    <ActivityListPopoverItem t-foreach="overdueActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="props.onActivityChanged" onClickEditActivityButton="props.close" onClickDoneAndScheduleNext="props.close"/>
+                </t>
+                <t t-if="todayActivities.length > 0">
+                    <div class="d-flex p-3 pb-2 border-bottom">
+                        <span class="text-warning fw-bold">Today</span>
+                        <span class="flex-grow-1"/>
+                        <span class="badge rounded-pill text-bg-warning align-self-center" t-esc="todayActivities.length"/>
+                    </div>
+                    <ActivityListPopoverItem t-foreach="todayActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="props.onActivityChanged" onClickEditActivityButton="props.close" onClickDoneAndScheduleNext="props.close"/>
+                </t>
+                <t t-if="plannedActivities.length > 0">
+                    <div class="d-flex p-3 pb-2 border-bottom">
+                        <span class="text-success fw-bold">Planned</span>
+                        <span class="flex-grow-1"/>
+                        <span class="badge rounded-pill text-bg-success align-self-center" t-esc="plannedActivities.length"/>
+                    </div>
+                    <ActivityListPopoverItem t-foreach="plannedActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="props.onActivityChanged" onClickEditActivityButton="props.close" onClickDoneAndScheduleNext="props.close"/>
+                </t>
+                <t t-if="doneActivities.length > 0">
+                    <div class="d-flex p-3 pb-2 border-bottom">
+                        <span class="fw-bold">Done</span>
+                        <span class="flex-grow-1"/>
+                        <span class="badge rounded-pill text-bg-secondary align-self-center" t-esc="doneActivities.length"/>
+                    </div>
+                    <ActivityListPopoverItem t-foreach="doneActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="props.onActivityChanged"/>
+                </t>
+            </div>
+        </div>
+
+        <t t-set-slot="footer">
+            <div class="o_bottom_sheet_footer">
+                <button class="btn btn-primary w-100 py-3" t-on-click="onClickAddActivityButton">
+                    <i class="fa fa-plus fa-fw me-2"></i>
+                    <t t-if="props.resIds">Schedule an activity on selected records</t>
+                    <t t-else="">Schedule an activity</t>
+                </button>
+            </div>
+        </t>
+    </t>
+</templates>

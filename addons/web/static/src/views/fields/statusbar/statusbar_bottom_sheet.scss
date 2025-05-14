@@ -1,0 +1,28 @@
+
+.o_bottom_sheet .o_bottom_sheet_sheet.o_status_bar_bottom_sheet {
+    .o_status_bar_bottom_sheet_line {
+        @include o-position-absolute(0, auto, 0, CALC(#{$list-group-item-padding-x} + .5em));
+        border-right: $border-width solid $border-color;
+        z-index: -1;
+    }
+
+    .list-group-item.active {
+        transform: translateX(-$border-width);
+
+        &:before, &:after {
+            right: auto;
+            left: $list-group-item-padding-x;
+        }
+    }
+
+    .list-group-item:where(:not(.active)):before {
+        @include o-position-absolute(50%, auto, auto, $list-group-item-padding-x);
+        background: $o-action;
+        border-radius: 100%;
+        height: 1rem;
+        aspect-ratio: 1;
+        transform: translateY(-50%);
+        background-color: $border-color;
+        content: ""
+    }
+}

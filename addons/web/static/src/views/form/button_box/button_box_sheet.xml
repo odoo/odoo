@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.ButtonBoxBottomSheet">
+        <div class="list-group list-group-flush mb-3">
+            <t t-foreach="props.additionalButtons" t-as="button" t-key="button">
+                <t t-slot="{{ button }}" />
+            </t>
+        </div>
+    </t>
+</templates>

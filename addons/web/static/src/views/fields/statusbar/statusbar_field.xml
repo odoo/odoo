@@ -13,8 +13,8 @@
     </t>
 
     <t t-name="web.StatusBarField">
-        <div class="o_statusbar_status" t-ref="root" role="radiogroup" aria-label="Statusbar">
-            <Dropdown position="'bottom-end'">
+        <div class="o_statusbar_status" t-att-class="{'o_statusbar_mobile': env.isSmall}" t-ref="root" role="radiogroup" aria-label="Statusbar">
+            <Dropdown t-if="!env.isSmall" position="'bottom-end'">
                 <button
                     t-ref="after"
                     type="button"
@@ -30,7 +30,7 @@
                     </t>
                 </t>
             </Dropdown>
-            <t t-foreach="items.inline" t-as="item" t-key="item.value">
+            <t t-if="!env.isSmall" t-foreach="items.inline" t-as="item" t-key="item.value">
                 <button
                     type="button"
                     class="btn btn-secondary o_arrow_button"
@@ -48,7 +48,7 @@
                     t-on-click="() => this.selectItem(item)"
                 />
             </t>
-            <Dropdown position="'bottom-start'">
+            <Dropdown t-if="!env.isSmall" position="'bottom-start'">
                 <button
                     t-ref="before"
                     type="button"
@@ -64,24 +64,30 @@
                     </t>
                 </t>
             </Dropdown>
-            <Dropdown position="'bottom-end'">
+            <t t-if="env.isSmall">
                 <t t-set="allItems" t-value="getAllItems()" />
                 <t t-set="selectedIndex" t-value="allItems.findIndex((item) => item.isSelected)" />
+
                 <button
-                    t-ref="dropdown" 
-                    type="button" 
-                    class="btn btn-secondary dropdown-toggle"
-                    t-att-class="{'o_arrow_button': env.isSmall, 'o_last': selectedIndex === 0 , 'o_first': selectedIndex === allItems.length - 1}"
-                    t-att-disabled="props.isDisabled"
+                    type="button"
+                    class="btn btn-secondary o_statusbar_mobile_button"
+                    t-on-click="openBottomSheet"
                 >
-                    <t t-out="getCurrentLabel()" />
+                    <i
+                        t-if="!props.isDisabled"
+                        class="fa fa-sort me-2"
+                        role="img"
+                        aria-hidden="true"
+                    />
+                    <i
+                        t-if="props.isDisabled"
+                        class="fa opacity-50 fa-lock me-1"
+                        role="img"
+                        aria-hidden="true"
+                    />
+                    <span t-esc="getCurrentLabel()" />
                 </button>
-                <t t-set-slot="content">
-                    <t t-call="web.StatusBarField.Dropdown">
-                        <t t-set="items" t-value="getAllItems()" />
-                    </t>
-                </t>
-            </Dropdown>
+            </t>
         </div>
     </t>
 </templates>

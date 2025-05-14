@@ -1,4 +1,13 @@
 .modal.o_technical_modal {
+    --o-control-pale-breadcrumbs-display: none;
+
+    animation: modalBackdropIn .8s cubic-bezier(.19, 1, .22, 1) backwards;
+    backdrop-filter: blur(.5px) grayscale(50%);
+
+    &:where(:not(.o_modal_full)) .modal-dialog {
+        transition: max-width .4s $o-easing-enter;
+    }
+
     .modal-content {
         .modal-header .modal-title {
             overflow: hidden;
@@ -13,7 +22,7 @@
             }
         }
     }
-    
+
     .modal-footer {
         text-align: left;
 
@@ -34,40 +43,121 @@
         button {
             margin: 0; // Reset boostrap.
         }
-        
+
         @include media-breakpoint-down(md) {
             .btn {
-                width: 45%;
                 text-overflow: ellipsis;
                 white-space: inherit;
             }
         }
 
+        @include media-breakpoint-down(sm) {
+            > .btn {
+                width: 100%;
+                padding-top: map-get($spacers, 2);
+                padding-bottom: map-get($spacers, 2);
+            }
+
+            // // Has exactly 2 or 4 buttons
+            &:where([data-buttons-count="2"]), &:where([data-buttons-count="4"]) {
+                > .btn {
+                    flex: 0 1 calc(50% - #{map-get($spacers, 2)});
+                }
+            }
+        }
+    }
+
+    &.o_modal_design_default {
+        .modal-content {
+            animation: modalIn .4s ease-out backwards;
+        }
+    }
+
+    &.o_modal_design_minimal {
+        --modal-header-border-width: 0;
+        --modal-footer-border-width: 0;
+
+        .modal-body {
+            padding: 0 var(--modal-padding);
+        }
+
+        @include media-breakpoint-down(sm) {
+            .modal-dialog {
+                --modal-margin: #{$modal-dialog-margin * 4 $modal-dialog-margin * 2};
+
+                display: flex;
+                margin: 0;
+                padding: var(--modal-margin);
+                height: 100vh;
+            }
+
+            .modal-content {
+                animation: none;
+                max-height: calc(100vh - #{$modal-dialog-margin * 8});
+            }
+        }
+
+        @include media-breakpoint-up(sm) {
+            .modal-content {
+                animation: modalIn .4s $o-easing-enter forwards;
+            }
+        }
     }
 
     @include media-breakpoint-down(sm) {
         &.o_modal_full {
-            .modal-dialog {
-                margin: 0px;
+            --modal-margin: 0;
+            --modal-border-width: 0;
+            --modal-border-radius: 0;
+            --modal-box-shadow: #{$border-width * -1 0 0 $border-color};
+
+            overflow: visible;
+
+            .modal-dialog, .modal-content, .modal-body {
                 height: 100%;
+            }
 
-                .modal-content {
-                    height: 100%;
-                    border: none;
+            .modal-header {
+                padding: 0;
 
-                    .modal-header {
-                        background: $o-navbar-background;
-
-                        .modal-title, .btn {
-                            color: $o-navbar-entry-color;
-                        }
-                    }
-
-                    .modal-body {
-                        height: 100%;
-                        overflow-y: auto;
-                    }
+                .modal-title {
+                    padding: var(--modal-header-padding);
+                    padding-right: 0;
                 }
+
+                .btn-close, .oi-arrow-left[data-bs-dismiss="modal"] {
+                    padding: var(--modal-header-padding);
+                }
+
+                .oi-arrow-left[data-bs-dismiss="modal"] + .modal-title {
+                    padding-left: 0;
+                }
+
+            }
+
+            .modal-body {
+                overflow-y: auto;
+            }
+
+            .modal-content {
+                animation: modalInSm $o-modal-slide-duration $o-easing-enter forwards;
+            }
+
+            &.o_modal_is_dismissing, &.o_modal_is_dismissing .modal-content {
+                animation-direction: reverse;
+                animation-duration: $o-modal-slide-duration * 0.7;
+                animation-timing-function: $o-easing-exit;
+            }
+
+            @at-root .modal-open:has(&:not(.o_modal_is_dismissing)) {
+                .o_navbar, .o_action_manager {
+                    transform: translateX(-100%);
+                    transition-timing-function: $o-easing-exit;
+                }
+            }
+
+            @at-root .o_navbar, .o_action_manager {
+                transition: transform $o-modal-slide-duration $o-easing-enter;
             }
         }
     }
@@ -79,29 +169,42 @@
 
 .o_dialog > .modal {
     display: block;
+    overflow: hidden;
 }
 
 @include media-breakpoint-up(sm) {
+    .modal-content {
+        .modal-header {
+            cursor: grab;
+        }
+    }
+
+    html:has(body.modal-open .modal-content.o_dragged) {
+        cursor: grabbing
+    }
+
     .modal-fs {
         width: calc(100% - #{2 * $modal-dialog-margin-y-sm-up});
         max-width: none;
     }
 }
 
-@include media-breakpoint-down(md) {
-    .modal {
-        &.o_modal_full .modal-content {
-            .modal-header {
-                align-items: center;
-                height: $o-navbar-height;
-                padding: 0 1rem;
-            }
 
-            .modal-footer {
-                @include o-webclient-padding($top: 1rem, $bottom: 0.5rem);
-                box-shadow: 0 1rem 2rem black;
-                z-index: 0;
-            }
-        }
+@keyframes modalIn {
+    from {
+        transform: translateY(1rem);
+    }
+}
+
+@keyframes modalInSm {
+    from {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes modalBackdropIn {
+    from {
+        background-color: transparent;
+        backdrop-filter: none;
     }
 }

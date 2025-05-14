@@ -12,6 +12,7 @@ import { DateTimePicker } from "./datetime_picker";
 
 /** @extends {Component<DateTimePickerPopoverProps>} */
 export class DateTimePickerPopover extends Component {
+    static name = "DateTimePickerPopover";
     static components = { DateTimePicker };
 
     static props = {

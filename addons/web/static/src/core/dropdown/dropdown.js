@@ -105,6 +105,10 @@ export class Dropdown extends Component {
          * @type {import("@web/core/navigation/navigation").NavigationOptions}
          */
         navigationOptions: { type: Object, optional: true },
+
+        /** BottomSheet related props */
+        useBottomSheet: { type: Boolean, optional: true },
+        sheetClasses: { type: String, optional: true },
     };
     static defaultProps = {
         disabled: false,
@@ -113,6 +117,8 @@ export class Dropdown extends Component {
         state: undefined,
         noClasses: false,
         navigationOptions: {},
+        useBottomSheet: true,
+        sheetClasses: "",
     };
 
     setup() {
@@ -131,6 +137,7 @@ export class Dropdown extends Component {
         // Set up UI active element related behavior ---------------------------
         let activeEl;
         this.uiService = useService("ui");
+        this.isMobile = this.uiService.isSmall;
         useEffect(
             () => {
                 Promise.resolve().then(() => {
@@ -161,6 +168,15 @@ export class Dropdown extends Component {
             },
             ref: this.menuRef,
             setActiveElement: false,
+
+            // BottomSheet
+            useBottomSheet: this.props.useBottomSheet,
+            // Ensure sheetClasses is a string and not an object
+            sheetClasses: this.props.sheetClasses
+                ? `o-dropdown--bottom-sheet ${this.props.sheetClasses}`
+                : "o-dropdown--bottom-sheet",
+            isNestedSheet: this.hasParent,
+            showBackBtn: this.hasParent,
         });
 
         // As the popover is in another context we need to force
@@ -220,7 +236,8 @@ export class Dropdown extends Component {
             return;
         }
 
-        if (this.hasParent || this.group.isOpen) {
+        // Don't auto-open on hover in mobile context
+        if ((this.hasParent || this.group.isOpen) && !this.isMobile) {
             this.target.focus();
             this.state.open();
         }
@@ -239,6 +256,15 @@ export class Dropdown extends Component {
         if (rootNode instanceof ShadowRoot) {
             target = rootNode.host;
         }
+
+        // In mobile context with bottom sheet, avoid closing when clicking inside sheet
+        if (this.isMobile && this.props.useBottomSheet) {
+            const isInBottomSheet = target.closest('.o_bottom_sheet');
+            if (isInBottomSheet) {
+                return false;
+            }
+        }
+
         return this.uiService.getActiveElementOf(target) === activeEl;
     }
 

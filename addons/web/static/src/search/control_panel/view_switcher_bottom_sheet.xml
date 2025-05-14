@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.ViewSwitcherBottomSheet">
+        <div class="o_view_switcher_bottom_sheet grid pt-3" style="--columns:3">
+            <t t-foreach="props.views" t-as="view" t-key="view.type">
+                <div
+                    role="button"
+                    class="text-center"
+                    t-on-click="() => { this.props.switchView(view.type); this.props.close(); }"
+                    >
+                    <span
+                        class="btn btn-lg btn-secondary mb-2 px-4 py-3"
+                        t-att-class="{'active fw-bold': view.type === props.activeViewType}"
+                        >
+                        <i class="fs-2" t-att-class="view.icon" role="img"/>
+                    </span>
+                    <div class="fw-medium" t-out="view.name"/>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

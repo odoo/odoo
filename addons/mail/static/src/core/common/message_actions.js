@@ -44,6 +44,7 @@ messageActionsRegistry
             });
         },
         sequence: 10,
+        mobileSwitchOverlayAfterClick: true,
     })
     .add("reply-to", {
         condition: (component) => component.props.message.canReplyTo(component.props.thread),
@@ -87,6 +88,7 @@ messageActionsRegistry
         onClick: (component) => component.openReactionMenu(),
         sequence: 50,
         dropdown: true,
+        mobileSwitchOverlayAfterClick: true,
     })
     .add("unfollow", {
         condition: (component) => component.props.message.canUnfollow(component.props.thread),
@@ -176,6 +178,7 @@ function transformAction(component, id, action) {
         component: action.component,
         id,
         mobileCloseAfterClick: action.mobileCloseAfterClick ?? true,
+        mobileSwitchOverlayAfterClick: action.mobileSwitchOverlayAfterClick,
         /** Condition to display this action. */
         get condition() {
             return messageActionsInternal.condition(component, id, action);

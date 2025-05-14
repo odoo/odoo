@@ -1,10 +1,10 @@
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Component } from "@odoo/owl";
 import { useMessageActions } from "./message_actions";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
+import { BottomSheet } from "@web/core/bottom_sheet/bottom_sheet";
 
 export class MessageActionMenuMobile extends Component {
-    static components = { Dialog };
+    static components = { BottomSheet };
     static props = [
         "message",
         "close?",
@@ -18,19 +18,7 @@ export class MessageActionMenuMobile extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.modalRef = useChildRef();
         this.messageActions = useMessageActions();
-        this.onClickModal = this.onClickModal.bind(this);
-        onMounted(() => {
-            this.modalRef.el.addEventListener("click", this.onClickModal);
-        });
-        onWillUnmount(() => {
-            this.modalRef.el.removeEventListener("click", this.onClickModal);
-        });
-    }
-
-    onClickModal() {
-        this.props.close?.();
     }
 
     get message() {
@@ -44,7 +32,10 @@ export class MessageActionMenuMobile extends Component {
     async onClickAction(action) {
         const success = await action.onClick();
         if (action.mobileCloseAfterClick && (success || success === undefined)) {
-            this.props.close?.();
+            // Small delay to ensure any state changes have processed
+            setTimeout(() => {
+                this.props.close?.();
+            }, 50);
         }
     }
 

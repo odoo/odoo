@@ -82,7 +82,7 @@
     <div t-if="section.errorMsg" class="alert alert-warning">
         <span><t t-esc="section.errorMsg"/></span>
     </div>
-    <ul t-else="" class="list-group d-block o_search_panel_field px-2 px-md-0">
+    <ul t-else="" class="list-group d-block o_search_panel_field">
         <t t-if="section.type === 'category'" t-call="{{ constructor.subTemplates.category }}">
             <t t-set="values" t-value="section.rootIds"/>
         </t>
@@ -155,7 +155,7 @@
                     <div class="d-flex align-items-center me-2 ms-auto">All</div>
                 </button>
             </div>
-            <Dropdown t-foreach="sections" t-as="section" t-key="section.id" state="getDropdownState(section.id)" menuClass="'my-2 mx-1'" onOpened.bind="updateGroupHeadersChecked">
+            <Dropdown t-foreach="sections" t-as="section" t-key="section.id" state="getDropdownState(section.id)" onOpened.bind="updateGroupHeadersChecked">
                 <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
                     <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
                         t-att-style="section.color and ('color: ' + section.color)"
@@ -182,6 +182,7 @@
     <t t-foreach="values" t-as="valueId" t-key="valueId">
         <t t-set="value" t-value="section.values.get(valueId)"/>
         <li class="o_search_panel_category_value list-group-item py-1 cursor-pointer border-0 pe-0"
+            t-attf-class="{{env.isSmall &amp;&amp; !isChildList ? 'ps-0' : ''}}"
             t-att-class="isChildList ? env.isSmall ? '' : 'o_treeEntry' : 'ps-0'"
             >
             <header

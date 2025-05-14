@@ -16,6 +16,7 @@ import { useService } from "@web/core/utils/hooks";
  * @extends {Component<Props, Env>}
  */
 export class ActivityListPopover extends Component {
+    static name = "ActivityListPopover";
     static components = { ActivityListPopoverItem };
     static props = [
         "activityIds",

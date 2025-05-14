@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.TimePickerBottomSheet">
+        <BottomSheet
+            id="props.id"
+            showBackBtn="true"
+            isNestedSheet="true"
+            title.translate="Select Time"
+            preventDismissOnContentScroll="true"
+            startExpanded="true"
+            withBodyPadding="false"
+            onClose="() => this.discardSelection()"
+        >
+            <t t-set-slot="header_right">
+                <div class="ms-auto">
+                    <button
+                        class="o_time_picker_buttons_confirm btn btn-link px-0"
+                        t-on-click="confirmSelection"
+                        >
+                        Confirm
+                    </button>
+                </div>
+            </t>
+
+            <div class="o_time_picker_bottom_sheet pb-4" t-ref="container">
+
+                <!-- Scrollable time picker columns -->
+                <div
+                    class="o_time_picker_columns position-relative d-flex align-items-center justify-content-center my-2"
+                >
+                    <!-- Selection indicator -->
+                    <div class="o_time_picker_selection_indicator translate-middle-y z-0 pe-none"/>
+
+                    <!-- Hours column -->
+                    <div
+                        t-ref="hourRef"
+                        class="o_time_picker_column o_hours position-relative h-100 overflow-y-auto"
+                    >
+                        <t t-foreach="hours" t-as="hour" t-key="hour">
+                            <div
+                                class="o_time_picker_cell d-flex align-items-center justify-content-center lh-1"
+                                t-att-class="{
+                                    'o_time_picker_cell_selected': state.hour === hour,
+                                    'o_time_picker_cell_preceding': isPrecedingCell(hour, state.hour, hours)
+                                }"
+                            >
+                                <span t-esc="formatTwoDigits(hour)"/>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Separator -->
+                    <div
+                        class="o_time_picker_separator position-relative px-2 fw-bold"
+                    >
+                        :
+                    </div>
+
+                    <!-- Minutes column -->
+                    <div
+                        t-ref="minuteRef"
+                        class="o_time_picker_column o_minutes position-relative h-100 overflow-y-auto"
+                    >
+                        <t t-foreach="minutes" t-as="minute" t-key="minute">
+                            <div
+                                class="o_time_picker_cell d-flex align-items-center justify-content-center lh-1"
+                                t-att-class="{
+                                    'o_time_picker_cell_selected': state.minute === minute,
+                                    'o_time_picker_cell_preceding': isPrecedingCell(minute, state.minute, minutes)
+                                }"
+                            >
+                                <span t-esc="formatTwoDigits(minute)"/>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Seconds column (optional) -->
+                    <t t-if="props.showSeconds">
+                        <div
+                            class="o_time_picker_separator position-relative px-2 fw-bold"
+                        >
+                            :
+                        </div>
+                        <div
+                            t-ref="secondRef"
+                            class="o_time_picker_column o_seconds position-relative h-100 overflow-y-auto"
+                        >
+                            <t t-foreach="seconds" t-as="second" t-key="second">
+                                <div
+                                    class="o_time_picker_cell d-flex align-items-center justify-content-center lh-1"
+                                    t-att-class="{
+                                        'o_time_picker_cell_selected': state.second === second,
+                                        'o_time_picker_cell_preceding': isPrecedingCell(second, state.second, seconds)
+                                    }"
+                                >
+                                    <span t-esc="formatTwoDigits(second)"/>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </BottomSheet>
+    </t>
+</templates>

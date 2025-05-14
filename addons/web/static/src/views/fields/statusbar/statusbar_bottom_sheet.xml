@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.StatusBarBottomSheet">
+        <BottomSheet
+            sheetClasses="'o_status_bar_bottom_sheet'"
+            onClose="props.close"
+            title.translate="Change stage"
+            showCloseBtn="true"
+        >
+            <div class="list-group list-group-flush pb-2">
+                <t t-foreach="props.items" t-as="item" t-key="item.value">
+                    <div
+                        role="button"
+                        class="list-group-item list-group-item-action d-flex align-items-center py-4"
+                        t-on-click="() => this.selectItem(item)"
+                        t-att-class="{
+                            'active fw-bold' : item.isSelected,
+                            'border-0': !item.isSelected,
+                            'pe-none': props.isDisabled,
+                            'opacity-75': props.isDisabled &amp;&amp; !item.isSelected,
+                        }"
+                        >
+                        <span
+                            class="o_status_bar_bottom_sheet_line"
+                            t-att-class="{
+                                'top-50' : item_first,
+                                'bottom-50' : item_last,
+                            }"
+                        />
+                        <span t-esc="item.label" class="ps-4"/>
+                        <span
+                            t-if="props.isDisabled &amp;&amp; item.isSelected"
+                            class="fa fa-lock ms-auto"
+                            role="img"
+                            />
+                    </div>
+                </t>
+            </div>
+        </BottomSheet>
+    </t>
+</templates>

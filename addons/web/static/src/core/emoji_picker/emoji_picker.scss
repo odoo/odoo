@@ -67,3 +67,30 @@
         }
     }
 }
+
+.o-EmojiPicker-BottomSheet {
+    // Temporary workarounds to improve o-EmojiPicker's
+    // UX when rendered inside a BottomSheet
+    .o-EmojiPicker {
+        min-height: 40svh;
+    }
+
+    .o-EmojiPicker-content:has(.o-EmojiPicker-empty) {
+        justify-content: start !important;
+    }
+
+    .o-EmojiPicker-navbar {
+        position: sticky;
+        bottom: 0;
+        background-color: inherit;
+
+        .o-Emoji {
+            padding-left: map-get($spacers, 2);
+            padding-right: map-get($spacers, 2);
+
+            span {
+                font-size: 1.4rem;
+            }
+        }
+    }
+}

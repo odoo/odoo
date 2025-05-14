@@ -51,7 +51,7 @@
                 </div>
             </t>
         </div>
-        <div t-attf-class="position-relative d-flex flex-column flex-md-row gap-4 gap-md-3 {{ props.type === 'datetime' ? 'justify-content-center' : 'justify-content-end' }}">
+        <div t-attf-class="o_datetime_picker_footer position-relative d-flex flex-column flex-md-row gap-4 gap-md-3 {{ props.type === 'datetime' ? 'justify-content-center' : 'justify-content-end' }}">
             <div t-attf-class="d-flex gap-3 w-100 {{ props.type === 'datetime' ? 'justify-content-around' : 'd-none' }}">
                 <t t-if="props.type === 'datetime'">
                     <t t-foreach="state.timeValues" t-as="timeValue" t-key="timeValue_index">
