@@ -331,6 +331,7 @@ class AccountMove(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
     company_price_include = fields.Selection(related='company_id.account_price_include', readonly=True)
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'account.move')], string='Attachments')
+    linked_attachment_ids = fields.One2many(comodel_name='ir.attachment', inverse_name='res_id')
     audit_trail_message_ids = fields.One2many(
         'mail.message',
         'res_id',
@@ -6393,7 +6394,7 @@ class AccountMove(models.Model):
 
         for invoice, attachments in attachments_per_invoice.items():
             if invoice == self:
-                invoice.attachment_ids |= attachments
+                invoice.linked_attachment_ids |= attachments
                 new_message.attachment_ids = attachments.ids
                 message_values.update({'res_id': self.id, 'attachment_ids': [Command.link(attachment.id) for attachment in attachments]})
                 super(AccountMove, invoice)._message_post_after_hook(new_message, message_values)
@@ -6404,7 +6405,7 @@ class AccountMove(models.Model):
                     'res_id': invoice.id,
                     'attachment_ids': [Command.link(attachment.id) for attachment in attachments],
                 }
-                invoice.attachment_ids |= attachments
+                invoice.linked_attachment_ids |= attachments
                 invoice.message_ids = [Command.set(sub_new_message.id)]
                 super(AccountMove, invoice)._message_post_after_hook(sub_new_message, sub_message_values)
 

@@ -1416,14 +1416,14 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
 
         statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
-            'attachment_ids': [Command.set(attachment.ids)],
+            'linked_attachment_ids': [Command.set(attachment.ids)],
         })
 
         attachment = self.env['ir.attachment'].create(attachment_vals)
 
-        statement.write({'attachment_ids': [Command.link(attachment.id)]})
+        statement.write({'linked_attachment_ids': [Command.link(attachment.id)]})
 
-        self.assertRecordValues(statement.attachment_ids, [
+        self.assertRecordValues(statement.linked_attachment_ids, [
             {'res_id': statement.id, 'res_model': 'account.bank.statement'},
             {'res_id': statement.id, 'res_model': 'account.bank.statement'},
         ])

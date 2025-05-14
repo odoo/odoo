@@ -13,11 +13,8 @@ class AccountMoveLine(models.Model):
     def _check_payable_receivable(self):
         super(AccountMoveLine, self.filtered(lambda line: line.expense_id.payment_mode != 'company_account'))._check_payable_receivable()
 
-    def _get_attachment_domains(self):
-        attachment_domains = super(AccountMoveLine, self)._get_attachment_domains()
-        if self.expense_id:
-            attachment_domains.append([('res_model', '=', 'hr.expense'), ('res_id', '=', self.expense_id.id)])
-        return attachment_domains
+    def _get_attachments(self):
+        return super()._get_attachments() + self.expense_id.linked_attachment_ids
 
     def _compute_totals(self):
         expenses = self.filtered('expense_id')

@@ -3010,18 +3010,13 @@ class AccountMoveLine(models.Model):
         """Get all the the lines matched with the lines in self."""
         return self._filter_reconciled_by_number(self._reconciled_by_number())
 
-    def _get_attachment_domains(self):
-        self.ensure_one()
-        domains = [[
-            ('res_model', '=', 'account.move'),
-            ('res_id', '=', self.move_id.id),
-            ('res_field', 'in', (False, 'invoice_pdf_report_file')),
-        ]]
-        if self.statement_id:
-            domains.append([('res_model', '=', 'account.bank.statement'), ('res_id', '=', self.statement_id.id)])
-        if self.payment_id:
-            domains.append([('res_model', '=', 'account.payment'), ('res_id', '=', self.payment_id.id)])
-        return domains
+    def _get_attachments(self):
+        return (
+            self.move_id.linked_attachment_ids
+            + self.move_id.invoice_pdf_report_id
+            + self.payment_id.linked_attachment_ids
+            + self.statement_id.linked_attachment_ids
+        )
 
     @api.model
     def _get_tax_exigible_domain(self):
