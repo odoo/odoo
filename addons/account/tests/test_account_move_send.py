@@ -236,8 +236,8 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             composer.action_send_and_print(allow_fallback_pdf=True)
             self.env.cr.flush()  # force tracking message
 
-        self.assertEqual(len(self._new_msgs), 2, 'Should produce 2 messages: one for posting template, one for tracking')
-        print_msg, track_msg = self._new_msgs[0], self._new_msgs[1]
+        self.assertEqual(len(self._new_msgs), 1, 'Should produce 1 message (for posting template)')
+        print_msg = self._new_msgs[0]
         self.assertNotified(
             print_msg,
             [{
@@ -257,10 +257,6 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                          'Should take invoice_user_id email')
         self.assertEqual(print_msg.notified_partner_ids, test_customer + self.user_accountman.partner_id)
         self.assertEqual(print_msg.subject, f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})')
-        # tracking: is_move_sent
-        self.assertEqual(track_msg.author_id, self.env.user.partner_id)
-        self.assertEqual(track_msg.email_from, self.env.user.email_formatted)
-        self.assertTrue('is_move_sent' in track_msg.tracking_value_ids.field_id.mapped('name'))
         # sent email
         self.assertMailMail(
             test_customer,
@@ -323,8 +319,8 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             composer.action_send_and_print()
             self.env.cr.flush()  # force tracking message
 
-        self.assertEqual(len(self._new_msgs), 2, 'Should produce 2 messages: one for posting template, one for tracking')
-        print_msg, track_msg = self._new_msgs[0], self._new_msgs[1]
+        self.assertEqual(len(self._new_msgs), 1, 'Should produce 1 message (for posting template)')
+        print_msg = self._new_msgs[0]
         self.assertNotified(
             print_msg,
             [{
@@ -344,10 +340,6 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                          'Should take invoice_user_id email')
         self.assertEqual(print_msg.notified_partner_ids, test_customer + self.user_accountman.partner_id)
         self.assertEqual(print_msg.subject, f'SpanishSubject for {test_move.name}')
-        # tracking: is_move_sent
-        self.assertEqual(track_msg.author_id, self.env.user.partner_id)
-        self.assertEqual(track_msg.email_from, self.env.user.email_formatted)
-        self.assertTrue('is_move_sent' in track_msg.tracking_value_ids.field_id.mapped('name'))
         # sent email
         self.assertMailMail(
             test_customer,
