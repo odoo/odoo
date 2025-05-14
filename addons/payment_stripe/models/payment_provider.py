@@ -501,7 +501,8 @@ class PaymentProvider(models.Model):
                 },
             },
             'is_tokenization_required': (
-                not PaymentPortal._compute_show_tokenize_input_mapping(self, **kwargs)[self.id]
+                self.allow_tokenization
+                and self._is_tokenization_required(**kwargs)
                 and payment_method_sudo.support_tokenization
             ),
             'payment_methods_mapping': const.PAYMENT_METHODS_MAPPING,
