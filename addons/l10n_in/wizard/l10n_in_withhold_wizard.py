@@ -136,11 +136,6 @@ class L10n_InWithholdWizard(models.TransientModel):
                 warnings['lower_move_amount'] = {
                     'message': message
                 }
-            elif wizard.related_payment_id and float_compare(wizard.related_payment_id.amount, wizard.base, precision_digits=precision) < 0:
-                message = _("The base amount of TDS is greater than the untaxed amount of the %s", wizard.type_name)
-                warnings['lower_payment_amount'] = {
-                    'message': message
-                }
             wizard.l10n_in_withholding_warning = warnings
 
     @api.depends('tax_id', 'base')
