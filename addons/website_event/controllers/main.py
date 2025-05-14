@@ -13,7 +13,7 @@ from odoo import fields, http, _
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import babel_locale_parse, get_lang
 from odoo.tools import lazy
 from odoo.exceptions import UserError
 
@@ -406,7 +406,7 @@ class WebsiteEventController(http.Controller):
     def get_formated_date(self, event):
         start_date = fields.Datetime.from_string(event.date_begin).date()
         end_date = fields.Datetime.from_string(event.date_end).date()
-        month = babel.dates.get_month_names('abbreviated', locale=get_lang(event.env).code)[start_date.month]
+        month = babel.dates.get_month_names('abbreviated', locale=babel_locale_parse(get_lang(event.env).code).language)[start_date.month]
         return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-" + end_date.strftime("%e")) or ""))
 
     def _extract_searched_event_tags(self, searches):

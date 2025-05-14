@@ -4,13 +4,13 @@
 import json
 import random
 
-from babel.dates import format_date
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.release import version
+from odoo.tools.misc import format_date
 
 
 class CrmTeam(models.Model):
@@ -356,10 +356,10 @@ class CrmTeam(models.Model):
                       "en_US"      December 28th           "28 Dec-3 Jan"
             """
             if (start_date + relativedelta(days=6)).month == start_date.month:
-                short_name_from = format_date(start_date, 'd', locale=locale)
+                short_name_from = format_date(self.env, start_date, date_format='d')
             else:
-                short_name_from = format_date(start_date, 'd MMM', locale=locale)
-            short_name_to = format_date(start_date + relativedelta(days=6), 'd MMM', locale=locale)
+                short_name_from = format_date(self.env, start_date, date_format='d MMM')
+            short_name_to = format_date(self.env, start_date + relativedelta(days=6), date_format='d MMM')
             return short_name_from + '-' + short_name_to
 
         self.ensure_one()

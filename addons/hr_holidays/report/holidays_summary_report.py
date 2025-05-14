@@ -8,7 +8,7 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.misc import format_date, get_lang
+from odoo.tools.misc import babel_locale_parse, format_date, get_lang
 
 COLORS_MAP = {
     0: 'lightgrey',
@@ -52,7 +52,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
         start_date = fields.Date.from_string(start_date)
         for x in range(0, 60):
             color = '#ababab' if self._date_is_day_off(start_date) else ''
-            res.append({'day_str': babel.dates.get_day_names('abbreviated', locale=get_lang(self.env).code)[start_date.weekday()], 'day': start_date.day, 'color': color})
+            res.append({'day_str': babel.dates.get_day_names('abbreviated', locale=babel_locale_parse(get_lang(self.env).code).language)[start_date.weekday()], 'day': start_date.day, 'color': color})
             start_date = start_date + relativedelta(days=1)
         return res
 
@@ -66,7 +66,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
             if last_date > end_date:
                 last_date = end_date
             month_days = (last_date - start_date).days + 1
-            res.append({'month_name': babel.dates.get_month_names(locale=get_lang(self.env).code)[start_date.month], 'days': month_days})
+            res.append({'month_name': babel.dates.get_month_names(locale=babel_locale_parse(get_lang(self.env).code).language)[start_date.month], 'days': month_days})
             start_date += relativedelta(day=1, months=+1)
         return res
 

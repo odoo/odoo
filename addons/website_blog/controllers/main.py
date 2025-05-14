@@ -12,7 +12,7 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
 from odoo.tools import html2plaintext
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import babel_locale_parse, get_lang
 from odoo.tools import sql
 
 
@@ -36,7 +36,7 @@ class WebsiteBlog(http.Controller):
         groups = request.env['blog.post']._read_group(
             dom, groupby=['post_date:month'])
 
-        locale = get_lang(request.env).code
+        locale = babel_locale_parse(get_lang(request.env).code).language
         tzinfo = pytz.timezone(request.context.get('tz', 'utc') or 'utc')
         fmt = tools.DEFAULT_SERVER_DATETIME_FORMAT
 

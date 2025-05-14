@@ -57,7 +57,7 @@ from . import api
 from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .tools import (
-    clean_context, config, CountingStream, date_utils, discardattr,
+    babel_locale_parse, clean_context, config, CountingStream, date_utils, discardattr,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, frozendict,
     get_lang, LastOrderedSet, lazy_classproperty, OrderedSet, ormcache,
     partition, populate, Query, ReversedIterable, split_every, unique, SQL, groupby
@@ -2478,7 +2478,7 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields[field_name]
 
             if field.type in ('date', 'datetime'):
-                locale = get_lang(self.env).code
+                locale = babel_locale_parse(get_lang(self.env).code)
                 fmt = DEFAULT_SERVER_DATETIME_FORMAT if field.type == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                 granularity = group.split(':')[1] if ':' in group else 'month'
                 interval = READ_GROUP_TIME_GRANULARITY[granularity]
@@ -2513,12 +2513,12 @@ class BaseModel(metaclass=MetaModel):
 
                             label = babel.dates.format_datetime(
                                 range_start, format=READ_GROUP_DISPLAY_FORMAT[granularity],
-                                tzinfo=tzinfo, locale=locale
+                                tzinfo=tzinfo, locale=locale.language
                             )
                         else:
                             label = babel.dates.format_date(
                                 value, format=READ_GROUP_DISPLAY_FORMAT[granularity],
-                                locale=locale
+                                locale=locale.language
                             )
                         if granularity == 'week':
                             year, week = date_utils.weeknumber(
@@ -2653,7 +2653,7 @@ class BaseModel(metaclass=MetaModel):
                 row[group] = babel.dates.format_date(
                     row[group],
                     format=READ_GROUP_DISPLAY_FORMAT[func],
-                    locale=get_lang(self.env).code
+                    locale=babel_locale_parse(get_lang(self.env).code)
                 )
         else:
             for row in rows_dict:

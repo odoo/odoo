@@ -1,5 +1,4 @@
 import ast
-from babel.dates import format_datetime, format_date
 from collections import defaultdict
 from datetime import datetime, timedelta
 import json
@@ -10,7 +9,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, SQL
-from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
+from odoo.tools.misc import format_date, format_datetime, get_lang
 
 
 def group_by_journal(vals_list):
@@ -113,7 +112,7 @@ class account_journal(models.Model):
                 'status': activity['status'],
                 'name': activity['summary'] or activity['act_type_name'],
                 'activity_category': activity['activity_category'],
-                'date': odoo_format_date(self.env, activity['date_deadline'])
+                'date': format_date(self.env, activity['date_deadline'])
             }
             if activity['activity_category'] == 'tax_report' and activity['res_model'] == 'account.move':
                 act['name'] = activity['ref']
@@ -187,8 +186,8 @@ class account_journal(models.Model):
         """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
         def build_graph_data(date, amount, currency):
             #display date in locale format
-            name = format_date(date, 'd LLLL Y', locale=locale)
-            short_name = format_date(date, 'd MMM', locale=locale)
+            name = format_date(self.env, date, date_format='d LLLL Y')
+            short_name = format_date(self.env, date, date_format='d MMM')
             return {'x': short_name, 'y': currency.round(amount), 'name': name}
 
         today = datetime.today()
@@ -249,9 +248,11 @@ class account_journal(models.Model):
 
     def _get_sale_purchase_graph_data(self):
         today = fields.Date.today()
-        day_of_week = int(format_datetime(today, 'e', locale=get_lang(self.env).code))
+        day_of_week = int(format_datetime(self.env, fields.Datetime.today(), dt_format='e'))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
-        format_month = lambda d: format_date(d, 'MMM', locale=get_lang(self.env).code)
+
+        def format_month(d):
+            return format_date(self.env, d, date_format='MMM')
 
         self.env.cr.execute("""
             SELECT move.journal_id,

@@ -13,7 +13,7 @@ from odoo.fields import Command
 from odoo.models import BaseModel, NewId
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
 from odoo.tools import date_utils, unique
-from odoo.tools.misc import OrderedSet, get_lang
+from odoo.tools.misc import OrderedSet, babel_locale_parse, get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
 
@@ -336,7 +336,7 @@ class Base(models.AbstractModel):
 
             # Again, imitating what _read_group_format_result and _read_group_prepare_data do
             if group_by_value and field_type in ['date', 'datetime']:
-                locale = get_lang(self.env).code
+                locale = babel_locale_parse(get_lang(self.env).code)
                 group_by_value = fields.Datetime.to_datetime(group_by_value)
                 if group_by_modifier != 'week':
                     # start_of(v, 'week') does not take into account the locale

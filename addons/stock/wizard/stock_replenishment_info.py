@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import babel.dates
 from json import dumps
 from datetime import datetime, time
 
@@ -9,7 +8,7 @@ from datetime import datetime, time
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv.expression import AND
 from odoo.tools import get_month, subtract, format_date
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import format_datetime, get_lang
 
 
 class StockReplenishmentInfo(models.TransientModel):
@@ -82,7 +81,7 @@ class StockReplenishmentInfo(models.TransientModel):
             fmt = models.READ_GROUP_DISPLAY_FORMAT['month']
             for month, product_qty_sum in quantity_by_month_out:
                 replenishment_history.append({
-                    'name': babel.dates.format_datetime(month, format=fmt, locale=locale),
+                    'name': format_datetime(self.env, month, dt_format=fmt),
                     'quantity': product_qty_sum - quantity_by_month_returned.get(month, 0),
                     'uom_name': replenishment_report.product_id.uom_id.display_name,
                 })

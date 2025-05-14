@@ -11,7 +11,7 @@ from odoo.exceptions import AccessError
 from odoo.http import request, Response
 from odoo.osv import expression
 from odoo.tools import consteq
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import babel_locale_parse, get_lang
 
 
 class PortalMailGroup(http.Controller):
@@ -34,11 +34,11 @@ class PortalMailGroup(http.Controller):
 
         date_groups = []
 
-        locale = get_lang(request.env).code
+        locale = babel_locale_parse(get_lang(request.env).code)
         fmt = models.READ_GROUP_DISPLAY_FORMAT['month']
         interval = models.READ_GROUP_TIME_GRANULARITY['month']
         for start, count in results:
-            label = babel.dates.format_datetime(start, format=fmt, locale=locale)
+            label = babel.dates.format_datetime(start, format=fmt, locale=locale.language)
             date_groups.append({
                 'date': label,
                 'date_begin': fields.Date.to_string(start),
