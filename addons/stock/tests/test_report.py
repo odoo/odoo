@@ -26,6 +26,11 @@ class TestReportsCommon(TransactionCase):
             'default_code': 'C4181234""154654654654',
             'barcode': 'scan""me'
         })
+        cls.serial_product = cls.env['product.product'].create({
+            'name': 'simple prod',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
 
         product_form = Form(cls.env['product.product'])
         product_form.is_storable = True
@@ -1961,3 +1966,80 @@ class TestReports(TestReportsCommon):
 
         Report.action_unassign(out_move.id, out_move.quantity, in_move.ids)
         self.assertEqual(out_move.procure_method, 'make_to_stock')
+
+    def test_report_stock_lot_customer_simple_delivery(self):
+        """
+        Deliver an SN product
+        The SN/Lot report should show the delivered SN
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        out_type = self.env.ref('stock.picking_type_out')
+
+        sn = self.env['stock.lot'].create({'name': 'supersn', 'product_id': self.serial_product.id})
+        self.env['stock.quant']._update_available_quantity(self.serial_product, stock_location, quantity=1, lot_id=sn)
+
+        delivery = self.env['stock.picking'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': out_type.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'name': f'out 1 units {self.serial_product.name}',
+                'product_id': self.serial_product.id,
+                'product_uom_qty': 1,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.button_validate()
+
+        action_view_stock_serial_domain = self.partner.action_view_stock_serial()['domain']
+        customer_lots = self.env['stock.lot'].search(action_view_stock_serial_domain)
+        self.assertEqual(customer_lots, sn)
+
+    def test_partner_lot_report_sml_without_picking(self):
+        """
+        Deliver a classic product and a tracked one
+        The SML of the SN is not directly linked to the picking
+        The report should still show the delivered SN
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        out_type = self.env.ref('stock.picking_type_out')
+
+        self.product.is_storable = False
+        delivery = self.env['stock.picking'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': out_type.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'name': f'out 1 units {self.product.name}',
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+
+        sn = self.env['stock.lot'].create({'name': 'supersn', 'product_id': self.serial_product.id})
+        delivery.move_ids = [Command.create({
+            'name': f'out 1 units {self.serial_product.name}',
+            'product_id': self.serial_product.id,
+            'product_uom_qty': 1,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_line_ids': [Command.create({
+                'product_id': self.serial_product.id,
+                'quantity': 1,
+                'lot_id': sn.id,
+            })],
+        })]
+        delivery.button_validate()
+
+        action_view_stock_serial_domain = self.partner.action_view_stock_serial()['domain']
+        customer_lots = self.env['stock.lot'].search(action_view_stock_serial_domain)
+        self.assertEqual(customer_lots, sn)
