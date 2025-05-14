@@ -1030,7 +1030,7 @@ class PosSession(models.Model):
         # Entries related to 'pay_later' payment method- should not be excluded from follow-ups
         for val in vals:
             val['blocked'] = False
-        MoveLine.create(vals)
+        data['pay_later_move_lines'] = MoveLine.create(vals)
         return data
 
     def _create_combine_account_payment(self, payment_method, amounts, diff_amount):
@@ -1226,7 +1226,7 @@ class PosSession(models.Model):
         stock_output_lines = data.get('stock_output_lines')
         payment_method_to_receivable_lines = data.get('payment_method_to_receivable_lines')
         payment_to_receivable_lines = data.get('payment_to_receivable_lines')
-
+        pay_later_move_lines = data.get('pay_later_move_lines')
 
         all_lines = (
               split_cash_statement_lines
@@ -1272,6 +1272,27 @@ class PosSession(models.Model):
             ( stock_output_lines[account_id]
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
             ).filtered(lambda aml: not aml.reconciled).with_context(no_cash_basis=True).reconcile()
+
+        # reconcile customer receivable move lines
+        if pay_later_move_lines:
+            account_ids = pay_later_move_lines.mapped("account_id")
+            partner_ids = pay_later_move_lines.mapped("partner_id")
+            pay_later_move_lines |= pay_later_move_lines.search(
+                [
+                    "|",
+                    ("journal_id", "=", self.config_id.journal_id.id),
+                    "&",
+                    ("move_type", "=", "out_invoice"),
+                    ("move_id.pos_order_ids", "!=", False),
+                    ("account_id", "in", account_ids.ids),
+                    ("partner_id", "in", partner_ids.ids),
+                    ("reconciled", "=", False),
+                ]
+            )
+
+            for partner in pay_later_move_lines.mapped("partner_id"):
+                pay_later_move_lines.filtered(lambda p: p.partner_id.id == partner.id).reconcile()
+
         return data
 
     def _get_rounding_difference_vals(self, amount, amount_converted):
