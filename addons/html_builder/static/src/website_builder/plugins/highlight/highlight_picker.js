@@ -1,5 +1,9 @@
 import { onMounted, useRef, Component, onWillDestroy } from "@odoo/owl";
-import { applyTextHighlight, textHighlightFactory } from "@website/js/highlight_utils";
+import {
+    applyTextHighlight,
+    textHighlightFactory,
+    getCurrentTextHighlight,
+} from "@website/js/highlight_utils";
 
 export class HighlightPicker extends Component {
     static template = "website.highlightPicker";
@@ -12,8 +16,9 @@ export class HighlightPicker extends Component {
     setup() {
         const root = useRef("root");
         onMounted(() => {
-            for (const textEl of root.el.querySelectorAll("[data-highlight-text]")) {
-                applyTextHighlight(textEl, textEl.dataset.highlightText);
+            for (const textEl of root.el.querySelectorAll(".o_text_highlight")) {
+                const highlightId = getCurrentTextHighlight(textEl);
+                applyTextHighlight(textEl, highlightId);
             }
         });
 

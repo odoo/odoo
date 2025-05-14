@@ -18,7 +18,7 @@ export class TextHighlight extends Interaction {
     }
 
     start() {
-        for (const textEl of this.el.querySelectorAll("[data-highlight-text]")) {
+        for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
             this.handleEl(textEl);
         }
     }
@@ -51,7 +51,7 @@ export class TextHighlight extends Interaction {
             closestToObserves.add(this.closestToObserve(target));
         }
         for (const closestToObserve of closestToObserves) {
-            for (const el of closestToObserve.querySelectorAll("[data-highlight-text]")) {
+            for (const el of closestToObserve.querySelectorAll(".o_text_highlight")) {
                 switchTextHighlight(el);
             }
         }

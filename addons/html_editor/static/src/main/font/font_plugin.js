@@ -20,6 +20,7 @@ import {
     getCSSVariableValue,
     getHtmlStyle,
     getFontSizeDisplayValue,
+    FONT_SIZE_CLASSES,
 } from "@html_editor/utils/formatting";
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { _t } from "@web/core/l10n/translation";
@@ -279,6 +280,8 @@ export class FontPlugin extends Plugin {
 
         /** Processors */
         clipboard_content_processors: this.processContentForClipboard.bind(this),
+
+        format_splittable_class: (className) => FONT_SIZE_CLASSES.includes(className),
     };
 
     setup() {

@@ -388,8 +388,14 @@ function buildPath(templates, options) {
  * @param {HTMLElement} el
  * @returns {String}
  */
-function getCurrentTextHighlight(el) {
-    return el.closest("[data-highlight-text]").getAttribute("data-highlight-text");
+export function getCurrentTextHighlight(el) {
+    const highlightEl = el.closest(".o_text_highlight");
+    if (!highlightEl) {
+        return;
+    }
+    return Array.from(highlightEl.classList)
+        .find((cls) => cls.startsWith("o_text_highlight_"))
+        ?.replace("o_text_highlight_", "");
 }
 function rectToBatch(rects) {
     if (!rects.length) {

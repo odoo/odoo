@@ -13,7 +13,7 @@ describe.current.tags("interaction_dev");
 const highlightTemplate = `
     <p>
         Great stories have a <b>personality</b>.
-        <span data-highlight-text="circle_1" style="--text-highlight-width: 2px;">
+        <span class="o_text_highlight o_text_highlight_circle_1" style="--text-highlight-width: 2px;">
             Consider telling a great story that provides personality.
             <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible pe-none">
                 <path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 142.36111111111111,18.18181818181818 C 372.7272727272727,19.047619047619047 430.5,18.18181818181818 419.42999999999995,8.620689655172415C 410, 1.36986301369863 290.5740609496811,0 205,0 S -2,1.36986301369863 -2,9.09090909090909S 96.69811320754717,20 301.4705882352941,20.8" class="o_text_highlight_path_circle_1"></path>
@@ -35,14 +35,14 @@ test("[resize] update the number of highlight items when necessary", async () =>
     // Ensure the update is finished
     await animationFrame();
     await animationFrame();
-    const numberOfItems1 = queryAll("[data-highlight-text] svg").length;
+    const numberOfItems1 = queryAll(".o_text_highlight svg").length;
 
     queryFirst("div").style.width = "200px";
 
     // Ensure the update is finished
     await animationFrame();
     await animationFrame();
-    const numberOfItems2 = queryAll("[data-highlight-text] svg").length;
+    const numberOfItems2 = queryAll(".o_text_highlight svg").length;
 
     expect(numberOfItems1).toBeLessThan(numberOfItems2);
 });

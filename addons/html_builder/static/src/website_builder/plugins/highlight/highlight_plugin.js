@@ -11,6 +11,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { removeStyle } from "@html_editor/utils/dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { omit } from "@web/core/utils/objects";
+import { getCurrentTextHighlight } from "@website/js/highlight_utils";
 
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
@@ -49,11 +50,12 @@ export class HighlightPlugin extends Plugin {
         normalize_handlers: (root) => {
             // Remove highlight SVGs when the text is removed.
             for (const svg of root.querySelectorAll(".o_text_highlight_svg")) {
-                if (!svg.closest("[data-highlight-text]")) {
+                if (!svg.closest(".o_text_highlight")) {
                     svg.remove();
                 }
             }
         },
+        format_splittable_class: (className) => className.startsWith("o_text_highlight"),
         selectionchange_handlers: this.updateSelectedHighlight.bind(this),
     };
 
@@ -80,7 +82,7 @@ export class HighlightPlugin extends Plugin {
         if (!el) {
             return;
         }
-        this.highlightState.highlightId = el.dataset.highlightText;
+        this.highlightState.highlightId = getCurrentTextHighlight(el);
         if (this.highlightState.highlightId) {
             const style = getComputedStyle(el);
             this.highlightState.color = style.getPropertyValue("--text-highlight-color");
@@ -95,7 +97,7 @@ export class HighlightPlugin extends Plugin {
                 .getTraversedNodes()
                 .map((n) => {
                     const el = n.nodeType === Node.ELEMENT_NODE ? n : n.parentElement;
-                    return el.closest("[data-highlight-text]");
+                    return el.closest(".o_text_highlight");
                 })
                 .filter(Boolean)
         );
@@ -127,7 +129,7 @@ export class HighlightPlugin extends Plugin {
                 .getTraversedNodes()
                 .map((n) => {
                     const el = n.nodeType === Node.ELEMENT_NODE ? n : n.parentElement;
-                    return el.closest("[data-highlight-text]");
+                    return el.closest(".o_text_highlight");
                 })
                 .filter(Boolean)
         );
@@ -151,20 +153,16 @@ registry.category("website-plugins").add(HighlightPlugin.id, HighlightPlugin);
 
 // Todo: formatsSpecs should allow to be register new formats through resources.
 formatsSpecs.highlight = {
-    isFormatted: (node) => {
-        const ret = !!closestElement(node)?.getAttribute("data-highlight-text");
-        return ret;
-    },
-    hasStyle: (node) => {
-        const ret = closestElement(node)?.getAttribute("data-highlight-text");
-        return ret;
-    },
+    isFormatted: (node) => closestElement(node)?.classList.contains("o_text_highlight"),
+    hasStyle: (node) => closestElement(node)?.classList.contains("o_text_highlight"),
     addStyle: (node, { highlightId }) => {
         node.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
-        node.setAttribute("data-highlight-text", highlightId);
+        node.classList.add("o_text_highlight", `o_text_highlight_${highlightId}`);
     },
     removeStyle: (node) => {
-        node.removeAttribute("data-highlight-text");
+        node.classList.remove(
+            ...[...node.classList].filter((cls) => cls.startsWith("o_text_highlight"))
+        );
         removeStyle(node, "--text-highlight-width");
         removeStyle(node, "--text-highlight-color");
     },
