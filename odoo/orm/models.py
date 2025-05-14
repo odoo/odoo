@@ -3822,6 +3822,7 @@ class BaseModel(metaclass=MetaModel):
             Rule = self.env['ir.rule']
             domain = Rule._compute_domain(self._name, operation)
             if domain and (forbidden := self - self.sudo().filtered_domain(domain)):
+                forbidden.invalidate_recordset()
                 return forbidden, functools.partial(Rule._make_access_error, operation, forbidden)
 
         return None

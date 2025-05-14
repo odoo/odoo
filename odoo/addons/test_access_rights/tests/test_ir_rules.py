@@ -5,6 +5,7 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 from odoo import Command
+import contextlib
 
 
 class TestRules(TransactionCase):
@@ -193,3 +194,29 @@ class TestRules(TransactionCase):
         for domain in valid_domains:
             # no error is raised
             rule.domain_force = domain
+
+    @mute_logger('odoo.addons.base.models.ir_rule')
+    def test_ir_rule_cache_after_error(self):
+        NB_RECORD = 14  # At least twice 6, 6 is used by _make_access_error
+        # copy the forbidden record 15 times
+        SomeObj = self.env['test_access_right.some_obj']
+        forbiddens = SomeObj.create([{'val': -1, 'categ_id': self.categ.id}] * NB_RECORD)
+        forbiddens.invalidate_model()
+
+        env = self.env(user=self.env.ref('base.public_user'))
+        forbiddens = forbiddens.with_env(env)
+        forbiddens.browse().check_access('read')
+
+        # Don't use assertRaise since it invalidates the cache
+        # and it is what we want to test.
+        with contextlib.suppress(AccessError):
+            forbiddens.check_access('read')
+            self.fail('Previous line should raise AccessError')
+
+        with contextlib.suppress(AccessError):
+            forbiddens[0].val
+            self.fail('Previous line should raise AccessError')
+
+        with contextlib.suppress(AccessError):
+            forbiddens[NB_RECORD - 1].val
+            self.fail('Previous line should raise AccessError')
