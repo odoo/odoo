@@ -8,7 +8,7 @@
     <t t-set="wblog_nav_offcanvas" t-value="len(blogs) > 4"/>
     <t t-set="wblog_all_title_string">All Blogs</t>
 
-    <nav t-attf-class="navbar navbar-expand-lg navbar-light pt-4 pb-0 px-0 #{additionnal_classes}">
+    <nav t-attf-class="navbar navbar-expand-lg pt-4 pb-0 px-0 #{additionnal_classes}">
         <div t-attf-class="container gap-2 w-100 #{wblog_nav_offcanvas and 'flex-nowrap' or 'flex-wrap flex-sm-nowrap'}">
             <!-- Desktop -->
             <ul t-if="len(blogs) > 1" class="navbar-nav d-none d-lg-flex flex-wrap">
