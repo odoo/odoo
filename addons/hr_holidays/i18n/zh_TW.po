@@ -1047,13 +1047,13 @@ msgstr "由員工批准人"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Approver and Time Off Officer"
-msgstr "由員工的批准人和人資單位提供"
+msgstr "員工的休假審批人及休假管理職員"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "由人資單位"
+msgstr "休假管理職員"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_calendar_event
@@ -1204,7 +1204,7 @@ msgstr "為該累計項目選擇一個上限。"
 msgid ""
 "Choose the Time Off Officers who will be notified to approve allocation or "
 "Time Off Request. If empty, nobody will be notified"
-msgstr "選擇將被通知批准分配或請假申請的請假幹事。如果為空，則不會通知任何人"
+msgstr "選擇有休假分配或休假申請需要審批時，要通知的休假管理職員。如果留空，則不會通知任何人"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2095,7 +2095,7 @@ msgstr "名稱是否自訂"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
 msgid "Is Officer"
-msgstr "為人資單位"
+msgstr "是管理職員"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__unpaid
@@ -2602,7 +2602,7 @@ msgstr "未許可"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
 msgid "Notified Time Off Officer"
-msgstr "已通知休假主管"
+msgstr "已通知休假管理職員"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__nov
@@ -2719,7 +2719,7 @@ msgstr "只剩"
 msgid ""
 "Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
 " can approve or refuse allocation requests."
-msgstr "只限 %s 的休假審批人、休假管理員工/負責人，或系統管理員，才可批准或拒絕休假分配請求。"
+msgstr "只限 %s 的休假審批人、休假管理職員/負責人，或系統管理員，才可批准或拒絕休假分配請求。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2745,7 +2745,7 @@ msgstr "只限休假管理員才可重設其他人的休假。"
 msgid ""
 "Only a Time Off Officer or Administrator can approve/refuse its own "
 "requests."
-msgstr "只限休假處理職員或管理員，才可批准/拒絕自己的申請。"
+msgstr "只限休假管理職員或系統管理員，才可批准/拒絕自己的申請。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2765,7 +2765,7 @@ msgstr "只限休假管理員才可批准自己的請求。"
 msgid ""
 "Only a time off Officer/Responsible or Administrator can approve or refuse "
 "allocation requests."
-msgstr "只限休假管理員工/負責人，或系統管理員，才可批准或拒絕休假分配請求。"
+msgstr "只限休假管理職員/負責人，或系統管理員，才可批准或拒絕休假分配請求。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3129,8 +3129,8 @@ msgid ""
 msgstr ""
 "選擇員工申請休假時所需的批准級別\n"
 "            #     - 無需驗證：員工的申請會自動獲得批准。\n"
-"            #     - 由休假主管批准：員工的申請需要由休假主管手動批准。\n"
-"            #       由休假主管、員工的主管，或兩者共同批准。"
+"            #     - 由休假管理職員批准：員工的申請需要由休假主管手動批准。\n"
+"            #       由休假管理職員、員工的休假審批人，或兩者共同批准。"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3683,8 +3683,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
-"人資單位時間為員工分配休假天數（例如帶薪休假）。<br>\n"
-"               員工向人資單位要求休假分配（例如，休養日）。"
+"休假管理職員會為員工分配休假日（例如：有薪假）。<br>\n"
+"                員工會向休假管理職員請求分配（例如：休養日）。"
 
 #. module: hr_holidays
 #. odoo-javascript

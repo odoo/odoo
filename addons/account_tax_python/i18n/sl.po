@@ -55,11 +55,17 @@ msgid ""
 ":param quantity: float\n"
 ":param product: A object representing the product\n"
 msgstr ""
+"Izračunajte znesek davka.\n"
+"\n"
+":param base: float, dejanski znesek, na katerega se obračuna davek\n"
+":param enota_cene: plavajoča\n"
+":param količina: plavajoči\n"
+":param izdelek: Predmet, ki predstavlja izdelek\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Custom Formula"
-msgstr ""
+msgstr "Formula po meri"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
@@ -74,7 +80,7 @@ msgstr "Formula"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
 msgid "Formula Decoded Info"
-msgstr ""
+msgstr "Informacije o dekodirani formuli"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
@@ -85,7 +91,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_tax_python/models/account_tax.py:0
 msgid "Malformed formula '%(formula)s' at position %(position)s"
-msgstr ""
+msgstr "Napačno oblikovana formula '%(formula)s' na položaju%(position)s"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
