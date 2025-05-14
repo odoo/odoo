@@ -33,6 +33,17 @@ $-editor-messages-margin-x: 2%;
 // This style block is about the "editor message" which highlights the areas
 // where the user can drag & drop snippets.
 .o_editable {
+    // Summernote did not Support for placeholder text, guess who else does not...
+    &[placeholder]:not(:focus) {
+        &:empty:before,
+        &:has(br:only-child):before,
+        &[data-oe-zws-empty-inline]:before {
+            content: attr(placeholder);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+    }
+
     &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
 
         // Base case (website.page (#wrap), t-field (product description), ...)
