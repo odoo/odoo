@@ -26,7 +26,7 @@ player_regexes = {
     'youtube': r'^(?:(?:https?:)?//)?(?:www\.|m\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|shorts/|live/|watch\?v=|watch\?.+&v=))((?:\w|-){11})\S*$',
     'vimeo': r'^(?:(?:https?:)?//)?(?:www\.)?vimeo\.com\/(?P<id>[^/\?]+)(?:/(?P<hash>[^/\?]+))?(?:\?(?P<params>[^\s]+))?$',
     'vimeo_player': r'^(?:(?:https?:)?//)?player\.vimeo\.com\/video\/(?P<id>[^/\?]+)(?:\?(?P<params>[^\s]+))?$',
-    'dailymotion': r'^(?:(?:https?:)?//)?(?:www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
+    'dailymotion': r'(https?://|//)?(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|geo\.dailymotion\.com\/player\.html\?video=|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
     'instagram': r'(?:(.*)instagram.com|instagr\.am)/p/(.[a-zA-Z0-9-_\.]*)',
 }
 
