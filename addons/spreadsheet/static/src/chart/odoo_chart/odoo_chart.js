@@ -1,5 +1,5 @@
 import { AbstractChart, CommandResult } from "@odoo/o-spreadsheet";
-import { ChartDataSource } from "../data_source/chart_data_source";
+import { ChartDataSource, chartTypeToDataSourceMode } from "../data_source/chart_data_source";
 
 /**
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
@@ -39,7 +39,7 @@ export class OdooChart extends AbstractChart {
         this.type = definition.type;
         this.metaData = {
             ...definition.metaData,
-            mode: this.type.replace("odoo_", ""),
+            mode: chartTypeToDataSourceMode(this.type),
             cumulated: definition.cumulative,
             cumulatedStart: definition.cumulatedStart,
         };

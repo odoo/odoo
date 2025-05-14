@@ -1,5 +1,6 @@
 import { navigateTo } from "@spreadsheet/actions/helpers";
 import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 
 export function onOdooChartItemClick(getters, chart) {
     return navigateInOdooMenuOnClick(getters, chart, (chartJsItem) => {
@@ -69,10 +70,12 @@ export function onGeoOdooChartItemClick(getters, chart) {
 function navigateInOdooMenuOnClick(getters, chart, getDomainFromChartItem) {
     return async (event, items) => {
         const env = getters.getOdooEnv();
-        if (!items.length) {
+        if (!items.length || !env) {
             return;
         }
-        if (!env) {
+        if (event.type === "click" || isChartJSMiddleClick(event)) {
+            event.native.preventDefault(); // Prevent other click actions
+        } else {
             return;
         }
         const { name, domain } = getDomainFromChartItem(items[0]);
@@ -92,7 +95,7 @@ function navigateInOdooMenuOnClick(getters, chart, getDomainFromChartItem) {
                 ],
                 domain,
             },
-            { viewType: "list" }
+            { viewType: "list", newWindow: isChartJSMiddleClick(event) }
         );
     };
 }
@@ -122,4 +125,35 @@ export function onGeoOdooChartItemHover() {
             event.native.target.style.cursor = "";
         }
     };
+}
+
+export async function navigateToOdooMenu(menu, actionService, notificationService, newWindow) {
+    if (!menu) {
+        throw new Error(`Cannot find any menu associated with the chart`);
+    }
+    if (!menu.actionID) {
+        notificationService.add(
+            _t(
+                "The menu linked to this chart doesn't have an corresponding action. Please link the chart to another menu."
+            ),
+            { type: "danger" }
+        );
+        return;
+    }
+    await actionService.doAction(menu.actionID, { newWindow });
+}
+
+/**
+ * Check if the even is a middle mouse click or ctrl+click
+ *
+ * ChartJS doesn't receive a click event when the user middle clicks on a chart, so we use the mouseup event instead.
+ *
+ */
+export function isChartJSMiddleClick(event) {
+    return (
+        (event.type === "click" &&
+            event.native.button === 0 &&
+            (event.native.ctrlKey || event.native.metaKey)) ||
+        (event.type === "mouseup" && event.native.button === 1)
+    );
 }

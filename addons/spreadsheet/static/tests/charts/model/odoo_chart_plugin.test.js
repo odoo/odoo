@@ -4,6 +4,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { OdooBarChart } from "@spreadsheet/chart/odoo_chart/odoo_bar_chart";
 import { OdooChart } from "@spreadsheet/chart/odoo_chart/odoo_chart";
 import { OdooLineChart } from "@spreadsheet/chart/odoo_chart/odoo_line_chart";
+import { ChartDataSource } from "@spreadsheet/chart/data_source/chart_data_source";
 
 import {
     createSpreadsheetWithChart,
@@ -13,7 +14,12 @@ import { insertListInSpreadsheet } from "@spreadsheet/../tests/helpers/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { addGlobalFilter, updateChart } from "@spreadsheet/../tests/helpers/commands";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
-import { mockService, makeServerError, fields } from "@web/../tests/web_test_helpers";
+import {
+    mockService,
+    makeServerError,
+    fields,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
 import { user } from "@web/core/user";
@@ -272,7 +278,7 @@ test("Data reloaded upon domain update for charts other than pie/bar/line", asyn
 
     updateChart(model, chartId, { type: "odoo_pie" });
     await waitForDataLoaded(model);
-    expect.verifySteps(["formatted_read_group"]); // Chart type changed
+    expect.verifySteps([]); // Chart type changed
 
     const newDefinition = model.getters.getChartDefinition(chartId);
     updateChart(model, chartId, {
@@ -888,9 +894,34 @@ test("See records when clicking on a bar chart bar", async () => {
     const runtime = model.getters.getChartRuntime(chartId);
     expect.verifySteps([]);
 
-    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
+    const event = { type: "click", native: new Event("click") };
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }]);
     await animationFrame();
     expect.verifySteps(["load-action", "do-action"]);
+});
+
+test("See records in new tab on middle click of chart element", async () => {
+    const fakeActionService = {
+        doAction: async (request, options = {}) => {
+            if (request.type === "ir.actions.act_window") {
+                expect(request.res_model).toEqual("partner");
+                if (options.newWindow) {
+                    expect.step("do-action-new-window");
+                }
+            }
+        },
+    };
+    mockService("action", fakeActionService);
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect.verifySteps([]);
+
+    const event = { type: "mouseup", native: new MouseEvent("mouseup", { button: 1 }) }; // Middle mouse button
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }]);
+    expect.verifySteps(["do-action-new-window"]);
 });
 
 test("See records when clicking on a pie chart slice", async () => {
@@ -961,7 +992,8 @@ test("See records when clicking on a pie chart slice", async () => {
     const runtime = model.getters.getChartRuntime(chartId);
     expect.verifySteps([]);
 
-    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
+    const event = { type: "click", native: new Event("click") };
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }]);
     await animationFrame();
     expect.verifySteps(["do-action"]);
 });
@@ -1008,7 +1040,8 @@ test("See records when clicking on a waterfall chart bar", async () => {
     const runtime = model.getters.getChartRuntime(chartId);
 
     // First dataset
-    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
+    const event = { type: "click", native: new Event("click") };
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }]);
     await animationFrame();
     expect(lastActionCalled?.domain).toEqual([
         "&",
@@ -1019,7 +1052,7 @@ test("See records when clicking on a waterfall chart bar", async () => {
     ]);
 
     // First dataset subtotal
-    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 2 }]);
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 2 }]);
     await animationFrame();
     expect(lastActionCalled?.domain).toEqual([
         "&",
@@ -1030,7 +1063,7 @@ test("See records when clicking on a waterfall chart bar", async () => {
     ]);
 
     // Second dataset
-    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 3 }]);
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 3 }]);
     await animationFrame();
     expect(lastActionCalled?.domain).toEqual([
         "&",
@@ -1086,7 +1119,8 @@ test("See records when clicking on a geo chart country", async () => {
     const runtime = model.getters.getChartRuntime(chartId);
     expect.verifySteps([]);
     const mockElement = { feature: { properties: { name: "Belgium" } } };
-    await runtime.chartJsConfig.options.onClick(undefined, [
+    const event = { type: "click", native: new Event("click") };
+    await runtime.chartJsConfig.options.onClick(event, [
         { datasetIndex: 0, index: 0, element: mockElement },
     ]);
     expect.verifySteps(["do-action"]);
@@ -1215,11 +1249,20 @@ test("Can configure the chart datasets", async () => {
     expect(definition.dataSets).toEqual([{ label: "My dataset" }]);
 });
 
-test("Chart data source is recreated when chart type is updated", async () => {
+test("Chart data source is updated when changing chart type", async () => {
+    patchWithCleanup(ChartDataSource.prototype, {
+        changeChartType(newMode) {
+            expect.step("changeChartType");
+            expect(newMode).toBe("line");
+            super.changeChartType(newMode);
+        },
+    });
+
     const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
     const sheetId = model.getters.getActiveSheetId();
     const chartId = model.getters.getChartIds(sheetId)[0];
     const chartDataSource = model.getters.getChartDataSource(chartId);
+
     model.dispatch("UPDATE_CHART", {
         definition: {
             ...model.getters.getChartDefinition(chartId),
@@ -1228,9 +1271,20 @@ test("Chart data source is recreated when chart type is updated", async () => {
         figureId: chartId,
         sheetId,
     });
-    expect(chartDataSource !== model.getters.getChartDataSource(chartId)).toBe(true, {
-        message: "The data source should have been recreated",
-    });
+    expect.verifySteps(["changeChartType"]);
+    expect(chartDataSource._metaData.mode).toBe("line");
+});
+
+test("Non-web chart types are using data source in 'bar' mode", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_radar" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+
+    const chart = model.getters.getChart(chartId);
+    expect(chart.metaData.mode).toBe("bar");
+
+    const chartDataSource = model.getters.getChartDataSource(chartId);
+    expect(chartDataSource._metaData.mode).toBe("bar");
 });
 
 test("Long labels are only truncated in the axis callback, not in the data given to the chart", async () => {

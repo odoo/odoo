@@ -77,7 +77,7 @@ function createOdooChartRuntime(chart, getters) {
         data: { labels: chartJSData.labels, datasets: chartJSData.datasets },
         options: {
             ...CHART_COMMON_OPTIONS,
-            layout: getChartLayout(definition),
+            layout: getChartLayout(definition, chartData),
             scales: getWaterfallChartScales(definition, chartData),
             plugins: {
                 title: getChartTitle(definition),

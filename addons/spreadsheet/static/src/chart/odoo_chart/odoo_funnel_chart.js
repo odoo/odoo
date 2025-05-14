@@ -69,7 +69,7 @@ function createOdooChartRuntime(chart, getters) {
         options: {
             ...CHART_COMMON_OPTIONS,
             indexAxis: "y",
-            layout: getChartLayout(definition),
+            layout: getChartLayout(definition, chartData),
             scales: getFunnelChartScales(definition, chartData),
             plugins: {
                 title: getChartTitle(definition),
