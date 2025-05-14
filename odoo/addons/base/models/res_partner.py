@@ -389,7 +389,7 @@ class ResPartner(models.Model):
         """ While creating / updating child contact, take the parent lang by
         default if any. 0therwise, fallback to default context / DB lang """
         for partner in self.filtered('parent_id'):
-            partner.lang = partner.parent_id.lang or self.default_get(['lang'])['lang'] or self.env.lang
+            partner.lang = partner.parent_id.lang or self.default_get(['lang']).get('lang') or self.env.lang
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
