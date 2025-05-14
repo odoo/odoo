@@ -5,10 +5,13 @@
     'version': '1.0',
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
-    'summary': "A Dutch payment provider covering several European countries.",
+    'summary': """
+A Dutch payment provider covering several European countries.
+
+https://www.mollie.com""",
     'description': " ",  # Non-empty string to avoid loading the README file.
     'author': 'Odoo S.A., Applix BV, Droggol Infotech Pvt. Ltd.',
-    'website': 'https://www.mollie.com',
+    'website': 'https://www.odoo.com/documentation/latest/applications/finance/payment_providers/mollie.html',
     'depends': ['payment'],
     'data': [
         'views/payment_mollie_templates.xml',
