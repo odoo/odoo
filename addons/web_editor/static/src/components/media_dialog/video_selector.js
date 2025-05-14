@@ -96,12 +96,7 @@ export class VideoSelector extends Component {
                     if (!src.startsWith("http:") && !src.startsWith("https:")) {
                         this.state.urlInput = "https:" + src;
                     }
-                    await this.updateVideo();
-
-                    this.state.options = this.state.options.map((option) => {
-                        const { urlParameter } = this.OPTIONS[option.id];
-                        return { ...option, value: src.indexOf(urlParameter) >= 0 };
-                    });
+                    await this.syncOptionsWithUrl();
                 }
             }
         });
@@ -110,7 +105,7 @@ export class VideoSelector extends Component {
 
         useAutofocus();
 
-        this.onChangeUrl = debounce((ev) => this.updateVideo(ev.target.value), 500);
+        this.onChangeUrl = debounce(async (ev) => await this.syncOptionsWithUrl(), 500);
     }
 
     get shownOptions() {
@@ -128,6 +123,7 @@ export class VideoSelector extends Component {
             return option;
         });
         await this.updateVideo();
+        this.state.urlInput = this.state.src;
     }
 
     async onClickSuggestion(src) {
@@ -253,5 +249,20 @@ export class VideoSelector extends Component {
                 console.warn(`Could not get video #${videoId} from vimeo: ${err}`);
             }
         }));
+    }
+
+    /**
+     * Utility method to make options and urlInput state consistent with state
+     * of component.
+     */
+    async syncOptionsWithUrl() {
+        await this.updateVideo();
+        this.state.options = this.state.options.map((option) => {
+            const { urlParameter } = this.OPTIONS[option.id];
+            return { ...option, value: this.state.urlInput.includes(urlParameter) };
+        });
+        // Ensure 'this.state.urlInput' and 'this.state.src' are consistent
+        // when the media dialog is closed without changing any options.
+        await this.updateVideo();
     }
 }
