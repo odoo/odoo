@@ -5,6 +5,10 @@ import requests
 import xml.etree.ElementTree as ET
 import urllib
 import socket
+import httpx
+import time
+import datetime
+import re
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -15,6 +19,7 @@ _logger = logging.getLogger(__name__)
 
 def _tote_codes(wizard):
     return wizard.pc_container_code_ids.mapped("name")
+
 
 
 class PackDeliveryReceiptWizard(models.TransientModel):
@@ -71,6 +76,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         string="Last Scanned Line",
         help="Tracks the last scanned line for controlled package number assignment"
     )
+    total_line_items = fields.Integer(
+        string="Total Line Items",
+        compute="_compute_total_line_items",
+        store=True
+    )
+    confirm_pack_warning = fields.Boolean(string="User Confirmed Pack Warning", default=False)
 
     @api.model
     def default_get(self, fields):
@@ -88,6 +99,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         else:
             raise ValidationError(_("No active Pack App record found. Please open this wizard from the Pack App."))
         return res
+
+    @api.depends('line_ids')
+    def _compute_total_line_items(self):
+        for wizard in self:
+            wizard.total_line_items = len(wizard.line_ids)
 
     @api.onchange("pc_container_code_ids")
     def _onchange_pc_container_code_ids(self):
@@ -107,9 +123,23 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             ("site_code_id", "=", self.site_code_id.id),
         ])
         if not pickings:
-            raise ValidationError(_("No pickings found for the scanned tote(s)."))
+            raise ValidationError("No pickings found for the scanned tote(s).")
 
         self.picking_ids = [(6, 0, pickings.ids)]
+
+        #  Validate all totes per picking are scanned
+        for picking in pickings:
+            all_totes_in_pick = picking.move_ids_without_package.mapped('pc_container_code')
+            scanned_totes = set(tote_codes)
+            expected_totes = set(all_totes_in_pick)
+
+            missing_totes = expected_totes - scanned_totes
+            if missing_totes:
+                raise ValidationError((
+                    "You must scan all tote(s) for Picking '%s'.\n\n"
+                    "Missing tote(s): %s\n\n"
+                    "Please scan them before continuing."
+                ) % (picking.name, ", ".join(missing_totes)))
 
         vals_list = []
         for picking in pickings:
@@ -123,7 +153,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             for mv in picking.move_ids_without_package.filtered(lambda m: m.pc_container_code in tote_codes):
                 qty_to_create = int(round(mv.remaining_qty or 0))
 
-                #  Always create one line per unit, regardless of single/multi pick
+                # Always create one line per unit, regardless of single/multi pick
                 for _ in range(qty_to_create):
                     vals_list.append({
                         "wizard_id": self.id,
@@ -183,7 +213,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         # 3) nothing found → stop the process
         raise ValidationError(_(
             "No package-box configuration found for this tenant/site. "
-            "Please create a *default* package type before continuing."
+            "Please create a default package type before continuing."
         ))
 
     @api.onchange("scanned_sku")
@@ -216,6 +246,49 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             line.product_package_number = self.next_package_number
 
         if len(self.picking_ids) > 1:  # MULTI-PICK
+            if self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE":
+                _logger.info("[LEGACY] Skipping OneTraker call and triggering legacy multi-pick payload.")
+
+                if any(l.api_payload_success for l in self.line_ids):
+                    _logger.info("[LEGACY] Legacy payload already sent — skipping.")
+                    return
+
+                # Mark line as scanned BEFORE preparing payload
+                line.scanned = True
+                line.quantity = 1
+                line.remaining_quantity = 0
+                line.available_quantity = 1
+                line.line_added = True
+
+                try:
+                    payload = self._prepare_old_logic_payload_multi_picks()
+                    is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
+                    api_url = (
+                        "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders"
+                        if is_production else
+                        "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
+                    )
+                    self.send_payload_to_api(api_url, payload)
+
+                    for l in self.line_ids:
+                        l.api_payload_success = True
+                        l.line_added = True
+                        l.scanned = True
+                        l.quantity = 1
+                        l.remaining_quantity = 0
+
+                    return {
+                        'warning': {
+                            'title': _("Success"),
+                            'message': _("Legacy label printed successfully."),
+                            'type': 'notification'
+                        }
+                    }
+                except Exception as e:
+                    _logger.error(f"[LEGACY] Failed to send legacy payload: {str(e)}")
+                    raise UserError(_("Legacy label failed:\n%s") % str(e))
+
+            # MULTI-PICK - OneTraker (non-Stonehive)
             config = self.get_onetraker_config()
             try:
                 success = self.send_payload_to_onetraker(self.env, line.picking_id, [line], config)
@@ -234,6 +307,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     raise UserError(_("Failed to send label for SKU %s.") % sku)
             except Exception as e:
                 raise UserError(_("Error while sending label for SKU %s:\n%s") % (sku, str(e)))
+
         else:  # SINGLE PICK
             line.quantity = 1
             line.available_quantity = 1
@@ -260,7 +334,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not config:
             raise UserError(_("No OneTraker configuration found for this tenant and site for the current environment."))
 
-        # 📝 Log config source
+        #  Log config source
         _logger.info(f"[ONETRAKER][CONFIG] Using {'PRODUCTION' if is_prod else 'DEVELOPMENT'} environment.")
         _logger.info(f"[ONETRAKER][CONFIG] Tenant: {self.tenant_code_id.name}, Site: {self.site_code_id.name}")
         _logger.info(f"[ONETRAKER][CONFIG] URL: {config.onetraker_order_url}")
@@ -274,87 +348,19 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "BEARER": config.bearer_token
         }
 
-    # def increment_package_number(self):
-    #     self.ensure_one()
-    #     self.next_package_number += 1
-    #     _logger.info(f"Package number incremented to {self.next_package_number}")
-    #
-    #     if self.last_scanned_line_id:
-    #         line = self.last_scanned_line_id
-    #
-    #         line.product_package_number = self.next_package_number
-    #         line.quantity = 1
-    #         line.scanned = True
-    #         line.line_added = True
-    #
-    #         line.available_quantity = 1
-    #         line.remaining_quantity = 0
-    #
-    #         _logger.info(
-    #             f"[Package Assigned] Product: {line.product_id.display_name}, Pkg#: {line.product_package_number}, Qty: {line.quantity}")
-    #
-    #         self.last_scanned_line_id = False
-    #     else:
-    #         _logger.warning("No last scanned line found to assign package number.")
-    #
-    #     return {
-    #         'type': 'ir.actions.act_window',
-    #         'res_model': 'custom.pack.app.wizard',
-    #         'res_id': self.id,
-    #         'view_mode': 'form',
-    #         'target': 'new',
-    #     }
-
     def increment_package_number(self):
         self.ensure_one()
         self.next_package_number += 1
         _logger.info(f"Package number incremented to {self.next_package_number}")
 
-        if self.last_scanned_line_id:
-            line = self.last_scanned_line_id
-
-            # ✅ Only assign if not already scanned or added
-            if not line.scanned and not line.line_added:
-                line.product_package_number = self.next_package_number
-                line.quantity = 1
-                line.available_quantity = 1
-                line.remaining_quantity = 0
-                line.line_added = True
-                line.scanned = True
-
-                _logger.info(
-                    f"[Package Assigned] Product: {line.product_id.display_name}, "
-                    f"Pkg#: {line.product_package_number}"
-                )
-            else:
-                _logger.warning(
-                    f"[SKIP] Line already scanned or added for {line.product_id.display_name}. "
-                    f"Package number not reassigned."
-                )
-
-            # ✅ Do NOT reset last_scanned_line_id if line wasn't updated
-            if not line.api_payload_attempted:
-                self.last_scanned_line_id = line
-            else:
-                self.last_scanned_line_id = False
-        else:
-            _logger.warning("No last scanned line found to assign package number.")
-
         return {
             'type': 'ir.actions.act_window',
-            'res_model': 'custom.pack.app.wizard',
+            'res_model': self._name,
             'res_id': self.id,
             'view_mode': 'form',
-            'target': 'new',
+            'view_type': 'form',
+            'target': 'new',  # Keeps the wizard open
         }
-
-    @api.onchange('confirm_increment')
-    def _onchange_confirm_increment(self):
-        for wizard in self:
-            if wizard.confirm_increment:
-                wizard.next_package_number += 1
-                wizard.confirm_increment = False
-                _logger.info(f"Package number incremented to {wizard.next_package_number}")
 
     @api.depends('line_ids')
     def _compute_updated_line_count(self):
@@ -429,14 +435,160 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 # bubble the message up so the user sees it immediately
                 raise err
 
+    def _process_single_pick_old_logic(self, picking, scanned_lines):
+        product_lines = []
+        for line in scanned_lines:
+            product_lines.append({
+                "sku_code": line.product_id.default_code,
+                "name": line.product_id.name,
+                "quantity": line.quantity,
+                "remaining_quantity": line.remaining_quantity,
+                "weight": line.weight,
+                "picking_id": line.picking_id.name,
+                "customer_name": line.picking_id.partner_id.name or "",
+                 "shipping_address": f"{line.picking_id.partner_id.name or ''}, {line.picking_id.partner_id.street or ''}, "
+                                     f"{line.picking_id.partner_id.street2 or ''}, {line.picking_id.partner_id.city or ''}, "
+                                     f"{line.picking_id.partner_id.state_id.name if line.picking_id.partner_id.state_id else ''}, "
+                                     f"{line.picking_id.partner_id.country_id.name if line.picking_id.partner_id.country_id else ''}, "
+                                     f"{line.picking_id.partner_id.zip or ''}",
+                "customer_email": line.picking_id.partner_id.email,
+                "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
+                "site_code": line.site_code_id.name if line.site_code_id else "",
+                "receipt_number": line.picking_id.name,
+                "partner_id": line.picking_id.partner_id.name,
+                "origin": line.picking_id.origin or "N/A",
+                "package_name": (line.package_box_type_id.name if line.package_box_type_id else "NoBox") + '_' + str(
+                    line.product_package_number),
+                "length": line.package_box_type_id.length or "NA",
+                "width": line.package_box_type_id.width or "NA",
+                "height": line.package_box_type_id.height or "NA",
+                "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
+                "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
+                "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
+                "customer_reference": line.picking_id.sale_id.client_order_ref if line.picking_id.sale_id else "N/A",
+                "incoterm_location": line.incoterm_location or "N/A",
+                "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
+                "carrier": line.picking_id.sale_id.carrier or "N/A",
+                "hs_code": line.product_id.hs_code or "N/A",
+                "cost_price": line.product_id.standard_price or "0.0",
+                "sale_price": line.product_id.list_price or "0.0",
+            })
+
+        payload = {
+            "header": {
+                "user_id": "system",
+                "user_key": "system",
+                "warehouse_code": self.warehouse_id.name
+            },
+            "body": {
+                "receipt_list": [{
+                    "product_lines": product_lines,
+                    "pack_bench_number": self.pack_bench_id.name,
+                    "pack_bench_ip": self.pack_bench_id.printer_ip,
+                }]
+            }
+        }
+
+        is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
+        api_url = "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders" if is_production == 'True' else "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
+
+        _logger.info(f"[OLD LOGIC] Sending legacy payload:\n{json.dumps(payload, indent=4)}")
+        self.send_payload_to_api(api_url, payload)
+
+        # Optional: update state after sending
+        picking.write({'current_state': 'pack'})
+        picking.sale_id.write({
+            'pick_status': 'packed',
+            'delivery_status': 'partial',
+            'tracking_url': 'https://auspost.com.au/mypost/track/details/placeholder'
+        })
+
+        return payload
+
+    def _prepare_old_logic_payload_multi_picks(self):
+        """
+        Prepares and returns the old format payload for multiple picks for:
+        Site Code: SHIPEROOALTONA
+        Tenant Code: STONEHIVE
+
+        This method groups lines per product and builds a flat payload list as required by
+        the old Shiperoo API.
+        """
+        if self.site_code_id.name != "SHIPEROOALTONA" or self.tenant_code_id.name != "STONEHIVE":
+            raise ValidationError("This method should only be called for SHIPEROOALTONA and STONEHIVE.")
+
+        product_lines = []
+
+        scanned_lines = self.line_ids.filtered(lambda l: l.scanned)
+        if not scanned_lines:
+            raise UserError(
+                _("No scanned lines found to build legacy multi-pick payload. Please scan at least one SKU."))
+
+        for line in scanned_lines:
+            product_lines.append({
+                "sku_code": line.product_id.default_code,
+                "name": line.product_id.name,
+                "quantity": line.quantity,
+                "remaining_quantity": line.remaining_quantity,
+                "weight": line.weight or 0.5,
+                "picking_id": line.picking_id.name if line.picking_id else "",
+                "customer_name": line.picking_id.partner_id.name or "",
+                "shipping_address": f"{line.picking_id.partner_id.name or ''}, {line.picking_id.partner_id.street or ''}, "
+                                     f"{line.picking_id.partner_id.street2 or ''}, {line.picking_id.partner_id.city or ''}, "
+                                     f"{line.picking_id.partner_id.state_id.name if line.picking_id.partner_id.state_id else ''}, "
+                                     f"{line.picking_id.partner_id.country_id.name if line.picking_id.partner_id.country_id else ''}, "
+                                     f"{line.picking_id.partner_id.zip or ''}",
+                "customer_email": line.picking_id.partner_id.email,
+                "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
+                "site_code": line.site_code_id.name if line.site_code_id else "",
+                "receipt_number": line.picking_id.name,
+                "partner_id": line.picking_id.partner_id.name,
+                "origin": line.picking_id.origin or "N/A",
+                "package_name": (line.package_box_type_id.name if line.package_box_type_id else "NoBox") + '_' + str(
+                    line.product_package_number),
+                "length": line.package_box_type_id.length or "NA",
+                "width": line.package_box_type_id.width or "NA",
+                "height": line.package_box_type_id.height or "NA",
+                "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
+                "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
+                "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
+                "customer_reference": line.picking_id.sale_id.client_order_ref if line.picking_id.sale_id else "N/A",
+                "incoterm_location": line.sale_order_id.packaging_source_type if line.sale_order_id else "N/A",
+                "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
+                "carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
+                "hs_code": line.product_id.hs_code or "N/A",
+                "so_reference": line.picking_id.sale_id.client_order_ref or "N/A",
+                "cost_price": line.product_id.standard_price or "0.0",
+                "sale_price": line.product_id.list_price or "0.0",
+            })
+
+        payload = {
+            "header": {
+                "user_id": "system",
+                "user_key": "system",
+                "warehouse_code": self.warehouse_id.name
+            },
+            "body": {
+                "receipt_list": [
+                    {
+                        "product_lines": product_lines,
+                        "pack_bench_number": self.pack_bench_id.name,
+                        "pack_bench_ip": self.pack_bench_id.printer_ip
+                    }
+                ]
+            }
+        }
+
+        _logger.info(f"[OLD LOGIC MULTI-PICK PAYLOAD] {json.dumps(payload, indent=4)}")
+        return payload
 
     def pack_products(self):
         """
         Main method to validate and process the pack operation.
-        - Checks for unscanned lines.
-        - Raises warning with missing SKU codes.
-        - Sends payloads only for lines where 'scanned' is True.
-        - Preserves existing single/multi pick logic and container release.
+        - Shows a warning if unscanned lines exist (with 2-step confirmation).
+        - Sends payloads for scanned lines.
+        - Handles both single-pick and multi-pick scenarios.
+        - Releases containers after successful pack.
         """
         self.ensure_one()
 
@@ -444,36 +596,46 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             _logger.warning("[PACK_PRODUCTS] picking_ids is empty or not properly set. Value: %s", self.picking_ids)
             raise ValidationError(_("No pickings are linked to this operation. Please check your container code."))
 
-        #  Check for unscanned lines
+        # Check for unscanned lines
         unscanned_lines = self.line_ids.filtered(lambda l: not l.scanned)
-        # if unscanned_lines:
-        #     missing_skus = ", ".join(unscanned_lines.mapped("product_id.default_code"))
-        #     return {
-        #         'warning': {
-        #             'title': _('Unscanned Items Detected'),
-        #             'message': _(
-        #                 'You have not scanned the following SKU(s):\n\n%s\n\nPlease scan them before proceeding to pack.') % missing_skus,
-        #             'type': 'notification'
-        #         }
-        #     }
+        if unscanned_lines:
+            missing_skus = ", ".join(unscanned_lines.mapped("product_id.default_code"))
 
-        #  Only use scanned lines for processing
+            # Show warning only on first click
+            if not self.confirm_pack_warning:
+                self.confirm_pack_warning = True
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _('Unscanned Items Detected'),
+                        'message': _(
+                            'You have not scanned the following SKU(s):\n%s\n\nClick "Pack" again to continue anyway.') % missing_skus,
+                        'type': 'warning',
+                        'sticky': False,
+                    }
+                }
+            else:
+                _logger.warning("[PACK_PRODUCTS] User acknowledged unscanned lines. Proceeding anyway.")
+
+        # Reset warning flag before proceeding
+        self.confirm_pack_warning = False
+
+        # Get scanned lines only
         scanned_lines = self.line_ids.filtered(lambda l: l.scanned)
-
-        #  Safety check
         if not scanned_lines:
             raise ValidationError(_("No scanned products found to pack."))
 
-        #  Validate scanned lines
+        # Validate scanned lines
         for line in scanned_lines:
             if not line.product_id:
-                raise ValidationError(_("Please ensure all line items have a product selected before proceeding."))
+                raise ValidationError(_("All line items must have a product selected."))
             if not line.weight or line.weight <= 0.0:
-                raise ValidationError(_(
-                    "The product '%s' (SKU: %s) does not have a weight. Please add weight before proceeding."
-                ) % (line.product_id.name, line.product_id.default_code or "N/A"))
+                raise ValidationError(
+                    _("Product '%s' (SKU: %s) has missing weight. Please update it before proceeding.")
+                    % (line.product_id.name, line.product_id.default_code or "N/A"))
 
-        #  Add section header for the tote
+        # Add section header for tote(s)
         pack_app_order = self.pack_app_id
         section_name = ', '.join(self.pc_container_code_ids.mapped('name'))
 
@@ -492,7 +654,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             'site_code_id': False,
         })
 
-        #  Create app lines only for scanned lines
         picking_orders = {}
         for line in scanned_lines:
             self.env['custom.pack.app.line'].create({
@@ -508,35 +669,36 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 'tenant_code_id': line.tenant_code_id.id,
                 'site_code_id': line.site_code_id.id,
             })
+            picking_orders.setdefault(line.picking_id.id, []).append(line)
 
-            if line.picking_id.id not in picking_orders:
-                picking_orders[line.picking_id.id] = []
-            picking_orders[line.picking_id.id].append(line)
-
-        #  Prepare for OneTraker payload
-        config = self.get_onetraker_config()
-        api_url = config["ONETRAKER_CREATE_ORDER_URL"]
-
-        #  Single Pick Logic
+        # Handle single pick separately
         if len(self.picking_ids) <= 1:
             if self.single_pick_payload_sent:
                 _logger.warning(f"[SKIP] Single-pick payload already sent for wizard {self.id}")
                 raise UserError(_("Payload already sent for this pick. Please refresh."))
 
-            payload = self.process_single_pick()  # should use all relevant scanned_lines internally
-            self.send_payload_to_api(api_url, payload)
+            payload = self.process_single_pick()
+
+            # Only call OneTraker if not using legacy logic
+            if not (self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE"):
+                config = self.get_onetraker_config()
+                api_url = config["ONETRAKER_CREATE_ORDER_URL"]
+                self.send_payload_to_api(api_url, payload)
+
             self.write({'single_pick_payload_sent': True})
             self.env.cr.flush()
             _logger.info(f"[PRE-FLAG] Wizard {self.id} marked as payload sent before API call.")
 
-        #  Release container in both cases
+        # Release container(s)
         self.release_container()
 
         return {'type': 'ir.actions.act_window_close'}
 
+
     def process_single_pick(self):
         """
         Builds and sends OneTraker payload for single-pick based on all scanned lines.
+        Validates picking only after successful label generation & printing.
         """
         self.ensure_one()
 
@@ -549,13 +711,16 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not scanned_lines:
             raise ValidationError("No scanned lines found to pack for this picking.")
 
+        if self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE":
+            return self._process_single_pick_old_logic(picking, scanned_lines)
+
         sale = picking.sale_id
         partner = picking.partner_id
 
         if not partner or not partner.email:
             raise ValidationError("Missing or invalid customer email.")
 
-        import re
+
         if not re.match(r"[^@]+@[^@]+\.[^@]+", partner.email):
             raise ValidationError("Invalid email for customer: %s" % partner.name)
 
@@ -584,8 +749,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "google_place_id": None,
             "contact": {
                 "name": partner.name,
-                "mobile_number": "+61412345678" or "0000000000",
-                "email": partner.email or "support@shiperoo.com"
+                "mobile_number": partner.mobile or "+61412345678",
+                "email": partner.email
             }
         }
 
@@ -650,16 +815,20 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         _logger.info(f"[ONETRAKER][SINGLE PICK PAYLOAD] Sending payload:\n{json.dumps(payload, indent=4)}")
 
-        # ✅ USE the full method that sends AND prints the label
-        self.send_payload_and_print_label(payload, picking.name)
+        #  Send to OneTraker and print label
+        label_url, con_id = self.send_payload_and_print_label(payload, picking.name)
 
-        # Mark picking and order as packed
+        #  Update records only if label was printed
         picking.write({'current_state': 'pack'})
         sale.write({
             'carrier': carrier,
             'pick_status': 'packed',
-            'delivery_status': 'partial'
+            'delivery_status': 'partial',
+            'consignment_number': con_id,
+            'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
         })
+
+        #  Finally, validate the picking
         picking.button_validate()
 
         return payload
@@ -724,12 +893,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         """
         Send the final JSON payload to OneTraker using credentials/config from the config model.
         """
-        config = self.get_onetraker_config()
+        # config = self.get_onetraker_config()
         headers = {
-            'Content-Type': 'application/json',
-            'Authorization': config["BEARER"]
+            'Content-Type': 'application/json'
         }
-
+        if "onetraker" in api_url:
+            config = self.get_onetraker_config()
+            headers['Authorization'] = config["BEARER"]
         try:
             response = requests.post(api_url, headers=headers, data=json.dumps(payload))
             if response.status_code == 200:
@@ -749,15 +919,15 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             raise UserError(f"Request error: {str(e)}")
 
     def send_payload_and_print_label(self, payload, pick_name=None):
-        """
-        Full OneTraker Label Process:
-        1. Send payload to OneTraker
-        2. Extract label URL from response
-        3. Print label via Zebra printer
-        """
+        self.ensure_one()
+
         config = self.get_onetraker_config()
         api_url = config.get("ONETRAKER_CREATE_ORDER_URL")
         bearer_token = config.get("BEARER")
+        bench_ip = self.pack_bench_id.printer_ip
+
+        if not bench_ip:
+            raise UserError(_("Pack Bench is missing printer IP."))
 
         headers = {
             'Content-Type': 'application/json',
@@ -765,40 +935,66 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         }
 
         try:
-            # Send payload to OneTraker
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload))
-            _logger.info(
-                f"[ONETRAKER][SEND] Response ({response.status_code}) for {pick_name or 'N/A'}: {response.text}"
-            )
-
-            if response.status_code != 200:
-                raise UserError(
-                    _("Label sending failed.\nStatus: %s\nResponse: %s") % (response.status_code, response.text)
-                )
+            t_start = time.perf_counter()
+            response = requests.post(api_url, headers=headers, json=payload, timeout=5)
+            response.raise_for_status()
 
             response_json = response.json()
             _logger.info(f"[ONETRAKER][FULL RESPONSE] for {pick_name or 'N/A'}:\n{json.dumps(response_json, indent=4)}")
 
-            # ✅ Extract from correct path in OneTraker response
+            generic = response_json.get("genericResponse", {})
+            status_code = generic.get("apiStatusCode")
+            status_success = generic.get("apiSuccessStatus")
+            status_message = generic.get("apiStatusMessage", "Unknown error from OneTraker")
+
+            if status_code != 200 or status_success != "True":
+                _logger.error(f"[ONETRAKER][ERROR] Code: {status_code}, Message: {status_message}")
+                raise UserError(_(status_message))
+            else:
+                _logger.info(f"[ONETRAKER][SUCCESS] Code: {status_code}, Message: {status_message}")
+
             label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
                                                                                                     {}).get("url")
+            con_id = response_json.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
 
             if not label_url:
-                raise UserError(_("Label URL not found in the OneTraker response."))
+                raise UserError(_("Label URL not found in OneTraker response."))
 
-            _logger.info(f"[ONETRAKER][LABEL] Retrieved label URL: {label_url}")
+            t_label_start = time.perf_counter()
+            label_resp = requests.get(label_url, stream=True, timeout=5)
+            label_resp.raise_for_status()
 
-            # Enhanced: Send to Zebra printer
-            self.print_label_via_pack_bench(label_url)
-            return {'type': 'ir.actions.act_window_close'}
+            zpl_data = ""
+            for chunk in label_resp.iter_content(chunk_size=1024):
+                zpl_data += chunk.decode('utf-8')
 
-        except requests.exceptions.RequestException as e:
-            _logger.error(f"[ONETRAKER][ERROR] Request failed: {str(e)}")
-            raise UserError(_("Failed to send payload to OneTraker:\n%s") % str(e))
+            t_label_end = time.perf_counter()
 
-        except ValueError:
-            _logger.error("[ONETRAKER][ERROR] Failed to parse JSON from response")
-            raise UserError(_("Failed to decode OneTraker API response. Please check logs."))
+            if not zpl_data.strip():
+                raise UserError(_("Downloaded label is empty."))
+
+            t_print_start = time.perf_counter()
+            with socket.create_connection((bench_ip, 9100), timeout=3) as sock:
+                sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+                sock.sendall(zpl_data.encode('utf-8'))
+
+            t_end = time.perf_counter()
+            time_to_response = t_label_start - t_start
+            time_to_label_download = t_label_end - t_label_start
+            time_to_print = t_end - t_print_start
+            total_time = t_end - t_start
+            _logger.info(
+                f"[PERF][{pick_name or 'N/A'}] "
+                f"API Response: {time_to_response:.2f}s, "
+                f"Label Download: {time_to_label_download:.2f}s, "
+                f"Print: {time_to_print:.2f}s, "
+                f"Total Time: {total_time:.2f}s"
+            )
+            return label_url, con_id
+
+        except Exception as e:
+            _logger.error(f"[ONETRAKER][FAILURE] {str(e)}")
+            raise UserError(_("Failed to print label:\n%s") % str(e))
 
     def print_label_via_pack_bench(self, label_url):
         self.ensure_one()
@@ -811,34 +1007,32 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             raise UserError(_("Pack Bench is missing IP address. Please configure it."))
 
         try:
-            # Download ZPL label content
-            label_resp = requests.get(label_url)
-            label_resp.raise_for_status()
+            #  Fast label fetch with short timeout
+            response = requests.get(label_url, timeout=5)
+            if response.status_code != 200 or not response.text.strip():
+                raise UserError(_("Failed to download label or label content is empty."))
 
-            zpl_data_str = label_resp.text.strip()
-            if not zpl_data_str:
-                raise UserError(_("Label data is empty. Check label format or contact support."))
+            zpl_data = response.text.strip()
 
-            # Send ZPL directly to Zebra printer via raw socket (not HTTP)
-            printer_port = 9100
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                sock.connect((bench_ip, printer_port))
-                sock.sendall(zpl_data_str.encode('utf-8'))
+            #  Instant socket print (raw, no buffer delay)
+            with socket.create_connection((bench_ip, 9100), timeout=1) as sock:
+                sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # disable Nagle
+                sock.sendall(zpl_data.encode('utf-8'))
 
-            _logger.info(f"[ZEBRA] Label sent to printer at {bench_ip}:9100")
+            _logger.info(f"[ZEBRA][FAST] Label printed instantly to {bench_ip}:9100")
 
-        except requests.exceptions.RequestException as e:
-            _logger.error(f"[ZEBRA ERROR] Failed to download label: {e}")
-            raise UserError(_("Failed to download label:\n%s") % str(e))
+        except (requests.exceptions.RequestException, socket.timeout) as e:
+            _logger.error(f"[ZEBRA][TIMEOUT] {str(e)}")
+            raise UserError(_("Timeout during label printing:\n%s") % str(e))
 
         except socket.error as e:
-            _logger.error(f"[ZEBRA ERROR] Socket error while printing label: {e}")
-            raise UserError(_("Failed to print label to printer %s:\n%s") % (bench_ip, str(e)))
+            _logger.error(f"[ZEBRA][SOCKET ERROR] {str(e)}")
+            raise UserError(_("Printer socket error:\n%s") % str(e))
 
     def send_payload_to_onetraker(self, env, picking, lines, config):
         """
         Prepares and sends OneTraker payload for given picking and its associated lines.
-        This works for both single-pick and multi-pick.
+        Prevents picking validation to avoid deleting wizard lines.
         """
         if not picking:
             raise ValidationError("Picking is required to send OneTraker payload.")
@@ -857,8 +1051,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         customer_ref = sale.client_order_ref or "NA"
         country = partner.country_id.name or "Australia"
         country_code = partner.country_id.code or "AU"
-
-        # Carrier fallback
         carrier = sale.carrier or 'AUSPOST'
 
         to_address = {
@@ -869,7 +1061,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "city": partner.city or "",
             "province": partner.state_id.name if partner.state_id else "",
             "province_code": partner.zip or "",
-            # "province_code": "VIC",
             "country": country,
             "country_code": country_code,
             "street_address": None,
@@ -890,8 +1081,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         for line in lines:
             pkg_num = line.product_package_number
-            box = line.package_box_type_id
-
             if pkg_num not in grouped_items:
                 grouped_items[pkg_num] = {
                     "type": None,
@@ -899,30 +1088,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "products": [],
                     "authority_to_leave": True,
                     "attributes": [
-                        {
-                            "category": "length",
-                            "unit": "m",
-                            "value":0.1
-                        },
-                        {
-                            "category": "width",
-                            "unit": "m",
-                            "value": 0.2
-                        },
-                        {
-                            "category": "height",
-                            "unit": "m",
-                            "value": 0.3
-                        },
-                        {
-                            "category": "weight",
-                            "unit": "KG",
-                            "value": line.weight or 0.5
-                        }
+                        {"category": "length", "unit": "m", "value": 0.1},
+                        {"category": "width", "unit": "m", "value": 0.2},
+                        {"category": "height", "unit": "m", "value": 0.3},
+                        {"category": "weight", "unit": "KG", "value": line.weight or 0.5}
                     ]
                 }
 
-            product_data = {
+            grouped_items[pkg_num]["products"].append({
                 "product_id": line.product_id.default_code,
                 "name": line.product_id.name,
                 "weight": line.weight or 0.5,
@@ -931,26 +1104,23 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "hs_code": line.product_id.hs_code or "999999",
                 "declared_value": round(line.product_id.list_price or 10.0, 2),
                 "item_contents_reference": ""
-            }
+            })
 
-            grouped_items[pkg_num]["products"].append(product_data)
-            declared_value += product_data["declared_value"] * product_data["quantity"]
+            declared_value += (line.product_id.list_price or 10.0) * (line.quantity or 1.0)
 
         payload = {
             "merchant_code": config["DEFAULT_MERCHANT_CODE"],
             "service_type": sale.service_type or "STANDARD",
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
-            "tu_id": None,  # Fixed value per sample
+            "tu_id": None,
             "tu_type": "",
             "auto_generate_label": config["DEFAULT_AUTO_GENERATE_LABEL"],
             "shipment": {
                 "from_location_id": config["DEFAULT_FROM_LOCATION_ID"],
                 "to_address": to_address,
                 "items": list(grouped_items.values()),
-                "instruction": {
-                    "note": sale.note or ""
-                }
+                "instruction": {"note": sale.note or ""}
             }
         }
 
@@ -974,41 +1144,36 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         api_url = config["ONETRAKER_CREATE_ORDER_URL"]
         _logger.info(f"[ONETRAKER] Sending payload to {api_url} for order {order_number}")
         _logger.info(json.dumps(payload, indent=4))
+        time_start = datetime.datetime.now()
+        _logger.info(f"[TIMING][{order_number}] Payload send start: {time_start}")
 
         try:
             response = requests.post(api_url, headers=headers, data=json.dumps(payload))
             response.raise_for_status()
             resp_data = response.json()
-            generic = resp_data.get("genericResponse", {})
+
             _logger.info(f"[ONETRAKER][FULL RESPONSE] for {order_number}:\n{json.dumps(resp_data, indent=4)}")
 
-            if generic.get("apiStatusCode") != 200:
-                raise UserError(generic.get("apiStatusMessage", "Unknown OneTraker API error."))
+            label_url = resp_data.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
+                                                                                                {}).get("url")
 
-            # Print label URL (for multi-pick)
-            label_url = generic.get("label_url")
-            # if label_url:
-            #     _logger.info(f"[ONETRAKER][LABEL] {label_url}")
-            #     self.env['ir.actions.act_url'].create({
-            #         'name': 'Print Label',
-            #         'type': 'ir.actions.act_url',
-            #         'url': label_url,
-            #         'target': 'new',
-            #     })
-            if label_url:
-                _logger.info(f"[ONETRAKER][LABEL] {label_url}")
-                self.print_label_via_pack_bench(label_url)
+            if not label_url:
+                raise UserError(_("Label URL not found in the OneTraker response."))
 
-            # Update Sale Order + Picking
+            #  Print label fast
+            self.print_label_via_pack_bench(label_url)
+
+            #  DO NOT VALIDATE PICKING (no button_validate)
             picking.write({'current_state': 'pack'})
             sale.write({
-                'consignment_number': generic.get("carrier_con_id", ""),
-                'tracking_url': label_url,
                 'carrier': carrier,
                 'pick_status': 'packed',
                 'delivery_status': 'partial',
+                'consignment_number': resp_data.get("order", {}).get("shipment", {}).get("carrier_details", {}).get(
+                    "con_id", ""),
+                'status': label_url,
+                'tracking_url': 'https://auspost.com.au/mypost/track/details/con_id',
             })
-            picking.button_validate()
 
             _logger.info("[ONETRAKER] Label sent successfully and records updated.")
             return True
@@ -1021,96 +1186,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             _logger.error("[ONETRAKER] Invalid JSON response from OneTraker.")
             raise UserError("Failed to decode OneTraker API response. Check the response format.")
 
-    def send_onetraker_test_payload():
-        api_url = "https://ext-api.onetraker.com/api/v1/shipping/order"  # Ensure your IP is allowed
-        bearer_token = "YOUR_BEARER_TOKEN"  # 🔐 Replace with your actual token from OneTraker
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": bearer_token
-        }
-
-        payload = {
-            "merchant_code": "BNBFC3",
-            "service_type": "STANDARD",
-            "order_number": "S001507",
-            "tags": {
-                "external_order_id": "BNB#319371"
-            },
-            "tu_id": None,
-            "tu_type": "",
-            "auto_generate_label": True,
-            "shipment": {
-                "from_location_id": "67a02a3efa0a44ea2542b5c5",
-                "to_address": {
-                    "google_formated_address": None,
-                    "business_name": "Julz Ferguson",
-                    "address1": "995 Wanaka-Luggate Highway",
-                    "address2": None,
-                    "city": "Wānaka",
-                    "province": "Otago",
-                    "province_code": "9382",
-                    "country": "New Zealand",
-                    "country_code": "NZ",
-                    "street_address": None,
-                    "area_name": None,
-                    "locality": None,
-                    "unit_floor": None,
-                    "landmark": None,
-                    "google_place_id": None,
-                    "contact": {
-                        "name": "Julz Ferguson",
-                        "mobile_number": "+64272758886",
-                        "email": "julz.ferg@xtra.co.nz"
-                    }
-                },
-                "items": [
-                    {
-                        "type": None,
-                        "quantity": 1,
-                        "products": [
-                            {
-                                "product_id": "OMM100BLK-XS-S",
-                                "name": "On My Mind Wool Blend Cape - Black",
-                                "weight": 1.35,
-                                "description": "On My Mind Wool Blend Cape - Black",
-                                "quantity": 1.0,
-                                "hs_code": "620211",
-                                "declared_value": 57.08,
-                                "item_contents_reference": ""
-                            }
-                        ],
-                        "authority_to_leave": True,
-                        "attributes": [
-                            {"category": "length", "unit": "m", "value": 0.2},
-                            {"category": "width", "unit": "m", "value": 0.1},
-                            {"category": "height", "unit": "m", "value": 0.1},
-                            {"category": "weight", "unit": "KG", "value": 1.35}
-                        ]
-                    }
-                ],
-                "instruction": {
-                    "note": ""
-                },
-                "international": {
-                    "incoterms": "DAP",
-                    "customs_declaration": {
-                        "description": "Apparell",
-                        "total_value": 57.08,
-                        "currency": "AUD",
-                        "duty_paid_by": "receiver",
-                        "export_declaration_number": ""
-                    }
-                }
-            }
-        }
-
-        try:
-            response = requests.post(api_url, headers=headers, data=json.dumps(payload))
-            print("Status Code:", response.status_code)
-            print("Response:", response.text)
-        except Exception as e:
-            print("Request failed:", e)
 
 class PackDeliveryReceiptWizardLine(models.TransientModel):
     _name = 'custom.pack.app.wizard.line'
@@ -1123,7 +1198,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     default_code = fields.Char(related='product_id.default_code', string='SKU Code')
     available_quantity = fields.Float(string='Expected Quantity', compute='_compute_available_quantity', store=True)
     remaining_quantity = fields.Float(string='Remaining Quantity', compute='_compute_remaining_quantity', store=True)
-    quantity = fields.Float(string='Quantity', store=True, default=1)
+    quantity = fields.Float(string='Quantity', store=True)
     available_product_ids = fields.Many2many('product.product', string='Available Products',
                                              compute='_compute_available_products')
     picking_id = fields.Many2one('stock.picking', string='Picking Number', store=True)
@@ -1220,6 +1295,44 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
 
             _logger.info(f"[AUTO PAYLOAD] Sending for {line.product_id.display_name}")
             line.api_payload_attempted = True
+            if wizard.site_code_id.name == "SHIPEROOALTONA" and wizard.tenant_code_id.name == "STONEHIVE":
+                _logger.info("[OLD LOGIC] Triggering old multi-pick payload from line onchange...")
+
+                # Avoid multiple legacy payload triggers
+                if any(l.api_payload_success for l in wizard.line_ids):
+                    _logger.warning("[OLD LOGIC] Legacy payload already triggered — skipping resend.")
+                    return
+
+                try:
+                    payload = wizard._prepare_old_logic_payload_multi_picks()
+                    is_production = wizard.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
+                    api_url = (
+                        "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders"
+                        if is_production else
+                        "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
+                    )
+                    wizard.send_payload_to_api(api_url, payload)
+                    _logger.info("[SUCCESS] Legacy multi-pick payload sent successfully to: %s", api_url)
+
+                    # Mark all lines as packed
+                    for l in wizard.line_ids:
+                        l.api_payload_success = True
+                        l.line_added = True
+                        l.scanned = True
+                        l.quantity = 1
+                        l.remaining_quantity = 0
+
+                    return {
+                        'warning': {
+                            'title': _("Success"),
+                            'message': _("Legacy label printed successfully for multi-pick."),
+                            'type': 'notification'
+                        }
+                    }
+
+                except Exception as e:
+                    _logger.error(f"[MULTI-PICK] Failed to send legacy payload: {str(e)}")
+                    raise UserError(_("Legacy multi-pick label failed:\n%s") % str(e))
 
             try:
                 config = wizard.get_onetraker_config()
@@ -1343,7 +1456,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
             )
             line.available_quantity = len(same)
 
-    @api.depends("wizard_id.line_ids.quantity", "product_id", "picking_id")
+    @api.depends("wizard_id.line_ids.scanned")
     def _compute_remaining_quantity(self):
         for line in self:
             if not line.picking_id or not line.product_id:
@@ -1354,17 +1467,18 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                 lambda l: l.product_id.id == line.product_id.id and l.picking_id.id == line.picking_id.id
             )
 
-            # Total expected lines for this product
             total_units = len(same_lines)
 
-            # Count only scanned or added lines (skip new blank ones)
-            scanned_units = sum(
-                1 for l in same_lines
-                if l.scanned or l.line_added or l.quantity == 1
-            )
+            # Count scanned units and fix quantity if scanned but 0
+            scanned_units = 0
+            for l in same_lines:
+                if l.scanned or l.line_added:
+                    scanned_units += 1
+                    if l.quantity == 0:
+                        l.quantity = 1  # Fix quantity to 1 for already scanned line
 
-            # Don't let it go negative
             line.remaining_quantity = max(total_units - scanned_units, 0)
+
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -1424,25 +1538,38 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                 }
             }
 
-
     @api.onchange('weight')
     def _onchange_weight(self):
         """
-        When the user manually enters a weight or leaves it empty:
+        When the user enters a weight:
         - If weight is 0 or missing, assign default value of 0.5.
         - Save to product if not already set.
+        - Propagate weight to all other lines with the same product in the wizard.
         """
-        if self.product_id:
-            if not self.weight or self.weight == 0.0:
-                self.weight = 0.5  #  Default fallback
-                _logger.warning(f"Weight was missing or zero; defaulted to 0.5 for product {self.product_id.name}")
+        if not self.product_id or not self.wizard_id:
+            return
 
-            if not self.product_id.weight or self.product_id.weight == 0.0:
-                self.product_id.write({'weight': self.weight})
-                _logger.info(f"Saved defaulted weight {self.weight} to product {self.product_id.name}")
+        # Default to 0.5 if not set
+        if not self.weight or self.weight == 0.0 and len(self.picking_ids) != 1:
+            self.weight = 0.5
+            _logger.warning(f"Weight was missing or zero; defaulted to 0.5 for product {self.product_id.name}")
 
-            # Re-trigger package box selection
-            self.wizard_id._auto_select_package_box_type()
+        # Save to product if not already set
+        if not self.product_id.weight or self.product_id.weight == 0.0:
+            self.product_id.write({'weight': self.weight})
+            _logger.info(f"Saved defaulted weight {self.weight} to product {self.product_id.name}")
+
+        # Propagate to other lines with same product in same wizard
+        same_product_lines = self.wizard_id.line_ids.filtered(
+            lambda l: l.product_id.id == self.product_id.id and l.id != self.id
+        )
+        for line in same_product_lines:
+            if not line.weight or line.weight == 0.0:
+                line.weight = self.weight
+                _logger.info(f"Updated weight to {self.weight} for product {line.product_id.name} on line ID {line.id}")
+
+        # Re-trigger package box selection logic if needed
+        self.wizard_id._auto_select_package_box_type()
 
     @api.depends('product_id')
     def _compute_show_serial_number(self):
