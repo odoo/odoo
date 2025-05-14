@@ -191,8 +191,8 @@ class StockPicking(models.Model):
                         "sc-file-processor/api/receipt-completion"
                     )
                     auth = ('apiuser', 'apipass')
-                            api_url = "https://shiperoo-connect.uat.automation.shiperoo.com/sc-file-processor/api/receipt-completion"
-                            auth = ('apiuser', 'apipass')
+                            #api_url = "https://shiperoo-connect.uat.automation.shiperoo.com/sc-file-processor/api/receipt-completion"
+                            #auth = ('apiuser', 'apipass')
             else:
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
                 api_url = (
