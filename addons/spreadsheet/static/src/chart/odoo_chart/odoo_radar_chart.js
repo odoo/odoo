@@ -20,12 +20,14 @@ export class OdooRadarChart extends OdooChart {
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
         this.fillArea = definition.fillArea;
+        this.hideDataMarkers = definition.hideDataMarkers;
     }
 
     getDefinition() {
         return {
             ...super.getDefinition(),
             fillArea: this.fillArea,
+            hideDataMarkers: this.hideDataMarkers,
         };
     }
 }
