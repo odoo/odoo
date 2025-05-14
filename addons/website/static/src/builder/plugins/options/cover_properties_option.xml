@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.CoverPropertiesOption">
-
+<BuilderContext action="'markCoverPropertiesToBeSaved'">
     <BuilderRow label.translate="Background">
         <!-- todo adapt when colorpicker is implemented: snippet_options_background_color_widget-->
         <BuilderColorPicker title.translate="Color" styleAction="'background-color'"/>
@@ -14,9 +14,7 @@
 
     <BuilderRow label.translate="Size" t-if="this.state.useSize">
         <BuilderSelect>
-            <BuilderSelectItem classAction="'o_full_screen_height'"><span>Full Screen</span></BuilderSelectItem>
-            <BuilderSelectItem classAction="'o_half_screen_height'"><span>Half Screen</span></BuilderSelectItem>
-            <BuilderSelectItem classAction="'cover_auto'"><span>Fit text</span></BuilderSelectItem>
+            <BuilderSelectItem t-foreach="coverSizeClasses" t-as="className" t-key="className" classAction="className" t-out="coverSizeLabel(className)"/>
         </BuilderSelect>
     </BuilderRow>
 
@@ -36,7 +34,7 @@
             <BuilderSelectItem classAction="'text-end'">Right</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-
+</BuilderContext>
 </t>
 
 </templates>
