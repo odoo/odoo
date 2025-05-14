@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 
-import { Orderline } from "@point_of_sale/app/store/models";
+import { Orderline, Order } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
 patch(Orderline.prototype, {
@@ -22,3 +22,10 @@ patch(Orderline.prototype, {
         }
     },
 });
+
+patch(Order.prototype, {
+    isLineValidForLoyaltyPoints(line) {
+        const result = super.isLineValidForLoyaltyPoints(line);
+        return !line.sale_order_origin_id && result
+    }
+})
