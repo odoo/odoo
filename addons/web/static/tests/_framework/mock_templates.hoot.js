@@ -5,42 +5,35 @@
 //-----------------------------------------------------------------------------
 
 /**
- * We remove all the attributes `src` and `alt` from the template and replace them by
- * data attributes (e.g. `src` to `data-src`, `alt` to `data-alt`).
- * alt attribute causes issues with scroll tests. Indeed, alt is
- * displayed between the time we scroll programmatically and the time
- * we assert for the scroll position. The src attribute is removed
- * as well to make sure images won't trigger a GET request on the
- * server.
+ * We remove all the `src` attributes (and derived forms) from the template and
+ * replace them by data attributes (e.g. `src` to `data-src`, `t-att-src` to
+ * `t-att-data-src`). This is done to ensure images will not trigger an actual request
+ * on the server.
  *
  * @param {Element} template
  */
 const replaceAttributes = (template) => {
-    for (const { attribute, tagName, value } of ATTRIBUTE_DEFAULT_VALUES) {
+    for (const [tagName, value] of SRC_REPLACERS) {
         for (const prefix of ATTRIBUTE_PREFIXES) {
-            const fullAttribute = `${prefix}${attribute}`;
-            const dataAttribute = `${prefix}data-${attribute}`;
-            for (const element of template.querySelectorAll(`${tagName || ""}[${fullAttribute}]`)) {
-                element.setAttribute(dataAttribute, element.getAttribute(fullAttribute));
-                if (attribute !== fullAttribute) {
-                    element.removeAttribute(fullAttribute);
+            const targetAttribute = `${prefix}src`;
+            const dataAttribute = `${prefix}data-src`;
+            for (const element of template.querySelectorAll(`${tagName}[${targetAttribute}]`)) {
+                element.setAttribute(dataAttribute, element.getAttribute(targetAttribute));
+                if (prefix) {
+                    element.removeAttribute(targetAttribute);
                 }
-                element.setAttribute(attribute, value);
+                element.setAttribute("src", value);
             }
         }
     }
 };
 
-const ATTRIBUTE_DEFAULT_VALUES = [
-    // "alt": empty string
-    { attribute: "alt", value: "" },
-    { attribute: "src", tagName: "iframe", value: "" },
-    {
-        attribute: "src",
-        tagName: "img",
-        // "src": 1x1 fuschia image
-        value: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==",
-    },
+const ONE_FUSCHIA_PIXEL_IMG =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
+
+const SRC_REPLACERS = [
+    ["iframe", ""],
+    ["img", ONE_FUSCHIA_PIXEL_IMG],
 ];
 const ATTRIBUTE_PREFIXES = ["", "t-att-", "t-attf-"];
 

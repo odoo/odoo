@@ -1,6 +1,7 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import { after, before, beforeEach, createJobScopedGetter } from "@odoo/hoot";
+import { validateType } from "@odoo/owl";
 
 const { view_info } = odoo.__session_info__ || {};
 delete odoo.__session_info__;
@@ -71,6 +72,27 @@ const SERVER_STATE_VALUES = {
     view_info,
 };
 
+const SERVER_STATE_VALUES_SCHEMA = {
+    companies: { type: Array, element: Object },
+    currencies: { type: Array, element: Object },
+    db: String,
+    debug: String,
+    groupId: [Number, { value: false }],
+    lang: String,
+    multiLang: Boolean,
+    odoobotId: [Number, { value: false }],
+    partnerId: [Number, { value: false }],
+    partnerName: String,
+    publicPartnerId: [Number, { value: false }],
+    publicPartnerName: String,
+    publicUserId: Number,
+    serverVersion: { type: Array, element: [String, Number] },
+    timezone: String,
+    userContext: Object,
+    userId: [Number, { value: false }],
+    view_info: Object,
+};
+
 const getServerStateValues = createJobScopedGetter(
     (previousValues) => ({
         ...JSON.parse(JSON.stringify(SERVER_STATE_VALUES)),
@@ -112,10 +134,22 @@ export function onServerStateChange(target, callback) {
 }
 
 export const serverState = new Proxy(SERVER_STATE_VALUES, {
-    get(target, p) {
+    deleteProperty(_target, p) {
+        return Reflect.deleteProperty(getServerStateValues(), p);
+    },
+    get(_target, p) {
         return Reflect.get(getServerStateValues(), p);
     },
-    set(target, p, newValue) {
+    has(_target, p) {
+        return Reflect.has(getServerStateValues(), p);
+    },
+    set(_target, p, newValue) {
+        if (p in SERVER_STATE_VALUES_SCHEMA && newValue !== null && newValue !== undefined) {
+            const errorMessage = validateType(p, newValue, SERVER_STATE_VALUES_SCHEMA[p]);
+            if (errorMessage) {
+                throw new TypeError(errorMessage);
+            }
+        }
         const result = Reflect.set(getServerStateValues(), p, newValue);
         if (result) {
             notifySubscribers();

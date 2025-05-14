@@ -29,7 +29,7 @@ import {
 import { advanceTime, animationFrame, mockFetch, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { EventList } from "@web/../lib/hoot-dom/helpers/events";
-import { mountForTest, parseUrl, waitForIframes } from "../local_helpers";
+import { mountForTest, parseUrl } from "../local_helpers";
 
 /**
  * @param {Event} ev
@@ -336,6 +336,47 @@ describe(parseUrl(import.meta.url), () => {
         ]);
     });
 
+    test("click on element allowing or disallowing pointer events", async () => {
+        await mountForTest(/* xml */ `
+            <div class="container">
+                <button class="first" style="pointer-events: none">
+                    Not allowed
+                </button>
+                <div style="pointer-events: none">
+                    <button class="second" style="pointer-events: auto">
+                        Allowed
+                    </button>
+                </div>
+                <button class="third" style="pointer-events: none">
+                    Not allowed
+                </button>
+            </div>
+        `);
+
+        const container = queryOne(".container");
+        const interactiveButton = queryOne(".second");
+        let events;
+
+        // Elements affected by pointer-events: none -> doesn't work
+        events = await click(".first");
+        expect(events.get("click").target).toBe(container);
+        events = await click(".third");
+        expect(events.get("click").target).toBe(container);
+
+        // Allowed button -> does work
+        events = await click(interactiveButton);
+        expect(events.get("click").target).toBe(interactiveButton);
+        expect("button:interactive").toHaveCount(1);
+
+        container.style.pointerEvents = "none";
+        interactiveButton.style.pointerEvents = "none";
+
+        // Does not work anymore
+        events = await click(interactiveButton);
+        expect(events.get("click").target).toBe(container.parentElement);
+        expect("button:interactive").not.toHaveCount();
+    });
+
     test("click on common parent", async () => {
         await mountForTest(/* xml */ `
             <main class="parent">
@@ -428,8 +469,6 @@ describe(parseUrl(import.meta.url), () => {
             <button>Click me</button>
             <iframe srcdoc="&lt;button&gt;iframe button&lt;/button&gt;" />
         `);
-
-        await waitForIframes();
 
         expect("button").toHaveCount(1);
         expect(":iframe button").toHaveCount(1);
@@ -1273,8 +1312,6 @@ describe(parseUrl(import.meta.url), () => {
             <input type="text" />
             <iframe srcdoc="&lt;input type='text' /&gt;" />
         `);
-
-        await waitForIframes();
 
         expect("input").toHaveCount(1);
         expect(":iframe input").toHaveCount(1);

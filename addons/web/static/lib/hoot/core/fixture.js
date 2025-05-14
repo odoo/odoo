@@ -9,6 +9,7 @@ import {
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { HootError } from "../hoot_utils";
 import { subscribeToTransitionChange } from "../mock/animation";
+import { getViewPortHeight, getViewPortWidth } from "../mock/window";
 
 /**
  * @typedef {Parameters<typeof import("@odoo/owl").mount>[2] & {
@@ -80,10 +81,10 @@ export function makeFixtureManager(runner) {
             }
 
             const { width, height } = getCurrentDimensions();
-            if (width !== window.innerWidth) {
+            if (width !== getViewPortWidth()) {
                 fixture.style.width = `${width}px`;
             }
-            if (height !== window.innerHeight) {
+            if (height !== getViewPortHeight()) {
                 fixture.style.height = `${height}px`;
             }
 
@@ -102,8 +103,6 @@ export function makeFixtureManager(runner) {
             getActiveElement().blur();
             getSelection().removeAllRanges();
         }
-
-        return cleanupFixture;
     };
 
     runner.beforeAll(() => {
@@ -114,6 +113,7 @@ export function makeFixtureManager(runner) {
     });
 
     return {
+        cleanup: cleanupFixture,
         setup: setupFixture,
         get: getFixture,
     };
@@ -156,29 +156,76 @@ export class HootFixtureElement extends HTMLElement {
         `;
     }
 
-    /** @type {(() => any) | null} */
-    cleanupEventActions = null;
+    get hasIframes() {
+        return this._iframes.size > 0;
+    }
+
+    /** @private */
+    _observer = new MutationObserver(this._onFixtureMutation.bind(this));
+    /**
+     * @private
+     * @type {Map<HTMLIFrameElement, Promise<void>>}
+     */
+    _iframes = new Map();
 
     connectedCallback() {
         currentFixture = this;
 
-        this.cleanupEventActions = setupEventActions(this);
+        setupEventActions(this);
         subscribeToTransitionChange((allowTransitions) =>
             this.classList.toggle(this.constructor.CLASSES.transitions, allowTransitions)
         );
+
+        this._observer.observe(this, { childList: true, subtree: true });
+        this._lookForIframes();
     }
 
     disconnectedCallback() {
         currentFixture = null;
 
-        this.cleanupEventActions?.();
+        this._iframes.clear();
+        this._observer.disconnect();
     }
 
     hide() {
         this.classList.remove(this.constructor.CLASSES.show);
     }
 
+    async waitForIframes() {
+        await Promise.all(this._iframes.values());
+    }
+
     show() {
         this.classList.add(this.constructor.CLASSES.show);
+    }
+
+    /**
+     * @private
+     */
+    _lookForIframes() {
+        const toRemove = new Set(this._iframes.keys());
+        for (const iframe of this.getElementsByTagName("iframe")) {
+            if (toRemove.delete(iframe)) {
+                continue;
+            }
+            this._iframes.set(
+                iframe,
+                new Promise((resolve) => iframe.addEventListener("load", resolve))
+            );
+            setupEventActions(iframe.contentWindow);
+        }
+        for (const iframe of toRemove) {
+            this._iframes.delete(iframe);
+        }
+    }
+
+    /**
+     * @private
+     * @type {MutationCallback}
+     */
+    _onFixtureMutation(mutations) {
+        if (mutations.some((mutation) => mutation.addedNodes)) {
+            this._lookForIframes();
+        }
     }
 }
