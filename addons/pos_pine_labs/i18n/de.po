@@ -24,11 +24,13 @@ msgstr ""
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_client
 msgid "A client id issued directly to the merchant by Pine Labs."
 msgstr ""
+"Eine Client-ID, die von Pine Labs direkt an den Händler ausgegeben wird."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
 msgid "A merchant id issued directly to the merchant by Pine Labs."
 msgstr ""
+"Eine Händler-ID, die von Pine Labs direkt an den Händler ausgegeben wird."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
@@ -40,11 +42,12 @@ msgstr ""
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_store
 msgid "A store id issued directly to the merchant by Pine Labs."
 msgstr ""
+"Eine Shop-ID, die von Pine Labs direkt an den Händler ausgegeben wird."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
 msgid "Accepted payment modes by Pine Labs for transactions."
-msgstr ""
+msgstr "Von Pine Labs für Transaktionen akzeptierte Zahlungsmodi."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__all
@@ -89,11 +92,13 @@ msgstr "Händler-ID von Pine Labs"
 msgid ""
 "Pine Labs POS transaction cancelled. Retry again for collecting payment."
 msgstr ""
+"Kassentransaktion von Pine Labs storniert. Versuchen Sie es erneut, um die "
+"Zahlung zu erhalten."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
 msgid "Pine Labs PlutusTransactionReferenceID"
-msgstr ""
+msgstr "PlutusTransactionReferenceID von Pine Labs"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
@@ -103,30 +108,30 @@ msgstr "Security-Token von Pine Labs"
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_store
 msgid "Pine Labs Store ID"
-msgstr ""
+msgstr "Shop-ID von Pine Labs"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
 msgid "Pine Labs Test Mode"
-msgstr ""
+msgstr "Testmodus von Pine Labs"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs get payment status request failed"
-msgstr ""
+msgstr "Abrufanfrage des Zahlstatus von Pine Labs fehlgeschlagen"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs make payment request failed"
-msgstr ""
+msgstr "Zahlungsanfrage von Pine Labs fehlgeschlagen"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs payment cancellation request failed"
-msgstr ""
+msgstr "Zahlungsstornierungsanfrage von Pine Labs fehlgeschlagen"
 
 #. module: pos_pine_labs
 #: model:ir.model,name:pos_pine_labs.model_pos_payment_method
@@ -151,11 +156,14 @@ msgid ""
 "https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
 "request-for-Void-ICB-on-UPI-transaction"
 msgstr ""
+"Während des Rückerstattungsprozesses erforderlich: "
+"https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
+"request-for-Void-ICB-on-UPI-transaction"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
 msgid "Test Pine Labs transaction process."
-msgstr ""
+msgstr "Transaktionsvorgang von Pine Labs testen"
 
 #. module: pos_pine_labs
 #. odoo-python
@@ -164,6 +172,8 @@ msgid ""
 "The expected error code for the Pine Labs POS status request was not "
 "included in the response."
 msgstr ""
+"Der erwartete Fehlercode für die Anfrage des Kassenstatus von Pine Labs war "
+"nicht in der Antwort enthalten."
 
 #. module: pos_pine_labs
 #. odoo-python
@@ -180,4 +190,4 @@ msgstr "Transaktion wegen Inaktivität fehlgeschlagen"
 #. module: pos_pine_labs
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__upi
 msgid "Upi"
-msgstr ""
+msgstr "UPI"
