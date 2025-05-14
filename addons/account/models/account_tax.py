@@ -113,10 +113,10 @@ class AccountTax(models.Model):
         string="Replaces",
         domain="""[
             ('type_tax_use', '=', type_tax_use),
-            ('id', '!=', id),
             ('is_domestic', '=', True),
         ]""",
         ondelete='cascade',
+        help="List of taxes to replace when applying any of the stipulated fiscal positions.",
     )
     display_alternative_taxes_field = fields.Boolean(compute='_compute_display_alternative_taxes_field')
     is_domestic = fields.Boolean(compute='_compute_is_domestic', store=True, precompute=True)
