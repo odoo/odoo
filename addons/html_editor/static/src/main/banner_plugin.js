@@ -15,6 +15,7 @@ export class BannerPlugin extends Plugin {
     static id = "banner";
     // sanitize plugin is required to handle `contenteditable` attribute.
     static dependencies = ["baseContainer", "history", "dom", "emoji", "selection", "sanitize"];
+    static shared = ["insertBanner"];
     resources = {
         user_commands: [
             {
@@ -91,7 +92,10 @@ export class BannerPlugin extends Plugin {
         });
     }
 
-    insertBanner(title, emoji, alertClass) {
+    insertBanner(title, emoji, alertClass, containerClass = "", contentClass = "") {
+        containerClass = containerClass ? `${containerClass} ` : "";
+        contentClass = contentClass ? `${contentClass} ` : "";
+
         const selection = this.dependencies.selection.getEditableSelection();
         const blockEl = closestBlock(selection.anchorNode);
         let baseContainer;
@@ -109,11 +113,11 @@ export class BannerPlugin extends Plugin {
         const baseContainerHtml = baseContainer.outerHTML;
         const bannerElement = parseHTML(
             this.document,
-            `<div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" data-oe-role="status">
+            `<div class="${containerClass}o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" data-oe-role="status">
                 <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="${htmlEscape(
                     title
                 )}">${emoji}</i>
-                <div class="o_editor_banner_content o-contenteditable-true w-100 px-3">
+                <div class="${contentClass}o_editor_banner_content o-contenteditable-true w-100 px-3">
                     ${baseContainerHtml}
                 </div>
             </div>`
