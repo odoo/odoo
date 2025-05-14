@@ -3,8 +3,10 @@
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, html2plaintext, plaintext2html
+from odoo.tools.mimetypes import get_extension
 
 from markupsafe import Markup
+import json
 
 
 class DiscussChannel(models.Model):
@@ -353,6 +355,20 @@ class DiscussChannel(models.Model):
         })
         mail.send()
 
+    def _get_attachment_data(self, attachment):
+        file_extension = get_extension(attachment.display_name)
+        attachment_data = {
+            "id": attachment.id,
+            "extension": file_extension.lstrip("."),
+            "mimetype": attachment.mimetype,
+            "filename": attachment.display_name,
+            "url": attachment.url,
+        }
+        return self.env["ir.qweb"]._render(
+            "im_livechat.attachment_template",
+            {"props": json.dumps({"fileData": attachment_data})},
+        )
+
     def _get_channel_history(self):
         """
         Converting message body back to plaintext for correct data formatting in HTML field.
@@ -372,6 +388,16 @@ class DiscussChannel(models.Model):
                 parts.append(Markup("<strong>%s</strong><br/>") % html2plaintext(message.body))
             else:
                 parts.append(Markup("%s<br/>") % html2plaintext(message.body))
+            for attachment in message.attachment_ids:
+                if attachment.mimetype.startswith("image/"):
+                    parts.append(
+                        Markup(
+                            '<img src="/web/content/%s" alt="%s" style="max-width: 75%%; height: auto; padding: 5px;"><br>'
+                        )
+                        % (attachment.id, attachment.name)
+                    )
+                else:
+                    parts.append(Markup("%s<br/>") % self._get_attachment_data(attachment))
             last_msg_from_chatbot = message.author_id == chatbot_op
         return Markup("").join(parts)
 
