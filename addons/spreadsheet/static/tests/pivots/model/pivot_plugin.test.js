@@ -2063,7 +2063,7 @@ test("Can change display type of a measure", async function () {
     });
     // prettier-ignore
     expect(getFormattedValueGrid(model, "A1:D5")).toEqual({
-        A1: "(#1) Partner Pivot", B1: "xphone",       C1: "xpad",         D1: "Total",
+        A1: "Partner Pivot",      B1: "xphone",       C1: "xpad",         D1: "Total",
         A2: "",                   B2: "Probability",  C2: "Probability",  D2: "Probability",
         A3: "No",                 B3: "",             C3: "15.00",        D3: "15.00",
         A4: "Yes",                B4: "10.00",        C4: "106.00",       D4: "116.00",
@@ -2076,7 +2076,7 @@ test("Can change display type of a measure", async function () {
 
     // prettier-ignore
     expect(getFormattedValueGrid(model, "A1:D5")).toEqual({
-        A1: "(#1) Partner Pivot", B1: "xphone",       C1: "xpad",         D1: "Total",
+        A1: "Partner Pivot",      B1: "xphone",       C1: "xpad",         D1: "Total",
         A2: "",                   B2: "Probability",  C2: "Probability",  D2: "Probability",
         A3: "No",                 B3: "0.00%",        C3: "11.45%",       D3: "11.45%",
         A4: "Yes",                B4: "7.63%",        C4: "80.92%",       D4: "88.55%",
@@ -2092,7 +2092,7 @@ test("Can change display type of a measure", async function () {
 
     // prettier-ignore
     expect(getFormattedValueGrid(model, "A1:D5")).toEqual({
-        A1: "(#1) Partner Pivot", B1: "xphone",       C1: "xpad",         D1: "Total",
+        A1: "Partner Pivot",      B1: "xphone",       C1: "xpad",         D1: "Total",
         A2: "",                   B2: "Probability",  C2: "Probability",  D2: "Probability",
         A3: "No",                 B3: "",             C3: "100.00%",      D3: "100.00%",
         A4: "Yes",                B4: "",             C4: "706.67%",      D4: "773.33%",
