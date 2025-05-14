@@ -8,9 +8,6 @@
             <xpath expr="//group[@name='document_details']" position="attributes">
                 <attribute name="invisible">state == 'pending' and is_process_through_irn or is_sent_through_irn</attribute>
             </xpath>
-            <xpath expr="//group[@name='partners']" position="attributes">
-                <attribute name="invisible">state == 'pending' and is_process_through_irn or is_sent_through_irn</attribute>
-            </xpath>
             <xpath expr="//field[@name='type_id']" position="attributes">
                 <attribute name="required">(
                         (state == 'pending' and not is_process_through_irn) or
