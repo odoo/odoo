@@ -170,6 +170,9 @@ apt-get clean
 localepurge
 rm -rfv /usr/share/doc
 
+# Remove the default nginx website, we have our own config in /etc/nginx/conf.d/
+rm /etc/nginx/sites-enabled/default
+
 pip3 install -r /home/pi/odoo/addons/iot_box_image/configuration/requirements.txt --break-system-package
 
 # Dowload MPD server and library for Six terminals
