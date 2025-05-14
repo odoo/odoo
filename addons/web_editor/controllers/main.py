@@ -228,7 +228,7 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/checklist', type='json', auth='user')
     def update_checklist(self, res_model, res_id, filename, checklistId, checked, **kwargs):
         record = request.env[res_model].browse(res_id)
-        value = filename in record._fields and record[filename]
+        value = filename in record._fields and record.read([filename])[0][filename]
         htmlelem = etree.fromstring("<div>%s</div>" % value, etree.HTMLParser())
         checked = bool(checked)
 
@@ -258,7 +258,7 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/stars', type='json', auth='user')
     def update_stars(self, res_model, res_id, filename, starsId, rating):
         record = request.env[res_model].browse(res_id)
-        value = filename in record._fields and record[filename]
+        value = filename in record._fields and record.read([filename])[0][filename]
         htmlelem = etree.fromstring("<div>%s</div>" % value, etree.HTMLParser())
 
         stars_widget = htmlelem.find(".//span[@id='checkId-%s']" % starsId)
