@@ -56,8 +56,9 @@ test("reconnecting/reconnect event is broadcasted", async () => {
     });
     await waitForSteps(["broadcast connect"]);
     worker.websocket.close(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
+    await waitForSteps(["broadcast disconnect", "broadcast reconnecting"]);
     await runAllTimers();
-    await waitForSteps(["broadcast disconnect", "broadcast reconnecting", "broadcast reconnect"]);
+    await waitForSteps(["broadcast reconnect"]);
 });
 
 test("notification event is broadcasted", async () => {
@@ -85,4 +86,16 @@ test("notification event is broadcasted", async () => {
     await waitForSteps(["broadcast connect"]);
     serverWS.send(JSON.stringify(notifications));
     await waitForSteps(["broadcast notification"]);
+});
+
+test("disconnect event is sent when stopping the worker", async () => {
+    const worker = await startWebSocketWorker((type) => {
+        if (type !== "worker_state_updated") {
+            expect.step(`broadcast ${type}`);
+        }
+    });
+    await expect.waitForSteps(["broadcast connect"]);
+    worker._stop();
+    await runAllTimers();
+    await expect.waitForSteps(["broadcast disconnect"]);
 });

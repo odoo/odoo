@@ -62,13 +62,17 @@ test("notifications not received after stoping the service", async () => {
 });
 
 test("notifications still received after disconnect/reconnect", async () => {
-    addBusServiceListeners(["reconnect", () => asyncStep("reconnect")]);
+    addBusServiceListeners(
+        ["disconnect", () => asyncStep("disconnect")],
+        ["reconnect", () => asyncStep("reconnect")]
+    );
     await makeMockEnv();
     getService("bus_service").addChannel("lambda");
     await waitForChannels(["lambda"]);
     MockServer.env["bus.bus"]._sendone("lambda", "notifType", "beta");
     await waitNotifications(["notifType", "beta"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
+    await waitForSteps(["disconnect"]);
     await runAllTimers();
     await waitForSteps(["reconnect"]);
     MockServer.env["bus.bus"]._sendone("lambda", "notifType", "gamma");
@@ -369,16 +373,17 @@ test("do not reconnect when worker version is outdated", async () => {
     const worker = getWebSocketWorker();
     expect(worker.state).toBe(WORKER_STATE.CONNECTED);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
+    await waitForSteps(["disconnect"]);
     await runAllTimers();
-    await waitForSteps(["disconnect", "reconnect"]);
+    await waitForSteps(["reconnect"]);
     expect(worker.state).toBe(WORKER_STATE.CONNECTED);
     patchWithCleanup(console, { warn: (message) => asyncStep(message) });
     MockServer.env["bus.bus"]._simulateDisconnection(
         WEBSOCKET_CLOSE_CODES.CLEAN,
         "OUTDATED_VERSION"
     );
-    await runAllTimers();
     await waitForSteps(["Worker deactivated due to an outdated version.", "disconnect"]);
+    await runAllTimers();
     stepWorkerActions("start");
     startBusService();
     await runAllTimers();
@@ -399,11 +404,12 @@ test("reconnect on demande after clean close code", async () => {
     await runAllTimers();
     await waitForSteps(["connect"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
-    await runAllTimers();
-    await waitForSteps(["disconnect", "reconnect"]);
-    MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.CLEAN);
-    await runAllTimers();
     await waitForSteps(["disconnect"]);
+    await runAllTimers();
+    await waitForSteps(["reconnect"]);
+    MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.CLEAN);
+    await waitForSteps(["disconnect"]);
+    await runAllTimers();
     startBusService();
     await waitForSteps(["connect"]);
 });
@@ -446,8 +452,8 @@ test("show notification when version is outdated", async () => {
         WEBSOCKET_CLOSE_CODES.CLEAN,
         "OUTDATED_VERSION"
     );
-    await runAllTimers();
     await waitForSteps(["Worker deactivated due to an outdated version.", "disconnect"]);
+    await runAllTimers();
     await waitFor(".o_notification", {
         text: "Save your work and refresh to get the latest updates and avoid potential issues.",
     });
@@ -456,6 +462,7 @@ test("show notification when version is outdated", async () => {
 });
 
 test("subscribe message is sent first", async () => {
+    addBusServiceListeners(["disconnect", () => asyncStep("disconnect")]);
     // Starting the server first, the following patch would be overwritten otherwise.
     await makeMockServer();
     const ogSocket = window.WebSocket;
@@ -478,6 +485,7 @@ test("subscribe message is sent first", async () => {
     getService("bus_service").send("some_event");
     await waitForSteps(["some_event"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.CLEAN);
+    await waitForSteps(["disconnect"]);
     getService("bus_service").send("some_event");
     getService("bus_service").send("some_other_event");
     getService("bus_service").addChannel("channel_1");
@@ -498,8 +506,8 @@ test("worker state is available from the bus service", async () => {
     await waitForSteps(["connect"]);
     expect(getService("bus_service").workerState).toBe(WORKER_STATE.CONNECTED);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.CLEAN);
-    await runAllTimers();
     await waitForSteps(["disconnect"]);
+    await runAllTimers();
     expect(getService("bus_service").workerState).toBe(WORKER_STATE.DISCONNECTED);
     startBusService();
     await waitForSteps(["connect"]);

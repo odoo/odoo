@@ -18,13 +18,17 @@ describe.current.tags("desktop");
 
 test("disconnect during vacuum should ask for reload", async () => {
     browser.location.addEventListener("reload", () => asyncStep("reload"));
-    addBusServiceListeners(["connect", () => asyncStep("connect")]);
+    addBusServiceListeners(
+        ["connect", () => asyncStep("connect")],
+        ["disconnect", () => asyncStep("disconnect")]
+    );
     onRpc("/bus/has_missed_notifications", () => true);
     await mountWithCleanup(WebClient);
     startBusService();
     await runAllTimers();
     await waitForSteps(["connect"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
+    await waitForSteps(["disconnect"]);
     await runAllTimers();
     await waitFor(".o_notification");
     expect(".o_notification_content:first").toHaveText(
