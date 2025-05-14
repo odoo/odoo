@@ -32,7 +32,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
-"                            If you need a Peppol compliant software, we recommend"
+"                                In Belgium, electronic invoicing will be <u>mandatory as of January 2026</u> - don't wait to register."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"<i class=\"text-muted\" style=\"min-width: 590px;\">\n"
+"                            This invoice has also been <b style=\"color: $o-enterprise-action-color\">sent via Peppol</b>.\n"
+"                        </i>"
 msgstr ""
 
 #. module: account_peppol
@@ -78,13 +86,16 @@ msgid ""
 "deregister from that service, or request a migration key before trying "
 "again. "
 msgstr ""
+"Udeleženec s temi podatki je že registriran v omrežju. Če ste se že "
+"registrirali v drugi storitvi Peppol, se pred ponovnim poskusom odjavite iz "
+"te storitve ali zahtevajte ključ za migracijo."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 #, python-format
 msgid "A purchase journal must be used to receive Peppol documents."
-msgstr ""
+msgstr "Za prejem dokumentov Peppol je treba uporabiti dnevnik nakupov."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -114,7 +125,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__is_peppol_journal
 msgid "Account used for Peppol"
-msgstr ""
+msgstr "Račun, ki se uporablja za Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__active
@@ -131,6 +142,7 @@ msgstr ""
 msgid ""
 "By clicking the button below I accept that Odoo may process my e-invoices."
 msgstr ""
+"S klikom na spodnji gumb soglašam, da Odoo lahko obdeluje moje e-račune."
 
 #. module: account_peppol
 #. odoo-python
@@ -158,7 +170,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "Cancel PEPPOL"
-msgstr ""
+msgstr "Prekliči PEPPOL"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -176,19 +188,19 @@ msgstr "Preklicano"
 #: code:addons/account_peppol/models/account_move.py:0
 #, python-format
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
-msgstr ""
+msgstr "Vnosa, ki je bil že poslan na PEPPOL, ni mogoče preklicati."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
 msgid "Cannot receive this format"
-msgstr ""
+msgstr "Te oblike ni mogoče prejeti"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Cannot register a user with a %s application"
-msgstr ""
+msgstr "Uporabnika ni mogoče registrirati z %s aplikacijo"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_validity_last_check
@@ -228,7 +240,7 @@ msgstr "Potrdi"
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Connection error, please try again later."
-msgstr ""
+msgstr "Napaka pri povezavi, poskusite znova pozneje."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -273,7 +285,7 @@ msgstr "Opravljeno"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_user
 msgid "EDI user"
-msgstr ""
+msgstr "EDI uporabnik"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -293,19 +305,12 @@ msgstr "Napaka"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
 msgid "Fetch Peppol invoice status"
-msgstr ""
+msgstr "Pridobi stanje računa Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
 msgid "Fetch from Peppol"
-msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"In Belgium, electronic invoicing will be <u>mandatory as of January "
-"2026</u>."
-msgstr ""
+msgstr "Prinesi iz Peppola"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -317,7 +322,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
-msgstr ""
+msgstr "Dnevnik prejetih računov"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__is_peppol_edi_format
@@ -351,7 +356,7 @@ msgstr "V živo"
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_migration_key
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_migration_key
 msgid "Migration Key"
-msgstr ""
+msgstr "Migracijski ključ"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -372,7 +377,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
 msgid "Not registered"
-msgstr ""
+msgstr "Ni registrirano"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
@@ -387,7 +392,7 @@ msgstr "Ni preverjeno"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
 msgid "Not verified yet"
-msgstr ""
+msgstr "Še ni preverjeno"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -397,7 +402,7 @@ msgstr "Odoo"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
 msgid "PEPPOL"
-msgstr ""
+msgstr "PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__is_account_peppol_participant
@@ -421,7 +426,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_payment__peppol_message_uuid
 msgid "PEPPOL message ID"
-msgstr ""
+msgstr "PEPPOL sporočilo ID"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_move_state
@@ -431,36 +436,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_proxy_state
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_proxy_state
 msgid "PEPPOL status"
-msgstr ""
+msgstr "PEPPOL stanje"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_new_documents_ir_actions_server
 msgid "PEPPOL: retrieve new documents"
-msgstr ""
+msgstr "PEPPOL: pridobivanje novih dokumentov"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_message_status_ir_actions_server
 msgid "PEPPOL: update message status"
-msgstr ""
+msgstr "PEPPOL: posodobi stanje sporočila"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "PEPPOL: update participant status"
-msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
-"invoice on Peppol.</b>"
-msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
-"color\">sent on Peppol</b>."
-msgstr ""
+msgstr "PEPPOL: posodobi status udeleženca"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -470,7 +461,7 @@ msgstr "Nerešeno"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
 msgid "Pending Reception"
-msgstr ""
+msgstr "Čaka na sprejem"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -496,14 +487,14 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
 msgid "Peppol Ready"
-msgstr ""
+msgstr "Peppol Pripravljen"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_journal.py:0
 #, python-format
 msgid "Peppol Ready invoices"
-msgstr ""
+msgstr "Peppol Pripravljeni računi"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_view_tree
@@ -535,24 +526,24 @@ msgstr ""
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol error: %s"
-msgstr ""
+msgstr "Peppol napaka: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
 msgid "Peppol ready invoices"
-msgstr ""
+msgstr "Peppol pripravljeni računi"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
 msgid "Peppol status"
-msgstr ""
+msgstr "Peppol stanje"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol status update: %s"
-msgstr ""
+msgstr "Peppol posodobitev stanja: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -584,40 +575,43 @@ msgid ""
 "For example: +32123456789, where +32 is the country code.\n"
 "Currently, only European countries are supported."
 msgstr ""
+"Prosimo, vnesite mobilno številko v pravilni mednarodni obliki.\n"
+"Na primer: +36841123456, kjer je +368 klicna številka države.\n"
+"Trenutno so podprte samo evropske države."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Please fill in the EAS code and the Participant ID code."
-msgstr ""
+msgstr "Prosimo, izpolnite kodo EAS in kodo ID udeleženca."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 #, python-format
 msgid "Please install the phonenumbers library."
-msgstr ""
+msgstr "Namestite knjižnico telefonskih številk."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Please verify partner configuration in partner settings."
-msgstr ""
+msgstr "Preverite konfiguracijo partnerja v nastavitvah partnerja."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Primary contact email"
-msgstr ""
+msgstr "Glavni kontaktni e-poštni naslov"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Primary contact email for Peppol-related communication"
-msgstr ""
+msgstr "Glavni kontaktni e-poštni naslov za komunikacijo v zvezi s Peppolom"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -627,12 +621,12 @@ msgstr "Vrsta posrednika (Proxy-ja)"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
 msgid "Queued"
-msgstr ""
+msgstr "V čakalni vrsti"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__ready
 msgid "Ready to send"
-msgstr ""
+msgstr "Pripravljeno za pošiljanje"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__is_account_peppol_participant
@@ -707,7 +701,7 @@ msgstr ""
 #: code:addons/account_peppol/models/res_company.py:0
 #, python-format
 msgid "The Peppol endpoint identification number is not correct."
-msgstr ""
+msgstr "Identifikacijska številka končne točke Peppol ni pravilna."
 
 #. module: account_peppol
 #. odoo-python
@@ -721,7 +715,7 @@ msgstr ""
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr ""
+msgstr "Dokument je bil poslan v obdelavo na dostopno točko Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -731,6 +725,8 @@ msgid ""
 "The endpoint number might not be correct. Please check if you entered the "
 "right identification number."
 msgstr ""
+"Številka končne točke morda ni pravilna. Preverite, ali ste vnesli pravilno "
+"identifikacijsko številko."
 
 #. module: account_peppol
 #. odoo-python
@@ -747,7 +743,7 @@ msgstr ""
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr ""
+msgstr "Partnerju manjka identifikator Peppol EAS in/ali končne točke."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_partner__account_peppol_is_endpoint_valid
@@ -818,6 +814,8 @@ msgid ""
 "To generate complete electronic invoices, also set a country for this "
 "partner."
 msgstr ""
+"Za ustvarjanje celotnih elektronskih računov nastavite tudi državo za tega "
+"partnerja."
 
 #. module: account_peppol
 #. odoo-python
@@ -895,7 +893,7 @@ msgstr "Preveri"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.partner_action_verify_peppol
 msgid "Verify Peppol"
-msgstr ""
+msgstr "Preveri Peppol"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -907,7 +905,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify partner's PEPPOL endpoint"
-msgstr ""
+msgstr "Preverite končno točko PEPPOL partnerja"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning
@@ -933,7 +931,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "You will receive a verification code to this mobile number"
-msgstr ""
+msgstr "Na to mobilno številko boste prejeli potrditveno kodo"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -955,4 +953,16 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your registration should be activated within a day."
+msgstr "Vaša registracija bi morala biti aktivirana v enem dnevu."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"to send invoices, but this one <b style=\"color: $o-enterprise-action-"
+"color;\">could not be sent via Peppol</b>."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "uses"
 msgstr ""

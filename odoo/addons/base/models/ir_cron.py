@@ -58,7 +58,7 @@ class ir_cron(models.Model):
     cron_name = fields.Char('Name', compute='_compute_cron_name', store=True)
     user_id = fields.Many2one('res.users', string='Scheduler User', default=lambda self: self.env.user, required=True)
     active = fields.Boolean(default=True)
-    interval_number = fields.Integer(default=1, help="Repeat every x.")
+    interval_number = fields.Integer(default=1, group_operator=None, help="Repeat every x.")
     interval_type = fields.Selection([('minutes', 'Minutes'),
                                       ('hours', 'Hours'),
                                       ('days', 'Days'),
@@ -68,7 +68,7 @@ class ir_cron(models.Model):
     doall = fields.Boolean(string='Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts.")
     nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
-    priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
+    priority = fields.Integer(default=5, group_operator=None, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
 
     @api.depends('ir_actions_server_id.name')
     def _compute_cron_name(self):

@@ -211,6 +211,9 @@ class StockMove(models.Model):
     def _prepare_move_split_vals(self, uom_qty):
         vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
         vals['purchase_line_id'] = self.purchase_line_id.id
+        # when backordering an mto move link the bakcorder to the purchase order
+        if self.procure_method == 'make_to_order' and self.created_purchase_line_ids:
+            vals['created_purchase_line_ids'] = [Command.set(self.created_purchase_line_ids.ids)]
         return vals
 
     def _clean_merged(self):

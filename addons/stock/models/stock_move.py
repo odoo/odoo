@@ -1378,7 +1378,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         # create procurements for make to order moves
         procurement_requests = []
-        for move in move_create_proc:
+        for move in move_create_proc if not self.env.context.get('bypass_procurement_creation') else self.env['stock.move']:
             values = move._prepare_procurement_values()
             origin = move._prepare_procurement_origin()
             procurement_requests.append(self.env['procurement.group'].Procurement(
@@ -1916,7 +1916,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
             # The backorder moves are not yet in their own picking. We do not want to check entire packs for those
             # ones as it could messed up the result_package_id of the moves being currently validated
-            backorder_moves.with_context(bypass_entire_pack=True)._action_confirm(merge=False)
+            backorder_moves.with_context(bypass_entire_pack=True, bypass_procurement_creation=True)._action_confirm(merge=False)
         moves_todo.mapped('move_line_ids').sorted()._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
