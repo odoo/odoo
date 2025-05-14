@@ -37,7 +37,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     )
     scanned_sku = fields.Char(
         string="Scan Product SKU",
-        help="Scan each SKU barcode.  The wizard updates the corresponding line automatically.",
+        help="Scan SKU or barcode. The system will match the product automatically.",
     )
     picking_id = fields.Many2one('stock.picking', string='Dummy Picking')
     site_code_id = fields.Many2one('site.code.configuration', string='Site Code', store=True)
@@ -216,28 +216,148 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "Please create a default package type before continuing."
         ))
 
+    # @api.onchange("scanned_sku")
+    # def _onchange_scanned_sku(self):
+    #     """Handle every product-barcode scan."""
+    #     self.ensure_one()
+    #     sku = (self.scanned_sku or "").strip()
+    #     if not sku:
+    #         return
+    #
+    #     matching_lines = self.line_ids.filtered(lambda l: l.product_id.default_code == sku)
+    #     if not matching_lines:
+    #         raise ValidationError(_("Scanned SKU '%s' is not in this tote.") % sku)
+    #
+    #     line = matching_lines.filtered(lambda l: l.quantity == 0 and not l.line_added).sorted(
+    #         key=lambda l: not l.product_package_number
+    #     )
+    #
+    #     if not line:
+    #         raise ValidationError(_("All units of SKU '%s' have already been scanned.") % sku)
+    #
+    #     line = line[0]
+    #
+    #     # Prevent reprocessing
+    #     if line.api_payload_attempted:
+    #         _logger.warning(f"[SKIP] Payload already attempted for SKU {sku}. Skipping resend.")
+    #         return
+    #
+    #     if not line.product_package_number:
+    #         line.product_package_number = self.next_package_number
+    #
+    #     if len(self.picking_ids) > 1:  # MULTI-PICK
+    #         if self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE":
+    #             _logger.info("[LEGACY] Skipping OneTraker call and triggering legacy multi-pick payload.")
+    #
+    #             if any(l.api_payload_success for l in self.line_ids):
+    #                 _logger.info("[LEGACY] Legacy payload already sent — skipping.")
+    #                 return
+    #
+    #             # Mark line as scanned BEFORE preparing payload
+    #             line.scanned = True
+    #             line.quantity = 1
+    #             line.remaining_quantity = 0
+    #             line.available_quantity = 1
+    #             line.line_added = True
+    #
+    #             try:
+    #                 payload = self._prepare_old_logic_payload_multi_picks()
+    #                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
+    #                 api_url = (
+    #                     "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders"
+    #                     if is_production else
+    #                     "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
+    #                 )
+    #                 self.send_payload_to_api(api_url, payload)
+    #
+    #                 for l in self.line_ids:
+    #                     l.api_payload_success = True
+    #                     l.line_added = True
+    #                     l.scanned = True
+    #                     l.quantity = 1
+    #                     l.remaining_quantity = 0
+    #
+    #                 return {
+    #                     'warning': {
+    #                         'title': _("Success"),
+    #                         'message': _("Legacy label printed successfully."),
+    #                         'type': 'notification'
+    #                     }
+    #                 }
+    #             except Exception as e:
+    #                 _logger.error(f"[LEGACY] Failed to send legacy payload: {str(e)}")
+    #                 raise UserError(_("Legacy label failed:\n%s") % str(e))
+    #
+    #         # MULTI-PICK - OneTraker (non-Stonehive)
+    #         config = self.get_onetraker_config()
+    #         try:
+    #             success = self.send_payload_to_onetraker(self.env, line.picking_id, [line], config)
+    #             line.api_payload_attempted = True
+    #             if success:
+    #                 line.update({
+    #                     "api_payload_success": True,
+    #                     "line_added": True,
+    #                     "quantity": 1,
+    #                     "available_quantity": 1,
+    #                     "remaining_quantity": 0,
+    #                     "scanned": True,
+    #                     "product_package_number": line.product_package_number or self.next_package_number
+    #                 })
+    #             else:
+    #                 raise UserError(_("Failed to send label for SKU %s.") % sku)
+    #         except Exception as e:
+    #             raise UserError(_("Error while sending label for SKU %s:\n%s") % (sku, str(e)))
+    #
+    #     else:  # SINGLE PICK
+    #         line.quantity = 1
+    #         line.available_quantity = 1
+    #         line.remaining_quantity = 0
+    #         line.line_added = True
+    #         line.scanned = True
+    #
+    #     # Track last scanned line
+    #     self.last_scanned_line_id = line
+    #     self.scanned_sku = False
+
     @api.onchange("scanned_sku")
     def _onchange_scanned_sku(self):
-        """Handle every product-barcode scan."""
+        """Handle scanned barcode or SKU (multi-barcode aware)."""
         self.ensure_one()
-        sku = (self.scanned_sku or "").strip()
-        if not sku:
+
+        scanned_input = (self.scanned_sku or "").strip()
+        if not scanned_input:
             return
 
-        matching_lines = self.line_ids.filtered(lambda l: l.product_id.default_code == sku)
+        # 1. Try exact match on product.product (barcode or SKU)
+        product = self.env['product.product'].search([
+            '|',
+            ('barcode', '=', scanned_input),
+            ('default_code', '=', scanned_input)
+        ], limit=1)
+
+        # 2. Try multi-barcode table if not found
+        if not product:
+            multi_barcode = self.env['product.barcode.multi'].search([('name', '=', scanned_input)], limit=1)
+            if multi_barcode and multi_barcode.product_id:
+                product = multi_barcode.product_id
+
+        if not product:
+            _logger.warning(f"No product found for scanned code: {scanned_input}")
+            raise ValidationError(_("No product found for scanned code: %s") % scanned_input)
+
+        sku = product.default_code
+        matching_lines = self.line_ids.filtered(lambda l: l.product_id == product)
         if not matching_lines:
             raise ValidationError(_("Scanned SKU '%s' is not in this tote.") % sku)
 
         line = matching_lines.filtered(lambda l: l.quantity == 0 and not l.line_added).sorted(
             key=lambda l: not l.product_package_number
         )
-
         if not line:
             raise ValidationError(_("All units of SKU '%s' have already been scanned.") % sku)
 
         line = line[0]
 
-        # Prevent reprocessing
         if line.api_payload_attempted:
             _logger.warning(f"[SKIP] Payload already attempted for SKU {sku}. Skipping resend.")
             return
@@ -247,13 +367,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         if len(self.picking_ids) > 1:  # MULTI-PICK
             if self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE":
-                _logger.info("[LEGACY] Skipping OneTraker call and triggering legacy multi-pick payload.")
-
+                _logger.info("[LEGACY] Triggering legacy multi-pick payload...")
                 if any(l.api_payload_success for l in self.line_ids):
-                    _logger.info("[LEGACY] Legacy payload already sent — skipping.")
+                    _logger.info("[LEGACY] Payload already sent — skipping.")
                     return
 
-                # Mark line as scanned BEFORE preparing payload
                 line.scanned = True
                 line.quantity = 1
                 line.remaining_quantity = 0
@@ -262,10 +380,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
                 try:
                     payload = self._prepare_old_logic_payload_multi_picks()
-                    is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
+                    is_prod = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
                     api_url = (
                         "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders"
-                        if is_production else
+                        if is_prod else
                         "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
                     )
                     self.send_payload_to_api(api_url, payload)
@@ -285,10 +403,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         }
                     }
                 except Exception as e:
-                    _logger.error(f"[LEGACY] Failed to send legacy payload: {str(e)}")
+                    _logger.error(f"[LEGACY] Payload failed: {str(e)}")
                     raise UserError(_("Legacy label failed:\n%s") % str(e))
 
-            # MULTI-PICK - OneTraker (non-Stonehive)
+            # MULTI-PICK - OneTraker
             config = self.get_onetraker_config()
             try:
                 success = self.send_payload_to_onetraker(self.env, line.picking_id, [line], config)
@@ -315,7 +433,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             line.line_added = True
             line.scanned = True
 
-        # Track last scanned line
         self.last_scanned_line_id = line
         self.scanned_sku = False
 
