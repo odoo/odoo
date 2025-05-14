@@ -385,12 +385,12 @@ describe("Selection collapsed", () => {
             test("should keep the list-style when add li", async () => {
                 await testEditor({
                     contentBefore: unformat(`
-                            <ul>
+                            <ul style="font-size: 14px; font-family: sans-serif;">
                                 <li style="list-style: cambodian;">a[]</li>
                             </ul>`),
                     stepFunction: splitBlock,
                     contentAfter: unformat(`
-                        <ul style="padding-inline-start: 36px;">
+                        <ul style="font-size: 14px; font-family: sans-serif; padding-inline-start: 36px;">
                             <li style="list-style: cambodian;">a</li>
                             <li style="list-style: cambodian;">[]<br></li>
                         </ul>`),
