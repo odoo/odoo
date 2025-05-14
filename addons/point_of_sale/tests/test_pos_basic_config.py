@@ -833,7 +833,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             self.assertEqual(len(cm.output), 4)
             self.assertEqual(cm.output[0], f"INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 started for PoS orders references: [{order_log_str}]")
             self.assertTrue(cm.output[1].startswith(f'DEBUG:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 processing order {order_log_str} order full data: '))
-            self.assertEqual(cm.output[2], f'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 order {order_log_str} pos.order #{odoo_order_id}')
+            self.assertEqual(cm.output[2], f'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 order {order_log_str} created pos.order #{odoo_order_id}')
             self.assertEqual(cm.output[3], 'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 finished')
             
         session.post_closing_cash_details(amount_paid)
@@ -1297,3 +1297,23 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(pos_orders.account_move.amount_total, round(sum(pos_orders.mapped('amount_total')), 2))
         self.assertEqual(pos_orders.account_move.payment_state, 'paid')
         self.assertEqual(pos_orders.account_move.state, 'posted')
+
+    def test_double_syncing_same_order(self):
+        """ Test that double syncing the same order doesn't create duplicates records
+        """
+        self.open_new_session()
+
+        # Create an order
+        order_data = self.create_ui_order_data([(self.product1, 1)], payments=[(self.cash_pm1, 10)], customer=self.customer, is_invoiced=True)
+        order_data['access_token'] = '0123456789'
+        res = self.env['pos.order'].sync_from_ui([order_data])
+        order_id = res['pos.order'][0]['id']
+
+        # Sync the same order again
+        res = self.env['pos.order'].sync_from_ui([order_data])
+        self.assertEqual(res['pos.order'][0]['id'], order_id, 'Syncing the same order should not create a new one')
+
+        order = self.env['pos.order'].browse(order_id)
+        self.assertEqual(order.picking_count, 1, 'Order should have one picking')
+        self.assertEqual(len(order.payment_ids), 1, 'Order should have one payment')
+        self.assertEqual(self.env['account.move'].search_count([('pos_order_ids', 'in', order.ids)]), 1, 'Order should have one invoice')
