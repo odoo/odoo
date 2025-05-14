@@ -118,6 +118,8 @@ class Pricelist(models.Model):
         :rtype: float
         """
         self and self.ensure_one()  # self is at most one record
+        if not product:
+            return {}
         return self._compute_price_rule(product, *args, **kwargs)[product.id][0]
 
     def _get_product_price_rule(self, product, *args, **kwargs):
