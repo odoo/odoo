@@ -79,14 +79,20 @@ def download_odoo_certificate():
             timeout=5,
         )
         response.raise_for_status()
-        result = response.json().get('result', {})
+        response_body = response.json()
     except (requests.exceptions.RequestException, ValueError):
         _logger.exception("An error occurred while trying to reach odoo.com")
         return None
 
-    error = result.get('error')
-    if error:
-        _logger.warning("Error received from odoo.com while trying to get the certificate: %s", error)
+    server_error = response_body.get('error')
+    if server_error:
+        _logger.error("Server error received from odoo.com while trying to get the certificate: %s", server_error)
+        return None
+
+    result = response_body.get('result', {})
+    certificate_error = result.get('error')
+    if certificate_error:
+        _logger.warning("Error received from odoo.com while trying to get the certificate: %s", certificate_error)
         return None
 
     update_conf({'subject': result['subject_cn']})
