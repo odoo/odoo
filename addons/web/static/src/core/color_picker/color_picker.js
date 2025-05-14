@@ -56,6 +56,7 @@ export class ColorPicker extends Component {
         colorPrefix: { type: String },
         noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
+        className: { type: String, optional: true },
     };
     static defaultProps = {
         close: () => {},

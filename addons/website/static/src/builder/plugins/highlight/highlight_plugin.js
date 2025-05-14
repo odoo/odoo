@@ -12,6 +12,7 @@ import { removeStyle } from "@html_editor/utils/dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { omit } from "@web/core/utils/objects";
 import { getCurrentTextHighlight } from "@website/js/highlight_utils";
+import { isCSSColor, rgbaToHex } from "@web/core/utils/colors";
 
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
@@ -32,6 +33,7 @@ export class HighlightPlugin extends Plugin {
                     previewHighlightStyle: this.previewHighlightStyle.bind(this),
                     revertHighlightStyle: this.revertHighlightStyle.bind(this),
                     getHighlightState: () => this.highlightState,
+                    getUsedCustomColors: this.getUsedCustomColors.bind(this),
                 },
             },
         ],
@@ -148,6 +150,18 @@ export class HighlightPlugin extends Plugin {
     revertHighlightStyle() {
         this.previewableApplyHighlightStyle.revert();
     }
+    getUsedCustomColors() {
+        const highlights = this.editable.querySelectorAll(".o_text_highlight");
+        const usedCustomColors = new Set();
+        for (const highlight of highlights) {
+            const style = getComputedStyle(highlight);
+            const color = style.getPropertyValue("--text-highlight-color");
+            if (isCSSColor(color)) {
+                usedCustomColors.add(rgbaToHex(color).toLowerCase());
+            }
+        }
+        return usedCustomColors;
+    }
 }
 registry.category("website-plugins").add(HighlightPlugin.id, HighlightPlugin);
 
@@ -178,10 +192,11 @@ class HighlightToolbarButton extends Component {
         previewHighlightStyle: Function,
         revertHighlight: Function,
         revertHighlightStyle: Function,
+        getUsedCustomColors: Function,
         title: String,
     };
     static template = xml`
-        <button t-ref="root" class="btn btn-light" t-on-click="openHighlightConfigurator">
+        <button t-ref="root" class="btn btn-light o-select-highlight" t-on-click="openHighlightConfigurator" t-att-title="props.title">
             <i class="fa oi oi-text-effect oi-fw py-1"/>
         </button>
     `;
