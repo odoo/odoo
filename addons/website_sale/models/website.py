@@ -327,8 +327,6 @@ class Website(models.Model):
                 })
             except AccessError:
                 logger.warning("API is unreachable for the category generation")
-            if not response:
-                logger.warning("API response is empty for the categories generation")
                 return None
 
             if response['status'] == 'success':
