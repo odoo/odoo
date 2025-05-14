@@ -201,7 +201,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         wizard.sending_methods = ['peppol']
         wizard.action_send_and_print()
-        self.assertEqual(self._get_mail_message(move).preview, 'The document has been sent to the Peppol Access Point for processing')
+        self.assertEqual(self._get_mail_message(move).preview, 'The document has been sent to Peppol for processing')
 
     def test_send_peppol_alerts_not_valid_partner(self):
         move = self.create_move(self.invalid_partner)
