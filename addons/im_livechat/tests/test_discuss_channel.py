@@ -1,5 +1,7 @@
 from datetime import timedelta
 from freezegun import freeze_time
+from markupsafe import Markup
+import json
 
 from odoo import Command, fields
 from odoo.tests import new_test_user, tagged
@@ -203,6 +205,18 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
 
     def test_livechat_conversation_history(self):
         """Test livechat conversation history formatting"""
+        def _convert_attachment_to_html(attachment):
+            attachment_data = {
+                "id": attachment.id,
+                "extension": "txt",
+                "mimetype": attachment.mimetype,
+                "filename": attachment.display_name,
+                "url": attachment.url,
+            }
+            return Markup(
+                "<div data-embedded='file' data-oe-protected='true' contenteditable='false' data-embedded-props='%s'/>",
+            ) % json.dumps({"fileData": attachment_data})
+
         self.authenticate(self.operators[0].login, self.password)
         channel = self.env["discuss.channel"].create(
             {
@@ -213,7 +227,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
                     Command.create({"partner_id": self.operators[0].partner_id.id}),
                     Command.create({"partner_id": self.visitor_user.partner_id.id}),
                 ],
-            }
+            },
         )
         attachment1 = self.env["ir.attachment"].create({"name": "test.txt"})
         attachment2 = self.env["ir.attachment"].with_user(self.visitor_user).create({"name": "test2.txt"})
@@ -222,7 +236,14 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         channel.with_user(self.visitor_user).message_post(body="Visitor Here")
         channel.with_user(self.visitor_user).message_post(body="", attachment_ids=[attachment2.id])
         channel_history = channel._get_channel_history()
-        self.assertEqual(channel_history, 'Operator Here<br/>Visitor Here<br/>')
+        self.assertEqual(
+            channel_history,
+            "Operator Here<br/>%(attachment_1)s<br/>Visitor Here<br/>%(attachment_2)s<br/>"
+            % {
+                "attachment_1": _convert_attachment_to_html(attachment1),
+                "attachment_2": _convert_attachment_to_html(attachment2),
+            },
+        )
 
     def test_gc_bot_sessions_after_one_day_inactivity(self):
         chatbot_script = self.env["chatbot.script"].create({"title": "Testing Bot"})
