@@ -218,7 +218,7 @@ class AccountMoveSend(models.AbstractModel):
                     invoice.peppol_message_uuid = message['message_uuid']
                     invoice.peppol_move_state = 'processing'
                     invoices |= invoice
-                log_message = _('The document has been sent to the Peppol Access Point for processing')
+                log_message = _('The document has been sent to Peppol for processing')
                 invoices._message_log_batch(bodies={invoice.id: log_message for invoice in invoices})
                 self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
 
