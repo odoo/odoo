@@ -16,6 +16,7 @@ export class SnippetViewer extends Component {
     static props = {
         state: { type: Object },
         selectSnippet: { type: Function },
+        hasSearchResults: Function,
         snippetModel: { type: Object },
     };
 
@@ -74,6 +75,11 @@ export class SnippetViewer extends Component {
                 columns[1].push(snippets[index]);
             }
         }
+        let numResults = 0;
+        for (const column of columns) {
+            numResults += column.length;
+        }
+        this.props.hasSearchResults(numResults > 0);
         return columns;
     }
 

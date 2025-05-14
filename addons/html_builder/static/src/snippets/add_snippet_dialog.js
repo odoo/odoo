@@ -17,14 +17,17 @@ export class AddSnippetDialog extends Component {
 
     setup() {
         this.iframeRef = useRef("iframe");
-
         this.state = useState({
             search: "",
             groupSelected: this.props.selectedSnippet.groupName,
             showIframe: false,
+            hasNoSearchResults: false,
         });
         this.snippetViewerProps = {
             state: this.state,
+            hasSearchResults: (has) => {
+                this.state.hasNoSearchResults = !has;
+            },
             selectSnippet: (...args) => {
                 this.props.selectSnippet(...args);
                 this.props.close();
