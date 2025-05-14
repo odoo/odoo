@@ -1045,8 +1045,14 @@ class PosOrder(models.Model):
                 raise ValidationError(_('You can only refund products from the same order.'))
 
             existing_order = self._get_open_order(order)
-            order_ids.append(self._process_order(order, existing_order or False))
-            _logger.info("PoS synchronisation #%d order %s pos.order #%d", sync_token, order_log_name, order_ids[-1])
+            if existing_order and existing_order.state != 'draft':
+                order_ids.append(existing_order.id)
+                _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)",
+                             sync_token, order_log_name, existing_order, existing_order.state)
+            else:
+                order_ids.append(self._process_order(order, existing_order or False))
+                _logger.info("PoS synchronisation #%d order %s pos.order #%d", sync_token, order_log_name,
+                             order_ids[-1])
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)

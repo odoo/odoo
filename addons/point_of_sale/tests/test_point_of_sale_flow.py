@@ -516,6 +516,11 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'Order should be in paid state.'
         )
 
+        self.assertEqual(
+            len(self.pos_order_pos1.picking_ids),
+            1,
+            'Only 1 Picking should be created for 1 pos order.'
+        )
         # I test that the pickings are created as expected during payment
         # One picking attached and having all the positive move lines in the correct state
         self.assertEqual(
