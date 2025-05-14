@@ -38,7 +38,7 @@ export class GenerateDialog extends Component {
             if (this.props.mode === 'generate') {
                 this.nextSerialCount.el.value = this.props.move.data.product_uom_qty || 2;
                 if (this.props.move.data.has_tracking === 'lot') {
-                    this.totalReceived.el.value = this.props.move.data.quantity;
+                    this.totalReceived.el.value = this.props.move.data.quantity || this.props.move.data.product_uom_qty;
                 }
             }
         });
