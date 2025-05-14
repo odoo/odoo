@@ -60,6 +60,7 @@ msgstr "# Vistas"
 msgid ""
 "%(link_start)sRead the guidelines to know how to gain karma.%(link_end)s"
 msgstr ""
+"%(link_start)sLea las directrices para saber cómo ganar karma.%(link_end)s"
 
 #. module: website_forum
 #. odoo-javascript
@@ -265,6 +266,9 @@ msgid ""
 "class=\"oi oi-arrow-right display-inline-block\"/> Return to questions "
 "list</a>"
 msgstr ""
+"<a class=\"btn-link o_translate_inline\" t-attf-href=\"/forum\"><i "
+"class=\"oi oi-arrow-right display-inline-block\"/> Regresar a la lista de "
+"preguntas</a>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
@@ -274,6 +278,10 @@ msgid ""
 "original-title=\"\" title=\"\" target=\"_blank\">Meet our community "
 "members</a>"
 msgstr ""
+"<a class=\"mb-2 o_translate_inline\" t-attf-"
+"href=\"/profile/users?forum_origin=#{request.httprequest.path}\" data-bs-"
+"original-title=\"\" title=\"\" target=\"_blank\">Conozca a los miembros de "
+"nuestra comunidad</a>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
@@ -672,6 +680,8 @@ msgid ""
 "<i class=\"oi oi-ellipsis-h\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" title=\"More\"/>"
 msgstr ""
+"<i class=\"oi oi-ellipsis-h\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"Más\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -3006,7 +3016,7 @@ msgstr "Re: %s"
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Read: {{0}}"
-msgstr ""
+msgstr "Leer: {{0}}"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_reason_id

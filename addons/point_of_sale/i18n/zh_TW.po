@@ -3075,7 +3075,7 @@ msgstr "額外資訊"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__extra_tax_data
 msgid "Extra Tax Data"
-msgstr ""
+msgstr "額外稅務數據"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__failed_pickings
@@ -4231,12 +4231,12 @@ msgstr "確保您使用的是IoT Box v18.12或更高版本。導航到 %s接受I
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage Printers"
-msgstr ""
+msgstr "管理打印機"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__use_timing
 msgid "Manage orders by time"
-msgstr ""
+msgstr "根據時間管理訂單"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4287,7 +4287,7 @@ msgstr "超過最大值"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_combo__qty_max
 msgid "Maximum number of items to select in the combo."
-msgstr ""
+msgstr "組合內最多可選取的商品數目。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo__qty_max
@@ -9134,6 +9134,12 @@ msgstr "你不可刪除未連結至此操作時段的現金轉移。"
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
 msgstr "您無法在營業點仍處於打開狀態時刪除營業點類別."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/ir_sequence.py:0
+msgid "You cannot delete a sequence used in an active session: %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

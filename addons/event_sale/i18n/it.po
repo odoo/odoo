@@ -3,9 +3,9 @@
 # 	* event_sale
 # 
 # Translators:
-# Marianna Ciofani, 2025
 # Wil Odoo, 2025
 # Sergio Zanchetta <primes2h@gmail.com>, 2025
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,6 +75,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Consenti più fasce orarie. Le comunicazioni, il numero massimo di "
+"partecipanti e il numero massimo di biglietti registrati sono definiti per "
+"ogni slot invece che per l'intero evento."
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -130,6 +133,8 @@ msgid ""
 "Choose an event slot and it will automatically create a registration for "
 "this event slot."
 msgstr ""
+"Scegli lo slot di un evento e verrà creata automaticamente una registrazione"
+" per quella fascia oraria specifica."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -280,7 +285,7 @@ msgstr "Resoconto vendite evento"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
 msgid "Event Slot"
-msgstr ""
+msgstr "Slot evento"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
@@ -345,7 +350,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
-msgstr ""
+msgstr "Scelta slot non valida \"%(slot_name)s\" per l'evento \"%(event_name)s\"."
 
 #. module: event_sale
 #. odoo-python
@@ -364,7 +369,7 @@ msgstr "Indirizzo fattura"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__is_multi_slots
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Con più slot"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
@@ -601,6 +606,9 @@ msgid ""
 "The sale order line with the product %(product_name)s needs an event, a "
 "ticket and a slot in case the event has multiple time slots."
 msgstr ""
+"Alla riga dell'ordine di vendita con il prodotto %(product_name)s deve "
+"essere associato un evento, un biglietto e uno slot nel caso in cui l'evento"
+" abbia più fasce orarie."
 
 #. module: event_sale
 #. odoo-python
@@ -668,7 +676,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
 msgid "changed from"
-msgstr ""
+msgstr "modificato da"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

@@ -1518,7 +1518,7 @@ msgstr "受信したメッセージを解凍できませんでした。"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The message does not comply with the AS4 policy."
-msgstr ""
+msgstr "メッセージはAS4ポリシーに準拠していません。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1534,6 +1534,7 @@ msgid ""
 "scope or other security policy-level requirements or agreements were not "
 "satisfied."
 msgstr ""
+"プロセッサは、メッセージのセキュリティ・メソッド、パラメータ、スコープ、またはその他のセキュリティポリシーレベルの要件や合意が満たされていないと判断しました。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1548,13 +1549,13 @@ msgstr "ベルギーでの推奨される識別方法は、会社登録番号で
 msgid ""
 "The signature in the Security header intended for the \"ebms\" SOAP actor, "
 "could not be validated by the Security module."
-msgstr ""
+msgstr "セキュリティヘッダー内の \"ebms\" SOAP アクター向けの署名を、セキュリティモジュールで検証できませんでした。 "
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The size of the data part in a fragment message is greater than %s"
-msgstr ""
+msgstr "フラグメント・メッセージのデータ部分のサイズが %sより大きいです。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1562,7 +1563,7 @@ msgstr ""
 msgid ""
 "The structure of a received bundle is not in accordance with the bundling "
 "rules."
-msgstr ""
+msgstr "受信したバンドルの構造がバンドル規則に従っていません。"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -1576,31 +1577,31 @@ msgstr "このユーザーを識別する一意のID、通常vat"
 msgid ""
 "The use of MIME is not consistent with the required usage in this "
 "specification."
-msgstr ""
+msgstr "この仕様で要求されている使用方法と、MIME の使用が一致していません。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "There is no message available for pulling from this MPC at this moment."
-msgstr ""
+msgstr "現在、このMPCから引き出せるメッセージはありません。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "There was an error while sending this invoice via Peppol."
-msgstr ""
+msgstr "Peppolでこの顧客請求書を送信する際にエラーが発生しました。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the Peppol Request"
-msgstr ""
+msgstr "Peppolリクエストでエラーが発生しました。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the incoming message."
-msgstr ""
+msgstr "受信メッセージにエラーがありました。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1608,19 +1609,19 @@ msgstr ""
 msgid ""
 "There was an issue with the Hermes Migration Token Collection Interface "
 "(MTCI)."
-msgstr ""
+msgstr "Hermes 移行トークン収集インターフェース(MTCI)で問題が発生しました。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an issue with the Peppol Participant."
-msgstr ""
+msgstr "Peppol参加者に問題がありました。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "This user is not registered on our Access Point."
-msgstr ""
+msgstr "このユーザは、当社のアクセスポイントに登録されていません。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1629,6 +1630,8 @@ msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
 msgstr ""
+"このユーザーは Peppolユーザではありません。関連付けられている proxy_type は \"peppol\" "
+"である必要があります。Peppol参加者を作成するには、これが必須です。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1646,13 +1649,13 @@ msgstr "完全な電子顧客請求書を作成するには、この取引先の
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unable to verify the digest value."
-msgstr ""
+msgstr "ダイジェスト値を検証できませんでした。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unexpected end of MIME multipart message."
-msgstr ""
+msgstr "MIME マルチパートメッセージが予期せず終了しました。"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1667,7 +1670,7 @@ msgstr "BIS Billing 3.0およびその派生版で使用される一意の識別
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unknown Peppol Error: %s"
-msgstr ""
+msgstr "不明なPeppolエラー: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
@@ -1706,7 +1709,7 @@ msgstr "この情報を持つユーザをサーバ上で見つけることがで
 #. module: account_peppol
 #: model:mail.template,subject:account_peppol.mail_template_peppol_registration
 msgid "Welcome to Peppol"
-msgstr ""
+msgstr "Peppolへようこそ"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1778,7 +1781,7 @@ msgstr "この顧客請求書は、Peppol 経由で電子的に送信するこ�
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You don't have enough credit"
-msgstr ""
+msgstr "クレジットが不足しています"
 
 #. module: account_peppol
 #. odoo-python
@@ -1786,7 +1789,7 @@ msgstr ""
 msgid ""
 "You have reached the limit of documents you can send today. Retry later. "
 "Please contact the support if you think you need to increase that limit."
-msgstr ""
+msgstr "今日送信できるドキュメントの数に達しました。後で再試行してください。送信可能数を増やす必要がある場合は、サポートにお問い合わせください。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1818,7 +1821,7 @@ msgstr "Peppolの登録はまもなく有効化されます。すでに顧客請
 msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
-msgstr ""
+msgstr "貴社はすでに顧客請求書を受け取るためのアクセスポイント(%s)に登録されています。Odooに送信者としてのみ登録します。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1829,7 +1832,7 @@ msgstr "エンドポイント"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
-msgstr ""
+msgstr "あなたのIDはまだこのアクション用に承認されていません。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1856,7 +1859,7 @@ msgstr "登録は1日以内に有効になります。"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your request is still being processed."
-msgstr ""
+msgstr "リクエストはまだ処理中です。"
 
 #. module: account_peppol
 #. odoo-python

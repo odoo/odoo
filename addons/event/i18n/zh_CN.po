@@ -1002,6 +1002,10 @@ msgid ""
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
+"不能在活动时间范围之外安排时段。\n"
+"\n"
+"活动：\t\t%(event_start)s - %(event_end)s\n"
+"时段：\t\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -1010,12 +1014,14 @@ msgid ""
 "A slot end hour must be later than its start hour.\n"
 "%s"
 msgstr ""
+"时段结束时间必须晚于其开始时间。\n"
+"%s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "时段小时必须在 0:00 至 23:59 之间。"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -1144,7 +1150,7 @@ msgid ""
 "Allow multiple time slots. The communications, the maximum number of "
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
-msgstr ""
+msgstr "允许多个时段。为每个时段而不是整个活动定义通信、最多出席人数和最大门票注册数量。"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced

@@ -60,19 +60,19 @@ msgstr "%(event_name)s -  %(attendee_name)s用登録"
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(slot_name)s (残席数:%(count)s )"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (Sold out)"
-msgstr ""
+msgstr "%(slot_name)s (完売)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s:  %(count)s 席足りません"
 
 #. module: event
 #. odoo-python
@@ -206,7 +206,7 @@ msgstr "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -1002,6 +1002,10 @@ msgid ""
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
+"スロットはイベントの時間範囲外にスケジュールできません。\n"
+"\n"
+"イベント:\t\t%(event_start)s - %(event_end)s\n"
+"スロット:\t\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -1010,12 +1014,14 @@ msgid ""
 "A slot end hour must be later than its start hour.\n"
 "%s"
 msgstr ""
+"スロットの終了時間は開始時間より後にしてください。\n"
+"%s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "スロット時間は0から23の間にして下さい。"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -1144,7 +1150,7 @@ msgid ""
 "Allow multiple time slots. The communications, the maximum number of "
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
-msgstr ""
+msgstr "複数のタイムスロットを許可します。通信手段、最大参加者数、最大チケット登録数は、イベント全体ではなく、タイムスロットごとに定義されます。"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -1267,6 +1273,8 @@ msgid ""
 "Attendees\n"
 "                                    <span invisible=\"not is_multi_slots\"> per slot</span>"
 msgstr ""
+"参加者\n"
+"                                    <span invisible=\"not is_multi_slots\">スロットごと</span>"
 
 #. module: event
 #. odoo-javascript
@@ -1851,7 +1859,7 @@ msgstr "イベント共有URL"
 #. module: event
 #: model:ir.model,name:event.model_event_slot
 msgid "Event Slot"
-msgstr ""
+msgstr "イベントスロット"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -2017,7 +2025,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
 #: model:ir.model.fields,help:event.field_event_slot__start_hour
 msgid "Expressed in the event timezone."
-msgstr ""
+msgstr "イベントのタイムゾーンで表示されています。"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -2056,6 +2064,7 @@ msgid ""
 "attendees), above this number the registrations are not accepted. If the "
 "event has multiple slots, this maximum number is applied per slot."
 msgstr ""
+"各イベントには、最大登録可能人数(参加者数)を設定できます。この人数を超える登録は受け付けられません。イベントに複数のスロットがある場合、この最大人数は各スロットに適用されます。"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
@@ -2289,6 +2298,7 @@ msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
 msgstr ""
+"通知の送信タイミングを指定します。イベントに複数のスロットがある場合、この間隔はイベント全体ではなく、それぞれのスロットに対して適用されます。 "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2311,7 +2321,7 @@ msgstr "間隔"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / slot choice"
-msgstr ""
+msgstr "無効なイベント/チケット選択"
 
 #. module: event
 #. odoo-python
@@ -2333,7 +2343,7 @@ msgstr "利用可能か"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "複数スロットイベント"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -2354,7 +2364,7 @@ msgstr "フォロー中　"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "複数スロット"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -2566,7 +2576,7 @@ msgstr "メール送信"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
 msgid "Mail Slot"
-msgstr ""
+msgstr "メールスロット"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2624,7 +2634,7 @@ msgstr "最大席数"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum per slot"
-msgstr ""
+msgstr "スロットごとの上限"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -2653,7 +2663,7 @@ msgstr "月"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Multiple Slots"
-msgstr ""
+msgstr "複数スロット"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3323,18 +3333,18 @@ msgstr "スロット"
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "スロットメールスケジューラ"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
-msgstr ""
+msgstr "複数スロットイベントでは、スロットの選択は必須です。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
 msgid "Slot-based communication"
-msgstr ""
+msgstr "スロット単位の通知"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_slot_from_event
@@ -3343,12 +3353,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Slots"
-msgstr ""
+msgstr "スロット"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
 msgid "Slots Count"
-msgstr ""
+msgstr "スロット数"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -3361,7 +3371,7 @@ msgstr "完売"
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_source_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Source"
-msgstr "情報源"
+msgstr "発生元"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__specific_question_ids
@@ -3542,6 +3552,8 @@ msgid ""
 "The following slots cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
+"以下のスロットは、1つ以上の登録がリンクされている間は削除できません:\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -3567,7 +3579,7 @@ msgstr "停止日を開始日より早くすることはできません。チケ
 msgid ""
 "There are more registrations than this limit, the event will be sold out and"
 " the extra registrations will remain."
-msgstr ""
+msgstr "この上限を超える登録がある場合、イベントは満席(完売)となり、超過分の登録は残ったままになります。"
 
 #. module: event
 #. odoo-python
@@ -3576,6 +3588,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"以下の席数が不足しています: %(event_name)s:\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
@@ -3597,6 +3611,8 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"これらのイベントは、時間範囲外の枠を設定することはできません:\n"
+"%(event_names)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
@@ -3739,7 +3755,7 @@ msgstr "参加者合計"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Total Registration"
-msgstr ""
+msgstr "合計登録数"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3830,7 +3846,7 @@ msgstr "今後 / 実施中"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "登録数の上限を更新しますか?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -3937,7 +3953,7 @@ msgstr "このチケットは空席がありません。"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "このスロットの席が満席かどうか。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form

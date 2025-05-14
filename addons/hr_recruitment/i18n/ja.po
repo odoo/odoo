@@ -1569,7 +1569,7 @@ msgstr "Eメールを作成"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_get_refuse_reason
 msgid "Get Refuse Reason"
-msgstr "不採用理由を入手"
+msgstr "不採用理由の選択"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__1
@@ -2415,7 +2415,7 @@ msgstr "配信エラーが発生されたメッセージ数"
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
-msgstr "Odooは各候補者の選考状況を追跡し、管理作業や面談・面接の設定など全てのオペレーションをサポートします。"
+msgstr "Odooは各候補者の選考状況を追跡し、管理作業や面談・面接の設定など全ての処理をサポートします。"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
@@ -2706,18 +2706,18 @@ msgstr "拒否日"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_refuse_reason_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Refuse Reason"
-msgstr "不採用事由"
+msgstr "不採用理由"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_refuse_reason
 msgid "Refuse Reason of Applicant"
-msgstr "候補者の不採用事由"
+msgstr "応募者の不採用理由"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_applicant_refuse_reason
 msgid "Refuse Reasons"
-msgstr "不採用事由"
+msgstr "不採用理由"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
@@ -2874,7 +2874,7 @@ msgstr "候補者を探す"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_view_search
 msgid "Search Source"
-msgstr "ソースの検索"
+msgstr "発生元の検索"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -2983,22 +2983,22 @@ msgstr "単一応募者Eメール"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__source_id
 msgid "Source"
-msgstr "情報源"
+msgstr "応募元"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr "応募者の情報源"
+msgstr "応募者の応募元"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm_sources
 msgid "Sources"
-msgstr "ソース"
+msgstr "応募元"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
-msgstr "応募者の情報源"
+msgstr "応募者の応募元"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -3155,7 +3155,7 @@ msgid ""
 "they can refuse him. You don't need to have Recruitment rights to be set as "
 "an interviewer."
 msgstr ""
-"求人ポジションに設定された面接者は、応募者全員を見ることができます。面接者は応募者の情報、添付ファイル、ミーティング管理へのアクセスが可能で、応募者を拒否することもできます。面接者として設定されるのに、採用権を持っている必要はありません。"
+"求人ポジションに面接官として設定されている従業員は、そのポジションに応募したすべての候補者を閲覧できます。候補者の情報、添付ファイル、面接の管理にアクセスでき、不採用にすることも可能です。面接官として設定されるために採用権限を持っている必要はありません。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__user_id
@@ -3253,7 +3253,7 @@ msgstr "これは、Fall_Drive、Christmas_Specialなど、さまざまなキャ
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr "これはリンクのソースです。たとえば、検索エンジン、別のドメイン、またはメーリングリストの名前です。"
+msgstr "これはリンクの応募元です。たとえば、検索エンジン、別のドメイン、またはメーリングリストの名前です。"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3436,7 +3436,7 @@ msgstr "何の求人募集を行いますか？職位を選択して下さい。
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_refuse
 msgid "When you refuse an application, you can choose this template"
-msgstr "応募を拒否するとき、このテンプレートを選択できます。"
+msgstr "応募者を不採用にするとき、このテンプレートを選択できます。"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -3492,7 +3492,7 @@ msgid ""
 "You cannot delete these UTM Sources as they are linked to the following recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
-"これらのUTMソースは採用における以下の採用ソースにリンクされているため、削除することはできません:\n"
+"これらのUTMソースは採用における以下の採用応募元にリンクされているため、削除することはできません:\n"
 "%(recruitment_sources)s"
 
 #. module: hr_recruitment

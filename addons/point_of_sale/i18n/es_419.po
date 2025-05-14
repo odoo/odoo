@@ -3,8 +3,8 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Wil Odoo, 2025
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Fernanda Alvarez, 2025
 # 
 msgid ""
@@ -2265,7 +2265,7 @@ msgstr "Crear facturas"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "Create Lot/Serial number..."
-msgstr ""
+msgstr "Crear número de lote o serie..."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2742,7 +2742,7 @@ msgstr "Detalles"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_sequence
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_sequence
 msgid "Determine the display order in the POS Terminal"
-msgstr ""
+msgstr "Determine el orden de visualización en la terminal de PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number_seq_id
@@ -2968,7 +2968,7 @@ msgstr "¿Desea abrir la lista de clientes para seleccionar un cliente? "
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Do you want to retry printing, or download it instead?"
-msgstr ""
+msgstr "¿Desea volver a intentar la impresión o descargarlo mejor?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3537,6 +3537,8 @@ msgstr "Ocultar usar terminal de pago"
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
 msgid "Hide or show the Presets menu in the Point of Sale configuration."
 msgstr ""
+"Ocultar o mostrar el menú de valores preestablecidos en la configuración de "
+"Punto de venta."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4365,7 +4367,7 @@ msgstr "Gestionar impresoras"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__use_timing
 msgid "Manage orders by time"
-msgstr ""
+msgstr "Gestionar órdenes por tiempo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6143,7 +6145,7 @@ msgstr "Preestablecido"
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_preset
 msgid "Preset Menu"
-msgstr ""
+msgstr "Menú de valores preestablecidos"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -7187,7 +7189,7 @@ msgstr "Programar"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Schedule based on"
-msgstr ""
+msgstr "Programar según"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7472,7 +7474,7 @@ msgstr "Establezca varios precios por producto, descuentos automáticos, etc."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set the background image of your customer display"
-msgstr ""
+msgstr "Configurar la imagen de fondo de la pantalla del cliente"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8090,7 +8092,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/product_combo.py:0
 msgid "The free quantity must be smaller or equal to the maximum quantity."
-msgstr ""
+msgstr "La cantidad gratis debe ser menor o igual a la cantidad máxima."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8138,7 +8140,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/product_combo.py:0
 msgid "The maximum quantity of a combo must be greater or equal to 1."
-msgstr ""
+msgstr "La cantidad máxima de un combo debe ser mayor o igual a 1."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8617,7 +8619,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "This operation will destroy all ${"
-msgstr ""
+msgstr "Esta operación destruirá todas las ${"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9464,6 +9466,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/ir_sequence.py:0
+msgid "You cannot delete a sequence used in an active session: %s"
+msgstr "No puede eliminar una secuencia utilizada en una sesión activa: %s"
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "You cannot delete a preset that is linked to a POS configuration."
 msgstr ""
@@ -9524,12 +9532,16 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You don't have the access rights to delete a cash in/out."
 msgstr ""
+"No tiene los permisos de acceso para borrar un depósito o retiro de "
+"efectivo."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You don't have the access rights to get the cash in/out list."
 msgstr ""
+"No tiene los permisos de acceso para obtener la lista de depósitos o retiros"
+" de efectivo"
 
 #. module: point_of_sale
 #. odoo-python

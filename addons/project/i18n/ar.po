@@ -152,6 +152,8 @@ msgid ""
 "<b>Log internal notes</b> and use @<b>mentions</b> to notify your "
 "colleagues."
 msgstr ""
+"<b>قم بتدوين الملاحظات الداخلية</b> واستخدم @<b>الإشارات</b> لإخطار زملائك "
+"في العمل. "
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -258,6 +260,9 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Neutral\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg < 3.66\" title=\"سعيد \"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"محايد \"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg >= 2.33\" title=\"غير سعيد \"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -949,19 +954,19 @@ msgstr "متوسط التقييم (1-5) "
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Happy"
-msgstr ""
+msgstr "متوسط التقييم: سعيد "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Neutral"
-msgstr ""
+msgstr "متوسط التقييم: محايد  "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Unhappy"
-msgstr ""
+msgstr "متوسط التقييم: غير سعيد "
 
 #. module: project
 #. odoo-javascript
@@ -4907,7 +4912,7 @@ msgstr "إلغاء المتابعة"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Unhappy face"
-msgstr ""
+msgstr "وجه غير سعيد "
 
 #. module: project
 #. odoo-python

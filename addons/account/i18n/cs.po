@@ -3,9 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Marta Wacławek, 2025
 # Jiří Podhorecký <jirka.p@volny.cz>, 2025
 # Wil Odoo, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-09 20:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -249,13 +249,13 @@ msgstr "%s (kopie)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%s - private part"
-msgstr ""
+msgstr "%s - soukromá část"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%s - private part (taxes)"
-msgstr ""
+msgstr "%s - soukromá část (daně)"
 
 #. module: account
 #. odoo-python
@@ -649,6 +649,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Vážený/á\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Níže je váš\n"
+"        <t t-if=\"object.name\">\n"
+"            dobropis <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            dobropis\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (s referenčním číslem: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        na částku <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        V případě dotazu nás prosím neváhejte kontaktovat.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -703,6 +734,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Vážený/á\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Níže je vaše\n"
+"        <t t-if=\"object.name\">\n"
+"            faktura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            faktura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (s referenčním číslem: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        na částku <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Tato faktura je již uhrazena\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Prosím proveďte platbu při nejbližší příležitosti.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                V platební referenci použijte prosím tento text: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    na bankovní účet <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br/><br/>\n"
+"            PS: časové výkazy můžete zkontrolovat <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">na portálu.</a>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        V případě dotazu nás prosím neváhejte kontaktovat.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -724,6 +804,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Vážený/á <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Děkujeme za vaši platbu.\n"
+"        Zde je vaše potvrzení platby <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> na částku\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        V případě dotazu nás prosím neváhejte kontaktovat.\n"
+"        <br/><br/>\n"
+"        S pozdravem,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1551,6 +1647,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"Bankovní účet s číslem účtu %(number)s již existuje pro partnera "
+"%(partner)s, ale je archivován. Zrušte jej z archivu."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1570,6 +1668,9 @@ msgid ""
 "                occurring over a given period of time on a credit account. You\n"
 "                should receive this periodically from your bank."
 msgstr ""
+"Úvěrový výpis je souhrn všech finančních transakcí\n"
+"                provedených v daném období na úvěrovým účtu.\n"
+"                Tento výpis byste měli pravidelně dostávat od své banky."
 
 #. module: account
 #. odoo-python
@@ -1626,7 +1727,7 @@ msgstr "Poznámka, jejíž obsah se běžně používá na sekci nebo produkt v�
 msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
-msgstr ""
+msgstr "Platbu s neuhrazeným účtem není možné potvrdit bez účetního záznamu."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -1749,6 +1850,8 @@ msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The"
 " unmerge operation only splits an account based on its companies."
 msgstr ""
+"Účet %s nelze oddělit, protože již patří jedné společnosti. Operace oddělení"
+" pouze rozdělí účet na základě společností, ke kterým patří."
 
 #. module: account
 #. odoo-python
@@ -1861,7 +1964,7 @@ msgstr "Účetní zámek vyjímka"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_map
 msgid "Account Map"
-msgstr ""
+msgstr "Mapa účtu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
@@ -1921,7 +2024,7 @@ msgstr "Účet závazků"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "Zástupný znak pro prefix účtu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -2058,7 +2161,7 @@ msgstr "Jméno majitele účtu, pokud se liší od jména držitele účtu"
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
 msgid "Account merge wizard"
-msgstr ""
+msgstr "Průvodce sloučením účtů"
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard_line
@@ -2123,7 +2226,7 @@ msgstr "Účet, používaný k přeúčtování nákladů za dané období"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__non_deductible_account_id
 msgid "Account used to register the private part of mixed expenses."
-msgstr ""
+msgstr "Účet používaný k evidenci soukromé části smíšených výdajů."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -3056,7 +3159,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Any currency"
-msgstr ""
+msgstr "Jakákoli měna"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__hard_lock_date
@@ -3065,6 +3168,9 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
+"Všechny záznamy do tohoto data včetně budou odloženy na pozdější datum v "
+"souladu s pořadím v deníku. Datum uzávěrky je nevratné a neumožňuje žádnou "
+"výjimku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -3072,6 +3178,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
+"Všechny záznamy do tohoto data včetně budou odloženy na pozdější datum v "
+"souladu s pořadím v deníku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -3080,6 +3188,9 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
+"Všechny záznamy s daněmi do tohoto data včetně budou odloženy na pozdější "
+"datum v souladu s pořadím v deníku. Datum uzávěrky daní se nastaví "
+"automaticky při zaúčtování závěrečného daňového záznamu."
 
 #. module: account
 #. odoo-python
@@ -3103,7 +3214,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Any label"
-msgstr ""
+msgstr "Jakýkoli štítek"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__purchase_lock_date
@@ -3111,6 +3222,8 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Veškeré nákupy zaznamenané před tímto datem včetně budou odloženy na "
+"pozdější datum v souladu s pořadím v deníku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
@@ -3118,6 +3231,8 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Veškeré prodeje zaznamenané před tímto datem včetně budou odloženy na "
+"pozdější datum v souladu s pořadím v deníku."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -15036,6 +15151,8 @@ msgid ""
 "The %(date_field)s (%(date)s) you've entered isn't aligned with the existing sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
 "To maintain date-based sequences, select entries and use the resequence option from the actions menu, available in developer mode."
 msgstr ""
+"%(date_field)s (%(date)s) které jste zadali, není srovnáno s existujícím pořadovým číslem (%(sequence)s). Chtece-li pokračovat, vymažte pořadové číslo.\n"
+"Chcete-li zachovat pořadí podle data, vyberte položky a použijte možnost změnit pořadí v nabídce akcí, která je k dispozici v režimu pro vývojáře."
 
 #. module: account
 #. odoo-python
@@ -15243,6 +15360,8 @@ msgid ""
 "The billing frequency for %(partner_name)s appears unusual. Based on your historical data, the expected next invoice date is not before %(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
+"Frekvence fakturace pro %(partner_name)s se jeví jako neobvyklá. Na základě vašich historických údajů není očekávané datum příští faktury dříve než %(expected_date)s (každých %(mean)s (± %(wiggle)s) dní).\n"
+"Zkontrolujte, zda je toto datum správné."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
@@ -17192,10 +17311,10 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"Používá se ve výkazech pro určení, zda-li se mají použít účetní položky od "
-"začátku času nebo od začátku fiskálního roku. Typy účtů, které by měly být "
-"zresetovány na nulu pro nový fiskální rok (jako náklady, příjmy...), by "
-"neměly mít tuto možnost nastavenu."
+"Používá se ve výkazech k určení, zda se mají zahrnout účetní položky od "
+"začátku času nebo pouze od začátku fiskálního roku. Typy účtů, které by se "
+"měly na začátku nového fiskálního roku vynulovat (např. nákladové a výnosové"
+" účty), by tuto možnost neměly mít aktivní."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence

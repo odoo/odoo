@@ -52,6 +52,21 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    Wenn mehrere Produkte dasselbe Präfix haben, erhalten sie dieselbe Sequenz. Andernfalls wird die Sequenz dem jeweiligen Produkt zugewiesen.\n"
+"\n"
+"    * Legende (für Präfix):\n"
+"    - Aktuelles Jahr mit Jahrhundert: %(year)s\n"
+"    - Aktuelles Jahr ohne Jahrhundert: %(y)s\n"
+"    - Monat: %(month)s\n"
+"    - Tag: %(day)s\n"
+"    - Tag des Jahres: %(doy)s\n"
+"    - Woche des Jahres: %(woy)s\n"
+"    - Tag der Woche (0:Montag): %(weekday)s\n"
+"    - Stunde 00->24: %(h24)s\n"
+"    - Stunde 00->12: %(h12)s\n"
+"    - Minute: %(min)s\n"
+"    - Sekunde: %(sec)s\n"
 
 #. module: stock
 #. odoo-python
@@ -679,7 +694,7 @@ msgstr "<span class=\"o_stat_text\">Los-/Seriennummern</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "<span class=\"o_stat_text\">Lots/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Los-/Seriennummern</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -759,11 +774,13 @@ msgid ""
 "<span class=\"text-muted small\"> Available</span>\n"
 "                            <span> / </span>"
 msgstr ""
+"<span class=\"text-muted small\"> Verfügbar</span>\n"
+"                            <span> / </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span class=\"text-muted small\"> On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\"> Vorrätig</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -866,7 +883,7 @@ msgstr "<strong>Von</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Instructions:</strong>"
-msgstr ""
+msgstr "<strong>Anweisungen:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -2472,7 +2489,7 @@ msgstr "Benutzerdefiniert"
 #: model:ir.model.fields,field_description:stock.field_product_template__serial_prefix_format
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Custom Lot/Serial"
-msgstr ""
+msgstr "Benutzerdefinierte Los-/Seriennummer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -3227,6 +3244,8 @@ msgstr "Los- & Seriennummern in Lieferscheinen anzeigen."
 msgid ""
 "Display instructions tailored to the customer or vendor on stock operations."
 msgstr ""
+"Zeigen Sie auf den Kunden oder Lieferanten angepasste Anweisungen auf "
+"Bestandsvorgängen an."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_level_tree_view_picking
@@ -4403,7 +4422,7 @@ msgstr "Barcode installieren"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Instructions on the Stock Operations"
-msgstr ""
+msgstr "Anweisungen auf Bestandsvorgängen"
 
 #. module: stock
 #. odoo-python
@@ -4475,6 +4494,8 @@ msgid ""
 "Internal instructions for the partner or its parent company as set by the "
 "user."
 msgstr ""
+"Interne Anweisung für den Partner oder die vom Benutzer eingestellten "
+"Muttergesellschaft."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_internal_location_ids
@@ -5672,7 +5693,7 @@ msgstr "Als nächstes erwartet"
 #: model:ir.model.fields,field_description:stock.field_product_product__next_serial
 #: model:ir.model.fields,field_description:stock.field_product_template__next_serial
 msgid "Next Serial"
-msgstr ""
+msgstr "Nächste Serie"
 
 #. module: stock
 #. odoo-python
@@ -5712,6 +5733,8 @@ msgid ""
 "No Stock On Hand. This analysis gives you an overview of the current stock "
 "level of your products."
 msgstr ""
+"Kein vorrätiger Bestand. Diese Analyse gibt Ihnen einen Überblick über den "
+"aktuellen Lagerbestand Ihrer Produkte."
 
 #. module: stock
 #. odoo-javascript
@@ -6542,7 +6565,7 @@ msgstr "Partneradresse"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Partner-Specific Instructions"
-msgstr ""
+msgstr "Partnerspezifische Anweisungen"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
@@ -6594,7 +6617,7 @@ msgstr "Kommissionierung"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_warning_text
 msgid "Picking Instructions"
-msgstr ""
+msgstr "Kommissionieranweisungen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -8362,7 +8385,7 @@ msgstr "Seriennummern"
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_sequence_id
 #: model:ir.model.fields,field_description:stock.field_product_template__lot_sequence_id
 msgid "Serial/Lot Numbers Sequence"
-msgstr ""
+msgstr "Sequenz der Serien-/Losnummern"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -9088,6 +9111,8 @@ msgid ""
 "Technical Field: The Ir.Sequence record that is used to generate serial/lot "
 "numbers for this product"
 msgstr ""
+"Technisches Feld: Der Ir.Sequence-Datensatz, der verwendet wird, um "
+"Serien-/Losnummern für dieses Produkt zu generieren."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -11528,7 +11553,7 @@ msgstr "z. B. Ersatzlager"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "e.g. The delivery area is at the back of the building."
-msgstr ""
+msgstr "z. B. Der Lieferbereich ist an der Rückseite des Gebäudes."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view

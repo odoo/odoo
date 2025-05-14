@@ -435,7 +435,7 @@ msgstr "<strong>セッション開始メモ:</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "<strong>Source Invoice</strong>"
-msgstr "<strong>ソース顧客請求書</strong>"
+msgstr "<strong>参照元顧客請求書</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -3715,7 +3715,7 @@ msgstr "内部メモ"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__interval_time
 msgid "Interval time (in min)"
-msgstr "インターバル時間 (分)"
+msgstr "間隔時間 (分)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4949,12 +4949,12 @@ msgstr "オープニングメモ"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_picking_type_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Operation Type"
-msgstr "オペレーションタイプ"
+msgstr "処理タイプ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr "オペレーションタイプは在庫ダッシュボードに表示されます。"
+msgstr "処理タイプは在庫ダッシュボードに表示されます。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5767,7 +5767,7 @@ msgstr "POSマネージャーグループ"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr "POSオペレーションタイプ"
+msgstr "POS処理タイプ"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -8138,7 +8138,7 @@ msgstr "オーダにチップが追加されました。ただし、選択され
 msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
-msgstr "トランザクションはAdyenによって処理されます。関連する支払い方法でAdyenの認証情報を設定します。"
+msgstr "取引はAdyenによって処理されます。関連する支払い方法でAdyenの認証情報を設定します。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -9131,6 +9131,12 @@ msgstr ""
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
 msgstr "セッションが開いている間は、POSカテゴリを削除することはできません。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/ir_sequence.py:0
+msgid "You cannot delete a sequence used in an active session: %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
