@@ -1,5 +1,5 @@
 import {
-    changeOption,
+    changeOptionInPopover,
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
@@ -15,14 +15,12 @@ registerWebsitePreviewTour("test_parallax", {
 }, () => [
     ...insertSnippet(coverSnippet),
     ...clickOnSnippet(coverSnippet),
-    changeOption("BackgroundOptimize", "we-toggler"),
-    changeOption("BackgroundOptimize", 'we-button[data-gl-filter="blur"]'),
+...changeOptionInPopover("Cover", "Filter", "Blur"),
 {
     content: "Check that the Cover snippet has the Blur filter on its background image",
     trigger: ":iframe .s_cover span[data-gl-filter='blur']",
 },
-    changeOption("Parallax", "we-toggler"),
-    changeOption("Parallax", 'we-button[data-set-parallax-type="none"]'),
+...changeOptionInPopover("Cover", "Parallax", "None"),
 {
     content: "Check that the data related to the filter have been transferred to the new target",
     trigger: ":iframe .s_cover[data-gl-filter='blur']",
@@ -31,8 +29,7 @@ registerWebsitePreviewTour("test_parallax", {
     content: "Check that the 'o_modified_image_to_save' class has been transferred to the new target",
     trigger: ":iframe .s_cover.o_modified_image_to_save",
 },
-    changeOption("Parallax", "we-toggler"),
-    changeOption("Parallax", 'we-button[data-set-parallax-type="fixed"]'),
+...changeOptionInPopover("Cover", "Parallax", "Fixed"),
 {
     content: "Check that the 'o_modified_image_to_save' class has been deleted from the old target",
     trigger: ":iframe .s_cover:not(.o_modified_image_to_save)",
@@ -45,14 +42,12 @@ registerWebsitePreviewTour("test_parallax", {
     content: "Check that the data related to the filter have been transferred to the new target",
     trigger: ":iframe span.s_parallax_bg[data-gl-filter='blur']",
 },
-    changeOption("Parallax", "we-toggler"),
-    changeOption("Parallax", 'we-button[data-set-parallax-type="top"]'),
+...changeOptionInPopover("Cover", "Parallax", "Parallax to Top"),
 {
     content: "Check that the option was correctly applied",
     trigger: ':iframe span.s_parallax_bg[style*=top][style*=bottom][style*=transform]',
 },
-    changeOption("Parallax", "we-toggler"),
-    changeOption("Parallax", 'we-button[data-set-parallax-type="zoom_in"]'),
+...changeOptionInPopover("Cover", "Parallax", "Zoom In"),
 {
     content: "Check that the option was correctly applied",
     trigger: ':iframe span.s_parallax_bg[style*="transform: scale("]',
