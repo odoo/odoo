@@ -12,6 +12,11 @@ function logout() {
             trigger: ".dropdown-item[data-menu=logout]",
             run: "click",
         },
+        {
+            // Wait and check we are logged out
+            // o_database_list is used in the case website is not installed and only portal is.
+            trigger: ".oe_website_login_container, .o_database_list",
+        },
     ];
 }
 
