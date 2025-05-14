@@ -347,15 +347,20 @@ class HrEmployee(models.Model):
                     }
                 }
 
+        existing_users_email = [record['login'] for record in self.env['res.users'].search_read([], ['login'])]
         old_users = []
         new_users = []
         users_without_emails = []
+        users_with_existing_email = []
         for employee in self:
             if employee.user_id:
                 old_users.append(employee.name)
                 continue
             if not employee.work_email:
                 users_without_emails.append(employee.name)
+                continue
+            if employee.work_email in existing_users_email:
+                users_with_existing_email.append(employee.name)
                 continue
             new_users.append({
                 'create_employee_id': employee.id,
@@ -382,6 +387,10 @@ class HrEmployee(models.Model):
         if users_without_emails:
             message = _("You need to set the work email address for %s", ', '.join(users_without_emails))
             next_action = _get_user_creation_notification_action(message, 'danger', next_action)
+
+        if users_with_existing_email:
+            message = _('User already exists with the same email for Employees %s', ', '.join(users_with_existing_email))
+            next_action = _get_user_creation_notification_action(message, 'warning', next_action)
 
         return next_action
 
