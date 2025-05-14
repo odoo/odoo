@@ -19,7 +19,7 @@ from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.modules.registry import Registry
 
 _logger = logging.getLogger(__name__)
-_UNFOLLOW_REGEX = re.compile(r'<span id="mail_unfollow".*?<\/span>', re.DOTALL)
+_UNFOLLOW_REGEX = re.compile(r'<span id="mail_unfollow".*?</span>', re.DOTALL)
 
 
 class MailMail(models.Model):
@@ -46,7 +46,7 @@ class MailMail(models.Model):
     mail_message_id_int = fields.Integer(compute='_compute_mail_message_id_int', compute_sudo=True)
     message_type = fields.Selection(related='mail_message_id.message_type', inherited=True, default='email_outgoing')
     body_html = fields.Text('Text Contents', help="Rich-text/HTML message")
-    body_content = fields.Html('Rich-text Contents', sanitize=True, compute='_compute_body_content', search="_search_body_content")
+    body_content = fields.Html('Rich-text Contents', compute='_compute_body_content', search="_search_body_content")
     references = fields.Text('References', help='Message references, such as identifiers of previous messages', readonly=True)
     headers = fields.Text('Headers', copy=False)
     restricted_attachment_count = fields.Integer('Restricted attachments', compute='_compute_restricted_attachments')
@@ -397,7 +397,7 @@ class MailMail(models.Model):
         """ Return a list of emails to send based on current mail.mail. Each
         is a dictionary for specific email values, depending on a partner, or
         generic to the whole recipients given by mail.email_to.
-
+    
         :param mail_server: <ir.mail_server> mail server that will be used to send the mails,
           False if it is the default one
         :param set recipients_follower_status: see ``Followers._get_mail_recipients_follower_status()``
@@ -405,7 +405,7 @@ class MailMail(models.Model):
         """
         self.ensure_one()
         body = self._prepare_outgoing_body()
-
+    
         # headers
         headers = {}
         if self.headers:
@@ -416,64 +416,69 @@ class MailMail(models.Model):
                     'Evaluation error when evaluating mail headers (received %r): %s',
                     self.headers, e,
                 )
-            # global except as we don't want to crash the queue just due to a malformed
-            # headers value
             except Exception as e:
                 _logger.warning(
                     'Unknown error when evaluating mail headers (received %r): %s',
                     self.headers, e,
                 )
         headers.setdefault('Return-Path', self.record_alias_domain_id.bounce_email or self.env.company.bounce_email)
-
-        # prepare recipients: use email_to if defined then check recipient_ids
-        # that receive a specific email, notably due to link shortening / redirect
-        # that is recipients-dependent. Keep original email/partner as this is
-        # used in post-processing to know failures, like missing recipients
+    
+        # prepare recipients: combine email_to and partner_ids into a single email_to
         email_list = []
+        email_to_list = []
+        email_to_normalized_list = []
+    
+        # First, handle email_to if defined
         if self.email_to:
             email_to_normalized = tools.mail.email_normalize_all(self.email_to)
             email_to = tools.mail.email_split_and_format_normalize(self.email_to)
+            email_to_list.extend(email_to)
+            email_to_normalized_list.extend(email_to_normalized)
+    
+        # Then, add emails from recipient_ids (partners)
+        if self.recipient_ids:
+            partner_emails = [
+                email for partner in self.recipient_ids
+                for email in tools.mail.email_split_and_format_normalize(partner.email)
+                if email
+            ]
+            partner_emails_normalized = [
+                email for partner in self.recipient_ids
+                for email in tools.mail.email_normalize_all(partner.email)
+                if email
+            ]
+            email_to_list.extend(partner_emails)
+            email_to_normalized_list.extend(partner_emails_normalized)
+    
+        # Remove duplicates while preserving order
+        email_to_list = list(dict.fromkeys(email_to_list))
+        email_to_normalized_list = list(dict.fromkeys(email_to_normalized_list))
+    
+        # Combine into a single email_to string, separated by commas
+        if email_to_list:
+            combined_email_to = ','.join(email_to_list)
             email_list.append({
                 'email_cc': [],
-                'email_to': email_to,
-                # list of normalized emails to help extract_rfc2822
-                'email_to_normalized': email_to_normalized,
-                # keep raw initial value for incoming pre processing of outgoing emails
-                'email_to_raw': self.email_to or '',
+                'email_to': [combined_email_to],
+                'email_to_normalized': email_to_normalized_list,
+                'email_to_raw': combined_email_to,
                 'partner_id': False,
             })
-        # add all cc once, either to the first "To", either as a single entry (do not mix
-        # with partner-specific sending)
+    
+        # Add email_cc if defined
         if self.email_cc:
             if email_list:
                 email_list[0]['email_cc'] = tools.mail.email_split_and_format_normalize(self.email_cc)
                 email_list[0]['email_to_normalized'] += tools.mail.email_normalize_all(self.email_cc)
             else:
                 email_list.append({
-                    'email_cc':  tools.mail.email_split_and_format_normalize(self.email_cc),
+                    'email_cc': tools.mail.email_split_and_format_normalize(self.email_cc),
                     'email_to': [],
                     'email_to_normalized': tools.mail.email_normalize_all(self.email_cc),
                     'email_to_raw': False,
                     'partner_id': False,
                 })
-        # specific behavior to customize the send email for notified partners
-        for partner in self.recipient_ids:
-            # check partner email content
-            email_to_normalized = tools.mail.email_normalize_all(partner.email)
-            email_to = [
-                tools.formataddr((partner.name or "", email or "False"))
-                for email in email_to_normalized or [partner.email]
-            ]
-            email_list.append({
-                'email_cc': [],
-                'email_to': email_to,
-                # list of normalized emails to help extract_rfc2822
-                'email_to_normalized': email_to_normalized,
-                # keep raw initial value for incoming pre processing of outgoing emails
-                'email_to_raw': partner.email or '',
-                'partner_id': partner,
-            })
-
+    
         attachments = self.attachment_ids
         # Prepare attachments:
         # Remove attachments if user send the link with the access_token.
@@ -504,12 +509,11 @@ class MailMail(models.Model):
         email_attachments = [(a['name'], a['raw'], a['mimetype'])
                              for a in attachments.sudo().read(['name', 'raw', 'mimetype'])
                              if a['raw'] is not False]
-
+    
         # Build final list of email values with personalized body for recipient
         results = []
         for email_values in email_list:
-            partner_id = email_values['partner_id']
-            body_personalized = self._personalize_outgoing_body(body, partner_id, recipients_follower_status)
+            body_personalized = self._personalize_outgoing_body(body, email_values['partner_id'], recipients_follower_status)
             results.append({
                 'attachments': email_attachments,
                 'body': body_personalized,
@@ -522,12 +526,12 @@ class MailMail(models.Model):
                 'headers': headers,
                 'message_id': self.message_id,
                 'object_id': f'{self.res_id}-{self.model}' if self.res_id else '',
-                'partner_id': partner_id,
+                'partner_id': email_values['partner_id'],
                 'references': self.references,
                 'reply_to': self.reply_to,
                 'subject': self.subject,
             })
-
+    
         return results
 
     def _split_by_mail_configuration(self):

@@ -891,19 +891,84 @@ class MailComposer(models.TransientModel):
         """
         self.ensure_one()
         email_mode = self.composition_mode == 'mass_mail'
-        rendering_mode = email_mode or self.composition_batch
-
+    
         # values that do not depend on rendering mode
         base_values = self._prepare_mail_values_static()
-
+    
         additional_values_all = {}
         # rendered based on raw content (wizard or template)
-        if rendering_mode and self.model:
+        if self.composition_batch and self.model:
             additional_values_all = self._prepare_mail_values_dynamic(res_ids)
         # wizard content already rendered
-        elif not rendering_mode:
+        elif not self.composition_batch:
             additional_values_all = self._prepare_mail_values_rendered(res_ids)
-
+    
+        # Nếu có partner_ids và ở chế độ mass_mail, gộp tất cả partner_ids vào một email duy nhất
+        if email_mode and self.partner_ids:
+            # Gộp tất cả partner_ids vào một danh sách recipient_ids duy nhất
+            recipient_ids_all = set(self.partner_ids.ids)
+            mail_values = dict(
+                base_values,
+                **additional_values_all.get(res_ids[0], {}),
+                recipient_ids=[(4, pid) for pid in recipient_ids_all],
+                res_id=res_ids[0] if res_ids else 0,
+            )
+    
+            # Xử lý các giá trị động như body_html, subject, attachments, v.v.
+            if self.template_id:
+                template_values = self._generate_template_for_composer(
+                    [res_ids[0]] if res_ids else [0],
+                    ['attachment_ids', 'email_to', 'email_cc', 'partner_ids', 'report_template_ids', 'scheduled_date'],
+                    find_or_create_partners=self.env.context.get("mail_composer_force_partners", True),
+                )[res_ids[0] if res_ids else 0]
+                mail_values.update(template_values)
+    
+            # Xử lý reply_to và các giá trị khác
+            if not mail_values.get('reply_to') and not self.reply_to_force_new:
+                reply_to_values = self.env[self.model].browse(res_ids[0])._notify_get_reply_to(default=False) if res_ids else {}
+                mail_values['reply_to'] = reply_to_values.get(res_ids[0], mail_values.get('email_from', False))
+    
+            # Xử lý attachments
+            attachment_ids = self.attachment_ids.copy({'res_model': self._name, 'res_id': self.id}).ids
+            attachment_ids.reverse()
+            decoded_attachments = [(name, base64.b64decode(enc_cont)) for name, enc_cont in mail_values.pop('attachments', [])]
+            process_record = self.env[self.model].browse(res_ids[0]) if res_ids and hasattr(self.env[self.model], "_process_attachments_for_post") else self.env["mail.thread"]
+            mail_values['attachment_ids'] = process_record._process_attachments_for_post(
+                decoded_attachments,
+                attachment_ids,
+                {'model': 'mail.message', 'res_id': 0}
+            )['attachment_ids']
+    
+            # Thêm headers
+            mail_values['headers'] = repr(self.env[self.model].browse(res_ids[0])._notify_by_email_get_headers()) if res_ids else {}
+    
+            # Render body_html với layout
+            if self.email_layout_xmlid and mail_values['recipient_ids']:
+                lang = self._render_field('lang', [res_ids[0]] if res_ids else [0])[res_ids[0] if res_ids else 0]
+                msg_vals = {
+                    'email_layout_xmlid': self.email_layout_xmlid,
+                    'model': self.model,
+                    'res_id': res_ids[0] if res_ids else 0,
+                }
+                message_inmem = self.env['mail.message'].new({'body': mail_values['body']})
+                for _lang, render_values, recipients_group_data in self.env[self.model].browse(res_ids[0] if res_ids else 0)._notify_get_classified_recipients_iterator(
+                    message_inmem,
+                    [{'active': True, 'id': pid, 'lang': lang, 'notif': 'email', 'share': True, 'type': 'customer', 'ushare': False} for pid in recipient_ids_all],
+                    msg_vals=msg_vals,
+                    model_description=False,
+                    force_email_lang=lang,
+                ):
+                    mail_body = self.env[self.model].browse(res_ids[0] if res_ids else 0)._notify_by_email_render_layout(
+                        message_inmem,
+                        recipients_group_data,
+                        msg_vals=msg_vals,
+                        render_values=render_values,
+                    )
+                    mail_values['body_html'] = mail_body
+    
+            return {res_ids[0] if res_ids else 0: mail_values}
+    
+        # Trường hợp không phải gửi chung qua partner_ids, giữ nguyên logic cũ
         mail_values_all = {
             res_id: dict(
                 base_values,
@@ -911,17 +976,10 @@ class MailComposer(models.TransientModel):
             )
             for res_id in res_ids
         }
-
+    
         if email_mode:
             mail_values_all = self._process_mail_values_state(mail_values_all)
-            # based on previous values, compute message ID / references
             for res_id, mail_values in mail_values_all.items():
-                # generate message_id directly; instead of letting mail_message create
-                # method doing it. Then use it to craft references, allowing to keep
-                # a trace of message_id even when email providers override it.
-                # Note that if 'auto_delete' is set and if 'auto_delete_keep_log' is False,
-                # mail.message is removed and parent finding based on messageID
-                # may be broken, tough life
                 message_id = self.env['mail.message']._get_message_id(mail_values)
                 mail_values['message_id'] = message_id
                 mail_values['references'] = message_id
