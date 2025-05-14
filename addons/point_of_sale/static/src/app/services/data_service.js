@@ -281,12 +281,15 @@ export class PosData extends Reactive {
         this.models = models;
         await this.withoutSyncing(this.initData.bind(this));
         this.network.loading = false;
+        this.connectWebSocket("ORDER_PLACED", ({ order_id, table_id, config_id }) => {
+            this.searchRead("pos.order", [["id", "=", order_id]]);
+        });
         this.connectWebSocket("DATA_CHANGED", ({ queue: newData, login_number, config_id }) => {
             if (config_id == odoo.pos_config_id && login_number == odoo.login_number) {
                 return;
             }
             const findRecord = async (modelName, id) =>
-                this.models[modelName].find((x) => x.uuid === id || x.id === id) ||
+                this.models[modelName]?.find((x) => x.uuid === id || x.id === id) ||
                 (
                     await this.searchRead(modelName, [
                         [typeof id === "string" ? "uuid" : "id", "=", id],
