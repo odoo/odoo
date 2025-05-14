@@ -4,7 +4,6 @@ import json
 import math
 import re
 
-import psycopg2
 from werkzeug import urls
 from werkzeug.exceptions import Forbidden
 
@@ -774,16 +773,15 @@ class CustomerPortal(Controller):
             missing_fields.add("login")
             error_messages.append(_("Some required fields are empty."))
         elif old_login != login:
-            try:
-                with request.env.cr.savepoint():
-                    request.env.user.write({"login": login})
-                    if error_messages:
-                        request.env.user.write({"login": old_login})
-                # update session token so the user does not get logged out
-                request.session.session_token = request.env.user._compute_session_token(request.session.sid)
-            except (ValidationError, psycopg2.errors.UniqueViolation):
+            user = request.env.user
+            if user.with_context(active_test=False).search_count(user._get_login_domain(login), limit=1):
                 invalid_fields.add("login")
                 error_messages.append(_("The user name %s is already taken. Please choose another one.", login))
+            elif not error_messages:
+                # update login when we had no errors
+                user.write({"login": login})
+                # update session token so the user does not get logged out
+                request.session.session_token = request.env.user._compute_session_token(request.session.sid)
 
     def _get_vat_validation_fields(self):
         return {'country_id', 'vat'}
