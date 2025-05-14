@@ -42,13 +42,13 @@ msgstr "%(count)s Sähköisen laskutuksen varoitukset"
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "A cancellation of the EDI has been requested."
-msgstr "EDI-sanoman peruutusta on pyydetty."
+msgstr "EDI-/OVT-pyynnön peruutusta on pyydetty."
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "A request for cancellation of the EDI has been called off."
-msgstr "EDI-sanoman peruutuksen pyyntö on peruttu."
+msgstr "EDI-/OVT-pyynnön peruutuspyyntö on peruttu."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_send
@@ -61,7 +61,7 @@ msgid ""
 "Are you sure you want to cancel this invoice without waiting for the EDI "
 "document to be canceled?"
 msgstr ""
-"Haluatko varmisti peruuttaa tämän laskun, vaikka EDI-dokumentin "
+"Haluatko varmisti peruuttaa tämän laskun, vaikka EDI-/OVT-dokumentin "
 "peruutuspyyntöä käsitellään vielä?"
 
 #. module: account_edi
@@ -91,7 +91,7 @@ msgstr ""
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr "Peruuta EDI-sanoman peruutus"
+msgstr "Peru EDI-/OVT-pyynnön peruutuspyyntö"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -117,7 +117,7 @@ msgstr "Koodi"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
 msgid "Compatible Edi"
-msgstr "Yhteensopiva EDI"
+msgstr "Yhteensopiva EDI/OVT"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
@@ -151,80 +151,80 @@ msgstr "Lataa"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "EDI Documents"
-msgstr "EDI-asiakirjat"
+msgstr "EDI-/OVT-asiakirjat"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_format
 msgid "EDI format"
-msgstr "EDI-muoto"
+msgstr "EDI-/OVT-muoto"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr "EDI-muoto, joka tukee tämän päiväkirjan kirjauksia"
+msgstr "EDI-/OVT-muoto, joka tukee tämän päiväkirjan kirjauksia"
 
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 msgid "EDI: Perform web services operations"
-msgstr "EDI: Suorita verkkopalvelutoiminnot"
+msgstr "EDI/OVT: Suorita verkkopalvelutoiminnot"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
 msgid "Edi Blocking Level"
-msgstr "EDI-estotaso"
+msgstr "EDI-/OVT-estotaso"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
 msgid "Edi Content"
-msgstr "EDI-sisältö"
+msgstr "EDI-/OVT-sisältö"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_document_ids
 msgid "Edi Document"
-msgstr "EDI-asiakirja"
+msgstr "EDI-/OVT-asiakirja"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
 msgid "Edi Error Count"
-msgstr "EDI-virheiden määrä"
+msgstr "EDI-/OVT-virheiden määrä"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 msgid "Edi Error Message"
-msgstr "EDI-virheviesti"
+msgstr "EDI-/OVT-virheviesti"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
 msgid "Edi Format"
-msgstr "EDI-muoto"
+msgstr "EDI-/OVT-muoto"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr "EDI Näytä Hylkää peruutus -nappi"
+msgstr "EDI-/OVT Näytä 'Hylkää peruutus' -painik"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
 msgid "Edi Show Cancel Button"
-msgstr "EDI näytä Peruuta-painike"
+msgstr "EDI-/OVT- näytä 'Peruuta'-painike"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_force_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
 msgid "Edi Show Force Cancel Button"
-msgstr "EDI: näytä nappi perumisen pakottamiselle"
+msgstr "EDI-/OVT-: näytä 'Pakota peruutus' -painike"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr "EDI web servicejä käsiteltävänä"
+msgstr "EDI-/OVT- käsiteltävät verkkopalvelut"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
@@ -270,7 +270,7 @@ msgstr "Muodon nimi"
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 msgid "How many EDIs are in error for this move?"
-msgstr "Kuinka monta EDI-tietoa on virheetilassa tässä siirrossa?"
+msgstr "Kuinka monta EDI-/OVT-toimintoa on virheetilassa tässä siirrossa?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -338,7 +338,7 @@ msgstr "Nimi"
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
 msgid "Only one edi document by move by format"
-msgstr "Vain yksi EDI-dokumentti kirjauksen ja muodon mukaan"
+msgstr "Vain yksi EDI-/OVT-asiakirja kirjauksen ja muodon mukaan"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -358,7 +358,7 @@ msgstr "Raporttin"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr "Pyydä EDI-peruutusta"
+msgstr "Pyydä EDI:n/OVT:n peruutusta"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -368,7 +368,7 @@ msgstr "Yritä uudelleen"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__edi_format_ids
 msgid "Send XML/EDI invoices"
-msgstr "Lähetä XML/EDI-laskut"
+msgstr "Lähetä XML/EDI-/OVT-laskut"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__sent
@@ -385,7 +385,7 @@ msgstr "Alue"
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr "Tämän kirjauksen kaikkien EDI web servicedien yhteenluettu tila"
+msgstr "Kaikkien EDI:en yhteenkoottu tila ja tämän siirron verkkopalvelut."
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -393,8 +393,8 @@ msgid ""
 "The file generated by edi_format_id when the invoice is posted (and this "
 "document is processed)."
 msgstr ""
-"Tiedosto, jonka edi_format_id luo, kun kun lasku kirjataan (ja tämä "
-"dokumentti käsitellään)."
+"Tiedosto, jonka edi_format_id luo, kun lasku kirjataan (ja tämä asiakirja "
+"käsitellään)."
 
 #. module: account_edi
 #. odoo-python
@@ -463,8 +463,9 @@ msgid ""
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
-"Et voi muokata seuraavaa päiväkirjakirjausta %s, koska sähköinen asiakirja "
-"on jo lähetetty. Käytä sen sijaan 'Pyydä EDI-peruutusta' -painiketta."
+"Et voi muokata seuraavaa päiväkirjamerkintää %s, koska sähköinen asiakirja "
+"on jo lähetetty. Käytä sen sijaan 'Pyydä EDI-pyynnön peruutusta' "
+"-painiketta."
 
 #. module: account_edi
 #. odoo-python

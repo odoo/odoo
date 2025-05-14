@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Deniz Guvener, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Deniz Guvener, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,11 +37,13 @@ msgid ""
 "(<i class=\"fa fa-long-arrow-right me-1\" aria-label=\"Assigned Partner\" "
 "title=\"Assigned Partner\"/>"
 msgstr ""
+"(<i class=\"fa fa-long-arrow-right me-1\" aria-label=\"Assigned Partner\" "
+"title=\"Atanan Partner\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
 msgid "<i class=\"fa fa-chevron-left me-2\"/>Back to resellers"
-msgstr ""
+msgstr "<i class=\"fa fa-chevron-left me-2\"/>Bayilere dönün"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -48,6 +51,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-2\"/>\n"
 "                There are no matching partners found for the selected country. Displaying results across all countries instead."
 msgstr ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                Seçilen ülke için eşleşen hiçbir iş ortağı bulunamadı. Bunun yerine tüm ülkelerden sonuçlar gösteriliyor. "
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
@@ -55,6 +60,8 @@ msgid ""
 "<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
 "title=\"Open map\"/>"
 msgstr ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
+"title=\"Açık harita\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -64,12 +71,12 @@ msgstr "<i class=\"fa fa-pencil me-1\"/>Düzenle"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<option>Countries...</option>"
-msgstr ""
+msgstr "<option>Ülkeler...</option>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<option>States...</option>"
-msgstr ""
+msgstr "<option>Eyaletler...</option>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -93,6 +100,9 @@ msgid ""
 "                                                        <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"input-group-text o_input_group_date_icon\">\n"
+"                                                        <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Takvim\"/>\n"
+"                                                    </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -101,6 +111,9 @@ msgid ""
 "                                                        <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\"/>\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"input-group-text o_input_group_date_icon\">\n"
+"                                                        <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\"/>\n"
+"                                                    </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -263,6 +276,91 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- BAŞLIK -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Müşteri adaylarınız</span><br/>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not user.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- İÇERİK -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Merhaba,<br/>\n"
+"                            Bölgenizde bulunan potansiyel müşteriler bizimle iletişime geçti. Bunun sonucunda aşağıdaki müşteri adayları atanmıştır <t t-out=\"ctx['partner_id'].name or ''\"/>:<br/>\n"
+"                            <ol>\n"
+"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Özne Tanımlanmamış</a>Kişi Adı Tanımlanmamış, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">Ülke Tanımlanmamış</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">E-Posta Tanımlanmamış</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br/>\n"
+"                            </ol>\n"
+"                            <t t-if=\"ctx.get('partner_in_portal')\">\n"
+"                                Ayrıntıları almak için lütfen <a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">Partner Portalınıza</a> bağlanın. Her müşteri adayının sol üst köşesinde müşteri adayıyla iletişime geçtikten sonra basmanız gereken iki düğme vardır: \"İlgileniyorum\" veya \"İlgilenmiyorum\".<br/>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                Veri tabanımıza henüz bir portal erişiminiz yok. Lütfen\n"
+"                                <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">bizimle</t>iletişime geçin.<br/>\n"
+"                            </t>\n"
+"                            Müşteri adayı ile 20 gün içinde iletişime geçmezseniz müşteri adayı başka bir partner gönderilecektir.<br/><br/>\n"
+"                            Teşekkür ederiz,<br/>\n"
+"                            <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>\n"
+"                            <br/>\n"
+"                            <t t-if=\"not ctx['partner_id'].user_id\">\n"
+"                                Not: Size atanmış bir hesap yöneticiniz yok gibi görünüyor, lütfen bizimle iletişime geçin.\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- ALT BAŞLIK -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"user.company_id.name or ''\">Şirketiniz</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <a t-if=\"user.company_id.email\" t-att-href=\"'mailto:%s' % user.company_id.email\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <a t-if=\"user.company_id.website\" t-att-href=\"'%s' % user.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- DESTEKLEYEN -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" style=\"color: #875A7B;\">Odoo</a> tarafından desteklenmektedir\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__activation
@@ -314,7 +412,7 @@ msgstr "Tüm Ülkeler"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "All fields are required!"
-msgstr ""
+msgstr "Tüm alanlar zorunludur!"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_view_search
@@ -350,7 +448,7 @@ msgstr "Otomatik olarak ayıklanan HTML içeriği"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
 msgid "Back to resellers list"
-msgstr ""
+msgstr "Bayi listesine dön"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_data_bronze
@@ -490,7 +588,7 @@ msgstr "Müşteri:"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.layout
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"
-msgstr ""
+msgstr "TÜM BAYİLERDE KULLANILABİLMESİ İÇİN YAPI BLOKLARINI BURAYA BIRAKIN"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -543,7 +641,7 @@ msgstr "Fırsatı Düzenle"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Edit to add a short description"
-msgstr ""
+msgstr "Kısa bir açıklama eklemek için düzenleyin"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -577,12 +675,12 @@ msgstr "Beklenen Gelir"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filter by category"
-msgstr ""
+msgstr "Kategoriye göre filtreleyin"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filter by country"
-msgstr ""
+msgstr "Ülkeye göre filtreleyin"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -592,17 +690,17 @@ msgstr "Filtreler"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Find a reseller"
-msgstr ""
+msgstr "Bayi bulun"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 msgid "Follow and convert your leads"
-msgstr ""
+msgstr "Adayları takip edin ve müşteriye dönüştürün"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 msgid "Follow and convert your opportunities"
-msgstr ""
+msgstr "Fırsatları takip edin ve müşteriye dönüştürün"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__partner_id
@@ -667,7 +765,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Go to reseller"
-msgstr ""
+msgstr "Bayiye gidin"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_data_gold
@@ -688,7 +786,7 @@ msgstr "Grupla"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "I am interested by this lead."
-msgstr ""
+msgstr "Bu adayla ilgileniyorum."
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -710,12 +808,12 @@ msgstr "Müşteriyle temas kurdum"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "I'm interested"
-msgstr ""
+msgstr "İlgileniyorum"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "I'm not interested"
-msgstr ""
+msgstr "İlgilenmiyorum"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__id
@@ -921,7 +1019,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "No Activities"
-msgstr ""
+msgstr "Etkinlik Yok"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.action_report_crm_partner_assign
@@ -942,17 +1040,17 @@ msgstr "\" için sonuç bulunamadı"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "Not allowed to update the following field(s): %s."
-msgstr ""
+msgstr "Aşağıdaki alan(lar) güncellenemez: %s."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Open categories dropdown"
-msgstr ""
+msgstr "Kategoriler açılır menüsünü açın"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Open countries dropdown"
-msgstr ""
+msgstr "Ülkeler açılır menüsünü açın"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
@@ -974,7 +1072,7 @@ msgstr "Fırsat"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Opportunity -"
-msgstr ""
+msgstr "Fırsat"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__partner_id
@@ -1187,17 +1285,17 @@ msgstr "İş Ortağı Arama Notu"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "See all resellers"
-msgstr ""
+msgstr "Tüm bayileri görün"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "See categories filters"
-msgstr ""
+msgstr "Kategori filtrelerini görün"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "See countries filters"
-msgstr ""
+msgstr "Ülke filtrelerini görün"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
@@ -1438,7 +1536,7 @@ msgstr "referans"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "references"
-msgstr ""
+msgstr "referanslar"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields.selection,name:website_crm_partner_assign.selection__crm_lead_forward_to_partner__forward_type__assigned

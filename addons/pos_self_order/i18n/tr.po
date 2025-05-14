@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Deniz Guvener, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-27 20:37+0000\n"
+"POT-Creation-Date: 2025-05-07 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Deniz Guvener, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,8 @@ msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
 msgstr ""
+"%s artık mevcut değildir, bu nedenle siparişinizden kaldırılmıştır. Lütfen "
+"siparişinizi gözden geçirin ve tekrar onaylayın."
 
 #. module: pos_self_order
 #. odoo-python
@@ -191,7 +194,7 @@ msgstr "İptal"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "Siparişi İptal Edin"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -332,6 +335,8 @@ msgid ""
 "Custom links that the restaurant can configure to be displayed on the self "
 "order screen"
 msgstr ""
+"Restoranın kendi kendine sipariş ekranında görüntülenmek üzere "
+"yapılandırabileceği özel bağlantılar"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -346,7 +351,7 @@ msgstr "Tehlike"
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__dark
 msgid "Dark"
-msgstr ""
+msgstr "Karanlık"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -436,6 +441,8 @@ msgid ""
 "Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
 "                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
 msgstr ""
+"Kat planınızdaki her masaya, yapılandırmanıza bağlı olarak benzersiz bir QR kodu atanır. Güvenlik nedeniyle,\n"
+"                    hem satış noktası hem de masa adları, aşağıdaki örnekte gösterildiği gibi oluşturulan URL'de şifrelenir:"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_preset
@@ -501,6 +508,8 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
+"Hey, görünüşe göre ürün oluşturmayı veya pos_config'e eklemeyi unuttunuz. "
+"Lütfen Self Order'ı kullanmadan önce bunları ekleyin"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -557,6 +566,8 @@ msgid ""
 "If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
 "                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
 msgstr ""
+"Özelleştirilmiş QR kodlarına ihtiyacınız varsa, URL'yi almak için ilgili QR kodunu tarayarak başlayın. Ardından\n"
+"                https://www.qrcode-monkey.com veya https://www.qr-code-generator.com gibi bir QR kodu oluşturucudan yararlanın"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -598,7 +609,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__kiosk
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_search_view
 msgid "Kiosk"
-msgstr ""
+msgstr "Dijital sipariş ekranı"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
@@ -648,6 +659,8 @@ msgid ""
 "Make it easy for your customers to explore your menu\n"
 "                online or order with the QR codes on your tables"
 msgstr ""
+"Müşterilerinizin menünüzü çevrim içi olarak keşfetmesini veya\n"
+"                masalarınızdaki QR kodları ile sipariş vermesini kolaylaştırın"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -660,7 +673,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Meal"
-msgstr ""
+msgstr "Yemek"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -911,6 +924,7 @@ msgstr "Ürün"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 msgid "Product Information"
 msgstr "Ürün Bilgisi"
@@ -1039,6 +1053,9 @@ msgid ""
 "to display it for all points of sale. You have to select among the points of"
 " sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
+"Bu bağlantıyı hangi satış noktalarında görüntülemek istediğinizi seçin. Tüm "
+"satış noktalarında görüntülemek için boş bırakın. 'QR Kod Menüsü' özelliği "
+"etkin olan satış noktaları arasından seçim yapmanız gerekir."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1095,7 +1112,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Self-ordering:"
-msgstr ""
+msgstr "Self-Servis Sipariş"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
@@ -1177,13 +1194,13 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Table:"
-msgstr ""
+msgstr "Masa:"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "Tax:"
-msgstr ""
+msgstr "Vergi:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1258,7 +1275,7 @@ msgstr "URL"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "URL:"
-msgstr ""
+msgstr "URL:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1276,7 +1293,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Uncategorised"
-msgstr ""
+msgstr "Kategorize edilmemiş"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
@@ -1393,7 +1410,7 @@ msgstr "الجزء الصحيح"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "https://odoo.com"
-msgstr ""
+msgstr "https://odoo.com"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
@@ -1404,4 +1421,4 @@ msgstr "odoo"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "options"
-msgstr ""
+msgstr "seçeekler"

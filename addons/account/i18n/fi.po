@@ -7,6 +7,7 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
 # Thomas Becquevort, 2025
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # Jessica Jakara, 2025
 # 
 msgid ""
@@ -3213,7 +3214,7 @@ msgstr "Oletko varma? Tämä suorittaa seuraavat toiminnot:\n"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
 msgid "Ask after 3 validations without edits"
-msgstr "Kysy kolmen vahvistuksen jälkeen ilman muokkauksia"
+msgstr "Kysy kolmen vahvistuksen jälkeen, jos ne ovat ilman muokkauksia"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -5399,12 +5400,12 @@ msgstr "Luotu"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Credit"
-msgstr "Kredit"
+msgstr "Luotto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_amount_currency
 msgid "Credit Amount Currency"
-msgstr "Kredit valuuttasumma"
+msgstr "Luottosumman valuutta"
 
 #. module: account
 #: model:account.account,name:account.1_credit_card
@@ -5416,7 +5417,7 @@ msgstr "Luottokortti"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Credit Card Setup"
-msgstr "Luottokortti asetukset"
+msgstr "Luottokortin asetukset"
 
 #. module: account
 #. odoo-python
@@ -5454,7 +5455,7 @@ msgstr "Hyvityslasku"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Credit Note Created"
-msgstr "Hyvitys luotu"
+msgstr "Hyvityslasku luotu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
@@ -5496,8 +5497,8 @@ msgstr "Luottokortti"
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
 msgstr ""
-"Myynnin luottokirjaus, jotka ovat yhteensopivia päiväkirjan merkinnän "
-"kanssa."
+"Luottopäiväkirjan merkinnät, jotka ovat yhteensopivia tämän päiväkirjan "
+"merkinnän kanssa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
@@ -5586,7 +5587,7 @@ msgstr "Valuutta on aina annettava QR-koodin luomiseksi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_currency_id
 msgid "Currency of the credit journal item."
-msgstr "Luottokirjauksen valuutta."
+msgstr "Luottopäiväkirjan merkinnän valuutta."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_currency_id
@@ -5671,7 +5672,7 @@ msgstr "Asiakkaan pankkitili"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_refund
 msgid "Customer Credit Note"
-msgstr "Asiakashyvitys"
+msgstr "Asiakkaan hyvityslasku"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__category__invoice
@@ -5987,12 +5988,12 @@ msgstr "Desimaalierotin"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "Erillinen hyvityslaskusekvenssi"
+msgstr "Kohdistettu hyvityslaskujärjestys"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
 msgid "Dedicated Payment Sequence"
-msgstr "Omistettu maksujärjestys"
+msgstr "Kohdistettu maksujärjestys"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -6019,7 +6020,7 @@ msgstr "Oletustilit"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_default_credit_limit
 msgid "Default Credit Limit"
-msgstr "Oletus luottolimiitti"
+msgstr "Oletusluottoraja"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6473,7 +6474,7 @@ msgstr "Inaktiivisen valuutan varoituksen näyttäminen"
 #: model:ir.model.fields,field_description:account.field_res_partner__display_invoice_edi_format
 #: model:ir.model.fields,field_description:account.field_res_users__display_invoice_edi_format
 msgid "Display Invoice Edi Format"
-msgstr "Näytä laskun Edi-muoto"
+msgstr "Näytä laskun EDI-muoto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__display_invoice_template_pdf_report_id
@@ -6795,7 +6796,7 @@ msgstr "Myyntikuittiluonnos"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Vendor Credit Note"
-msgstr "Toimittajahyvityksen luonnos"
+msgstr "Toimittajan hyvityslaskun luonnos"
 
 #. module: account
 #. odoo-javascript
@@ -6994,7 +6995,7 @@ msgstr "Muokkaa"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_totals
 #: model:ir.model.fields,help:account.field_account_move__tax_totals
 msgid "Edit Tax amounts if you encounter rounding issues."
-msgstr "Muokkaa verosummia, jos kohtaat pyöristysongelmia."
+msgstr "Muokkaa veron määrää, jos kohtaat pyöristysongelmia."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -7052,7 +7053,7 @@ msgstr "Ota PEPPOL käyttöön"
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,help:account.field_res_config_settings__account_use_credit_limit
 msgid "Enable the use of credit limit on partners."
-msgstr "Ota luottolimiitti käyttöön kumppaneilla."
+msgstr "Ota luottoraja käyttöön kumppaneille."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__by_default
@@ -7344,12 +7345,12 @@ msgstr "Ulkoinen arvo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__extra_edi_checkboxes
 msgid "Extra Edi Checkboxes"
-msgstr "Extra Edi -valintaruudut"
+msgstr "Organisaatioiden välisen ekstra tiedonsiirron valintaruudut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__extra_edis
 msgid "Extra Edis"
-msgstr "Extra Edis"
+msgstr "Organisaatioiden välinen ekstra tiedonsiirto"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
@@ -8864,7 +8865,7 @@ msgstr "Pankkien välinen siirtotili"
 msgid ""
 "Intermediary account used when moving from a liquidity account to another."
 msgstr ""
-"Välitili, jota käytetään likviditeetinhallinnassa, kun siirretään rahaa "
+"Välitystili, jota käytetään likviditeetin hallinnassa, kun siirretään rahaa "
 "tililtä toiselle."
 
 #. module: account
@@ -8873,7 +8874,7 @@ msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
 msgstr ""
-"Välitili, jota käytetään likviditeetinhallinnassa, kun rahaa siirretään "
+"Välitystili, jota käytetään likviditeetin hallinnassa, kun rahaa siirretään "
 "tililtä toiselle"
 
 #. module: account
@@ -9138,7 +9139,7 @@ msgstr "Laskun verkkomaksu"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_outstanding_credits_debits_widget
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_outstanding_credits_debits_widget
 msgid "Invoice Outstanding Credits Debits Widget"
-msgstr "Laskun maksamatta oleva luotto ja debet widget"
+msgstr "Laskun maksamatta oleva luotto ja veloitukset -widget"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices
@@ -9176,7 +9177,7 @@ msgid ""
 "for the base."
 msgstr ""
 "Myyntilaskun ja hyvityslaskun jaon tulisi molempien sisältää tasan yksi rivi"
-" verottomalle perustalle."
+" perustalle."
 
 #. module: account
 #. odoo-python
@@ -9185,8 +9186,8 @@ msgid ""
 "Invoice and credit note distribution should have a total factor (+) equals "
 "to 100."
 msgstr ""
-"Laskujen ja hyvityslaskujen jaon on oltava kokonaistekijä (+), joka on yhtä "
-"suuri kuin 100."
+"Laskujen ja hyvityslaskujen jaon tuloksena tulisi olla kokonaistekijä (+), "
+"joka on yhtä suuri kuin 100."
 
 #. module: account
 #. odoo-python
@@ -9194,14 +9195,16 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
-msgstr "Laskujen ja hyvityslaskujen jaon kokonaistekijän (-) on oltava 100."
+msgstr ""
+"Laskujen ja hyvityslaskujen jaon tuloksena tulisi olla kokonaistekijä (-), "
+"joka on yhtä suuri kuin 100."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
-msgstr "Myyntilaskun ja hyvityslaskun jaon tulisi olla sama määrä rivejä."
+msgstr "Myyntilaskun ja hyvityslaskun jaon tulisi sisältää sama määrä rivejä."
 
 #. module: account
 #. odoo-python
@@ -18114,7 +18117,7 @@ msgstr "Väärä luotto- tai veloitusarvo kirjanpitomerkinnässä!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "XML format"
-msgstr ""
+msgstr "XML-formaatti"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
