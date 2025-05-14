@@ -40,14 +40,15 @@ class ProjectProject(models.Model):
         count_fields = {fname for fname in self._fields if 'count' in fname}
         if count_field not in count_fields:
             raise ValueError(f"Parameter 'count_field' can only be one of {count_fields}, got {count_field} instead.")
-        domain = [('project_id', 'in', self.ids), ('is_template', '=', False)]
+        domain = [('project_id', 'in', self.ids)]
         if additional_domain:
             domain = AND([domain, additional_domain])
-        tasks_count_by_project = dict(self.env['project.task'].with_context(
-            active_test=any(project.active for project in self)
-        )._read_group(domain, ['project_id'], ['__count']))
+        ProjectTask = self.env['project.task'].with_context(active_test=any(project.active for project in self))
+        tasks_count_by_project = dict(ProjectTask._read_group(domain, ['project_id'], ['__count']))
+        templates_count_by_project = dict(ProjectTask._read_group(AND([domain, [('is_template', '=', True)]]), ['project_id'], ['__count']))
         for project in self:
-            project.update({count_field: tasks_count_by_project.get(project, 0)})
+            count = tasks_count_by_project.get(project, 0) - templates_count_by_project.get(project, 0)
+            project.update({count_field: count})
 
     def _compute_task_count(self):
         self.__compute_task_count()
@@ -75,8 +76,9 @@ class ProjectProject(models.Model):
         return [('favorite_user_ids', 'in', [self.env.uid])]
 
     def _compute_is_favorite(self):
+        favorite_project_ids = self.env.user.favorite_project_ids
         for project in self:
-            project.is_favorite = self.env.user in project.favorite_user_ids
+            project.is_favorite = project in favorite_project_ids
 
     def _set_favorite_user_ids(self, is_favorite):
         self_sudo = self.sudo() # To allow project users to set projects as favorite
