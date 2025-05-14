@@ -1,5 +1,5 @@
 import { after, expect, getFixture } from "@odoo/hoot";
-import { click, formatXml, queryAll, queryAllTexts } from "@odoo/hoot-dom";
+import { click, formatXml, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, tick } from "@odoo/hoot-mock";
 import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -9,6 +9,7 @@ import { mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
 import { getMockEnv, getService, makeMockEnv } from "./env_test_helpers";
 import { MockServer } from "./mock_server/mock_server";
+import { getPopoverForTarget } from "@web/core/popover/popover";
 
 /**
  * @typedef {{
@@ -125,11 +126,11 @@ export async function clickCancel(options) {
  * @param {string} fieldName
  * @param {SelectorOptions} [options]
  */
-export async function clickFieldDropdown(fieldName, options) {
-    const selector = getMockEnv().isSmall
-        ? `[name='${fieldName}'] input`
-        : `[name='${fieldName}'] .dropdown input`;
-    await contains(buildSelector(selector, options)).click();
+export async function clickFieldDropdown(fieldName) {
+    const inputSelector = `[name='${fieldName}'] .o-autocomplete--input`;
+    if (!getPopoverForTarget(queryOne(inputSelector))) {
+        await contains(inputSelector).click();
+    }
 }
 
 /**
@@ -142,15 +143,13 @@ export async function clickFieldDropdownItem(fieldName, itemContent, options) {
         await contains(`.o_kanban_record:contains('${itemContent}')`).click();
         return;
     }
-    const dropdowns = queryAll(
-        buildSelector(`[name='${fieldName}'] .dropdown .dropdown-menu`, options)
-    );
-    if (dropdowns.length === 0) {
+    const dropdown = getPopoverForTarget(queryOne(`[name='${fieldName}'] .o-autocomplete--input`));
+    if (!dropdown) {
         throw new Error(`No dropdown found for field ${fieldName}`);
-    } else if (dropdowns.length > 1) {
-        throw new Error(`Found ${dropdowns.length} dropdowns for field ${fieldName}`);
     }
-    const dropdownItems = queryAll(buildSelector("li", options), { root: dropdowns[0] });
+    const dropdownItems = queryAll(buildSelector(".o-autocomplete--dropdown-item", options), {
+        root: dropdown,
+    });
     const indexToClick = queryAllTexts(dropdownItems).indexOf(itemContent);
     if (indexToClick === -1) {
         throw new Error(`The element '${itemContent}' does not exist in the dropdown`);

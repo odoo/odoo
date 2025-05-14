@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.AutoComplete.Item">
+        <t
+            t-tag="props.unselectable ? 'span' : 'a'"
+            class="dropdown-item o-dropdown-item o-autocomplete--dropdown-item text-truncate"
+            t-att-class="{
+                'o-navigable': !props.unselectable,
+                'o-autocomplete--unselectable text-muted py-1': props.unselectable,
+                [props.class]: true,
+            }"
+            t-att-id="props.id"
+            t-att-href="!props.unselectable and '#'"
+            t-att-role="!props.unselectable and 'option'"
+            t-on-click.stop="() => !props.unselectable and this.props.onSelected()"
+            t-att="props.attrs"
+        >
+            <t t-slot="default" />
+        </t>
+    </t>
+
+</templates>

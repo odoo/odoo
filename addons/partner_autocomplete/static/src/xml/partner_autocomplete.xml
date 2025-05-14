@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="partner_autocomplete.PartnerAutoComplete" t-inherit="web.AutoComplete" t-inherit-mode="primary">
-        <xpath expr="//ul" position="inside">
+        <xpath expr="//t[@t-set-slot='content']" position="inside">
             <t t-if="this.sources &amp;&amp; this.sources.at(-1)?.options.length !== 0 &amp;&amp; !this.shouldSearchWorldwide">  <!-- 1 because IAP sources (potential partners) are loaded after DB sources (existing partners)-->
                 <li
                     class="o-autocomplete--dropdown-item ui-menu-item d-block"
@@ -14,8 +14,6 @@
                         role="option"
                         href="#"
                         class="dropdown-item ui-menu-item-wrapper text-truncate text-info"
-                        t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
-                        t-att-aria-selected="isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
                     >
                         Search Worldwide 🌎
                     </a>

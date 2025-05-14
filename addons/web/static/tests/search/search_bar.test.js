@@ -735,7 +735,7 @@ test("checks that an arrowDown always selects an item", async () => {
     await hover(`.o_searchview_autocomplete .o-dropdown-item.o_indent:last-child`);
     await contains(".o_expand").click();
     await keyDown("ArrowDown");
-    expect(".focus").toHaveCount(1);
+    expect(".o_searchview_autocomplete .focus").toHaveCount(1);
 });
 
 test("checks that an arrowUp always selects an item", async () => {
@@ -754,7 +754,7 @@ test("checks that an arrowUp always selects an item", async () => {
     await hover(`.o_searchview_autocomplete .o-dropdown-item.o_indent:last-child`);
     await contains(".o_expand").click();
     await keyDown("ArrowUp");
-    expect(".focus").toHaveCount(1);
+    expect(".o_searchview_autocomplete .focus").toHaveCount(1);
 });
 
 test("many2one_reference fields are supported in search view", async () => {

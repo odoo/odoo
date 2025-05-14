@@ -121,9 +121,18 @@ export class Dropdown extends Component {
         this.state = this.props.state || useDropdownState();
         this.nesting = useDropdownNesting(this.state);
         this.group = useDropdownGroup();
+
         this.navigation = useNavigation(this.menuRef, {
-            focusInitialElementOnDisabled: () => !this.group.isInGroup,
-            itemsSelector: ":scope .o-navigable, :scope .o-dropdown",
+            isNavigationAvailable: () => this.state.isOpen,
+            getItems: () => {
+                if (this.state.isOpen && this.menuRef.el) {
+                    return this.menuRef.el.querySelectorAll(
+                        ":scope .o-navigable, :scope .o-dropdown"
+                    );
+                } else {
+                    return [];
+                }
+            },
             // Using deepMerge allows to keep entries of both option.hotkeys
             ...deepMerge(this.nesting.navigationOptions, this.props.navigationOptions),
         });
@@ -324,28 +333,39 @@ export class Dropdown extends Component {
     }
 
     closePopover() {
+        if (!this.popover.isOpen) {
+            return;
+        }
+
         this.popover.close();
-        this.navigation.disable();
+        if (!this.group.isInGroup) {
+            this._focusedBeforeOpen?.focus();
+            this._focusedBeforeOpen = undefined;
+        }
     }
 
     onOpened() {
-        this.navigation.enable();
-        this.props.onOpened?.();
-        this.props.onStateChanged?.(true);
+        this._focusedBeforeOpen = document.activeElement;
+        this.navigation.update();
 
         if (this.target) {
             this.target.ariaExpanded = true;
             this.target.classList.add("show");
         }
+
+        this.props.onOpened?.();
+        this.props.onStateChanged?.(true);
     }
 
     onClosed() {
-        this.props.onStateChanged?.(false);
+        this.navigation.update();
 
         if (this.target) {
             this.target.ariaExpanded = false;
             this.target.classList.remove("show");
             this.setTargetDirectionClass(this.defaultDirection);
         }
+
+        this.props.onStateChanged?.(false);
     }
 }
