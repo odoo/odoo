@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { defineWebsiteModels, dummyBase64Img, setupWebsiteBuilder } from "../website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
-import { animationFrame, click, queryOne, setInputRange, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, microTick, queryOne, setInputRange, waitFor } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
@@ -43,12 +43,15 @@ test("set card aligment", async () => {
     expect("[data-label='Alignment'] button[title='Left']").toHaveClass("active");
 
     await click("[data-label='Alignment'] button[title='Center']");
+    await microTick();
     expect(":iframe .s_card").toHaveClass("mx-auto");
 
     await click("[data-label='Alignment'] button[title='Right']");
+    await microTick();
     expect(":iframe .s_card").toHaveClass("ms-auto");
 
     await click("[data-label='Alignment'] button[title='Left']");
+    await microTick();
     expect(":iframe .s_card").toHaveClass("me-auto");
 });
 

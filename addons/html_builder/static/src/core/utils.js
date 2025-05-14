@@ -454,7 +454,7 @@ export function useClickableBuilderComponent() {
     const onReady = usePrepareAction(getAllActions);
     const { reload } = useReloadAction(getAllActions);
 
-    const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(callApply);
+    const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
     const inheritedActionIds =
         comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
 
@@ -621,7 +621,7 @@ export function useInputBuilderComponent({
         await Promise.all(proms);
     }
 
-    const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(callApply);
+    const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
     const operationWithReload = useOperationWithReload(callApply, reload);
     function getState(editingElement) {
         if (!isConnectedElement(editingElement)) {

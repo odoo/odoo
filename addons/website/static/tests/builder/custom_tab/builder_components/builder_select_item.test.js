@@ -3,6 +3,7 @@ import { expect, test } from "@odoo/hoot";
 import {
     animationFrame,
     click,
+    microTick,
     press,
     queryAllTexts,
     queryFirst,
@@ -18,7 +19,6 @@ import {
 } from "../../website_helpers";
 
 defineWebsiteModels();
-
 test("call a specific action with some params and value (BuilderSelectItem)", async () => {
     addActionOption({
         customAction: {
@@ -41,6 +41,7 @@ test("call a specific action with some params and value (BuilderSelectItem)", as
     await animationFrame();
     expect("[data-action-id='customAction']").toHaveText("MyAction");
     await click("[data-action-id='customAction']");
+    await microTick();
     // The function `apply` should be called twice (on hover (for preview), then, on click).
     expect.verifySteps(["customAction myParam myValue", "customAction myParam myValue"]);
 });

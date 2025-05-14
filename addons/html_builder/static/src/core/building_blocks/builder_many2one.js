@@ -32,7 +32,7 @@ export class BuilderMany2One extends Component {
         useBuilderComponent();
         const { getAllActions, callOperation } = getAllActionsAndOperations(this);
         this.callOperation = callOperation;
-        this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
+        this.applyOperation = this.env.editor.shared.history.makePreviewableOperation(
             this.callApply.bind(this)
         );
         const getAction = this.env.editor.shared.builderActions.getAction;
