@@ -18,7 +18,6 @@ class StockPicking(models.Model):
         ('pack', 'Pack'),
         ('partially_pick', 'Partially Pick')
     ],tracking=True,default='draft')
-
     warehouse_id = fields.Many2one(related='sale_id.warehouse_id', store=True)
 
     def action_confirm_geek_pick(self):
