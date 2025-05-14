@@ -36,7 +36,7 @@ export class GenerateDialog extends Component {
             if (this.props.mode === 'generate') {
                 this.nextSerialCount.el.value = this.props.move.data.product_uom_qty || 2;
                 if (this.props.move.data.has_tracking === 'lot') {
-                    this.totalReceived.el.value = this.props.move.data.quantity;
+                    this.totalReceived.el.value = this.props.move.data.quantity || this.props.move.data.product_uom_qty;
                 }
             }
         });
@@ -74,8 +74,7 @@ export class GenerateDialog extends Component {
             this.lots.el?.value,
         ]);
         const newlines = [];
-        let lines = []
-        lines = this.props.move.data.move_line_ids;
+        const lines = this.props.move.data[this.moveLineField] ?? [];
 
         // create records directly from values to bypass onchanges
         for (const values of move_line_vals) {
@@ -104,6 +103,10 @@ export class GenerateDialog extends Component {
             await this.orm.write("ir.sequence", [this.sequence.id], {number_next_actual: this.sequence.number_next_actual + newlines.length});
         }
         this.props.close();
+    }
+
+    get moveLineField() {
+        return "move_line_ids";
     }
 }
 
