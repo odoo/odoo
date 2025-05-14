@@ -3,6 +3,7 @@ import {
     goBackToBlocks,
     goToTheme,
     registerWebsitePreviewTour,
+    selectFullText,
 } from "@website/js/tours/tour_utils";
 import { rgbToHex } from "@web/core/utils/colors";
 
@@ -30,18 +31,7 @@ registerWebsitePreviewTour("website_text_edition", {
     },
     goBackToBlocks(),
     ...insertSnippet({id: "s_text_block", name: "Text", groupName: "Text"}),
-    {
-        content: "Click on the text block first paragraph (to auto select)",
-        trigger: ":iframe .s_text_block p",
-        async run(actions) {
-            await actions.click();
-            const range = document.createRange();
-            const selection = this.anchor.ownerDocument.getSelection();
-            range.selectNodeContents(this.anchor);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        },
-    },
+    selectFullText("text block first paragraph", ".s_text_block p"),
     {
         content: "Expand toolbar to see the color picker",
         trigger: ".o-we-toolbar button[name='expand_toolbar']",

@@ -4,6 +4,7 @@ import {
     clickOnSave,
     openLinkPopup,
     registerWebsitePreviewTour,
+    selectFullText,
 } from "@website/js/tours/tour_utils";
 
 const toggleMegaMenu = (stepOptions) => Object.assign({}, {
@@ -254,19 +255,10 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
         trigger: '[data-select-label="Big Icons Subtitles"]',
         run: "click",
     },
-    {
-        content: "Select the h4 of first menu link of the first column",
-        trigger: ':iframe .s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child h4',
-        async run(actions) {
-            await actions.click();
-            const iframeDocument = document.querySelector('.o_iframe').contentDocument;
-            const range = iframeDocument.createRange();
-            range.selectNodeContents(this.anchor);
-            const sel = iframeDocument.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-        },
-    },
+    selectFullText(
+        "h4 of first menu link of the first column",
+        ".s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child h4"
+    ),
     {
         content: "Convert it to Bold",
         trigger: '#oe_snippets #toolbar #bold',
