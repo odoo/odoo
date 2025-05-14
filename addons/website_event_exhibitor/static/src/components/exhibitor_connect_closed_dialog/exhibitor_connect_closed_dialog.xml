@@ -29,8 +29,7 @@
                         </span>
                         <span class="my-0" t-else="">
                             starts on
-                            <span t-out="sponsorData.event_date_begin"
-                                t-options='{"widget": "datetime", "show_seconds": False, "tz_name": sponsorData.event_date_tz, "format": "medium"}'/>
+                            <span t-out="formatEventDateBegin"/>
                         </span>
                     </div>
                 </t>
