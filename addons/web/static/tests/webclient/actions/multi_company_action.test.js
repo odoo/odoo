@@ -52,7 +52,7 @@ beforeEach(() => {
     });
 });
 
-test("open record withtout the correct company (load state)", async () => {
+test.skip("open record withtout the correct company (load state)", async () => {
     cookie.set("cids", "1");
     onRpc("web_read", () => {
         throw makeServerError({
@@ -71,7 +71,7 @@ test("open record withtout the correct company (load state)", async () => {
     });
 });
 
-test("open record withtout the correct company (doAction)", async () => {
+test.skip("open record withtout the correct company (doAction)", async () => {
     cookie.set("cids", "1");
     onRpc("web_read", () => {
         throw makeServerError({
@@ -97,7 +97,7 @@ test("open record withtout the correct company (doAction)", async () => {
 });
 
 test.tags("desktop");
-test("form view in dialog shows wrong company error", async () => {
+test.skip("form view in dialog shows wrong company error", async () => {
     expect.errors(1);
     cookie.set("cids", "1");
 
@@ -122,4 +122,3 @@ test("form view in dialog shows wrong company error", async () => {
     expect(cookie.get("cids")).toBe("1"); // cookies were not modified
     expect.verifySteps([]); // don't reload
 });
-

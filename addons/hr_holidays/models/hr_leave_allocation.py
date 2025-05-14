@@ -805,9 +805,6 @@ class HrLeaveAllocation(models.Model):
         new_allocations.state = 'confirm'
         return new_allocations
 
-    def _get_redirect_suggested_company(self):
-        return self.holiday_status_id.company_id
-
     ####################################################
     # Business methods
     ####################################################

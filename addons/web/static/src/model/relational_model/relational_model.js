@@ -23,6 +23,7 @@ import {
     makeActiveField,
 } from "./utils";
 import { FetchRecordError } from "./errors";
+import { user } from "@web/core/user";
 
 /**
  * @typedef {import("@web/core/context").Context} Context
@@ -269,6 +270,9 @@ export class RelationalModel extends Model {
 
         config.context = "context" in params ? params.context : config.context;
         if (currentConfig.isMonoRecord) {
+            Object.assign(config.context, {
+                allowed_company_ids: user.allowedCompaniesInOrder.map((c) => c.id),
+            });
             config.resId = "resId" in params ? params.resId : config.resId;
             config.resIds = "resIds" in params ? params.resIds : config.resIds;
             if (!config.resIds) {

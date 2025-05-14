@@ -33,7 +33,6 @@ import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
 
 import {
     Component,
-    onError,
     onMounted,
     onRendered,
     onWillUnmount,
@@ -211,22 +210,6 @@ export class FormController extends Component {
                 },
                 [this.model]
             );
-        });
-
-        onError((error) => {
-            const suggestedCompany = error.cause?.data?.context?.suggested_company;
-            if (
-                error.cause?.data?.name === "odoo.exceptions.AccessError" &&
-                suggestedCompany &&
-                !this.env.inDialog
-            ) {
-                this.env.pushStateBeforeReload();
-                const activeCompanyIds = user.activeCompanies.map((c) => c.id);
-                activeCompanyIds.push(suggestedCompany.id);
-                user.activateCompanies(activeCompanyIds);
-            } else {
-                throw error;
-            }
         });
 
         // select footers that are not in subviews and move them to another arch

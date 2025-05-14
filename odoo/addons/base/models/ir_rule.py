@@ -238,14 +238,7 @@ class IrRule(models.Model):
 
         context = None
         if company_related:
-            suggested_companies = records_sudo._get_redirect_suggested_company()
-            if suggested_companies and len(suggested_companies) != 1:
-                resolution_info += _('\n\nNote: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!')
-            elif suggested_companies and suggested_companies in self.env.user.company_ids:
-                context = {'suggested_company': {'id': suggested_companies.id, 'display_name': suggested_companies.display_name}}
-                resolution_info += _('\n\nThis seems to be a multi-company issue, you might be able to access the record by switching to the company: %s.', suggested_companies.display_name)
-            elif suggested_companies:
-                resolution_info += _('\n\nThis seems to be a multi-company issue, but you do not have access to the proper company to access the record anyhow.')
+            resolution_info += _('\n\nThis seems to be a multi-company issue, but you do not have access to the proper company to access the record anyhow.')
 
         if not self.env.user.has_group('base.group_no_one') or not self.env.user._is_internal():
             msg = f"{operation_error}\n{failing_model}\n\n{resolution_info}"

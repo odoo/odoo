@@ -5515,22 +5515,6 @@ class BaseModel(metaclass=MetaModel):
     def _unregister_hook(self) -> None:
         """ Clean up what `~._register_hook` has done. """
 
-    def _get_redirect_suggested_company(self) -> BaseModel | typing.Literal[False]:
-        """Return the suggested company to be set on the context
-        in case of a URL redirection to the record. To avoid multi
-        company issues when clicking on a shared link, this
-        could be called to try setting the most suited company on
-        the allowed_company_ids in the context. This method can be
-        overridden, for example on the hr.leave model, where the
-        most suited company is the company of the leave type, as
-        specified by the ir.rule.
-        """
-        if 'company_id' in self:
-            return self.company_id
-        elif 'company_ids' in self:
-            return (self.company_ids & self.env.user.company_ids)[:1]
-        return False
-
     def _can_return_content(
             self, field_name: str | None = None, access_token: str | None = None
     ) -> bool:

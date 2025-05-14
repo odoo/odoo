@@ -855,9 +855,6 @@ class HrLeave(models.Model):
             return vals_list
         raise UserError(_('A time off cannot be duplicated.'))
 
-    def _get_redirect_suggested_company(self):
-        return self.holiday_status_id.company_id
-
     ####################################################
     # Business methods
     ####################################################

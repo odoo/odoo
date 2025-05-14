@@ -206,6 +206,11 @@ export function _makeUser(session) {
         get activeCompany() {
             return activeCompanies?.[0];
         },
+        get allowedCompaniesInOrder() {
+            const res = [...allowedCompanies];
+            res.unshift(res.splice(res.indexOf(this.activeCompany), 1)[0]);
+            return res;
+        },
         async activateCompanies(
             companyIds,
             options = { includeChildCompanies: true, reload: true }

@@ -17,6 +17,7 @@ import { orderByToString } from "@web/search/utils/order_by";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { uniqueId } from "@web/core/utils/functions";
+import { shallowEqual } from "@web/core/utils/arrays";
 
 const granularityToInterval = {
     hour: { hours: 1 },
@@ -265,7 +266,10 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                 activeField.required = "False";
             }
         }
-        if (["many2one", "many2one_reference"].includes(fields[fieldName].type) && fieldNode.views) {
+        if (
+            ["many2one", "many2one_reference"].includes(fields[fieldName].type) &&
+            fieldNode.views
+        ) {
             const viewDescr = fieldNode.views.default;
             activeField.related = extractFieldsFromArchInfo(viewDescr, viewDescr.fields);
         }
@@ -349,6 +353,14 @@ function getFieldContextForSpec(activeFields, fields, fieldName, evalContext) {
         context = fields[fieldName].context || {};
     } else {
         context = evalPartialContext(context, evalContext);
+    }
+    if (
+        !shallowEqual(
+            evalContext.allowed_company_ids,
+            user.activeCompanies.map((c) => c.id)
+        )
+    ) {
+        context.allowed_company_ids = user.activeCompanies.map((c) => c.id);
     }
     if (Object.keys(context).length > 0) {
         return context;
