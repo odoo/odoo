@@ -131,6 +131,8 @@ export class CartService {
             })
         }
 
+        const showQuantity = await this.rpc('/website_sale/is_quantity_view_enabled');
+
         if(isCombo) {
             const { combos, ...remainingData } = await this.rpc(
                 '/website_sale/combo_configurator/get_data',
@@ -170,7 +172,7 @@ export class CartService {
                 remainingData,
                 {
                     isBuyNow: isBuyNow,
-                    showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
+                    showQuantity: showQuantity,
                 },
                 rest
             );
@@ -205,7 +207,7 @@ export class CartService {
                 {
                     isBuyNow: isBuyNow,
                     isMainProductConfigurable: !isConfigured,
-                    showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
+                    showQuantity: showQuantity,
                 },
                 rest
             );
