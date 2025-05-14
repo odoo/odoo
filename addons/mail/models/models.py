@@ -16,6 +16,13 @@ _logger = logging.getLogger(__name__)
 class BaseModel(models.AbstractModel):
     _inherit = 'base'
 
+    def unlink(self):
+        # Override unlink to delete messages. This cannot be
+        # cascaded, because link is done through (model, res_id). """
+        if self:
+            self.env['mail.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
+        return super().unlink()
+
     def _valid_field_parameter(self, field, name):
         # allow tracking on abstract models; see also 'mail.thread'
         return (

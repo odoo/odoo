@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import contextlib
 import logging
 import re
 import textwrap
@@ -8,7 +7,7 @@ from binascii import Error as binascii_error
 from collections import defaultdict
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.tools import clean_context, format_list, groupby, SQL
 from odoo.tools.misc import OrderedSet
@@ -894,7 +893,7 @@ class Message(models.Model):
             model_name: self.env[model_name]
             .browse(ids)
             .with_prefetch(tuple(ids_by_model[model_name] | prefetch_ids_by_model[model_name]))
-            for model_name, ids in ids_by_model.items()
+            for model_name, ids in ids_by_model.items() if self.env[model_name].browse(ids).exists()
         }
 
     def _record_by_message(self):
@@ -903,7 +902,12 @@ class Message(models.Model):
             message: self.env[message.model]
             .browse(message.res_id)
             .with_prefetch(records_by_model_name[message.model]._prefetch_ids)
-            for message in self.filtered(lambda m: m.model and m.res_id)
+            for message in self.filtered(
+                lambda m:
+                    m.model and m.res_id and
+                    m.model in records_by_model_name and
+                    m.res_id in records_by_model_name[m.model].ids
+                )
         }
 
     def _to_store(
@@ -989,11 +993,8 @@ class Message(models.Model):
         for record in records:
             thread_data = {}
             if record._name != "discuss.channel":
-                try:
-                    # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
-                    thread_data["name"] = record.sudo().display_name
-                except MissingError:
-                    continue  # related non mail.thread document deleted, still show message in history
+                # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
+                thread_data["name"] = record.sudo().display_name
             if self.env[record._name]._original_module:
                 thread_data["module_icon"] = modules.module.get_module_icon(
                     self.env[record._name]._original_module
@@ -1008,17 +1009,16 @@ class Message(models.Model):
             # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated
             data = message._read_format(fields, load=False)[0]
             record = record_by_message.get(message)
-            record_name = False
-            default_subject = False
             if record:
-                with contextlib.suppress(MissingError):
-                    # sudo: if mentionned in a non accessible thread, user should be able to see the name
-                    record_name = record.sudo().display_name
-                if record_name:
-                    default_subject = record_name
-                    if hasattr(record, "_message_compute_subject"):
-                        # sudo: if mentionned in a non accessible thread, user should be able to see the subject
-                        default_subject = record.sudo()._message_compute_subject()
+                # sudo: if mentionned in a non accessible thread, user should be able to see the name
+                record_name = record.sudo().display_name
+                default_subject = record_name
+                if hasattr(record, "_message_compute_subject"):
+                    # sudo: if mentionned in a non accessible thread, user should be able to see the subject
+                    default_subject = record.sudo()._message_compute_subject()
+            else:
+                record_name = False
+                default_subject = False
             data["default_subject"] = default_subject
             vals = {
                 # sudo: mail.message - reading attachments on accessible message is allowed
