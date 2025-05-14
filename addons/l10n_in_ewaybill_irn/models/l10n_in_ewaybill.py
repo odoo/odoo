@@ -43,11 +43,18 @@ class L10nInEwaybill(models.Model):
         return super()._prepare_ewaybill_transportation_json_payload()
 
     def _ewaybill_generate_irn_json(self):
-        return {
+        json_payload = {
             'Irn': self.account_move_id._get_l10n_in_edi_response_json().get('Irn'),
             'Distance': str(self.distance),
             **self._prepare_ewaybill_transportation_json_payload(),
+            'DispDtls': self.env['account.edi.format']._get_l10n_in_edi_partner_details(
+                self.partner_ship_from_id, set_phone_and_email=False, set_vat=False)
         }
+        if self.account_move_id.l10n_in_gst_treatment == 'overseas':
+            json_payload["ExpShipDtls"] = self.env['account.edi.format']._get_l10n_in_edi_partner_details(
+                self.partner_ship_to_id, set_phone_and_email=False, set_vat=False)
+            json_payload["ExpShipDtls"].pop('Nm')  # 'Nm'(Name) is not included in ExpShipDtls as per the JSON schema
+        return json_payload
 
     def _compute_content(self):
         irn_ewaybill = self.filtered('is_process_through_irn')
