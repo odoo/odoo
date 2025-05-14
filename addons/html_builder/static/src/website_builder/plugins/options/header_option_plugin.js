@@ -44,7 +44,7 @@ class HeaderOptionPlugin extends Plugin {
             withSequence(HEADER_TEMPLATE, {
                 editableOnly: false,
                 template: "website.headerTemplateOption",
-                selector: "header",
+                selector: "#wrapwrap > header",
                 groups: ["website.group_website_designer"],
             }),
             withSequence(HEADER_TEMPLATE_SECONDARY_OPTIONS, {
@@ -75,7 +75,7 @@ class HeaderOptionPlugin extends Plugin {
             withSequence(HEADER_ELEMENT, {
                 editableOnly: false,
                 template: "website.headerElementOption",
-                selector: "header",
+                selector: "#wrapwrap > header",
                 groups: ["website.group_website_designer"],
             }),
             withSequence(HEADER_BORDER, {

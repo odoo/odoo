@@ -11,8 +11,7 @@ class ProductsListPageOptionPlugin extends Plugin {
             {
                 OptionComponent: ProductsListPageOption,
                 selector: "main:has(.o_wsale_products_page)",
-                applyTo:
-                    "#products_grid .o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table",
+                applyTo: "#o_wsale_container",
                 editableOnly: false,
                 title: _t("Products Page"),
                 groups: ["website.group_website_designer"],

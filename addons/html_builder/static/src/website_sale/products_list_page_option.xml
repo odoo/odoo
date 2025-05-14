@@ -9,7 +9,7 @@
     </BuilderSelect>
 </BuilderRow>
 
-<BuilderRow label.translate="Size" level="1">
+<BuilderRow label.translate="Size" applyTo="'#o_wsale_products_grid'" level="1">
     <BuilderNumberInput action="'setPpg'" step="1"/>
     <t t-if="this.isActiveItem('grid_view_opt')">
         <span class="mx-2">by</span>
