@@ -10,9 +10,9 @@ import {
 const scrollToHeading = function (position) {
     return {
         content: `Scroll to h2 number ${position}`,
-        trigger: `:iframe h2:eq(${position})`,
+        trigger: `:iframe .s_table_of_content h2:eq(${position})`,
         run: function () {
-            this.anchor.scrollIntoView(true);
+            this.anchor.scrollIntoView({ behavior: "smooth", block: "center" });
         },
     };
 };
@@ -30,24 +30,24 @@ registerWebsitePreviewTour('snippet_table_of_content', {
     ...insertSnippet({id: "s_table_of_content", name: "Table of Content", groupName: "Text"}),
     {
         content: "Drag the Text snippet group and drop it.",
-        trigger: '#oe_snippets #snippet_groups .oe_snippet[name="Text"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
+        trigger: ".o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Text'] .o_snippet_thumbnail",
         run: "drag_and_drop :iframe #wrap",
     },
     {
         content: "Click on the s_table_of_content snippet.",
-        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_table_of_content"]',
+        trigger: ':iframe .o_add_snippets_preview [data-snippet="s_table_of_content"]',
         run: "click",
     },
     // To make sure that the public widgets of the two previous ones started.
     ...insertSnippet({id: "s_banner", name: "Banner", groupName: "Intro"}),
     {
         content: "Drag the Intro snippet group and drop it.",
-        trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
+        trigger: ".o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Intro'] .o_snippet_thumbnail",
         run: "drag_and_drop :iframe #wrap",
     },
     {
         content: "Click on the s_banner snippet.",
-        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_banner"]',
+        trigger: ':iframe .o_add_snippets_preview [data-snippet="s_banner"]',
         run: "click",
     },
     ...clickOnSave(),
@@ -59,7 +59,7 @@ registerWebsitePreviewTour('snippet_table_of_content', {
     scrollToHeading(2),
     checkTOCNavBar(1, 0),
     scrollToHeading(3),
-    checkTOCNavBar(1, 1),
+    checkTOCNavBar(1, 0),
     ...clickOnEditAndWaitEditMode(),
     {
         content: "Click on the first TOC's title",
@@ -68,7 +68,7 @@ registerWebsitePreviewTour('snippet_table_of_content', {
     },
     {
         content: "Hide the first TOC on mobile",
-        trigger: '[data-toggle-device-visibility="no_mobile"]',
+        trigger: '[data-action-param="no_mobile"]',
         run: "click",
     },
     // Go back to blocks tabs to avoid changing the first ToC options
@@ -80,7 +80,7 @@ registerWebsitePreviewTour('snippet_table_of_content', {
     },
     {
         content: "Hide the second TOC on desktop",
-        trigger: '[data-toggle-device-visibility="no_desktop"]',
+        trigger: '[data-action-param="no_desktop"]',
         run: "click",
     },
     ...clickOnSave(),
