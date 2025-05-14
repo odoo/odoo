@@ -22,8 +22,9 @@
 # dejan_b, 2024
 # Edi Šuc, 2024
 # Grega Vavtar <grega@hbs.si>, 2025
-# Aleš Pipan, 2025
 # Wil Odoo, 2025
+# Aleš Pipan, 2025
+# Jan Zorko, 2025
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jan Zorko, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -270,7 +271,7 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "- %(name)s in %(company)s"
-msgstr ""
+msgstr "- %(name)s v %(company)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -705,6 +706,9 @@ msgid ""
 "title=\"The email address is unknown on the partner\" invisible=\"not "
 "send_mail_readonly\"/>"
 msgstr ""
+"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
+"title=\"The email address is unknown on the partner\" invisible=\"not "
+"send_mail_readonly\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -726,12 +730,16 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Choose or Configure "
 "Email Servers"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Izberi ali nastavi "
+"e-poštne strežnike"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Email Servers"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Nastavi e-poštne "
+"strežnike"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -754,6 +762,10 @@ msgid ""
 "                            <span invisible=\"not allow_out_payment\" class=\"text-success\">Trusted</span>\n"
 "                        </span>"
 msgstr ""
+"<span class=\"d-flex gap-2 w-100\">\n"
+"                            <span invisible=\"allow_out_payment\" class=\"text-muted\">Nepotrjeno</span>\n"
+"                            <span invisible=\"not allow_out_payment\" class=\"text-success\">Potrjeno</span>\n"
+"                        </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -939,6 +951,9 @@ msgid ""
 "                                        A second payment will be created in the destination journal.\n"
 "                                    </span>"
 msgstr ""
+"<span invisible=\"paired_internal_transfer_payment_id or not is_internal_transfer or state != 'draft'\" class=\"fst-italic\">\n"
+"                                        Drugo plačilo bo ustvarjeno v ciljnem dnevniku.\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -955,6 +970,8 @@ msgid ""
 "<span invisible=\"rule_type != 'invoice_matching'\" class=\"o_form_label "
 "o_td_label\">Match Invoice/bill with</span>"
 msgstr ""
+"<span invisible=\"rule_type != 'invoice_matching'\" class=\"o_form_label "
+"o_td_label\">Ujemanje računa z</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -962,6 +979,8 @@ msgid ""
 "<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
+"quick_edit_mode\">Osnutek</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -996,7 +1015,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span> Bill</span>"
-msgstr "<span>Račun</span>"
+msgstr "<span> Račun</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -1064,7 +1083,7 @@ msgstr "<span>Osnutek</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "<span>Followers of the document and</span>"
-msgstr ""
+msgstr "<span>Sledilci dokumenta in</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1166,7 +1185,7 @@ msgstr "<strong>Datum dobropisa:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong><br/>"
-msgstr ""
+msgstr "<strong>Koda stranke:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1319,7 +1338,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A journal group name must be unique per company."
-msgstr ""
+msgstr "Ime skupine dnevnikov mora biti unikatno za vsako družbo."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -4398,7 +4417,7 @@ msgstr "Država, za katero je ta oznaka na voljo, ko se uporabi za davke."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Coverage"
-msgstr ""
+msgstr "Pokritost"
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_create_invoice
@@ -4434,7 +4453,7 @@ msgstr "Ustvarjanje vnosov v dnevnik"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Create Manually"
-msgstr ""
+msgstr "Ustvari ročno"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -5681,7 +5700,7 @@ msgstr "Prikaži opozorilo o neaktivni valuti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__display_mail_composer
 msgid "Display Mail Composer"
-msgstr ""
+msgstr "Prikaz sestavljalca pošte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_name
@@ -6148,7 +6167,7 @@ msgstr "Prazno"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__enable_download
 msgid "Enable Download"
-msgstr ""
+msgstr "Omogoči prenos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6158,7 +6177,7 @@ msgstr "Omogoči PEPPOL"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__enable_send_mail
 msgid "Enable Send Mail"
-msgstr ""
+msgstr "Omogoči pošiljanje pošte"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
@@ -8815,7 +8834,7 @@ msgstr "Oznaka na računih"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__mail_lang
 msgid "Lang"
-msgstr ""
+msgstr "Jezik"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -10242,7 +10261,7 @@ msgstr "Enega ali več računov ni bilo mogoče obdelati."
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
+msgstr "Ena ali več vrstic zahteva 100-odstotno analitično porazdelitev."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -12617,7 +12636,7 @@ msgstr "Pošlji & natisni"
 #: model:ir.model.fields,field_description:account.field_account_move__send_and_print_values
 #: model:ir.model.fields,field_description:account.field_account_payment__send_and_print_values
 msgid "Send And Print Values"
-msgstr ""
+msgstr "Pošlji in natisni vrednosti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_email
@@ -12627,7 +12646,7 @@ msgstr "Pošlji e-pošto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__send_mail_readonly
 msgid "Send Mail Readonly"
-msgstr ""
+msgstr "Pošlji pošto samo za branje"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__send_mail_warning_message

@@ -18,8 +18,8 @@
 # Eiler Attila, 2025
 # Pammer József, 2025
 # Valics Lehel, 2025
-# gezza <geza.nagy@oregional.hu>, 2025
 # Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2025
+# gezza <geza.nagy@oregional.hu>, 2025
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2025\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4002,6 +4002,9 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"Vevői rendelés tétel, melyhez az eltöltött idő hozzáadásra kerül vevő "
+"részére történő számlázás céljából. Távolítsa el a vevői rendelés tétel "
+"kapcsolatot a munkaidő tételről ha nem szeretné kiszámlázni."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4175,6 +4178,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
+"Email küldése hasznos lehet ha szükséges megosztani termékspecifikus "
+"információt vagy tartalmat (pl: használati utasítások, szabályzatok, "
+"hivatkozások, média, stb). Hozzon létre és állítson be email sablont a "
+"termék részleteit tartalmazó űrlapon (Könyvelés fül)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
@@ -4671,13 +4678,14 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
+"Az összeg százaléka, melyet meg kell fizetni az ajánlat megerősítéséhez."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
-msgstr ""
+msgstr "A(z) %stermék nem kompatibilis értékeket tartalmaz: %s"
 
 #. module: sale
 #. odoo-python
@@ -4768,6 +4776,9 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"Ez a vevőnek megígért szállítási dátum. Ha be van állítva, akkor a "
+"kiszállítási rendelés ezen dátum alapján kerül ütemezésre a termék átfutási "
+"ideje helyett."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -5087,7 +5098,7 @@ msgstr "Felülértékesítési lehetőség"
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
-msgstr ""
+msgstr "Értékesítők használják ajánlatok vagy díjbekérők kiküldéséhez."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
