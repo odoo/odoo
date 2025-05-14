@@ -12,7 +12,6 @@ import { scan_barcode, negateStep } from "@point_of_sale/../tests/generic_helper
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
-import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
@@ -688,15 +687,14 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_preset_timing", {
+registry.category("web_tour.tours").add("test_preset_timing_retail", {
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
-            ProductScreen.selectPreset("Eat in", "Takeaway"),
-            TextInputPopup.inputText("John"),
-            Dialog.confirm(),
+            ProductScreen.selectPreset("Eat in", "Delivery"),
+            PartnerList.clickPartner("A simple PoS man!"),
             Chrome.clickPresetTimingSlot(),
             Chrome.selectPresetTimingSlotHour("12:00"),
             Chrome.presetTimingSlotIs("12:00"),
@@ -706,8 +704,8 @@ registry.category("web_tour.tours").add("test_preset_timing", {
             Chrome.createFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(1, "John"),
-            TicketScreen.nthRowContains(1, "Takeaway", false),
+            TicketScreen.nthRowContains(1, "A simple PoS man!"),
+            TicketScreen.nthRowContains(1, "Delivery", false),
             TicketScreen.nthRowContains(2, "002"),
             TicketScreen.nthRowContains(2, "Eat in", false),
         ].flat(),

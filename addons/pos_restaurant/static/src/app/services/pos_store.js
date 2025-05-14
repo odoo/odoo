@@ -393,6 +393,19 @@ patch(PosStore.prototype, {
 
         this.showScreen(screenName || "ProductScreen", props);
     },
+    async handleSelectNamePreset(order) {
+        if (this.config.module_pos_restaurant) {
+            const orderPreset = order.preset_id;
+            if (orderPreset && !order.floating_order_name && !order.table_id) {
+                order.floating_order_name = order.getPartner()?.name;
+                if (!order.floating_order_name) {
+                    this.editFloatingOrderName(order);
+                }
+            }
+        } else {
+            return super.handleSelectNamePreset(...arguments);
+        }
+    },
     findTable(tableNumber) {
         const find_table = (t) => t.table_number === parseInt(tableNumber);
         return (

@@ -1860,6 +1860,14 @@ export class PosStore extends WithLazyGetterTrap {
     async selectPricelist(pricelist) {
         await this.getOrder().setPricelist(pricelist);
     }
+    async handleSelectNamePreset(order) {
+        if (!order.partner_id) {
+            const partner = await this.selectPartner();
+            if (!partner) {
+                return;
+            }
+        }
+    }
     async selectPreset(preset = false, order = this.getOrder()) {
         if (!preset) {
             const selectionList = this.models["pos.preset"].map((preset) => ({
@@ -1885,11 +1893,8 @@ export class PosStore extends WithLazyGetterTrap {
                 }
             }
 
-            if (preset.identification === "name" && !order.floating_order_name && !order.table_id) {
-                order.floating_order_name = order.getPartner()?.name;
-                if (!order.floating_order_name) {
-                    this.editFloatingOrderName(order);
-                }
+            if (preset.identification === "name") {
+                this.handleSelectNamePreset(order);
             }
 
             if (preset.use_timing && !order.preset_time) {

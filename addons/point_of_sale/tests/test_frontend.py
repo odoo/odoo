@@ -1961,16 +1961,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         n_draft_order = self.env['pos.order'].search_count([('state', '=', 'draft')], limit=1)
         self.assertEqual(n_draft_order, 0, 'There should be no draft orders created')
 
-    def test_preset_timing(self):
+    def test_preset_timing_retail(self):
         """
         Test to set order preset hour inside a tour
         """
         self.preset_eat_in = self.env['pos.preset'].create({
             'name': 'Eat in',
-        })
-        self.preset_takeaway = self.env['pos.preset'].create({
-            'name': 'Takeaway',
-            'identification': 'name',
         })
         self.preset_delivery = self.env['pos.preset'].create({
             'name': 'Delivery',
@@ -1979,7 +1975,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'use_presets': True,
             'default_preset_id': self.preset_eat_in.id,
-            'available_preset_ids': [(6, 0, [self.preset_takeaway.id, self.preset_delivery.id])],
+            'available_preset_ids': [(6, 0, [self.preset_delivery.id])],
         })
         resource_calendar = self.env['resource.calendar'].create({
             'name': 'Takeaway',
@@ -1991,11 +1987,11 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'day_period': 'morning',
             }) for day in range(0, 7)],
         })
-        self.preset_takeaway.write({
+        self.preset_delivery.write({
             'use_timing': True,
             'resource_calendar_id': resource_calendar
         })
-        self.start_pos_tour('test_preset_timing')
+        self.start_pos_tour('test_preset_timing_retail')
 
     def test_quantity_package_of_non_basic_unit(self):
         pack_of_12_inch = self.env['uom.uom'].create({
