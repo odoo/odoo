@@ -55,7 +55,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'payment_method_ids': [Command.link(self.customer_account_payment_method.id)],
         })
 
-        self.assertEqual(self.partner_test_1.total_due, 0)
+        self.assertEqual(self.partner_test_1.total_receivable_due, 0)
 
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         current_session = self.main_pos_config.current_session_id
@@ -87,7 +87,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         order_payment.with_context(**payment_context).check()
 
-        self.assertEqual(self.partner_test_1.total_due, 10)
+        self.assertEqual(self.partner_test_1.total_receivable_due, 10)
         current_session.action_pos_session_closing_control()
 
         self.main_pos_config.with_user(self.pos_admin).open_ui()
