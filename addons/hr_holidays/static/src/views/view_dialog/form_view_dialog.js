@@ -59,7 +59,7 @@ export class TimeOffDialogFormController extends FormController {
     }
 
     get isOwnLeave() {
-        return this.record.data.user_id && this.record.data.user_id[0] === user.userId;
+        return this.record.data.user_id && this.record.data.user_id.id === user.userId;
     }
 
     get canCancel() {
