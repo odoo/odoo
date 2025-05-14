@@ -652,3 +652,23 @@ export function openLinkPopup(triggerSelector, linkName = "", focusNodeIndex = 0
         }
     ];
 }
+
+/**
+ * Selects all the text of an element.
+ * @param {*} elementName
+ * @param {*} selector
+ */
+export function selectFullText(elementName, selector) {
+    return {
+        content: `Select all the text of the ${elementName}`,
+        trigger: `:iframe ${selector}`,
+        async run(actions) {
+            await actions.click();
+            const range = document.createRange();
+            const selection = this.anchor.ownerDocument.getSelection();
+            range.selectNodeContents(this.anchor);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        },
+    };
+}

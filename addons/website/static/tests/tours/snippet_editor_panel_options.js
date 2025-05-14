@@ -4,6 +4,7 @@ import {
     insertSnippet,
     goBackToBlocks,
     registerWebsitePreviewTour,
+    selectFullText,
 } from '@website/js/tours/tour_utils';
 import { browser } from '@web/core/browser/browser';
 
@@ -17,18 +18,8 @@ registerWebsitePreviewTour('snippet_editor_panel_options', {
     groupName: "Content",
 }),
 // Test keeping the text selection when using the width option.
+selectFullText("first paragraph", ".s_text_image p"),
 {
-    content: "Select the first paragraph.",
-    trigger: ':iframe .s_text_image p',
-    async run(actions) {
-        await actions.click();
-        const range = document.createRange();
-        const selection = this.anchor.ownerDocument.getSelection();
-        range.selectNodeContents(this.anchor);
-        selection.removeAllRanges();
-        selection.addRange(range);
-    },
-}, {
     content: "The text toolbar should be visible. The paragraph should be selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',
     run() {
@@ -95,18 +86,8 @@ goBackToBlocks(),
     name: 'Text',
     groupName: "Text",
 }),
+selectFullText("first paragraph", ".s_text_block p"),
 {
-    content: "Select the first paragraph.",
-    trigger: ':iframe .s_text_block p',
-    async run(actions) {
-        await actions.click();
-        const range = document.createRange();
-        const selection = this.anchor.ownerDocument.getSelection();
-        range.selectNodeContents(this.anchor);
-        selection.removeAllRanges();
-        selection.addRange(range);
-    },
-}, {
     content: "The text toolbar should be visible. The paragraph should be selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',
     run() {
