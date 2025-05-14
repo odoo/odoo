@@ -7,6 +7,7 @@ import json
 import requests
 import logging
 from datetime import date
+#import math
 
 
 _logger = logging.getLogger(__name__)
@@ -27,8 +28,40 @@ class StockPicking(models.Model):
     is_automation = fields.Boolean(string='Is Automation', default=False)
     is_error_found = fields.Boolean(string='Is Error Found', default=False)
     is_error_found_message = fields.Char(string='Error Found Message')
-    reference_1 = fields.Char(string='Reference', store=True)
-    container_number = fields.Char(string='Container Number', store=True)
+    reference_1 = fields.Char(string='Reference', store=False)
+    container_number = fields.Char(string='Container Number', store=False)
+    # tolerance_qty = fields.Integer(
+    #     string="Tolerance Quantity", compute='_compute_tolerance_qty', store=True)
+    # total_allowed_qty = fields.Float(
+    #     string="Total Allowed Quantity", compute='_compute_tolerance_qty', store=True)
+
+    # @api.depends('product_uom_qty', 'picking_id.tenant_code_id', 'picking_id.customer_number')
+    # def _compute_tolerance_qty(self):
+    #     """
+    #     Compute:
+    #     - tolerance_qty = ceil(5% of product_uom_qty)
+    #     - total_allowed_qty = product_uom_qty + tolerance_qty
+    #     - Use international tolerance if customer_number exists, else domestic
+    #     """
+    #     ToleranceConfig = self.env['shipment.tolerance.config']
+    #     for move in self:
+    #         move.tolerance_qty = 0
+    #         move.total_allowed_qty = move.product_uom_qty
+    #
+    #         tenant = move.picking_id.tenant_code_id
+    #         customer_number = move.picking_id.customer_number
+    #         if not tenant:
+    #             continue
+    #
+    #         config = ToleranceConfig.search([('tenant_id', '=', tenant.id)], limit=1)
+    #         if not config:
+    #             continue
+    #
+    #         tolerance_percent = config.international_tolerance if customer_number else config.domestic_tolerance
+    #         tolerance_value = (tolerance_percent / 100.0) * move.product_uom_qty
+    #
+    #         move.tolerance_qty = math.ceil(tolerance_value)
+    #         move.total_allowed_qty = move.product_uom_qty + move.tolerance_qty
 
     @api.onchange('is_error_found')
     def _onchange_is_error_found(self):
@@ -40,90 +73,6 @@ class StockPicking(models.Model):
         else:
             self.is_error_found_message = ""
 
-    # def button_manual_pack(self):
-    #     """
-    #     This method manually packs line items marked as 'Packed'
-    #     and sends them to the external Flask API in a consolidated format.
-    #     """
-    #
-    #     for picking in self:
-    #         packed_lines = picking.move_ids_without_package.filtered(lambda line: line.packed and not line.released_manual)
-    #         if not packed_lines:
-    #             raise UserError("No packed items found in this picking.")
-    #
-    #         sku_list = []
-    #         total_sku_amount = 0  # To calculate the total quantity
-    #         sku_type_amount = 0  # To count unique SKUs
-    #
-    #         # Loop through each packed line to build the SKU list
-    #         for line in packed_lines:
-    #             total_sku_amount += line.quantity  # Accumulate total quantity
-    #             sku_list.append({
-    #                 "sku_code": line.product_id.default_code,  # Product code (SKU)
-    #                 "sku_amount": line.quantity,  # Quantity
-    #                 "amount": line.quantity,  # Quantity
-    #                 "out_batch_code": "ECOM",  # Batch code
-    #                 "owner_code": picking.tenant_code_id.name,  # Tenant code
-    #                 "out_order_code": picking.name,  # Picking name as the order code
-    #             })
-    #
-    #         sku_type_amount = len(sku_list)  # Count unique SKUs
-    #
-    #         # Prepare payload with consolidated SKU list
-    #         data = {
-    #             "header": {
-    #                 "user_id": "admin",  # Replace as needed
-    #                 "user_key": "admin",
-    #                 "warehouse_code": picking.site_code_id.name,  # Site Code
-    #                 # "interface_code": "feedback_outbound_container"  # Interface Code
-    #             },
-    #             "body": {
-    #                 "container_list": [
-    #                     {
-    #                         "container_code": picking.name,  # Receipt number
-    #                         "sku_type_amount": sku_type_amount,  # Unique SKU count
-    #                         "sku_amount": total_sku_amount,  # Total quantities of all SKUs
-    #                         "sku_list": sku_list,  # Consolidated SKU list
-    #                     }
-    #                 ],
-    #                 "warehouse_code": picking.site_code_id.name,  # Warehouse code
-    #             }
-    #         }
-    #
-    #         # Convert data to JSON format
-    #         json_data = json.dumps(data, indent=4)
-    #         _logger.info(f"Generated data Pack: {json_data}")
-    #
-    #         # Determine environment-specific URL
-    #         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
-    #         url_manual_packing = (
-    #             "https://shiperooconnect-prod.automation.shiperoo.com/receive_payload"
-    #             if is_production == 'True'
-    #             else "https://shiperooconnect.automation.shiperoo.com/receive_payload"
-    #         )
-    #
-    #         headers = {
-    #             'Content-Type': 'application/json'
-    #         }
-    #
-    #         try:
-    #             # Send POST request to the external Flask API
-    #             response = requests.post(url_manual_packing, data=json_data, headers=headers)
-    #             if response.status_code == 200:
-    #                 api_response = response.json()
-    #                 if api_response.get('success'):
-    #                     for line in packed_lines:
-    #                         line.released_manual = True  # Mark the line as released
-    #                     self.env.cr.commit()  # Commit changes immediately to avoid conflicts
-    #                 else:
-    #                     raise UserError(
-    #                         f"Failed to send data to Pack App {picking.name}: {api_response.get('message')}")
-    #             else:
-    #                 raise UserError(f"Flask API error ({response.status_code}): {response.text}")
-    #         except requests.RequestException as e:
-    #             raise UserError(f"Error communicating with Flask API: {str(e)}")
-    #
-    #     return True
 
     def button_validate_picking(self):
         """
@@ -191,8 +140,8 @@ class StockPicking(models.Model):
                         "sc-file-processor/api/receipt-completion"
                     )
                     auth = ('apiuser', 'apipass')
-                            #api_url = "https://shiperoo-connect.uat.automation.shiperoo.com/sc-file-processor/api/receipt-completion"
-                            #auth = ('apiuser', 'apipass')
+                    # api_url = "https://shiperoo-connect.uat.automation.shiperoo.com/sc-file-processor/api/receipt-completion"
+                    # auth = ('apiuser', 'apipass')
             else:
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
                 api_url = (
