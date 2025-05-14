@@ -986,8 +986,8 @@ class ResPartner(models.Model):
     )
     def _compute_display_name(self):
         for partner in self:
-            name = partner.name
             if partner._context.get("formatted_display_name"):
+                name = partner.name or ''
                 if partner.parent_id or partner.company_name:
                     name = f"{partner.company_name or partner.parent_id.name} \t --{partner.name}--"
 
