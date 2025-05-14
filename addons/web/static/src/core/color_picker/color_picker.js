@@ -195,7 +195,7 @@ export function useColorPicker(refName, props, options = {}) {
     const root = useRef(refName);
 
     function onClick() {
-        colorPicker.open(root.el, props);
+        colorPicker.isOpen ? colorPicker.close() : colorPicker.open(root.el, props);
     }
 
     useEffect(
