@@ -528,6 +528,46 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(action['params']['message'], f'You need to set a valid work email address for {employee.name}')
         self.assertFalse(employee.user_id)
 
+    def test_user_creation_from_employee_multi_emails(self):
+        employees = self.env['hr.employee'].create([
+            {
+                'name': 'Existing Email Employee',
+                'work_email': self.user_without_image.email,
+            }, {
+                'name': 'New Employee',
+                'work_email': 'newuser@example.com',
+            }, {
+                'name': 'Invalid Email Employee',
+                'work_email': 'invalid-email',
+            }, {
+                'name': 'Without Email Employee',
+                'work_email': False,
+            }, {
+                'name': 'Formatted Email Employee',
+                'work_email': f'"John Doe" <{self.user_without_image.email_normalized}>',
+            }, {
+                'name': 'Multi Email Employee',
+                'work_email': '"Name1" <name@test.example.com>, "Name 2" <name2@test.example.com>',
+            },
+        ])
+        # Add an existing employee who already has a user to the employee list
+        employees += self.employee_without_image
+        context = {'selected_ids': employees.ids}
+        confirmed_employees = self.env['hr.employee'].with_context(context).browse(employees.ids)
+        action = confirmed_employees.action_create_users()
+
+        params = action.get('params')
+        self.assertEqual(params.get('message'), f"User already exists with the same email for Employees {employees[0].name}, {employees[4].name}")
+        params = params.get('next').get('params')
+        self.assertEqual(params.get('message'), f"You need to set a valid work email address for {employees[2].name}, {employees[5].name}")
+        params = params.get('next').get('params')
+        self.assertEqual(params.get('message'), f"You need to set the work email address for {employees[3].name}")
+        params = params.get('next').get('params')
+        self.assertEqual(params.get('message'), f"User already exists for Those Employees {employees[6].name}")
+        params = params.get('next').get('params')
+        self.assertEqual(params.get('message'), f"Users {employees[1].name} creation successful")
+        self.assertTrue(employees[1].user_id)
+
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeWebJson(HttpCase):
