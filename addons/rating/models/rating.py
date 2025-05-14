@@ -59,6 +59,9 @@ class RatingRating(models.Model):
         'Rating should be between 0 and 5',
     )
 
+    _consumed_idx = models.Index('(res_model, res_id, write_date) WHERE consumed IS TRUE')
+    _parent_consumed_idx = models.Index('(parent_res_model, parent_res_id, write_date) WHERE consumed IS TRUE')
+
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
         for rating in self:
