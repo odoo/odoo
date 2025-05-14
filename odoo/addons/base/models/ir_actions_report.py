@@ -711,7 +711,8 @@ class IrActionsReport(models.Model):
         elif barcode_type == 'QR':
             # for `QR` type, `quiet` is not supported. And is simply ignored.
             # But we can use `barBorder` to get a similar behaviour.
-            if 'quiet' in kwargs and not kwargs['quiet']:
+            # quiet=True & barBorder=4 by default cf above, remove border only if quiet=False
+            if not kwargs['quiet']:
                 kwargs['barBorder'] = 0
 
         if barcode_type in ('EAN8', 'EAN13') and not check_barcode_encoding(value, barcode_type):
