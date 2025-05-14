@@ -1,16 +1,16 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { standardFieldProps } from "../standard_field_props";
-import { FileInput } from "@web/core/file_input/file_input";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
+import { Many2XBinary } from "../many2x_binary/many2x_binary_component";
+import { standardFieldProps } from "../standard_field_props";
 
 import { Component } from "@odoo/owl";
 
 export class Many2ManyBinaryField extends Component {
     static template = "web.Many2ManyBinaryField";
     static components = {
-        FileInput,
+        Many2XBinary,
     };
     static props = {
         ...standardFieldProps,
@@ -20,33 +20,15 @@ export class Many2ManyBinaryField extends Component {
     };
 
     setup() {
-        this.orm = useService("orm");
         this.notification = useService("notification");
         this.operations = useX2ManyCrud(() => this.props.record.data[this.props.name], true);
     }
 
-    get uploadText() {
-        return this.props.record.fields[this.props.name].string;
-    }
     get files() {
-        return this.props.record.data[this.props.name].records.map((record) => {
-            return {
-                ...record.data,
-                id: record.resId,
-            };
-        });
-    }
-
-    getUrl(id) {
-        return "/web/content/" + id + "?download=true";
-    }
-
-    getExtension(file) {
-        return file.name.replace(/^.*\./, "");
-    }
-
-    isImage(file) {
-        return file.mimetype.startsWith("image/");
+        return this.props.record.data[this.props.name].records.map((record) => ({
+            ...record.data,
+            id: record.resId,
+        }));
     }
 
     async onFileUploaded(files) {
