@@ -5,7 +5,7 @@ import { manuallyDispatchProgrammaticEvent, queryFirst, queryOne } from "@odoo/h
 
 import { switchToEditMode } from "../../helpers";
 
-setupInteractionWhiteList("website.carousel_slider");
+setupInteractionWhiteList("website.carousel_edit");
 
 describe.current.tags("interaction_dev");
 

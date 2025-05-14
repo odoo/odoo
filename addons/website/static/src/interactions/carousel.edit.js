@@ -79,6 +79,6 @@ export class CarouselEdit extends Interaction {
     }
 }
 
-registry.category("public.interactions.edit").add("html_builder.carousel_edit", {
+registry.category("public.interactions.edit").add("website.carousel_edit", {
     Interaction: CarouselEdit,
 });

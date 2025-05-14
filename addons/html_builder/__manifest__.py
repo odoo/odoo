@@ -43,7 +43,6 @@
 
             'html_builder/static/src/**/*',
             ('remove', 'html_builder/static/src/website_preview/**/*'),
-            ('remove', 'html_builder/static/src/interactions/**/*'),
         ],
         'html_builder.inside_builder_style': [
             ('include', 'web._assets_helpers'),
@@ -53,7 +52,6 @@
         ],
         'html_builder.assets_edit_frontend': [
             ('include', 'website.assets_edit_frontend'),
-            'html_builder/static/src/interactions/**/*.edit.*',
         ],
         'html_builder.iframe_add_dialog': [
             ('include', 'web.assets_frontend'),
@@ -65,9 +63,7 @@
             ('include', 'html_builder.assets'),
         ],
         'web.assets_frontend': [
-            'html_builder/static/src/interactions/**/*',
             'html_builder/static/src/website_preview/website_builder_action.editor.scss',
-            ('remove', 'html_builder/static/src/interactions/**/*.edit.*'),
         ],
     },
     'license': 'LGPL-3',

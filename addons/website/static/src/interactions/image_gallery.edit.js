@@ -9,7 +9,7 @@ export class ImageGalleryEdit extends Interaction {
         },
     };
     setup() {
-        this.renderAt("html_builder.empty_image_gallery_alert", {}, this.el);
+        this.renderAt("website.empty_image_gallery_alert", {}, this.el);
     }
     onAddImage() {
         const applySpec = { editingElement: this.el };
@@ -17,6 +17,6 @@ export class ImageGalleryEdit extends Interaction {
     }
 }
 
-registry.category("public.interactions.edit").add("html_builder.image_gallery_edit", {
+registry.category("public.interactions.edit").add("website.image_gallery_edit", {
     Interaction: ImageGalleryEdit,
 });
