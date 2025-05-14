@@ -345,7 +345,7 @@ export function computeColorClasses(colorNames, prefix = "bg-") {
  * @returns {string}
  */
 export function getCSSVariableValue(key, htmlStyle) {
-    if (htmlStyle === undefined) {
+    if (!htmlStyle) {
         htmlStyle = editableWindow.getComputedStyle(editableWindow.document.documentElement);
     }
     // Get trimmed value from the HTML element
@@ -359,6 +359,37 @@ export function getCSSVariableValue(key, htmlStyle) {
     // double-quotes when reading them through getPropertyValue...
     return value.replace(/"/g, "'");
 }
+
+/**
+ * @param {CSSStyleDeclaration} [htmlStyle]
+ * @returns {Array} list of presets
+ */
+export function getThemePresets(htmlStyle) {
+    const presets = [];
+    const unquote = (string) => string.substring(1, string.length - 1);
+    for (let i = 1; i <= 5; i++) {
+        const preset = {
+            id: i,
+            background: getCSSVariableValue(`o-cc${i}-bg`, htmlStyle),
+            backgroundGradient: unquote(getCSSVariableValue(`o-cc${i}-bg-gradient`, htmlStyle)),
+            text: getCSSVariableValue(`o-cc${i}-text`, htmlStyle),
+            headings: getCSSVariableValue(`o-cc${i}-headings`, htmlStyle),
+            primaryBtn: getCSSVariableValue(`o-cc${i}-btn-primary`, htmlStyle),
+            primaryBtnText: getCSSVariableValue(`o-cc${i}-btn-primary-text`, htmlStyle),
+            primaryBtnBorder: getCSSVariableValue(`o-cc${i}-btn-primary-border`, htmlStyle),
+            secondaryBtn: getCSSVariableValue(`o-cc${i}-btn-secondary`, htmlStyle),
+            secondaryBtnText: getCSSVariableValue(`o-cc${i}-btn-secondary-text`, htmlStyle),
+            secondaryBtnBorder: getCSSVariableValue(`o-cc${i}-btn-secondary-border`, htmlStyle),
+        };
+        // TODO: check if this is necessary
+        if (preset.backgroundGradient) {
+            preset.backgroundGradient += ", url('/web/static/img/transparent.png')";
+        }
+        presets.push(preset);
+    }
+    return presets;
+}
+
 /**
  * Normalize a color in case it is a variable name so it can be used outside of
  * css.
