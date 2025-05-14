@@ -27,6 +27,40 @@ test("many2one_avatar_employee widget in kanban view with skills on avatar card"
     });
     pyEnv["m2o.avatar.employee"].create([{ employee_id: pierreEid }]);
     await start();
+<<<<<<< 79e110a1936bb459f2c6ea5909f46458371384e1
+||||||| 9294f391e6dafc8cf03f697107dd8f6ab9ec8b93
+
+    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+        const resourceIdArray = params.args[0];
+        const resourceId = resourceIdArray[0];
+        const resources = pyEnv['hr.employee.public'].read([resourceId]);
+        const result = resources.map(resource => ({
+            name: resource.name,
+            role_ids: resource.role_ids,
+            email:resource.email,
+            phone: resource.phone,
+            user_id: resource.user_id,
+            employee_skill_ids: resource.employee_skill_ids
+        }));
+        return result;
+    });
+=======
+
+    onRpc("hr.employee", "get_avatar_card_data", (params) => {
+        const resourceIdArray = params.args[0];
+        const resourceId = resourceIdArray[0];
+        const resources = pyEnv['hr.employee.public'].read([resourceId]);
+        const result = resources.map(resource => ({
+            name: resource.name,
+            role_ids: resource.role_ids,
+            email:resource.email,
+            phone: resource.phone,
+            user_id: resource.user_id,
+            employee_skill_ids: resource.employee_skill_ids
+        }));
+        return result;
+    });
+>>>>>>> 11c11b1f17b51ce9335b728171725c12ea2ba2bc
     await mountView({
         type: "kanban",
         resModel: "m2o.avatar.employee",

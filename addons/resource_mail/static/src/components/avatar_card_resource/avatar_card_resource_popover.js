@@ -27,6 +27,7 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
     }
 
     async onWillStart() {
+<<<<<<< 79e110a1936bb459f2c6ea5909f46458371384e1
         try {
             [this.record] = await this.orm.read(this.props.recordModel, [this.props.id], this.fieldNames);
             await Promise.all(this.loadAdditionalData());
@@ -36,6 +37,13 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
             }
             throw err;
         }
+||||||| 9294f391e6dafc8cf03f697107dd8f6ab9ec8b93
+        [this.record] = await this.orm.call('resource.resource', 'get_avatar_card_data', [[this.props.id], this.fieldNames], {});
+        await Promise.all(this.loadAdditionalData());
+=======
+        [this.record] = await this.orm.call(this.props.recordModel, 'get_avatar_card_data', [[this.props.id], this.fieldNames], {});
+        await Promise.all(this.loadAdditionalData());
+>>>>>>> 11c11b1f17b51ce9335b728171725c12ea2ba2bc
     }
 
     loadAdditionalData() {
