@@ -15,9 +15,11 @@ SHOP_PAGE_STYLE_MAPPING = {
         'img_src': '/website_sale/static/src/img/configurator/shop/classic_grid.jpg',
         'views': {
             'enable': [
-                'website.template_header_sales_one',  # Header
+            #    'website.template_header_sales_one',  # Header
             ],
-            'disable': [DEFAULT_HEADER_VIEW_XMLID],
+            'disable': [
+            #    DEFAULT_HEADER_VIEW_XMLID
+            ],
         },
         'website_fields': {},  # Default
     },
@@ -31,8 +33,8 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_thumb_4_5',  # Style/Images size
                 'website_sale.products_attributes_top',  # Filters
                 'website_sale.floating_bar',  # Toolbar/floating
-                'website.template_header_search',  # Header
-                'website.header_width_full',  # Header width
+            #    'website.template_header_search',  # Header
+            #    'website.header_width_full',  # Header width
             ],
             'disable': [
                 'website_sale.products_design_card',  # Style
@@ -40,8 +42,8 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_thumb_4_3',  # Images size
                 'website_sale.products_thumb_2_3',  # Images size
                 'website_sale.products_attributes',  # Filters
-                'website.header_width_small',  # Header width
-                DEFAULT_HEADER_VIEW_XMLID,
+            #    'website.header_width_small',  # Header width
+            #    DEFAULT_HEADER_VIEW_XMLID,
             ],
         },
         'website_fields': {
@@ -56,9 +58,11 @@ SHOP_PAGE_STYLE_MAPPING = {
             'enable': [
                 'website_sale.products_list_view',  # Listview layout
                 'website_sale.products_description',  # Description
-                'website.template_header_sales_two',  # Header
+            #    'website.template_header_sales_two',  # Header
             ],
-            'disable': [DEFAULT_HEADER_VIEW_XMLID],
+            'disable': [
+            #    DEFAULT_HEADER_VIEW_XMLID
+            ],
         },
         'website_fields': {},
     },
@@ -71,14 +75,14 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_categories',  # Categories sidebar
                 'website_sale.option_collapse_products_categories',  # Categories/Collapse
                 'website_sale.products_attributes_top',  # Filters
-                'website.template_header_sales_four',  # Header
+            #    'website.template_header_sales_four',  # Header
             ],
             'disable': [
                 'website_sale.products_design_thumbs',  # Style
                 'website_sale.products_design_grid',  # Style
                 'website_sale.products_categories_top',  # Categories top
                 'website_sale.products_attributes',  # Filters
-                DEFAULT_HEADER_VIEW_XMLID,
+            #    DEFAULT_HEADER_VIEW_XMLID,
             ],
         },
         'website_fields': {
@@ -95,12 +99,12 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_categories',  # Categories sidebar
                 'website_sale.products_attributes_top',  # Filters
                 'website_sale.floating_bar',  # Toolbar/floating
-                'website.template_header_sales_three',  # Header
+            #    'website.template_header_sales_three',  # Header
             ],
             'disable': [
                 'website_sale.products_categories_top',  # Categories top
                 'website_sale.products_attributes',  # Filters
-                DEFAULT_HEADER_VIEW_XMLID,
+            #    DEFAULT_HEADER_VIEW_XMLID,
             ],
         },
         'website_fields': {
@@ -117,7 +121,7 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_thumb_4_3',  # Style/Images sizes (Landscape)
                 'website_sale.products_categories',  # Categories/Sidebar
                 'website_sale.products_attributes_top',  # Filters
-                'website.template_header_stretch',  # Header
+            #    'website.template_header_stretch',  # Header
             ],
             'disable': [
                 'website_sale.products_design_card',  # Style
@@ -126,7 +130,7 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_thumb_2_3',  # Style/Images sizes
                 'website_sale.products_categories_top',  # Categories/Top
                 'website_sale.products_attributes',  # Filters
-                DEFAULT_HEADER_VIEW_XMLID,
+            #    DEFAULT_HEADER_VIEW_XMLID,
             ],
         },
         'website_fields': {
