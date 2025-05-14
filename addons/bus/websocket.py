@@ -958,7 +958,13 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
+<<<<<<< c87836e5ce7243b3905000f66bda2097cf76c3f6
     _VERSION = "saas-18.2-2"
+||||||| 8f58e800d9cf08ddcf5e44029eb8c50e5b06d997
+    _VERSION = "saas-18.1-1"
+=======
+    _VERSION = "saas-18.1-2"
+>>>>>>> f64d5d140de313ec82e566afd2e0483a1cc2bad7
 
     @classmethod
     def websocket_allowed(cls, request):
