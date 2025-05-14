@@ -7,7 +7,19 @@ _lt = LazyTranslate(__name__, default_lang='en_US')
 
 # Website configurator
 
-DEFAULT_HEADER_VIEW_XMLID = 'website.template_header_default'
+DEFAULT_HEADER_VIEW_XMLID = [
+    "website.template_header_default",
+    "website.header_navbar_pills_style",
+    "website.template_header_boxed",
+    "website.template_header_stretch",
+    "website.template_header_vertical",
+    "website.template_header_search",
+    "website.template_header_sales_one",
+    "website.template_header_sales_two",
+    "website.template_header_sales_three",
+    "website.template_header_sales_four",
+    "website.template_header_sidebar",
+]
 
 SHOP_PAGE_STYLE_MAPPING = {
     'classic_grid': {
@@ -17,7 +29,7 @@ SHOP_PAGE_STYLE_MAPPING = {
             'enable': [
                 'website.template_header_sales_one',  # Header
             ],
-            'disable': [DEFAULT_HEADER_VIEW_XMLID],
+            'disable': DEFAULT_HEADER_VIEW_XMLID,
         },
         'website_fields': {},  # Default
     },
@@ -41,7 +53,7 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_thumb_2_3',  # Images size
                 'website_sale.products_attributes',  # Filters
                 'website.header_width_small',  # Header width
-                DEFAULT_HEADER_VIEW_XMLID,
+                *DEFAULT_HEADER_VIEW_XMLID,
             ],
         },
         'website_fields': {
@@ -58,7 +70,7 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_description',  # Description
                 'website.template_header_sales_two',  # Header
             ],
-            'disable': [DEFAULT_HEADER_VIEW_XMLID],
+            'disable': DEFAULT_HEADER_VIEW_XMLID,
         },
         'website_fields': {},
     },
@@ -78,7 +90,7 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_design_grid',  # Style
                 'website_sale.products_categories_top',  # Categories top
                 'website_sale.products_attributes',  # Filters
-                DEFAULT_HEADER_VIEW_XMLID,
+                *DEFAULT_HEADER_VIEW_XMLID,
             ],
         },
         'website_fields': {
@@ -100,7 +112,7 @@ SHOP_PAGE_STYLE_MAPPING = {
             'disable': [
                 'website_sale.products_categories_top',  # Categories top
                 'website_sale.products_attributes',  # Filters
-                DEFAULT_HEADER_VIEW_XMLID,
+                *DEFAULT_HEADER_VIEW_XMLID,
             ],
         },
         'website_fields': {
@@ -126,7 +138,7 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website_sale.products_thumb_2_3',  # Style/Images sizes
                 'website_sale.products_categories_top',  # Categories/Top
                 'website_sale.products_attributes',  # Filters
-                DEFAULT_HEADER_VIEW_XMLID,
+                *DEFAULT_HEADER_VIEW_XMLID,
             ],
         },
         'website_fields': {
