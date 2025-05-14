@@ -256,6 +256,12 @@ class AccountMove(models.Model):
 
         return msg, error_codes
 
+    def _get_partner_l10n_tr_nilvera_customer_alias_name(self):
+        # This getter function is used to change the alias on send
+        # For any senario spesific changes for the alias
+        self.ensure_one()
+        return self.partner_id.l10n_tr_nilvera_customer_alias_id.name
+
     # -------------------------------------------------------------------------
     # CRONS
     # -------------------------------------------------------------------------

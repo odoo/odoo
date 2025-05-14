@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.tr.nilvera.einvoice.extended</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_tr_nilvera.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='nilvera_settings']/div[hasclass('content-group')]" position="inside">
+                <div class="row">
+                    <label string="Export Alias" for="l10n_tr_nilvera_api_key" class="col-lg-6 o_light_label" />
+                    <field name="l10n_tr_nilvera_api_key"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
