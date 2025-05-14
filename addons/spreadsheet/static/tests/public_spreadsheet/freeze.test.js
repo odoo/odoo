@@ -297,7 +297,7 @@ test("spilled pivot table", async function () {
     const data = await freezeOdooData(model);
     const sheet = data.sheets[0];
     const cells = sheet.cells;
-    expect(cells.A10).toBe("(#1) Partner Pivot");
+    expect(cells.A10).toBe("Partner Pivot");
     expect(cells.A11).toBe("");
     expect(cells.A12).toBe("Total");
     expect(cells.B10).toBe("Total");
