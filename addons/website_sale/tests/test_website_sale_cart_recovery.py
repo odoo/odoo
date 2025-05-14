@@ -2,7 +2,6 @@
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
-import unittest
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 

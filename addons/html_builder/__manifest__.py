@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "HTML Builder",
     'summary': "Generic html builder",

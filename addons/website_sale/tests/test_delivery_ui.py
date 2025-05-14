@@ -2,7 +2,6 @@
 
 import odoo.tests
 from odoo.fields import Command
-import unittest
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):

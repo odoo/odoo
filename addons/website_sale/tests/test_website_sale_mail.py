@@ -6,7 +6,6 @@ import odoo
 
 from odoo import SUPERUSER_ID, fields
 from odoo.tests import HttpCase, tagged
-import unittest
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon

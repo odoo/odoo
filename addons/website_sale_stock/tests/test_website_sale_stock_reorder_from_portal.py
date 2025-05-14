@@ -4,7 +4,6 @@
 from odoo import Command
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
-import unittest
 
 from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 

@@ -7,7 +7,6 @@ from contextlib import suppress
 import odoo.tests
 from odoo.tools.misc import file_open
 from werkzeug.urls import url_quote_plus
-import unittest
 
 RE_FORBIDDEN_STATEMENTS = re.compile(r'test.*\.(only|debug)\(')
 RE_ONLY = re.compile(r'QUnit\.(only|debug)\(')

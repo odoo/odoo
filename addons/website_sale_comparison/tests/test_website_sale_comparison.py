@@ -2,7 +2,6 @@
 
 import logging
 from collections import OrderedDict
-import unittest
 
 from lxml import etree
 

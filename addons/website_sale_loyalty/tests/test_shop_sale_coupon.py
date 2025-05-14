@@ -6,7 +6,6 @@ from odoo import fields, http
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
-import unittest
 
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon

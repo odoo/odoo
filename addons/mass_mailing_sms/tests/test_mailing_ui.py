@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import HttpCase, tagged, users
-import unittest
 
 @tagged('post_install', '-at_install', 'mail_activity')
 class TestMailingUi(HttpCase):

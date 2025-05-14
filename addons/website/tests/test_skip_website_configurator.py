@@ -1,6 +1,5 @@
 from odoo.tests import tagged
 from odoo.addons.website.tests.test_configurator import TestConfiguratorCommon
-import unittest
 
 
 @tagged('post_install', '-at_install')

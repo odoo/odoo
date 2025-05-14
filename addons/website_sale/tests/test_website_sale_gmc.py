@@ -7,7 +7,6 @@ from urllib.parse import urlparse
 
 from odoo import Command
 from odoo.tests import HttpCase, tagged
-import unittest
 
 from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon

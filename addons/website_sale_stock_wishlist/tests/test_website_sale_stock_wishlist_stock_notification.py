@@ -2,7 +2,6 @@
 
 from odoo.tests import tagged
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
-import unittest
 
 
 @tagged('post_install', '-at_install')

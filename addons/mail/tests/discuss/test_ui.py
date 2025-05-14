@@ -3,7 +3,6 @@
 import odoo.tests
 from odoo import Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-import unittest
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo):

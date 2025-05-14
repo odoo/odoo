@@ -2,7 +2,6 @@
 
 from odoo import Command
 from odoo.tests import HttpCase, TransactionCase, tagged
-import unittest
 
 
 @tagged('post_install', '-at_install')

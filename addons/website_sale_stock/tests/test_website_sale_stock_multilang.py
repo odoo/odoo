@@ -4,7 +4,6 @@
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
-import unittest
 
 
 @tagged('post_install', '-at_install')

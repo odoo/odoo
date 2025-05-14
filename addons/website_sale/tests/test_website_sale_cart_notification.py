@@ -2,7 +2,6 @@
 
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
-import unittest
 
 from odoo.addons.product.tests.common import ProductAttributesCommon
 

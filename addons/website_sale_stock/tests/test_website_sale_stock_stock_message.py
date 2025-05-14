@@ -5,7 +5,6 @@ from odoo.tests import tagged
 from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
-import unittest
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleStockProductConfigurator(TestProductConfiguratorCommon, HttpCaseWithUserPortal, HttpCaseWithWebsiteUser):
