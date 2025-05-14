@@ -2,6 +2,7 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
     selectElementInWeSelectWidget,
+    selectFullText,
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("text_highlights", {
@@ -13,18 +14,7 @@ registerWebsitePreviewTour("text_highlights", {
         name: "Cover",
         groupName: "Intro",
     }),
-    {
-        content: "Select the snippet title",
-        trigger: ":iframe .s_cover h1",
-        async run(actions) {
-            await actions.click();
-            const range = document.createRange();
-            const selection = this.anchor.ownerDocument.getSelection();
-            range.selectNode(this.anchor);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        },
-    },
+    selectFullText("snippet title", ".s_cover h1"),
     {
         content: "Click on the 'Highlight Effects' button to activate the option",
         trigger: "div.o_we_text_highlight",
