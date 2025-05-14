@@ -518,6 +518,7 @@ class ProjectProject(models.Model):
             'materials': self.env._('Materials'),
             'other_invoice_revenues': self.env._('Customer Invoices'),
             'downpayments': self.env._('Down Payments'),
+            'cost_of_goods_sold': self.env._('Cost of Goods Sold'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):
