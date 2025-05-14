@@ -171,8 +171,12 @@ export class CustomizeWebsitePlugin extends Plugin {
                     await this.dependencies.savePlugin.save(/* not in translation */);
                     // TODO doAction in savePlugin.save ?
                     await this.services.action.doAction("base.action_view_base_language_install", {
-                        website_id: websiteId,
-                        url_return: "[land]",
+                        additionalContext: {
+                            params: {
+                                website_id: websiteId,
+                                url_return: "[lang]",
+                            },
+                        },
                         onClose: def.resolve,
                     });
                     return def;
