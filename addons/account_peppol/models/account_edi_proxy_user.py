@@ -272,7 +272,6 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                         continue
 
                     move.peppol_move_state = content['state']
-                    move._message_log(body=_('Peppol status update: %s', content['state']))
 
                 edi_user._call_peppol_proxy(
                     "/api/peppol/1/ack",
