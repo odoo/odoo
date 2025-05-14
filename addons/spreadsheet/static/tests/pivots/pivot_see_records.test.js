@@ -264,7 +264,7 @@ test("Can see records on PIVOT cells", async function () {
 
     // same but without the column headers
     // set the function in A3 such as the data cells matches the ones in the first sheet
-    setCellContent(model, "A3", `=PIVOT("1",,,FALSE)`, "42");
+    setCellContent(model, "A3", `=PIVOT("1",,,FALSE,,FALSE)`, "42");
     await checkCells(data_cells);
 });
 
