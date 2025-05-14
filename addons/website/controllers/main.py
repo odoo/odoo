@@ -1052,7 +1052,9 @@ class Website(Home):
             classes = res[0].get('class').split()
             width = next((c for c in container_classes if c in classes), False)
             if width:
-                views_enable += [width_views.get(width)]
+                view = width_views.get(width)
+                if view is not None:
+                    views_enable += [view]
                 views_disable += [v for k, v in width_views.items() if k != width]
 
         # Activate/Deactivate the computed views
