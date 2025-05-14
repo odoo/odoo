@@ -10,7 +10,7 @@ export class HighlightPicker extends Component {
     static props = {
         selectHighlight: Function,
         previewHighlight: Function,
-        resetHighlightPreview: Function,
+        revertHighlight: Function,
     };
 
     setup() {

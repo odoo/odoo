@@ -2,6 +2,7 @@ import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { ColorPicker } from "@web/core/color_picker/color_picker";
 import { HighlightPicker } from "./highlight_picker";
 import { applyTextHighlight } from "@website/js/highlight_utils";
+import { normalizeColor } from "@html_builder/utils/utils_css";
 
 export const highlightIdToName = {
     underline: "Underline",
@@ -40,6 +41,7 @@ export class HighlightConfigurator extends Component {
         revertHighlight: Function,
         revertHighlightStyle: Function,
         componentStack: Object,
+        getUsedCustomColors: Function,
     };
 
     setup() {
@@ -73,13 +75,18 @@ export class HighlightConfigurator extends Component {
         this.props.componentStack.push(
             ColorPicker,
             {
-                state: { selectedColor: this.state.color },
-                //TODO: implement customColors
-                getUsedCustomColors: () => {},
+                state: { selectedColor: this.state.color, defaultTab: "solid" },
+                colorPrefix: "",
+                getUsedCustomColors: this.props.getUsedCustomColors,
+                enabledTabs: ["solid", "custom"],
                 applyColor: this.selectHighlightColor.bind(this),
                 applyColorPreview: (color) =>
-                    this.props.previewHighlightStyle("--text-highlight-color", color),
+                    this.props.previewHighlightStyle(
+                        "--text-highlight-color",
+                        normalizeColor(color)
+                    ),
                 applyColorResetPreview: this.props.revertHighlightStyle,
+                className: "w-100",
             },
             "Select a color",
             true
@@ -93,7 +100,7 @@ export class HighlightConfigurator extends Component {
 
     selectHighlightColor(color) {
         this.props.componentStack.pop();
-        this.props.applyHighlightStyle("--text-highlight-color", color);
+        this.props.applyHighlightStyle("--text-highlight-color", normalizeColor(color));
     }
 
     onThicknessChange(ev) {
