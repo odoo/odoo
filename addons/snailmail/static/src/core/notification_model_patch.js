@@ -29,17 +29,17 @@ const notificationPatch = {
     get failureMessage() {
         switch (this.failure_type) {
             case "sn_credit":
-                return _t("Snailmail Credit Error");
+                return _t("Insufficient Credits");
             case "sn_trial":
-                return _t("Snailmail Trial Error");
+                return _t("No IAP Credits");
             case "sn_price":
-                return _t("Snailmail No Price Available");
+                return _t("Country Not Supported");
             case "sn_fields":
-                return _t("Snailmail Missing Required Fields");
+                return _t("Missing Required Fields");
             case "sn_format":
-                return _t("Snailmail Format Error");
+                return _t("Format Error");
             case "sn_error":
-                return _t("Snailmail Unknown Error");
+                return _t("Unknown Error");
             default:
                 return super.failureMessage;
         }
