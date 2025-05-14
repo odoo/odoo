@@ -228,7 +228,7 @@ class IrRule(models.Model):
         # so it is relatively safe here to include the list of rules and record names.
         rules = self._get_failing(records, mode=operation).sudo()
 
-        records_sudo = records[:6].sudo()
+        display_records = records[:6].sudo()
         company_related = any('company_id' in (r.domain_force or '') for r in rules)
 
         def get_record_description(rec):
@@ -240,7 +240,7 @@ class IrRule(models.Model):
 
         context = None
         if company_related:
-            suggested_companies = records_sudo._get_redirect_suggested_company()
+            suggested_companies = display_records._get_redirect_suggested_company()
             if suggested_companies and len(suggested_companies) != 1:
                 resolution_info += _('\n\nNote: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!')
             elif suggested_companies and suggested_companies in self.env.user.company_ids:
@@ -253,13 +253,13 @@ class IrRule(models.Model):
             msg = f"{operation_error}\n{failing_model}\n\n{resolution_info}"
         else:
             # This extended AccessError is only displayed in debug mode.
-            failing_records = '\n'.join(f'- {get_record_description(rec)}' for rec in records_sudo)
+            failing_records = '\n'.join(f'- {get_record_description(rec)}' for rec in display_records)
             rules_description = '\n'.join(f'- {rule.name}' for rule in rules)
             failing_rules = _("Blame the following rules:\n%s", rules_description)
             msg = f"{operation_error}\n{failing_records}\n\n{failing_rules}\n\n{resolution_info}"
 
-        # clean up the cache of records prefetched with display_name above
-        records_sudo.invalidate_recordset()
+        # clean up the cache of records because of filtered_domain to check ir.rule + display_name above
+        records.invalidate_recordset()
 
         exception = AccessError(msg)
         if context:
