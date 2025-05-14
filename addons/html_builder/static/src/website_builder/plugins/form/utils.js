@@ -406,7 +406,7 @@ export function getDependencyEl(fieldEl) {
     const dependencyName = fieldEl.dataset.visibilityDependency;
     return fieldEl
         .closest("form")
-        .querySelector(`.s_website_form_input[name="${CSS.escape(dependencyName)}"]`);
+        ?.querySelector(`.s_website_form_input[name="${CSS.escape(dependencyName)}"]`);
 }
 
 /**

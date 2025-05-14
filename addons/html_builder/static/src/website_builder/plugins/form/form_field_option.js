@@ -32,6 +32,30 @@ export class FormFieldOption extends BaseOptionComponent {
                 modelName,
             };
         });
+
+        this.domStateDependency = useDomState((el) => {
+            const dependencyEl = getDependencyEl(el);
+            if (!dependencyEl) {
+                return {
+                    type: "",
+                    nodeName: "",
+                    isRecordField: false,
+                    isFormDate: false,
+                    isFormDateTime: false,
+                    hasDateTimePicker: false,
+                };
+            }
+
+            return {
+                type: dependencyEl.type,
+                nodeName: dependencyEl.nodeName,
+                isRecordField:
+                    dependencyEl.closest(".s_website_form_field")?.dataset.type === "record",
+                isFormDate: !!dependencyEl.closest(".s_website_form_date"),
+                isFormDateTime: !!dependencyEl.closest(".s_website_form_datetime"),
+                hasDateTimePicker: dependencyEl.classList.contains("datetimepicker-input"),
+            };
+        });
         onWillStart(async () => {
             const el = this.env.getEditingElement();
             const fieldOptionData = await this.props.loadFieldOptionData(el);
@@ -39,7 +63,6 @@ export class FormFieldOption extends BaseOptionComponent {
             this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
             this.state.valueList = fieldOptionData.valueList;
             this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
-            this.state.dependencyEl = getDependencyEl(el);
         });
         onWillUpdateProps(async (props) => {
             const el = this.env.getEditingElement();
@@ -51,7 +74,6 @@ export class FormFieldOption extends BaseOptionComponent {
             this.state.valueList = fieldOptionData.valueList;
             this.state.conditionValueList.length = 0;
             this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
-            this.state.dependencyEl = getDependencyEl(el);
         });
         // TODO select field's hack ?
     }

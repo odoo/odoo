@@ -237,7 +237,7 @@
 	                t-out="input.textContent"
 	            />
 	        </BuilderSelect>
-	        <BuilderSelect t-if="state.dependencyEl and (state.dependencyEl.type === 'checkbox' || state.dependencyEl.type === 'radio' || state.dependencyEl.nodeName === 'SELECT')"
+	        <BuilderSelect t-if="domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT'"
 	            id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
 	        >
 	            <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
@@ -256,7 +256,7 @@
 	            <BuilderSelectItem dataAttributeActionValue="'set'">Is set</BuilderSelectItem>
 	            <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
 	        </BuilderSelect>
-	        <BuilderSelect t-if="state.dependencyEl and state.dependencyEl.type === 'number'"
+	        <BuilderSelect t-if="domStateDependency.type === 'number'"
 	            id="'hidden_condition_num_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
 	        >
 	            <!-- number comparator possibilities -->
@@ -269,7 +269,7 @@
 	            <BuilderSelectItem dataAttributeActionValue="'set'">Is set</BuilderSelectItem>
 	            <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
 	        </BuilderSelect>
-	        <BuilderSelect t-if="state.dependencyEl?.classList.contains('datetimepicker-input')"
+	        <BuilderSelect t-if="domStateDependency.hasDateTimePicker"
 	            id="'hidden_condition_time_comparators_opt'" preview="false"
 	            dataAttributeAction="'visibilityComparator'"
 	        >
@@ -285,14 +285,14 @@
 	            <BuilderSelectItem dataAttributeActionValue="'between'">Is between (included)</BuilderSelectItem>
 	            <BuilderSelectItem dataAttributeActionValue="'!between'">Is not between (excluded)</BuilderSelectItem>
 	        </BuilderSelect>
-	        <BuilderSelect t-if="state.dependencyEl?.type === 'file'"
+	        <BuilderSelect t-if="domStateDependency.type === 'file'"
 	            id="'hidden_condition_file_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
 	        >
 	            <!-- file comparator possibilities -->
 	            <BuilderSelectItem dataAttributeActionValue="'fileset'">Is set</BuilderSelectItem>
 	            <BuilderSelectItem dataAttributeActionValue="'!fileset'">Is not set</BuilderSelectItem>
 	        </BuilderSelect>
-            <BuilderSelect t-if="state.dependencyEl?.closest('.s_website_form_field')?.dataset.type === 'record'"
+            <BuilderSelect t-if="domStateDependency.isRecordField"
                 id="'hidden_condition_record_opt'" dataAttributeAction="'visibilityComparator'" preview="false"
             >
                 <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
@@ -300,7 +300,7 @@
             </BuilderSelect>
 	    </div>
 	    <div class="d-flex position-relative p-1 px-2 ps-3 hb-row">
-	        <BuilderSelect t-if="state.conditionValueList and (state.dependencyEl and (state.dependencyEl.type === 'checkbox' || state.dependencyEl.type === 'radio' || state.dependencyEl.nodeName === 'SELECT'))"
+	        <BuilderSelect t-if="state.conditionValueList and (domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT')"
 	            id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
 	        >
 	            <!-- checkbox, select, radio possible values -->
@@ -309,7 +309,7 @@
 	                t-out="record.textContent"
 	            />   
 	        </BuilderSelect>
-	        <BuilderSelect t-if="state.conditionValueList and state.dependencyEl?.closest('.s_website_form_field')?.dataset.type === 'record'"
+	        <BuilderSelect t-if="state.conditionValueList and domStateDependency.isRecordField"
 	            id="'hidden_condition_record_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
 	        >
 	            <!-- checkbox, select, radio possible values -->
@@ -321,16 +321,16 @@
 	        <BuilderTextInput t-if="isTextConditionValueVisible"
 	            id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
 	        />
-	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_datetime') and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
+	        <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
 	            id="'hidden_condition_additional_datetime'" dataAttributeAction="'visibilityCondition'" type="'datetime'"
 	        />
-	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_date') and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
+	        <BuilderDateTimePicker t-if="domStateDependency.isFormDate and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
 	            id="'hidden_condition_additional_date'" dataAttributeAction="'visibilityCondition'" type="'date'"
 	        />
-	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_datetime') and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
+	        <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
 	            id="'hidden_condition_datetime_between'" dataAttributeAction="'visibilityBetween'" type="'datetime'"
 	        />
-	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_date') and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
+	        <BuilderDateTimePicker t-if="domStateDependency.isFormDate and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
 	            id="'hidden_condition_date_between'" dataAttributeAction="'visibilityBetween'" type="'date'"
 	        />
 	    </div>
