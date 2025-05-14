@@ -11,7 +11,7 @@ class WebsiteSlidesLegacy(http.Controller):
     """
 
     @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True,
-                sitemap=True, readonly=True)
+                sitemap=False, readonly=True)
     def slides_channel_all(self, slug_tags=None, **post):
         """ "All" in < 19 was different from "Home". Both have been merged, but we keep
         some backward compatibility for saved links, even if the display is going to

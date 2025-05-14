@@ -86,7 +86,32 @@ class QueryURL:
 
 class Website(Home):
 
-    @http.route('/', auth="public", website=True, sitemap=True)
+    def sitemap_index(env, rule, qs):
+        Website = env['website'].get_current_website()
+        homepage_url = Website.homepage_url
+
+        def match(loc):
+            return not qs or qs.lower() in loc.lower()
+
+        if homepage_url and homepage_url != '/' and match(homepage_url):
+            yield {'loc': homepage_url}
+            return
+        website_page = env['website.page'].sudo().search([
+            ('url', '=', '/'),
+            ('is_published', '=', True),
+        ], limit=1)
+        if website_page and match('/'):
+            yield {'loc': '/'}
+            return
+
+        top_menu = Website.menu_id
+        reachable_menus = top_menu.child_id.filtered(Website.is_reachable)
+        if reachable_menus:
+            loc = reachable_menus[0].url
+            if match(loc):
+                yield {'loc': loc}
+
+    @http.route('/', auth="public", website=True, sitemap=sitemap_index)
     def index(self, **kw):
         """ The goal of this controller is to make sure we don't serve a 404 as
         the website homepage. As this is the website entry point, serving a 404
@@ -120,14 +145,9 @@ class Website(Home):
             except (AccessError, NotFound, SessionExpiredException):
                 pass
 
-        # Fallback on first accessible menu
-        def is_reachable(menu):
-            return menu.is_visible and menu.url not in ('/', '', '#') and not menu.url.startswith(('/?', '/#', ' '))
-
         # prefetch all menus (it will prefetch website.page too)
         top_menu = request.website.menu_id
-
-        reachable_menus = top_menu.child_id.filtered(is_reachable)
+        reachable_menus = top_menu.child_id.filtered(request.website.is_reachable)
         if reachable_menus:
             return request.redirect(reachable_menus[0].url)
 
