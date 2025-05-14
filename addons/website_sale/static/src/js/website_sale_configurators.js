@@ -22,7 +22,7 @@ WebsiteSale.include({
     },
 
     async _openDialog(isOnProductPage) {
-        const { combos, ...remainingData } = await rpc(
+        const { combos, show_quantity, ...remainingData } = await rpc(
             '/website_sale/combo_configurator/get_data',
             {
                 product_tmpl_id: this.rootProduct.product_template_id,
@@ -52,7 +52,7 @@ WebsiteSale.include({
                 );
             }
             // If some combo choices need to be configured, open the combo configurator.
-            return this._openComboConfigurator(combos, remainingData);
+            return this._openComboConfigurator(combos, remainingData, show_quantity);
         }
         if (this.isBuyNow) {
             return this._submitForm();
@@ -66,7 +66,7 @@ WebsiteSale.include({
             }
         );
         if (shouldShowProductConfigurator) {
-            return this._openProductConfigurator(isOnProductPage);
+            return this._openProductConfigurator(isOnProductPage, show_quantity);
         }
         return this._submitForm();
     },
@@ -75,8 +75,9 @@ WebsiteSale.include({
      * Opens the product configurator dialog.
      *
      * @param isOnProductPage Whether the user is currently on the product page.
+     * @param showQuantity Whether the quantity selector is shown.
      */
-    _openProductConfigurator(isOnProductPage) {
+    _openProductConfigurator(isOnProductPage, showQuantity) {
         this.call('dialog', 'add', ProductConfiguratorDialog, {
             productTemplateId: this.rootProduct.product_template_id,
             ptavIds: this.rootProduct.variant_values,
@@ -92,7 +93,7 @@ WebsiteSale.include({
             isFrontend: true,
             options: {
                 isMainProductConfigurable: !isOnProductPage,
-                showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
+                showQuantity: showQuantity,
             },
             save: async (mainProduct, optionalProducts, options) => {
                 this._trackProducts([mainProduct, ...optionalProducts]);
@@ -114,8 +115,9 @@ WebsiteSale.include({
      *
      * @param combos The combos of the product.
      * @param remainingData Other data needed to open the combo configurator.
+     * @param showQuantity Whether the quantity selector is shown.
      */
-    _openComboConfigurator(combos, remainingData) {
+    _openComboConfigurator(combos, remainingData, showQuantity) {
         this.call('dialog', 'add', ComboConfiguratorDialog, {
             combos: combos.map(combo => new ProductCombo(combo)),
             ...remainingData,
@@ -123,7 +125,7 @@ WebsiteSale.include({
             edit: false,
             isFrontend: true,
             options: {
-                showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
+                showQuantity: showQuantity,
             },
             save: (comboProductData, selectedComboItems, options) =>
                 this.addComboProductToCart(
