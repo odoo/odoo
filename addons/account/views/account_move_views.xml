@@ -911,6 +911,9 @@
                             </button>
                         </div>
 
+                        <widget name="web_ribbon" title="Sent"
+                                bg_color="gray_ribbon"
+                                invisible="not is_move_sent or payment_state != 'not_paid' or move_type not in ('out_invoice', 'out_refund', 'out_receipt')"/>
                         <!-- Payment status for invoices / receipts -->
                         <widget name="web_ribbon" title="Paid"
                                 invisible="payment_state != 'paid' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"/>

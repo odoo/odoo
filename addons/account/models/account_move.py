@@ -633,7 +633,6 @@ class AccountMove(models.Model):
     is_move_sent = fields.Boolean(
         readonly=True,
         copy=False,
-        tracking=True,
         help="It indicates that the invoice/payment has been sent or the PDF has been generated.",
     )
     is_being_sent = fields.Boolean(
