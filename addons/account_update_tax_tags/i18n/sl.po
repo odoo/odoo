@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr "Ustvarjeno"
 #. module: account_update_tax_tags
 #: model:ir.model.fields,help:account_update_tax_tags.field_account_update_tax_tags_wizard__date_from
 msgid "Date from which journal items will be updated."
-msgstr ""
+msgstr "Datum, od katerega se bodo postavke dnevnika posodabljale."
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -47,7 +48,7 @@ msgstr "Opusti"
 #. module: account_update_tax_tags
 #: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__display_lock_date_warning
 msgid "Display Lock Date Warning"
-msgstr ""
+msgstr "Opozorilo o datumu zaklepanja zaslona"
 
 #. module: account_update_tax_tags
 #: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__display_name
@@ -72,13 +73,14 @@ msgstr "Zadnjič posodobljeno"
 #. module: account_update_tax_tags
 #: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__date_from
 msgid "Starting from"
-msgstr ""
+msgstr "Začni z"
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
 msgid ""
 "The date you chose is violating the tax lock date, do this at your own risk."
 msgstr ""
+"Izbrani datum krši datum davčne blokade, to storite na lastno odgovornost."
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -88,13 +90,13 @@ msgstr "Posodobi"
 #. module: account_update_tax_tags
 #: model:ir.model,name:account_update_tax_tags.model_account_update_tax_tags_wizard
 msgid "Update Tax Tags Wizard"
-msgstr ""
+msgstr "Čarovnik za posodobitev davčnih oznak"
 
 #. module: account_update_tax_tags
 #: model:ir.actions.act_window,name:account_update_tax_tags.action_open_wizard
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.res_config_settings_view_form
 msgid "Update tax tags on existing Journal Entries"
-msgstr ""
+msgstr "Posodobi davčne oznake na obstoječih dnevniških vnosih"
 
 #. module: account_update_tax_tags
 #. odoo-python
@@ -102,7 +104,7 @@ msgstr ""
 msgid ""
 "Update with children taxes that are child of multiple parents is not "
 "supported."
-msgstr ""
+msgstr "Posodobitev z davki za otroke, ki so otroci več staršev, ni podprta."
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -113,3 +115,8 @@ msgid ""
 "                    The update will change tax tags on your accounting history, starting from and including selected date,\n"
 "                    so that it matches with the current configuration of your taxes.<br/>"
 msgstr ""
+"Posodabljanje davčnih oznak na obstoječih dnevniških vnosih je <b>nepovratno</b> dejanje, ki bo vplivalo\n"
+"                    vaša poročila.<br/>\n"
+"                    Zelo priporočljivo je, da predhodno naredite varnostno kopijo baze podatkov.<br/>\n"
+"                    Posodobitev bo spremenila davčne oznake v vaši računovodski zgodovini, z začetnim izbranim datumom vključno z njim,\n"
+"                    tako da se ujema s trenutno konfiguracijo vaših davkov.<br/>"
