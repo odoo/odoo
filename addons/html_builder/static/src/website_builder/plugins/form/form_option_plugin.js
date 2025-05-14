@@ -636,10 +636,12 @@ export class FormOptionPlugin extends Plugin {
         const formInfo = registry.category("website.form_editor_actions").get(formKey, null);
         if (formInfo) {
             const formatInfo = getDefaultFormat(el);
-            await formInfo.formFields.forEach(async (field) => {
-                field.formatInfo = formatInfo;
-                await this.fetchFieldRecords(field);
-            });
+            await Promise.all(
+                formInfo.formFields.map((field) => {
+                    field.formatInfo = formatInfo;
+                    return this.fetchFieldRecords(field);
+                })
+            );
             await this.fetchFormInfoFields(formInfo);
         }
         return formInfo;
