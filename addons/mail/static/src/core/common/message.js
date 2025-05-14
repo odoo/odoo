@@ -430,16 +430,6 @@ export class Message extends Component {
         this.popover.open(ev.target, { message });
     }
 
-    onClickFailure(ev) {
-        const message = toRaw(this.message);
-        markEventHandled(ev, "Message.ClickFailure");
-        this.env.services.action.doAction("mail.mail_resend_message_action", {
-            additionalContext: {
-                mail_message_to_resend: message.id,
-            },
-        });
-    }
-
     /** @param {MouseEvent} [ev] */
     openMobileActions(ev) {
         if (!isMobileOS()) {
