@@ -1,12 +1,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import contextlib
 from datetime import timedelta
 from unittest.mock import patch
 
+import freezegun
+
 import odoo
 from odoo import Command, fields
-from odoo.tests.common import users
-from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
+from odoo.addons.mail.tests.common import MailCommon
+from odoo.tests.common import users
+
+
+@contextlib.contextmanager
+def freeze_all_time(time=None):
+    """ Freeze time for datetime calls and create_date in odoo.sql_db.BaseCursor."""
+    if time is None:
+        time = fields.Datetime.now()
+    with patch('odoo.sql_db.BaseCursor.now', return_value=time), freezegun.freeze_time(time):
+        yield
 
 
 @odoo.tests.tagged("-at_install", "post_install")
@@ -430,3 +443,38 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
         self.assertEqual(
             livechat_channel._get_operator(lang="en_US", users=all_operators), operator_2
         )
+
+    def test_buffer_time_multi_operator(self):
+        first_operator = self._create_operator()
+        second_operator = self._create_operator()
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Livechat Channel",
+                "user_ids": [first_operator.id, second_operator.id],
+                "buffer_time": 10,
+            }
+        )
+        now = fields.Datetime.now()
+        with freeze_all_time(now + timedelta(minutes=-1)):
+            self._create_chat(livechat_channel, second_operator)
+        with freeze_all_time(now):
+            self._create_chat(livechat_channel, first_operator)
+            self.assertEqual(second_operator, livechat_channel._get_operator())
+        with freeze_all_time(now + timedelta(seconds=11)):
+            self.assertEqual(first_operator, livechat_channel._get_operator())
+
+    def test_bypass_buffer_time_when_impossible_selection(self):
+        first_operator = self._create_operator()
+        second_operator = self._create_operator()
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Livechat Channel",
+                "user_ids": [first_operator.id, second_operator.id],
+                "buffer_time": 10,
+            }
+        )
+        now = fields.Datetime.now()
+        with freeze_all_time(now):
+            self._create_chat(livechat_channel, first_operator)
+            self._create_chat(livechat_channel, second_operator)
+            self.assertEqual(first_operator, livechat_channel._get_operator())
