@@ -24,14 +24,6 @@ class WebsiteMenu(models.Model):
         menu = self.search([], limit=1, order="sequence DESC")
         return menu.sequence or 0
 
-    def _default_website_id(self):
-        """Return the current website if there's only one in the database,
-        otherwise False."""
-        Website = self.env['website']
-        if Website.search_count([]) == 1:
-            return Website.get_current_website()
-        return False
-
     @api.depends('mega_menu_content')
     def _compute_field_is_mega_menu(self):
         for menu in self:
@@ -52,7 +44,7 @@ class WebsiteMenu(models.Model):
     controller_page_id = fields.Many2one('website.controller.page', 'Related Model Page', ondelete='cascade', index='btree_not_null')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer(default=_default_sequence)
-    website_id = fields.Many2one('website', 'Website', ondelete='cascade', default=_default_website_id)
+    website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True)
