@@ -480,6 +480,10 @@ patch(PosOrder.prototype, {
         }
         return true;
     },
+    isLineValidForLoyaltyPoints(line) {
+        // This method should be overriden in other modules
+        return true;
+    },
     /**
      * Computes how much points each program gives.
      *
@@ -499,6 +503,10 @@ patch(PosOrder.prototype, {
             const rewardProgram = reward && reward.program_id;
             // Skip lines for automatic discounts.
             if (isDiscount && rewardProgram.trigger === "auto") {
+                continue;
+            }
+
+            if (!this.isLineValidForLoyaltyPoints(line)) {
                 continue;
             }
             for (const program of programs) {
