@@ -57,7 +57,7 @@
                     starts on
                     <span t-field="sponsor.event_id.date_begin"
                         t-options="{'format': 'medium', 'tz_name': sponsor.event_id.date_tz}"/>
-                    <span>(<t t-if="website_visitor_timezone != sponsor.event_id.date_tz" t-out="event.date_tz"/>)</span>
+                    <span t-if="website_visitor_timezone != sponsor.event_id.date_tz">(<t t-out="event.date_tz"/>)</span>
                 </span>
                 <br/>
                 <span t-if="is_event_user">Attendees will be able to join to meet <b t-out="sponsor.partner_name"/> .</span>
