@@ -228,6 +228,9 @@ apt-get clean
 localepurge
 rm -rfv /usr/share/doc
 
+# Remove the default nginx website, we have our own config in /etc/nginx/conf.d/
+rm /etc/nginx/sites-enabled/default
+
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
 # this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspios
