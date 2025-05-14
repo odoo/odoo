@@ -80,7 +80,7 @@ function createOdooChartRuntime(chart, getters) {
         },
         options: {
             ...CHART_COMMON_OPTIONS,
-            layout: getChartLayout(definition),
+            layout: getChartLayout(definition, chartData),
             scales: getBarChartScales(definition, chartData),
             plugins: {
                 title: getChartTitle(definition),

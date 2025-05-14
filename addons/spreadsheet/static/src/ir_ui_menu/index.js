@@ -44,7 +44,7 @@ export const spreadsheetLinkMenuCellService = {
         }
 
         urlRegistry
-            .add("OdooMenuIdLink", {
+            .replace("OdooMenuIdLink", {
                 sequence: 65,
                 match: isMarkdownIrMenuIdUrl,
                 createLink(url, label) {
@@ -70,7 +70,7 @@ export const spreadsheetLinkMenuCellService = {
                     env.services.action.doAction(menu.actionID, { newWindow });
                 },
             })
-            .add("OdooMenuXmlLink", {
+            .replace("OdooMenuXmlLink", {
                 sequence: 66,
                 match: isIrMenuXmlUrl,
                 createLink(url, label) {
@@ -95,7 +95,7 @@ export const spreadsheetLinkMenuCellService = {
                     env.services.action.doAction(menu.actionID, { newWindow });
                 },
             })
-            .add("OdooViewLink", {
+            .replace("OdooViewLink", {
                 sequence: 67,
                 match: isMarkdownViewUrl,
                 createLink(url, label) {

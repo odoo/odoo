@@ -13,6 +13,7 @@ const {
     getChartTitle,
     getPieChartLegend,
     getChartShowValues,
+    getTopPaddingForDashboard,
 } = chartHelpers;
 
 export class OdooPieChart extends OdooChart {
@@ -50,6 +51,7 @@ function createOdooChartRuntime(chart, getters) {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
         locale: getters.getLocale(),
+        topPadding: getTopPaddingForDashboard(definition, getters),
     };
 
     const config = {
@@ -60,7 +62,7 @@ function createOdooChartRuntime(chart, getters) {
         },
         options: {
             ...CHART_COMMON_OPTIONS,
-            layout: getChartLayout(definition),
+            layout: getChartLayout(definition, chartData),
             plugins: {
                 title: getChartTitle(definition),
                 legend: getPieChartLegend(definition, chartData),

@@ -7,8 +7,8 @@ const { deepEquals } = helpers;
 class ChartAnimationStore extends SpreadsheetStore {
     animationPlayed = {};
 
-    disableAnimationForChart(chartId) {
-        this.animationPlayed[chartId] = true;
+    disableAnimationForChart(chartId, chartType) {
+        this.animationPlayed[chartId] = chartType;
     }
 }
 
@@ -21,15 +21,18 @@ patch(components.ChartJsComponent.prototype, {
     },
     createChart(chartData) {
         if (this.env.model.getters.isDashboard()) {
-            if (!this.animationStore.animationPlayed[this.props.figureUI.id]) {
+            chartData = this.addOdooMenuPluginToChartData(chartData);
+            const chartType = this.env.model.getters.getChart(this.props.figureUI.id).type;
+            if (this.animationStore.animationPlayed[this.props.figureUI.id] !== chartType) {
                 chartData = this.enableAnimationInChartData(chartData);
-                this.animationStore.disableAnimationForChart(this.props.figureUI.id);
+                this.animationStore.disableAnimationForChart(this.props.figureUI.id, chartType);
             }
         }
         super.createChart(chartData);
     },
     updateChartJs(chartData) {
         if (this.env.model.getters.isDashboard()) {
+            chartData = this.addOdooMenuPluginToChartData(chartData);
             if (this.hasChartDataChanged()) {
                 chartData = this.enableAnimationInChartData(chartData);
                 this.animationStore.disableAnimationForChart(this.props.figureUI.id);
@@ -53,5 +56,12 @@ patch(components.ChartJsComponent.prototype, {
                 },
             },
         };
+    },
+    addOdooMenuPluginToChartData(chartData) {
+        chartData.options.plugins.chartOdooMenuPlugin = {
+            env: this.env,
+            menu: this.env.model.getters.getChartOdooMenu(this.props.figureUI.id),
+        };
+        return chartData;
     },
 });
