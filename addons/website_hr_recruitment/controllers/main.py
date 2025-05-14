@@ -176,7 +176,13 @@ class WebsiteHrRecruitment(WebsiteForm):
         })
         return f"/jobs/{request.env['ir.http']._slug(job)}"
 
-    @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
+    def sitemap_jobs_detail(env, rule, qs):
+        slug = env['ir.http']._slug
+        for job in env['hr.job'].search([('is_published', '=', True)]):
+            if not qs or qs.lower() in f'/jobs/{slug(job)}':
+                yield {'loc': f'/jobs/{slug(job)}'}
+
+    @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=sitemap_jobs_detail)
     def jobs_detail(self, job, **kwargs):
         redirect_url = f"/jobs/{request.env['ir.http']._slug(job)}"
         return request.redirect(redirect_url, code=301)

@@ -399,9 +399,13 @@ class WebsiteSlides(WebsiteProfile):
     def _has_slide_channel_search(self, my=None, slug_tags=None, slide_category=None, **post):
         return my or post.get('search') or slug_tags or post.get('tag') or slide_category
 
+    def sitemap_slides_channel(env, rule, qs):
+        if not qs or qs.lower() in '/slides':
+            yield {"loc": "/slides"}
+
     @http.route(['/slides', '/slides/page/<int:page>',
                  '/slides/tag/<string:slug_tags>', '/slides/tag/<string:slug_tags>/page/<int:page>'],
-                type='http', auth="public", website=True, sitemap=True, readonly=True,
+                type='http', auth="public", website=True, sitemap=sitemap_slides_channel, readonly=True,
                 list_as_website_content=_lt("eLearning"))
     def slides_channel(self, slide_category=None, slug_tags=None, my=0, page=1, **post):
         my = 1 if str(my) == '1' else 0  # if in the URL parameters, it will be a string instead of a number
@@ -967,8 +971,19 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.SLIDE MAIN / SEARCH
     # --------------------------------------------------
 
+    def sitemap_slide_view(env, rule, qs):
+        slides = env['slide.slide'].search([('website_published', '=', True), ('active', '=', True)])
+        for slide in slides:
+            if slide.is_category:
+                loc = slide.channel_id.website_url
+            else:
+                loc = slide.website_url
+
+            if not qs or qs.lower() in loc.lower():
+                yield {'loc': loc}
+
     @http.route('/slides/slide/<model("slide.slide"):slide>', type='http', auth="public",
-                website=True, sitemap=True, handle_params_access_error=handle_wslide_error)
+                website=True, sitemap=sitemap_slide_view, handle_params_access_error=handle_wslide_error)
     def slide_view(self, slide, **kwargs):
         if not slide.channel_id.can_access_from_current_website() or not slide.active:
             raise werkzeug.exceptions.NotFound()

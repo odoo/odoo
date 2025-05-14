@@ -66,7 +66,16 @@ class WebsiteForum(WebsiteProfile):
     # Forum
     # --------------------------------------------------
 
-    @http.route(['/forum'], type='http', auth="public", website=True, sitemap=True, readonly=True, list_as_website_content=_lt("Forum"))
+    def sitemap_forum(env, rule, qs):
+        website = env['website'].get_current_website()
+        domain = website.website_domain()
+        forums_count = env['forum.forum'].search_count(domain, limit=2)
+
+        if forums_count > 1:
+            if not qs or qs.lower() in '/forum':
+                yield {'loc': '/forum'}
+
+    @http.route(['/forum'], type='http', auth="public", website=True, sitemap=sitemap_forum, readonly=True, list_as_website_content=_lt("Forum"))
     def forum(self, **kwargs):
         domain = request.website.website_domain()
         forums = request.env['forum.forum'].search(domain)
@@ -78,7 +87,7 @@ class WebsiteForum(WebsiteProfile):
             'forums': forums
         })
 
-    def sitemap_forum(env, rule, qs):
+    def sitemap_forum_all(env, rule, qs):
         Forum = env['forum.forum']
         dom = sitemap_qs2dom(qs, '/forum', Forum._rec_name)
         dom &= env['website'].get_current_website().website_domain()
@@ -110,7 +119,7 @@ class WebsiteForum(WebsiteProfile):
                  '/forum/<model("forum.forum"):forum>/page/<int:page>',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
-                 ], type='http', auth="public", website=True, sitemap=sitemap_forum, readonly=True)
+                 ], type='http', auth="public", website=True, sitemap=sitemap_forum_all, readonly=True)
     def questions(self, forum=None, tag=None, page=1, filters='all', my=None, sorting=None, search='', create_uid=False, include_answers=False, **post):
         Post = request.env['forum.post']
 
