@@ -2,12 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
-const oeStructureSelector = "#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]";
-const oeFieldSelector = "#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])";
-const OE_RECORD_COVER_SELECTOR = "#wrapwrap .o_record_cover_container[data-res-model]";
-const oeCoverSelector = `#wrapwrap .s_cover[data-res-model], ${OE_RECORD_COVER_SELECTOR}`;
-const SAVABLE_SELECTOR = `${oeStructureSelector}, ${oeFieldSelector}, ${oeCoverSelector}`;
-
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
     static shared = ["save"];
@@ -16,6 +10,11 @@ export class SavePlugin extends Plugin {
         handleNewRecords: this.handleMutations.bind(this),
         start_edition_handlers: this.startObserving.bind(this),
         // Resource definitions:
+        savable_selectors: [
+            "#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]",
+            "#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])",
+            "#wrapwrap .s_cover[data-res-model]",
+        ],
         before_save_handlers: [
             // async () => {
             //     called at the very beginning of the save process
@@ -27,6 +26,12 @@ export class SavePlugin extends Plugin {
             //     root is the clone of a node that was o_dirty
             // }
         ],
+        save_element_handlers: [
+            // async (el) => {
+            //     called when saving an element (in parallel to saving the view)
+            // }
+            this.saveView.bind(this),
+        ],
         save_handlers: [
             // async () => {
             //     called at the very end of the save process
@@ -37,6 +42,7 @@ export class SavePlugin extends Plugin {
 
     setup() {
         this.canObserve = false;
+        this.savableSelector = this.getResource("savable_selectors").join(", ");
     }
 
     async save() {
@@ -58,7 +64,13 @@ export class SavePlugin extends Plugin {
             if (this.config.isTranslation) {
                 await this.saveTranslationElement(cleanedEl);
             } else {
-                await this.saveView(cleanedEl);
+                const proms = this.getResource("save_element_handlers")
+                    .map((h) => h(cleanedEl))
+                    .filter(Boolean);
+                if (!proms.length) {
+                    console.warning("no save_element_handlers for dirty element", cleanedEl);
+                }
+                await Promise.all(proms);
             }
         });
         // used to track dirty out of the editable scope, like header, footer or wrapwrap
@@ -66,43 +78,15 @@ export class SavePlugin extends Plugin {
         await Promise.all(saveProms.concat(willSaves));
     }
 
-    async saveCoverProperties(el) {
-        const resModel = el.dataset.resModel;
-        const resID = Number(el.dataset.resId);
-
-        if (!resModel || !resID) {
-            throw new Error("There should be a model and id associated to the cover");
-        }
-
-        const coverProps = {
-            "background-image": el.dataset.bgImage,
-            background_color_class: el.dataset.bgColorClass,
-            background_color_style: el.dataset.bgColorStyle,
-            opacity: el.dataset.filterValue,
-            resize_class: el.dataset.coverClass,
-            text_align_class: el.dataset.textAlignClass,
-        };
-
-        return this.services.orm.write(resModel, [resID], {
-            cover_properties: JSON.stringify(coverProps),
-        });
-    }
-
     /**
      * Saves one (dirty) element of the page.
      *
      * @param {HTMLElement} el - the element to save.
      */
-    async saveView(el) {
-        const proms = [];
+    saveView(el) {
         const viewID = Number(el.dataset["oeId"]);
-
-        if (el.classList.contains("o_record_cover_container")) {
-            proms.push(this.saveCoverProperties(el));
-
-            if (!viewID) {
-                return Promise.all(proms);
-            }
+        if (!viewID) {
+            return;
         }
 
         const context = {
@@ -113,19 +97,12 @@ export class SavePlugin extends Plugin {
             delay_translations: false,
         };
 
-        proms.push(
-            this.services.orm.call(
-                "ir.ui.view",
-                "save",
-                [
-                    viewID,
-                    el.outerHTML,
-                    (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null,
-                ],
-                { context }
-            )
+        return this.services.orm.call(
+            "ir.ui.view",
+            "save",
+            [viewID, el.outerHTML, (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null],
+            { context }
         );
-        return Promise.all(proms);
     }
 
     /**
@@ -211,7 +188,7 @@ export class SavePlugin extends Plugin {
             if (!targetEl) {
                 continue;
             }
-            const savableEl = targetEl.closest(SAVABLE_SELECTOR);
+            const savableEl = targetEl.closest(this.savableSelector);
             if (
                 !savableEl ||
                 savableEl.classList.contains("o_dirty") ||
@@ -223,4 +200,5 @@ export class SavePlugin extends Plugin {
         }
     }
 }
+
 registry.category("translation-plugins").add(SavePlugin.id, SavePlugin);
