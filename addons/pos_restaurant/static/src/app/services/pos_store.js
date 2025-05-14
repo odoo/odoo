@@ -2,6 +2,7 @@ import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { EditOrderNamePopup } from "@pos_restaurant/app/components/popup/edit_order_name_popup/edit_order_name_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
@@ -550,6 +551,22 @@ patch(PosStore.prototype, {
             }
         }
     },
+    async editFloatingOrderName(order) {
+        const payload = await makeAwaitable(this.dialog, EditOrderNamePopup, {
+            title: _t("Edit Order Name"),
+            placeholder: _t("18:45 John 4P"),
+            startingValue: order.floating_order_name || "",
+        });
+        if (payload) {
+            if (typeof order.id == "number") {
+                this.data.write("pos.order", [order.id], {
+                    floating_order_name: payload,
+                });
+            } else {
+                order.floating_order_name = payload;
+            }
+        }
+    },
     setFloatingOrder(floatingOrder) {
         if (this.getOrder()?.isFilledDirectSale) {
             this.transferOrder(this.getOrder().uuid, null, floatingOrder);
@@ -564,6 +581,24 @@ patch(PosStore.prototype, {
         }
 
         this.showScreen(screenName || "ProductScreen", props);
+    },
+    async handleSelectNamePreset(order) {
+        if (this.config.module_pos_restaurant) {
+            const orderPreset = order.preset_id;
+            if (orderPreset && !order.floating_order_name && !order.table_id) {
+                order.floating_order_name = order.getPartner()?.name;
+                if (!order.floating_order_name) {
+                    await this.editFloatingOrderName(order);
+                    //re-set the order in case an order was selected from the current orders list in the EditOrderNamePopup
+                    order = this.getOrder();
+                    if (!order.floating_order_name) {
+                        return;
+                    }
+                }
+            }
+        } else {
+            return super.handleSelectNamePreset(...arguments);
+        }
     },
     findTable(tableNumber) {
         const find_table = (t) => t.table_number === parseInt(tableNumber);
