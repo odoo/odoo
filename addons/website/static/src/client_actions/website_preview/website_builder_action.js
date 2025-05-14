@@ -80,13 +80,6 @@ export class WebsiteBuilder extends Component {
         useSubEnv({
             localOverlayContainerKey: uniqueId("website"),
         });
-        useEffect(
-            () => {
-                this.addWelcomeMessage();
-                return () => this.welcomeMessageEl?.remove();
-            },
-            () => [this.state.isEditing]
-        );
         this.websitePreviewRef = useRef("website_preview");
 
         onWillStart(async () => {
@@ -265,6 +258,7 @@ export class WebsiteBuilder extends Component {
         this.setupClickListener();
         this.replaceBrowserUrl();
         this.resolveIframeLoaded();
+        this.addWelcomeMessage();
 
         if (this.props.action.context.params?.with_loader) {
             this.websiteService.hideLoader();
@@ -386,8 +380,8 @@ export class WebsiteBuilder extends Component {
 
     async reloadIframeAndCloseEditor() {
         const isEditing = false;
-        await this.reloadIframe(isEditing);
         this.state.isEditing = isEditing;
+        await this.reloadIframe(isEditing);
     }
 
     async reloadIframe(isEditing = true, url) {
@@ -423,7 +417,6 @@ export class WebsiteBuilder extends Component {
     }
 
     async addWelcomeMessage() {
-        await this.iframeLoaded;
         if (this.websiteService.isRestrictedEditor && !this.state.isEditing) {
             const wrapEl = this.websiteContent.el.contentDocument.querySelector(
                 "#wrapwrap.homepage #wrap"

@@ -13,6 +13,8 @@ export class SetupEditorPlugin extends Plugin {
 
     setup() {
         this.websiteService = this.services.website;
+        const welcomeMessageEl = this.editable.querySelector("#wrap .o_homepage_editor_welcome_message");
+        welcomeMessageEl?.remove();
         this.editable.setAttribute("contenteditable", false);
         // Add the `o_editable` class on the editable elements
         if (this.config.isTranslation) {
