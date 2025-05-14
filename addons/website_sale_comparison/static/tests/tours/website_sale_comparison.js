@@ -106,12 +106,17 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         run: "click",
     },
     {
+        isActive: ["body:not(:has(.comparator-popover))"],
+        trigger: ".o_add_compare_dyn",
+        run: "click",
+    },
+    {
         content: "check limit is reached",
-        trigger: '.o_comparelist_limit_warning',
+        trigger: '.comparator-popover .o_comparelist_limit_warning',
     },
     {
         content: "click on compare button",
-        trigger: '.o_comparelist_button a',
+        trigger: '.comparator-popover .o_comparelist_button a',
         run: "click",
     },
     // test on compare page

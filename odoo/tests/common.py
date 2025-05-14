@@ -2410,7 +2410,6 @@ class HttpCase(TransactionCase):
         if 'tour_enabled' not in self.env['res.users']._fields:
             raise unittest.SkipTest('web_tour is not installed')
         options = {
-            'stepDelay': step_delay or 0,
             'keepWatchBrowser': kwargs.get('watch', False),
             'debug': kwargs.get('debug', False),
             'startUrl': url_path,

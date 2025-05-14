@@ -26,60 +26,67 @@ export class TourAutomatic {
         return this.config.debug !== false;
     }
 
+    computeTimeout(step) {
+        const { stepDelay } = this.config;
+        let timeout = step.timeout || this.timeout || 10000;
+        if (this.debugMode) {
+            if (step.pause) {
+                return 9999999;
+            } else if (stepDelay > 0) {
+                timeout += stepDelay;
+            }
+        }
+        return timeout;
+    }
+
     start() {
         setupEventActions(document.createElement("div"), { allowSubmit: true });
-        const { delayToCheckUndeterminisms, stepDelay } = this.config;
+        const { stepDelay } = this.config;
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
-            .flatMap((step) => [
-                {
-                    action: async () => {
-                        if (this.debugMode) {
-                            console.groupCollapsed(step.describeMe);
-                            console.log(step.stringify);
-                            if (step.break) {
-                                // eslint-disable-next-line no-debugger
-                                debugger;
-                            }
-                        } else {
-                            console.log(step.describeMe);
-                        }
-                        // This delay is important for making the current set of tour tests pass.
-                        // IMPROVEMENT: Find a way to remove this delay.
-                        await new Promise((resolve) => requestAnimationFrame(resolve));
-                        if (stepDelay > 0) {
-                            await hoot.delay(stepDelay);
-                        }
-                    },
-                },
-                {
-                    trigger: step.trigger ? () => step.findTrigger() : null,
-                    timeout:
-                        step.pause && this.debugMode
-                            ? 9999999
-                            : step.timeout || this.timeout || 10000,
-                    action: async (trigger) => {
-                        if (delayToCheckUndeterminisms > 0) {
-                            await step.checkForUndeterminisms(trigger, delayToCheckUndeterminisms);
-                        }
-                        const result = await step.doAction();
-                        if (this.debugMode) {
-                            console.log(trigger);
-                            if (step.skipped) {
-                                console.log("This step has been skipped");
+            .flatMap((step) => {
+                const timeout = this.computeTimeout(step);
+                return [
+                    {
+                        action: async () => {
+                            if (this.debugMode) {
+                                console.groupCollapsed(step.describeMe);
+                                console.log(step.stringify);
+                                if (step.break) {
+                                    // eslint-disable-next-line no-debugger
+                                    debugger;
+                                }
                             } else {
-                                console.log("This step has run successfully");
+                                console.log(step.describeMe);
                             }
-                            console.groupEnd();
-                            if (step.pause) {
-                                await this.pause();
-                            }
-                        }
-                        tourState.setCurrentIndex(step.index + 1);
-                        return result;
+                        },
                     },
-                },
-            ]);
+                    {
+                        trigger: step.trigger ? () => step.findTrigger(step.trigger) : null,
+                        action: async (trigger) => {
+                            if (this.debugMode) {
+                                console.log(trigger);
+                                if (trigger && stepDelay > 0) {
+                                    await step.waitDelay(trigger, step.trigger, stepDelay);
+                                }
+                                if (step.skipped) {
+                                    console.log("This step has been skipped");
+                                } else {
+                                    console.log("This step has run successfully");
+                                }
+                                console.groupEnd();
+                                if (step.pause) {
+                                    await this.pause();
+                                }
+                            }
+                            const result = await step.doAction(trigger);
+                            tourState.setCurrentIndex(step.index + 1);
+                            return result;
+                        },
+                        timeout,
+                    },
+                ];
+            });
 
         const end = () => {
             delete window.hoot;
