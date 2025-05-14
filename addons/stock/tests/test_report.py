@@ -26,6 +26,11 @@ class TestReportsCommon(TransactionCase):
             'default_code': 'C4181234""154654654654',
             'barcode': 'scan""me'
         })
+        cls.serial_product = cls.env['product.product'].create({
+            'name': 'simple prod',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
 
         product_form = Form(cls.env['product.product'])
         product_form.is_storable = True
@@ -1957,8 +1962,7 @@ class TestReports(TestReportsCommon):
 class TestReportsPostInstall(TestReportsCommon):
 
     def test_report_stock_lot_customer_simple_delivery(self):
-        serial_product = self.env['product.product'].create({'name': 'simple prod', 'is_storable': True})
-        serial_product.tracking = 'serial'
+        serial_product = self.serial_product
         delivery = self.env['stock.picking'].create({
             'partner_id': self.partner.id,
             'picking_type_id': self.ref('stock.picking_type_out'),
@@ -1984,3 +1988,50 @@ class TestReportsPostInstall(TestReportsCommon):
                 'quantity': 1.0,
             }]
         )
+
+    def test_report_stock_lot_customer_sml_without_picking(self):
+        """
+        Deliver a classic product and a tracked one
+        The SML of the SN is not directly linked to the picking
+        The report should still show the delivered SN
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        out_type = self.env.ref('stock.picking_type_out')
+
+        delivery = self.env['stock.picking'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': out_type.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'name': f'out 1 units {self.product.name}',
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+                'quantity': 1,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+
+        sn = self.env['stock.lot'].create({'name': 'supersn', 'product_id': self.serial_product.id})
+        delivery.move_ids = [Command.create({
+            'name': f'out 1 units {self.product.name}',
+            'product_id': self.serial_product.id,
+            'product_uom_qty': 1,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_line_ids': [Command.create({
+                'product_id': self.serial_product.id,
+                'quantity': 1,
+                'lot_id': sn.id,
+            })],
+        })]
+
+        delivery.button_validate()
+
+        customer_lots = self.env['stock.lot.report'].search([('partner_id', '=', self.partner.id)])
+        self.assertRecordValues(customer_lots, [
+            {'lot_id': sn.id, 'picking_id': delivery.id, 'quantity': 1.0},
+        ])
