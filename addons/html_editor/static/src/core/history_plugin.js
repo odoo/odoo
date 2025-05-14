@@ -1232,8 +1232,13 @@ export class HistoryPlugin extends Plugin {
                 revertOperation = this.makeSavePoint();
                 this.isPreviewing = true;
                 operation(...args);
+                // todo: We should not add a step on preview as it would send
+                // unnecessary steps in collaboration and let the other peer see
+                // what we preview.
+                //
                 // The operation should be similar than in the 'commit'
-                // (normalize etc...) hence the 'addStep'.
+                // (normalize etc...) hence the 'addStep' (but we need to remove
+                // it for the collaboration).
                 this.addStep();
             },
             commit: (...args) => {
@@ -1270,8 +1275,13 @@ export class HistoryPlugin extends Plugin {
                 this.isPreviewing = true;
                 await operation(...args);
                 def.resolve();
+                // todo: We should not add a step on preview as it would send
+                // unnecessary steps in collaboration and let the other peer see
+                // what we preview.
+                //
                 // The operation should be similar than in the 'commit'
-                // (normalize etc...) hence the 'addStep'.
+                // (normalize etc...) hence the 'addStep' (but we need to remove
+                // it for the collaboration).
                 this.addStep();
             },
             commit: async (...args) => {
