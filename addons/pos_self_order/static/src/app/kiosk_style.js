@@ -17,6 +17,7 @@ function generateKioskCSS(primaryBg, primaryText = "#fff") {
 :root {
   --primary-rgb: ${primaryRGB};
   --primary: ${primaryBg};
+  --k-background-color: ${kioskBG};
 }
 
 .btn-primary {
@@ -40,7 +41,7 @@ function generateKioskCSS(primaryBg, primaryText = "#fff") {
   --color: rgba(${primaryRGB}, var(--text-opacity, 1));
 }
 
-.o_kiosk_background {
+.o_self_background {
   background-color: ${kioskBG};
 }`;
 }

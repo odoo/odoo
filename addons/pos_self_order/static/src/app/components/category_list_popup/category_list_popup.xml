@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.CategoryListPopup">
+        <div class="o_dialog" t-att-id="id">
+            <div role="dialog" class="modal d-block" tabindex="-1"  >
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down" role="document" >
+                    <div class="modal-content" t-on-click.stop="" >
+                        <div class="modal-header">
+                            <h2 class="modal-title fw-bolder">Categories</h2>
+                            <button type="button" class="btn-close" t-on-click.stop="() => this.props.close()"></button>
+                        </div>
+                        <div class="modal-body p-0" t-ref="scrollContainer">
+                            <t t-foreach="this.props.categories" t-as="category" t-key="category.id">
+                                  <div class="p-3 fw-bold fs-3 cursor-pointer text-nowrap d-flex align-items-center "
+                                    t-on-click=" ()=> this.selectCategory(category)"  t-att-class="{'border-bottom': !category_last}"  >
+                                    <div class="ratio ratio-1x1 me-3" style="width:50px">
+                                        <img class="object-fit-cover rounded" t-attf-src="/web/image/pos.category/#{category.id}/image_128?unique=#{category.write_date}"/>
+                                    </div>
+                                    <t t-esc="category.name"/>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="modal-footer d-none d-sm-flex justify-content-center"  t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom }">
+                            <button type="button" class="btn btn-primary" t-on-click.stop="() => this.props.close()">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,18 +1,16 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_table";
-import { _t } from "@web/core/l10n/translation";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
-import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
-import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
-import { payOrder } from "./cart_page_utils";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
-    static components = { PopupTable, OrderWidget, PresetInfoPopup, ProductCard };
+    static components = { PopupTable, OrderWidget, PresetInfoPopup };
     static props = {};
 
     setup() {
@@ -23,27 +21,26 @@ export class CartPage extends Component {
             fillInformations: false,
             cancelConfirmation: false,
         });
+
+        if (this.lines.length <= 0) {
+            this.router.back();
+        }
+
+        this.scrollShadow = useScrollShadow(useRef("scrollContainer"));
         this.renderer = useService("renderer");
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
     }
 
     get lines() {
-        const lines = this.selfOrder.currentOrder.lines;
-        return lines ? lines : [];
-    }
-
-    get linesToDisplay() {
         const selfOrder = this.selfOrder;
         const order = selfOrder.currentOrder;
-
-        if (
-            selfOrder.config.self_ordering_pay_after === "meal" &&
+        const lines =
+            (selfOrder.config.self_ordering_pay_after === "meal" &&
             Object.keys(order.changes).length > 0
-        ) {
-            return order.unsentLines;
-        } else {
-            return this.lines;
-        }
+                ? order.unsentLines
+                : this.selfOrder.currentOrder.lines) || [];
+
+        return lines.filter((line) => !line.combo_parent_id);
     }
 
     get optionalProducts() {
@@ -54,6 +51,13 @@ export class CartPage extends Component {
         return optionalProducts;
     }
 
+    getAttributes(line) {
+        return [
+            ...(line.attribute_value_ids || []),
+            ...(line.product_id.product_template_attribute_value_ids || []),
+        ];
+    }
+
     getLineChangeQty(line) {
         const currentQty = line.qty;
         const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
@@ -61,7 +65,7 @@ export class CartPage extends Component {
     }
 
     async pay() {
-        await payOrder(this.selfOrder, this.state);
+        await this.payOrder(this.selfOrder, this.state);
     }
 
     async proceedInfos(state) {
@@ -86,11 +90,11 @@ export class CartPage extends Component {
             },
             { addClass: "pos-receipt-print p-3" }
         );
+
     async _sendReceiptToCustomer({ action, destination, mail_template_id }) {
         const order = this.selfOrder.currentOrder;
         const fullTicketImage = await this.generateTicketImage();
         const basicTicketImage = await this.generateTicketImage(true);
-
         await this.selfOrder.data.call("pos.order", action, [
             [order.id],
             destination,
@@ -113,7 +117,7 @@ export class CartPage extends Component {
 
     getPrice(line) {
         const childLines = line.combo_line_ids;
-        if (childLines.length == 0) {
+        if (childLines.length === 0) {
             const qty = this.getLineChangeQty(line) || line.qty;
             return line.getDisplayPriceWithQty(qty);
         } else {
@@ -129,11 +133,9 @@ export class CartPage extends Component {
     canChangeQuantity(line) {
         const order = this.selfOrder.currentOrder;
         const lastChange = order.uiState.lineChanges[line.uuid];
-
         if (!lastChange) {
             return true;
         }
-
         return lastChange.qty < line.qty;
     }
 
@@ -142,42 +144,106 @@ export class CartPage extends Component {
         return !lastChange ? true : lastChange.qty !== line.qty;
     }
 
-    async removeLine(line) {
-        const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
-
+    removeLine(line, event) {
         if (!this.canDeleteLine(line)) {
             return;
         }
-
+        const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
         if (lastChange) {
             line.qty = lastChange.qty;
-        } else {
-            this.selfOrder.removeLine(line);
+            return;
         }
+
+        const doRemoveLine = () => {
+            this.selfOrder.removeLine(line);
+            if (this.lines.length === 0) {
+                this.router.back();
+            }
+        };
+        const card = event?.target.closest(".product-cart-item");
+        if (!card) {
+            doRemoveLine();
+        }
+        const onAnimationEnd = () => {
+            card.removeEventListener("animationend", onAnimationEnd);
+            doRemoveLine();
+        };
+        card.addEventListener("animationend", onAnimationEnd);
+        card.classList.add("delete-fade-out");
     }
 
-    async _changeQuantity(line, increase) {
+    changeQuantity(line, increase) {
         if (!increase && !this.canChangeQuantity(line)) {
             return;
         }
 
-        if (!increase && line.qty === 1) {
+        // Update combo first
+        for (const cline of line.combo_line_ids) {
+            this.changeQuantity(cline, increase);
+        }
+
+        if (line.combo_parent_id) {
+            line.qty =
+                (line.qty / line.combo_parent_id.qty) *
+                (line.combo_parent_id.qty + (increase ? 1 : -1));
+        } else {
+            increase ? line.qty++ : line.qty--;
+        }
+
+        if (line.qty <= 0) {
             this.removeLine(line.uuid);
+        }
+    }
+
+    getCustomValue(line, attr) {
+        return (
+            attr.is_custom &&
+            line.custom_attribute_value_ids.find(
+                (c) => c.custom_product_template_attribute_value_id === attr
+            )?.custom_value
+        );
+    }
+    get displayTaxes() {
+        return !this.selfOrder.isTaxesIncludedInPrice();
+    }
+
+    async payOrder(selfOrder, state) {
+        const presets = selfOrder.models["pos.preset"].getAll();
+        const config = selfOrder.config;
+        const type = config.self_ordering_mode;
+        const orderingMode =
+            config.use_presets && presets.length > 1
+                ? selfOrder.currentOrder.preset_id?.service_at
+                : config.self_ordering_service_mode;
+
+        if (selfOrder.rpcLoading || !selfOrder.verifyCart()) {
             return;
         }
-        increase ? line.qty++ : line.qty--;
-        for (const cline of this.selfOrder.currentOrder.lines) {
-            if (cline.combo_parent_id?.uuid === line.uuid) {
-                this._changeQuantity(cline, increase);
-            }
+
+        if (!selfOrder.currentOrder.presetRequirementsFilled && orderingMode !== "table") {
+            state.fillInformations = true;
+            return;
         }
+
+        if (
+            type === "mobile" &&
+            orderingMode === "table" &&
+            !selfOrder.currentTable &&
+            selfOrder.config.module_pos_restaurant
+        ) {
+            state.selectTable = true;
+            return;
+        } else {
+            selfOrder.currentOrder.table_id = selfOrder.currentTable;
+        }
+
+        selfOrder.rpcLoading = true;
+        await selfOrder.confirmOrder();
+        selfOrder.rpcLoading = false;
     }
 
-    async changeQuantity(line, increase) {
-        await this._changeQuantity(line, increase);
-    }
-
-    clickOnLine(line) {
+    /*
+        clickOnLine(line) {
         const order = this.selfOrder.currentOrder;
         this.selfOrder.editedLine = line;
 
@@ -195,4 +261,5 @@ export class CartPage extends Component {
             });
         }
     }
+*/
 }

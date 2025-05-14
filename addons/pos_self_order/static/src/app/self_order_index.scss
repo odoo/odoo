@@ -3,6 +3,7 @@
     --secondary-active-border: #{$o-action};
 
     --btn-group-gap: 0;
+    --border-light-color:#e7e9ed;
 
     // Disable zoom
     touch-action: pan-x pan-y;
@@ -13,11 +14,10 @@
         --root-font-size: #{$o-so-font-size-4k};
     }
 
-    @include media-breakpoint-up(lg) {
-        @media (orientation: portrait) {
-            --root-font-size: #{$o-so-font-size-kiosk};
-        }
+    .bg-secondary {
+        --background-color: #F4F4F4;
     }
+
 }
 
 @keyframes fadeIn {
@@ -76,75 +76,28 @@ li {
     background-color: $o-gray-100;
 }
 
+.form-control:focus {
+  border-color: var(--primary) !important;
+}
+
+@include media-breakpoint-down(sm) {
+   .o_self_footer {
+       .btn-lg, .btn-group-lg > .btn {
+           padding: $input-btn-padding-y $input-btn-padding-x !important;
+           font-size: 1.1rem;
+       }
+   }
+}
+
 .o-so-tabular-nums {
     font-variant: tabular-nums;
 }
 
-.o-so-products-row {
-    @include make-row();
-    --gutter-y: 8vw;
-
-    > * {
-        @include make-col-ready();
-    }
-
-    @include row-cols(1);
-
-    @include media-breakpoint-up(sm) {
-        @include row-cols(2);
-    }
-
-    @include media-breakpoint-up(md) {
-        @include row-cols(4);
-        --gutter-y: 2vw;
-    }
-
-    @include media-breakpoint-up(xl) {
-        @include o-so-landscape() {
-            @include row-cols(6);
-        }
-        @include o-so-portrait() {
-            @include row-cols(4);
-        }
-    }
-}
-
-.kiosk{
-    --border-light-color:#e7e9ed;
-
-    .bg-secondary {
-        --background-color: #F4F4F4;
-    }
-
-    .border-light{
-        border-color: var(--border-light-color) !important;
-    }
-}
-
-.o_kiosk_background {
+.o_self_background {
     background-color: mix(white, $o-brand-primary, 85%);
 }
 
-
-.o_kiosk_container {
-    grid-template-columns: repeat(2, 1fr);
-}
-
-.o_kiosk_container_small {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-@include media-breakpoint-down(md) {
-    .o_kiosk_container {
-        grid-template-columns: 1fr;
-    }
-}
-
-.o_kiosk_language_selector img {
-    height: 2rem;
-}
-
-.o_kiosk_fade {
+.o_self_fade {
     animation: fadeIn 300ms cubic-bezier(.4, 0, .2, 1);
 }
 
@@ -162,47 +115,111 @@ li {
     }
 }
 
-.o_kiosk_shadow_top {
-    height: 3rem;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent);
+.o_self_shadow_top {
+    position: relative;
+    &::after {
+        content: "";
+        z-index: 10;
+        position: absolute;
+        bottom: -16px;
+        left: 0;
+        height: 16px;
+        width: 100%;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), transparent);
+    }
 }
 
-.o_kiosk_shadow_bottom {
-    height: 3rem;
-    background: linear-gradient(to top, rgba(0,0,0,0.1), transparent);
+.o_self_shadow_bottom {
+    position: relative;
+    &::after {
+        content: "";
+        z-index: 10;
+        position: absolute;
+        top: -16px;
+        left: 0;
+        height: 16px;
+        width: 100%;
+        background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
+    }
 }
 
 @include media-breakpoint-up(lg) {
-    @media (orientation: portrait) {
-        
-        .btn {
-            border-radius: $border-radius-xl;
+  .o_self_container {
+    max-width: 960px !important;
+  }
+}
 
-            &:active {
-                transform: scale(0.98);
-                transition: transform 100ms ease;
-            }
-        }
+@include o-kiosk{
+    @include generate-kiosk-utilities(kiosk);
+}
 
-        .nav-link {
-            transition: transform 100ms ease;
-        
-            &:active {
-                transform: scale(0.98);
-            }
-        }
 
-        .modal-content {
-            border-radius: $border-radius-xl;
-        }
-
-        .modal-dialog {
-            transform: scale(0.8);
-            animation: selfOrderModalScale 120ms ease-out forwards;
-        }
+@include o-kiosk-portrait{
+    &:root {
+        --root-font-size: #{$o-so-font-size-kiosk};
     }
+
+     .o_self_container {
+        width: 100% !important;
+        max-width: 1100px !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+
+    .kiosk-p-btn-lg {
+      padding: $input-btn-padding-y-lg $input-btn-padding-x-lg !important;
+      font-size: 1.25rem;
+    }
+
+    @include generate-kiosk-utilities(kiosk-p);
+}
+
+@include o-kiosk-landscape{
+    @include generate-kiosk-utilities(kiosk-l);
+}
+
+$shadow-sizes: sm, md, lg, xl;
+
+@each $breakpoint, $value in $grid-breakpoints {
+  @include media-breakpoint-up($breakpoint) {
+    .shadow-#{$breakpoint}-none {
+      box-shadow: none !important;
+    }
+
+    @each $size in $shadow-sizes {
+      .shadow-#{$breakpoint}-#{$size} {
+        box-shadow: var(--box-shadow-#{$size}) !important;
+      }
+    }
+  }
+}
+
+.btn {
+   border-radius: $border-radius-xl;
+}
+
+.modal-content {
+   border-radius: $border-radius-xl;
+}
+
+@include media-breakpoint-down(sm) {
+   .btn {
+       border-radius: $border-radius-lg;
+   }
+  .modal-content {
+     border-radius: $border-radius-lg;
+  }
+}
+
+.modal-dialog {
+   transform: scale(0.8);
+   animation: selfOrderModalScale 120ms ease-out forwards;
 }
 
 .pos-receipt .info-list {
     padding-left: 2rem;
+}
+
+.border-light{
+   border-color: var(--border-light-color) !important;
 }

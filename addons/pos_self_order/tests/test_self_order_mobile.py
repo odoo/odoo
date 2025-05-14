@@ -37,8 +37,8 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self_route = self.pos_config._get_self_order_route()
 
         # Test selection of different presets
-        self.start_tour(self_route, "self_mobile_each_table_takeaway_in", step_delay=300)
-        self.start_tour(self_route, "self_mobile_each_table_takeaway_out", step_delay=300)
+        self.start_tour(self_route, "self_mobile_each_table_takeaway_in")
+        self.start_tour(self_route, "self_mobile_each_table_takeaway_out")
         orders = self.env['pos.order'].search([], order="id desc", limit=2)
         self.assertEqual(orders[0].preset_id, self.out_preset)
         self.assertEqual(orders[1].preset_id, self.in_preset)
@@ -48,8 +48,8 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         })
 
         # Mobile, each, counter
-        self.start_tour(self_route, "self_mobile_each_counter_takeaway_in", step_delay=300)
-        self.start_tour(self_route, "self_mobile_each_counter_takeaway_out", step_delay=300)
+        self.start_tour(self_route, "self_mobile_each_counter_takeaway_in")
+        self.start_tour(self_route, "self_mobile_each_counter_takeaway_out")
 
         self.env['pos.order'].search([]).write({'state': 'cancel'})
         self.pos_config.write({
@@ -58,8 +58,8 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         })
 
         # Mobile, meal, table
-        self.start_tour(self_route, "self_mobile_meal_table_takeaway_in", step_delay=300)
-        self.start_tour(self_route, "self_mobile_meal_table_takeaway_out", step_delay=300)
+        self.start_tour(self_route, "self_mobile_meal_table_takeaway_in")
+        self.start_tour(self_route, "self_mobile_meal_table_takeaway_out")
 
         self.env['pos.order'].search([]).write({'state': 'cancel'})
         self.pos_config.write({
@@ -67,11 +67,11 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         })
 
         # Mobile, meal, counter
-        self.start_tour(self_route, "self_mobile_meal_counter_takeaway_in", step_delay=300)
-        self.start_tour(self_route, "self_mobile_meal_counter_takeaway_out", step_delay=300)
+        self.start_tour(self_route, "self_mobile_meal_counter_takeaway_in")
+        self.start_tour(self_route, "self_mobile_meal_counter_takeaway_out")
 
         # Cancel in meal
-        self.start_tour(self_route, "self_order_mobile_meal_cancel", step_delay=300)
+        self.start_tour(self_route, "self_order_mobile_meal_cancel")
 
         self.env['pos.order'].search([]).write({'state': 'cancel'})
         self.pos_config.write({
@@ -79,4 +79,4 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         })
 
         # Cancel in each
-        self.start_tour(self_route, "self_order_mobile_each_cancel", step_delay=300)
+        self.start_tour(self_route, "self_order_mobile_each_cancel")
