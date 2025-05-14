@@ -1,6 +1,7 @@
 import {
     insertSnippet,
     registerWebsitePreviewTour,
+    selectFullText,
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("text_animations", {
@@ -12,18 +13,7 @@ registerWebsitePreviewTour("text_animations", {
         name: "Cover",
         groupName: "Intro",
     }),
-    {
-        content: "Select the snippet title",
-        trigger: ":iframe .s_cover h1",
-        async run(actions) {
-            await actions.click();
-            const range = document.createRange();
-            const selection = this.anchor.ownerDocument.getSelection();
-            range.selectNodeContents(this.anchor);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        },
-    },
+    selectFullText("snippet title", ".s_cover h1"),
     {
         content: "Click on the 'Animate Text' button to activate the option",
         trigger: "div.o_we_animate_text",
