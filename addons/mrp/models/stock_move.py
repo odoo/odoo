@@ -519,7 +519,7 @@ class StockMove(models.Model):
         return super(StockMove, moves)._action_done(cancel_backorder)
 
     def _should_bypass_reservation(self, forced_location=False):
-        return super()._should_bypass_reservation(forced_location) or self.product_id.is_kits
+        return super()._should_bypass_reservation(forced_location) or self.product_id.with_company(self.company_id).is_kits
 
     def action_explode(self):
         """ Explodes pickings """
