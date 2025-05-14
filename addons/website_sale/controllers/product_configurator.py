@@ -45,6 +45,24 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             or not (single_product_variant.get('product_id') or is_product_configured)
         )
 
+    @route(
+        route='/website_sale/is_quantity_view_enabled',
+        type='jsonrpc',
+        auth='public',
+        website=True,
+        readonly=True,
+    )
+    def website_sale_is_quantity_view_enabled(self):
+        """ Return whether the quantity selector view is enabled and should be shown on product
+        configurator.
+
+        :rtype: bool
+        :return: Whether the quantity selector view is enabled.
+        """
+        is_quantity_view_enabled = request.website.is_view_active('website_sale.product_quantity')
+        # if view doesn't exist default to true
+        return is_quantity_view_enabled if is_quantity_view_enabled is not None else True
+
     def _get_product_template(self, product_template_id):
         if request.is_frontend:
             combo_item = request.env['product.combo.item'].sudo().search([
