@@ -97,6 +97,9 @@ class TestStockCommon(ProductVariantsCommon):
         cls.picking_type_out.reservation_method = 'manual'
 
         cls.stock_location = cls.warehouse_1.lot_stock_id
+        cls.scrap_location = cls.StockLocationObj.search([
+            ('company_id', '=', cls.warehouse_1.company_id.id), ('scrap_location', '=', True)
+        ], limit=1)
         cls.shelf_1, cls.shelf_2 = cls.StockLocationObj.create([{
             'name': 'Shelf 1',
             'location_id': cls.stock_location.id,
