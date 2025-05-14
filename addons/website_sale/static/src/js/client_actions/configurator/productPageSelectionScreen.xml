@@ -9,9 +9,12 @@
                     <div class="o_configurator_typing_text text-center pt-3 mb-4">
                         Choose your favorite <b class="text-info">Product Page</b>
                     </div>
-                    <div class="row row-cols-1 row-cols-md-2 g-2 g-sm-3 g-lg-4">
+                    <div class="row g-2 g-sm-3 g-lg-4">
                         <t t-foreach="this.productPageStyles" t-as="style" t-key="style_index">
-                            <div class="col">
+                            <t t-if="style_index % 2 === 0">
+                                <div class="d-none d-lg-block col-2"/>
+                            </t>
+                            <div class="col-sm-6 col-lg-4">
                                 <div
                                     class="theme_preview o_configurator_show_fast rounded position-relative button_area mt-3 mb-2"
                                     t-on-click="() => this.selectStyle(style.option)"
@@ -29,6 +32,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <t t-if="style_index % 2 === 1 || style_index + 1 === this.productPageStyles.length">
+                                <div class="d-none d-lg-block col-2"/>
+                            </t>
                         </t>
                     </div>
                 </div>
