@@ -56,6 +56,12 @@ class Im_LivechatChannel(models.Model):
     )
     block_assignment_during_call = fields.Boolean("No Chats During Call", help="While on a call, agents will not receive new conversations.")
     review_link = fields.Char("Review Link", help="Visitors who leave a positive review will be redirected to this optional link.")
+    buffer_time = fields.Integer(
+        string="Individual Buffer Time (sec)",
+        help="Time in seconds between two sessions of the same operator."
+            "This will not be enforced if the operator is the best suited for the session"
+            "(e.g. the only one available with the right language or set of skills)"
+    )
 
     # computed fields
     web_page = fields.Char('Web Page', compute='_compute_web_page_link', store=False, readonly=True,
@@ -394,6 +400,23 @@ class Im_LivechatChannel(models.Model):
                 )
                 return previous_operator_user
 
+        agents_failing_buffer = {
+                group[0]
+                for group in self.env["im_livechat.channel.member.history"]._read_group(
+                    [
+                        ("livechat_member_type", "=", "agent"),
+                        ("partner_id", "in", users.partner_id.ids),
+                        ("channel_id.livechat_active", "=", True),
+                        (
+                            "create_date",
+                            ">",
+                            fields.Datetime.now() - timedelta(seconds=self.buffer_time),
+                        ),
+                    ],
+                    groupby=["partner_id"],
+                )
+            } if self.buffer_time else set()
+
         def same_language(operator):
             return operator.partner_id.lang == lang or lang in operator.livechat_lang_ids.mapped("code")
 
@@ -423,6 +446,10 @@ class Im_LivechatChannel(models.Model):
             for preference in preferences:
                 operators = operators.filtered(preference)
             if operators:
+                if agents_respecting_buffer := operators.filtered(
+                    lambda op: op.partner_id not in agents_failing_buffer
+                ):
+                    operators = agents_respecting_buffer
                 return self._get_less_active_operator(operator_statuses, operators)
         return self._get_less_active_operator(operator_statuses, users)
 
