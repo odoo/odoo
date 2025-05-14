@@ -298,6 +298,11 @@ class IrUiView(models.Model):
         if not current_website_id:
             return self.filtered(lambda view: not view.website_id)
 
+        specific_views_keys = set()
+        for view_check in self:
+            if view_check.website_id and view_check.website_id.id == current_website_id:
+                specific_views_keys.add(view_check.key)
+
         for view in self:
             # specific view: add it if it's for the current website and ignore
             # it if it's for another website
@@ -305,7 +310,7 @@ class IrUiView(models.Model):
                 most_specific_views |= view
             # generic view: add it only if, for the current website, there is no
             # specific view for this view (based on the same `key` attribute)
-            elif not view.website_id and not any(view.key == view2.key and view2.website_id and view2.website_id.id == current_website_id for view2 in self):
+            elif not view.website_id and view.key not in specific_views_keys:
                 most_specific_views |= view
 
         return most_specific_views
