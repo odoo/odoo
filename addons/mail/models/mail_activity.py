@@ -10,6 +10,7 @@ from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.addons.mail.tools.discuss import Store
@@ -635,7 +636,7 @@ class MailActivity(models.Model):
 
     @api.readonly
     @api.model
-    def get_activity_data(self, res_model, domain, limit=None, offset=0, fetch_done=False):
+    def get_activity_data(self, res_model, domain, limit=None, offset=0, fetch_done=False, based_on_my_activities=None):
         """ Get aggregate data about records and their activities.
 
         The goal is to fetch and compute aggregated data about records and their
@@ -650,6 +651,7 @@ class MailActivity(models.Model):
         :param int offset: offset of the first record to fetch
         :param bool fetch_done: determines if "done" activities are integrated in the
             aggregated data or not.
+        :param bool based_on_my_activities: determines if we compute colors only for my activities
         :return dict: {'activity_types': dict of activity type info
                             {id: int, name: str, mail_template: list of {id:int, name:str}}
                        'activity_res_ids': list<int> of record id ordered by closest date
@@ -712,13 +714,18 @@ class MailActivity(models.Model):
         for res_id_tuple in res_id_type_tuples:
             res_id, activity_type_id = res_id_tuple
             ongoing = grouped_ongoing.get(res_id_tuple, Activity)
+            user_ongoing = ongoing.filtered(lambda rec: rec.user_id.id == self.env.uid)
+            if (filter_my_activities and not user_ongoing and ongoing):
+                # filter out activities not involved with user if we only show the user's activities
+                continue
             completed = grouped_completed.get(res_id_tuple, Activity)
+            user_completed = completed.filtered(lambda rec: rec.user_id.id == self.env.uid)
             activities = ongoing | completed
 
             # As completed is sorted on date_done DESC, we take here the max date_done
-            date_done = completed and completed[0].date_done
+            date_done = (filter_my_activities and user_completed and user_completed[0].date_done) or (completed and completed[0].date_done)
             # As ongoing is sorted on date_deadline ASC, we take here the min date_deadline
-            date_deadline = ongoing and ongoing[0].date_deadline
+            date_deadline = (filter_my_activities and user_ongoing and user_ongoing[0].date_deadline) or (ongoing and ongoing[0].date_deadline)
             if date_deadline and (res_id not in res_id_to_deadline or date_deadline < res_id_to_deadline[res_id]):
                 res_id_to_deadline[res_id] = date_deadline
             if date_done and (res_id not in res_id_to_date_done or date_done > res_id_to_date_done[res_id]):

@@ -22,6 +22,7 @@ export class ActivityModel extends RelationalModel {
             limit: params.limit || this.initialLimit,
             offset: params.offset || 0,
             fetch_done: true,
+            based_on_my_activities: params.context?.my_activities || false,
         });
     }
 }

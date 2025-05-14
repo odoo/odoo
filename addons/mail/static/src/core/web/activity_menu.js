@@ -43,6 +43,7 @@ export class ActivityMenu extends Component {
             // So, duplicates are faking the count and "Load more" doesn't show up
             force_search_count: 1,
             search_default_filter_activities_my: 1,
+            my_activities: true,
         };
         if (group.model === "mail.activity") {
             this.action.doAction("mail.mail_activity_without_access_action", {
