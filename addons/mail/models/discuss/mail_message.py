@@ -14,7 +14,7 @@ class MailMessage(models.Model):
             Store.Many(
                 "call_history_ids",
                 ["duration_hour", "end_dt"],
-                predicate=lambda m: 'data-oe-type="call"' in m.body,
+                predicate=lambda m: m.body and 'data-oe-type="call"' in m.body,
             ),
         ]
 
