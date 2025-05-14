@@ -42,18 +42,18 @@ test("many2one in list view", async () => {
     ]);
     await start();
     onRpc("has_group", () => false);
-    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+    onRpc("hr.employee.public", "get_avatar_card_data", (params) => {
         const resourceIdArray = params.args[0];
         const resourceId = resourceIdArray[0];
-        const resources = env['hr.employee.public'].search_read([['id', '=', resourceId]]);
-        const result = resources.map(resource => ({
+        const resources = env["hr.employee.public"].search_read([["id", "=", resourceId]]);
+        const result = resources.map((resource) => ({
             name: resource.name,
-            work_email:resource.work_email,
+            work_email: resource.work_email,
             phone: resource.phone,
             user_id: resource.user_id,
         }));
         return result;
-    })
+    });
 
     await mountView({
         type: "list",
@@ -131,19 +131,19 @@ test("many2one: click on an employee not associated with a user", async () => {
     const { env } = await makeMockServer();
     const employeeId = env["hr.employee.public"].create({ name: "Mario" });
     const avatarId = env["m2x.avatar.employee"].create({ employee_id: employeeId });
-    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+    onRpc("hr.employee.public", "get_avatar_card_data", (params) => {
         expect.step(`get_avatar_card_data ${params.model} ${params.args[0]}`);
         const resourceIdArray = params.args[0];
         const resourceId = resourceIdArray[0];
-        const resources = env['hr.employee.public'].search_read([['id', '=', resourceId]]);
-        const result = resources.map(resource => ({
+        const resources = env["hr.employee.public"].search_read([["id", "=", resourceId]]);
+        const result = resources.map((resource) => ({
             name: resource.name,
-            work_email:resource.work_email,
+            work_email: resource.work_email,
             phone: resource.phone,
             user_id: resource.user_id,
         }));
         return result;
-    })
+    });
     onRpc("has_group", () => false);
     await mountView({
         type: "form",
@@ -153,7 +153,7 @@ test("many2one: click on an employee not associated with a user", async () => {
     });
     await waitFor(".o_field_widget[name=employee_id] input:value(Mario)");
     await contains(".o_m2o_avatar > img").click();
-    expect.verifySteps([`get_avatar_card_data resource.resource ${avatarId}`]);
+    expect.verifySteps([`get_avatar_card_data hr.employee.public ${avatarId}`]);
 });
 
 test("many2one with hr group widget in kanban view", async () => {
@@ -270,18 +270,18 @@ test("many2one in form view", async () => {
     });
     await start();
     onRpc("has_group", () => false);
-    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+    onRpc("hr.employee.public", "get_avatar_card_data", (params) => {
         const resourceIdArray = params.args[0];
         const resourceId = resourceIdArray[0];
-        const resources = env['hr.employee.public'].search_read([['id', '=', resourceId]]);
-        const result = resources.map(resource => ({
+        const resources = env["hr.employee.public"].search_read([["id", "=", resourceId]]);
+        const result = resources.map((resource) => ({
             name: resource.name,
-            work_email:resource.work_email,
+            work_email: resource.work_email,
             phone: resource.phone,
             user_id: resource.user_id,
         }));
         return result;
-    })
+    });
     await mountView({
         type: "form",
         resId: avatarId_1,
@@ -334,19 +334,19 @@ test("many2one with hr group widget in form view", async () => {
         employee_ids: [employeeId_1, employeeId_2],
     });
 
-    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+    onRpc("hr.employee", "get_avatar_card_data", (params) => {
         const resourceIdArray = params.args[0];
         const resourceId = resourceIdArray[0];
-        const resources = env['hr.employee.public'].search_read([['id', '=', resourceId]]);
-        const result = resources.map(resource => ({
+        const resources = env["hr.employee.public"].search_read([["id", "=", resourceId]]);
+        const result = resources.map((resource) => ({
             name: resource.name,
-            work_email:resource.work_email,
+            work_email: resource.work_email,
             phone: resource.phone,
             user_id: resource.user_id,
         }));
         expect.step(`read ${params.model} ${params.args[0]}`);
         return result;
-    })
+    });
     await mountView({
         type: "form",
         resId: avatarId_1,
@@ -360,10 +360,7 @@ test("many2one with hr group widget in form view", async () => {
     );
     await contains(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar:eq(0)").click();
     await contains(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar:eq(1)").click();
-    expect.verifySteps([
-        `read resource.resource ${employeeId_1}`,
-        `read resource.resource ${employeeId_2}`,
-    ]);
+    expect.verifySteps([`read hr.employee ${employeeId_1}`, `read hr.employee ${employeeId_2}`]);
 });
 
 test("many2one widget in list view", async () => {
@@ -394,18 +391,18 @@ test("many2one widget in list view", async () => {
     });
     await start();
 
-    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+    onRpc("hr.employee.public", "get_avatar_card_data", (params) => {
         const resourceIdArray = params.args[0];
         const resourceId = resourceIdArray[0];
-        const resources = env['hr.employee.public'].search_read([['id', '=', resourceId]]);
-        const result = resources.map(resource => ({
+        const resources = env["hr.employee.public"].search_read([["id", "=", resourceId]]);
+        const result = resources.map((resource) => ({
             name: resource.name,
-            work_email:resource.work_email,
+            work_email: resource.work_email,
             phone: resource.phone,
             user_id: resource.user_id,
         }));
         return result;
-    })
+    });
     await mountView({
         type: "list",
         resModel: "m2x.avatar.employee",
@@ -460,18 +457,18 @@ test("many2many in kanban view", async () => {
         employee_ids: [employeeId_1, employeeId_2],
     });
     onRpc("has_group", () => false);
-    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+    onRpc("hr.employee.public", "get_avatar_card_data", (params) => {
         const resourceIdArray = params.args[0];
         const resourceId = resourceIdArray[0];
-        const resources = env['hr.employee.public'].search_read([['id', '=', resourceId]]);
-        const result = resources.map(resource => ({
+        const resources = env["hr.employee.public"].search_read([["id", "=", resourceId]]);
+        const result = resources.map((resource) => ({
             name: resource.name,
-            work_email:resource.work_email,
+            work_email: resource.work_email,
             phone: resource.phone,
             user_id: resource.user_id,
         }));
         return result;
-    })
+    });
     await start();
     await mountView({
         type: "kanban",
@@ -541,18 +538,18 @@ test("many2many: click on an employee not associated with a user", async () => {
         employee_ids: [employeeId_1, employeeId_2],
     });
     onRpc("has_group", () => false);
-    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+    onRpc("hr.employee.public", "get_avatar_card_data", (params) => {
         const resourceIdArray = params.args[0];
         const resourceId = resourceIdArray[0];
-        const resources = env['hr.employee.public'].search_read([['id', '=', resourceId]]);
-        const result = resources.map(resource => ({
+        const resources = env['hr.employee.public'].search_read([["id", "=", resourceId]]);
+        const result = resources.map((resource) => ({
             name: resource.name,
             work_email:resource.work_email,
             phone: resource.phone,
             user_id: resource.user_id,
         }));
         return result;
-    })
+    });
     await start();
     await mountView({
         type: "form",
