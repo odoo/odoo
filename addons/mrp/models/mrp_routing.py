@@ -107,6 +107,7 @@ class MrpRoutingWorkcenter(models.Model):
             quantity = self.env.context.get('quantity', operation.bom_id.product_qty or 1)
             unit = self.env.context.get('unit', operation.bom_id.product_uom_id)
             (capacity, setup, cleanup) = workcenter._get_capacity(product, unit, operation.bom_id.product_qty or 1)
+            capacity = capacity or 1
             operation.cycle_number = float_round(quantity / capacity, precision_digits=0, rounding_method="UP")
             operation.time_total = setup + cleanup + operation.cycle_number * operation.time_cycle * 100.0 / (workcenter.time_efficiency or 100.0)
             operation.show_time_total = operation.cycle_number > 1 or not float_is_zero(setup + cleanup, precision_digits=0)
