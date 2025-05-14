@@ -331,6 +331,9 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
             }
         }
 
+        // Wait for selectionchange handlers to react before any actual testing.
+        await Promise.resolve();
+
         if (spec.stepFunction) {
             try {
                 await spec.stepFunction(editor);
