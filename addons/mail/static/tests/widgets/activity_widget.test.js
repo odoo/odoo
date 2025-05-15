@@ -69,7 +69,7 @@ test("list activity widget with no activity", async () => {
         arch: `<list><field name="activity_ids" widget="list_activity"/></list>`,
     });
     await waitForSteps(["/mail/data", "web_search_read"]);
-    await contains(".o-mail-ActivityButton i.text-muted");
+    await contains(".o-mail-ActivityButton i.fa-clock-o");
     await contains(".o-mail-ListActivity-summary", { text: "" });
 });
 
