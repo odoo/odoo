@@ -22,24 +22,27 @@ function isConnectedElement(el) {
     return el && el.isConnected && !!el.ownerDocument.defaultView;
 }
 
-export function useDomState(getState, { checkEditingElement = true, onReady } = {}) {
+export function useDomState(getState, { checkEditingElement = true } = {}) {
     const env = useEnv();
     const isValid = (el) => (!el && !checkEditingElement) || isConnectedElement(el);
-    const handler = () => {
+    const handler = async (ev) => {
         const editingElement = env.getEditingElement();
         if (isValid(editingElement)) {
-            Object.assign(state, getState(editingElement));
+            const newStatePromise = getState(editingElement);
+            if (ev) {
+                ev.detail.getStatePromises.push(newStatePromise);
+                const newState = await newStatePromise;
+                const shouldApply = await ev.detail.updatePromise;
+                if (shouldApply) {
+                    Object.assign(state, newState);
+                }
+            } else {
+                Object.assign(state, await newStatePromise);
+            }
         }
     };
     const state = useState({});
-    if (onReady) {
-        onReady.then(() => {
-            handler();
-        });
-    } else {
-        handler();
-    }
-
+    onWillStart(handler);
     useBus(env.editorBus, "DOM_UPDATED", handler);
     return state;
 }
@@ -93,11 +96,11 @@ export function useBuilderComponent() {
     };
     updateEditingElements();
     oldEnv.editorBus.addEventListener("UPDATE_EDITING_ELEMENT", updateEditingElements);
-    onWillUpdateProps((nextProps) => {
+    onWillUpdateProps(async (nextProps) => {
         if (comp.props.applyTo !== nextProps.applyTo) {
             applyTo = nextProps.applyTo;
             oldEnv.editorBus.trigger("UPDATE_EDITING_ELEMENT");
-            oldEnv.editorBus.trigger("DOM_UPDATED");
+            await oldEnv.triggerDomUpdated();
         }
     });
     onWillDestroy(() => {
@@ -332,12 +335,12 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
             env.selectableContext.removeSelectableItem(selectableItem);
         });
     } else {
-        state = useDomState(
-            () => ({
+        state = useDomState(async () => {
+            await onReady;
+            return {
                 isActive: isSelectableActive(),
-            }),
-            { onReady }
-        );
+            };
+        });
     }
 
     if (id) {
