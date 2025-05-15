@@ -634,7 +634,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             _logger.info(f"[PRE-FLAG] Wizard {self.id} marked as payload sent before API call.")
 
         # Release container(s)
-        # self.release_container()
+        self.release_container()
 
         return {'type': 'ir.actions.act_window_close'}
 
