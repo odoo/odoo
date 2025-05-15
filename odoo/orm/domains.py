@@ -194,7 +194,7 @@ class Domain:
     __slots__ = ('_opt_level',)
     _opt_level: OptimizationLevel
 
-    def __new__(cls, *args, strict: bool | None = None):
+    def __new__(cls, *args):
         """Build a domain AST.
 
         ```
@@ -209,13 +209,11 @@ class Domain:
 
         By default, the special operators ``'any*'`` and ``'not any*'`` are
         allowed in domain conditions (``Domain('a', 'any*', dom)``) but not in
-        domain lists (``Domain([('a', 'any*', dom)])``).  Passing parameter
-        ``strict=True`` forbids the operators in both cases, while passing
-        ``strict=False`` allows them in both cases.
+        domain lists (``Domain([('a', 'any*', dom)])``).
         """
         if len(args) > 1:
             if isinstance(args[0], str):
-                return DomainCondition(*args).checked(strict is True)
+                return DomainCondition(*args).checked()
             # special cases like True/False constants
             if args == _TRUE_LEAF:
                 return _TRUE_DOMAIN
@@ -241,8 +239,8 @@ class Domain:
         stack: list[Domain] = []
         try:
             for item in reversed(arg):
-                if isinstance(item, (tuple, list)) and len(item) == 3:
-                    stack.append(Domain(*item, strict=(strict is not False)))
+                if isinstance(item, (tuple, list)) and len(item) == 3 and '*' not in item[1]:
+                    stack.append(Domain(*item))
                 elif item == DomainAnd.OPERATOR:
                     stack.append(stack.pop() & stack.pop())
                 elif item == DomainOr.OPERATOR:
@@ -731,7 +729,7 @@ class DomainCondition(Domain):
         self._opt_level = OptimizationLevel.NONE
         return self
 
-    def checked(self, strict: bool) -> DomainCondition:
+    def checked(self) -> DomainCondition:
         """Validate `self` and return it if correct, otherwise raise an exception."""
         if not isinstance(self.field_expr, str) or not self.field_expr:
             self._raise("Empty field name", error=TypeError)
@@ -740,8 +738,6 @@ class DomainCondition(Domain):
             warnings.warn(f"Deprecated since 19.0, the domain condition {(self.field_expr, self.operator, self.value)!r} should have a lower-case operator", DeprecationWarning)
             return DomainCondition(self.field_expr, operator, self.value).checked()
         if operator not in CONDITION_OPERATORS:
-            self._raise("Invalid operator")
-        if strict and operator in ('any*', 'not any*'):
             self._raise("Invalid operator")
         # check already the consistency for domain manipulation
         # these are common mistakes and optimizations, do them here to avoid recreating the domain
@@ -925,7 +921,7 @@ class DomainCondition(Domain):
             original_exception = e
         else:
             if computed_domain is not NotImplemented:
-                return Domain(computed_domain, strict=False)
+                return Domain(computed_domain)
         # try with the positive operator
         if (
             original_exception is None
@@ -933,7 +929,7 @@ class DomainCondition(Domain):
         ):
             computed_domain = field.determine_domain(model, inversed_opeator, value)
             if computed_domain is not NotImplemented:
-                return ~Domain(computed_domain, strict=False)
+                return ~Domain(computed_domain)
         # backward compatibility to implement only '=' or '!='
         try:
             if operator == 'in':
