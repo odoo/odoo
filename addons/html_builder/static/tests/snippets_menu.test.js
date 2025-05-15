@@ -1,4 +1,4 @@
-import { WebsiteBuilder } from "@html_builder/website_preview/website_builder_action";
+import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";

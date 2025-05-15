@@ -21,7 +21,6 @@
 
     'assets': {
         'web.assets_backend': [
-            'html_builder/static/src/website_preview/**/*',
             'website/static/src/xml/website_form_editor.xml',
             # TODO Remove the module's form js - this is for testing.
             'website/static/src/js/send_mail_form.js',
@@ -41,7 +40,6 @@
             'web/static/lib/bootstrap/scss/_maps.scss',
 
             'html_builder/static/src/**/*',
-            ('remove', 'html_builder/static/src/website_preview/**/*'),
         ],
         'html_builder.inside_builder_style': [
             ('include', 'web._assets_helpers'),
@@ -60,9 +58,6 @@
         'web.assets_unit_tests': [
             'html_builder/static/tests/**/*',
             ('include', 'html_builder.assets'),
-        ],
-        'web.assets_frontend': [
-            'html_builder/static/src/website_preview/website_builder_action.editor.scss',
         ],
     },
     'license': 'LGPL-3',

@@ -1,4 +1,4 @@
-import { EditWebsiteSystrayItem } from "@html_builder/website_preview/edit_website_systray_item";
+import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
 import { patch } from "@web/core/utils/patch";
 
 patch(EditWebsiteSystrayItem.prototype, {

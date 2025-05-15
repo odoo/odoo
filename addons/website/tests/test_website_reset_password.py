@@ -11,7 +11,6 @@ from odoo.tests.common import HttpCase
 @tagged('post_install', '-at_install')
 class TestWebsiteResetPassword(HttpCase):
 
-
     def test_01_website_reset_password_tour(self):
         """The goal of this test is to make sure the reset password works."""
         # We override unlink because we don't want the email to be auto deleted

@@ -1,4 +1,4 @@
-import { NewContentModal } from "@html_builder/website_preview/new_content_modal";
+import { NewContentModal } from "./new_content_modal";
 import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 

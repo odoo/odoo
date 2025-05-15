@@ -1,8 +1,8 @@
-import { InstallModuleDialog } from "@html_builder/website_preview/install_module_dialog";
+import { InstallModuleDialog } from "./install_module_dialog";
 import {
     MODULE_STATUS,
     NewContentElement,
-} from "@html_builder/website_preview/new_content_element";
+} from "./new_content_element";
 import { Component, onWillStart, useState, xml } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
