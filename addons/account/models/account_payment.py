@@ -770,21 +770,26 @@ class AccountPayment(models.Model):
         self.flush_model(used_fields)
 
         payment_table_and_alias = SQL("account_payment AS payment")
-        if not self[0].id:  # if record is under creation/edition in UI, safely inject values in the query
+        if self.filtered(lambda x : not x.id):  # if record is under creation/edition in UI, safely inject values in the query
             # Necessary since new record aren't searchable in the DB and record in edition aren't up to date yet
-            values = {
-                field_name: self._fields[field_name].convert_to_write(self[field_name], self) or None
+            all_values = [{**{
+                field_name: payment_id._fields[field_name].convert_to_write(payment_id[field_name], payment_id) or None
                 for field_name in used_fields
-            }
-            values["id"] = self._origin.id or 0
+            }, **{'id': payment_id._origin.id or 0}} for payment_id in self]
             # The amount total depends on the field line_ids and is calculated upon saving, we needed a way to get it even when the
             # invoices has not been saved yet.
-            casted_values = SQL(', ').join(
-                SQL("%s::%s", value, SQL.identifier(self._fields[field_name].column_type[0]))
-                for field_name, value in values.items()
+            casted_values = []
+            for values in all_values:
+                casted_values.append(SQL(', ').join(
+                    SQL("%s::%s", value, SQL.identifier(self._fields[field_name].column_type[0]))
+                    for field_name, value in values.items()
+                ))
+            query_values = SQL(', ').join(
+                SQL("(%s)", value)
+                for value in casted_values
             )
             column_names = SQL(', ').join(SQL.identifier(field_name) for field_name in values)
-            payment_table_and_alias = SQL("(VALUES (%s)) AS payment(%s)", casted_values, column_names)
+            payment_table_and_alias = SQL("(VALUES %s) AS payment(%s)", query_values, column_names)
 
         query = SQL(
             """
