@@ -12,7 +12,8 @@ export class CardImageAlignmentOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
-        this.state = useDomState((editingElement) => {
+        this.state = useDomState(async (editingElement) => {
+            await this.waitForAllImageloaded(this.env.getEditingElements());
             const imageToWrapperRatio = this.getImageToWrapperRatio(editingElement);
             const hasCoverImage = !!editingElement.querySelector(".o_card_img_wrapper");
             // Sometimes the imageToWrapperRatio is very close to but not
@@ -46,5 +47,24 @@ export class CardImageAlignmentOption extends BaseOptionComponent {
         const imgRatio = imageEl.naturalWidth / imageEl.naturalHeight;
         const wrapperRatio = imageWrapperEl.offsetWidth / imageWrapperEl.offsetHeight;
         return imgRatio / wrapperRatio;
+    }
+
+    async waitForAllImageloaded(editingElements) {
+        const promises = [];
+        for (const editingEl of editingElements) {
+            const imageEls = editingEl.matches("img")
+                ? [editingEl]
+                : editingEl.querySelectorAll("img");
+            for (const imageEl of imageEls) {
+                if (!imageEl.complete) {
+                    promises.push(
+                        new Promise((resolve) => {
+                            imageEl.addEventListener("load", () => resolve());
+                        })
+                    );
+                }
+            }
+        }
+        await Promise.all(promises);
     }
 }

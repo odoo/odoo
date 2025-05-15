@@ -7,7 +7,8 @@ import {
     useDomState,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
-import { BasicMany2One } from "./basic_many2one";
+import { SelectMany2X } from "./select_many2x";
+import { useCachedModel } from "../cached_model_utils";
 
 export class BuilderMany2One extends Component {
     static template = "html_builder.BuilderMany2One";
@@ -26,11 +27,12 @@ export class BuilderMany2One extends Component {
         ...BuilderComponent.defaultProps,
         allowUnselect: true,
     };
-    static components = { BuilderComponent, BasicMany2One };
+    static components = { BuilderComponent, SelectMany2X };
 
     setup() {
         useBuilderComponent();
         const { getAllActions, callOperation } = getAllActionsAndOperations(this);
+        this.cachedModel = useCachedModel();
         this.callOperation = callOperation;
         this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
             this.callApply.bind(this)
@@ -40,12 +42,26 @@ export class BuilderMany2One extends Component {
             ({ actionId }) => getAction(actionId).getValue
         );
         const { actionId, actionParam } = actionWithGetValue;
-        this.domState = useDomState((el) => {
-            const actionValue = getAction(actionId).getValue({
+        this.domState = useDomState(async (el) => {
+            const selectedString = getAction(actionId).getValue({
                 editingElement: el,
                 params: actionParam,
             });
-            return { selected: actionValue && JSON.parse(actionValue) };
+            const selected = selectedString && JSON.parse(selectedString);
+            if (selected && !("display_name" in selected && "name" in selected)) {
+                Object.assign(
+                    selected,
+                    (
+                        await this.cachedModel.ormRead(
+                            this.props.model,
+                            [selected.id],
+                            ["display_name", "name"]
+                        )
+                    )[0]
+                );
+            }
+
+            return { selected };
         });
         if (this.props.id) {
             useDependencyDefinition(this.props.id, {

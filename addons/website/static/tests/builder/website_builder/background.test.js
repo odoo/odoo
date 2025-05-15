@@ -1,12 +1,14 @@
 import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import { waitFor } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
 test("test parallax zoom", async () => {
     await setupWebsiteAndOpenParallaxOptions();
     await contains("[data-action-value='zoom_in']").click();
+    await waitFor("[data-label='Intensity'] input");
     expect(":iframe section").not.toHaveStyle("background-image", { inline: true });
     expect("[data-label='Intensity'] input").toBeVisible();
 });
@@ -41,9 +43,10 @@ test("remove parallax changes editing element", async () => {
 async function setupWebsiteAndOpenParallaxOptions({ editingElClasses = "" } = {}) {
     const backgroundImageUrl = "url('/web/image/123/transparent.png')";
     const editingElClass = editingElClasses ? `class=${editingElClasses}` : "";
-    await setupWebsiteBuilder(`
+    const websiteBuilder = await setupWebsiteBuilder(`
         <section ${editingElClass} style="background-image: ${backgroundImageUrl}; width: 500px; height:500px">
         </section>`);
     await contains(":iframe section").click();
     await contains("[data-label='Scroll Effect'] button.o-dropdown").click();
+    return websiteBuilder;
 }

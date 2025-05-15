@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
+import { click, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, dataURItoBlob, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, dummyBase64Img, setupWebsiteBuilder } from "../website_helpers";
 
@@ -27,7 +27,7 @@ test("Add image in gallery", async () => {
         { pure: true }
     );
 
-    await setupWebsiteBuilder(
+    const { waitDomUpdated } = await setupWebsiteBuilder(
         `
         <section class="s_image_gallery o_masonry" data-columns="2">
             <div class="container">
@@ -64,7 +64,7 @@ test("Add image in gallery", async () => {
     // We use "click" instead of contains.click because contains wait for the image to be visible.
     // In this test we don't want to wait ~800ms for the image to be visible but we can still click on it
     await click("img.o_we_attachment_highlight");
-    await animationFrame();
+    await waitDomUpdated();
     await contains(".modal-footer button").click();
     await waitFor(":iframe .o_masonry_col img[data-index='6']");
 

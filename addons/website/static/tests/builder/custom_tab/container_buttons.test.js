@@ -13,7 +13,7 @@ import {
     waitForSnippetDialog,
 } from "../website_helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { animationFrame, Deferred, queryText, tick } from "@odoo/hoot-dom";
+import { animationFrame, Deferred, queryText, tick, waitFor } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -48,7 +48,7 @@ test("Use the sidebar 'remove' buttons", async () => {
         ".o_customize_tab .options-container > div:contains('Image') button.oe_snippet_remove";
 
     await contains(":iframe .col-lg-7 img").click();
-    await animationFrame();
+    await waitFor(".options-container");
     expect(removeSectionSelector).toHaveCount(1);
     expect(removeColumnSelector).toHaveCount(1);
     expect(removeImageSelector).toHaveCount(1);
