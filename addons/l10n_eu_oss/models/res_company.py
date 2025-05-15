@@ -81,12 +81,16 @@ class ResCompany(models.Model):
                                         'name': f'{tg.tax_payable_account_id.name} OSS',
                                         'code': self.env['account.account']._search_new_account_code(tg.tax_payable_account_id.code),
                                         'account_type': tg.tax_payable_account_id.account_type,
+                                        'reconcile': tg.tax_payable_account_id.reconcile,
+                                        'non_trade': tg.tax_payable_account_id.non_trade,
                                         'company_ids': [Command.link(company.id)],
                                     }])
                                     default_oss_receivable_account = self.env['account.account'].create([{
                                         'name': f'{tg.tax_receivable_account_id.name} OSS',
                                         'code': self.env['account.account']._search_new_account_code(tg.tax_receivable_account_id.code),
                                         'account_type': tg.tax_receivable_account_id.account_type,
+                                        'reconcile': tg.tax_receivable_account_id.reconcile,
+                                        'non_trade': tg.tax_receivable_account_id.non_trade,
                                         'company_ids': [Command.link(company.id)],
                                     }])
 
