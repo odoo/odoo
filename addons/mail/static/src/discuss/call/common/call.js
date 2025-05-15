@@ -44,7 +44,6 @@ export class Call extends Component {
         super.setup();
         this.grid = useRef("grid");
         this.notification = useService("notification");
-        this.rtc = useService("discuss.rtc");
         this.ui = useService("ui");
         this.isMobileOs = isMobileOS();
         this.state = useState({
@@ -69,6 +68,10 @@ export class Call extends Component {
             browser.clearTimeout(this.overlayTimeout);
         });
         useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 
     get isActiveCall() {

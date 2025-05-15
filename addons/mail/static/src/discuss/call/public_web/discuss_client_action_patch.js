@@ -6,7 +6,10 @@ import { patch } from "@web/core/utils/patch";
 patch(DiscussClientAction.prototype, {
     setup() {
         super.setup(...arguments);
-        this.rtc = useService("discuss.rtc");
+        this.store = useService("mail.store");
+    },
+    get rtc() {
+        return this.store.rtc;
     },
     /**
      * Checks if we are in a client action and if we have a query parameter requesting to join a call,
