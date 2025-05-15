@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherited_pos_category_form_view" model="ir.ui.view">
+        <field name="name">pos.category.form.view.inherit</field>
+        <field name="model">pos.category</field>
+        <field name="inherit_id" ref="point_of_sale.product_pos_category_form_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <label for="option_name" string="Nom de la catégorie"/>
+            </field>
+
+            <field name="name" position="after">
+                <field name="option_name" widget="selection" options="{'no_open': True, 'no_create': True}" style="width: 600px; font-size: 14px;"/>
+            </field>
+
+            <field name="name" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <field name="parent_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <field name="image_128" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

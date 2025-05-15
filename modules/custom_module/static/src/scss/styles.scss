@@ -1,0 +1,216 @@
+/* The main navbar without personalized elements */
+.o_main_navbar {
+    background-color: #A31219 !important;
+    border-color: #A31219 !important;
+}
+
+/* Elements of the main navbar */
+.o_main_navbar .dropdown-toggle,
+.o_main_navbar .o_nav_entry {
+    background-color: #A31219 !important;
+    &:hover {
+        border-color: transparent !important;
+        background-color: #921016 !important;
+        border-color: #921016;
+    }
+}
+
+/* Customize buttons and labels colors */
+.btn-primary {
+    color: #FFFFFF !important;
+    background-color: #A31219 !important;
+    border-color: #A31219 !important;
+    &:hover {
+        background-color: #921016 !important;
+        border-color: #921016 !important;
+    }
+}
+
+.btn.btn-secondary, .o_form_button_create {
+    background-color: #FFFFFF;
+    color: #A31219;
+    border-color: #A31219;
+    &:hover {
+        background-color: #A31219;
+        color: #FFFFFF;
+        border-color: #A31219;
+    }
+}
+
+/* The tabs of form views */
+a.nav-link, a.fw-bold.text-truncate, .btn.btn-link  {
+    color: #A31219 !important;
+}
+
+/* The checkboxes of form views */
+.form-check-input{
+    border-color: #A31219 !important;
+    &:checked {
+        background-color: #A31219 !important;
+        color: #FFFFFF !important;
+    }
+}
+
+/* The 'recherche avancée' */
+.o-autocomplete--dropdown-item.ui-menu-item.d-block.o_m2o_dropdown_option.o_m2o_dropdown_option_search_more .dropdown-item.ui-menu-item-wrapper.text-truncate{
+    color: #A31219 !important;
+}
+
+/* The button icons in top of the form views ( icons and stats-infos )*/
+div.o_control_panel_actions.d-empty-none.d-flex.align-items-center.justify-content-start.justify-content-lg-around.order-2.order-lg-1.w-100.w-lg-auto > div > button > i {
+    color: #A31219;
+}
+body > div.o_action_manager > div > div > div.o_control_panel.d-flex.flex-column.gap-3.gap-lg-1.px-3.pt-2.pb-3 > div > div.o_control_panel_actions.d-empty-none.d-flex.align-items-center.justify-content-start.justify-content-lg-around.order-2.order-lg-1.w-100.w-lg-auto > div > button > div > div > span.o_stat_value > div > span {
+    color: #A31219;
+}
+
+/* Icons color of the search panel */
+.o_search_panel i {
+    color: #A31219 !important;
+}
+
+/* The search bar and input fields border color*/
+.o_input, .o_searchview {
+    &:focus-within, &:hover {
+        border-color: #A31219 !important;
+        + .o-dropdown .o_searchview_dropdown_toggler {
+            border-top-color: #A31219 !important;
+            border-right-color: #A31219 !important;
+            border-bottom-color: #A31219 !important;
+        }
+    }
+}
+
+/* The buttons of search bar + views format details */
+.btn-check:checked + .btn-outline-secondary, .btn-check:active + .btn-outline-secondary, .btn-outline-secondary:active, .btn-outline-secondary.active, .show > .btn-outline-secondary.dropdown-toggle  {
+        border-color: #A31219 !important;
+        background-color: #eccfd1 !important;
+}
+
+.btn-check:checked + .btn-secondary, .btn-check:active + .btn-secondary, .btn-secondary:active, .btn-secondary.active, .show > .btn-secondary.dropdown-toggle {
+   border-color: #A31219 !important;
+   background-color: #eccfd1 !important;
+   &:hover{
+       border-color: #A31219 !important;
+       background-color: #eccfd1 !important;
+       color: #000000 !important;
+   }
+}
+
+/* "Ajouter une ligne" Element */
+.o_field_x2many_list_row_add a{
+    color: #A31219 !important;
+}
+
+.o-dropdown--menu.dropdown-menu.d-block o_search_bar_menu i, .text-primary, .text-action {
+    color: #A31219 !important;
+}
+
+/* The 'tick' icon when item is selected */
+.dropdown-item.selected {
+    &::before{
+        color: #A31219 !important;
+    }
+}
+
+/* The pointer color */
+.o_tour_pointer .o_tour_pointer_tip{
+    background-image: radial-gradient(
+        #A31219, #921016
+    );
+}
+
+/* Buttons from 'facturation' menu item */
+.o_onboarding_main .o_onboarding_step .o_onboarding_step_action {
+    color: #A31219;
+    border-color: #A31219;
+}
+
+/* FIXME: center the table items in categories interface */
+.o_data_row.o_row_draggable {
+    vertical-align: middle;
+}
+
+.o_primary a{
+    color: #7f0e13;
+}
+
+.bg-action, .text-bg-action {
+    background-color: #A31219 !important;
+}
+
+.o_form_view .o_form_uri > span:first-child {
+    color: #A31219;
+    &:hover {
+        color: #921016 !important;
+    }
+}
+
+.o-form-buttonbox .o_pie_value, .o-form-buttonbox .oe_stat_button .o_stat_info .o_stat_value, .o-form-buttonbox .oe_stat_button > span .o_stat_value, .o-form-buttonbox .oe_stat_button .o_field_statinfo .o_stat_value {
+    color: #A31219;
+}
+
+.btn-link {
+    color: #A31219 !important;
+    &:hover {
+        color: #921016 !important;
+    }
+}
+
+.o_field_highlight .o_field_widget .o_input, .o_field_highlight.o_field_widget .o_input {
+    border-color: #A31219 !important;
+}
+
+.content-group a , .mt16 a{
+    color: #A31219 !important;
+}
+
+.badge.text-bg-default, .badge.bg-light, .badge.text-bg-light, .badge.bg-default, .badge.text-primary {
+    color: #A31219 !important;
+    outline: 1px solid #A31219;
+    &:hover {
+    color: #A31219 !important;
+    outline: 1px solid #A31219;
+    }
+}
+
+.o_loading_indicator {
+    background-color: #A31219 !important;
+}
+
+
+/* The Employee page */
+a {
+    color: #A31219;
+    &:hover {
+        color: #A31219;
+    }
+}
+
+/* Inventaire -> Livraisons */
+.o_field_statusbar > .o_statusbar_status > .o_arrow_button:not(.d-none) {
+    &:not(.o_first), &:not(.o_last) {
+        &:before {
+            border-left-color: #A31219 !important;
+        }
+        &:hover:after {
+            border-left-color: #A31219 !important;
+        }
+    }
+
+    &.o_arrow_button_current:disabled, &:active:not(.o_first) {
+        background-color: #eccfd1;
+        border-color: #A31219 !important;
+        &:after {
+            border-left-color: #eccfd1 !important;
+        }
+        &:before {
+            border-left-color: #A31219 !important;
+        }
+
+    }
+}
+
+.text-bg-primary {
+    background-color: #A31219 !important;
+}

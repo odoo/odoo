@@ -1,0 +1,67 @@
+// Change the color of the navbar
+.pos .top-content .top-headers {
+    background-color: #A31219 !important;
+    border-color: #A31219 !important;
+    color: #FFFFFF !important;
+}
+
+// Change the color of the buttons
+.btn-primary {
+    color: #FFFFFF !important;
+    background-color: #A31219 !important;
+    border-color: #A31219 !important;
+    &:hover {
+        background-color: #921016 !important;
+        border-color: #921016 !important;
+    }
+}
+
+// Price tag
+.text-primary {
+    color: #A31219 !important;
+}
+
+// Replace the Odoo logo with MP logo in POS interface
+.pos-logo {
+    content: url('/custom_module/static/src/img/MP_logo.png');
+    width: 60px;
+    height: 30px;
+}
+
+// Hide the default Odoo logo from POS interface
+.pos .top-content .top-headers .pos-branding .pos-logo[src="/web/static/img/logo.png"] {
+    display: none;
+}
+
+// Order lines in 'Orders' interface
+.order-row{
+    &:hover {
+        background-color: #A31219 !important;
+        color: #FFFFFF !important;
+    }
+
+}
+
+.border-primary {
+    border-color: #A31219 !important;
+}
+
+.btn-check:checked + .btn-light, .btn-check:active + .btn-light, .btn-light:active, .btn-light.active, .show > .btn-light.dropdown-toggle {
+    background-color: #eccfd1 !important;
+}
+
+.btn-check:focus + .btn-light, .btn-light:focus, .btn-light:visited {
+    background-color: #A31219 !important;
+    &:visited , &:hover, &:active {
+        background-color: #A31219 !important;
+    }
+}
+
+.btn-outline-primary {
+    color: #A31219 !important;
+    border-color: #A31219 !important;
+    &:hover {
+        background-color: #A31219 !important;
+        border-color: #A31219 !important;
+    }
+}

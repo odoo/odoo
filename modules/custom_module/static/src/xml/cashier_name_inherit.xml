@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="hide_cashier_name" t-inherit="point_of_sale.CashierName" t-inherit-mode="extension">
+        <xpath expr="//button[contains(@class, 'cashier-name')]" position="replace">
+            <span class="cashier-name d-flex align-items-center gap-1">
+                <img t-att-src="avatar" t-att-alt="username" class="avatar rounded-3"/>
+                <span t-if="!ui.isSmall" t-esc="username" class="username"/>
+            </span>
+        </xpath>
+    </t>
+
+</templates>
