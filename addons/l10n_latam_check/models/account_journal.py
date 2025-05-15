@@ -21,6 +21,7 @@ class AccountJournal(models.Model):
         res.add("own_checks")
         return res
 
+    @api.model_create_multi
     def create(self, vals_list):
         journals = super().create(vals_list)
         inbound_payment_accounts = self.env['account.account'].search([
