@@ -150,6 +150,7 @@ class MailActivityPlanTemplate(models.Model):
         """
         self.ensure_one()
         error = False
+        warning = False
         if self.responsible_type == 'other':
             responsible = self.responsible_id
         elif self.responsible_type == 'on_demand':
@@ -163,4 +164,5 @@ class MailActivityPlanTemplate(models.Model):
         return {
             'responsible': responsible,
             'error': error,
+            'warning': warning,
         }

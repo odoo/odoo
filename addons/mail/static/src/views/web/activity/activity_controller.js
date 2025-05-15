@@ -104,11 +104,11 @@ export class ActivityController extends Component {
                     default_res_id: resId,
                     default_res_model: this.props.resModel,
                     default_activity_type_id: activityTypeId,
+                    dialog_size: "large",
                 },
             },
             {
                 onClose: () => this.model.load(this.getSearchProps()),
-                additionalContext: { dialog_size: "medium" },
             }
         );
     }
