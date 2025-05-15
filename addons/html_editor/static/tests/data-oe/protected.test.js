@@ -89,7 +89,7 @@ test("should not normalize protected elements children (true)", async () => {
                     <ul><li><p>abc</p><p><br></p></li></ul>
                 </div>
                 <div data-oe-protected="true" contenteditable="false">
-                    <p>\ufeff<i class="fa"></i>\ufeff</p>
+                    <p><i class="fa"></i></p>
                     <ul><li>abc<p><br></p></li></ul>
                 </div>
                 `),
@@ -124,7 +124,7 @@ test("should normalize unprotected elements children (false)", async () => {
                 `),
         contentAfterEdit: unformat(`
                 <div data-oe-protected="true" contenteditable="false">
-                    <p>\ufeff<i class="fa"></i>\ufeff</p>
+                    <p><i class="fa"></i></p>
                     <ul><li>abc<p><br></p></li></ul>
                     <div data-oe-protected="false" contenteditable="true">
                         <p>\ufeff<i class="fa" contenteditable="false">\u200B</i>\ufeff</p>
