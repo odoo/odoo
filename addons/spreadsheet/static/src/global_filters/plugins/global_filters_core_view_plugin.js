@@ -560,7 +560,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         }
         this.exportSheetWithActiveFilters(data);
         data.sheets[data.sheets.length - 1] = {
-            ...createEmptyExcelSheet(uuidGenerator.uuidv4(), _t("Active Filters")),
+            ...createEmptyExcelSheet(uuidGenerator.smallUuid(), _t("Active Filters")),
             ...data.sheets.at(-1),
         };
     }
@@ -600,7 +600,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const styleId = getItemId({ bold: true }, data.styles);
 
         const sheet = {
-            ...createEmptySheet(uuidGenerator.uuidv4(), _t("Active Filters")),
+            ...createEmptySheet(uuidGenerator.smallUuid(), _t("Active Filters")),
             cells,
             formats,
             styles: {

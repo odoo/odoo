@@ -69,8 +69,8 @@ function getChartDefinition(type) {
         background: "#FFFFFF",
         legendPosition: "top",
         verticalAxisPosition: "left",
-        dataSourceId: uuidGenerator.uuidv4(),
-        id: uuidGenerator.uuidv4(),
+        dataSourceId: uuidGenerator.smallUuid(),
+        id: uuidGenerator.smallUuid(),
         type,
     };
 }

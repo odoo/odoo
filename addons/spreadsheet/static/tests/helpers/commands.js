@@ -301,7 +301,7 @@ export function updatePivotMeasureDisplay(model, pivotId, measureId, display) {
 }
 
 export function createSheet(model, data = {}) {
-    const sheetId = data.sheetId || model.uuidGenerator.uuidv4();
+    const sheetId = data.sheetId || model.uuidGenerator.smallUuid();
     return model.dispatch("CREATE_SHEET", {
         position: data.position !== undefined ? data.position : 1,
         sheetId,
