@@ -168,6 +168,7 @@ export class IconPlugin extends Plugin {
             return;
         }
         selectedIcon.classList.toggle("fa-spin");
+        this.dependencies.history.addStep();
     }
 
     hasIconSize(size) {
