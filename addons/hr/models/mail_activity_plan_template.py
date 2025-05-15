@@ -27,13 +27,15 @@ class MailActivityPlanTemplate(models.Model):
         while True:
             if not responsible_parent:
                 return {
-                    'error': error_message,
-                    'responsible': False
+                    'error': False,
+                    'responsible': self.env.user,
+                    'warning': error_message
                 }
             if responsible_parent.user_id:
                 return {
                     'error': False,
-                    'responsible': responsible_parent.user_id
+                    'responsible': responsible_parent.user_id,
+                    'warning': False
                 }
             if responsible_parent in viewed_responsible:
                 return {
@@ -42,6 +44,7 @@ class MailActivityPlanTemplate(models.Model):
                         We found a circular reporting loop and no one in that loop is linked to a user.\
                         Please double-check that everyone reports to the correct manager."
                     ),
+                    'warning': False,
                     "responsible": False,
                 }
             else:
@@ -51,7 +54,7 @@ class MailActivityPlanTemplate(models.Model):
     def _determine_responsible(self, on_demand_responsible, employee):
         if self.plan_id.res_model != 'hr.employee' or self.responsible_type not in {'coach', 'manager', 'employee'}:
             return super()._determine_responsible(on_demand_responsible, employee)
-        result = {"error": "", "responsible": False}
+        result = {"error": "", "warning": "", "responsible": False}
         if self.responsible_type == 'coach':
             if not employee.coach_id:
                 result['error'] = _('Coach of employee %s is not set.', employee.name)
@@ -60,6 +63,7 @@ class MailActivityPlanTemplate(models.Model):
                 # If a plan cannot be launched due to the coach not being linked to an user,
                 # attempt to assign it to the coach's manager user. If that manager is also not linked
                 # to an user, continue searching upwards until a manager with a linked user is found.
+                # If no one is found still, assign to current user.
                 result = self._get_closest_parent_user(
                     employee=employee,
                     responsible=employee.coach_id.parent_id,
@@ -76,6 +80,7 @@ class MailActivityPlanTemplate(models.Model):
                 # If a plan cannot be launched due to the manager not being linked to an user,
                 # attempt to assign it to the manager's manager user. If that manager is also not linked
                 # to an user, continue searching upwards until a manager with a linked user is found.
+                # If no one is found still, assign to current user.
                 result = self._get_closest_parent_user(
                     employee=employee,
                     responsible=employee.parent_id.parent_id,
@@ -90,6 +95,7 @@ class MailActivityPlanTemplate(models.Model):
                 # If a plan cannot be launched due to the employee not being linked to an user,
                 # attempt to assign it to the manager's user. If the manager is also not linked
                 # to an user, continue searching upwards until a manager with a linked user is found.
+                # If no one is found still, assign to current user.
                 result = self._get_closest_parent_user(
                     employee=employee,
                     responsible=employee.parent_id,

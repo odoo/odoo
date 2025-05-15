@@ -318,6 +318,24 @@ class MailActivityMixin(models.AbstractModel):
             ]).unlink()
         return res
 
+    # Reschedules next my activity to Today
+    def action_reschedule_my_next_today(self):
+        self.ensure_one()
+        my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        my_next_activity.action_reschedule_today()
+
+    # Reschedules next my activity to Tomorrow
+    def action_reschedule_my_next_tomorrow(self):
+        self.ensure_one()
+        my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        my_next_activity.action_reschedule_tomorrow()
+
+    # Reschedules next my activity to Next Monday
+    def action_reschedule_my_next_nextweek(self):
+        self.ensure_one()
+        my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        my_next_activity.action_reschedule_nextweek()
+
     def activity_send_mail(self, template_id):
         """ Automatically send an email based on the given mail.template, given
         its ID. """

@@ -28,7 +28,7 @@
                             <field name="activity_type_id"/>
                             <field name="summary" placeholder="e.g. Discuss Proposal"/>
                             <field name="responsible_type"/>
-                            <field name="responsible_id" invisible="responsible_type != 'other'"/>
+                            <field name="responsible_id" invisible="responsible_type != 'other'" required="responsible_type == 'other'"/>
                             <label for="delay_count"/>
                             <div>
                                 <field class="oe_inline pe-1 o_input_3ch" name="delay_count"/>

@@ -31,11 +31,11 @@ patch(Activity.prototype, {
                     context: {
                         default_res_model: this.res_model,
                         default_res_id: this.res_id,
+                        dialog_size: "large",
                     },
                 },
-                { 
+                {
                     onClose: resolve,
-                    additionalContext: { dialog_size: "medium" },
                 }
             )
         );

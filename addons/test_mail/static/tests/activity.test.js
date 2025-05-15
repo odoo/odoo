@@ -214,6 +214,7 @@ test("activity view: simple activity rendering", async () => {
                     default_res_id: mailTestActivityIds[1],
                     default_res_model: "mail.test.activity",
                     default_activity_type_id: mailActivityTypeIds[2],
+                    dialog_size: "large",
                 },
                 res_id: false,
                 res_model: "mail.activity",
