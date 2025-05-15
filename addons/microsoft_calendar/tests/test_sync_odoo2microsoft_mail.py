@@ -4,6 +4,7 @@ from unittest.mock import patch
 from datetime import datetime
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.models.res_users import ResUsers
@@ -80,3 +81,27 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
                     mock_insert.assert_not_called()
                     for notified_partner in mail_notified_partners:
                         self.assertMailMail(notified_partner, 'sent', author=(organizer or create_user).partner_id)
+
+    def test_change_organizer_pure_odoo_event(self):
+        """
+        Test that changing organizer on a pure Odoo event (not synced with Microsoft)
+        does not archive the event.
+        """
+        self.organizer_user.microsoft_synchronization_stopped = True
+        event = self.env["calendar.event"].with_user(self.organizer_user).create({
+            'name': "Pure Odoo Event",
+            'start': datetime(2024, 1, 1, 10, 0),
+            'stop': datetime(2024, 1, 1, 11, 0),
+            'user_id': self.organizer_user.id,
+            'partner_ids': [Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])],
+        })
+
+        self.assertFalse(event.microsoft_id)
+        self.assertTrue(event.active)
+
+        event.write({
+            'user_id': self.attendee_user.id,
+        })
+
+        self.assertTrue(event.active, "Pure Odoo event should not be archived when changing organizer")
+        self.assertEqual(event.user_id, self.attendee_user, "Organizer should be updated")
