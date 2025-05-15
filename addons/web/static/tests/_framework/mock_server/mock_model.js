@@ -1662,15 +1662,7 @@ export class Model extends Array {
         const result = [];
         for (const record of this) {
             const isInDomain = actualDomain.contains(record);
-            if (
-                isInDomain &&
-                (!name ||
-                    (operator === "="
-                        ? record.display_name === name
-                        : operator === "=ilike"
-                        ? new RegExp(name.replaceAll("%", ".*")).test(record.display_name)
-                        : record.display_name?.includes(name)))
-            ) {
+            if (isInDomain && (!name || record.display_name?.includes(name))) {
                 result.push(toIdDisplayName(record));
             }
         }
