@@ -17,7 +17,6 @@ import {
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
-import { getWebsiteSnippets } from "./snippets_getter.hoot";
 
 export function patchWithCleanupImg() {
     const defaultImg =
@@ -50,13 +49,6 @@ function getSnippetView(snippets) {
 function getSnippetStructure({ name, content, keywords = [], groupName, imagePreview = "" }) {
     keywords = keywords.join(", ");
     return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-group="${groupName}">${content}</div>`;
-}
-
-class IrUiView extends models.Model {
-    _name = "ir.ui.view";
-    render_public_asset() {
-        return getWebsiteSnippets();
-    }
 }
 
 class BuilderContainer extends Component {
@@ -120,8 +112,16 @@ class BuilderContainer extends Component {
     }
 }
 
+class IrUiView extends models.Model {
+    _name = "ir.ui.view";
+    render_public_asset() {
+        throw new Error("This should be implemented by some helper");
+    }
+}
+
 export async function setupHTMLBuilder(content = "", { snippetContent, dropzoneSelectors } = {}) {
     defineMailModels(); // fuck this shit
+
     defineModels([IrUiView]);
 
     patchWithCleanupImg();
