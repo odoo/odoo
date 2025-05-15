@@ -35,9 +35,12 @@
                             <p class="h4">Take a look at the search bar, there might be a small typo!</p>
                         </div>
                     </t>
-                    <t t-else="">
-                        <div class="spinner-grow position-absolute top-50 start-50 translate-middle" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                    <t t-elif="!state.showIframe">
+                        <div class="o_add_snippet_dialog_iframe_loader d-flex flex-column justify-content-center text-center h-100 p-4" role="status">
+                            <i class="fa fa-3x fa-circle-o-notch fa-spin"></i>
+                            <p class="h3 mt-3">
+                                Almost there! Snippets are incoming, grab a coffee and relax!
+                            </p>
                         </div>
                     </t>
                     <iframe class="border-0 fade bg-200 position-relative o_add_snippet_iframe" t-att-class="state.showIframe ? ' show' : '' " tabindex="-1" t-ref="iframe" src="about:blank" height="333%" width="333%" />

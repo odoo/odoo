@@ -9,7 +9,7 @@ registerWebsitePreviewTour(
     () => [
         {
             content: "Click on any snippet to open the 'Insert Snippet' dialog.",
-            trigger: ".o_panel_body div.oe_snippet",
+            trigger: ".o_snippets_container_body div.o_snippet button",
             run: "click",
         },
         {
