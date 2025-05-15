@@ -1257,7 +1257,10 @@ registry.FullScreenHeight = publicWidget.Widget.extend({
             // rules may alter the full-screen-height class behavior in some
             // cases (blog...).
             this._adaptSize();
-            $(window).on('resize.FullScreenHeight', debounce(() => this._adaptSize(), 250));
+            $(window).on('resize.FullScreenHeight', debounce(() => this._adaptSize(), 250, {
+                leading: true,
+                trailing: true,
+            }));
         }
         return this._super(...arguments);
     },
