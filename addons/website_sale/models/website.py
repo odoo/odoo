@@ -12,7 +12,6 @@ from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.website_sale import const
 
-
 _lt = LazyTranslate(__name__)
 
 CART_SESSION_CACHE_KEY = 'sale_order_id'
@@ -249,11 +248,7 @@ class Website(models.Model):
         website_settings = {}
         views_to_disable = []
         views_to_enable = []
-        IrUiView = self.env['ir.ui.view'].with_context(active_test=False, website_id=website.id)
-
-        def get_views(xmlids_):
-            domain = expression.AND([[('key', 'in', xmlids_)], website.website_domain()])
-            return IrUiView.search(domain).filter_duplicate()
+        ThemeUtils = self.env['theme.utils'].with_context(website_id=website.id)
 
         def parse_style_config(style_config_):
             website_settings.update(style_config_['website_fields'])
@@ -273,10 +268,15 @@ class Website(models.Model):
         # Apply eCommerce page style configurations.
         if website_settings:
             website.write(website_settings)
-        if views_to_disable:
-            get_views(views_to_disable).active = False
-        if views_to_enable:
-            get_views(views_to_enable).active = True
+        for xml_id in views_to_disable:
+            if (
+                xml_id == 'website_sale_comparison.product_add_to_compare'
+                and 'website_sale_comparison' not in self.env['ir.module.module']._installed()
+            ):
+                continue
+            ThemeUtils.disable_view(xml_id)
+        for xml_id in views_to_enable:
+            ThemeUtils.enable_view(xml_id)
 
         return res
 
