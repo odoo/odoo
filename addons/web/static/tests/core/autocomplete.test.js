@@ -1,8 +1,8 @@
 import { expect, test } from "@odoo/hoot";
 import {
+    hover,
     isInViewPort,
     isScrollable,
-    manuallyDispatchProgrammaticEvent,
     pointerDown,
     pointerUp,
     press,
@@ -785,7 +785,8 @@ test("autocomplete scrolls when moving with arrows", async () => {
     expect(".o-autocomplete input").toHaveCount(1);
     // Open with arrow key.
     await contains(".o-autocomplete input").focus();
-    await contains(".o-autocomplete input").press("ArrowDown");
+    await press("ArrowDown");
+    await animationFrame();
     expect(".o-autocomplete--dropdown-item").toHaveCount(5);
     expect(isScrollable(dropdownSelector)).toBe(true, { message: "dropdown should be scrollable" });
     // First element focused and visible (dropdown is not scrolled yet).
@@ -795,8 +796,9 @@ test("autocomplete scrolls when moving with arrows", async () => {
     expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:contains('Up')")).toBe(false, {
         message: "'Up' " + msgNotInView,
     });
-    await contains(".o-autocomplete--input").press("ArrowUp");
-    await contains(".o-autocomplete--input").press("ArrowUp");
+    await press("ArrowUp");
+    await press("ArrowUp");
+    await animationFrame();
     expect(activeItemSelector).toHaveText("Up");
     expect(isInViewWithinScrollableY(activeItemSelector)).toBe(true, { message: msgInView });
     // Navigate to an item that is not currently visible.
@@ -805,8 +807,9 @@ test("autocomplete scrolls when moving with arrows", async () => {
         { message: "'Never' " + msgNotInView }
     );
     for (let i = 0; i < 4; i++) {
-        await contains(".o-autocomplete--input").press("ArrowUp");
+        await press("ArrowUp");
     }
+    await animationFrame();
     expect(activeItemSelector).toHaveText("Never");
     expect(isInViewWithinScrollableY(activeItemSelector)).toBe(true, { message: msgInView });
     expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:last")).toBe(false, {
@@ -908,23 +911,17 @@ test("unselectable options are... not selectable", async () => {
     expect.verifySteps(["selected: selectable"]);
 });
 
+test.tags("desktop");
 test("items are selected only when the mouse moves, not just on enter", async () => {
     class Parent extends Component {
         static template = xml`
-            <AutoComplete value="''" sources="[source]" onSelect.bind="onSelect"/>
+            <AutoComplete value="''" sources="[source]" onSelect="() => {}" />
         `;
         static props = ["*"];
         static components = { AutoComplete };
-        get source() {
-            return {
-                options: [
-                    { label: "one" },
-                    { label: "two" },
-                    { label: "three" },
-                ],
-            };
-        }
-        onSelect(option) {}
+        source = {
+            options: [{ label: "one" }, { label: "two" }, { label: "three" }],
+        };
     }
 
     // In this test we use custom events to prevent unwanted mouseenter/mousemove events
@@ -934,22 +931,29 @@ test("items are selected only when the mouse moves, not just on enter", async ()
     queryOne(`.o-autocomplete input`).click();
     await animationFrame();
 
-    expect(".o-autocomplete--dropdown-item:nth-child(1) .dropdown-item").toHaveClass("ui-state-active");
+    expect(".o-autocomplete--dropdown-item:nth-child(1) .dropdown-item").toHaveClass(
+        "ui-state-active"
+    );
 
-    const item2 = queryOne(".o-autocomplete--dropdown-item:nth-child(2)");
-    await manuallyDispatchProgrammaticEvent(item2, "mouseenter");
+    await hover(".o-autocomplete--dropdown-item:nth-child(2)");
     await animationFrame();
     // mouseenter should be ignored
-    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").not.toHaveClass("ui-state-active");
+    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").not.toHaveClass(
+        "ui-state-active"
+    );
 
     await press("arrowdown");
     await animationFrame();
-    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").toHaveClass("ui-state-active");
+    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").toHaveClass(
+        "ui-state-active"
+    );
 
-    await manuallyDispatchProgrammaticEvent(item2, "mousemove");
-    const item3 = queryOne(".o-autocomplete--dropdown-item:nth-child(3)");
-    await manuallyDispatchProgrammaticEvent(item3, "mouseenter");
+    await hover(".o-autocomplete--dropdown-item:nth-child(3)");
     await animationFrame();
-    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").not.toHaveClass("ui-state-active");
-    expect(".o-autocomplete--dropdown-item:nth-child(3) .dropdown-item").toHaveClass("ui-state-active");
+    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").not.toHaveClass(
+        "ui-state-active"
+    );
+    expect(".o-autocomplete--dropdown-item:nth-child(3) .dropdown-item").toHaveClass(
+        "ui-state-active"
+    );
 });

@@ -796,7 +796,7 @@ test("domain field: edit through selector (dynamic content)", async function () 
     // Open and close the datepicker
     await contains(".o_datetime_input").click();
     expect(".o_datetime_picker").toHaveCount(1);
-    await scroll(getFixture(), { top: 10 });
+    await scroll(getFixture(), { top: 10 }, { scrollable: false });
     expect(".o_datetime_picker").toHaveCount(1);
     expect(SELECTORS.debugArea).toHaveValue(rawDomain);
     expect.verifySteps([]);
