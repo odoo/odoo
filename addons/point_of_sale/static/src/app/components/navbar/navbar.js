@@ -21,6 +21,7 @@ import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_sl
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
+import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 
 const { DateTime } = luxon;
 
@@ -55,6 +56,7 @@ export class Navbar extends Component {
             this.isSystemUser = await user.hasGroup("base.group_system");
         });
         useExternalListener(document, "keydown", this.handleKeydown.bind(this));
+        this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming);
     }
 
     handleKeydown(event) {
