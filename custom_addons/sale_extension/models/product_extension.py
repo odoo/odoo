@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class ProductExtension(models.Model):
@@ -43,3 +43,8 @@ class ProductExtension(models.Model):
         help='Cantidad a fabricar',
         default=0
     )
+
+    @api.model
+    def action_import_csv(self):
+        return {
+        }

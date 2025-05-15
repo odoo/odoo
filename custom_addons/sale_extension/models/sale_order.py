@@ -15,6 +15,13 @@ class SaleOrder(models.Model):
         inverse="_inverse_delivery_date"
     )
 
+    delivery_method = fields.Selection([
+        ('pickup_index', 'Se retira en INDEX TECHNOLOGY'),
+        ('delivery_address', 'Se entrega en Dirección de entrega'),
+        ('freight_buyer', 'Se entrega en expreso a cargo del comprador'),
+    ], string="Forma de entrega")
+
+    discount = fields.Float(string="Descuento (%)", default=0.0)
 
     def print_quotation_report(self):
         return self.env.ref('sale.action_report_saleorder').report_action(self)
