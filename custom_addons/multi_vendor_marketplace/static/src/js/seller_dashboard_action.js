@@ -53,19 +53,22 @@ var CustomDashBoard = AbstractAction.extend({
             domain: [['state', '=', 'rejected']],
         })
         })
-        $("#seller_pending").text(res.seller_pending)
-        $("#seller_approved").text(res.seller_approved)
-        $("#seller_rejected").text(res.seller_rejected)
-        $("#inventory_pending").text(res.inventory_pending)
-        $("#inventory_approved").text(res.inventory_approved)
-        $("#inventory_rejected").text(res.inventory_rejected)
-        $("#payment_pending").text(res.payment_pending)
-        $("#payment_approved").text(res.payment_approved)
-        $("#payment_rejected").text(res.payment_rejected)
-        $("#order_pending").text(res.order_pending)
-        $("#order_approved").text(res.order_approved)
-        $("#order_shipped").text(res.order_shipped)
-        $("#order_cancel").text(res.order_cancel)
+        $('#divseller_pending_count').text(res.seller_pending)
+        $('#divseller_approved_count').text(res.seller_approved)
+        $('#divseller_rejected_count').text(res.seller_rejected)
+
+        $('#inv_req_pending_count').text(res.inventory_pending)
+        $('#inv_req_approved_count').text(res.inventory_approved)
+        $('#inv_req_rejected_count').text(res.inventory_rejected)
+
+        $('#div_payment_pending_count').text(res.payment_pending)
+        $('#div_payment_approved_count').text(res.payment_approved)
+        $('#div_payment_rejected_count').text(res.payment_rejected)
+
+        $('#divorder_pending_count').text(res.order_pending)
+        $('#divorder_approved_count').text(res.order_approved)
+        $('#divorder_shipped_count').text(res.order_shipped)
+        $('#divorder_cancel_count').text(res.order_cancel)
         $("#divseller_rejected").click(function(){
         console.log("seller rejetced")
         self.do_action({

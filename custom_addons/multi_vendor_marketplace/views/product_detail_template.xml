@@ -205,10 +205,18 @@
                 <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
                 <t t-foreach="product_images" t-as="img">
                     <div class="w-100 d-flex justify-content-center mb-4">
-                        <img t-att-src="image_data_uri(img.image_1920)"
-                             class="img-fluid product-gallery-img"
-                             style="max-width: 1050px; width: 100%; height: auto; border-radius: 12px; object-fit: contain; background: #f8f8f8; display: block;" 
-                             alt="Product image"/>
+                        <t t-if="img and img.image_1920">
+                            <img t-att-src="image_data_uri(img.image_1920)"
+                                 class="img-fluid product-gallery-img"
+                                 style="max-width: 1050px; width: 100%; height: auto; border-radius: 12px; object-fit: contain; background: #f8f8f8; display: block;" 
+                                 alt="Product image"/>
+                        </t>
+                        <t t-else="">
+                            <img src="/multi_vendor_marketplace/static/src/img/product.png"
+                                 class="img-fluid product-gallery-img"
+                                 style="max-width: 1050px; width: 100%; height: auto; border-radius: 12px; object-fit: contain; background: #f8f8f8; display: block;" 
+                                 alt="No image"/>
+                        </t>
                     </div>
                 </t>
             </div>

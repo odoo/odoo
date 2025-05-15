@@ -31,6 +31,37 @@
                 <option value="cn">Китай</option>
             </select>
         </div>
+        <div class="mb-3 field-profile-url">
+            <label for="profile_url">Уникальный адрес магазина</label>
+            <input type="text" name="profile_url" id="profile_url"
+                   class="form-control form-control-sm"
+                   placeholder="myshop123"
+                   required="required"
+                   pattern="[-a-zA-Z0-9_]+"
+                   title="Только латинские буквы, цифры, - и _"/>
+            <small class="form-text text-muted">Только латинские буквы, цифры, - и _</small>
+        </div>
+        <div class="mb-3 field-email">
+            <label for="email">Email</label>
+            <input type="email" name="login" id="email"
+                   class="form-control form-control-sm"
+                   placeholder="Введите email"
+                   required="required"/>
+        </div>
+        <div class="mb-3 field-password">
+            <label for="password">Пароль</label>
+            <input type="password" name="password" id="password"
+                   class="form-control form-control-sm"
+                   placeholder="Введите пароль"
+                   required="required"/>
+        </div>
+        <div class="mb-3 field-password">
+            <label for="confirm_password">Подтвердите пароль</label>
+            <input type="password" name="confirm_password" id="confirm_password"
+                   class="form-control form-control-sm"
+                   placeholder="Повторите пароль"
+                   required="required"/>
+        </div>
     </template>
     <template id="mark" name="Sign up login">
         <t t-call="web.login_layout">

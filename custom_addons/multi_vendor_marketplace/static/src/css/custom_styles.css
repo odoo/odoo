@@ -1157,4 +1157,84 @@ body.modal-open {
     color: #fff !important;
 }
 
+/* New Catalog Button Styles */
+.catalog-button-container {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+}
+
+.catalog-button {
+    background: #ff7300 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 32px !important;
+    padding: 8px 22px !important;
+    font-size: 15px !important;
+    min-width: 110px !important;
+    height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+}
+
+.catalog-button:hover {
+    background: #ff9100 !important;
+    transform: translateY(-1px);
+}
+
+.catalog-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    padding: 24px 20px 20px 20px;
+    margin-top: 10px;
+    display: none;
+    z-index: 1000;
+    min-width: 280px;
+}
+
+.catalog-dropdown.active {
+    display: block;
+}
+
+.catalog-dropdown .o_wsale_products_categories_list {
+    display: block !important;
+    margin: 0;
+    padding: 0;
+}
+
+.catalog-dropdown .category-item {
+    margin-bottom: 12px;
+}
+
+.catalog-dropdown .category-item:last-child {
+    margin-bottom: 0;
+}
+
+.catalog-dropdown .category-link {
+    color: #333;
+    font-size: 15px;
+    text-decoration: none;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.catalog-dropdown .category-link:hover {
+    background: #f8f8f8;
+    color: #ff7300;
+}
+
+/* Hide old catalog button */
+#catalog-toggle-btn {
+    display: none !important;
+}
+
 
