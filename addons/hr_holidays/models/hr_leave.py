@@ -101,6 +101,7 @@ class HolidaysRequest(models.Model):
         # request_date_{from,to} instead of date_{from,to}, we just convert
         # date_{from,to} to request_date_{from,to} here.
 
+<<<<<<< 874a8a5fb1983ff4cec7ba36a50012f95e60c415
         # Request dates are determined during an onchange scenario.
         # To ensure that the values are correct in the client context (UI),
         # the timezone must be applied (because no processing is carried out
@@ -118,6 +119,27 @@ class HolidaysRequest(models.Model):
                 values['request_date_to'] = pytz.utc.localize(values['date_to']).astimezone(client_tz)
             del values['date_to']
         return values
+||||||| a578e11d88229cbed21095e6bd1b83671a58d487
+            employee = self.env['hr.employee'].browse(values['employee_id']) if values.get('employee_id') else self.env.user.employee_id
+            default_start_time = self._get_start_or_end_from_attendance(7, datetime.now().date(), employee).time()
+            default_end_time = self._get_start_or_end_from_attendance(19, datetime.now().date(), employee).time()
+            if values['date_from'].time() == default_start_time and values['date_to'].time() == default_end_time:
+                attendance_from, attendance_to = self._get_attendances(employee, date_from, date_to)
+                new_values['date_from'] = self._get_start_or_end_from_attendance(attendance_from.hour_from, date_from, employee)
+                new_values['date_to'] = self._get_start_or_end_from_attendance(attendance_to.hour_to, date_to, employee)
+
+        return new_values
+=======
+            employee = self.env['hr.employee'].browse(values['employee_id']) if values.get('employee_id') else self.env.user.employee_id
+            default_start_time = self._get_start_or_end_from_attendance(7, values['date_from'].date(), employee).time()
+            default_end_time = self._get_start_or_end_from_attendance(19, values['date_to'].date(), employee).time()
+            if values['date_from'].time() == default_start_time and values['date_to'].time() == default_end_time:
+                attendance_from, attendance_to = self._get_attendances(employee, date_from, date_to)
+                new_values['date_from'] = self._get_start_or_end_from_attendance(attendance_from.hour_from, date_from, employee)
+                new_values['date_to'] = self._get_start_or_end_from_attendance(attendance_to.hour_to, date_to, employee)
+
+        return new_values
+>>>>>>> 19badbfa6f81b15b58f5b7e1a97181348791d44a
 
     active = fields.Boolean(default=True, readonly=True)
     # description
