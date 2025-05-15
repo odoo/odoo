@@ -1,11 +1,15 @@
-import { patch } from "@web/core/utils/patch";
-import { ProductDocumentKanbanController } from "@product/js/product_document_kanban/product_document_kanban_controller";
+import { KanbanController } from "@web/views/kanban/kanban_controller";
+import { UploadButton } from "@product/js/product_document_kanban/upload_button/upload_button";
 
-patch(ProductDocumentKanbanController.prototype, {
+export class MrpDocumentsKanbanController extends KanbanController {
+    static components = { ...KanbanController.components, UploadButton };
+
     setup() {
-        super.setup(...arguments);
-        if (this.props.context.attached_on_bom) {
-            this.formData.attached_on_bom = this.props.context.bom_id;
-        }
-    },
-});
+        super.setup();
+        this.uploadRoute = '/mrp/document/upload';
+        this.formData = {
+            'res_model': this.props.context.default_res_model,
+            'res_id': this.props.context.default_res_id,
+        };
+    }
+}
