@@ -505,3 +505,20 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
                 'analytic_distribution': {str(self.analytic_account_1.id): 100.00},
             },
         ])
+
+    def test_get_relevant_plans_in_multi_company(self):
+        """ Test the plans returned with applicability rules and options in multi-company """
+        self.analytic_plan_1.write({
+            'applicability_ids': [Command.create({
+                'business_domain': 'general',
+                'applicability': 'mandatory',
+                'account_prefix': '60, 61, 62',
+            })],
+        })
+        company_2 = self.company_data_2['company']
+        plans_json = self.env['account.analytic.plan'].sudo().with_company(company_2).get_relevant_plans(
+            business_domain='general',
+            account=self.company_data['default_account_assets'].id,
+            company=self.company.id,
+        )
+        self.assertTrue(plans_json)
