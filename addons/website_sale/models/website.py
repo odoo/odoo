@@ -9,7 +9,6 @@ from werkzeug.exceptions import NotFound
 
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import AccessError
-
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.osv import expression
@@ -17,7 +16,6 @@ from odoo.tools import file_open, ormcache
 from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.website_sale import const
-
 
 logger = logging.getLogger(__name__)
 _lt = LazyTranslate(__name__)
@@ -258,6 +256,7 @@ class Website(models.Model):
         views_to_disable = []
         views_to_enable = []
         IrUiView = self.env['ir.ui.view'].with_context(active_test=False, website_id=website.id)
+        ThemeUtils = self.env['theme.utils'].with_context(website_id=website.id)
 
         def get_views(xmlids_):
             domain = expression.AND([[('key', 'in', xmlids_)], website.website_domain()])
@@ -277,6 +276,11 @@ class Website(models.Model):
         if product_page_style_option:
             style_config = const.PRODUCT_PAGE_STYLE_MAPPING[product_page_style_option]
             parse_style_config(style_config)
+
+        # When enabling a header, disable all other headers
+        all_header_templates = set(ThemeUtils._header_templates)
+        if header_template := all_header_templates & set(views_to_enable):
+            views_to_disable.extend(all_header_templates - header_template)
 
         # Apply eCommerce page style configurations.
         if website_settings:
