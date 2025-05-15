@@ -372,12 +372,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     _logger.info("[LEGACY] Payload already sent — skipping.")
                     return
 
+                line.scanned = True
+                line.quantity = 1
+                line.remaining_quantity = 0
+                line.available_quantity = 1
+                line.line_added = True
+
                 try:
-                    line.scanned = True
-                    line.quantity = 1
-                    line.remaining_quantity = 0
-                    line.available_quantity = 1
-                    line.line_added = True
                     payload = self._prepare_old_logic_payload_multi_picks()
                     is_prod = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
                     api_url = (
@@ -385,82 +386,26 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         if is_prod else
                         "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
                     )
+                    self.send_payload_to_api(api_url, payload)
 
-                    headers = {'Content-Type': 'application/json'}
-                    response = requests.post(api_url, headers=headers, data=json.dumps(payload))
+                    for l in self.line_ids:
+                        l.api_payload_success = True
+                        l.line_added = True
+                        l.scanned = True
+                        l.quantity = 1
+                        l.remaining_quantity = 0
 
-                    if response.status_code == 200:
-                        for l in self.line_ids:
-                            l.update({
-                                'api_payload_success': True,
-                                'line_added': True,
-                                'scanned': True,
-                                'quantity': 1,
-                                'remaining_quantity': 0,
-                                'available_quantity': 1
-                            })
-                        return {
-                            'warning': {
-                                'title': _("Success"),
-                                'message': _("Legacy label printed successfully."),
-                                'type': 'notification'
-                            }
+                    return {
+                        'warning': {
+                            'title': _("Success"),
+                            'message': _("Legacy label printed successfully."),
+                            'type': 'notification'
                         }
-                    else:
-                        _logger.error(f"Legacy payload failed. HTTP {response.status_code}: {response.text}")
-                        raise ValidationError(_("Legacy label failed:\n%s") % response.text)
-
+                    }
                 except Exception as e:
                     _logger.error(f"[LEGACY] Payload failed: {str(e)}")
-                    raise ValidationError(_("Legacy label failed:\n%s") % str(e))
-            if self.tenant_code_id.name in ["MYSALE",'KIDSTUFF','BELLBLOOM','MRWINSTON','MYDEAL','HOMEGROWNKIDS']:
-                _logger.info("[LEGACY] Triggering legacy multi-pick payload...")
-                if any(l.api_payload_success for l in self.line_ids):
-                    _logger.info("[LEGACY] Payload already sent — skipping.")
-                    return
+                    raise UserError(_("Legacy label failed:\n%s") % str(e))
 
-                try:
-                    line.scanned = True
-                    line.quantity = 1
-                    line.remaining_quantity = 0
-                    line.available_quantity = 1
-                    line.line_added = True
-
-                    payload = self._prepare_old_logic_payload_multi_picks()
-                    is_prod = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
-                    api_url = (
-                        "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/ot_orders"
-                        if is_prod else
-                        "https://shiperooconnect-dev.automation.shiperoo.com/api/ot_orders"
-                    )
-
-                    headers = {'Content-Type': 'application/json'}
-                    response = requests.post(api_url, headers=headers, data=json.dumps(payload))
-
-                    if response.status_code == 200:
-                        for l in self.line_ids:
-                            l.update({
-                                'api_payload_success': True,
-                                'line_added': True,
-                                'scanned': True,
-                                'quantity': 1,
-                                'remaining_quantity': 0,
-                                'available_quantity': 1
-                            })
-                        return {
-                            'warning': {
-                                'title': _("Success"),
-                                'message': _("Legacy label printed successfully."),
-                                'type': 'notification'
-                            }
-                        }
-                    else:
-                        _logger.error(f"Legacy payload failed. HTTP {response.status_code}: {response.text}")
-                        raise ValidationError(_("Legacy label failed:\n%s") % response.text)
-
-                except Exception as e:
-                    _logger.error(f"[LEGACY] Payload failed: {str(e)}")
-                    raise ValidationError(_("Legacy label failed:\n%s") % str(e))
             # MULTI-PICK - OneTraker
             config = self.get_onetraker_config()
             try:
@@ -661,20 +606,19 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             }
         }
 
-        is_prod = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
-        use_orders = self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE"
-
-        api_url = (
-            "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders" if is_prod else
-            "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
-        ) if use_orders else (
-            "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/ot_orders" if is_prod else
-            "https://shiperooconnect-dev.automation.shiperoo.com/api/ot_orders"
-        )
+        is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
+        api_url = "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders" if is_production == 'True' else "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
 
         _logger.info(f"[OLD LOGIC] Sending legacy payload:\n{json.dumps(payload, indent=4)}")
         self.send_payload_to_api(api_url, payload)
 
+        # Optional: update state after sending
+        picking.write({'current_state': 'pack'})
+        picking.sale_id.write({
+            'pick_status': 'packed',
+            'delivery_status': 'partial',
+            'tracking_url': 'https://auspost.com.au/mypost/track/details/placeholder'
+        })
 
         return payload
 
@@ -687,8 +631,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         This method groups lines per product and builds a flat payload list as required by
         the old Shiperoo API.
         """
-        # if self.site_code_id.name != "SHIPEROOALTONA" or self.tenant_code_id.name != "STONEHIVE":
-        #     raise ValidationError("This method should only be called for SHIPEROOALTONA and STONEHIVE.")
+        if self.site_code_id.name != "SHIPEROOALTONA" or self.tenant_code_id.name != "STONEHIVE":
+            raise ValidationError("This method should only be called for SHIPEROOALTONA and STONEHIVE.")
 
         product_lines = []
 
@@ -885,8 +829,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             raise ValidationError("No scanned lines found to pack for this picking.")
 
         if self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE":
-            return self._process_single_pick_old_logic(picking, scanned_lines)
-        if self.tenant_code_id.name in ["MYSALE", 'KIDSTUFF', 'BELLBLOOM', 'MRWINSTON', 'MYDEAL', 'HOMEGROWNKIDS']:
             return self._process_single_pick_old_logic(picking, scanned_lines)
 
         sale = picking.sale_id
@@ -1490,44 +1432,6 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                         "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders"
                         if is_production else
                         "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
-                    )
-                    wizard.send_payload_to_api(api_url, payload)
-                    _logger.info("[SUCCESS] Legacy multi-pick payload sent successfully to: %s", api_url)
-
-                    # Mark all lines as packed
-                    for l in wizard.line_ids:
-                        l.api_payload_success = True
-                        l.line_added = True
-                        l.scanned = True
-                        l.quantity = 1
-                        l.remaining_quantity = 0
-
-                    return {
-                        'warning': {
-                            'title': _("Success"),
-                            'message': _("Legacy label printed successfully for multi-pick."),
-                            'type': 'notification'
-                        }
-                    }
-
-                except Exception as e:
-                    _logger.error(f"[MULTI-PICK] Failed to send legacy payload: {str(e)}")
-                    raise UserError(_("Legacy multi-pick label failed:\n%s") % str(e))
-            if wizard.site_code_id.name == "SHIPEROOALTONA" and wizard.tenant_code_id.name .name == "STONEHIVE":
-                _logger.info("[OLD LOGIC] Triggering old multi-pick payload from line onchange...")
-
-                # Avoid multiple legacy payload triggers
-                if any(l.api_payload_success for l in wizard.line_ids):
-                    _logger.warning("[OLD LOGIC] Legacy payload already triggered — skipping resend.")
-                    return
-
-                try:
-                    payload = wizard._prepare_old_logic_payload_multi_picks()
-                    is_production = wizard.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
-                    api_url = (
-                        "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/ot_orders"
-                        if is_production else
-                        "https://shiperooconnect-dev.automation.shiperoo.com/api/ot_orders"
                     )
                     wizard.send_payload_to_api(api_url, payload)
                     _logger.info("[SUCCESS] Legacy multi-pick payload sent successfully to: %s", api_url)
