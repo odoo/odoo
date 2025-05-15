@@ -61,6 +61,7 @@ class ThemePreviewFormController extends FormController {
         useLoaderOnClick();
 
         // TODO adapt theme previews then remove this
+        // ... or remove the feature entirely ? See task-3454790.
         onMounted(() => {
             setTimeout(() => {
                 document.querySelector('button[name="button_choose_theme"]')?.click();
