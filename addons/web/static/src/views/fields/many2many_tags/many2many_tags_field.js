@@ -159,6 +159,7 @@ export class Many2ManyTagsField extends Component {
                 }
                 this.onTagKeydown(ev);
             },
+            hoverText: record.data.tooltip || record.data.display_name,
         };
     }
 
@@ -241,12 +242,24 @@ export const many2ManyTagsField = {
             availableTypes: ["integer"],
             help: _t("Set an integer field to use colors with the tags."),
         },
+        {
+            label: _t("Hover field"),
+            name: "hover_field",
+            type: "field",
+            availableTypes: ["char"],
+            help: _t(
+                "Specifies the name of a Char field whose value will be displayed as a tooltip when hovering over a tag."
+            ),
+        },
     ],
     supportedTypes: ["many2many"],
     relatedFields: ({ options }) => {
         const relatedFields = [{ name: "display_name", type: "char" }];
         if (options.color_field) {
             relatedFields.push({ name: options.color_field, type: "integer", readonly: false });
+        }
+        if (options.hover_field) {
+            relatedFields.push({ name: options.hover_field, type: "char", readonly: false });
         }
         return relatedFields;
     },

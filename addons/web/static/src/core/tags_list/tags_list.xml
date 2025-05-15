@@ -13,7 +13,7 @@
                 t-attf-class="{{ !tag.img ? 'o_tag_color_' + (tag.colorIndex ? tag.colorIndex : '0') : '' }}"
                 tabindex="-1"
                 t-att-data-color="tag.colorIndex"
-                t-att-title="tag.text"
+                t-att-title="tag.hoverText or tag.text"
                 t-on-click="(ev) => tag.onClick and tag.onClick(ev)"
                 t-on-keydown="tag.onKeydown">
 
