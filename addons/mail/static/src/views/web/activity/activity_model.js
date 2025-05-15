@@ -21,7 +21,7 @@ export class ActivityModel extends RelationalModel {
             domain: params.domain || this.env.searchModel._domain,
             limit: params.limit || this.initialLimit,
             offset: params.offset || 0,
-            fetch_done: true,
+            fetch_done: false,
         });
     }
 }
