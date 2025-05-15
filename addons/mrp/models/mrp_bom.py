@@ -595,7 +595,6 @@ class MrpBomLine(models.Model):
     child_line_ids = fields.One2many(
         'mrp.bom.line', string="BOM lines of the referred bom",
         compute='_compute_child_line_ids')
-    attachments_count = fields.Integer('Attachments Count', compute='_compute_attachments_count')
     tracking = fields.Selection(related='product_id.tracking')
 
     _bom_qty_zero = models.Constraint(
@@ -615,15 +614,6 @@ class MrpBomLine(models.Model):
                 line.child_bom_id = False
             else:
                 line.child_bom_id = bom_by_product.get(line.product_id, False)
-
-    @api.depends('product_id')
-    def _compute_attachments_count(self):
-        for line in self:
-            nbr_attach = self.env['product.document'].search_count([
-                '|',
-                '&', ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id),
-                '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_tmpl_id.id)])
-            line.attachments_count = nbr_attach
 
     @api.depends('child_bom_id')
     def _compute_child_line_ids(self):
@@ -658,35 +648,6 @@ class MrpBomLine(models.Model):
             return False
 
         return self.env['mrp.bom']._skip_for_no_variant(product, self.bom_product_template_attribute_value_ids, never_attribute_values)
-
-    def action_see_attachments(self):
-        domain = [
-            '|',
-            '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_id.id),
-            '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_id.product_tmpl_id.id)]
-        attachment_view = self.env.ref('mrp.view_document_file_kanban_mrp')
-        context = {'default_res_model': 'product.product',
-            'default_res_id': self.product_id.id,
-            'default_company_id': self.company_id.id,
-        }
-
-        return {
-            'name': _('Attachments'),
-            'domain': domain,
-            'res_model': 'mrp.document',
-            'type': 'ir.actions.act_window',
-            'view_id': attachment_view.id,
-            'views': [(attachment_view.id, 'kanban'), (False, 'form')],
-            'view_mode': 'kanban,list,form',
-            'target': 'current',
-            'help': _('''<p class="o_view_nocontent_smiling_face">
-                        Upload files to your product
-                    </p><p>
-                        Use this feature to store any files, like drawings or specifications.
-                    </p>'''),
-            'limit': 80,
-            'context': context,
-        }
 
     # -------------------------------------------------------------------------
     # CATALOG

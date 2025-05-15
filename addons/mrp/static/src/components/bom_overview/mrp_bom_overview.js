@@ -27,7 +27,6 @@ export class BomOverviewComponent extends Component {
             showOptions: {
                 mode: this.props.action.context.mode || 'overview',
                 uom: false,
-                attachments: false,
             },
             currentWarehouse: null,
             currentVariantId: null,
@@ -94,7 +93,6 @@ export class BomOverviewComponent extends Component {
             { context }
         );
         this.state.bomData = bomData["lines"];
-        this.state.showOptions.attachments = bomData["has_attachments"];
         return bomData;
     }
 
