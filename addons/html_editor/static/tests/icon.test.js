@@ -266,3 +266,36 @@ test("Styles should be preserved when replacing icon", async () => {
     await animationFrame();
     expect("span.fa-search.fa-3x").toHaveCount(1);
 });
+
+test("Should be able to undo after adding spin effect to an icon", async () => {
+    const { el, editor } = await setupEditor('<p><span class="fa fa-glass"></span></p>');
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</p>`
+    );
+    // Selection normalization include U+FEFF, moving the cursor outside the
+    // icon and triggering the normal toolbar. To prevent this, we exclude
+    // U+FEFF from selection.
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 1,
+        focusNode: el.firstChild,
+        focusOffset: 2,
+    });
+    editor.shared.history.stageSelection();
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>]\ufeff</p>`
+    );
+    await waitFor(".o-we-toolbar");
+    expect(".btn-group[name='icon_spin']").toHaveCount(1);
+    expect(".btn-group[name='icon_spin']").not.toHaveClass("active");
+    await click("button[name='icon_spin']");
+    await animationFrame();
+    expect("span.fa-glass.fa-spin").toHaveCount(1);
+    expect(".btn-group[name='icon_spin'] button").toHaveClass("active");
+    undo(editor);
+    await animationFrame();
+    expect("span.fa-glass.fa-spin").toHaveCount(0);
+    expect(".btn-group[name='icon_spin']").not.toHaveClass("active");
+    expect("span.fa-glass").toHaveCount(1);
+    expect("span.fa-glass.fa-spin").toHaveCount(0);
+});
