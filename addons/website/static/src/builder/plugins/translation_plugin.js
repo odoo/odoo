@@ -86,6 +86,7 @@ export class TranslationPlugin extends Plugin {
         const editableEls = findOEditable(this.editable);
         this.buildTranslationInfoMap(editableEls);
         this.handleSelectTranslation(editableEls);
+        this.handleAnnouncementScrollTranslation(editableEls);
         this.markTranslatableNodes();
         for (const [translatedEl] of this.elToTranslationInfoMap) {
             if (translatedEl.matches("input[type=hidden].o_translatable_input_hidden")) {
@@ -236,6 +237,14 @@ export class TranslationPlugin extends Plugin {
         }
     }
 
+    handleAnnouncementScrollTranslation(editableEls) {
+        this.announcementScrollEls = editableEls
+            .filter(el => {
+                return el.parentElement.classList.contains('s_announcement_scroll_marquee_item');
+            })
+            .map(el => el.closest('.s_announcement_scroll'));
+    }
+
     handleToC(translateEl) {
         if (translateEl.closest(".s_table_of_content_navbar_wrap")) {
             // Make sure the same translation ids are used
@@ -297,6 +306,19 @@ export class TranslationPlugin extends Plugin {
                     node: translateSelectEl,
                     addStep: this.dependencies.history.addStep,
                 });
+            });
+        }
+        for (const announcementScrollEl of this.announcementScrollEls) {
+            // FIXME
+            // 1. Do not use prompt but an Odoo dialog
+            // 2. The interaction should be restarted when the text changes
+            // => There should probably be a better way to handle this.
+            this.addDomListener(announcementScrollEl, "click", ev => {
+                const els = announcementScrollEl.querySelectorAll('.s_announcement_scroll_marquee_item > [data-oe-translation-source-sha]');
+                const value = prompt("", els[0].textContent);
+                for (const el of els) {
+                    el.textContent = value;
+                }
             });
         }
     }
