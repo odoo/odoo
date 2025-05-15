@@ -27,8 +27,10 @@ import { rpcBus } from "@web/core/network/rpc";
 const { DateTime } = luxon;
 const SPECIAL = Symbol("special");
 
-/** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
-/** @typedef {import("../views/utils").OrderTerm} OrderTerm */
+/**
+ * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
+ * @typedef {import("@web/search/utils/order_by").OrderTerm} OrderTerm
+ */
 
 /**
  * @typedef {Object} SearchParams
