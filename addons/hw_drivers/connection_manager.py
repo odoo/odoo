@@ -118,8 +118,6 @@ class ConnectionManager(Thread):
         self.new_database_url = url
         # Save DB URL and token
         helpers.save_conf_server(url, token, db_uuid, enterprise_code)
-        # Notify the DB, so that the kanban view already shows the IoT Box
-        manager.send_all_devices()
         # Switch git branch before restarting, this avoids restarting twice
         helpers.check_git_branch()
         # Restart to get a certificate, load the IoT handlers...
