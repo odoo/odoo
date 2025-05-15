@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.AnnouncementScrollOption">
+    <BuilderRow label.translate="Text">
+        <BuilderTextInput dataAttributeAction="'scrollcontent'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Direction">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'s_announcement_scroll_direction_left'" title.translate="Left">Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_announcement_scroll_direction_right'" title.translate="Right">Right</BuilderSelectItem>
+            <BuilderSelectItem id="'announcement_scroll_direction_none_opt'" classAction="'s_announcement_scroll_direction_none'" title.translate="None">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow t-if="!this.isActiveItem('announcement_scroll_direction_none_opt')" level="1" label.translate="Scroll Speed">
+        <BuilderRange
+            styleAction="'--marquee-animation-speed'"
+            min="1"
+            max="10"
+            step="1"
+            unit="'s'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Hover effect">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''" title.translate="None">None</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_announcement_scroll_hover_pause'" title.translate="Pause">Pause</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_announcement_scroll_hover_slow'" title.translate="Slowdown">Slowdown</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_announcement_scroll_hover_direction'" title.translate="Swap Direction">Swap Direction</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Parallax">
+        <BuilderCheckbox classAction="'s_announcement_scroll_parallax'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Font Size">
+        <BuilderRange
+            dataAttributeAction="'marqueeFontSize'"
+            min="40"
+            max="320"
+            step="8"
+            displayRangeValue="true"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Font Family" applyTo="'.s_announcement_scroll_marquee_container'" tooltip.translate="Apply the font-family of your paragraph or headings from your Theme settings">
+        <BuilderSelect>
+            <BuilderSelectItem title.translate="Headings" classAction="'s_announcement_scroll_heading_family'">Headings</BuilderSelectItem>
+            <BuilderSelectItem title.translate="Paragraph" classAction="''">Paragraph</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>
