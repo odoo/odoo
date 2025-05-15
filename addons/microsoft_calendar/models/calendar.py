@@ -186,8 +186,9 @@ class CalendarEvent(models.Model):
                 sender_user, partner_ids = event._get_organizer_user_change_info(values)
                 partner_included = sender_user.partner_id in event.attendee_ids.partner_id or sender_user.partner_id.id in partner_ids
                 event._check_organizer_validation(sender_user, partner_included)
-                event._recreate_event_different_organizer(values, sender_user)
-                deactivated_events_ids.append(event.id)
+                if event.microsoft_id:
+                    event._recreate_event_different_organizer(values, sender_user)
+                    deactivated_events_ids.append(event.id)
 
         # check a Outlook limitation in overlapping the actual recurrence
         if recurrence_update_setting == 'self_only' and 'start' in values:
