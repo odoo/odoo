@@ -1,51 +1,81 @@
-export function insertKioskStyle(primaryBgColor, primaryTextColor) {
+export function insertKioskStyle(primaryBgColor) {
     const style = document.createElement("style");
-    style.textContent = generateKioskCSS(primaryBgColor, primaryTextColor);
+    style.textContent = generateKioskCSS(primaryBgColor);
     document.head.appendChild(style);
 }
 
-function generateKioskCSS(primaryBg, primaryText = "#fff") {
-    if (!primaryBg || primaryBg === "#875A7B") {
-        primaryBg = "#714B67";
+function generateKioskCSS(companyPrimaryColor) {
+    let bgPrimary = companyPrimaryColor;
+    if (!bgPrimary || bgPrimary === "#875A7B") {
+        bgPrimary = "#714B67";
     }
-    const activeBG = shadeColor(primaryBg, 0.2);
-    const primaryRGB = hexToRgb(primaryBg);
-    const hoverFocusRGB = hexToRgb(mixColors(primaryText, primaryBg, 0.15));
-    const kioskBG = mixColors("#fff", primaryBg, 0.85);
+    const luminance = getLuminance(bgPrimary);
+    const isLightBackground = luminance > 0.55;
+    const shadedPrimary = shadeColor(bgPrimary, 0.6);
+
+    const textBgPrimary = isLightBackground
+        ? shadeColor(bgPrimary, 0.95)
+        : mixColors("#FFFFFF", bgPrimary, 0.95);
+    const primaryTextBorder = isLightBackground ? shadedPrimary : bgPrimary;
+
+    const buttonActiveColor = shadeColor(bgPrimary, 0.2);
 
     return `
-:root {
-  --primary-rgb: ${primaryRGB};
-  --primary: ${primaryBg};
-}
+        :root {
+            --primary-rgb: ${hexToRgb(bgPrimary)};
+            --primary: ${bgPrimary};
+        }
 
-.btn-primary {
-  --btn-color: ${primaryText};
-  --btn-bg: ${primaryBg};
-  --btn-border-color: ${primaryBg};
-  --btn-hover-color: ${primaryText};
-  --btn-hover-bg: ${primaryBg};
-  --btn-hover-border-color: ${primaryBg};
-  --btn-focus-shadow-rgb: ${hoverFocusRGB};
-  --btn-active-color: ${primaryText};
-  --btn-active-bg: ${activeBG};
-  --btn-active-border-color: ${activeBG};
-  --btn-active-shadow: 0;
-  --btn-disabled-color: ${primaryText};
-  --btn-disabled-bg: ${primaryBg};
-  --btn-disabled-border-color: ${primaryBg};
-}
+        .btn-primary {
+            --btn-color: ${textBgPrimary};
+            --btn-bg: ${bgPrimary};
+            --btn-border-color: ${bgPrimary};
+            --btn-hover-color: ${textBgPrimary};
+            --btn-hover-bg: ${bgPrimary};
+            --btn-hover-border-color: ${bgPrimary};
+            --btn-focus-shadow-rgb: ${hexToRgb(mixColors(textBgPrimary, bgPrimary, 0.15))};
+            --btn-active-color: ${textBgPrimary};
+            --btn-active-bg: ${buttonActiveColor};
+            --btn-active-border-color: ${buttonActiveColor};
+            --btn-active-shadow: 0;
+            --btn-disabled-color: ${textBgPrimary};
+            --btn-disabled-bg: ${bgPrimary};
+            --btn-disabled-border-color: ${bgPrimary};
+        }
 
-.text-primary {
-  --color: rgba(${primaryRGB}, var(--text-opacity, 1));
-}
+        .text-primary {
+            --color: rgba(${hexToRgb(primaryTextBorder)}, var(--text-opacity, 1));
+        }
 
-.o_kiosk_background {
-  background-color: ${kioskBG};
-}`;
+        .border-primary {
+            border-color: ${primaryTextBorder} !important;
+        }
+
+        .text-bg-primary :is(h1, h2, h3, h4, h5, h6) {
+            color: ${textBgPrimary};
+        }
+
+        .text-bg-primary .btn-link, .badge.text-bg-primary, .btn.text-bg-primary {
+            color: ${textBgPrimary} !important;
+        }
+
+        .text-bg-primary .btn-link:hover {
+            color: ${mixColors(textBgPrimary, bgPrimary, 0.85)} !important;
+        }
+
+        .o_kiosk_background {
+            background-color: ${mixColors("#ffffff", bgPrimary, 0.85)};
+        }
+    `;
 }
 
 // Utilities
+
+function getLuminance(hex) {
+    const fullHex = expandHex(hex);
+    const [r, g, b] = [0, 2, 4].map((i) => parseInt(fullHex.slice(i, i + 2), 16));
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+}
 
 function hexToRgb(hex) {
     const fullHex = expandHex(hex);
@@ -76,7 +106,6 @@ function mixColors(color1, color2, weight) {
     return result;
 }
 
-//  Mix a color with black
 function shadeColor(color, weight) {
     return mixColors("#000000", color, weight);
 }

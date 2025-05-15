@@ -139,10 +139,9 @@ registry.category("web_tour.tours").add("kiosk_order_price_null", {
 
 registry.category("web_tour.tours").add("self_order_language_changes", {
     steps: () => [
-        Utils.clickBtn("Order Now"),
-
         LandingPage.checkKioskLanguageSelected("English"),
         LandingPage.checkKioskCountryFlagShown("us"),
+        Utils.clickBtn("Order Now"),
 
         LandingPage.selectKioskLocation("Test-Takeout"),
         CategoryPage.clickKioskCategory("Test Category"),
@@ -150,9 +149,9 @@ registry.category("web_tour.tours").add("self_order_language_changes", {
         ProductPage.clickBack(),
         ...CategoryPage.clickCancel(),
 
-        Utils.clickBtn("Order Now"),
+        LandingPage.checkKioskLanguageSelected("English"),
+        LandingPage.checkKioskCountryFlagShown("us"),
         ...Utils.changeKioskLanguage("Français"),
-        Utils.clickBackBtn(),
 
         Utils.clickBtn("Commander maintenant"),
         LandingPage.selectKioskLocation("Test-Takeout"),

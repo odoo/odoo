@@ -5,10 +5,12 @@ import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { LanguagePopup } from "@pos_self_order/app/components/language_popup/language_popup";
 import { session } from "@web/session";
+import { KioskLanguageSelector } from "@pos_self_order/app/components/kiosk_language_selector/language_selector";
 
 export class LandingPage extends Component {
     static template = "pos_self_order.LandingPage";
     static props = {};
+    static components = { KioskLanguageSelector };
 
     setup() {
         this.selfOrder = useSelfOrder();

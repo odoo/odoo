@@ -18,32 +18,30 @@
             </div>
         </div>
         <div class="o_pos_landing_footer position-absolute bottom-0 end-0 d-flex w-100 gap-3 p-2 p-md-3">
-            <div class="d-flex gap-3" t-att-class="{'flex-grow-1 justify-content-around': !selfOrder.models['pos_self_order.custom_link'].length}">
-                <t t-if="showMyOrderBtn()">
-                    <a
-                        type="button"
-                        t-on-click="clickMyOrder"
-                        class="btn btn-lg btn-secondary"
-                        style="border-color: #714B67">
-                        <t t-if="draftOrder.length > 0">
-                            My Order
-                        </t>
-                        <t t-else="">
-                            My Orders
-                        </t>
-                    </a>
-                </t>
-            </div>
-            <div t-if="selfOrder.models['pos_self_order.custom_link'].length" class="d-flex gap-3 flex-grow-1">
+            <div t-if="selfOrder.models['pos_self_order.custom_link'].length" class="d-flex flex-column flex-lg-row flex-fill gap-3">
+                <a type="button"
+                    t-if="showMyOrderBtn()"
+                    t-on-click="clickMyOrder"
+                    class="btn btn-lg btn-secondary flex-fill">
+                    <t t-if="draftOrder.length > 0">
+                        My Order
+                    </t>
+                    <t t-else="">
+                        My Orders
+                    </t>
+                </a>
                 <t t-foreach="selfOrder.models['pos_self_order.custom_link'].getAll()" t-as="link" t-key="link.id">
                     <a type="button"
                         t-if="!hideBtn(link)"
                         t-on-click="(event) => this.clickCustomLink(link)"
-                        t-attf-class="btn btn-lg btn-{{link.style}}">
+                        t-attf-class="btn btn-lg btn-{{link.style}} flex-fill">
                         <t t-esc="link.name"/>
                     </a>
                 </t>
             </div>
+            <t t-if="selfOrder.kioskMode">
+                <KioskLanguageSelector />
+            </t>
         </div>
     </t>
 </templates>

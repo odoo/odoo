@@ -5,7 +5,7 @@
             <div class="kiosk_stand_page d-flex flex-column align-items-center flex-grow-1 o_kiosk_background overflow-y-auto text-center o_kiosk_fade"
             t-attf-style="background-image:#{selfOrder.kioskBackgroundImage};background-size: cover; background-position: center;">
                 <div class="d-flex flex-column my-auto overflow-y-auto">
-                    <h1 class="mb-4 m-0">Take a tracker and enter its number</h1>
+                    <h1 class="mb-4 m-0">Enter your tracker number</h1>
                     <div class="d-flex flex-column gap-4">
                         <div class="input-number form-control form-control-lg w-100 rounded-4 bg-white text-center oveflow-hidden text-nowrap text-truncate shadow-sm">
                             <span t-attf-class="display-1 fw-bolder {{ state.standNumber ? 'text-primary' : 'opacity-0' }}" t-esc="state.standNumber || '_ _'"/>
@@ -22,7 +22,7 @@
         <t t-else="">
             <div class="self_order_stand_number d-flex flex-column flex-grow-1 justify-content-between px-3 overflow-y-auto">
                 <div class="text-center pt-5">
-                    <h1>Take a tracker and enter its number</h1>
+                    <h1>Enter your tracker number</h1>
                     <div class="input-number form-contol w-100 form-control-lg text-center">
                         <span t-esc="state.standNumber || '_ _'" class="display-1"/>
                     </div>
