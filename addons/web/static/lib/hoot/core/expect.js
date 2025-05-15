@@ -1482,6 +1482,62 @@ export class Matcher {
     }
 
     /**
+     * Expects the received value to include the given object shape.
+     *
+     * A *partial* deep equality is performed, meaning that only the keys included
+     * in `partialObject` will be checked on the received value.
+     *
+     * This partial matching is only applied to non-iterable object, and not to
+     * arrays and other iterables; these are checked for deep equality. Although,
+     * non-iterable objects contained in iterables will be partially checked again.
+     *
+     * @param {Partial<R>} partialObject
+     * @param {ExpectOptions} [options]
+     * @example
+     *  // Partial equality can be performed on nested objects
+     *  expect({
+     *      company: {
+     *          name: "Odoo",
+     *          location: "Belgium",
+     *      },
+     *      employees: new Set([
+     *          {
+     *              name: "Julien",
+     *              age: 28,
+     *          },
+     *      ]),
+     *  }).toMatchObject({
+     *      company: { name: "Odoo" }
+     *      employees: new Set([{ age: 28 }]),
+     *  });
+     * @example
+     *  // Iterables should have an (deep) equal content
+     *  expect({ list: [1, 2, 3], other: "property" }).not.toMatchObject({ list: [1, 2] });
+     *  // ... as expected in the following assertion
+     *  expect({ list: [1, 2, 3], other: "property" }).toMatchObject({ list: [1, 2, 3] });
+     */
+    toMatchObject(partialObject, options) {
+        this._ensureArguments(arguments, "object");
+
+        return this._resolve(() => ({
+            name: "toMatchObject",
+            acceptedType: ["object"],
+            predicate: () => deepEqual(this._received, partialObject, { partial: true }),
+            message:
+                options?.message ||
+                ((pass) =>
+                    pass
+                        ? [this._received, r`[matches!does not match] object`, partialObject]
+                        : [r`expected object[! not] to match the given shape`]),
+            getFailedDetails: () =>
+                detailsFromEntries([
+                    ["Partial object:", partialObject],
+                    ["Object:", this._received],
+                ]),
+        }));
+    }
+
+    /**
      * Expects the received {@link Function} to throw an error after being called.
      *
      * @param {import("../hoot_utils").Matcher} [matcher=Error]
