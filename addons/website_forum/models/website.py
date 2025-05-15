@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
@@ -16,7 +15,7 @@ class Website(models.Model):
         return websites
 
     def get_suggested_controllers(self):
-        suggested_controllers = super(Website, self).get_suggested_controllers()
+        suggested_controllers = super().get_suggested_controllers()
         suggested_controllers.append((_('Forum'), self.env['ir.http']._url_for('/forum'), 'website_forum'))
         return suggested_controllers
 
