@@ -1,5 +1,4 @@
-import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
+import { EventBus } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
@@ -13,6 +12,7 @@ export class OutdatedPageWatcherService {
      * @param {Partial<import("services").Services>} services
      */
     setup(env, { bus_service, multi_tab, notification }) {
+        this.bus = new EventBus();
         this.notification = notification;
         this.multi_tab = multi_tab;
         this.lastNotificationId = null;
@@ -38,7 +38,7 @@ export class OutdatedPageWatcherService {
         bus_service.addEventListener("reconnect", () => this.checkHasMissedNotifications());
         multi_tab.bus.addEventListener("shared_value_updated", ({ detail: { key } }) => {
             if (key === "bus.has_missed_notifications") {
-                this.showOutdatedPageNotification();
+                this.bus.trigger("outdated_page");
             }
         });
     }
@@ -53,28 +53,14 @@ export class OutdatedPageWatcherService {
             { silent: true }
         );
         if (hasMissedNotifications) {
-            this.showOutdatedPageNotification();
+            this.bus.trigger("outdated_page");
             this.multi_tab.setSharedValue("bus.has_missed_notifications", Date.now());
         }
     }
 
-    showOutdatedPageNotification() {
-        this.closeNotificationFn?.();
-        this.closeNotificationFn = this.notification.add(
-            _t("Save your work and refresh to get the latest updates and avoid potential issues."),
-            {
-                title: _t("The page is out of date"),
-                type: "warning",
-                sticky: true,
-                buttons: [
-                    {
-                        name: _t("Refresh"),
-                        primary: true,
-                        onClick: () => browser.location.reload(),
-                    },
-                ],
-            }
-        );
+    /** Register a callback to be executed when notifications are missed. */
+    subscribe(fn) {
+        this.bus.addEventListener("outdated_page", fn);
     }
 }
 

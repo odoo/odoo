@@ -39,14 +39,6 @@ export class LivechatService {
         this.store = services["mail.store"];
     }
 
-    async initialize() {
-        this.store.fetchStoreData("init_livechat", this.options.channel_id, { readonly: false });
-        if (this.options.chatbot_test_store) {
-            await this.store.chatHub.initPromise;
-            this.store.insert(this.options.chatbot_test_store);
-        }
-    }
-
     /**
      * Open a new live chat thread.
      *
@@ -146,11 +138,7 @@ export class LivechatService {
 export const livechatService = {
     dependencies: ["mail.store", "notification"],
     start(env, services) {
-        const livechat = reactive(new LivechatService(env, services));
-        if (livechat.store.livechat_available) {
-            livechat.initialize();
-        }
-        return livechat;
+        return reactive(new LivechatService(env, services));
     },
 };
 registry.category("services").add("im_livechat.livechat", livechatService);

@@ -165,6 +165,7 @@ Help your customers with this chat, and analyse their feedback.
             'rating/static/tests/mock_server/**/*',
             'im_livechat/static/tests/mock_server/**/*',
             'bus/static/tests/mock_websocket.js',
+            'bus/static/src/outdated_page_watcher_service.js',
         ],
         "im_livechat.assets_livechat_support_tours": [
             "web_tour/static/src/tour_pointer/**/*",
@@ -175,6 +176,7 @@ Help your customers with this chat, and analyse their feedback.
             "web/static/tests/legacy/helpers/cleanup.js",
             "web/static/tests/legacy/helpers/utils.js",
             "web/static/tests/legacy/utils.js",
+            'mail/static/tests/tours/discuss_store_reset_tour.js',
             "im_livechat/static/tests/tours/support/*",
         ],
         'im_livechat.embed_assets_unit_tests': [

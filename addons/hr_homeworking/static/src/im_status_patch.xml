@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ImStatus" t-inherit-mode="extension">
         <xpath expr="//*[@name='icon']" position="replace">
-            <t t-if="persona.im_status">
+            <t t-if="persona?.im_status">
                 <t t-if="persona.im_status.split('_').length == 2">
                     <t t-set="location" t-value="persona.im_status.split('_')[0]"/>
                     <t t-if="location == 'home' || location == 'office' || location == 'other'">
@@ -23,7 +23,7 @@
 
     <t t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
         <xpath expr="//*[@name='chat_static']" position="replace">
-            <t t-if="correspondent.persona.im_status">
+            <t t-if="correspondent.persona?.im_status">
                 <t t-if="correspondent.persona.im_status.split('_').length >= 2">
                     <t t-set="location" t-value="correspondent.persona.im_status.split('_')[0]"/>
                     <t t-if="location == 'home' || location == 'office' || location == 'other'">

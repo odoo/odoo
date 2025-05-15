@@ -47,9 +47,12 @@ patch(FormRenderer.prototype, {
         return this.messagingState.thread.attachmentsInWebClientView.length > 0;
     },
     mailLayout(hasAttachmentContainer) {
+        const hasChatter = !!this.mailStore;
+        if (!hasChatter || !this.mailStore.exists()) {
+            return "NONE";
+        }
         const xxl = this.uiService.size >= SIZES.XXL;
         const hasFile = this.hasFile();
-        const hasChatter = !!this.mailStore;
         const hasExternalWindow = !!this.mailPopoutService.externalWindow;
         if (hasExternalWindow && hasFile && hasAttachmentContainer) {
             if (xxl) {
