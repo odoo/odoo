@@ -713,6 +713,7 @@ registry.category("web_tour.tours").add("test_preset_timing", {
             Chrome.clickPresetTimingSlot(),
             Chrome.selectPresetTimingSlotHour("12:00"),
             Chrome.presetTimingSlotIs("12:00"),
+            Chrome.isSynced(),
             Chrome.clickPresetTimingSlot(),
             Chrome.selectPresetTimingSlotHour("15:00"),
             Chrome.presetTimingSlotIs("15:00"),
