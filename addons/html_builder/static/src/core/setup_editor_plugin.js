@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
-import { getTranslationEditableEls } from "@html_builder/website_builder/plugins/translation_plugin";
 import { registry } from "@web/core/registry";
 
 export class SetupEditorPlugin extends Plugin {
@@ -12,23 +11,15 @@ export class SetupEditorPlugin extends Plugin {
     };
 
     setup() {
-        this.websiteService = this.services.website;
-        const welcomeMessageEl = this.editable.querySelector("#wrap .o_homepage_editor_welcome_message");
+        const welcomeMessageEl = this.editable.querySelector(
+            "#wrap .o_homepage_editor_welcome_message"
+        );
         welcomeMessageEl?.remove();
         this.editable.setAttribute("contenteditable", false);
-        // Add the `o_editable` class on the editable elements
-        if (this.config.isTranslation) {
-            const translationSavableEls = getTranslationEditableEls(
-                this.websiteService.pageDocument
-            );
-            for (const translationSavableEl of translationSavableEls) {
-                if (!translationSavableEl.hasAttribute("data-oe-readonly")) {
-                    translationSavableEl.classList.add("o_editable");
-                }
-            }
-            this.dispatchTo("after_setup_editor_handlers");
+        if (this.delegateTo("after_setup_editor_handlers")) {
             return;
         }
+        // Add the `o_editable` class on the editable elements
         let editableEls = this.getEditableElements("[data-oe-model]")
             .filter((el) => !el.matches("link, script"))
             .filter((el) => !el.hasAttribute("data-oe-readonly"))
