@@ -373,6 +373,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     return
 
                 try:
+                    line.scanned = True
+                    line.quantity = 1
+                    line.remaining_quantity = 0
+                    line.available_quantity = 1
+                    line.line_added = True
                     payload = self._prepare_old_logic_payload_multi_picks()
                     is_prod = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
                     api_url = (
@@ -415,6 +420,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     return
 
                 try:
+                    line.scanned = True
+                    line.quantity = 1
+                    line.remaining_quantity = 0
+                    line.available_quantity = 1
+                    line.line_added = True
+
                     payload = self._prepare_old_logic_payload_multi_picks()
                     is_prod = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
                     api_url = (
