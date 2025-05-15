@@ -385,7 +385,7 @@ class ResUsers(models.Model):
             if activity.res_model:
                 activities_rec_groups[activity.res_model][activity.res_id] += activity
             else:
-                activities_model_groups["mail.activity"] += activity
+                activities_rec_groups["mail.activity"][False] += activity
         model_activity_states = {
             'mail.activity': {'overdue_count': 0, 'today_count': 0, 'planned_count': 0, 'total_count': 0}
         }
@@ -404,23 +404,23 @@ class ResUsers(models.Model):
                     allowed_company_ids=user_company_ids)._filtered_access('read')
             model_activity_states[model_name] = {'overdue_count': 0, 'today_count': 0, 'planned_count': 0, 'total_count': 0}
             for record_id, activities in activities_by_record.items():
-                if record_id in unallowed_records.ids:
+                if record_id in unallowed_records.ids or not record_id:
                     model_key = 'mail.activity'
                     activities_model_groups['mail.activity'] += activities
                 elif record_id in allowed_records.ids:
                     model_key = model_name
                     activities_model_groups[model_name] += activities
-                else:
+                elif record_id:
                     continue
 
                 if 'overdue' in activities.mapped('state'):
                     model_activity_states[model_key]['overdue_count'] += 1
                     model_activity_states[model_key]['total_count'] += 1
-                if 'today' in activities.mapped('state'):
+                elif 'today' in activities.mapped('state'):
                     model_activity_states[model_key]['today_count'] += 1
                     model_activity_states[model_key]['total_count'] += 1
                 else:
-                    model_activity_states[model_name]['planned_count'] += 1
+                    model_activity_states[model_key]['planned_count'] += 1
 
         model_ids = [self.env["ir.model"]._get_id(name) for name in activities_model_groups]
         user_activities = {}

@@ -18,13 +18,13 @@
             <xpath expr="//field[@name='note']" position="attributes">
                 <attribute name="invisible">activity_category == 'meeting'</attribute>
             </xpath>
-            <xpath expr="//field[@name='summary']" position="attributes">
+            <xpath expr="//group[@name='summary_group']" position="attributes">
                 <attribute name="invisible">activity_category == 'meeting'</attribute>
             </xpath>
-            <xpath expr="//field[@name='summary']" position="after">
+            <xpath expr="//field[@name='note']" position="before">
                 <div invisible="activity_category != 'meeting'" class="text-muted text-center w-100">
                     <div>
-                        <i class="fa fa-3x fa-calendar p-5" title="Calendar" aria-hidden="true"/>
+                        <i class="fa fa-9x fa-calendar p-3" title="Calendar" aria-hidden="true"/>
                     </div>
                     <p>Schedule a meeting in your calendar</p>
                 </div>

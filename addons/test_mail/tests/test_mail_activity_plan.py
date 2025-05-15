@@ -151,40 +151,10 @@ class TestActivitySchedule(ActivityScheduleCase):
                 for record in test_records:
                     self.assertActivityDoneOnRecord(record, self.activity_type_call)
 
-                # 3. LOG DONE ACTIVITIES, PREPARE SCHEDULE NEXT
-                with freeze_time(self.reference_now):
-                    form = self._instantiate_activity_schedule_wizard(test_records)
-                    form.activity_type_id = self.activity_type_todo
-                    form.activity_user_id = self.user_admin
-                    with self._mock_activities():
-                        wizard_res = form.save().with_context(
-                            mail_activity_quick_update=True
-                        ).action_schedule_activities_done_and_schedule()
-                self.assertDictEqual(wizard_res, {
-                    'name': "Schedule Activity On Selected Records" if len(test_records) > 1 else "Schedule Activity",
-                    'context': {
-                        'active_id': test_records[0].id,
-                        'active_ids': test_records.ids,
-                        'active_model': test_records._name,
-                        'mail_activity_quick_update': True,
-                        'default_previous_activity_type_id': 4,
-                        'activity_previous_deadline': self.reference_now.date() + timedelta(days=4),
-                        'default_res_ids': repr(test_records.ids),
-                        'default_res_model': test_records._name,
-                    },
-                    'view_mode': 'form',
-                    'res_model': 'mail.activity.schedule',
-                    'views': [(False, 'form')],
-                    'type': 'ir.actions.act_window',
-                    'target': 'new',
-                })
-                for record in test_records:
-                    self.assertActivityDoneOnRecord(record, self.activity_type_todo)
-
-                # 4. CONTINUE WITH SCHEDULE ACTIVITIES
+                # 3. CONTINUE WITH SCHEDULE ACTIVITIES
                 # implies deadline addition on top of previous activities
                 with freeze_time(self.reference_now):
-                    form = Form(self.env['mail.activity.schedule'].with_context(wizard_res['context']))
+                    form = self._instantiate_activity_schedule_wizard(test_records)
                     form.activity_type_id = self.activity_type_call
                     form.activity_user_id = self.user_admin
                     with self._mock_activities():
@@ -196,7 +166,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                     self.assertActivityCreatedOnRecord(record, {
                         'activity_type_id': self.activity_type_call,
                         'automated': False,
-                        'date_deadline': self.reference_now.date() + timedelta(days=5),  # both types delays
+                        'date_deadline': self.reference_now.date() + timedelta(days=1),  # activity call delay
                         'note': False,
                         'summary': 'TodoSumCallSummary',
                         'user_id': self.user_admin,

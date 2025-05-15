@@ -6,7 +6,7 @@
             </button>
 
             <t t-set-slot="content">
-                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, targetDays.today.newDeadline)">
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, targetDays.today.actionName)">
                     <div class="d-flex justify-content-between">
                         <span>
                             <i class="oi oi-schedule-today me-1"/> Today
@@ -14,7 +14,7 @@
                         <span t-out="targetDays.today.displayDay" class="ms-2 text-muted"/>
                     </div>
                 </DropdownItem>
-                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, targetDays.tomorrow.newDeadline)">
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, targetDays.tomorrow.actionName)">
                     <div class="d-flex justify-content-between">
                         <span>
                             <i class="oi oi-schedule-tomorrow me-1"/> Tomorrow
@@ -22,7 +22,7 @@
                         <span t-out="targetDays.tomorrow.displayDay" class="ms-2 text-muted"/>
                     </div>
                 </DropdownItem>
-                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, targetDays.nextWeek.newDeadline)">
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, targetDays.nextWeek.actionName)">
                     <div class="d-flex justify-content-between">
                         <span>
                             <i class="oi oi-schedule-later me-1"/> Next Week

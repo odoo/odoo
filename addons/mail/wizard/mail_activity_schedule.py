@@ -8,7 +8,7 @@ from odoo import api, fields, models, _
 from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import ValidationError
 from odoo.tools import html2plaintext
-from odoo.tools.misc import clean_context, format_date
+from odoo.tools.misc import format_date
 from odoo.osv import expression
 _logger = logging.getLogger(__name__)
 
@@ -48,6 +48,8 @@ class MailActivitySchedule(models.TransientModel):
     # usage
     error = fields.Html(compute='_compute_error')
     has_error = fields.Boolean(compute='_compute_error')
+    warning = fields.Html(compute='_compute_error')
+    has_warning = fields.Boolean(compute='_compute_error')
     # plan-based
     plan_available_ids = fields.Many2many('mail.activity.plan', compute='_compute_plan_available_ids',
                                           store=True, compute_sudo=True)
@@ -113,6 +115,7 @@ class MailActivitySchedule(models.TransientModel):
     def _compute_error(self):
         for scheduler in self:
             errors = set()
+            warnings = set()
             if scheduler.res_model:
                 applied_on = scheduler._get_applied_on_records()
                 if applied_on and ('company_id' in scheduler.env[applied_on._name]._fields and
@@ -120,6 +123,7 @@ class MailActivitySchedule(models.TransientModel):
                     errors.add(_('The records must belong to the same company.'))
             if scheduler.plan_id:
                 errors |= set(scheduler._check_plan_templates_error(applied_on))
+                warnings |= set(scheduler._check_plan_templates_warning(applied_on))
                 if not scheduler.res_ids:
                     errors.add(_("Can't launch a plan without a record."))
             if not scheduler.res_ids and not scheduler.activity_user_id:
@@ -134,9 +138,24 @@ class MailActivitySchedule(models.TransientModel):
                 )
                 scheduler.error = f'{error_header}{error_body}'
                 scheduler.has_error = True
+                scheduler.has_warning = False
             else:
                 scheduler.error = False
                 scheduler.has_error = False
+
+            if warnings:
+                warning_header = (
+                    _('The plan "%(plan_name)s" can be launched, with these additional effects:', plan_name=scheduler.plan_id.name) if scheduler.plan_id
+                    else _('The activity can be launched, with these additional effects:')
+                )
+                warning_body = Markup('<ul>%s</ul>') % (
+                    Markup().join(Markup('<li>%s</li>') % warning for warning in warnings)
+                )
+                scheduler.warning = f'{warning_header}{warning_body}'
+                scheduler.has_warning = True
+            else:
+                scheduler.warning = False
+                scheduler.has_warning = False
 
     @api.depends('res_ids')
     def _compute_is_batch_mode(self):
@@ -230,7 +249,9 @@ class MailActivitySchedule(models.TransientModel):
     @api.depends('res_model')
     def _compute_activity_type_id(self):
         for scheduler in self:
-            if not scheduler.activity_type_id:
+            if not scheduler.activity_type_id or (
+                scheduler.activity_type_id.res_model and scheduler.res_model and scheduler.activity_type_id.res_model != scheduler.res_model
+            ):
                 scheduler.activity_type_id = scheduler.env['mail.activity']._default_activity_type_for_model(scheduler.res_model)
 
     @api.depends('activity_type_id')
@@ -244,14 +265,12 @@ class MailActivitySchedule(models.TransientModel):
     @api.depends('activity_type_id')
     def _compute_summary(self):
         for scheduler in self:
-            if scheduler.activity_type_id.summary:
-                scheduler.summary = scheduler.activity_type_id.summary
+            scheduler.summary = scheduler.activity_type_id.summary
 
     @api.depends('activity_type_id')
     def _compute_note(self):
         for scheduler in self:
-            if scheduler.activity_type_id.default_note:
-                scheduler.note = scheduler.activity_type_id.default_note
+            scheduler.note = scheduler.activity_type_id.default_note
 
     @api.depends('activity_type_id', 'res_model')
     def _compute_activity_user_id(self):
@@ -282,7 +301,7 @@ class MailActivitySchedule(models.TransientModel):
         functional_models = [
             model.model
             for model in self.env['ir.model'].sudo().search(
-                ['&', ('is_mail_thread', '=', True), ('transient', '=', False)]
+                ['&', ('is_mail_activity', '=', True), ('transient', '=', False)]
             )
             if model.has_access('read')
         ]
@@ -353,6 +372,16 @@ class MailActivitySchedule(models.TransientModel):
             ]
         )
 
+    def _check_plan_templates_warning(self, applied_on):
+        self.ensure_one()
+        return filter(
+            None, [
+                activity_template._determine_responsible(self.plan_on_demand_user_id, record)['warning']
+                for activity_template in self.plan_id.template_ids
+                for record in applied_on
+            ]
+        )
+
     # ------------------------------------------------------------
     # ACTIVITY-BASED SCHEDULING API
     # ------------------------------------------------------------
@@ -362,28 +391,6 @@ class MailActivitySchedule(models.TransientModel):
 
     def action_schedule_activities_done(self):
         self._action_schedule_activities().action_done()
-
-    # todo guce postfreeze: delete
-    def action_schedule_activities_done_and_schedule(self):
-        ctx = dict(
-            clean_context(self.env.context),
-            default_previous_activity_type_id=self.activity_type_id.id,
-            activity_previous_deadline=self.date_deadline,
-            default_res_ids=self.res_ids,
-            default_res_model=self.res_model,
-        )
-        _messages, next_activities = self._action_schedule_activities()._action_done()
-        if next_activities:
-            return False
-        return {
-            'name': _("Schedule Activity On Selected Records") if self.is_batch_mode else _("Schedule Activity"),
-            'context': ctx,
-            'view_mode': 'form',
-            'res_model': 'mail.activity.schedule',
-            'views': [(False, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
 
     def _action_schedule_activities(self):
         if not self.res_model:

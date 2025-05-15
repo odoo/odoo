@@ -231,15 +231,15 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             self.employee_manager.user_id = False
             form = self._instantiate_activity_schedule_wizard(employees)
             form.plan_id = self.plan_onboarding
-            self.assertTrue(form.has_error)
-            n_error = form.error.count('<li>')
-            self.assertEqual(n_error, 2 * len(employees))
-            self.assertIn(f"The user of {self.employee_1.name}'s coach is not set.", form.error)
-            self.assertIn(f'The manager of {self.employee_1.name} should be linked to a user.', form.error)
+            self.assertTrue(form.has_warning)
+            n_warning = form.warning.count('<li>')
+            self.assertEqual(n_warning, 2 * len(employees))
+            self.assertIn(f"The user of {self.employee_1.name}'s coach is not set.", form.warning)
+            self.assertIn(f'The manager of {self.employee_1.name} should be linked to a user.', form.warning)
             if len(employees) > 1:
-                self.assertIn(f"The user of {self.employee_2.name}'s coach is not set.", form.error)
-                self.assertIn(f'The manager of {self.employee_2.name} should be linked to a user.', form.error)
-            with self.assertRaises(ValidationError):
-                form.save()
+                self.assertIn(f"The user of {self.employee_2.name}'s coach is not set.", form.warning)
+                self.assertIn(f'The manager of {self.employee_2.name} should be linked to a user.', form.warning)
+            # should save without error, with coach
+            form.save()
             self.employee_coach.user_id = self.user_coach
             self.employee_manager.user_id = self.user_manager
