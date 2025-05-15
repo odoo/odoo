@@ -43,6 +43,7 @@
         'views/website_technical_views.xml',
         'views/website_templates.xml',
         'views/snippets/snippets.xml',
+        'views/snippets/s_announcement_scroll.xml',
         'views/snippets/s_framed_intro.xml',
         'views/snippets/s_title.xml',
         'views/snippets/s_cover.xml',
