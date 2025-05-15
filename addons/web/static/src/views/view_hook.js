@@ -161,7 +161,7 @@ export function useExportRecords(env, context, getDefaultExportList) {
             data: {
                 data: JSON.stringify({
                     import_compat,
-                    context,
+                    context: root.context,
                     domain: root.domain,
                     fields: exportedFields,
                     groupby: root.groupBy,
@@ -179,7 +179,7 @@ export function useExportRecords(env, context, getDefaultExportList) {
     return () => {
         const root = model.root;
         model.dialog.add(ExportDataDialog, {
-            context,
+            context: root.context,
             defaultExportList: getDefaultExportList(),
             download: _downloadExport,
             getExportedFields: _getExportedFields,
