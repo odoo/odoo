@@ -81,15 +81,15 @@ test("basic grouped rendering with automations", async () => {
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3);
 
-    await contains(".o_kanban_group:eq(0) .o_kanban_config .dropdown-toggle", {
+    await contains(".o_kanban_group:eq(0) .o_group_config .dropdown-toggle", {
         visible: false,
     }).click();
 
     // check available actions in kanban header's config dropdown
     expect(".o-dropdown--menu .o_kanban_toggle_fold").toHaveCount(1);
     expect(".o-dropdown--menu .o_column_automations").toHaveCount(1);
-    expect(".o-dropdown--menu .o_column_edit").toHaveCount(0);
-    expect(".o-dropdown--menu .o_column_delete").toHaveCount(0);
+    expect(".o-dropdown--menu .o_group_edit").toHaveCount(0);
+    expect(".o-dropdown--menu .o_group_delete").toHaveCount(0);
     expect(".o-dropdown--menu .o_column_archive_records").toHaveCount(0);
     expect(".o-dropdown--menu .o_column_unarchive_records").toHaveCount(0);
     expect.verifySteps([]);
