@@ -163,7 +163,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             Chrome.isSyncStatusConnected(),
-            TicketScreen.selectOrder("005"),
+            TicketScreen.selectOrder("007"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             Chrome.clickPlanButton(),

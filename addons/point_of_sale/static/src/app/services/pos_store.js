@@ -178,12 +178,17 @@ export class PosStore extends WithLazyGetterTrap {
         this.navigate(page, params);
     }
 
-    get defaultPage() {
+    getOpenFreeOrder() {
         let openOrder = this.models["pos.order"].find((o) => o.state === "draft");
 
         if (!openOrder) {
             openOrder = this.addNewOrder();
         }
+        return openOrder;
+    }
+
+    get defaultPage() {
+        const openOrder = this.getOpenFreeOrder();
 
         return {
             page: "ProductScreen",

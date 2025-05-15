@@ -27,6 +27,15 @@ patch(PosStore.prototype, {
             ? { page: "LoginScreen", params: {} }
             : this.defaultPage;
     },
+    getOpenFreeOrder() {
+        if (this.config.module_pos_restaurant) {
+            return (
+                this.models["pos.order"].find((o) => o.state === "draft" && o.isDirectSale) ||
+                this.addNewOrder()
+            );
+        }
+        return super.getOpenFreeOrder(...arguments);
+    },
     get defaultPage() {
         const screen = super.defaultPage;
         if (this.config.module_pos_restaurant) {
@@ -36,6 +45,9 @@ patch(PosStore.prototype, {
             };
             screen.page = screens[this.config.default_screen];
             screen.params = {};
+            if (this.config.default_screen === "register") {
+                screen.params.orderUuid = this.getOpenFreeOrder().uuid;
+            }
         }
         return screen;
     },
