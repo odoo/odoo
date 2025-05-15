@@ -293,7 +293,9 @@ class Location(models.Model):
                                              reverse=True)
 
         putaway_location = None
-        locations = self.child_internal_location_ids
+        locations = self.env.context.get("locations")
+        if not locations:
+            locations = self.child_internal_location_ids
         if putaway_rules:
             # get current product qty (qty in current quants and future qty on assigned ml) of all child locations
             qty_by_location = defaultdict(lambda: 0)
