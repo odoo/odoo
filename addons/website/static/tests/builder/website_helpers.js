@@ -15,6 +15,7 @@ import {
     advanceTime,
     animationFrame,
     click,
+    delay,
     queryOne,
     tick,
     waitFor,
@@ -170,9 +171,23 @@ export async function setupWebsiteBuilder(
         },
     });
 
+    let lastUpdatePromise;
+    const waitDomUpdated = async () => {
+        await delay();
+        await lastUpdatePromise;
+        await animationFrame();
+    };
     patchWithCleanup(Builder.prototype, {
         setup() {
             super.setup();
+            patchWithCleanup(this.env.editorBus, {
+                trigger(eventName, detail) {
+                    if (eventName === "DOM_UPDATED") {
+                        lastUpdatePromise = detail.updatePromise;
+                    }
+                    return super.trigger(eventName, detail);
+                },
+            });
             editor = this.editor;
         },
     });
@@ -228,6 +243,7 @@ export async function setupWebsiteBuilder(
         getEditableContent: () => editableContent,
         openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
         getIframeEl: () => iframe,
+        waitDomUpdated,
     };
 }
 
