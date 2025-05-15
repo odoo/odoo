@@ -240,62 +240,109 @@ class SellerSignup(AuthSignupHome):
     def seller_signup(self, *args, **kw):
         """Seller Registration Form"""
         qcontext = self.get_auth_signup_qcontext()
+        
+        # Список разрешенных стран по кодам с правильными русскими названиями
+        country_mapping = [
+            ('KG', 'Кыргызстан'),  # Первым в списке
+            ('AZ', 'Азербайджан'),
+            ('AM', 'Армения'),
+            ('BY', 'Беларусь'),
+            ('KZ', 'Казахстан'),
+            ('MD', 'Молдова'),
+            ('RU', 'Россия'),
+            ('TJ', 'Таджикистан'),
+            ('UZ', 'Узбекистан'),
+            ('CN', 'Китай')
+        ]
+        
+        # Получаем страны по кодам в нужном порядке
+        countries = []
+        for code, name in country_mapping:
+            country = request.env['res.country'].sudo().search([('code', '=', code)], limit=1)
+            if country:
+                # Создаем временную копию страны с нужным русским именем
+                custom_country = country.copy_data()[0]
+                custom_country['id'] = country.id
+                custom_country['name'] = name
+                countries.append(type('obj', (object,), custom_country))
+        
+        qcontext.update({'countries': countries})
+        
         if not qcontext.get('token') and not qcontext.get('signup_enabled'):
             raise werkzeug.exceptions.NotFound()
+            
         if 'error' not in qcontext and request.httprequest.method == 'POST':
-            if request.env["res.partner"].sudo().search(
-                    [("profile_url_value", "=", kw.get("profile_url"))]):
-                qcontext["error"] = _(
-                    "Another user has already registered using this Profile "
-                    "url.")
-            else:
-                try:
-                    profile_url = {'profile_url': 1}
-                    qcontext.update(profile_url)
-                    self.do_signup(qcontext)
-                    base_url = request.env[
-                        'ir.config_parameter'].sudo().get_param(
-                        'web.base.url')
-                    request.env["res.partner"].sudo().search(
-                        [('email', '=', kw.get('login'))]).write(
-                        {'profile_url': base_url + "/seller/profile/" + kw.get(
-                            'profile_url'),
-                         'profile_url_value': kw.get('profile_url')})
-                    if qcontext.get('token'):
-                        user = self.env['res.users']
-                        user_sudo = user.sudo().search(
-                            user._get_login_domain(qcontext.get('login')),
-                            order=user._get_login_order(), limit=1
-                        )
-                        template = request.env.ref(
-                            'auth_signup.mail_template_user_input_invite',
-                            raise_if_not_found=False)
-                        if user_sudo and template:
-                            template.sudo().send_mail(user_sudo.id,
-                                                      force_send=True)
-                    return self.web_login(*args, **kw)
-                except UserError as e:
-                    qcontext['error'] = e.args[0]
-                except (SignupError, AssertionError) as e:
-                    if request.env["res.users"].sudo().search(
-                            [("login", "=", qcontext.get("login"))]):
-                        qcontext["error"] = _(
-                            "Another user is already registered using this "
-                            "email address.")
-                    else:
-                        _logger.error("%s", e)
-                        qcontext['error'] = _(
-                            "Could not create a new account.")
-        elif 'signup_email' in qcontext:
-            user = request.env['res.users'].sudo().search(
-                [('email', '=', qcontext.get('signup_email')),
-                 ('state', '!=', 'new')], limit=1)
-            if user:
-                return request.redirect('/web/login?%s' % url_encode(
-                    {'login': user.login, 'redirect': '/web'}))
-        response = request.render('multi_vendor_marketplace.mark', qcontext)
-        return response
-    
+            try:
+                # Получаем телефон и очищаем его для использования как логин
+                phone = kw.get('phone', '').strip()
+                if not phone:
+                    qcontext['error'] = _("Phone number is required.")
+                    return request.render('multi_vendor_marketplace.simplified_seller_registration', qcontext)
+                
+                # Используем телефон в качестве логина
+                login = phone.replace(' ', '').replace('+', '').replace('-', '')
+                
+                # Проверяем пароль и подтверждение пароля
+                password = kw.get('password', '')
+                confirm_password = kw.get('confirm_password', '')
+                
+                if not password:
+                    qcontext['error'] = _("Password is required.")
+                    return request.render('multi_vendor_marketplace.simplified_seller_registration', qcontext)
+                
+                if password != confirm_password:
+                    qcontext['error'] = _("Passwords do not match.")
+                    return request.render('multi_vendor_marketplace.simplified_seller_registration', qcontext)
+                
+                # Генерируем URL профиля на основе имени и телефона
+                name_part = kw.get('name', '').lower().split()[0] if kw.get('name') else ''
+                if not name_part:
+                    name_part = 'seller'
+                phone_part = login[-4:] if len(login) >= 4 else login
+                profile_url = f"{name_part}_{phone_part}"
+                
+                # Обновляем контекст для регистрации
+                qcontext.update({
+                    'login': login,
+                    'name': kw.get('name'),
+                    'password': password,
+                    'confirm_password': confirm_password,
+                    'profile_url': 1,
+                    'profile_url_value': profile_url
+                })
+                
+                # Обновляем kw для любых методов, которые могут его использовать
+                kw['login'] = login
+                kw['profile_url'] = profile_url
+                
+                # Получаем страну
+                country_id = kw.get('country_id')
+                
+                # Регистрируем пользователя
+                self.do_signup(qcontext)
+                
+                # Обновляем партнера с доп. информацией
+                base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                partner = request.env["res.partner"].sudo().search([('email', '=', login)])
+                if partner:
+                    partner.write({
+                        'phone': phone,
+                        'profile_url': f"{base_url}/seller/profile/{profile_url}",
+                        'profile_url_value': profile_url,
+                        'country_id': int(country_id) if country_id else False
+                    })
+                
+                # Перенаправляем на страницу входа с предварительно заполненным логином
+                return werkzeug.utils.redirect(f'/web/login?login={login}')
+                
+            except UserError as e:
+                qcontext['error'] = e.args[0]
+            except (SignupError, AssertionError) as e:
+                _logger.error("%s", e)
+                qcontext['error'] = _("Could not create a new account.")
+                
+        return request.render('multi_vendor_marketplace.simplified_seller_registration', qcontext)
+
     @http.route('/', type='http', auth='public', website=True)
     def redirect_to_seller_shop(self, **kwargs):
         """Redirect homepage to default seller shop."""
@@ -311,23 +358,31 @@ class SellerSignup(AuthSignupHome):
 
 
     def _prepare_signup_values(self, qcontext):
-        """Super The _prepare_signup_values function to pass values  not to
-        Override The Default Sign Up"""
-        values = {key: qcontext.get(key) for key in
-                  ('login', 'name', 'password')}
-        if not values:
-            raise UserError(_("The form was not properly filled in."))
+        """Modified to handle simplified signup form values"""
+        values = {
+            'login': qcontext.get('login', ''),  # Ensure it's at least an empty string
+            'name': qcontext.get('name', ''),
+            'password': qcontext.get('password', '')
+        }
+        
+        if not values.get('name'):
+            raise UserError(_("Full name is required."))
+            
+        if not values.get('login'):
+            raise UserError(_("Login is required."))
+            
+        if not values.get('password'):
+            raise UserError(_("Password is required."))
+            
         if values.get('password') != qcontext.get('confirm_password'):
-            raise UserError(
-                _("Passwords do not match; please retype them."))
-        supported_lang_codes = [code for code, _ in
-                                request.env['res.lang'].get_installed()]
+            raise UserError(_("Passwords do not match; please retype them."))
+            
+        supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
         lang = request.context.get('lang', '')
         if lang in supported_lang_codes:
             values['lang'] = lang
-        values['profile_url'] = int(
-            qcontext.get('profile_url')) if qcontext.get(
-            'profile_url') else 0
+            
+        values['profile_url'] = int(qcontext.get('profile_url')) if qcontext.get('profile_url') else 0
         return values
 
 
