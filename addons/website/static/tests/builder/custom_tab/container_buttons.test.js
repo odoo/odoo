@@ -37,7 +37,7 @@ const dummySnippet = `
 `;
 
 test("Use the sidebar 'remove' buttons", async () => {
-    await setupWebsiteBuilder(dummySnippet);
+    const { waitDomUpdated } = await setupWebsiteBuilder(dummySnippet);
 
     const removeSectionSelector =
         ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_remove";
@@ -47,7 +47,7 @@ test("Use the sidebar 'remove' buttons", async () => {
         ".o_customize_tab .options-container > div:contains('Image') button.oe_snippet_remove";
 
     await contains(":iframe .col-lg-7 img").click();
-    await animationFrame();
+    await waitDomUpdated();
     expect(removeSectionSelector).toHaveCount(1);
     expect(removeColumnSelector).toHaveCount(1);
     expect(removeImageSelector).toHaveCount(1);

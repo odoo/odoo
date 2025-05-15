@@ -25,21 +25,18 @@ function isConnectedElement(el) {
 export function useDomState(getState, { checkEditingElement = true, onReady } = {}) {
     const env = useEnv();
     const isValid = (el) => (!el && !checkEditingElement) || isConnectedElement(el);
-    const handler = () => {
+    const handler = async (ev) => {
         const editingElement = env.getEditingElement();
         if (isValid(editingElement)) {
-            Object.assign(state, getState(editingElement));
+            const newStatePromise = getState(editingElement);
+            ev?.detail.getStatePromises.push(newStatePromise);
+            const newState = await newStatePromise;
+            await ev?.detail.updatePromise;
+            Object.assign(state, newState);
         }
     };
     const state = useState({});
-    if (onReady) {
-        onReady.then(() => {
-            handler();
-        });
-    } else {
-        handler();
-    }
-
+    onWillStart(() => (onReady ? onReady.then(() => handler()) : handler()));
     useBus(env.editorBus, "DOM_UPDATED", handler);
     return state;
 }
@@ -93,11 +90,11 @@ export function useBuilderComponent() {
     };
     updateEditingElements();
     oldEnv.editorBus.addEventListener("UPDATE_EDITING_ELEMENT", updateEditingElements);
-    onWillUpdateProps((nextProps) => {
+    onWillUpdateProps(async (nextProps) => {
         if (comp.props.applyTo !== nextProps.applyTo) {
             applyTo = nextProps.applyTo;
             oldEnv.editorBus.trigger("UPDATE_EDITING_ELEMENT");
-            oldEnv.editorBus.trigger("DOM_UPDATED");
+            await triggerDomUpdated(oldEnv.editorBus);
         }
     });
     onWillDestroy(() => {
@@ -938,4 +935,10 @@ export class BaseOptionComponent extends Component {
         const Components = editor.shared.builderComponents.getComponents();
         Object.assign(comp.constructor.components, Components);
     }
+}
+export function triggerDomUpdated(editorBus) {
+    const getStatePromises = [];
+    const { promise: updatePromise, resolve } = Promise.withResolvers();
+    editorBus.trigger("DOM_UPDATED", { getStatePromises, updatePromise });
+    Promise.all(getStatePromises).then(resolve);
 }

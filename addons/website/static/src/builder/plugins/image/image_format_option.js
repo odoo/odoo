@@ -1,5 +1,4 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { KeepLast } from "@web/core/utils/concurrency";
 import { getImageSrc, getMimetype } from "@html_editor/utils/image";
 import { clamp } from "@web/core/utils/numbers";
 
@@ -15,22 +14,15 @@ export class ImageFormatOption extends BaseOptionComponent {
     MAX_SUGGESTED_WIDTH = 1920;
     setup() {
         super.setup();
-        const keepLast = new KeepLast();
-        this.state = useDomState((editingElement) => {
-            keepLast
-                .add(
-                    this.env.editor.shared.imageFormatOption.computeAvailableFormats(
-                        editingElement,
-                        this.computeMaxDisplayWidth.bind(this)
-                    )
-                )
-                .then((formats) => {
-                    const hasSrc = !!getImageSrc(editingElement);
-                    this.state.formats = hasSrc ? formats : [];
-                });
+        this.state = useDomState(async (editingElement) => {
+            const formats = await this.env.editor.shared.imageFormatOption.computeAvailableFormats(
+                editingElement,
+                this.computeMaxDisplayWidth.bind(this)
+            );
+            const hasSrc = !!getImageSrc(editingElement);
             return {
                 showQuality: ["image/jpeg", "image/webp"].includes(getMimetype(editingElement)),
-                formats: [],
+                formats: hasSrc ? formats : [],
             };
         });
     }

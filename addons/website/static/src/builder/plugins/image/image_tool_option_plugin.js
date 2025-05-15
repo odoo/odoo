@@ -1,4 +1,8 @@
-import { cropperDataFieldsWithAspectRatio, isGif } from "@html_editor/utils/image_processing";
+import {
+    cropperDataFieldsWithAspectRatio,
+    isGif,
+    loadImageInfo,
+} from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { ImageToolOption } from "./image_tool_option";
@@ -192,11 +196,12 @@ class ImageToolOptionPlugin extends Plugin {
         };
     }
     async canHaveHoverEffect(img) {
+        const getDataset = async () => Object.assign({}, img.dataset, await loadImageInfo(img));
         return (
             img.tagName === "IMG" &&
             !this.isDeviceShape(img) &&
             !this.isAnimatedShape(img) &&
-            this.isImageSupportedForShapes(img) &&
+            this.isImageSupportedForShapes(img, await getDataset()) &&
             !(await isImageCorsProtected(img))
         );
     }
@@ -212,8 +217,8 @@ class ImageToolOptionPlugin extends Plugin {
         // todo: to implement while implementing the animated shapes
         return false;
     }
-    isImageSupportedForShapes(img) {
-        return img.dataset.originalId && isImageSupportedForProcessing(getMimetype(img));
+    isImageSupportedForShapes(img, dataset = img.dataset) {
+        return dataset.originalId && isImageSupportedForProcessing(getMimetype(img));
     }
 }
 registry.category("website-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);

@@ -25,6 +25,7 @@ import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { EDITOR_COLOR_CSS_VARIABLES, getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
+import { triggerDomUpdated } from "./core/utils";
 
 export class Builder extends Component {
     static template = "html_builder.Builder";
@@ -93,7 +94,7 @@ export class Builder extends Component {
                         this.state.canRedo = this.editor.shared.history.canRedo();
                         this.updateInvisibleEls();
                         editorBus.trigger("UPDATE_EDITING_ELEMENT");
-                        editorBus.trigger("DOM_UPDATED");
+                        triggerDomUpdated(editorBus);
                     }
                 },
                 reloadEditor: (param = {}) => {
@@ -104,10 +105,10 @@ export class Builder extends Component {
                 },
                 resources: {
                     trigger_dom_updated: () => {
-                        editorBus.trigger("DOM_UPDATED");
+                        triggerDomUpdated(editorBus);
                     },
                     on_mobile_preview_clicked: withSequence(20, () => {
-                        editorBus.trigger("DOM_UPDATED");
+                        triggerDomUpdated(editorBus);
                     }),
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;

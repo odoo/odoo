@@ -38,6 +38,7 @@ import { WebClient } from "@web/webclient/webclient";
 import { patchWithCleanupImg } from "@html_builder/../tests/helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
 import { mockImageRequests } from "./image_test_helpers";
+import { Mutex } from "@web/core/utils/concurrency";
 
 class Website extends models.Model {
     _name = "website";
@@ -170,9 +171,23 @@ export async function setupWebsiteBuilder(
         },
     });
 
+    const mutex = new Mutex();
+    const waitDomUpdated = async () => {
+        await animationFrame();
+        await mutex.exec(() => {});
+        await animationFrame();
+    }
     patchWithCleanup(Builder.prototype, {
         setup() {
             super.setup();
+            patchWithCleanup(this.env.editorBus, {
+                trigger(eventName, detail) {
+                    if (eventName === 'DOM_UPDATED') {
+                        mutex.exec(() => detail.updatePromise);
+                    }
+                    return super.trigger(eventName, detail);
+                }
+            });
             editor = this.editor;
         },
     });
@@ -228,6 +243,7 @@ export async function setupWebsiteBuilder(
         getEditableContent: () => editableContent,
         openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
         getIframeEl: () => iframe,
+        waitDomUpdated,
     };
 }
 

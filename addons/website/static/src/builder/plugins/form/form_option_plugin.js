@@ -3,7 +3,6 @@ import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
 import { reactive } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { FormOptionRedraw } from "./form_option_redraw";
 import { FormFieldOptionRedraw } from "./form_field_option_redraw";
 import { FormOptionAddFieldButton } from "./form_option_add_field_button";
 import {
@@ -36,6 +35,7 @@ import {
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { FormOption } from "./form_option";
 
 export class FormOptionPlugin extends Plugin {
     static id = "websiteFormOption";
@@ -86,7 +86,7 @@ export class FormOptionPlugin extends Plugin {
         },
         builder_options: [
             {
-                OptionComponent: FormOptionRedraw,
+                OptionComponent: FormOption,
                 props: {
                     fetchModels: this.fetchModels.bind(this),
                     prepareFormModel: this.prepareFormModel.bind(this),
