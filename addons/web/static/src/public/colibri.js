@@ -153,10 +153,6 @@ export class Colibri {
         }
     }
 
-    refreshListeners() {
-        this.refreshNodes();
-    }
-
     mapSelectorToListeners(sel, event, handler, options) {
         if (this.listeners.has(sel)) {
             this.listeners.get(sel)[event] = [handler, options];
@@ -193,7 +189,7 @@ export class Colibri {
             for (const node of nodes) {
                 this.core.env.services["public.interactions"].startInteractions(node);
             }
-            this.refreshListeners();
+            this.refreshNodes();
         } else {
             el.textContent = value;
         }
@@ -334,12 +330,12 @@ export class Colibri {
         for (const dynamicAttr of this.dynamicAttrs) {
             const { sel, attr, definition, initialValues } = dynamicAttr;
             let valuePerNode;
-            const nodes = this.dynamicNodes.get(sel);
-            if (!initialValues && nodes && nodes.length) {
+            const nodes = this.dynamicNodes.get(sel) || [];
+            if (!initialValues && nodes.length) {
                 valuePerNode = new Map();
                 dynamicAttr.initialValues = valuePerNode;
             }
-            for (const node of nodes || []) {
+            for (const node of nodes) {
                 try {
                     const value = definition.call(interaction, node);
                     if (!initialValues) {

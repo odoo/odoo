@@ -362,14 +362,14 @@ export class Interaction {
     }
 
     /**
-     * Recomputes event listeners registered through `dynamicContent`.
+     * Recomputes all nodes registered through `dynamicContent`.
      * Interaction listeners are static. If the DOM is updated at some point,
-     * you should call `refreshListeners` so that events are:
+     * you should call `refreshNodes` so that events are:
      * - removed on nodes that don't match the selector anymore
      * - added on new nodes or on nodes that didn't match it before but do now.
      */
-    refreshListeners() {
-        this.__colibri__.refreshListeners();
+    refreshNodes() {
+        this.__colibri__.refreshNodes();
     }
 
     /**
@@ -388,7 +388,7 @@ export class Interaction {
             this.registerCleanup(() => el.remove());
         }
         this.services["public.interactions"].startInteractions(el);
-        this.refreshListeners();
+        this.refreshNodes();
     }
 
     /**
