@@ -324,3 +324,15 @@ class TestWorkEntry(TestWorkEntryBase):
         work_entry_types = [entry.work_entry_type_id for entry in result_entries]
         self.assertEqual(len(result_entries), 4, 'A shift should be created for each attendance')
         self.assertEqual(work_entry_types, [entry_type_1, entry_type_1, entry_type_1, entry_type_2])
+
+    def test_work_entry_duration(self):
+        """ Test the duration of a work entry is rounded to the nearest minute """
+        work_entry = self.env['hr.work.entry'].create({
+            'name': 'Test Work Entry',
+            'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
+            'date_start': datetime(2023, 10, 1, 9, 0, 0),
+            'date_stop': datetime(2023, 10, 1, 9, 59, 59, 999999),
+            'work_entry_type_id': self.work_entry_type.id,
+        })
+        self.assertEqual(work_entry.duration, 1, "The duration should be 1 hour")

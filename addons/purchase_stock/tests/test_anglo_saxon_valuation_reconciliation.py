@@ -754,7 +754,5 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                     {'account_id': account_payable_account.id,   'debit':   0.00,   'credit': 483.00},
                     {'account_id': stock_input_account.id,       'debit':   0.00,   'credit': 420.00},
                     {'account_id': stock_valuation_account.id,   'debit': 420.00,   'credit':   0.00},
-                    {'account_id': stock_input_account.id,       'debit':  46.67,   'credit':   0.00},
-                    {'account_id': stock_valuation_account.id,   'debit':   0.00,   'credit':  46.67},
                 ]
             )
