@@ -2364,6 +2364,49 @@ test(`grouped list rendering with groupby m2o and m2m field`, async () => {
     ]);
 });
 
+test(`grouped list rendering with groupby m2o field: add group`, async () => {
+    onRpc("name_create", ({ args }) => {
+        expect(args[0]).toBe("New group");
+        expect.step("name_create");
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/></list>`,
+        groupBy: ["m2o"],
+    });
+    expect(`.o_group_header:eq(0) th`).toHaveCount(1);
+    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1 (3)", "Value 2 (1)"]);
+    expect(`.o_list_footer td > button`).toHaveText("Add a M2o");
+    await contains(`.o_list_footer td > button`).click();
+    expect(`.o_list_footer td > button`).toHaveCount(0);
+    expect(`.o_list_footer td input`).toHaveCount(1);
+    await contains(`.o_list_footer td input`).edit("New group", { confirm: false });
+    await contains(`.o_list_footer .o_list_group_confirm`).click();
+    expect.verifySteps(["name_create"]);
+    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1 (3)", "Value 2 (1)", "New group (0)"]);
+});
+
+test(`grouped list rendering with groupby m2o field: group_create = false`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list group_create="false"><field name="foo"/></list>`,
+        groupBy: ["m2o"],
+    });
+    expect(`.o_list_footer td > button`).toHaveCount(0);
+});
+
+test(`grouped list rendering with groupby non m2o field`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list group_create="false"><field name="foo"/></list>`,
+        groupBy: ["bar"],
+    });
+    expect(`.o_list_footer td > button`).toHaveCount(0);
+});
+
 test.tags("desktop");
 test(`grouped list with (disabled) pager inside group`, async () => {
     let def;
@@ -4402,20 +4445,20 @@ test(`aggregates are computed correctly on desktop`, async () => {
             </search>
         `,
     });
-    expect(queryAllTexts(`tfoot td`)).toEqual(["", "", "32", "1.50"]);
+    expect(queryAllTexts(`tfoot td`)).toEqual(["", "32", "1.50"]);
 
     await contains(`tbody .o_list_record_selector input:eq(0)`).click();
     await contains(`tbody .o_list_record_selector input:eq(3)`).click();
-    expect(queryAllTexts(`tfoot td`)).toEqual(["", "", "6", "0.50"]);
+    expect(queryAllTexts(`tfoot td`)).toEqual(["", "6", "0.50"]);
 
     await contains(`thead .o_list_record_selector input`).click();
-    expect(queryAllTexts(`tfoot td`)).toEqual(["", "", "32", "1.50"]);
+    expect(queryAllTexts(`tfoot td`)).toEqual(["", "32", "1.50"]);
 
     // Let's update the view to dislay NO records
     await contains(`.o_unselect_all`).click();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
-    expect(queryAllTexts(`tfoot td`)).toEqual(["", "", "", ""]);
+    expect(queryAllTexts(`tfoot td`)).toEqual([""]);
 });
 
 test.tags("mobile");
@@ -4456,7 +4499,7 @@ test(`aggregates are computed correctly on mobile`, async () => {
     // Let's update the view to dislay NO records
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
-    expect(queryAllTexts(`tfoot td`)).toEqual(["", "", ""]);
+    expect(queryAllTexts(`tfoot td`)).toEqual([""]);
 });
 
 test(`aggregates are computed correctly in grouped lists`, async () => {
@@ -4868,7 +4911,7 @@ test(`currency_field is taken into account when formatting monetary values`, asy
     expect(`tfoot td.o_list_number`).toHaveText("—", {
         message: "aggregates monetary should never work if different currencies are used",
     });
-    expect(`tfoot td.o_list_number ~ td`).toHaveText("", {
+    expect(`tfoot td.o_list_number ~ td`).toHaveCount(0, {
         message:
             "monetary aggregation should only be attempted with an active aggregation function when using different currencies",
     });

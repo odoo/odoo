@@ -93,15 +93,32 @@
                 </tbody>
                 <tfoot t-on-click="() => props.list.leaveEditMode()" class="o_list_footer cursor-default" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
                     <tr>
-                        <td t-if="hasSelectors"/>
-                        <t t-foreach="columns" t-as="column" t-key="column.id">
-                            <t t-set="aggregate" t-value="aggregates[column.name]"/>
-                            <td t-if="aggregate" class="o_list_number" >
-                                <span t-esc="aggregate.value" t-att-data-tooltip="aggregate.help"/>
-                            </td>
-                            <td t-elif="column.type != 'field'" class="w-print-auto"/>
-                            <td t-else=""/>
-                        </t>
+                        <td t-att-colspan="getGroupNameCellColSpan()">
+                            <button
+                                t-if="props.list.isGrouped and canCreateGroup and !state.showGroupInput"
+                                class="btn btn-link o_list_group_add"
+                                t-on-click.stop.prevent="() => this.state.showGroupInput = true"
+                            >
+                                Add a <t t-out="this.props.list.groupByField.string"/>
+                            </button>
+                            <div t-elif="state.showGroupInput" class="input-group mb-1">
+                                <input type="text"
+                                    class="form-control bg-view o_list_group_input"
+                                    t-attf-placeholder="{{ this.props.list.groupByField.string }}..."
+                                    t-ref="groupInput"
+                                    t-on-keydown="(ev) => this.onGroupInputKeydown(ev)"
+                                />
+                                <button class="btn btn-primary o_list_group_confirm" type="button" t-on-click="addNewGroup">
+                                    <i class="fa fa-check"/>
+                                </button>
+                                <button class="btn btn-danger o_list_group_cancel" type="button" t-on-click="() => this.state.showGroupInput = false">
+                                    <i class="fa fa-times"/>
+                                </button>
+                            </div>
+                        </td>
+                        <td t-foreach="getAggregateColumns()" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
+                            <span t-if="column.type === 'field' and aggregates[column.name]" t-esc="aggregates[column.name].value" t-att-data-tooltip="aggregates[column.name].help"/>
+                        </td>
                         <td t-if="hasOpenFormViewColumn" class="w-print-0 p-print-0"/>
                         <td t-if="displayOptionalFields or activeActions.onDelete" class="w-print-0 p-print-0" />
                     </tr>
