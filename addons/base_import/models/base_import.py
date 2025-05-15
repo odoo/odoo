@@ -1597,9 +1597,9 @@ class Base_ImportImport(models.TransientModel):
 
                 # merge data if necessary
                 if field_type == 'char':
-                    new_record.append(' '.join(record[idx] for idx in indexes if record[idx]))
+                    new_record.append(' '.join(str(record[idx]) for idx in indexes if record[idx]))
                 elif field_type == 'text':
-                    new_record.append('\n'.join(record[idx] for idx in indexes if record[idx]))
+                    new_record.append('\n'.join(str(record[idx]) for idx in indexes if record[idx]))
                 elif field_type == 'many2many':
                     new_record.append(','.join(record[idx] for idx in indexes if record[idx]))
                 else:
