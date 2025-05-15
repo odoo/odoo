@@ -16,10 +16,10 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
     trigger: "body:not(.o_column_quick_create)",
 }, {
     content: "Check that there is no create column",
-    trigger: "body:not(.o_column_edit)",
+    trigger: "body:not(.o_group_edit)",
 }, {
     content: "Check that there is no create column",
-    trigger: "body:not(.o_column_delete)",
+    trigger: "body:not(.o_group_delete)",
 }, {
     content: "Go to tasks",
     trigger: 'button[data-menu-xmlid="project.menu_project_management"]',
@@ -46,7 +46,7 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
     run: "hover && click .o_kanban_header:contains(Never) .dropdown-toggle",
 }, {
     content: "Try editing inbox",
-    trigger: ".dropdown-item.o_column_edit",
+    trigger: ".dropdown-item.o_group_edit",
     run: "click",
 }, {
     content: "Change title",

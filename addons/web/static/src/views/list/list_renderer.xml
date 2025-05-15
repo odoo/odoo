@@ -234,6 +234,7 @@
                     <div t-if="showGroupPager(group)" t-on-click.stop="" class="ms-auto">
                         <Pager t-props="getGroupPagerProps(group)"/>
                     </div>
+                    <GroupConfigMenu t-if="showGroupConfigMenu(group)" t-props="getGroupConfigMenuProps(group)"/>
                 </div>
             </th>
             <td t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">

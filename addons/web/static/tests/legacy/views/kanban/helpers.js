@@ -106,17 +106,6 @@ export async function validateColumn(target) {
     await click(target, ".o_column_quick_create .o_kanban_add");
 }
 
-export async function toggleColumnActions(target, columnIndex) {
-    const group = getColumn(target, columnIndex);
-    await click(group, ".o_kanban_config .dropdown-toggle");
-    const buttons = getDropdownMenu(target, group).querySelectorAll(".dropdown-item");
-    return (buttonText) => {
-        const re = new RegExp(`\\b${buttonText}\\b`, "i");
-        const button = [...buttons].find((b) => re.test(b.innerText));
-        return click(button);
-    };
-}
-
 export async function loadMore(target, columnIndex) {
     await click(getColumn(target, columnIndex), ".o_kanban_load_more button");
 }
