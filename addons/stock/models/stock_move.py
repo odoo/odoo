@@ -2037,7 +2037,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             rounding = move.product_uom.rounding
             if move.state in ('cancel', 'done') or (move.state == 'draft' and not move.quantity):
                 continue
-            elif float_compare(move.quantity, move.product_uom_qty, precision_rounding=rounding) >= 0:
+            elif move._should_bypass_reservation() or float_compare(move.quantity, move.product_uom_qty, precision_rounding=rounding) >= 0:
                 moves_state_to_write['assigned'].add(move.id)
             elif move.quantity and float_compare(move.quantity, move.product_uom_qty, precision_rounding=rounding) <= 0:
                 moves_state_to_write['partially_available'].add(move.id)
