@@ -48,21 +48,21 @@ class ProductsItemOptionPlugin extends Plugin {
         return {
             setItemSize: {
                 reload: {},
-                isApplied: ({ editingElement, value }) => {
+                isApplied: ({ editingElement, value: [i, j] }) => {
                     if (
-                        parseInt(editingElement.dataset.rowspan || 1) - 1 === value.i &&
-                        parseInt(editingElement.dataset.colspan || 1) - 1 === value.j
+                        parseInt(editingElement.dataset.rowspan || 1) - 1 === i &&
+                        parseInt(editingElement.dataset.colspan || 1) - 1 === j
                     ) {
-                        this.itemSize.x = value.j + 1;
-                        this.itemSize.y = value.i + 1;
+                        this.itemSize.x = j + 1;
+                        this.itemSize.y = i + 1;
                         return true;
                     }
                     return false;
                 },
 
-                apply: ({ editingElement, value }) => {
-                    const x = value.j + 1;
-                    const y = value.i + 1;
+                apply: ({ editingElement, value: [i, j] }) => {
+                    const x = j + 1;
+                    const y = i + 1;
 
                     this.productTemplateID = parseInt(
                         editingElement

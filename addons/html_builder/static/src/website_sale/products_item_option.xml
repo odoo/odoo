@@ -9,7 +9,7 @@
                             <tr>
                                 <t t-foreach="[0, 1, 2, 3]" t-as="j" t-key="j">
                                     <td t-on-mouseover="()=>this._onTableCellMouseOver(i, j)" t-on-click="()=>this._onTableCellMouseClick(i, j)">
-                                        <BuilderButton preview="false" actionValue="{'i': i, 'j': j}" />
+                                        <BuilderButton preview="false" actionValue="[i, j]" />
                                     </td>
                                 </t>
                             </tr>
