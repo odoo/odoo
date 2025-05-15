@@ -1,5 +1,5 @@
 import {
-    changeOption,
+    changeOptionInPopover,
     clickOnExtraMenuItem,
     clickOnSave,
     openLinkPopup,
@@ -195,14 +195,10 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     edition: true,
 }, () => [
     // Add a megamenu item to the top menu.
-    {
-        content: "Click on a menu item",
-        trigger: ':iframe .top_menu .nav-item a',
-        run: "click",
-    },
+    ...openLinkPopup(":iframe .top_menu .nav-item a", "Home"),
     {
         content: "Click on 'Link' to open Link Dialog",
-        trigger: ':iframe .o_edit_menu_popover a.js_edit_menu',
+        trigger: ".o-we-linkpopover a.js_edit_menu",
         run: "click",
     },
     {
@@ -232,14 +228,11 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
         run: "click",
     },
     {
-        trigger: '#oe_snippets.o_loaded',
+        trigger: "body:not(:has(.modal))",
     },
     {
         content: "Check for the new mega menu",
         trigger: ':iframe .top_menu:has(.nav-item a.o_mega_menu_toggle:contains("Megaaaaa2!"))',
-    },
-    {
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"
     },
     // Edit a menu item
     clickOnExtraMenuItem({}, true),
@@ -249,12 +242,8 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
         trigger: ':iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :first-child',
         run: "click",
     },
-    changeOption("MegaMenuLayout", "we-toggler"),
-    {
-        content: "Select Big Icons Subtitles mega menu",
-        trigger: '[data-select-label="Big Icons Subtitles"]',
-        run: "click",
-    },
+    // Change MegaMenu template
+    ...changeOptionInPopover("Mega Menu", "Template", "[title='Big Icons Subtitles']"),
     ...clickToolbarButton(
         "h4 of first menu link of the first column",
         ".s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child h4",
