@@ -11,13 +11,16 @@
                 <xpath expr="//field[@name='type']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <xpath expr="//field[@name='is_storable']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
                 <xpath expr="//field[@name='invoice_policy']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
+                <xpath expr="//field[@name='product_tooltip']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
                 <xpath expr="//field[@name='taxes_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='tax_string']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='standard_price']" position="attributes">
@@ -50,12 +53,18 @@
                 <xpath expr="//group[@name='internal_notes']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
+
+                <!-- pone invisible los campos is_storable y tracking -->
+                <xpath expr="//label[@for='is_storable']" position="replace">
+                    <label for="is_storable" class="oe_inline" invisible="1"/>
+                </xpath>
+                <xpath expr="//div[@class='o_row w-100']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
             </field>
         </record>
     </data>
 </odoo>
-
-
 
 
 
