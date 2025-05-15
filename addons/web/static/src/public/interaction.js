@@ -362,17 +362,6 @@ export class Interaction {
     }
 
     /**
-     * Recomputes all nodes registered through `dynamicContent`.
-     * Interaction listeners are static. If the DOM is updated at some point,
-     * you should call `refreshNodes` so that events are:
-     * - removed on nodes that don't match the selector anymore
-     * - added on new nodes or on nodes that didn't match it before but do now.
-     */
-    refreshNodes() {
-        this.__colibri__.refreshNodes();
-    }
-
-    /**
      * Inserts and activate an element at a specific location (default position:
      * "beforeend").
      * The inserted element will be removed when the interaction is destroyed.
@@ -388,7 +377,7 @@ export class Interaction {
             this.registerCleanup(() => el.remove());
         }
         this.services["public.interactions"].startInteractions(el);
-        this.refreshNodes();
+        this.__colibri__.refreshNodes();
     }
 
     /**

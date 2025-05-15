@@ -411,7 +411,6 @@ export class WebsiteForum extends Interaction {
             }
             voteCountEl.textContent = parseInt(data["vote_count"]);
             voteCountEl.classList.add("o_forum_vote_animate");
-            this.refreshNodes();
         }
     }
 
