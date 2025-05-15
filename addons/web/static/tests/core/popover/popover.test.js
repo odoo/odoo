@@ -260,7 +260,7 @@ test("within iframe", async () => {
     expect(Math.floor(popoverBox.top)).toBe(Math.floor(expectedTop));
     expect(Math.floor(popoverBox.left)).toBe(Math.floor(expectedLeft));
 
-    await scroll(popoverTarget.ownerDocument.documentElement, { y: 100 });
+    await scroll(popoverTarget.ownerDocument.documentElement, { y: 100 }, { scrollable: false });
     await animationFrame();
     expect.verifySteps(["bottom"]);
     popoverBox = comp.popoverRef.el.getBoundingClientRect();
