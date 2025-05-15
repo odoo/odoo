@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import textwrap
 from collections import defaultdict
 from operator import itemgetter
 
@@ -243,9 +241,9 @@ class ForumForum(models.Model):
             [('forum_id', 'in', self.ids), ('parent_id', '=', False), ('state', '=', 'active')],
             groupby=['forum_id'], aggregates=['id:max'],
         )
-        forum_to_last_post_id = {forum.id: last_post_id for forum, last_post_id in last_forums_posts}
+        forum_to_last_post = dict(last_forums_posts)
         for forum in self:
-            forum.last_post_id = forum_to_last_post_id.get(forum.id, False)
+            forum.last_post_id = forum_to_last_post.get(forum, False)
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
@@ -255,7 +253,7 @@ class ForumForum(models.Model):
             self.update(default_stats)
             return
 
-        result = {cid: dict(default_stats) for cid in self.ids}
+        result = defaultdict(default_stats.copy)
         read_group_res = self.env['forum.post']._read_group(
             [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close')), ('parent_id', '=', False)],
             ['forum_id'],

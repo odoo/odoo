@@ -233,7 +233,7 @@ class ForumPost(models.Model):
     @api.depends_context('uid')
     def _compute_user_vote(self):
         votes = self.env['forum.post.vote'].sudo().search_read([('post_id', 'in', self._ids), ('user_id', '=', self.env.uid)], ['vote', 'post_id'])
-        mapped_vote = dict([(v['post_id'][0], v['vote']) for v in votes])
+        mapped_vote = {v['post_id'][0]: v['vote'] for v in votes}
         for vote in self:
             vote.user_vote = mapped_vote.get(vote.id, 0)
 
@@ -642,17 +642,14 @@ class ForumPost(models.Model):
 
     def _flag(self):
         res = []
+        to_flag = self.browse()
         for post in self:
             if not post.can_flag:
                 raise AccessError(_('%d karma required to flag a post.', post.forum_id.karma_flag))
             if post.state == 'flagged':
-               res.append({'error': 'post_already_flagged'})
+                res.append({'error': 'post_already_flagged'})
             elif post.state == 'active':
-                # TODO: potential performance bottleneck, can be batched
-                post.write({
-                    'state': 'flagged',
-                    'flag_user_id': self.env.user.id,
-                })
+                to_flag |= post
                 res.append(
                     post.can_moderate and
                     {'success': 'post_flagged_moderator'} or
@@ -660,6 +657,10 @@ class ForumPost(models.Model):
                 )
             else:
                 res.append({'error': 'post_non_flaggable'})
+
+        if to_flag:
+            to_flag.write({'state': 'flagged', 'flag_user_id': self.env.user.id})
+
         return res
 
     def _mark_as_offensive(self, reason_id):
