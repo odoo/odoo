@@ -262,10 +262,10 @@ class HrLeave(models.Model):
         ])
         for holiday in self:
             conflicting_holidays = all_leaves.filtered_domain([
-                ('employee_id', '=', holiday.employee_id.id),
+                ('employee_id', 'in', holiday.employee_id.ids),
                 ('date_from', '<', holiday.date_to),
                 ('date_to', '>', holiday.date_from),
-                ('id', '!=', holiday.id),
+                ('id', 'not in', holiday.ids),
             ])
             if not conflicting_holidays:
                 holiday.dashboard_warning_message = False
