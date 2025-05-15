@@ -321,7 +321,8 @@ export function contains(target, options) {
          */
         scroll: async (position) => {
             consumeContains();
-            await scroll(nodePromise, position);
+            // disable "scrollable" check
+            await scroll(nodePromise, position, { scrollable: false, ...options });
             await animationFrame();
         },
         /**
