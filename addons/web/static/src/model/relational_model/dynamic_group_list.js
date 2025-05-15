@@ -239,6 +239,7 @@ export class DynamicGroupList extends DynamicList {
         };
         const nextConfigGroups = { ...this.config.groups };
         const domain = Domain.and([this.domain, [[this.groupByField.name, "=", id]]]).toList();
+        const groupBy = this.groupBy.slice(1);
         nextConfigGroups[id] = {
             ...commonConfig,
             context,
@@ -251,7 +252,7 @@ export class DynamicGroupList extends DynamicList {
                 ...commonConfig,
                 context,
                 domain: domain,
-                groupBy: [],
+                groupBy,
                 orderBy: this.orderBy,
                 limit: this.model.initialLimit,
                 offset: 0,
@@ -260,9 +261,9 @@ export class DynamicGroupList extends DynamicList {
         this.model._updateConfig(this.config, { groups: nextConfigGroups }, { reload: false });
 
         const data = {
+            aggregates: {},
             count: 0,
             length: 0,
-            records: [],
             __domain: domain,
             [this.groupByField.name]: [id, groupName],
             value: id,
@@ -270,6 +271,11 @@ export class DynamicGroupList extends DynamicList {
             displayName: groupName,
             rawValue: [id, groupName],
         };
+        if (groupBy.length) {
+            data.groups = [];
+        } else {
+            data.records = [];
+        }
 
         const group = this._createGroupDatapoint(data);
         if (lastGroup) {
