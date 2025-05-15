@@ -121,8 +121,8 @@ class HolidaysRequest(models.Model):
             new_values.update([('request_date_from', date_from), ('request_date_to', date_to)])
 
             employee = self.env['hr.employee'].browse(values['employee_id']) if values.get('employee_id') else self.env.user.employee_id
-            default_start_time = self._get_start_or_end_from_attendance(7, datetime.now().date(), employee).time()
-            default_end_time = self._get_start_or_end_from_attendance(19, datetime.now().date(), employee).time()
+            default_start_time = self._get_start_or_end_from_attendance(7, values['date_from'].date(), employee).time()
+            default_end_time = self._get_start_or_end_from_attendance(19, values['date_to'].date(), employee).time()
             if values['date_from'].time() == default_start_time and values['date_to'].time() == default_end_time:
                 attendance_from, attendance_to = self._get_attendances(employee, date_from, date_to)
                 new_values['date_from'] = self._get_start_or_end_from_attendance(attendance_from.hour_from, date_from, employee)
