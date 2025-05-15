@@ -1237,4 +1237,592 @@ body.modal-open {
     display: none !important;
 }
 
+/* Desktop Navigation Icons Next to Search */
+.desktop-nav-icons {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+    gap: 15px;
+}
+
+.nav-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb;
+    color: #ff6600;
+    transform: translateY(-2px);
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+.nav-icon-btn i {
+    font-size: 18px;
+}
+
+/* Make search bar and nav icons row */
+.o_wsale_products_searchbar_form {
+    display: flex;
+    flex-grow: 1;
+}
+
+/* Layout adjustments for search + nav */
+.navbar-collapse form.o_wsale_products_searchbar_form {
+    max-width: calc(100% - 200px);
+}
+
+/* Fix search bar to take available space */
+.oe_search_box {
+    width: 100%;
+}
+
+/* Ensure only logo is visible in header */
+header .navbar-brand.logo {
+    margin: 0 auto;
+}
+
+/* Hide original navbar items but keep the navbar */
+header .navbar ul.navbar-nav:not(.ml-auto) {
+    display: none !important;
+}
+
+/* Mobile bottom nav adjustments */
+@media (max-width: 767.98px) {
+    .desktop-nav-icons {
+        display: none !important;
+    }
+}
+
+/* Adjusted Desktop Navigation Icons */
+.desktop-nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: auto; /* Push to the right side */
+    padding-right: 20px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nav-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb;
+    color: #ff6600;
+    transform: translateY(-2px);
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+.nav-icon-btn i {
+    font-size: 18px;
+}
+
+/* Position the navbar correctly */
+header .navbar {
+    position: relative; /* Make sure relative positioning is applied for absolute children */
+}
+
+/* Center the logo */
+header .navbar-brand.logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+/* Hide original navigation items */
+header .navbar-collapse {
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+}
+
+/* Simpler Desktop Navigation Icon Styling */
+.desktop-nav-icons {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.nav-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb;
+    color: #ff6600;
+    transform: translateY(-2px);
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+.nav-icon-btn i {
+    font-size: 18px;
+}
+
+/* Center logo in header */
+header .navbar-brand.logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+/* Make header position relative for absolute positioning */
+header.position-relative {
+    position: relative;
+}
+
+/* Hide navbar items using CSS instead of XPath for greater reliability */
+header .navbar-collapse ul.navbar-nav {
+    display: none !important;
+}
+
+/* Improved Header Layout */
+header .navbar {
+    min-height: 80px !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+/* Fixed position for navigation icons at search level */
+.desktop-nav-icons {
+    position: absolute !important;
+    top: 50% !important;
+    right: 20px !important;
+    transform: translateY(-50%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 15px !important;
+    z-index: 100 !important;
+}
+
+/* Better navigation icon styling */
+.nav-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+/* Make sure the catalog button is visible */
+#catalog-toggle-btn {
+    display: block !important; /* Override the previous display: none */
+}
+
+/* Logo positioning */
+header .navbar-brand.logo {
+    margin: 0 auto !important;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    max-height: 60px;
+}
+
+/* Fix search bar positioning if needed */
+.navbar-collapse form.o_wsale_products_searchbar_form {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Center the search bar */
+.o_wsale_products_searchbar_form {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Ensure elements are at proper z-index */
+header .navbar {
+    position: relative;
+    z-index: 1000;
+}
+
+/* Hide navbar items but with important flag */
+header .navbar-collapse ul.navbar-nav {
+    display: none !important;
+}
+
+/* Fix for the hidden catalog button - remove or override the previous rule */
+#catalog-toggle-btn {
+    display: block !important; /* Make button visible again */
+    z-index: 1001;
+}
+
+/* Position navigation icons next to search */
+.desktop-nav-icons {
+    position: absolute !important;
+    top: 50% !important;
+    right: 20px !important; /* Keep right positioned */
+    transform: translateY(-50%) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    z-index: 1000 !important;
+}
+
+/* Adjust navbar layout to accommodate search and icons */
+.navbar-collapse form.o_wsale_products_searchbar_form {
+    max-width: calc(100% - 200px) !important; /* Leave space for the icons */
+    display: inline-flex !important;
+    margin-right: auto !important;
+}
+
+/* Make search bar container display as flex to align its contents */
+.o_wsale_products_searchbar_form {
+    display: flex !important;
+}
+
+/* Ensure the navbar has space for search and icons */
+header .navbar > .container {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Make navbar taller */
+header .navbar {
+    min-height: 80px !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+/* Center logo with more space */
+header .navbar-brand.logo {
+    margin: 0 auto !important; 
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    max-height: 60px !important;
+}
+
+/* Essential navigation icon styling - keeping it simple */
+
+/* Fix for the hidden catalog button */
+#catalog-toggle-btn {
+    display: block !important; /* Override previous display:none rule */
+}
+
+/* Simple positioning of nav icons with !important to override other styles */
+.desktop-nav-icons {
+    position: absolute !important;
+    top: 50% !important;
+    right: 85px !important; /* Position to the right, next to search form */
+    transform: translateY(-50%) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    z-index: 1000 !important;
+}
+
+/* Taller navbar for more space */
+header .navbar {
+    min-height: 80px !important;
+    padding: 15px 0 !important;
+}
+
+/* Center logo with more space */
+header .navbar-brand.logo {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important;
+    max-height: 60px !important;
+}
+
+/* Hide all navbar items with !important */
+header .navbar-collapse ul.navbar-nav {
+    display: none !important;
+}
+
+/* Specific positioning for navigation icons to be next to search */
+.desktop-nav-icons {
+    position: absolute !important;
+    right: 20px !important; 
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    z-index: 1001 !important;
+    margin-left: 0 !important;
+}
+
+/* Adjust the search form to leave space for the icons */
+.products_header .o_wsale_products_searchbar_form {
+    max-width: calc(100% - 200px) !important;
+    margin-right: 180px !important; /* Leave space for icons */
+}
+
+/* Hide navigation icons in the header itself */
+header > .desktop-nav-icons {
+    display: none !important;
+}
+
+/* Make sure catalog button is visible */
+#catalog-toggle-btn {
+    display: block !important;
+}
+
+/* Style for products header to position elements properly */
+.products_header {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Fix positioning for nav icons using more specific CSS */
+
+/* Override all previous rules for navigation icons with this one */
+.desktop-nav-icons {
+    position: fixed !important;
+    top: 25px !important; /* Adjust as needed to vertically align with search */
+    right: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    z-index: 1010 !important; /* Higher z-index to ensure visibility */
+}
+
+/* Ensure icons are visible and styled properly */
+.nav-icon-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb !important;
+    color: #ff6600 !important;
+    transform: translateY(-2px) !important;
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600 !important;
+    color: #fff !important;
+}
+
+/* Ensure catalog button is visible */
+#catalog-toggle-btn {
+    display: block !important;
+}
+
+/* Always show icons on desktop */
+@media (min-width: 768px) {
+    .desktop-nav-icons {
+        display: flex !important;
+    }
+}
+
+/* Make search form leave space for icons */
+.o_wsale_products_searchbar_form {
+    max-width: calc(100% - 240px) !important;
+    margin-right: 220px !important;
+}
+
+/* Улучшенный стиль строки поиска и иконок */
+
+/* Улучшенное размещение иконок навигации */
+.desktop-nav-icons {
+    position: static !important;  /* Отменяем fixed позицию */
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    margin-left: 15px !important;
+    z-index: 100 !important;
+    transform: none !important;
+    top: auto !important;
+    right: auto !important;
+}
+
+/* Улучшенный стиль иконок */
+.nav-icon-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb !important;
+    color: #ff6600 !important;
+    transform: translateY(-2px) !important;
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600 !important;
+    color: #fff !important;
+}
+
+/* Стиль контейнера products_header, чтобы там поместилось всё */
+.products_header {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+}
+
+/* Расширяем строку поиска */
+.products_header .o_wsale_products_searchbar_form {
+    flex: 1 !important;
+    max-width: none !important;
+    margin-right: 0 !important;
+}
+
+.o_wsale_products_searchbar_form .input-group {
+    width: 100% !important;
+}
+
+.oe_search_box {
+    width: 100% !important;
+}
+
+/* Контейнер для иконок в header */
+.header-icons-container {
+    display: flex !important;
+    align-items: center !important;
+    margin-left: 15px !important;
+    white-space: nowrap !important;
+}
+
+/* Убираем скрытие иконок при перемещении */
+.header-icons-container .desktop-nav-icons.d-none {
+    display: flex !important;
+}
+
+/* Мобильная версия */
+@media (max-width: 767px) {
+    .header-icons-container {
+        display: none !important;
+    }
+}
+
+/* Обновленные стили для навигационных иконок, чтобы они всегда отображались рядом с поиском */
+
+/* Контейнер поиска и иконок в одной строке */
+.products_header {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    position: relative !important;
+}
+
+/* Стиль для поисковой формы */
+.o_wsale_products_searchbar_form {
+    flex: 1 !important;
+    display: flex !important;
+    margin-right: 15px !important;
+}
+
+/* Иконки навигации */
+.desktop-nav-icons {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    margin-left: auto !important;
+}
+
+/* Стиль иконок */
+.nav-icon-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb !important;
+    color: #ff6600 !important;
+    transform: translateY(-2px) !important;
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600 !important;
+    color: #fff !important;
+}
+
+/* Мобильная версия */
+@media (max-width: 767px) {
+    .desktop-nav-icons {
+        display: none !important;
+    }
+}
+
 

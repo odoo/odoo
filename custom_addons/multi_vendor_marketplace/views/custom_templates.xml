@@ -186,6 +186,40 @@
         </t>
     </template>
 
+    <!-- Упрощаем шаблон, сохраняя функционал кнопки каталога -->
+    <template id="desktop_search_nav" inherit_id="website.layout">
+        <!-- Пустой для удаления -->
+    </template>
+
+    <!-- Добавляем специальный шаблон для размещения иконок в products_header -->
+    <template id="header_icons_placement" inherit_id="website_sale.products">
+        <!-- Пустой для удаления -->
+    </template>
+
+    <!-- Create a new template that directly injects icons into the products_header -->
+    <template id="product_header_with_icons" inherit_id="website_sale.products">
+        <xpath expr="//div[hasclass('products_header')]" position="attributes">
+            <attribute name="class" add="position-relative d-flex align-items-center" separator=" "/>
+        </xpath>
+        
+        <xpath expr="//div[hasclass('products_header')]" position="inside">
+            <div class="desktop-nav-icons ms-3" style="display: flex; align-items: center; gap: 15px; margin-left: auto;">
+                <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
+                    <i class="fa fa-home"></i>
+                </a>
+                <a href="/videos" class="nav-icon-btn">
+                    <i class="fa fa-play"></i>
+                </a>
+                <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
+                    <i class="fa fa-shopping-cart"></i>
+                </a>
+                <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
+                    <i class="fa fa-user"></i>
+                </a>
+            </div>
+        </xpath>
+    </template>
+
     <template id="mobile_bottom_nav" inherit_id="website.layout">
         <xpath expr="//body" position="inside">
             <div class="mobile-bottom-nav d-md-none">
@@ -255,5 +289,125 @@
                 });
             });
         </script>
+    </template>
+
+    <template id="custom_shop_with_catalog" inherit_id="website_sale.products">
+        <!-- Кнопка Каталог слева от поиска -->
+        <xpath expr="//t[@t-call='website_sale.search']" position="before">
+            <div class="catalog-button-container">
+                <button class="catalog-button" type="button">Каталог</button>
+            </div>
+            <div class="catalog-sidebar" style="display:none;">
+                <div class="catalog-sidebar__content">
+                    <div class="catalog-sidebar__header">
+                        <button class="catalog-sidebar__close" type="button">×</button>
+                    </div>
+                    <div class="catalog-sidebar__categories">
+                        <t t-call="website_sale.products_categories_list"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="inside">
+            <style>
+                .catalog-sidebar {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    height: 100dvh;
+                    width: 220px;
+                    background: #fff;
+                    box-shadow: 2px 0 16px rgba(0,0,0,0.08);
+                    z-index: 2000;
+                    display: flex;
+                    flex-direction: column;
+                    transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+                    transform: translateX(-100%);
+                    overflow-y: auto;
+                }
+                .catalog-sidebar.open {
+                    display: flex !important;
+                    transform: translateX(0);
+                }
+                .catalog-sidebar__content {
+                    flex: 1 1 auto;
+                    display: flex;
+                    flex-direction: column;
+                    height: 100dvh;
+                    padding: 24px 12px 20px 12px;
+                }
+                .catalog-sidebar__header {
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+                    margin-bottom: 16px;
+                }
+                .catalog-sidebar__close {
+                    background: none;
+                    border: none;
+                    font-size: 2rem;
+                    color: #888;
+                    cursor: pointer;
+                }
+                .catalog-sidebar__categories .o_categories_collapse_title {
+                    display: none !important;
+                }
+                @media (max-width: 600px) {
+                    .catalog-sidebar {
+                        width: 45vw;
+                        min-width: 0;
+                    }
+                }
+                body.sidebar-open {
+                    overflow: hidden !important;
+                    position: fixed;
+                    width: 100vw;
+                }
+            </style>
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    var btn = document.querySelector('.catalog-button');
+                    var sidebar = document.querySelector('.catalog-sidebar');
+                    var closeBtn = sidebar ? sidebar.querySelector('.catalog-sidebar__close') : null;
+
+                    function openSidebar() {
+                        if(sidebar) {
+                            sidebar.style.display = 'flex';
+                            setTimeout(function(){ sidebar.classList.add('open'); }, 10);
+                            document.body.classList.add('sidebar-open');
+                        }
+                    }
+                    function closeSidebar() {
+                        if(sidebar) {
+                            sidebar.classList.remove('open');
+                            setTimeout(function(){ sidebar.style.display = 'none'; }, 250);
+                            document.body.classList.remove('sidebar-open');
+                        }
+                    }
+
+                    if(btn) {
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            if(sidebar &amp;&amp; sidebar.classList.contains('open')) {
+                                closeSidebar();
+                            } else {
+                                openSidebar();
+                            }
+                        });
+                    }
+                    if(closeBtn) {
+                        closeBtn.addEventListener('click', function() {
+                            closeSidebar();
+                        });
+                    }
+                    // Закрытие по клику вне сайдбара
+                    document.addEventListener('click', function(e) {
+                        if(sidebar &amp;&amp; sidebar.classList.contains('open') &amp;&amp; !sidebar.contains(e.target) &amp;&amp; e.target !== btn) {
+                            closeSidebar();
+                        }
+                    });
+                });
+            </script>
+        </xpath>
     </template>
 </odoo>
