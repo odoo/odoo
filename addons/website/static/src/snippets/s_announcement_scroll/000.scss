@@ -1,0 +1,77 @@
+.s_announcement_scroll {
+    overflow-x: clip;
+
+    // Parallax effects
+    &.s_announcement_scroll_parallax.s_announcement_scroll_page_scrolling {
+        .s_announcement_scroll_marquee_item {
+            animation-play-state: paused !important;
+        }
+    }
+
+    // Hover effects
+    // High specificity to override the animation state, disabling the hover effect when
+    // a scroll event is registered.
+    &:not(.s_announcement_scroll_page_scrolling) {
+        &.s_announcement_scroll_hover_pause:hover .s_announcement_scroll_marquee_item {
+            animation-play-state: paused;
+        }
+
+        &.s_announcement_scroll_hover_slow {
+            &:hover .s_announcement_scroll_marquee_item {
+                animation-play-state: running;
+            }
+        }
+
+        &.s_announcement_scroll_hover_direction:hover .s_announcement_scroll_marquee_item {
+            animation-play-state: paused, running;
+        }
+    }
+
+    &.s_announcement_scroll_hover_slow {
+        // Needs to be defined outside the :not to avoid the value not being defined when the
+        // page is scrolling.
+        --marquee-animation-hover-multiplier: 2;
+    }
+
+    // Item options
+    .s_announcement_scroll_marquee_item {
+        white-space: preserve nowrap;
+        font-size: clamp(40px, calc(var(--marquee-item-font-size, 80) * .05vw), 200px);
+        caret-color: transparent; // o_not_editable doesn't hide the caret on Firefox
+    }
+
+    .s_announcement_scroll_heading_family .s_announcement_scroll_marquee_item {
+        font-family: $o-theme-headings-font;
+        font-weight: $headings-font-weight;
+    }
+
+    &.s_announcement_scroll_direction_right {
+        --marquee-animation: o-marquee-scroll-right;
+    }
+
+    &.s_announcement_scroll_direction_none {
+        --marquee-animation: none;
+    }
+
+    // Animation states
+    &.s_announcement_scroll_ready.s_announcement_scroll_in_viewport .s_announcement_scroll_marquee_item {
+        --marquee-animation-time: calc((25s - var(--marquee-animation-speed) * 2) * var(--marquee-item-size) * .001);
+
+        animation-composition: add;
+        animation:
+            var(--marquee-animation, o-marquee-scroll-left) linear infinite var(--marquee-animation-time),
+            var(--marquee-animation, o-marquee-scroll-left) linear infinite calc(var(--marquee-animation-time) * var(--marquee-animation-hover-multiplier, 1)) reverse paused;
+    }
+}
+
+@keyframes o-marquee-scroll-left {
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes o-marquee-scroll-right {
+    from {
+        transform: translateX(-100%);
+    }
+}
