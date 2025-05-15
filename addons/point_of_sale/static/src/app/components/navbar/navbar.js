@@ -21,6 +21,7 @@ import { _t } from "@web/core/l10n/translation";
 import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
 import { uuidv4 } from "@point_of_sale/utils";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
+import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -53,6 +54,7 @@ export class Navbar extends Component {
             this.isSystemUser = await user.hasGroup("base.group_system");
         });
         useExternalListener(document, "keydown", this.handleKeydown.bind(this));
+        this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming);
     }
 
     handleKeydown(event) {
