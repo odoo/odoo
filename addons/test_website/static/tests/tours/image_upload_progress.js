@@ -1,6 +1,6 @@
 import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
-import { FileSelectorControlPanel } from "@web_editor/components/media_dialog/file_selector";
+import { FileSelectorControlPanel } from "@html_editor/main/media/media_dialog/file_selector";
 import { patch } from "@web/core/utils/patch";
 
 let patchWithError = false;
@@ -72,7 +72,7 @@ registerWebsitePreviewTour('test_image_upload_progress', {
         run: "click",
     }, {
         content: "click on add images to open image dialog (in multi mode)",
-        trigger: 'we-customizeblock-option [data-add-images]',
+        trigger: "button[data-action-id='addImage']",
         run: "click",
     }, {
         content: "manually trigger input change",
@@ -123,7 +123,7 @@ registerWebsitePreviewTour('test_image_upload_progress', {
         run: "click",
     }, {
         content: "click on replace media to open image dialog",
-        trigger: 'we-customizeblock-option [data-replace-media]',
+        trigger: "button[data-action-id='replaceMedia']",
         run: "click",
     }, {
         content: "manually trigger input change",
@@ -162,7 +162,7 @@ registerWebsitePreviewTour('test_image_upload_progress', {
         run: "click",
     }, {
         content: "click on replace media to open image dialog",
-        trigger: 'we-customizeblock-option [data-replace-media]',
+        trigger: "button[data-action-id='replaceMedia']",
         run: "click",
     }, {
         content: "manually trigger input change",
@@ -206,7 +206,7 @@ registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         run: "click",
     }, {
         content: "click on replace media to open image dialog",
-        trigger: 'we-customizeblock-option [data-replace-media]',
+        trigger: "button[data-action-id='replaceMedia']",
         run: "click",
     }, {
         content: "search 'fox' images",
@@ -230,7 +230,7 @@ registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         run: "click",
     }, {
         content: "unsplash image (mocked to logo) should have been used",
-        trigger: ":iframe #wrap .s_image_gallery .img[data-original-src^='/unsplash/HQqIOc8oYro/fox']",
+        trigger: ":iframe #wrap .s_image_gallery img[src^='/unsplash/HQqIOc8oYro/fox']",
         run() {
             unpatchMediaDialog();
         },
