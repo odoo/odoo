@@ -410,4 +410,165 @@
             </script>
         </xpath>
     </template>
+
+    <!-- Добавляем навигационные иконки на страницу videos -->
+    <template id="videos_nav_icons" inherit_id="website.layout">
+        <xpath expr="//main" position="before">
+            <t t-if="request.httprequest.path == '/videos'">
+                <div class="container py-3">
+                    <div class="desktop-nav-icons d-none d-md-flex mx-auto" style="display: flex !important; max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
+                        <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
+                            <i class="fa fa-home"></i>
+                        </a>
+                        <a href="/videos" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/videos' else '' }}">
+                            <i class="fa fa-play"></i>
+                        </a>
+                        <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
+                            <i class="fa fa-shopping-cart"></i>
+                        </a>
+                        <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
+                            <i class="fa fa-user"></i>
+                        </a>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Добавляем навигационные иконки также на страницы корзины и оформления заказа -->
+    <template id="cart_nav_icons" inherit_id="website_sale.cart">
+        <xpath expr="//div[hasclass('container')]" position="before">
+            <div class="container py-3">
+                <div class="desktop-nav-icons d-none d-md-flex mx-auto" style="display: flex !important; max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
+                    <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
+                        <i class="fa fa-home"></i>
+                    </a>
+                    <a href="/videos" class="nav-icon-btn">
+                        <i class="fa fa-play"></i>
+                    </a>
+                    <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
+                        <i class="fa fa-shopping-cart"></i>
+                    </a>
+                    <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
+                        <i class="fa fa-user"></i>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Добавляем навигационные иконки на страницу оформления заказа -->
+    <template id="checkout_nav_icons" inherit_id="website_sale.checkout">
+        <xpath expr="//div[hasclass('container')]" position="before">
+            <div class="container py-3">
+                <div class="desktop-nav-icons d-none d-md-flex mx-auto" style="display: flex !important; max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
+                    <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
+                        <i class="fa fa-home"></i>
+                    </a>
+                    <a href="/videos" class="nav-icon-btn">
+                        <i class="fa fa-play"></i>
+                    </a>
+                    <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
+                        <i class="fa fa-shopping-cart"></i>
+                    </a>
+                    <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
+                        <i class="fa fa-user"></i>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Добавляем навигационные иконки на страницу профиля пользователя -->
+    <template id="profile_nav_icons" inherit_id="multi_vendor_marketplace.custom_user_profile">
+        <xpath expr="//div[hasclass('container')]" position="before">
+            <div class="container py-3">
+                <div class="desktop-nav-icons d-none d-md-flex mx-auto" style="display: flex !important; max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
+                    <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
+                        <i class="fa fa-home"></i>
+                    </a>
+                    <a href="/videos" class="nav-icon-btn">
+                        <i class="fa fa-play"></i>
+                    </a>
+                    <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
+                        <i class="fa fa-shopping-cart"></i>
+                    </a>
+                    <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
+                        <i class="fa fa-user"></i>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Add a new template that injects CSS directly in the products page -->
+    <template id="product_grid_5_direct" inherit_id="website_sale.products">
+        <xpath expr="//div[hasclass('oe_website_sale')]" position="inside">
+            <style>
+                /* Target the product grid items directly with more specific selectors */
+                @media (min-width: 1200px) {
+                    /* Show 5 products per row on large screens */
+                    #products_grid .oe_product.oe_grid,
+                    .oe_website_sale .products_pager + .row .oe_product,
+                    .o_wsale_products_grid_table_wrapper .oe_product.oe_grid,
+                    .o_wsale_products_grid_table_wrapper .oe_product {
+                        width: 20% !important;
+                        max-width: 20% !important;
+                        min-width: unset !important;
+                        flex: 0 0 20% !important;
+                    }
+                    
+                    /* Override Bootstrap column classes that might be applied */
+                    .oe_website_sale .col-lg-2,
+                    .oe_website_sale .col-lg-3,
+                    .oe_website_sale .col-lg-4,
+                    #products_grid .col-lg-2,
+                    #products_grid .col-lg-3,
+                    #products_grid .col-lg-4 {
+                        width: 20% !important;
+                        flex: 0 0 20% !important;
+                        max-width: 20% !important;
+                    }
+                }
+                
+                /* Responsive adjustments */
+                @media (max-width: 1199px) and (min-width: 992px) {
+                    /* 4 products per row on medium-large screens */
+                    #products_grid .oe_product.oe_grid,
+                    .o_wsale_products_grid_table_wrapper .oe_product.oe_grid {
+                        width: 25% !important;
+                        max-width: 25% !important;
+                        flex: 0 0 25% !important;
+                    }
+                }
+                
+                @media (max-width: 991px) and (min-width: 768px) {
+                    /* 3 products per row on medium screens */
+                    #products_grid .oe_product.oe_grid,
+                    .o_wsale_products_grid_table_wrapper .oe_product.oe_grid {
+                        width: 33.333% !important;
+                        max-width: 33.333% !important;
+                        flex: 0 0 33.333% !important;
+                    }
+                }
+                
+                @media (max-width: 767px) and (min-width: 576px) {
+                    /* 2 products per row on small screens */
+                    #products_grid .oe_product.oe_grid,
+                    .o_wsale_products_grid_table_wrapper .oe_product.oe_grid {
+                        width: 50% !important;
+                        max-width: 50% !important;
+                        flex: 0 0 50% !important;
+                    }
+                }
+                
+                /* Make sure product card style looks good */
+                .oe_product.oe_grid {
+                    padding: 10px !important;
+                    margin-bottom: 20px !important;
+                    border: none !important;
+                }
+            </style>
+        </xpath>
+    </template>
 </odoo>

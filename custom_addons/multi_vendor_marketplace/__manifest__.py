@@ -50,6 +50,7 @@
 
         'views/custom_templates.xml',
         'views/product_detail_template.xml',
+        'views/global_nav_icons.xml',  # Добавляем новый файл
 
         'views/vendor_dashboard_views.xml',
         'views/stock_moves_views.xml',
