@@ -65,7 +65,8 @@ export const dialogService = {
                     subEnv,
                 },
                 {
-                    onRemove: (closeParams) => {
+                    onRemove: async (closeParams) => {
+                        await options.onClose?.(closeParams);
                         stack.splice(
                             stack.findIndex((d) => d.id === id),
                             1
@@ -76,7 +77,6 @@ export const dialogService = {
                         } else {
                             document.body.classList.remove("modal-open");
                         }
-                        options.onClose?.(closeParams);
                     },
                     rootId: options.context?.root?.el.getRootNode()?.host?.id,
                 }
