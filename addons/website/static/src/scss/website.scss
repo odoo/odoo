@@ -403,7 +403,9 @@ body {
 
         .accordion-button {
             &:not(.collapsed) {
-                background-color: shade-color($-navbar-mobile-bg-color, 5%);
+                @if $-navbar-mobile-bg-color != null {
+                    background-color: shade-color($-navbar-mobile-bg-color, 5%);
+                }
             }
 
             // Replace the default chevron with our Odoo UI icon so it adapts to
