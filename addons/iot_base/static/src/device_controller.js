@@ -30,7 +30,7 @@ export class DeviceController {
      * @param callback - function to call when the listener is triggered
      * @param fallback - if true, no notification will be displayed on fail
      */
-    addListener(callback, fallback = false) {
+    addListener(callback, fallback = true) {
         return this.iotLongpolling.addListener(this.iotIp, [this.identifier], this.id, callback, fallback);
     }
     removeListener() {
