@@ -424,6 +424,7 @@ test("activity click on edit should pass correct context", async () => {
             expect(action.context).toEqual({
                 default_res_model: "res.partner",
                 default_res_id: partnerId,
+                dialog_size: "large",
             });
             return super.doAction(...arguments);
         },

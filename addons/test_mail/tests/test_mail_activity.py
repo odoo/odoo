@@ -344,7 +344,7 @@ class TestActivityFlow(TestActivityCommon):
             self.env.flush_all()
 
 
-@tests.tagged("mail_activity")
+@tests.tagged("mail_activity", "post_install", "-at_install")
 class TestActivitySystray(TestActivityCommon, HttpCase):
     """Test for systray_get_activities"""
 
@@ -394,7 +394,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             if record.get("model") == self.test_lead_records._name
         )
         self.assertEqual(total_lead_count, 2)
-        self.assertEqual(data["Store"]["activityCounter"], 4)
+        self.assertEqual(data["Store"]["activityCounter"], 5)
 
 
 @tests.tagged('mail_activity')
@@ -456,7 +456,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 next((t for t in activity_data['activity_types'] if t['id'] == self.type_upload.id), {}),
                 {
                     'id': self.type_upload.id,
-                    'name': 'Upload Document',
+                    'name': 'Document',
                     'template_ids': [],
                 })
 

@@ -585,6 +585,7 @@ class MailActivity(models.Model):
             'views': [(False, 'form')],
         }
 
+    # Deprecated in 18.3 onwards
     def action_snooze(self):
         today = date.today()
         for activity in self:
