@@ -34,6 +34,7 @@ import { session } from "@web/session";
  * @property {Record<string, any>[]} viewSwitcherEntry
  * @property {typeof Component} Banner
  *
+ * @typedef {import("@web/core/context").Context} Context
  * @typedef {import("@web/env").OdooEnv} OdooEnv
  * @typedef {import("@web/search/utils/order_by").OrderTerm} OrderTerm
  *
@@ -54,7 +55,7 @@ import { session } from "@web/session";
  * @property {boolean} [loadIrFilters=false]
  *
  * @property {Record<string, any>} [comparison]
- * @property {Record<any, any>} [context={}]
+ * @property {Context} [context={}]
  * @property {DomainRepr} [domain]
  * @property {string[]} [groupBy]
  * @property {OrderTerm[]} [orderBy]

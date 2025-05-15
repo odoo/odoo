@@ -5,11 +5,10 @@ import { evaluate } from "./py_js/py_interpreter";
 /**
  * @typedef {{
  *  lang?: string;
- *  uid?: number;
  *  tz?: string;
- *  [key: string]: unknown;
+ *  uid?: number | false;
+ *  [key: string]: any;
  * }} Context
- *
  * @typedef {Context | string | undefined} ContextDescription
  */
 
