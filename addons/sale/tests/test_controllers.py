@@ -75,11 +75,11 @@ class TestSalesControllers(BaseUsersCommon, HttpCase, SaleCommon):
 
         req = self.url_open(portal_so.get_portal_url(report_type='pdf'), allow_redirects=False)
         self.assertEqual(req.status_code, 200)
-        self.assertEqual(req.headers['content-disposition'], f"inline; filename*=UTF-8''Quotation-S{portal_so.id:05}.pdf")
+        self.assertEqual(req.headers['content-disposition'], f"inline; filename*=UTF-8''Quotation-{portal_so.name}.pdf")
 
         req = self.url_open(portal_so.get_portal_url(report_type='pdf', download=True), allow_redirects=False)
         self.assertEqual(req.status_code, 200)
-        self.assertEqual(req.headers['content-disposition'], f"attachment; filename*=UTF-8''Quotation-S{portal_so.id:05}.pdf")
+        self.assertEqual(req.headers['content-disposition'], f"attachment; filename*=UTF-8''Quotation-{portal_so.name}.pdf")
 
 
 @tagged('post_install', '-at_install')
