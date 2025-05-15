@@ -189,6 +189,7 @@ export class ListArchParser {
                 const activeActions = {
                     ...getActiveActions(xmlDoc),
                     exportXlsx: exprToBoolean(xmlDoc.getAttribute("export_xlsx"), true),
+                    createGroup: exprToBoolean(xmlDoc.getAttribute("group_create"), true),
                 };
                 treeAttr.activeActions = activeActions;
 

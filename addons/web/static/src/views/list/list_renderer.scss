@@ -189,11 +189,15 @@
         }
 
         tfoot {
+            .o_list_group_input {
+                max-width: 300px;
+            }
             > tr > td {
                 color: $o-list-footer-color;
                 background-color: $o-list-footer-bg-color;
                 font-weight: $o-list-footer-font-weight;
                 @include o-text-overflow(table-cell);
+                vertical-align: baseline;
             }
 
             .o_list_number {
