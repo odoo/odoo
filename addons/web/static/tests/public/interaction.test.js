@@ -277,7 +277,7 @@ describe("using selectors", () => {
         expect(clicked).toBe(1);
     });
 
-    test("can refresh listeners", async () => {
+    test("can refresh nodes", async () => {
         let clicked = 0;
         class Test extends Interaction {
             static selector = ".test";
@@ -289,7 +289,7 @@ describe("using selectors", () => {
                             .querySelectorAll("span:not(.me)")
                             .forEach((el) => el.classList.add("me"));
                         ev.currentTarget.classList.remove("me");
-                        this.refreshListeners();
+                        this.refreshNodes();
                     },
                 },
             };
