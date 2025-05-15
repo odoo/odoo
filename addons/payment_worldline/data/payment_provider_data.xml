@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_worldline" model="payment.provider">
+        <field name="name">Worldline</field>
+        <field
+            name="image_128"
+            type="base64"
+            file="payment_worldline/static/description/icon.png"
+        />
+        <field name="module_id" ref="base.module_payment_worldline"/>
+        <!-- https://docs.direct.worldline-solutions.com/en/payment-methods-and-features/index -->
+        <field
+            name="payment_method_ids"
+            eval="[Command.set([
+                      ref('payment_worldline.payment_method_alipay_plus'),
+                      ref('payment.payment_method_bancontact'),
+                      ref('payment.payment_method_bizum'),
+                      ref('payment.payment_method_card'),
+                      ref('payment.payment_method_cofidis'),
+                      ref('payment.payment_method_eps'),
+                      ref('payment.payment_method_floa_bank'),
+                      ref('payment.payment_method_ideal'),
+                      ref('payment.payment_method_klarna'),
+                      ref('payment.payment_method_mbway'),
+                      ref('payment.payment_method_multibanco'),
+                      ref('payment.payment_method_p24'),
+                      ref('payment.payment_method_paypal'),
+                      ref('payment_worldline.payment_method_post_finance'),
+                      ref('payment.payment_method_twint'),
+                      ref('payment.payment_method_wechat_pay'),
+                  ])]"
+        />
+        <field name="code">worldline</field>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+        <field name="allow_tokenization">True</field>
+    </record>
+
+</odoo>
