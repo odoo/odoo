@@ -1,3 +1,4 @@
+import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { Component, useState, onMounted, useRef, useEffect, useExternalListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
@@ -231,7 +232,10 @@ export class LinkPopover extends Component {
             if (icon) {
                 this.state.previewIcon.value = icon;
             }
-        } else if (window.location.hostname !== url.hostname) {
+        } else if (
+            window.location.hostname !== url.hostname &&
+            !new RegExp(`^https?://${session.db}\\.odoo\\.com(/.*)?$`).test(url.origin)
+        ) {
             // Preview pages from current website only. External website will
             // most of the time raise a CORS error. To avoid that error, we
             // would need to fetch the page through the server (s2s), involving
