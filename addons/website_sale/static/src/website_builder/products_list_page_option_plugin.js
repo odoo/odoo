@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 
 class ProductsListPageOptionPlugin extends Plugin {
     static id = "productsListPageOptionPlugin";
+
     resources = {
         builder_options: [
             {
@@ -47,6 +48,13 @@ class ProductsListPageOptionPlugin extends Plugin {
             setGap: {
                 reload: {},
                 apply: ({ value }) => rpc("/shop/config/website", { shop_gap: value }),
+            },
+            setDefaultGap: {
+                reload: {},
+                apply: ({ editingElement, value }) => {
+                    editingElement.style.setProperty("--o-wsale-products-grid-gap", value + "px");
+                    return rpc("/shop/config/website", { shop_gap: value });
+                },
             },
             setDefaultSort: {
                 reload: {},
