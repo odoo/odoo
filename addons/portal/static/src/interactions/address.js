@@ -1,7 +1,6 @@
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { rpc } from '@web/core/network/rpc';
-import { renderToElement } from '@web/core/utils/render';
 
 export class CustomerAddress extends Interaction {
     // /my/address & /my/account
@@ -152,8 +151,6 @@ export class CustomerAddress extends Interaction {
                 fieldName => this.addressForm[fieldName].classList.add('is-invalid')
             );
 
-            // Remove previous error message in footer
-            document.querySelector('.o_portal_error')?.remove();
             // Display the error messages
             // NOTE: setCustomValidity is not used as we would have to reset the error msg on
             // input update, which is not worth catching for the rare cases where the
@@ -165,11 +162,6 @@ export class CustomerAddress extends Interaction {
                 errorHeader.appendChild(document.createTextNode(message));
                 return errorHeader;
             });
-            ev.currentTarget.before(
-                renderToElement('portal.error', {
-                    message: "Please fill in the form correctly.",
-                })
-            );
 
             this.errorsDiv.replaceChildren(...newErrors);
         }
