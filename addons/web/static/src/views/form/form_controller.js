@@ -652,7 +652,7 @@ export class FormController extends Component {
             this.props.onDiscard(this.model.root);
         }
         if (this.env.inDialog) {
-            this.env.dialogData.close();
+            await this.env.dialogData.close();
         } else if (this.model.root.isNew) {
             this.env.config.historyBack();
         }
