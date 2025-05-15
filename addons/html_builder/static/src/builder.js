@@ -146,8 +146,6 @@ export class Builder extends Component {
                     this.snippetModel.saveSnippet(snippetEl, cleanForSaveHandlers),
                 getShared: () => this.editor.shared,
                 updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
-                allowCustomStyle: true,
-                allowTargetBlank: true,
             },
             this.env.services
         );
