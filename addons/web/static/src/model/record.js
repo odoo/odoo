@@ -194,9 +194,9 @@ export class Record extends Component {
         if (fields) {
             this.fields = fields;
         } else {
-            const orm = useService("orm");
+            const fieldService = useService("field");
             onWillStart(async () => {
-                this.fields = await orm.call(resModel, "fields_get", [fieldNames], {});
+                this.fields = await fieldService.loadFields(resModel, { fieldNames });
             });
         }
     }
