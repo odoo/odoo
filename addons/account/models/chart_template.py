@@ -902,8 +902,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': f"{existing_account.name} - {additional_label}",
                 'code': new_code,
                 'account_type': existing_account.account_type,
+                'reconcile': reconcilable or existing_account.reconcile,
+                'non_trade': existing_account.non_trade,
                 'company_ids': [Command.link(company.id)],
-                'reconcile': reconcilable,
             })
 
         existing_accounts = {'': None, None: None}  # keeps tracks of the created account by foreign xml_id
