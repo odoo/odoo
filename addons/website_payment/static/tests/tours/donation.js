@@ -3,7 +3,7 @@ import {
     clickOnSave,
     registerWebsitePreviewTour,
     insertSnippet,
-    changeOption,
+    changeOptionInPopover,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -127,8 +127,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_donation_donate_btn",
             run: "click",
         },
-        changeOption("Donation", "we-toggler"),
-        changeOption("Donation", '[data-name="slider_opt"]'),
+        ...changeOptionInPopover("Donation Button", "Custom Amount", "[data-action-param='slider']"),
         ...clickOnSave(),
     ],
 );
