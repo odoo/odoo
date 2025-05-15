@@ -129,7 +129,7 @@ registerWebsitePreviewTour('website_no_dirty_lazy_image', {
         run: "click",
     },
     {
-        trigger: '.o_we_user_value_widget[data-replace-media="true"]',
+        trigger: "[data-action-id='replaceMedia']",
     },
     {
         content: "Check that there is no more than one dirty flag",

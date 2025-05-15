@@ -723,7 +723,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour('/', 'website_powerbox_snippet', login='admin')
         self.start_tour('/', 'website_powerbox_keyword', login='admin')
 
-    @unittest.skip
     def test_website_no_dirty_lazy_image(self):
         website = self.env['website'].browse(1)
         # Enable multiple langs to reduce the chance of the test being silently
@@ -789,7 +788,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_website_seo_notification(self):
         self.start_tour(self.env['website'].get_client_action_url("/"), "website_seo_notification", login="admin")
 
-    @unittest.skip
     def test_website_add_snippet_dialog(self):
         self.start_tour("/", "website_add_snippet_dialog", login="admin")
 
