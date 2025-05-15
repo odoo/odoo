@@ -43,6 +43,7 @@ export {
     queryAllRects,
     queryAllTexts,
     queryAllValues,
+    queryAny,
     queryAttribute,
     queryFirst,
     queryOne,

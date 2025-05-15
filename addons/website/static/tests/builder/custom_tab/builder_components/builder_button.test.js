@@ -88,7 +88,7 @@ test("preview a shorthand action and a specific action", async () => {
     expect(":iframe .test-options-target").toHaveClass("my-custom-class");
     expect.verifySteps(["customAction"]);
     expect(":iframe .test-options-target").toHaveInnerHTML("c");
-    await hover(".test-options-target");
+    await hover(":iframe .test-options-target");
     expect(":iframe .test-options-target").toHaveInnerHTML("b");
     expect.verifySteps([]);
 });

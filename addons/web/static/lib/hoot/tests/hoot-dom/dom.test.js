@@ -373,7 +373,7 @@ describe(parseUrl(import.meta.url), () => {
 
     test("waitFor: rejects", async () => {
         await expect(waitFor("never", { timeout: 1 })).rejects.toThrow(
-            `Could not find elements matching "never" within 1 milliseconds`
+            `expected at least 1 element after 1ms and found 0 elements: 0 matching "never"`
         );
     });
 
@@ -883,6 +883,28 @@ describe(parseUrl(import.meta.url), () => {
 
             expect("div").toHaveRect({ width: 50, height: 70 }); // with padding
             expect("div").toHaveRect({ width: 40, height: 60 }, { trimPadding: true });
+        });
+
+        test("not found messages", async () => {
+            await mountForTest(/* xml */ `
+                <div class="tralalero">
+                    Tralala
+                </div>
+            `);
+
+            expect(() => queryOne(".tralalero:contains(Tralala):visible:scrollable:first")).toThrow(
+                `found 0 elements instead of 1: 0 matching ".tralalero:contains(Tralala):visible:scrollable:first" (1 element with text "Tralala" > 1 visible element > 0 scrollable elements > 0 first elements)`
+            );
+            expect(() =>
+                queryOne(".tralalero", {
+                    contains: "Tralala",
+                    visible: true,
+                    scrollable: true,
+                    first: true,
+                })
+            ).toThrow(
+                `found 0 elements instead of 1: 1 matching ".tralalero", including 1 element with text "Tralala", including 1 visible element, including 0 scrollable elements, including 0 first elements`
+            );
         });
     });
 });
