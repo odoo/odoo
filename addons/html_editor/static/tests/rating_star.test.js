@@ -17,7 +17,7 @@ test("add 3 star elements", async () => {
 
     await press("Enter");
     expect(getContent(el)).toBe(
-        `<p>\u200B<span contenteditable="false" class="o_stars">\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff</span>\u200B[]</p>`
+        `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`
     );
 });
 
@@ -29,7 +29,7 @@ test("add 5 star elements", async () => {
 
     await press("Enter");
     expect(getContent(el)).toBe(
-        `<p>\u200B<span contenteditable="false" class="o_stars">\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff</span>\u200B[]</p>`
+        `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`
     );
 });
 
@@ -41,19 +41,19 @@ test("select star rating", async () => {
     await click("i.fa-star-o:first");
     await animationFrame();
     expect(getContent(el)).toBe(
-        `<p>\u200B<span contenteditable="false" class="o_stars">\ufeff<i class="fa fa-star" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff</span>\u200B[]</p>`
+        `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`
     );
 
     await click("i.fa-star-o:last");
     await animationFrame();
     expect(getContent(el)).toBe(
-        `<p>\u200B<span contenteditable="false" class="o_stars">\ufeff<i class="fa fa-star" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star" contenteditable="false">\u200B</i>\ufeff</span>\u200B[]</p>`
+        `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star" contenteditable="false">\u200B</i><i class="o_stars fa fa-star" contenteditable="false">\u200B</i><i class="o_stars fa fa-star" contenteditable="false">\u200B</i></span>\u200B[]</p>`
     );
 
     await click("i.fa-star:last");
     await animationFrame();
     expect(getContent(el)).toBe(
-        `<p>\u200B<span contenteditable="false" class="o_stars">\ufeff<i class="fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff<i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i>\ufeff</span>\u200B[]</p>`
+        `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`
     );
 });
 

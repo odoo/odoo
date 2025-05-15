@@ -93,7 +93,9 @@ export class FeffPlugin extends Plugin {
             return [];
         }
         const elements = [...selectElements(root, combinedSelector)];
+        const isEditable = (node) => node.parentElement?.isContentEditable;
         const feffNodes = elements
+            .filter(isEditable)
             .flatMap((el) => {
                 const addFeff = (position) => this.addFeff(el, position, cursors);
                 return [
