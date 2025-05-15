@@ -50,11 +50,6 @@
         </td>
         <td t-else=""/>
         <td t-attf-class="text-end {{ data.type == 'component' ? 'opacity-50' : '' }}" t-esc="formatMonetary(data.bom_cost)"/>
-        <td t-if="showAttachments" class="text-center">
-            <span t-if="data.has_attachments">
-                <a href="#" role="button" t-on-click.prevent="goToAttachment" class="fa fa-fw o_button_icon fa-files-o"/>
-            </span>
-        </td>
     </tr>
 
 </templates>
