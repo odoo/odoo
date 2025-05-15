@@ -1,37 +1,47 @@
 <odoo>
     <data> 
-        <record id="res_partner_form_inherit_hide_fields" model="ir.ui.view">
-            <field name="name">res.partner.form.inherit.hide.fields</field>
+        <record id="res_partner_form_inherit_extension" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.extension</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-            
-                <xpath expr="//field[@name='phone']" position="attributes">
-                    <attribute name="invisible">1</attribute>
+
+                <xpath expr="//span[@name='address_name']/field[@name='type']" position="replace">
+                    <field name="type" invisible="1" context="{'default_type': 'invoice'}"/>
                 </xpath>
-                <xpath expr="//field[@name='vat']" position="attributes">
-                    <attribute name="invisible">1</attribute>
+                <xpath expr="//span[@name='address_name']/span" position="replace">
+                    <span>Dirección fiscal</span>
                 </xpath>
-                <xpath expr="//field[@name='company_type']" position="attributes">
-                    <attribute name="invisible">1</attribute>
+                <xpath expr="//div[@class='o_address_format' and not(@name='div_address')]/field[@name='street2']" position="replace">
+                    <div class="d-flex gap-2">
+                        <field name="floor" placeholder="Piso" class="o_address_street" readonly="type == 'contact' and parent_id"/>
+                        <field name="apartment" placeholder="Departamento" class="o_address_street" readonly="type == 'contact' and parent_id"/>
+                    </div>
                 </xpath>
-                <xpath expr="//field[@name='title']" position="attributes">
-                    <attribute name="invisible">1</attribute>
+                <xpath expr="//div[@name='partner_address_country']" position="after">
+                    <field name="cuit" placeholder="CUIT" class="o_address_country" on_change="1"/>
                 </xpath>
-                <xpath expr="//field[@name='category_id']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <xpath expr="//page[@name='accounting']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <xpath expr="//page[@name='internal_notes']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <xpath expr="//page[@name='sales_purchases']" position="attributes">
-                    <attribute name="invisible">1</attribute>
+
+                <xpath expr="//div[@class='o_address_format']" position="after">
+                    <span class="o_form_label o_td_label o_address_type" name="address_name">
+                        <field name="type" invisible="1" context="{'default_type': 'delivery'}"/>
+                        <span>Dirección de entrega</span>
+                    </span>
+                    <div class="o_address_format" name="dir_entrega">
+                        <field name="street" placeholder="Street..." class="o_address_street" readonly="type == 'contact' and parent_id"/>
+                        <div class="d-flex gap-2">
+                            <field name="floor" placeholder="Piso" class="o_address_street" readonly="type == 'contact' and parent_id"/>
+                            <field name="apartment" placeholder="Departamento" class="o_address_street" readonly="type == 'contact' and parent_id"/>
+                        </div>
+                        <field name="city" placeholder="City" class="o_address_city" readonly="type == 'contact' and parent_id"/>
+                        <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" readonly="type == 'contact' and parent_id" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}" on_change="1" can_create="True" can_write="True"/>
+                        <field name="zip" placeholder="ZIP" class="o_address_zip" readonly="type == 'contact' and parent_id" on_change="1"/>
+                        <div name="partner_address_country" class="d-flex justify-content-between">
+                            <field name="country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" readonly="type == 'contact' and parent_id" on_change="1" can_create="True" can_write="True"/>
+                        </div>
+                    </div>
                 </xpath>
             </field>
         </record>
-
     </data>
 </odoo>
