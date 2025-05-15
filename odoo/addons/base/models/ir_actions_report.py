@@ -435,7 +435,14 @@ class IrActionsReport(models.Model):
         for attribute in root.items():
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
-
+        
+        # search in pages for dinamic rotations
+        pages = root.xpath('//div[@class="page"]')
+        for page in pages:
+            for attribute in page.attrib.items():
+                if attribute[0].startswith('data-report-'):
+                    specific_paperformat_args[attribute[0]] = attribute[1]
+                    
         header = self.env['ir.qweb']._render(layout.id, {
             'subst': True,
             'body': Markup(lxml.html.tostring(header_node, encoding='unicode')),
