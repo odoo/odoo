@@ -1601,8 +1601,8 @@ export class SearchModel extends EventBus {
                         if (searchItem.filterDomain || operators.size === 1) {
                             type = "field";
                             title = searchItem.description;
-                            for (const { label, labelForFacet } of autocompleteValues) {
-                                values.push((labelForFacet || label).trim());
+                            for (const { label } of autocompleteValues) {
+                                values.push(label.trim());
                             }
                         } else {
                             type = "filter";
@@ -1704,16 +1704,10 @@ export class SearchModel extends EventBus {
      * of a search item of type 'field'.
      */
     _getFieldDomain(field, autocompleteValues) {
-        const domains = autocompleteValues.map(({ label, value, operator, enforceOperator }) => {
+        const domains = autocompleteValues.map(({ label, value, operator }) => {
             let domain;
             if (field.filterDomain) {
-                let filterDomain = field.filterDomain;
-                if (enforceOperator) {
-                    filterDomain = field.filterDomain
-                        .replaceAll("'ilike'", `'${operator}'`)
-                        .replaceAll('"ilike"', `"${operator}"`);
-                }
-                domain = new Domain(filterDomain).toList({
+                domain = new Domain(field.filterDomain).toList({
                     self: label.trim(),
                     raw_value: value,
                 });
