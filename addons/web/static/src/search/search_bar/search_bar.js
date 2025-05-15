@@ -22,45 +22,6 @@ const FOLDABLE_TYPES = ["properties", "many2one", "many2many"];
 let nextItemId = 1;
 const SUB_ITEMS_DEFAULT_LIMIT = 8;
 
-/**
- * @param {Object} params
- * @param {string} params.operator
- * @param {string} params.value
- * @param {string} [params.label]
- * @returns {Object}
- */
-function manageSearchWithQuotes({ operator, value, label }) {
-    const startsWithQuote = value.length > 1 && value[0] === `"`;
-    const endsWithQuote = value.length > 1 && value[value.length - 1] === `"`;
-    const enforceOperator = startsWithQuote || endsWithQuote;
-    let labelForFacet;
-    if (startsWithQuote) {
-        if (endsWithQuote) {
-            operator = "=";
-            value = value.slice(1, -1);
-            label = label ? label.slice(1, -1) : label;
-        } else {
-            operator = "=ilike";
-            value = value.slice(1) + "%";
-            labelForFacet = label ? label.slice(1) : label;
-            label = label ? label.slice(1) + "%" : label;
-        }
-    } else if (endsWithQuote) {
-        operator = "=ilike";
-        value = "%" + value.slice(0, -1);
-        labelForFacet = label ? label.slice(0, -1) : label;
-        label = label ? "%" + label.slice(0, -1) : label;
-    }
-    const autoCompleteValue = { label, operator, value };
-    if (enforceOperator) {
-        autoCompleteValue.enforceOperator = enforceOperator;
-    }
-    if (labelForFacet) {
-        autoCompleteValue.labelForFacet = labelForFacet;
-    }
-    return autoCompleteValue;
-}
-
 export class SearchBar extends Component {
     static template = "web.SearchBar";
     static components = {
@@ -360,16 +321,9 @@ export class SearchBar extends Component {
                     ? searchItem.propertyFieldDefinition.comodel
                     : field.relation;
 
-            let nameSearchOperator;
-            ({ operator: nameSearchOperator, value: query } = manageSearchWithQuotes({
-                operator: "ilike",
-                value: query,
-            }));
-
             const limitToFetch = this.state.subItemsLimits[searchItem.id] + 1;
             options = await this.orm.call(relation, "name_search", [], {
                 domain: domain,
-                operator: nameSearchOperator,
                 context: { ...this.env.searchModel.globalContext, ...field.context },
                 limit: limitToFetch,
                 name: query.trim(),
@@ -471,8 +425,7 @@ export class SearchBar extends Component {
 
         if (!item.unselectable) {
             const { searchItemId, label, operator, value } = item;
-            const autoCompleteValue = manageSearchWithQuotes({ label, operator, value });
-            this.env.searchModel.addAutoCompletionValues(searchItemId, autoCompleteValue);
+            this.env.searchModel.addAutoCompletionValues(searchItemId, { label, operator, value });
         }
 
         if (item.loadMore) {
