@@ -731,7 +731,7 @@ test("select command with 'mouseenter' after scroll -- doc in iframe", async () 
 
     // Hoot don't trigger a mousemove event at the start of an hover, if we don't hover
     // another element before. So we need to do a first hover to set a previous element.
-    await hover("body"); // Hover on main document's body
+    await hover(document.body); // Hover on main document's body
 
     await insertText(editor, "/");
     await animationFrame();

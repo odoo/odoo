@@ -3,6 +3,7 @@
 
 from odoo import models, api, tools
 from odoo.tools.misc import str2bool
+from odoo.exceptions import UserError
 
 
 class ResUsers(models.Model):
@@ -11,6 +12,9 @@ class ResUsers(models.Model):
     @api.model
     def web_create_users(self, emails):
         emails_normalized = [tools.mail.parse_contact_from_email(email)[1] for email in emails]
+
+        if 'email_normalized' not in self._fields:
+            raise UserError(self.env._("You have to install the Discuss application to use this feature."))
 
         # Reactivate already existing users if needed
         deactivated_users = self.with_context(active_test=False).search([

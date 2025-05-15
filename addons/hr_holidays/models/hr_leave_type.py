@@ -593,8 +593,9 @@ class HolidaysType(models.Model):
 
     def _get_closest_expiring_leaves_date_and_count(self, allocations, remaining_leaves, target_date):
         # Get the expiration date and carryover date of all allocations and compute the closest expiration date
-        expiration_dates_per_allocation = defaultdict(lambda: {'expiration_date': fields.Date(), 'carryover_date': fields.Date()})
+        expiration_dates_per_allocation = defaultdict(lambda: {'expiration_date': fields.Date(), 'carryover_date': fields.Date(), 'carried_over_days_expiration_date': fields.Date()})
         expiration_dates = list()
+        carried_over_days_expiration_data = self._get_carried_over_days_expiration_data(allocations, target_date)
         for allocation in allocations:
             expiration_date = allocation.date_to
 
@@ -610,9 +611,12 @@ class HolidaysType(models.Model):
                 if carryover_date == target_date:
                     carryover_date += relativedelta(years=1)
 
-            expiration_dates.extend([expiration_date, carryover_date])
+            carried_over_days_expiration_date = carried_over_days_expiration_data[allocation]['expiration_date']
+
+            expiration_dates.extend([expiration_date, carryover_date, carried_over_days_expiration_date])
             expiration_dates_per_allocation[allocation]['expiration_date'] = expiration_date
             expiration_dates_per_allocation[allocation]['carryover_date'] = carryover_date
+            expiration_dates_per_allocation[allocation]['carried_over_days_expiration_date'] = carried_over_days_expiration_date
 
         expiration_dates = list(filter(lambda date: date is not False, expiration_dates))
         expiration_dates.sort()
@@ -622,13 +626,34 @@ class HolidaysType(models.Model):
             for allocation in allocations:
                 expiration_date = expiration_dates_per_allocation[allocation]['expiration_date']
                 carryover_date = expiration_dates_per_allocation[allocation]['carryover_date']
+                carried_over_days_expiration_date = expiration_dates_per_allocation[allocation]['carried_over_days_expiration_date']
+
                 if expiration_date and expiration_date == closest_expiration_date:
                     expiring_leaves_count += remaining_leaves[allocation]['virtual_remaining_leaves']
                 elif carryover_date and carryover_date == closest_expiration_date:
                     accrual_plan_level = allocation.sudo()._get_current_accrual_plan_level_id(target_date)[0]
                     expiring_leaves_count += max(0, remaining_leaves[allocation]['virtual_remaining_leaves'] - accrual_plan_level.postpone_max_days)
+                elif carried_over_days_expiration_date and carried_over_days_expiration_date == closest_expiration_date:
+                    expiring_leaves_count += carried_over_days_expiration_data[allocation]['no_expiring_days']
+
             if expiring_leaves_count != 0:
                 return closest_expiration_date, expiring_leaves_count
 
         # No leaves will expire
         return False, 0
+
+    def _get_carried_over_days_expiration_data(self, allocations, target_date):
+        fake_allocations = self.env['hr.leave.allocation']
+        for allocation in allocations:
+            fake_allocations |= self.env['hr.leave.allocation'].with_context(default_date_from=target_date).new(origin=allocation)
+        fake_allocations.sudo().with_context(default_date_from=target_date)._process_accrual_plans(target_date, log=False)
+        carried_over_days_expiration_data = {
+            fake_allocation._origin:
+            {
+                'expiration_date': fake_allocation.carried_over_days_expiration_date,
+                'no_expiring_days': max(0, fake_allocation.expiring_carryover_days - fake_allocation.leaves_taken)
+            }
+            for fake_allocation in fake_allocations
+        }
+        fake_allocations.invalidate_recordset()
+        return carried_over_days_expiration_data

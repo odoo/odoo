@@ -17,25 +17,30 @@ import {
     queryRect,
 } from "@web/../lib/hoot-dom/helpers/dom";
 import { Deferred } from "@web/../lib/hoot-dom/helpers/time";
-import { addInteractionListener, isFirefox, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import {
+    addInteractionListener,
+    isFirefox,
+    isIterable,
+    R_WHITE_SPACE,
+} from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     CASE_EVENT_TYPES,
-    ElementMap,
-    HootError,
-    Markup,
-    S_ANY,
-    S_NONE,
     deepCopy,
     deepEqual,
+    ElementMap,
     ensureArguments,
     ensureArray,
     formatHumanReadable,
+    HootError,
     isLabel,
     isNil,
     isOfType,
     makeLabel,
     makeLabelIcon,
+    Markup,
     match,
+    S_ANY,
+    S_NONE,
     strictEqual,
 } from "../hoot_utils";
 import { Test } from "./test";
@@ -353,7 +358,6 @@ const ARROW_RIGHT = makeLabelIcon("fa fa-arrow-right text-sm");
 const R_LINE_RETURN = /\n+/g;
 const R_NOT = /\[([\w\s]*)!([\w\s]*)\]/g;
 const R_PLURAL = /\[([\w\s]*)%([\w\s]*)\]/g;
-const R_WHITE_SPACE = /\s+/g;
 
 const FLAGS = {
     error: 0b1,

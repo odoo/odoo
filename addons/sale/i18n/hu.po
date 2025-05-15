@@ -4252,7 +4252,7 @@ msgstr "Felelős felhasználó"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid "Revenue Target for the current month (untaxed total of paid invoices)."
-msgstr ""
+msgstr "Jelen hónap árbevétel cél (fizetett számlák nettó összesen)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -4517,6 +4517,9 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"Vevői rendelés tétel, melyhez az eltöltött idő hozzáadásra kerül vevő "
+"részére történő számlázás céljából. Távolítsa el a vevői rendelés tétel "
+"kapcsolatot a munkaidő tételről ha nem szeretné kiszámlázni."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4670,6 +4673,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
+"Email küldése hasznos lehet ha szükséges megosztani termékspecifikus "
+"információt vagy tartalmat (pl: használati utasítások, szabályzatok, "
+"hivatkozások, média, stb). A termék részleteit tartalmazó űrlapon (Könyvelés"
+" fül) hozhat létre és állíthat be email sablont."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
@@ -4800,12 +4807,14 @@ msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"Néhány megerősített rendelés kiválasztásra került. A hozzájuk kapcsolt dokumentumokat is \n"
+"                        érintheti a visszavonás."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Some orders are not in a state requiring confirmation."
-msgstr ""
+msgstr "Néhány rendelés nincs megerősítést igénylő állapotban."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -5164,12 +5173,14 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
+"Az összeg százaléka, melyet meg kell fizetni az ajánlat megerősítéséhez."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
 msgstr ""
+"A(z) %(product)stermék nem kompatibilis értékeket tartalmaz: %(value_list)s"
 
 #. module: sale
 #. odoo-python
@@ -5210,7 +5221,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_downpayment_categ_id
 msgid "This account will be used on Downpayment invoices."
-msgstr ""
+msgstr "Az előleg számlákhoz használandó főkönyvi számla."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5238,6 +5249,9 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"Ez a vevőnek megígért szállítási dátum. Ha be van állítva, akkor a "
+"kiszállítási rendelés ezen dátum alapján kerül ütemezésre a termék átfutási "
+"ideje helyett."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -5563,7 +5577,7 @@ msgstr "Felülértékesítési lehetőség"
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
-msgstr ""
+msgstr "Értékesítők használják ajánlatok vagy díjbekérők kiküldéséhez."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations

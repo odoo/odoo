@@ -25,7 +25,7 @@ test("rating value displayed on the preview", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem-text", { text: "Rating:" });
-    await contains(".o-rating-preview-image[data-alt='top']");
+    await contains(".o-rating-preview-image[alt='top']");
     await contains(".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']");
 });
 
@@ -56,6 +56,6 @@ test("rating value displayed on the needaction preview", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem-text", { text: "Rating:" });
-    await contains(".o-rating-preview-image[data-alt='top']");
+    await contains(".o-rating-preview-image[alt='top']");
     await contains(".o-rating-preview-image[data-src='/rating/static/src/img/rating_5.png']");
 });

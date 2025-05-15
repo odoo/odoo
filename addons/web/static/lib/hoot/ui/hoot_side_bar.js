@@ -3,7 +3,7 @@
 import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
 import { Suite } from "../core/suite";
 import { createUrlFromId } from "../core/url";
-import { lookup, normalize } from "../hoot_utils";
+import { lookup, parseQuery } from "../hoot_utils";
 import { HootJobButtons } from "./hoot_job_buttons";
 
 /**
@@ -250,12 +250,12 @@ export class HootSideBar extends Component {
 
         // Filtering suites
 
-        const nFilter = normalize(this.state.filter);
-        if (nFilter) {
+        const parsedQuery = parseQuery(this.state.filter);
+        if (parsedQuery.length) {
             allowedIds = new Set();
             unfoldedIds = new Set(this.state.unfoldedIds);
             rootSuites = new Set();
-            for (const matchingSuite of lookup(nFilter, allSuites, "name")) {
+            for (const matchingSuite of lookup(parsedQuery, allSuites, "name")) {
                 for (const suite of matchingSuite.path) {
                     allowedIds.add(suite.id);
                     unfoldedIds.add(suite.id);
