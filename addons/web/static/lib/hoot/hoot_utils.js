@@ -34,6 +34,7 @@ import { getRunner } from "./main_runner";
  *
  * @typedef {{
  *  ignoreOrder?: boolean;
+ *  partial?: boolean;
  * }} DeepEqualOptions
  *
  * @typedef {[string, ArgumentType]} Label
@@ -231,10 +232,11 @@ const truncate = (value, length = MAX_HUMAN_READABLE_SIZE) => {
  * @param {unknown} a
  * @param {unknown} b
  * @param {boolean} ignoreOrder
+ * @param {boolean} partial
  * @param {ReturnType<makeObjectCache>} cache
  * @returns {boolean}
  */
-const _deepEqual = (a, b, ignoreOrder, cache) => {
+const _deepEqual = (a, b, ignoreOrder, partial, cache) => {
     // Primitives
     if (strictEqual(a, b)) {
         return true;
@@ -274,12 +276,13 @@ const _deepEqual = (a, b, ignoreOrder, cache) => {
 
     // Non-iterable objects
     if (!aIsIterable) {
-        const aKeys = $ownKeys(a);
-        if (aKeys.length !== $ownKeys(b).length) {
+        const bKeys = $ownKeys(b);
+        const diff = $ownKeys(a).length - bKeys.length;
+        if (partial ? diff < 0 : diff !== 0) {
             return false;
         }
-        for (const key of aKeys) {
-            if (!_deepEqual(a[key], b[key], ignoreOrder, cache)) {
+        for (const key of bKeys) {
+            if (!_deepEqual(a[key], b[key], ignoreOrder, partial, cache)) {
                 return false;
             }
         }
@@ -306,7 +309,7 @@ const _deepEqual = (a, b, ignoreOrder, cache) => {
         const comparisonCache = makeObjectCache();
         for (let i = 0; i < a.length; i++) {
             const bi = b.findIndex((bValue) =>
-                _deepEqual(a[i], bValue, ignoreOrder, comparisonCache)
+                _deepEqual(a[i], bValue, ignoreOrder, partial, comparisonCache)
             );
             if (bi < 0) {
                 return false;
@@ -316,7 +319,7 @@ const _deepEqual = (a, b, ignoreOrder, cache) => {
     } else {
         // Ordered iterables
         for (let i = 0; i < a.length; i++) {
-            if (!_deepEqual(a[i], b[i], ignoreOrder, cache)) {
+            if (!_deepEqual(a[i], b[i], ignoreOrder, partial, cache)) {
                 return false;
             }
         }
@@ -819,7 +822,7 @@ export function debounce(fn, delay) {
  * @returns {boolean}
  */
 export function deepEqual(a, b, options) {
-    return _deepEqual(a, b, options?.ignoreOrder, makeObjectCache());
+    return _deepEqual(a, b, !!options?.ignoreOrder, !!options?.partial, makeObjectCache());
 }
 
 /**
