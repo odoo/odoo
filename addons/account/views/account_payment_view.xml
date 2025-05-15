@@ -26,7 +26,7 @@
                     <field name="currency_id" string="Payment Currency" optional="hide"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="amount_company_currency_signed" widget="monetary" string="Amount" sum="Total"/>
-                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'in_process'"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'in_process'" decoration-success="state == 'paid'"/>
                 </list>
             </field>
         </record>
