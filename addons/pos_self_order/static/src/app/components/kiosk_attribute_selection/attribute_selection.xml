@@ -11,11 +11,10 @@
                             <button
                                 t-on-click="() => this.selectAttribute(attribute, value)"
                                 role="button"
-                                class="o_kiosk_product_box btn btn-light d-flex flex-column align-items-center justify-content-center gap-2 border-transparent shadow-sm"
-                                t-attf-class="{{ valueSelected ? 'o_kiosk_box_selected text-bg-primary': '' }}">
+                                class="o_kiosk_product_box btn btn-light d-flex flex-column align-items-center justify-content-center gap-2 border border-4 shadow-sm"
+                                t-attf-class="{{ valueSelected ? 'border-primary': 'border-transparent' }}">
                                     <span t-esc="value.name" class="fs-4"/>
-                                    <span t-if="shouldShowPriceExtra(value)" t-esc="formatExtraPrice(value)" class="fs-5 text-muted"
-                                    t-att-class="{ 'text-light opacity-75' : valueSelected }"  />
+                                    <span t-if="shouldShowPriceExtra(value)" t-esc="formatExtraPrice(value)" class="badge position-absolute top-0 end-0 m-1 px-2 py-1 rounded-3 text-bg-primary fw-bold"></span>
                             </button>
                         </div>
                     </div>

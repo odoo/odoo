@@ -5,12 +5,12 @@
             <!-- Header -->
             <t t-set="productList" t-value="products"/>
             <div class="o_kiosk_combo_page_header p-3 text-bg-primary shadow-lg z-1">
-                <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-2 text-reset" t-on-click="() => this.router.back()">
+                <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-2" t-on-click="() => this.router.back()">
                     <i class="oi oi-close fa-fw" aria-hidden="true"/>
                     Discard
                 </button>
                 <div class="d-flex flex-column gap-4 align-items-center">
-                    <h1 class="mb-0 text-reset" t-esc="currentCombo.name"/>
+                    <h1 class="mb-0" t-esc="currentCombo.name"/>
                     <div class="o_kiosk_combo_image rounded-4">
                         <img height="384" width="384" t-attf-src="/web/image/product.template/{{ props.productTemplate.id }}/image_512?unique=#{props.productTemplate.write_date}" loading="lazy"/>
                     </div>
@@ -53,7 +53,7 @@
                                         <div class="h-100 w-100 ratio ratio-1x1">
                                             <img class="w-100 h-100 object-fit-cover" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                         </div>
-                                        <span t-if="extraPrice" class="badge position-absolute top-0 end-0 m-2 p-2 rounded-4 text-bg-primary fs-5 fw-bold">
+                                        <span t-if="extraPrice" class="badge position-absolute top-0 end-0 m-1 px-2 py-1 rounded-3 text-bg-primary fw-bold">
                                         + <t t-out="selfOrder.formatMonetary(extraPrice)"/>
                                         </span>
                                         <div class="d-flex flex-column flex-grow-1 align-items-center justify-content-center py-2 text-center">
