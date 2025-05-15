@@ -391,7 +391,7 @@ describe("not collapsed selection", () => {
                 );
             },
             contentAfterEdit:
-                '<p>\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff[]</p>',
+                '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]</p>',
             contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]</p>',
         });
     });
