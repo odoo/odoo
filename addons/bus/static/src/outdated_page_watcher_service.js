@@ -44,7 +44,7 @@ export class OutdatedPageWatcherService {
     }
 
     async checkHasMissedNotifications() {
-        if (!this.multi_tab.isOnMainTab()) {
+        if (!this.multi_tab.isOnMainTab() || !this.lastNotificationId) {
             return;
         }
         const hasMissedNotifications = await rpc(
