@@ -3,14 +3,14 @@
     <t t-name="pos_self_order.KioskProductPage">
         <div class="o_kiosk_product_page d-flex flex-column vh-100 overflow-hidden o_kiosk_background o_kiosk_fade">
             <!-- Header -->
-            <div class="o_kiosk_product_page_header p-3 text-bg-primary shadow-lg z-1">
+            <div class="o_kiosk_product_page_header p-3 text-bg-primary text-reset shadow-lg z-1">
                 <t t-set="product" t-value="productTemplate"/>
-                <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-2 text-reset" t-on-click="() => this.router.back()">
+                <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-2" t-on-click="() => this.router.back()">
                     <i class="oi oi-close fa-fw" aria-hidden="true"/>
                     Discard
                 </button>
                 <div class="d-flex flex-column gap-4 align-items-center">
-                    <h1 class="mb-0 text-reset" t-esc="product.name"/>
+                    <h1 class="mb-0" t-esc="product.name"/>
                     <div class="o_kiosk_product_image rounded-4">
                         <img height="384" width="384" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
                     </div>

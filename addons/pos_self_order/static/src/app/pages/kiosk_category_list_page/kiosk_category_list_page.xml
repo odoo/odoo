@@ -18,7 +18,7 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center position-relative p-2 p-md-3">
+            <div class="p-2 p-md-3">
                 <t t-set="isBack" t-value="shouldGoBack()"/>
                 <button class="btn btn-lg btn-light btn-back border-light" t-att-class="{'btn-back' : isBack, 'btn-cancel': !isBack}" t-on-click="()=>this.onClickBack()">
                     <t t-if="isBack">
@@ -30,7 +30,6 @@
                         <i class="oi oi-close d-md-none"/><span class="d-none d-md-inline">Cancel</span>
                     </t>
                 </button>
-                <KioskLanguageSelector />
             </div>
         </div>
     </t>

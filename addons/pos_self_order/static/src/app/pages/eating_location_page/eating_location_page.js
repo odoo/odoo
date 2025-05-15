@@ -1,12 +1,10 @@
 import { Component } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
-import { KioskLanguageSelector } from "@pos_self_order/app/components/kiosk_language_selector/language_selector";
 
 export class EatingLocationPage extends Component {
     static template = "pos_self_order.EatingLocationPage";
     static props = {};
-    static components = { KioskLanguageSelector };
 
     setup() {
         this.selfOrder = useSelfOrder();
