@@ -9,12 +9,23 @@ class ForumPostVote(models.Model):
     _description = 'Post Vote'
     _order = 'create_date desc, id desc'
 
-    post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True, index=True)
-    user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self.env.uid, ondelete='cascade')
-    vote = fields.Selection([('1', '1'), ('-1', '-1'), ('0', '0')], string='Vote', required=True, default='1')
-    create_date = fields.Datetime('Create Date', index=True, readonly=True)
-    forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True, readonly=False, index='btree_not_null')
-    recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True, readonly=False)
+    post_id = fields.Many2one(
+        'forum.post', string='Post',
+        ondelete='cascade', required=True, index=True)
+    user_id = fields.Many2one(
+        'res.users', string='User', required=True,
+        default=lambda self: self.env.uid, ondelete='cascade')
+    vote = fields.Selection(
+        [('1', '1'), ('-1', '-1'), ('0', '0')],
+        string='Vote', required=True, default='1')
+    create_date = fields.Datetime(
+        'Create Date', index=True, readonly=True)
+    forum_id = fields.Many2one(
+        'forum.forum', string='Forum', related="post_id.forum_id",
+        store=True, readonly=False, index='btree_not_null')
+    recipient_id = fields.Many2one(
+        'res.users', string='To', related="post_id.create_uid",
+        store=True, readonly=False)
 
     _vote_uniq = models.Constraint(
         'unique (post_id, user_id)',
@@ -94,7 +105,7 @@ class ForumPostVote(models.Model):
         # karma check
         if upvote and not self.post_id.can_upvote:
             raise AccessError(_('%d karma required to upvote.', self.post_id.forum_id.karma_upvote))
-        elif not upvote and not self.post_id.can_downvote:
+        if not upvote and not self.post_id.can_downvote:
             raise AccessError(_('%d karma required to downvote.', self.post_id.forum_id.karma_downvote))
 
     def _vote_update_karma(self, old_vote, new_vote):
