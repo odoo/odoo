@@ -2,128 +2,258 @@
 <templates xml:space="preserve">
 
 <t t-name="website_sale.ProductsListPageOption">
-<BuilderRow label.translate="Layout">
-    <BuilderSelect action="'websiteConfig'">
-        <BuilderSelectItem id="'grid_view_opt'" actionParam="{views: []}">Grid</BuilderSelectItem>
-        <BuilderSelectItem actionParam="{views: ['website_sale.products_list_view']}">List</BuilderSelectItem>
-    </BuilderSelect>
-</BuilderRow>
+    <!-- Dummy element to allow styling this specific option container with .o_wsale_products_list_page_options -->
+    <div class="d-none o_wsale_products_list_page_options"/>
 
-<BuilderRow label.translate="Size" applyTo="'#o_wsale_products_grid'" level="1">
-    <BuilderNumberInput action="'setPpg'" step="1"/>
-    <t t-if="this.isActiveItem('grid_view_opt')">
-        <span class="mx-2">by</span>
-        <BuilderButtonGroup action="'setPpr'">
-            <BuilderButton actionValue="2">2</BuilderButton>
-            <BuilderButton actionValue="3">3</BuilderButton>
-            <BuilderButton actionValue="4">4</BuilderButton>
+    <BuilderRow label.translate="Content Width">
+        <BuilderButtonGroup action="'websiteConfig'">
+            <BuilderButton
+                    title.translate="Regular"
+                    classAction="'container'"
+                    actionParam="{views: []}"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
+            />
+            <BuilderButton
+                    title.translate="Full"
+                    classAction="'container-fluid o_wsale_page_fluid'"
+                    actionParam="{views: ['website_sale.shop_fullwidth']}"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
+            />
         </BuilderButtonGroup>
-    </t>
-</BuilderRow>
-
-<BuilderRow label.translate="Gap" level="1">
-    <BuilderRange
-        styleAction="'--o-wsale-products-grid-gap'"
-        action="'setGap'"
-        min="0"
-        max="28"
-        unit="'px'"
-        displayRangeValue="true"/>
-</BuilderRow>
-
-<BuilderRow label.translate="Style" level="1">
-    <BuilderSelect action="'websiteConfig'">
-        <BuilderSelectItem classAction="''" actionParam="{views: []}">Default</BuilderSelectItem>
-        <BuilderSelectItem classAction="'o_wsale_design_cards'" actionParam="{views: ['website_sale.products_design_card']}">Cards</BuilderSelectItem>
-        <BuilderSelectItem classAction="'o_wsale_design_thumbs'" actionParam="{views: ['website_sale.products_design_thumbs']}">Thumbnails</BuilderSelectItem>
-        <BuilderSelectItem classAction="'o_wsale_design_grid'" actionParam="{views: ['website_sale.products_design_grid']}">Grid</BuilderSelectItem>
-    </BuilderSelect>
-</BuilderRow>
-
-<BuilderRow label.translate="Images Size" level="1">
-    <BuilderSelect action="'websiteConfig'">
-        <BuilderSelectItem classAction="'o_wsale_context_thumb_4_3'" actionParam="{views: ['website_sale.products_thumb_4_3']}">Landscape (4/3)</BuilderSelectItem>
-        <BuilderSelectItem classAction="''" actionParam="{views: []}">Default (1/1)</BuilderSelectItem>
-        <BuilderSelectItem classAction="'o_wsale_context_thumb_4_5'" actionParam="{views: ['website_sale.products_thumb_4_5']}">Portrait (4/5)</BuilderSelectItem>
-        <BuilderSelectItem classAction="'o_wsale_context_thumb_2_3'" actionParam="{views: ['website_sale.products_thumb_2_3']}">Vertical (2/3)</BuilderSelectItem>
-    </BuilderSelect>
-</BuilderRow>
-
-<BuilderRow label.translate="Fill" level="2">
-    <BuilderButtonGroup action="'websiteConfig'">
-        <BuilderButton
-            classAction="''"
-            actionParam="{views: []}"
-            iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'">
-        </BuilderButton>
-        <BuilderButton
-            id="'thumb_cover'"
-            classAction="'o_wsale_context_thumb_cover'"
-            actionParam="{views: ['website_sale.products_thumb_cover']}"
-            iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'">
-        </BuilderButton>
-    </BuilderButtonGroup>
-</BuilderRow>
-
-<BuilderContext action="'websiteConfig'">
-    <BuilderRow label.translate="Search Bar">
-        <BuilderCheckbox actionParam="{views: ['website_sale.search']}"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Product Description">
-        <BuilderCheckbox actionParam="{views: ['website_sale.products_description']}"/>
+    <BuilderRow label.translate="Layout">
+        <BuilderButtonGroup action="'websiteConfig'">
+            <BuilderButton
+                title.translate="Catalog of products"
+                id="'grid_view_opt'"
+                classAction="'o_wsale_layout_catalog'"
+                actionParam="{views: []}"
+                icon="'oi-apps'"
+            />
+            <BuilderButton
+                title.translate="List of products"
+                classAction="'o_wsale_layout_list'"
+                actionParam="{views: ['website_sale.products_list_view']}"
+                icon="'oi-view-list'"
+            />
+        </BuilderButtonGroup>
     </BuilderRow>
 
-    <BuilderRow label.translate="Categories">
-        <BuilderButton id="'categories_opt'" actionParam="{views: ['website_sale.products_categories']}">Left</BuilderButton>
-        <BuilderButton id="'categories_opt_top'" actionParam="{views: ['website_sale.products_categories_top']}">Top</BuilderButton>
+    <BuilderRow label.translate="Size" applyTo="'#o_wsale_products_grid'" level="1">
+        <BuilderNumberInput action="'setPpg'" step="1"/>
+        <t t-if="this.isActiveItem('grid_view_opt')">
+            <span class="mx-2">by</span>
+            <BuilderSelect action="'setPpr'">
+                <BuilderSelectItem actionValue="2">2</BuilderSelectItem>
+                <BuilderSelectItem actionValue="3">3</BuilderSelectItem>
+                <BuilderSelectItem actionValue="4">4</BuilderSelectItem>
+                <BuilderSelectItem actionValue="5">5</BuilderSelectItem>
+            </BuilderSelect>
+        </t>
+    </BuilderRow>
+
+    <BuilderRow t-if="isActiveItem('grid_view_opt')" label.translate="Mobile" level="1">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem actionParam="{views: ['website_sale.products_mobile_cols_single']}">1 Column</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{views: []}">2 Columns</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Gap" level="1">
+        <BuilderRange
+            styleAction="'--o-wsale-products-grid-gap'"
+            action="'setGap'"
+            min="0"
+            max="28"
+            unit="'px'"
+            displayRangeValue="true"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Style">
+        <BuilderSelect action="'reloadComposite'">
+            <t t-set="defaultLabel">Default</t>
+            <t t-set="cardsLabel">Cards</t>
+            <t t-set="thumbnailsLabel">Thumbnails</t>
+            <t t-set="gridLabel">Grid</t>
+            <t t-set="styles" t-value="[
+                {
+                    label: defaultLabel,
+                    className: '',
+                    views: [],
+                    gap: 16,
+                },
+                {
+                    label: cardsLabel,
+                    className: 'o_wsale_design_cards',
+                    views: ['website_sale.products_design_card'],
+                    gap: 16,
+                },
+                {
+                    label: thumbnailsLabel,
+                    className: 'o_wsale_design_thumbs',
+                    views: ['website_sale.products_design_thumbs'],
+                    gap: 16,
+                },
+                {
+                    label: gridLabel,
+                    className: 'o_wsale_design_grid',
+                    views: ['website_sale.products_design_grid'],
+                    gap: 0,
+                },
+            ]"/>
+            <t t-foreach="styles" t-as="style" t-key="style_index">
+                <BuilderSelectItem
+                        classAction="style.className"
+                        actionParam="[
+                            {action: 'websiteConfig', actionParam: {views: style.views}},
+                            {action: 'setDefaultGap', actionValue: style.gap + 'px'},
+                        ]"
+                        t-out="style.label"
+                />
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Images Size" level="1">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem classAction="'o_wsale_context_thumb_4_3'" actionParam="{views: ['website_sale.products_thumb_4_3']}">Landscape (4/3)</BuilderSelectItem>
+            <BuilderSelectItem classAction="''" actionParam="{views: []}">Default (1/1)</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_wsale_context_thumb_4_5'" actionParam="{views: ['website_sale.products_thumb_4_5']}">Portrait (4/5)</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_wsale_context_thumb_2_3'" actionParam="{views: ['website_sale.products_thumb_2_3']}">Vertical (2/3)</BuilderSelectItem>
+        </BuilderSelect>
+
+        <t t-set-slot="collapse">
+            <BuilderRow label.translate="Images Fill" level="2">
+                <BuilderButtonGroup action="'websiteConfig'">
+                    <BuilderButton
+                            title.translate="Contain within the box"
+                            classAction="''"
+                            actionParam="{views: []}"
+                            iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
+                    />
+                    <BuilderButton
+                            title.translate="Always Fill the box"
+                            id="'thumb_cover'"
+                            classAction="'o_wsale_context_thumb_cover'"
+                            actionParam="{views: ['website_sale.products_thumb_cover']}"
+                            iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
+                    />
+                </BuilderButtonGroup>
+            </BuilderRow>
+        </t>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Description" level="1">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_sale.products_description']}"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Actions" level="1">
+        <BuilderButton
+                title.translate="Add to Cart"
+                icon="'fa-shopping-cart'"
+                action="'websiteConfig'"
+                actionParam="{views: ['website_sale.products_add_to_cart']}"
+                id="'button_add_to_cart_opt'"
+        />
+        <div class="flex-basis-100"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Categories" action="'websiteConfig'">
+        <BuilderButton
+                title.translate="Show into Sidebar"
+                id="'categories_opt'"
+                actionParam="{views: ['website_sale.products_categories']}"
+        >Sidebar</BuilderButton>
+
+        <BuilderButton
+                title.translate="Show a filmstrip navigation at the Top"
+                id="'categories_opt_top'"
+                actionParam="{views: ['website_sale.products_categories_top']}"
+        >Top</BuilderButton>
     </BuilderRow>
 
     <BuilderRow t-if="this.isActiveItem('categories_opt')" label.translate="Collapse Category Recursive" level="1">
-        <BuilderCheckbox id="'collapse_category_recursive'" actionParam="{views: ['website_sale.option_collapse_products_categories']}"/>
+        <BuilderCheckbox
+                id="'collapse_category_recursive'"
+                action="'websiteConfig'"
+                actionParam="{views: ['website_sale.option_collapse_products_categories']}"
+        />
     </BuilderRow>
 
-    <BuilderRow label.translate="Attributes">
-        <BuilderButton id="'attributes_opt'" actionParam="{views: ['website_sale.products_attributes']}">Left</BuilderButton>
-        <BuilderButton id="'attributes_opt_top'" actionParam="{views: ['website_sale.products_attributes_top']}">Top</BuilderButton>
+    <BuilderRow t-if="isActiveItem('categories_opt_top')" label.translate="Style" level="1">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem classAction="''" actionParam="{views: []}">Filmstrip - default</BuilderSelectItem>
+        </BuilderSelect>
     </BuilderRow>
-    <t t-if="this.isActiveItem('attributes_opt') or this.isActiveItem('attributes_opt_top')">
-        <BuilderRow label.translate="Price Filter" level="1">
+
+    <BuilderRow label.translate="Filters">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem
+                    title.translate="Hide all filters"
+                    id="'attributes_hide_opt'"
+                    actionParam="{views: []}"
+            >Hide</BuilderSelectItem>
+            <BuilderSelectItem
+                    title.translate="Show filters into Sidebar"
+                    id="'attributes_opt'"
+                    actionParam="{views: ['website_sale.products_attributes']}"
+            >Sidebar</BuilderSelectItem>
+            <BuilderSelectItem
+                    title.translate="Render a button to show the Off-screen Menu"
+                    id="'attributes_opt_top'"
+                    actionParam="{views: ['website_sale.products_attributes_top']}"
+            >Off-screen Menu</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderContext
+            t-if="isActiveItem('attributes_opt') or isActiveItem('attributes_opt_top')"
+            action="'websiteConfig'"
+    >
+        <BuilderRow label.translate="Price" level="1">
             <BuilderCheckbox actionParam="{views: ['website_sale.filter_products_price']}"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Product Tags Filter" level="1">
+        <BuilderRow label.translate="Tags" level="1">
             <BuilderCheckbox id="'o_wsale_tags_filter_opt'" actionParam="{views: ['website_sale.filter_products_tags']}"/>
         </BuilderRow>
+    </BuilderContext>
 
-        <t t-set="CollapsibleSidebarViews" t-value="['website_sale.products_categories_list_collapsible', 'website_sale.products_attributes_collapsible']"/>
-        <BuilderRow label.translate="Collapsible Sidebar" level="1">
-            <BuilderCheckbox id="'collapsible_sidebar'" actionParam="{views: CollapsibleSidebarViews}"/>
-        </BuilderRow>
-    </t>
-
-
-    <BuilderRow label.translate="Top Bar">
-        <BuilderButton actionParam="{views: ['website_sale.sort']}">Sort by</BuilderButton>
-        <BuilderButton actionParam="{views: ['website_sale.add_grid_or_list_option']}">Layout</BuilderButton>
+    <t t-set="CollapsibleSidebarViews" t-value="['website_sale.products_categories_list_collapsible', 'website_sale.products_attributes_collapsible']"/>
+    <BuilderRow
+            t-if="isActiveItem('attributes_opt') or isActiveItem('categories_opt')"
+            label.translate="Collapse sidebar sections"
+    >
+        <BuilderCheckbox
+                id="'collapsible_sidebar'"
+                action="'websiteConfig'"
+                actionParam="{views: CollapsibleSidebarViews}"
+        />
     </BuilderRow>
-</BuilderContext>
 
-<BuilderRow label.translate="Default Sort">
-    <BuilderSelect action="'setDefaultSort'">
-        <t t-foreach="products_sort_mapping" t-as="queryAndLabel" t-key="queryAndLabel_index">
-            <BuilderSelectItem actionValue="queryAndLabel.query" t-out="queryAndLabel.label"/>
-        </t>
-    </BuilderSelect>
-</BuilderRow>
+    <BuilderRow label.translate="Toolbar" action="'websiteConfig'">
+        <BuilderButton id="'sort_top_opt'" actionParam="{views: ['website_sale.sort']}">Sort by</BuilderButton>
+        <BuilderButton id="'search_top_opt'" actionParam="{views: ['website_sale.search']}">Search</BuilderButton>
+    </BuilderRow>
 
-<BuilderRow label.translate="Buttons">
-    <BuilderButton title.translate="Add to Cart" icon="'fa-shopping-cart'"
-        action="'websiteConfig'"
-        actionParam="{views: ['website_sale.products_add_to_cart']}"
-        id="'button_add_to_cart_opt'"
-    />
-</BuilderRow>
+    <BuilderRow
+            t-if="isActiveItem('attributes_opt_top') or isActiveItem('search_top_opt') or isActiveItem('sort_top_opt')"
+            label.translate="Floating"
+            tooltip.translate="Floating sticky Toolbar"
+            level="1"
+            action="'websiteConfig'"
+    >
+        <BuilderCheckbox actionParam="{views: ['website_sale.floating_bar']}"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Default Sort" level="1" applyTo="'#o_wsale_products_grid'">
+        <BuilderSelect action="'setDefaultSort'">
+            <t t-foreach="products_sort_mapping" t-as="queryAndLabel" t-key="queryAndLabel_index">
+                <BuilderSelectItem actionValue="queryAndLabel.query" t-out="queryAndLabel.label"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
 </t>
 
 </templates>
