@@ -1,0 +1,14 @@
+.o_group_config.show {
+    visibility: visible;
+}
+
+.o_group_config {
+    visibility: hidden;
+    @include media-breakpoint-down(md) {
+        visibility: visible;
+    }
+}
+
+.o-dropdown--group-config-menu {
+    cursor: default;
+}

@@ -27,6 +27,7 @@ import {
     Component,
     onMounted,
     onPatched,
+    onWillDestroy,
     onWillPatch,
     onWillRender,
     status,
@@ -38,6 +39,8 @@ import { _t } from "@web/core/l10n/translation";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_list";
 import { ActionHelper } from "@web/views/action_helper";
+import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
+
 /**
  * @typedef {import('@web/model/relational_model/dynamic_list').DynamicList} DynamicList
  * @typedef {import('@web/model/relational_model/group').Group} Group
@@ -106,6 +109,7 @@ export class ListRenderer extends Component {
         Pager,
         Widget,
         ActionHelper,
+        GroupConfigMenu,
     };
     static defaultProps = { allowSelectors: false, cycleOnTab: true };
 
@@ -279,6 +283,10 @@ export class ListRenderer extends Component {
             this.lastEditedCell = null;
         });
         this.isRTL = localization.direction === "rtl";
+        this.dialogClose = [];
+        onWillDestroy(() => {
+            this.dialogClose.forEach((close) => close());
+        });
     }
 
     displaySaveNotification() {
@@ -725,6 +733,17 @@ export class ListRenderer extends Component {
             }
         }
         return aggregates;
+    }
+
+    getGroupConfigMenuProps(group) {
+        return {
+            activeActions: this.props.activeActions,
+            configItems: registry.category("group_config_items").getEntries(),
+            deleteGroup: async () => await this.props.list.deleteGroups([group]),
+            dialogClose: this.dialogClose,
+            group,
+            list: this.props.list,
+        };
     }
 
     formatGroupAggregate(group, column) {
@@ -1879,6 +1898,13 @@ export class ListRenderer extends Component {
      */
     showGroupPager(group) {
         return !group.isFolded && group.list.limit < group.list.count;
+    }
+
+    /**
+     * @param {Group} group
+     */
+    showGroupConfigMenu(group) {
+        return group.value && ["many2one", "many2many"].includes(group.groupByField.type);
     }
 
     /**

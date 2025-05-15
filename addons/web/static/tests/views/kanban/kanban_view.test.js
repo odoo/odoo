@@ -506,12 +506,10 @@ test("basic grouped rendering", async () => {
 
     // check available actions in kanban header's config dropdown
     expect(".o-dropdown--menu .o_kanban_toggle_fold").toHaveCount(1);
-    expect(".o_kanban_header:first-child .o_kanban_config .o_column_edit").toHaveCount(0);
-    expect(".o_kanban_header:first-child .o_kanban_config .o_column_delete").toHaveCount(0);
-    expect(".o_kanban_header:first-child .o_kanban_config .o_column_archive_records").toHaveCount(
-        0
-    );
-    expect(".o_kanban_header:first-child .o_kanban_config .o_column_unarchive_records").toHaveCount(
+    expect(".o_kanban_header:first-child .o_group_config .o_group_edit").toHaveCount(0);
+    expect(".o_kanban_header:first-child .o_group_config .o_group_delete").toHaveCount(0);
+    expect(".o_kanban_header:first-child .o_group_config .o_column_archive_records").toHaveCount(0);
+    expect(".o_kanban_header:first-child .o_group_config .o_column_unarchive_records").toHaveCount(
         0
     );
 
@@ -5615,10 +5613,10 @@ test("delete a column in grouped on m2o", async () => {
             message: "should be able to fold the column",
         }
     );
-    expect(queryAll(".o_column_edit", { root: getKanbanColumnDropdownMenu(0) })).toHaveCount(1, {
+    expect(queryAll(".o_group_edit", { root: getKanbanColumnDropdownMenu(0) })).toHaveCount(1, {
         message: "should be able to edit the column",
     });
-    expect(queryAll(".o_column_delete", { root: getKanbanColumnDropdownMenu(0) })).toHaveCount(1, {
+    expect(queryAll(".o_group_delete", { root: getKanbanColumnDropdownMenu(0) })).toHaveCount(1, {
         message: "should be able to delete the column",
     });
     expect(
@@ -5660,10 +5658,10 @@ test("delete a column in grouped on m2o", async () => {
             message: "should be able to fold the column",
         }
     );
-    expect(queryAll(".o_column_edit", { root: getKanbanColumnDropdownMenu(0) })).toHaveCount(0, {
+    expect(queryAll(".o_group_edit", { root: getKanbanColumnDropdownMenu(0) })).toHaveCount(0, {
         message: "should be able to edit the column",
     });
-    expect(queryAll(".o_column_delete", { root: getKanbanColumnDropdownMenu(0) })).toHaveCount(0, {
+    expect(queryAll(".o_group_delete", { root: getKanbanColumnDropdownMenu(0) })).toHaveCount(0, {
         message: "should not be able to delete the column",
     });
     expect(
@@ -7247,7 +7245,7 @@ test("empty grouped kanban with sample data: cannot fold a column", async () => 
 
     await toggleKanbanColumnActions(0);
 
-    expect(getDropdownMenu(".o_kanban_config").querySelector(".o_kanban_toggle_fold")).toHaveClass(
+    expect(getDropdownMenu(".o_group_config").querySelector(".o_kanban_toggle_fold")).toHaveClass(
         "disabled"
     );
 });
@@ -7898,7 +7896,7 @@ test("open config dropdown on kanban with records and groups draggable off", asy
         groupBy: ["product_id"],
     });
 
-    expect(".o_kanban_group .o_kanban_config").toHaveCount(2);
+    expect(".o_kanban_group .o_group_config").toHaveCount(2);
     expect(".o-dropdown--menu").toHaveCount(0);
 
     await toggleKanbanColumnActions(0);
@@ -12935,7 +12933,7 @@ test("Kanban: no reset of the groupby when a non-empty column is deleted", async
 
     // check availability of delete action in kanban header's config dropdown
     await toggleKanbanColumnActions(2);
-    expect(queryAll(".o_column_delete", { root: getKanbanColumnDropdownMenu(2) })).toHaveCount(1, {
+    expect(queryAll(".o_group_delete", { root: getKanbanColumnDropdownMenu(2) })).toHaveCount(1, {
         message: "should be able to delete the column",
     });
 

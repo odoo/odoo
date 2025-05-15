@@ -2397,6 +2397,61 @@ test(`grouped list rendering with groupby m2o field: group_create = false`, asyn
     expect(`.o_list_footer td > button`).toHaveCount(0);
 });
 
+test(`grouped list rendering with groupby m2o field: edit group`, async () => {
+    Bar._views = {
+        form: `<form><field name="name"/></form>`,
+    };
+    onRpc("bar", "web_save", ({ args }) => {
+        expect(args).toEqual([[1], { name: "Value edit" }]);
+        expect.step("web_save");
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/></list>`,
+        groupBy: ["m2o"],
+    });
+
+    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1 (3)", "Value 2 (1)"]);
+    expect(`.o_group_header:first .o_group_config`).toHaveCount(1);
+    await contains(`.o_group_header:first .o_group_config button`, { visible: false }).click();
+    expect(`.o_popover.o-dropdown--group-config-menu`).toHaveCount(1);
+    await contains(`.o_popover.o-dropdown--group-config-menu .o_group_edit`).click();
+    expect(`.o_dialog`).toHaveCount(1);
+    expect(`.o_dialog .o_form_renderer .o_field_char[name="name"]`).toHaveCount(1);
+    await contains(`.o_dialog .o_form_renderer .o_field_char[name="name"] input`).edit(
+        "Value edit"
+    );
+    await contains(`.o_dialog .o_form_button_save`).click();
+    expect(`.o_dialog`).toHaveCount(0);
+    expect.verifySteps(["web_save"]);
+    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value edit (3)", "Value 2 (1)"]);
+});
+
+test(`grouped list rendering with groupby m2o field: delete group`, async () => {
+    onRpc("bar", "unlink", ({ args }) => {
+        expect.step("unlink");
+        expect(args[0][0]).toBe(1);
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/></list>`,
+        groupBy: ["m2o"],
+    });
+
+    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1 (3)", "Value 2 (1)"]);
+    expect(`.o_group_header:first .o_group_config`).toHaveCount(1);
+    await contains(`.o_group_header:first .o_group_config button`, { visible: false }).click();
+    expect(`.o_popover.o-dropdown--group-config-menu`).toHaveCount(1);
+    await contains(`.o_popover.o-dropdown--group-config-menu .o_group_delete`).click();
+    expect(`.o_dialog`).toHaveCount(1);
+    expect(`.o_dialog .modal-body`).toHaveText("Are you sure you want to delete this column?");
+    await contains(`.o_dialog footer button:contains(Delete)`).click();
+    expect.verifySteps(["unlink"]);
+    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 2 (1)", "None (3)"]);
+});
+
 test(`grouped list rendering with groupby non m2o field`, async () => {
     await mountView({
         resModel: "foo",
@@ -7572,13 +7627,13 @@ test(`groupby node with a button`, async () => {
     await selectGroup("currency_id");
     expect.verifySteps(["web_read_group"]);
     expect(`.o_group_header`).toHaveCount(2, { message: "there should be 2 group headers" });
-    expect(`.o_group_header button`).toHaveCount(0, {
-        message: "there should be no button in the header",
+    expect(`.o_group_header:eq(0) .o_group_buttons`).toHaveCount(0, {
+        message: "there should be no group button in the header",
     });
 
     await contains(`.o_group_header:eq(0)`).click();
     expect.verifySteps(["web_search_read"]);
-    expect(`.o_group_header button`).toHaveCount(1);
+    expect(`.o_group_header:eq(0) .o_group_buttons button`).toHaveCount(1);
 
     await contains(`.o_group_header:eq(0) button`).click();
     expect.verifySteps(["button_method"]);
@@ -7607,7 +7662,7 @@ test(`groupby node with a button when many2one is None`, async () => {
 
     await contains(`.o_group_header:first-child`).click();
     expect(`.o_group_header.o_group_open`).toHaveCount(1);
-    expect(`.o_group_header button`).toHaveCount(0);
+    expect(`.o_group_header .o_group_buttons button`).toHaveCount(0);
 });
 
 test(`groupby node with a button in inner groupbys`, async () => {
@@ -7625,14 +7680,14 @@ test(`groupby node with a button in inner groupbys`, async () => {
         groupBy: ["bar", "currency_id"],
     });
     expect(`.o_group_header`).toHaveCount(2, { message: "there should be 2 group headers" });
-    expect(`.o_group_header button`).toHaveCount(0);
+    expect(`.o_group_header .o_group_buttons button`).toHaveCount(0);
 
     await contains(`.o_group_header:eq(0)`).click();
     expect(`.o_list_view .o_group_header`).toHaveCount(3);
-    expect(`.o_group_header button`).toHaveCount(0);
+    expect(`.o_group_header .o_group_buttons button`).toHaveCount(0);
 
     await contains(`.o_group_header:eq(1)`).click();
-    expect(`.o_group_header button`).toHaveCount(1);
+    expect(`.o_group_header .o_group_buttons button`).toHaveCount(1);
 });
 
 test(`groupby node with a button with modifiers`, async () => {
@@ -7666,17 +7721,17 @@ test(`groupby node with a button with modifiers`, async () => {
         "web_read",
         "res.currency:web_read",
     ]);
-    expect(`.o_group_header button`).toHaveCount(0);
+    expect(`.o_group_header .o_group_buttons button`).toHaveCount(0);
     expect(`.o_data_row`).toHaveCount(0);
 
     await contains(`.o_group_header:eq(1)`).click();
     expect.verifySteps(["web_search_read"]);
-    expect(`.o_group_header button`).toHaveCount(0);
+    expect(`.o_group_header .o_group_buttons button`).toHaveCount(0);
     expect(`.o_data_row`).toHaveCount(1);
 
     await contains(`.o_group_header:eq(0)`).click();
     expect.verifySteps(["web_search_read"]);
-    expect(`.o_group_header button`).toHaveCount(1);
+    expect(`.o_group_header .o_group_buttons button`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(4);
 });
 
@@ -7700,8 +7755,8 @@ test(`groupby node with a button with modifiers using a many2one`, async () => {
         `,
         groupBy: ["currency_id"],
     });
-    expect(`.o_group_header:eq(0) button`).toHaveCount(1);
-    expect(`.o_group_header:eq(1) button`).toHaveCount(0);
+    expect(`.o_group_header:eq(0) .o_group_buttons button`).toHaveCount(1);
+    expect(`.o_group_header:eq(1) .o_group_buttons button`).toHaveCount(0);
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -7729,10 +7784,10 @@ test(`reload list view with groupby node`, async () => {
         `,
         groupBy: ["currency_id"],
     });
-    expect(`.o_group_header button`).toHaveCount(1);
+    expect(`.o_group_header .o_group_buttons button`).toHaveCount(1);
 
     await validateSearch();
-    expect(`.o_group_header button`).toHaveCount(1);
+    expect(`.o_group_header .o_group_buttons button`).toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -7793,8 +7848,7 @@ test(`groupby node with edit button`, async () => {
         `,
         groupBy: ["currency_id"],
     });
-
-    await contains(`.o_group_header button:eq(1)`).click();
+    await contains(`.o_group_header .o_group_buttons button:eq(1)`).click();
     expect.verifySteps(["doAction"]);
 });
 
@@ -12250,10 +12304,10 @@ test(`grouped list view, indentation for empty group`, async () => {
 
     // open the first group
     await contains(`.o_group_header`).click();
-    expect(`tr:nth-child(1) th.o_group_name .fa`).toHaveCount(1, {
+    expect(`tr:nth-child(1) th.o_group_name span.o_group_caret`).toHaveCount(1, {
         message: "There should be an element creating the indentation for the subgroup.",
     });
-    expect(`tr:nth-child(1) th.o_group_name span`).toHaveStyle(
+    expect(`tr:nth-child(1) th.o_group_name span.o_group_caret`).toHaveStyle(
         { "--o-list-group-level": "0" },
         {
             message:

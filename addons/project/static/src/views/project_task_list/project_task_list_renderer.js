@@ -1,7 +1,13 @@
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { getRawValue } from "@web/views/kanban/kanban_record";
+import { ProjectTaskGroupConfigMenu } from "../project_task_kanban/project_task_group_config_menu";
 
 export class ProjectTaskListRenderer extends ListRenderer {
+    static components = {
+        ...ListRenderer.components,
+        GroupConfigMenu: ProjectTaskGroupConfigMenu,
+    };
+
     /**
      * This method prevents from computing the selection once for each cell when
      * rendering the list. Indeed, `selection` is a getter which browses all

@@ -1,17 +1,15 @@
-import { _t } from "@web/core/l10n/translation";
 import { Component, useRef } from "@odoo/owl";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { registry } from "@web/core/registry";
+import { utils } from "@web/core/ui/ui_service";
 import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { isRelational } from "@web/model/relational_model/utils";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { registry } from "@web/core/registry";
-import { utils } from "@web/core/ui/ui_service";
+import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
 
 class KanbanHeaderTooltip extends Component {
     static template = "web.KanbanGroupTooltip";
@@ -23,7 +21,7 @@ class KanbanHeaderTooltip extends Component {
 
 export class KanbanHeader extends Component {
     static template = "web.KanbanHeader";
-    static components = { ColumnProgress, Dropdown, DropdownItem };
+    static components = { ColumnProgress, Dropdown, DropdownItem, GroupConfigMenu };
     static props = {
         activeActions: { type: Object },
         canQuickCreate: { type: Boolean },
@@ -64,26 +62,29 @@ export class KanbanHeader extends Component {
     // Getters
     // ------------------------------------------------------------------------
 
-    get _configDropdownContainer() {
-        // FIXME: please do not override this getter in other modules.
-        // The dropdown's container prop is only used here as a workaround of
-        // a stacking context issue. It should be removed in the next release.
-        return this.rootRef.el.closest(`.o_kanban_group[data-id="${this.props.group.id}"]`);
-    }
-
-    get configItems() {
-        const args = { permissions: this.permissions, props: this.props };
-        return registry
-            .category("kanban_header_config_items")
-            .getEntries()
-            .map(([key, desc]) => ({
-                key,
-                method: desc.method,
-                label: desc.label,
-                isVisible:
-                    typeof desc.isVisible === "function" ? desc.isVisible(args) : desc.isVisible,
-                class: typeof desc.class === "function" ? desc.class(args) : desc.class,
-            }));
+    get configMenuProps() {
+        return {
+            activeActions: this.props.activeActions,
+            configItems: [
+                [
+                    "toggle_group",
+                    {
+                        label: _t("Fold"),
+                        method: () => this.group.toggle(),
+                        isVisible: () => !utils.isSmall(),
+                        class: () => ({
+                            o_kanban_toggle_fold: true,
+                            disabled: this.props.list.model.useSampleModel,
+                        }),
+                    },
+                ],
+                ...registry.category("group_config_items").getEntries(),
+            ],
+            deleteGroup: this.props.deleteGroup,
+            dialogClose: this.props.dialogClose,
+            group: this.props.group,
+            list: this.props.list,
+        };
     }
 
     get progressBar() {
@@ -124,66 +125,12 @@ export class KanbanHeader extends Component {
             .map((fieldName) => ({ title: tooltipInfo[fieldName], value: values[fieldName] }));
     });
 
-    // ------------------------------------------------------------------------
-    // Edition methods
-    // ------------------------------------------------------------------------
-
-    deleteGroup() {
-        this.dialog.add(ConfirmationDialog, {
-            body: _t("Are you sure you want to delete this column?"),
-            confirm: async () => {
-                this.props.deleteGroup(this.group);
-            },
-            confirmLabel: _t("Delete"),
-            cancel: () => {},
-        });
-    }
-
-    editGroup() {
-        const { context, displayName, groupByField, value } = this.group;
-        this.props.dialogClose.push(
-            this.dialog.add(FormViewDialog, {
-                context,
-                resId: value,
-                resModel: groupByField.relation,
-                title: _t("Edit: %s", displayName),
-                onRecordSaved: async () => {
-                    await this.props.list.load();
-                    this.props.list.model.notify();
-                },
-            })
-        );
-    }
-
     quickCreate(group) {
         this.props.quickCreateState.groupId = this.group.id;
     }
 
     toggleGroup() {
         return this.group.toggle();
-    }
-
-    // ------------------------------------------------------------------------
-    // Permissions
-    // ------------------------------------------------------------------------
-
-    get permissions() {
-        return ["canDeleteGroup", "canEditGroup", "canQuickCreate"].reduce((o, key) => {
-            Object.defineProperty(o, key, { get: () => this[key]() });
-            return o;
-        }, {});
-    }
-
-    canDeleteGroup() {
-        const { deleteGroup } = this.props.activeActions;
-        const { groupByField, value } = this.group;
-        return deleteGroup && isRelational(groupByField) && value;
-    }
-
-    canEditGroup() {
-        const { editGroup } = this.props.activeActions;
-        const { groupByField, value } = this.group;
-        return editGroup && isRelational(groupByField) && value;
     }
 
     canQuickCreate() {
@@ -195,38 +142,3 @@ export class KanbanHeader extends Component {
         this.props.scrollTop();
     }
 }
-
-const kanbanHeaderConfigItems = registry.category("kanban_header_config_items");
-kanbanHeaderConfigItems.add(
-    "toggle_group",
-    {
-        label: _t("Fold"),
-        method: "toggleGroup",
-        isVisible: () => !utils.isSmall(),
-        class: ({ props }) => ({
-            o_kanban_toggle_fold: true,
-            disabled: props.list.model.useSampleModel,
-        }),
-    },
-    { sequence: 10 }
-);
-kanbanHeaderConfigItems.add(
-    "edit_group",
-    {
-        label: _t("Edit"),
-        method: "editGroup",
-        isVisible: ({ permissions }) => permissions.canEditGroup,
-        class: "o_column_edit",
-    },
-    { sequence: 20 }
-);
-kanbanHeaderConfigItems.add(
-    "delete_group",
-    {
-        label: _t("Delete"),
-        method: "deleteGroup",
-        isVisible: ({ permissions }) => permissions.canDeleteGroup,
-        class: "o_column_delete",
-    },
-    { sequence: 30 }
-);

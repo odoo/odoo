@@ -223,22 +223,8 @@
     // Kanban Grouped Layout - Column default
     .o_kanban_group {
         .o_kanban_header > .o_kanban_header_title {
-            &:hover .o_kanban_config,
-            .o_kanban_config.show {
+            &:hover .o_group_config {
                 visibility: visible;
-            }
-
-            .o_kanban_config {
-                visibility: hidden;
-                @include media-breakpoint-down(md) {
-                    visibility: visible;
-                }
-            }
-        }
-
-        .o_kanban_header {
-            .o-dropdown--kanban-config-menu {
-                cursor: default;
             }
         }
 
