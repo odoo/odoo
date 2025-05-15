@@ -4,7 +4,6 @@ import { Plugin } from "@html_editor/plugin";
 import { reactive } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { redirect } from "@web/core/utils/urls";
-import { FormOptionRedraw } from "./form_option_redraw";
 import { FormFieldOptionRedraw } from "./form_field_option_redraw";
 import { FormOptionAddFieldButton } from "./form_option_add_field_button";
 import {
@@ -39,6 +38,7 @@ import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { FormOption } from "./form_option";
 
 const DEFAULT_EMAIL_TO_VALUE = "info@yourcompany.example.com";
 export class FormOptionPlugin extends Plugin {
@@ -101,7 +101,7 @@ export class FormOptionPlugin extends Plugin {
         },
         builder_options: [
             {
-                OptionComponent: FormOptionRedraw,
+                OptionComponent: FormOption,
                 props: {
                     fetchModels: this.fetchModels.bind(this),
                     prepareFormModel: this.prepareFormModel.bind(this),
