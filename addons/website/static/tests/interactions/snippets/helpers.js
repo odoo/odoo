@@ -27,7 +27,7 @@ export async function setupTest(core, wrapwrap) {
  * @param {Parameters<scroll>[1]} target
  */
 export async function simpleScroll(wrapwrapEl, target) {
-    await scroll(wrapwrapEl, target);
+    await scroll(wrapwrapEl, target, { scrollable: false });
     await endTransition();
 }
 
