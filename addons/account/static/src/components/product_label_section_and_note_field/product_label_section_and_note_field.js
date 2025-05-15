@@ -127,6 +127,15 @@ export class ProductLabelSectionAndNoteField extends Component {
         };
     }
 
+    get sectionAndNoteIsReadonly() {
+        return (
+            this.props.readonly
+            && this.isProductClickable
+            && (["cancel", "posted"].includes(this.props.record.evalContext.parent.state)
+            || this.props.record.evalContext.parent.locked)
+        )
+    };
+
     isSection(record = null) {
         record = record || this.props.record;
         return record.data.display_type === "line_section";
