@@ -23,10 +23,18 @@ export class MailCoreWeb {
             }
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
-            if (message.needaction && notifId > this.store.inbox.counter_bus_id) {
+            if (
+                this.store.inbox &&
+                message.needaction &&
+                notifId > this.store.inbox.counter_bus_id
+            ) {
                 this.store.inbox.counter--;
             }
-            if (message.starred && notifId > this.store.starred.counter_bus_id) {
+            if (
+                this.store.starred &&
+                message.starred &&
+                notifId > this.store.starred.counter_bus_id
+            ) {
                 this.store.starred.counter--;
             }
         });

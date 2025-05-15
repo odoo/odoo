@@ -28,7 +28,7 @@ const ThreadPatch = {
                 this.rtcSessions.add(r);
                 this.store.ringingThreads.add(this);
                 this.cancelRtcInvitationTimeout = browser.setTimeout(() => {
-                    this.store.env.services["discuss.rtc"].leaveCall(this);
+                    this.store.env.services["mail.store"].rtc.leaveCall(this);
                 }, 30000);
             },
             /** @this {import("models").Thread} */
@@ -40,7 +40,7 @@ const ThreadPatch = {
         this.rtcSessions = Record.many("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */
             onDelete(r) {
-                this.store.env.services["discuss.rtc"].deleteSession(r.id);
+                this.store.env.services["mail.store"].rtc?.deleteSession(r.id);
             },
             /** @this {import("models").Thread} */
             onUpdate() {

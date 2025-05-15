@@ -1,6 +1,6 @@
 import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
-import { useSubEnv } from "@odoo/owl";
+import { useEffect, useSubEnv } from "@odoo/owl";
 
 import { x2ManyCommands } from "@web/core/orm_service";
 import { useService } from "@web/core/utils/hooks";
@@ -12,6 +12,17 @@ patch(FormController.prototype, {
         super.setup(...arguments);
         if (this.env.services["mail.store"]) {
             this.mailStore = useService("mail.store");
+            useEffect(
+                () => {
+                    if (this.mailStore.resetCount) {
+                        this.env.chatter.fetchThreadData = true;
+                        this.env.chatter.fetchMessages = true;
+                        const { resModel, resId } = this.model.root;
+                        this.env.bus.trigger("MAIL:RELOAD-THREAD", { model: resModel, id: resId });
+                    }
+                },
+                () => [this.mailStore.resetCount]
+            );
         }
         useSubEnv({
             chatter: {

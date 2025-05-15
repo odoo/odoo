@@ -20,7 +20,6 @@ export class CallSettings extends Component {
         super.setup();
         this.notification = useService("notification");
         this.store = useService("mail.store");
-        this.rtc = useService("discuss.rtc");
         this.microphoneVolume = useMicrophoneVolume();
         this.state = useState({
             userDevices: [],
@@ -52,6 +51,10 @@ export class CallSettings extends Component {
             }
             this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
         });
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 
     get stopText() {

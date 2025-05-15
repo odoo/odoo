@@ -10,39 +10,41 @@ threadActionsRegistry
     .add("call", {
         condition(component) {
             return (
-                component.thread?.allowCalls && !component.thread?.eq(component.rtc.state.channel)
+                component.thread?.allowCalls &&
+                !component.thread?.eq(component.store.rtc.state.channel)
             );
         },
         icon: "fa fa-fw fa-phone",
         iconLarge: "fa fa-fw fa-lg fa-phone",
         name: _t("Start a Call"),
         open(component) {
-            component.rtc.toggleCall(component.thread);
+            component.store.rtc.toggleCall(component.thread);
         },
         sequence: 10,
         sequenceQuick: 30,
         setup() {
             const component = useComponent();
-            component.rtc = useService("discuss.rtc");
+            component.store = useService("mail.store");
         },
     })
     .add("camera-call", {
         condition(component) {
             return (
-                component.thread?.allowCalls && !component.thread?.eq(component.rtc.state.channel)
+                component.thread?.allowCalls &&
+                !component.thread?.eq(component.store.rtc.state.channel)
             );
         },
         icon: "fa fa-fw fa-video-camera",
         iconLarge: "fa fa-fw fa-lg fa-video-camera",
         name: _t("Start a Video Call"),
         open(component) {
-            component.rtc.toggleCall(component.thread, { camera: true });
+            component.store.rtc.toggleCall(component.thread, { camera: true });
         },
         sequence: 5,
         sequenceQuick: (component) => (component.env.inDiscussApp ? 25 : 35),
         setup() {
             const component = useComponent();
-            component.rtc = useService("discuss.rtc");
+            component.store = useService("mail.store");
         },
     })
     .add("settings", {
@@ -63,7 +65,7 @@ threadActionsRegistry
         sequenceGroup: 30,
         setup() {
             const component = useComponent();
-            component.rtc = useService("discuss.rtc");
+            component.store = useService("mail.store");
         },
         toggle: true,
     });

@@ -14,7 +14,6 @@ export class DiscussCorePublicWeb {
         this.store = services["mail.store"];
         this.busService = services.bus_service;
         this.notificationService = services.notification;
-        this.rtcService = services["discuss.rtc"];
         try {
             this.sidebarCategoriesBroadcast = new browser.BroadcastChannel(
                 "discuss_core_public_web.sidebar_categories"
@@ -62,6 +61,10 @@ export class DiscussCorePublicWeb {
                 }
             }
         );
+    }
+
+    get rtcService() {
+        return this.store.rtc;
     }
 
     /**

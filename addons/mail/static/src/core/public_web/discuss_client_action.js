@@ -1,6 +1,6 @@
 import { Discuss } from "@mail/core/public_web/discuss";
 
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, useEffect } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -30,6 +30,13 @@ export class DiscussClientAction extends Component {
             // bracket to avoid blocking rendering with restore promise
             this.restoreDiscussThread(nextProps);
         });
+        useEffect(
+            () => {
+                this.restoreDiscussThread(this.props);
+                this.store.discuss.isActive = true;
+            },
+            () => [this.store.resetCount]
+        );
     }
 
     getActiveId(props) {

@@ -12,13 +12,17 @@ export class CallParticipantVideo extends Component {
 
     setup() {
         super.setup();
-        this.rtc = useService("discuss.rtc");
+        this.store = useService("mail.store");
         this.root = useRef("root");
         onMounted(() => this._update());
         onPatched(() => this._update());
         useExternalListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
             await this.play();
         });
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 
     _update() {

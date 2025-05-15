@@ -22,7 +22,7 @@ const threadPatch = {
         return this.recipientsCount === this.recipients.length;
     },
     computeIsDisplayed() {
-        if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
+        if (this.store.discuss?.isActive && !this.store.env.services.ui.isSmall) {
             return this.eq(this.store.discuss.thread);
         }
         return super.computeIsDisplayed();

@@ -3,7 +3,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
 
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -30,7 +30,14 @@ export class MessagingMenu extends Component {
         });
         this.dropdown = useDropdownState();
         this.notificationList = useRef("notification-list");
-
+        useEffect(
+            () => {
+                if (this.dropdown.isOpen && this.store.channels?.status === "not_fetched") {
+                    this.store.channels.fetch();
+                }
+            },
+            () => [this.store.resetCount]
+        );
         useExternalListener(window, "keydown", this.onKeydown, true);
     }
 

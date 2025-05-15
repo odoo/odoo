@@ -26,7 +26,6 @@ export class CallParticipantCard extends Component {
             arrow: false,
             popoverClass: "border-secondary",
         });
-        this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rootHover = useHover("root");
@@ -38,7 +37,7 @@ export class CallParticipantCard extends Component {
             if (!this.rtcSession) {
                 return;
             }
-            this.rtc.updateVideoDownload(this.rtcSession, {
+            this.rtc?.updateVideoDownload(this.rtcSession, {
                 viewCountIncrement: 1,
             });
         });
@@ -46,11 +45,15 @@ export class CallParticipantCard extends Component {
             if (!this.rtcSession) {
                 return;
             }
-            this.rtc.updateVideoDownload(this.rtcSession, {
+            this.rtc?.updateVideoDownload(this.rtcSession, {
                 viewCountIncrement: -1,
             });
         });
         useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 
     get isContextMenuAvailable() {
