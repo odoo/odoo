@@ -586,7 +586,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "incoterm_location": line.incoterm_location or "N/A",
                 "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
                 "carrier": line.picking_id.sale_id.carrier or "N/A",
-                "hs_code": line.product_id.hs_code or "N/A",
+                "hs_code": line.product_id.hs_code or "",
                 "cost_price": line.product_id.standard_price or "0.0",
                 "sale_price": line.product_id.list_price or "0.0",
             })
@@ -673,7 +673,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "incoterm_location": line.sale_order_id.packaging_source_type if line.sale_order_id else "N/A",
                 "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
                 "carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
-                "hs_code": line.product_id.hs_code or "N/A",
+                "hs_code": line.product_id.hs_code or "",
                 "so_reference": line.picking_id.sale_id.client_order_ref or "N/A",
                 "cost_price": line.product_id.standard_price or "0.0",
                 "sale_price": line.product_id.list_price or "0.0",
@@ -876,6 +876,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         for line in scanned_lines:
             pkg_num = line.product_package_number
+            total_weight = sum(
+                l.weight or 0.5
+                for l in scanned_lines
+                if l.product_package_number == pkg_num
+            )
             if pkg_num not in grouped_items:
                 grouped_items[pkg_num] = {
                     "type": None,
@@ -886,17 +891,17 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         {"category": "length", "unit": "m", "value": 0.1},
                         {"category": "width", "unit": "m", "value": 0.2},
                         {"category": "height", "unit": "m", "value": 0.3},
-                        {"category": "weight", "unit": "KG", "value": line.weight or 0.5}
+                        {"category": "weight", "unit": "KG", "value": total_weight}
                     ]
                 }
 
             grouped_items[pkg_num]["products"].append({
                 "product_id": line.product_id.default_code,
-                "name": line.product_id.name,
+                "name": (line.product_id.name or "")[:40],
                 "weight": line.weight or 0.5,
-                "description": line.product_id.name,
+                "description": (line.product_id.name or "")[:40],
                 "quantity": line.quantity or 1.0,
-                "hs_code": line.product_id.hs_code or "999999",
+                "hs_code": line.product_id.hs_code or "",
                 "declared_value": round(line.product_id.list_price or 10.0, 2),
                 "item_contents_reference": ""
             })
@@ -1053,7 +1058,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         try:
             t_start = time.perf_counter()
-            response = requests.post(api_url, headers=headers, json=payload, timeout=5)
+            response = requests.post(api_url, headers=headers, json=payload, timeout=30)
             response.raise_for_status()
 
             response_json = response.json()
@@ -1078,7 +1083,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 raise UserError(_("Label URL not found in OneTraker response."))
 
             t_label_start = time.perf_counter()
-            label_resp = requests.get(label_url, stream=True, timeout=5)
+            label_resp = requests.get(label_url, stream=True, timeout=30)
             label_resp.raise_for_status()
 
             zpl_data = ""
@@ -1091,7 +1096,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 raise UserError(_("Downloaded label is empty."))
 
             t_print_start = time.perf_counter()
-            with socket.create_connection((bench_ip, 9100), timeout=3) as sock:
+            with socket.create_connection((bench_ip, 9100), timeout=20) as sock:
                 sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
                 sock.sendall(zpl_data.encode('utf-8'))
 
@@ -1125,14 +1130,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         try:
             #  Fast label fetch with short timeout
-            response = requests.get(label_url, timeout=5)
+            response = requests.get(label_url, timeout=20)
             if response.status_code != 200 or not response.text.strip():
                 raise UserError(_("Failed to download label or label content is empty."))
 
             zpl_data = response.text.strip()
 
             #  Instant socket print (raw, no buffer delay)
-            with socket.create_connection((bench_ip, 9100), timeout=1) as sock:
+            with socket.create_connection((bench_ip, 9100), timeout=20) as sock:
                 sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # disable Nagle
                 sock.sendall(zpl_data.encode('utf-8'))
 
@@ -1214,11 +1219,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
             grouped_items[pkg_num]["products"].append({
                 "product_id": line.product_id.default_code,
-                "name": line.product_id.name,
+                "name": (line.product_id.name or "")[:40],
                 "weight": line.weight or 0.5,
-                "description": line.product_id.name,
+                "description": (line.product_id.name or "")[:40],
                 "quantity": line.quantity or 1.0,
-                "hs_code": line.product_id.hs_code or "999999",
+                "hs_code": line.product_id.hs_code or "",
                 "declared_value": round(line.product_id.list_price or 10.0, 2),
                 "item_contents_reference": ""
             })
