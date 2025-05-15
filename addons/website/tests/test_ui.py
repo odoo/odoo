@@ -555,8 +555,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_30_website_text_animations(self):
         self.start_tour("/", 'text_animations', login='admin')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_31_website_edit_megamenu_big_icons_subtitles(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu_big_icons_subtitles', login='admin')
 
