@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, queryFirst } from "@odoo/hoot-dom";
+import { queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 
@@ -25,6 +25,7 @@ test("visibility of animation animation=none", async () => {
     `);
     await contains(":iframe .test-options-target img").click();
 
+    await waitFor(".options-container");
     expect(".options-container [data-label='Effect']").not.toBeVisible();
     expect(".options-container [data-label='Direction']").not.toHaveCount();
     expect(".options-container [data-label='Trigger']").not.toBeVisible();
@@ -34,7 +35,7 @@ test("visibility of animation animation=none", async () => {
 });
 describe("onAppearance", () => {
     test("visibility of animation animation=onAppearance", async () => {
-        await setupWebsiteBuilder(
+        const { waitDomUpdated } = await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
                     ${testImg}
@@ -46,6 +47,7 @@ describe("onAppearance", () => {
 
         await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
         await contains(".o-dropdown--menu [data-action-value='onAppearance']").click();
+        await waitDomUpdated();
         expect(".options-container [data-label='Animation'] .o-dropdown").toHaveText(
             "On Appearance"
         );
@@ -61,7 +63,7 @@ describe("onAppearance", () => {
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
     test("visibility of animation animation=onAppearance effect=slide", async () => {
-        await setupWebsiteBuilder(
+        const { waitDomUpdated } = await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
                     ${testImg}
@@ -76,6 +78,7 @@ describe("onAppearance", () => {
 
         await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
         await contains(".o-dropdown--menu [data-action-value='o_anim_slide_in']").click();
+        await waitDomUpdated();
         expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Slide");
 
         expect(".options-container [data-label='Direction'] .o-dropdown").toHaveText("From right");
@@ -88,7 +91,7 @@ describe("onAppearance", () => {
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
     test("visibility of animation animation=onAppearance effect=bounce", async () => {
-        await setupWebsiteBuilder(
+        const { waitDomUpdated } = await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
                     ${testImg}
@@ -103,6 +106,7 @@ describe("onAppearance", () => {
 
         await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
         await contains(".o-dropdown--menu [data-action-value='o_anim_bounce_in']").click();
+        await waitDomUpdated();
         expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Bounce");
 
         expect(".options-container [data-label='Direction'] .o-dropdown").toHaveText("In place");
@@ -115,7 +119,7 @@ describe("onAppearance", () => {
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
     test("visibility of animation animation=onAppearance effect=flash", async () => {
-        await setupWebsiteBuilder(
+        const { waitDomUpdated } = await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
                     ${testImg}
@@ -130,6 +134,7 @@ describe("onAppearance", () => {
 
         await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
         await contains(".o-dropdown--menu [data-action-value='o_anim_flash']").click();
+        await waitDomUpdated();
         expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Flash");
 
         expect(".options-container [data-label='Direction']").not.toHaveCount();
@@ -143,7 +148,7 @@ describe("onAppearance", () => {
     });
 });
 test("visibility of animation animation=onScroll", async () => {
-    await setupWebsiteBuilder(`
+    const { waitDomUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
@@ -152,6 +157,7 @@ test("visibility of animation animation=onScroll", async () => {
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='onScroll']").click();
+    await waitDomUpdated();
     expect(".options-container [data-label='Animation'] .o-dropdown").toHaveText("On Scroll");
 
     expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Fade");
@@ -165,7 +171,7 @@ test("visibility of animation animation=onScroll", async () => {
     expect(".options-container [data-label='Scroll Zone']").toBeVisible();
 });
 test("animation=onScroll should not be visible when the animation is limited", async () => {
-    await setupWebsiteBuilder(
+    const { waitDomUpdated } = await setupWebsiteBuilder(
         `
                 <div class="test-options-target">
                     ${testImg}
@@ -180,6 +186,7 @@ test("animation=onScroll should not be visible when the animation is limited", a
 
     await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='o_anim_flash']").click();
+    await waitDomUpdated();
     expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Flash");
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
@@ -290,7 +297,7 @@ test("image should not be lazy onAppearance", async () => {
 });
 
 test("should not show the animation options if the image has a parent [data-oe-type='image']", async () => {
-    const { getEditor } = await setupWebsiteBuilder(`
+    const { getEditor, waitDomUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
@@ -298,17 +305,17 @@ test("should not show the animation options if the image has a parent [data-oe-t
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
 
-    await animationFrame();
+    await waitFor(".options-container");
     expect(".options-container [data-label='Animation'] .dropdown-toggle").toBeVisible();
     const optionTarget = queryFirst(":iframe .test-options-target");
     optionTarget.setAttribute("data-oe-type", "image");
     editor.shared.history.addStep();
-    await animationFrame();
+    await waitDomUpdated();
     expect(".options-container [data-label='Animation'] .dropdown-toggle").not.toHaveCount();
 });
 
 test("should not show the animation options if the image has is [data-oe-xpath]", async () => {
-    const { getEditor } = await setupWebsiteBuilder(`
+    const { getEditor, waitDomUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
@@ -316,12 +323,12 @@ test("should not show the animation options if the image has is [data-oe-xpath]"
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
 
-    await animationFrame();
+    await waitFor(".options-container");
     expect(".options-container [data-label='Animation'] .dropdown-toggle").toBeVisible();
     const optionTarget = queryFirst(":iframe .test-options-target img");
     optionTarget.setAttribute("data-oe-xpath", "/foo/bar");
     editor.shared.history.addStep();
-    await animationFrame();
+    await waitDomUpdated();
     expect(".options-container [data-label='Animation'] .dropdown-toggle").not.toHaveCount();
 });
 
