@@ -186,9 +186,24 @@ export async function setupWebsiteBuilder(
         },
     });
 
+    let lastUpdatePromise;
+    const waitDomUpdated = async () => {
+        // The tick ensures that lastUpdatePromise has correctly been assigned
+        await tick();
+        await lastUpdatePromise;
+        await animationFrame();
+    };
     patchWithCleanup(Builder.prototype, {
         setup() {
             super.setup();
+            patchWithCleanup(this.env.editorBus, {
+                trigger(eventName, detail) {
+                    if (eventName === "DOM_UPDATED") {
+                        lastUpdatePromise = detail.updatePromise;
+                    }
+                    return super.trigger(eventName, detail);
+                },
+            });
             editor = this.editor;
         },
     });
@@ -243,6 +258,7 @@ export async function setupWebsiteBuilder(
         getEditor: () => editor,
         getEditableContent: () => editableContent,
         openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
+        waitDomUpdated,
     };
 }
 

@@ -3,17 +3,18 @@
 
 <t t-name="html_builder.BuilderMany2One">
     <BuilderComponent>
-        <BasicMany2One
+        <SelectMany2X
             model="props.model"
+            fields="props.fields"
             limit="props.limit"
             domain="props.domain"
-            fields="props.fields"
-            selected="domState.selected"
+            selected="domState.selected ? [domState.selected] : []"
             select="select.bind(this)"
-            unselect="props.allowUnselect ? select.bind(this, undefined) : undefined"
-            defaultMessage="props.defaultMessage"
             create="props.createAction ? create.bind(this) : undefined"
+
+            message="domState.selected?.display_name || props.defaultMessage"
         />
+        <button t-if="domState.selected and props.allowUnselect" type="button" class="btn btn-primary fa fa-fw fa-times" style="min-width: min-content;" t-on-click="() => this.select()"/>
     </BuilderComponent>
 </t>
 
