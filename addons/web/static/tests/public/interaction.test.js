@@ -289,7 +289,6 @@ describe("using selectors", () => {
                             .querySelectorAll("span:not(.me)")
                             .forEach((el) => el.classList.add("me"));
                         ev.currentTarget.classList.remove("me");
-                        this.refreshNodes();
                     },
                 },
             };
