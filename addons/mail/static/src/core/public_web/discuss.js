@@ -100,7 +100,11 @@ export class Discuss extends Component {
             );
         }
         onMounted(() => (this.store.discuss.isActive = true));
-        onWillUnmount(() => (this.store.discuss.isActive = false));
+        onWillUnmount(() => {
+            if (this.store.exists() && this.store.discuss) {
+                this.store.discuss.isActive = false;
+            }
+        });
         useEffect(
             (memberListAction) => {
                 if (!memberListAction) {
