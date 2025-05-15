@@ -10,6 +10,7 @@ import logging
 import re
 import requests
 import threading
+import time
 import uuid
 
 from datetime import datetime
@@ -27,6 +28,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.modules.module import get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN
+from odoo.service.model import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY, MAX_TRIES_ON_CONCURRENCY_FAILURE
 from odoo.tools import SQL, Query, sql as sqltools
 from odoo.tools.translate import _, xml_translate
 
@@ -709,20 +711,42 @@ class Website(models.Model):
             'website.template_footer_minimalist',
         ]
         for footer_id in footer_ids:
-            try:
-                view_id = self.env['website'].viewref(footer_id)
-                if view_id:
-                    # Deliberately hardcode dynamic code inside the view arch,
-                    # it will be transformed into static nodes after a save/edit
-                    # thanks to the t-ignore in parents node.
-                    arch_string = etree.fromstring(view_id.arch_db)
-                    el = arch_string.xpath("//t[@t-set='configurator_footer_links']")[0]
-                    el.attrib['t-value'] = json.dumps(footer_links)
-                    view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(arch_string)})
-            except Exception as e:
-                # The xml view could have been modified in the backend, we don't
-                # want the xpath error to break the configurator feature
-                logger.warning(e)
+            for tryno in range(1, MAX_TRIES_ON_CONCURRENCY_FAILURE + 1):
+                try:
+                    view_id = self.env['website'].viewref(footer_id)
+                    if view_id:
+                        # Deliberately hardcode dynamic code inside the view arch,
+                        # it will be transformed into static nodes after a save/edit
+                        # thanks to the t-ignore in parents node.
+                        arch_string = etree.fromstring(view_id.arch_db)
+                        el = arch_string.xpath("//t[@t-set='configurator_footer_links']")[0]
+                        el.attrib['t-value'] = json.dumps(footer_links)
+                        view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(arch_string)})
+
+                    # Success — break out of the retry loop
+                    break
+
+                except Exception as e:  # noqa: BLE001
+                    if isinstance(e, PG_CONCURRENCY_EXCEPTIONS_TO_RETRY):
+                        tryleft = MAX_TRIES_ON_CONCURRENCY_FAILURE - tryno
+                        if not tryleft:
+                            logger.error("Max retries reached for footer_id '%s'.", footer_id)
+                            break
+
+                        retry_delay = 0.5
+                        logger.warning(
+                            "Serialization failure while processing footer_id '%s' (attempt %s). Retries left: %s. Retrying in %s seconds.",
+                            footer_id, tryno, tryleft, retry_delay,
+                            exc_info=True
+                        )
+
+                        self.env.cr.rollback()
+                        time.sleep(retry_delay)
+                    else:
+                        # The xml view could have been modified in the backend, we don't
+                        # want the xpath error to break the configurator feature
+                        logger.warning(e)
+                        break
 
         # Load suggestion from iap for selected pages
         industry_id = kwargs['industry_id']
