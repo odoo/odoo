@@ -704,20 +704,24 @@ class Website(models.Model):
             'website.template_footer_minimalist',
         ]
         for footer_id in footer_ids:
-            try:
-                view_id = self.env['website'].viewref(footer_id)
-                if view_id:
-                    # Deliberately hardcode dynamic code inside the view arch,
-                    # it will be transformed into static nodes after a save/edit
-                    # thanks to the t-ignore in parents node.
+            view_id = self.env['website'].viewref(footer_id)
+            if view_id:
+                # Deliberately hardcode dynamic code inside the view arch,
+                # it will be transformed into static nodes after a save/edit
+                # thanks to the t-ignore in parents node.
+                try:
                     arch_string = etree.fromstring(view_id.arch_db)
-                    el = arch_string.xpath("//t[@t-set='configurator_footer_links']")[0]
-                    el.attrib['t-value'] = json.dumps(footer_links)
+                except etree.XMLSyntaxError as e:
+                    # The xml view could have been modified in the backend, we don't
+                    # want the xpath error to break the configurator feature
+                    logger.warning("Failed to update footer links in view %s: %s", footer_id, e)
+                else:
+                    el = arch_string.xpath("//t[@t-set='configurator_footer_links']")
+                    if not el:
+                        logger.warning("No 'configurator_footer_links' found in view %s", footer_id)
+                        continue
+                    el[0].attrib['t-value'] = json.dumps(footer_links)
                     view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(arch_string)})
-            except Exception as e:
-                # The xml view could have been modified in the backend, we don't
-                # want the xpath error to break the configurator feature
-                logger.warning(e)
 
         # Load suggestion from iap for selected pages
         industry_id = kwargs['industry_id']
