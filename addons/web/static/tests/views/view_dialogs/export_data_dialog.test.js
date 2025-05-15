@@ -19,6 +19,7 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
+    toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 
 import { download } from "@web/core/network/download";
@@ -730,6 +731,65 @@ test("Direct export list", async () => {
     });
 
     await exportAllAction();
+});
+
+test("Export list with modified context", async () => {
+    patchWithCleanup(download, {
+        _download: (options) => {
+            expect.step("Export records");
+            expect(options.url).toBe("/web/export/xlsx");
+            expect(JSON.parse(options.data.data)).toEqual({
+                context: {
+                    allowed_company_ids: [1],
+                    lang: "en",
+                    uid: 7,
+                    tz: "taht",
+                    yipi: true,
+                },
+                model: "partner",
+                domain: [["bar", "!=", "glou"]],
+                groupby: [],
+                ids: false,
+                import_compat: false,
+                fields: [
+                    {
+                        name: "foo",
+                        label: "Foo",
+                        store: true,
+                        type: "char",
+                    },
+                    {
+                        name: "bar",
+                        label: "Bar",
+                        store: true,
+                        type: "boolean",
+                    },
+                ],
+            });
+        },
+    });
+    onRpc("/web/export/formats", () => [{ tag: "xls", label: "Excel" }]);
+    onRpc("/web/export/get_fields", () => fetchedFields.root);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
+        <list export_xlsx="1">
+            <field name="foo"/>
+            <field name="bar"/>
+        </list>`,
+        loadActionMenus: true,
+        domain: [["bar", "!=", "glou"]],
+        searchViewArch: `
+        <search>
+            <filter name="owo" string="OwO" context="{'yipi': True}"/>
+        </search>`,
+    });
+    await toggleSearchBarMenu();
+    await contains(".o-dropdown-item:contains(OwO)").click();
+    await exportAllAction();
+    expect.verifySteps(["Export records"]);
 });
 
 test("Direct export grouped list", async () => {
