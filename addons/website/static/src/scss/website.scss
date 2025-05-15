@@ -786,6 +786,9 @@ table.table_desc tr td {
     flex-direction: column;
     justify-content: space-around;
     min-height: 100vh !important;
+    // See JS: this is overridden for multiple reasons, including the fact that
+    // Arc browser does not support this correctly at the moment.
+    min-height: 100svh !important;
 }
 .o_half_screen_height {
     @extend .o_full_screen_height;
