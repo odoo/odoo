@@ -514,3 +514,24 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
                 quantity=1,
             )
             self.assertEqual(data["quantity"], 1)
+
+    def test_get_cart_after_company_change(self):
+        """Finding the customer cart shouldn't crash even if their company changed."""
+        internal_user = self.env.ref('base.user_admin')
+        website = self.website.with_user(internal_user)
+        with MockRequest(website.env, website=website):
+            # Create a cart for the user
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=1,
+            )
+
+        # Change the user's company (will also update the user's partner)
+        other_company = self.env['res.company'].create({'name': "Other Company"})
+        internal_user.company_ids = [Command.link(other_company.id)]
+        internal_user.company_id = other_company
+        with MockRequest(website.env, website=website) as request:
+            # We shouldn't find any abandonned cart if the customer isn't allowed to
+            # buy from this website (because their contact belongs to another company)
+            self.assertFalse(request.cart)
