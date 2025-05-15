@@ -159,6 +159,7 @@ export class Many2ManyTagsField extends Component {
                 }
                 this.onTagKeydown(ev);
             },
+            hoverText: record.data.tooltip || record.data.display_name,
         };
     }
 
@@ -247,6 +248,9 @@ export const many2ManyTagsField = {
         const relatedFields = [{ name: "display_name", type: "char" }];
         if (options.color_field) {
             relatedFields.push({ name: options.color_field, type: "integer", readonly: false });
+        }
+        if (options.hover_field) {
+            relatedFields.push({ name: options.hover_field, type: "char", readonly: false });
         }
         return relatedFields;
     },
