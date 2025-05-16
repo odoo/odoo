@@ -2,7 +2,7 @@ import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 
 export class TimeoutPopup extends Component {
     static template = "pos_self_order.TimeoutPopup";
-    static props = ["onTimeout"];
+    static props = ["close", "onTimeout"];
     setup() {
         this.state = useState({ time: 10 });
 
