@@ -1,6 +1,9 @@
+import { renderToElement } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
+import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { localization } from "@web/core/l10n/localization";
 
-import { useComponent, useEffect, useExternalListener } from "@odoo/owl";
+import { useComponent, useEffect, useExternalListener, xml } from "@odoo/owl";
 
 // This file defines a hook that encapsulates the column width logic of the list view. This logic
 // aims at optimizing the available space between columns and, once computed, at freezing the table
@@ -50,11 +53,23 @@ const DEFAULT_MIN_WIDTH = 80;
 const SELECTOR_WIDTH = 20;
 const OPEN_FORM_VIEW_BUTTON_WIDTH = 54;
 const DELETE_BUTTON_WIDTH = 12;
-const FIELD_WIDTHS = {
+let _dateFieldWidth = null; // computed dynamically, lazily, see @computeOptimalDateWidths
+let _datetimeFieldWidth = null; // computed dynamically, lazily, see @computeOptimalDateWidths
+export const FIELD_WIDTHS = Object.freeze({
     boolean: [20, 100], // [minWidth, maxWidth]
     char: [80], // only minWidth, no maxWidth
-    date: 80, // minWidth = maxWidth
-    datetime: 145,
+    get date() {
+        if (!_dateFieldWidth) {
+            computeOptimalDateWidths();
+        }
+        return _dateFieldWidth;
+    },
+    get datetime() {
+        if (!_datetimeFieldWidth) {
+            computeOptimalDateWidths();
+        }
+        return _datetimeFieldWidth;
+    },
     float: 93,
     integer: 71,
     many2many: [80],
@@ -65,7 +80,59 @@ const FIELD_WIDTHS = {
     reference: [80],
     selection: [80],
     text: [80, 1200],
-};
+});
+
+export function resetDateFieldWidths() {
+    // useful for tests
+    _dateFieldWidth = null;
+    _datetimeFieldWidth = null;
+}
+
+/**
+ * Compute ideal date and datetime widths. There's no static value for them as they depend on the
+ * localization. Moreover, as we want to have the exact minimum width necessary, it also depends on
+ * the fonts (we never want to see "..." in date fields). So we render date(time) values, we insert
+ * them into the DOM and compute their width.
+ */
+function computeOptimalDateWidths() {
+    const dates = [];
+    const datetimes = [];
+    const { dateFormat, timeFormat } = localization;
+    // generate a date for each month if date format contains MMMM or MMM (full or abbrev. month)
+    for (let month = 1; month <= (/(?<!')MMM/.test(dateFormat) ? 12 : 1); month++) {
+        // generate a date for each day if date format contains cccc or ccc (full or abbrev. day)
+        for (let day = 1; day <= (/(?<!')ccc/.test(dateFormat) ? 7 : 1); day++) {
+            dates.push(formatDate(luxon.DateTime.local(2017, month, day)));
+            datetimes.push(formatDateTime(luxon.DateTime.local(2017, month, day, 8, 0, 0)));
+            if (/(?<!')a/.test(timeFormat)) {
+                // generate a date in the afternoon if time is displayed with AM/PM or equivalent
+                datetimes.push(formatDateTime(luxon.DateTime.local(2017, month, day, 20, 0, 0)));
+            }
+        }
+    }
+    const template = xml`
+        <div class="invisible" style="font-variant-numeric: tabular-nums;">
+            <div class="dates">
+                <div t-foreach="dates" t-as="date" t-key="date_index">
+                    <span t-esc="date"/>
+                </div>
+            </div>
+            <div class="datetimes">
+                <div t-foreach="datetimes" t-as="datetime" t-key="datetime_index">
+                    <span t-esc="datetime"/>
+                </div>
+            </div>
+        </div>`;
+    const div = renderToElement(template, { dates, datetimes });
+    document.body.append(div);
+    const dateSpans = div.querySelectorAll(".dates span");
+    const dateWidths = [...dateSpans].map((span) => span.getBoundingClientRect().width);
+    const datetimeSpans = div.querySelectorAll(".datetimes span");
+    const datetimeWidths = [...datetimeSpans].map((span) => span.getBoundingClientRect().width);
+    document.body.removeChild(div);
+    _dateFieldWidth = Math.ceil(Math.max(...dateWidths)) + 1;
+    _datetimeFieldWidth = Math.ceil(Math.max(...datetimeWidths)) + 1;
+}
 
 /**
  * Compute ideal widths based on the rules described on top of this file.
@@ -220,7 +287,11 @@ function getWidthSpecs(columns) {
                 if (column.field.listViewWidth) {
                     width = column.field.listViewWidth;
                     if (typeof width === "function") {
-                        width = width({ type: column.fieldType, hasLabel: column.hasLabel });
+                        width = width({
+                            type: column.fieldType,
+                            hasLabel: column.hasLabel,
+                            options: column.options,
+                        });
                     }
                 } else {
                     width = FIELD_WIDTHS[column.widget || column.fieldType];
@@ -378,9 +449,9 @@ export function useMagicColumnWidths(tableRef, getState) {
 
             // Store current column widths to freeze them
             const headers = [...table.querySelectorAll("thead th")];
-            columnWidths = headers.map((th) => {
-                return th.getBoundingClientRect().width - getHorizontalPadding(th);
-            });
+            columnWidths = headers.map(
+                (th) => th.getBoundingClientRect().width - getHorizontalPadding(th)
+            );
 
             // Ignores the 'left mouse button down' event as it used to start resizing
             if (ev.type === "pointerdown" && ev.button === 0) {
