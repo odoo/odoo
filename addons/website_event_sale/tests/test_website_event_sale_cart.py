@@ -23,6 +23,8 @@ class TestWebsiteEventSaleCart(TestWebsiteEventSaleCommon, TestWebsiteSaleCartAb
         })
 
         cls.partner_admin = cls.env.ref('base.partner_admin')
+        if not cls.partner_admin.email:
+            cls.partner_admin.email = 'base@partner.admin'
 
     def test_sold_out_event_cart_reminder(self):
         """Check that abandoned cart emails aren't sent for sold out tickets."""
