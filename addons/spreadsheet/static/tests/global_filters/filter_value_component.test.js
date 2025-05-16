@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryAllTexts, queryAllValues } from "@odoo/hoot-dom";
+import { click, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { contains, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
@@ -7,6 +7,7 @@ import { contains, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/we
 import { Model } from "@odoo/o-spreadsheet";
 import {
     addGlobalFilter,
+    editGlobalFilter,
     setCellContent,
     setCellFormat,
 } from "@spreadsheet/../tests/helpers/commands";
@@ -15,27 +16,49 @@ import { FilterValue } from "@spreadsheet/global_filters/components/filter_value
 import { user } from "@web/core/user";
 
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
+import { Component, onWillUnmount, xml } from "@odoo/owl";
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
+
+class FilterValueWrapper extends Component {
+    static template = xml`
+        <FilterValue
+            t-props="props"
+            globalFilterValue="globalFilterValue"
+        />`;
+    static components = { FilterValue };
+    static props = FilterValue.props;
+
+    setup() {
+        this.props.model.on("update", this, () => this.render(true));
+        onWillUnmount(() => this.props.model.off("update", this));
+    }
+
+    get globalFilterValue() {
+        return (
+            this.props.globalFilterValue ??
+            this.props.model.getters.getGlobalFilterValue(this.props.filter.id)
+        );
+    }
+}
 
 /**
  *
  * @param {{ model: Model, filter: object}} props
  */
 async function mountFilterValueComponent(props) {
-    props.setGlobalFilterValue =
-        props.setGlobalFilterValue ||
-        ((id, value, displayNames) => {
+    props = {
+        setGlobalFilterValue: (id, value, displayNames) => {
             props.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
                 id,
                 value,
                 displayNames,
             });
-        });
-    props.globalFilterValue =
-        props.globalFilterValue || props.model.getters.getGlobalFilterValue(props.filter.id);
-    await mountWithCleanup(FilterValue, { props });
+        },
+        ...props,
+    };
+    await mountWithCleanup(FilterValueWrapper, { props });
 }
 
 test("basic text filter", async function () {
@@ -47,8 +70,26 @@ test("basic text filter", async function () {
         label: "Text Filter",
     });
     await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
-    await contains("input").edit("foo");
-    expect(model.getters.getGlobalFilterValue("42")).toBe("foo", { message: "value is set" });
+    await contains(".o-autocomplete input").edit("foo");
+    await contains(".o-autocomplete input").press("Enter");
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(["foo"], { message: "value is set" });
+});
+
+test("can clear a text filter value", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "text",
+        label: "Text Filter",
+        defaultValue: ["foo", "bar"],
+    });
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
+    expect(queryAllTexts(".o_tag")).toEqual(["foo", "bar"]);
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(["foo", "bar"]);
+    await contains(".o_tag .o_delete").click();
+    expect(queryAllTexts(".o_tag")).toEqual(["bar"]);
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(["bar"]);
 });
 
 test("text filter with range", async function () {
@@ -65,14 +106,66 @@ test("text filter with range", async function () {
     setCellContent(model, "A2", "0");
     setCellFormat(model, "A2", "0.00");
     await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
-    expect("select").toHaveValue("", { message: "no value is selected" });
-    expect(queryAllTexts("option")).toEqual(["Choose a value...", "foo", "0.00"], {
+    expect(".o_tag").toHaveCount(0, { message: "no value is selected" });
+    await click(".o-autocomplete input");
+    await animationFrame();
+
+    expect(queryAllTexts(".dropdown-item")).toEqual(["foo", "0.00"], {
         message: "values are formatted",
     });
-    expect(queryAllValues("option")).toEqual(["", "foo", "0"]);
-    await contains("select").select("0");
-    expect("select").toHaveValue("0", { message: "value is selected" });
-    expect(model.getters.getGlobalFilterValue("42")).toBe("0", { message: "value is set" });
+    await click(".dropdown-item:last");
+    await animationFrame();
+    expect(".o_tag").toHaveText("0.00");
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(["0"]);
+
+    // select a second value
+    await click(".o-autocomplete input");
+    await animationFrame();
+
+    await click(".dropdown-item:last");
+    await animationFrame();
+    expect(queryAllTexts(".o_tag")).toEqual(["0.00", "foo"]);
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(["0", "foo"]);
+});
+
+test("cannot edit text filter input with range", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    const sheetId = model.getters.getActiveSheetId();
+    setCellContent(model, "A1", "foo");
+    const filter = {
+        id: "42",
+        type: "text",
+        label: "Text Filter",
+    };
+    await addGlobalFilter(model, filter);
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
+    expect(".o-autocomplete input").not.toHaveAttribute("maxlength");
+    editGlobalFilter(model, {
+        ...filter,
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1")],
+    });
+    await animationFrame();
+    expect(".o-autocomplete input").toHaveAttribute("maxlength", "0");
+    editGlobalFilter(model, filter);
+    await animationFrame();
+    expect(".o-autocomplete input").not.toHaveAttribute("maxlength");
+});
+
+test("text filter cannot have the same value twice", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "text",
+        label: "Text Filter",
+    });
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
+    await contains(".o-autocomplete input").edit("foo");
+    await contains(".o-autocomplete input").press("Enter");
+    await contains(".o-autocomplete input").edit("foo");
+    await contains(".o-autocomplete input").press("Enter");
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(["foo"]);
 });
 
 test("relational filter with domain", async function () {
@@ -102,7 +195,7 @@ test("Filter with showClear should display the clear icon", async function () {
         id: "42",
         type: "text",
         label: "Text Filter",
-        defaultValue: "foo",
+        defaultValue: ["foo"],
     });
     await mountFilterValueComponent({
         model,
@@ -119,7 +212,7 @@ test("Filter without showClear should not display the clear icon", async functio
         id: "42",
         type: "text",
         label: "Text Filter",
-        defaultValue: "foo",
+        defaultValue: ["foo"],
     });
     await mountFilterValueComponent({
         model,

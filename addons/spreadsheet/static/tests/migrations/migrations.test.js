@@ -221,7 +221,7 @@ test("fieldMatchings are moved from filters to their respective datasources", ()
                         tag: "chart",
                         data: {
                             type: "odoo_bar",
-                            metaData: {}
+                            metaData: {},
                         },
                     },
                 ],
@@ -292,7 +292,7 @@ test("fieldMatchings offsets are correctly preserved after migration", () => {
                         tag: "chart",
                         data: {
                             type: "odoo_bar",
-                            metaData: {}
+                            metaData: {},
                         },
                     },
                 ],
@@ -574,10 +574,10 @@ test("Chart cumulatedStart is set to true if cumulative at migration", () => {
                             type: "odoo_bar",
                             metaData: {
                                 cumulative: true,
-                                cumulatedStart: false
+                                cumulatedStart: false,
                             },
                             cumulative: true,
-                            cumulatedStart: false
+                            cumulatedStart: false,
                         },
                     },
                 ],
@@ -592,4 +592,24 @@ test("Chart cumulatedStart is set to true if cumulative at migration", () => {
     expect(sheet.figures[1].data.cumulatedStart).toBe(false);
     expect(sheet.figures[2].data.metaData.cumulatedStart).toBe(false);
     expect(sheet.figures[2].data.cumulatedStart).toBe(false);
+});
+
+test("text global filter default value is now an array of strings", () => {
+    const data = {
+        version: "18.3.0",
+        globalFilters: [
+            {
+                id: "1",
+                type: "text",
+                defaultValue: "foo",
+            },
+            {
+                id: "2",
+                type: "text",
+            },
+        ],
+    };
+    const migratedData = load(data);
+    expect(migratedData.globalFilters[0].defaultValue).toEqual(["foo"]);
+    expect(migratedData.globalFilters[1].defaultValue).toBe(undefined);
 });

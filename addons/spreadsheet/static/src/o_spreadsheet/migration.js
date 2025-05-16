@@ -36,8 +36,8 @@ migrationStepRegistry.add("18.1.2", {
 
 migrationStepRegistry.add("18.3.2", {
     migrate(data) {
-        for (let sheet of data.sheets || []) {
-            for (let figure of sheet.figures || []) {
+        for (const sheet of data.sheets || []) {
+            for (const figure of sheet.figures || []) {
                 if (
                     figure.tag === "chart" &&
                     ["odoo_bar", "odoo_line", "odoo_pie"].includes(figure.data.type) &&
@@ -47,6 +47,17 @@ migrationStepRegistry.add("18.3.2", {
                     figure.data.cumulatedStart = isCumulative;
                     figure.data.metaData.cumulatedStart = isCumulative;
                 }
+            }
+        }
+        return data;
+    },
+});
+
+migrationStepRegistry.add("18.4.10", {
+    migrate(data) {
+        for (const globalFilter of data.globalFilters || []) {
+            if (globalFilter.type === "text" && typeof globalFilter.defaultValue == "string") {
+                globalFilter.defaultValue = [globalFilter.defaultValue];
             }
         }
         return data;
