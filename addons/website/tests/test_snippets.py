@@ -7,7 +7,6 @@ from werkzeug.urls import url_encode
 from odoo.tests import HttpCase, tagged
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.tools import create_image_attachment
-import unittest
 
 _logger = logging.getLogger(__name__)
 
@@ -112,8 +111,6 @@ class TestSnippets(HttpCase):
     def test_12_snippet_images_wall(self):
         self.start_tour('/', 'snippet_images_wall', login='admin')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_snippet_popup_with_scrollbar_and_animations(self):
         website = self.env.ref('website.default_website')
         website.cookies_bar = True
