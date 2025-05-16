@@ -32,7 +32,7 @@
                 </t>
                 <t t-set-slot="control-panel-selection-actions">
                     <div t-if="hasSelectedRecords" class="o_selection_container d-flex gap-1 w-100 w-md-auto">
-                       <SelectionBox />
+                       <SelectionBox root="this.model.root"/>
                         <t t-if="!env.isSmall">
                             <t t-foreach="headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
                                 <MultiRecordViewButton
