@@ -30,10 +30,7 @@ export function checkFilterValueIsValid(filter, value) {
     if (value !== undefined) {
         switch (type) {
             case "text":
-                if (typeof value !== "string") {
-                    return false;
-                }
-                break;
+                return Array.isArray(value) && value.every((text) => typeof text === "string");
             case "date": {
                 return checkDateFilterValueIsValid(filter, value);
             }

@@ -25,7 +25,7 @@ declare module "@spreadsheet" {
         id: string;
         label: string;
         rangeOfAllowedValues?: Range;
-        defaultValue?: string;
+        defaultValue?: string[];
     }
 
     export interface CmdTextGlobalFilter extends TextGlobalFilter {
