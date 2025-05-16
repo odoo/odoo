@@ -9,6 +9,7 @@ import httpx
 import time
 import datetime
 import re
+import threading
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -866,7 +867,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "google_place_id": None,
             "contact": {
                 "name": partner.name,
-                "mobile_number": partner.mobile or "+61412345678",
+                "mobile_number": partner.mobile or "00000000",
                 "email": partner.email
             }
         }
@@ -952,15 +953,21 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         #  Finally, validate the picking
         picking.button_validate()
-
+        self.send_tracking_update_to_ot_orders(
+            so_number=sale.name,
+            con_id=con_id,
+            carrier=carrier,
+            origin=sale.origin or picking.origin or "N/A",
+            tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
+        )
         return payload
 
+
     def release_container(self):
-        """ Releases the container only if packing was successful. """
+        """Releases the container(s) using fire-and-forget logic. Errors are logged but not raised."""
         self.ensure_one()
 
         container_codes = ', '.join(self.pc_container_code_ids.mapped('name'))
-
         warehouse_code = self.warehouse_id.name
         owner_code = self.tenant_code_id.name if self.tenant_code_id else ""
         site_code = self.site_code_id.name if self.site_code_id else ""
@@ -973,7 +980,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         if not container_codes or not warehouse_code or not owner_code or not site_code:
             _logger.error("Missing container, warehouse, site code or owner code.")
-            raise UserError(_("Missing required data to release container(s)."))
+            return  # No raise, just exit silently
 
         # Fetch URLs dynamically from system parameters based on Warehouse Code
         dev_url = self.env['ir.config_parameter'].sudo().get_param('dev_container_release_url')
@@ -981,13 +988,19 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         if not dev_url or not prod_url:
             _logger.error(f"Missing API URL configuration for warehouse {warehouse_code}")
-            raise UserError(_("API URL configuration is missing for warehouse: %s") % warehouse_code)
+            return  # No raise, just exit silently
 
-        # Select the correct API URL based on the environment
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
         release_container_api_url = prod_url if is_production else dev_url
 
         _logger.info(f"Releasing container(s) {container_codes} via API: {release_container_api_url}")
+
+        def _release_async(url, payload, code):
+            try:
+                requests.post(url, headers={'Content-Type': 'application/json'}, data=json.dumps(payload), timeout=0.5)
+                _logger.info(f"[RELEASE] Sent async release for {code}")
+            except Exception as e:
+                _logger.warning(f"[RELEASE] failed for {code}: {str(e)}")
 
         for container_code in self.pc_container_code_ids.mapped("name"):
             release_payload = {
@@ -1000,14 +1013,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
             _logger.info(f"Container Release Payload: {json.dumps(release_payload, indent=4)}")
 
-            try:
-                response = requests.post(release_container_api_url, headers={'Content-Type': 'application/json'},
-                                         data=json.dumps(release_payload))
-                response.raise_for_status()
-                _logger.info(f"Container {container_code} successfully released.")
-            except requests.exceptions.RequestException as e:
-                _logger.error(f"Error releasing container {container_code}: {str(e)}")
-                raise UserError(_("Error releasing container: %s") % str(e))
+            threading.Thread(
+                target=_release_async,
+                args=(release_container_api_url, release_payload, container_code),
+                daemon=True
+            ).start()
 
         return True
 
@@ -1077,6 +1087,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
             label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
                                                                                                     {}).get("url")
+
+            # if not label_url:
+            #     raise UserError(_("Label URL not found in OneTraker response."))
             con_id = response_json.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
 
             if not label_url:
@@ -1121,8 +1134,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     def print_label_via_pack_bench(self, label_url):
         self.ensure_one()
 
-        if not label_url:
-            raise UserError(_("No label URL provided to print."))
+        # if not label_url:
+        #     raise UserError(_("No label URL provided to print."))
 
         bench_ip = self.pack_bench_id.printer_ip
         if not bench_ip:
@@ -1193,7 +1206,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "google_place_id": None,
             "contact": {
                 "name": partner.name,
-                "mobile_number": "+61412345678" or "0000000000",
+                "mobile_number": partner.mobile or  "0000000000",
                 "email": partner.email or "support@shiperoo.com"
             }
         }
@@ -1279,8 +1292,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             label_url = resp_data.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
                                                                                                 {}).get("url")
 
-            if not label_url:
-                raise UserError(_("Label URL not found in the OneTraker response."))
+            # if not label_url:
+            #     raise UserError(_("Label URL not found in the OneTraker response."))
 
             #  Print label fast
             self.print_label_via_pack_bench(label_url)
@@ -1296,6 +1309,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 'status': label_url,
                 'tracking_url': 'https://auspost.com.au/mypost/track/details/con_id',
             })
+            con_id = resp_data.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
+            self.send_tracking_update_to_ot_orders(
+                so_number=sale.name,
+                con_id=con_id,
+                carrier=carrier,
+                origin=sale.origin or picking.origin or "N/A",
+                tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
+            )
 
             _logger.info("[ONETRAKER] Label sent successfully and records updated.")
             return True
@@ -1307,6 +1328,37 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         except ValueError:
             _logger.error("[ONETRAKER] Invalid JSON response from OneTraker.")
             raise UserError("Failed to decode OneTraker API response. Check the response format.")
+
+    def send_tracking_update_to_ot_orders(self, so_number, con_id, carrier, origin, tenant_code):
+            is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
+            ot_orders_url = (
+                "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/ot_orders"
+                if is_production else
+                "https://shiperooconnect-dev.automation.shiperoo.com/api/ot_orders"
+            )
+
+            payload = {
+                "so_number": so_number,
+                "carrier_con_id": con_id,
+                "carrier": carrier,
+                "cin_id": origin,
+                "tenant_code": tenant_code,
+            }
+
+            headers = {"Content-Type": "application/json"}
+
+            _logger.info(f"[OT_ORDERS] Fire-and-forget tracking update to {ot_orders_url}:\n{json.dumps(payload)}")
+
+            try:
+                # Non-blocking, fast attempt with short timeout
+                requests.post(
+                    url=ot_orders_url,
+                    headers=headers,
+                    json=payload,
+                    timeout=0.5  # 500 ms timeout to avoid blocking
+                )
+            except requests.exceptions.RequestException as e:
+                _logger.warning(f"[OT_ORDERS] Tracking update skipped due to network issue: {str(e)}")
 
 
 class PackDeliveryReceiptWizardLine(models.TransientModel):
