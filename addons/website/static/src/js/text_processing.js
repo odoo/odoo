@@ -356,11 +356,27 @@ export function applyTextHighlight(topTextEl, highlightID) {
             }
         });
     });
-    topTextEl.replaceChildren(...lines.map(textLine => {
+    topTextEl.replaceChildren(...lines.map((textLine, index) => {
         // First we add text content to be able to build svg paths
         // correctly (`<br/>` tags are excluded).
-        return nodeIsBR(textLine[0]) ? textLine[0] :
-            createHighlightContainer(textLine);
+        if (nodeIsBR(textLine[0])) {
+            return textLine[0];
+        }
+        const highlightedContainer = createHighlightContainer(textLine);
+        // as `highlightedContainer` is an inline element but it behaves as a block
+        // we prefix its text content with `\ufeff` to allow proper navigation with arrow
+        // left/right when at the end container.
+        // we skip the first line `index` === 0 as in that case we change block so navigation
+        // works as expected.
+        let textNode = highlightedContainer.firstChild;
+        while (textNode.nodeType !== Node.TEXT_NODE && textNode.firstChild) {
+            textNode = textNode.firstChild;
+        }
+        textNode.textContent = textNode.textContent.replaceAll("\ufeff", "");
+        if (index && textNode.nodeType === Node.TEXT_NODE && topTextEl.isContentEditable) {
+            textNode.textContent = "\ufeff" + textNode.textContent;
+        }
+        return highlightedContainer;
     }));
     // Build and set highlight SVGs.
     [...topTextEl.querySelectorAll(".o_text_highlight_item")].forEach(container => {
