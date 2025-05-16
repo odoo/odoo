@@ -2084,3 +2084,24 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
         self.assertEqual(pickings[0].state, 'done')
         self.assertEqual(len(sale_order.order_line), 1)
+
+    def test_create_return_on_cancel(self):
+        """
+        Test that the return picking is created when the sale order is cancelled.
+        """
+        warehouse = self.company_data.get('default_warehouse')
+        warehouse.delivery_steps = 'pick_pack_ship'
+        self.env['stock.quant']._update_available_quantity(self.test_product_delivery, warehouse.lot_stock_id, 1)
+        sale_order = self._get_new_sale_order(amount=1, product=self.test_product_delivery)
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.button_validate()
+        picking_count_before = self.env['stock.return.picking'].search_count([])
+        sale_order.action_cancel()
+        picking_count_after = self.env['stock.return.picking'].search_count([])
+        self.assertTrue(picking_count_after > picking_count_before, "Return picking was not created.")
+        # check that the return picking has the correct quantity
+        return_picking = self.env['stock.picking'].search([('origin', '=', 'Return of ' + picking.name), ('state', '=', 'assigned')])
+        self.assertEqual(return_picking.move_line_ids.quantity, 1, "Return picking quantity should be 1.")
+        # check that the return picking is linked to the SO
+        self.assertEqual(return_picking.sale_id, sale_order, "Return picking should be linked to the sale order.")
