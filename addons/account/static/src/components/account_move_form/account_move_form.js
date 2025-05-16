@@ -26,10 +26,11 @@ export class AccountMoveFormController extends FormController {
     }
 
     async loadExtraPrintItems() {
-        if (!this.model.root.isNew) {
+        const resId = this.model.root.resId;
+        if (!resId) {
             return []
         }
-        return this.orm.call("account.move", "get_extra_print_items", [this.model.root.resId]);
+        return this.orm.call("account.move", "get_extra_print_items", [resId]);
     }
 
 
