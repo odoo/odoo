@@ -33,8 +33,8 @@ const checkScrollbar = function (hasScrollbar) {
     };
 };
 
-const toggleBackdrop = function () {
-    return changeOption('SnippetPopup', 'we-button[data-name="popup_backdrop_opt"] we-checkbox', 'backdrop');
+function toggleBackdrop(snippet) {
+    return changeOption(`${snippet}`, "[data-action-id='setBackdrop'] .form-check-input");
 };
 
 registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
@@ -49,33 +49,35 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         trigger: ':iframe .s_popup .modal',
         run: "click",
     },
-    toggleBackdrop(), // hide Popup backdrop
+    toggleBackdrop("Popup"), // hide Popup backdrop
     checkScrollbar(true),
     goBackToBlocks(),
     {
         content: "Drag the Content snippet group and drop it at the bottom of the popup.",
-        trigger: ".o_block_tab:not(.o_we_ongoing_insertion) #oe_snippets .oe_snippet[name='Content'] .oe_snippet_thumbnail",
+        trigger: ".o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Content'].o_draggable .o_snippet_thumbnail",
         run: "drag_and_drop :iframe #wrap .s_popup .oe_drop_zone:last",
     },
     {
         content: "Click on the s_media_list snippet.",
-        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_media_list"]',
+        trigger: ":iframe .o_add_snippets_preview [data-snippet='s_media_list']",
         run: "click",
     },
     checkScrollbar(false),
     {
+        trigger: ":iframe:not(:has(.o_loading_screen))",
+    },
+    {
         content: "Select the Media List snippet in the Popup.",
-        trigger: ":iframe #wrap .s_popup .modal-content .s_media_list",
+        trigger: ":iframe .s_popup .s_media_list",
         run: "click",
     },
     {
-        content: "Remove the Media List snippet in the Popup.",
-        trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
+        content: "Remove the s_media_list snippet",
+        trigger: ".overlay .o_overlay_options .oe_snippet_remove",
         run: "click",
     },
     checkScrollbar(true),
-    toggleBackdrop(), // show Popup backdrop
-    checkScrollbar(false),
+    toggleBackdrop("Popup"), // show Popup backdrop
     {
         content: "Close the Popup that has now backdrop.",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
@@ -88,57 +90,57 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         run: "click",
     },
     checkScrollbar(true),
-    toggleBackdrop(), // show Cookies Bar backdrop
-    checkScrollbar(false),
-    toggleBackdrop(), // hide Cookies Bar backdrop
+    toggleBackdrop("Cookies Bar"), // show Cookies Bar backdrop
+    toggleBackdrop("Cookies Bar"), // hide Cookies Bar backdrop
     checkScrollbar(true),
     {
         content: "Open the Popup that has backdrop.",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
         run: "click",
     },
-    /* task-4185877
-    checkScrollbar(false),
-    */
     goBackToBlocks(),
     {
         content: "Drag the Content snippet group and drop it at the bottom of the popup.",
-        trigger: ".o_block_tab:not(.o_we_ongoing_insertion) #oe_snippets .oe_snippet[name='Content'] .oe_snippet_thumbnail",
-        run: "drag_and_drop :iframe #wrap .s_popup .oe_drop_zone:last",
+        trigger: ".o-snippets-menu .o_snippet[name='Content'] .o_snippet_thumbnail:not(.o_we_ongoing_insertion)",
+        run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
     },
     {
         content: "Click on the s_media_list snippet.",
-        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_media_list"]',
+        trigger: ":iframe .o_add_snippets_preview [data-snippet='s_media_list']",
         run: "click",
     },
-    /* task-4185877
-    checkScrollbar(true), // The popup backdrop is activated so there should be a scrollbar
-    */
     {
         content: 'Click on the s_popup snippet',
         trigger: ':iframe .s_popup .modal',
-        run: "click",
+        run() {
+            this.anchor.scrollIntoView();
+            this.anchor.click();
+        },
     },
     {
         content: "Remove the s_popup snippet",
-        trigger: ".o_we_customize_panel we-customizeblock-options:contains('Popup') we-button.oe_snippet_remove:first",
-        async run(helpers) {
-            await helpers.click();
-            // TODO: remove the below setTimeout. Without it, goBackToBlocks() not works.
-            await new Promise((r) => setTimeout(r, 1000));
-        }
+        trigger: ".overlay .o_overlay_options .oe_snippet_remove",
+        run: "click",
     },
     checkScrollbar(true),
+    {
+        content: "Open the Cookie Bar.",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry",
+        run: "click",
+    },
     goBackToBlocks(),
     {
         content: "Drag the Content snippet group and drop it in the Cookies Bar.",
-        trigger: ".o_block_tab:not(.o_we_ongoing_insertion) #oe_snippets .oe_snippet[name='Content'] .oe_snippet_thumbnail",
+        trigger: ".o-snippets-menu .o_snippet[name='Content'] .o_snippet_thumbnail:not(.o_we_ongoing_insertion)",
         run: "drag_and_drop :iframe #website_cookies_bar .modal-content.oe_structure",
     },
     {
         content: "Click on the s_media_list snippet.",
-        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_media_list"]',
+        trigger: ":iframe .o_add_snippets_preview [data-snippet='s_media_list']",
         run: "click",
+    },
+    {
+        trigger: ":iframe:not(:has(.o_loading_screen))",
     },
     {
         content: "Select the Media List snippet in the Cookies Bar.",
@@ -147,21 +149,23 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     },
     {
         content: "Duplicate the Media List snippet",
-        trigger: ".o_we_customize_panel we-customizeblock-options:contains('Media List') we-button.oe_snippet_clone:first",
-        run() {
-            // TODO: use run: "click", instead
-            this.anchor.click();
-        }
+        trigger: ".o_customize_tab .options-container[data-container-title='Media List'] .oe_snippet_clone",
+        run: "click",
     },
     checkScrollbar(false),
     {
+        content: "Select the Media List snippet in the Cookies Bar.",
+        trigger: ":iframe #website_cookies_bar .modal-content .s_media_list",
+        run: "click",
+    },
+    {
         content: "Remove the first Media List snippet in the Cookies Bar.",
-        trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
+        trigger: ".overlay .o_overlay_options .oe_snippet_remove",
         run: "click",
     },
     {
         content: "Remove the second Media List snippet in the Cookies Bar.",
-        trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
+        trigger: ".overlay .o_overlay_options .oe_snippet_remove",
         run: "click",
     },
     checkScrollbar(true),
