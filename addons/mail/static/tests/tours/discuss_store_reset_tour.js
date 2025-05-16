@@ -1,15 +1,14 @@
-import { queryFirst } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
-window.queryFirst = queryFirst;
-function getSendFirstMessageAndResetSteps(containerSelector) {
+
+export function getSendFirstMessageAndResetSteps(containerSelector) {
     return [
         {
             trigger: `${containerSelector} .o-mail-Composer-input`,
             run: "edit Hello!",
         },
         {
-            trigger: `${containerSelector} .o-mail-Composer-input`,
-            run: "press Enter",
+            trigger: `${containerSelector} button.o-sendMessageActive`,
+            run: "click",
         },
         {
             trigger: `${containerSelector} .o-mail-Message-body:contains("Hello!")`,
@@ -19,7 +18,8 @@ function getSendFirstMessageAndResetSteps(containerSelector) {
         },
     ];
 }
-function getAfterResetSteps(containerSelector) {
+
+export function getAfterResetSteps(containerSelector) {
     // Execute basic actions after store reset to ensure that the basic functionalities
     // are still working as expected: Send/Edit message, Add/Remove reactio
     return [
@@ -32,8 +32,8 @@ function getAfterResetSteps(containerSelector) {
             run: "edit Hello again!",
         },
         {
-            trigger: `${containerSelector} .o-mail-Composer-input`,
-            run: "press Enter",
+            trigger: `${containerSelector} button.o-sendMessageActive`,
+            run: "click",
         },
         {
             trigger: `${containerSelector} .o-mail-Message-textContent:contains(Hello again!):not(:has(.o-mail-Message-pendingProgress))`,
@@ -43,7 +43,7 @@ function getAfterResetSteps(containerSelector) {
             run: "click",
         },
         {
-            trigger: `[title='Edit']`,
+            trigger: `[title='Edit'], ${containerSelector} [title='Edit']`,
             run: "click",
         },
         {
@@ -56,18 +56,17 @@ function getAfterResetSteps(containerSelector) {
         },
         {
             trigger: `${containerSelector} .o-mail-Message-textContent:contains(Hello!)`,
-            run: "hover && click .o-mail-Message [title='Add a Reaction']",
+            run: `hover && click .o-mail-Message [title='Add a Reaction'], ${containerSelector} .o-mail-Message [title='Add a Reaction']`,
         },
         {
-            trigger: `.o-mail-QuickReactionMenu-emojiPicker`,
+            trigger: `.o-mail-QuickReactionMenu-emojiPicker, ${containerSelector} .o-mail-QuickReactionMenu-emojiPicker`,
             run: "click",
         },
         {
-            trigger: `.o-EmojiPicker .o-Emoji:contains('🙂')`,
+            trigger: `.o-EmojiPicker .o-Emoji:contains('🙂'), ${containerSelector} .o-EmojiPicker .o-Emoji:contains('🙂')`,
             run: "click",
         },
         {
-            content: "Remove reaction",
             trigger: `${containerSelector} .o-mail-MessageReaction:contains('🙂')`,
             run: "click",
         },

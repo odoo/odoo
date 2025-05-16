@@ -647,6 +647,7 @@ export class Store extends BaseStore {
     }
     async onReset() {
         await super.onReset();
+        this.cannedReponses.status = "not_fetched";
         this.insert(session.storeData);
         /**
          * Add defaults for `self` and `settings` because in livechat there could be no user and no

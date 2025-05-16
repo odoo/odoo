@@ -23,13 +23,3 @@ class TestImLivechatSupportPage(TestGetOperatorCommon):
         )
         with patch.object(LivechatController, "_is_cors_request", return_value=True):
             self.start_tour(f"/im_livechat/support/{livechat_channel.id}", "im_livechat.basic_tour")
-
-    def test_store_reset_in_embed_livechat(self):
-        operator = self._create_operator()
-        livechat_channel = self.env["im_livechat.channel"].create(
-            {"name": "Support Channel", "user_ids": [operator.id]}
-        )
-        self.start_tour(
-            f"/im_livechat/support/{livechat_channel.id}",
-            "im_livechat.store_reset_in_embed_livechat",
-        )
