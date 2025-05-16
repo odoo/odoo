@@ -11,6 +11,7 @@ declare module "models" {
     import { Failure as FailureClass } from "@mail/core/common/failure_model";
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
+    import { MailActivityType as MailActivityTypeClass } from "@mail/core/common/mail_activity_type_model";
     import { MailTemplate as MailTemplateClass } from "@mail/core/common/mail_template_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
     import { MessageLinkPreview as MessageLinkPreviewClass } from "@mail/core/common/message_link_preview_model";
@@ -20,6 +21,7 @@ declare module "models" {
     import { ResGroups as ResGroupsClass } from "@mail/core/common/res_groups_model";
     import { ResGroupsPrivilege as ResGroupsPrivilegeClass } from "@mail/core/common/res_groups_privilege_model";
     import { ResRole as ResRoleClass } from "@mail/core/common/res_role_model";
+    import { ResUsers as ResUsersClass } from "@mail/core/common/res_users_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
     import { Volume as VolumeClass } from "@mail/core/common/volume_model";
@@ -36,6 +38,7 @@ declare module "models" {
     export interface Failure extends FailureClass {}
     export interface Follower extends FollowerClass {}
     export interface LinkPreview extends LinkPreviewClass {}
+    export interface MailActivityType extends MailActivityTypeClass {}
     export interface MailTemplate extends MailTemplateClass {}
     export interface Message extends MessageClass {}
     export interface MessageLinkPreview extends MessageLinkPreviewClass {}
@@ -45,6 +48,7 @@ declare module "models" {
     export interface ResGroups extends ResGroupsClass {}
     export interface ResGroupsPrivilege extends ResGroupsPrivilegeClass {}
     export interface ResRole extends ResRoleClass {}
+    export interface ResUsers extends ResUsersClass {}
     export interface Settings extends SettingsClass {}
     export interface Thread extends ThreadClass {}
     export interface Volume extends VolumeClass {}
@@ -58,6 +62,7 @@ declare module "models" {
         Failure: StaticMailRecord<Failure, typeof FailureClass>;
         "ir.attachment": StaticMailRecord<Attachment, typeof AttachmentClass>;
         "mail.activity": StaticMailRecord<Activity, typeof ActivityClass>;
+        "mail.activity.type": StaticMailRecord<MailActivityType, typeof MailActivityTypeClass>;
         "mail.canned.response": StaticMailRecord<CannedResponse, typeof CannedResponseClass>;
         "mail.followers": StaticMailRecord<Follower, typeof FollowerClass>;
         "mail.link.preview": StaticMailRecord<LinkPreview, typeof LinkPreviewClass>;
@@ -71,6 +76,7 @@ declare module "models" {
         "res.groups": StaticMailRecord<ResGroups, typeof ResGroupsClass>;
         "res.groups.privilege": StaticMailRecord<ResGroupsPrivilege, typeof ResGroupsPrivilegeClass>;
         "res.role": StaticMailRecord<ResRole, typeof ResRoleClass>;
+        "res.users": StaticMailRecord<ResUsers, typeof ResUsersClass>;
         Settings: StaticMailRecord<Settings, typeof SettingsClass>;
         Thread: StaticMailRecord<Thread, typeof ThreadClass>;
         Volume: StaticMailRecord<Volume, typeof VolumeClass>;
@@ -85,6 +91,7 @@ declare module "models" {
         Failure: Failure;
         "ir.attachment": Attachment;
         "mail.activity": Activity;
+        "mail.activity.type": MailActivityType;
         "mail.canned.response": CannedResponse;
         "mail.followers": Follower;
         "mail.link.preview": LinkPreview;
@@ -98,6 +105,7 @@ declare module "models" {
         "res.groups": ResGroups;
         "res.groups.privilege": ResGroupsPrivilege;
         "res.role": ResRole;
+        "res.users": ResUsers;
         Settings: Settings;
         Thread: Thread;
         Volume: Volume;

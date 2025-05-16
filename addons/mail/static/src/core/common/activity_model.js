@@ -29,8 +29,7 @@ export class Activity extends Record {
     active;
     /** @type {string} */
     activity_category;
-    /** @type {[number, string]} */
-    activity_type_id;
+    activity_type_id = fields.One("mail.activity.type");
     /** @type {string|false} */
     activity_decoration;
     /** @type {Object[]} */
@@ -40,8 +39,7 @@ export class Activity extends Record {
     /** @type {'suggest'|'trigger'} */
     chaining_type;
     create_date = fields.Datetime();
-    /** @type {[number, string]} */
-    create_uid;
+    create_uid = fields.One("res.users");
     date_deadline = fields.Date();
     date_done = fields.Date();
     /** @type {string} */
@@ -55,10 +53,6 @@ export class Activity extends Record {
     mail_template_ids = fields.Many("mail.template");
     note = fields.Html("");
     persona = fields.One("Persona");
-    /** @type {number|false} */
-    previous_activity_type_id;
-    /** @type {number|false} */
-    recommended_activity_type_id;
     /** @type {string} */
     res_model;
     /** @type {[number, string]} */
