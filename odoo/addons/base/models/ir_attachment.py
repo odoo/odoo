@@ -111,12 +111,12 @@ class IrAttachment(models.Model):
         return fname, full_path
 
     @api.model
-    def _file_read(self, fname):
+    def _file_read(self, fname, size=None):
         assert isinstance(self, IrAttachment)
         full_path = self._full_path(fname)
         try:
             with open(full_path, 'rb') as f:
-                return f.read()
+                return f.read(size)
         except OSError:
             _logger.info("_read_file reading %s", full_path, exc_info=True)
         return b''
