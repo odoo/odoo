@@ -8,6 +8,7 @@ declare module "models" {
         channels: DiscussAppCategory;
         chats: DiscussAppCategory;
         computeChats: () => object;
+        unreadChannels: Thread[];
     }
     export interface Message {
         linkedSubChannel: Thread;
@@ -21,6 +22,7 @@ declare module "models" {
     }
     export interface Thread {
         _computeDiscussAppCategory: () => undefined|unknown;
+        appAsUnreadChannels: DiscussApp;
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
         discussAppCategory: DiscussAppCategory;
         displayInSidebar: boolean;
