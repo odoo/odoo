@@ -3,6 +3,7 @@ import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { removeClass, toggleClass, wrapInlinesInBlocks } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
+    isElement,
     isEmptyBlock,
     isListElement,
     isListItemElement,
@@ -19,8 +20,10 @@ import {
     selectElements,
     ancestors,
     childNodes,
+    firstLeaf,
+    lastLeaf,
 } from "@html_editor/utils/dom_traversal";
-import { childNodeIndex } from "@html_editor/utils/position";
+import { childNodeIndex, nodeSize } from "@html_editor/utils/position";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
@@ -150,6 +153,22 @@ export class ListPlugin extends Plugin {
         format_selection_overrides: this.applyFormatToListItem.bind(this),
         node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
+        fully_selected_node_predicates: (node, selection, range) => {
+            if (node.nodeName === "LI") {
+                const nonListChildren = childNodes(node).filter(
+                    (n) => !["UL", "OL"].includes(n.nodeName)
+                );
+                if (!nonListChildren.length) {
+                    return;
+                }
+                const startLeaf = firstLeaf(nonListChildren[0]);
+                const endLeaf = lastLeaf(nonListChildren[nonListChildren.length - 1]);
+                return (
+                    range.isPointInRange(startLeaf, 0) &&
+                    range.isPointInRange(endLeaf, nodeSize(endLeaf))
+                );
+            }
+        },
     };
 
     setup() {
@@ -1036,10 +1055,20 @@ export class ListPlugin extends Plugin {
         }
         for (const list of targetedNodes) {
             if (this.dependencies.selection.areNodeContentsFullySelected(list)) {
-                for (const node of descendants(list)) {
-                    if (node.nodeType === Node.ELEMENT_NODE && node.style.color) {
+                for (const node of [
+                    list,
+                    ...descendants(list).filter(
+                        (n) => isElement(n) && closestElement(n, "LI") === list
+                    ),
+                ]) {
+                    removeClass(node, "o_default_color");
+                    if (node.style.color) {
                         node.style.color = "";
                     }
+                }
+                const sublists = childNodes(list).filter(isListElement);
+                for (const list of sublists) {
+                    list.classList.add("o_default_color");
                 }
                 this.dependencies.color.colorElement(list, color, mode);
             }
@@ -1058,16 +1087,32 @@ export class ListPlugin extends Plugin {
         }
         const listsSet = new Set();
         for (const listItem of targetedNodes) {
-            // Skip list items with block descendants
-            if ([...descendants(listItem)].some(isBlock)) {
+            // Skip list items with block descendants other than base
+            // container or a list related elements.
+            if (
+                ![...descendants(listItem)]
+                    .filter(isBlock)
+                    .every((n) => n.matches(`${baseContainerGlobalSelector}, ol, ul, li`))
+            ) {
                 continue;
             }
 
             if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
-                for (const node of [listItem, ...descendants(listItem)]) {
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                        removeClass(node, ...FONT_SIZE_CLASSES);
+                for (const node of [
+                    listItem,
+                    ...descendants(listItem).filter(
+                        (n) => isElement(n) && closestElement(n, "LI") === listItem
+                    ),
+                ]) {
+                    removeClass(node, ...FONT_SIZE_CLASSES, "o_default_font_size");
+                    if (node.style.fontSize) {
+                        node.style.fontSize = "";
                     }
+                }
+
+                const sublists = childNodes(listItem).filter(isListElement);
+                for (const list of sublists) {
+                    list.classList.add("o_default_font_size");
                 }
 
                 if (formatName === "setFontSizeClassName") {

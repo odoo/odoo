@@ -206,3 +206,12 @@ test("should change color of subpart of a list item (2)", async () => {
             '<ol><li style="color: rgb(255, 0, 0);">a<font style="color: rgb(0, 0, 255);">[bc</font></li><li style="color: rgb(255, 0, 0);"><font style="color: rgb(0, 0, 255);">gh]</font>i</li></ol>',
     });
 });
+
+test("should apply color to a list containing sublist if list contents are fully selected", async () => {
+    await testEditor({
+        contentBefore: "<ol><li><p>[abc]</p><ol><li>def</li></ol></li></ol>",
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter:
+            '<ol><li style="color: rgb(255, 0, 0);"><p>[abc]</p><ol class="o_default_color"><li>def</li></ol></li></ol>',
+    });
+});
