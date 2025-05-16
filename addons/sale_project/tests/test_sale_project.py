@@ -367,7 +367,6 @@ class TestSaleProject(TestSaleProjectCommon):
             'product_id': self.product_consumable.id,
             'order_id': sale_order_1.id,
         }])
-        self.assertFalse(sale_order_1.show_create_project_button, "There is no service product with one of the correct service_policy on the sale order, the button should be hidden")
         self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
         self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
         # add a milestone product
@@ -1314,3 +1313,32 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(self.project_global.sale_line_id, sale_order.order_line)
 
         sale_order.action_confirm()  # no error should be raised even if the SO is already confirmed
+
+    def test_project_creation_from_sol_with_goods_type_product_should(self):
+        """ Test that a project can be created from a confirmed sale order containing a 'goods' type product.
+        Steps:
+            - Create a sale order with a consumable (goods-type) product.
+            - Confirm the sale order.
+            - Trigger 'Create Project' action from the sale order.
+            - Fill out and save the project form.
+            - Ensure the created project is correctly linked to the sale order,
+                but not to a specific sale order line.
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_consumable.id,
+                }),
+            ],
+        })
+
+        sale_order.action_confirm()
+        action = sale_order.action_create_project()
+
+        with Form(self.env['project.project'].with_context(action['context'])) as project_form:
+            project_form.name = "test project"
+            project = project_form.save()
+
+        self.assertEqual(project.reinvoiced_sale_order_id.id, sale_order.id, "The project should be linked to the SO.")
+        self.assertFalse(project.sale_line_id, "The project should not be linked to sale order line.")
