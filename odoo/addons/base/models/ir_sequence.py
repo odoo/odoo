@@ -316,6 +316,11 @@ class IrSequenceDate_Range(models.Model):
     _rec_name = "sequence_id"
     _allow_sudo_commands = False
 
+    _unique_range_per_sequence = models.Constraint(
+        'UNIQUE(sequence_id, date_from, date_to)',
+        "You cannot create two date ranges for the same sequence with the same date range.",
+    )
+
     def _get_number_next_actual(self):
         '''Return number from ir_sequence row when no_gap implementation,
         and number from postgres sequence when standard implementation.'''
