@@ -103,20 +103,38 @@
     <template id="403">
         <t t-call="web.frontend_layout">
             <div id="wrap">
-                <div class="container">
-                    <h1 class="mt-5">403: Forbidden</h1>
-                    <p>The page you were looking for could not be authorized.</p>
-                </div>
-                    <t t-if="editable or debug">
-                        <t t-call="http_routing.http_error_debug"/>
-                    </t>
-                    <t t-else="">
-                        <div class="container">
-                            <t t-call="http_routing.error_message"/>
+                <div class="oe_structure oe_empty" id="403_layout_1"/>
+                <div class="container o_editable">
+                    <div class="s_403_error">
+                        <section class="s_text_block">
+                            <div class="s_allow_columns">
+                                <h1 class="mt-5">403: Forbidden</h1>
+                                <p>The page you were looking for could not be authorized.</p>
+                            </div>
+                        </section>
+                        <div t-if="debug" class="debug_block">
+                            <t t-call="http_routing.http_error_debug"/>
                         </div>
-                    </t>
+                    </div>
+                </div>
+                <div class="oe_structure oe_empty" id="403_layout_2"/>
             </div>
         </t>
+    </template>
+
+    <template id="403_error_insertion" inherit_id="http_routing.403">
+        <xpath expr="//div[hasclass('s_403_error')]" position="inside">
+            <div t-att-class="debug and 'error_block d-none' or 'error_block'">
+                <t t-if="editable">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </t>
+            </div>
+        </xpath>
     </template>
 
     <template id="404" name="Page Not Found">
