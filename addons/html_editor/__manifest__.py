@@ -70,6 +70,9 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/main/chatgpt/language_selector.dark.scss',
             'html_editor/static/src/main/table/table_align_selector.dark.scss',
         ],
+        'web.assets_tests': [
+            'html_editor/static/tests/tours/**/*',
+        ],
         'web.assets_unit_tests': [
             'html_editor/static/tests/**/*',
         ],
