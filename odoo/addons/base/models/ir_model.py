@@ -978,9 +978,8 @@ class IrModelFields(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         IrModel = self.env['ir.model']
-        models = set()
         for vals in vals_list:
-            if 'model_id' in vals:
+            if 'model_id' in vals and 'model' not in vals:
                 vals['model'] = IrModel.browse(vals['model_id']).model
 
         # for self._get_ids() in _update_selection()
