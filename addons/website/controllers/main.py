@@ -150,6 +150,16 @@ class Website(Home):
 
         raise request.not_found()
 
+    @http.route("/website/http_error/<int:status_code>", type="http", auth="public", website=True)
+    def website_http_error_page(self, status_code, **kwargs):
+        """
+        Generic error page renderer for 400, 403, 404, 500, etc.
+        """
+        template = f"http_routing.{status_code}"
+        if not request.env.ref(template, raise_if_not_found=False):
+            template = "http_routing.404"
+        return request.render(template)
+
     @http.route('/website/force/<int:website_id>', type='http', auth="user", website=True, sitemap=False, multilang=False, readonly=True)
     def website_force(self, website_id, path='/', isredir=False, **kw):
         """ To switch from a website to another, we need to force the website in

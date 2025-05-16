@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="website.403_with_technical_error" inherit_id="http_routing.403" active="False">
+    <xpath expr="//div[hasclass('o_error_block')]" position="replace">
+        <div t-if="debug" class="o_debug_block">
+            <t t-call="http_routing.http_error_debug"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>
