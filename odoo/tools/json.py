@@ -70,4 +70,6 @@ def json_default(obj):
         return dict(obj)
     if isinstance(obj, bytes):
         return obj.decode()
+    if isinstance(obj, fields.Domain):
+        return list(obj)
     return str(obj)
