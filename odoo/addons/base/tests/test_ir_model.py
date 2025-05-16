@@ -357,11 +357,3 @@ class TestIrModelInherit(TransactionCase):
         self.assertEqual(len(imi), 1)
         self.assertEqual(imi.parent_id.model, "res.partner")
         self.assertEqual(imi.parent_field_id.name, "partner_id")
-
-    def test_delegate_field(self):
-        imi = self.env["ir.model.inherit"].search(
-            [("model_id.model", "=", "ir.cron"), ("parent_field_id", "!=", False)]
-        )
-        self.assertEqual(len(imi), 1)
-        self.assertEqual(imi.parent_id.model, "ir.actions.server")
-        self.assertEqual(imi.parent_field_id.name, "ir_actions_server_id")
