@@ -14,7 +14,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.osv import expression
 from odoo.sql_db import BaseCursor
-from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date
+from odoo.tools import float_compare, float_is_zero, frozendict, groupby, split_every, format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -346,11 +346,19 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
     def _compute_qty_to_order_computed(self):
+        records = groupby(
+            self.filtered(lambda o: o.product_id and o.location_id).sorted('location_id'),
+            key=lambda o: o.location_id,
+        )
+        qty_in_progress_by_orderpoint = {}
+        for _location, orderpoints in records:
+            qty_in_progress_by_orderpoint.update(
+                self.env['stock.warehouse.orderpoint'].concat(*orderpoints)._quantity_in_progress()
+            )
         for orderpoint in self:
-            if not orderpoint.product_id or not orderpoint.location_id:
-                orderpoint.qty_to_order_computed = False
-                continue
-            orderpoint.qty_to_order_computed = orderpoint._get_qty_to_order(qty_in_progress_by_orderpoint=orderpoint._quantity_in_progress())
+            orderpoint.qty_to_order_computed = orderpoint._get_qty_to_order(
+                qty_in_progress_by_orderpoint=qty_in_progress_by_orderpoint
+            )
 
     def _get_qty_to_order(self, force_visibility_days=False, qty_in_progress_by_orderpoint={}):
         self.ensure_one()
