@@ -14,6 +14,7 @@ export class LinkPopover extends Component {
         onRemove: Function,
         onCopy: Function,
         onClose: Function,
+        onEdit: Function,
         getInternalMetaData: Function,
         getExternalMetaData: Function,
         getAttachmentMetadata: Function,
@@ -113,6 +114,7 @@ export class LinkPopover extends Component {
     }
     onClickEdit() {
         this.state.editing = true;
+        this.props.onEdit();
         this.state.url = this.props.linkElement.href;
 
         const textContent = cleanZWChars(this.props.linkElement.textContent);

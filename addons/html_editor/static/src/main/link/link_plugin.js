@@ -468,7 +468,7 @@ export class LinkPlugin extends Plugin {
             }
         };
 
-        const restoreSavePoint = this.dependencies.history.makeSavePoint();
+        this.restoreSavePoint = this.dependencies.history.makeSavePoint();
         const props = {
             linkElement,
             isImage: isImage,
@@ -481,7 +481,7 @@ export class LinkPlugin extends Plugin {
             },
             onChange: applyCallback,
             onDiscard: () => {
-                restoreSavePoint();
+                this.restoreSavePoint();
                 if (linkElement.isConnected) {
                     this.openLinkTools(linkElement);
                 }
@@ -499,6 +499,9 @@ export class LinkPlugin extends Plugin {
             onClose: () => {
                 this.linkInDocument = null;
                 this.overlay.close();
+            },
+            onEdit: () => {
+                this.restoreSavePoint = this.dependencies.history.makeSavePoint();
             },
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
