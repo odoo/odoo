@@ -24,7 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "%(payment_method)s requires both a first and last name."
-msgstr ""
+msgstr "%(payment_method)s vaatii sekä etu- että sukunimen."
 
 #. module: payment_nuvei
 #. odoo-python
@@ -49,7 +49,7 @@ msgstr "Näyttönimi"
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
@@ -70,17 +70,17 @@ msgstr "Nuvei"
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
 msgid "Nuvei Merchant Identifier"
-msgstr ""
+msgstr "Nuvei, kauppiaan tunnus"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_secret_key
 msgid "Nuvei Secret Key"
-msgstr ""
+msgstr "Nuvei, salattu avain"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_site_identifier
 msgid "Nuvei Site Identifier"
-msgstr ""
+msgstr "Nuvei, sivun tunniste"
 
 #. module: payment_nuvei
 #: model:ir.model,name:payment_nuvei.model_payment_provider
@@ -96,7 +96,7 @@ msgstr "Maksutapahtuma"
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "Received data with missing payment state."
-msgstr "Vastaanotetut tiedot, joista puuttuu maksutila."
+msgstr "Vastaanotetut tiedot, joista puuttuu maksun tila."
 
 #. module: payment_nuvei
 #. odoo-python
@@ -114,12 +114,12 @@ msgstr "Saatu virheellinen tapahtuman tila %(status)s ja syy '%(reason)s'."
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Secret Key"
-msgstr "Salainen avain"
+msgstr "Salattu avain"
 
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Site Identifier"
-msgstr ""
+msgstr "Sivun tunniste"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
@@ -135,7 +135,7 @@ msgstr "Asiakas poistui maksusivulta."
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_site_identifier
 msgid "The site identifier code associated with the merchant account."
-msgstr ""
+msgstr "Sivustotunniste, joka on yhdistetty kauppiastiliin."
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code

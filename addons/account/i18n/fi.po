@@ -7,7 +7,6 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
 # Thomas Becquevort, 2025
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # Jessica Jakara, 2025
 # 
 msgid ""
@@ -1472,6 +1471,8 @@ msgid ""
 "<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
 "disabled again if there are any existing journal items."
 msgstr ""
+"<strong>Varoitus:</strong> Kun kirjausketju on otettu käyttöön, sitä ei voi "
+"poistaa käytöstä, jos yhtäkään päiväkirjamerkintöjä on olemassa."
 
 #. module: account
 #. odoo-python
@@ -1516,6 +1517,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"Pakkitili ja tilinumero %(number)s ovat jo olemassa Kumppanilla %(partner)s,"
+" mutta ne on arkistoitu. Ole hyvä ja poista niiden arkistointi."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -3551,7 +3554,7 @@ msgstr "Pankkitili"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s archived"
-msgstr ""
+msgstr "Pankkitili %(link)s ja tilinumero %(number)s ovat arkistoitu"
 
 #. module: account
 #. odoo-python
@@ -4171,7 +4174,7 @@ msgstr "Ei voi saada koontitietoja riviltä, joka ei käytä 'koonti' -moduulia"
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Cannot identify the invoices in the generated PDF: %s"
-msgstr ""
+msgstr "Luodun PDF:n laskuja ei voitu tunnistaa: %s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -6025,7 +6028,7 @@ msgstr "Oletusluottoraja"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Expense Account"
-msgstr "Oletuskulutili"
+msgstr "Oletusmenotili"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -7296,7 +7299,7 @@ msgstr "Menotili"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__expense_accrual_account_id
 msgid "Expense Accrual Account"
-msgstr "Kulujen jaksotustili"
+msgstr "Menojen jaksotustili"
 
 #. module: account
 #: model:account.account,name:account.1_expense
@@ -9224,7 +9227,7 @@ msgid ""
 " line."
 msgstr ""
 "Laskujen ja hyvityslaskujen jaossa on oltava vähintään yksi verojen "
-"uudelleenosoitusrivi."
+"uudelleenjakamisen rivi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9883,7 +9886,7 @@ msgid ""
 msgstr ""
 "Jätä tämä kenttä tyhjäksi, jos haluat käyttää tuotekategorian oletusarvoa. "
 "Jos anglo-saxon on määritetty automatisoidulla arvostusmenetelmällä, "
-"käytetään tuotekategorian kulutiliä."
+"käytetään tuotekategorian menotiliä."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -10489,7 +10492,7 @@ msgstr "Yhteensovita tekstin sijainnin viite"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_credit_ids
 msgid "Matched Credits"
-msgstr "Vastaavat krediitit"
+msgstr "Täsmäytetty luotto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_debit_ids
@@ -11243,7 +11246,7 @@ msgstr "Kirjanpidon numeeriset päiväkirjat ilman pankkia"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account_credit
 msgid "Num Journals Without Account Credit"
-msgstr "Kirjanpidon numeeriset päiväkirjat ilman krediittiä"
+msgstr "Kirjanpidon numeeriset päiväkirjat ilman luottoa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name
@@ -11554,7 +11557,7 @@ msgstr "Tilikauden aloitussaldo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_credit
 msgid "Opening Credit"
-msgstr "Avaava kredit"
+msgstr "Aloitusluotto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_date
@@ -11785,7 +11788,7 @@ msgstr "Avointen kuittien tilit"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Outstanding credits"
-msgstr "Avoimet krediitit"
+msgstr "Maksamatta oleva luotto"
 
 #. module: account
 #. odoo-python
@@ -14121,7 +14124,7 @@ msgstr "Lähetä asiakkaalle laskun kanssa liitteenä"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_discount_expense_allocation_id
 msgid "Separate account for expense discount"
-msgstr "Erillinen tili kulujen alennusta varten"
+msgstr "Erillinen tili kulualennusta varten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_discount_income_allocation_id
@@ -14398,7 +14401,8 @@ msgstr "Näytä aktiiviset verot"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Näytä kaikki kirjaukset, joiden seuraava toimenpide on ennen kuluvaa päivää"
+"Näytä kaikki kirjaukset, joiden seuraavan toimenpiteen eräpäivä oli ennen "
+"tätä päivää"
 
 #. module: account
 #. odoo-python
@@ -15453,7 +15457,7 @@ msgid ""
 "balance."
 msgstr ""
 "Toissijaisena valuuttana ilmaistun summan on oltava positiivinen, kun "
-"tililtä veloitetaan (debet), ja negatiivinen, kun tilille hyvitetään "
+"tililtä veloitetaan (debit), ja negatiivinen, kun tilille hyvitetään "
 "(kredit). Jos valuutta on sama kuin yrityksen valuutta, tämän määrän on "
 "ehdottomasti oltava yhtä suuri kuin saldo."
 
@@ -18117,7 +18121,7 @@ msgstr "Väärä luotto- tai veloitusarvo kirjanpitomerkinnässä!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "XML format"
-msgstr "XML-formaatti"
+msgstr "XML-muoto"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
