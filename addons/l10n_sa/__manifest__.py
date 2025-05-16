@@ -23,13 +23,17 @@ Activates:
     'depends': [
         'l10n_gcc_invoice',
         'account',
+        'account_debit_note',
     ],
     'auto_install': ['account'],
     'data': [
         'data/account_data.xml',
         'data/account_tax_report_data.xml',
         'data/report_paperformat_data.xml',
+        'views/account_move_views.xml',
         'views/report_invoice.xml',
+        'wizard/account_debit_note.xml',
+        'wizard/account_move_reversal_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

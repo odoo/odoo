@@ -115,7 +115,7 @@ class TestEdiZatca(TestSaEdiCommon):
                         'default_journal_id': move.journal_id.id,
                     }
                     refund_invoice_wiz = self.env['account.move.reversal'].with_context(wiz_context).create({
-                        'reason': 'please reverse :c',
+                        'l10n_sa_reason': 'BR-KSA-17-reason-4',
                         'date': '2022-09-05',
                     })
                     refund_invoice = self.env['account.move'].browse(refund_invoice_wiz.reverse_moves()['res_id'])
