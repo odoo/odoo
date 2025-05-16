@@ -62,6 +62,7 @@ export async function loadDefaultEmbedConfig() {
                 channel_name: "YourWebsite.com",
                 channel_id: livechatChannelId,
                 default_username: "Visitor",
+                review_link: "https://www.odoo.com",
             },
         },
     });
