@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import datetime, time
 from statistics import mode
 import re
+
+import pytz
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
@@ -77,6 +80,7 @@ class AccountAnalyticLine(models.Model):
     readonly_timesheet = fields.Boolean(compute="_compute_readonly_timesheet", compute_sudo=True, export_string_translation=False)
     milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
     message_partner_ids = fields.Many2many('res.partner', compute='_compute_message_partner_ids', search='_search_message_partner_ids')
+    calendar_display_name = fields.Char(compute="_compute_calendar_display_name", export_string_translation=False)
 
     def _search_message_partner_ids(self, operator, value):
         followed_ids_by_model = dict(self.env['mail.followers']._read_group([
@@ -163,6 +167,39 @@ class AccountAnalyticLine(models.Model):
         for line in self:
             line.department_id = line.employee_id.department_id
 
+    def _compute_calendar_display_name(self):
+        companies = self.company_id
+        encoding_in_days_per_company = dict(zip(companies, [company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day') for company in companies]))
+        for line in self:
+            if not line.project_id:
+                line.calendar_display_name = ""
+                continue
+            if encoding_in_days_per_company[line.company_id]:
+                days = line._get_timesheet_time_day()
+                if days == int(days):
+                    days = int(days)
+                line.calendar_display_name = self.env._(
+                    "%(project_name)s (%(days)sd)",
+                    project_name=line.project_id.display_name,
+                    days=days,
+                )
+            else:
+                minutes = round(line.unit_amount * 60)
+                hours, minutes = divmod(minutes, 60)
+                if minutes:
+                    line.calendar_display_name = self.env._(
+                        "%(project_name)s (%(hours)sh%(minutes)s)",
+                        project_name=line.project_id.display_name,
+                        hours=hours,
+                        minutes=minutes,
+                    )
+                else:
+                    line.calendar_display_name = self.env._(
+                        "%(project_name)s (%(hours)sh)",
+                        project_name=line.project_id.display_name,
+                        hours=hours,
+                    )
+
     def _check_can_write(self, values):
         # If it's a basic user then check if the timesheet is his own.
         if (
@@ -177,12 +214,27 @@ class AccountAnalyticLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        user_timezone = pytz.timezone(self.env.user.tz or self.env.context.get('tz') or 'UTC')
         # Before creating a timesheet, we need to put a valid employee_id in the vals
         default_user_id = self._default_user()
         user_ids = []
         employee_ids = []
+        # If batch creating from the calendar view, prefetch all employees to avoid fetching them one by one in the loop
+        if self.env.context.get('timesheet_calendar'):
+            self.env['hr.employee'].browse([vals.get('employee_id') for vals in vals_list])
         # 1/ Collect the user_ids and employee_ids from each timesheet vals
-        for vals in vals_list:
+        for vals in vals_list[:]:
+            if self.env.context.get('timesheet_calendar'):
+                if not 'employee_id' in vals:
+                    vals['employee_id'] = self.env.user.employee_id.id
+                employee = self.env['hr.employee'].browse(vals['employee_id'])
+                date = fields.Date.from_string(vals.get('date', fields.Date.to_string(fields.Date.context_today(self))))
+                if not any(employee.resource_id._get_valid_work_intervals(
+                    datetime.combine(date, time.min, tzinfo=user_timezone),
+                    datetime.combine(date, time.max, tzinfo=user_timezone),
+                )[0][employee.resource_id.id]):
+                    vals_list.remove(vals)
+                    continue
             task = self.env['project.task'].sudo().browse(vals.get('task_id'))
             project = self.env['project.project'].sudo().browse(vals.get('project_id'))
             if not (task or project):
@@ -453,3 +505,7 @@ class AccountAnalyticLine(models.Model):
             'views': [(self.env.ref('hr_timesheet.timesheet_view_form_portal_user').id, 'form')],
             'context': self._context,
         }
+
+    @api.model
+    def get_unusual_days(self, date_from, date_to=None):
+        return self.env.user.employee_id._get_unusual_days(date_from, date_to)

@@ -321,6 +321,63 @@
             </field>
         </record>
 
+        <record id="view_calendar_account_analytic_line" model="ir.ui.view">
+            <field name="name">account.analytic.line.calendar</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <calendar
+                    scales="month"
+                    mode="month"
+                    date_start="date"
+                    color="employee_id"
+                    show_unusual_days="True"
+                    multi_create_view="hr_timesheet.view_calendar_account_analytic_line_multi_create"
+                    js_class="timesheet_calendar"
+                    create_name_field="calendar_display_name"
+                    form_view_id="%(hr_timesheet.hr_timesheet_line_form)d"
+                >
+                    <field name="employee_id" avatar_field="avatar_128" widget="many2one_avatar_employee"/>
+                    <field name="project_id"/>
+                    <field name="task_id" invisible="not task_id"/>
+                    <field name="name"/>
+                    <field name="employee_id" avatar_field="avatar_128" filters="1" write_model="account.analytic.line.calendar.employee" write_field="employee_id" filter_field="checked"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="view_calendar_account_analytic_line_multi_create" model="ir.ui.view">
+            <field name="name">account.analytic.line.calendar.multi_create</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="project_id" options="{'no_create_edit': True}"
+                            context="{'search_default_my_projects': True}" required="1"/>
+                        <field name="task_id" widget="task_with_hours"
+                            context="{'default_project_id': project_id, 'search_default_my_tasks': True, 'search_default_open_tasks': True}"/>
+                        <field name="unit_amount" string="Time Spent" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"
+                                decoration-muted="unit_amount == 0"/>
+                        <field name="name" required="0" placeholder="e.g. Sending E-mails"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_calendar_account_analytic_line_my_timesheets" model="ir.ui.view">
+            <field name="name">account.analytic.line.calendar</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.view_calendar_account_analytic_line"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <calendar position="attributes">
+                    <attribute name="color">project_id</attribute>
+                    <attribute name="js_class">timesheet_calendar_my_timesheets</attribute>
+                </calendar>
+                <field name="employee_id" position="replace"/>
+                <field name="employee_id" filters="1" position="replace"/>
+            </field>
+        </record>
+
         <record id="view_kanban_account_analytic_line_portal_user" model="ir.ui.view">
             <field name="name">portal.account.analytic.line.kanban</field>
             <field name="model">account.analytic.line</field>
@@ -367,6 +424,13 @@
             <field name="view_mode">form</field>
             <field name="sequence" eval="5"/>
             <field name="view_id" ref="hr_timesheet_line_form"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line"/>
+        </record>
+
+        <record id="act_hr_timesheet_line_view_calendar" model="ir.actions.act_window.view">
+            <field name="view_mode">calendar</field>
+            <field name="sequence" eval="5"/>
+            <field name="view_id" ref="view_calendar_account_analytic_line_my_timesheets"/>
             <field name="act_window_id" ref="act_hr_timesheet_line"/>
         </record>
 
@@ -445,6 +509,13 @@
             <field name="sequence" eval="5"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="timesheet_view_form_user"/>
+            <field name="act_window_id" ref="timesheet_action_all"/>
+        </record>
+
+        <record id="timesheet_action_view_all_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="view_calendar_account_analytic_line"/>
             <field name="act_window_id" ref="timesheet_action_all"/>
         </record>
 
