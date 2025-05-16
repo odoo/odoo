@@ -27,14 +27,14 @@ class TestPosAR(AccountTestInvoicingHttpCommon, TestAr):
         cls.pos_receivable_bank = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable'})
         cls.outstanding_bank = cls.copy_account(cls.outbound_payment_method_line.payment_account_id, {'name': 'Outstanding'})
 
-        cls.bank_pm = cls.env['pos.payment.method'].create({
+        cls.bank_pm = cls.env['pos.payment.method'].sudo().create({
             'name': 'Bank',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'receivable_account_id': cls.pos_receivable_bank.id,
             'outstanding_account_id': cls.outstanding_bank.id,
             'company_id': cls.company.id,
         })
-        cls.cash_pm = cls.env['pos.payment.method'].create({
+        cls.cash_pm = cls.env['pos.payment.method'].sudo().create({
             'name': 'Cash',
             'journal_id': cls.company_data['default_journal_cash'].id,
             'receivable_account_id': cls.pos_receivable_bank.id,
@@ -42,7 +42,7 @@ class TestPosAR(AccountTestInvoicingHttpCommon, TestAr):
             'company_id': cls.company.id,
         })
 
-        cls.main_pos_config = cls.env['pos.config'].create({
+        cls.main_pos_config = cls.env['pos.config'].sudo().create({
             'name': 'Shop',
             'module_pos_restaurant': False,
             'payment_method_ids': [(4, cls.bank_pm.id), (4, cls.cash_pm.id)],
