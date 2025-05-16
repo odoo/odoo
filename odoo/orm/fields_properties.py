@@ -743,12 +743,19 @@ class Properties(Field):
             combine_sql = SQL(" OR ") if operator == 'in' else SQL(" AND ")
             return SQL("(%s)", combine_sql.join(sqls))
 
-        sql_operator = SQL_OPERATORS[operator]
-        if operator in ('ilike', 'not ilike'):
-            value = f'%{value}%'
-            unaccent = model.env.registry.unaccent
-        else:
-            unaccent = lambda x: x  # noqa: E731
+        unaccent = lambda x: x  # noqa: E731
+        if operator.endswith('like'):
+            if operator.endswith('ilike'):
+                unaccent = model.env.registry.unaccent
+            if '=' in operator:
+                value = str(value)
+            else:
+                value = f'%{value}%'
+
+        try:
+            sql_operator = SQL_OPERATORS[operator]
+        except KeyError:
+            raise ValueError(f"Invalid operator {operator} for Properties")
 
         if isinstance(value, str):
             sql_left = SQL("(%s ->> %s)", raw_sql_field, property_name)  # JSONified value
