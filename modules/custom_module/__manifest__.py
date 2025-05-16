@@ -2,6 +2,8 @@
 {
     'name': 'Custom Module',
     'version': '1.0',
+    'installable': True,
+    'application': True,
     'depends': ['base', 'web','pos_self_order', 'point_of_sale', 'base_import', 'pos_restaurant','bus', 'pos_hr'],
     'data': [
         #'security/ir.model.access.csv',
