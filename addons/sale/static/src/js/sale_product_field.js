@@ -9,7 +9,7 @@ import { rpc } from "@web/core/network/rpc";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { uuid } from "@web/views/utils";
+import { uuid } from "@web/core/utils/strings";
 import { ComboConfiguratorDialog } from "./combo_configurator_dialog/combo_configurator_dialog";
 import { ProductCombo } from "./models/product_combo";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";

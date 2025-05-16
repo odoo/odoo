@@ -1,5 +1,6 @@
 import { registry } from '@web/core/registry';
-import { post, uuid } from '@iot_base/network_utils/http';
+import { post } from '@iot_base/network_utils/http';
+import { uuid } from "@web/core/utils/strings";
 import { _t } from '@web/core/l10n/translation';
 
 export class IoTLongpolling {
