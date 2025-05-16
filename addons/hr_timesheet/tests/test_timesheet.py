@@ -3,6 +3,7 @@
 
 from lxml import etree
 
+from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form, TransactionCase
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
@@ -806,3 +807,75 @@ class TestTimesheet(TestCommonTimesheet):
         create_timesheet(self.task2, 10)
         project_update_vals_list = create_project_update()
         self.assertListEqual(project_update_vals_list, [12, 15, 125])
+
+    def test_calendar_display_name(self):
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'unit_amount': 1,
+            'project_id': self.project_customer.id,
+            'employee_id': self.empl_employee.id,
+        })
+        self.assertEqual(timesheet.calendar_display_name, f"{self.project_customer.name} (1h)")
+        timesheet.unit_amount = 1.5
+        timesheet.invalidate_recordset(['calendar_display_name'])
+        self.assertEqual(timesheet.calendar_display_name, f"{self.project_customer.name} (1h30)")
+        timesheet.unit_amount = 8
+        timesheet.company_id.timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
+        timesheet.invalidate_recordset(['calendar_display_name'])
+        self.assertEqual(timesheet.calendar_display_name, f"{self.project_customer.name} (1d)")
+        timesheet.unit_amount = 12
+        timesheet.invalidate_recordset(['calendar_display_name'])
+        self.assertEqual(timesheet.calendar_display_name, f"{self.project_customer.name} (1.5d)")
+
+    def test_multi_create_timesheets_from_calendar(self):
+        """
+        Simulate creating timesheets using the multi-create feature in the calendar view
+        """
+        HrTimesheet = self.env['account.analytic.line'].with_context(timesheet_calendar=True)
+
+        timesheet = HrTimesheet.create({
+            'project_id': self.project_customer.id,
+            'unit_amount': 1,
+            'employee_id': self.empl_employee.id,
+            'date': '2025-05-26',
+        })
+        self.assertTrue(timesheet, "The timesheet should be created without errors")
+        self.assertEqual(timesheet.employee_id, self.empl_employee)
+        self.assertEqual(fields.Date.to_string(timesheet.date), '2025-05-26')
+
+        timesheet = HrTimesheet.create({
+            'project_id': self.project_customer.id,
+            'unit_amount': 1,
+            'employee_id': self.empl_employee.id,
+            'date': '2025-05-25',   # Sunday
+        })
+        self.assertFalse(timesheet, "The timesheet should not get created on a weekend")
+
+        calendar = self.env['resource.calendar'].with_company(self.env.company).create({
+            'name': "part time",
+            'hours_per_day': 8.0,
+            'attendance_ids': [
+                (0, 0, {'name': "Monday Morning", 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': "Monday Lunch", 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': "Monday Evening", 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': "Thursday Morning", 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': "Thursday Lunch", 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': "Thursday Evening", 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': "Friday Morning", 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': "Friday Lunch", 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': "Friday Evening", 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            ],
+        })
+
+        self.empl_employee.resource_calendar_id = calendar
+        self.empl_employee2.resource_calendar_id = calendar
+
+        timesheets = HrTimesheet.create([{
+            'project_id': self.project_customer.id,
+            'unit_amount': 1,
+            'date': f'2025-05-{day}',
+            'employee_id': employee.id,
+        } for day in ('25', '26', '27') for employee in (self.empl_employee, self.empl_employee2)])
+        self.assertEqual(len(timesheets), 2)
+        self.assertEqual(fields.Date.to_string(timesheets[0].date), '2025-05-26', "The timesheet creation should skip non-working days")
+        self.assertEqual(fields.Date.to_string(timesheets[1].date), '2025-05-26', "The timesheet creation should skip non-working days")

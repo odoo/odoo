@@ -271,3 +271,51 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.assertEqual(len(timesheet), 3, "Three timesheets should be created for each leave day")
         self.assertEqual(sum(timesheet.mapped('unit_amount')), 24, "The duration of the timesheet for flexible employee leave "
                                                         "should be number of days * hours per day")
+
+    def test_multi_create_timesheets_from_calendar(self):
+        """
+        Simulate creating timesheets using the multi-create feature in the calendar view
+        """
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public holiday',
+            'date_from': datetime(2025, 5, 27, 0, 0),
+            'date_to': datetime(2025, 5, 28, 23, 59),
+        })
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Legal Leaves',
+            'time_type': 'leave',
+            'requires_allocation': False,
+        })
+
+        self.env['hr.leave'].sudo().create([
+            {
+                'holiday_status_id': leave_type.id,
+                'employee_id': self.empl_employee.id,
+                'request_date_from': datetime(2025, 5, 26, 8, 0),
+                'request_date_to': datetime(2025, 5, 26, 17, 0),
+            }, {
+                'holiday_status_id': leave_type.id,
+                'employee_id': self.empl_employee2.id,
+                'request_date_from': datetime(2025, 5, 29, 8, 0),
+                'request_date_to': datetime(2025, 5, 29, 17, 0),
+            },
+        ])._action_validate()
+
+        # At this point:
+        # - empl_employee is on time off the 26th
+        # - both empl_employee and empl_employee2 are on public time off the 27th and 28th
+        # - empl_employee2 is on time off the 29th
+
+        timesheets = self.env['account.analytic.line'].with_context(timesheet_calendar=True).create([{
+            'project_id': self.project_customer.id,
+            'unit_amount': 1,
+            'date': f'2025-05-{day}',
+            'employee_id': employee.id,
+        } for day in ('26', '27', '28', '29') for employee in (self.empl_employee, self.empl_employee2)])
+        self.assertEqual(len(timesheets), 2, "Two leaves should have been created: one for each employee")
+        self.assertEqual(timesheets[0].employee_id, self.empl_employee2)
+        self.assertEqual(fields.Date.to_string(timesheets[0].date), '2025-05-26')
+        self.assertEqual(timesheets[1].employee_id, self.empl_employee)
+        self.assertEqual(fields.Date.to_string(timesheets[1].date), '2025-05-29')
