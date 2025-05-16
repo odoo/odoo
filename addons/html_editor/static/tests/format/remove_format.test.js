@@ -671,13 +671,13 @@ test("should remove multiple color with shortcut", async () => {
 test("undo remove format should return the element to it's original state", async () => {
     await testEditor({
         contentBefore:
-            '<p><strong><em><u><s><font style="color: rgb(0, 255, 0); background: rgb(0, 0, 255);">[sdsdsdsds]</font></s></u></em></strong></p>',
+            '<p><strong><em><font style="color: rgb(0, 255, 0); background: rgb(0, 0, 255);"><u><s>[sdsdsdsds]</s></u></font></em></strong></p>',
         stepFunction: (editor) => {
             execCommand(editor, "removeFormat");
             execCommand(editor, "historyUndo");
         },
         contentAfter:
-            '<p><strong><em><u><s><font style="color: rgb(0, 255, 0); background: rgb(0, 0, 255);">[sdsdsdsds]</font></s></u></em></strong></p>',
+            '<p><strong><em><font style="color: rgb(0, 255, 0); background: rgb(0, 0, 255);"><u><s>[sdsdsdsds]</s></u></font></em></strong></p>',
     });
 });
 

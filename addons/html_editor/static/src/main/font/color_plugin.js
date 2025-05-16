@@ -289,20 +289,29 @@ export class ColorPlugin extends Plugin {
             }
         }
 
+        const findTopMostDecoration = (current) => {
+            const decoration = closestElement(current.parentNode, "s, u");
+            return decoration?.textContent === current.textContent
+                ? findTopMostDecoration(decoration)
+                : current;
+        };
+
         const hexColor = rgbaToHex(color).toLowerCase();
-        const selectedNodes = targetedNodes.filter((node) => {
-            if (mode === "backgroundColor" && color) {
-                return !closestElement(node, "table.o_selected_table");
-            }
-            if (closestElement(node).classList.contains("o_default_color")) {
-                return false;
-            }
-            const li = closestElement(node, "li");
-            if (li && color && this.dependencies.selection.areNodeContentsFullySelected(li)) {
-                return rgbaToHex(li.style.color).toLowerCase() !== hexColor;
-            }
-            return true;
-        });
+        const selectedNodes = targetedNodes
+            .filter((node) => {
+                if (mode === "backgroundColor" && color) {
+                    return !closestElement(node, "table.o_selected_table");
+                }
+                if (closestElement(node).classList.contains("o_default_color")) {
+                    return false;
+                }
+                const li = closestElement(node, "li");
+                if (li && color && this.dependencies.selection.areNodeContentsFullySelected(li)) {
+                    return rgbaToHex(li.style.color).toLowerCase() !== hexColor;
+                }
+                return true;
+            })
+            .map((node) => findTopMostDecoration(node));
 
         const targetedFieldNodes = new Set(
             this.dependencies.selection
@@ -482,7 +491,7 @@ export class ColorPlugin extends Plugin {
             if (hasBackgroundColor && hasGradient && !backgroundImage) {
                 element.style.backgroundImage = "none";
             }
-            this.fixColorCombination(element);
+            this.fixColorCombination(element, color);
             return;
         }
 
@@ -529,7 +538,7 @@ export class ColorPlugin extends Plugin {
             mode = mode.replace("backgroundColor", "background-color");
             this.delegateTo("apply_style", element, mode, color);
         }
-        this.fixColorCombination(element);
+        this.fixColorCombination(element, color);
     }
     /**
      * There is a limitation with css. The defining a background image and a
@@ -541,14 +550,14 @@ export class ColorPlugin extends Plugin {
      * so that setting an image in the background-image property will not
      * override the gradient.
      */
-    fixColorCombination(element) {
+    fixColorCombination(element, color) {
         const parts = backgroundImageCssToParts(element.style["background-image"]);
         const hasBackgroundColor =
             element.style["background-color"] ||
             !!element.className.match(/\bbg-/) ||
             parts.gradient;
 
-        if (!hasBackgroundColor) {
+        if (!hasBackgroundColor && (isColorGradient(color) || color.startsWith("o_cc"))) {
             element.style["background-image"] = "";
             parts.gradient = backgroundImageCssToParts(
                 // Compute the style from o_cc class.
