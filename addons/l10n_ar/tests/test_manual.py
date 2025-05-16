@@ -113,6 +113,14 @@ class TestManual(common.TestAr):
             if len_l10n_ar_price_unit_digits == len_line_price_unit_digits == decimal_price_digits_setting:
                 self.assertEqual(l10n_ar_price_unit_decimal_part, line_price_unit_decimal_part)
 
+    def _get_simple_detail_ar_tax(self, invoice):
+        """ Get the simple detail_ar_tax list of tuples with the vat group name and the amount
+        [("vat_taxes", float), ("other_taxes", float)] """
+        return [
+            (item.get('group'), item.get('tax_amount'))
+            for item in invoice._l10n_ar_get_invoice_totals_for_report().get('detail_ar_tax')
+        ]
+
     def test_16_invoice_b_tax_breakdown_1(self):
         """ Display Both VAT and Other Taxes """
         invoice1 = self._create_invoice_from_dict({
@@ -132,10 +140,7 @@ class TestManual(common.TestAr):
                     'tax_ids': [(6, 0, [self.tax_0.id, self.tax_other.id])]},
             ],
         })
-        res1 = invoice1._l10n_ar_get_invoice_totals_for_report()
-        self.assertEqual(res1.get('detail_ar_tax'), [
-            {'formatted_amount_tax': '868.51', 'name': 'VAT Content $', 'tax_amount': 868.51},
-            {'formatted_amount_tax': '142.20', 'name': 'Other National Ind. Taxes $', 'tax_amount': 142.20}])
+        self.assertEqual(self._get_simple_detail_ar_tax(invoice1), [("vat", 868.51), ("other", 142.20)])
 
     def test_17_invoice_b_tax_breakdown_2(self):
         """ Display only Other Taxes (VAT taxes are 0) """
@@ -150,6 +155,19 @@ class TestManual(common.TestAr):
                     'tax_ids': [(6, 0, [self.tax_no_gravado.id, self.tax_internal.id])]},
             ],
         })
-        res2 = invoice2._l10n_ar_get_invoice_totals_for_report()
-        self.assertEqual(res2.get('detail_ar_tax'), [
-            {'formatted_amount_tax': '300.00', 'name': 'Other National Ind. Taxes $', 'tax_amount': 300.00}])
+        self.assertEqual(self._get_simple_detail_ar_tax(invoice2), [("vat", 0.0), ("other", 300.0)])
+
+    def test_18_invoice_b_tax_breakdown_3(self):
+        """ Display only Other Taxes (VAT taxes are 0 and non other taxes) """
+        invoice3 = self._create_invoice_from_dict({
+            'ref': 'test_invoice_22:  Final Consumer Invoice B with 0 only',
+            "move_type": 'out_invoice',
+            "partner_id": self.partner_cf,
+            "company_id": self.company_ri,
+            "invoice_date": "2021-03-20",
+            "invoice_line_ids": [
+                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0, 'quantity': 1,
+                    'tax_ids': [(6, 0, [self.tax_no_gravado.id])]},
+            ],
+        })
+        self.assertEqual(self._get_simple_detail_ar_tax(invoice3), [("vat", 0.0)])
