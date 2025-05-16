@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isZWS } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
-import { isTextNode } from "@web/views/view_compiler";
 import { composeToolbarButton, Toolbar } from "./toolbar";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
@@ -322,7 +321,8 @@ export class ToolbarPlugin extends Plugin {
             .filter(
                 (node) =>
                     this.dependencies.selection.isNodeEditable(node) &&
-                    (!isTextNode(node) || (node.textContent.trim().length && !isZWS(node)))
+                    (node.nodeType !== Node.TEXT_NODE ||
+                        (node.textContent.trim().length && !isZWS(node)))
             );
     }
 

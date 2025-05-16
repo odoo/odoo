@@ -1,4 +1,4 @@
-import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/plugin_sets";
+import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
 import { isEmpty } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
