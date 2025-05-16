@@ -189,6 +189,14 @@ class ResUsers(models.Model):
         """
         return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz', 'api_key_ids', 'phone']
 
+    @api.model
+    @tools.ormcache()
+    def _self_accessible_fields(self) -> tuple[frozenset[str], frozenset[str]]:
+        """Readable and writable fields by portal users."""
+        readable = frozenset(self.SELF_READABLE_FIELDS)
+        writeable = frozenset(self.SELF_WRITEABLE_FIELDS)
+        return readable, writeable
+
     def _default_groups(self):
         """Default groups for employees
 
@@ -534,11 +542,11 @@ class ResUsers(models.Model):
         # Hacky fix to access fields in `SELF_READABLE_FIELDS` in the onchange logic.
         # Put field values in the cache.
         if self == self.env.user:
-            [self.sudo()[field_name] for field_name in self.SELF_READABLE_FIELDS]
+            [self.sudo()[field_name] for field_name in self._self_accessible_fields()[0]]
         return super().onchange(values, field_names, fields_spec)
 
     def read(self, fields=None, load='_classic_read'):
-        readable = self.SELF_READABLE_FIELDS
+        readable, _ = self._self_accessible_fields()
         if fields and self == self.env.user and all(key in readable or key.startswith('context_') for key in fields):
             # safe fields only, so we read as super-user to bypass access rights
             self = self.sudo()
@@ -548,7 +556,7 @@ class ResUsers(models.Model):
         return super()._has_field_access(field, operation) or (
             operation == 'read'
             and self._origin == self.env.user
-            and field.name in self.SELF_READABLE_FIELDS
+            and field.name in self._self_accessible_fields()[0]
         )
 
     @api.model_create_multi
@@ -579,7 +587,7 @@ class ResUsers(models.Model):
             # unarchive partners before unarchiving the users
             self.partner_id.action_unarchive()
         if self == self.env.user:
-            writeable = self.SELF_WRITEABLE_FIELDS
+            writeable = self._self_accessible_fields()[1]
             for key in list(values):
                 if key not in writeable:
                     break
@@ -1287,14 +1295,15 @@ class ResUsers(models.Model):
         res = super().fields_get(allfields, attributes=attributes)
 
         # add self readable/writable fields
-        missing = set(self.SELF_WRITEABLE_FIELDS).union(self.SELF_READABLE_FIELDS).difference(res.keys())
+        readable_fields, writeable_fields = self._self_accessible_fields()
+        missing = (writeable_fields | readable_fields).difference(res.keys())
         if allfields:
             missing = missing.intersection(allfields)
         if missing:
             self = self.sudo()  # noqa: PLW0642
             res.update({
-                key: dict(values, readonly=key not in self.SELF_WRITEABLE_FIELDS, searchable=False)
-                for key, values in super().fields_get(missing, attributes).items()
+                key: dict(values, readonly=key not in writeable_fields, searchable=False)
+                for key, values in super().fields_get(sorted(missing), attributes).items()
             })
         return res
 
