@@ -377,27 +377,26 @@ class AccountMove(models.Model):
 
             # Prepare the subtotals to show in the report
             currency_symbol = self.currency_id.symbol
-            detail_info = {}
+            detail_info = {
+                'vat_taxes': {'name': _("VAT Content %s", currency_symbol), 'tax_amount': 0.0, 'group': 'vat'},
+                'other_taxes': {'name': _("Other National Ind. Taxes %s", currency_symbol), 'tax_amount': 0.0,
+                                'group': 'other'},
+            }
 
             for subtotals in temp['groups_by_subtotal'].values():
                 for subtotal in subtotals:
                     tax_group_id = subtotal['tax_group_id']
-                    tax_amount = subtotal['tax_group_amount']
-
                     if tax_group_id in nat_int_tax_groups.ids:
                         key = 'other_taxes'
-                        name = _("Other National Ind. Taxes %s", currency_symbol)
                     elif tax_group_id in vat_tax_groups.ids:
                         key = 'vat_taxes'
-                        name = _("VAT Content %s", currency_symbol)
                     else:
                         continue  # If not belongs to the needed groups we ignore them
 
-                    if key not in detail_info:
-                        if tax_amount != 0.0:
-                            detail_info[key] = {"name": name, "tax_amount": tax_amount}
-                    else:
-                        detail_info[key]["tax_amount"] += tax_amount
+                    detail_info[key]["tax_amount"] += subtotal['tax_group_amount']
+
+            if detail_info['other_taxes']["tax_amount"] == 0.0:
+                detail_info.pop('other_taxes')
 
             # Format the amounts to show in the report
             for _item, values in detail_info.items():
