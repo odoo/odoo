@@ -676,7 +676,7 @@ test(`width computation: x2many, editable list, with invisible modifier on x2man
     expect(columnWidths[1]).toBeGreaterThan(500);
 });
 
-test.todo(`width computation: widths are re-computed on window resize`, async () => {
+test(`width computation: widths are re-computed on window resize`, async () => {
     Foo._records[0].text =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
         "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
@@ -686,21 +686,42 @@ test.todo(`width computation: widths are re-computed on window resize`, async ()
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
-                <field name="datetime"/>
+            <tree>
+                <field name="int_field"/>
                 <field name="text"/>
             </tree>
         `,
     });
-    const initialTextWidth = queryRect(`th[data-name="text"]`).width;
-    const selectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
 
-    resize({ width: queryRect(getFixture()).width / 2 });
-    await animationFrame();
-    const postResizeTextWidth = queryRect(`th[data-name="text"]`).width;
-    const postResizeSelectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
-    expect(postResizeTextWidth).toBeLessThan(initialTextWidth);
-    expect(selectorWidth).toBe(postResizeSelectorWidth);
+    expect(getColumnWidths()).toEqual([40, 80, 680]);
+
+    resize({ width: queryRect(getFixture()).width * 1.2 });
+    await runAllTimers();
+    expect(getColumnWidths()).toEqual([40, 80, 840]);
+});
+
+test(`width computation: widths are re-computed on parent resize`, async () => {
+    Foo._records[0].text =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+        "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
+        "ipsum purus bibendum est.";
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree>
+                <field name="int_field"/>
+                <field name="text"/>
+            </tree>
+        `,
+    });
+
+    expect(getColumnWidths()).toEqual([40, 80, 680]);
+
+    queryOne(".o_list_renderer").style.width = "600px";
+    await runAllTimers();
+    expect(getColumnWidths()).toEqual([40, 80, 480]);
 });
 
 test(`width computation: button columns don't have a max width`, async () => {
