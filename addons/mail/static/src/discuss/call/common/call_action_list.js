@@ -20,12 +20,15 @@ export class CallActionList extends Component {
         super.setup();
         this.CALL_PROMOTE_FULLSCREEN = CALL_PROMOTE_FULLSCREEN;
         this.store = useService("mail.store");
-        this.rtc = useService("discuss.rtc");
         this.callActions = useCallActions();
         this.more = useRef("more");
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
         });
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 
     get MORE() {
