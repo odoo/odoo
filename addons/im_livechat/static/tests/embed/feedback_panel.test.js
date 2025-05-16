@@ -17,6 +17,7 @@ import {
     asyncStep,
     Command,
     getService,
+    patchWithCleanup,
     serverState,
     waitForSteps,
     withUser,
@@ -86,7 +87,7 @@ test("Feedback with rating and comment", async () => {
         if (route === "/im_livechat/feedback") {
             asyncStep(route);
             expect(args.reason.includes("Good job!")).toBe(true);
-            expect(args.rate).toBe(RATING.GOOD);
+            expect(args.rate).toBe(RATING.OK);
         }
     });
     await start({ authenticateAs: false });
@@ -98,7 +99,7 @@ test("Feedback with rating and comment", async () => {
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
     await waitForSteps(["/im_livechat/visitor_leave_session"]);
-    await click(`img[alt="${RATING.GOOD}"]`);
+    await click(`img[alt="${RATING.OK}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
     await click("button:contains(Send):enabled");
     await contains("p", { text: "Thank you for your feedback" });
@@ -141,4 +142,27 @@ test("Start new session from feedback panel", async () => {
     await click("button", { text: "New Session" });
     await contains(".o-mail-ChatWindow", { count: 1 });
     await contains(".o-mail-ChatWindow", { text: "Bob Operator" });
+});
+
+test("open review link on good rating", async () => {
+    patchWithCleanup(window, {
+        open: (...args) => {
+            expect.step("window.open");
+            expect(args[0]).toBe("https://www.odoo.com");
+            expect(args[1]).toBe("_blank");
+        },
+    });
+    await startServer();
+    await loadDefaultEmbedConfig();
+    await start({ authenticateAs: false });
+    await click(".o-livechat-LivechatButton");
+    await insertText(".o-mail-Composer-input", "Hello World!");
+    triggerHotkey("Enter");
+    await contains(".o-mail-Message-content", { text: "Hello World!" });
+    await click("[title*='Close Chat Window']");
+    await click(".o-livechat-CloseConfirmation-leave");
+    await click(`img[alt="${RATING.GOOD}"]`);
+    await insertText("textarea[placeholder='Explain your note']", "Good job!");
+    await click("button:contains(Send):enabled");
+    await expect.waitForSteps(["window.open"]);
 });
