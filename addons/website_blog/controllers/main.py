@@ -7,7 +7,7 @@ import babel.dates
 import werkzeug
 
 from odoo import http, tools, models
-from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.controllers.main import SlugifyTags, QueryURL
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.http.session import touch
@@ -22,15 +22,6 @@ _lt = LazyTranslate(__name__)
 class WebsiteBlog(http.Controller):
     _blog_post_per_page = 12  # multiple of 2,3,4
     _post_comment_per_page = 10
-
-    def tags_list(self, tag_ids, current_tag):
-        tag_ids = list(tag_ids)  # required to avoid using the same list
-        if current_tag in tag_ids:
-            tag_ids.remove(current_tag)
-        else:
-            tag_ids.append(current_tag)
-        tag_ids = request.env['blog.tag'].browse(tag_ids)
-        return ','.join(request.env['ir.http']._slug(tag) for tag in tag_ids)
 
     def nav_list(self, blog=None):
         dom = blog and [('blog_id', '=', blog.id)] or []
@@ -149,13 +140,15 @@ class WebsiteBlog(http.Controller):
         # and avoid accessing related blogs one by one
         posts.blog_id
 
+        slugify_tags = SlugifyTags(model='blog.tag')
+
         return {
             'date_begin': date_begin,
             'date_end': date_end,
             'other_tags': other_tags,
             'tag_category': tag_category,
             'nav_list': nav_list,
-            'tags_list': self.tags_list,
+            'tags_list': slugify_tags,
             'pager': pager,
             'posts': posts.with_prefetch(),
             'tag': tags,

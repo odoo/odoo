@@ -10,7 +10,7 @@ import werkzeug
 
 from odoo import fields, http, tools, _
 from odoo.addons.base.models.ir_qweb import keep_query
-from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.controllers.main import SlugifyTags, QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
@@ -38,6 +38,7 @@ class WebsiteSlides(WebsiteProfile):
         'view': 'total_views desc',
         'date': 'create_date desc',
     }
+    slugify_tags = SlugifyTags(model='slide.channel.tag')
 
     def sitemap_slide(env, rule, qs):
         Channel = env['slide.channel']
@@ -55,7 +56,7 @@ class WebsiteSlides(WebsiteProfile):
             'user': request.env.user,
             'is_public_user': website.is_public_user(),
             # tools
-            '_slugify_tags': self._slugify_tags,
+            '_slugify_tags': self.slugify_tags,
         }
 
     # SLIDE UTILITIES
@@ -275,21 +276,6 @@ class WebsiteSlides(WebsiteProfile):
     # TAG UTILITIES
     # --------------------------------------------------
 
-    def _slugify_tags(self, tag_ids, toggle_tag_id=None):
-        """ Prepares a comma separated slugified tags for the sake of readable
-        URLs.
-
-        :param toggle_tag_id: add the tag being clicked (current_tag) to the already
-          selected tags (tag_ids) as well as in URL; if tag is already selected
-          by the user it is removed from the selected tags (and so from the URL);
-        """
-        tag_ids = list(tag_ids)  # required to avoid using the same list
-        if toggle_tag_id and toggle_tag_id in tag_ids:
-            tag_ids.remove(toggle_tag_id)
-        elif toggle_tag_id:
-            tag_ids.append(toggle_tag_id)
-        return ','.join(request.env['ir.http']._slug(tag) for tag in request.env['slide.channel.tag'].browse(tag_ids))
-
     def _channel_search_tags_ids(self, search_tags):
         """ Input: %5B4%5D """
         ChannelTag = request.env['slide.channel.tag']
@@ -382,7 +368,7 @@ class WebsiteSlides(WebsiteProfile):
             'challenges_done': challenges_done,
             'search_tags': request.env['slide.channel.tag'],
             'slide_query_url': QueryURL('/slides', ['tag']),
-            'slugify_tags': self._slugify_tags,
+            'slugify_tags': self.slugify_tags,
         })
         return render_values
 
@@ -480,7 +466,7 @@ class WebsiteSlides(WebsiteProfile):
             'search_tags': search_tags,
             'search_count': search_count,
             'top3_users': self._get_top3_users(),
-            'slugify_tags': self._slugify_tags,
+            'slugify_tags': self.slugify_tags,
             'slide_query_url': QueryURL('/slides', ['tag']),
             'pager': website.pager(
                 url=request.httprequest.path.partition('/page/')[0],

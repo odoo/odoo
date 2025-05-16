@@ -6,7 +6,7 @@ from collections import Counter
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
-from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.controllers.main import SlugifyTags, QueryURL
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import get_lang
@@ -169,6 +169,8 @@ class WebsiteEventController(http.Controller):
 
         searches['search'] = fuzzy_search_term or search
 
+        slugify_tags = SlugifyTags(model='event.tag')
+
         values = {
             'current_date': current_date,
             'current_country': current_country,
@@ -184,7 +186,7 @@ class WebsiteEventController(http.Controller):
             'searches': searches,
             'search_tags': search_tags,
             'keep_event_url': keep,
-            'slugify_tags': self._slugify_tags,
+            'slugify_tags': slugify_tags,
             'search_count': event_count,
             'original_search': fuzzy_search_term and search,
             'website': website
@@ -556,21 +558,6 @@ class WebsiteEventController(http.Controller):
         elif 'tags' in searches:
             tags = self._event_search_tags_ids(searches['tags'])
         return tags
-
-    def _slugify_tags(self, tag_ids, toggle_tag_id=None):
-        """ Prepares a comma separated slugified tags for the sake of readable URLs.
-
-        :param toggle_tag_id: add the tag being clicked to the already
-          selected tags as well as in URL; if tag is already selected
-          by the user it is removed from the selected tags (and so from the URL);
-        """
-        tag_ids = list(tag_ids)
-        if toggle_tag_id and toggle_tag_id in tag_ids:
-            tag_ids.remove(toggle_tag_id)
-        elif toggle_tag_id:
-            tag_ids.append(toggle_tag_id)
-
-        return ','.join(request.env['ir.http']._slug(tag_id) for tag_id in request.env['event.tag'].browse(tag_ids)) or ''
 
     def _event_search_tags_ids(self, search_tags):
         """ Input: %5B4%5D """
