@@ -2710,27 +2710,14 @@
             <t t-set="redirect" t-valuef="/shop/checkout"/>
             <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
             <div id="shop_checkout">
-                <!-- When delivery address is enabled. -->
                 <t
                     t-if="order._has_deliverable_products()"
-                    groups="account.group_delivery_invoice_address"
-                >
-                    <t t-call="website_sale.delivery_address_row">
-                        <t t-set="addresses" t-value="delivery_addresses"/>
-                    </t>
-                    <t t-call="website_sale.delivery_form">
-                        <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
-                    </t>
-                </t>
-                <t t-call="website_sale.billing_address_row">
-                    <t t-set="addresses" t-value="billing_addresses"/>
-                </t>
-                <!-- When delivery address is disabled. -->
-                <t
-                    groups="!account.group_delivery_invoice_address"
                     t-call="website_sale.delivery_form"
                 >
                     <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
+                </t>
+                <t t-call="website_sale.billing_address_row">
+                    <t t-set="addresses" t-value="billing_addresses"/>
                 </t>
             </div>
         </t>
@@ -2749,40 +2736,23 @@
 
     <template id="billing_address_row">
         <div id="billing_address_row" class="mb-3">
-            <p
-                t-attf-class="{{only_services and 'h4 mb-3' or 'h5'}}"
-                groups="account.group_delivery_invoice_address"
-            >
+            <p t-attf-class="{{only_services and 'h4 mb-3' or 'h5'}}">
                 Billing address
             </p>
-            <h4 groups="!account.group_delivery_invoice_address">Your address</h4>
-            <t groups="account.group_delivery_invoice_address">
-                <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
-                <div t-if="has_delivery" class="form-check form-switch mt-2 mb-3">
-                    <label id="use_delivery_as_billing_label">
-                        <input
-                            type="checkbox"
-                            id="use_delivery_as_billing"
-                            class="form-check-input"
-                            t-att-checked="use_delivery_as_billing"
-                        /> Same as delivery address
-                    </label>
-                </div>
-            </t>
-            <t
-                t-set="delivery_address_disabled"
-                groups="!account.group_delivery_invoice_address"
-                t-value="True"
-            />
-            <t
-                t-set="delivery_address_disabled"
-                groups="account.group_delivery_invoice_address"
-                t-value="False"
-            />
+            <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
+            <div t-if="has_delivery" class="form-check form-switch mt-2 mb-3">
+                <label id="use_delivery_as_billing_label">
+                    <input
+                        type="checkbox"
+                        id="use_delivery_as_billing"
+                        class="form-check-input"
+                        t-att-checked="use_delivery_as_billing"
+                    /> Same as delivery address
+                </label>
+            </div>
             <div
                 id="billing_container"
                 t-attf-class="{{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
-                t-att-data-delivery-address-disabled="delivery_address_disabled"
             >
                 <t t-call="website_sale.address_row">
                     <t t-set="address_type" t-value="'billing'"/>
@@ -2839,7 +2809,6 @@
                         t-if="use_delivery_as_billing and not only_services and partner_sudo"
                         class="alert alert-warning"
                         role="alert"
-                        groups="account.group_delivery_invoice_address"
                     >
                         <p class="mb-0">
                             You are editing your <b>delivery and billing</b> addresses
@@ -2912,7 +2881,6 @@
                     <div
                         t-if="not use_delivery_as_billing and order._has_deliverable_products()"
                         t-attf-class="{{not use_delivery_as_billing and not only_services and 'col-md-6 ps-1'}}"
-                        groups="account.group_delivery_invoice_address"
                     >
                         <t t-if="order.pickup_location_data">
                             <b>Deliver to pickup point</b>
