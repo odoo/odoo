@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import BaseCase, TransactionCase
@@ -99,6 +98,25 @@ class QueryTestCase(BaseCase):
         query.join('foo', 'bar_id', SQL('(SELECT id FROM foo)'), 'id', 'bar')
         from_clause = query.from_clause.code
         self.assertEqual(from_clause, '"foo" JOIN (SELECT id FROM foo) AS "foo__bar" ON ("foo"."bar_id" = "foo__bar"."id")')
+
+    def test_empty_set_result_ids(self):
+        query = Query(None, 'foo')
+        query.set_result_ids([])
+        self.assertEqual(query.get_result_ids(), ())
+        self.assertTrue(query.is_empty())
+        self.assertIn('SELECT', query.subselect().code, "subselect must contain SELECT")
+
+        query.add_where(SQL("x > 0"))
+        self.assertTrue(query.is_empty(), "adding where clauses keeps the result empty")
+
+    def test_set_result_ids(self):
+        query = Query(None, 'foo')
+        query.set_result_ids([1, 2, 3])
+        self.assertEqual(query.get_result_ids(), (1, 2, 3))
+        self.assertFalse(query.is_empty())
+
+        query.add_where(SQL("x > 0"))
+        self.assertIsNone(query._ids, "adding where clause resets the ids")
 
 
 class TestQuery(TransactionCase):
