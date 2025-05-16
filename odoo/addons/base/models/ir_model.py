@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import inspect
 import itertools
 import logging
 import random
@@ -1378,12 +1377,6 @@ class IrModelInherit(models.Model):
                 ] + [
                     (model_id, get_model_id(parent_name), get_field_id(field))
                     for parent_name, field in cls._inherits.items()
-                ] + [
-                    (model_id, get_model_id(field.comodel_name), get_field_id(field_name))
-                    for (field_name, field) in inspect.getmembers(cls)
-                    if isinstance(field, fields.Many2one)
-                    if field.type == 'many2one' and not field.related and field.delegate
-                    if field_name not in cls._inherits.values()
                 ]
 
                 for item in items:
