@@ -37,11 +37,11 @@ registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
     run: "click",
 }, {
     content: "Open the ribbon selector",
-    trigger: ".o_wsale_ribbon_select we-toggler",
+    trigger: ".o_wsale_ribbon_select + button:contains('None')",
     run: "click",
 }, {
     content: "Select a ribbon",
-    trigger: '.o_wsale_ribbon_select we-button:contains("Sale")',
+    trigger: ".o_popover div:contains('Sale')",
     run: "click",
 },
 ...clickOnSave(),
