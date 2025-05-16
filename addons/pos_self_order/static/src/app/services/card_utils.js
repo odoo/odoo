@@ -18,7 +18,7 @@ export function computeProductPrice(selfOrder, productTemplate, selectedAttribut
 
 export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, qty) {
     if (!comboValues || !comboValues.length) {
-        return computeInitialComboPrice(selfOrder, productTemplate);
+        return selfOrder.getProductDisplayPrice(productTemplate);
     }
 
     const baseLineValues = getOrderLineValues(
@@ -46,17 +46,6 @@ export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, 
     return selfOrder.isTaxesIncludedInPrice()
         ? order.getTotalWithTaxOfLines(transientLines)
         : order.getTotalWithoutTaxOfLines(transientLines);
-}
-
-export function computeInitialComboPrice(selfOrder, productTemplate) {
-    const comboValues = productTemplate.combo_ids.map((combo) => {
-        const defaultItem = combo.combo_item_ids.find((item) => item.extra_price === 0);
-        return {
-            combo_item_id: defaultItem,
-            qty: 1,
-        };
-    });
-    return computeTotalComboPrice(selfOrder, productTemplate, comboValues, 1);
 }
 
 export function getOrderLineValues(
