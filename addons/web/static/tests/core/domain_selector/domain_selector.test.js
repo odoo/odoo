@@ -2753,3 +2753,26 @@ test("remove all conditions in a sub connector", async () => {
     await clickOnButtonDeleteNode(2);
     expect.verifySteps([`[("bar", "!=", False)]`]);
 });
+
+test("hide today, next, last operators when allowExpressions = False", async () => {
+    Team._fields.active = fields.Boolean();
+    await makeDomainSelector({
+        domain: `[("datetime", "=", False)]`,
+        allowExpressions: false,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getOperatorOptions()).toEqual([
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "is not between",
+        "set",
+        "not set",
+    ]);
+});
