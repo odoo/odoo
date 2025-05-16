@@ -37,7 +37,7 @@ registerWebsitePreviewTour(
             // such as o_we_add_font_btn.
             run: function () {
                 const options = odoo.loader.modules.get(
-                    "@html_builder/website_builder/plugins/customize_website_plugin"
+                    "@website/website_builder/plugins/customize_website_plugin"
                 )["CustomizeWebsitePlugin"];
                 patch(options.prototype, {
                     async reloadBundles() {

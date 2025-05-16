@@ -1,8 +1,8 @@
-import { Builder } from "@html_builder/builder";
+import { Builder } from "@website/temp/builder";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { VersionControlPlugin } from "@html_builder/core/version_control_plugin";
-import { EditInteractionPlugin } from "@html_builder/website_builder/plugins/edit_interaction_plugin";
-import { WebsiteSessionPlugin } from "@html_builder/website_builder/plugins/website_session_plugin";
+import { EditInteractionPlugin } from "@website/website_builder/plugins/edit_interaction_plugin";
+import { WebsiteSessionPlugin } from "@website/website_builder/plugins/website_session_plugin";
 import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { setContent } from "@html_editor/../tests/_helpers/selection";

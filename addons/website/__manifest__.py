@@ -465,8 +465,24 @@
             ('remove', 'website/static/src/components/dialog/*.dark.scss'),
         ],
         'html_builder.assets': [
+            ('include', 'web._assets_helpers'),
+
+            'html_builder/static/src/bootstrap_overriden.scss',
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+
             'website/static/src/scss/website_common.scss',
-        ]
+            'website/static/src/website_builder/**/*',
+            # to remove
+            'website/static/src/temp/**/*',
+        ],
+        'html_builder.iframe_add_dialog': [
+            ('include', 'web.assets_frontend'),
+            'website/static/src/temp/snippets/snippet_viewer.scss',
+            'website/static/src/snippets/**/*.edit.scss',
+        ],
     },
     'configurator_snippets': {
         'homepage': ['s_cover', 's_text_image', 's_numbers'],

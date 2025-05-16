@@ -1,4 +1,4 @@
-import { Builder } from "@html_builder/builder";
+import { Builder } from "@website/temp/builder";
 import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
 import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";

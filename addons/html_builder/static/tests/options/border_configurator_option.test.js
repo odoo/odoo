@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+import { BorderConfigurator } from "@website/temp/plugins/border_configurator_option";
 import { xml } from "@odoo/owl";
 import { waitFor } from "@odoo/hoot-dom";
 

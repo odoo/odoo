@@ -10,7 +10,7 @@ import {
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { animationFrame, click, waitFor } from "@odoo/hoot-dom";
 import { MockResponse } from "@web/../lib/hoot/mock/network";
-import { Builder } from "@html_builder/builder";
+import { Builder } from "@website/temp/builder";
 
 defineWebsiteModels();
 

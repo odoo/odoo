@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { EditInteractionPlugin } from "@html_builder/website_builder/plugins/edit_interaction_plugin";
+import { EditInteractionPlugin } from "@website/website_builder/plugins/edit_interaction_plugin";
 import {
     addActionOption,
     addOption,

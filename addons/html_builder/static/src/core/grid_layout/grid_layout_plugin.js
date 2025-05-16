@@ -16,7 +16,7 @@ import {
     toggleGridMode,
 } from "@html_builder/utils/grid_layout_utils";
 import { isMobileView } from "@html_builder/utils/utils";
-import { hasGridLayoutOption } from "@html_builder/plugins/layout_option/layout_option_plugin";
+import { hasGridLayoutOption } from "@website/temp/plugins/layout_option/layout_option_plugin";
 
 const gridItemSelector = ".row.o_grid_mode > div.o_grid_item";
 

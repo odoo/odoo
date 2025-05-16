@@ -31,14 +31,6 @@
         ],
         # this bundle is lazy loaded when the editor is ready
         'html_builder.assets': [
-            ('include', 'web._assets_helpers'),
-
-            'html_builder/static/src/bootstrap_overriden.scss',
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables-dark.scss',
-            'web/static/lib/bootstrap/scss/_maps.scss',
-
             'html_builder/static/src/**/*',
         ],
         'html_builder.inside_builder_style': [
@@ -50,11 +42,11 @@
         'html_builder.assets_edit_frontend': [
             ('include', 'website.assets_edit_frontend'),
         ],
-        'html_builder.iframe_add_dialog': [
-            ('include', 'web.assets_frontend'),
-            'html_builder/static/src/snippets/snippet_viewer.scss',
-            'website/static/src/snippets/**/*.edit.scss',
-        ],
+        # 'html_builder.iframe_add_dialog': [
+        #     ('include', 'web.assets_frontend'),
+        #     'html_builder/static/src/snippets/snippet_viewer.scss',
+        #     'website/static/src/snippets/**/*.edit.scss',
+        # ],
         'web.assets_unit_tests': [
             'html_builder/static/tests/**/*',
             ('include', 'html_builder.assets'),

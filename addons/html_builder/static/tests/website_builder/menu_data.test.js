@@ -5,7 +5,7 @@ import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { patchWithCleanup, mockService, onRpc } from "@web/../tests/web_test_helpers";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { MenuDataPlugin } from "@html_builder/website_builder/plugins/menu_data_plugin";
+import { MenuDataPlugin } from "@website/website_builder/plugins/menu_data_plugin";
 import { MenuDialog } from "@website/components/dialog/edit_menu";
 
 defineWebsiteModels();

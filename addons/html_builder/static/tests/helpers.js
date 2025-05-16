@@ -1,4 +1,4 @@
-import { Builder } from "@html_builder/builder";
+import { Builder } from "@website/temp/builder";
 import { Img } from "@html_builder/core/img";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";

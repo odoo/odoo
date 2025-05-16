@@ -4,7 +4,7 @@ import {
     modifyText,
     setupWebsiteBuilder,
 } from "./website_helpers";
-import { Builder } from "@html_builder/builder";
+import { Builder } from "@website/temp/builder";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { patchWithCleanup, contains } from "@web/../tests/web_test_helpers";
