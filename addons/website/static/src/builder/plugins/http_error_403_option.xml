@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.HttpError403Option">
+        <BuilderRow label.translate="Hide Error Message" tooltip.translate="Hides an error message when a 403 Forbidden error occurs.">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website.403_with_technical_error']}"/>
+        </BuilderRow>
+    </t>
+
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@id='snippet_specific_options']" position="inside">
+            <http_error_403_option
+                selector="main:has(.s_403_error)"
+                template="website.HttpError403Option"
+                title="403 Error Message"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+        </xpath>
+    </t>
+</templates>
