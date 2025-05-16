@@ -375,7 +375,7 @@ class Warehouse(models.Model):
 
         for picking_type, values in data.items():
             if self[picking_type]:
-                self[picking_type].sudo().sequence_id.write(sequence_data[picking_type])
+                self[picking_type].sudo().sequence_id.write({'company_id': self.company_id.id})
                 self[picking_type].write(values)
             else:
                 data[picking_type].update(create_data[picking_type])
