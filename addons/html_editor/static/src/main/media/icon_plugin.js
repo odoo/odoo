@@ -181,6 +181,5 @@ export class IconPlugin extends Plugin {
             return;
         }
         this.dependencies.color.colorElement(selectedIcon, color, mode);
-        return true;
     }
 }
