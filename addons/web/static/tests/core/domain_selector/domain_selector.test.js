@@ -192,7 +192,7 @@ test("building a domain with an invalid path", async () => {
         "Invalid field chain"
     );
     expect(getOperatorOptions()).toHaveLength(1);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("abc");
 
     await openModelFieldSelectorPopover();
@@ -211,12 +211,12 @@ test("building a domain with an invalid path (2)", async () => {
 
     expect(getCurrentPath()).toBe("bloup");
     expect(isNotSupportedPath()).toBe(true);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("abc");
 
     await clearNotSupported();
     expect(getCurrentPath()).toBe("Id");
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("1");
 });
 
@@ -235,7 +235,7 @@ test("building a domain with an invalid path (3)", async () => {
 
     expect(getCurrentPath()).toBe("bloup");
     expect(isNotSupportedPath()).toBe(true);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("abc");
 
     await clearNotSupported();
@@ -262,7 +262,7 @@ test("building a domain with an invalid operator", async () => {
     expect(getCurrentPath()).toBe("Foo");
     expect(".o_model_field_selector_warning").toHaveCount(0);
     expect(getOperatorOptions()).toHaveLength(10);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("abc");
 });
 
@@ -290,13 +290,13 @@ test("building a domain with an expression in value", async () => {
     });
 
     expect(getCurrentPath()).toBe("Int");
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("id");
 
     await selectOperator("<");
 
     expect(getCurrentPath()).toBe("Int");
-    expect(getCurrentOperator()).toBe("is lower");
+    expect(getCurrentOperator()).toBe("lower");
     expect(getCurrentValue()).toBe("1");
 });
 
@@ -382,7 +382,7 @@ test("set [(1, '=', 1)] or [(0, '=', 1)] as domain with the debug textarea", asy
     });
     expect(SELECTORS.condition).toHaveCount(1);
     expect(getCurrentPath()).toBe("0");
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("1");
 });
 
@@ -410,7 +410,7 @@ test("selection field with operator change from 'set' to '='", async () => {
 
     await selectOperator("=");
     expect(getCurrentPath()).toBe("State");
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe(`ABC`);
 });
 
@@ -460,7 +460,7 @@ test("multi selection", async () => {
 test("json field with operator change from 'equal' to 'ilike'", async () => {
     await makeDomainSelector({ domain: `[['json_field', '=', "hey"]]` });
     expect(getCurrentPath()).toBe(`Json Field`);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe(`hey`);
 
     await selectOperator("ilike");
@@ -611,7 +611,7 @@ test("debug input in model field selector popover", async () => {
     expect(getCurrentPath()).toBe("a");
     expect(".o_model_field_selector_warning").toHaveCount(1);
     expect(getOperatorOptions()).toHaveLength(1);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("1");
     expect(SELECTORS.debugArea).toHaveValue(`[("a", "=", 1)]`);
 });
@@ -627,7 +627,7 @@ test("between operator", async () => {
     });
 
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(getCurrentOperator()).toBe("is between");
+    expect(getCurrentOperator()).toBe("between");
     expect(".o_datetime_input").toHaveCount(2);
 
     await contains(".o_datetime_input:first").edit("2023-01-02 00:00:00");
@@ -647,8 +647,8 @@ test("between operator (2)", async () => {
         domain: `["&", "&", ("foo", "=", "abc"), ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 23:59:59")]`,
     });
     expect(SELECTORS.condition).toHaveCount(2);
-    expect(getCurrentOperator()).toBe("is equal");
-    expect(getCurrentOperator(1)).toBe("is between");
+    expect(getCurrentOperator()).toBe("equals");
+    expect(getCurrentOperator(1)).toBe("between");
     expect(".o_datetime_input").toHaveCount(2);
 });
 
@@ -658,8 +658,8 @@ test("between operator (3)", async () => {
         domain: `["&", "&", ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 23:59:59"), ("foo", "=", "abc")]`,
     });
     expect(SELECTORS.condition).toHaveCount(2);
-    expect(getCurrentOperator()).toBe("is between");
-    expect(getCurrentOperator(1)).toBe("is equal");
+    expect(getCurrentOperator()).toBe("between");
+    expect(getCurrentOperator(1)).toBe("equals");
     expect(".o_datetime_input").toHaveCount(2);
 });
 
@@ -669,8 +669,8 @@ test("between operator (4)", async () => {
         domain: `["&", ("datetime", ">=", "2023-01-01 00:00:00"), "&", ("datetime", "<=", "2023-01-10 00:00:00"), ("foo", "=", "abc")]`,
     });
     expect(SELECTORS.condition).toHaveCount(2);
-    expect(getCurrentOperator()).toBe("is between");
-    expect(getCurrentOperator(1)).toBe("is equal");
+    expect(getCurrentOperator()).toBe("between");
+    expect(getCurrentOperator(1)).toBe("equals");
     expect(".o_datetime_input").toHaveCount(2);
 });
 
@@ -681,7 +681,7 @@ test("between operator (5)", async () => {
         readonly: true,
     });
     expect(".o_domain_selector").toHaveText(
-        `Match\nany\nof the following rules:\nCreated on\nis between\n04/01/2023 00:00:00\nand\n04/30/2023 23:59:59\n0\nis equal\n1`
+        `Match\nany\nof the following rules:\nCreated on\nbetween\n04/01/2023 00:00:00\nand\n04/30/2023 23:59:59\n0\n=\n1`
     );
 });
 
@@ -695,7 +695,7 @@ test("expressions in between operator", async () => {
         },
     });
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(getCurrentOperator()).toBe("is between");
+    expect(getCurrentOperator()).toBe("between");
     expect(SELECTORS.valueEditor).toHaveCount(1);
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
     expect(SELECTORS.clearNotSupported).toHaveCount(1);
@@ -713,99 +713,99 @@ test("support of connector '!' (mode readonly)", async () => {
     const toTest = [
         {
             domain: `["!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc`,
         },
         {
             domain: `["!", "!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc`,
+            result: `Match\nall\nof the following rules:\nFoo\n=\nabc`,
         },
         {
             domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc`,
         },
         {
             domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Match\nany\nof the following rules:\nFoo\nnot =\nabc\nFoo\nnot =\ndef`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc\nFoo\nnot =\ndef`,
         },
         {
             domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\nnot =\ndef`,
         },
         {
             domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nany\nof the following rules:\nFoo\nnot =\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\nnot =\ndef`,
         },
         {
             domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nany\nof:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nall\nof the following rules:\nany\nof:\nFoo\nnot =\nabc\nFoo\nnot =\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc\nFoo\nnot =\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nany\nof the following rules:\nFoo\nnot =\nabc\nFoo\nnot =\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nall\nof:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nany\nof the following rules:\nall\nof:\nFoo\nnot =\nabc\nFoo\nnot =\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Match\nany\nof the following rules:\nFoo\nnot =\nabc\nFoo\nnot =\ndef\nFoo\nnot =\nghi`,
         },
         {
             domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc\nFoo\nnot =\ndef\nFoo\nnot =\nghi`,
         },
         {
             domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nall\nof:\nFoo\nis not equal\nabc\nFoo\nis equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Match\nany\nof the following rules:\nall\nof:\nFoo\nnot =\nabc\nFoo\n=\ndef\nFoo\nnot =\nghi`,
         },
         {
             domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nany\nof:\nFoo\nis not equal\nabc\nFoo\nis not equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Match\nall\nof the following rules:\nany\nof:\nFoo\nnot =\nabc\nFoo\nnot =\ndef\nFoo\nnot =\nghi`,
         },
         {
             domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nall\nof:\nFoo\nis not equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Match\nany\nof the following rules:\nFoo\nnot =\nabc\nall\nof:\nFoo\nnot =\ndef\nFoo\nnot =\nghi`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "!=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nany\nof:\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc\nany\nof:\nFoo\nnot =\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "!=", "def"), "!", ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nany\nof:\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc\nany\nof:\nFoo\n=\ndef\nFoo\n=\nghi`,
         },
     ];
 
@@ -831,99 +831,99 @@ test("support of connector '!' (debug mode)", async () => {
     const toTest = [
         {
             domain: `["!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc`,
         },
         {
             domain: `["!", "!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc`,
+            result: `Match\nall\nof the following rules:\nFoo\n=\nabc`,
         },
         {
             domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc`,
         },
         {
             domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nnot all\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nnot all\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nnone\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nnone\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\nnot =\ndef`,
         },
         {
             domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nall\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis not equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nany\nof the following rules:\nFoo\nnot =\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis not equal\ndef`,
+            result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\nnot =\ndef`,
         },
         {
             domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-            result: `Match\nany\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef`,
+            result: `Match\nany\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef`,
         },
         {
             domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nnot all\nof:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nall\nof the following rules:\nnot all\nof:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nnone\nof:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nall\nof the following rules:\nnone\nof:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nnot all\nof:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nany\nof the following rules:\nnot all\nof:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nany\nof the following rules:\nnone\nof:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nany\nof the following rules:\nnone\nof:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnot all\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nnot all\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnone\nof the following rules:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nnone\nof the following rules:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnot all\nof the following rules:\nany\nof:\nFoo\nis equal\nabc\nFoo\nis not equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nnot all\nof the following rules:\nany\nof:\nFoo\n=\nabc\nFoo\nnot =\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnone\nof the following rules:\nall\nof:\nFoo\nis equal\nabc\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nnone\nof the following rules:\nall\nof:\nFoo\n=\nabc\nFoo\n=\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnot all\nof the following rules:\nFoo\nis equal\nabc\nany\nof:\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nnot all\nof the following rules:\nFoo\n=\nabc\nany\nof:\nFoo\n=\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-            result: `Match\nnone\nof the following rules:\nFoo\nis equal\nabc\nall\nof:\nFoo\nis equal\ndef\nFoo\nis equal\nghi`,
+            result: `Match\nnone\nof the following rules:\nFoo\n=\nabc\nall\nof:\nFoo\n=\ndef\nFoo\n=\nghi`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), "!", ("foo", "=", "ghi")]`,
-            result: `Match\nnone\nof the following rules:\nFoo\nis equal\nabc\nall\nof:\nFoo\nis equal\ndef\nFoo\nis not equal\nghi`,
+            result: `Match\nnone\nof the following rules:\nFoo\n=\nabc\nall\nof:\nFoo\n=\ndef\nFoo\nnot =\nghi`,
         },
     ];
 
@@ -1004,7 +1004,7 @@ test("support properties", async () => {
     expectedDomain = `[("properties.xpad_prop_1", "=", False)]`;
     await contains(".o_model_field_selector_popover_item[data-name='xpad_prop_1'] button").click();
     expect(getCurrentPath()).toBe("Properties > M2O");
-    expect(getOperatorOptions()).toEqual(["is equal", "is not equal", "set", "not set"]);
+    expect(getOperatorOptions()).toEqual(["equals", "not equals", "set", "not set"]);
 
     const toTests = [
         {
@@ -1015,16 +1015,16 @@ test("support properties", async () => {
         {
             name: "xphone_prop_2",
             domain: `[("properties.xphone_prop_2", "=", False)]`,
-            options: ["is equal", "is not equal", "set", "not set"],
+            options: ["equals", "not equals", "set", "not set"],
         },
         {
             name: "xphone_prop_3",
             domain: `[("properties.xphone_prop_3", "=", "")]`,
             options: [
-                "is equal",
-                "is not equal",
+                "equals",
+                "not equals",
                 "contains",
-                "does not contain",
+                "not contains",
                 "is in",
                 "is not in",
                 "set",
@@ -1037,16 +1037,14 @@ test("support properties", async () => {
             name: "xphone_prop_4",
             domain: `[("properties.xphone_prop_4", "=", 1)]`,
             options: [
-                "is equal",
-                "is not equal",
-                "is greater",
-                "is greater or equal",
-                "is lower",
-                "is lower or equal",
-                "is between",
-                "is not between",
+                "equals",
+                "not equals",
+                "greater",
+                "lower",
+                "between",
+                "not between",
                 "contains",
-                "does not contain",
+                "not contains",
                 "set",
                 "not set",
             ],
@@ -1057,14 +1055,12 @@ test("support properties", async () => {
             options: [
                 "today",
                 "not today",
-                "is equal",
-                "is not equal",
-                "is greater",
-                "is greater or equal",
-                "is lower",
-                "is lower or equal",
-                "is between",
-                "is not between",
+                "equals",
+                "not equals",
+                "greater",
+                "lower",
+                "between",
+                "not between",
                 "next",
                 "not next",
                 "last",
@@ -1135,31 +1131,31 @@ test("support properties (mode readonly)", async () => {
         },
         {
             domain: `[("properties.xphone_prop_2", "=", "abc")]`,
-            result: "Properties ➔ Selection is equal ABC",
+            result: "Properties ➔ Selection = ABC",
         },
         {
             domain: `[("properties.xphone_prop_3", "=", "def")]`,
-            result: "Properties ➔ Char is equal def",
+            result: "Properties ➔ Char = def",
         },
         {
             domain: `[("properties.xphone_prop_4", "=", 1)]`,
-            result: "Properties ➔ Integer is equal 1",
+            result: "Properties ➔ Integer = 1",
         },
         {
             domain: `[("properties.xphone_prop_5", "=", "2023-10-05")]`,
-            result: "Properties ➔ Date is equal 05|10|2023",
+            result: "Properties ➔ Date = 05|10|2023",
         },
         {
             domain: `[("properties.xphone_prop_6", "in", "g")]`,
-            result: "Properties ➔ Tags is in g",
+            result: "Properties ➔ Tags = g",
         },
         {
             domain: `[("properties.xphone_prop_7", "in", [37])]`,
-            result: "Properties ➔ M2M is in ( xphone )",
+            result: "Properties ➔ M2M = xphone",
         },
         {
             domain: `[("properties.xpad_prop_1", "=", 41)]`,
-            result: "Properties ➔ M2O is equal xpad",
+            result: "Properties ➔ M2O = xpad",
         },
     ];
 
@@ -1320,7 +1316,7 @@ test("display of a contextual value (readonly)", async () => {
         domain: `[("foo", "=", uid)]`,
         readonly: true,
     });
-    expect(getConditionText()).toBe("Foo is equal uid");
+    expect(getConditionText()).toBe("Foo = uid");
 });
 
 test("boolean field (readonly)", async () => {
@@ -1344,19 +1340,19 @@ test("integer field (readonly)", async () => {
         readonly: true,
     });
     const toTest = [
-        { domain: `[("int", "=", True)]`, text: `Int is equal true` },
+        { domain: `[("int", "=", True)]`, text: `Int = true` },
         { domain: `[("int", "=", False)]`, text: `Int not set` },
-        { domain: `[("int", "!=", True)]`, text: `Int is not equal true` },
+        { domain: `[("int", "!=", True)]`, text: `Int not = true` },
         { domain: `[("int", "!=", False)]`, text: `Int set` },
-        { domain: `[("int", "=", 1)]`, text: `Int is equal 1` },
-        { domain: `[("int", "!=", 1)]`, text: `Int is not equal 1` },
-        { domain: `[("int", "<", 1)]`, text: `Int is lower 1` },
-        { domain: `[("int", "<=", 1)]`, text: `Int is lower or equal 1` },
-        { domain: `[("int", ">", 1)]`, text: `Int is greater 1` },
-        { domain: `[("int", ">=", 1)]`, text: `Int is greater or equal 1` },
+        { domain: `[("int", "=", 1)]`, text: `Int = 1` },
+        { domain: `[("int", "!=", 1)]`, text: `Int not = 1` },
+        { domain: `[("int", "<", 1)]`, text: `Int lower 1` },
+        { domain: `[("int", "<=", 1)]`, text: `Int lower or equal 1` },
+        { domain: `[("int", ">", 1)]`, text: `Int greater 1` },
+        { domain: `[("int", ">=", 1)]`, text: `Int greater or equal 1` },
         {
             domain: `["&", ("int", ">=", 1),("int","<=", 2)]`,
-            text: `Int is between 1 and 2`,
+            text: `Int between 1 and 2`,
         },
     ];
     for (const { domain, text } of toTest) {
@@ -1375,22 +1371,22 @@ test("date field (readonly)", async () => {
         readonly: true,
     });
     const toTest = [
-        { domain: `[("date", "=", False)]`, text: `Date is equal false` },
-        { domain: `[("date", "!=", False)]`, text: `Date is not equal false` },
-        { domain: `[("date", "=", "2023-07-03")]`, text: `Date is equal 03|07|2023` },
-        { domain: `[("date", "=", context_today())]`, text: `Date is equal context_today()` },
-        { domain: `[("date", "!=", "2023-07-03")]`, text: `Date is not equal 03|07|2023` },
-        { domain: `[("date", "<", "2023-07-03")]`, text: `Date is lower 03|07|2023` },
-        { domain: `[("date", "<=", "2023-07-03")]`, text: `Date is lower or equal 03|07|2023` },
-        { domain: `[("date", ">", "2023-07-03")]`, text: `Date is greater 03|07|2023` },
-        { domain: `[("date", ">=", "2023-07-03")]`, text: `Date is greater or equal 03|07|2023` },
+        { domain: `[("date", "=", False)]`, text: `Date not set` },
+        { domain: `[("date", "!=", False)]`, text: `Date set` },
+        { domain: `[("date", "=", "2023-07-03")]`, text: `Date = 03|07|2023` },
+        { domain: `[("date", "=", context_today())]`, text: `Date = context_today()` },
+        { domain: `[("date", "!=", "2023-07-03")]`, text: `Date not = 03|07|2023` },
+        { domain: `[("date", "<", "2023-07-03")]`, text: `Date lower 03|07|2023` },
+        { domain: `[("date", "<=", "2023-07-03")]`, text: `Date lower or equal 03|07|2023` },
+        { domain: `[("date", ">", "2023-07-03")]`, text: `Date greater 03|07|2023` },
+        { domain: `[("date", ">=", "2023-07-03")]`, text: `Date greater or equal 03|07|2023` },
         {
             domain: `["&", ("date", ">=", "2023-07-03"),("date","<=", "2023-07-15")]`,
-            text: `Date is between 03|07|2023 and 15|07|2023`,
+            text: `Date between 03|07|2023 and 15|07|2023`,
         },
         {
             domain: `["&", ("date", ">=", "2023-07-03"),("date","<=", context_today())]`,
-            text: `Date is between 03|07|2023 and context_today()`,
+            text: `Date between 03|07|2023 and context_today()`,
         },
     ];
     for (const { domain, text } of toTest) {
@@ -1406,13 +1402,13 @@ test("char field (readonly)", async () => {
     const toTest = [
         { domain: `[("foo", "=", False)]`, text: `Foo not set` },
         { domain: `[("foo", "!=", False)]`, text: `Foo set` },
-        { domain: `[("foo", "=", "abc")]`, text: `Foo is equal abc` },
-        { domain: `[("foo", "=", expr)]`, text: `Foo is equal expr` },
-        { domain: `[("foo", "!=", "abc")]`, text: `Foo is not equal abc` },
+        { domain: `[("foo", "=", "abc")]`, text: `Foo = abc` },
+        { domain: `[("foo", "=", expr)]`, text: `Foo = expr` },
+        { domain: `[("foo", "!=", "abc")]`, text: `Foo not = abc` },
         { domain: `[("foo", "ilike", "abc")]`, text: `Foo contains abc` },
-        { domain: `[("foo", "not ilike", "abc")]`, text: `Foo does not contain abc` },
-        { domain: `[("foo", "in", ["abc", "def"])]`, text: `Foo is in ( abc , def )` },
-        { domain: `[("foo", "not in", ["abc", "def"])]`, text: `Foo is not in ( abc , def )` },
+        { domain: `[("foo", "not ilike", "abc")]`, text: `Foo not contains abc` },
+        { domain: `[("foo", "in", ["abc", "def"])]`, text: `Foo = abc or def` },
+        { domain: `[("foo", "not in", ["abc", "def"])]`, text: `Foo not = abc or def` },
     ];
     for (const { domain, text } of toTest) {
         await parent.set(domain);
@@ -1427,18 +1423,18 @@ test("selection field (readonly)", async () => {
     const toTest = [
         { domain: `[("state", "=", False)]`, text: `State not set` },
         { domain: `[("state", "!=", False)]`, text: `State set` },
-        { domain: `[("state", "=", "abc")]`, text: `State is equal ABC` },
-        { domain: `[("state", "=", expr)]`, text: `State is equal expr` },
-        { domain: `[("state", "!=", "abc")]`, text: `State is not equal ABC` },
-        { domain: `[("state", "in", ["abc", "def"])]`, text: `State is in ( ABC , DEF )` },
-        { domain: `[("state", "in", ["abc", False])]`, text: `State is in ( "ABC" , false )` },
+        { domain: `[("state", "=", "abc")]`, text: `State = ABC` },
+        { domain: `[("state", "=", expr)]`, text: `State = expr` },
+        { domain: `[("state", "!=", "abc")]`, text: `State not = ABC` },
+        { domain: `[("state", "in", ["abc", "def"])]`, text: `State = ABC or DEF` },
+        { domain: `[("state", "in", ["abc", False])]`, text: `State = "ABC" or false` },
         {
             domain: `[("state", "not in", ["abc", "def"])]`,
-            text: `State is not in ( ABC , DEF )`,
+            text: `State not = ABC or DEF`,
         },
         {
             domain: `[("state", "not in", ["abc", expr])]`,
-            text: `State is not in ( "ABC" , expr )`,
+            text: `State not = "ABC" or expr`,
         },
     ];
     for (const { domain, text } of toTest) {
@@ -1481,15 +1477,15 @@ test("selection property (readonly)", async () => {
         },
         {
             domain: `[("properties.selection_prop", "=", "abc")]`,
-            text: `Properties ➔ Selection is equal ABC`,
+            text: `Properties ➔ Selection = ABC`,
         },
         {
             domain: `[("properties.selection_prop", "=", expr)]`,
-            text: `Properties ➔ Selection is equal expr`,
+            text: `Properties ➔ Selection = expr`,
         },
         {
             domain: `[("properties.selection_prop", "!=", "abc")]`,
-            text: `Properties ➔ Selection is not equal ABC`,
+            text: `Properties ➔ Selection not = ABC`,
         },
     ];
     for (const { domain, text } of toTest) {
@@ -1502,51 +1498,51 @@ test("many2one field (readonly)", async () => {
     const toTest = [
         {
             domain: `[("product_id", "=", 37)]`,
-            text: "Product is equal xphone",
+            text: "Product = xphone",
         },
         {
             domain: `[("product_id", "=", 2)]`,
-            text: "Product is equal Inaccessible/missing record ID: 2",
+            text: "Product = Inaccessible/missing record ID: 2",
         },
         {
             domain: `[("product_id", "!=", 37)]`,
-            text: "Product is not equal xphone",
+            text: "Product not = xphone",
         },
         {
             domain: `[("product_id", "=", false)]`,
-            text: "Product is equal false",
+            text: "Product not set",
         },
         {
             domain: `[("product_id", "!=", false)]`,
-            text: "Product is not equal false",
+            text: "Product set",
         },
         {
             domain: `[("product_id", "in", [])]`,
-            text: "Product is in ( )",
+            text: "Product not set",
         },
         {
             domain: `[("product_id", "in", [41, 37])]`,
-            text: "Product is in ( xpad , xphone )",
+            text: "Product = xpad or xphone",
         },
         {
             domain: `[("product_id", "in", [1, 37])]`,
-            text: "Product is in ( Inaccessible/missing record ID: 1 , xphone )",
+            text: "Product = Inaccessible/missing record ID: 1 or xphone",
         },
         {
             domain: `[("product_id", "in", [1, uid, 37])]`,
-            text: 'Product is in ( Inaccessible/missing record ID: 1 , uid , "xphone" )',
+            text: 'Product = Inaccessible/missing record ID: 1 or uid or "xphone"',
         },
         {
             domain: `[("product_id", "in", ["abc"])]`,
-            text: "Product is in ( abc )",
+            text: "Product = abc",
         },
         {
             domain: `[("product_id", "in", 37)]`,
-            text: "Product is in xphone",
+            text: "Product = xphone",
         },
         {
             domain: `[("product_id", "in", 2)]`,
-            text: "Product is in Inaccessible/missing record ID: 2",
+            text: "Product = Inaccessible/missing record ID: 2",
         },
     ];
     const parent = await makeDomainSelector({ readonly: true });
@@ -1563,10 +1559,10 @@ test("many2one field operators (edit)", async () => {
     expect(getOperatorOptions()).toEqual([
         "is in",
         "is not in",
-        "is equal",
-        "is not equal",
+        "equals",
+        "not equals",
         "contains",
-        "does not contain",
+        "not contains",
         "set",
         "not set",
         "starts with",
@@ -1615,7 +1611,7 @@ test("many2one field and operator =/!= (edit)", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -1624,30 +1620,30 @@ test("many2one field and operator =/!= (edit)", async () => {
     await runAllTimers();
     expect(".dropdown-menu").toHaveCount(1);
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xphone"]);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("xph");
 
     await contains(".dropdown-menu li").click();
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("xphone");
     expect.verifySteps([`[("product_id", "=", 37)]`]);
     expect(".dropdown-menu").toHaveCount(0);
 
     await editValue("", { confirm: false });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("");
     await contains(".o_domain_selector").click();
     expect.verifySteps([`[("product_id", "=", False)]`]);
 
     await selectOperator("!=");
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equals");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([`[("product_id", "!=", False)]`]);
 
     await editValue("xpa", { confirm: false });
     await runAllTimers();
     await contains(".dropdown-menu li").click();
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equals");
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_id", "!=", 41)]`]);
 });
@@ -1657,7 +1653,7 @@ test("many2one field on record with falsy display_name", async () => {
     await makeDomainSelector({
         domain: `[("product_id", "=", False)]`,
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("");
     expect(".dropdown-menu").toHaveCount(0);
 
@@ -1719,7 +1715,7 @@ test("many2one field and operator ilike/not ilike (edit)", async () => {
     expect.verifySteps([`[("product_id", "ilike", "def")]`]);
 
     await selectOperator("not ilike");
-    expect(getCurrentOperator()).toBe("does not contain");
+    expect(getCurrentOperator()).toBe("not contains");
     expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
     expect(getCurrentValue()).toBe("def");
     expect.verifySteps([`[("product_id", "not ilike", "def")]`]);
@@ -1732,7 +1728,7 @@ test("many2many field and operator set/not set (edit)", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([]);
 
@@ -1748,7 +1744,7 @@ test("many2many field and operator set/not set (edit)", async () => {
     expect.verifySteps([`[("product_id", "!=", False)]`]);
 
     await selectOperator("!=");
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equals");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([`[("product_id", "!=", False)]`]);
 });
@@ -1760,7 +1756,7 @@ test("many2many field: clone a set/not set condition", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([]);
 
@@ -1785,10 +1781,10 @@ test("x2many field operators (edit)", async () => {
     expect(getOperatorOptions()).toEqual([
         "is in",
         "is not in",
-        "is equal",
-        "is not equal",
+        "equals",
+        "not equals",
         "contains",
-        "does not contain",
+        "not contains",
         "set",
         "not set",
         "starts with",
@@ -1874,12 +1870,12 @@ test("many2many field: operator =/!=/in/not in (edit)", async () => {
     expect.verifySteps([`[("product_ids", "not in", [41])]`]);
 
     await selectOperator("=");
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_ids", "=", [41])]`]);
 
     await selectOperator("!=");
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equals");
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_ids", "!=", [41])]`]);
 });
@@ -1905,7 +1901,7 @@ test("many2many field: operator ilike/not ilike (edit)", async () => {
     expect.verifySteps([`[("product_ids", "ilike", "def")]`]);
 
     await selectOperator("not ilike");
-    expect(getCurrentOperator()).toBe("does not contain");
+    expect(getCurrentOperator()).toBe("not contains");
     expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
     expect(getCurrentValue()).toBe("def");
     expect.verifySteps([`[("product_ids", "not ilike", "def")]`]);
@@ -2011,7 +2007,7 @@ test("date/datetime edition: switch !=/set", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equals");
     expect(".o_datetime_input").toHaveCount(1);
     expect(getCurrentValue()).toBe("05/20/2023");
 
@@ -2021,7 +2017,7 @@ test("date/datetime edition: switch !=/set", async () => {
     expect.verifySteps([`[("date", "!=", False)]`]);
 
     await selectOperator("!=");
-    expect(getCurrentOperator()).toBe("is not equal");
+    expect(getCurrentOperator()).toBe("not equals");
     expect(".o_datetime_input").toHaveCount(1);
     expect(getCurrentValue()).toBe("04/20/2023");
     expect.verifySteps([`[("date", "!=", "2023-04-20")]`]);
@@ -2044,7 +2040,7 @@ test("date/datetime edition: switch is_set to other operators", async () => {
 
     await selectOperator("between");
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(getCurrentOperator()).toBe("is between");
+    expect(getCurrentOperator()).toBe("between");
     expect(SELECTORS.valueEditor).toHaveCount(1);
     expect(SELECTORS.valueEditor + " " + SELECTORS.editor).toHaveCount(2);
     expect(SELECTORS.clearNotSupported).toHaveCount(0);
@@ -2059,18 +2055,18 @@ test("date/datetime edition: switch is_set to other operators", async () => {
     expect(getCurrentOperator()).toBe("not set");
     expect.verifySteps(['[("datetime", "=", False)]']);
 
-    await selectOperator(">=");
+    await selectOperator(">");
     expect(".o_datetime_input").toHaveCount(1);
     expect(getCurrentValue()).toBe("04/20/2023 00:00");
-    expect(getCurrentOperator()).toBe("is greater or equal");
-    expect.verifySteps(['[("datetime", ">=", "2023-04-20 00:00:00")]']);
+    expect(getCurrentOperator()).toBe("greater");
+    expect.verifySteps(['[("datetime", ">", "2023-04-20 00:00:00")]']);
 });
 
 test("render false and true leaves", async () => {
     await makeDomainSelector({ domain: `[(0, "=", 1), (1, "=", 1)]` });
-    expect(getOperatorOptions()).toEqual(["is equal"]);
+    expect(getOperatorOptions()).toEqual(["equals"]);
     expect(getValueOptions()).toEqual(["1"]);
-    expect(getOperatorOptions(-1)).toEqual(["is equal"]);
+    expect(getOperatorOptions(-1)).toEqual(["equals"]);
     expect(getValueOptions(-1)).toEqual(["1"]);
 });
 
@@ -2086,7 +2082,7 @@ test("datetime domain in readonly mode (check localization)", async () => {
         readonly: true,
     });
     expect(".o_tree_editor_condition").toHaveText(
-        `Datetime\nis between\n11.03.2023 13:41:23\nand\n11.13.2023 11:45:11`
+        `Datetime\nbetween\n11.03.2023 13:41:23\nand\n11.13.2023 11:45:11`
     );
 });
 
@@ -2101,7 +2097,7 @@ test("date domain in readonly mode (check localization)", async () => {
         domain: `["&", ("date", ">=", "2023-11-03"), ("date", "<=", "2023-11-13")]`,
         readonly: true,
     });
-    expect(".o_tree_editor_condition").toHaveText("Date\nis between\n03|11|2023\nand\n13|11|2023");
+    expect(".o_tree_editor_condition").toHaveText("Date\nbetween\n03|11|2023\nand\n13|11|2023");
 });
 
 test(`any/not any operator in editable mode`, async () => {
@@ -2128,7 +2124,7 @@ test(`any/not any operator (readonly) with custom domain as value`, async () => 
     const toTest = [
         {
             domain: `[("product_id", "any", [("machin", "in", ["chose", "truc"] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nmachin\nis in\n(\nchose\n,\ntruc\n)`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nmachin\n=\nchose\nor\ntruc`,
         },
     ];
     const parent = await makeDomainSelector({ readonly: true });
@@ -2142,19 +2138,19 @@ test(`any/not any operator (readonly) with invalid domain as value`, async () =>
     const toTest = [
         {
             domain: `[("product_id", "any", A )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\n(\nA\n)`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\n(\nA\n)`,
         },
         {
             domain: `[("product_id", "any", "bete et méchant" )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\n(\nbete et méchant\n)`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\n(\nbete et méchant\n)`,
         },
         {
             domain: `[("product_id", "any", [("team_id", "any", "bête et méchant")])]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nProduct Team\nmatches\n(\nbête et méchant\n)`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nProduct Team\n:\n(\nbête et méchant\n)`,
         },
         {
             domain: `[("product_id", "any", ["&"])]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\n(\n&\n)`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\n(\n&\n)`,
         },
     ];
     const parent = await makeDomainSelector({ readonly: true });
@@ -2221,27 +2217,27 @@ test(`any/not any operator (readonly)`, async () => {
     const toTest = [
         {
             domain: `[("product_id", "any", [("name", "in", [37,41] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nProduct Name\nis in\n(\n37\n,\n41\n)`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nProduct Name\n=\n37\nor\n41`,
         },
         {
             domain: `[("product_id", "not any", [("name", "in", [37,41] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches none of\nall\nof:\nProduct Name\nis in\n(\n37\n,\n41\n)`,
+            text: `Match\nall\nof the following rules:\nProduct\n: not\nall\nof:\nProduct Name\n=\n37\nor\n41`,
         },
         {
             domain: `[("product_id", "not any", ["|", ("team_id", "any", [("name", "ilike", "mancity")] ), ("name", "in", [37,41] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches none of\nany\nof:\nProduct Team\nmatches\nall\nof:\nTeam Name\ncontains\nmancity\nProduct Name\nis in\n(\n37\n,\n41\n)`,
+            text: `Match\nall\nof the following rules:\nProduct\n: not\nany\nof:\nProduct Team\n:\nall\nof:\nTeam Name\ncontains\nmancity\nProduct Name\n=\n37\nor\n41`,
         },
         {
             domain: `[("product_id", "any", ["|", ("name", "in", [37,41] ), ("bar", "=", True)] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\nany\nof:\nProduct Name\nis in\n(\n37\n,\n41\n)\nProduct Bar\nset`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\nany\nof:\nProduct Name\n=\n37\nor\n41\nProduct Bar\nset`,
         },
         {
             domain: `[("product_id", "any", ["&", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["&", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\nall\nof:\nProduct Name\nis in\n(\nJD7\n,\nKDB\n)\nProduct Team\nmatches none of\nall\nof:\nId\nis equal\n17\nTeam Name\ncontains\nmancity`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nall\nof:\nId\n=\n17\nTeam Name\ncontains\nmancity`,
         },
         {
             domain: `[("product_id", "any", ["|", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["|", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
-            text: `Match\nall\nof the following rules:\nProduct\nmatches\nany\nof:\nProduct Name\nis in\n(\nJD7\n,\nKDB\n)\nProduct Team\nmatches none of\nany\nof:\nId\nis equal\n17\nTeam Name\ncontains\nmancity`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\nany\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nany\nof:\nId\n=\n17\nTeam Name\ncontains\nmancity`,
         },
     ];
     const parent = await makeDomainSelector({ readonly: true });
@@ -2257,7 +2253,7 @@ test(`any/not any operator (readonly) for one2many`, async () => {
         domain: `[("player_ids", "any", [('name', 'in', ["Kevin De Bruyne", "Jeremy Doku"])])]`,
         readonly: true,
     });
-    const text = `Match\nall\nof the following rules:\nPlayers\nmatch\nall\nof:\nPlayer Name\nis in\n(\nKevin De Bruyne\n,\nJeremy Doku\n)`;
+    const text = `Match\nall\nof the following rules:\nPlayers\n:\nall\nof:\nPlayer Name\n=\nKevin De Bruyne\nor\nJeremy Doku`;
     expect(".o_domain_selector").toHaveText(text);
 });
 
@@ -2498,7 +2494,7 @@ test("shorten descriptions of long lists", async () => {
         readonly: true,
     });
     expect(".o_tree_editor_condition").toHaveText(
-        `Id\nis in\n(\n${values.slice(0, 4).join("\n,\n")}\n,\n...\n)`
+        `Id\n=\n${values.slice(0, 4).join("\nor\n")}\nor\n...`
     );
 });
 
@@ -2510,7 +2506,7 @@ test("many2one: no domain in autocompletion", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -2520,11 +2516,11 @@ test("many2one: no domain in autocompletion", async () => {
 
     expect(".dropdown-menu").toHaveCount(1);
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xphone", "xpad"]);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("x");
 
     await contains(".dropdown-menu li").click();
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("xphone");
     expect.verifySteps([`[("product_id", "=", 37)]`]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -2539,7 +2535,7 @@ test("many2many: domain in autocompletion", async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -2549,11 +2545,11 @@ test("many2many: domain in autocompletion", async () => {
 
     expect(".dropdown-menu").toHaveCount(1);
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("x");
 
     await contains(".dropdown-menu li").click();
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_ids", "=", [41])]`]);
     expect(".dropdown-menu").toHaveCount(0);
@@ -2570,10 +2566,10 @@ test("Any operator supported even if not proposed", async () => {
     expect(getOperatorOptions()).toEqual([
         "is in",
         "is not in",
-        "is equal",
-        "is not equal",
+        "equals",
+        "not equals",
         "contains",
-        "does not contain",
+        "not contains",
         "set",
         "not set",
         "starts with",
@@ -2601,10 +2597,10 @@ test("Hierarchical operators", async () => {
     expect(getOperatorOptions()).toEqual([
         "is in",
         "is not in",
-        "is equal",
-        "is not equal",
+        "equals",
+        "not equals",
         "contains",
-        "does not contain",
+        "not contains",
         "set",
         "not set",
         "starts with",
@@ -2615,10 +2611,10 @@ test("Hierarchical operators", async () => {
     expect(getOperatorOptions()).toEqual([
         "is in",
         "is not in",
-        "is equal",
-        "is not equal",
+        "equals",
+        "not equals",
         "contains",
-        "does not contain",
+        "not contains",
         "set",
         "not set",
         "starts with",
@@ -2653,13 +2649,13 @@ test("preserve virtual operators in sub domains", async () => {
     expect(getCurrentOperator(1)).toBe("matches");
     expect(getCurrentOperator(2)).toBe("not set");
     expect(getCurrentOperator(3)).toBe("not set");
-    expect(getCurrentOperator(4)).toBe("is equal");
+    expect(getCurrentOperator(4)).toBe("equals");
 
     await addNewRule(1);
     expect(getCurrentOperator(2)).toBe("not set");
     expect(getCurrentOperator(3)).toBe("not set");
-    expect(getCurrentOperator(4)).toBe("is equal");
-    expect(getCurrentOperator(5)).toBe("is equal");
+    expect(getCurrentOperator(4)).toBe("equals");
+    expect(getCurrentOperator(5)).toBe("equals");
     expect.verifySteps([
         `[("product_id", "any", ["&", "&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("id", "=", 1), ("id", "=", 1)])]`,
     ]);
@@ -2789,7 +2785,7 @@ test("datetime options (readonly)", async () => {
                 ("datetime.month_number", "=", 3),
                 ("datetime.day_of_month", "=", 20),
             ]`,
-            text: `Datetime ➔ Date is equal 03/20/2025`,
+            text: `Datetime ➔ Date = 03/20/2025`,
         },
         {
             domain: `[
@@ -2799,7 +2795,7 @@ test("datetime options (readonly)", async () => {
                 ("datetime.month_number", "!=", 3),
                 ("datetime.day_of_month", "!=", 20),
             ]`,
-            text: `Datetime ➔ Date is not equal 03/20/2025`,
+            text: `Datetime ➔ Date not = 03/20/2025`,
         },
         {
             domain: `[
@@ -2807,7 +2803,7 @@ test("datetime options (readonly)", async () => {
                 ("datetime.month_number", "=", 3),
                 ("datetime.day_of_month", "=", 20),
             ]`,
-            text: `Datetime ➔ Date ➔ Year is equal a`, // first line here
+            text: `Datetime ➔ Date ➔ Year = a`, // first line here
         },
         {
             domain: `[
@@ -2835,7 +2831,7 @@ test("datetime options (readonly)", async () => {
                             ("datetime.month_number", "=", 7),
                             ("datetime.day_of_month", "<=", 15),
             ]`,
-            text: `Datetime ➔ Date is between 03/20/2025 and 07/15/2026`,
+            text: `Datetime ➔ Date between 03/20/2025 and 07/15/2026`,
         },
         {
             domain: `[
@@ -2861,7 +2857,7 @@ test("datetime options (readonly)", async () => {
                 ("datetime.minute_number", "=", 4),
                 ("datetime.second_number", "=", 3),
             ]`,
-            text: `Datetime ➔ Time is equal 15:04:03`,
+            text: `Datetime ➔ Time = 15:04:03`,
         },
         {
             domain: `[
@@ -2871,7 +2867,7 @@ test("datetime options (readonly)", async () => {
                 ("datetime.minute_number", "!=", 40),
                 ("datetime.second_number", "!=", 30),
             ]`,
-            text: `Datetime ➔ Time is not equal 15:40:30`,
+            text: `Datetime ➔ Time not = 15:40:30`,
         },
         {
             domain: `[
@@ -2882,7 +2878,7 @@ test("datetime options (readonly)", async () => {
                 ("datetime.minute_number", "!=", 40),
                 ("datetime.second_number", "!=", 30),
             ]`,
-            text: `Datetime ➔ Time is equal 15:40:30`,
+            text: `Datetime ➔ Time = 15:40:30`,
         },
         {
             domain: `[
@@ -2910,7 +2906,7 @@ test("datetime options (readonly)", async () => {
                             ("datetime.minute_number", "=", 20),
                             ("datetime.second_number", "<=", 00),
             ]`,
-            text: `Datetime ➔ Time is between 15:40:30 and 17:20:00`,
+            text: `Datetime ➔ Time between 15:40:30 and 17:20:00`,
         },
         {
             domain: `[
@@ -2918,7 +2914,7 @@ test("datetime options (readonly)", async () => {
                 ("datetime.minute_number", "=", 40),
                 ("datetime.second_number", "=", 20),
             ]`,
-            text: `Datetime ➔ Time ➔ Hour is equal a`, // first line here
+            text: `Datetime ➔ Time ➔ Hour = a`, // first line here
         },
         {
             domain: `[("datetime.year_number", "=", False)]`,
@@ -2926,7 +2922,7 @@ test("datetime options (readonly)", async () => {
         },
         {
             domain: `[("datetime.year_number", "=", 2026)]`,
-            text: `Datetime ➔ Date ➔ Year is equal 2026`,
+            text: `Datetime ➔ Date ➔ Year = 2026`,
         },
         {
             domain: `[("datetime.quarter_number", "=", False)]`,
@@ -2934,7 +2930,7 @@ test("datetime options (readonly)", async () => {
         },
         {
             domain: `[("datetime.quarter_number", "=", 1)]`,
-            text: `Datetime ➔ Date ➔ Quarter is equal Quarter 1`,
+            text: `Datetime ➔ Date ➔ Quarter = Quarter 1`,
         },
         {
             domain: `[("datetime.month_number", "=", False)]`,
@@ -2942,7 +2938,7 @@ test("datetime options (readonly)", async () => {
         },
         {
             domain: `[("datetime.month_number", "=", 3)]`,
-            text: `Datetime ➔ Date ➔ Month is equal March`,
+            text: `Datetime ➔ Date ➔ Month = March`,
         },
         {
             domain: `[("datetime.iso_week_number", "=", False)]`,
@@ -2950,7 +2946,7 @@ test("datetime options (readonly)", async () => {
         },
         {
             domain: `[("datetime.iso_week_number", "=", 3)]`,
-            text: `Datetime ➔ Date ➔ Week number is equal 3`,
+            text: `Datetime ➔ Date ➔ Week number = 3`,
         },
         {
             domain: `[("datetime.day_of_year", "=", False)]`,
@@ -2958,7 +2954,7 @@ test("datetime options (readonly)", async () => {
         },
         {
             domain: `[("datetime.day_of_year", "=", 3)]`,
-            text: `Datetime ➔ Date ➔ Day of year is equal 3`,
+            text: `Datetime ➔ Date ➔ Day of year = 3`,
         },
         {
             domain: `[("datetime.day_of_month", "=", False)]`,
@@ -2966,7 +2962,7 @@ test("datetime options (readonly)", async () => {
         },
         {
             domain: `[("datetime.day_of_month", "=", 3)]`,
-            text: `Datetime ➔ Date ➔ Day of month is equal 3`,
+            text: `Datetime ➔ Date ➔ Day of month = 3`,
         },
         {
             domain: `[("datetime.day_of_week", "=", False)]`,
@@ -2974,7 +2970,7 @@ test("datetime options (readonly)", async () => {
         },
         {
             domain: `[("datetime.day_of_week", "=", 3)]`,
-            text: `Datetime ➔ Date ➔ Weekday is equal Wednesday`,
+            text: `Datetime ➔ Date ➔ Weekday = Wednesday`,
         },
         {
             domain: `[("datetime.hour_number", "=", False)]`,
@@ -2982,7 +2978,7 @@ test("datetime options (readonly)", async () => {
         },
         {
             domain: `[("datetime.hour_number", "=", 3)]`,
-            text: `Datetime ➔ Time ➔ Hour is equal 3`,
+            text: `Datetime ➔ Time ➔ Hour = 3`,
         },
         {
             domain: `[("datetime.minute_number", "=", False)]`,
@@ -2990,7 +2986,7 @@ test("datetime options (readonly)", async () => {
         },
         {
             domain: `[("datetime.minute_number", "=", 3)]`,
-            text: `Datetime ➔ Time ➔ Minute is equal 3`,
+            text: `Datetime ➔ Time ➔ Minute = 3`,
         },
         {
             domain: `[("datetime.second_number", "=", False)]`,
@@ -2998,7 +2994,7 @@ test("datetime options (readonly)", async () => {
         },
         {
             domain: `[("datetime.second_number", "=", 3)]`,
-            text: `Datetime ➔ Time ➔ Second is equal 3`,
+            text: `Datetime ➔ Time ➔ Second = 3`,
         },
     ];
     for (const { domain, text } of toTest) {
@@ -3041,21 +3037,19 @@ test("datetime options (edit)", async () => {
     ]);
 
     expect(getOperatorOptions()).toEqual([
-        "is equal",
-        "is not equal",
-        "is greater",
-        "is greater or equal",
-        "is lower",
-        "is lower or equal",
-        "is between",
-        "is not between",
+        "equals",
+        "not equals",
+        "greater",
+        "lower",
+        "between",
+        "not between",
         "set",
         "not set",
     ]);
 
     await selectOperator("between");
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(getCurrentOperator()).toBe("is between");
+    expect(getCurrentOperator()).toBe("between");
     expect(SELECTORS.valueEditor).toHaveCount(1);
     expect(SELECTORS.valueEditor + " " + SELECTORS.editor).toHaveCount(2);
     expect(SELECTORS.clearNotSupported).toHaveCount(0);
@@ -3073,14 +3067,12 @@ test("datetime options (edit)", async () => {
     expect.verifySteps([`[("datetime.day_of_week", "=", 5)]`]);
 
     expect(getOperatorOptions()).toEqual([
-        "is equal",
-        "is not equal",
-        "is greater",
-        "is greater or equal",
-        "is lower",
-        "is lower or equal",
-        "is between",
-        "is not between",
+        "equals",
+        "not equals",
+        "greater",
+        "lower",
+        "between",
+        "not between",
         "set",
         "not set",
     ]);
@@ -3106,14 +3098,12 @@ test("datetime options (edit)", async () => {
     expect.verifySteps(['[("datetime.hour_number", "=", 15)]']);
 
     expect(getOperatorOptions()).toEqual([
-        "is equal",
-        "is not equal",
-        "is greater",
-        "is greater or equal",
-        "is lower",
-        "is lower or equal",
-        "is between",
-        "is not between",
+        "equals",
+        "not equals",
+        "greater",
+        "lower",
+        "between",
+        "not between",
         "set",
         "not set",
     ]);
@@ -3139,7 +3129,7 @@ test("date options (readonly)", async () => {
                 ("date.minute_number", "=", False),
                 ("date.second_number", "=", False),
             ]`,
-            text: `Date ➔ hour_number is equal false`, // first line here
+            text: `Date ➔ hour_number not set`, // first line here
         },
         {
             domain: `[("date.year_number", "=", False)]`,
@@ -3147,7 +3137,7 @@ test("date options (readonly)", async () => {
         },
         {
             domain: `[("date.year_number", "=", 2026)]`,
-            text: `Date ➔ Year is equal 2026`,
+            text: `Date ➔ Year = 2026`,
         },
         {
             domain: `[("date.quarter_number", "=", False)]`,
@@ -3155,7 +3145,7 @@ test("date options (readonly)", async () => {
         },
         {
             domain: `[("date.quarter_number", "=", 1)]`,
-            text: `Date ➔ Quarter is equal Quarter 1`,
+            text: `Date ➔ Quarter = Quarter 1`,
         },
         {
             domain: `[("date.month_number", "=", False)]`,
@@ -3163,7 +3153,7 @@ test("date options (readonly)", async () => {
         },
         {
             domain: `[("date.month_number", "=", 3)]`,
-            text: `Date ➔ Month is equal March`,
+            text: `Date ➔ Month = March`,
         },
         {
             domain: `[("date.iso_week_number", "=", False)]`,
@@ -3171,7 +3161,7 @@ test("date options (readonly)", async () => {
         },
         {
             domain: `[("date.iso_week_number", "=", 3)]`,
-            text: `Date ➔ Week number is equal 3`,
+            text: `Date ➔ Week number = 3`,
         },
         {
             domain: `[("date.day_of_year", "=", False)]`,
@@ -3179,7 +3169,7 @@ test("date options (readonly)", async () => {
         },
         {
             domain: `[("date.day_of_year", "=", 3)]`,
-            text: `Date ➔ Day of year is equal 3`,
+            text: `Date ➔ Day of year = 3`,
         },
         {
             domain: `[("date.day_of_month", "=", False)]`,
@@ -3187,7 +3177,7 @@ test("date options (readonly)", async () => {
         },
         {
             domain: `[("date.day_of_month", "=", 3)]`,
-            text: `Date ➔ Day of month is equal 3`,
+            text: `Date ➔ Day of month = 3`,
         },
         {
             domain: `[("date.day_of_week", "=", False)]`,
@@ -3195,15 +3185,15 @@ test("date options (readonly)", async () => {
         },
         {
             domain: `[("date.day_of_week", "=", 3)]`,
-            text: `Date ➔ Weekday is equal Wednesday`,
+            text: `Date ➔ Weekday = Wednesday`,
         },
         {
             domain: `[("date.month_number", "=", context_today().month)]`,
-            text: `Date ➔ Month is equal This month`,
+            text: `Date ➔ Month = This month`,
         },
         {
             domain: `[("date.day_of_month", "=", context_today().day)]`,
-            text: `Date ➔ Day of month is equal This day`,
+            text: `Date ➔ Day of month = This day`,
         },
     ];
     for (const { domain, text } of toTest) {
@@ -3231,14 +3221,12 @@ test("date options (edit)", async () => {
     await contains(".o_model_field_selector_popover_item_name:contains(/^Month$/)").click();
 
     expect(getOperatorOptions()).toEqual([
-        "is equal",
-        "is not equal",
-        "is greater",
-        "is greater or equal",
-        "is lower",
-        "is lower or equal",
-        "is between",
-        "is not between",
+        "equals",
+        "not equals",
+        "greater",
+        "lower",
+        "between",
+        "not between",
         "set",
         "not set",
     ]);
