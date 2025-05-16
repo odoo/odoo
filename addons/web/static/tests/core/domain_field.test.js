@@ -196,7 +196,7 @@ test("domain field is correctly reset on every view change", async function () {
             </form>`,
     });
 
-    // As the domain is equal to [["id", "=", 1]] there should be a field
+    // As the domain = to [["id", "=", 1]] there should be a field
     // selector to change this
     expect(".o_field_domain .o_model_field_selector").toHaveCount(1, {
         message: "there should be a field selector",
@@ -849,7 +849,7 @@ test("domain field with 'inDialog' options", async function () {
     await contains(`.modal ${SELECTORS.addNewRule}`).click();
     await contains(".modal-footer .btn-primary").click();
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(getConditionText()).toBe("Id is equal 1");
+    expect(getConditionText()).toBe("Id = 1");
 });
 
 test("invalid value in domain field with 'inDialog' options", async function () {
@@ -1029,7 +1029,7 @@ test("domain field can be foldable", async function () {
     // Fold domain selector
     await contains(".o_field_domain a i").click();
 
-    expect(".o_field_domain .o_facet_values:contains('Color index is equal 2')").toHaveCount(1);
+    expect(".o_field_domain .o_facet_values:contains('Color index = 2')").toHaveCount(1);
 });
 
 test("add condition in empty foldable domain", async function () {
@@ -1108,7 +1108,7 @@ test("folded domain field with any operator", async function () {
                 </sheet>
             </form>`,
     });
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Company matches ( Id is equal 1 )");
+    expect(`.o_field_domain .o_facet_values`).toHaveText("Company : ( Id = 1 )");
 });
 
 test("foldable domain, search_count delayed", async function () {
@@ -1133,7 +1133,7 @@ test("foldable domain, search_count delayed", async function () {
     });
     expect(".o_domain_show_selection_button").toHaveCount(0);
     expect(".o_tree_editor").toHaveCount(0);
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Id is equal 1");
+    expect(`.o_field_domain .o_facet_values`).toHaveText("Id = 1");
     def.resolve();
     await animationFrame();
     expect(".o_domain_show_selection_button").toHaveCount(1);

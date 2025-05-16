@@ -1333,7 +1333,7 @@ test("edit a filter", async () => {
     expect(SELECTORS.condition).toHaveCount(1);
     expect(queryAllTexts`.modal footer button`).toEqual(["Search", "Discard"]);
     expect(getCurrentPath()).toBe("Birthday");
-    expect(getCurrentOperator()).toBe("is greater or equal");
+    expect(getCurrentOperator()).toBe("greater or equal");
     expect(getCurrentValue()).toBe("context_today()");
     expect(`.modal footer button`).toBeEnabled();
 
@@ -1344,12 +1344,12 @@ test("edit a filter", async () => {
     await contains(`.modal ${SELECTORS.addNewRule}`).click();
     expect(SELECTORS.condition).toHaveCount(1);
     expect(getCurrentPath()).toBe("Id");
-    expect(getCurrentOperator()).toBe("is equal");
+    expect(getCurrentOperator()).toBe("equals");
     expect(getCurrentValue()).toBe("1");
 
     await contains(".modal footer button").click();
     expect(`.modal`).toHaveCount(0);
-    expect(getFacetTexts()).toEqual(["Id is equal 1", "Bool"]);
+    expect(getFacetTexts()).toEqual(["Id = 1", "Bool"]);
 });
 
 test("edit a filter with context: context is kept after edition", async () => {
@@ -1372,7 +1372,7 @@ test("edit a filter with context: context is kept after edition", async () => {
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
     await contains(`.modal ${SELECTORS.addNewRule}`).click();
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Foo is equal abc`, `Foo is equal abc`]);
+    expect(getFacetTexts()).toEqual([`Foo = abc`, `Foo = abc`]);
     expect(searchBar.env.searchModel.context.specialKey).toBe("abc");
 });
 
@@ -1492,7 +1492,7 @@ test("no rpc for getting display_name for facets if known", async () => {
 
     await contains(".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item").click();
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Bar is in ( First record )"]);
+    expect(getFacetTexts()).toEqual(["Bar = First record"]);
 });
 
 test.tags`desktop`("clicking on search input trigger the search menu", async () => {
@@ -1542,7 +1542,7 @@ test("facets display with any / not any operator", async function () {
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
-        "Company matches ( Bar matches ( Company is in ( JD7 , KDB ) and Company is in ( JD7 , KDB ) ) )",
+        "Company : ( Bar : ( Company = JD7 or KDB and Company = JD7 or KDB ) )",
     ]);
     expect.verifySteps([`/web/domain/validate`]);
 });
@@ -1574,9 +1574,7 @@ test("facets display with any / not any operator (with a complex path)", async f
     await addNewRule();
 
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([
-        "Company ➔ Company matches ( Id is equal 1 and Id is equal 1 ) or Bar is equal false",
-    ]);
+    expect(getFacetTexts()).toEqual(["Company ➔ Company : ( Id = 1 and Id = 1 ) or Bar not set"]);
     expect.verifySteps([`/web/domain/validate`]);
 });
 
@@ -1607,9 +1605,7 @@ test("facets display with any / not any operator (with a or)", async function ()
     await addNewRule();
 
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([
-        "Company matches ( Id is equal 1 and Id is equal 1 ) or Bar is equal false",
-    ]);
+    expect(getFacetTexts()).toEqual(["Company : ( Id = 1 and Id = 1 ) or Bar not set"]);
     expect.verifySteps([`/web/domain/validate`]);
 });
 
@@ -1641,7 +1637,7 @@ test("facets display with any / not any operator (check brackets)", async functi
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
-        "Company matches ( Bar matches ( Bool not set and Bool not set ) and Bar matches ( Bool set ) ) or Bar is equal false",
+        "Company : ( Bar : ( Bool not set and Bool not set ) and Bar : ( Bool set ) ) or Bar not set",
     ]);
     expect.verifySteps([`/web/domain/validate`]);
 });
