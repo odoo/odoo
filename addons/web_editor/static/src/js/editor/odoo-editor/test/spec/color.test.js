@@ -291,6 +291,20 @@ describe('applyColor', () => {
             contentAfter: '<div style="background-image:none"><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ab<strong>cd</strong>ef]</font></p></div>'
         });
     });
+    it("should keep font element on top of underline/strike (1)", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><u>[abc]</u></p>',
+            stepFunction: setColor("linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)", "color"),
+            contentAfter: '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);"><u>[abc]</u></font></p>'
+        });
+    });
+    it("should keep font element on top of underline/strike (2)", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><u><s>[abc]</s></u></p>',
+            stepFunction: setColor("linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%)", "color"),
+            contentAfter: '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);"><u><s>[abc]</s></u></font></p>'
+        });
+    });
 });
 describe('rgbToHex', () => {
     it('should convert an rgb color to hexadecimal', async () => {
