@@ -62,11 +62,15 @@
 
                         <!-- All action buttons -->
                         <div invisible="account_peppol_proxy_state != 'receiver' or account_peppol_edi_mode == 'demo'">
+                            <!-- Note: Deprecated; the button is permanently invisible. -->
+                            <!-- Disabling services can lead to complicance issues and is not necessary -->
+                            <!-- since all existing services should just work. -->
                             <button string="Configure Peppol Services"
                                     name="button_account_peppol_configure_services"
                                     type="object"
                                     class="btn-link mt-3 mb-3"
-                                    icon="oi-arrow-right"/>
+                                    icon="oi-arrow-right"
+                                    invisible="1"/>
                         </div>
 
                         <div class="d-flex gap-1 action_buttons" colspan="3">
