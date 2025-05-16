@@ -609,15 +609,6 @@ class MailActivity(models.Model):
     def activity_format(self):
         return Store(self).get_result()
 
-    def _to_store(self, store, fields, **kwargs):
-        readable_fields = [field for field in fields if isinstance(field, str)]
-        store_fields = set(fields) - set(readable_fields)
-        records = self._read_format(list(readable_fields))
-        for record, record_data in zip(self, records):
-            store.add_model_values(record._name, record_data)
-        if store_fields:
-            store.add_records_fields(self, list(store_fields))
-
     def _to_store_defaults(self):
         return [
             "activity_category",
