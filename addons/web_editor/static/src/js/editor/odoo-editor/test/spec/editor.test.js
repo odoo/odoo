@@ -7386,8 +7386,194 @@ X[]
                     `),
                 });
             });
+            it('should select text highlight (collapsed)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">abc
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">[]def
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                    stepFunction: async editor => {
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowUp', shiftKey: true });
+                    },
+                    contentAfter: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">]abc
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">[def
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                });
+            });
+            it('should select text highlight (collapsed) (2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">abc
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">def[]
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                    stepFunction: async editor => {
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowUp', shiftKey: true });
+                    },
+                    contentAfter: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">abc
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">]def[
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                });
+            });
+            it('should select text highlight (non collapsed)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">abc
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">[def]
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                    stepFunction: async editor => {
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowUp', shiftKey: true });
+                    },
+                    contentAfter: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">]abc
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">[def
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                });
+            });
         });
         describe('ArrowDown', () => {
+            it('should select text highlight (non collapsed)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">[abc]
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">def
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                    stepFunction: async editor => {
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown', shiftKey: true });
+                    },
+                    contentAfter: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">[abc
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">]def
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                });
+            });
+            it('should select text highlight (collapsed)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">[]abc
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">def
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                    stepFunction: async editor => {
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown', shiftKey: true });
+                    },
+                    contentAfter: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">[abc]
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">def
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                });
+            });
+            it('should select text highlight (collapsed) (2)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">abc[]
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">def
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                    stepFunction: async editor => {
+                        await triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown', shiftKey: true });
+                    },
+                    contentAfter: unformat(`
+                        <p style="margin-bottom: 0px;">
+                            <span class="o_text_highlight o_translate_inline o_text_highlight_underline" style="--text-highlight-width: 2px;">
+                                <span style="display: inline-flex;" class="o_text_highlight_item a">abc[
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                                <span style="display: inline-flex;" class="o_text_highlight_item b">def]
+                                    <svg fill="none" class="o_text_highlight_svg o_content_no_merge position-absolute overflow-visible top-0 start-0 w-100 h-100 pe-none"><path stroke-width="var(--text-highlight-width)" stroke="var(--text-highlight-color)" stroke-linecap="round" d="M 0,19 h 516.515625" class="o_text_highlight_path_underline"></path></svg>
+                                </span>
+                            </span>
+                        </p>
+                    `),
+                });
+            });
             it('should select banner forwards', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: unformat(`
