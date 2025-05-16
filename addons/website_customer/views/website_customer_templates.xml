@@ -8,7 +8,7 @@
                 <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
                     <h2 class="me-auto mb-0 h4">Our references</h2>
                     <div class="o_wcrm_search d-flex w-100 w-lg-25">
-                        <form action="" method="get" class="flex-grow-1">
+                        <form t-att-action="customer_url(tag=tag, search=search)" method="get" class="flex-grow-1">
                             <div class="input-group" role="search">
                                 <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="post.get('search', '')"/>
                                 <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
@@ -93,7 +93,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="accordion-item" t-if="len(tags)">
+                            <div class="accordion-item" t-if="len(tags) and not tag and not search">
                                 <h2 class="accordion-header">
                                     <button class="accordion-button border-top collapsed"
                                         type="button"
@@ -107,11 +107,9 @@
                                 <div class="o_wc_offcanvas_tags accordion-collapse collapse">
                                     <div class="accordion-body">
                                         <div class="d-flex flex-wrap align-items-center gap-1 mb-4" t-if="len(tags)">
-                                            <a class="badge text-bg-info" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
-                                                <span class="fa fa-1x fa-tags"/> All </a>
                                             <t t-foreach="tags" t-as="o_tag">
-                                                <a t-attf-class="badge text-bg-#{o_tag.classname}" t-out="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
-                                                t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>
+                                                <a t-if="not tag and not search" t-attf-class="badge customer_tags_common text-bg-#{o_tag.classname}" t-out="o_tag.name"
+                                                t-attf-href="#{customer_url(tag=tags_list(active_tag_ids, o_tag.id))}"/>
                                             </t>
                                         </div>
                                     </div>
@@ -121,6 +119,29 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div t-if="tag or search" class="col-12 mb-3">
+                        <div t-if="partners" class="h4 mb-3">
+                            <t t-esc="search_count"/>
+                            <t t-if="search_count &lt; 2">Customer</t>
+                            <t t-else="">Customers</t>
+                        </div>
+                        <span t-if="search" class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
+                            <i class="fa fa-search me-2 text-muted"/>
+                            <t t-esc="search"/>
+                            <a t-att-href="customer_url(search=False, tag=tag)"
+                                    t-attf-class="btn border-0 py-1 post_link text-reset">&#215;</a>
+                        </span>
+                        <t t-foreach="tag" t-as="o_tag">
+                            <span t-attf-class="align-items-baseline d-inline-flex ps-2 rounded mb-2 o_filter_tag text-bg-#{o_tag.classname}">
+                                <i class="fa fa-tag me-2"/>
+                                <t t-esc="o_tag.name"/>
+                                <a t-attf-href="#{customer_url(tag=tags_list(active_tag_ids, o_tag.id))}"
+                                    t-attf-class="btn border-0 py-1 post_link text-reset">&#215;</a>
+                            </span>
+                        </t>
+                    </div>
+                </div>
+                <div class="row customer_row">
                     <div class="my-5 py-5 text-center" t-if="not partners">
                         <h5>No results found for "<span t-out="post.get('search', '')"/>"</h5>
                         <a href="/customers">See all customers</a>
@@ -132,18 +153,25 @@
                     </div>
                     <t t-foreach="partners" t-as="partner">
                         <div class="col-md-4 col-xl-3 col-12 mb-4">
-                            <div class="card h-100 text-decoration-none">
+                            <div class="card customer_card h-100 text-decoration-none">
                                 <a class="text-decoration-none" t-attf-href="/customers/#{slug(partner)}" aria-label="Go to customer">
                                     <div t-field="partner.avatar_1920"
                                         class="card-img-top border-bottom"
                                         t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100 object-fit-cover", "style": "max-height: 208px; object-fit: cover"}'
                                     />
                                     <div class="card-body">
-                                        <h5 class="card-title" t-field="partner.display_name"/>
+                                        <h5 class="card-title customer_card_title" t-field="partner.display_name"/>
                                         <small class="o_wcrm_short_description text-muted overflow-hidden" t-field="partner.website_short_description"/>
                                         <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
                                             Enter a short description
                                         </small>
+                                        <t t-foreach="partner.website_tag_ids" t-as="o_tag">
+                                            <a t-attf-href="#{customer_url(tag=tags_list(active_tag_ids, o_tag.id))}"
+                                                t-attf-class="badge mb-2 me-1 text-truncate o_customer_tag post_link text-bg-#{o_tag.classname}"
+                                                t-att-title="o_tag.name">
+                                                <t t-esc="o_tag.name"/>
+                                            </a>
+                                        </t>
                                         <t t-if="partner.industry_id">
                                             <a class="badge mt-3 text-bg-secondary" t-attf-href="/customers/#{ 'industry/%s/' % slug(partner.industry_id) }#{ current_country_id and 'country/%s' % slug(current_country) or '' }" t-out="partner.industry_id.name"/>
                                         </t>
@@ -238,13 +266,10 @@
 
 <template id="opt_tag_list" inherit_id="website_customer.index" name="Filter on Tags" priority="40">
     <xpath expr="//section[hasclass('o_wcrm_filters_top')]" position="after">
-        <div class="d-flex flex-wrap align-items-center gap-2 my-4" t-if="len(tags)">
-            <a class="badge text-bg-info" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
-                <span class="fa fa-1x fa-tags"/> All
-            </a>
+        <div class="d-flex flex-wrap align-items-center gap-2 my-4" t-if="len(tags) and not tag and not search">
             <t t-foreach="tags" t-as="o_tag">
-                <a t-attf-class="text-bg-#{o_tag.classname} badge" t-out="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
-                t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>
+                <a t-if="not tag and not search" t-attf-class="text-bg-#{o_tag.classname} customer_tags_common badge" t-out="o_tag.name"
+                t-attf-href="#{customer_url(tag=tags_list(active_tag_ids, o_tag.id))}"/>
             </t>
         </div>
     </xpath>
