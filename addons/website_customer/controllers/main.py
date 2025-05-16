@@ -8,6 +8,7 @@ from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.tools.translate import _, LazyTranslate
 from odoo.http import request
+from odoo.addons.website.controllers.main import QueryURL
 
 _lt = LazyTranslate(__name__)
 
@@ -51,6 +52,28 @@ class WebsiteCustomer(GoogleMap):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
+    def tags_list(self, active_tag_ids, toggled_tag_id=None):
+        """
+        Build a comma-separated list of tag slugs for URL parameters.
+
+        Toggles the given tag ID within the active list and returns the
+        corresponding slugs.
+
+        :param list[int] active_tag_ids: Currently active tag IDs.
+        :param int toggled_tag_id: Optional tag ID to add or remove.
+        :return: Comma-separated tag slugs.
+        :rtype: str
+        """
+        Tag = request.env['res.partner.tag']
+        tag_ids = list(active_tag_ids or [])
+        if toggled_tag_id:
+            if toggled_tag_id in tag_ids:
+                tag_ids.remove(toggled_tag_id)
+            else:
+                tag_ids.append(toggled_tag_id)
+
+        return ",".join(request.env['ir.http']._slug(tag) for tag in Tag.browse(tag_ids) if tag.exists())
+
     @http.route([
         '/customers',
         '/customers/page/<int:page>',
@@ -75,10 +98,16 @@ class WebsiteCustomer(GoogleMap):
                 ('industry_id.name', 'ilike', search_value),
             ]
 
-        tag_id = post.get('tag_id')
-        if tag_id:
-            tag_id = request.env['ir.http']._unslug(tag_id)[1] or 0
-            domain += [('website_tag_ids', 'in', tag_id)]
+        tag_param = post.get('tag')
+        active_tags = Tag.browse()
+        if tag_param:
+            tag_ids = []
+            for slug in tag_param.split(','):
+                tag_id = request.env['ir.http']._unslug(slug)[1]
+                tag_ids.append(tag_id)
+            if tag_ids:
+                active_tags = Tag.browse(tag_ids).exists()
+                domain += [('website_tag_ids', 'in', active_tags.ids)]
 
         # group by industry, based on customers found with the search(domain)
         industry_groups = Partner.sudo()._read_group(
@@ -141,7 +170,6 @@ class WebsiteCustomer(GoogleMap):
         google_maps_api_key = request.website.google_maps_api_key
 
         tags = Tag.search([('website_published', '=', True), ('partner_ids', 'in', partners.ids)], order='classname, name ASC')
-        tag = tag_id and Tag.browse(tag_id) or False
 
         values = {
             'countries': countries,
@@ -154,11 +182,24 @@ class WebsiteCustomer(GoogleMap):
             'pager': pager,
             'post': post,
             'search_path': "?%s" % werkzeug.urls.url_encode(post),
-            'tag': tag,
+            'active_tags': active_tags,
             'tags': tags,
+            'active_tag_ids': active_tags.ids,
+            'tags_list': self.tags_list,
+            'search': search_value,
+            'search_count': partner_count,
             'google_maps_api_key': google_maps_api_key,
             'fallback_all_countries': fallback_all_countries,
         }
+
+        values['customer_url'] = QueryURL('/customers',
+            ['industry', 'country'],
+            tag=self.tags_list(active_tags.ids),
+            search=search_value,
+            country=country,
+            industry=industry,
+        )
+
         return request.render("website_customer.index", values)
 
     # Do not use semantic controller due to SUPERUSER_ID
