@@ -1343,6 +1343,41 @@
         <field name="category" eval="'absence'"/>
     </record>
 
+    <record id="l10n_lu_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Luxembourg Sick Time Off</field>
+        <field name="color">5</field>
+        <field name="code">LUXSICK</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="l10n_lu_work_entry_type_family_reason_leave" model="hr.work.entry.type">
+        <field name="name">Family Reason Time Off</field>
+        <field name="color">5</field>
+        <field name="code">LUFRTO</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="l10n_lu_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="name">Maternity Leave</field>
+        <field name="color">5</field>
+        <field name="code">LUMAT</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="l10n_lu_work_entry_type_welcome_leave" model="hr.work.entry.type">
+        <field name="name">Welcome Leave</field>
+        <field name="color">5</field>
+        <field name="code">LUACC</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="l10n_lu_work_entry_type_caring_leave" model="hr.work.entry.type">
+        <field name="name">Caring Leave</field>
+        <field name="color">5</field>
+        <field name="code">LUCAR</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+
 <!-- MX : Mexico -->
     <record id="l10n_mx_work_entry_type_work_risk_imss" model="hr.work.entry.type">
         <field name="name">Work risk (IMSS)</field>
