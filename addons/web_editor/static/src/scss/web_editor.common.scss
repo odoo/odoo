@@ -846,6 +846,27 @@ section, .oe_img_bg, [data-oe-shape-data] {
     .fa {
         display: inherit;
     }
+
+    %o-text-gradient-decoration {
+        background-size: 100% 0.1em;
+        background-repeat: repeat-x;
+        background-image: inherit !important;
+        text-decoration-color: transparent !important;
+        color: transparent;
+        caret-color: black;
+    }
+    * {
+        background-size: 0px;
+        background-image: inherit !important;
+    }
+    s:not(font[style*="-webkit-text-fill-color"] s) {
+        @extend %o-text-gradient-decoration;
+        background-position: 0 50%;
+    }
+    u:not(font[style*="-webkit-text-fill-color"] u) {
+        @extend %o-text-gradient-decoration;
+        background-position: 0 95%;
+    }
 }
 
 /* QWEB */
