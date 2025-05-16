@@ -76,6 +76,7 @@ class DiscussChannel(models.Model):
         string="Live Chat Session Failure",
     )
     livechat_is_escalated = fields.Boolean("Is session escalated", compute="_compute_livechat_is_escalated", store=True)
+    rating_last_text = fields.Selection(store=True)
 
     _livechat_operator_id = models.Constraint(
         "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
