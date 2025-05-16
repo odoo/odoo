@@ -149,7 +149,6 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
             },
             addLanguage: {
-                reload: {},
                 preview: false,
                 apply: async () => {
                     const def = new Deferred();

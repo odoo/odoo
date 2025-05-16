@@ -1,10 +1,12 @@
 import {
-    clickOnEditAndWaitEditMode,
+    clickOnEditAndWaitEditModeInTranslatedPage,
     clickOnSave,
     insertSnippet,
     goToTheme,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
+import { setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+
 import { whenReady } from "@odoo/owl";
 
 registerWebsitePreviewTour('rte_translator', {
@@ -15,7 +17,7 @@ registerWebsitePreviewTour('rte_translator', {
 ...goToTheme(),
 {
     content: "click on Add a language",
-    trigger: "we-button[data-add-language]",
+    trigger: "button[data-action-id='addLanguage']",
     run: "click",
 }, {
     content: "confirm leave editor",
@@ -56,11 +58,11 @@ registerWebsitePreviewTour('rte_translator', {
 },
 {
     content: "Open new page menu",
-    trigger: ".o_menu_systray .o_new_content_container > a",
+    trigger: ".o_menu_systray .o_new_content_container > button",
     run: "click",
 }, {
     content: "click on new page",
-    trigger: '.o_new_content_element a',
+    trigger: ".o_new_content_element button",
     run: "click",
 }, {
     content: "click on Use this template",
@@ -88,11 +90,11 @@ registerWebsitePreviewTour('rte_translator', {
     run: "click",
 }, {
     content: "Open new page menu",
-    trigger: ".o_menu_systray .o_new_content_container > a",
+    trigger: ".o_menu_systray .o_new_content_container > button",
     run: "click",
 }, {
     content: "click on new page",
-    trigger: '.o_new_content_element a',
+    trigger: '.o_new_content_element button',
     run: "click",
 }, {
     content: "click on Use this template",
@@ -122,11 +124,11 @@ registerWebsitePreviewTour('rte_translator', {
     content: "change content",
     trigger: ':iframe #wrap',
     run() {
-        $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap p:first").replaceWith('<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
+        this.anchor.querySelector("p").innerHTML = '<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
             <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
             useful to your <a href="/999">readers</a>.</p> <input value="test translate default value" placeholder="test translate placeholder"/>\
-            <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>');
-        $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap img").attr("title", "test translate image title");
+            <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>';
+        this.anchor.querySelector(".oe_img_bg").title ="test translate image title";
     }
     }, {
     content: "ensure change was applied",
@@ -147,7 +149,7 @@ registerWebsitePreviewTour('rte_translator', {
     run: "click",
 }, {
     content: "edit",
-    trigger: '.o_edit_website_container button',
+    trigger: ".o-website-btn-custo-primary.dropdown-toggle:contains('edit')",
     run: "click",
 },
 {
@@ -167,15 +169,14 @@ registerWebsitePreviewTour('rte_translator', {
     run: "click",
 },
 {
-    trigger: "#oe_snippets.o_loaded",
+    trigger: ".o_builder_sidebar_open",
 },
 {
     content: "translate text",
     trigger: ':iframe #wrap p font:first',
     async run(actionHelper) {
         await actionHelper.editor('translated Parseltongue text');
-        const {Wysiwyg} = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
-        Wysiwyg.setRange(this.anchor.childNodes[0], 22);
+        setSelection({ anchorNode: this.anchor.childNodes[0], anchorOffset: 22 })
         this.anchor.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: "_"}));
         this.anchor.dispatchEvent(new InputEvent("input", {bubbles: true}));
     },
@@ -185,8 +186,7 @@ registerWebsitePreviewTour('rte_translator', {
     async run(actionHelper) {
         await actionHelper.click();
         this.anchor.textContent = '<{translated}>' + this.anchor.textContent;
-        const {Wysiwyg} = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
-        Wysiwyg.setRange(this.anchor.childNodes[0], 0);
+        setSelection({ anchorNode: this.anchor.childNodes[0], anchorOffset: 0 })
         this.anchor.dispatchEvent(new KeyboardEvent("keyup", {bubbles: true, key: "_"}));
         this.anchor.dispatchEvent(new InputEvent("input", {bubbles: true}));
     },
@@ -224,7 +224,7 @@ registerWebsitePreviewTour('rte_translator', {
     trigger: ':iframe #wrap p font:first:contains(translated Parseltongue text)',
 }, {
     content: "check: content with special char is translated",
-    trigger: ":iframe #wrap input + p:contains(<{translated}><b></b> is an HTML tag & )",
+    trigger: ":iframe #wrap input + p:contains(<{translated}> is an HTML tag & )",
 }, {
     content: "check: placeholder translation",
     trigger: ':iframe input[placeholder="test Parseltongue placeholder"]',
@@ -247,7 +247,7 @@ registerWebsitePreviewTour('rte_translator', {
     content: "Check body",
     trigger: ":iframe body:not(:has(#wrap p font:first:contains(/^paragraphs <b>describing</b>$/)))",
 },
-...clickOnEditAndWaitEditMode(),
+...clickOnEditAndWaitEditModeInTranslatedPage(),
 {
     content: "select text",
     trigger: ':iframe #wrap p',
@@ -258,8 +258,7 @@ registerWebsitePreviewTour('rte_translator', {
         mousedown.initMouseEvent('mousedown', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
         el.dispatchEvent(mousedown);
         var mouseup = document.createEvent('MouseEvents');
-        const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
-        Wysiwyg.setRange(el.childNodes[2], 6, el.childNodes[2], 13);
+        setSelection({ anchorNode: this.anchor.childNodes[0], anchorOffset: 6, focusNode: el.childNodes[2], focusOffset: 13 });
         mouseup.initMouseEvent('mouseup', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
         el.dispatchEvent(mouseup);
     },
@@ -305,10 +304,12 @@ registerWebsitePreviewTour('rte_translator', {
     content: "Check that the editor is not showing translated content (1)",
     trigger: '.ace_text-layer .ace_line:contains("an HTML")',
     run() {
-        const lineEscapedText = $(this.anchor.textContent).last().text();
-        if (lineEscapedText !== "&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty") {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(this.anchor.textContent, 'text/html');
+        const lineEscapedText = doc.body.querySelector("p:last-child").innerHTML;
+        if (lineEscapedText !== "&lt;b&gt;&lt;/b&gt; is an HTML·tag &amp; is empty") {
             console.error('The HTML editor should display the correct untranslated content');
-            $('iframe:not(.o_ignore_in_tour)').contents().find('body').addClass('rte_translator_error');
+            document.querySelector('iframe:not(.o_ignore_in_tour)').contentDocument.body.classList.add('rte_translator_error');
         }
     },
 }, {
