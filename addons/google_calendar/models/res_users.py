@@ -128,7 +128,12 @@ class ResUsers(models.Model):
     @api.model
     def _sync_all_google_calendar(self):
         """ Cron job """
-        users = self.env['res.users'].sudo().search([('google_calendar_rtoken', '!=', False), ('google_synchronization_stopped', '=', False)])
+        domain = [('google_calendar_rtoken', '!=', False), ('google_synchronization_stopped', '=', False)]
+        # google_calendar_token_validity is not stored on res.users
+        if not self:
+            users = self.env['res.users'].sudo().search(domain).sorted('google_calendar_token_validity')
+        else:
+            users = self.filtered_domain(domain).sorted('google_calendar_token_validity')
         google = GoogleCalendarService(self.env['google.service'])
         for user in users:
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
