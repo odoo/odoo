@@ -37,8 +37,8 @@
             <div t-if="state.showDetails">
                 <table class="o-mail-Activity-details table table-sm mt-2">
                     <tbody>
-                        <tr><td class="text-end fw-bolder">Activity type</td><td><t t-esc="props.activity.activity_type_id[1]"/></td></tr>
-                        <tr><td class="text-end fw-bolder">Created</td><td><t t-esc="props.activity.dateCreateFormatted"/> by <t t-esc="props.activity.create_uid[1]"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Activity type</td><td><t t-esc="props.activity.activity_type_id?.name"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Created</td><td><t t-esc="props.activity.dateCreateFormatted"/> by <t t-esc="props.activity.create_uid?.name"/></td></tr>
                         <tr t-if="props.activity.persona"><td class="text-end fw-bolder">Assigned to</td><td><t t-esc="props.activity.persona.displayName"/></td></tr>
                         <tr><td class="text-end fw-bolder">Due on</td><td><t t-esc="props.activity.dateDeadlineFormatted"/></td></tr>
                     </tbody>
