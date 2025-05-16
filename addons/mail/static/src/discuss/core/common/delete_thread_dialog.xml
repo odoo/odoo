@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.DeleteThreadDialog">
+        <ActionPanel title.translate="Delete Thread" icon="'fa fa-trash'" resizable="false">
+            <p class="fs-5">Are you sure you want to delete this thread?</p>
+            <input 
+                type="text"
+                class="form-control mb-3 o-mail-DeleteThreadDialog-input"
+                placeholder="Type 'delete' to confirm"
+                ref="autofocus"
+                t-on-keydown="onKeydown"
+                t-model="state.confirmationText"
+            />
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-secondary" t-on-click="onCancel">Cancel</button>
+                <button class="btn btn-danger" t-on-click="onConfirmation" t-att-disabled="state.confirmationText !== 'delete'">
+                    Delete Thread
+                </button>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>
