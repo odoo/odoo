@@ -55,7 +55,6 @@ class SaleOrder(models.Model):
         show_button_ids = self.env['sale.order.line']._read_group([
             ('order_id', 'in', self.ids),
             ('order_id.state', 'not in', ['draft', 'sent']),
-            ('product_id.type', '=', 'service'),
         ], aggregates=['order_id:array_agg'])[0][0]
         for order in self:
             order.show_project_button = order.id in show_button_ids and order.project_count
@@ -211,7 +210,7 @@ class SaleOrder(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'type': 'danger',
-                    'message': _("The project couldn't be created as the Sales Order must be confirmed, is already linked to a project, or doesn't involve any services."),
+                    'message': self.env._("The project couldn't be created as the Sales Order must be confirmed or is already linked to a project."),
                 }
             }
 
@@ -224,6 +223,7 @@ class SaleOrder(models.Model):
             **self.env["ir.actions.actions"]._for_xml_id("project.open_create_project"),
             'context': {
                 'default_sale_order_id': self.id,
+                'default_reinvoiced_sale_order_id': self.id,
                 'default_sale_line_id': default_sale_line.id,
                 'default_partner_id': self.partner_id.id,
                 'default_user_ids': [self.env.uid],
