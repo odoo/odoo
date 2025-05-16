@@ -2,12 +2,12 @@
 
 import { waitUntil } from "@odoo/hoot-dom";
 import {
-    changeOption,
     clickOnEditAndWaitEditMode,
     clickOnElement,
     clickOnSave,
     insertSnippet,
     registerWebsitePreviewTour,
+    changeOptionInPopover,
 } from "@website/js/tours/tour_utils";
 
 const snippets = [
@@ -30,10 +30,8 @@ const snippets = [
 
 const setOnScrollAnim = function () {
     return [
-        changeOption("WebsiteAnimate", 'we-select[data-is-animation-type-selection="true"] we-toggler'),
-        changeOption("WebsiteAnimate", 'we-button[data-animation-mode="onScroll"]'),
-        changeOption("WebsiteAnimate", 'we-select[data-name="animation_effect_opt"] we-toggler'),
-        changeOption("WebsiteAnimate", 'we-button[data-name="o_anim_slide_in_opt"]'),
+        ...changeOptionInPopover("Card", "Animation", "On Scroll"),
+        ...changeOptionInPopover("Card", "Effect", "Slide"),
     ];
 };
 
@@ -92,16 +90,13 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     ...insertSnippet(snippets[0]), // Popup
     ...insertSnippet(snippets[1]), // Media List
     {
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
-    },
-    {
         content: "Drag the Columns snippet group and drop it at the bottom of the popup.",
-        trigger: ".o_block_tab:not(.o_we_ongoing_insertion) #oe_snippets .oe_snippet[name='Columns'] .oe_snippet_thumbnail",
+        trigger: `.o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name="Columns"].o_draggable .o_snippet_thumbnail`,
         run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
     },
     {
         content: "Click on the s_three_columns snippet.",
-        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_three_columns"]',
+        trigger: ':iframe .o_add_snippets_preview [data-snippet-id="s_three_columns"]',
         run: "click",
     },
     clickOnElement("3rd columns", ":iframe .s_popup .s_three_columns .row > :last-child"),
@@ -142,32 +137,27 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Check that the popup has been closed",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') i.fa-eye-slash",
     },
-    clickOnElement("Last image of the 'Columns' snippet", ":iframe .s_three_columns .o_animate_on_scroll img"),
-    changeOption("WebsiteAnimate", 'we-toggler:contains("None")'),
-    changeOption("WebsiteAnimate", 'we-button[data-animation-mode="onHover"]'),
-    {
-        trigger: ".snippet-option-WebsiteAnimate we-row:contains('Animation') we-select[data-is-animation-type-selection] we-toggler:contains('On Hover')",
-    },
+    clickOnElement("Last image of the 'Columns' snippet", ":iframe .s_three_columns .o_animate_on_scroll:not(:visible) img"),
+    ...changeOptionInPopover("Image", "Animation", "On Hover"),
     {
         content: "Check that the hover effect animation has been applied on the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll:not(:visible) img[data-hover-effect='overlay']",
     },
     ...clickOnSave(),
     ...clickOnEditAndWaitEditMode(),
-    clickOnElement("Image of the 'Columns' snippet with the overlay effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']:not(:visible)"),
-    changeOption("WebsiteAnimate", 'we-toggler:contains("Overlay")'),
-    changeOption("WebsiteAnimate", 'we-button[data-select-data-attribute="outline"]'),
+    clickOnElement("Image of the 'Columns' snippet with the overlay effect", ":iframe .s_three_columns .o_animate_on_scroll:not(:visible) img[data-hover-effect='overlay']:not(:visible)"),
+    ...changeOptionInPopover("Image", "Effect", "Outline"),
     {
-        trigger: ".snippet-option-WebsiteAnimate we-select[data-attribute-name='hoverEffect'] we-toggler:contains('Outline')",
+        trigger: ".o_customize_tab .options-container[data-container-title='Image'] [data-label='Effect'] button:contains('Outline')",
     },
     {
         content: "Check that the outline effect has been applied on the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']:not(:visible)",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll:not(:visible) img[data-hover-effect='outline']:not(:visible)",
     },
     ...clickOnSave(),
     {
         content: "Check that the image src is not the raw data",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']:not(:visible)",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll:not(:visible) img[data-hover-effect='outline']:not(:visible)",
         run() {
             const imgEl = document.querySelector("iframe").contentDocument.querySelector(".s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']");
             const src = imgEl.getAttribute("src");
@@ -177,24 +167,23 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
         },
     },
     ...clickOnEditAndWaitEditMode(),
-    clickOnElement("Image of the 'Columns' snippet with the outline effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']:not(:visible)"),
-    changeOption("ImageTools", 'we-select:contains("Filter") we-toggler:contains("None")'),
-    changeOption("ImageTools", 'we-button:contains("Blur")'),
+    clickOnElement("Image of the 'Columns' snippet with the outline effect", ":iframe .s_three_columns .o_animate_on_scroll:not(:visible) img[data-hover-effect='outline']:not(:visible)"),
+    ...changeOptionInPopover("Image", "Filter", "Blur"),
     {
-        trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+        trigger: ".o_customize_tab .options-container[data-container-title='Image'] [data-label='Filter'] button:contains('Blur')",
     },
     {
         content: "Check that the Blur filter has been applied on the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-gl-filter='blur']:not(:visible)",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll:not(:visible) img[data-gl-filter='blur']:not(:visible)",
     },
     {
         content: "Click on the 'undo' button",
-        trigger: ".o_we_external_history_buttons button.fa-undo",
+        trigger: ".o-snippets-top-actions button.fa-undo",
         run: "click",
     },
     {
         content: "Check that the Blur filter has been removed from the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img:not([data-gl-filter='blur']):not(:visible)",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll:not(:visible) img:not([data-gl-filter='blur']):not(:visible)",
     },
     ...clickOnSave(),
     {
