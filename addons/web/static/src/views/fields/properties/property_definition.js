@@ -11,7 +11,7 @@ import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { PropertyDefinitionSelection } from "./property_definition_selection";
 import { PropertyTags } from "./property_tags";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { uuid } from "../../utils";
+import { uuid } from "@web/core/utils/strings";
 
 import { Component, useState, onWillUpdateProps, useEffect, useRef } from "@odoo/owl";
 

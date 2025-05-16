@@ -286,18 +286,6 @@ export function toStringExpression(str) {
 }
 
 /**
- * Generate a unique identifier (64 bits) in hexadecimal.
- *
- * @returns {string}
- */
-export function uuid() {
-    const array = new Uint8Array(8);
-    window.crypto.getRandomValues(array);
-    // Uint8Array to hex
-    return [...array].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-/**
  * Given an array of values and an aggregator function, returns the aggregated
  * value.
  *

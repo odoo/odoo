@@ -16,7 +16,7 @@ import { childNodeIndex, nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { renderToString } from "@web/core/utils/render";
-import { uuid } from "@web/views/utils";
+import { uuid } from "@web/core/utils/strings";
 
 const toggleSelector = "[data-embedded='toggleBlock']";
 const titleSelector = "[data-embedded-editable='title']";
