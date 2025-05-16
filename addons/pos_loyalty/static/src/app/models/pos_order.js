@@ -142,7 +142,7 @@ patch(PosOrder.prototype, {
     waitForPushOrder() {
         return (
             Object.keys(this.uiState.couponPointChanges || {}).length > 0 ||
-            this._get_reward_lines().length ||
+            this._getRewardLines().length ||
             super.waitForPushOrder(...arguments)
         );
     },
@@ -175,13 +175,13 @@ patch(PosOrder.prototype, {
 
         return [...nonRewardLines, ...rewardLines];
     },
-    _get_reward_lines() {
+    _getRewardLines() {
         if (this.lines) {
             return this.lines.filter((line) => line.is_reward_line);
         }
         return this.lines;
     },
-    _get_regular_order_lines() {
+    _getRegularOrderLines() {
         if (this.lines) {
             return this.lines.filter((line) => !line.is_reward_line && !line.refunded_orderline_id);
         }
@@ -230,7 +230,7 @@ patch(PosOrder.prototype, {
         if (!this.lines.length) {
             return;
         }
-        const rewardLines = this._get_reward_lines();
+        const rewardLines = this._getRewardLines();
         if (!rewardLines.length) {
             return;
         }
@@ -334,7 +334,7 @@ patch(PosOrder.prototype, {
             const balance = loyaltyCard.points;
             won += points - this._getPointsCorrection(program);
             if (coupon_id !== 0) {
-                for (const line of this._get_reward_lines()) {
+                for (const line of this._getRewardLines()) {
                     if (line.coupon_id.id === coupon_id) {
                         spent += line.points_cost;
                     }
@@ -680,7 +680,7 @@ patch(PosOrder.prototype, {
      * @param {*} rule
      */
     _computeNItems(rule) {
-        return this._get_regular_order_lines().reduce((nItems, line) => {
+        return this._getRegularOrderLines().reduce((nItems, line) => {
             let increment = 0;
             if (rule.any_product || rule.validProductIds.has(line.product_id.id)) {
                 increment = line.getQuantity();
@@ -1223,7 +1223,7 @@ patch(PosOrder.prototype, {
                 reward.reward_product_ids.map((reward) => reward.id).includes(product.id) &&
                 reward.reward_product_ids.map((reward) => reward.id).includes(line.getProduct().id)
             ) {
-                if (this._get_reward_lines() == 0) {
+                if (this._getRewardLines() == 0) {
                     if (line.getProduct() === product) {
                         available += line.getQuantity();
                     }
@@ -1385,7 +1385,7 @@ patch(PosOrder.prototype, {
             this.uiState.disabledRewards,
             this.uiState.codeActivatedProgramRules,
             Object.keys(this.uiState.couponPointChanges),
-            this._get_reward_lines(),
+            this._getRewardLines(),
         ];
         return array.some((elem) => elem.length > 0);
     },

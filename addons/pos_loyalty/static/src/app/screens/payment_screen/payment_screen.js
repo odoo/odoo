@@ -30,7 +30,7 @@ patch(PaymentScreen.prototype, {
                 newCodes.push(pe.barcode);
             }
         }
-        for (const line of this.currentOrder._get_reward_lines()) {
+        for (const line of this.currentOrder._getRewardLines()) {
             let couponId = line.coupon_id.id;
             if (isNaN(Number(line.coupon_id.id))) {
                 couponId = this.pos.data.mapUuidToId(line.coupon_id.id);
@@ -96,7 +96,7 @@ patch(PaymentScreen.prototype, {
     async _postProcessLoyalty(order) {
         // Compile data for our function
         const ProgramModel = this.pos.models["loyalty.program"];
-        const rewardLines = order._get_reward_lines();
+        const rewardLines = order._getRewardLines();
         const partner = order.getPartner();
 
         let couponData = Object.values(order.uiState.couponPointChanges).reduce((agg, pe) => {
