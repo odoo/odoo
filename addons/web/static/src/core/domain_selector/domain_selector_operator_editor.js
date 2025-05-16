@@ -1,4 +1,4 @@
-export function getDomainDisplayedOperators(fieldDef) {
+export function getDomainDisplayedOperators(fieldDef, params = {}) {
     if (!fieldDef) {
         fieldDef = {};
     }
@@ -37,18 +37,18 @@ export function getDomainDisplayedOperators(fieldDef) {
         case "date":
         case "datetime":
             return [
-                "today",
-                "not_today",
+                ...("allowExpressions" in params && !params.allowExpressions
+                    ? []
+                    : ["today", "not_today"]),
                 "=",
                 "!=",
                 ">",
                 "<",
                 "between",
                 "is_not_between",
-                "next",
-                "not_next",
-                "last",
-                "not_last",
+                ...("allowExpressions" in params && !params.allowExpressions
+                    ? []
+                    : ["next", "not_next", "last", "not_last"]),
                 "set",
                 "not_set",
             ];
