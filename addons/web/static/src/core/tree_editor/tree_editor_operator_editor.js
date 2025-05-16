@@ -10,19 +10,19 @@ import { Select } from "@web/core/tree_editor/tree_editor_components";
 
 const OPERATOR_DESCRIPTIONS = {
     // valid operators (see TERM_OPERATORS in expression.py)
-    "=": _t("is equal"),
-    "!=": _t("is not equal"),
-    "<=": _t("is lower or equal"),
-    "<": _t("is lower"),
-    ">": _t("is greater"),
-    ">=": _t("is greater or equal"),
+    "=": _t("equals"),
+    "!=": _t("not equals"),
+    "<=": _t("lower or equal"),
+    "<": _t("lower"),
+    ">": _t("greater"),
+    ">=": _t("greater or equal"),
     "=?": "=?",
     "=like": _t("=like"),
     "=ilike": _t("=ilike"),
     like: _t("like"),
     "not like": _t("not like"),
     ilike: _t("contains"),
-    "not ilike": _t("does not contain"),
+    "not ilike": _t("not contains"),
     in: _t("is in"),
     "not in": _t("is not in"),
     child_of: _t("child of"),
@@ -39,12 +39,12 @@ const OPERATOR_DESCRIPTIONS = {
     not_today: _t("not today"),
 
     // virtual operators (equivalent to a couple (>=,<=))
-    between: _t("is between"),
+    between: _t("between"),
     last: _t("last"),
     next: _t("next"),
 
     // virtual operators (equivalent to a couple (<,>))
-    is_not_between: _t("is not between"),
+    is_not_between: _t("not between"),
     not_last: _t("not last"),
     not_next: _t("not next"),
 
@@ -136,6 +136,6 @@ export function getOperatorEditorInfo(operators, fieldDef) {
         isSupported: ([operator]) =>
             typeof operator === "string" && operator in OPERATOR_DESCRIPTIONS, // should depend on fieldDef too... (e.g. parent_id does not always make sense)
         message: _t("Operator not supported"),
-        stringify: ([operator, negate]) => getOperatorLabel(operator, negate),
+        stringify: ([operator, negate]) => getOperatorLabel(operator, fieldDef?.type, negate),
     };
 }
