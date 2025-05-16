@@ -1,5 +1,13 @@
-import { expect, test } from "@odoo/hoot";
-import { click, edit, queryAll, queryAllTexts, select } from "@odoo/hoot-dom";
+import { after, expect, test } from "@odoo/hoot";
+import {
+    click,
+    edit,
+    queryAll,
+    queryAllProperties,
+    queryAllTexts,
+    resize,
+    select,
+} from "@odoo/hoot-dom";
 import { animationFrame, mockTimeZone } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -10,7 +18,6 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-
 import {
     getPickerApplyButton,
     getPickerCell,
@@ -18,6 +25,7 @@ import {
     zoomOut,
 } from "@web/../tests/core/datetime/datetime_test_helpers";
 
+import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
 class Partner extends models.Model {
     date = fields.Date({ string: "A date", searchable: true });
     datetime = fields.Datetime({ string: "A datetime", searchable: true });
@@ -561,4 +569,24 @@ test("datetime field in kanban view with condensed option", async () => {
 
     const expectedDateString = "2/8/2017 8:00:00"; // 10:00:00 without timezone
     expect(".o_kanban_record:first").toHaveText(expectedDateString);
+});
+
+test("list datetime: column widths (show_time=false)", async () => {
+    await resize({ width: 800 });
+    document.body.style.fontFamily = "sans-serif";
+    resetDateFieldWidths();
+    after(resetDateFieldWidths);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+            <list>
+                <field name="datetime" widget="datetime" options="{'show_time': false }" />
+                <field name="display_name" />
+            </list>`,
+    });
+
+    expect(queryAllTexts(".o_data_row:eq(0) .o_data_cell")).toEqual(["02/08/2017", "partner,1"]);
+    expect(queryAllProperties(".o_list_table thead th", "offsetWidth")).toEqual([40, 81, 679]);
 });
