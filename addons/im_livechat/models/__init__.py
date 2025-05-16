@@ -4,6 +4,7 @@ from . import chatbot_message
 from . import chatbot_script
 from . import chatbot_script_answer
 from . import chatbot_script_step
+from . import digest
 from . import res_users
 from . import res_groups
 from . import res_partner
@@ -16,4 +17,3 @@ from . import mail_message
 from . import mail_message_reaction
 from . import res_users_settings
 from . import rating_rating
-from . import digest

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kpi_hr_recruitment_new_colleagues" model="digest.kpi" forcecreate="True">
+        <field name="name">New Employees</field>
+        <field name="res_model_id" ref="model_hr_employee"/>
+        <field name="group_ids" eval="[Command.link(ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+        <field name="action_id" ref="hr.open_view_employee_list_my"/>
+        <field name="action_menu_root_id" ref="hr.menu_hr_root"/>
+        <field name="module_id" ref="base.module_hr_recruitment"/>
+        <field name="sequence" eval="8000"/>
+    </record>
+</odoo>
