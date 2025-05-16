@@ -78,10 +78,10 @@ class L10nInEwaybill(models.Model):
         self._write_successfully_response({
             'name': name,
             'state': 'generated',
-            'ewaybill_date': self._indian_timezone_to_odoo_utc(
+            'ewaybill_date': self._convert_str_datetime_to_date(
                 response_data['EwbDt']
             ),
-            'ewaybill_expiry_date': self._indian_timezone_to_odoo_utc(
+            'ewaybill_expiry_date': self._convert_str_datetime_to_date(
                 response_data.get('EwbValidTill')
             ),
             **self._l10n_in_ewaybill_handle_zero_distance_alert_if_present(response_data)
