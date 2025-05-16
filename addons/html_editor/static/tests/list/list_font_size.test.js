@@ -40,7 +40,7 @@ test("should apply font-size to completely selected list item", async () => {
         contentAfter: unformat(`
             <ol style="padding-inline-start: 69px;">
                 <li style="font-size: 64px;"><p>[abc</p>
-                    <ol style="padding-inline-start: 68px;">
+                    <ol class="o_default_font_size" style="padding-inline-start: 68px;">
                         <li style="font-size: 64px;">def</li>
                     </ol>
                 </li>
@@ -227,5 +227,15 @@ test("should pad list based on font-size (2)", async () => {
         contentBefore: `<span style="font-size: 56px">[a]</span>`,
         stepFunction: toggleOrderedList,
         contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[]a</li></ol>`,
+    });
+});
+
+test.tags("font-dependent");
+test("should apply color to a list containing sublist if list contents are fully selected", async () => {
+    await testEditor({
+        styleContent: "ol { font: 14px Roboto }",
+        contentBefore: "<ol><li><p>[abc]</p><ol><li>def</li></ol></li></ol>",
+        stepFunction: setFontSize("56px"),
+        contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;"><p>[abc]</p><ol class="o_default_font_size"><li>def</li></ol></li></ol>`,
     });
 });
