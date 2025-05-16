@@ -497,7 +497,11 @@ export class LinkPlugin extends Plugin {
             onChange: applyCallback,
             onDiscard: () => {
                 restoreSavePoint();
-                this.openLinkTools(linkElement);
+                if (this.linkInDocument?.isConnected) {
+                    this.openLinkTools(linkElement);
+                } else {
+                    this.closeLinkTools();
+                }
                 this.dependencies.selection.focusEditable();
             },
             onRemove: () => {
