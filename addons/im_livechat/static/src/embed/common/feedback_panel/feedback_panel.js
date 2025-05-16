@@ -51,5 +51,9 @@ export class FeedbackPanel extends Component {
             channel_id: this.props.thread.id,
         });
         this.state.step = this.STEP.THANKS;
+        const link = this.livechatService.options.review_link;
+        if (this.state.rating === this.RATING.GOOD && link) {
+            window.open(link, "_blank", "noopener");
+        }
     }
 }

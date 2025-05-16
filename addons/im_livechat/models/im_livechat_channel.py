@@ -3,9 +3,10 @@
 from datetime import timedelta
 import random
 import re
+from urllib.parse import urlparse
 
 from odoo import api, Command, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 from odoo.addons.mail.tools.discuss import Store
 
@@ -54,6 +55,7 @@ class Im_LivechatChannel(models.Model):
         help="Maximum number of concurrent sessions per operator.",
     )
     block_assignment_during_call = fields.Boolean("No Chats During Call", help="While on a call, agents will not receive new conversations.")
+    review_link = fields.Char("Review Link", help="Visitors who leave a positive review will be redirected to this optional link.")
 
     # computed fields
     web_page = fields.Char('Web Page', compute='_compute_web_page_link', store=False, readonly=True,
@@ -94,6 +96,15 @@ class Im_LivechatChannel(models.Model):
         operators_by_livechat_channel = self._get_available_operators_by_livechat_channel()
         for livechat_channel in self:
             livechat_channel.available_operator_ids = operators_by_livechat_channel[livechat_channel]
+
+    @api.constrains("review_link")
+    def _check_review_link(self):
+        for record in self.filtered("review_link"):
+            url = urlparse(record.review_link)
+            if url.scheme not in ("http", "https") or not url.netloc:
+                raise ValidationError(
+                    self.env._("Invalid URL '%s'. The Review Link must start with 'http://' or 'https://'.") % record.review_link
+                )
 
     def _get_available_operators_by_livechat_channel(self, users=None):
         """Return a dictionary mapping each livechat channel in self to the users that are available
@@ -428,6 +439,7 @@ class Im_LivechatChannel(models.Model):
             'default_message': self.default_message,
             "channel_name": self.name,
             "channel_id": self.id,
+            "review_link": self.review_link,
         }
 
     def get_livechat_info(self, username=None):

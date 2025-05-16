@@ -1,5 +1,5 @@
 from odoo.tests import new_test_user, tagged
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.fields import Command
 
@@ -88,3 +88,11 @@ class TestImLivechatChannel(TestImLivechatCommon):
             "user_ids": [Command.link(bob_operator.id)],
         })
         self.assertNotIn(bob_operator, self.livechat_channel.user_ids)
+
+    def test_review_link(self):
+        with self.assertRaises(ValidationError):
+            self.livechat_channel.review_link = "javascript:alert('hello')"
+        with self.assertRaises(ValidationError):
+            self.livechat_channel.review_link = "https://"
+        self.livechat_channel.review_link = "https://www.odoo.com"
+        self.assertEqual(self.livechat_channel.review_link, "https://www.odoo.com")
