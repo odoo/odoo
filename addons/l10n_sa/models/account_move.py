@@ -2,9 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 from odoo.tools import float_repr
+
+ADJUSTMENT_REASONS = [
+    ("BR-KSA-17-reason-1", "Cancellation or suspension of the supplies after its occurrence either wholly or partially"),
+    ("BR-KSA-17-reason-2", "In case of essential change or amendment in the supply, which leads to the change of the VAT due"),
+    ("BR-KSA-17-reason-3", "Amendment of the supply value which is pre-agreed upon between the supplier and consumer"),
+    ("BR-KSA-17-reason-4", "In case of goods or services refund"),
+    ("BR-KSA-17-reason-5", "In case of change in Seller's or Buyer's information"),
+]
 
 
 class AccountMove(models.Model):
@@ -12,6 +19,8 @@ class AccountMove(models.Model):
 
     l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str')
     l10n_sa_confirmation_datetime = fields.Datetime(string='Confirmation Date', readonly=True, copy=False)
+    l10n_sa_show_reason = fields.Boolean(compute="_compute_show_l10n_sa_reason")
+    l10n_sa_reason = fields.Selection(string="ZATCA Reason", selection=ADJUSTMENT_REASONS, copy=False)
 
     @api.depends('country_code', 'move_type')
     def _compute_show_delivery_date(self):
@@ -66,6 +75,15 @@ class AccountMove(models.Model):
     def button_draft(self):
         self._l10n_sa_reset_confirmation_datetime()
         super().button_draft()
+
+    def _l10n_sa_get_adjustment_reason(self):
+        self.ensure_one()
+        readable_zatca_reason = dict(self._fields['l10n_sa_reason'].selection).get(self.l10n_sa_reason)
+        return readable_zatca_reason if self.l10n_sa_show_reason else self.ref
+
+    def _compute_show_l10n_sa_reason(self):
+        for record in self:
+            record.l10n_sa_show_reason = record.country_code == 'SA' and (record.move_type == 'out_refund' or (record.move_type == 'out_invoice' and record.debit_origin_id))
 
     def _get_l10n_sa_totals(self):
         self.ensure_one()

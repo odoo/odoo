@@ -65,12 +65,12 @@ class AccountMove(models.Model):
         company_name_length_encoding = len(field).to_bytes(length=int_length, byteorder='big')
         return company_name_tag_encoding + company_name_length_encoding + field
 
-    def _l10n_sa_check_refund_reason(self):
+    def _l10n_sa_check_billing_reference(self):
         """
-            Make sure credit/debit notes have a valid reason and reversal reference
+            Make sure credit/debit notes have a either a reveresed move or debited move or a customer reference
         """
         self.ensure_one()
-        return self.reversed_entry_id or self.ref
+        return self.debit_origin_id or self.reversed_entry_id or self.ref
 
     @api.model
     def _l10n_sa_get_qr_code(self, journal_id, unsigned_xml, certificate, signature, is_b2c=False):

@@ -209,7 +209,7 @@
         </template>
 
         <template id="ubl_21_InvoiceType_zatca" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceType" primary="True">
-            <xpath expr="//*[local-name()='OrderReference']/*[local-name()='SalesOrderID']" position="replace"/>
+            <xpath expr="//*[local-name()='OrderReference']" position="replace"/>
             <!-- Add Invoice UUID in compliance with rule BR-KSA-03 -->
             <xpath expr="//*[local-name()='ID']" position="after">
                 <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
@@ -275,7 +275,7 @@
                     </cac:InvoiceLine>
                 </t>
             </xpath>
-            <xpath expr="//*[local-name()='OrderReference']/*[local-name()='SalesOrderID']" position="replace"/>
+            <xpath expr="//*[local-name()='OrderReference']" position="replace"/>
             <!-- Add Invoice UUID in compliance with rule BR-KSA-03 -->
             <xpath expr="//*[local-name()='ID']" position="after">
                 <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
@@ -343,7 +343,7 @@
                     </cac:LegalMonetaryTotal>
                 </t>
             </xpath>
-            <xpath expr="//*[local-name()='OrderReference']/*[local-name()='SalesOrderID']" position="replace"/>
+            <xpath expr="//*[local-name()='OrderReference']" position="replace"/>
             <!-- Add Invoice UUID in compliance with rule BR-KSA-03 -->
             <xpath expr="//*[local-name()='ID']" position="after">
                 <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
