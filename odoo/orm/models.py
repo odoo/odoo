@@ -6648,6 +6648,9 @@ class BaseModel(metaclass=MetaModel):
         self._invalidate_cache(fnames, self._ids)
 
     def _invalidate_cache(self, fnames: Collection[str] | None = None, ids: Sequence[IdType] | None = None) -> None:
+        if ids is not None and not ids:  # Avoid invalidating field_inverses for no reason
+            return
+
         if fnames is None:
             fields = self._fields.values()
         else:
