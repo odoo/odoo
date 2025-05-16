@@ -30,33 +30,8 @@ def send_to_controller(params, server_url=None):
         _logger.exception('Could not reach confirmation status URL: %s', server_url)
 
 
-def on_message(ws, messages):
-    """Synchronously handle messages received by the websocket."""
-    for message in json.loads(messages):
-        _logger.debug("websocket received a message: %s", pprint.pformat(message))
-        payload = message['message']['payload']
-        if not helpers.get_identifier() in payload.get('iot_identifiers', []):
-            continue
-
-        match message['message']['type']:
-            case 'iot_action':
-                for device_identifier in payload['device_identifiers']:
-                    if device_identifier in main.iot_devices:
-                        _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
-                        main.iot_devices[device_identifier].action(payload)
-            case 'server_clear':
-                helpers.disconnect_from_server()
-                close_server_log_sender_handler()
-            case _:
-                continue
-
-
 def on_error(ws, error):
     _logger.error("websocket received an error: %s", error)
-
-
-def on_close(ws, close_status_code, close_msg):
-    _logger.debug("websocket closed with status: %s", close_status_code)
 
 
 @helpers.require_db
@@ -71,10 +46,38 @@ class WebsocketClient(Thread):
             'event_name': 'subscribe',
             'data': {
                 'channels': [self.channel],
-                'last': 0,
+                'last': self.last_message_id,
                 'identifier': helpers.get_identifier(),
             }
         }))
+
+    def on_message(self, ws, messages):
+        """Synchronously handle messages received by the websocket."""
+        for message in json.loads(messages):
+            _logger.debug("websocket received a message: %s", pprint.pformat(message))
+            self.last_message_id = message['id']
+            payload = message['message']['payload']
+            if not helpers.get_identifier() in payload.get('iot_identifiers', []):
+                continue
+
+            match message['message']['type']:
+                case 'iot_action':
+                    for device_identifier in payload['device_identifiers']:
+                        if device_identifier in main.iot_devices:
+                            _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
+                            main.iot_devices[device_identifier].action(payload)
+                case 'server_clear':
+                    helpers.disconnect_from_server()
+                    close_server_log_sender_handler()
+                case 'restart_odoo':
+                    ws.close()
+                    helpers.odoo_restart()
+                case _:
+                    continue
+
+    def on_close(self, ws, close_status_code, close_msg):
+        _logger.debug("websocket closed with status: %s", close_status_code)
+        helpers.update_conf({'last_websocket_message_id': self.last_message_id})
 
     def __init__(self, channel, server_url=None):
         """This class will not be instantiated if no db is connected.
@@ -83,6 +86,7 @@ class WebsocketClient(Thread):
         :param str server_url: URL of the Odoo server (provided by decorator).
         """
         self.channel = channel
+        self.last_message_id = int(helpers.get_conf('last_websocket_message_id') or 0)
         url_parsed = urllib.parse.urlsplit(server_url)
         scheme = url_parsed.scheme.replace("http", "ws", 1)
         self.url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
@@ -91,8 +95,8 @@ class WebsocketClient(Thread):
     def run(self):
         self.ws = websocket.WebSocketApp(self.url,
             header={"User-Agent": "OdooIoTBox/1.0"},
-            on_open=self.on_open, on_message=on_message,
-            on_error=on_error, on_close=on_close)
+            on_open=self.on_open, on_message=self.on_message,
+            on_error=on_error, on_close=self.on_close)
 
         # The IoT synchronised servers can stop in 2 ways that we need to handle:
         #  A. Gracefully:
