@@ -91,7 +91,7 @@ registry.category("web_tour.tours").add("test_error_website", {
             expectUnloadPage: true,
         },
         {
-            trigger: 'h1:contains("Something went wrong.")',
+            trigger: 'h1:contains("422: Unprocessable Entity")',
         },
         {
             content: "http user error page has title and message",
@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add("test_error_website", {
             expectUnloadPage: true,
         },
         {
-            trigger: 'h1:contains("Something went wrong.")',
+            trigger: 'h1:contains("422: Unprocessable Entity")',
         },
         {
             content: "http user error page debug has title and message open",
@@ -118,7 +118,7 @@ registry.category("web_tour.tours").add("test_error_website", {
             expectUnloadPage: true,
         },
         {
-            trigger: 'h1:contains("Something went wrong.")',
+            trigger: 'h1:contains("422: Unprocessable Entity")',
         },
         {
             content: "http validation error page has title and message",
@@ -130,7 +130,7 @@ registry.category("web_tour.tours").add("test_error_website", {
             expectUnloadPage: true,
         },
         {
-            trigger: 'h1:contains("Something went wrong.")',
+            trigger: 'h1:contains("422: Unprocessable Entity")',
         },
         {
             content: "http validation error page debug has title and message open",
