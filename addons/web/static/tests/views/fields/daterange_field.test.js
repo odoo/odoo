@@ -1,7 +1,8 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { after, beforeEach, expect, test } from "@odoo/hoot";
 import {
     queryAll,
     queryAllProperties,
+    queryAllTexts,
     queryAllValues,
     queryFirst,
     queryValue,
@@ -13,12 +14,14 @@ import {
     clickSave,
     contains,
     defineModels,
+    defineParams,
     fields,
     models,
     mountView,
     onRpc,
     pagerNext,
 } from "../../web_test_helpers";
+import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
 
 function getPickerCell(expr) {
     return queryAll(`.o_datetime_picker .o_date_item_cell:contains(/^${expr}$/)`);
@@ -811,6 +814,9 @@ test("list daterange with empty start date and end date", async () => {
 
 test("list daterange: column widths", async () => {
     await resize({ width: 800 });
+    document.body.style.fontFamily = "sans-serif";
+    resetDateFieldWidths();
+    after(resetDateFieldWidths);
 
     Partner._fields.char_field = fields.Char();
     Partner._fields.date_end = fields.Date();
@@ -830,11 +836,80 @@ test("list daterange: column widths", async () => {
 
     expect(".o_data_row").toHaveCount(1);
     const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
-    expect(columnWidths).toEqual([40, 189, 304, 267]);
+    expect(columnWidths).toEqual([40, 183, 300, 277]);
+});
+
+test("list daterange: column widths (fancy format)", async () => {
+    await resize({ width: 800 });
+    document.body.style.fontFamily = "sans-serif";
+
+    defineParams({
+        lang_parameters: {
+            date_format: "%a, %d %B %Y",
+            time_format: "%H:%M:%S %p",
+        },
+    });
+    resetDateFieldWidths();
+    after(resetDateFieldWidths);
+
+    Partner._fields.char_field = fields.Char();
+    Partner._fields.date_end = fields.Date();
+    Partner._records[0].date_end = "2017-02-04";
+    Partner._records[0].datetime_end = "2017-02-09 17:00:00";
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+            <tree>
+                <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}" />
+                <field name="char_field" />
+            </tree>`,
+    });
+
+    expect(".o_data_row").toHaveCount(1);
+    expect(queryAllTexts(".o_data_cell")).toEqual([
+        "Fri, 03 February 2017\nSat, 04 February 2017",
+        "Wed, 08 February 2017 15:30:00 PM\nThu, 09 February 2017 22:30:00 PM",
+        "",
+    ]);
+    const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
+    expect(columnWidths).toEqual([40, 361, 527, 100]);
+});
+
+test("list daterange: column widths (show_time=false)", async () => {
+    await resize({ width: 800 });
+    document.body.style.fontFamily = "sans-serif";
+    resetDateFieldWidths();
+    after(resetDateFieldWidths);
+
+    Partner._fields.char_field = fields.Char();
+    Partner._fields.date_end = fields.Date();
+    Partner._records[0].date_end = "2017-02-04";
+    Partner._records[0].datetime_end = "2017-02-09 17:00:00";
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+            <tree>
+                <field name="datetime" widget="daterange" options="{'show_time': false, 'end_date_field': 'datetime_end'}" />
+                <field name="char_field" />
+            </tree>`,
+    });
+
+    expect(".o_data_row").toHaveCount(1);
+    expect(queryAllTexts(".o_data_cell")).toEqual(["02/08/2017\n02/09/2017", ""]);
+    const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
+    expect(columnWidths).toEqual([40, 183, 577]);
 });
 
 test("list daterange: column widths (no record)", async () => {
     await resize({ width: 800 });
+    document.body.style.fontFamily = "sans-serif";
+    resetDateFieldWidths();
+    after(resetDateFieldWidths);
 
     Partner._fields.char_field = fields.Char();
     Partner._fields.date_end = fields.Date();
@@ -853,7 +928,7 @@ test("list daterange: column widths (no record)", async () => {
 
     expect(".o_data_row").toHaveCount(0);
     const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
-    expect(columnWidths).toEqual([40, 189, 304, 267]);
+    expect(columnWidths).toEqual([40, 183, 300, 277]);
 });
 
 test("always range: related end date, both start date and end date empty", async () => {
