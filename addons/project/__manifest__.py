@@ -213,7 +213,7 @@
             'project/static/src/views/project_task_form/*.scss',
 
             ('include', 'portal.assets_chatter_helpers'),
-            'portal/static/src/chatter/core/**/*',
+            'portal/static/src/chatter/portal/**/*',
             'project/static/src/project_sharing/**/*',
             'web/static/src/start.js',
         ],
