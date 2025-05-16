@@ -3258,3 +3258,24 @@ test("date options (edit): This day/This month", async () => {
     expect(getCurrentValue()).toBe("This day");
     expect.verifySteps([`[("date.day_of_month", "=", context_today().day)]`]);
 });
+
+test("hide today, next, last operators when allowExpressions = False", async () => {
+    Team._fields.active = fields.Boolean();
+    await makeDomainSelector({
+        domain: `[("datetime", "=", False)]`,
+        allowExpressions: false,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getOperatorOptions()).toEqual([
+        "equals",
+        "not equals",
+        "greater",
+        "lower",
+        "between",
+        "not between",
+        "set",
+        "not set",
+    ]);
+});
