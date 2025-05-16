@@ -231,6 +231,7 @@ class ResCompany(models.Model):
             not tools.config['test_enable']
             and (self.env.registry.ready or not self.env.registry._init)
             and not modules.module.current_test
+            and not self.env.context.get('install_mode')  # due to savepoint when importing the file
         )
         if uninstalled_modules and is_ready_and_not_test:
             return uninstalled_modules.button_immediate_install()
