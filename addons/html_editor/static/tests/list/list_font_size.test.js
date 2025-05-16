@@ -204,3 +204,12 @@ test("should pad list based on font-size (2)", async () => {
         contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[]a</li></ol>`,
     });
 });
+
+test.tags("font-dependent");
+test("should apply color to a list containing sublist if list contents are fully selected", async () => {
+    await testEditor({
+        contentBefore: "<ol><li><p>[abc]</p><ol><li>def</li></ol></li></ol>",
+        stepFunction: setFontSize("56px"),
+        contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;"><p>[abc]</p><ol><li>def</li></ol></li></ol>`,
+    });
+});

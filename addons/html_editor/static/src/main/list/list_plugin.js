@@ -18,8 +18,10 @@ import {
     selectElements,
     ancestors,
     childNodes,
+    firstLeaf,
+    lastLeaf,
 } from "@html_editor/utils/dom_traversal";
-import { childNodeIndex } from "@html_editor/utils/position";
+import { childNodeIndex, nodeSize } from "@html_editor/utils/position";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
@@ -147,6 +149,22 @@ export class ListPlugin extends Plugin {
         format_selection_overrides: this.applyFormatToListItem.bind(this),
         node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
+        fully_selected_node_predicates: (node, selection, range) => {
+            if (node.nodeName === "LI") {
+                const nonListChildren = childNodes(node).filter(
+                    (n) => !["UL", "OL"].includes(n.nodeName)
+                );
+                if (!nonListChildren.length) {
+                    return;
+                }
+                const startLeaf = firstLeaf(nonListChildren[0]);
+                const endLeaf = lastLeaf(nonListChildren[nonListChildren.length - 1]);
+                return (
+                    range.isPointInRange(startLeaf, 0) &&
+                    range.isPointInRange(endLeaf, nodeSize(endLeaf))
+                );
+            }
+        },
     };
 
     setup() {
@@ -1048,8 +1066,13 @@ export class ListPlugin extends Plugin {
         }
         const listsSet = new Set();
         for (const listItem of targetedNodes) {
-            // Skip list items with block descendants
-            if ([...descendants(listItem)].some(isBlock)) {
+            // Skip list items with block descendants other than base
+            // container or a list related elements.
+            if (
+                ![...descendants(listItem)]
+                    .filter(isBlock)
+                    .every((n) => n.matches(`${baseContainerGlobalSelector}, ol, ul, li`))
+            ) {
                 continue;
             }
 

@@ -662,7 +662,9 @@ export class SelectionPlugin extends Plugin {
         const lastLeafNode = lastLeaf(node);
         return (
             // Custom rules
-            this.getResource("fully_selected_node_predicates").some((cb) => cb(node, selection)) ||
+            this.getResource("fully_selected_node_predicates").some((cb) =>
+                cb(node, selection, range)
+            ) ||
             // Default rule
             (range.isPointInRange(firstLeafNode, 0) &&
                 range.isPointInRange(lastLeafNode, nodeSize(lastLeafNode)))
