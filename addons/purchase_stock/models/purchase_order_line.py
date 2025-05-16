@@ -51,7 +51,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_qty_received(self):
         from_stock_lines = self.filtered(lambda order_line: order_line.qty_received_method == 'stock_moves')
         super(PurchaseOrderLine, self - from_stock_lines)._compute_qty_received()
-        for line in self:
+        for line in self._origin:
             if line.qty_received_method == 'stock_moves':
                 total = 0.0
                 # In case of a BOM in kit, the products delivered do not correspond to the products in
