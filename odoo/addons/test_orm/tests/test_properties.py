@@ -2152,6 +2152,9 @@ class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
         result = self._search(Model, [('attributes.mychar', 'ilike', 'hélène')])
         self.assertEqual(self.message_1 | self.message_2, result)
 
+        result = self._search(Model, [('attributes.mychar', '=ilike', 'hél%')])
+        self.assertEqual(self.message_1 | self.message_2, result)
+
         result = self._search(Model, [('attributes.mychar', 'not ilike', 'Helene')])
         self.assertNotIn(self.message_1, result)
         self.assertNotIn(self.message_2, result)
