@@ -11,18 +11,6 @@
     </record>
 
     <!-- Security groups -->
-    <record id="base.group_public" model="res.groups">
-        <field name="implied_ids" eval="[
-            Command.link(ref('account.group_delivery_invoice_address')),
-        ]"/>
-    </record>
-
-    <record id="base.group_portal" model="res.groups">
-        <field name="implied_ids" eval="[
-            Command.link(ref('account.group_delivery_invoice_address')),
-        ]"/>
-    </record>
-
     <record id="base.group_user" model="res.groups">
         <field name="implied_ids" eval="[
             Command.link(ref('account.group_delivery_invoice_address')),
