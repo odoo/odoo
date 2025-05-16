@@ -136,7 +136,10 @@ class PeppolConfigWizard(models.TransientModel):
             self_billing_services.write({'enabled': wizard.peppol_activate_self_billing})
 
     def button_sync_form_with_peppol_proxy(self):
-        """Interpret changes to the services, and add or remove them on the IAP accordingly."""
+        """Update the peppol contact email on IAP.
+        Note: The service configuration is DEPRECATED / hidden in the view.
+        Disabling services can lead to complicance issues and is not necessary
+        since all existing services should just work."""
         self.ensure_one()
 
         # Update company details
@@ -151,32 +154,6 @@ class PeppolConfigWizard(models.TransientModel):
                 endpoint='/api/peppol/1/update_user',
                 params=params,
             )
-
-        # Update services
-        if self.account_peppol_proxy_state == 'receiver':
-            services = self.service_ids.read(['document_identifier', 'enabled'])
-            service_json = self.service_json or {}
-            to_add, to_remove = [], []
-
-            for service in services:
-                if service['document_identifier'] in service_json and not service['enabled']:
-                    to_remove.append(service['document_identifier'])
-
-                if service['document_identifier'] not in service_json and service['enabled']:
-                    to_add.append(service['document_identifier'])
-
-            if to_add:
-                self.account_peppol_edi_user._call_peppol_proxy(
-                    "/api/peppol/2/add_services", {
-                        'document_identifiers': to_add,
-                    },
-                )
-            if to_remove:
-                self.account_peppol_edi_user._call_peppol_proxy(
-                    "/api/peppol/2/remove_services", {
-                        'document_identifiers': to_remove,
-                    },
-                )
 
         return True
 
