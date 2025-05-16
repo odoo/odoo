@@ -52,10 +52,14 @@ up a management by affair.
     'assets': {
         'web.assets_backend': [
             'hr_timesheet/static/src/**/*',
-            ('remove', 'hr_timesheet/static/src/views/**'),
+            ('remove', 'hr_timesheet/static/src/views/project_task_analysis_graph/**/*'),
+            ('remove', 'hr_timesheet/static/src/views/project_task_graph/**/*'),
+            ('remove', 'hr_timesheet/static/src/views/timesheet_graph/**/*'),
         ],
         'web.assets_backend_lazy': [
-            'hr_timesheet/static/src/views/**',
+            'hr_timesheet/static/src/views/project_task_analysis_graph/**/*',
+            'hr_timesheet/static/src/views/project_task_graph/**/*',
+            'hr_timesheet/static/src/views/timesheet_graph/**/*',
         ],
         'web.assets_unit_tests': [
             'hr_timesheet/static/tests/hr_timesheet_models.js',
