@@ -42,3 +42,8 @@ class SaleOrder(models.Model):
     @api.depends('delivery_date')
     def _inverse_delivery_date(self):
         pass
+
+    @api.model
+    def action_import_csv(self):
+        return {
+        }
