@@ -5315,6 +5315,13 @@ class AccountMove(models.Model):
             'target': 'download',
         }
 
+    def _get_action_generate_invoice_edi_format(self, invoice_edi_format):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/account/download_invoice_documents/{",".join(map(str, self.ids))}/invoice_edi_format_{invoice_edi_format}',
+            'target': 'download',
+        }
+
     def action_print_pdf(self):
         self.ensure_one()
         invoice_template = self.env['account.move.send']._get_default_pdf_report_id(self)
@@ -5968,6 +5975,15 @@ class AccountMove(models.Model):
                 }
             elif allow_fallback:
                 return self._get_invoice_pdf_proforma()
+        elif filetype.startswith('invoice_edi_format_'):
+            invoice_edi_format = filetype.removeprefix('invoice_edi_format_')
+            get_documents = self._get_invoice_legal_documents_invoice_edi_format_generator(invoice_edi_format)
+            if get_documents:
+                return get_documents(self)
+
+    def _get_invoice_legal_documents_invoice_edi_format_generator(self, invoice_edi_format):
+        # To extend
+        return None
 
     def _get_invoice_legal_documents_all(self, allow_fallback=False):
         """ Retrieve the invoice legal attachments: PDF, XML, ...
@@ -6415,16 +6431,44 @@ class AccountMove(models.Model):
         """
         return []
 
+    def _get_invoice_edi_formats_for_print_items(self):
+        """
+        :return: A set of of `invoice_edi_format` strings (See field `invoice_edi_format` on 'res.partner')
+        """
+        # The suggested / selected / local edi formats may all be the same or `False`
+        return {
+            edi_format
+            for partner in [move.partner_id.with_company(move.company_id) for move in self]
+            for edi_format in [
+                    partner._get_suggested_invoice_edi_format(),
+                    partner.invoice_edi_format,
+                    partner._get_local_invoice_edi_format() if partner._use_local_invoice_edi_format() else False,
+            ]
+            if self._get_invoice_legal_documents_invoice_edi_format_generator(edi_format)
+        } - {False}
+
     def get_extra_print_items(self):
         """ Helper to dynamically add items in the 'Print' menu of list and form of account.move.
         This is necessary to avoid the re-generation of the PDF through the action_report.
         Indeed, once a legal PDF is generated, it should be used and not re-generated.
         """
-        return [{
+        print_items = [{
             'key': 'download_pdf',
             'description': _('PDF'),
             **self.action_invoice_download_pdf()
         }]
+
+        # Add items to generate XMLs for selected invoice edi formats.
+        invoice_edi_format_description = self.env['res.partner']._fields['invoice_edi_format'].get_description(self.env)
+        print_items.extend([
+            {
+                'key': f'generate_{edi_format}',
+                'description': dict(invoice_edi_format_description['selection'])[edi_format],
+                **self._get_action_generate_invoice_edi_format(edi_format),
+            } for edi_format in self._get_invoice_edi_formats_for_print_items()
+        ])
+
+        return print_items
 
     @staticmethod
     def _can_commit():
