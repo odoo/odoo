@@ -612,11 +612,11 @@ class MailActivity(models.Model):
     def _to_store_defaults(self):
         return [
             "activity_category",
-            "activity_type_id",
+            Store.One("activity_type_id", "name"),
             "can_write",
             "chaining_type",
             "create_date",
-            "create_uid",
+            Store.One("create_uid", "name"),
             "date_deadline",
             "date_done",
             "icon",
