@@ -310,6 +310,57 @@ export function useGetTreeDescription(fieldService, nameService) {
     };
 }
 
+export function useGetTreeTooltip(fieldService, nameService) {
+    fieldService ||= useService("field");
+    nameService ||= useService("name");
+    const makeGetFieldDef = useMakeGetFieldDef(fieldService);
+    const makeGetConditionDescription = useMakeGetConditionDescription(fieldService, nameService);
+    return async (resModel, tree) => {
+        async function getTooltipLines(resModel, tree, depth = 0) {
+            const tabs = " ".repeat(depth * 4);
+            tree = simplifyTree(tree);
+            if (tree.type === "connector") {
+                // we assume that the domain tree is normalized (--> there is at least two children)
+                let connector = tree.value === "&" ? _t("all") : _t("any");
+                if (tree.negate) {
+                    connector = tree.value === "&" ? _t("not all") : _t("none");
+                }
+                connector = `${tabs}${connector}`;
+                const childrenTooltipLines = await Promise.all(
+                    tree.children.map((node) => getTooltipLines(resModel, node, depth + 1))
+                );
+                return [connector, ...childrenTooltipLines].flat();
+            }
+            const getFieldDef = await makeGetFieldDef(resModel, tree);
+            const getConditionDescription = await makeGetConditionDescription(
+                resModel,
+                tree,
+                getFieldDef
+            );
+            const { pathDescription, operatorDescription, valueDescription } =
+                getConditionDescription(tree);
+            const descr = [];
+            const stringDescriptions = [pathDescription, operatorDescription];
+            if (valueDescription) {
+                const { values, join, addParenthesis } = valueDescription;
+                const jointedValues = values.join(` ${join} `);
+                stringDescriptions.push(addParenthesis ? `( ${jointedValues} )` : jointedValues);
+            }
+            descr.push(`${tabs}${stringDescriptions.join(" ")}`);
+            if (isTree(tree.value)) {
+                const _fieldDef = getFieldDef(tree.path);
+                const _resModel = getResModel(_fieldDef);
+                const _tree = tree.value;
+                const tooltipLines = await getTooltipLines(_resModel, _tree, depth + 1);
+                descr.push(...tooltipLines);
+            }
+            return descr;
+        }
+        const descriptions = await getTooltipLines(resModel, tree);
+        return descriptions.join("\n");
+    };
+}
+
 export function getResModel(fieldDef) {
     if (fieldDef) {
         return fieldDef.is_property ? fieldDef.comodel : fieldDef.relation;

@@ -7,7 +7,11 @@ import { _t } from "@web/core/l10n/translation";
 import { rpcBus } from "@web/core/network/rpc";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { domainFromTree, treeFromDomain } from "@web/core/tree_editor/condition_tree";
-import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor/utils";
+import {
+    useGetTreeDescription,
+    useGetTreeTooltip,
+    useMakeGetFieldDef,
+} from "@web/core/tree_editor/utils";
 import { user } from "@web/core/user";
 import { groupBy, sortBy } from "@web/core/utils/arrays";
 import { deepCopy } from "@web/core/utils/objects";
@@ -186,6 +190,7 @@ export class SearchModel extends EventBus {
         this.orderByCount = false;
 
         this.getDomainTreeDescription = useGetTreeDescription(fieldService, nameService);
+        this.getDomainTreeTooltip = useGetTreeTooltip(fieldService, nameService);
         this.makeGetFieldDef = useMakeGetFieldDef(fieldService);
 
         // used to manage search items related to date/datetime fields
@@ -707,9 +712,13 @@ export class SearchModel extends EventBus {
         const tree = treeFromDomain(domain, { distributeNot: !this.isDebugMode, getFieldDef });
         const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
         const promises = trees.map(async (tree) => {
-            const description = await this.getDomainTreeDescription(this.resModel, tree);
+            const [description, tooltip] = await Promise.all([
+                this.getDomainTreeDescription(this.resModel, tree),
+                this.getDomainTreeTooltip(this.resModel, tree, true),
+            ]);
             const preFilter = {
                 description,
+                tooltip,
                 domain: domainFromTree(tree),
                 invisible: "True",
                 type: "filter",
@@ -1589,12 +1598,14 @@ export class SearchModel extends EventBus {
             const values = [];
             let title;
             let type;
+            let tooltip;
             for (const activeItem of group.activeItems) {
                 const domain = this._getSearchItemDomain(activeItem);
                 if (domain) {
                     groupActiveItemDomains.push(domain);
                 }
                 const searchItem = this.searchItems[activeItem.searchItemId];
+                tooltip = searchItem.tooltip;
                 switch (searchItem.type) {
                     case "field_property":
                     case "field": {
@@ -1626,6 +1637,7 @@ export class SearchModel extends EventBus {
                             "description"
                         );
                         values.push(`${searchItem.description}: ${periodDescription}`);
+
                         break;
                     }
                     default: {
@@ -1650,6 +1662,9 @@ export class SearchModel extends EventBus {
                     facet.icon = FACET_ICONS[type];
                 }
                 facet.color = FACET_COLORS[type];
+            }
+            if (tooltip) {
+                facet.tooltip = tooltip;
             }
             if (groupActiveItemDomains.length) {
                 facet.domain = Domain.or(groupActiveItemDomains).toString();
