@@ -201,6 +201,8 @@
             'web/static/lib/hoot-dom/**/*',
 
             ('include', 'html_editor.assets_editor'),
+            'html_editor/static/src/others/dynamic_placeholder_plugin.js',
+            'html_editor/static/src/backend/**/*',
             'html_editor/static/src/fields/**/*',
 
             'mail/static/src/scss/variables/*.scss',

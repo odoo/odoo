@@ -1,7 +1,8 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { click, manuallyDispatchProgrammaticEvent, press } from "@odoo/hoot-dom";
-import { DYNAMIC_PLACEHOLDER_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
 import { defineModels, models, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { insertText } from "./_helpers/user_actions";
