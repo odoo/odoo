@@ -17,6 +17,7 @@ import {
     getConditionText,
     getCurrentPath,
     getCurrentValue,
+    getOperatorOptions,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
@@ -1169,7 +1170,7 @@ test("folded domain field with withinh operator", async function () {
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partner', 'foldable': true}" />
+                        <field name="foo" widget="domain" options="{'model': 'partner', 'foldable': true, 'allow_expressions':True}" />
                     </group>
                 </sheet>
             </form>`,
@@ -1244,5 +1245,51 @@ test("allow_expressions = false (default)", async function () {
     );
     await animationFrame();
     expect(".o_field_domain").toHaveClass("o_field_invalid");
+    expect.verifySteps(["The domain should not involve non-literals"]);
+});
+
+test("hide within operators when allow_expressions = False", async function () {
+    Partner._records[0].foo = `[("datetime", "=", False)]`;
+
+    serverState.debug = "1";
+    replaceNotificationService();
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="domain" options="{'model': 'partner' }" />
+                        </group>
+                    </sheet>
+                </form>`,
+    });
+
+    expect(getOperatorOptions()).toEqual([
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "is not between",
+        "is set",
+        "is not set",
+    ]);
+
+    await contains(SELECTORS.debugArea).edit(
+        `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = a)).strftime("%Y-%m-%d"))]`
+    );
+    await animationFrame();
+    expect(".o_field_domain").toHaveClass("o_field_invalid");
+    expect.verifySteps(["The domain should not involve non-literals"]);
+
+    await contains(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).edit("2");
+    await animationFrame();
+    expect(".o_field_domain").not.toHaveClass("o_field_invalid"); // should we have class? We don't do it in other cases
     expect.verifySteps(["The domain should not involve non-literals"]);
 });
