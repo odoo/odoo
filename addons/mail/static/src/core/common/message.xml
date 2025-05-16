@@ -203,9 +203,9 @@
 
 <t t-name="mail.Message.expandAction">
     <button class="btn border-0 rounded-0 o-mail-Message-expandBtn" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{
-        'o-mail-Message-openActionMobile p-2 mt-n2 rounded-circle user-select-none': isMobileOS and !mobileExpanded,
-        'me-n2': isMobileOS and !mobileExpanded and isAlignedRight,
-        'ms-n2': isMobileOS and !mobileExpanded and !isAlignedRight,
+        'o-mail-Message-openActionMobile p-2 mt-n3 rounded-circle user-select-none': isMobileOS and !mobileExpanded,
+        'ms-n2': isMobileOS and !mobileExpanded and isAlignedRight,
+        'me-n2': isMobileOS and !mobileExpanded and !isAlignedRight,
         'px-2 py-0': !isMobileOS,
         'rounded-start-1': !isMobileOS and isReverse,
         'rounded-end-1': !isMobileOS and !isReverse,
