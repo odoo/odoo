@@ -1,19 +1,5 @@
 import { browser } from "@web/core/browser/browser";
 
-
-/**
- * Comes from @web/views/utils.js
- * Generate a unique identifier (64 bits) in hexadecimal.
- *
- * @returns {string}
- */
-export function uuid() {
-    const array = new Uint8Array(8);
-    window.crypto.getRandomValues(array);
-    // Uint8Array to hex
-    return [...array].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
 /**
  * Format the endpoint to send the request to
  * Used to ensure the request is sent with the same protocol as the current page
