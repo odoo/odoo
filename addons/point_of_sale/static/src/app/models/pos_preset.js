@@ -96,26 +96,22 @@ export class PosPreset extends Base {
         // Compute slots for next 7 days
         for (const i of [...Array(7).keys()]) {
             const dateNow = DateTime.now().plus({ days: i });
+            const getDateTime = (hour) =>
+                DateTime.fromObject({
+                    year: dateNow.year,
+                    month: dateNow.month,
+                    day: dateNow.day,
+                    hour: Math.floor(hour),
+                    minute: Math.round((hour % 1) * 60),
+                });
             const dayOfWeek = (dateNow.weekday - 1).toString();
             const date = DateTime.now().plus({ days: i }).toFormat("yyyy-MM-dd");
             const attToday = this.attendance_ids.filter((a) => a.dayofweek === dayOfWeek);
             slots[date] = [];
 
             for (const attendance of attToday) {
-                const dateOpening = DateTime.fromObject({
-                    year: dateNow.year,
-                    month: dateNow.month,
-                    day: dateNow.day,
-                    hour: Math.floor(attendance.hour_from),
-                    minute: (attendance.hour_from % 1) * 60,
-                });
-                const dateClosing = DateTime.fromObject({
-                    year: dateNow.year,
-                    month: dateNow.month,
-                    day: dateNow.day,
-                    hour: Math.floor(attendance.hour_to),
-                    minute: (attendance.hour_to % 1) * 60,
-                });
+                const dateOpening = getDateTime(attendance.hour_from);
+                const dateClosing = getDateTime(attendance.hour_to);
 
                 let start = dateOpening;
                 while (start >= dateOpening && start <= dateClosing && interval > 0) {
