@@ -34,6 +34,7 @@
             <field name="body">Welcome to CompanyName! 👋</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=1)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=1)" name="create_date"/>
         </record>
         <record id="livechat_channel_chatbot_session_3_message_2_demo" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -43,6 +44,7 @@
             <field name="body">What are you looking for?</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=2)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=2)" name="create_date"/>
         </record>
         <record id="livechat_channel_chatbot_session_3_message_3_demo" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -53,6 +55,7 @@
             <field name="body">I have a pricing question</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=3)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=3)" name="create_date"/>
         </record>
         <record id="livechat_channel_chatbot_session_3_message_4_demo" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -62,6 +65,7 @@
             <field name="body">Hmmm, let me check if I can find someone that could help you with that...</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=4)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=4)" name="create_date"/>
         </record>
         <record id="livechat_channel_chatbot_session_3_message_5_demo" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -71,6 +75,7 @@
             <field name="body">Hu-ho, it looks like none of our operators are available 🙁</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=5)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=5)" name="create_date"/>
         </record>
         <record id="livechat_channel_chatbot_session_3_message_6_demo" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -80,6 +85,7 @@
             <field name="body">Would you mind leaving your email address so that we can reach you back?</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=6)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=6)" name="create_date"/>
         </record>
         <record id="livechat_channel_chatbot_session_3_message_7_demo" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -90,6 +96,7 @@
             <field name="body">visitor@example.com</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=7)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=7)" name="create_date"/>
         </record>
     </data>
 </odoo>

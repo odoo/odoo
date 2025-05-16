@@ -31,6 +31,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=15)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=15)" name="create_date"/>
         </record>
         <record id="livechat_channel_session_4_message_2" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -40,6 +41,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=16)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=16)" name="create_date"/>
         </record>
         <record id="livechat_channel_session_4_message_3" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -49,6 +51,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=17)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=17)" name="create_date"/>
         </record>
         <record id="livechat_channel_session_4_rating_message" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -57,6 +60,7 @@
             <field name="subtype_id" ref="mail.mt_note"/>
             <field name="message_type">notification</field>
             <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=20)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-2, days=-3, minutes=20)" name="create_date"/>
         </record>
         <record id="livechat_channel_session_4_rating" model="rating.rating">
             <field name="access_token">LIVECHAT_4</field>
