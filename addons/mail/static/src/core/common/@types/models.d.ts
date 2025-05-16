@@ -11,6 +11,7 @@ declare module "models" {
     import { Failure as FailureClass } from "@mail/core/common/failure_model";
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
+    import { MailTemplate as MailTemplateClass } from "@mail/core/common/mail_template_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
     import { MessageLinkPreview as MessageLinkPreviewClass } from "@mail/core/common/message_link_preview_model";
     import { MessageReactions as MessageReactionsClass } from "@mail/core/common/message_reactions_model";
@@ -35,6 +36,7 @@ declare module "models" {
     export interface Failure extends FailureClass {}
     export interface Follower extends FollowerClass {}
     export interface LinkPreview extends LinkPreviewClass {}
+    export interface MailTemplate extends MailTemplateClass {}
     export interface Message extends MessageClass {}
     export interface MessageLinkPreview extends MessageLinkPreviewClass {}
     export interface MessageReactions extends MessageReactionsClass {}
@@ -62,6 +64,7 @@ declare module "models" {
         "mail.message": StaticMailRecord<Message, typeof MessageClass>;
         "mail.message.link.preview": StaticMailRecord<MessageLinkPreview, typeof MessageLinkPreviewClass>;
         "mail.notification": StaticMailRecord<Notification, typeof NotificationClass>;
+        "mail.template": StaticMailRecord<MailTemplate, typeof MailTemplateClass>;
         MessageReactions: StaticMailRecord<MessageReactions, typeof MessageReactionsClass>;
         Persona: StaticMailRecord<Persona, typeof PersonaClass>;
         "res.country": StaticMailRecord<Country, typeof CountryClass>;
@@ -88,6 +91,7 @@ declare module "models" {
         "mail.message": Message;
         "mail.message.link.preview": MessageLinkPreview;
         "mail.notification": Notification;
+        "mail.template": MailTemplate;
         MessageReactions: MessageReactions;
         Persona: Persona;
         "res.country": Country;

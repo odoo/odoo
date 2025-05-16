@@ -52,8 +52,7 @@ export class Activity extends Record {
     feedback;
     /** @type {string} */
     icon = "fa-tasks";
-    /** @type {Object[]} */
-    mail_template_ids;
+    mail_template_ids = fields.Many("mail.template");
     note = fields.Html("");
     persona = fields.One("Persona");
     /** @type {number|false} */
