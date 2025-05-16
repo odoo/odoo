@@ -3,9 +3,11 @@ import { Component, useState } from "@odoo/owl";
 export class SelectionBox extends Component {
     static components = {};
     static template = "web.SelectionBox";
-    static props = {};
+    static props = {
+        root: { type: Object, optional: true },
+    };
     setup() {
-        this.root = useState(this.env.model.root);
+        this.root = this.props.root || useState(this.env.model.root);
     }
     get nbSelected() {
         return this.selectedRecords.length;
