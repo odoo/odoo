@@ -34,7 +34,7 @@ patch(Composer.prototype, {
             rating_id: this.message.rating_id.id,
             publisher_comment: this.props.composer.text.trim(),
         });
-        this.message.rating_id = data;
+        this.store.insert(data);
         this.props.onPostCallback();
     },
 

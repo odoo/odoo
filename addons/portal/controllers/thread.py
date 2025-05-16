@@ -24,3 +24,15 @@ class ThreadController(thread.ThreadController):
             if partner and message.author_id == partner:
                 return True
         return super()._can_edit_message(message, hash=hash, pid=pid, token=token, **kwargs)
+
+    def _should_apply_share_domain(self, *args, only_portal=None, **kwargs):
+        apply_domain = super()._should_apply_share_domain(*args, only_portal=only_portal, **kwargs)
+        return apply_domain or only_portal
+
+    def _get_fetch_domain(self, thread, *args, only_portal=None, **kwargs):
+        """Restricts the fetched messages for portal."""
+        domain = super()._get_fetch_domain(thread, *args, only_portal=only_portal, **kwargs)
+        model = request.env[thread._name]
+        if only_portal:
+            domain &= model._fields["website_message_ids"].get_comodel_domain(model)
+        return domain
