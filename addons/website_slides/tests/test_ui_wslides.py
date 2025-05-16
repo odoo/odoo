@@ -143,8 +143,6 @@ class TestUi(TestUICommon):
             location = self.parse_http_location(response.headers.get("Location"))
             self.assertEqual(location.path, "/web/login")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_course_member_employee(self):
         user_demo = self.user_demo
         user_demo.write({
@@ -169,8 +167,6 @@ class TestUi(TestUICommon):
 
         self.start_tour('/slides', 'course_member', login=user_portal.login)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_full_screen_edition_website_restricted_editor(self):
         # group_website_designer
         user_demo = self.user_demo
