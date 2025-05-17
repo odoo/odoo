@@ -111,6 +111,15 @@ export function customerIs(name) {
         },
     ];
 }
+export function isPointsDisplayed(isDisplayed) {
+    return [
+        {
+            trigger: isDisplayed
+                ? ".loyalty-points-title"
+                : "body:not(:has(.loyalty-points-title))",
+        },
+    ];
+}
 export function pointsAwardedAre(points_str) {
     return [
         {
