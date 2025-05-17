@@ -1,4 +1,3 @@
-# -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
@@ -11,10 +10,8 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import ormcache, format_list
-from odoo.tools.date_intervals import string_to_datetime
+from odoo.tools.intervals import Intervals
 from odoo.exceptions import UserError
-
-from .hr_work_intervals import WorkIntervals
 
 
 class HrContract(models.Model):
@@ -178,15 +175,15 @@ class HrContract(models.Model):
                     else:
                         end = end_dt.astimezone(tz)
                         tz_dates[(tz, end_dt)] = end
-                    dt0 = string_to_datetime(leave.date_from).astimezone(tz)
-                    dt1 = string_to_datetime(leave.date_to).astimezone(tz)
+                    dt0 = leave.date_from.astimezone(tz)
+                    dt1 = leave.date_to.astimezone(tz)
                     leave_start_dt = max(start, dt0)
                     leave_end_dt = min(end, dt1)
                     leave_interval = (leave_start_dt, leave_end_dt, leave)
                     leave_interval = contract._get_valid_leave_intervals(attendances, leave_interval)
                     if leave_interval:
                         result[resource.id] += leave_interval
-            mapped_leaves = {r.id: WorkIntervals(result[r.id]) for r in resources_list}
+            mapped_leaves = {r.id: Intervals(result[r.id], keep_distinct=True) for r in resources_list}
             leaves = mapped_leaves[resource.id]
 
             real_attendances = attendances - leaves
@@ -239,7 +236,7 @@ class HrContract(models.Model):
                     ('state', 'draft'),
                 ] + contract._get_more_vals_attendance_interval(interval))]
 
-            leaves_over_attendances = WorkIntervals(leaves) & real_leaves
+            leaves_over_attendances = Intervals(leaves, keep_distinct=True) & real_leaves
             for interval in real_leaves:
                 # Could happen when a leave is configured on the interface on a day for which the
                 # employee is not supposed to work, i.e. no attendance_ids on the calendar.
