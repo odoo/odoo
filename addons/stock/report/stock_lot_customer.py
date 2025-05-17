@@ -34,6 +34,7 @@ class StockLotReport(models.Model):
         """
 
     def _join_on_picking_type_and_partner(self):
+        # todo remove master
         return """
             JOIN stock_picking_type AS type
             ON picking.picking_type_id = type.id and type.code = 'outgoing'
@@ -41,14 +42,22 @@ class StockLotReport(models.Model):
             ON partner.id = picking.partner_id
         """
 
+    def _outgoing_operation_types(self):
+        return "'outgoing'"
+
     def _from(self):
         return f"""
             stock_lot lot
             JOIN stock_move_line AS sml
             ON lot.id = sml.lot_id
+            JOIN stock_move AS sm
+            ON sm.id = sml.move_id
             JOIN stock_picking AS picking
-            ON picking.id = sml.picking_id
-            {self._join_on_picking_type_and_partner()}
+            ON picking.id = COALESCE(sm.picking_id, sml.picking_id)
+            JOIN stock_picking_type AS type
+            ON type.id = COALESCE(sm.picking_type_id, picking.picking_type_id) and type.code in ({self._outgoing_operation_types()})
+            JOIN res_partner AS partner
+            ON partner.id = COALESCE(sm.partner_id, picking.partner_id)
             LEFT JOIN res_country_state AS state
             ON state.id = partner.state_id
             LEFT JOIN res_country AS country

@@ -265,8 +265,8 @@ class AccountChartTemplate(models.AbstractModel):
                 template_data.pop(prop)
         data.pop('account.reconcile.model', None)
         if 'res.company' in data:
+            data['res.company'][company.id].clear()
             data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
-
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
             if self.ref(xmlid, raise_if_not_found=False):
                 del data['account.journal'][xmlid]
@@ -336,18 +336,24 @@ class AccountChartTemplate(models.AbstractModel):
                     if xmlid not in xmlid2fiscal_position and not force_create:
                         skip_update.add((model_name, xmlid))
                         continue
-                    # Only add tax mappings containing new taxes
-                    if old_tax_ids := values.pop('tax_ids', []):
-                        new_tax_ids = []
-                        for element in old_tax_ids:
-                            match element:
-                                case Command.CREATE, _, {'tax_src_id': src_id, 'tax_dest_id': dest_id} if (
-                                    not self.ref(src_id, raise_if_not_found=False)
-                                    or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
-                                ):
-                                    new_tax_ids.append(element)
-                        if new_tax_ids:
-                            values['tax_ids'] = new_tax_ids
+                    # Only add accounts and taxes mappings containing new records
+                    for model in ['account', 'tax']:
+                        if not force_create:  # there can't be new records if we don't create them
+                            values.pop(f'{model}_ids', [])
+                        if old_ids := values.pop(f'{model}_ids', []):
+                            new_ids = []
+                            for element in old_ids:
+                                match element:
+                                    case Command.CREATE, _, (
+                                        {'tax_src_id': src_id, 'tax_dest_id': dest_id}
+                                        | {'account_src_id': src_id, 'account_dest_id': dest_id}
+                                    ) if (
+                                        not self.ref(src_id, raise_if_not_found=False)
+                                        or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
+                                    ):
+                                        new_ids.append(element)
+                            if new_ids:
+                                values[f'{model}_ids'] = new_ids
 
                 elif model_name == 'account.tax':
                     # Only update the tags of existing taxes
@@ -452,7 +458,7 @@ class AccountChartTemplate(models.AbstractModel):
         e.g. the account codes' width must be standardized to the code_digits applied.
         The fiscal country code must be put in place before taxes are generated.
         """
-        if 'account_fiscal_country_id' in data['res.company'][company.id]:
+        if 'account_fiscal_country_id' in data.get('res.company', {}).get(company.id, {}):
             fiscal_country = self.ref(data['res.company'][company.id]['account_fiscal_country_id'])
         else:
             fiscal_country = company.account_fiscal_country_id
@@ -759,18 +765,10 @@ class AccountChartTemplate(models.AbstractModel):
                                 template_data[model][xmlid].update(record)
         return template_data
 
-    def _setup_utility_bank_accounts(self, template_code, company, template_data):
-        """Define basic bank accounts for the company.
-
-        - Suspense Account
-        - Outstanding Receipts/Payments Accounts
-        - Cash Difference Gain/Loss Accounts
-        - Liquidity Transfer Account
-        """
-        # Create utility bank_accounts
-        bank_prefix = company.bank_account_code_prefix
-        code_digits = int(template_data.get('code_digits', 6))
-        accounts_data = {
+    def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):
+        bank_prefix = bank_prefix or company.bank_account_code_prefix
+        code_digits = code_digits or int(template_data.get('code_digits', 6))
+        return {
             'account_journal_suspense_account_id': {
                 'name': _("Bank Suspense Account"),
                 'prefix': bank_prefix,
@@ -810,6 +808,18 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
+    def _setup_utility_bank_accounts(self, template_code, company, template_data):
+        """Define basic bank accounts for the company.
+
+        - Suspense Account
+        - Outstanding Receipts/Payments Accounts
+        - Cash Difference Gain/Loss Accounts
+        - Liquidity Transfer Account
+        """
+        # Create utility bank_accounts
+        bank_prefix = company.bank_account_code_prefix
+        code_digits = int(template_data.get('code_digits', 6))
+        accounts_data = self._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, code_digits=code_digits)
         for fname in list(accounts_data):
             if company[fname]:
                 del accounts_data[fname]

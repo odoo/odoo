@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import replace_exceptions
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
 
@@ -193,7 +194,6 @@ class LivechatController(http.Controller):
         return store.get_result()
 
     def _post_feedback_message(self, channel, rating, reason):
-        reason = Markup("<br>" + re.sub(r'\r\n|\r|\n', "<br>", reason) if reason else "")
         body = Markup(
             """<div class="o_mail_notification o_hide_author">"""
             """%(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s"""
@@ -201,7 +201,7 @@ class LivechatController(http.Controller):
         ) % {
             "rating": _("Rating"),
             "rating_url": rating.rating_image_url,
-            "reason": reason,
+            "reason": nl2br("\n" + reason) if reason else "",
         }
         # sudo: discuss.channel - not necessary for posting, but necessary to update related rating
         channel.sudo().message_post(

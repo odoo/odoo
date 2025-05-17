@@ -6,18 +6,19 @@
                   inherit_id="mail.mail_notification_layout_with_responsible_signature"
                   primary="True">
             <xpath expr="//t[hasclass('o_signature')]" position="after">
-                <div id="peppol_advertisement" t-if="peppol_info" style="font-size: 13px;">
+                <div id="peppol_status" t-if="peppol_info" style="font-size: 13px;">
+                    <br/><br/>
                     <t t-if="peppol_info['is_peppol_sent']">
-                        <i class="text-muted" style="min-width: 590px;">
-                            This invoice has also been <b style="color: $o-enterprise-action-color">sent via Peppol</b>.
+                        <i style="color: #777">
+                            This invoice has also been <b t-attf-style="color: {{company.email_secondary_color or '#875A7B'}}">sent via Peppol</b>.
                         </i>
                     </t>
                     <t t-if="not peppol_info['is_peppol_sent'] and not peppol_info['partner_on_peppol']">
-                        <i class="text-muted" style="min-width: 590px;">
-                            <t t-out="company.name"/> uses <a target="_blank" href="https://www.odoo.com/app/invoicing?utm_source=db&amp;utm_medium=email&amp;utm_campaign=einvoicing" style="color: $o-enterprise-color;">Odoo</a> to send invoices, but this one <b style="color: $o-enterprise-action-color;">could not be sent via Peppol</b>.
+                        <i style="color: #777">
+                            <t t-out="company.name"/> uses <a target="_blank" href="https://www.odoo.com/app/invoicing">Odoo</a> to send invoices, but this one <b t-attf-style="color: {{company.email_secondary_color or '#875A7B'}}">could not be sent via Peppol</b>.
                             <t t-if="peppol_info['peppol_country'] == 'BE'">
                                 <br/>
-                                In Belgium, electronic invoicing will be <u>mandatory as of January 2026</u> - don't wait to register.
+                                In Belgium, electronic invoicing is <u>mandatory as of January 2026</u> - don't wait to register.
                             </t>
                         </i>
                     </t>

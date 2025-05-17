@@ -71,7 +71,7 @@ test("list activity widget with no activity", async () => {
             },
         })}`,
     ]);
-    await contains(".o-mail-ActivityButton i.text-muted");
+    await contains(".o-mail-ActivityButton i.fa-clock-o");
     await contains(".o-mail-ListActivity-summary", { text: "" });
 });
 

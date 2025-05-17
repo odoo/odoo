@@ -567,11 +567,16 @@ export class PosStore extends Reactive {
             return formattedUnitPrice;
         }
     }
-    async openConfigurator(product) {
+    async openConfigurator(product, opts = {}) {
         const attrById = this.models["product.attribute"].getAllBy("id");
-        const attributeLines = product.attribute_line_ids.filter(
+        let attributeLines = product.attribute_line_ids.filter(
             (attr) => attr.attribute_id?.id in attrById
         );
+        if (opts.code) {
+            attributeLines = attributeLines.filter(
+                (attr) => attr.attribute_id.create_variant === "no_variant"
+            );
+        }
         const attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
@@ -685,7 +690,7 @@ export class PosStore extends Reactive {
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
         if (values.product_id.isConfigurable() && configure) {
-            const payload = await this.openConfigurator(values.product_id);
+            const payload = await this.openConfigurator(values.product_id, opts);
 
             if (payload) {
                 const productFound = this.models["product.product"]
