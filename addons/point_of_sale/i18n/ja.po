@@ -1340,7 +1340,7 @@ msgstr "顧客を変更できません"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_make_invoice
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Cancel"
-msgstr "取消"
+msgstr "キャンセル"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1353,26 +1353,26 @@ msgstr "オーダをキャンセル"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 msgid "Cancel Orders"
-msgstr "オーダ取消"
+msgstr "オーダをキャンセル"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.js:0
 msgid "Cancel Payment"
-msgstr "支払を取消"
+msgstr "支払をキャンセル"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Cancel Payment Request"
-msgstr "支払要求を取消"
+msgstr "支払要求をキャンセル"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__cancel
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__cancel
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Cancelled"
-msgstr "取消済"
+msgstr "キャンセル済"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1962,7 +1962,7 @@ msgstr "設定 &gt; 管理設定"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Configure Presets"
-msgstr ""
+msgstr "プリセットの設定"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
@@ -2399,7 +2399,7 @@ msgstr "顧客が必要です"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Customer address is required"
-msgstr ""
+msgstr "顧客の住所が必要です"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4653,7 +4653,7 @@ msgstr "体系"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Not Cancelled"
-msgstr "未取消"
+msgstr "キャンセルされていない"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5398,7 +5398,7 @@ msgstr "支払要求は保留中"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Payment reversed"
-msgstr "支払が取消されました"
+msgstr "支払がキャンセルされました"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7963,7 +7963,7 @@ msgstr "不明なエラーのため、注文をサーバーに送信できませ
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "The order delivery / pickup date is in the future. You cannot cancel it."
-msgstr "オーダの配送/ピックアップ日は未来の日付です。取消はできません。"
+msgstr "オーダの配送/ピックアップ日は未来の日付です。キャンセルはできません。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8265,7 +8265,7 @@ msgstr "検証・請求前に、オーダに少なくとも1つのプロダク�
 msgid ""
 "This barcode is not compatible with the GS1 standard. Consider configuring a"
 " fallback barcode parser from the PoS settings."
-msgstr ""
+msgstr "このバーコードは GS1 標準規格に対応していません。PoS 設定からフォールバックバーコードパーサーの設定をご検討ください。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8767,7 +8767,7 @@ msgstr "無名プロダクト"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
 msgid "Unsupported Barcode Format"
-msgstr ""
+msgstr "サポートされていないバーコード形式です"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9050,7 +9050,7 @@ msgstr ""
 msgid ""
 "You can only cancel a session that is in opening control state and has no "
 "orders."
-msgstr "セッションを取消できるのは、開始コントロールステータスかつオーダがないセッションのみです。"
+msgstr "セッションをキャンセルできるのは、開始コントロールステータスかつオーダがないセッションのみです。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9064,7 +9064,7 @@ msgstr "同一オーダのプロダクトのみ返金が可能です。"
 msgid ""
 "You can only unlink PoS order lines that are related to orders in new or "
 "cancelled state."
-msgstr "リンク解除できるのは、新規または取消状態のオーダに関連するPOSオーダ明細のみです。"
+msgstr "リンク解除できるのは、新規またはキャンセル状態のオーダに関連するPOSオーダ明細のみです。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9136,13 +9136,13 @@ msgstr "セッションが開いている間は、POSカテゴリを削除する
 #. odoo-python
 #: code:addons/point_of_sale/models/ir_sequence.py:0
 msgid "You cannot delete a sequence used in an active session: %s"
-msgstr ""
+msgstr "アクティブなセッションで使用されているシーケンスは削除できません: %s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "You cannot delete a preset that is linked to a POS configuration."
-msgstr ""
+msgstr "POS 設定にリンクされているプリセットは削除できません。"
 
 #. module: point_of_sale
 #. odoo-python

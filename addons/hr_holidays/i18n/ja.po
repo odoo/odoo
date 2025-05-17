@@ -124,7 +124,7 @@ msgstr "%(label)s 戻り予定: %(date)s"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s."
-msgstr "%(leave_name)sは以下の理由で取消されました: <br/> %(reason)s"
+msgstr "%(leave_name)sは以下の理由でキャンセルされました: <br/> %(reason)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -431,7 +431,7 @@ msgstr "<strong>部署と従業員</strong>"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "A cancelled leave cannot be modified."
-msgstr "取消済の休暇は変更できません。"
+msgstr "キャンセル済の休暇は変更できません。"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
@@ -1243,12 +1243,12 @@ msgstr "キャンセル"
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Cancel Time Off"
-msgstr "休暇を取消"
+msgstr "休暇をキャンセル"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_cancel_leave
 msgid "Cancel Time Off Wizard"
-msgstr "休暇ウィザード取消"
+msgstr "休暇ウィザードキャンセル"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__cancel
@@ -1264,7 +1264,7 @@ msgstr "休暇ウィザード取消"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Cancelled"
-msgstr "取消済"
+msgstr "キャンセル済"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3088,7 +3088,7 @@ msgstr "休暇割当を最終確定できるのは、休暇管理者またはマ
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a manager can modify a canceled leave."
-msgstr "取消済休暇を変更できるのはマネジャーのみです。"
+msgstr "キャンセル済休暇を変更できるのはマネジャーのみです。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3546,7 +3546,7 @@ msgstr "一部の休暇は、どの割当にもリンクできません。それ
 msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
-msgstr "削除しようとしている休暇累積プランの中には、既存の割当にリンクされているものがあります。まず、それらを削除または取消して下さい。"
+msgstr "削除しようとしている休暇累積プランの中には、既存の割当にリンクされているものがあります。まず、それらを削除またはキャンセルして下さい。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_hours
@@ -3848,7 +3848,7 @@ msgstr "休暇は自動的に承認されました"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "The time off has been cancelled: %s"
-msgstr "休暇が取消されました: %s"
+msgstr "休暇がキャンセルされました: %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -3878,7 +3878,7 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, delete and create a new one."
 msgstr ""
-"この割当は一度実行されているため、どのような変更を加えても、その従業員に割当てられた日数には反映されません。割当の設定を変更する必要がある場合は、取消して新しい割当を作成して下さい。"
+"この割当は一度実行されているため、どのような変更を加えても、その従業員に割当てられた日数には反映されません。割当の設定を変更する必要がある場合は、キャンセルして新しい割当を作成して下さい。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -3931,7 +3931,7 @@ msgstr "現在の状態では、この変更は許可されていません。"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "This time off cannot be cancelled."
-msgstr "この休暇は取消できません。"
+msgstr "この休暇はキャンセルできません。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -4132,7 +4132,7 @@ msgstr "休暇."
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_cron_cancel_invalid_ir_actions_server
 msgid "Time Off: Cancel invalid leaves"
-msgstr "休暇: 無効な休暇を取消"
+msgstr "休暇: 無効な休暇をキャンセル"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -4552,7 +4552,7 @@ msgstr "このフィールドを選択すると、年間累計休暇数合計が
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Why do you want to cancel this approved time off ?"
-msgstr "承認済の休暇の取消理由は何ですか？"
+msgstr "承認済の休暇のキャンセル理由は何ですか？"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_work_accident
@@ -4644,7 +4644,8 @@ msgstr "過去に遡って累積を開始することはできません。"
 msgid ""
 "You can only cancel your own leave. You can cancel a leave only if this "
 "leave is approved, validated or refused."
-msgstr "自分自身の休暇申請のみ取消できます。また、休暇が「承認済」「最終確定済」または「却下済」の状態である場合に限り、取消が可能です。"
+msgstr ""
+"自分自身の休暇申請のみキャンセルできます。また、休暇が「承認済」「最終確定済」または「却下済」の状態である場合に限り、キャンセルが可能です。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4712,14 +4713,14 @@ msgstr "休暇管理者によって最終確定された休暇割当を却下す
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't reset a leave. Cancel/delete this one and create an other"
-msgstr "休暇をリセットすることはできません。この休暇を取消/削除し、別の休暇を作成してください。"
+msgstr "休暇をリセットすることはできません。この休暇をキャンセル/削除し、別の休暇を作成してください。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "You can't reset an allocation. Cancel/delete this one and create an other"
-msgstr "休暇割当をリセットすることはできません。この休暇割当を取消/削除し、別の休暇を作成してください。"
+msgstr "休暇割当をリセットすることはできません。この休暇割当をキャンセル/削除し、別の休暇を作成してください。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4859,7 +4860,7 @@ msgstr "選択した頻度が正しくありません。次のいずれかの頻
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 msgid "Your time off has been cancelled."
-msgstr "あなたの休暇が取消されました。"
+msgstr "あなたの休暇がキャンセルされました。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form

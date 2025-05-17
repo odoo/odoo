@@ -4,8 +4,8 @@
 # 
 # Translators:
 # 何彬 <vnsoft.he@gmail.com>, 2025
-# Chloe Wang, 2025
 # Wil Odoo, 2025
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,6 +85,32 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or ''\"/>\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or ''\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\"><t t-out=\"client_name\">客户名称</t>您好！</t>\n"
+"                        <t t-else=\"\">您好！</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>您的订单 <t t-out=\"object.tracking_number\">...</t>（金额为 <t t-out=\"object.amount_total\">$xx.xx</t>）已获确认。<span t-if=\"object.preset_time or client.street\">订单将会在以下时间/地点准备好：</span> <span t-if=\"object.preset_time\"><t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">下午12:00</t></span> <span t-if=\"client.street\"><t t-out=\"street\">街道</t>，<t t-out=\"state\">州/省</t>，<t t-out=\"client.zip or ''\">邮递区号</t>，<t t-out=\"city\">城市</t>，<t t-out=\"country\">国家/地区</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>谢谢！</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>随函附上您的收据</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">商店名称</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -110,6 +136,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\"><t t-out=\"client_name\">客户名称</t> 您好！</t>\n"
+"                        <t t-else=\"\">您好！</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>您的订单 <t t-out=\"object.tracking_number\">...</t>（金额为 <t t-out=\"object.amount_total\">$xx.xx</t>）已获确认。<span t-if=\"object.preset_time\">订单将会在以下时间准备好：<t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">下午 12:00</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>谢谢！</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>您的收据在附件中。</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">商店名称</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -439,7 +485,7 @@ msgstr "发货"
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.delivery_email_template
 msgid "Delivery: Confirmation order for self"
-msgstr ""
+msgstr "送餐：确认自助订单"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
@@ -643,7 +689,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_background_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Image to be displayed in the background"
-msgstr ""
+msgstr "背景显示的图片"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -832,7 +878,7 @@ msgstr "未找到产品"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
 msgid "No, thanks"
-msgstr ""
+msgstr "不用，谢谢"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -911,7 +957,7 @@ msgstr "之后支付"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Personalize the Kiosk background"
-msgstr ""
+msgstr "个性化自助服务机背景"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1163,7 +1209,7 @@ msgstr "选择"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Self Order"
-msgstr ""
+msgstr "自助订单"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -1249,7 +1295,7 @@ msgstr "餐桌服务"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
 msgid "Session Inactive"
-msgstr ""
+msgstr "操作时段非活动中"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_background_ids

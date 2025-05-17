@@ -153,6 +153,8 @@ msgid ""
 "<b>Log internal notes</b> and use @<b>mentions</b> to notify your "
 "colleagues."
 msgstr ""
+"<b>Registre notas internas</b> y use @<b>menciones</b> para notificar a sus "
+"compañeros."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -233,6 +235,81 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            <t t-if=\"partner.name\">\n"
+"                Hola <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Hola,<br/><br/>\n"
+"            </t>\n"
+"            Tómese un momento para calificar nuestros servicios relacionados a la tarea “<strong t-out=\"object.name or ''\">Planificación y presupuesto</strong>”\n"
+"            <t t-if=\"object._rating_get_operator().name\">\n"
+"                asignada a <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                .<br/>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong>Cuéntenos su experiencia con nuestro servicio</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(haga clic en una de estas caritas)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Happy\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfecho\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Neutral\" src=\"/rating/static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Unhappy\" src=\"/rating/static/src/img/rating_1.png\" title=\"Insatisfecho\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Apreciamos sus comentarios, nos ayudan a seguir mejorando.\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Esta encuesta de satisfacción se ha enviado porque su tarea se ha movido a la etapa <b t-out=\"object.stage_id.name or ''\">En progreso</b>.</span>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Esta encuesta de satisfacción se envía <b t-out=\"object.project_id.rating_status_period or ''\">semanalmente</b> mientras la tarea se encuentre en la etapa <b t-out=\"object.stage_id.name or ''\">En progreso</b>.</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td><br/>Saludos cordiales,</td></tr>\n"
+"        <tr><td>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">SuCompañía</t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@sucompania.com</a>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.company_id.website\">\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http://www.ejemplo.com</a>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -272,6 +349,9 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Neutral\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg < 3.66\" title=\"Satisfecho\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Neutral\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg >= 2.33\" title=\"Insatisfecho\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -418,7 +498,7 @@ msgstr "<strong>Hito:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Priority:</strong>"
-msgstr ""
+msgstr "<strong>Prioridad:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -587,7 +667,7 @@ msgstr "Añadir hitos"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
 msgid "Add Sub-task"
-msgstr ""
+msgstr "Añadir subtarea"
 
 #. module: project
 #. odoo-javascript
@@ -972,19 +1052,19 @@ msgstr "Calificación media (1-5)"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Happy"
-msgstr ""
+msgstr "Calificación media: Satisfecho"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Neutral"
-msgstr ""
+msgstr "Calificación media: Neutral"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Unhappy"
-msgstr ""
+msgstr "Calificación media: Insatisfecho"
 
 #. module: project
 #. odoo-javascript
@@ -1204,7 +1284,7 @@ msgstr "Compañía"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__done
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__done
 msgid "Complete"
-msgstr ""
+msgstr "Completado"
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -1279,7 +1359,7 @@ msgstr "Convertir en tareas/subtareas "
 #. module: project
 #: model:ir.actions.server,name:project.action_server_convert_to_template
 msgid "Convert to Template"
-msgstr ""
+msgstr "Convertir en plantilla"
 
 #. module: project
 #. odoo-javascript
@@ -1950,7 +2030,7 @@ msgstr "Seguir"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comment on tasks in your projects"
-msgstr ""
+msgstr "Siga y comente las tareas de sus proyectos"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
@@ -2875,7 +2955,7 @@ msgstr "No se encontraron etiquetas. ¡Creemos una!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_task_templates_action
 msgid "No task templates found. Let's create one!"
-msgstr ""
+msgstr "No se han encontrado plantillas de tareas. Creemos una."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3253,7 +3333,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Private tasks cannot be converted into templates"
-msgstr ""
+msgstr "Las tareas privadas no se pueden convertir en plantillas"
 
 #. module: project
 #. odoo-javascript
@@ -3418,13 +3498,13 @@ msgstr "Tareas del proyecto"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Project: %(project_name)s"
-msgstr ""
+msgstr "Proyecto: %(project_name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Project: %(project_name)s, Stage: %(stage_name)s"
-msgstr ""
+msgstr "Proyecto: %(project_name)s, Etapa: %(stage_name)s"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
@@ -3805,6 +3885,8 @@ msgid ""
 "Save time by using task templates with pre-filled details.<br>\n"
 "                    Standardize workflows and ensure consistency across tasks."
 msgstr ""
+"Ahorre tiempo y use plantillas de tareas con datos ya rellenados..<br>\n"
+"                    Estandarice los flujos de trabajo y garantice la coherencia entre las tareas."
 
 #. module: project
 #. odoo-javascript
@@ -4311,7 +4393,7 @@ msgstr "Etapas de la tarea"
 #: model:ir.actions.act_window,name:project.project_task_templates_action
 #: model:ir.ui.menu,name:project.project_menu_config_task_templates
 msgid "Task Templates"
-msgstr ""
+msgstr "Plantillas de tareas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4356,7 +4438,7 @@ msgstr "Tarea cancelada "
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/actions/client_actions.js:0
 msgid "Task converted to template"
-msgstr ""
+msgstr "Tarea convertida en plantilla"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -4441,7 +4523,7 @@ msgstr "Plantilla"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Template converted back to regular task"
-msgstr ""
+msgstr "Plantilla convertida en tarea regular"
 
 #. module: project
 #. odoo-javascript
@@ -4732,6 +4814,7 @@ msgid ""
 "This task is already a template. Do you want to convert it back to a regular"
 " task?"
 msgstr ""
+"Esta tarea ya es una plantilla. ¿Desea convertirla en una tarea regular?"
 
 #. module: project
 #. odoo-javascript
@@ -4990,7 +5073,7 @@ msgstr "Dejar de seguir"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Unhappy face"
-msgstr ""
+msgstr "Cara insatisfecha"
 
 #. module: project
 #. odoo-python
@@ -5258,7 +5341,7 @@ msgstr "¿Desea desarchivar también todas las tareas de estas etapas?"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
 msgid "Write a task name"
-msgstr ""
+msgstr "Escriba un nombre para la tarea"
 
 #. module: project
 #. odoo-javascript
@@ -5627,7 +5710,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "{{0}} Milestones reached out of {{1}}"
-msgstr ""
+msgstr "{{0}} hitos alcanzados de {{1}}"
 
 #. module: project
 #. odoo-python

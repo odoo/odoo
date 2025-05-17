@@ -3,8 +3,8 @@
 # 	* stock
 # 
 # Translators:
-# Manon Rondou, 2025
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-06 09:27+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +52,21 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    Si plusieurs produits partagent le même préfixe, ils partageront la même séquence. Sinon, la séquence sera propre à chaque produit.\n"
+"\n"
+"    * Légende (pour le préfixe) :\n"
+"    - Année en cours avec siècle : %(year)s\n"
+"    - Année en cours sans siècle : %(y)s\n"
+"    - Mois : %(month)s\n"
+"    - Jour : %(day)s\n"
+"    - Jour de l’année : %(doy)s\n"
+"    - Semaine de l’année : %(woy)s\n"
+"    - Jour de la semaine (0 : Lundi) : %(weekday)s\n"
+"    - Heure 00->24 : %(h24)s\n"
+"    - Heure 00->12 : %(h12)s\n"
+"    - Minute : %(min)s\n"
+"    - Seconde : %(sec)s\n"
 
 #. module: stock
 #. odoo-python
@@ -1049,7 +1064,7 @@ msgstr "Activités"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Activities of"
-msgstr ""
+msgstr "Activités de"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_exception_decoration
@@ -8553,6 +8568,8 @@ msgstr "Montrer les transferts"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Afficher tous les enregistrements dont la date de la prochaine activité est "
+"dépassée"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan

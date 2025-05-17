@@ -590,6 +590,18 @@ msgid ""
 "                                        notifying all followers. It will appear in the messaging history.\n"
 "                                    </span>"
 msgstr ""
+"<span invisible=\"mail_post_method != 'email'\">\n"
+"                                        該訊息將作為電子郵件發送給範本的收件人，\n"
+"                                        並且不會出現在訊息歷史記錄中。\n"
+"                                    </span>\n"
+"                                    <span invisible=\"mail_post_method != 'note'\">\n"
+"                                        該訊息將作為內部註釋發布，內部用戶可以在\n"
+"                                        訊息歷史記錄中看到。\n"
+"                                    </span>\n"
+"                                    <span invisible=\"mail_post_method != 'comment'\">\n"
+"                                        該訊息將作為記錄上的訊息發布，\n"
+"                                        通知所有追蹤者。它將出現在訊息歷史記錄中。\n"
+"                                    </span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert

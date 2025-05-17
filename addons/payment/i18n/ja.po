@@ -687,12 +687,12 @@ msgstr "キャンセル"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__cancel
 msgid "Canceled"
-msgstr "取消済"
+msgstr "キャンセル済"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__cancel_msg
 msgid "Cancelled Message"
-msgstr "取消済メッセージ"
+msgstr "キャンセル済メッセージ"
 
 #. module: payment
 #. odoo-javascript
@@ -2680,7 +2680,7 @@ msgstr "支払が認証されたら表示されるメッセージ"
 #: model:ir.model.fields,help:payment.field_payment_provider__cancel_msg
 msgid ""
 "The message displayed if the order is cancelled during the payment process"
-msgstr "支払手続き中にオーダが取消された場合に表示されるメッセージ"
+msgstr "支払手続き中にオーダがキャンセルされた場合に表示されるメッセージ"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__done_msg
@@ -2819,7 +2819,7 @@ msgstr "参照%(ref)sの取引( %(amount)s用)が確定されました (%(provid
 msgid ""
 "The transaction with reference %(ref)s for %(amount)s is canceled "
 "(%(provider_name)s)."
-msgstr "取引 (参照番号:%(ref)s  金額: %(amount)s)は取消されました(%(provider_name)s)。"
+msgstr "取引 (参照番号:%(ref)s  金額: %(amount)s)はキャンセルされました(%(provider_name)s)。"
 
 #. module: payment
 #. odoo-python
@@ -3146,7 +3146,7 @@ msgstr "Xendit"
 msgid ""
 "You can't unarchive tokens linked to inactive payment methods or disabled "
 "providers."
-msgstr "非アクティブな支払方法または無効なプロバイダーにリンクされたトークンをアーカイブ取消することはできません。"
+msgstr "非アクティブな支払方法または無効なプロバイダーにリンクされたトークンをアーカイブ解除することはできません。"
 
 #. module: payment
 #. odoo-python
@@ -3160,7 +3160,7 @@ msgstr "Safariを開き、プリンタのIPアドレスに移動します。そ�
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
 msgid "You cannot delete the default payment method."
-msgstr ""
+msgstr "デフォルトの支払方法は削除できません。"
 
 #. module: payment
 #. odoo-python

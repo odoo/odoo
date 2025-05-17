@@ -592,6 +592,18 @@ msgid ""
 "                                        notifying all followers. It will appear in the messaging history.\n"
 "                                    </span>"
 msgstr ""
+"<span invisible=\"mail_post_method != 'email'\">\n"
+"                                        信息将以电子邮件的形式发送给模板的收件人，\n"
+"                                        不会出现在信息历史记录中。\n"
+"                                    </span>\n"
+"                                    <span invisible=\"mail_post_method != 'note'\">\n"
+"                                        模板的收件人，\n"
+"                                        不会出现在信息历史记录中。\n"
+"                                    </span>\n"
+"                                    <span invisible=\"mail_post_method != 'comment'\">\n"
+"                                        信息将作为内部备注发布，\n"
+"                                        内部用户可在信息历史记录中看到。\n"
+"                                    </span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -725,7 +737,7 @@ msgstr "只能在使用活动的模型上计划下一个活动。"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_role_unique_name
 msgid "A role with the same name already exists."
-msgstr ""
+msgstr "具有相同名称的角色已存在。"
 
 #. module: mail
 #. odoo-python
@@ -901,7 +913,7 @@ msgstr "活动必须链接到具有非空res_id的记录。"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_user_id_is_set_if_model
 msgid "Activities must be assigned if not attached to a document."
-msgstr ""
+msgstr "如果未将活动附在文件中，则必须分配活动。"
 
 #. module: mail
 #. odoo-javascript
