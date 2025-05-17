@@ -28,7 +28,7 @@ msgid ""
 "A partial refund is not allowed because the transaction has not yet been "
 "settled."
 msgstr ""
-"Osittaista hyvitystä ei sallita, koska tapahtumaa ei ole vielä käsitelty."
+"Osittaista hyvitystä ei sallita, koska tapahtumaa ei ole vielä selvitetty."
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -54,7 +54,7 @@ msgstr "BHARATQR"
 #. odoo-python
 #: code:addons/pos_razorpay/models/razorpay_pos_request.py:0
 msgid "Cannot decode Razorpay POS response"
-msgstr "Ei voi purkaa Razorpayn kassavastetta"
+msgstr "Ei voida koodata Razorpayn Kassajärjestelmän vastausta"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -73,7 +73,7 @@ msgid ""
 "Choose allow payment mode: \n"
 " All/Card/UPI or QR"
 msgstr ""
-"Valitse salli maksutapa:\n"
+"Valitse \"salli maksutapa\" -tila:\n"
 " Kaikki/Kortti/UPI tai QR"
 
 #. module: pos_razorpay
@@ -105,7 +105,7 @@ msgstr "Näyttönimi"
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -120,12 +120,12 @@ msgstr ""
 #. module: pos_razorpay
 #: model:ir.model,name:pos_razorpay.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Kassan maksutavat"
+msgstr "Kassajärjestelmän maksutavat"
 
 #. module: pos_razorpay
 #: model:ir.model,name:pos_razorpay.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "Kassan maksut"
+msgstr "Kassajärjestelmän maksut"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_api_key
@@ -135,18 +135,18 @@ msgstr "Razorpay API-avain"
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
 msgid "Razorpay Allowed Payment Modes"
-msgstr "Razorpay Sallitut maksutavat"
+msgstr "Razorpay, sallitut maksun tilat"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_tid
 msgid "Razorpay Device Serial No"
-msgstr "Razorpay Laitteen sarjanumero"
+msgstr "Razorpay, laitteen sarjanumero"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
 msgid "Razorpay Error"
-msgstr "Razorpay virhe"
+msgstr "Razorpay, virhe"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -164,7 +164,7 @@ msgstr ""
 msgid ""
 "Razorpay POS payment request expected errorCode not found in the response"
 msgstr ""
-"Razorpay kassamaksupyynnön odotettua errorCode-koodia ei löydy vastauksesta"
+"Razorpay kassamaksupyynnön odotettua virhekoodia ei löydy vastauksesta"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -173,14 +173,14 @@ msgid ""
 "Razorpay POS payment status request expected errorCode not found in the "
 "response"
 msgstr ""
-"Razorpay kassamaksun tilatietopyynnön odotettua errorCode-koodia ei löydy "
+"Razorpay kassamaksun tilatietopyynnön odotettua virhekoodia ei löydy "
 "vastauksesta"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid "Razorpay POS transaction canceled successfully"
-msgstr "Razorpay kassamaksutapahtuma on peruutettu onnistuneesti"
+msgstr "Razorpay, kassamaksutapahtuma on peruutettu onnistuneesti"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -191,7 +191,7 @@ msgstr "Razorpay kassamaksutapahtuma epäonnistui"
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reverse_ref_no
 msgid "Razorpay Reverse Reference No."
-msgstr "Razorpay Käänteinen viitenumero."
+msgstr "Razorpay, käänteinen viitenumero."
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_test_mode
@@ -201,7 +201,7 @@ msgstr "Razorpay-testitila"
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_username
 msgid "Razorpay Username"
-msgstr "Razorpay Käyttäjätunnus"
+msgstr "Razorpay, käyttäjätunnus"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
@@ -220,7 +220,7 @@ msgstr "Viitenumero ei täsmää"
 msgid ""
 "Related transaction has already been Refunded. Please try using another "
 "payment method."
-msgstr "Liittyvä tapahtuma on jo hyvitetty. Yritä käyttää toista maksutapaa."
+msgstr "Liittyvä tapahtuma on jo hyvitetty. Koita käyttää toista maksutapaa."
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -228,7 +228,7 @@ msgstr "Liittyvä tapahtuma on jo hyvitetty. Yritä käyttää toista maksutapaa
 msgid ""
 "Related transaction has already been voided. Please try using another "
 "payment method."
-msgstr "Liittyvä tapahtuma on jo mitätöity. Yritä käyttää toista maksutapaa."
+msgstr "Liittyvä tapahtuma on jo mitätöity. Koita käyttää toista maksutapaa."
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
@@ -257,7 +257,7 @@ msgstr "Tapahtuma epäonnistui aikakatkaisun vuoksi"
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_test_mode
 msgid "Turn it on when in Test Mode"
-msgstr "Kytke se päälle, kun se on testitilassa"
+msgstr "Kytke se päälle testitilassa"
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__upi
