@@ -1,11 +1,10 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_peppol
-#
+# 
 # Translators:
-# Jolien De Paepe, 2024
-# Wil Odoo, 2024
 # Manon Rondou, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,8 +26,6 @@ msgid ""
 "<br/>\n"
 "                                In Belgium, electronic invoicing will be <u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
-"<br/>\n"
-"                                En Belgique, la facturation électronique sera <u>obligatoire dès janvier 2026</u> - n'attendez plus pour vous enregistrer."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -37,9 +34,6 @@ msgid ""
 "                            This invoice has also been <b style=\"color: $o-enterprise-action-color\">sent via Peppol</b>.\n"
 "                        </i>"
 msgstr ""
-"<i class=\"text-muted\" style=\"min-width: 590px;\">\n"
-"                            Cette facture a également été <b style=\"color: $o-enterprise-action-color\">envoyée via Peppol</b>.\n"
-"                        </i>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -386,7 +380,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid ""
 "In demo mode sending invoices is simulated.\n"
 "                                There will be no communication with the Peppol network."
@@ -1156,13 +1150,16 @@ msgid "Your registration should be activated within a day."
 msgstr "Votre inscription devrait être activée dans la journée."
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "for validation purposes"
+msgstr "pour validation"
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "to send invoices, but this one <b style=\"color: $o-enterprise-action-"
 "color;\">could not be sent via Peppol</b>."
 msgstr ""
-"pour envoyer ses factures, mais celle-ci <b style=\"color: $o-enterprise-action-"
-"color;\">n'a pas pu être envoyée via Peppol</b>."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
