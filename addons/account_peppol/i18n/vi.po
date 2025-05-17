@@ -69,10 +69,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
-"                            If you need a Peppol compliant software, we recommend"
+"                                In Belgium, electronic invoicing is <u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
-"<br/>\n"
-"                            Nếu bạn cần phần mềm tuân thủ Peppol, chúng tôi khuyên bạn nên"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -486,14 +484,6 @@ msgid ""
 msgstr "Nếu bạn muốn Peppol xuất hóa đơn, cấu hình của bạn phải hợp lệ."
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"In Belgium, electronic invoicing will be <u>mandatory as of January "
-"2026</u>."
-msgstr ""
-"Tại Bỉ, việc lập hóa đơn điện tử sẽ <u>bắt buộc kể từ tháng 1 năm 2026</u>."
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
 msgstr "Sổ nhật ký hoá đơn đến"
@@ -634,24 +624,6 @@ msgstr "PEPPOL: cập nhật trạng thái thông báo"
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "PEPPOL: update participant status"
 msgstr "PEPPOL: cập nhật trạng thái đối tượng tham gia"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
-"invoice on Peppol.</b>"
-msgstr ""
-"PS: <b style=\"color: $o-enterprise-action-color;\">Chúng tôi không gửi hóa "
-"đơn của bạn trên Peppol.</b>"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
-"color\">sent on Peppol</b>."
-msgstr ""
-"PS: Hóa đơn này cũng <b style=\"color: $o-enterprise-action-color\">đã được "
-"gửi trên Peppol</b>."
 
 #. module: account_peppol
 #. odoo-python
@@ -1013,6 +985,11 @@ msgid "The unique id that identifies this user, typically the vat"
 msgstr "ID duy nhất định danh người dùng này, thường là vat"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "This invoice has also been"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "This will delete your Peppol registration."
 msgstr "Thao tác này sẽ xóa đăng ký Peppol của bạn."
@@ -1207,3 +1184,23 @@ msgstr "Đăng ký của bạn sẽ được kích hoạt trong vòng một ngà
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__invoice_sending_method__peppol
 msgid "by Peppol"
 msgstr "bởi Peppol"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "could not be sent via Peppol"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "sent via Peppol"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "to send invoices, but this one"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "uses"
+msgstr ""

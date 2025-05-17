@@ -254,13 +254,13 @@ msgstr "%s (kopie)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%s - private part"
-msgstr ""
+msgstr "%s - soukromá část"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%s - private part (taxes)"
-msgstr ""
+msgstr "%s - soukromá část (daně)"
 
 #. module: account
 #. odoo-python
@@ -284,7 +284,7 @@ msgstr "(Ne)blokovaná platba"
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "(copy)"
-msgstr "(kopírovat)"
+msgstr "(kopie)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -964,7 +964,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "<span class=\"o_form_label o_td_label\">Match with</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label o_td_label\">Shoda s</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -1471,6 +1471,8 @@ msgid ""
 "<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
 "disabled again if there are any existing journal items."
 msgstr ""
+"<strong>Varování:</strong> Jakmile je auditní stopa povolena, nelze ji znovu"
+" zakázat, pokud existují nějaké položky deníku."
 
 #. module: account
 #. odoo-python
@@ -1516,6 +1518,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"Bankovní účet s číslem účtu %(number)s již existuje pro partnera "
+"%(partner)s, ale je archivován. Zrušte jej z archivu."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1535,6 +1539,9 @@ msgid ""
 "                occurring over a given period of time on a credit account. You\n"
 "                should receive this periodically from your bank."
 msgstr ""
+"Úvěrový výpis je souhrn všech finančních transakcí\n"
+"                provedených v daném období na úvěrovým účtu.\n"
+"                Tento výpis byste měli pravidelně dostávat od své banky."
 
 #. module: account
 #. odoo-python
@@ -1609,7 +1616,7 @@ msgstr ""
 msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
-msgstr ""
+msgstr "Platbu s neuhrazeným účtem není možné potvrdit bez účetního záznamu."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -1856,7 +1863,7 @@ msgstr "Účetní zámek vyjímka"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_map
 msgid "Account Map"
-msgstr ""
+msgstr "Mapa účtu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
@@ -1910,7 +1917,7 @@ msgstr "Účet závazků"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "Zástupný znak pro prefix účtu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -2047,7 +2054,7 @@ msgstr "Jméno majitele účtu, pokud se liší od jména držitele účtu"
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
 msgid "Account merge wizard"
-msgstr ""
+msgstr "Průvodce sloučením účtů"
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard_line
@@ -2112,7 +2119,7 @@ msgstr "Účet, používaný k přeúčtování nákladů za dané období"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__non_deductible_account_id
 msgid "Account used to register the private part of mixed expenses."
-msgstr ""
+msgstr "Účet používaný k evidenci soukromé části smíšených výdajů."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -3033,7 +3040,7 @@ msgid ""
 "does not allow any exception."
 msgstr ""
 "Všechny záznamy do tohoto data včetně budou odloženy na pozdější datum v "
-"souladu s pořadím v deníku. Datum uzavěrky je nevratné a neumožňuje žádnou "
+"souladu s pořadím v deníku. Datum uzávěrky je nevratné a neumožňuje žádnou "
 "výjimku."
 
 #. module: account
@@ -3042,6 +3049,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
+"Všechny záznamy do tohoto data včetně budou odloženy na pozdější datum v "
+"souladu s pořadím v deníku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -3079,6 +3088,8 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Veškeré nákupy zaznamenané před tímto datem včetně budou odloženy na "
+"pozdější datum v souladu s pořadím v deníku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
@@ -3086,6 +3097,8 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Veškeré prodeje zaznamenané před tímto datem včetně budou odloženy na "
+"pozdější datum v souladu s pořadím v deníku."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
