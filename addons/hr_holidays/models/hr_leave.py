@@ -10,11 +10,12 @@ from pytz import timezone, UTC
 from markupsafe import Markup
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 from odoo import api, Command, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.date_intervals import float_to_time, HOURS_PER_DAY
+from odoo.tools.date_utils import float_to_time
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.tools.misc import format_date
 from odoo.tools.translate import _

@@ -3,7 +3,7 @@ from datetime import datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.date_intervals import float_to_time
+from odoo.tools.date_utils import float_to_time
 from odoo.tools import (
     format_date,
     format_datetime,

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
@@ -8,7 +7,7 @@ from itertools import chain
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.addons.hr_work_entry_contract.models.hr_work_intervals import WorkIntervals
+from odoo.tools.intervals import Intervals
 
 
 class HrWorkEntry(models.Model):
@@ -173,7 +172,9 @@ class HrWorkEntry(models.Model):
         return bool(outside_entries)
 
     def _to_intervals(self):
-        return WorkIntervals((w.date_start.replace(tzinfo=pytz.utc), w.date_stop.replace(tzinfo=pytz.utc), w) for w in self)
+        return Intervals(
+            ((w.date_start.replace(tzinfo=pytz.utc), w.date_stop.replace(tzinfo=pytz.utc), w) for w in self),
+            keep_distinct=True)
 
     @api.model
     def _from_intervals(self, intervals):

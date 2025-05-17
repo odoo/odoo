@@ -15,11 +15,11 @@ from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools.date_intervals import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime
+from odoo.tools.intervals import Intervals
+from odoo.tools.date_utils import float_to_time, localized, to_timezone
 from odoo.tools.float_utils import float_round
 
 from odoo.tools import date_utils, float_compare, ormcache
-from odoo.addons.hr_work_entry_contract.models.hr_work_intervals import WorkIntervals
 
 
 class ResourceCalendar(models.Model):
@@ -429,7 +429,7 @@ class ResourceCalendar(models.Model):
         result_per_resource_id = dict()
         for tz, resources in resources_per_tz.items():
             res = result_per_tz[tz]
-            res_intervals = WorkIntervals(res)
+            res_intervals = Intervals(res, keep_distinct=True)
             for resource in resources:
                 if resource and resource._is_flexible():
                 # If the resource is flexible, return the whole period from start_dt to end_dt with a dummy attendance
@@ -437,11 +437,11 @@ class ResourceCalendar(models.Model):
                         'duration_hours': (end - start).total_seconds() / 3600,
                         'duration_days': (end - start).days + 1,
                     })
-                    result_per_resource_id[resource.id] = WorkIntervals([(start, end, dummy_attendance)])
+                    result_per_resource_id[resource.id] = Intervals([(start, end, dummy_attendance)], keep_distinct=True)
                 elif resource in per_resource_result:
                     resource_specific_result = [(max(bounds_per_tz[tz][0], tz.localize(val[0])), min(bounds_per_tz[tz][1], tz.localize(val[1])), val[2])
                         for val in per_resource_result[resource]]
-                    result_per_resource_id[resource.id] = WorkIntervals(itertools.chain(res, resource_specific_result))
+                    result_per_resource_id[resource.id] = Intervals(itertools.chain(res, resource_specific_result), keep_distinct=True)
                 else:
                     result_per_resource_id[resource.id] = res_intervals
         return result_per_resource_id
@@ -480,8 +480,8 @@ class ResourceCalendar(models.Model):
         # Public leave don't have a resource_id
         domain = domain + [
             ('resource_id', 'in', [False] + [r.id for r in resources_list]),
-            ('date_from', '<=', datetime_to_string(end_dt)),
-            ('date_to', '>=', datetime_to_string(start_dt)),
+            ('date_from', '<=', end_dt.astimezone(utc).replace(tzinfo=None)),
+            ('date_to', '>=', start_dt.astimezone(utc).replace(tzinfo=None)),
         ]
 
         # retrieve leave intervals in (start_dt, end_dt)
@@ -507,8 +507,8 @@ class ResourceCalendar(models.Model):
                 else:
                     end = end_dt.astimezone(tz)
                     tz_dates[(tz, end_dt)] = end
-                dt0 = string_to_datetime(leave_date_from).astimezone(tz)
-                dt1 = string_to_datetime(leave_date_to).astimezone(tz)
+                dt0 = leave_date_from.astimezone(tz)
+                dt1 = leave_date_to.astimezone(tz)
                 if leave_resource and leave_resource._is_flexible():
                     dt0, dt1 = self._handle_flexible_leave_interval(dt0, dt1, leave)
                 result[resource.id].append((max(start, dt0), min(end, dt1), leave))
@@ -733,8 +733,8 @@ class ResourceCalendar(models.Model):
             quantity of working time expressed as days and as hours.
         """
         # naive datetimes are made explicit in UTC
-        from_datetime, dummy = make_aware(from_datetime)
-        to_datetime, dummy = make_aware(to_datetime)
+        from_datetime = localized(from_datetime)
+        to_datetime = localized(to_datetime)
 
         # actual hours per day
         if compute_leaves:
@@ -754,7 +754,8 @@ class ResourceCalendar(models.Model):
 
         Return datetime after having planned hours
         """
-        day_dt, revert = make_aware(day_dt)
+        revert = to_timezone(day_dt.tzinfo)
+        day_dt = localized(day_dt)
 
         if resource is None:
             resource = self.env['resource.resource']
@@ -799,7 +800,8 @@ class ResourceCalendar(models.Model):
 
         Returns the datetime of a days scheduling.
         """
-        day_dt, revert = make_aware(day_dt)
+        revert = to_timezone(day_dt.tzinfo)
+        day_dt = localized(day_dt)
 
         # which method to use for retrieving intervals
         if compute_leaves:
