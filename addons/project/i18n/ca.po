@@ -31,7 +31,7 @@
 # marcescu, 2024
 # Ivan Espinola, 2024
 # Josep Anton Belchi, 2024
-# Xavier, 2024
+# Harcogourmet, 2024
 # Wil Odoo, 2025
 # Santiago Payà <santiagopim@gmail.com>, 2025
 # Noemi Pla, 2025
@@ -40,7 +40,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-05-14 20:46+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -450,6 +450,16 @@ msgid ""
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Estimat <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>:<br/>\n"
+"    És per a mi un plaer comunicar-li que hem completat amb èxit el projecte «<strong t-out=\"object.name or ''\">Renovacions</strong>».\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Ha rebut aquest correu perquè el seu projecte s'ha mogut a l'etapa <b t-out=\"object.stage_id.name or ''\">Finalitzat</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -5772,12 +5782,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as complete."
-msgstr ""
-
-#. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
-msgid "state.message"
 msgstr ""
 
 #. module: project

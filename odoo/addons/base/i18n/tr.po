@@ -46,8 +46,8 @@
 # Cengiz Cokay Global Nonwoven, 2025
 # Hakan Türkün, 2025
 # Ayhan Kızıltan, 2025
-# Deniz Guvener, 2025
 # Wil Odoo, 2025
+# Deniz Guvener, 2025
 # 
 msgid ""
 msgstr ""
@@ -55,7 +55,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-13 15:13+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Deniz Guvener, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -369,10 +369,12 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Bu modül Satış Noktası'na restoran yönetimine özgü çeşitli özellikler ekler:\n"
-"- Fatura Yazdırma: Sipariş ödenmeden önce bir makbuz yazdırmanıza izin verir\n"
-"- Fatura Bölme: Bir siparişi farklı siparişlere bölmenizi sağlar\n"
-"- Mutfak Siparişi Baskısı: Mutfak veya çubuk yazıcılarda sipariş güncellemelerini yazdırmanıza izin verir\n"
+"Bu modül, restoran yönetimine özel olarak tasarlanmış birkaç özelliği Satış Noktası (PoS) sistemine ekler:\n"
+"- Fatura Yazdırma: Sipariş ödemesi alınmadan önce fiş yazdırılmasına olanak tanır\n"
+"- Fatura Bölme: Bir siparişin birden fazla siparişe bölünmesini sağlar\n"
+"- Mutfak Siparişi Yazdırma: Sipariş güncellemelerinin mutfak veya bar yazıcısına gönderilmesini sağlar\n"
+" \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -1853,6 +1855,17 @@ msgid ""
 "* Quick payments by swiping, scanning, or tapping your credit/debit card or UPI QR code at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, RuPay.\n"
 msgstr ""
+"\n"
+"Pine Labs POS ödemelerine izin verin\n"
+"==============================\n"
+"\n"
+"Bu modüle yalnızca Hindistan rupisi kullanan şirketler erişebilir. \n"
+"Müşterilerin siparişleri için Pine Labs POS terminalleri aracılığıyla banka / kredi kartları ve UPI kullanarak ödeme yapmalarını sağlar.\n"
+"Hareketleri işlemek için bir Pine Labs tüccar hesabı gereklidir.\n"
+"Bazı özellikler:\n"
+"\n"
+"* Ödeme terminalinde kredi/banka kartınızı veya UPI QR kodunuzu kaydırarak, tarayarak veya dokunarak hızlı ödemeler.\n"
+"* Desteklenen kartlar: Visa, MasterCard, RuPay.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_razorpay
@@ -3670,9 +3683,6 @@ msgid ""
 "that would need such functionality.\n"
 "\n"
 msgstr ""
-"\n"
-"ESC/POS Donanım Sürücüsü\n"
-"Bu modül, Odoo'nun ESC / POS uyumlu yazıcılarla baskı yapmasına ve ESC / POS kontrollü nakit çekmecelerin satış noktasında ve bu tür işlevselliğe ihtiyaç duyabilecek diğer modüllerde açılmasına olanak tanır.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_oss
@@ -4349,6 +4359,9 @@ msgid ""
 "GCC POS Localization\n"
 "=======================================================\n"
 msgstr ""
+"\n"
+"KİK POS Yerelleştirmesi\n"
+"=======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_reports_gstr
@@ -4909,16 +4922,6 @@ msgid ""
 "regular Odoo interface anymore.\n"
 "\n"
 msgstr ""
-"\n"
-"IoT Kutusu Ana Sayfası\n"
-"================\n"
-"\n"
-"Bu modül, basit bir görünüm için Odoo web arayüzünü geçersiz kılar\n"
-"İotbox'ın ne olduğunu açıklayan, durumu ve dokümanı \n"
-"nerede bulacağını gösteren ana sayfa.\n"
-"\n"
-"Bu modülü etkinleştirirseniz, artık normal Odoo arayüzüne erişemezsiniz.\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison_wishlist
@@ -6532,6 +6535,9 @@ msgid ""
 "Saudi Arabia POS Localization\n"
 "===========================================================\n"
 msgstr ""
+"\n"
+"Suudi Arabistan POS Yerelleştirmesi\n"
+"===========================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll
@@ -6836,6 +6842,9 @@ msgid ""
 "Swiss POS Localization\n"
 "=======================================================\n"
 msgstr ""
+"\n"
+"İsviçre POS Yerelleştirmesi\n"
+"=======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -7099,6 +7108,21 @@ msgid ""
 "\n"
 "    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
+"\n"
+"Bu eklenti, Fransız mevzuatı CGI madde 286, I. 3° bis kapsamında yer alan teknik gereksinimleri karşılar. Bu düzenleme, bireysel müşterilere (B2C) yönelik satış verilerinin değiştirilemezliği, güvenliği, saklanması ve arşivlenmesine ilişkin belirli kriterleri zorunlu kılar.\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Bireylere satış yapmak için Satış Noktası (PoS) uygulamasını kullanıyorsanız bu modülü yüklemeniz gerekmektedir.\n"
+"\n"
+"Modül aşağıdaki özellikleri ekler:\n"
+"\n"
+"    Değiştirilemezlik: Satış noktası siparişleri, faturalar ve yevmiye kayıtlarıyla ilgili anahtar verilerin iptal veya değişiklik yollarının devre dışı bırakılması\n"
+"\n"
+"    Güvenlik: Verilerin değiştirilemezliğini doğrulamak için zincirleme algoritması\n"
+"\n"
+"    Saklama: Günlük, aylık ve yıllık olacak şekilde dönemsel ve kümülatif toplamları hesaplayan otomatik satış kapanışları\n"
+"\n"
+"    Sertifika Erişimi: Odoo SA tarafından sağlanan ve mevzuata uygunluğu belgeleyen Zorunlu Uygunluk Sertifikası’nı indirme imkanı (yalnızca Odoo Kurumsal kullanıcıları için)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_purchase
@@ -8340,9 +8364,6 @@ msgid ""
 "This module brings the technical requirements for the new Germany regulation regarding the restaurant.\n"
 "Install this if you are using the Point of Sale app with restaurant in Germany.\n"
 msgstr ""
-"\n"
-"Bu modül, restoranla ilgili yeni Almanya yönetmeliği için teknik gereklilikleri getirmektedir.\n"
-"Almanya'daki restoranla Satış Noktası uygulamasını kullanıyorsanız bunu yükleyin.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale

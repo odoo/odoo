@@ -47,7 +47,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-05-14 20:46+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Deniz Guvener, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -846,9 +846,6 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
-"Tüm erişilebilir fiyat listeleri, eğer Muhasebe uygulamasını kullanıyorsanız"
-" ya Satış Yevmiyesinde belirlenmiş olan para birimini ya da şirketin para "
-"birimi ile aynı birimi kullanmalı."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2966,9 +2963,6 @@ msgid ""
 "These credentials are configurable in the *HR Settings* tab of the employee "
 "form."
 msgstr ""
-"Personeller, PoS oturumunda oturum açmak için rozetlerini tarayabilir veya "
-"bir PIN girebilir. Bu kimlik bilgileri, çalışan formunun *İK Ayarları* "
-"sekmesinde yapılandırılabilir."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3964,11 +3958,11 @@ msgid ""
 "For bank journal, we write to the outstanding account specified in this payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
-"Müşterinin alacak hesabını kullanmak için boş bırakın.\n"
-"Oturumu kapattıktan sonra birikmiş ödemelerin (veya Müşteriyi Tanımla doğruysa bireysel ödemenin) nerede kaydedileceği günlüğü tanımlar.\n"
-"Nakit yevmiyesi için, ekstre satırları aracılığıyla doğrudan dergideki varsayılan hesaba yazıyoruz.\n"
-"Banka yevmiyesi için, bu ödeme yönteminde belirtilen bekleyen hesaba yazarız.\n"
-"Sadece nakit ve banka yevmiyelerine izin verilir."
+"Boş bırakıldığında, müşterinin alacak hesabı kullanılır.\n"
+"Oturum kapatıldığında, biriken ödemelerin (veya “Müşteri Tanımla” seçiliyse bireysel ödemenin) muhasebeleştirileceği yevmiye burada tanımlanır.\n"
+"Nakit yevmiye için, yevmiye içerisindeki varsayılan hesaba doğrudan hareket satırı ile yazılır.\n"
+"Banka yevmiyesi için, tanımlı ödeme yöntemi içindeki geçici hesaba yazılır.\n"
+"Sadece nakit ve banka yevmiyeleri kullanılabilir."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -4069,11 +4063,6 @@ msgid ""
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
 msgstr ""
-"Satış Noktası'nda erişilebilir bir çok fiyat listesi yapın. Ayrıca "
-"kontaklarınızdan belirli müşteriler için belirli fiyat listeleri "
-"uygulayabilirsiniz (Satış sekmesinde). Geçerli olması için bu fiyat "
-"listesinin,  mevcut fiyat listesi olarak için listelenmelidir. Yoksa "
-"varsayılan fiyat listesi uygulanacaktır."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7158,8 +7147,6 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
-"Bazı siparişler yapılandırma hataları nedeniyle sunucuya gönderilemedi. "
-"Satış Noktasından çıkabilirsiniz, ancak sorun çözülmeden oturumu kapatmayın."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7169,9 +7156,6 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
-"Bazı siparişler internet bağlantısı sorunları nedeniyle sunucuya "
-"gönderilemedi. Satış Noktasından çıkabilirsiniz, ancak sorun çözülmeden "
-"oturumu kapatmayın."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7395,7 +7379,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Take Out"
-msgstr ""
+msgstr "Eve Servis"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8061,10 +8045,6 @@ msgid ""
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
-"Bu alan oturum kapatılırken satış noktası yöneticisi olmayanlar için bitiş "
-"bakiyesi ile teorik nakit arasında izin verilen en fazla farktır. Eğer bu "
-"değer aşılırsa kullanıcı oturumu kapatırken yöneticisiyle iletişime geçmesi "
-"gerektiğini söyleyen bir hata mesajı alacaktır."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -8918,10 +8898,6 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
-"Şunları yapamazsınız: arka uç arayüzünden bir pos siparişi oluşturamazsınız "
-"veya fiyat listesinin ayarını kaldıramazsınız veya Form aracıyla bir python "
-"testinde pos.order oluşturamazsınız veya PoS siparişi yoksa stüdyoda form "
-"görünümünü düzenleyebilirsiniz"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9150,12 +9126,6 @@ msgid "discount"
 msgstr "indirim"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. 0123456789"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "e.g. Cash"
 msgstr "örn. Nakit"
@@ -9179,12 +9149,6 @@ msgstr "örn: İade Politikası, Bizimle alışveriş yaptığınız için teşe
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
 msgstr "örn. Alkolsüz İçecekler"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. john.doe@mail.com"
-msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -9323,17 +9287,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "kullanma"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
-msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
-msgid ""
-"{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product "
-"lot'}}"
-msgstr ""
