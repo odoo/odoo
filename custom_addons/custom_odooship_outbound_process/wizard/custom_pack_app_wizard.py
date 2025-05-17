@@ -612,14 +612,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         _logger.info(f"[OLD LOGIC] Sending legacy payload:\n{json.dumps(payload, indent=4)}")
         self.send_payload_to_api(api_url, payload)
-
-        # Optional: update state after sending
-        picking.write({'current_state': 'pack'})
-        picking.sale_id.write({
-            'pick_status': 'packed',
-            'delivery_status': 'partial',
-            'tracking_url': 'https://auspost.com.au/mypost/track/details/placeholder'
-        })
+        #
+        # # Optional: update state after sending
+        # picking.write({'current_state': 'pack'})
+        # picking.sale_id.write({
+        #     'pick_status': 'packed',
+        #     'delivery_status': 'partial',
+        #     'tracking_url': 'https://auspost.com.au/mypost/track/details/placeholder'
+        # })
 
         return payload
 
@@ -1300,6 +1300,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
             #  DO NOT VALIDATE PICKING (no button_validate)
             picking.write({'current_state': 'pack'})
+            con_id = resp_data.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
             sale.write({
                 'carrier': carrier,
                 'pick_status': 'packed',
@@ -1307,14 +1308,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 'consignment_number': resp_data.get("order", {}).get("shipment", {}).get("carrier_details", {}).get(
                     "con_id", ""),
                 'status': label_url,
-                'tracking_url': 'https://auspost.com.au/mypost/track/details/con_id',
+                'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
             })
-            con_id = resp_data.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
             self.send_tracking_update_to_ot_orders(
                 so_number=sale.name,
                 con_id=con_id,
                 carrier=carrier,
-                origin=sale.origin or picking.origin or "N/A",
+                origin=sale.origin or "N/A",
                 tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
             )
 
@@ -1355,7 +1355,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     url=ot_orders_url,
                     headers=headers,
                     json=payload,
-                    timeout=0.5  # 500 ms timeout to avoid blocking
+                    timeout=3
                 )
             except requests.exceptions.RequestException as e:
                 _logger.warning(f"[OT_ORDERS] Tracking update skipped due to network issue: {str(e)}")
@@ -1577,6 +1577,13 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         })
         picking.write({'current_state': "pack"})
         picking.button_validate()
+        self.send_tracking_update_to_ot_orders(
+            so_number=sale_order.name,
+            con_id=tracking_number,
+            carrier=carrier_name,
+            origin=sale_order.origin or "N/A",
+            tenant_code=sale_order.tenant_code_id.name if sale_order.tenant_code_id else "N/A"
+        )
 
         _logger.info(f"Tracking and pick state updated for Order: {order_number}, Pick: {pick_number}")
 
@@ -1599,7 +1606,13 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         })
         picking.write({'current_state': "pack"})
         picking.button_validate()
-
+        self.send_tracking_update_to_ot_orders(
+            so_number=sale_order.name,
+            con_id="Manual WB",
+            carrier="Manual",
+            origin=sale_order.origin or "N/A",
+            tenant_code=sale_order.tenant_code_id.name if sale_order.tenant_code_id else "N/A"
+        )
         _logger.info(f"Manual WB tracking and pick state updated for Order: {order_number}")
 
     @api.depends("wizard_id.picking_ids")
