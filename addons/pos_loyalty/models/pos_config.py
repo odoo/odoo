@@ -25,7 +25,7 @@ class PosConfig(models.Model):
             '|', ('pos_config_ids', '=', self.id), ('pos_config_ids', '=', False),
             '|', ('date_from', '=', False), ('date_from', '<=', today),
             '|', ('date_to', '=', False), ('date_to', '>=', today)
-        ])
+        ]).filtered(lambda p: not p.limit_usage or p.sudo().total_order_count < p.max_usage)
 
     def _check_before_creating_new_session(self):
         self.ensure_one()
