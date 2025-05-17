@@ -11,7 +11,25 @@ class PosConfig(models.Model):
     # NOTE: this funtions acts as a m2m field with loyalty.program model. We do this to handle an excpetional use case:
     # When no PoS is specified at a loyalty program form, this program is applied to every PoS (instead of none)
     def _get_program_ids(self):
+<<<<<<< 7786a2d8d1e4608aa2da146c0b9d48397c7d3dcb
         return self.env['loyalty.program'].search(['&', ('pos_ok', '=', True), '|', ('pos_config_ids', '=', self.id), ('pos_config_ids', '=', False)])
+||||||| 6ebe743caf6366bf597a6db3070b00d30c1df8ee
+        today = fields.Date.context_today(self)
+        return self.env['loyalty.program'].search([
+            ('pos_ok', '=', True),
+            '|', ('pos_config_ids', '=', self.id), ('pos_config_ids', '=', False),
+            '|', ('date_from', '=', False), ('date_from', '<=', today),
+            '|', ('date_to', '=', False), ('date_to', '>=', today)
+        ])
+=======
+        today = fields.Date.context_today(self)
+        return self.env['loyalty.program'].search([
+            ('pos_ok', '=', True),
+            '|', ('pos_config_ids', '=', self.id), ('pos_config_ids', '=', False),
+            '|', ('date_from', '=', False), ('date_from', '<=', today),
+            '|', ('date_to', '=', False), ('date_to', '>=', today)
+        ]).filtered(lambda p: not p.limit_usage or p.sudo().total_order_count < p.max_usage)
+>>>>>>> e5d321f4a8ab3de7ea42269a1509e966489d23da
 
     def _check_before_creating_new_session(self):
         self.ensure_one()
