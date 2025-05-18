@@ -4,10 +4,11 @@ import base64
 import json
 import psycopg2
 
-from markupsafe import Markup
+from markupsafe import Markup, escape
 from psycopg2 import IntegrityError
 import re
 from werkzeug.exceptions import BadRequest
+import logging
 
 from odoo import http, SUPERUSER_ID
 from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
@@ -18,6 +19,7 @@ from odoo.tools.misc import hmac, consteq
 from odoo.tools.translate import _, LazyTranslate
 
 _lt = LazyTranslate(__name__)
+_logger = logging.getLogger(__name__)
 
 
 class WebsiteForm(http.Controller):
@@ -66,6 +68,9 @@ class WebsiteForm(http.Controller):
                 'error': _("The form's specified model does not exist")
             })
 
+        user_email = kwargs.get("email_from") or kwargs.get("email")
+        visitor_name = kwargs.get("partner_name") or kwargs.get("contact_name") or kwargs.get("name")
+
         try:
             data = self.extract_data(model_record, kwargs)
         # If we encounter an issue while extracting data
@@ -74,6 +79,7 @@ class WebsiteForm(http.Controller):
             return json.dumps({'error_fields': e.args[0]})
 
         try:
+            data["custom"] = data["custom"].split("send_a_copy")[0].strip()
             id_record = self.insert_record(request, model_record, data['record'], data['custom'], data.get('meta'))
             if id_record:
                 self.insert_attachment(model_record, id_record, data['attachments'])
@@ -91,6 +97,25 @@ class WebsiteForm(http.Controller):
                         if not consteq(kwargs["website_form_signature"], hash_value):
                             raise AccessDenied(self.env._('invalid website_form_signature'))
                     request.env[model_name].sudo().browse(id_record).send()
+
+                try:
+                    if user_email and kwargs.get("send_a_copy", False):
+                        send_a_copy_dict = json.loads(kwargs.get("send_a_copy"))
+                        template = request.env.ref("website.email_template_form_submission")
+                        filled_values = nl2br(
+                            Markup("").join(
+                                Markup("<b>{label}:</b> {value}<br/>").format(
+                                    label=escape(key), value=escape(value)
+                                ) for key, value in send_a_copy_dict.items()
+                            )
+                        )
+                        template.sudo().with_context(
+                            filled_values=filled_values, visitor_name=visitor_name, to_mail=user_email
+                        ).send_mail(
+                            2, force_send=True, raise_exception=True
+                        )
+                except Exception:
+                    _logger.exception("Error while sending a copy of the form submission to the user")
 
         # Some fields have additional SQL constraints that we can't check generically
         # Ex: crm.lead.probability which is a float between 0 and 1

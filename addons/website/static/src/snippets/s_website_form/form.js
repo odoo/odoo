@@ -300,6 +300,10 @@ export class Form extends Interaction {
             return false;
         }
 
+        if(this.el.classList.contains("o_send_a_copy")) {
+            this._onPrepareEmailData();
+        }
+
         // Prepare form inputs
         const formFields = [];
         new FormData(this.el).forEach((value, key) => {
@@ -494,6 +498,64 @@ export class Form extends Interaction {
             delete inputEl.fileList;
         });
     }
+
+    /**
+     * @private
+     */
+    _onPrepareEmailData() {
+        const fieldEls = this.el.querySelectorAll(
+            ".s_website_form_field:not(.s_website_form_dnone):not([data-type='binary'])"
+        );
+
+        let result = {};
+
+        fieldEls.forEach((fieldEl) => {
+            const labelEl = fieldEl.querySelector("label.s_website_form_label");
+            const inputEl = fieldEl.querySelector(".s_website_form_input");
+
+            if (labelEl && inputEl) {
+                const labelContent = labelEl
+                    .querySelector(".s_website_form_label_content")
+                    ?.innerText.trim();
+                let inputValue;
+
+                if (inputEl.type === "checkbox") {
+                    const checkboxes = fieldEl.querySelectorAll("input[type='checkbox']:checked");
+                    inputValue = Array.from(checkboxes)
+                        .map((checkbox) => {
+                            const label = fieldEl.querySelector("label[for='${checkbox.id}']");
+                            return label ? label.textContent.trim() : checkbox.value;
+                        })
+                        .join(", ");
+                } else if (inputEl.type === "radio") {
+                    const radio = fieldEl.querySelector('input[type="radio"]:checked');
+                    if (radio) {
+                        const label = fieldEl.querySelector("label[for='${radio.id}']");
+                        inputValue = label ? label.textContent.trim() : radio.value;
+                    } else {
+                        inputValue = "";
+                    }
+                } else {
+                    inputValue = inputEl.value;
+                }
+
+                if (labelContent) {
+                    result[labelContent] = inputValue;
+                }
+            }
+        });
+
+        const hiddenFieldValue = JSON.stringify(result);
+        let hiddenField = this.el.querySelector("input[name='send_a_copy']");
+
+        if (!hiddenField) {
+            hiddenField = document.createElement("input");
+            hiddenField.type = "hidden";
+            hiddenField.name = "send_a_copy";
+            this.el.appendChild(hiddenField);
+        }
+        hiddenField.value = hiddenFieldValue;
+    } 
 
     checkErrorFields(errorFields) {
         let formValid = true;

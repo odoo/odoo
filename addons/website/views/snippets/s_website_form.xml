@@ -4,7 +4,7 @@
 <template id="s_website_form" name="Form">
     <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
         <div class="container-fluid">
-            <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+            <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required o_send_a_copy" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                 <div class="s_website_form_rows row s_col_no_bgcolor">
                     <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
@@ -94,10 +94,16 @@
 <template id="s_website_form_options" inherit_id="website.snippet_options">
     <!-- Extend drop locations to columns -->
     <xpath expr="//t[@t-set='so_content_addition_selector']" position="inside" t-translation="off">, .s_website_form</xpath>
-
     <xpath expr="//div" position="after">
         <!-- Form -->
         <div data-js="WebsiteFormEditor" data-selector=".s_website_form" data-target="form" data-drop-exclude-ancestor="form">
+            <we-checkbox
+                string="Send a Copy"
+                title="Email a copy of the answers to the visitor."
+                data-select-class="o_send_a_copy"
+                data-no-preview="true"
+                data-toggle-email-field="true"
+            />
             <we-select string="Marked Fields" data-name="field_mark_select">
                 <we-button data-select-class="">None</we-button>
                 <we-button data-select-class="o_mark_required" data-name="form_required_opt">Required</we-button>
