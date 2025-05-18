@@ -22,19 +22,17 @@ class AccountPaymentRegister(models.TransientModel):
         store=True,
     )
 
-    @api.depends("payment_method_line_id")
+    @api.depends("payment_method_id")
     def _compute_is_main_payment(self):
         for rec in self:
-            rec.is_main_payment = rec.payment_method_line_id.payment_method_id.code == 'payment_bundle'
+            rec.is_main_payment = rec.payment_method_id.code == 'payment_bundle'
 
-    @api.depends("main_payment_id")
-    def _compute_available_journal_ids(self):
-        """Only main payment can use the bundle journal"""
-        super()._compute_available_journal_ids()
-        for pay in self.filtered(lambda x: x.main_payment_id and x.can_edit_wizard):
-            bundle_journal_id = pay.company_id._get_bundle_journal(pay.payment_type)
-            pay.available_journal_ids = pay.available_journal_ids.filtered(
-                lambda x: x._origin.id != bundle_journal_id
+    @api.depends('main_payment_id')
+    def _compute_available_payment_method_ids(self):
+        super()._compute_available_payment_method_ids()
+        for wizard in self.filtered(lambda x: x.main_payment_id and x.can_edit_wizard):
+            wizard.available_payment_method_ids = wizard.available_payment_method_ids.filtered(
+                lambda x: x.code != 'payment_bundle'
             )
 
     @api.depends('is_main_payment')

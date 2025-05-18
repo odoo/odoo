@@ -15,19 +15,15 @@ class AccountPayment(models.Model):
         store=True,
     )
 
-    @api.depends("payment_method_line_id")
+    @api.depends("payment_method_id")
     def _compute_is_main_payment(self):
         for rec in self:
-            rec.is_main_payment = rec.payment_method_line_id.payment_method_id.code == 'payment_bundle'
+            rec.is_main_payment = rec.payment_method_id.code == 'payment_bundle'
 
-    @api.depends("main_payment_id")
-    def _compute_available_journal_ids(self):
-        super()._compute_available_journal_ids()
-        for pay in self.filtered('main_payment_id'):
-            bundle_journal_id = pay.company_id._get_bundle_journal(pay.payment_type)
-            pay.available_journal_ids = pay.available_journal_ids.filtered(
-                lambda x: x._origin.id != bundle_journal_id
-            )
+    def _get_payment_method_codes_to_exclude(self):
+        self.ensure_one()
+        to_exclude = ['payment_bundle'] if self.main_payment_id else []
+        return super()._get_payment_method_codes_to_exclude() + to_exclude
 
     @api.depends("link_payment_ids", "date", 'currency_id')
     def _compute_payment_total(self):

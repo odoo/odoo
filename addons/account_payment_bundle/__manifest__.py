@@ -15,6 +15,5 @@
         'wizard/account_payment_register_views.xml',
     ],
     'installable': True,
-    'post_init_hook': '_payment_bundle_post_init',
     'license': 'LGPL-3',
 }
