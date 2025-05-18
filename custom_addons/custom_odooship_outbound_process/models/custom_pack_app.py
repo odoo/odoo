@@ -17,13 +17,12 @@ class PackAPP(models.Model):
         comodel_name='custom.pack.app.line',
         inverse_name='pack_app_line_id',
         string='Product Lines',
-        tracking=True,
     )
     state = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress', 'In Progress'),
         ('done', 'Done'),
-    ], default='draft',string='Status', readonly=True, tracking=True)
+    ], default='draft',string='Status', readonly=True)
     automation_bulk_manual = fields.Selection([
         ('automation','Automation'),
         ('automation_bulk','Automation Bulk'),

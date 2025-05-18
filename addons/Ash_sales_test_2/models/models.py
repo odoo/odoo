@@ -165,14 +165,21 @@ class SaleOrder(models.Model):
                     'order_number': order.name,
                     'products': products_data,
                     'tenant_code':order.tenant_code_id.name,
-                    'shipping_address' : f"{order.partner_id.name},{order.partner_id.street or ''}",
+                    # 'shipping_address' : f"{order.partner_id.name},{order.partner_id.street or ''}",
+                    'name': order.partner_id.name,
+                    'street1': order.partner_id.street,
+                    'street2': order.partner_id.street2,
+                    'city': order.partner_id.city,
+                    'state': order.partner_id.state_id.name if order.partner_id.state_id else '',
+                    'country': order.partner_id.country_id.name if order.partner_id.country_id else '',
+                    'zip': order.partner_id.zip,
                 }
                 logger.info(f"Generated data to release: {data_to_send}")
                 logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
                 # Send data to external API based on env
                 release_url = (
-                    "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
+                    "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/odoo_release"
                     if is_production == 'True'
                     else "https://shiperooconnect-dev.automation.shiperoo.com/api/odoo_release"
                 )

@@ -333,7 +333,7 @@ class AutomationBulkManual(models.Model):
         #Define URL based on environment settings
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
         url_automation_putaway = (
-            "https://shiperooconnect-prod.automation.shiperoo.com/api/interface/automationputaway"
+            "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/interface/automationputaway"
             if is_production == 'True'
             else "https://shiperooconnect.automation.shiperoo.com/api/interface/automationputaway"
         )
