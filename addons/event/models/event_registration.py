@@ -5,6 +5,7 @@ import os
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.addons.event.tools.esc_label_tools import print_event_attendees, setup_printer, layout_96x82
+from odoo.osv import expression
 from odoo.tools import email_normalize, email_normalize_all, formataddr
 from odoo.exceptions import AccessError, ValidationError
 _logger = logging.getLogger(__name__)
@@ -58,7 +59,7 @@ class EventRegistration(models.Model):
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
         readonly=False, store=True)
-    event_begin_date = fields.Datetime("Event Start Date", compute="_compute_event_begin_date")
+    event_begin_date = fields.Datetime("Event Start Date", compute="_compute_event_begin_date", search="_search_event_begin_date")
     event_end_date = fields.Datetime("Event End Date", compute="_compute_event_end_date")
     event_date_range = fields.Char("Date Range", compute="_compute_date_range")
     event_organizer_id = fields.Many2one(string='Event Organizer', related='event_id.organizer_id', readonly=True)
@@ -176,6 +177,13 @@ class EventRegistration(models.Model):
     def _compute_event_begin_date(self):
         for registration in self:
             registration.event_begin_date = registration.event_slot_id.start_datetime or registration.event_id.date_begin
+
+    @api.model
+    def _search_event_begin_date(self, operator, value):
+        return expression.OR([
+            ["&", ("event_slot_id", "!=", False), ("event_slot_id.start_datetime", operator, value)],
+            ["&", ("event_slot_id", "=", False), ("event_id.date_begin", operator, value)],
+        ])
 
     @api.depends("event_id", "event_slot_id")
     def _compute_event_end_date(self):
