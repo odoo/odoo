@@ -4694,7 +4694,7 @@ class BaseModel(metaclass=MetaModel):
             if fname not in self or self._fields[fname].type != 'properties':
                 continue
             field_converter = self._fields[fname].convert_to_cache
-            to_write[fname] = dict(self[fname], **field_converter(values.pop(fname), self, validate=False))
+            to_write[fname] = dict(self[fname] or {}, **field_converter(values.pop(fname), self, validate=False))
 
         self.write(values)
         if to_write:
