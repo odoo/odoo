@@ -5,6 +5,7 @@ import { UPDATE_METHODS } from "@web/core/orm_service";
 
 export const currencyService = {
     dependencies: ["orm"],
+    async: ["reload_currencies"],
     start(env, { orm }) {
         /**
          * Reload the currencies (initially given in session_info)
@@ -23,6 +24,7 @@ export const currencyService = {
                 reloadCurrencies();
             }
         });
+        return { reloadCurrencies };
     },
 };
 
