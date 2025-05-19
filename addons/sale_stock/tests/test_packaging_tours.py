@@ -23,6 +23,8 @@ class TestPackagingTours(HttpCase):
             })]
         })
         url = self._get_product_url(product_a.product_tmpl_id.id)
-        self.env.user.write({'groups_id': [Command.link(self.env.ref('uom.group_uom').id)]})
+        self.env['res.config.settings'].create({
+            'group_uom': True,
+        }).execute()
         with mute_logger('odoo.sql_db', 'odoo.http'):
             self.start_tour(url, 'test_barcode_duplication_error', login='admin', timeout=60)
