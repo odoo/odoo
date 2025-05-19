@@ -483,8 +483,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_19_website_page_options(self):
         self.start_tour("/odoo", "website_page_options", login="admin")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_20_snippet_editor_panel_options(self):
         self.start_tour('/@/', 'snippet_editor_panel_options', login='admin')
 
