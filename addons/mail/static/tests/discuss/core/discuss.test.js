@@ -32,6 +32,9 @@ test("Member list and Pinned Messages Panel menu are exclusive", async () => {
 
 test("subscribe to known partner presences", async () => {
     patchWebsocketWorkerWithCleanup({
+        // Force update doesn't matter in this test and is non-deterministic, since the subscription
+        // content depends on whether add_channels runs first (both are debounced).
+        _forceUpdateChannels() {},
         _sendToServer({ event_name, data }) {
             if (event_name === "subscribe") {
                 step(`subscribe - [${data.channels}]`);
