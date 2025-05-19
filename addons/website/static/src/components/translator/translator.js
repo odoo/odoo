@@ -280,7 +280,11 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
                 sticky: false,
             });
         };
+        const elementsToSkip = ".carousel-control-prev, .carousel-control-next";
         for (const translationEl of $editable) {
+            if (translationEl.closest(elementsToSkip)) {
+                continue;
+            }
             if (translationEl.closest('.o_not_editable')) {
                 translationEl.addEventListener('click', (ev) => {
                     ev.stopPropagation();
