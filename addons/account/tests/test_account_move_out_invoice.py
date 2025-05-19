@@ -4777,3 +4777,17 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             "<p>Manually written terms by user</p>",
             "Narration should be preserved after partner change when invoice terms are disabled"
         )
+
+    def test_invoice_with_no_lines(self):
+        """
+        Test that previewing an invoice with no lines doesn't crash.
+        """
+        # Create invoice with no lines
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.today(),
+            'currency_id': self.currency_data['currency'].id,
+        })
+        values = invoice._get_invoice_portal_extra_values()
+        self.assertIn('payment_state', values)

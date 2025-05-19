@@ -5563,6 +5563,7 @@ class AccountMove(models.Model):
     def _get_invoice_next_payment_values(self, custom_amount=None):
         self.ensure_one()
         term_lines = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+<<<<<<< 6852ec7b57d8667fab3bb42d2e09be201eb7fe7a
         if not term_lines:
             return {}
         installments = term_lines._get_installments_data()
@@ -5586,6 +5587,17 @@ class AccountMove(models.Model):
             next_payment_reference = f"{self.name}-{not_reconciled_installments[0]['number']}"
             next_due_date = not_reconciled_installments[0]['date_maturity']
         elif epd_installment:
+||||||| 420765c787b33f79ee8814f799de721508858319
+        epd_installment = term_lines._get_epd_data()
+        discount_date = epd_installment and epd_installment['line'].discount_date
+        epd_info = {}
+        if epd_installment and discount_date:
+=======
+        epd_installment = term_lines and term_lines._get_epd_data()
+        discount_date = epd_installment and epd_installment['line'].discount_date
+        epd_info = {}
+        if epd_installment and discount_date:
+>>>>>>> 262af25101a0c8efc510ab165d9fab69838531d4
             installment_state = 'epd'
             amount_due = epd_installment['amount_residual_currency_unsigned']
             next_amount_to_pay = self.amount_residual
