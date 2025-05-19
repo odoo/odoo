@@ -57,6 +57,7 @@ class ResConfigSettings(models.TransientModel):
     stock_text_confirmation = fields.Boolean(related='company_id.stock_text_confirmation', string='Stock Text Validation with stock move', readonly=False)
     stock_confirmation_type = fields.Selection(related='company_id.stock_confirmation_type', string='Stock Text Validation type', readonly=False)
     horizon_days = fields.Float(related='company_id.horizon_days', readonly=False)
+    picking_policy = fields.Selection(related="company_id.picking_policy", readonly=False, required=True)
 
     def _compute_replenish_on_order(self):
         route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)
@@ -106,6 +107,14 @@ class ResConfigSettings(models.TransientModel):
         base_user_implied_ids = base_user.implied_ids
         if not self.group_stock_multi_locations and location_grp in base_user_implied_ids and warehouse_grp in base_user_implied_ids:
             raise UserError(_("You can't deactivate the multi-location if you have more than once warehouse by company"))
+
+        # Update all picking types of this company to keep their move_type aligned with the configured picking policy
+        picking_types = self.env['stock.picking.type'].search([
+            ('move_type', '!=', self.picking_policy),
+            ('company_id', '=', self.company_id.id)
+        ])
+        if picking_types:
+            picking_types.move_type = self.picking_policy
 
         previous_group = self.default_get(['group_stock_multi_locations', 'group_stock_production_lot', 'group_stock_tracking_lot'])
         super().set_values()

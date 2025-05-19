@@ -180,7 +180,7 @@ class PosConfig(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', default=_default_warehouse_id, ondelete='restrict')
     route_id = fields.Many2one('stock.route', string="Spefic route for products delivered later.")
     picking_policy = fields.Selection([
-        ('direct', 'As soon as possible'),
+        ('direct', 'As soon as possible, with back orders'),
         ('one', 'When all products are ready')],
         string='Shipping Policy', required=True, default='direct',
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "

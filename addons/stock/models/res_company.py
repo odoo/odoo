@@ -49,6 +49,10 @@ class ResCompany(models.Model):
     # used for sending stock text confirmation
     stock_text_confirmation = fields.Boolean("Stock Text Confirmation")
     stock_confirmation_type = fields.Selection([('sms', 'SMS')], default='sms')
+    picking_policy = fields.Selection([
+        ('direct', 'As soon as possible, with back orders'),
+        ('one', 'When all products are ready')
+    ], default='direct', required=True)
 
     def _create_transit_location(self):
         '''Create a transit location with company_id being the given company_id. This is needed

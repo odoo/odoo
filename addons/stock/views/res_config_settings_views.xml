@@ -20,6 +20,9 @@
                             <setting id="warning_info" string="Partner-Specific Instructions" help="Display instructions tailored to the customer or vendor on stock operations.">
                                 <field name="group_warning_stock"/>
                             </setting>
+                            <setting help="When to start shipping">
+                                <field name="picking_policy" string="Shipping Policy" class="o_light_label w-auto" widget="selection"/>
+                            </setting>
                             <setting id="quality_control" help="Add quality checks to your transfer operations"
                                      documentation="/applications/inventory_and_mrp/manufacturing/management/quality_control.html">
                                 <field name="module_quality_control" widget="upgrade_boolean"/>
