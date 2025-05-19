@@ -22,7 +22,6 @@
         <input type="text"
             t-else=""
             class="o_input o-global-filter-text-value text-truncate"
-            t-att-placeholder="translate(props.label)"
             t-att-value="props.value"
             t-on-change="(e) => props.onValueChanged(e.target.value)" />
     </t>
