@@ -1,4 +1,6 @@
 import { Component, useEffect, useRef } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
 
 /**
@@ -47,6 +49,7 @@ export class TourPointer extends Component {
     static height = 28; // in pixels
 
     setup() {
+        this.orm = useService("orm");
         const positionOptions = {
             margin: 6,
             onPositioned: (pointer, position) => {
@@ -175,5 +178,10 @@ export class TourPointer extends Component {
 
     get position() {
         return this.props.pointerState.position || "top";
+    }
+
+    async onStopClicked() {
+        await this.orm.call("res.users", "switch_tour_enabled", [false]);
+        browser.location.reload();
     }
 }

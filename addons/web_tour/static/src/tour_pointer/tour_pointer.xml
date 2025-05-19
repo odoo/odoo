@@ -23,7 +23,12 @@
                 class="o_tour_pointer_content rounded overflow-hidden px-3 py-2 w-100 h-100 position-relative"
                 t-att-class="{ 'invisible': !isOpen }"
             >
-                <t t-out="content" />
+                <span>
+                    <t t-out="content" />
+                </span>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-link" t-on-click="onStopClicked">Stop Tour</button>
+                </div>
             </div>
         </div>
         <div class="o_tour_dropzone position-fixed pe-none" t-if="props.pointerState.isVisible and props.pointerState.isZone" t-ref="zone" style="border: 3px dashed #714b67;"/>
