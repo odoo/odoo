@@ -16,7 +16,7 @@ const changeFirstAndSecondColumnsMobileOrder = (snippetRowSelector, snippetName)
         run: "click",
     }, {
         content: "Change the orders of the 1st and 2nd columns",
-        trigger: ":iframe .o_overlay_move_options [data-name='move_right_opt']",
+        trigger: "body .o_overlay_options button[title='Move right']",
         run: "click",
     }];
 };
@@ -176,7 +176,7 @@ registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop", {
     ...toggleMobilePreview(false),
     {
         content: "Drag a 'Text-Image' column and drop it in the same snippet",
-        trigger: ":iframe .o_overlay_move_options .o_move_handle",
+        trigger: "body .o_overlay_options .o_move_handle",
         run: `drag_and_drop ${textImageSnippetRow}`,
     },
     checkIfNoMobileOrder(textImageSnippetRow),
@@ -191,7 +191,7 @@ registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop", {
         run: "click",
     }, {
         content: "Drag the second column of 'Columns' and drop it in 'Text-Image'",
-        trigger: ":iframe .o_overlay_move_options .o_move_handle",
+        trigger: "body .o_overlay_options .o_move_handle, body .o_overlay_options .o_move_handle:not(:visible)",
         run: `drag_and_drop ${textImageSnippetRow}`,
     },
     checkIfNoMobileOrder(textImageSnippetRow),
