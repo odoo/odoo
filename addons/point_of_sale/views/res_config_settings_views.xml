@@ -353,7 +353,7 @@
                                     <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'adyen', 'config_ids': [pos_config_id], 'provider_name': 'Adyen'}" invisible="not module_pos_adyen" />
                                 </setting>
-                                <setting id="stripe_payment_terminal_setting" title="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method." string="Stripe" help="Accept payments with a Stripe payment terminal" documentation="applications/sales/point_of_sale/payment_methods/terminals/stripe.html">
+                                <setting id="stripe_payment_terminal_setting" title="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method." string="Stripe" help="Accept payments with a Stripe payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/stripe.html">
                                     <field name="module_pos_stripe"/>
                                     <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'stripe', 'config_ids': [pos_config_id], 'provider_name': 'Stripe'}" invisible="not module_pos_stripe" />
