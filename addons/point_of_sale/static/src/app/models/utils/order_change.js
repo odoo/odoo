@@ -151,9 +151,26 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     if (lastGeneralCustomerNote !== order.general_customer_note) {
         result.general_customer_note = order.general_customer_note;
     }
+<<<<<<< 1035421f9f4bd0e3533920102dc4042830fdd3cb
     const lastInternalNote = order.last_order_preparation_change.internal_note || "";
     if (lastInternalNote !== order.internal_note) {
         result.internal_note = order.internal_note;
+||||||| a4e1dc86daef9aae53e5cdd1ca546abd3d622f7d
+    const sittingMode = order.last_order_preparation_change.sittingMode;
+    if (
+        (sittingMode !== "dine in" && !order.takeaway) ||
+        (sittingMode !== "takeaway" && order.takeaway)
+    ) {
+        result.modeUpdate = true;
+=======
+    const sittingMode = order.last_order_preparation_change.sittingMode;
+    if (
+        Object.keys(order.last_order_preparation_change.lines).length &&
+        ((sittingMode !== "dine in" && !order.takeaway) ||
+            (sittingMode !== "takeaway" && order.takeaway))
+    ) {
+        result.modeUpdate = true;
+>>>>>>> 16ee003d69ed1531a2431dd9788733aeb25bb9b7
     }
     return result;
 };
