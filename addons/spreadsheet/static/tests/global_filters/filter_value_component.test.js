@@ -84,6 +84,39 @@ test("relational filter with domain", async function () {
     expect.verifySteps(["name_search"]);
 });
 
+test("Filter with showClear should display the clear icon", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "text",
+        label: "Text Filter",
+        defaultValue: "foo",
+    });
+    await mountFilterValueComponent({
+        model,
+        filter: model.getters.getGlobalFilter("42"),
+        showClear: true,
+    });
+    expect(".fa-times").toHaveCount(1);
+});
+
+test("Filter without showClear should not display the clear icon", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "text",
+        label: "Text Filter",
+        defaultValue: "foo",
+    });
+    await mountFilterValueComponent({
+        model,
+        filter: model.getters.getGlobalFilter("42"),
+    });
+    expect(".fa-times").toHaveCount(0);
+});
+
 test("relational filter with a contextual domain", async function () {
     onRpc("partner", "name_search", ({ kwargs }) => {
         expect.step("name_search");
