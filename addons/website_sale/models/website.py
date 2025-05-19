@@ -28,7 +28,9 @@ class Website(models.Model):
 
     enabled_portal_reorder_button = fields.Boolean(string="Re-order From Portal")
     salesperson_id = fields.Many2one(
-        string="Salesperson", comodel_name='res.users', domain="[('share', '=', False)]",
+        string="Salesperson",
+        comodel_name='res.users',
+        domain=[('share', '=', False)],
     )
     salesteam_id = fields.Many2one(
         string="Sales Team",
