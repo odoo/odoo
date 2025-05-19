@@ -386,6 +386,7 @@ class AccountMoveSend(models.AbstractModel):
 
         company_id = next(iter(invoices_data)).company_id
         grouped_invoices_by_report = defaultdict(dict)
+        is_send_wizard = self._name == 'account.move.send.wizard'
         for invoice, invoice_data in invoices_data.items():
             grouped_invoices_by_report[invoice_data['pdf_report']][invoice] = invoice_data
 
@@ -398,13 +399,23 @@ class AccountMoveSend(models.AbstractModel):
                 raise ValidationError(_("Cannot identify the invoices in the generated PDF: %s", ids))
 
             for invoice, invoice_data in group_invoices_data.items():
+                # For the scheduled messages to have an invoice report attached to them then we need to link the attachment to
+                # the mail.compose.message temporarily, as how it's done for the generic mail.scheduled.message.
+                if is_send_wizard and self.scheduled_date:
+                    attachment_res_model = 'mail.compose.message'
+                    attachment_res_id = 0
+                    res_field = False
+                else:
+                    attachment_res_model = invoice._name
+                    attachment_res_id = invoice.id
+                    res_field = 'invoice_pdf_report_file'
                 invoice_data['pdf_attachment_values'] = {
                     'name': invoice._get_invoice_report_filename(report=pdf_report),
                     'raw': content_by_id[invoice.id],
                     'mimetype': 'application/pdf',
-                    'res_model': invoice._name,
-                    'res_id': invoice.id,
-                    'res_field': 'invoice_pdf_report_file',  # Binary field
+                    'res_model': attachment_res_model,
+                    'res_id': attachment_res_id,
+                    'res_field': res_field,  # Binary field
                 }
 
     @api.model

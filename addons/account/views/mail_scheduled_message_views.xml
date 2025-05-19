@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        <record id="mail_scheduled_message_form_account" model="ir.ui.view">
+            <field name="name">mail.scheduled.message.view.form.account</field>
+            <field name="model">mail.scheduled.message</field>
+            <field name="inherit_id" ref="mail.mail_scheduled_message_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='subject']" position="attributes">
+                    <attribute name="readonly">is_note and from_account_move_send</attribute>
+                </xpath>
+                <xpath expr="//field[@name='body']" position="attributes">
+                    <attribute name="readonly">is_note and from_account_move_send</attribute>
+                </xpath>
+                <xpath expr="//field[@name='attachment_ids' and @widget='mail_composer_attachment_list']" position="attributes">
+                    <attribute name="invisible">is_note and from_account_move_send</attribute>
+                </xpath>
+                <xpath expr="//field[@name='attachment_ids' and @widget='mail_composer_attachment_selector']" position="attributes">
+                    <attribute name="invisible">is_note and from_account_move_send</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

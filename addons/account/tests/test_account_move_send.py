@@ -2,13 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
-from datetime import date
+from datetime import date, timedelta
 from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
+from odoo.fields import Datetime as FieldDatetime
 from odoo.tests import users, warmup, tagged, Form
 from odoo.tools import formataddr, mute_logger
 
@@ -478,7 +479,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         )
 
 
-class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
+class TestAccountMoveSendCommon(AccountTestInvoicingCommon, MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -486,6 +487,7 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
         cls.partner_a.email = "partner_a@tsointsoin"
         cls.partner_b.email = "partner_b@tsointsoin"
+        cls.reference_now = FieldDatetime.from_string('2025-05-21 12:00:00')
 
     def _assert_mail_attachments_widget(self, wizard, expected_values_list):
         self.assertEqual(len(wizard.mail_attachments_widget), len(expected_values_list))
@@ -511,6 +513,9 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
     def _get_mail_message(self, move, limit=1):
         return self.env['mail.message'].search([('model', '=', move._name), ('res_id', '=', move.id)], limit=limit)
+
+    def _get_mail_scheduled_message(self, move, limit=1):
+        return self.env['mail.scheduled.message'].search([('model', '=', move._name), ('res_id', '=', move.id)], limit=limit)
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'mail_template')
@@ -1224,3 +1229,224 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard_2 = self.create_send_and_print(move2)
         wizard_2.action_send_and_print()
         self.assertEqual(move2.message_main_attachment_id.name, f"CustomName_{move2._get_report_base_filename().replace('/', '_')}.pdf")
+
+    def test_invoice_single_scheduling(self):
+        """ Tests scheduling an invoice to be sent later by email. """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(
+            invoice,
+            sending_methods=['email'],
+            scheduled_date=FieldDatetime.to_string(self.reference_now + timedelta(days=1)),
+        )
+
+        # Cannot schedule a message without a scheduled date
+        with self.assertRaises(UserError):
+            wizard.action_schedule_message()
+
+        # Process.
+        with self.mock_datetime_and_now(self.reference_now):
+            wizard.action_schedule_message()
+        self.assertFalse(invoice.sending_data)
+        scheduled_messages = self._get_mail_scheduled_message(invoice, limit=None)
+        self.assertEqual(len(scheduled_messages), 1)
+        scheduled_messages._post_message()  # Sending invoice now
+
+        # The PDF has been successfully generated.
+        pdf_report = invoice.invoice_pdf_report_id
+        self.assertTrue(pdf_report)
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', invoice._name),
+            ('res_id', '=', invoice.id),
+            ('res_field', '=', 'invoice_pdf_report_file'),
+        ])
+        self.assertEqual(len(invoice_attachments), 1)
+        self.assertTrue(self._get_mail_message(invoice))
+
+    def test_invoice_mail_attachments_widget_in_case_of_scheduling_invoice(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+
+        # Add a new attachment on the mail_template.
+        template = invoice._get_mail_template()
+
+        wizard = self.create_send_and_print(
+            invoice,
+            sending_methods=['email'],
+            template_id=template.id,
+            scheduled_date=FieldDatetime.to_string(self.reference_now + timedelta(days=1)),
+        )
+        pdf_report_values = {
+            'mimetype': 'application/pdf',
+            'name': 'INV_2019_00001.pdf',
+            'placeholder': True,
+        }
+        self._assert_mail_attachments_widget(wizard, [pdf_report_values])
+
+        # Add a new attachment manually.
+        manual_attachment = self.env['ir.attachment'].create({'name': "manual_attachment", 'raw': b'foo'})
+        manual_attachment_values = {
+            'id': manual_attachment.id,
+            'name': manual_attachment.name,
+            'mimetype': manual_attachment.mimetype,
+            'placeholder': False,
+            'manual': True,
+        }
+        wizard.mail_attachments_widget = wizard.mail_attachments_widget + [manual_attachment_values]
+
+        # Process.
+        with self.mock_datetime_and_now(self.reference_now):
+            wizard.action_schedule_message()
+        scheduled_messages = self._get_mail_scheduled_message(invoice, limit=None)
+        self.assertEqual(len(scheduled_messages), 1)
+
+        # Add a new attachment on the scheduled message.
+        extra_attachment = self.env['ir.attachment'].create({'name': "extra_attachment", 'raw': b'bar'})
+        scheduled_messages.attachment_ids = [Command.link(extra_attachment.id)]
+
+        scheduled_messages._post_message()  # Sending invoice now
+        message = self._get_mail_message(invoice)
+        self.assertRecordValues(message.attachment_ids.sorted('name'), [
+            {
+                'name': invoice.invoice_pdf_report_id.name,
+                'datas': invoice.invoice_pdf_report_id.datas,
+            },
+            {
+                'name': extra_attachment.name,
+                'datas': extra_attachment.datas,
+            },
+            {
+                'name': manual_attachment.name,
+                'datas': manual_attachment.datas,
+            },
+        ])
+
+    def test_invoice_scheduled_messages_for_multiple_sending_methods(self):
+        """ Tests creation of multiple scheduled messages in the same invoice when the sending methods are different """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+
+        def get_default_extra_edis(self, move):
+            return {'edi1', 'edi2'}
+
+        def get_all_extra_edis(self):
+            return {
+                'edi1': {'label': 'EDI 1'},
+                'edi2': {'label': 'EDI 2'},
+            }
+
+        with (
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis', get_default_extra_edis),
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_all_extra_edis', get_all_extra_edis)
+        ):
+            wizard = self.create_send_and_print(
+                invoice,
+                sending_methods=['email'],
+                scheduled_date=FieldDatetime.to_string(self.reference_now + timedelta(days=1)),
+            )
+            # Process.
+            with self.mock_datetime_and_now(self.reference_now):
+                wizard.action_schedule_message()
+
+            # Two scheduled messages should be created, one for email and one for all the extra edis
+            scheduled_messages = self._get_mail_scheduled_message(invoice, limit=None)
+            self.assertEqual(len(scheduled_messages), 2)
+
+    def test_invoice_allow_multiple_scheduling_for_email(self):
+        """ Tests that multiple scheduled messages can be created in the same invoice when the sending method is 'email' """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(
+            invoice,
+            sending_methods=['email'],
+            scheduled_date=FieldDatetime.to_string(self.reference_now + timedelta(days=1)),
+        )
+
+        # Process.
+        with self.mock_datetime_and_now(self.reference_now):
+            wizard.action_schedule_message()
+        scheduled_messages = self._get_mail_scheduled_message(invoice, limit=None)
+        self.assertEqual(len(scheduled_messages), 1)
+
+        # Schedule again with 'email' method
+        wizard = self.create_send_and_print(
+            invoice,
+            sending_methods=['email'],
+            scheduled_date=FieldDatetime.to_string(self.reference_now + timedelta(days=1)),
+        )
+        # Process again.
+        with self.mock_datetime_and_now(self.reference_now):
+            wizard.action_schedule_message()
+        scheduled_messages = self._get_mail_scheduled_message(invoice, limit=None)
+        self.assertEqual(len(scheduled_messages), 2)
+
+    def test_invoice_restrict_multiple_scheduling_for_extra_edis(self):
+        """ Tests restriction on scheduling or sending when there is already a scheduled message for the same extra edis
+        """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+
+        def get_default_extra_edis(self, move):
+            return {'edi1', 'edi2'}
+
+        def get_all_extra_edis(self):
+            return {
+                'edi1': {'label': 'EDI 1'},
+                'edi2': {'label': 'EDI 2'},
+            }
+
+        with (
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis', get_default_extra_edis),
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_all_extra_edis', get_all_extra_edis)
+        ):
+            wizard = self.create_send_and_print(
+                invoice,
+                scheduled_date=FieldDatetime.to_string(self.reference_now + timedelta(days=1)),
+            )
+            # Process.
+            with self.mock_datetime_and_now(self.reference_now):
+                wizard.action_schedule_message()
+
+            scheduled_messages = self._get_mail_scheduled_message(invoice, limit=None)
+            self.assertEqual(len(scheduled_messages), 1)
+
+            # Scheduling again with these edis should raise UserError as those edis are already scheduled
+            wizard = self.create_send_and_print(
+                invoice,
+                scheduled_date=FieldDatetime.to_string(self.reference_now + timedelta(days=1)),
+            )
+            # Process.
+            with self.assertRaises(UserError):
+                with self.mock_datetime_and_now(self.reference_now):
+                    wizard.action_schedule_message()
+
+            # Regular sending should raise UserError as well, as those edis are already scheduled
+            with self.assertRaises(UserError):
+                wizard.action_send_and_print()
+
+            # Still only one scheduled message should be there, for all the extra edis
+            scheduled_messages = self._get_mail_scheduled_message(invoice, limit=None)
+            self.assertEqual(len(scheduled_messages), 1)
+
+    def test_proforma_pdf_when_scheduling(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(
+            invoice,
+            sending_methods=['email'],
+            scheduled_date=FieldDatetime.to_string(self.reference_now + timedelta(days=1)),
+        )
+
+        def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
+            invoice_data['error'] = {'error_title': 'test_proforma_pdf'}
+
+        # Process.
+        with patch(
+                'odoo.addons.account.models.account_move_send.AccountMoveSend._hook_invoice_document_before_pdf_report_render',
+                _hook_invoice_document_before_pdf_report_render
+        ):
+            with self.mock_datetime_and_now(self.reference_now):
+                wizard.action_schedule_message(allow_fallback_pdf=True)
+
+            self.assertFalse(invoice.sending_data)
+            scheduled_messages = self._get_mail_scheduled_message(invoice, limit=None)
+            self.assertEqual(len(scheduled_messages), 1)
+            scheduled_messages._post_message()  # Sending invoice now
+
+        # The PDF is not generated but a proforma.
+        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertEqual(invoice.message_main_attachment_id.name, 'INV_2019_00001_proforma.pdf')

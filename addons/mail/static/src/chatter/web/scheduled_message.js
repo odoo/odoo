@@ -74,12 +74,21 @@ export class ScheduledMessage extends Component {
     }
 
     onClickCancel() {
-        this.dialogService.add(ConfirmationDialog, {
-            body: _t("Are you sure you want to cancel the scheduled message?"),
-            cancel: () => {},
+        const { is_note } = this.props.scheduledMessage;
+        const dialogConfig = {
+            body: is_note
+                ? _t("Are you sure you want to cancel the scheduled log?")
+                : _t("Are you sure you want to cancel the scheduled message?"),
+            confirmLabel: is_note ? _t("Cancel Log") : _t("Cancel Message"),
             cancelLabel: _t("Close"),
+        };
+
+        this.dialogService.add(ConfirmationDialog, {
+            body: dialogConfig.body,
+            cancelLabel: dialogConfig.cancelLabel,
+            cancel: () => {},
             confirm: this.cancel.bind(this),
-            confirmLabel: _t("Cancel Message"),
+            confirmLabel: dialogConfig.confirmLabel,
         });
     }
 

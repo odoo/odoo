@@ -118,3 +118,11 @@ class AccountMoveSend(models.AbstractModel):
             attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_vals)
             res_ids = attachments.mapped('res_id')
             self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['l10n_es_edi_facturae_xml_id', 'l10n_es_edi_facturae_xml_file'])
+
+    def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
+        attachments = super()._generate_and_send_invoices(moves, from_cron, allow_raising, allow_fallback_pdf, **custom_settings)
+        if 'es_facturae' in custom_settings.get('extra_edis', []):
+            # Set partner's invoice_edi_format to 'es_facturae' after sending
+            partner = moves.commercial_partner_id
+            partner.invoice_edi_format = 'es_facturae'
+        return attachments
