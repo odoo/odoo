@@ -4443,7 +4443,7 @@ class AccountMove(models.Model):
             payment_state = 'partially_paid'
 
         term_lines = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
-        epd_installment = term_lines._get_epd_data()
+        epd_installment = term_lines and term_lines._get_epd_data()
         discount_date = epd_installment and epd_installment['line'].discount_date
         epd_info = {}
         if epd_installment and discount_date:
