@@ -116,10 +116,6 @@ export class FilterValue extends Component {
         }
     }
 
-    translate(text) {
-        return _t(text);
-    }
-
     clear(id) {
         this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id });
     }
