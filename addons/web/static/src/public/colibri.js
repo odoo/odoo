@@ -328,17 +328,16 @@ export class Colibri {
         const errors = [];
         const interaction = this.interaction;
         for (const dynamicAttr of this.dynamicAttrs) {
-            const { sel, attr, definition, initialValues } = dynamicAttr;
-            let valuePerNode;
+            let { sel, attr, definition, initialValues } = dynamicAttr;
             const nodes = this.dynamicNodes.get(sel) || [];
             if (!initialValues && nodes.length) {
-                valuePerNode = new Map();
-                dynamicAttr.initialValues = valuePerNode;
+                initialValues = new Map();
+                dynamicAttr.initialValues = initialValues;
             }
             for (const node of nodes) {
                 try {
                     const value = definition.call(interaction, node);
-                    if (!initialValues) {
+                    if (!initialValues || !initialValues.has(node)) {
                         let attrValue;
                         switch (attr) {
                             case "class":
@@ -360,7 +359,7 @@ export class Colibri {
                             default:
                                 attrValue = node.getAttribute(attr);
                         }
-                        valuePerNode.set(node, attrValue);
+                        initialValues.set(node, attrValue);
                     }
                     this.applyAttr(node, attr, value, dynamicAttr.initialValues.get(node));
                 } catch (e) {
@@ -369,22 +368,21 @@ export class Colibri {
             }
         }
         for (const tOut of this.tOuts) {
-            const { sel, definition, initialValue } = tOut;
-            let valuePerNode;
+            let { sel, definition, initialValue } = tOut;
             const nodes = this.dynamicNodes.get(sel) || [];
             if (!initialValue && nodes.length) {
-                valuePerNode = new Map();
-                tOut.initialValue = valuePerNode;
+                initialValue = new Map();
+                tOut.initialValue = initialValue;
             }
             for (const node of nodes) {
-                if (!initialValue) {
+                if (!initialValue || !initialValue.has(node)) {
                     if (!owl) {
                         owl = odoo.loader.modules.get("@odoo/owl");
                     }
                     const value = node.children.length
                         ? owl.markup(node.innerHTML)
                         : node.textContent;
-                    valuePerNode.set(node, value);
+                    initialValue.set(node, value);
                 }
                 this.applyTOut(
                     node,
@@ -411,8 +409,10 @@ export class Colibri {
                 continue;
             }
             for (const node of this.dynamicNodes.get(sel) || []) {
-                const initialValue = initialValues.get(node);
-                this.applyAttr(node, attr, initialValue);
+                if (initialValues.has(node)) {
+                    const initialValue = initialValues.get(node);
+                    this.applyAttr(node, attr, initialValue);
+                }
             }
         }
 
