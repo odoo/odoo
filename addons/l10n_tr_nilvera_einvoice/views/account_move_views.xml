@@ -17,4 +17,32 @@
             </xpath>
         </field>
     </record>
+
+    <record id="account_nilvera_view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.nilvera.invoice.select</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='accounting_date']" position="after">
+                <filter string="Nilvera Status" name="nilvera_status" context="{'group_by': 'l10n_tr_nilvera_send_status'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_nilvera_view_invoice_tree" model="ir.ui.view">
+        <field name="name">account.nilvera.invoice.list</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='abnormal_date_warning']" position="after">
+                <field name="l10n_tr_nilvera_send_status"
+                    string="Nilvera Status"
+                    widget="badge"
+                    decoration-danger="l10n_tr_nilvera_send_status == 'error'"
+                    decoration-warning="l10n_tr_nilvera_send_status in ('sent', 'waiting')"
+                    decoration-success="l10n_tr_nilvera_send_status == 'succeed'"
+                    optional="hide"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

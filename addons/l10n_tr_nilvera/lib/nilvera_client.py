@@ -10,15 +10,15 @@ _logger = logging.getLogger(__name__)
 
 def _get_nilvera_client(company, timeout_limit=None):
     return NilveraClient(
-        environment=company.l10n_tr_nilvera_environment,
+        test_environment=company.l10n_tr_nilvera_use_test_env,
         api_key=company.l10n_tr_nilvera_api_key,
         timeout_limit=timeout_limit,
     )
 
 
 class NilveraClient:
-    def __init__(self, environment=None, api_key=None, timeout_limit=None):
-        self.is_production = environment and environment == 'production'
+    def __init__(self, test_environment=False, api_key=None, timeout_limit=None):
+        self.is_production = not test_environment
         self.base_url = 'https://api.nilvera.com' if self.is_production else 'https://apitest.nilvera.com'
         self.timeout_limit = min(timeout_limit or 10, 30)
 
