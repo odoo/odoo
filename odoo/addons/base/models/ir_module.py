@@ -462,6 +462,17 @@ class IrModuleModule(models.Model):
         return self._button_immediate_function(self.env.registry[self._name].button_install)
 
     @assert_log_admin_access
+    @api.model
+    def button_reset_state(self):
+        self.search([('state', '=', 'to install')]).state = 'uninstalled'
+        self.search([('state', 'in', ('to update', 'to remove'))]).state = 'installed'
+        return True
+
+    @api.model
+    def check_module_update(self):
+        return bool(self.sudo().search_count([('state', 'in', ('to install', 'to update', 'to remove'))], limit=1))
+
+    @assert_log_admin_access
     def module_uninstall(self):
         """ Perform the various steps required to uninstall a module completely
         including the deletion of all database structures created by the module:
