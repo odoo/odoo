@@ -280,7 +280,7 @@ test("hovering to the anchor element should show the content and not when conten
     await contains("button.inc").hover();
     await animationFrame();
     expect(".o_tour_pointer_content:not(.invisible)").toHaveCount(1);
-    expect(".o_tour_pointer_content:not(.invisible)").toHaveText("content");
+    expect(".o_tour_pointer_content:not(.invisible) span").toHaveText("content");
     await contains(".other").hover();
     await animationFrame();
     expect(".o_tour_pointer_content.invisible").toHaveCount(1);
@@ -407,7 +407,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
     expect(firstOpenWidth).toBe("28px");
 
     await contains("button.inc").hover();
-    expect(".o_tour_pointer").toHaveText(content);
+    expect(".o_tour_pointer span").toHaveText(content);
     expect(".o_tour_pointer").toHaveClass("o_open");
     await contains(".interval input").hover();
     expect(".o_tour_pointer").not.toHaveClass("o_open");
@@ -419,7 +419,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
     expect(".o_tour_pointer").toHaveCount(1);
     await contains(".o_tour_pointer").hover();
     await animationFrame();
-    expect(".o_tour_pointer").toHaveText("Scroll up to reach the next step.");
+    expect(".o_tour_pointer span").toHaveText("Scroll up to reach the next step.");
     await contains(".o_tour_pointer").click();
 
     await runAllTimers();
@@ -432,7 +432,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
     await contains("button.inc").hover();
     await animationFrame();
     expect(".o_tour_pointer").toHaveClass("o_open");
-    expect(".o_tour_pointer").toHaveText(content);
+    expect(".o_tour_pointer span").toHaveText(content);
     await contains(".interval input").hover();
     const secondOpenHeight = queryFirst(".o_tour_pointer").style.height;
     const secondOpenWidth = queryFirst(".o_tour_pointer").style.width;
