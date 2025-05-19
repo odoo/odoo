@@ -449,3 +449,22 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
         })
         self.start_pos_tour('test_cash_rounding_up_with_change')
+
+    def test_remove_archived_product_from_cache(self):
+        self.pos_admin.write({
+            'group_ids': [
+                (4, self.env.ref('product.group_product_manager').id),
+            ]
+        })
+        self.env['product.product'].create({
+            'is_storable': True,
+            'name': 'A Test Product',
+            'available_in_pos': True,
+            'list_price': 1,
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_remove_archived_product_from_cache",
+            login="pos_admin"
+        )

@@ -1,5 +1,11 @@
 import { expect, test } from "@odoo/hoot";
-import { defineModels, getService, makeMockEnv, models } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    getService,
+    makeMockEnv,
+    models,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import { RPCError } from "@web/core/network/rpc";
 
 class PosSession extends models.ServerModel {
@@ -125,6 +131,7 @@ class ResPartner extends models.ServerModel {
 }
 test("don't retry sending data to the server if the reason that caused the failure is not a network error", async () => {
     defineModels({ PosSession, ResPartner });
+    onRpc("pos.session", "filter_local_data", () => ({}));
     await makeMockEnv();
 
     await expect(

@@ -29,6 +29,9 @@ class PosLoadMixin(models.AbstractModel):
             domain = AND([domain, [('write_date', '>', last_server_date)]])
         return domain
 
+    def _unrelevant_records(self):
+        return self.filtered(lambda record: not record.active).ids
+
     def _post_read_pos_data(self, data):
         return data
 

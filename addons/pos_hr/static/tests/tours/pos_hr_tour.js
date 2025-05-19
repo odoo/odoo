@@ -165,7 +165,7 @@ registry.category("web_tour.tours").add("test_change_on_rights_reflected_directl
                 trigger: ".o_tag:contains('Pos Employee1') .o_delete",
                 run: "click",
             },
-            BackendUtils.saveShopConfiguration(),
+            BackendUtils.saveConfiguration(),
             {
                 trigger: ".o_main_navbar .o-dropdown-item:contains('Dashboard')",
                 run: "click",
