@@ -43,15 +43,15 @@
             <div class="o_sidebar_section" t-if="show_contact">
                 <ul class="o_social">
                     <li class="email" t-if="o.company_id.email">
-                        <i class="fa fa-solid fa-envelope pe-2"/>
+                        <i class="fa fa-envelope pe-2"/>
                         <a t-attf-href="mailto: #{o.company_id.email}" t-field="o.company_id.email">demo@email.com</a>
                     </li>
                     <li class="phone" t-if="o.company_id.phone">
-                        <i class="fa fa-solid fa-phone pe-2"/>
+                        <i class="fa fa-phone pe-2"/>
                         <a t-attf-href="tel:#{o.company_id.phone}" t-field="o.company_id.phone">+1234567890</a>
                     </li>
                     <li class="website" t-if="o.company_id.website">
-                        <i class="fa fa-solid fa-globe pe-2"/>
+                        <i class="fa fa-globe pe-2"/>
                         <a t-attf-href="tel:#{o.company_id.website}" t-field="o.company_id.website">www.demo.com</a>
                     </li>
                 </ul>
@@ -67,7 +67,7 @@
                 <div class="o_main_panel_section">
                     <h2 class="o_main_panel_title mt-4" t-attf-style="color: #{color_secondary};">
                         <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
-                            <i class="fa fa-solid fa-briefcase"/>
+                            <i class="fa fa-briefcase"/>
                         </span>
                         <span t-out="line_type">Experience</span>
                     </h2>
@@ -97,7 +97,7 @@
             <div class="o_main_panel_section" t-if="skill_type_language">
                 <h2 class="o_main_panel_title" t-attf-style="color: #{color_secondary};">
                     <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
-                        <i class="fa fa-solid fa-language"/>
+                        <i class="fa fa-language"/>
                     </span>
                     Languages
                 </h2>
@@ -119,7 +119,7 @@
             <div class="o_main_panel_section">
                 <h2 class="o_main_panel_title" t-attf-style="color: #{color_secondary};">
                     <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
-                        <i class="fa fa-solid fa-rocket"/>
+                        <i class="fa fa-rocket"/>
                     </span>
                     Skills
                 </h2>
