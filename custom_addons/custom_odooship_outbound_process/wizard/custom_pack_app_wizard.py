@@ -955,7 +955,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         # picking.button_validate()
         # Ensure move lines are correctly updated before validation
         picking.action_assign()
-        for move in picking.move_lines:
+        for move in picking.move_ids:
             for line in move.move_line_ids:
                 _logger.info(
                     f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
@@ -1590,7 +1590,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         picking.write({'current_state': "pack"})
         # Ensure move lines are correctly updated before validation
         picking.action_assign()
-        for move in picking.move_lines:
+        for move in picking.move_ids:
             for line in move.move_line_ids:
                 _logger.info(
                     f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
@@ -1601,7 +1601,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         # picking.button_validate()
         # Ensure move lines are correctly updated before validation
         picking.action_assign()
-        for move in picking.move_lines:
+        for move in picking.move_ids:
             for line in move.move_line_ids:
                 _logger.info(
                     f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
@@ -1641,7 +1641,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         # picking.button_validate()
         # Ensure move lines are correctly updated before validation
         picking.action_assign()
-        for move in picking.move_lines:
+        for move in picking.move_ids:
             for line in move.move_line_ids:
                 _logger.info(
                     f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
