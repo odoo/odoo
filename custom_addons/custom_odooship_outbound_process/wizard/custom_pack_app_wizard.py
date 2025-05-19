@@ -1010,7 +1010,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 origin=sale.origin or picking.origin or "N/A",
                 tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
             )
-            return True
+            return payload
 
         _logger.info(f"[ONETRAKER][SINGLE PICK PAYLOAD] Sending payload:\n{json.dumps(payload, indent=4)}")
 
