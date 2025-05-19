@@ -15,6 +15,8 @@ import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_ut
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
 import { generatePreparationReceiptElement } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
+import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
+import * as BackendUtils from "@point_of_sale/../tests/pos/tours/utils/backend_utils";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     steps: () =>
@@ -763,6 +765,35 @@ registry.category("web_tour.tours").add("test_product_long_press", {
             ProductScreen.longPressProduct("Test Product"),
             Dialog.is(),
             Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_remove_archived_product_from_cache", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("A Test Product"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            Chrome.clickMenuOption("Close Register"),
+            Dialog.confirm("Close Register"),
+            Utils.selectButton("Backend"),
+            BackendUtils.openProductForm("A Test Product"),
+            {
+                trigger: `.fa-cog`,
+                run: "click",
+            },
+            {
+                trigger: ".dropdown-item:contains('Archive')",
+                run: "click",
+            },
+            Utils.selectButton("Archive"),
+            BackendUtils.openShopSession("Shop"),
+            Dialog.confirm("Open Register"),
+            ProductScreen.productIsDisplayed("A Test Product").map(negateStep),
         ].flat(),
 });
 
