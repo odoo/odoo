@@ -16,12 +16,13 @@
                         </button>
                     </div>
                 </t>
-                <LotAutoComplete
+                <AutoComplete
                     placeholder.translate="Lot/Serial number"
                     sources="getSources()"
                     value="state.value"
                     autoSelect="true"
                     autofocus="true"
+                    input="inputRef"
                 />
             </div>
             <t t-set-slot="footer">

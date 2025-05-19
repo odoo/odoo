@@ -34,7 +34,7 @@ import {
 } from "@website/js/text_processing";
 import { throttleForAnimation } from "@web/core/utils/timing";
 
-import { Component, markup, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, markup, useRef, useState } from "@odoo/owl";
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
@@ -154,31 +154,6 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
         this._super(...arguments);
     }
 });
-
-class GoogleFontAutoComplete extends AutoComplete {
-    setup() {
-        super.setup();
-        this.inputRef = useRef("input");
-        this.sourcesListRef = useRef("sourcesList");
-        useEffect((el) => {
-            el.setAttribute("id", "google_font");
-        }, () => [this.inputRef.el]);
-    }
-
-    get dropdownOptions() {
-        return {
-            ...super.dropdownOptions,
-            position: "bottom-fit",
-        };
-    }
-
-    onInput(ev) {
-        super.onInput(ev);
-        if (this.sourcesListRef.el) {
-            this.sourcesListRef.el.scrollTop = 0;
-        }
-    }
-}
 
 const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     events: Object.assign({}, SelectUserValueWidget.prototype.events || {}, {
@@ -338,7 +313,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     async _onAddFontClick(ev) {
         const addFontDialog = class extends Component {
             static template = "website.dialog.addFont";
-            static components = { GoogleFontAutoComplete, Dialog };
+            static components = { AutoComplete, Dialog };
             static props = { close: Function, title: String, onClickSave: Function };
             state = useState({
                 valid: true, loading: false,
