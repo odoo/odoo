@@ -996,7 +996,20 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 }
             }
             _logger.warning("[INTERNATIONAL] Skipping label print for international order.")
-            self.handle_manual_wb_update(order_number=sale.name, pick_number=picking.name)
+            sale.write({
+                'consignment_number': "Manual WB",
+                'pick_status': "packed",
+                'tracking_url': "MANUAL",
+            })
+            picking.write({'current_state': "pack"})
+            picking.button_validate()
+            self.send_tracking_update_to_ot_orders(
+                so_number=sale.name,
+                con_id="INTL",
+                carrier=carrier,
+                origin=sale.origin or picking.origin or "N/A",
+                tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
+            )
             return True
 
         _logger.info(f"[ONETRAKER][SINGLE PICK PAYLOAD] Sending payload:\n{json.dumps(payload, indent=4)}")
@@ -1362,7 +1375,20 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 }
             }
             _logger.warning("[INTERNATIONAL] Skipping label print for international order.")
-            self.handle_manual_wb_update(order_number=sale.name, pick_number=picking.name)
+            sale.write({
+                'consignment_number': "Manual WB",
+                'pick_status': "packed",
+                'tracking_url': "MANUAL",
+            })
+            picking.write({'current_state': "pack"})
+            picking.button_validate()
+            self.send_tracking_update_to_ot_orders(
+                so_number=sale.name,
+                con_id="INTL",
+                carrier=carrier,
+                origin=sale.origin or picking.origin or "N/A",
+                tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
+            )
             return payload
 
         headers = {
