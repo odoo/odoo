@@ -118,10 +118,10 @@ class Properties(Field):
         if not value:
             return None
 
-        value = self.convert_to_cache(value, record, validate=validate)
+        value = self.convert_to_cache(value, record, validate=validate, values=values)
         return json.dumps(value)
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, record, validate=True, values=None):
         # any format -> cache format {name: value} or None
         if not value:
             return None
@@ -129,23 +129,45 @@ class Properties(Field):
         if isinstance(value, Property):
             value = value._values
 
-        if isinstance(value, dict):
+        elif isinstance(value, dict):
             # avoid accidental side effects from shared mutable data
-            return copy.deepcopy(value)
+            value = copy.deepcopy(value)
 
-        if isinstance(value, str):
+        elif isinstance(value, str):
             value = json.loads(value)
             if not isinstance(value, dict):
                 raise ValueError(f"Wrong property value {value!r}")
-            return value
 
-        if isinstance(value, list):
+        elif isinstance(value, list):
             # Convert the list with all definitions into a simple dict
             # {name: value} to store the strict minimum on the child
             self._remove_display_name(value)
-            return self._list_to_dict(value)
+            value = self._list_to_dict(value)
 
-        raise ValueError(f"Wrong property type {type(value)!r}")
+        else:
+            raise TypeError(f"Wrong property type {type(value)!r}")
+
+        if validate and value:
+            if record:
+                definition = {d['name']: d for d in self._get_properties_definition(record) or []}
+            elif values and self.definition_record in values:
+                model_definition_record = record._fields[self.definition_record].comodel_name
+                definition_record = record.env[model_definition_record].browse(values[self.definition_record])
+                definition = {d['name']: d for d in definition_record[self.definition_record_field] or []}
+            else:
+                value = {}
+                definition = {}
+
+            value = {
+                name: (
+                    html_sanitize(value, **Properties.SANITIZE_SETTINGS)
+                    if definition[name]['type'] == 'html' else value
+                )
+                for name, value in value.items()
+                if name in definition
+            }
+
+        return value
 
     # Record format: the value is either False, or a dict mapping property
     # names to their corresponding value, like
@@ -298,6 +320,10 @@ class Properties(Field):
                 for property_definition in properties_definition:
                     property_definition.pop('value', None)
                 container[self.definition_record_field] = properties_definition
+
+                # Names could have changed, re-map the value
+                for definition_child, definition_parent in zip(value, container[self.definition_record_field]):
+                    definition_child['name'] = definition_parent['name']
 
                 _logger.info('Properties field: User #%i changed definition of %r', records.env.user.id, container)
 
@@ -459,8 +485,7 @@ class Properties(Field):
         """
         for definition in values_list:
             if definition.get('definition_changed') and not definition.get('name'):
-                # keep only the first 64 bits
-                definition['name'] = str(uuid.uuid4()).replace('-', '')[:16]
+                definition['name'] = str(uuid.uuid4()).replace('-', '')
 
     @classmethod
     def _parse_json_types(cls, values_list, env, res_ids_per_model):
@@ -521,9 +546,6 @@ class Properties(Field):
                     id_ for id_ in property_value
                     if id_ in res_ids_per_model[res_model]
                 ] if res_model in env else []
-
-            elif property_type == 'html':
-                property_value = html_sanitize(property_value, **cls.SANITIZE_SETTINGS)
 
             property_definition['value'] = property_value
 
@@ -828,7 +850,7 @@ class PropertiesDefinition(Field):
         if validate:
             Properties._remove_display_name(value, value_key='default')
 
-            self._validate_properties_definition(value, record.env)
+            self._validate_properties_definition(value, record)
 
         return json.dumps(record._convert_to_cache_properties_definition(value))
 
@@ -851,7 +873,7 @@ class PropertiesDefinition(Field):
         if validate:
             Properties._remove_display_name(value, value_key='default')
 
-            self._validate_properties_definition(value, record.env)
+            self._validate_properties_definition(value, record)
 
         return record._convert_to_column_properties_definition(value)
 
@@ -913,11 +935,28 @@ class PropertiesDefinition(Field):
     def convert_to_write(self, value, record):
         return value
 
-    def _validate_properties_definition(self, properties_definition, env):
+    def _validate_properties_definition(self, properties_definition, record):
         """Raise an error if the property definition is not valid."""
-        allowed_keys = self.ALLOWED_KEYS + env["base"]._additional_allowed_keys_properties_definition()
+        if len(record) > 1:
+            raise ValueError("Write on many definitions is not supported")
 
-        env["base"]._validate_properties_definition(properties_definition, self)
+        allowed_keys = self.ALLOWED_KEYS + record.env["base"]._additional_allowed_keys_properties_definition()
+
+        # Re-generate names if type changed or new property
+        old_definition_names = {d['name']: d['type'] for d in record[self.name]}
+        for definition in properties_definition:
+            if definition['name'] in old_definition_names and old_definition_names[definition['name']] == definition['type']:
+                continue
+
+            # TODO: move outside of the loop
+            # Check if the property exists somewhere else with the same name
+            if not record and record.sudo().search([(self.name, '=', json.dumps(properties_definition))]):
+                # The exact same definition already exist on a different record
+                break
+
+            definition['name'] = str(uuid.uuid4()).replace('-', '')
+
+        record.env["base"]._validate_properties_definition(properties_definition, self)
 
         properties_names = set()
 
@@ -957,7 +996,7 @@ class PropertiesDefinition(Field):
                 property_definition['default'] = html_sanitize(default, **Properties.SANITIZE_SETTINGS)
 
             model = property_definition.get('comodel')
-            if model and (model not in env or env[model].is_transient() or env[model]._abstract):
+            if model and (model not in record.env or record.env[model].is_transient() or record.env[model]._abstract):
                 raise ValueError(f'Invalid model name {model!r}')
 
             property_selection = property_definition.get('selection')
