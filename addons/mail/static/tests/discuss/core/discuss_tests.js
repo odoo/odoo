@@ -27,6 +27,9 @@ QUnit.test("Member list and settings menu are exclusive", async () => {
 
 QUnit.test("subscribe to known partner presences", async () => {
     patchWebsocketWorkerWithCleanup({
+        // Force update doesn't matter in this test and is non-deterministic, since the subscription
+        // content depends on whether add_channels runs first (both are debounced).
+        _forceUpdateChannels() {},
         _sendToServer({ event_name, data }) {
             if (event_name === "subscribe") {
                 step(`subscribe - [${data.channels}]`);
