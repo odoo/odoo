@@ -66,4 +66,5 @@ class StockAddToWave(models.TransientModel):
                 self.env.context,
                 picking_to_wave=self.picking_ids.ids,
                 active_wave_id=self.wave_id.id,
+                from_wave_form=self.env.context.get('from_wave_form'),
             )}

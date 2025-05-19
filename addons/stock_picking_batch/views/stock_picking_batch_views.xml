@@ -124,7 +124,9 @@
                         </page>
                         <page string="Transfers" name="page_transfers">
                             <field name="allowed_picking_ids" invisible="1"/>
-                            <field name="picking_ids" widget="many2many" mode="list,kanban"
+                            <field name="picking_ids" widget="stock_picking_many2many" mode="list,kanban" invisible="not is_wave"
+                                context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited', 'list_view_ref': 'stock_picking_batch.stock_picking_view_batch_tree_ref'}" readonly="state not in ['draft', 'in_progress']"/>
+                            <field name="picking_ids" widget="many2many" mode="list,kanban" invisible="is_wave"
                                 context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited', 'list_view_ref': 'stock_picking_batch.stock_picking_view_batch_tree_ref'}" readonly="state not in ['draft', 'in_progress']"/>
                         </page>
                     </notebook>

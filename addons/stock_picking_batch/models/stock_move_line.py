@@ -95,20 +95,26 @@ class StockMoveLine(models.Model):
             self.env['stock.picking'].create(picking_to_wave_vals_list)
         if wave.picking_type_id.batch_auto_confirm:
             wave.action_confirm()
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': notification_title,
-                'message': '%s',
-                'links': [{
-                    'label': wave.name,
-                    'url': f'/odoo/action-stock_picking_batch.action_picking_tree_wave/{wave.id}',
-                }],
-                'sticky': False,
-                'next': {'type': 'ir.actions.act_window_close'},
+        if not self.env.context.get('from_wave_form'):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': notification_title,
+                    'message': '%s',
+                    'links': [{
+                        'label': wave.name,
+                        'url': f'/odoo/action-stock_picking_batch.action_picking_tree_wave/{wave.id}',
+                    }],
+                    'sticky': False,
+                    'next': {'type': 'ir.actions.act_window_close'},
+                }
             }
-        }
+        else:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'soft_reload',
+            }
 
     def _is_auto_waveable(self):
         self.ensure_one()
