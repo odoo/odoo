@@ -2,6 +2,7 @@ import { SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
 
 class NavTabsStyleOptionPlugin extends Plugin {
     static id = "navTabsOptionStyle";
@@ -19,6 +20,10 @@ class NavTabsStyleOptionPlugin extends Plugin {
             }),
         ],
         builder_actions: this.getActions(),
+        has_overlay_options: { hasOption: (el) => this.isNavItem(el) },
+        get_overlay_buttons: withSequence(0, {
+            getButtons: this.getActiveOverlayButtons.bind(this),
+        }),
     };
 
     setup() {
@@ -32,6 +37,63 @@ class NavTabsStyleOptionPlugin extends Plugin {
         this.navTabsClasses = ["card-header-tabs", "mx-0", "px-2", "border-bottom"];
         this.tabsBtnClasses = ["d-flex", "rounded"];
         this.navBtnClasses = ["d-inline-flex", "nav-pills", "p-2"];
+
+        this.overlayTarget = null;
+    }
+
+    isNavItem(el) {
+        return el.matches(".nav-item") && !!el.closest(".s_tabs, .s_tabs_images");
+    }
+
+    getActiveOverlayButtons(target) {
+        if (!this.isNavItem(target)) {
+            this.overlayTarget = null;
+            return [];
+        }
+
+        this.overlayTarget = target;
+        const buttons = [];
+        const parentStyle = window.getComputedStyle(this.overlayTarget.parentElement);
+        const isVertical = parentStyle.flexDirection === "column";
+        const previousNavItemEl = this.overlayTarget.previousElementSibling;
+        const nextNavItemEl = this.overlayTarget.nextElementSibling;
+
+        if (previousNavItemEl) {
+            const direction = isVertical ? "up" : "left";
+            buttons.push({
+                class: `fa fa-fw fa-angle-${direction}`,
+                title: _t("Move %s", direction),
+                handler: this.moveNavItem.bind(this, "prev"),
+            });
+        }
+
+        if (nextNavItemEl) {
+            const direction = isVertical ? "down" : "right";
+            buttons.push({
+                class: `fa fa-fw fa-angle-${direction}`,
+                title: _t("Move %s", direction),
+                handler: this.moveNavItem.bind(this, "next"),
+            });
+        }
+
+        return buttons;
+    }
+
+    moveNavItem(direction) {
+        const tabHash = this.overlayTarget.querySelector(".nav-link").hash;
+        const tabPaneEl = this.overlayTarget.closest("section").querySelector(tabHash);
+
+        if (direction === "prev") {
+            const previousNavItemEl = this.overlayTarget.previousElementSibling;
+            const previousTabPaneEl = tabPaneEl.previousElementSibling;
+            previousNavItemEl.before(this.overlayTarget);
+            previousTabPaneEl.before(tabPaneEl);
+        } else {
+            const nextNavItemEl = this.overlayTarget.nextElementSibling;
+            const nextTabPaneEl = tabPaneEl.nextElementSibling;
+            nextNavItemEl.after(this.overlayTarget);
+            nextTabPaneEl.after(tabPaneEl);
+        }
     }
 
     getNavEl(editingElement) {
