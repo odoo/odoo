@@ -199,7 +199,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         # Define the API URL based on the environment
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
         api_url = (
-            "https://shiperooconnect-prod.automation.shiperoo.com/api/process_so"
+            "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/process_so"
             if is_production == 'True'
             else "https://shiperooconnect.automation.shiperoo.com/api/process_so"
         )
