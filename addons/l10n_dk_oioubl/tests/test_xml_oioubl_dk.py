@@ -127,7 +127,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
     @freeze_time('2017-01-01')
     def test_export_invoice_two_line_foreign_partner_be(self):
         # Set peppol endpoint to have schemeID of 'GLN'
-        self.company_data['company'].partner_id.peppol_endpoint = '0239843188'
+        self.company_data['company'].partner_id.peppol_endpoint = '39843188'
         invoice = self.create_post_and_send_invoice(partner=self.partner_b)
         self.assertTrue(invoice.ubl_cii_xml_id)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_foreign_partner_be.xml")
