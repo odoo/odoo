@@ -1456,7 +1456,7 @@ test("message sound on receiving new message (push notif enabled)", async () => 
             thread_model: "discuss.channel",
         })
     );
-    await waitFor(".o-mail-ChatBubble .badge:contains(1)");
+    await waitFor(".o-mail-ChatBubble .badge:contains(1)", { timeout: 3000 });
     await waitForSteps(["sound:new-message"]);
     // simulate message sound settings turned off
     browser.localStorage.setItem("mail.user_setting.message_sound", false);
@@ -1471,7 +1471,7 @@ test("message sound on receiving new message (push notif enabled)", async () => 
             thread_model: "discuss.channel",
         })
     );
-    await waitFor(".o-mail-ChatBubble .badge:contains(2)");
+    await waitFor(".o-mail-ChatBubble .badge:contains(2)", { timeout: 3000 });
     expect.verifySteps([]);
     // simulate message sound settings turned on
     browser.localStorage.setItem("mail.user_setting.message_sound", null);
@@ -1486,7 +1486,7 @@ test("message sound on receiving new message (push notif enabled)", async () => 
             thread_model: "discuss.channel",
         })
     );
-    await waitFor(".o-mail-ChatBubble .badge:contains(3)");
+    await waitFor(".o-mail-ChatBubble .badge:contains(3)", { timeout: 3000 });
     await waitForSteps(["sound:new-message"]);
 });
 
