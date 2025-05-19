@@ -28,7 +28,6 @@ class AccountReconcileModelLine(models.Model):
             ('percentage', 'Percentage of balance'),
             ('percentage_st_line', 'Percentage of statement line'),
             ('regex', 'From label'),
-            ('from_transaction_details', 'From Transaction Details'),
         ],
         required=True,
         default='percentage',
@@ -71,7 +70,7 @@ class AccountReconcileModelLine(models.Model):
                 raise UserError(_("Balance percentage can't be 0"))
             if record.amount_type == 'percentage' and record.amount == 0:
                 raise UserError(_("Statement line percentage can't be 0"))
-            if record.amount_type in {'regex', 'from_transaction_details'}:
+            if record.amount_type == 'regex':
                 try:
                     re.compile(record.amount_string)
                 except re.error:
