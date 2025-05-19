@@ -19,11 +19,9 @@ class SaleOrder(models.Model):
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     incoterm_location = fields.Char(string='Incoterm Location')
     picking_policy = fields.Selection([
-        ('direct', 'As soon as possible'),
-        ('one', 'When all products are ready')],
-        string='Shipping Policy', required=True, default='direct',
-        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
-        "product lead time. Otherwise, it will be based on the shortest.")
+        ('direct', 'As soon as possible, with back orders'), ('one', 'When all products are ready')],
+        string='Shipping Policy', required=True, default=lambda self: self.env.company.picking_policy,
+        help="It specifies goods to be deliver partially or all at once")
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse',
         compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,

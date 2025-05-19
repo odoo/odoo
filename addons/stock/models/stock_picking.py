@@ -150,8 +150,8 @@ class StockPickingType(models.Model):
     )
     kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
     move_type = fields.Selection([
-        ('direct', 'As soon as possible'), ('one', 'When all products are ready')],
-        'Shipping Policy', default='direct', required=True,
+        ('direct', 'As soon as possible, with back orders'), ('one', 'When all products are ready')], 'Shipping Policy',
+        default=lambda self: self.env.company.picking_policy, required=True,
         help="It specifies goods to be transferred partially or all at once")
 
     @api.model_create_multi
@@ -566,7 +566,7 @@ class StockPicking(models.Model):
     return_count = fields.Integer('# Returns', compute='_compute_return_count', compute_sudo=False)
 
     move_type = fields.Selection([
-        ('direct', 'As soon as possible'), ('one', 'When all products are ready')], 'Shipping Policy',
+        ('direct', 'As soon as possible, with back orders'), ('one', 'When all products are ready')], 'Shipping Policy',
         compute='_compute_move_type', store=True, required=True, readonly=False, precompute=True,
         help="It specifies goods to be deliver partially or all at once")
     state = fields.Selection([
