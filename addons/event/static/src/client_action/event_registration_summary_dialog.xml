@@ -7,14 +7,14 @@
             <div class="row">
                 <div class="col-lg-10 w-100 fs-2">
                     <div t-if="['confirmed_registration', 'unconfirmed_registration'].includes(registrationStatus.value)" class="alert alert-success d-flex justify-content-center" role="alert">
-                        <i class="fa fa-solid fa-check-circle align-self-center me-2 ms-0 ms-sm-5"/>
+                        <i class="fa fa-check-circle align-self-center me-2 ms-0 ms-sm-5"/>
                         <span>Successfully registered!</span>
                         <button type="button" class="btn btn-link ms-3 ms-sm-5" t-on-click="undoRegistration">
                             Undo
                         </button>
                     </div>
                     <div t-else="" class="alert alert-warning d-flex justify-content-center" role="alert">
-                        <i class="fa fa-solid fa-exclamation-circle me-2 align-self-center ms-0 ms-sm-5"/>
+                        <i class="fa fa-exclamation-circle me-2 align-self-center ms-0 ms-sm-5"/>
                         <t t-if="registrationStatus.value === 'need_manual_confirmation'">
                             <span>This ticket is for another event!<br/>
                             Confirm attendance?</span>
