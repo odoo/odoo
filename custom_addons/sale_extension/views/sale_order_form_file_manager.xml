@@ -1,0 +1,37 @@
+<odoo>
+  <record id="view_order_form_custom" model="ir.ui.view">
+    <field name="name">sale.order.form.save.quotaion</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale.view_order_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//button[@name='action_quotation_send']" position="replace">
+        <button name="action_save_quotation"
+                type="object"
+                string="Confirmar Presupuesto"
+                class="btn-primary"
+                invisible="quotation_status != 'draft'"
+                />
+
+        <button name="action_quotation_send"
+              type="object"
+              string="Enviar Presupuesto"
+              class="btn-primary"
+              invisible="quotation_status == 'draft' or state == 'sale'"
+              />
+
+        <field name="quotation_status" invisible="1"/>
+      </xpath>
+      <xpath expr="//button[@name='action_confirm']" position="attributes">
+        <attribute name="string">Generar orden de venta</attribute>
+        <attribute name="class">btn-primary</attribute>
+        <attribute name="invisible">quotation_status == 'draft' or state == 'sale'</attribute>
+      </xpath>
+      <xpath expr="//button[@name='action_quotation_send']" position="attributes">
+        <attribute name="class">btn-primary</attribute>
+      </xpath>
+      <xpath expr="//button[@name='327']" position="attributes">
+        <!--<attribute name="class">btn-primary</attribute>-->
+      </xpath>
+    </field>
+  </record>
+</odoo>
