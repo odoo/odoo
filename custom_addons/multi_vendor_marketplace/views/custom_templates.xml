@@ -33,6 +33,13 @@
     <template id="custom_user_profile" name="Custom User Profile">
         <t t-call="website.layout">
             <div class="container mt-5 o_custom_profile_page">
+                <!-- Language Button - Moved to top, standalone position -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <t t-call="multi_vendor_marketplace.standalone_language_selector"/>
+                    </div>
+                </div>
+                
                 <!-- User Info -->
                 <div class="row text-center">
                     <div class="col-md-12">
@@ -76,8 +83,133 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Removed language selector from here -->
             </div>
         </t>
+    </template>
+
+    <!-- Standalone Language Selector Template -->
+    <template id="standalone_language_selector" name="Standalone Language Selector">
+        <div class="dropdown border-0 text-center w-100">
+            <button type="button" class="btn btn-warning dropdown-toggle border-0 mx-auto" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #ff7300 !important; color: white !important; border: none !important; outline: none !important; box-shadow: none !important; -webkit-box-shadow: none !important; text-shadow: none !important; border-radius: 20px !important; padding: 8px 15px !important; font-weight: bold !important; font-size: 12px !important; -webkit-appearance: none; appearance: none; margin: 0 auto; display: block; width: 170px !important; min-width: 170px !important;">
+                <i class="fa fa-globe me-1"/>ЯЗЫК
+            </button>
+            <div class="dropdown-menu" aria-labelledby="languageDropdown">
+                <t t-foreach="website.language_ids" t-as="lg">
+                    <a href="#" t-att-data-url_code="lg.code" class="dropdown-item js_change_lang" t-att-data-lang="lg.code">
+                        <t t-esc="lg.name"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+        <style>
+            /* Ultra-aggressive CSS to completely ensure no frames/borders */
+            .dropdown, .dropdown * {
+                border: none !important;
+                outline: none !important;
+            }
+            
+            .dropdown .btn, 
+            .dropdown button,
+            .dropdown .btn.btn-warning, 
+            .dropdown .btn.dropdown-toggle,
+            button#languageDropdown {
+                border: 0 !important;
+                border-width: 0 !important;
+                border-style: none !important;
+                border-color: transparent !important;
+                outline: 0 !important;
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+                text-shadow: none !important;
+                -webkit-appearance: none !important;
+                appearance: none !important;
+                border-image: none !important;
+            }
+            
+            /* Specifically target frames that might be added by JavaScript */
+            .dropdown .btn:after,
+            .dropdown .btn:before,
+            .dropdown-toggle:after,
+            .dropdown-toggle:before {
+                display: none !important;
+                content: none !important;
+            }
+            
+            .dropdown .btn:hover,
+            .dropdown .btn:focus,
+            .dropdown .btn:active,
+            .dropdown .btn.active,
+            .dropdown .show>.btn,
+            .dropdown .btn.show,
+            #languageDropdown:hover,
+            #languageDropdown:focus,
+            #languageDropdown:active {
+                border: 0 !important;
+                outline: 0 !important;
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+                border-color: transparent !important;
+            }
+            
+            /* Remove animations and transitions that could show frames */
+            #languageDropdown {
+                transition: none !important;
+                animation: none !important;
+            }
+            
+            /* Remove ALL ripple effects */
+            .o_ripple_container,
+            .o_ripple,
+            .o_ripple_item,
+            .ripple,
+            .rippleEffect,
+            .btn .o_ripple,
+            .btn span[style*="animation"],
+            .btn span.o_ripple_item {
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+            }
+            
+            /* Dropdown menu styling to match button */
+            .dropdown-menu {
+                min-width: 170px !important;
+                width: 170px !important;
+                padding: 0 !important;
+                margin-top: 5px !important;
+                border-radius: 10px !important;
+                border: none !important;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+                overflow: hidden !important;
+            }
+            
+            .dropdown-item {
+                padding: 8px 15px !important;
+                font-size: 12px !important;
+                font-weight: 500 !important;
+                text-align: center !important;
+                color: #333 !important;
+                transition: background-color 0.2s ease !important;
+            }
+            
+            .dropdown-item:hover, 
+            .dropdown-item:focus, 
+            .dropdown-item:active {
+                background-color: #fff1e6 !important;
+                color: #ff7300 !important;
+                font-weight: bold !important;
+            }
+            
+            /* Override Bootstrap's focus styling */
+            .btn-warning:focus, .btn-warning.focus,
+            .dropdown-toggle:focus {
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+            }
+        </style>
     </template>
 
     <template id="edit_user_profile" name="Edit User Profile">
@@ -633,5 +765,95 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <!-- Hide empty cart message - More aggressive approach -->
+    <template id="hide_empty_cart_message" inherit_id="website_sale.cart">
+        <xpath expr="//div[hasclass('oe_cart')]" position="before">
+            <style>
+                /* Super aggressive CSS to hide the cart empty message */
+                .js_cart_lines.alert,
+                .js_cart_lines.alert-info,
+                div.js_cart_lines,
+                div[class*="js_cart_lines"],
+                div[class*="alert-info"],
+                div:contains("Your cart is empty"),
+                div:contains("Ваша корзина пуста"),
+                .js_cart_lines {
+                    display: none !important;
+                    visibility: hidden !important;
+                    height: 0 !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    border: none !important;
+                    overflow: hidden !important;
+                }
+            </style>
+            <script type="text/javascript">
+                // JavaScript to aggressively hide the cart empty message
+                document.addEventListener('DOMContentLoaded', function() {
+                    function hideEmptyCartMessage() {
+                        // Find all possible empty cart messages
+                        var messages = document.querySelectorAll('.js_cart_lines, .alert-info, .oe_cart > div.alert');
+                        if (messages) {
+                            messages.forEach(function(msg) {
+                                var text = msg.textContent.toLowerCase();
+                                if (text.includes('empty') || text.includes('пуст')) {
+                                    msg.style.display = 'none';
+                                    msg.style.visibility = 'hidden';
+                                    msg.style.height = '0';
+                                    msg.style.padding = '0';
+                                    msg.style.margin = '0';
+                                    msg.style.border = 'none';
+                                }
+                            });
+                        }
+                    }
+                    
+                    // Run immediately and after a short delay
+                    hideEmptyCartMessage();
+                    setTimeout(hideEmptyCartMessage, 100);
+                    setTimeout(hideEmptyCartMessage, 500);
+                });
+            </script>
+        </xpath>
+    </template>
+
+    <!-- Hide footer elements using CSS injection -->
+    <template id="hide_footer_elements" inherit_id="website.layout">
+        <xpath expr="//head" position="inside">
+            <style>
+                /* Hide "Powered by Odoo" section */
+                .o_brand_promotion {
+                    display: none !important;
+                }
+                
+                /* Hide language selector dropdown */
+                .js_language_selector {
+                    display: none !important;
+                }
+                
+                /* Fix for language switching issues */
+                html[lang="ru_RU"] .d-none {
+                    display: initial;
+                }
+            </style>
+            <script type="text/javascript">
+                // Fix for language switching issues
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Get all language switching links
+                    var langLinks = document.querySelectorAll('.js_change_lang');
+                    if (langLinks) {
+                        langLinks.forEach(function(link) {
+                            link.addEventListener('click', function(e) {
+                                // Force a full page reload
+                                window.location.href = this.href;
+                                return false;
+                            });
+                        });
+                    }
+                });
+            </script>
+        </xpath>
     </template>
 </odoo>
