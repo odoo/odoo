@@ -4,6 +4,8 @@ from unittest.mock import patch
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
+from contextlib import contextmanager
+
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -170,13 +172,19 @@ class TestUBLRO(TestUBLCommon):
             'country_id': cls.env.ref('base.ro').id,
         })
 
+    @contextmanager
+    def _protect_company_peppol_endpoint(self, company):
+        # This method is called with the 'with' keyword. It makes sure the peppol_endpoint is the same before and after
+        peppol_endpoint = company.peppol_endpoint
+        yield
+        company.peppol_endpoint = peppol_endpoint
+
     ####################################################
     # Test export - import
     ####################################################
 
     def create_move(self, move_type, send=True, **kwargs):
         return self._generate_move(
-            self.env.company.partner_id,
             self.partner_a,
             send=send,
             move_type=move_type,
@@ -223,20 +231,22 @@ class TestUBLRO(TestUBLCommon):
 
     def test_export_invoice_without_country_code_prefix_in_vat(self):
         self.company_data['company'].write({'vat': '1234567897'})
-        self.partner_a.write({'vat': False})
+        self.partner_a.write({'vat': False, 'peppol_endpoint': self.partner_a.peppol_endpoint})
         invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_vat.xml')
 
     def test_export_no_vat_but_have_company_registry(self):
-        self.company_data['company'].write({'vat': False, 'company_registry': 'RO1234567897'})
+        with self._protect_company_peppol_endpoint(self.company_data['company']):
+            self.company_data['company'].write({'vat': False, 'company_registry': 'RO1234567897'})
         invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice.xml')
 
     def test_export_no_vat_but_have_company_registry_without_prefix(self):
-        self.company_data['company'].write({'vat': False, 'company_registry': '1234567897'})
-        self.partner_a.write({'vat': False})
+        with self._protect_company_peppol_endpoint(self.company_data['company']):
+            self.company_data['company'].write({'vat': False, 'company_registry': '1234567897'})
+        self.partner_a.write({'vat': False, 'peppol_endpoint': self.partner_a.peppol_endpoint})
         invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_company_registry.xml')

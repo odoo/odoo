@@ -43,7 +43,6 @@ class TestUBLRS(TestUBLCommon):
 
     def create_invoice(self, move_type, **invoice_kwargs):
         return self._generate_move(
-            self.env.company.partner_id,
             self.partner_a,
             send=False,
             move_type=move_type,

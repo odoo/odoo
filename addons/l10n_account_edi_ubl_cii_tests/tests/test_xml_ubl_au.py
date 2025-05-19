@@ -50,8 +50,8 @@ class TestUBLAU(TestUBLCommon):
     ####################################################
 
     def test_export_import_invoice(self):
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[
@@ -108,8 +108,8 @@ class TestUBLAU(TestUBLCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
+        self.env.company.partner_id = self.partner_1
         refund = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_refund',
             invoice_line_ids=[

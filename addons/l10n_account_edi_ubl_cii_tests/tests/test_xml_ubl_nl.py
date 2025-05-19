@@ -25,7 +25,7 @@ class TestUBLNL(TestUBLCommon):
             'country_id': cls.env.ref('base.nl').id,
             'bank_ids': [(0, 0, {'acc_number': 'NL000099998B57'})],
             'peppol_eas': '0106',
-            'peppol_endpoint': '77777677',
+            'peppol_endpoint': '77777677777776776',
             'ref': 'ref_partner_1',
             'invoice_edi_format': 'nlcius',
         })
@@ -92,8 +92,8 @@ class TestUBLNL(TestUBLCommon):
     ####################################################
 
     def test_export_import_invoice(self):
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[
@@ -150,8 +150,8 @@ class TestUBLNL(TestUBLCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
+        self.env.company.partner_id = self.partner_1
         refund = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_refund',
             invoice_line_ids=[
@@ -212,8 +212,9 @@ class TestUBLNL(TestUBLCommon):
         Ensure that an invoice containing a product with a fixed tax posted to a journal with the peppol and nlcius edi
             tags generates edi documents with accurate LineExtensionAmount values
         """
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            self.partner_1, self.partner_2,
+            self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[{
                 'name': 'product costing 50.0',

@@ -119,8 +119,8 @@ class TestCIIFR(TestUBLCommon):
             'partner_id': self.company_data['company'].partner_id.id,
         })
 
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_invoice',
             partner_bank_id=acc_bank.id,
@@ -139,8 +139,8 @@ class TestCIIFR(TestUBLCommon):
         self.assertEqual(pdf_attachment['name'], facturx_filename)
 
     def test_export_import_invoice(self):
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[
@@ -188,8 +188,8 @@ class TestCIIFR(TestUBLCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
+        self.env.company.partner_id = self.partner_1
         refund = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_refund',
             invoice_line_ids=[
@@ -238,8 +238,8 @@ class TestCIIFR(TestUBLCommon):
         Tests whether the tax included price_units are correctly converted to tax excluded
         amounts in the exported xml
         """
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[
@@ -285,8 +285,8 @@ class TestCIIFR(TestUBLCommon):
         )
 
     def test_encoding_in_attachment_facturx(self):
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            seller=self.partner_1,
             buyer=self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
@@ -295,9 +295,9 @@ class TestCIIFR(TestUBLCommon):
         self._test_encoding_in_attachment(invoice.ubl_cii_xml_id, facturx_filename)
 
     def test_export_with_fixed_taxes_case1(self):
+        self.env.company.partner_id = self.partner_1
         # CASE 1: simple invoice with a recupel tax
         invoice = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[
@@ -313,9 +313,9 @@ class TestCIIFR(TestUBLCommon):
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/facturx_ecotaxes_case1.xml')
 
     def test_export_with_fixed_taxes_case2(self):
+        self.env.company.partner_id = self.partner_1
         # CASE 2: Same but with several ecotaxes
         invoice = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[
@@ -335,9 +335,9 @@ class TestCIIFR(TestUBLCommon):
         self.recupel.price_include_override = 'tax_included'
         self.tax_21.price_include_override = 'tax_included'
 
+        self.env.company.partner_id = self.partner_1
         # Price TTC = 121 = (99 + 1 ) * 1.21
         invoice = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[
@@ -357,8 +357,8 @@ class TestCIIFR(TestUBLCommon):
     ####################################################
 
     def test_import_partner_facturx(self):
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            seller=self.partner_1,
             buyer=self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
@@ -366,8 +366,8 @@ class TestCIIFR(TestUBLCommon):
         self._test_import_partner(invoice.ubl_cii_xml_id, self.partner_1, self.partner_2)
 
     def test_import_in_journal_facturx(self):
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            seller=self.partner_1,
             buyer=self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
@@ -523,8 +523,8 @@ class TestCIIFR(TestUBLCommon):
         """
         Test that the is no negative ChargeAmount in the facturx xml
         """
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            seller=self.partner_1,
             buyer=self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[
