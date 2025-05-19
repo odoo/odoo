@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from odoo.addons.event.tests.common import EventCase
 from odoo import exceptions
@@ -60,8 +60,44 @@ class TestEventSlotsCommon(EventCase):
             second_ticket = cls.test_event.event_ticket_ids.filtered(lambda t: t.name == 'Better')
 
             # already existing registrations
-            cls._create_registrations_for_slot_and_ticket(cls.test_event, first_slot, first_ticket, 3)
-            cls._create_registrations_for_slot_and_ticket(cls.test_event, second_slot, second_ticket, 1)
+            cls.test_reg_slot_1 = cls._create_registrations_for_slot_and_ticket(cls.test_event, first_slot, first_ticket, 3)
+            cls.test_reg_slot_2 = cls._create_registrations_for_slot_and_ticket(cls.test_event, second_slot, second_ticket, 1)
+
+
+@tagged('event_slot', 'event_registration')
+class TestEventSlotRegistration(TestEventSlotsCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.test_event_no_slot = cls.env['event.event'].create({
+            'date_begin': cls.reference_beg,
+            'date_end': cls.reference_end,
+            'date_tz': 'Europe/Brussels',
+            'name': 'Test Event No Slot',
+        })
+        cls.test_reg_no_slot = cls.env["event.registration"].create({
+            "event_id": cls.test_event_no_slot.id,
+            "name": "Test Registration No Slot",
+        })
+
+    def test_search_event_begin_date(self):
+        """ Searching on the registration 'event_begin_date' field should correctly search
+        on the slot start datetime if the registration is linked to a slot
+        else on the event start date.
+        """
+        for search_from_date, expected in [
+            (self.reference_beg, self.test_reg_no_slot + self.test_reg_slot_1 + self.test_reg_slot_2),
+            (self.reference_beg + timedelta(minutes=30), self.test_reg_slot_1 + self.test_reg_slot_2),
+            (self.reference_beg + timedelta(hours=1), self.test_reg_slot_2),
+        ]:
+            self.assertEqual(
+                self.env["event.registration"].search([
+                    ('event_id', 'in', [self.test_event_no_slot.id, self.test_event.id]),
+                    ('event_begin_date', '>=', search_from_date),
+                ]),
+                expected,
+            )
 
 
 @tagged('event_slot', 'event_seats')
