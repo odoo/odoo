@@ -7,7 +7,7 @@
         <!-- Image position -->
             <BuilderButtonGroup action="'setCoverImagePosition'">
                 <BuilderButton
-                    id="'card_img_top_option'"
+                    id="'card_img_top_opt'"
                     classAction="'o_card_img_top'"
                     actionParam="'card-img-top'"
                     iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"
@@ -49,12 +49,12 @@
             <BuilderSelect applyTo="'.o_card_img_wrapper'">
                 <BuilderSelectItem id="'card_img_default_ratio_option'" classAction="''">Image default</BuilderSelectItem>
                 <BuilderSelectItem classAction="'ratio ratio-1x1'">Square</BuilderSelectItem>
-                <t t-if="isActiveItem('card_img_top_option')">
+                <t t-if="isActiveItem('card_img_top_opt')">
                     <BuilderSelectItem classAction="'ratio ratio-4x3'">Landscape - 4/3</BuilderSelectItem>
                     <BuilderSelectItem classAction="'ratio ratio-16x9'">Wide - 16/9</BuilderSelectItem>
                     <BuilderSelectItem classAction="'ratio ratio-21x9'">Ultrawide - 21/9</BuilderSelectItem>
                     <BuilderSelectItem
-                        id="'card_img_custom_ratio_option'"
+                        id="'image_ratio_custom_opt'"
                         classAction="'ratio o_card_img_ratio_custom'">
                         Custom
                     </BuilderSelectItem>
@@ -63,7 +63,7 @@
         </BuilderRow>
 
         <!-- Custom ratio control -->
-        <BuilderRow t-if="isActiveItem('card_img_custom_ratio_option')" label.translate="Custom Ratio" level="2">
+        <BuilderRow t-if="isActiveItem('image_ratio_custom_opt')" label.translate="Custom Ratio" level="2">
             <BuilderRange
                 styleAction="'--card-img-aspect-ratio'"
                 min="8"
@@ -74,7 +74,7 @@
         </BuilderRow>
 
         <!-- Width -->
-        <BuilderRow t-if="!isActiveItem('card_img_top_option')" label.translate="Width" level="1">
+        <BuilderRow t-if="!isActiveItem('card_img_top_opt')" label.translate="Width" level="1">
             <!-- Bootstrap default column size -->
             <t t-set="colSize" t-value="8.33333333"/>
             <BuilderRange
