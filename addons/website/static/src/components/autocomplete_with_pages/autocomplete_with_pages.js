@@ -5,8 +5,6 @@ export class AutoCompleteWithPages extends AutoComplete {
     static props = {
         ...AutoComplete.props,
         targetDropdown: { type: HTMLElement },
-        dropdownClass: { type: String, optional: true },
-        dropdownOptions: { type: Object, optional: true },
     };
     static template = "website.AutoCompleteWithPages";
 
@@ -42,24 +40,6 @@ export class AutoCompleteWithPages extends AutoComplete {
         );
     }
 
-    get dropdownOptions() {
-        if (this.props.dropdownOptions) {
-            return {
-                ...super.dropdownOptions,
-                ...this.props.dropdownOptions,
-            };
-        }
-        return super.dropdownOptions;
-    }
-
-    get ulDropdownClass() {
-        let classList = super.ulDropdownClass;
-        if (this.props.dropdownClass) {
-            classList += ` ${this.props.dropdownClass}`;
-        }
-        return classList;
-    }
-
     get targetDropdown() {
         return this.props.targetDropdown;
     }
@@ -73,73 +53,6 @@ export class AutoCompleteWithPages extends AutoComplete {
         if (this.inputRef.el) {
             this.inputRef.el.value = this.targetDropdown.value;
             this.onInput();
-        }
-    }
-
-    /**
-     *
-     * @param option
-     * @return {boolean}
-     * @private
-     */
-    _isCategory(option) {
-        return !!option?.data.separator;
-    }
-
-    getOption(indices) {
-        const [sourceIndex, optionIndex] = indices;
-        return this.sources[sourceIndex]?.options[optionIndex];
-    }
-
-    /**
-     * @override
-     */
-    onOptionMouseEnter(indices) {
-        if (!this._isCategory(this.getOption(indices))) {
-            return super.onOptionMouseEnter(...arguments);
-        }
-    }
-
-    /**
-     * @override
-     */
-    onOptionMouseLeave(indices) {
-        if (!this._isCategory(this.getOption(indices))) {
-            return super.onOptionMouseLeave(...arguments);
-        }
-    }
-    isActiveSourceOption(indices) {
-        if (!this._isCategory(this.getOption(indices))) {
-            return super.isActiveSourceOption(...arguments);
-        }
-    }
-    /**
-     * @override
-     */
-    selectOption(option) {
-        if (!this._isCategory(option)) {
-            const { value } = option.data;
-            this.targetDropdown.value = value;
-            return super.selectOption(...arguments);
-        }
-    }
-
-    /**
-     * @override
-     */
-    navigate(direction) {
-        super.navigate(direction);
-        if (direction !== 0 && this.state.activeSourceOption) {
-            let [sourceIndex, optionIndex] = this.state.activeSourceOption;
-            const option = this.sources[sourceIndex]?.options[optionIndex];
-            if (option) {
-                if (!!option.data.separator) {
-                    this.navigate(direction);
-                }
-                if (option.data && option.data.value) {
-                    this.inputRef.el.value = option.data.value;
-                }
-            }
         }
     }
 

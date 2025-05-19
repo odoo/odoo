@@ -1,42 +1,14 @@
 import { _t } from "@web/core/l10n/translation";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { Component, onMounted, onPatched, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useProductAndLabelAutoresize } from "@account/core/utils/product_and_label_autoresize";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 
-class ProductLabelSectionAndNoteFieldAutocomplete extends AutoComplete {
-    onInputKeydown(event) {
-        super.onInputKeydown(event);
-        const hotkey = getActiveHotkey(event);
-        const labelVisibilityButton = document.getElementById('labelVisibilityButtonId');
-        if (hotkey === "enter" && labelVisibilityButton) {
-            labelVisibilityButton.click();
-            event.stopPropagation();
-            event.preventDefault();
-        }
-    }
-}
-
-class ProductLabelSectionAndNoteFieldMany2XAutocomplete extends Many2XAutocomplete {
-    static components = {
-        ...super.components,
-        AutoComplete: ProductLabelSectionAndNoteFieldAutocomplete,
-    };
-}
-class ProductLabelSectionAndNoteFieldMany2One extends Many2One {
-    static components = {
-        ...super.components,
-        Many2XAutocomplete: ProductLabelSectionAndNoteFieldMany2XAutocomplete,
-    };
-}
-
 export class ProductLabelSectionAndNoteField extends Component {
     static template = "account.ProductLabelSectionAndNoteField";
-    static components = { Many2One: ProductLabelSectionAndNoteFieldMany2One };
+    static components = { Many2One };
     static props = { ...Many2OneField.props };
 
     setup() {
@@ -134,7 +106,11 @@ export class ProductLabelSectionAndNoteField extends Component {
             && (["cancel", "posted"].includes(this.props.record.evalContext.parent.state)
             || this.props.record.evalContext.parent.locked)
         )
-    };
+    }
+
+    get showLabelVisibilityToggler() {
+        return !this.props.readonly && this.columnIsProductAndLabel.value && !this.label;
+    }
 
     isSection(record = null) {
         record = record || this.props.record;
@@ -159,6 +135,18 @@ export class ProductLabelSectionAndNoteField extends Component {
                 || value
             ),
         });
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    onM2oInputKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "enter" && this.showLabelVisibilityToggler) {
+            this.switchLabelVisibility();
+            ev.stopPropagation();
+            ev.preventDefault();
+        }
     }
 }
 

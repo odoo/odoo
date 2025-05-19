@@ -23,14 +23,10 @@ class PropertyTagsColorListPopover extends Component {
     };
 }
 
-// property tags does not really need timeout because it does not make RPC calls
-export class PropertyTagAutoComplete extends AutoComplete {}
-Object.assign(PropertyTagAutoComplete, { timeout: 0 });
-
 export class PropertyTags extends Component {
     static template = "web.PropertyTags";
     static components = {
-        AutoComplete: PropertyTagAutoComplete,
+        AutoComplete,
         TagsList,
         ColorList,
         Popover: PropertyTagsColorListPopover,

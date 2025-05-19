@@ -5,6 +5,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
 import { Component, onWillUpdateProps, useExternalListener, useRef, useState } from "@odoo/owl";
+import { mergeClasses } from "@web/core/utils/classname";
 
 export class AutoComplete extends Component {
     static template = "web.AutoComplete";
@@ -38,6 +39,8 @@ export class AutoComplete extends Component {
         autofocus: { type: Boolean, optional: true },
         class: { type: String, optional: true },
         slots: { type: Object, optional: true },
+        menuPositionOptions: { type: Object, optional: true },
+        menuCssClass: { type: [String, Array, Object], optional: true },
     };
     static defaultProps = {
         value: "",
@@ -52,6 +55,8 @@ export class AutoComplete extends Component {
         onFocus: () => {},
         searchOnInputClick: true,
         inputDebounceDelay: 250,
+        menuPositionOptions: {},
+        menuCssClass: {},
     };
 
     get timeout() {
@@ -142,6 +147,7 @@ export class AutoComplete extends Component {
     get dropdownOptions() {
         return {
             position: "bottom-start",
+            ...this.props.menuPositionOptions,
         };
     }
 
@@ -214,6 +220,7 @@ export class AutoComplete extends Component {
 
         await Promise.all(proms);
         this.navigate(0);
+        this.scroll();
     }
     get displayOptions() {
         return !this.props.dropdown || (this.isOpened && this.hasOptions);
@@ -365,13 +372,10 @@ export class AutoComplete extends Component {
     }
 
     get ulDropdownClass() {
-        let classList = "";
-        if (this.props.dropdown) {
-            classList += " dropdown-menu ui-autocomplete";
-        } else {
-            classList += " list-group";
-        }
-        return classList;
+        return mergeClasses(this.props.menuCssClass, {
+            "dropdown-menu ui-autocomplete": this.props.dropdown,
+            "list-group": !this.props.dropdown,
+        });
     }
 
     async onInputKeydown(ev) {

@@ -37,16 +37,18 @@ export class UrlAutoComplete extends Component {
             {
                 optionSlot: "option",
                 options: async (term) => {
+                    const makeItem = (item) => ({
+                        cssClass: "ui-autocomplete-item",
+                        label: item.label,
+                        onSelect: this.onSelect.bind(this, item.value),
+                    });
+
                     if (term[0] === "#") {
                         const anchors = await this.props.loadAnchors(
                             term,
                             this.props.options && this.props.options.body
                         );
-                        return anchors.map((anchor) => ({
-                            cssClass: "ui-autocomplete-item",
-                            label: anchor,
-                            onSelect: () => this.onSelect(anchor),
-                        }));
+                        return anchors.map((anchor) => makeItem({ label: anchor, value: anchor }));
                     } else if (term.startsWith("http") || term.length === 0) {
                         // avoid useless call to /website/get_suggested_links
                         return [];
@@ -58,21 +60,23 @@ export class UrlAutoComplete extends Component {
                         needle: term,
                         limit: 15,
                     });
-                    let choices = res.matching_pages;
-                    res.others.forEach((other) => {
+                    const choices = [];
+                    for (const page of res.matching_pages) {
+                        choices.push(makeItem(page));
+                    }
+                    for (const other of res.others) {
                         if (other.values.length) {
-                            choices = choices.concat(
-                                [{ separator: other.title, label: other.title }],
-                                other.values
-                            );
+                            choices.push({
+                                cssClass: "ui-autocomplete-category",
+                                data: { separator: true },
+                                label: other.title,
+                            });
+                            for (const page of other.values) {
+                                choices.push(makeItem(page));
+                            }
                         }
-                    });
-                    return choices.map((choice) => ({
-                        cssClass: choice.separator ? "ui-autocomplete-category" : "ui-autocomplete-item",
-                        data: choice,
-                        label: choice.label,
-                        onSelect: () => this.onSelect(choice.value),
-                    }));
+                    }
+                    return choices;
                 },
             },
         ];
