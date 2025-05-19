@@ -21,7 +21,7 @@ class ProductTemplate(models.Model):
         domain=[('usage', '=', 'internal')],
         help="Lors des ventes en POS, le stock sera prioritairement prélevé de cet emplacement, même si la quantité disponible est insuffisante."
     )
-    # margin = fields.Float(string="Marge (%)", compute="_compute_margin", store=True)
+    margin = fields.Float(string="Marge (%)", compute="_compute_margin", store=True)
     kitchen_notes = fields.Text (string="Notes de cuisine")
 
     def sync_menus(self):
@@ -264,10 +264,10 @@ class ProductTemplate(models.Model):
 
         return image_data, image_type
 
-    # @api.depends('list_price', 'standard_price')
-    # def _compute_margin(self):
-    #     for product in self:
-    #         if product.detailed_type == 'consu' and product.list_price:
-    #             product.margin = ((product.list_price - product.standard_price) / product.list_price)
-    #         else:
-    #             product.margin = False
+    @api.depends('list_price', 'standard_price')
+    def _compute_margin(self):
+        for product in self:
+            if product.type == 'consu' and product.list_price:
+                product.margin = ((product.list_price - product.standard_price) / product.list_price)
+            else:
+                product.margin = False
