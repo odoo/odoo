@@ -112,9 +112,9 @@ class TestResCurrency(TransactionCase):
             {"name": "1971-01-01", "rate": 1.5, "currency_id": currency_B.id},
             {"name": "1972-01-01", "rate": 0.69, "currency_id": currency_B.id},
         ])
-        # should not try to match field 'rate' (float field)
-        self.assertEqual(self.env["res.currency"].search_count([["rate_ids", "=", "1971-01-01"]]), 2)
         # should not try to match field 'name' (date field)
+        self.assertEqual(self.env["res.currency"].search_count([["rate_ids", "=", "1971-01-01"]]), 2)
+        # should not try to match field 'rate' (float field)
         self.assertEqual(self.env["res.currency"].search_count([["rate_ids", "=", "0.69"]]), 1)
         # should not try to match any of 'name' and 'rate'
         self.assertEqual(self.env["res.currency"].search_count([["rate_ids", "=", "irrelevant"]]), 0)
