@@ -22,9 +22,18 @@ class StockPicking(models.Model):
         readonly=True,
         store=True
     )
-    site_code_id = fields.Many2one(related='location_dest_id.site_code_id', string='Site Code', store=True)
+    site_code_id = fields.Many2one(
+        'site.code.configuration',
+        string='Site Code',
+        compute='_compute_site_code_id',
+        store=True
+    )
+    site_code = fields.Char(
+        string='Site Code Name',
+        compute='_compute_site_code_id',
+        store=True
+    )
     tenant_id = fields.Char(related='tenant_code_id.name',string='Tenant ID', store=True)
-    site_code = fields.Char(related='site_code_id.name',string='Site Code', store=True)
     is_automation = fields.Boolean(string='Is Automation', default=False)
     is_error_found = fields.Boolean(string='Is Error Found', default=False)
     is_error_found_message = fields.Char(string='Error Found Message')
@@ -62,6 +71,13 @@ class StockPicking(models.Model):
     #
     #         move.tolerance_qty = math.ceil(tolerance_value)
     #         move.total_allowed_qty = move.product_uom_qty + move.tolerance_qty
+
+    @api.depends('location_dest_id.site_code_id', 'location_id.site_code_id')
+    def _compute_site_code_id(self):
+        for picking in self:
+            site = picking.location_dest_id.site_code_id or picking.location_id.site_code_id
+            picking.site_code_id = site
+            picking.site_code = site.name if site else ''
 
     @api.onchange('is_error_found')
     def _onchange_is_error_found(self):
