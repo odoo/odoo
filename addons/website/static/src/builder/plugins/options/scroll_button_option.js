@@ -17,6 +17,6 @@ export class ScrollButtonOption extends BaseOptionComponent {
     }
 
     showHeightField() {
-        return this.state.heightFieldEnabled && this.isActiveItem("fit_content_opt");
+        return this.state.heightFieldEnabled && this.isActiveItem("minheight_auto_opt");
     }
 }

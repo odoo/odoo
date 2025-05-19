@@ -45,7 +45,7 @@
         <BuilderButtonGroup>
             <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'header-font-size'" unit="'px'" saveUnit="'rem'"/>
             <BuilderColorPicker action="'customizeWebsiteVariable'" actionParam="'header-text-color'"/>
-            <BuilderSelect action="'websiteConfig'" id="'header_alignment_opt'">
+            <BuilderSelect action="'websiteConfig'" t-if="!hasSomeViews(['website.template_header_sales_three', 'website.template_header_vertical'])" id="'header_alignment_opt'">
                 <BuilderSelectItem
                     actionParam="{
                         views: [],
@@ -71,7 +71,7 @@
             </BuilderSelect>
         </BuilderButtonGroup>
     </BuilderRow>
-    <BuilderRow label.translate="Link Style" t-if="hasSomeViews(['website.template_header_default', 'website.template_header_boxed', 'website.template_header_vertical', 'website.template_header_search', 'website.template_header_sales_one', 'website.template_header_sales_two', 'website.template_header_sales_three', 'website.template_header_sales_four'])">
+    <BuilderRow label.translate="Link Style" t-if="!hasSomeViews(['website.template_header_hamburger', 'website.template_header_stretch', 'website.template_header_sidebar'])">
         <BuilderSelect action="'websiteConfig'">
             <BuilderSelectItem
                 id="'option_header_navbar_links_default'"
@@ -139,7 +139,7 @@
             >Secondary</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Sub Menus">
+    <BuilderRow label.translate="Sub Menus" t-if="!hasSomeViews(['website.template_header_hamburger'])">
         <BuilderSelect action="'websiteConfig'">
             <BuilderSelectItem
                 id="header_dropdown_on_click_opt"
