@@ -1474,6 +1474,10 @@ class BaseModel(metaclass=MetaModel):
                 with contextlib.suppress(ValueError):
                     typed_value = field.convert_to_write(value, self)
                     domains.append([(field_name, operator, typed_value)])
+                continue
+            with contextlib.suppress(ValueError, TypeError):
+                # ignore that case if the value doesn't match the field type
+                domains.append([(field_name, operator, field.convert_to_write(value, self))])
         return aggregator(domains)
 
     @api.model
