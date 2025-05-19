@@ -1,10 +1,12 @@
 import { Component } from "@odoo/owl";
+import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 
 export class PaymentScreenStatus extends Component {
     static template = "point_of_sale.PaymentScreenStatus";
     static props = {
         order: Object,
     };
+    static components = { PriceFormatter };
 
     get changeText() {
         return this.env.utils.formatCurrency(this.props.order.getChange());

@@ -5,10 +5,11 @@ import { Component, onWillDestroy, useState } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
+import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
-    static components = { Orderline, OrderDisplay };
+    static components = { Orderline, OrderDisplay, PriceFormatter };
     static props = {
         disallow: { type: Boolean, optional: true },
         orderUuid: { type: String },
@@ -45,27 +46,13 @@ export class SplitBillScreen extends Component {
 
     onClickLine(line) {
         const lines = line.getAllLinesInCombo();
-
         for (const line of lines) {
-            if (!line.isPosGroupable()) {
-                if (this.qtyTracker[line.uuid] === line.getQuantity()) {
-                    this.qtyTracker[line.uuid] = 0;
-                } else {
-                    this.qtyTracker[line.uuid] = line.getQuantity();
-                }
-            } else if (!this.qtyTracker[line.uuid]) {
-                this.qtyTracker[line.uuid] = 1;
-            } else if (this.qtyTracker[line.uuid] === line.getQuantity()) {
-                this.qtyTracker[line.uuid] = 0;
-            } else {
-                this.qtyTracker[line.uuid] += 1;
-            }
-            // We need this split for decimal quantities (e.g. 0.5 kg)
-            if (this.qtyTracker[line.uuid] > line.getQuantity()) {
-                this.qtyTracker[line.uuid] = line.getQuantity();
-            }
-            this.priceTracker[line.uuid] =
-                (line.getPriceWithTax() / line.qty) * this.qtyTracker[line.uuid];
+            const uuid = line.uuid;
+            const maxQty = line.getQuantity();
+            const currentQty = this.qtyTracker[uuid] || 0;
+            const nextQty = currentQty === maxQty ? 0 : currentQty + 1;
+            this.qtyTracker[uuid] = Math.min(nextQty, maxQty);
+            this.priceTracker[uuid] = (line.getPriceWithTax() / line.qty) * this.qtyTracker[uuid];
             this.setLineQtyStr(line);
         }
     }
@@ -210,6 +197,16 @@ export class SplitBillScreen extends Component {
         this.pos.navigate("ProductScreen", {
             orderUuid: this.pos.selectedOrderUuid,
         });
+    }
+    adjustFontSize(amount) {
+        const length = amount.toString().length;
+        if (length > 11) {
+            return "6vw";
+        } else if (length > 9) {
+            return "8vw";
+        } else {
+            return "10vw";
+        }
     }
 }
 
