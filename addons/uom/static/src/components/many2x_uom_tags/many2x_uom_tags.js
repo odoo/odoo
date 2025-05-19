@@ -5,7 +5,6 @@ import {
     Many2ManyTagsFieldColorEditable,
     many2ManyTagsFieldColorEditable,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { UomAutoComplete } from "@uom/components/uom_autocomplete/uom_autocomplete";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { onWillUpdateProps } from "@odoo/owl";
 
@@ -20,10 +19,6 @@ export function getProductRelatedModel() {
 }
 
 export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
-    static components = {
-        ...Many2XAutocomplete.components,
-        AutoComplete: UomAutoComplete,
-    };
     static props = {
         ...Many2XAutocomplete.props,
         productModel: { type: String, optional: true },

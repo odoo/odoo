@@ -145,24 +145,9 @@ export class WelcomeScreen extends Component {
     }
 }
 
-export class IndustrySelectionAutoComplete extends AutoComplete {
-    static timeout = 400;
-
-    get dropdownOptions() {
-        return {
-            ...super.dropdownOptions,
-            position: "bottom-fit",
-        };
-    }
-
-    get ulDropdownClass() {
-        return `${super.ulDropdownClass} custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown`;
-    }
-}
-
 export class DescriptionScreen extends Component {
     static template = 'website.Configurator.DescriptionScreen';
-    static components = { SkipButton, AutoComplete: IndustrySelectionAutoComplete };
+    static components = { SkipButton, AutoComplete };
     static props = {
         navigate: Function,
         skip: Function,

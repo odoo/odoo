@@ -1,13 +1,13 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, useState } from "@odoo/owl";
+import { Component, onMounted, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
-import { LotAutoComplete } from "@point_of_sale/app/components/popups/select_lot_popup/lot_autocomplete/lot_autocomplete";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
 export class SelectLotPopup extends Component {
     static template = "point_of_sale.SelectLotPopup";
-    static components = { Dialog, LotAutoComplete };
+    static components = { Dialog, AutoComplete };
     static props = {
         array: Array,
         isSingleItem: Boolean,
@@ -34,6 +34,10 @@ export class SelectLotPopup extends Component {
         });
         useAutoFocusToLast();
         this.notification = useService("notification");
+        this.inputRef = useChildRef();
+        onMounted(() => {
+            this.inputRef.el.click();
+        });
     }
     _nextId() {
         return this._id++;

@@ -29,8 +29,8 @@
             </t>
             <t t-else="">
                 <div class="d-flex align-items-center gap-1">
-                    <Many2One t-props="this.m2oProps" cssClass="'w-100'"/>
-                    <t t-if="!props.readonly and columnIsProductAndLabel.value and !label">
+                    <Many2One t-props="this.m2oProps" cssClass="'w-100'" t-on-keydown="onM2oInputKeydown"/>
+                    <t t-if="showLabelVisibilityToggler">
                         <button
                             class="btn fa fa-bars text-start o_external_button px-1"
                             type="button"
