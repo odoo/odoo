@@ -1,6 +1,14 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, dblclick, queryAll, queryFirst, waitFor } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    dblclick,
+    queryAll,
+    queryAllTexts,
+    queryFirst,
+    waitFor,
+    waitUntil,
+} from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder, dummyBase64Img } from "./website_helpers";
 import { testImg } from "./image_test_helpers";
@@ -37,6 +45,21 @@ test("double click on text", async () => {
     await dblclick(":iframe .text_class");
     await animationFrame();
     expect(".modal-content").toHaveCount(0);
+});
+
+test("click on Image should show image size tag in sidebar", async () => {
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+    await contains(":iframe .test-options-target img").click();
+    await waitUntil(
+        () =>
+            queryAllTexts(".options-container span.badge.text-bg-dark[title='Size']")[0] ===
+            "42.9 KB",
+        { timeout: 2000 }
+    );
 });
 
 describe("Image format/optimize", () => {
