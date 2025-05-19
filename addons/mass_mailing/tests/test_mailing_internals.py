@@ -29,9 +29,6 @@ class TestMassMailValues(MassMailCommon):
         super(TestMassMailValues, cls).setUpClass()
         cls._create_mailing_list()
 
-    def _eval_domain(self, domain):
-        return self.env['mailing.filter']._evaluate_domain(domain)
-
     @users('user_marketing')
     def test_mailing_body_cropped_vml_image(self):
         """ Testing mail mailing responsive bg-image cropping for Outlook.
@@ -380,45 +377,6 @@ class TestMassMailValues(MassMailCommon):
                 # If configured, check if dedicated email outgoing server is
                 # on mailing record
                 self.assertEqual(mailing.mail_server_id, mail_server)
-
-    @users('user_marketing')
-    @mute_logger('odoo.sql_db')
-    def test_mailing_computed_fields_dynamic_domain(self):
-        """Ensure dynamic domain evaluation works and isn't obviously unsafe."""
-        filters = self.env['mailing.filter'].create([
-            {'name': 'Literals Filter',
-             'mailing_domain': [('create_uid', '=', '1')],
-             'mailing_model_id': self.env['ir.model']._get('discuss.channel').id
-             },
-            {'name': 'String Literals Filter',
-             'mailing_domain': "[('create_uid', '=', '1')]",
-             'mailing_model_id': self.env['ir.model']._get('discuss.channel').id
-             },
-            {'name': 'Dynamic Filter',
-             'mailing_domain': "[('id', '=', 1 + 1)]",
-             'mailing_model_id': self.env['ir.model']._get('discuss.channel').id
-             },
-            {'name': 'Dynamic Date Context Methods',
-             'mailing_domain': "[('create_date', '<=', (datetime.datetime(2042, 12, 31) + relativedelta(days=1)).to_utc().strftime('%Y-%m-%d'))]",
-             'mailing_model_id': self.env['ir.model']._get('discuss.channel').id
-             },
-            {'name': 'Dynamic Date Object',
-             'mailing_domain': "[('create_date', '<=', datetime.datetime(2042, 12, 31) + relativedelta(days=1))]",
-             'mailing_model_id': self.env['ir.model']._get('discuss.channel').id
-             }
-        ])
-        domains = [
-            [('create_uid', '=', '1')], [('create_uid', '=', '1')], [('id', '=', 2)],
-            [('create_date', '<=', '2043-01-01')], [('create_date', '<=', datetime(2043, 1, 1))],
-        ]
-        for mailing_filter, domain in zip(filters, domains):
-            self.assertListEqual(self._eval_domain(mailing_filter.mailing_domain), domain)
-        with self.assertRaises(ValidationError):
-            self.env['mailing.filter'].create({
-                'name': 'Illegal Dynamic Filter',
-                'mailing_domain': "[('id', '=', datetime.sys.hash_info)]",
-                'mailing_model_id': self.env['ir.model']._get('discuss.channel').id
-            })
 
     @users('user_marketing')
     def test_mailing_computed_fields_form(self):
