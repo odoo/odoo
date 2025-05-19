@@ -602,6 +602,7 @@ test("text global filter default value is now an array of strings", () => {
                 id: "1",
                 type: "text",
                 defaultValue: "foo",
+                rangeOfAllowedValues: "Sheet1!A1:A2",
             },
             {
                 id: "2",
@@ -611,5 +612,9 @@ test("text global filter default value is now an array of strings", () => {
     };
     const migratedData = load(data);
     expect(migratedData.globalFilters[0].defaultValue).toEqual(["foo"]);
+    expect(migratedData.globalFilters[0].rangeOfAllowedValues).toBe(undefined);
+    expect(migratedData.globalFilters[0].rangesOfAllowedValues).toEqual(["Sheet1!A1:A2"]);
     expect(migratedData.globalFilters[1].defaultValue).toBe(undefined);
+    expect(migratedData.globalFilters[1].rangeOfAllowedValues).toBe(undefined);
+    expect(migratedData.globalFilters[1].rangesOfAllowedValues).toBe(undefined);
 });

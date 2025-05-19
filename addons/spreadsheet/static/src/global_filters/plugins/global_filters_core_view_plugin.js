@@ -56,7 +56,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         "getActiveFilterCount",
         "isGlobalFilterActive",
         "getTextFilterOptions",
-        "getTextFilterOptionsFromRange",
+        "getTextFilterOptionsFromRanges",
     ]);
     constructor(config) {
         super(config);
@@ -306,7 +306,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      */
     getTextFilterOptions(filterId) {
         const filter = this.getters.getGlobalFilter(filterId);
-        if (filter.type !== "text" || !filter.rangeOfAllowedValues) {
+        if (filter.type !== "text" || !filter.rangesOfAllowedValues) {
             return [];
         }
         const additionOptions = [
@@ -315,8 +315,8 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             ...(this.getGlobalFilterValue(filterId) ?? []),
             ...(filter.defaultValue ?? []),
         ];
-        const options = this.getTextFilterOptionsFromRange(
-            filter.rangeOfAllowedValues,
+        const options = this.getTextFilterOptionsFromRanges(
+            filter.rangesOfAllowedValues,
             additionOptions
         );
         return options;
@@ -325,11 +325,13 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     /**
      * Returns the possible values a text global filter can take from a range
      * or any addition raw string value. Removes duplicates and empty string values.
-     * @param {object} range
+     * @param {object[]} ranges
      * @param {string[]} additionalOptionValues
      */
-    getTextFilterOptionsFromRange(range, additionalOptionValues = []) {
-        const cells = this.getters.getEvaluatedCellsInZone(range.sheetId, range.zone);
+    getTextFilterOptionsFromRanges(ranges, additionalOptionValues = []) {
+        const cells = ranges.flatMap((range) =>
+            this.getters.getEvaluatedCellsInZone(range.sheetId, range.zone)
+        );
         const uniqueFormattedValues = new Set();
         const uniqueValues = new Set();
         const allowedValues = cells

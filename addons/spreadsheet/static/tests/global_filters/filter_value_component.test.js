@@ -100,7 +100,7 @@ test("text filter with range", async function () {
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1:A3"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1:A3")],
     });
     setCellContent(model, "A1", "foo");
     setCellContent(model, "A2", "0");
