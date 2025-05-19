@@ -10,8 +10,13 @@
                 <field name="peppol_eas"
                        placeholder="Peppol ID"
                        nolabel="1"
-                       class="o_field_peppol_eas_selection"/>
-                <field name="peppol_endpoint" nolabel="1" placeholder="Your endpoint"/>
+                       class="o_field_peppol_eas_selection"
+                       invisible="not is_peppol_edi_format"/>
+                <div class="row" invisible="not is_peppol_edi_format">
+                    <div id="peppol_endpoint_partner" class="col-4">
+                        <field name="peppol_endpoint" nolabel="1" placeholder="Your endpoint"/>
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>

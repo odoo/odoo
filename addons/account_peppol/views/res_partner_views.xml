@@ -24,7 +24,7 @@
                     <div class="alert alert-warning mb-0"
                          colspan="2"
                          role="alert"
-                         invisible="country_code != 'BE' or not peppol_endpoint or peppol_eas in (False, '0208')">
+                         invisible="1">
                          The recommended identification method for Belgium is your Company Registry Number.
                     </div>
                     <div class="alert alert-warning"
@@ -34,25 +34,24 @@
                          To generate complete electronic invoices, also set a country for this partner.
                     </div>
                 </xpath>
-                <xpath expr="//div[@id='peppol_address']" position="after">
-                    <field name="is_peppol_edi_format" invisible="1"/>
-                    <field name="peppol_verification_state" invisible="1" force_save="1"/>
-                    <label for="peppol_verification_state"
-                           groups="base.group_no_one"
-                           invisible="not peppol_endpoint"/>
-                    <div class="row"
-                         groups="base.group_no_one"
-                         invisible="not peppol_endpoint">
-                        <div class="col-6">
-                            <field name="peppol_verification_state" readonly="1"/>
-                        </div>
-                        <div class="col-6 pt-0">
-                            <button name="button_account_peppol_check_partner_endpoint"
-                                    class="btn btn-secondary"
-                                    type="object"
-                                    string="Verify"
-                                    help="Verify partner's PEPPOL endpoint"/>
-                        </div>
+                <xpath expr="//div[@id='peppol_endpoint_partner']" position="after">
+                    <div class="col-3 pt-0">
+                        <button name="button_account_peppol_check_partner_endpoint"
+                                invisible="peppol_verification_state == 'valid'"
+                                class="btn btn-secondary"
+                                type="object"
+                                icon="fa-refresh"
+                                title="Verify"
+                                help="Verify partner's PEPPOL endpoint"/>
+                        <i title="Not valid"
+                           invisible="peppol_verification_state == 'valid'"
+                           class="fa fa-remove offset-lg-1"/>
+                        <i title="Valid"
+                           invisible="not peppol_verification_state == 'valid'"
+                           class="fa fa-check offset-lg-1"/>
+                    </div>
+                    <div class="col-5">
+                        <field name="peppol_verification_state" readonly="1"/>
                     </div>
                 </xpath>
             </data>
