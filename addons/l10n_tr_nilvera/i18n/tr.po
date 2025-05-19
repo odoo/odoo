@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-28 16:01+0000\n"
-"PO-Revision-Date: 2025-03-28 16:01+0000\n"
+"POT-Creation-Date: 2025-06-03 10:08+0000\n"
+"PO-Revision-Date: 2025-06-03 10:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,24 +19,56 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
 msgid ""
 "<i title=\"Go to Nilvera portal\" role=\"img\" aria-label=\"Go to Nilvera portal\" class=\"fa fa-external-link-square fa-fw\"/>\n"
-"                                Nilvera portal"
+"                                    Nilvera portal"
 msgstr ""
 "<i title=\"Nilvera portalına git\" role=\"img\" aria-label=\"Nilvera portalına git\" class=\"fa fa-external-link-square fa-fw\"/>\n"
-"                                Nilvera Portalı"
+"                                    Nilvera portalı"
+
+#. module: l10n_tr_nilvera
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
+msgid ""
+"<i title=\"Go to Nilvera portal\" role=\"img\" aria-label=\"Go to Nilvera portal\" class=\"fa fa-external-link-square fa-fw\"/>\n"
+"                                    Nilvera portal (Test)"
+msgstr ""
+"<i title=\"Nilvera portalına git\" role=\"img\" aria-label=\"Nilvera portalına git\" class=\"fa fa-external-link-square fa-fw\"/>\n"
+"                                    Nilvera portalı (Test)"
 
 #. module: l10n_tr_nilvera
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
 msgid ""
 "<i title=\"Test connection\" role=\"img\" aria-label=\"Test connection\" class=\"fa fa-plug fa-fw\"/>\n"
-"                                Test connection"
+"                                    Test connection"
 msgstr ""
-"<i title=\"Test bağlantısı\" role=\"img\" aria-label=\"Test bağlantısı\" class=\"fa fa-plug fa-fw\"/>\n"
-"                                Test bağlantısı"
+"<i title=\"Bağlantıyı test et\" role=\"img\" aria-label=\"Bağlantıyı test et\" class=\"fa fa-plug fa-fw\"/>\n"
+"                                    Bağlantıyı test et"
 
 #. module: l10n_tr_nilvera
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
-msgid "API KEY"
+msgid ""
+"<span class=\"o_form_label\">\n"
+"                                    Nilvera Details\n"
+"                                </span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\"/>"
 msgstr ""
+"<span class=\"o_form_label\">\n"
+"                                    Nilvera Detayları\n"
+"                                </span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Burada ayarlanan değerler şirkete özeldir.\"/>"
+
+#. module: l10n_tr_nilvera
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
+msgid "API Key"
+msgstr "API Anahtarı"
+
+#. module: l10n_tr_nilvera
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
+msgid "API Key: Your Nilvera API key for authenticating with the platform."
+msgstr "API Anahtarı: Platforma doğrulama için Nilvera API anahtarınız."
+
+#. module: l10n_tr_nilvera
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
+msgid "Activate to send e-documents to sandbox"
+msgstr "E-belgeleri sandbox ortamına göndermek için etkinleştir"
 
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_partner__l10n_tr_nilvera_customer_alias_id
@@ -47,7 +79,6 @@ msgstr "Takma ad"
 #. module: l10n_tr_nilvera
 #. odoo-python
 #: code:addons/l10n_tr_nilvera/models/res_config_settings.py:0
-#, python-format
 msgid "An error occurred. Try again later."
 msgstr "Bir hata oluştu. Daha sonra tekrar deneyin."
 
@@ -73,8 +104,12 @@ msgstr "Yapılandırma Ayarları"
 
 #. module: l10n_tr_nilvera
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
-msgid "Configure Nilvera settings"
-msgstr "Nilvera ayarlarını yapılandırma"
+msgid ""
+"Configure your Nilvera integration settings below to securely send and\n"
+"                                        receive e-documents directly within Odoo."
+msgstr ""
+"Nilvera entegrasyon ayarlarınızı aşağıda yapılandırarak güvenli bir şekilde\n"
+"                                        e-belgeleri doğrudan Odoo içinde gönderip alabilirsiniz."
 
 #. module: l10n_tr_nilvera
 #: model:ir.model,name:l10n_tr_nilvera.model_res_partner
@@ -112,7 +147,12 @@ msgid "Customer Alias on Nilvera"
 msgstr "Nilvera Müşteri Takma Adları"
 
 #. module: l10n_tr_nilvera
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_account_journal__display_name
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_partner__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_uom_uom__display_name
 msgid "Display Name"
 msgstr "Ekran Adı"
 
@@ -148,7 +188,12 @@ msgid "Gross Ton"
 msgstr "Brüt Ton"
 
 #. module: l10n_tr_nilvera
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_account_journal__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_l10n_tr_nilvera_alias__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_partner__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_uom_uom__id
 msgid "ID"
 msgstr ""
 
@@ -156,6 +201,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
 msgstr "Gelen Faturalar Günlüğü"
+
+#. module: l10n_tr_nilvera
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
+msgid ""
+"Incoming Invoices Journal: Incoming documents will be auto-recorded as "
+"journal entries"
+msgstr ""
+"Gelen Faturalar Defteri: Gelen belgeler otomatik olarak yevmiye kayıtları olarak kaydedilecektir"
 
 #. module: l10n_tr_nilvera
 #: model:ir.model,name:l10n_tr_nilvera.model_account_journal
@@ -232,14 +285,8 @@ msgstr "Nilvera API anahtarı"
 
 #. module: l10n_tr_nilvera
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
-msgid "Nilvera Electronic Document Invoicing"
-msgstr "Nilvera Elektronik Belge Faturalama"
-
-#. module: l10n_tr_nilvera
-#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_company__l10n_tr_nilvera_environment
-#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_config_settings__l10n_tr_nilvera_environment
-msgid "Nilvera Environment"
-msgstr "Nilvera Çevre"
+msgid "Nilvera Portal: Link to the Nilvera dashboard."
+msgstr "Nilvera Portalı: Nilvera kontrol paneline bağlantı."
 
 #. module: l10n_tr_nilvera
 #: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_company__l10n_tr_nilvera_purchase_journal_id
@@ -254,9 +301,13 @@ msgid "Nilvera Status"
 msgstr "Nilvera Durumu"
 
 #. module: l10n_tr_nilvera
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_config_settings__l10n_tr_nilvera_vat
+msgid "Nilvera VAT"
+msgstr "Nilvera KDV"
+
+#. module: l10n_tr_nilvera
 #. odoo-python
 #: code:addons/l10n_tr_nilvera/models/res_config_settings.py:0
-#, python-format
 msgid ""
 "Nilvera connection successful but the tax number on Nilvera and Odoo doesn't"
 " match. Check Nilvera."
@@ -267,14 +318,12 @@ msgstr ""
 #. module: l10n_tr_nilvera
 #. odoo-python
 #: code:addons/l10n_tr_nilvera/models/res_config_settings.py:0
-#, python-format
 msgid "Nilvera connection successful!"
 msgstr "Nilvera bağlantısı başarılı!"
 
 #. module: l10n_tr_nilvera
 #. odoo-python
 #: code:addons/l10n_tr_nilvera/models/res_config_settings.py:0
-#, python-format
 msgid "Nilvera connection was unsuccessful, check the API key."
 msgstr "Nilvera bağlantısı başarısız oldu, API anahtarını kontrol edin."
 
@@ -314,9 +363,9 @@ msgid "Partner"
 msgstr "Ortak"
 
 #. module: l10n_tr_nilvera
-#: model:ir.model.fields.selection,name:l10n_tr_nilvera.selection__res_company__l10n_tr_nilvera_environment__production
-msgid "Production"
-msgstr "Üretim"
+#: model:ir.model,name:l10n_tr_nilvera.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Ürün Ölçü Birimi"
 
 #. module: l10n_tr_nilvera
 #: model:uom.uom,name:l10n_tr_nilvera.product_uom_d62
@@ -339,14 +388,43 @@ msgid "Standard Cubic Meter"
 msgstr "Standart Metreküp"
 
 #. module: l10n_tr_nilvera
-#: model:ir.model.fields.selection,name:l10n_tr_nilvera.selection__res_company__l10n_tr_nilvera_environment__sandbox
-msgid "Test"
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
+msgid ""
+"Test Connection: Validates the API connection to Nilvera with the provided "
+"credentials."
+msgstr ""
+"Bağlantıyı Test Et: Sağlanan kimlik bilgileriyle Nilvera API bağlantısını doğrular."
+
+#. module: l10n_tr_nilvera
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
+msgid "Test Environment: Enable to test the integration in sandbox"
+msgstr "Test Ortamı: Entegrasyonu sandbox ortamında test etmek için etkinleştirin"
+
+#. module: l10n_tr_nilvera
+#: model:ir.model.fields,help:l10n_tr_nilvera.field_res_config_settings__l10n_tr_nilvera_vat
+msgid ""
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
+msgstr ""
+"Vergi Kimlik Numarası. Buradaki değerler ülke formatına göre doğrulanacaktır. "
+"Ortağın vergiye tabi olmadığını belirtmek için '/' kullanabilirsiniz."
+
+#. module: l10n_tr_nilvera
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
+msgid "Türkiye Electronic Integrations"
+msgstr "Türkiye Elektronik Entegrasyonları"
+
+#. module: l10n_tr_nilvera
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera.selection__res_partner__invoice_edi_format__ubl_tr
+msgid "UBL TR 1.2"
 msgstr ""
 
 #. module: l10n_tr_nilvera
-#: model:ir.model.fields.selection,name:l10n_tr_nilvera.selection__res_partner__ubl_cii_format__ubl_tr
-msgid "UBL TR 1.2"
-msgstr ""
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_company__l10n_tr_nilvera_use_test_env
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_config_settings__l10n_tr_nilvera_use_test_env
+msgid "Use testing environment"
+msgstr "Test ortamını kullan"
 
 #. module: l10n_tr_nilvera
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.view_partner_property_form_inherit_ubl_tr
@@ -362,3 +440,14 @@ msgstr "Nilvera'daki ortağı doğrulayın"
 #: model:uom.uom,name:l10n_tr_nilvera.product_uom_ann
 msgid "Year"
 msgstr "Yıl"
+
+#. module: l10n_tr_nilvera
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera.res_config_settings_view_form
+msgid "You are sending and receiving e-documents using the following Tax ID:"
+msgstr "Aşağıdaki Vergi Kimlik Numarasını kullanarak e-belgeler gönderiyor ve alıyorsunuz:"
+
+#. module: l10n_tr_nilvera
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_partner__invoice_edi_format
+#: model:ir.model.fields,field_description:l10n_tr_nilvera.field_res_users__invoice_edi_format
+msgid "eInvoice format"
+msgstr "e-Fatura Biçimi"
