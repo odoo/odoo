@@ -851,3 +851,56 @@ class TestSaleMrpKitBom(TransactionCase):
         picking.button_validate()
 
         self.assertEqual(so.order_line.qty_delivered, 1)
+
+    def test_SO_kit_delivery_change_to_comp_packaging(self):
+        """
+        Test that when selling a kit, and changing the packaging on the stock move
+        to the packaging of the comp, the correct quantity is computed when printing
+        """
+        grp_pack = self.env.ref('product.group_stock_packaging')
+        self.env.user.write({'groups_id': [(4, grp_pack.id, 0)]})
+        kit_product = self._create_product('Kit', 'product', 1)
+        comp_product = self._create_product('Component', 'product', 1)
+        comp_product.uom_id = self.env.ref('uom.product_uom_gram').id
+        packaging_final_prod = self.env['product.packaging'].create({
+            'name': "packs of 9",
+            'product_id': kit_product.id,
+            'qty': 9.0,
+        })
+        packaging_comp = self.env['product.packaging'].create({
+            'name': "pack of 0.45 g",
+            'product_id': comp_product.id,
+            'product_uom_id': self.env.ref('uom.product_uom_gram').id,
+            'qty': 0.45,
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': comp_product.id,
+                    'product_qty': 0.1,
+                    'product_uom_id': self.env.ref('uom.product_uom_gram').id
+
+                }),
+            ]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [
+                Command.create({
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
+                    'product_uom_qty': 9,
+                    'product_packaging_id': packaging_final_prod.id
+            })],
+        })
+        so.action_confirm()
+        so.picking_ids.move_ids.product_packaging_id = packaging_comp
+        so.picking_ids.move_ids.write({'quantity': 0.9})
+
+        so.picking_ids.button_validate()
+        aggr_prod_qty = so.picking_ids.move_ids.move_line_ids[0]._get_aggregated_product_quantities(kit_name='Kit')
+        key = f"{comp_product.id}_{comp_product.display_name}__{comp_product.uom_id.id}_{packaging_comp}_{kit_product.bom_ids.id}"
+        self.assertEqual(aggr_prod_qty[key]['packaging_quantity'], 2)
