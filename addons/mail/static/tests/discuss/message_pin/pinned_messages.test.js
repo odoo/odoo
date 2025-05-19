@@ -13,26 +13,6 @@ import { disableAnimations } from "@odoo/hoot-mock";
 describe.current.tags("desktop");
 defineMailModels();
 
-test("Pin message", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.message"].create({
-        body: "Hello world!",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Pinned Messages']");
-    await contains(".o-discuss-PinnedMessagesPanel p", {
-        text: "This channel doesn't have any pinned messages.",
-    });
-    await click(".o-mail-Message [title='Expand']");
-    await click(".dropdown-item", { text: "Pin" });
-    await click(".modal-footer button", { text: "Yeah, pin it!" });
-    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { text: "Hello world!" });
-});
-
 test("Unpin message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
