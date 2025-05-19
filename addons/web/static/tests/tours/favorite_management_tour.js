@@ -5,8 +5,15 @@ registry.category("web_tour.tours").add("test_favorite_management", {
     url: "/odoo/apps",
     steps: () => [
         {
+            trigger:
+                ".o_kanban_renderer:not(:has(.o_kanban_record:contains(France - Localizations)))",
+        },
+        {
             trigger: ".o_facet_remove",
             run: "click",
+        },
+        {
+            trigger: ".o_kanban_renderer:has(.o_kanban_record:contains(France - Localizations))",
         },
         {
             trigger: ".o_searchview_dropdown_toggler",
